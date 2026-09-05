@@ -12,7 +12,9 @@ html, body, #root { margin: 0; min-height: 100%; }
   --gold-bright: #f0d49a;
   --gold-deep: #a88556;
   --cool: #95a8c2;
+  --cool-deep: #5e7593;
   --serif: "Iowan Old Style", "Apple Garamond", "Palatino Linotype", Baskerville, Georgia, "Times New Roman", serif;
+  --display: "Hoefler Text", "Iowan Old Style", "Apple Garamond", Baskerville, Georgia, serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
@@ -58,7 +60,7 @@ body {
   z-index: 0;
   background:
     radial-gradient(ellipse 85% 70% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.45) 100%),
-    linear-gradient(180deg, rgba(28, 36, 48, 0.12) 0%, transparent 22%, transparent 78%, rgba(28, 14, 8, 0.18) 100%);
+    linear-gradient(180deg, rgba(38, 50, 64, 0.10) 0%, transparent 22%, transparent 78%, rgba(28, 14, 8, 0.18) 100%);
 }
 
 .codex-edge {
@@ -147,7 +149,7 @@ body {
 }
 
 .watermark-stroke {
-  opacity: 0.55;
+  opacity: 0.45;
   stroke-dasharray: 3600;
   stroke-dashoffset: 3600;
   animation: watermarkDraw 5.2s cubic-bezier(0.6, 0.02, 0.2, 1) 1.9s forwards;
@@ -165,7 +167,7 @@ body {
 }
 
 @keyframes watermarkIn {
-  to { opacity: 0.045; }
+  to { opacity: 0.04; }
 }
 
 @keyframes watermarkDraw {
@@ -173,12 +175,56 @@ body {
 }
 
 @keyframes watermarkDot {
-  to { opacity: 0.55; transform: scale(1); }
+  to { opacity: 0.45; transform: scale(1); }
 }
 
 @keyframes watermarkBreathe {
-  0%, 100% { opacity: 0.55; }
-  50%      { opacity: 0.32; }
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 0.26; }
+}
+
+/* ----- Ink-trail (cursor) ----- */
+
+.ink-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 4;
+  mix-blend-mode: screen;
+  transition: opacity 0.6s ease;
+  opacity: 0;
+}
+
+.ink-trail.is-active { opacity: 1; transition-duration: 0.15s; }
+
+.ink-trail-core {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: var(--gold-bright);
+  box-shadow: 0 0 8px rgba(240, 212, 154, 0.65);
+  opacity: 0.85;
+}
+
+.ink-trail-halo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  margin-top: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(240, 212, 154, 0.18) 0%, rgba(240, 212, 154, 0.06) 40%, transparent 70%);
+  filter: blur(2px);
 }
 
 /* ----- Marginalia ----- */
@@ -582,6 +628,72 @@ body {
   background: var(--ink);
 }
 
+/* ----- "Since [time]" reading marker ----- */
+
+.marg-since {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, 0.7vw, 9px);
+  flex: 0 0 100%;
+  justify-content: flex-end;
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(8.5px, 0.78vw, 9.5px);
+  letter-spacing: 0.16em;
+  text-transform: lowercase;
+  color: var(--ink-faint);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 0.8s ease 1.4s,
+    transform 0.8s ease 1.4s,
+    color 0.5s ease;
+  white-space: nowrap;
+}
+
+.frame.ready .marg-since {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.marg-since-rule {
+  display: inline-block;
+  width: clamp(14px, 2vw, 26px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ink-faint));
+  opacity: 0.6;
+}
+
+.marg-since-label {
+  font-style: italic;
+  font-family: var(--serif);
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+}
+
+.marg-since-time {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+  letter-spacing: 0.06em;
+  opacity: 0.9;
+}
+
+.marg-since-dim {
+  opacity: 0.55;
+  letter-spacing: 0.12em;
+}
+
+.marg-br:hover .marg-since,
+.marg-br:focus-visible .marg-since {
+  color: var(--ink-soft);
+}
+
+.marg-br:hover .marg-since-time,
+.marg-br:focus-visible .marg-since-time {
+  color: var(--gold);
+}
+
 /* ----- Guide rule (marginalia → center) ----- */
 
 .guide-rule {
@@ -680,7 +792,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(16px, 2.1vw, 24px);
+  gap: clamp(12px, 1.6vw, 18px);
   max-width: 100%;
 }
 
@@ -755,7 +867,7 @@ body {
 }
 
 .folio-mark-letter {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: 38px;
   font-style: italic;
   font-weight: 500;
@@ -1162,7 +1274,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: clamp(-2px, -0.2vw, 0) 0 clamp(-2px, -0.4vw, -1px);
+  margin: clamp(-6px, -0.7vw, -3px) 0 clamp(-2px, -0.2vw, 0);
   opacity: 0;
   transform: translateY(2px);
   transition:
@@ -1181,7 +1293,7 @@ body {
   display: block;
   color: var(--gold);
   transform-origin: 50% 80%;
-  animation: maniculeBob 4.6s ease-in-out infinite;
+  animation: maniculeBeckon 5.4s ease-in-out infinite;
   transition: color 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
@@ -1212,44 +1324,13 @@ body {
 .hero:hover + .manicule-wrap .manicule,
 .hero:focus-visible + .manicule-wrap .manicule {
   color: var(--gold-bright);
+  animation-duration: 2.4s;
 }
 
-@keyframes maniculeBob {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-4px); }
-}
-
-/* ----- Ruling line ----- */
-
-.ruling {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: clamp(120px, 26vw, 320px);
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.9s ease 1.45s, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.45s;
-}
-
-.composition.ready .ruling {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.ruling-line {
-  flex: 1 1 auto;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--ink-soft) 50%, transparent);
-  opacity: 0.5;
-}
-
-.ruling-mark {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--gold);
-  opacity: 0.6;
-  flex: 0 0 auto;
+@keyframes maniculeBeckon {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  35%      { transform: translateY(-3px) rotate(-4deg); }
+  65%      { transform: translateY(-1px) rotate(2deg); }
 }
 
 /* ----- Question ----- */
@@ -1263,11 +1344,11 @@ body {
 }
 
 .question {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-weight: 400;
-  font-size: clamp(22px, 3.5vw, 46px);
-  line-height: 1.14;
-  letter-spacing: -0.013em;
+  font-size: clamp(22px, 3.4vw, 44px);
+  line-height: 1.18;
+  letter-spacing: -0.012em;
   text-align: center;
   color: var(--ink);
   max-width: 22ch;
@@ -1291,14 +1372,36 @@ body {
   font-feature-settings: "ss01" on, "liga" on;
   color: var(--gold-bright);
   letter-spacing: 0;
+  position: relative;
 }
 
 .question-name {
   font-style: italic;
 }
 
+.question-name::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.06em;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-deep) 24%, var(--gold) 50%, var(--gold-deep) 76%, transparent);
+  opacity: 0;
+  transform: scaleX(0.6);
+  transform-origin: center;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.composition.ready .question-name::after {
+  opacity: 0.55;
+  transform: scaleX(1);
+  transition-delay: 2.4s;
+}
+
 .question-yet {
   font-style: italic;
+  display: inline-block;
 }
 
 .question-underline {
@@ -1359,7 +1462,7 @@ body {
 }
 
 .answer.is-on {
-  opacity: 0.78;
+  opacity: 0.82;
   transform: translateY(0);
   max-height: 6em;
   margin: clamp(14px, 1.8vw, 20px) 0 0;
@@ -1587,7 +1690,7 @@ body {
 }
 
 .seal-letter {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-style: italic;
   font-size: 18px;
   font-weight: 500;
@@ -1621,6 +1724,7 @@ body {
 /* ----- Reduced motion ----- */
 
 @media (prefers-reduced-motion: reduce) {
+  .ink-trail { display: none; }
   .hero-svg { animation: none; transform: none; }
   .hero-svg-wrap { transform: none; transition: none; }
   .hero-dot-ring { animation: none; opacity: 0.18; transform: scale(1); }
@@ -1631,19 +1735,21 @@ body {
   .hero.pulse { animation: none; }
   .hero { animation: none; filter: drop-shadow(0 0 28px rgba(217, 176, 116, 0.18)); }
   .hero:hover { transform: none; }
-  .question, .ruling, .rubric, .fleuron, .fleuron-rule line, .fleuron-ornament, .fleuron-dots,
+  .question, .rubric, .fleuron, .fleuron-rule line, .fleuron-ornament, .fleuron-dots,
   .folio-mark, .folio-mark-flourish, .folio-mark-pearl,
   .manicule-wrap, .manicule, .printer-note {
     opacity: 1;
     transform: none;
     transition: none;
   }
+  .question-name::after { opacity: 0.55; transform: scaleX(1); transition: none; }
   .folio-mark-dot { animation: none; }
   .marg, .marg-rule, .marg-label, .marg-body, .marg-now, .marg-glyph {
     opacity: 1;
     transform: none;
     transition: color 0.3s ease;
   }
+  .marg-since { opacity: 1; transform: none; transition: color 0.3s ease; }
   .marg-whisper {
     transition: max-height 0.2s ease, color 0.3s ease;
   }
@@ -1691,7 +1797,7 @@ body {
   .watermark {
     transition: none;
     animation: none;
-    opacity: 0.045;
+    opacity: 0.04;
   }
   .watermark-stroke {
     transition: none;
@@ -1701,7 +1807,7 @@ body {
   .watermark-dot {
     transition: none;
     animation: none;
-    opacity: 0.55;
+    opacity: 0.45;
     transform: none;
   }
   .guide-rule:hover .guide-rule-line,
@@ -1757,6 +1863,8 @@ body {
   .colophon-folio { letter-spacing: 0.36em; }
   .colophon-quaeritur { letter-spacing: 0.26em; }
   .reply { max-width: 28ch; }
+  .marg-since { letter-spacing: 0.1em; }
+  .marg-since-rule { width: 14px; }
 }
 
 @media (max-width: 520px) {
@@ -1768,8 +1876,7 @@ body {
   .folio-mark-letter { font-size: 30px; }
   .hero-svg { width: 150px; }
   .question { font-size: 21px; max-width: 100%; line-height: 1.22; }
-  .composition { gap: 16px; }
-  .ruling { width: clamp(100px, 40vw, 200px); }
+  .composition { gap: 14px; }
   .marg-now-time { font-size: 10px; }
   .clock { width: 18px; height: 18px; }
   .rubric { letter-spacing: 0.32em; }
@@ -1782,6 +1889,7 @@ body {
   .reply-rule { width: 14px; margin-right: 8px; }
   .reply-end .fleuron { width: 56px; }
   .printer-seal { width: 22px; height: 22px; }
+  .ink-trail-halo { width: 22px; height: 22px; margin-left: -11px; margin-top: -11px; }
 }
 
 /* tiny screens — keep only the corner clock and minimal marginalia */

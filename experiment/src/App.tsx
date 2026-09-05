@@ -53,7 +53,7 @@ const REPLY_STAGGER_MS = 26
 
 // A short self-typed caption that sits above the chapter piece, like a
 // printer's margin note introducing the folio without ceremony.
-const PRINTER_NOTE = '· composed in pixels — lit only while read ·'
+const PRINTER_NOTE = '· a question, typeset in pixels ·'
 const PRINTER_NOTE_DELAY = 2400
 const PRINTER_NOTE_STEP = 42
 
@@ -405,6 +405,30 @@ function Watermark() {
   )
 }
 
+// A small ink-trail dot that lingers where the cursor has been.
+// It decays back to invisible when the cursor stops moving — the page
+// marks only what's being read.
+function InkTrail({
+  x,
+  y,
+  active,
+}: {
+  x: number
+  y: number
+  active: boolean
+}) {
+  return (
+    <span
+      className={`ink-trail${active ? ' is-active' : ''}`}
+      style={{ transform: `translate(${x}px, ${y}px)` } as CSSProperties}
+      aria-hidden="true"
+    >
+      <span className="ink-trail-core" />
+      <span className="ink-trail-halo" />
+    </span>
+  )
+}
+
 function Marg({
   corner,
   id,
@@ -505,7 +529,10 @@ export function App() {
   const heroBoxRef = useRef<DOMRect | null>(null)
   const heroRef = useRef<HTMLButtonElement>(null)
   const waveTimeoutsRef = useRef<number[]>([])
+  const trailRef = useRef({ x: -100, y: -100, active: false, last: 0 })
+  const [trail, setTrail] = useState({ x: -100, y: -100, active: false })
   const now = useTick(reduced ? 60_000 : 1000)
+  const arrivalRef = useRef<number>(Date.now())
 
   useEffect(() => {
     const t = setTimeout(() => setReady(true), 60)
@@ -601,6 +628,52 @@ export function App() {
     return () => clearTimeout(id)
   }, [printerNoteOn, printerNoteChars, reduced])
 
+  // Cursor ink-trail — a single faint dot that lingers under the pointer
+  // and fades when the cursor stops moving. Tracks in a rAF loop so the
+  // visual update isn't coupled to React's pointer event rate.
+  useEffect(() => {
+    if (reduced) return
+    let raf = 0
+    let alive = true
+    const tick = () => {
+      if (!alive) return
+      const t = trailRef.current
+      const dx = pointerRef.current.x - t.x
+      const dy = pointerRef.current.y - t.y
+      const dist2 = dx * dx + dy * dy
+      if (dist2 > 4 || t.active) {
+        t.x += dx * 0.28
+        t.y += dy * 0.28
+        const moving = dist2 > 36
+        t.active = moving
+        if (moving || performance.now() - t.last < 220) {
+          setTrail({ x: t.x, y: t.y, active: true })
+        } else {
+          setTrail((p) => ({ ...p, active: false }))
+        }
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    const onMove = (e: PointerEvent) => {
+      pointerRef.current.x = e.clientX
+      pointerRef.current.y = e.clientY
+      trailRef.current.last = performance.now()
+      trailRef.current.active = true
+    }
+    const onLeave = () => {
+      trailRef.current.active = false
+    }
+    tick()
+    window.addEventListener('pointermove', onMove, { passive: true })
+    window.addEventListener('pointerleave', onLeave)
+    return () => {
+      alive = false
+      cancelAnimationFrame(raf)
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerleave', onLeave)
+    }
+  }, [reduced])
+
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -627,7 +700,7 @@ export function App() {
       for (let i = 0; i < count; i++) {
         const r = Math.random()
         const tone: Particle['tone'] =
-          r < 0.16 ? 'warm' : r < 0.26 ? 'cool' : 'pale'
+          r < 0.14 ? 'warm' : r < 0.24 ? 'cool' : r < 0.5 ? 'pale' : 'cool'
         arr.push({
           x: Math.random() * w,
           y: Math.random() * h,
@@ -723,23 +796,12 @@ export function App() {
       draw()
     }
 
-    const onMove = (e: PointerEvent) => {
-      pointerRef.current.x = e.clientX
-      pointerRef.current.y = e.clientY
-      pointerRef.current.active = true
-    }
-    const onLeave = () => {
-      pointerRef.current.active = false
-      pointerRef.current.over = false
-    }
     const onResize = () => {
       setupDims()
       seed()
       draw()
     }
 
-    window.addEventListener('pointermove', onMove)
-    window.addEventListener('pointerleave', onLeave)
     window.addEventListener('resize', onResize)
 
     let raf = 0
@@ -758,8 +820,6 @@ export function App() {
     return () => {
       alive = false
       cancelAnimationFrame(raf)
-      window.removeEventListener('pointermove', onMove)
-      window.removeEventListener('pointerleave', onLeave)
       window.removeEventListener('resize', onResize)
     }
   }, [reduced])
@@ -858,6 +918,15 @@ export function App() {
   const hh = d.getHours().toString().padStart(2, '0')
   const mm = d.getMinutes().toString().padStart(2, '0')
 
+  // Reading-since — a quiet timestamp of when the page first noticed you.
+  const arrivedAt = new Date(arrivalRef.current)
+  const arrivedHH = arrivedAt.getHours().toString().padStart(2, '0')
+  const arrivedMM = arrivedAt.getMinutes().toString().padStart(2, '0')
+  const elapsedMin = Math.max(
+    0,
+    Math.floor((now - arrivalRef.current) / 60_000),
+  )
+
   const answerDisplay = answerOn ? ANSWER.slice(0, Math.max(0, answerChars)) : ''
   const replyDisplay = replyOn ? REPLY.slice(0, Math.max(0, replyChars)) : ''
 
@@ -915,7 +984,7 @@ export function App() {
           active={active}
           wave={echoIdx === 3}
           onHover={setActive}
-          ariaLabel={`Local time ${hh}:${mm}`}
+          ariaLabel={`Local time ${hh}:${mm}. Reading since ${arrivedHH}:${arrivedMM}.`}
         >
           <span className="marg-now">
             <span className="marg-now-time">
@@ -935,6 +1004,12 @@ export function App() {
                 style={{ transform: `rotate(${secAngle}deg)` }}
               />
             </span>
+          </span>
+          <span className="marg-since" aria-hidden="true">
+            <span className="marg-since-rule" />
+            <span className="marg-since-label">since</span>
+            <span className="marg-since-time">{arrivedHH}:{arrivedMM}</span>
+            <span className="marg-since-dim">· {elapsedMin}m read</span>
           </span>
         </Marg>
 
@@ -1036,11 +1111,6 @@ export function App() {
           <div className="manicule-wrap" aria-hidden="true">
             <Manicule />
           </div>
-          <div className="ruling" aria-hidden="true">
-            <span className="ruling-mark ruling-mark-l" />
-            <span className="ruling-line" />
-            <span className="ruling-mark ruling-mark-r" />
-          </div>
           <div className="question-block">
             <h1 className="question">
               is <em className="question-name">Minimax M3</em> good at frontend{' '}
@@ -1086,10 +1156,10 @@ export function App() {
           <span className="colophon-quaeritur">quaeritur</span>
           <span className="colophon-rule" />
           <span className="colophon-line colophon-line-1">
-            typeset in margins · read by cursor
+            typeset in pixels · lit by attention
           </span>
           <span className="colophon-line colophon-line-2">
-            lit by attention · answered in kind
+            the question reads you back
           </span>
           <span className="colophon-seal">
             <PrinterSeal />
@@ -1099,6 +1169,8 @@ export function App() {
           </span>
         </div>
       </div>
+
+      <InkTrail x={trail.x} y={trail.y} active={trail.active} />
     </main>
   )
 }
