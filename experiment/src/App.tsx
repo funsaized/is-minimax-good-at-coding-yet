@@ -51,6 +51,15 @@ const REPLY =
 const ANSWER_STAGGER_MS = 34
 const REPLY_STAGGER_MS = 26
 
+// Scholastic glosses — short italicized commentaries that surface near the
+// hero when the reader approaches. Three notes, cycled gently.
+const SCHOLASTIC_NOTES: string[] = [
+  'a question first asked, then asked again',
+  '— still being composed, never quite set',
+  'asked each time; settled each time differently',
+]
+const SCHOLASTIC_CYCLE_MS = 4400
+
 // A short self-typed caption that sits above the chapter piece, like a
 // printer's margin note introducing the folio without ceremony.
 const PRINTER_NOTE = '· a question, typeset in pixels ·'
@@ -454,6 +463,102 @@ function Signature() {
   )
 }
 
+// BifolioSpine — a soft vertical crease suggesting an open book spread.
+// Subtle enough to read as paper, never as a gimmick.
+function BifolioSpine() {
+  return (
+    <div className="bifolio" aria-hidden="true">
+      <span className="bifolio-crease" />
+      <span className="bifolio-shadow bifolio-shadow-l" />
+      <span className="bifolio-shadow bifolio-shadow-r" />
+    </div>
+  )
+}
+
+// BracketFlourish — a delicate curled bracket that flanks the hero like the
+// scoring around an illuminated initial. Pairs left and right; one tiny
+// vermillion pip gives it the rubric accent of a manuscript drop-cap.
+function BracketFlourish({ side }: { side: 'left' | 'right' }) {
+  const d =
+    side === 'left'
+      ? 'M 24 6 Q 6 6 6 26 L 6 74 Q 6 94 24 94'
+      : 'M 4 6 Q 22 6 22 26 L 22 74 Q 22 94 4 94'
+  return (
+    <svg
+      className={`bracket-flourish bracket-flourish-${side}`}
+      viewBox="0 0 28 100"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path className="bracket-curve" d={d} pathLength={100} />
+      <circle
+        cx={side === 'left' ? 12 : 16}
+        cy="50"
+        r="1.4"
+        className="bracket-pip"
+      />
+      <circle
+        cx={side === 'left' ? 12 : 16}
+        cy="50"
+        r="3.2"
+        className="bracket-pip-halo"
+      />
+      <circle
+        cx={side === 'left' ? 3 : 25}
+        cy="50"
+        r="0.8"
+        className="bracket-pip-faint"
+      />
+    </svg>
+  )
+}
+
+// ScholasticGloss — a single line of italicized scholarly commentary that
+// surfaces beneath the hero when the reader approaches. Cycles slowly
+// through three notes; in reduced motion a single static note stays.
+function ScholasticGloss({
+  active,
+  reduced,
+}: {
+  active: boolean
+  reduced: boolean
+}) {
+  const [idx, setIdx] = useState(0)
+  const [visible, setVisible] = useState(false)
+  const timerRef = useRef<number>(0)
+  const fadeTimerRef = useRef<number>(0)
+
+  useEffect(() => {
+    if (reduced) {
+      setIdx(0)
+      setVisible(active)
+      return
+    }
+    if (active) {
+      setVisible(true)
+      timerRef.current = window.setTimeout(() => {
+        setIdx((i) => (i + 1) % SCHOLASTIC_NOTES.length)
+      }, SCHOLASTIC_CYCLE_MS)
+      return () => clearTimeout(timerRef.current)
+    }
+    fadeTimerRef.current = window.setTimeout(() => setVisible(false), 420)
+    return () => clearTimeout(fadeTimerRef.current)
+  }, [active, idx, reduced])
+
+  const note = SCHOLASTIC_NOTES[idx]
+  return (
+    <p
+      className={`scholastic-gloss ${visible ? 'is-on' : ''}`}
+      aria-live="polite"
+    >
+      <span className="scholastic-gloss-rule" aria-hidden="true" />
+      <span key={idx} className="scholastic-gloss-text">
+        {note}
+      </span>
+    </p>
+  )
+}
+
 // A small ink-trail dot that lingers where the cursor has been.
 // It decays back to invisible when the cursor stops moving — the page
 // marks only what's being read.
@@ -563,6 +668,7 @@ export function App() {
     bl: false,
     br: false,
   })
+  const [glossActive, setGlossActive] = useState(false)
   const [noteNonce, setNoteNonce] = useState(0)
   const [answerOn, setAnswerOn] = useState(false)
   const [answerChars, setAnswerChars] = useState(0)
@@ -744,7 +850,7 @@ export function App() {
 
     const seed = () => {
       const { w, h } = dimsRef.current
-      const count = Math.min(120, Math.floor((w * h) / 12500))
+      const count = Math.min(86, Math.floor((w * h) / 18000))
       const arr: Particle[] = []
       for (let i = 0; i < count; i++) {
         const r = Math.random()
@@ -753,10 +859,10 @@ export function App() {
         arr.push({
           x: Math.random() * w,
           y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.05,
-          vy: -Math.random() * 0.14 - 0.02,
-          r: Math.random() * 1.1 + 0.4,
-          a: Math.random() * 0.5 + 0.18,
+          vx: (Math.random() - 0.5) * 0.04,
+          vy: -Math.random() * 0.10 - 0.018,
+          r: Math.random() * 1.0 + 0.35,
+          a: Math.random() * 0.42 + 0.14,
           tone,
         })
       }
@@ -851,10 +957,10 @@ export function App() {
           }
         }
         // Embers drift gently upward; small random sway.
-        p.vx *= 0.984
-        p.vy = p.vy * 0.987 - 0.0085
-        p.vx += (Math.random() - 0.5) * 0.012
-        p.vy += (Math.random() - 0.5) * 0.008 - 0.0014
+        p.vx *= 0.978
+        p.vy = p.vy * 0.982 - 0.0065
+        p.vx += (Math.random() - 0.5) * 0.010
+        p.vy += (Math.random() - 0.5) * 0.006 - 0.0010
         p.x += p.vx
         p.y += p.vy
         if (p.x < -4) p.x = w + 4
@@ -961,9 +1067,11 @@ export function App() {
   const onHeroEnter = useCallback((e: ReactPointerEvent) => {
     pointerRef.current.over = true
     heroBoxRef.current = (e.currentTarget as HTMLElement).getBoundingClientRect()
+    setGlossActive(true)
   }, [])
   const onHeroLeave = useCallback(() => {
     pointerRef.current.over = false
+    setGlossActive(false)
     const el = heroRef.current
     if (el) {
       el.style.setProperty('--gaze-x', '0')
@@ -1010,6 +1118,7 @@ export function App() {
       <div className="rim" aria-hidden="true" />
       <div className="codex-edge" aria-hidden="true" />
       <PaperGrain />
+      <BifolioSpine />
       <Watermark />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
@@ -1103,14 +1212,18 @@ export function App() {
           <FolioMark />
           <span className="rubric">an inquiry</span>
           <Fleuron />
-          <button
-            type="button"
+          <div className="hero-frame">
+            <BracketFlourish side="left" />
+            <button
+              type="button"
             ref={heroRef}
             className={`hero ${drawn ? 'drawn' : ''} ${pulsing ? 'pulse' : ''} ${tracing ? 'echo' : ''}`}
             onClick={acknowledge}
             onPointerEnter={onHeroEnter}
             onPointerLeave={onHeroLeave}
             onPointerMove={onHeroMove}
+            onFocus={() => setGlossActive(true)}
+            onBlur={() => setGlossActive(false)}
             aria-label="the question"
           >
             <span className="hero-svg-wrap">
@@ -1202,9 +1315,12 @@ export function App() {
               </span>
             )}
           </button>
+            <BracketFlourish side="right" />
+          </div>
           <div className="manicule-wrap" aria-hidden="true">
             <Manicule />
           </div>
+          <ScholasticGloss active={glossActive} reduced={reduced} />
           <div className="question-block">
             <h1 className="question">
               is <em className="question-name">Minimax M3</em> good at frontend{' '}

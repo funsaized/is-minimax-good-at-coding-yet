@@ -11,6 +11,8 @@ html, body, #root { margin: 0; min-height: 100%; }
   --gold: #d9b074;
   --gold-bright: #f0d49a;
   --gold-deep: #a88556;
+  --vermilion: #b0533a;
+  --vermilion-soft: #86402d;
   --cool: #95a8c2;
   --cool-deep: #5e7593;
   --serif: "Iowan Old Style", "Apple Garamond", "Palatino Linotype", Baskerville, Georgia, "Times New Roman", serif;
@@ -100,6 +102,71 @@ body {
 
 @keyframes edgeIn {
   to { opacity: 0.18; }
+}
+
+/* ----- Bifolio spine (open book feel) ----- */
+
+.bifolio {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  animation: bifolioIn 2.6s ease 0.45s forwards;
+}
+
+.bifolio-crease {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-0.5px);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(184, 169, 143, 0.08) 12%,
+    rgba(184, 169, 143, 0.28) 50%,
+    rgba(184, 169, 143, 0.08) 88%,
+    transparent 100%
+  );
+}
+
+.bifolio-shadow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(160px, 22vw, 360px);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.85;
+}
+
+.bifolio-shadow-l {
+  left: 50%;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.38) 0%,
+    rgba(0, 0, 0, 0.18) 32%,
+    transparent 100%
+  );
+  background-position: right top;
+}
+
+.bifolio-shadow-r {
+  right: 50%;
+  transform: translateX(100%);
+  background: linear-gradient(
+    -90deg,
+    rgba(0, 0, 0, 0.38) 0%,
+    rgba(0, 0, 0, 0.18) 32%,
+    transparent 100%
+  );
+}
+
+@keyframes bifolioIn {
+  to { opacity: 1; }
 }
 
 /* Paper grain — a faint SVG turbulence overlay that hints at pressed paper */
@@ -1197,6 +1264,156 @@ body {
   50%      { opacity: calc(var(--pip-alpha) * 0.4); transform: scale(0.78); }
 }
 
+/* ----- Hero frame (brackets flanking the hero, like an illuminated initial) ----- */
+
+.hero-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4px, 0.6vw, 10px);
+  width: 100%;
+}
+
+.bracket-flourish {
+  flex: 0 0 auto;
+  width: clamp(16px, 2.2vw, 30px);
+  height: clamp(72px, 9vw, 138px);
+  color: var(--gold);
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 6px rgba(217, 176, 116, 0.16));
+  transform: translateY(8px);
+  transition:
+    opacity 1s ease 1.45s,
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 1.45s;
+}
+
+.composition.ready .bracket-flourish {
+  opacity: 0.78;
+  transform: translateY(0);
+}
+
+.hero-frame:hover .bracket-flourish,
+.hero-frame:focus-within .bracket-flourish {
+  opacity: 0.95;
+}
+
+.bracket-flourish-left {
+  animation: bracketBreatheL 11s ease-in-out 4s infinite;
+}
+
+.bracket-flourish-right {
+  animation: bracketBreatheR 11s ease-in-out 4s infinite;
+}
+
+@keyframes bracketBreatheL {
+  0%, 100% { scale: 1 1; }
+  50%      { scale: 0.985 1.012; }
+}
+
+@keyframes bracketBreatheR {
+  0%, 100% { scale: 1 1; }
+  50%      { scale: 1.015 1.012; }
+}
+
+.bracket-curve {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) 1.55s;
+}
+
+.composition.ready .bracket-curve { stroke-dashoffset: 0; }
+
+.bracket-pip {
+  fill: var(--vermilion);
+  opacity: 0;
+  transition: opacity 0.7s ease 2.55s;
+}
+
+.composition.ready .bracket-pip { opacity: 0.92; }
+
+.bracket-pip-halo {
+  fill: var(--vermilion);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.4);
+  transition:
+    opacity 0.7s ease 2.55s,
+    transform 0.7s ease 2.55s;
+}
+
+.composition.ready .bracket-pip-halo {
+  opacity: 0.18;
+  transform: scale(1);
+}
+
+.bracket-pip-faint {
+  fill: var(--gold);
+  opacity: 0;
+  transition: opacity 0.6s ease 2.7s;
+}
+
+.composition.ready .bracket-pip-faint { opacity: 0.55; }
+
+/* ----- Scholastic gloss (italic commentary near the hero) ----- */
+
+.scholastic-gloss {
+  margin: clamp(2px, 0.4vw, 6px) 0 clamp(-4px, -0.4vw, 0);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 0.8vw, 14px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, 1.05vw, 13px);
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  max-width: min(46ch, 80vw);
+  text-align: center;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.5s ease;
+}
+
+.scholastic-gloss.is-on {
+  opacity: 0.85;
+  transform: translateY(0);
+}
+
+.scholastic-gloss-rule {
+  display: inline-block;
+  width: clamp(14px, 1.6vw, 22px);
+  height: 1px;
+  background: var(--vermilion);
+  opacity: 0.65;
+  flex: 0 0 auto;
+  transform: scaleX(0.4);
+  transform-origin: left center;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s;
+}
+
+.scholastic-gloss.is-on .scholastic-gloss-rule {
+  transform: scaleX(1);
+}
+
+.scholastic-gloss-text {
+  display: inline;
+}
+
 .hero-stroke {
   fill: none;
   stroke: currentColor;
@@ -1401,9 +1618,9 @@ body {
 .question {
   font-family: var(--display);
   font-weight: 400;
-  font-size: clamp(22px, 3.4vw, 44px);
+  font-size: clamp(24px, 3.6vw, 46px);
   line-height: 1.18;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.008em;
   text-align: center;
   color: var(--ink);
   max-width: 22ch;
@@ -1433,16 +1650,17 @@ body {
 
 .question-name {
   font-style: italic;
+  letter-spacing: -0.015em;
 }
 
 .question-name::after {
   content: '';
   position: absolute;
-  left: 0;
-  right: 0;
+  left: -2%;
+  right: -2%;
   bottom: 0.06em;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-deep) 24%, var(--gold) 50%, var(--gold-deep) 76%, transparent);
+  background: linear-gradient(90deg, transparent, var(--gold-deep) 22%, var(--gold) 50%, var(--gold-deep) 78%, transparent);
   opacity: 0;
   transform: scaleX(0.6);
   transform-origin: center;
@@ -1458,6 +1676,8 @@ body {
 .question-yet {
   font-style: italic;
   display: inline-block;
+  font-size: 1.04em;
+  letter-spacing: -0.02em;
 }
 
 .question-underline {
@@ -1819,6 +2039,14 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .ink-trail { display: none; }
+  .bifolio { animation: none; opacity: 1; }
+  .bracket-flourish { animation: none; opacity: 0.78; transform: none; transition: opacity 0.3s ease; }
+  .bracket-curve { transition: none; stroke-dashoffset: 0; }
+  .bracket-pip { transition: opacity 0.3s ease; }
+  .bracket-pip-halo { transition: opacity 0.3s ease; transform: scale(1); }
+  .bracket-pip-faint { transition: opacity 0.3s ease; }
+  .scholastic-gloss { transition: opacity 0.3s ease; }
+  .scholastic-gloss-rule { transition: transform 0.3s ease; transform: scaleX(1); }
   .hero-svg { animation: none; transform: none; }
   .hero-svg-wrap { transform: none; transition: none; }
   .hero-dot-ring { animation: none; opacity: 0.18; transform: scale(1); }
@@ -1973,6 +2201,9 @@ body {
   .printer-seal { width: 24px; height: 24px; }
   .taper { width: clamp(56px, 24vw, 110px); height: clamp(120px, 24vh, 200px); top: 14%; filter: blur(6px); }
   .signature { width: 44px; }
+  .bracket-flourish { width: clamp(12px, 2vw, 18px); height: clamp(56px, 7vw, 88px); }
+  .hero-frame { gap: clamp(2px, 1vw, 6px); }
+  .bifolio-shadow { width: clamp(120px, 22vw, 220px); }
 }
 
 @media (max-width: 620px) {
@@ -2008,6 +2239,8 @@ body {
   .ink-trail-halo { width: 22px; height: 22px; margin-left: -11px; margin-top: -11px; }
   .taper { width: clamp(48px, 30vw, 90px); height: clamp(96px, 22vh, 170px); top: 12%; filter: blur(5px); }
   .signature { width: 40px; }
+  .bracket-flourish { display: none; }
+  .bifolio-shadow { display: none; }
 }
 
 /* tiny screens — keep only the corner clock and minimal marginalia */
