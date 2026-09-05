@@ -8,5 +8,6 @@
   "maxSnapshotBytes": 12000000,
   "maxArchiveBytes": 75000000,
   "projectName": "is-minimax-good-at-coding-yet",
+  "publicUrl": "https://is-minimax-good-at-coding-yet-snimmagadda1s-projects.vercel.app",
   "serviceName": "is-minimax-good-at-coding-yet"
 }

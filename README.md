@@ -2,7 +2,7 @@
 
 MiniMax M3 keeps redesigning a page that begins black, with the title **is Minimax M3 good at frontend yet?** A permanent React + TanStack Router viewer lets anyone scrub backward through the actual interactive pages.
 
-- Website: https://is-minimax-good-at-coding-yet.vercel.app
+- Website: https://is-minimax-good-at-coding-yet-snimmagadda1s-projects.vercel.app
 - Source and assets: https://github.com/funsaized/is-minimax-good-at-coding-yet
 - Fixed prompt: [runner/prompt.md](runner/prompt.md)
 

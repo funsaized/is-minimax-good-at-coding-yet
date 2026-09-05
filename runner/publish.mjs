@@ -77,7 +77,7 @@ export async function publishPending() {
   log(`Verifying ${pending.deploymentUrl}`)
   await verifyDeployment(pending.deploymentUrl, pending.id)
   await command(path.join(ROOT, 'node_modules/.bin/vercel'), ['promote', pending.deploymentUrl, '--yes', '--no-color'], { timeout: 240_000, echo: true })
-  const publicUrl = `https://${config.projectName}.vercel.app`
+  const publicUrl = config.publicUrl
   await verifyDeployment(publicUrl, pending.id)
   state = await readState()
   state.lastPublished = { id: pending.id, commit: pending.archiveCommit, url: publicUrl, deployedAt: new Date().toISOString() }
