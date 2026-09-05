@@ -68,7 +68,14 @@ body {
   to { opacity: 1; }
 }
 
-/* ----- Rim and codex edge ----- */
+/* ----- Rim (candlelit reading pool) -----
+   * Iteration 40 elevates the rim from a quiet vignette into the page's
+   * authoritative candlelit atmosphere. The candle at the top casts a
+   * warm pool of light that bathes the upper composition; the inner
+   * soft halo holds the chapter in a clearly lit zone; the periphery
+   * darkens into the room's shadow, and a faint desk shadow at the
+   * bottom grounds the folio on a reading surface. The result reads as
+   * "a chapter being read by candlelight," not "a page with a vignette." */
 
 .rim {
   position: fixed;
@@ -76,13 +83,32 @@ body {
   pointer-events: none;
   z-index: 0;
   background:
+    /* Warm pool — the candle illuminates the air above the composition */
     radial-gradient(
-      62% 38% at 50% 22%,
-      rgba(240, 212, 154, 0.06) 0%,
-      transparent 62%
+      62% 40% at 50% 18%,
+      rgba(240, 212, 154, 0.20) 0%,
+      rgba(217, 176, 116, 0.11) 28%,
+      rgba(176, 83, 58, 0.045) 50%,
+      transparent 70%
     ),
-    radial-gradient(ellipse 85% 70% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.5) 100%),
-    linear-gradient(180deg, rgba(38, 50, 64, 0.10) 0%, transparent 22%, transparent 78%, rgba(28, 14, 8, 0.20) 100%);
+    /* Inner glow — the chapter sits in a softly bright zone */
+    radial-gradient(
+      78% 62% at 50% 48%,
+      rgba(240, 212, 154, 0.055) 0%,
+      rgba(217, 176, 116, 0.025) 30%,
+      transparent 56%
+    ),
+    /* Periphery vignette — corners darken into the room beyond */
+    radial-gradient(ellipse 112% 92% at 50% 50%, transparent 28%, rgba(0, 0, 0, 0.68) 100%),
+    /* Vertical tone — cool above (out of candlelight), warmer through middle,
+       desk shadow at the bottom */
+    linear-gradient(180deg,
+      rgba(38, 50, 64, 0.16) 0%,
+      rgba(28, 22, 16, 0.06) 14%,
+      transparent 36%,
+      transparent 64%,
+      rgba(8, 4, 2, 0.52) 100%
+    );
 }
 
 .codex-edge {
@@ -303,6 +329,7 @@ body {
   display: grid;
   place-items: center;
   z-index: 1;
+  isolation: isolate;
 }
 
 /* ----- Watermark ----- */
@@ -400,20 +427,24 @@ body {
   50%      { transform: rotate(1.6deg); }
 }
 
-/* ----- Taper ----- */
+/* ----- Taper (candle's cone of light) -----
+   * Iteration 40 widens the taper into a proper cone of warm light that
+   * bathes the hero emblem and the upper chapter. The beam is wider and
+   * softer than before so the candle feels like the page's true light
+   * source — the chapter sits in its pool, not in a narrow shaft. */
 
 .taper {
   position: absolute;
-  top: 18%;
+  top: 12%;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(72px, 14vw, 180px);
-  height: clamp(180px, 30vh, 340px);
+  width: clamp(180px, 36vw, 420px);
+  height: clamp(320px, 56vh, 620px);
   color: var(--gold);
   pointer-events: none;
   z-index: 0;
   opacity: 0;
-  filter: blur(7px);
+  filter: blur(13px);
   mix-blend-mode: screen;
   animation: taperIn 2.6s ease 1.45s forwards;
   will-change: opacity, transform;
@@ -421,18 +452,18 @@ body {
 
 .taper-fill {
   transform-origin: 50% 0%;
-  transform: scaleY(0.92);
+  transform: scaleY(0.94);
   animation: taperBreath 11s ease-in-out 3.4s infinite;
   will-change: transform, opacity;
 }
 
 @keyframes taperIn {
-  to { opacity: 0.7; }
+  to { opacity: 0.78; }
 }
 
 @keyframes taperBreath {
-  0%, 100% { transform: scaleY(0.92); opacity: 1; }
-  50%      { transform: scaleY(1.0); opacity: 0.78; }
+  0%, 100% { transform: scaleY(0.94); opacity: 1; }
+  50%      { transform: scaleY(1.02); opacity: 0.82; }
 }
 
 /* ----- Candle flame (authored light source) -----
@@ -446,14 +477,14 @@ body {
   top: clamp(18px, 4.5vh, 54px);
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(34px, 5.2vw, 68px);
+  width: clamp(40px, 6vw, 78px);
   height: auto;
   pointer-events: none;
   z-index: 1;
   opacity: 0;
   filter:
-    drop-shadow(0 0 calc(10px + var(--flame-warmth, 0) * 22px)
-                rgba(240, 180, 110, calc(0.35 + var(--flame-warmth, 0) * 0.45)));
+    drop-shadow(0 0 calc(12px + var(--flame-warmth, 0) * 26px)
+                rgba(240, 180, 110, calc(0.4 + var(--flame-warmth, 0) * 0.5)));
   animation: flameIn 2.6s ease 1.25s forwards;
   will-change: opacity, filter;
   transition: filter 0.4s ease;
@@ -966,15 +997,19 @@ body {
   100% { color: var(--ink-soft); }
 }
 
-/* ----- Composition ----- */
+/* ----- Composition -----
+   * Iteration 40: the composition gains a small additional breathing
+   * room around the question block, so the chapter reads as a single
+   * open folio rather than a tightly packed column. */
 
 .composition {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(16px, 1.9vw, 24px);
+  gap: clamp(15px, 1.8vw, 22px);
   max-width: 100%;
+  padding: clamp(8px, 1.4vw, 18px) 0 clamp(28px, 3.6vw, 44px);
 }
 
 /* ----- Capitulum (running title above the chapter) ----- */
@@ -1408,7 +1443,7 @@ body {
 }
 
 .hero-svg {
-  width: clamp(160px, 23vw, 248px);
+  width: clamp(178px, 25vw, 272px);
   height: auto;
   display: block;
   overflow: visible;
@@ -1451,15 +1486,16 @@ body {
   animation:
     aurioleTraceIn 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) 1.6s forwards,
     aurioleTraceBreathe 11s ease-in-out 4s infinite;
+  filter: drop-shadow(0 0 4px rgba(217, 176, 116, 0.18));
 }
 
 @keyframes aurioleTraceIn {
-  to { opacity: 0.42; }
+  to { opacity: 0.55; }
 }
 
 @keyframes aurioleTraceBreathe {
-  0%, 100% { opacity: 0.42; transform: scale(1) rotate(0deg); }
-  50%      { opacity: 0.22; transform: scale(1.012) rotate(1deg); }
+  0%, 100% { opacity: 0.55; transform: scale(1) rotate(0deg); }
+  50%      { opacity: 0.32; transform: scale(1.018) rotate(1.4deg); }
 }
 
 @keyframes aurioleRadialIn {
@@ -1467,8 +1503,8 @@ body {
 }
 
 @keyframes aurioleRadialBreathe {
-  0%, 100% { opacity: 0.9; transform: scale(1); }
-  50%      { opacity: 0.6; transform: scale(1.025); }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.74; transform: scale(1.032); }
 }
 
 .auriole-pips circle {
@@ -1602,8 +1638,8 @@ body {
 }
 
 @keyframes bowlBloomBreathe {
-  0%, 100% { opacity: 0.92; transform: scale(1); }
-  50%      { opacity: 0.62; transform: scale(1.06); }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.74; transform: scale(1.08); }
 }
 
 .hero:hover .hero-bowl-bloom,
@@ -2208,7 +2244,9 @@ body {
   max-width: 22ch;
   margin: 0;
   text-wrap: balance;
-  text-shadow: 0 0 32px rgba(240, 232, 218, 0.08);
+  text-shadow:
+    0 0 32px rgba(240, 232, 218, 0.10),
+    0 0 64px rgba(217, 176, 116, 0.04);
   opacity: 0;
   transform: translateY(14px);
   transition:
@@ -2934,18 +2972,18 @@ body {
   .auriole-trace,
   .auriole-pips circle {
     animation: none;
-    opacity: var(--auriole-alpha, 0.32);
+    opacity: var(--auriole-alpha, 0.4);
     transform: scale(1);
   }
   .auriole-radial {
     animation: none;
-    opacity: 0.92;
+    opacity: 1;
     transform: scale(1);
   }
   .taper {
     animation: none;
-    opacity: 0.6;
-    filter: blur(7px);
+    opacity: 0.65;
+    filter: blur(13px);
   }
   .taper-fill { animation: none; transform: scaleY(1); }
   .reading-lantern { transition: opacity 0.18s ease; }
@@ -3032,8 +3070,8 @@ body {
   .question-underline { left: 6%; right: 6%; }
   .watermark { width: min(130vmin, 760px); height: min(130vmin, 760px); }
   .reply { font-size: clamp(13px, 1.6vw, 16px); }
-  .candle-flame { width: clamp(30px, 4.4vw, 50px); top: clamp(14px, 3vh, 32px); }
-  .taper { width: clamp(64px, 18vw, 130px); height: clamp(150px, 26vh, 260px); top: 16%; }
+  .candle-flame { width: clamp(34px, 5vw, 56px); top: clamp(14px, 3vh, 32px); }
+  .taper { width: clamp(140px, 30vw, 240px); height: clamp(240px, 42vh, 360px); top: 12%; filter: blur(11px); }
   .illuminated-star { width: 48px; height: 48px; }
   .question { font-size: clamp(28px, 5.4vw, 48px); }
   .question-yet { font-size: 1.12em; }
@@ -3048,13 +3086,13 @@ body {
   .frame { max-width: 100%; }
   .marg-body { display: none; }
   .marg { max-width: min(40ch, 38vw); }
-  .hero-svg { width: clamp(140px, 30vw, 200px); }
+  .hero-svg { width: clamp(150px, 28vw, 210px); }
   .question { font-size: clamp(24px, 5.6vw, 38px); max-width: 18ch; gap: 8px; }
   .question-yet { font-size: 1.1em; }
   .question-mark { font-size: 1.1em; }
   .guide-rule { width: 48px; height: 48px; }
-  .candle-flame { width: 32px; top: 18px; opacity: 0.85; }
-  .taper { width: clamp(56px, 24vw, 110px); height: clamp(120px, 24vh, 200px); top: 14%; filter: blur(6px); }
+  .candle-flame { width: clamp(32px, 5vw, 44px); top: 18px; opacity: 0.9; }
+  .taper { width: clamp(110px, 32vw, 200px); height: clamp(190px, 32vh, 300px); top: 12%; filter: blur(9px); }
   .reading-lantern {
     background: radial-gradient(
       240px 240px at var(--lantern-x, 50%) var(--lantern-y, 36%),
@@ -3105,14 +3143,14 @@ body {
   .marg-glyph { width: 15px; height: 15px; }
   .folio-mark { width: 48px; }
   .folio-mark-letter { font-size: 30px; }
-  .hero-svg { width: 150px; }
-  .candle-flame { width: 26px; top: 12px; opacity: 0.75; }
-  .taper { width: clamp(48px, 30vw, 90px); height: clamp(96px, 22vh, 170px); top: 12%; filter: blur(5px); }
+  .hero-svg { width: 160px; }
+  .candle-flame { width: 30px; top: 12px; opacity: 0.85; }
+  .taper { width: clamp(90px, 36vw, 150px); height: clamp(150px, 28vh, 220px); top: 10%; filter: blur(7px); }
   .question { font-size: 25px; max-width: 100%; line-height: 1.18; gap: 6px; }
   .question-yet { font-size: 1.08em; }
   .question-mark { font-size: 1.08em; }
   .question-lead-punctus { width: 7px; }
-  .composition { gap: 16px; }
+  .composition { gap: 14px; padding-bottom: clamp(20px, 5vw, 28px); }
   .rubric {
     letter-spacing: 0.18em;
     flex-wrap: wrap;
@@ -3124,7 +3162,6 @@ body {
   .reply { font-size: 13.5px; max-width: 26ch; }
   .reply-rule { width: 16px; margin-right: 8px; }
   .reply-end .fleuron { width: 56px; }
-  .taper { width: clamp(48px, 30vw, 90px); height: clamp(96px, 22vh, 170px); top: 12%; filter: blur(5px); }
   .signature { width: 40px; }
   .bifolio-shadow { display: none; }
   .capitulum { gap: 5px; font-size: 9px; letter-spacing: 0.02em; }
@@ -3250,7 +3287,7 @@ body {
   .marg-br { bottom: clamp(48px, 9vw, 64px); right: clamp(14px, 4vw, 24px); }
   .colophon { bottom: clamp(10px, 2.5vw, 18px); }
   .watermark { width: min(150vmin, 620px); height: min(150vmin, 620px); }
-  .taper { width: clamp(44px, 32vw, 80px); height: clamp(86px, 20vh, 140px); top: 10%; filter: blur(4px); opacity: 0.6; }
+  .taper { width: clamp(80px, 38vw, 130px); height: clamp(120px, 26vh, 180px); top: 10%; filter: blur(6px); opacity: 0.7; }
   .signature { width: 38px; }
   .sig-letter { font-size: 10px; }
   .marginal-rubric { display: none; }
@@ -5363,8 +5400,8 @@ body {
   opacity: 0;
   background-image: radial-gradient(
     circle at 50% 50%,
-    var(--gold) 0.55px,
-    transparent 0.55px
+    var(--gold) 0.6px,
+    transparent 0.6px
   );
   background-size: 3px 7px;
   background-repeat: repeat-y;
@@ -5422,22 +5459,22 @@ body {
   position: absolute;
   left: 50%;
   top: -2%;
-  width: 11px;
-  height: 56px;
+  width: 16px;
+  height: 76px;
   transform: translateX(-50%) translateY(0);
   background:
     radial-gradient(
       ellipse 60% 60% at 50% 50%,
-      rgba(240, 212, 154, 0.85) 0%,
-      rgba(217, 176, 116, 0.45) 28%,
-      rgba(217, 176, 116, 0.18) 56%,
+      rgba(240, 212, 154, 0.95) 0%,
+      rgba(217, 176, 116, 0.55) 26%,
+      rgba(217, 176, 116, 0.22) 54%,
       transparent 80%
     );
-  filter: blur(0.4px);
+  filter: blur(0.6px);
   opacity: 0;
   pointer-events: none;
   mix-blend-mode: screen;
-  animation: chapterSpinePulse 1.85s cubic-bezier(0.42, 0.04, 0.36, 1) forwards;
+  animation: chapterSpinePulse 1.95s cubic-bezier(0.42, 0.04, 0.36, 1) forwards;
   will-change: top, opacity;
 }
 
@@ -5446,21 +5483,22 @@ body {
     linear-gradient(
       to bottom,
       transparent 0%,
-      var(--gold-deep) 6%,
-      var(--gold) 22%,
-      var(--gold-deep) 50%,
-      var(--gold) 78%,
-      var(--gold-deep) 94%,
+      var(--gold-deep) 5%,
+      var(--gold-bright) 22%,
+      var(--gold) 50%,
+      var(--gold-bright) 78%,
+      var(--gold-deep) 95%,
       transparent 100%
     );
-  transition: background-image 0.6s ease;
-  opacity: 0.95;
+  transition: background-image 0.7s ease;
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(217, 176, 116, 0.22);
 }
 
 @keyframes chapterSpinePulse {
   0%   { top: -6%; opacity: 0; }
-  12%  { opacity: 0.95; }
-  85%  { opacity: 0.85; }
+  10%  { opacity: 1; }
+  85%  { opacity: 0.92; }
   100% { top: 102%; opacity: 0; }
 }
 

@@ -1,12 +1,17 @@
-# Chapter changelog
+# Chapter log
 
-## Iteration 39 — the opening folio
+## Iteration 40 — A reader's evening
 
-The chapter block now reads as a properly opened folio rather than a half-framed editorial card. The two missing vine corners (top-right and bottom-left) have been added to complete the four-corner ornament frame, and the hard 1px border around the question block has been retired in favor of a soft inner glow — the four vines do the framing work on their own. A small folio-opening mark (two gold rules flanking a vermilion four-pointed pip) crowns the chapter body just above the question, marking the formal opening of the section. A new word-hover ink highlight draws a soft gold underline beneath whichever question word the reader finds, vermilion for the illuminated incipit "i" so its opening voice stays distinct. Reduced-motion variants skip the entry choreography; mobile breakpoints shrink the folio opener so the chapter opening still reads cleanly on narrow screens.
+Candlelit pool of light now reads as the page's true atmosphere. The composition sits inside it.
 
-## Recent history
-- Iteration 38: The chapter steps back from its margins so the question itself can speak. Four marginal ornaments that competed without earning their place are softened.
-- Iteration 37: The chapter spine is now a living channel: a soft gold pulse travels from the top of the column down to the compass mark whenever the chapter is engaged.
-- Iteration 36: Added a quiet reader's marginal response and a matching hero breath to close the chapter's reading dialogue.
-- Iteration 35: A drift constellation, word hover glow, illuminated answer dropcap, and hero sparkle trace.
-- Iteration 34: A quiet chapter spine runs through the folio's centerline, with a four-pointed star closing the colophon.
+- Strengthened the rim into a clear candlelit pool: a warmer top where the candle lives, an inner soft glow holding the chapter in a lit zone, a deeper vignette at the periphery, and a desk shadow at the bottom that grounds the folio.
+- Widened and softened the taper into a proper cone of warm light — the candle bathes the hero and upper chapter rather than casting a narrow shaft.
+- Eased the taper gradient stops so the wider beam reads as diffused candlelight, not as a hard column.
+- Enlarged the hero emblem slightly and strengthened its auriole and bowl bloom so the question mark sits more confidently at the chapter's center.
+- Enlarged and brightened the candle itself; the page now has a more present authored light source.
+- Strengthened the chapter spine's pulse and sealed state — a slightly larger pulse halo travels down the column, and the sealed hairline resolves into a brighter, more confident stroke with a faint outer glow.
+- Refined the question text shadow so the title carries a touch more warmth from the candle above.
+- Added a small breathing room around the composition so the chapter reads as a single open folio rather than a tightly packed column.
+- Updated all responsive breakpoints to match the new atmosphere: the candlelit pool and wider taper translate cleanly to tablet and mobile, with the corner marginalia and ribbon gracefully retiring as before.
+
+No new manuscript elements added; no existing ornaments removed. The change is one of weight and presence — the candle becomes the page's true light source and everything it touches settles into a quieter, more confident evening of reading.

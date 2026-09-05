@@ -666,6 +666,9 @@ function DriftConstellation() {
 }
 
 // Taper — a faint candlelight beam falling onto the question mark from above.
+// Iteration 40 widens the beam into a softer, more diffused cone so the
+// candle feels like the page's true light source. Stops are eased so the
+// falloff reads as candlelight, not as a hard shaft.
 function Taper() {
   return (
     <svg
@@ -678,10 +681,10 @@ function Taper() {
       <defs>
         <linearGradient id="taper-grad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%"   stopColor="currentColor" stopOpacity="0" />
-          <stop offset="22%"  stopColor="currentColor" stopOpacity="0.06" />
-          <stop offset="58%"  stopColor="currentColor" stopOpacity="0.22" />
-          <stop offset="92%"  stopColor="currentColor" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0.42" />
+          <stop offset="18%"  stopColor="currentColor" stopOpacity="0.04" />
+          <stop offset="44%"  stopColor="currentColor" stopOpacity="0.13" />
+          <stop offset="72%"  stopColor="currentColor" stopOpacity="0.28" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0.22" />
         </linearGradient>
       </defs>
       <rect
