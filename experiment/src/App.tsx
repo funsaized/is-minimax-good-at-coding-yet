@@ -48,6 +48,10 @@ const ANSWER =
 const REPLY =
   'so read it once, then again — slower this time.'
 
+// Scholastic gloss in vermilion — a single rubricated marginal word
+// sitting just outside the hero, the medieval reader's "Qu." (quaeritur).
+const MARGINAL_RUBRIC = 'Qu.'
+
 const ANSWER_STAGGER_MS = 34
 const REPLY_STAGGER_MS = 26
 
@@ -139,7 +143,7 @@ function FolioMark() {
         textAnchor="middle"
         className="folio-mark-letter"
       >
-        V
+        xi
       </text>
       <path
         className="folio-mark-flourish"
@@ -445,7 +449,7 @@ function Taper() {
 }
 
 // Signature — a typeset gathering mark for the colophon, in the manner of an
-// old printer's signature on a folio. Replaces a plain "folio v" label.
+// old printer's signature on a folio. Replaces a plain "folio xi" label.
 function Signature() {
   return (
     <svg
@@ -455,11 +459,28 @@ function Signature() {
       focusable="false"
     >
       <line x1="2"  y1="9" x2="14" y2="9" className="sig-rule" />
-      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">v</text>
+      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">xi</text>
       <line x1="50" y1="9" x2="62" y2="9" className="sig-rule" />
       <circle cx="18" cy="9" r="0.7" className="sig-pip" />
       <circle cx="46" cy="9" r="0.7" className="sig-pip" />
     </svg>
+  )
+}
+
+// MarginalRubric — a small vermilion annotation sitting in the left margin
+// of the hero, connected by a hairline to the bracket. The scribal "Qu."
+// (quaeritur) — a tag hung next to a passage to flag it as a question.
+function MarginalRubric() {
+  return (
+    <span className="marginal-rubric" aria-hidden="true">
+      <span className="marginal-rubric-text">{MARGINAL_RUBRIC}</span>
+      <svg className="marginal-rubric-arc" viewBox="0 0 60 24" preserveAspectRatio="none">
+        <path
+          d="M 0 14 Q 28 8 56 14"
+          className="marginal-rubric-arc-line"
+        />
+      </svg>
+    </span>
   )
 }
 
@@ -469,6 +490,7 @@ function BifolioSpine() {
   return (
     <div className="bifolio" aria-hidden="true">
       <span className="bifolio-crease" />
+      <span className="bifolio-gilt" />
       <span className="bifolio-shadow bifolio-shadow-l" />
       <span className="bifolio-shadow bifolio-shadow-r" />
     </div>
@@ -1210,9 +1232,13 @@ export function App() {
             )}
           </p>
           <FolioMark />
-          <span className="rubric">an inquiry</span>
+          <span className="rubric">
+            <span className="rubric-pilcrow" aria-hidden="true">§</span>
+            <span className="rubric-text">an inquiry</span>
+          </span>
           <Fleuron />
           <div className="hero-frame">
+            <MarginalRubric />
             <BracketFlourish side="left" />
             <button
               type="button"
@@ -1323,7 +1349,9 @@ export function App() {
           <ScholasticGloss active={glossActive} reduced={reduced} />
           <div className="question-block">
             <h1 className="question">
-              is <em className="question-name">Minimax M3</em> good at frontend{' '}
+              <span className="question-rule" aria-hidden="true" />
+              <em className="question-lead">is</em>{' '}
+              <em className="question-name">Minimax M3</em> good at frontend{' '}
               <em className="question-yet">yet</em>?
             </h1>
             <span

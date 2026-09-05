@@ -1,11 +1,12 @@
-Folio x — opens the spread into a true bifolio, brackets the question mark, and answers its own marginalia.
+# Iteration 11 — folio xi
 
-A vertical crease and inward gutter shadow now ground the composition as an open
-codex rather than a single page. A pair of curled brackets with a small vermilion
-pip flank the question mark like the scoring around an illuminated initial. On
-hover or keyboard focus the page surfaces a cycling scholastic gloss — italicized
-commentary that fades gently in and out beneath the hero. The "yet" of the question
-is slightly more confident, the title typography tightened, and the embers of the
-canvas quieted (fewer particles, slower drift) so the page breathes rather than
-flickers. Vermilion appears only as a single rubric pip and a gloss rule.
-Build verified.
+Folio xi: gilded spine edge, pilcrow chapter heading, rubricated marginal Qu., tighter question typesetting.
+
+## Changes
+
+- Updated the folio signature mark and colophon signature from "V" to "xi" (lowercase italic, in the manner of an old printer's gathering mark).
+- Added a small vermilion pilcrow (§) before the "an inquiry" rubric, scaling in with a spring easing after the rubric settles.
+- Added a rubricated marginal annotation "Qu." in the left margin of the hero frame, connected to the left bracket by a vermilion hairline arc. Hidden under 480px.
+- Added a whisper-thin gilt line at the spine of the bifolio — gold leaf catching light along the page's center binding.
+- Strengthened the question's typesetting: enlarged to clamp(26px, 4vw, 50px) with tighter line-height; "is" set as an italic gold lead; a small gold rule draws in before it; "yet" gets a hairline underline with a vermilion pip at its center.
+- All new motion respects `prefers-reduced-motion: reduce`, snapping to final state without transitions.

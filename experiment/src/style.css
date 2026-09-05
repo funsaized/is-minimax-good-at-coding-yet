@@ -132,6 +132,30 @@ body {
   );
 }
 
+/* A whisper-thin gilt line at the spine — the page-edge gold leaf */
+.bifolio-gilt {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: translateX(0.5px);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(217, 176, 116, 0.0) 8%,
+    rgba(217, 176, 116, 0.42) 32%,
+    rgba(240, 212, 154, 0.66) 50%,
+    rgba(217, 176, 116, 0.42) 68%,
+    rgba(217, 176, 116, 0.0) 92%,
+    transparent 100%
+  );
+  filter: blur(0.3px);
+  opacity: 0;
+  animation: giltIn 3.6s ease 1.4s forwards;
+  mix-blend-mode: screen;
+}
+
 .bifolio-shadow {
   position: absolute;
   top: 0;
@@ -167,6 +191,10 @@ body {
 
 @keyframes bifolioIn {
   to { opacity: 1; }
+}
+
+@keyframes giltIn {
+  to { opacity: 0.85; }
 }
 
 /* Paper grain — a faint SVG turbulence overlay that hints at pressed paper */
@@ -970,11 +998,11 @@ body {
 
 .folio-mark-letter {
   font-family: var(--display);
-  font-size: 38px;
+  font-size: 32px;
   font-style: italic;
   font-weight: 500;
   fill: currentColor;
-  letter-spacing: 0;
+  letter-spacing: 0.02em;
 }
 
 .folio-mark-flourish {
@@ -1027,11 +1055,44 @@ body {
     opacity 0.9s ease 1.05s,
     transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.05s;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(8px, 1vw, 14px);
 }
 
 .composition.ready .rubric {
   opacity: 0.88;
   transform: translateY(0);
+}
+
+.rubric-pilcrow {
+  display: inline-block;
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: 0.92em;
+  letter-spacing: 0;
+  color: var(--vermilion);
+  opacity: 0;
+  transform: scale(0.7) translateY(-1px);
+  transform-origin: center;
+  transition:
+    opacity 0.6s ease 1.55s,
+    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1) 1.55s,
+    color 0.5s ease;
+}
+
+.composition.ready .rubric-pilcrow {
+  opacity: 0.92;
+  transform: scale(1) translateY(0);
+}
+
+.composition.ready .rubric:hover .rubric-pilcrow {
+  opacity: 1;
+  color: var(--vermilion);
+}
+
+.rubric-text {
+  display: inline-block;
 }
 
 /* ----- Fleuron (printer's ornament) ----- */
@@ -1273,6 +1334,76 @@ body {
   justify-content: center;
   gap: clamp(4px, 0.6vw, 10px);
   width: 100%;
+}
+
+/* Marginal rubric — a small vermilion "Qu." sitting outside the hero frame,
+   anchored to the left bracket by a hairline arc. */
+.marginal-rubric {
+  position: absolute;
+  right: calc(100% + clamp(4px, 0.7vw, 8px));
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, 0.5vw, 7px);
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 0.9s ease 2.3s,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 2.3s;
+}
+
+.composition.ready .marginal-rubric {
+  opacity: 1;
+  transform: translateY(-50%);
+}
+
+.marginal-rubric-arc {
+  width: clamp(28px, 3.6vw, 48px);
+  height: clamp(20px, 2.4vw, 30px);
+  overflow: visible;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.marginal-rubric-arc-line {
+  fill: none;
+  stroke: var(--vermilion);
+  stroke-width: 0.85;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 2.4s;
+}
+
+.composition.ready .marginal-rubric-arc-line {
+  stroke-dashoffset: 0;
+}
+
+.marginal-rubric-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.4vw, 17px);
+  letter-spacing: 0.02em;
+  color: var(--vermilion);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 0.7s ease 2.8s,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 2.8s;
+  text-shadow: 0 0 8px rgba(176, 83, 58, 0.18);
+}
+
+.composition.ready .marginal-rubric-text {
+  opacity: 0.85;
+  transform: translateX(0);
+}
+
+.hero-frame:hover .marginal-rubric-text,
+.hero-frame:focus-within .marginal-rubric-text {
+  opacity: 1;
 }
 
 .bracket-flourish {
@@ -1618,15 +1749,15 @@ body {
 .question {
   font-family: var(--display);
   font-weight: 400;
-  font-size: clamp(24px, 3.6vw, 46px);
-  line-height: 1.18;
-  letter-spacing: -0.008em;
+  font-size: clamp(26px, 4vw, 50px);
+  line-height: 1.16;
+  letter-spacing: -0.005em;
   text-align: center;
   color: var(--ink);
   max-width: 22ch;
   margin: 0;
   text-wrap: balance;
-  text-shadow: 0 0 24px rgba(240, 232, 218, 0.06);
+  text-shadow: 0 0 24px rgba(240, 232, 218, 0.08);
   opacity: 0;
   transform: translateY(12px);
   transition:
@@ -1637,6 +1768,33 @@ body {
 .composition.ready .question {
   opacity: 1;
   transform: translateY(0);
+}
+
+.question-rule {
+  display: inline-block;
+  vertical-align: 0.42em;
+  width: clamp(14px, 1.6vw, 24px);
+  height: 1px;
+  margin-right: clamp(10px, 1vw, 16px);
+  background: linear-gradient(90deg, transparent, var(--gold) 60%, var(--gold-bright));
+  opacity: 0;
+  transform: scaleX(0.2);
+  transform-origin: left center;
+  transition:
+    opacity 0.6s ease 1.85s,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 1.85s;
+}
+
+.composition.ready .question-rule {
+  opacity: 0.7;
+  transform: scaleX(1);
+}
+
+.question-lead {
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.01em;
+  position: relative;
 }
 
 .question-name,
@@ -1668,7 +1826,7 @@ body {
 }
 
 .composition.ready .question-name::after {
-  opacity: 0.55;
+  opacity: 0.6;
   transform: scaleX(1);
   transition-delay: 2.4s;
 }
@@ -1676,8 +1834,30 @@ body {
 .question-yet {
   font-style: italic;
   display: inline-block;
-  font-size: 1.04em;
+  font-size: 1.06em;
   letter-spacing: -0.02em;
+  color: var(--gold-bright);
+  position: relative;
+}
+
+.question-yet::after {
+  content: '';
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: -0.08em;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-deep) 30%, var(--vermilion) 50%, var(--gold-deep) 70%, transparent);
+  opacity: 0;
+  transform: scaleX(0.4);
+  transform-origin: center;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.composition.ready .question-yet::after {
+  opacity: 0.55;
+  transform: scaleX(1);
+  transition-delay: 2.55s;
 }
 
 .question-underline {
@@ -1925,10 +2105,10 @@ body {
 .sig-letter {
   font-family: var(--display);
   font-style: italic;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   fill: currentColor;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.02em;
 }
 
 .sig-rule {
@@ -2170,6 +2350,13 @@ body {
   .auriole-r2 { --auriole-alpha: 0.32; }
   .auriole-r1 { --auriole-alpha: 0.18; }
   .printer-note-caret { animation: none; opacity: 0.5; }
+  .rubric-pilcrow { transition: none; opacity: 1; transform: none; }
+  .question-rule { transition: none; opacity: 0.7; transform: scaleX(1); }
+  .question-yet::after { transition: none; opacity: 0.55; transform: scaleX(1); }
+  .marginal-rubric { transition: none; opacity: 1; transform: translate(0, -50%); }
+  .marginal-rubric-arc-line { transition: none; stroke-dashoffset: 0; }
+  .marginal-rubric-text { transition: none; opacity: 0.85; transform: none; }
+  .bifolio-gilt { animation: none; opacity: 0.7; }
   .auriole-pips circle:nth-child(1),
   .auriole-pips circle:nth-child(2) { opacity: 0.55; }
   .auriole-pips circle:nth-child(3),
@@ -2196,6 +2383,7 @@ body {
   .marg { max-width: min(40ch, 38vw); }
   .hero-svg { width: clamp(140px, 30vw, 200px); }
   .question { font-size: clamp(20px, 5.4vw, 32px); max-width: 18ch; }
+  .question-rule { width: 12px; margin-right: 8px; }
   .guide-rule { width: 48px; height: 48px; }
   .colophon-line { letter-spacing: 0.22em; }
   .printer-seal { width: 24px; height: 24px; }
@@ -2204,6 +2392,11 @@ body {
   .bracket-flourish { width: clamp(12px, 2vw, 18px); height: clamp(56px, 7vw, 88px); }
   .hero-frame { gap: clamp(2px, 1vw, 6px); }
   .bifolio-shadow { width: clamp(120px, 22vw, 220px); }
+  .marginal-rubric { right: calc(100% + 2px); gap: 3px; }
+  .marginal-rubric-arc { width: 24px; height: 22px; }
+  .marginal-rubric-text { font-size: 11px; }
+  .rubric-pilcrow { font-size: 0.9em; }
+  .rubric { letter-spacing: 0.32em; gap: 8px; }
 }
 
 @media (max-width: 620px) {
@@ -2252,5 +2445,6 @@ body {
   .watermark { width: min(150vmin, 620px); height: min(150vmin, 620px); }
   .taper { width: clamp(44px, 32vw, 80px); height: clamp(86px, 20vh, 140px); top: 10%; filter: blur(4px); opacity: 0.65; }
   .signature { width: 38px; }
-  .sig-letter { font-size: 11px; }
+  .sig-letter { font-size: 10px; }
+  .marginal-rubric { display: none; }
 }
