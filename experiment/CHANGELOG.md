@@ -1,15 +1,10 @@
-# Changelog
+## Iteration 3 — a folio turned into a composed chapter page
 
-## Iteration 2 — The folio
-
-A folio: golden question mark centered, marginalia in each corner, real-time clock at bottom-right.
-
-- Added four corner marginalia (folio / medium / craft / now) — italic serif body with mono labels, thin rules that draw outward on load, and a small gold dot before each label. Hover one and the others dim; focus shows a dashed gold outline.
-- Added a real local-time clock inside the bottom-right marginalia: small analog dial with rotating minute and second hands (gold second tick) plus a tabular digital readout below; the colon blinks each second.
-- Added a hand-set ruling line (gradient hairline with gold end-stop dots) between the question mark and the question.
-- Refined the hero question mark: layered a brighter `trace` stroke that shimmers along the path on click, and added a quietly breathing ring around the period dot.
-- Extended the canvas dust with a small cool-toned fraction (faint blue) for atmospheric depth; added a subtle vignette rim layer.
-- Clicking the question mark now triggers a layered sequence: dust pulse, hero nod, glowing stroke trace that briefly follows the curve, and a corner-to-corner wave that lights each marginalia in turn.
-- Boot choreography: dust fades in, marginalia rules draw outward in sequence with staggered delays, the question mark stroke draws, the dot settles in, the ruling appears, and the question fades in last.
-- Honors `prefers-reduced-motion`: animations disabled, clock ticks once per minute, everything appears immediately.
-- Responsive: marginalia bodies collapse on medium screens, only the corner clock remains on phones, with the hero and question scaled down.
+- Added a rubric chapter piece ("an inquiry") and a custom SVG fleuron above the question mark, so the hero is now a typeset chapter heading rather than a standalone figure.
+- Added an ink-spatter flourish on click: nine small gold drops radiate briefly from the question mark alongside the existing pulse, trace, and echo-wave.
+- Added hover guide rules: each marginalium draws a thin gold hairline with a small terminus dot toward the central composition, turning the four corners into proper anchored annotations.
+- Added a Latin folio signature ("quaeritur") flanked by hairline rules at the bottom-center of the frame.
+- Added a subtle codex-edge border with two small printer's corner ornaments, suggesting a bound page.
+- Refined reduced-motion behavior so guide rules, spatter, and entrance animations remain visible only as state, never as motion.
+- Widened the marginalia max-width so the longer bl body no longer wraps at tablet widths.
+- Preserved the title, hero path, marginalia labels, clock, dust canvas, and overall dark/gold palette from iteration 2.

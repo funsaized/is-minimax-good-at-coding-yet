@@ -1,7 +1,27 @@
-import { useEffect, useRef, useState, useCallback, type PointerEvent as ReactPointerEvent } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  type PointerEvent as ReactPointerEvent,
+  type CSSProperties,
+} from 'react'
 
-const HERO_PATH = 'M 65 115 C 65 5 175 5 175 115 C 175 172 120 156 120 205 L 120 250'
+const HERO_PATH =
+  'M 65 115 C 65 5 175 5 175 115 C 175 172 120 156 120 205 L 120 250'
 const HERO_DOT = { cx: 120, cy: 286, r: 17 }
+
+const SPATTER = [
+  { angle: 18, distance: 78, size: 2.2, delay: 0 },
+  { angle: 56, distance: 102, size: 1.5, delay: 42 },
+  { angle: 96, distance: 84, size: 1.9, delay: 76 },
+  { angle: 142, distance: 92, size: 1.6, delay: 22 },
+  { angle: 178, distance: 68, size: 2.4, delay: 58 },
+  { angle: 222, distance: 86, size: 1.7, delay: 12 },
+  { angle: 262, distance: 104, size: 2.0, delay: 50 },
+  { angle: 304, distance: 74, size: 1.6, delay: 34 },
+  { angle: 342, distance: 90, size: 2.1, delay: 86 },
+]
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
@@ -35,6 +55,49 @@ type Particle = {
 }
 
 type Corner = 'tl' | 'tr' | 'bl' | 'br'
+
+function Fleuron() {
+  return (
+    <svg className="fleuron" viewBox="0 0 160 14" aria-hidden="true">
+      <g className="fleuron-rule fleuron-rule-l">
+        <line x1="0" y1="7" x2="58" y2="7" pathLength="100" />
+      </g>
+      <g className="fleuron-rule fleuron-rule-r">
+        <line x1="102" y1="7" x2="160" y2="7" pathLength="100" />
+      </g>
+      <g className="fleuron-dots">
+        <circle cx="66" cy="7" r="1.1" />
+        <circle cx="94" cy="7" r="1.1" />
+      </g>
+      <g className="fleuron-ornament">
+        <circle cx="80" cy="7" r="3.2" className="fleuron-disc" />
+        <path
+          className="fleuron-bloom"
+          d="M 80 1.4 L 81.9 5 L 85.6 7 L 81.9 9 L 80 12.6 L 78.1 9 L 74.4 7 L 78.1 5 Z"
+        />
+        <circle cx="80" cy="7" r="0.9" className="fleuron-pip" />
+      </g>
+    </svg>
+  )
+}
+
+function GuideRule({ corner }: { corner: Corner }) {
+  return (
+    <span className={`guide-rule guide-rule-${corner}`} aria-hidden="true">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMinYMin meet">
+        <line
+          className="guide-rule-line"
+          x1="0"
+          y1="0"
+          x2="100"
+          y2="100"
+          pathLength="100"
+        />
+        <circle className="guide-rule-dot" cx="100" cy="100" r="2.6" />
+      </svg>
+    </span>
+  )
+}
 
 function Marg({
   corner,
@@ -75,6 +138,7 @@ function Marg({
       <span className="marg-label">{label}</span>
       {body !== undefined && <span className="marg-body">{body}</span>}
       {children}
+      <GuideRule corner={corner} />
     </aside>
   )
 }
@@ -86,6 +150,7 @@ export function App() {
   const [drawn, setDrawn] = useState(false)
   const [pulsing, setPulsing] = useState(false)
   const [tracing, setTracing] = useState(false)
+  const [spattering, setSpattering] = useState(false)
   const [active, setActive] = useState<string | null>(null)
   const [echoIdx, setEchoIdx] = useState(-1)
   const pulseRef = useRef(0)
@@ -132,7 +197,8 @@ export function App() {
       const arr: Particle[] = []
       for (let i = 0; i < count; i++) {
         const r = Math.random()
-        const tone: Particle['tone'] = r < 0.16 ? 'warm' : r < 0.26 ? 'cool' : 'pale'
+        const tone: Particle['tone'] =
+          r < 0.16 ? 'warm' : r < 0.26 ? 'cool' : 'pale'
         arr.push({
           x: Math.random() * w,
           y: Math.random() * h,
@@ -186,8 +252,10 @@ export function App() {
         }
         ctx.beginPath()
         ctx.arc(p.x, p.y, radius, 0, Math.PI * 2)
-        if (p.tone === 'warm') ctx.fillStyle = `rgba(217,176,116,${Math.min(1, alpha)})`
-        else if (p.tone === 'cool') ctx.fillStyle = `rgba(150,170,196,${Math.min(1, alpha * 0.7)})`
+        if (p.tone === 'warm')
+          ctx.fillStyle = `rgba(217,176,116,${Math.min(1, alpha)})`
+        else if (p.tone === 'cool')
+          ctx.fillStyle = `rgba(150,170,196,${Math.min(1, alpha * 0.7)})`
         else ctx.fillStyle = `rgba(240,232,218,${Math.min(1, alpha)})`
         ctx.fill()
       }
@@ -279,12 +347,19 @@ export function App() {
     return () => clearTimeout(t)
   }, [tracing])
 
+  useEffect(() => {
+    if (!spattering) return
+    const t = setTimeout(() => setSpattering(false), 1000)
+    return () => clearTimeout(t)
+  }, [spattering])
+
   const acknowledge = useCallback(() => {
     if (reduced) return
     pulseRef.current = 1
     echoRef.current = 1
     setPulsing(true)
     setTracing(true)
+    setSpattering(true)
     const order: Corner[] = ['tl', 'tr', 'bl', 'br']
     waveTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
     waveTimeoutsRef.current = []
@@ -321,6 +396,7 @@ export function App() {
     <main className="stage">
       <canvas ref={canvasRef} className="dust" aria-hidden="true" />
       <div className="rim" aria-hidden="true" />
+      <div className="codex-edge" aria-hidden="true" />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
         <Marg
@@ -381,6 +457,8 @@ export function App() {
         </Marg>
 
         <div className={`composition ${ready ? 'ready' : ''}`}>
+          <span className="rubric">an inquiry</span>
+          <Fleuron />
           <button
             type="button"
             className={`hero ${drawn ? 'drawn' : ''} ${pulsing ? 'pulse' : ''} ${tracing ? 'echo' : ''}`}
@@ -406,6 +484,24 @@ export function App() {
                 r={HERO_DOT.r}
               />
             </svg>
+            {spattering && (
+              <span className="hero-spatter" aria-hidden="true">
+                {SPATTER.map((s, i) => (
+                  <span
+                    key={i}
+                    className="spatter-dot"
+                    style={
+                      {
+                        '--angle': `${s.angle}deg`,
+                        '--distance': `${s.distance}px`,
+                        '--size': `${s.size}px`,
+                        '--delay': `${s.delay}ms`,
+                      } as CSSProperties
+                    }
+                  />
+                ))}
+              </span>
+            )}
           </button>
           <div className="ruling" aria-hidden="true">
             <span className="ruling-mark ruling-mark-l" />
@@ -413,6 +509,12 @@ export function App() {
             <span className="ruling-mark ruling-mark-r" />
           </div>
           <h1 className="question">is Minimax M3 good at frontend yet?</h1>
+        </div>
+
+        <div className="folio-mark" aria-hidden="true">
+          <span className="folio-mark-rule folio-mark-rule-l" />
+          <span className="folio-mark-text">quaeritur</span>
+          <span className="folio-mark-rule folio-mark-rule-r" />
         </div>
       </div>
     </main>
