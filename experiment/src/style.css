@@ -1711,8 +1711,9 @@ body {
 .marginal-rubric-text {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(13px, 1.4vw, 17px);
-  letter-spacing: 0.02em;
+  font-weight: 500;
+  font-size: clamp(14px, 1.55vw, 19px);
+  letter-spacing: 0.01em;
   color: var(--vermilion);
   white-space: nowrap;
   opacity: 0;
@@ -1720,7 +1721,7 @@ body {
   transition:
     opacity 0.7s ease 2.8s,
     transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 2.8s;
-  text-shadow: 0 0 8px rgba(176, 83, 58, 0.18);
+  text-shadow: 0 0 10px rgba(176, 83, 58, 0.22);
 }
 
 .composition.ready .marginal-rubric-text {
@@ -1852,6 +1853,97 @@ body {
   font-size: 0.92em;
   transform: translateY(-0.08em);
   animation: caretBlink 0.85s steps(2, end) infinite;
+}
+
+/* ----- Seal impression (vermilion ink stamp on acknowledge) -----
+   * A small "Mm" monogram pressed into the page, expanding outward
+   * with two concentric rings and a soft halo. Replaces the prior
+   * bee messenger — quieter, more deliberate, and tied visually to
+   * the wax seal that closes the colophon. */
+.seal-impression {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+}
+
+.seal-impression-halo {
+  position: absolute;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(176, 83, 58, 0.42) 0%,
+    rgba(176, 83, 58, 0.14) 38%,
+    transparent 68%);
+  opacity: 0;
+  transform: scale(0.45);
+  filter: blur(2.5px);
+}
+
+.seal-impression-ring {
+  position: absolute;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1.5px solid var(--vermilion-bright);
+  opacity: 0;
+  transform: scale(0.4);
+  box-shadow: 0 0 14px rgba(176, 83, 58, 0.25);
+}
+
+.seal-impression-mark {
+  position: absolute;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(13px, 1.5vw, 17px);
+  color: var(--vermilion-bright);
+  opacity: 0;
+  transform: scale(0.55);
+  text-shadow:
+    0 0 8px rgba(176, 83, 58, 0.45),
+    0 0 18px rgba(176, 83, 58, 0.22);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.seal-impression.is-stamping .seal-impression-halo {
+  animation: sealHalo 1.5s cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
+}
+
+.seal-impression.is-stamping .seal-impression-ring-1 {
+  animation: sealRing 1.5s cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
+}
+
+.seal-impression.is-stamping .seal-impression-ring-2 {
+  animation: sealRing 1.7s cubic-bezier(0.2, 0.6, 0.2, 1) 0.18s forwards;
+}
+
+.seal-impression.is-stamping .seal-impression-mark {
+  animation: sealMark 1.5s cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
+}
+
+@keyframes sealHalo {
+  0%   { opacity: 0;    transform: scale(0.4); }
+  22%  { opacity: 0.9; }
+  100% { opacity: 0;    transform: scale(2.4); }
+}
+
+@keyframes sealRing {
+  0%   { opacity: 0;    transform: scale(0.35); border-width: 2px; }
+  18%  { opacity: 0.9; }
+  100% { opacity: 0;    transform: scale(2.55); border-width: 0.6px; }
+}
+
+@keyframes sealMark {
+  0%   { opacity: 0;    transform: scale(0.55); }
+  28%  { opacity: 1;    transform: scale(1.04); }
+  72%  { opacity: 0.55; transform: scale(1.08); }
+  100% { opacity: 0;    transform: scale(1.12); }
 }
 
 /* ----- Maniculum (the reader's pointing hand) -----
@@ -2729,7 +2821,8 @@ body {
   .illuminated-star-core { opacity: 0.92; }
   .catchword { transition: none; opacity: 0.82; transform: none; }
 
-  .bee-parchment { transition: none; opacity: 1; transform: none; }
+  .chapter-stamp { transition: none; opacity: 0.78; transform: none; }
+  .seal-impression { display: none; }
   .answer-dropcap-wrap { transition: none; opacity: 1; transform: none; }
   .answer-dropcap-shadow { transition: none; opacity: 0.7; transform: scaleX(1); }
   .maniculum {
@@ -2867,18 +2960,87 @@ body {
 .question-block {
   position: relative;
   width: min(100%, 780px);
-  padding: clamp(22px, 4vw, 44px) clamp(18px, 5vw, 66px) clamp(26px, 4vw, 48px);
+  padding: clamp(28px, 4vw, 48px) clamp(22px, 5vw, 70px) clamp(28px, 4vw, 50px);
   border: 1px solid rgba(217, 176, 116, 0.22);
   background: linear-gradient(135deg, rgba(240, 232, 218, 0.055), rgba(176, 83, 58, 0.035));
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24), inset 0 1px rgba(255, 244, 220, 0.06);
 }
-.question-block::before, .question-block::after { content: ''; position: absolute; width: 11px; height: 11px; border-color: var(--vermilion); opacity: 0.75; }
-.question-block::before { top: -1px; left: -1px; border-top: 2px solid; border-left: 2px solid; }
-.question-block::after { right: -1px; bottom: -1px; border-right: 2px solid; border-bottom: 2px solid; }
+.question-block::before, .question-block::after {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--gold);
+  opacity: 0;
+  transition: opacity 0.9s ease 2.45s;
+}
+.question-block::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.question-block::after { right: -1px; bottom: -1px; border-left: 0; border-top: 0; }
+.composition.ready .question-block::before,
+.composition.ready .question-block::after { opacity: 0.7; }
 .question-kicker { display: block; margin-bottom: clamp(12px, 2vw, 22px); color: var(--vermilion-bright); font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; }
+
+/* ----- Chapter stamp (top-right corner of the editorial card) ----- */
+.chapter-stamp {
+  position: absolute;
+  top: clamp(8px, 1.3vw, 16px);
+  right: clamp(12px, 2vw, 24px);
+  display: block;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(-3px);
+  transition:
+    opacity 0.95s ease 2.6s,
+    transform 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) 2.6s;
+  pointer-events: none;
+}
+
+.composition.ready .chapter-stamp {
+  opacity: 0.78;
+  transform: translateY(0);
+}
+
+.chapter-stamp-svg {
+  width: clamp(38px, 4.4vw, 56px);
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.chapter-stamp-rule {
+  stroke: currentColor;
+  stroke-width: 0.55;
+  opacity: 0.55;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.chapter-stamp-pip {
+  fill: currentColor;
+  opacity: 0.7;
+}
+
+.chapter-stamp-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 11px;
+  fill: currentColor;
+  letter-spacing: 0.04em;
+}
+
+.chapter-stamp-label {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 5.4px;
+  fill: currentColor;
+  letter-spacing: 0.24em;
+  text-transform: lowercase;
+  opacity: 0.7;
+}
 .question-prompt { margin: clamp(18px, 2.4vw, 28px) 0 0; color: var(--ink-faint); font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-align: center; text-transform: uppercase; transition: color 0.35s ease; }
 .composition.is-pointing .question-prompt { color: var(--gold); }
-@media (max-width: 620px) { .question-block { padding-inline: 18px; } .question-kicker { letter-spacing: 0.14em; } .question-prompt { line-height: 1.6; } }
+@media (max-width: 620px) { .question-block { padding-inline: 18px; } .question-kicker { letter-spacing: 0.14em; } .question-prompt { line-height: 1.6; } .chapter-stamp { right: clamp(10px, 2.6vw, 18px); top: clamp(6px, 1.8vw, 12px); } .chapter-stamp-svg { width: 38px; } }
 @media (prefers-reduced-motion: reduce) { .question-prompt { transition: none; } }
 
 @media (max-width: 480px) {

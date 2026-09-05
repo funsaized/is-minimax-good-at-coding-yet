@@ -569,57 +569,6 @@ function Signature() {
   )
 }
 
-// Bee — the printer's bee, Aldine mark.
-function Bee() {
-  return (
-    <svg className="bee-glyph" viewBox="0 0 32 24" aria-hidden="true" focusable="false">
-      <g className="bee-body-group">
-        <ellipse className="bee-wing bee-wing-l" cx="11" cy="6" rx="5.6" ry="3.7" />
-        <ellipse className="bee-wing bee-wing-r" cx="21" cy="6" rx="5.6" ry="3.7" />
-        <ellipse className="bee-body" cx="16" cy="14.2" rx="7.6" ry="4.6" />
-        <path className="bee-stripe" d="M 11.4 11.6 Q 11.8 14.2 11.4 16.9" />
-        <path className="bee-stripe" d="M 16 11.2 Q 16 14.2 16 17.2" />
-        <path className="bee-stripe" d="M 20.6 11.6 Q 20.2 14.2 20.6 16.9" />
-        <circle className="bee-head" cx="23.7" cy="13.7" r="2.4" />
-        <circle className="bee-eye" cx="24.5" cy="13.2" r="0.45" />
-        <path className="bee-ant" d="M 24.1 11.7 Q 25 10 25.8 8.6" />
-        <path className="bee-ant" d="M 25.1 12.1 Q 26.4 10.9 27.4 9.5" />
-      </g>
-    </svg>
-  )
-}
-
-// Parchment — a tiny rolled vellum the bee carries when it arrives at
-// the margin. Reads as the bee bearing a written reply from the chapter
-// to the corner — a courier, not a flourish.
-function Parchment({ arrived }: { arrived: boolean }) {
-  return (
-    <svg
-      className={`parchment ${arrived ? 'is-arrived' : ''}`}
-      viewBox="0 0 24 18"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        className="parchment-roll"
-        d="M 2 4 Q 12 1.4 22 4 L 22 14 Q 12 16.6 2 14 Z"
-      />
-      <path
-        className="parchment-line"
-        d="M 6 8 Q 12 6.6 18 8"
-      />
-      <path
-        className="parchment-line"
-        d="M 6 10.5 Q 12 9.4 18 10.5"
-      />
-      <circle cx="3.4" cy="4" r="0.6" className="parchment-cap" />
-      <circle cx="20.6" cy="4" r="0.6" className="parchment-cap" />
-      <circle cx="3.4" cy="14" r="0.6" className="parchment-cap" />
-      <circle cx="20.6" cy="14" r="0.6" className="parchment-cap" />
-    </svg>
-  )
-}
-
 // Maniculum — the medieval reader's pointing hand that emerges from the
 // right margin to mark the question's climax word ("yet?"). Always present
 // as a quiet marginal mark; brightens and leans in when the reader engages
@@ -754,43 +703,6 @@ function BifolioSpine() {
   )
 }
 
-// BracketFlourish — a delicate curled bracket that flanks the hero like
-// the scoring around an illuminated initial.
-function BracketFlourish({ side }: { side: 'left' | 'right' }) {
-  const d =
-    side === 'left'
-      ? 'M 24 6 Q 6 6 6 26 L 6 74 Q 6 94 24 94'
-      : 'M 4 6 Q 22 6 22 26 L 22 74 Q 22 94 4 94'
-  return (
-    <svg
-      className={`bracket-flourish bracket-flourish-${side}`}
-      viewBox="0 0 28 100"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path className="bracket-curve" d={d} pathLength={100} />
-      <circle
-        cx={side === 'left' ? 12 : 16}
-        cy="50"
-        r="1.4"
-        className="bracket-pip"
-      />
-      <circle
-        cx={side === 'left' ? 12 : 16}
-        cy="50"
-        r="3.2"
-        className="bracket-pip-halo"
-      />
-      <circle
-        cx={side === 'left' ? 3 : 25}
-        cy="50"
-        r="0.8"
-        className="bracket-pip-faint"
-      />
-    </svg>
-  )
-}
-
 // Bookmark ribbon — a slim vermilion fabric ribbon hanging from the top
 // of the page like a marker left in a bound volume.
 function Ribbon() {
@@ -841,6 +753,47 @@ function AnswerDropCap({ visible: show }: { visible: boolean }) {
     <span className={`answer-dropcap-wrap ${show ? 'is-on' : ''}`} aria-hidden="true">
       <span className="answer-dropcap">{ANSWER_DROPCAP}</span>
       <span className="answer-dropcap-shadow" />
+    </span>
+  )
+}
+
+// ChapterStamp — a small typeset gathering mark placed in the top-right
+// corner of the editorial card. Replaces the standalone folio mark
+// above the rubric, tucking the chapter reference into the desk frame
+// where it reads as a marginal stamp rather than a centered emblem.
+function ChapterStamp() {
+  return (
+    <span className="chapter-stamp" aria-hidden="true">
+      <svg viewBox="0 0 64 30" className="chapter-stamp-svg">
+        <line x1="4" y1="10" x2="22" y2="10" className="chapter-stamp-rule" />
+        <circle cx="4"  cy="10" r="0.85" className="chapter-stamp-pip" />
+        <circle cx="22" cy="10" r="0.85" className="chapter-stamp-pip" />
+        <text x="32" y="14.5" textAnchor="middle" className="chapter-stamp-num">xviii</text>
+        <line x1="42" y1="10" x2="60" y2="10" className="chapter-stamp-rule" />
+        <circle cx="42" cy="10" r="0.85" className="chapter-stamp-pip" />
+        <circle cx="60" cy="10" r="0.85" className="chapter-stamp-pip" />
+        <text x="32" y="25" textAnchor="middle" className="chapter-stamp-label">fol · mss</text>
+      </svg>
+    </span>
+  )
+}
+
+// SealImpression — a quiet vermilion ink stamp that blooms outward
+// from the hero when the reader acknowledges the question. Replaces
+// the prior bee messenger with a more deliberate gesture: a small
+// "Mm" monogram pressed into the page, expanding and fading. Ties
+// visually to the wax seal that closes the colophon — the question
+// is answered by the same mark that closes the chapter.
+function SealImpression({ sealing }: { sealing: boolean }) {
+  return (
+    <span
+      className={`seal-impression${sealing ? ' is-stamping' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="seal-impression-halo" />
+      <span className="seal-impression-ring seal-impression-ring-1" />
+      <span className="seal-impression-ring seal-impression-ring-2" />
+      <span className="seal-impression-mark">Mm</span>
     </span>
   )
 }
@@ -936,28 +889,7 @@ export function App() {
   const [replyOn, setReplyOn] = useState(false)
   const [replyChars, setReplyChars] = useState(0)
   const [pointing, setPointing] = useState(false)
-  const [bee, setBee] = useState<{
-    visible: boolean
-    flying: boolean
-    arrived: boolean
-    startX: number
-    startY: number
-    tx: string
-    ty: string
-    rot: string
-    corner: Corner
-  }>({
-    visible: false,
-    flying: false,
-    arrived: false,
-    startX: 0,
-    startY: 0,
-    tx: '0px',
-    ty: '0px',
-    rot: '0deg',
-    corner: 'br',
-  })
-  const beeTimeoutsRef = useRef<number[]>([])
+  const [sealing, setSealing] = useState(false)
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
@@ -1265,80 +1197,14 @@ export function App() {
     return () => clearTimeout(t)
   }, [spattering])
 
-  const launchBee = useCallback(() => {
-    if (reduced) return
-    const hero = heroRef.current
-    if (!hero) return
-    const rect = hero.getBoundingClientRect()
-    const startX = rect.left + rect.width / 2
-    const startY = rect.top + rect.height / 2
-    const vw = window.innerWidth
-    const vh = window.innerHeight
-    const corners: Corner[] = ['tl', 'tr', 'bl', 'br']
-    const isSmall = vw < 520
-    const padX = isSmall ? 70 : 150
-    const padY = isSmall ? 70 : 95
-    const baseTarget = (corner: Corner) => ({
-      x:
-        corner === 'tl'
-          ? padX
-          : corner === 'tr'
-            ? vw - padX
-            : corner === 'bl'
-              ? padX
-              : vw - padX,
-      y:
-        corner === 'tl'
-          ? padY
-          : corner === 'tr'
-            ? padY
-            : corner === 'bl'
-              ? vh - padY
-              : vh - padY,
-    })
-    const corner = corners[Math.floor(Math.random() * corners.length)]
-    const target = baseTarget(corner)
-    beeTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
-    beeTimeoutsRef.current = []
-    setBee({
-      visible: false,
-      flying: false,
-      arrived: false,
-      startX,
-      startY,
-      tx: '0px',
-      ty: '0px',
-      rot: '0deg',
-      corner,
-    })
-    const showDelay = 720
-    const flightMs = 2200
-    const t1 = window.setTimeout(() => {
-      setBee((b) => ({
-        ...b,
-        visible: true,
-        flying: false,
-        tx: '0px',
-        ty: '0px',
-        rot: '0deg',
-      }))
-      const t2 = window.setTimeout(() => {
-        setBee((b) => ({
-          ...b,
-          flying: true,
-          tx: `${target.x - startX}px`,
-          ty: `${target.y - startY}px`,
-          rot: `${(Math.random() - 0.5) * 26}deg`,
-        }))
-        const t3 = window.setTimeout(() => {
-          setBee((b) => ({ ...b, flying: false, arrived: true }))
-        }, flightMs)
-        beeTimeoutsRef.current.push(t3)
-      }, 60)
-      beeTimeoutsRef.current.push(t2)
-    }, showDelay)
-    beeTimeoutsRef.current.push(t1)
-  }, [reduced])
+  useEffect(() => {
+    if (!sealing) return
+    const t = window.setTimeout(
+      () => setSealing(false),
+      reduced ? 900 : 1600,
+    )
+    return () => window.clearTimeout(t)
+  }, [sealing, reduced])
 
   const acknowledge = useCallback(() => {
     pulseRef.current = reduced ? 0 : 1
@@ -1348,6 +1214,7 @@ export function App() {
     setSpattering(true)
     setNoteNonce((n) => n + 1)
     setPointing(true)
+    setSealing(true)
     const order: Corner[] = ['tl', 'br']
     waveTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
     waveTimeoutsRef.current = []
@@ -1384,8 +1251,7 @@ export function App() {
       reduced ? 2600 : 5200,
     )
     waveTimeoutsRef.current.push(ansOff)
-    launchBee()
-  }, [reduced, launchBee])
+  }, [reduced])
 
   const onHeroEnter = useCallback((e: ReactPointerEvent) => {
     pointerRef.current.over = true
@@ -1461,7 +1327,6 @@ export function App() {
 
         <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''}`}>
           <Capitulum />
-          <FolioMark />
           <span className="rubric">
             <span className="rubric-pilcrow" aria-hidden="true">§</span>
             <span className="rubric-text">an inquiry</span>
@@ -1471,7 +1336,6 @@ export function App() {
           <Fleuron />
           <div className="hero-frame">
             <MarginalRubric />
-            <BracketFlourish side="left" />
             <button
               type="button"
             ref={heroRef}
@@ -1569,10 +1433,11 @@ export function App() {
                 ))}
               </span>
             )}
+            <SealImpression sealing={sealing} />
           </button>
-            <BracketFlourish side="right" />
           </div>
            <div className="question-block">
+             <ChapterStamp />
              <span className="question-kicker">a question in public</span>
              <h1 className="question">
               <span className="question-line">
@@ -1633,34 +1498,6 @@ export function App() {
           <Catchword />
         </div>
       </div>
-
-      {bee.visible && (
-        <div
-          className={`bee-flight ${bee.flying ? 'is-flying' : ''} ${bee.arrived ? 'is-arrived' : ''} bee-corner-${bee.corner}`}
-          style={{
-            left: `${bee.startX}px`,
-            top: `${bee.startY}px`,
-            transform: `translate(${bee.tx}, ${bee.ty}) rotate(${bee.rot})`,
-          }}
-          aria-hidden="true"
-        >
-          {bee.flying && (
-            <span className="bee-echo">
-              <span className="bee-echo-dot" style={{ '--i': 0 } as CSSProperties} />
-              <span className="bee-echo-dot" style={{ '--i': 1 } as CSSProperties} />
-              <span className="bee-echo-dot" style={{ '--i': 2 } as CSSProperties} />
-              <span className="bee-echo-dot" style={{ '--i': 3 } as CSSProperties} />
-              <span className="bee-echo-dot" style={{ '--i': 4 } as CSSProperties} />
-            </span>
-          )}
-          <span className="bee-hover">
-            <Bee />
-          </span>
-          <span className="bee-parchment">
-            <Parchment arrived={bee.arrived} />
-          </span>
-        </div>
-      )}
     </main>
   )
 }
