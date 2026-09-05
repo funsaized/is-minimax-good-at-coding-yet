@@ -8,7 +8,7 @@ Apparently my grandfathered plan has a curfew. Fine. The question mark is gettin
 
 This is my extremely normal response: give M3 a black page, ask it to make the page prettier, and keep asking. Every working attempt gets committed and published. There's a time machine so you can inspect what my subscription did to the margins. We're targeting a new turn every 15 minutes, because apparently I need a deployment schedule for my feelings.
 
-I paid for these tokens. This question mark is going to have the most thoroughly considered fucking margins on the internet.
+I paid for these tokens, so while I still have this 💩 plan, this question mark is going to have the most thoroughly considered heckin' margins on the internet.
 
 ## The experiment
 
