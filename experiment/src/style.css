@@ -6140,3 +6140,221 @@ body {
     display: none;
   }
 }
+
+/* ----- Iteration 36: a lectoris nota and the hero quietus -----
+ *
+ * Once the footnote has finished writing itself, the reader's quiet
+ * response lands in the chapter: a small italic Latin gloss
+ * ("intellexi" — "I have understood") beneath the explicit mark,
+ * with a drawn quill flourish above the word. It closes the
+ * chapter's Latin dialogue: quaeritur (the page asks) →
+ * respondetur (the catchword answers) → relege (the footnote
+ * invites another reading) → intellexi (the reader accepts) →
+ * legi (the colophon confirms) → explicit (the chapter closes).
+ *
+ * At the same moment, the hero emblem above takes a single
+ * inward breath — its bowl brightens for a beat and softly
+ * resolves, like the question has been received. The breath
+ * holds for just under two seconds before the page returns to
+ * its quiet baseline, ready to be re-engaged from a settled
+ * state.
+ */
+
+.intellexi-nota {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(3px, 0.3vw, 5px);
+  margin: clamp(10px, 1.4vw, 16px) auto 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10px, 1vw, 12px);
+  line-height: 1.3;
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  color: var(--vermilion);
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition:
+    opacity 1.0s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 1.0s cubic-bezier(0.2, 0.7, 0.2, 1);
+  text-shadow: 0 0 9px rgba(176, 83, 58, 0.22);
+  position: relative;
+}
+
+.intellexi-nota.is-on {
+  opacity: 0.9;
+  transform: translateY(0);
+}
+
+.intellexi-nota-flourish {
+  display: block;
+  width: clamp(34px, 4vw, 48px);
+  height: clamp(7px, 0.7vw, 9px);
+  overflow: visible;
+  opacity: 0.85;
+}
+
+.intellexi-nota-flourish-curve {
+  fill: none;
+  stroke: var(--vermilion-soft);
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition:
+    stroke-dashoffset 1.05s cubic-bezier(0.55, 0.04, 0.32, 1) 0.15s;
+}
+
+.intellexi-nota.is-on .intellexi-nota-flourish-curve {
+  stroke-dashoffset: 0;
+}
+
+.intellexi-nota-flourish-pip {
+  fill: var(--vermilion-soft);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.3);
+  transition:
+    opacity 0.45s ease 1.15s,
+    transform 0.6s cubic-bezier(0.2, 1.2, 0.4, 1) 1.15s;
+}
+
+.intellexi-nota.is-on .intellexi-nota-flourish-pip {
+  opacity: 0.85;
+  transform: scale(1);
+}
+
+.intellexi-nota-text {
+  font-style: italic;
+  letter-spacing: 0.22em;
+  white-space: nowrap;
+  position: relative;
+  padding: 0 0.2em;
+}
+
+.intellexi-nota-strike {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(-3px, -0.3vw, -1px);
+  width: 102%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(176, 83, 58, 0.55) 24%,
+    var(--vermilion) 50%,
+    rgba(176, 83, 58, 0.55) 76%,
+    transparent 100%
+  );
+  transform: translateX(-50%) scaleX(0.2);
+  transform-origin: 50% 50%;
+  opacity: 0;
+  transition:
+    opacity 0.65s ease 0.55s,
+    transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s;
+  pointer-events: none;
+}
+
+.intellexi-nota.is-on .intellexi-nota-strike {
+  opacity: 0.7;
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* The hero "quietus" — a single inward breath when the reader has
+   understood the chapter. A subtle filter glow on the svg-wrap and
+   an additional overlay ring (added via pseudo-element on the hero
+   itself) brighten together for a beat, then resolve.
+
+   Only `filter` is animated on the svg-wrap so it does not disturb
+   the gaze-driven transform or the existing bowl/auriole animations.
+   The breath is layered on top — additive, never disruptive. */
+
+.hero.is-quietus::after {
+  content: '';
+  position: absolute;
+  inset: -16% -10%;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(
+    52% 56% at 50% 60%,
+    rgba(240, 212, 154, 0.22) 0%,
+    rgba(217, 176, 116, 0.10) 36%,
+    transparent 72%
+  );
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: heroQuietusHalo 1.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.hero.is-quietus .hero-svg-wrap {
+  animation: heroQuietusFilter 1.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: filter;
+}
+
+@keyframes heroQuietusFilter {
+  0%   { filter: drop-shadow(0 0 0 rgba(240, 212, 154, 0)); }
+  20%  { filter: drop-shadow(0 0 22px rgba(240, 212, 154, 0.42)); }
+  60%  { filter: drop-shadow(0 0 10px rgba(240, 212, 154, 0.18)); }
+  100% { filter: drop-shadow(0 0 0 rgba(240, 212, 154, 0)); }
+}
+
+@keyframes heroQuietusHalo {
+  0%   { opacity: 0;    transform: scale(0.86); }
+  22%  { opacity: 0.92; transform: scale(1.02); }
+  60%  { opacity: 0.42; transform: scale(1.04); }
+  100% { opacity: 0;    transform: scale(1.06); }
+}
+
+/* Reduced motion: the nota appears in place, the hero stays at rest. */
+@media (prefers-reduced-motion: reduce) {
+  .intellexi-nota {
+    transition: opacity 0.2s ease;
+    transform: none;
+  }
+  .intellexi-nota.is-on {
+    transform: none;
+  }
+  .intellexi-nota-flourish-curve {
+    transition: none;
+    stroke-dashoffset: 0;
+  }
+  .intellexi-nota-flourish-pip {
+    transition: none;
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  .intellexi-nota-strike {
+    transition: none;
+    opacity: 0.7;
+    transform: translateX(-50%) scaleX(1);
+  }
+  .hero.is-quietus::after,
+  .hero.is-quietus .hero-svg-wrap {
+    animation: none;
+  }
+  .hero.is-quietus::after { opacity: 0; }
+}
+
+/* Mobile sizing for the new details */
+@media (max-width: 880px) {
+  .intellexi-nota {
+    letter-spacing: 0.16em;
+    font-size: clamp(9.5px, 1.3vw, 11.5px);
+  }
+  .intellexi-nota-flourish { width: clamp(30px, 5vw, 42px); }
+}
+
+@media (max-width: 520px) {
+  .intellexi-nota { letter-spacing: 0.14em; }
+  .intellexi-nota-flourish { width: 28px; }
+}
+
+@media (max-width: 380px) {
+  .intellexi-nota-strike {
+    opacity: 0.55;
+  }
+}

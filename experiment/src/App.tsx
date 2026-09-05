@@ -1363,6 +1363,42 @@ function Explicit() {
   )
 }
 
+// IntellexiNota — the reader's quiet response to the chapter, written
+// into the page once the footnote has settled. The note is "intellexi"
+// — "I have understood" — completing the chapter's Latin dialogue:
+// quaeritur (the page asks) → respondetur (the catchword answers) →
+// relege (the footnote invites another reading) → intellexi (the reader
+// accepts) → legi (the colophon confirms) → explicit (the chapter
+// closes). A small drawn quill flourish above the word, like the reader
+// set down a single hairline stroke before writing their gloss.
+function IntellexiNota({ visible }: { visible: boolean }) {
+  return (
+    <p
+      className={`intellexi-nota ${visible ? 'is-on' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="intellexi-nota-flourish"
+        viewBox="0 0 32 7"
+        focusable="false"
+      >
+        <path
+          className="intellexi-nota-flourish-curve"
+          d="M 2 4 Q 9 1 16 3.5 Q 23 6 30 2"
+        />
+        <circle
+          className="intellexi-nota-flourish-pip"
+          cx="30"
+          cy="2"
+          r="0.55"
+        />
+      </svg>
+      <em className="intellexi-nota-text">intellexi</em>
+      <span className="intellexi-nota-strike" aria-hidden="true" />
+    </p>
+  )
+}
+
 // VineCorner — small hand-drawn vine ornament that replaces the plain
 // gold L brackets on the question block. A leaf curls in from the
 // corner toward the text, like a printer's flourish painted over
@@ -1705,6 +1741,8 @@ export function App() {
   const [footnoteChars, setFootnoteChars] = useState(0)
   const [pointing, setPointing] = useState(false)
   const [sealing, setSealing] = useState(false)
+  const [intellexiOn, setIntellexiOn] = useState(false)
+  const [quietus, setQuietus] = useState(false)
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
@@ -1802,7 +1840,25 @@ export function App() {
       () => setFootnoteChars((c) => Math.min(total, c + 1)),
       FOOTNOTE_STAGGER_MS,
     )
-    return () => window.clearTimeout(id)
+    return () => clearTimeout(id)
+  }, [footnoteOn, footnoteChars, reduced])
+
+  // The reader's quiet response — "intellexi" — appears after the
+  // footnote has fully settled. It waits a beat so the chapter's own
+  // conclusion lands before the reader signs off, like closing a book
+  // and writing a single word in the endpaper. The hero receives a
+  // matching inward breath at the same moment, so the emblem above
+  // and the gloss below settle into the same quiet.
+  useEffect(() => {
+    if (!footnoteOn || footnoteChars < FOOTNOTE_TEXT.length) return
+    const t = window.setTimeout(
+      () => {
+        setIntellexiOn(true)
+        setQuietus(true)
+      },
+      reduced ? 80 : 720,
+    )
+    return () => window.clearTimeout(t)
   }, [footnoteOn, footnoteChars, reduced])
 
   useEffect(() => {
@@ -2052,6 +2108,19 @@ export function App() {
     return () => window.clearTimeout(t)
   }, [sealing, reduced])
 
+  // The hero "quietus" — a single inward breath when the reader has
+  // understood the chapter. Once the breath has settled, the flag is
+  // cleared so the page returns to its idle state and the chapter
+  // can be re-engaged from a quiet baseline.
+  useEffect(() => {
+    if (!quietus) return
+    const t = window.setTimeout(
+      () => setQuietus(false),
+      reduced ? 1100 : 1900,
+    )
+    return () => window.clearTimeout(t)
+  }, [quietus, reduced])
+
   const acknowledge = useCallback(() => {
     pulseRef.current = reduced ? 0 : 1
     echoRef.current = reduced ? 0 : 1
@@ -2090,6 +2159,8 @@ export function App() {
     setFootnoteChars(0)
     setReplyOn(false)
     setFootnoteOn(false)
+    setIntellexiOn(false)
+    setQuietus(false)
     setAnswerOn(true)
     const ansOff = window.setTimeout(
       () => {
@@ -2193,7 +2264,7 @@ export function App() {
           ariaLabel="now: this instant, the only one that ever arrives"
         />
 
-        <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''}`}>
+        <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''} ${quietus ? 'is-quietus' : ''}`}>
           <ChapterSpine />
           <Capitulum />
           <span className="rubric">
@@ -2210,7 +2281,7 @@ export function App() {
             <button
               type="button"
             ref={heroRef}
-            className={`hero ${drawn ? 'drawn' : ''} ${pulsing ? 'pulse' : ''} ${tracing ? 'echo' : ''}`}
+            className={`hero ${drawn ? 'drawn' : ''} ${pulsing ? 'pulse' : ''} ${tracing ? 'echo' : ''} ${quietus ? 'is-quietus' : ''}`}
             onClick={acknowledge}
             onPointerEnter={(e) => {
               setPointing(true)
@@ -2401,6 +2472,7 @@ export function App() {
               done={footnoteDone}
             />
             <Explicit />
+            <IntellexiNota visible={intellexiOn} />
           </div>
         </div>
 
