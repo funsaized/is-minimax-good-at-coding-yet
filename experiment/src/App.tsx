@@ -546,6 +546,105 @@ function Watermark() {
   )
 }
 
+// DriftConstellation — a small arc of seven asterisks that drift slowly
+// across the upper region of the composition, like the heavens the
+// speculum charts. Each star twinkles on its own phase and translates
+// with parallax — the reader's pointer subtly shifts the constellation
+// in the opposite direction, so the celestial field feels suspended in
+// depth rather than painted onto the page. The constellation appears
+// after the speculum has settled, so the two instruments feel like a
+// single quiet observatory laid out at the start of a reading session.
+type DriftStar = {
+  x: number   // percentage across (0-100)
+  y: number   // pixels from top of arc
+  r: number   // radius of the asterisk in px
+  phase: number
+  drift: number
+  twinkle: number
+  color: 'gold' | 'vermilion' | 'pale'
+}
+
+const DRIFT_STARS: DriftStar[] = [
+  { x:  8, y: 10, r: 1.8, phase: 0.0,  drift: 0.42, twinkle: 5.6, color: 'gold' },
+  { x: 21, y:  4, r: 1.2, phase: 1.4,  drift: 0.28, twinkle: 6.8, color: 'pale' },
+  { x: 38, y:  9, r: 2.1, phase: 2.6,  drift: 0.36, twinkle: 7.4, color: 'gold' },
+  { x: 51, y:  2, r: 1.4, phase: 0.7,  drift: 0.22, twinkle: 5.2, color: 'gold' },
+  { x: 64, y:  7, r: 1.9, phase: 3.2,  drift: 0.34, twinkle: 6.4, color: 'vermilion' },
+  { x: 78, y:  3, r: 1.3, phase: 1.9,  drift: 0.26, twinkle: 7.0, color: 'pale' },
+  { x: 92, y: 11, r: 2.0, phase: 4.1,  drift: 0.40, twinkle: 5.8, color: 'gold' },
+]
+
+function DriftConstellation() {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let raf = 0
+    let px = 0
+    let py = 0
+    let tx = 0
+    let ty = 0
+    let cx = 0
+    let cy = 0
+    const onMove = (e: PointerEvent) => {
+      const w = window.innerWidth || 1
+      const h = window.innerHeight || 1
+      tx = (e.clientX - w / 2) / (w / 2)
+      ty = (e.clientY - h / 2) / (h / 2)
+    }
+    const tick = () => {
+      raf = requestAnimationFrame(tick)
+      px += (tx - px) * 0.05
+      py += (ty - py) * 0.05
+      cx += (-px - cx) * 0.18
+      cy += (-py - cy) * 0.18
+      el.style.setProperty('--const-x', cx.toFixed(3))
+      el.style.setProperty('--const-y', cy.toFixed(3))
+    }
+    if (reduced) {
+      el.style.setProperty('--const-x', '0')
+      el.style.setProperty('--const-y', '0')
+    } else {
+      window.addEventListener('pointermove', onMove, { passive: true })
+      raf = requestAnimationFrame(tick)
+    }
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+  return (
+    <div className="drift-constellation" aria-hidden="true" ref={ref}>
+      {DRIFT_STARS.map((s, i) => (
+        <span
+          key={i}
+          className={`drift-star drift-star-${s.color}`}
+          style={
+            {
+              '--star-x': `${s.x}%`,
+              '--star-y': `${s.y}px`,
+              '--star-r': `${s.r}px`,
+              '--star-phase': `${s.phase}s`,
+              '--star-drift': `${s.drift}s`,
+              '--star-twinkle': `${s.twinkle}s`,
+              '--star-i': i,
+            } as CSSProperties
+          }
+        />
+      ))}
+      <svg className="drift-arc" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
+        <path
+          className="drift-arc-curve"
+          d="M 4 24 Q 100 -4 196 24"
+        />
+        <circle cx="4"   cy="24" r="0.7" className="drift-arc-end" />
+        <circle cx="196" cy="24" r="0.7" className="drift-arc-end" />
+      </svg>
+    </div>
+  )
+}
+
 // Taper — a faint candlelight beam falling onto the question mark from above.
 function Taper() {
   return (
@@ -1053,11 +1152,24 @@ function Ribbon() {
 
 // AnswerDropCap — a small painted "I" that opens the answer line, set
 // in vermilion italic as a manuscript illuminated initial. Pulls the eye
-// into the chapter's reply as the climax lands.
+// into the chapter's reply as the climax lands. Iteration 35 elevates
+// it to a true illuminated initial: a taller, more present vermilion
+// capital, with gold-leaf flourishes above and below and a tiny four-
+// pointed star nested inside its body — the answer opens like the
+// opening of a sacramentary, with the same celestial mark that closes
+// the colophon now answering the chapter's question.
 function AnswerDropCap({ visible: show }: { visible: boolean }) {
   return (
     <span className={`answer-dropcap-wrap ${show ? 'is-on' : ''}`} aria-hidden="true">
+      <span className="answer-dropcap-gold" />
       <span className="answer-dropcap">{ANSWER_DROPCAP}</span>
+      <span className="answer-dropcap-star" aria-hidden="true">
+        <svg viewBox="0 0 12 12" focusable="false">
+          <path
+            d="M 6 1.2 L 6.86 4.86 L 10.6 5.2 L 7.4 7.2 L 8.4 10.8 L 6 8.6 L 3.6 10.8 L 4.6 7.2 L 1.4 5.2 L 5.14 4.86 Z"
+          />
+        </svg>
+      </span>
       <span className="answer-dropcap-shadow" />
     </span>
   )
@@ -1323,6 +1435,47 @@ function QuestionFlourish() {
       <path className="question-flourish-curve" d="M 3 6 Q 14 2 24 5 Q 30 7 34 4" />
       <circle cx="32" cy="3.5" r="1.1" className="question-flourish-drop" />
     </svg>
+  )
+}
+
+// HeroSparkle — a small cluster of ink-dust motes that drift upward
+// from the bowl of the hero question mark when the reader approaches.
+// Reads as the candle's light catching the dust of the manuscript —
+// three vermilion and three gold motes, each on a slightly different
+// cadence, so the cluster never feels like a loop. Respects reduced
+// motion: the cluster is hidden entirely when motion is reduced, so
+// the hover state stays calm and the existing hero choreography is
+// never doubled.
+const HERO_SPARKLES: Array<{
+  x: number; y: number; dx: number; dy: number; delay: number
+}> = [
+  { x: 50, y: 18, dx:  6, dy: -22, delay:   0 },
+  { x: 38, y: 22, dx: -8, dy: -18, delay: 220 },
+  { x: 62, y: 24, dx: 10, dy: -14, delay: 480 },
+  { x: 46, y: 28, dx: -4, dy: -26, delay: 720 },
+  { x: 56, y: 30, dx:  4, dy: -28, delay: 980 },
+  { x: 42, y: 34, dx: -10, dy: -20, delay:1240 },
+]
+
+function HeroSparkle() {
+  return (
+    <span className="hero-sparkle" aria-hidden="true">
+      {HERO_SPARKLES.map((s, i) => (
+        <span
+          key={i}
+          className="hero-sparkle-dot"
+          style={
+            {
+              '--sp-x': `${s.x}%`,
+              '--sp-y': `${s.y}%`,
+              '--sp-dx': `${s.dx}px`,
+              '--sp-dy': `${s.dy}px`,
+              '--sp-delay': `${s.delay}ms`,
+            } as CSSProperties
+          }
+        />
+      ))}
+    </span>
   )
 }
 
@@ -1995,6 +2148,7 @@ export function App() {
       <ReadingLantern />
       <BifolioSpine />
       <Watermark />
+      <DriftConstellation />
       <Ribbon />
       <PressedLeaf />
       <ThumbPrint />
@@ -2168,10 +2322,11 @@ export function App() {
               </span>
             )}
             <SealImpression sealing={sealing} />
+            <HeroSparkle />
             <span className="hero-question-link" aria-hidden="true" />
           </button>
           </div>
-           <div className="question-block">
+             <div className="question-block">
              <ChapterStamp />
              <VineCorner position="tl" />
              <VineCorner position="br" />
@@ -2181,23 +2336,23 @@ export function App() {
                 <span className="question-lead-punctus" aria-hidden="true">
                   <span className="question-lead-punctus-dot" />
                 </span>
-                <em className="incipit-i">i</em>
-                <em className="question-lead">s</em>
+                <em className="incipit-i question-word">i</em>
+                <em className="question-lead question-word">s</em>
               <span className="question-space"> </span>
-                <em className="question-name">Minimax&nbsp;M3</em>
+                <em className="question-name question-word">Minimax&nbsp;M3</em>
                 <span className="question-name-pause" aria-hidden="true">
                   <span className="question-name-pause-dot" />
                 </span>
                 <span className="question-verb-wrap">
-                  <span className="question-verb"> good at frontend </span>
+                  <span className="question-verb question-word"> good at frontend </span>
                   <PredicateRule />
                 </span>
                 <span className="question-yet-pause" aria-hidden="true">
                   <span className="question-yet-pause-dot" />
                 </span>
-                <em className="question-yet">yet</em>
+                <em className="question-yet question-word">yet</em>
                 <span className="question-mark-group">
-                  <span className="question-mark">?</span>
+                  <span className="question-mark question-word">?</span>
                   <QuestionFlourish />
                 </span>
               </span>

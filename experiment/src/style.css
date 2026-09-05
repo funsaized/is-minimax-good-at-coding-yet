@@ -5819,3 +5819,324 @@ body {
     margin-bottom: -3px;
   }
 }
+
+/* ----- Iteration 35: drift constellation, word glow, illuminated answer -----
+ *
+ * Three small extensions bind the existing manuscript to a sense of
+ * reading light. Above the composition, a quiet arc of seven asterisks
+ * drifts across the upper area like the celestial field the speculum
+ * charts — each star twinkles on its own phase, and the cluster is
+ * nudged gently against the reader's pointer so the field feels
+ * suspended in depth rather than painted onto the page. Each word of
+ * the central question receives a soft gold halo when it is the
+ * reader's focus, so the candle's light follows the eye. And the
+ * answer's dropcap "I" becomes a true illuminated initial: vermilion
+ * stem with gold-leaf flourishes and a tiny four-pointed star nested
+ * in its body, so the answer opens with the same celestial mark that
+ * closes the colophon.
+ */
+
+/* ----- Drift constellation (upper celestial arc) ----- */
+
+.drift-constellation {
+  position: fixed;
+  top: clamp(28px, 5.5vh, 64px);
+  left: 0;
+  right: 0;
+  height: clamp(68px, 11vh, 124px);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  animation: driftConstellationIn 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.2s forwards;
+  transform: translate3d(
+      calc(var(--const-x, 0) * 6px),
+      calc(var(--const-y, 0) * 4px),
+      0
+    );
+  will-change: transform, opacity;
+}
+
+@keyframes driftConstellationIn {
+  to { opacity: 1; }
+}
+
+.drift-star {
+  position: absolute;
+  left: var(--star-x, 50%);
+  top: var(--star-y, 0px);
+  width: calc(var(--star-r, 1.6px) * 6);
+  height: calc(var(--star-r, 1.6px) * 6);
+  margin-left: calc(var(--star-r, 1.6px) * -3);
+  margin-top: calc(var(--star-r, 1.6px) * -3);
+  display: block;
+  opacity: 0;
+  animation:
+    driftStarIn 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) calc(2.3s + var(--star-i, 0) * 0.12s) forwards,
+    driftStarTwinkle var(--star-twinkle, 6s) ease-in-out calc(var(--star-phase, 0s) + 4s) infinite;
+  will-change: opacity, transform;
+}
+
+.drift-star::before,
+.drift-star::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: currentColor;
+  box-shadow: 0 0 calc(var(--star-r, 1.6px) * 4) currentColor;
+  border-radius: 0;
+  opacity: 0.92;
+}
+
+.drift-star::before {
+  width: calc(var(--star-r, 1.6px) * 6);
+  height: 1px;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.drift-star::after {
+  width: 1px;
+  height: calc(var(--star-r, 1.6px) * 6);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.drift-star-gold { color: var(--gold); }
+.drift-star-vermilion { color: var(--vermilion); }
+.drift-star-pale { color: var(--gold-bright); }
+
+@keyframes driftStarIn {
+  0%   { opacity: 0; transform: scale(0.4) translateY(2px); }
+  100% { opacity: 0.85; transform: scale(1) translateY(0); }
+}
+
+@keyframes driftStarTwinkle {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  38%      { opacity: 0.32; transform: scale(0.86); }
+  62%      { opacity: 1;    transform: scale(1.08); }
+}
+
+/* The faint arc that threads through the stars — a hairline curve the
+   reader almost reads as the constellation's own horizon. */
+.drift-arc {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  opacity: 0;
+  animation: driftArcIn 2.4s ease 2.6s forwards;
+  pointer-events: none;
+}
+
+.drift-arc-curve {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 0.45;
+  stroke-dasharray: 1.2 5.4;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: driftArcDraw 2.6s ease 2.6s forwards;
+}
+
+.drift-arc-end {
+  fill: var(--gold);
+  opacity: 0;
+  animation: driftArcEnd 1.2s ease 3.6s forwards;
+}
+
+@keyframes driftArcIn {
+  to { opacity: 1; }
+}
+
+@keyframes driftArcDraw {
+  to { opacity: 0.45; }
+}
+
+@keyframes driftArcEnd {
+  to { opacity: 0.65; }
+}
+
+/* ----- Word hover glow on the question ----- */
+
+.question-word {
+  display: inline-block;
+  border-radius: 2px;
+  padding: 0 0.04em;
+  margin: 0 -0.04em;
+  transition:
+    color 0.55s ease,
+    text-shadow 0.55s ease,
+    filter 0.55s ease;
+}
+
+.question:hover .question-word:not(.incipit-i):hover,
+.question:hover .question-word:not(.incipit-i):focus-visible {
+  color: var(--gold-bright);
+  text-shadow:
+    0 0 12px rgba(240, 212, 154, 0.42),
+    0 0 28px rgba(217, 176, 116, 0.18);
+  filter: drop-shadow(0 0 6px rgba(240, 212, 154, 0.28));
+}
+
+/* The vermilion incipit-i glows with its own colour — preserves the
+   chapter's opening vermilion voice and its scale-and-rotate identity
+   when the reader finds it. */
+.question:hover .incipit-i.question-word:hover,
+.question:hover .incipit-i.question-word:focus-visible {
+  color: var(--vermilion-bright);
+  text-shadow:
+    0 0 12px rgba(198, 104, 74, 0.42),
+    0 0 28px rgba(176, 83, 58, 0.18);
+  filter: drop-shadow(0 0 6px rgba(198, 104, 74, 0.28));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question-word { transition: color 0.2s ease, text-shadow 0.2s ease, filter 0.2s ease; }
+}
+
+/* ----- Illuminated answer dropcap ----- */
+
+.answer-dropcap-gold {
+  position: absolute;
+  inset: -8% -22% -8% -22%;
+  background:
+    radial-gradient(
+      56% 60% at 50% 50%,
+      rgba(240, 212, 154, 0.10) 0%,
+      transparent 72%
+    );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.7s ease 0.15s;
+}
+
+.answer-dropcap-wrap.is-on .answer-dropcap-gold {
+  opacity: 1;
+}
+
+.answer-dropcap-star {
+  position: absolute;
+  top: 4%;
+  right: -28%;
+  width: 9px;
+  height: 9px;
+  display: block;
+  color: var(--gold);
+  opacity: 0;
+  transform: scale(0.2) rotate(-26deg);
+  transform-origin: center;
+  transition:
+    opacity 0.6s ease 0.4s,
+    transform 0.8s cubic-bezier(0.2, 1.2, 0.4, 1) 0.4s;
+  pointer-events: none;
+}
+
+.answer-dropcap-wrap.is-on .answer-dropcap-star {
+  opacity: 0.95;
+  transform: scale(1) rotate(0deg);
+  animation: answerStarTwinkle 6.4s ease-in-out 1.5s infinite;
+}
+
+.answer-dropcap-star svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.answer-dropcap-star svg path {
+  fill: currentColor;
+  filter: drop-shadow(0 0 4px rgba(240, 212, 154, 0.5));
+}
+
+@keyframes answerStarTwinkle {
+  0%, 100% { opacity: 0.95; transform: scale(1) rotate(0deg); }
+  40%      { opacity: 0.55; transform: scale(0.82) rotate(-4deg); }
+  62%      { opacity: 1;    transform: scale(1.05) rotate(2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-dropcap-gold { transition: none; }
+  .answer-dropcap-star {
+    transition: none;
+    opacity: 0.95;
+    transform: scale(1) rotate(0deg);
+    animation: none;
+  }
+}
+
+/* ----- Hero sparkle trace (hover-only, like ink-dust catching the light) ----- */
+
+.hero-sparkle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.hero:hover .hero-sparkle,
+.hero:focus-visible .hero-sparkle {
+  opacity: 1;
+}
+
+.hero-sparkle-dot {
+  position: absolute;
+  left: var(--sp-x, 50%);
+  top: var(--sp-y, 50%);
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  border-radius: 50%;
+  background: var(--gold-bright);
+  box-shadow: 0 0 7px var(--gold), 0 0 14px rgba(217, 176, 116, 0.5);
+  opacity: 0;
+  animation: heroSparkleDrift 2.6s ease-in var(--sp-delay, 0s) infinite;
+}
+
+.hero-sparkle-dot:nth-child(2n) {
+  background: var(--vermilion-bright);
+  box-shadow: 0 0 7px var(--vermilion), 0 0 14px rgba(176, 83, 58, 0.4);
+}
+
+@keyframes heroSparkleDrift {
+  0%   { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  18%  { opacity: 0.85; transform: translate(0, 0) scale(1); }
+  60%  { opacity: 0.4; transform: translate(var(--sp-dx, 6px), var(--sp-dy, -8px)) scale(0.7); }
+  100% { opacity: 0; transform: translate(calc(var(--sp-dx, 6px) * 1.6), calc(var(--sp-dy, -8px) * 1.6)) scale(0.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-sparkle { transition: none; }
+  .hero-sparkle-dot { animation: none; opacity: 0; }
+}
+
+/* ----- Responsive: hide constellation on small screens ----- */
+
+@media (max-width: 760px) {
+  .drift-constellation {
+    height: clamp(46px, 7vh, 70px);
+    top: clamp(20px, 4vh, 36px);
+  }
+  .drift-star {
+    transform: scale(0.78);
+  }
+}
+
+@media (max-width: 520px) {
+  .drift-constellation {
+    display: none;
+  }
+  .answer-dropcap-star {
+    width: 7px;
+    height: 7px;
+    right: -36%;
+    top: -2%;
+  }
+}
+
+@media (max-width: 380px) {
+  .answer-dropcap-star {
+    display: none;
+  }
+}
