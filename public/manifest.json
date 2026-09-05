@@ -417,6 +417,25 @@
         "outputTokens": 2391,
         "steps": 18
       }
+    },
+    {
+      "id": 22,
+      "parentId": 21,
+      "createdAt": "2026-09-05T18:19:39.363Z",
+      "summary": "A quieter seal — the hero stands alone; a vermilion \"Mm\" stamp blooms from it on acknowledge.",
+      "path": "/iterations/000022/index.html",
+      "screenshot": "/iterations/000022/desktop.png",
+      "mobileScreenshot": "/iterations/000022/mobile.png",
+      "sourceCommit": "9f0884c6d99f668fa68d00379bf6465a0ea17014",
+      "model": "minimax-coding-plan/MiniMax-M3",
+      "durationSeconds": 733,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": {
+        "estimatedCostUsd": 0,
+        "inputTokens": 151009,
+        "outputTokens": 63981,
+        "steps": 79
+      }
     }
   ]
 }
