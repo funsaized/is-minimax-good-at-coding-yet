@@ -1,0 +1,19 @@
+{
+  "id": 26,
+  "parentId": 25,
+  "createdAt": "2026-09-05T19:27:54.842Z",
+  "summary": "A reader's thumb-mark now rests in the bottom-right margin, mirroring the pressed leaf — together they frame the folio's",
+  "path": "/iterations/000026/index.html",
+  "screenshot": "/iterations/000026/desktop.png",
+  "mobileScreenshot": "/iterations/000026/mobile.png",
+  "sourceCommit": "8bfcf94e9eb8ea5547f5061e2a4dba4549c92caf",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 298,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 87479,
+    "outputTokens": 27320,
+    "steps": 36
+  }
+}
