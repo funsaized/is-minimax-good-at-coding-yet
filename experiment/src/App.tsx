@@ -426,7 +426,9 @@ function PaperGrain() {
 // devices in steady state, since there is no cursor to follow once a
 // finger lifts. Falls back to the candle's position via CSS defaults
 // when idle, so the page still feels lit even before the reader
-// arrives.
+// arrives. A second, softer halo trails the cursor with eased lag,
+// so the reader's passage leaves a brief trace of warm light on the
+// parchment — the page quietly records the path of attention.
 function ReadingLantern() {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -435,6 +437,11 @@ function ReadingLantern() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let raf = 0
     let hideTimer = 0
+    let trailRaf = 0
+    let trailX = window.innerWidth / 2
+    let trailY = window.innerHeight / 2
+    let currX = trailX
+    let currY = trailY
     const show = () => {
       if (!el.classList.contains('is-on')) el.classList.add('is-on')
       if (hideTimer) {
@@ -449,9 +456,35 @@ function ReadingLantern() {
         hideTimer = 0
       }, 1400)
     }
+    const applyTrail = () => {
+      trailRaf = 0
+      if (ref.current) {
+        ref.current.style.setProperty('--lantern-x-prev', `${trailX}px`)
+        ref.current.style.setProperty('--lantern-y-prev', `${trailY}px`)
+      }
+    }
+    const tickTrail = () => {
+      trailX += (currX - trailX) * 0.16
+      trailY += (currY - trailY) * 0.16
+      applyTrail()
+      if (Math.abs(currX - trailX) > 0.4 || Math.abs(currY - trailY) > 0.4) {
+        trailRaf = requestAnimationFrame(tickTrail)
+      } else {
+        trailRaf = 0
+      }
+    }
     const setVars = (x: number, y: number) => {
+      currX = x
+      currY = y
       el.style.setProperty('--lantern-x', `${x}px`)
       el.style.setProperty('--lantern-y', `${y}px`)
+      if (reduced) {
+        trailX = x
+        trailY = y
+        applyTrail()
+        return
+      }
+      if (!trailRaf) trailRaf = requestAnimationFrame(tickTrail)
     }
     const onMove = (e: PointerEvent) => {
       if (reduced) {
@@ -460,8 +493,7 @@ function ReadingLantern() {
         raf = requestAnimationFrame(() => {
           raf = 0
           if (!ref.current) return
-          ref.current.style.setProperty('--lantern-x', `${e.clientX}px`)
-          ref.current.style.setProperty('--lantern-y', `${e.clientY}px`)
+          setVars(e.clientX, e.clientY)
         })
       }
       show()
@@ -475,6 +507,7 @@ function ReadingLantern() {
       window.removeEventListener('pointerleave', onLeave)
       if (raf) cancelAnimationFrame(raf)
       if (hideTimer) window.clearTimeout(hideTimer)
+      if (trailRaf) cancelAnimationFrame(trailRaf)
     }
   }, [])
   return <div ref={ref} className="reading-lantern" aria-hidden="true" />
@@ -975,6 +1008,94 @@ function ThumbPrint() {
         <em className="thumb-print-text">manus</em>
       </span>
     </aside>
+  )
+}
+
+// ScribeInkpot — a small scribe's inkpot and resting quill drawn into
+// the left margin of the question, mirroring the maniculum on the right.
+// The reader's hand points; the writer's tools rest. The quill lifts
+// slightly when the reader approaches the hero, and a single vermilion
+// drop falls from the nib — the page's quiet record of being written.
+// Pairs with the maniculum so the question is framed on both sides:
+// a scholastic gloss and a reader's hand on the right, a scribe's
+// inkpot and quill on the left.
+function ScribeInkpot({ active }: { active: boolean }) {
+  return (
+    <span
+      className={`scribe-inkpot ${active ? 'is-active' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="scribe-inkpot-svg-wrap">
+        <svg viewBox="0 0 56 38" focusable="false">
+          {/* Inkpot body — a small round vessel, gold with a darker shadow */}
+          <ellipse className="inkpot-body-shadow" cx="22" cy="30" rx="14" ry="3" />
+          <path className="inkpot-body" d="M 8 26 Q 8 34 22 34 Q 36 34 36 26 L 36 22 L 8 22 Z" />
+          {/* Inkpot lip */}
+          <path className="inkpot-lip" d="M 12 22 L 32 22 L 30 19 L 14 19 Z" />
+          {/* Ink surface — a dark pool at the neck */}
+          <ellipse className="inkpot-surface" cx="22" cy="20.6" rx="8" ry="1.7" />
+          {/* Subtle highlight on the pot */}
+          <ellipse className="inkpot-highlight" cx="16" cy="27" rx="3" ry="0.7" />
+
+          {/* Quill resting diagonally across the pot */}
+          <g className="inkpot-quill">
+            {/* Feather plume */}
+            <path
+              className="inkpot-quill-plume"
+              d="M 4 8 Q 11 4 19 7 Q 22 9.5 19 11.5 Q 11 14 4 8 Z"
+            />
+            {/* Feather barbs */}
+            <path className="inkpot-quill-barb" d="M 7 6.6 Q 10 7 13 8.2" />
+            <path className="inkpot-quill-barb" d="M 6 8.6 Q 11 9.2 16 10" />
+            <path className="inkpot-quill-barb" d="M 6 10.4 Q 11 10.6 16 10.6" />
+            <path className="inkpot-quill-barb" d="M 7 12 Q 11 11.8 14 11.2" />
+            {/* Shaft */}
+            <line
+              className="inkpot-quill-shaft"
+              x1="18.5"
+              y1="9.2"
+              x2="44"
+              y2="22"
+            />
+            {/* Nib — vermilion wedge */}
+            <path
+              className="inkpot-quill-nib"
+              d="M 43 20.8 L 49 23 L 44 24 Z"
+            />
+            {/* Slit down the nib */}
+            <line
+              className="inkpot-quill-slit"
+              x1="44"
+              y1="22.4"
+              x2="48"
+              y2="23.1"
+            />
+          </g>
+
+          {/* Ink drop falling from the nib */}
+          <circle className="inkpot-drip" cx="48" cy="28" r="0.95" />
+          <circle className="inkpot-drip inkpot-drip-trail" cx="48" cy="32" r="0.6" />
+        </svg>
+      </span>
+    </span>
+  )
+}
+
+// Explicit — the chapter's formal closing mark, set beneath the footnote
+// once the gloss has finished. A single gold rule, the Latin "explicit"
+// set in serif italic between flanking gold-deep middots, and a small
+// vermilion pilcrow to mark the chapter's true end. Reads as the final
+// line a scribe would add when a folio is complete — "the chapter is
+// ended; the binding continues on the next folio."
+function Explicit() {
+  return (
+    <p className="explicit" aria-hidden="true">
+      <span className="explicit-rule" />
+      <em className="explicit-text">explicit</em>
+      <span className="explicit-sep">·</span>
+      <em className="explicit-text explicit-text-faint">fol. xviii</em>
+      <span className="explicit-pilcrow">¶</span>
+    </p>
   )
 }
 
@@ -1809,6 +1930,7 @@ export function App() {
               </span>
             </h1>
              <Maniculum active={pointing} />
+             <ScribeInkpot active={pointing} />
              <p className="question-prompt">press the mark · the page answers</p>
             <span
               key={noteNonce}
@@ -1849,6 +1971,7 @@ export function App() {
               text={footnoteDisplay}
               done={footnoteDone}
             />
+            <Explicit />
           </div>
         </div>
 

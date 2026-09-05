@@ -1,25 +1,12 @@
 # Changelog
 
-## Iteration 27 — a scribe's late gloss
+## Iteration 28 — Reader's instruments
 
-A small bilingual footnote ("¹ relege · without a reader, silence")
-writes itself into the page after the reply has finished being set.
-A thin gold rule draws outward from center, a vermilion "¹" marker
-settles in, and the body types out in a slow, deliberate cadence;
-a drawn flourish beneath the line suggests the scribe's quill
-lifting from the parchment. Once finished, the gloss breathes gently
-in place. Honors prefers-reduced-motion and shrinks to mobile.
-
-### Changed
-- `src/App.tsx`: added `FOOTNOTE_TEXT` and `FOOTNOTE_ARIA` constants,
-  `ScholasticFootnote` component, `footnoteOn` and `footnoteChars`
-  state, and a typing effect that fires after the reply finishes.
-  Reset footnote state alongside answer/reply state on acknowledge.
-- `src/style.css`: added `.footnote` block with rule, marker, latin
-  lemma, middot separator, English gloss, blinking caret, and a
-  small drawn flourish; added reduced-motion and mobile overrides.
-
-### Preserved
-- The page title, document title, and entry point remain unchanged.
-- All prior iterations' marginalia, ornaments, and gestures are
-  untouched; the footnote slots beneath the existing ink-stain.
+A scribe's inkpot-and-quill now rests in the left margin of the
+question, mirroring the maniculum on the right; the reader's hand
+points, the writer's tools wait. The quill lifts and a vermilion drop
+falls when the reader engages the hero, and a small `explicit · fol.
+xviii` signoff sets beneath the footnote to formally close the chapter.
+The reading lantern trails a second, softer halo at the previous cursor
+position, so the page briefly records the path of attention in warm
+light. The reader's instruments now match the reader's marks.

@@ -4112,3 +4112,342 @@ body {
 @media (max-width: 380px) {
   .footnote-flourish { display: none; }
 }
+
+/* ----- Iteration 28: reader's instruments -----
+ * Three small additions deepen the page's reading relationship:
+ *  - A scribe's inkpot-and-quill in the left margin mirrors the maniculum
+ *    on the right. The reader's hand points; the writer's tools rest.
+ *    The quill lifts and a vermilion drop falls when the reader engages
+ *    the hero.
+ *  - An "explicit" closing mark beneath the footnote — a thin gold rule
+ *    with the Latin word in serif italic, set between a middot and a
+ *    vermilion pilcrow. The chapter's formal end, drawn in once the
+ *    footnote has finished.
+ *  - The reading lantern now trails a second, softer halo at the
+ *    previous cursor position (eased lag) — the page records the path
+ *    of attention briefly, like light lingering where the reader paused. */
+
+/* ----- Scribe inkpot (left-margin writer's instruments) ----- */
+
+.scribe-inkpot {
+  position: absolute;
+  left: clamp(8px, 3vw, 36px);
+  top: 48%;
+  width: clamp(46px, 5.4vw, 70px);
+  height: auto;
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-22px, -50%) rotate(-2.4deg);
+  transform-origin: 0% 50%;
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s,
+    transform 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s,
+    filter 0.65s ease;
+  filter: drop-shadow(0 0 4px rgba(217, 176, 116, 0.18));
+  will-change: opacity, transform;
+}
+
+.scribe-inkpot-svg-wrap {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: 0% 50%;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.scribe-inkpot-svg-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.composition.is-pointing .scribe-inkpot,
+.composition.ready .scribe-inkpot {
+  opacity: 0.46;
+  transform: translate(-10px, -50%) rotate(0deg);
+}
+
+.composition.is-pointing .scribe-inkpot {
+  opacity: 1;
+  transform: translate(-2px, -50%) rotate(0deg);
+  filter:
+    drop-shadow(0 0 10px rgba(217, 176, 116, 0.42))
+    drop-shadow(0 0 22px rgba(176, 83, 58, 0.18));
+}
+
+.composition.is-pointing .scribe-inkpot-svg-wrap {
+  transform: rotate(-5deg) translate(-1px, -1px);
+}
+
+.inkpot-body-shadow {
+  fill: rgba(0, 0, 0, 0.32);
+}
+
+.inkpot-body {
+  fill: var(--gold);
+  fill-opacity: 0.78;
+  stroke: var(--gold-deep);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+}
+
+.inkpot-lip {
+  fill: var(--gold);
+  fill-opacity: 0.92;
+  stroke: var(--gold-deep);
+  stroke-width: 0.4;
+  stroke-linejoin: round;
+}
+
+.inkpot-surface {
+  fill: var(--bg-deep);
+  stroke: var(--vermilion-soft);
+  stroke-width: 0.3;
+  fill-opacity: 0.96;
+}
+
+.inkpot-highlight {
+  fill: var(--gold-bright);
+  fill-opacity: 0.55;
+}
+
+.inkpot-quill {
+  transform-box: fill-box;
+  transform-origin: 0% 50%;
+  transition: transform 0.65s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.composition.is-pointing .inkpot-quill {
+  transform: rotate(-6deg);
+}
+
+.inkpot-quill-plume {
+  fill: var(--gold);
+  fill-opacity: 0.66;
+  stroke: var(--gold-deep);
+  stroke-width: 0.45;
+  stroke-linejoin: round;
+}
+
+.inkpot-quill-barb {
+  fill: none;
+  stroke: var(--gold-deep);
+  stroke-width: 0.32;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.inkpot-quill-shaft {
+  stroke: var(--gold-deep);
+  stroke-width: 0.85;
+  stroke-linecap: round;
+  opacity: 0.78;
+}
+
+.inkpot-quill-nib {
+  fill: var(--vermilion-soft);
+  stroke: var(--vermilion);
+  stroke-width: 0.32;
+  stroke-linejoin: round;
+}
+
+.inkpot-quill-slit {
+  stroke: var(--bg-deep);
+  stroke-width: 0.25;
+  opacity: 0.6;
+}
+
+.inkpot-drip {
+  fill: var(--vermilion-bright);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+}
+
+.composition.is-pointing .inkpot-drip {
+  animation: inkpotDripFall 2.4s cubic-bezier(0.55, 0.05, 0.55, 0.96) 0.8s infinite;
+}
+
+.composition.is-pointing .inkpot-drip-trail {
+  animation-name: inkpotDripFallTrail;
+  animation-delay: 1.4s;
+}
+
+@keyframes inkpotDripFall {
+  0%   { opacity: 0;    transform: scale(0.3) translateY(-2px); }
+  18%  { opacity: 0.95; transform: scale(1)   translateY(0); }
+  72%  { opacity: 0.7;  transform: scale(0.85) translateY(7px); }
+  100% { opacity: 0;    transform: scale(0.4)  translateY(13px); }
+}
+
+@keyframes inkpotDripFallTrail {
+  0%   { opacity: 0;    transform: scale(0.4) translateY(0); }
+  25%  { opacity: 0.85; transform: scale(0.85) translateY(2px); }
+  100% { opacity: 0;    transform: scale(0.3) translateY(10px); }
+}
+
+/* ----- Explicit (chapter's formal closing mark) ----- */
+
+.explicit {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: clamp(8px, 0.7vw, 13px);
+  margin: clamp(18px, 2.2vw, 28px) auto 0;
+  font-family: var(--serif);
+  font-size: clamp(9.5px, 0.92vw, 11.5px);
+  line-height: 1.4;
+  letter-spacing: 0.3em;
+  text-transform: lowercase;
+  color: var(--ink-faint);
+  opacity: 0;
+  transform: translateY(5px);
+  pointer-events: none;
+  transition:
+    opacity 1.0s ease,
+    transform 1.0s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.footnote.is-done ~ .explicit {
+  opacity: 0.88;
+  transform: translateY(0);
+  transition-delay: 0.35s;
+}
+
+.explicit-rule {
+  display: inline-block;
+  width: clamp(18px, 2vw, 30px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold-deep) 30%,
+    var(--gold) 50%,
+    var(--gold-deep) 70%,
+    transparent
+  );
+  align-self: center;
+  opacity: 0.7;
+}
+
+.explicit-text {
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  opacity: 0.95;
+  white-space: nowrap;
+  text-shadow: 0 0 8px rgba(217, 176, 116, 0.18);
+}
+
+.explicit-text-faint {
+  color: var(--ink-faint);
+  opacity: 0.7;
+  letter-spacing: 0.22em;
+}
+
+.explicit-sep {
+  font-style: normal;
+  color: var(--gold-deep);
+  opacity: 0.7;
+  transform: translateY(-0.05em);
+  letter-spacing: 0;
+}
+
+.explicit-pilcrow {
+  font-family: var(--serif);
+  font-style: normal;
+  color: var(--vermilion);
+  opacity: 0.85;
+  transform: translateY(-0.04em);
+  letter-spacing: 0;
+  text-shadow: 0 0 8px rgba(176, 83, 58, 0.22);
+}
+
+/* ----- Reading lantern trail (eased second halo) ----- */
+
+.reading-lantern {
+  background:
+    radial-gradient(
+      360px 360px at var(--lantern-x, 50%) var(--lantern-y, 36%),
+      rgba(240, 212, 154, 0.11) 0%,
+      rgba(240, 212, 154, 0.06) 18%,
+      rgba(217, 176, 116, 0.04) 40%,
+      transparent 66%
+    ),
+    radial-gradient(
+      260px 260px at var(--lantern-x-prev, 50%) var(--lantern-y-prev, 36%),
+      rgba(240, 212, 154, 0.055) 0%,
+      rgba(240, 212, 154, 0.02) 26%,
+      rgba(217, 176, 116, 0.012) 50%,
+      transparent 72%
+    );
+}
+
+/* ----- Reduced motion overrides for iteration 28 ----- */
+
+@media (prefers-reduced-motion: reduce) {
+  .scribe-inkpot {
+    transition: opacity 0.2s ease;
+    transform: translate(-2px, -50%) rotate(0deg);
+  }
+  .composition.ready .scribe-inkpot {
+    opacity: 0.5;
+    transform: translate(-2px, -50%) rotate(0deg);
+  }
+  .composition.is-pointing .scribe-inkpot {
+    opacity: 1;
+    transform: translate(-2px, -50%) rotate(0deg);
+    animation: none;
+  }
+  .scribe-inkpot-svg-wrap { transform: none; transition: none; }
+  .inkpot-quill { transform: none; transition: none; }
+  .inkpot-drip { animation: none; opacity: 0.55; transform: scale(1) translateY(2px); }
+  .inkpot-drip-trail { display: none; }
+
+  .explicit { transition: opacity 0.25s ease; transform: none; }
+  .footnote.is-done ~ .explicit { opacity: 0.88; transform: none; }
+
+  .reading-lantern {
+    background: radial-gradient(
+      240px 240px at var(--lantern-x, 50%) var(--lantern-y, 36%),
+      rgba(240, 212, 154, 0.10) 0%,
+      rgba(240, 212, 154, 0.05) 22%,
+      transparent 62%
+    );
+  }
+}
+
+/* ----- Mobile sizing for iteration 28 ----- */
+
+@media (max-width: 880px) {
+  .scribe-inkpot {
+    width: clamp(38px, 5vw, 56px);
+    left: clamp(4px, 2vw, 16px);
+  }
+  .explicit { font-size: clamp(9px, 1.2vw, 11px); }
+}
+
+@media (max-width: 760px) {
+  .scribe-inkpot {
+    width: 32px;
+    left: clamp(4px, 2vw, 12px);
+  }
+}
+
+@media (max-width: 520px) {
+  .scribe-inkpot { display: none; }
+  .explicit {
+    gap: clamp(6px, 1.6vw, 10px);
+    letter-spacing: 0.24em;
+  }
+  .explicit-rule { width: 16px; }
+  .explicit-text { letter-spacing: 0.22em; }
+  .explicit-text-faint { letter-spacing: 0.16em; }
+}
+
+@media (max-width: 380px) {
+  .explicit-text-faint { display: none; }
+}
