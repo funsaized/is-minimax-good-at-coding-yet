@@ -1572,8 +1572,9 @@ export function App() {
           </button>
             <BracketFlourish side="right" />
           </div>
-          <div className="question-block">
-            <h1 className="question">
+           <div className="question-block">
+             <span className="question-kicker">a question in public</span>
+             <h1 className="question">
               <span className="question-line">
                 <em className="question-lead">is</em>
                 <span className="question-space"> </span>
@@ -1583,7 +1584,8 @@ export function App() {
                 <span className="question-mark">?</span>
               </span>
             </h1>
-            <Maniculum active={pointing} />
+             <Maniculum active={pointing} />
+             <p className="question-prompt">Tap the mark when you have an opinion.</p>
             <span
               key={noteNonce}
               className={`question-underline${noteNonce > 0 ? ' is-on' : ''}`}
