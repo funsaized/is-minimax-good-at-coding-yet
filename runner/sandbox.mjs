@@ -28,6 +28,7 @@ export async function sandboxCommand(attempt, bin, args, options = {}) {
   const home = path.join(attempt, 'home')
   const nodeDir = path.dirname(path.dirname(await fs.realpath(process.execPath)))
   const opencodePath = (await command('which', ['opencode'])).trim()
+  const resolver = await fs.realpath('/etc/resolv.conf')
   const mounts = [
     '--unshare-all', '--share-net', '--die-with-parent', '--new-session',
     '--ro-bind', '/usr', '/usr', '--symlink', 'usr/lib', '/lib', '--symlink', 'usr/lib', '/lib64',
@@ -36,6 +37,8 @@ export async function sandboxCommand(attempt, bin, args, options = {}) {
     '--bind', home, '/home/agent', '--bind', work, '/work',
     '--ro-bind', path.join(ROOT, 'node_modules'), '/work/node_modules',
   ]
+  // On systemd-resolved hosts /etc/resolv.conf points into /run, which is otherwise hidden.
+  if (resolver !== '/etc/resolv.conf') mounts.push('--ro-bind', resolver, resolver)
   for (const f of [...protectedFiles, 'opencode.json', 'ITERATION_CONTEXT.md']) mounts.push('--ro-bind', path.join(work, f), `/work/${f}`)
   mounts.push('--chdir', '/work', '--clearenv',
     '--setenv', 'HOME', '/home/agent', '--setenv', 'PATH', '/opt/node/bin:/usr/bin:/bin',
