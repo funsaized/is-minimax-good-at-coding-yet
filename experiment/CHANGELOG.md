@@ -1,15 +1,27 @@
 # Changelog
 
-## Iteration 5 — folio v · marginalia awakens
+folio vi: a ghost question mark, a printer's seal, and a longer reply.
 
-A coherent evolution of the existing folio: each corner of the marginalia now carries its own hand-drawn glyph, the central composition opens with an illuminated chapter V, and the answer reveals itself word by word as if written in real time.
+## Iteration 6 — folio vi: a ghost, a seal, and a reply
 
-- Per-corner marginalia glyphs: a bifolio at the folio corner, a nib at the medium corner, an asterism at the craft corner; the now corner keeps its clock.
-- Illuminated chapter V mark above the rubric: pulsing pearl, italic roman V in gold, hand-drawn flourish with twin pearls that scale in on appearance.
-- Cursor gaze on the question mark: the hero leans toward the cursor as it moves across the button, pivoting softly from its base; resets smoothly when the cursor leaves.
-- Word-by-word whisper reveal: each whisper now writes itself in, one word at a time, with a faint stagger; fade-out remains together so the marginalia closes cleanly.
-- Typewriter answer: the closing line reveals character by character with a blinking gold caret, and restarts from the beginning on every acknowledgement.
-- Colophon updated for the new folio: "folio v · quaeritur" with the lines "typeset in margins · read by cursor" and "lit by attention · answered in kind".
-- Refactor: cursor gaze moved from React state to direct CSS-variable writes on the hero element so pointer moves do not trigger re-renders.
-- Reduced-motion handling extended to the chapter mark, marginal glyphs, whisper words, hero wrap, and answer caret.
-- Mobile breakpoints adjusted for the new glyphs and chapter mark sizing.
+A faint oversized question mark now lives behind the page as a watermark; the colophon gains a hand-drawn printer's seal; the click yields a longer reply.
+
+### Added
+- **Watermark**: a scaled-up, screen-blended ghost of the hero curve, drawn onto the page in the first ~6 seconds and then breathing softly. Sits behind everything (`z-index: 0`, `opacity: 0.045`).
+- **Printer's seal**: a small italic "Mm" monogram inside a double ring, placed in the colophon above the register cross. The two rings draw on with a slight stagger, the letter scales in, and two pips fade in last.
+- **Reply paragraph**: after the first answer finishes typing, a second italic sentence (`so read it once, then again — slower this time.`) fades in below, prefixed with a small gold rule and closed with a miniature fleuron.
+
+### Changed
+- **Hero shimmer**: a slow `drop-shadow` brightness drift (`heroShimmer`, ~8.5s loop) makes the question mark feel lit by a moving lamp without altering the existing breathe animation.
+- **Spatter**: replaced the 9-dot ring with a 13-dot hand-drawn flourish in three readable arcs, each dot carrying its own per-dot opacity (`--op`) for inked-pen variation.
+- **Answer dwell**: extended the answer-visible window from ~4.4s to ~5.2s so the reply has time to settle before the answer fades.
+
+### Responsive & accessibility
+- Watermark, reply paragraph, and printer seal each receive their own sizing at 880/760/620/520/480px breakpoints.
+- New elements covered by the `prefers-reduced-motion` block: watermark renders as a static ghost, seal snaps to its final state, reply fades without per-character typing or caret, hero shimmer is disabled, new reply caret is included alongside the answer caret.
+- All new content remains keyboard-accessible through the existing button; the reply is announced via the same `aria-live="polite"` region as the answer.
+
+### Preserved
+- Document title and visible H1: `is Minimax M3 good at frontend yet?`
+- Entry point, framework (React 18 + Vite + TypeScript), package files, and build configuration.
+- Existing marginalia, clock, fleuron, rubric, folio mark, dust canvas, paper grain, and click choreography.

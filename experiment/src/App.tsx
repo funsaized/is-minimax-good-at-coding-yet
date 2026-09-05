@@ -11,16 +11,26 @@ const HERO_PATH =
   'M 65 115 C 65 5 175 5 175 115 C 175 172 120 156 120 205 L 120 250'
 const HERO_DOT = { cx: 120, cy: 286, r: 17 }
 
+// Watermark — same curve as the hero, blown up, ghosted into the page
+const WIDE_PATH =
+  'M 195 345 C 195 15 525 15 525 345 C 525 516 360 468 360 615 L 360 750'
+const WIDE_DOT = { cx: 360, cy: 858, r: 51 }
+
+// Deliberate ink-arc spatter: a flourish that reads as one gesture, not noise
 const SPATTER = [
-  { angle: 18, distance: 78, size: 2.2, delay: 0 },
-  { angle: 56, distance: 102, size: 1.5, delay: 42 },
-  { angle: 96, distance: 84, size: 1.9, delay: 76 },
-  { angle: 142, distance: 92, size: 1.6, delay: 22 },
-  { angle: 178, distance: 68, size: 2.4, delay: 58 },
-  { angle: 222, distance: 86, size: 1.7, delay: 12 },
-  { angle: 262, distance: 104, size: 2.0, delay: 50 },
-  { angle: 304, distance: 74, size: 1.6, delay: 34 },
-  { angle: 342, distance: 90, size: 2.1, delay: 86 },
+  { angle: 8,  distance: 70,  size: 2.4, delay: 0,   op: 1.0 },
+  { angle: 28, distance: 96,  size: 2.0, delay: 18,  op: 0.95 },
+  { angle: 48, distance: 118, size: 1.6, delay: 38,  op: 0.85 },
+  { angle: 68, distance: 104, size: 1.4, delay: 58,  op: 0.75 },
+  { angle: 122, distance: 88,  size: 1.7, delay: 30,  op: 0.8 },
+  { angle: 152, distance: 110, size: 2.2, delay: 12,  op: 0.95 },
+  { angle: 178, distance: 82,  size: 2.4, delay: 46,  op: 1.0 },
+  { angle: 202, distance: 96,  size: 1.5, delay: 70,  op: 0.8 },
+  { angle: 232, distance: 116, size: 1.8, delay: 22,  op: 0.9 },
+  { angle: 262, distance: 104, size: 1.6, delay: 52,  op: 0.8 },
+  { angle: 292, distance: 92,  size: 2.0, delay: 8,   op: 0.9 },
+  { angle: 322, distance: 118, size: 1.7, delay: 36,  op: 0.85 },
+  { angle: 352, distance: 80,  size: 2.2, delay: 64,  op: 0.95 },
 ]
 
 type Whisper = { corner: Corner; text: string }
@@ -33,9 +43,13 @@ const WHISPERS: Whisper[] = [
 ]
 
 const ANSWER =
-  '— and the page itself, you are reading it now.'
+  '— and the page itself, which you are reading now.'
+
+const REPLY =
+  'so read it once, then again — slower this time.'
 
 const ANSWER_STAGGER_MS = 34
+const REPLY_STAGGER_MS = 26
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
@@ -193,6 +207,48 @@ function Asterism() {
   )
 }
 
+// The printer's seal — a small italic "Mm" monogram inside a double ring,
+// standing in for a handwritten sign-manual. Renders between the colophon lines.
+function PrinterSeal() {
+  return (
+    <svg
+      className="printer-seal"
+      viewBox="0 0 40 40"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle
+        cx="20"
+        cy="20"
+        r="18"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="0.6"
+        className="seal-ring seal-ring-outer"
+      />
+      <circle
+        cx="20"
+        cy="20"
+        r="14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="0.4"
+        className="seal-ring seal-ring-inner"
+      />
+      <text
+        x="20"
+        y="25"
+        textAnchor="middle"
+        className="seal-letter"
+      >
+        Mm
+      </text>
+      <circle cx="20" cy="8.5" r="0.5" className="seal-pip" />
+      <circle cx="20" cy="31.5" r="0.5" className="seal-pip" />
+    </svg>
+  )
+}
+
 function RegisterCross() {
   return (
     <svg
@@ -230,22 +286,53 @@ function GuideRule({ corner }: { corner: Corner }) {
 function PaperGrain() {
   return (
     <svg className="paper-grain" aria-hidden="true" focusable="false">
-      <filter id="pg-noise">
-        <feTurbulence
-          type="fractalNoise"
-          baseFrequency="0.85"
-          numOctaves="2"
-          stitchTiles="stitch"
-          seed="7"
-        />
-        <feColorMatrix
-          values="0 0 0 0 0.94
-                  0 0 0 0 0.86
-                  0 0 0 0 0.66
-                  0 0 0 0.55 0"
-        />
-      </filter>
+      <defs>
+        <filter id="pg-noise">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.85"
+            numOctaves="2"
+            stitchTiles="stitch"
+            seed="7"
+          />
+          <feColorMatrix
+            values="0 0 0 0 0.94
+                    0 0 0 0 0.86
+                    0 0 0 0 0.66
+                    0 0 0 0.55 0"
+          />
+        </filter>
+      </defs>
       <rect width="100%" height="100%" filter="url(#pg-noise)" />
+    </svg>
+  )
+}
+
+// A faint oversized ghost of the hero curve, behind everything — the page's shadow
+function Watermark() {
+  return (
+    <svg
+      className="watermark"
+      viewBox="0 0 720 1020"
+      preserveAspectRatio="xMidYMid meet"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        className="watermark-stroke"
+        d={WIDE_PATH}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="58"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle
+        className="watermark-dot"
+        cx={WIDE_DOT.cx}
+        cy={WIDE_DOT.cy}
+        r={WIDE_DOT.r}
+      />
     </svg>
   )
 }
@@ -338,6 +425,8 @@ export function App() {
   const [noteNonce, setNoteNonce] = useState(0)
   const [answerOn, setAnswerOn] = useState(false)
   const [answerChars, setAnswerChars] = useState(0)
+  const [replyOn, setReplyOn] = useState(false)
+  const [replyChars, setReplyChars] = useState(0)
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
@@ -375,6 +464,37 @@ export function App() {
     )
     return () => clearTimeout(id)
   }, [answerOn, answerChars, reduced])
+
+  // Begin typing the reply once the answer has finished writing itself out.
+  useEffect(() => {
+    if (!answerOn || answerChars < ANSWER.length) {
+      if (!answerOn) setReplyOn(false)
+      return
+    }
+    const t = window.setTimeout(
+      () => setReplyOn(true),
+      reduced ? 80 : 520,
+    )
+    return () => clearTimeout(t)
+  }, [answerOn, answerChars, reduced])
+
+  useEffect(() => {
+    if (!replyOn) {
+      setReplyChars(0)
+      return
+    }
+    if (reduced) {
+      setReplyChars(REPLY.length)
+      return
+    }
+    const total = REPLY.length
+    if (replyChars >= total) return
+    const id = window.setTimeout(
+      () => setReplyChars((c) => Math.min(total, c + 1)),
+      REPLY_STAGGER_MS,
+    )
+    return () => clearTimeout(id)
+  }, [replyOn, replyChars, reduced])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -589,10 +709,12 @@ export function App() {
     )
     waveTimeoutsRef.current.push(end)
     setAnswerChars(0)
+    setReplyChars(0)
+    setReplyOn(false)
     setAnswerOn(true)
     const ansOff = window.setTimeout(
       () => setAnswerOn(false),
-      reduced ? 2200 : 4400,
+      reduced ? 2600 : 5200,
     )
     waveTimeoutsRef.current.push(ansOff)
   }, [reduced])
@@ -632,6 +754,7 @@ export function App() {
   const mm = d.getMinutes().toString().padStart(2, '0')
 
   const answerDisplay = answerOn ? ANSWER.slice(0, Math.max(0, answerChars)) : ''
+  const replyDisplay = replyOn ? REPLY.slice(0, Math.max(0, replyChars)) : ''
 
   return (
     <main className="stage">
@@ -639,6 +762,7 @@ export function App() {
       <div className="rim" aria-hidden="true" />
       <div className="codex-edge" aria-hidden="true" />
       <PaperGrain />
+      <Watermark />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
         <Marg
@@ -753,6 +877,7 @@ export function App() {
                         '--distance': `${s.distance}px`,
                         '--size': `${s.size}px`,
                         '--delay': `${s.delay}ms`,
+                        '--op': `${s.op}`,
                       } as CSSProperties
                     }
                   />
@@ -784,6 +909,23 @@ export function App() {
                 <span className="answer-caret" aria-hidden="true">|</span>
               )}
             </p>
+            <p
+              className={`reply ${replyOn ? 'is-on' : ''}`}
+              aria-live="polite"
+            >
+              {replyOn && (
+                <span className="reply-rule" aria-hidden="true" />
+              )}
+              <span className="reply-text">{replyDisplay}</span>
+              {replyOn && replyChars < REPLY.length && (
+                <span className="reply-caret" aria-hidden="true">|</span>
+              )}
+              {replyOn && replyChars >= REPLY.length && (
+                <span className="reply-end" aria-hidden="true">
+                  <Fleuron />
+                </span>
+              )}
+            </p>
           </div>
         </div>
 
@@ -797,6 +939,9 @@ export function App() {
           </span>
           <span className="colophon-line colophon-line-2">
             lit by attention · answered in kind
+          </span>
+          <span className="colophon-seal">
+            <PrinterSeal />
           </span>
           <span className="colophon-mark">
             <RegisterCross />

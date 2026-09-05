@@ -128,6 +128,59 @@ body {
   z-index: 1;
 }
 
+/* ----- Watermark (a ghost of the hero, far behind) ----- */
+
+.watermark {
+  position: fixed;
+  inset: 0;
+  width: min(110vmin, 880px);
+  height: min(110vmin, 880px);
+  margin: auto;
+  color: var(--gold);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  mix-blend-mode: screen;
+  filter: blur(0.4px);
+  animation: watermarkIn 4.4s ease 1.6s forwards;
+  will-change: opacity;
+}
+
+.watermark-stroke {
+  opacity: 0.55;
+  stroke-dasharray: 3600;
+  stroke-dashoffset: 3600;
+  animation: watermarkDraw 5.2s cubic-bezier(0.6, 0.02, 0.2, 1) 1.9s forwards;
+}
+
+.watermark-dot {
+  fill: currentColor;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  animation:
+    watermarkDot 1.6s cubic-bezier(0.2, 1.2, 0.4, 1) 5.7s forwards,
+    watermarkBreathe 9s ease-in-out 7.5s infinite;
+}
+
+@keyframes watermarkIn {
+  to { opacity: 0.045; }
+}
+
+@keyframes watermarkDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes watermarkDot {
+  to { opacity: 0.55; transform: scale(1); }
+}
+
+@keyframes watermarkBreathe {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 0.32; }
+}
+
 /* ----- Marginalia ----- */
 
 .marg {
@@ -820,6 +873,7 @@ body {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   border-radius: 2px;
+  animation: heroShimmer 8.5s ease-in-out infinite;
 }
 
 .hero:hover {
@@ -933,6 +987,11 @@ body {
   50%      { transform: scale(1.015); }
 }
 
+@keyframes heroShimmer {
+  0%, 100% { filter: drop-shadow(0 0 28px rgba(217, 176, 116, 0.18)); }
+  50%      { filter: drop-shadow(0 0 38px rgba(240, 212, 154, 0.30)); }
+}
+
 /* ----- Ink spatter (on click) ----- */
 
 .hero-spatter {
@@ -953,16 +1012,16 @@ body {
   opacity: 0;
   box-shadow: 0 0 6px rgba(240, 212, 154, 0.5);
   transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0) scale(1);
-  animation: spatter 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) var(--delay, 0ms) forwards;
+  animation: spatter 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) var(--delay, 0ms) forwards;
 }
 
 @keyframes spatter {
   0% {
-    opacity: 0.9;
+    opacity: calc(var(--op, 1) * 0.95);
     transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0) scale(1);
   }
   55% {
-    opacity: 0.55;
+    opacity: calc(var(--op, 1) * 0.55);
     transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(var(--distance) * 0.62)) scale(0.85);
   }
   100% {
@@ -1135,6 +1194,89 @@ body {
   51%, 100% { opacity: 0.15; }
 }
 
+/* ----- Reply (second sentence the page says back) ----- */
+
+.reply {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.28vw, 16px);
+  line-height: 1.55;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+  text-align: center;
+  max-width: 32ch;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(6px);
+  max-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.8s ease 0.05s,
+    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s,
+    max-height 0.8s ease 0.05s,
+    margin 0.8s ease 0.05s;
+}
+
+.reply.is-on {
+  opacity: 0.82;
+  transform: translateY(0);
+  max-height: 8em;
+  margin: clamp(6px, 0.9vw, 12px) 0 0;
+}
+
+.reply-rule {
+  display: inline-block;
+  width: clamp(18px, 2.2vw, 28px);
+  height: 1px;
+  background: var(--gold);
+  vertical-align: 0.45em;
+  margin-right: clamp(8px, 0.8vw, 12px);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: replyRule 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s forwards;
+}
+
+@keyframes replyRule {
+  to { opacity: 0.6; transform: scaleX(1); }
+}
+
+.reply-text {
+  display: inline;
+}
+
+.reply-caret {
+  display: inline-block;
+  color: var(--gold);
+  margin-left: 1px;
+  animation: caretBlink 0.85s steps(2, end) infinite;
+  font-weight: 400;
+  transform: translateY(-0.05em);
+}
+
+.reply-end {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: clamp(8px, 1vw, 14px);
+  opacity: 0;
+  animation: replyEnd 0.9s ease 0.35s forwards;
+  color: var(--gold);
+}
+
+.reply-end .fleuron {
+  width: clamp(56px, 8vw, 100px);
+  animation: none;
+}
+
+@keyframes replyEnd {
+  to { opacity: 0.9; }
+}
+
 /* ----- Colophon (closure under the folio) ----- */
 
 .colophon {
@@ -1212,6 +1354,81 @@ body {
   display: block;
 }
 
+.colophon-seal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: clamp(4px, 0.6vw, 8px);
+  color: var(--gold);
+  opacity: 0;
+  transition: opacity 1.2s ease 2.5s;
+}
+
+.frame.ready .colophon-seal {
+  opacity: 0.85;
+}
+
+.printer-seal {
+  width: clamp(22px, 2.4vw, 30px);
+  height: clamp(22px, 2.4vw, 30px);
+  display: block;
+  overflow: visible;
+  color: inherit;
+}
+
+.seal-ring-outer {
+  opacity: 0;
+  stroke-dasharray: 116;
+  stroke-dashoffset: 116;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-90deg);
+  animation: sealDraw 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.3s forwards;
+}
+
+.seal-ring-inner {
+  opacity: 0;
+  stroke-dasharray: 90;
+  stroke-dashoffset: 90;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-90deg);
+  animation: sealDraw 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s forwards;
+  animation-delay: 2.45s;
+}
+
+.seal-letter {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  font-weight: 500;
+  fill: currentColor;
+  letter-spacing: -0.04em;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.4);
+  animation: sealLetter 0.6s cubic-bezier(0.2, 1.2, 0.4, 1) 2.7s forwards;
+}
+
+.seal-pip {
+  fill: currentColor;
+  opacity: 0;
+  animation: sealPip 0.4s ease 2.85s forwards;
+}
+
+@keyframes sealDraw {
+  to { opacity: 1; stroke-dashoffset: 0; transform: rotate(0deg); }
+}
+
+@keyframes sealLetter {
+  to { opacity: 0.92; transform: scale(1); }
+}
+
+@keyframes sealPip {
+  to { opacity: 0.7; }
+}
+
 /* ----- Reduced motion ----- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -1223,6 +1440,7 @@ body {
   .hero-dot { transform: scale(1); transition: none; }
   .hero-spatter { display: none; }
   .hero.pulse { animation: none; }
+  .hero { animation: none; filter: drop-shadow(0 0 28px rgba(217, 176, 116, 0.18)); }
   .hero:hover { transform: none; }
   .question, .ruling, .rubric, .fleuron, .fleuron-rule line, .fleuron-ornament, .fleuron-dots,
   .folio-mark, .folio-mark-flourish, .folio-mark-pearl {
@@ -1252,7 +1470,7 @@ body {
   .codex-edge { animation: none; opacity: 0.18; }
   .paper-grain { animation: none; opacity: 0.32; }
   .colon-anim, .clock-colon { animation: none; }
-  .answer-caret { animation: none; opacity: 0.5; }
+  .answer-caret, .reply-caret { animation: none; opacity: 0.5; }
   .question-underline {
     transition: none;
     animation: none;
@@ -1265,7 +1483,37 @@ body {
   }
   .answer { transition: opacity 0.15s ease; }
   .answer.is-on { transform: none; }
+  .reply { transition: opacity 0.15s ease; }
+  .reply.is-on { transform: none; opacity: 0.82; }
+  .reply-rule { transition: none; animation: none; opacity: 0.6; transform: scaleX(1); }
+  .reply-end { transition: none; animation: none; opacity: 0.9; }
   .colophon { opacity: 1; transition: none; }
+  .colophon-seal { transition: none; opacity: 1; }
+  .printer-seal, .seal-ring-outer, .seal-ring-inner, .seal-letter, .seal-pip {
+    transition: none;
+    animation: none;
+    opacity: 1;
+    transform: none;
+    stroke-dashoffset: 0;
+  }
+  .seal-letter { opacity: 0.92; }
+  .seal-pip { opacity: 0.7; }
+  .watermark {
+    transition: none;
+    animation: none;
+    opacity: 0.045;
+  }
+  .watermark-stroke {
+    transition: none;
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .watermark-dot {
+    transition: none;
+    animation: none;
+    opacity: 0.55;
+    transform: none;
+  }
   .guide-rule:hover .guide-rule-line,
   .guide-rule:focus-visible .guide-rule-line,
   .marg:hover .guide-rule-line,
@@ -1281,6 +1529,8 @@ body {
 @media (max-width: 880px) {
   .guide-rule { width: 60px; height: 60px; }
   .question-underline { left: 6%; right: 6%; }
+  .watermark { width: min(130vmin, 760px); height: min(130vmin, 760px); }
+  .reply { font-size: clamp(12px, 1.5vw, 15px); }
 }
 
 @media (max-width: 760px) {
@@ -1291,11 +1541,13 @@ body {
   .question { font-size: clamp(20px, 5.4vw, 32px); max-width: 18ch; }
   .guide-rule { width: 48px; height: 48px; }
   .colophon-line { letter-spacing: 0.22em; }
+  .printer-seal { width: 24px; height: 24px; }
 }
 
 @media (max-width: 620px) {
   .colophon-folio { letter-spacing: 0.36em; }
   .colophon-quaeritur { letter-spacing: 0.26em; }
+  .reply { max-width: 28ch; }
 }
 
 @media (max-width: 520px) {
@@ -1315,6 +1567,10 @@ body {
   .colophon { gap: 4px; }
   .colophon-folio, .colophon-quaeritur { letter-spacing: 0.28em; }
   .colophon-line { font-size: 8.5px; letter-spacing: 0.2em; }
+  .reply { font-size: 13px; max-width: 26ch; }
+  .reply-rule { width: 14px; margin-right: 8px; }
+  .reply-end .fleuron { width: 56px; }
+  .printer-seal { width: 22px; height: 22px; }
 }
 
 /* tiny screens — keep only the corner clock and minimal marginalia */
@@ -1323,4 +1579,5 @@ body {
   .marg-br { bottom: clamp(48px, 9vw, 64px); right: clamp(14px, 4vw, 24px); }
   .colophon { bottom: clamp(10px, 2.5vw, 18px); }
   .colophon-line-1 { display: none; }
+  .watermark { width: min(150vmin, 620px); height: min(150vmin, 620px); }
 }
