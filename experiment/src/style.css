@@ -4588,3 +4588,405 @@ body {
 @media (max-width: 380px) {
   .colophon-provenance { display: none; }
 }
+
+/* ----- Iteration 30: a vide annotation, predicate rule, and quieter question -----
+ *
+ * The page gains one new authored mark — a small "vide" scholastic gloss
+ * in the left margin, asking the reader to "look" at the answer. The
+ * annotation drifts in once the answer has begun to write itself, like
+ * a careful reader adding one more marginal mark after the chapter has
+ * started to speak. Pairs with the existing "Qu." rubric (top-left of
+ * the hero) and the scribe's inkpot (middle-left), so the left margin
+ * now reads as a chain of three scholastic marginalia: a question, a
+ * writer, and an instruction.
+ *
+ * The question text itself is tightened: the predicate "good at frontend"
+ * receives a small gold ink rule beneath it, mirroring the rule already
+ * beneath the named subject "Minimax M3" — so subject and predicate are
+ * framed equally, and the reader sees the question as a balanced triple.
+ * Two tiny pause-dots (one between subject and predicate, one between
+ * predicate and climax) soften the rhythm of the line.
+ *
+ * A faint hairline connects the hero emblem to the question's terminal
+ * "?" when the reader engages — the two question marks (the emblem
+ * above, the punctuation in the text) acknowledge each other. */
+
+/* ----- Predicate rule (gold ink rule beneath "good at frontend") ----- */
+
+.predicate-rule {
+  display: block;
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: clamp(-6px, -0.55vw, -4px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(217, 176, 116, 0.55) 30%,
+    rgba(240, 212, 154, 0.75) 50%,
+    rgba(217, 176, 116, 0.55) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.35);
+  transform-origin: 50% 50%;
+  pointer-events: none;
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 3.05s,
+    transform 1.15s cubic-bezier(0.2, 0.7, 0.2, 1) 3.05s;
+}
+
+.composition.ready .predicate-rule {
+  opacity: 0.72;
+  transform: scaleX(1);
+}
+
+/* The verb wrapper establishes a positioning context for the predicate rule */
+.question-verb-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+/* ----- Pause dots (between subject–predicate, predicate–climax) -----
+   Two tiny gold middots that soften the rhythm of the question line. */
+
+.question-name-pause,
+.question-yet-pause {
+  display: inline-block;
+  width: clamp(10px, 1vw, 14px);
+  height: 1em;
+  vertical-align: baseline;
+  position: relative;
+  margin: 0 -1px;
+}
+
+.question-name-pause-dot,
+.question-yet-pause-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2.4px;
+  height: 2.4px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.85s cubic-bezier(0.2, 1.1, 0.4, 1);
+}
+
+.question-name-pause-dot {
+  transition-delay: 2.75s;
+}
+
+.question-yet-pause-dot {
+  transition-delay: 2.95s;
+}
+
+.composition.ready .question-name-pause-dot,
+.composition.ready .question-yet-pause-dot {
+  opacity: 0.55;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.composition.is-pointing .question-name-pause-dot,
+.composition.is-pointing .question-yet-pause-dot {
+  opacity: 0.85;
+}
+
+/* ----- Hero ↔ question mark visual connection -----
+   When the reader engages the hero, the question's terminal "?"
+   brightens — the two question marks (the emblem above, the
+   punctuation in the text) acknowledge each other. The "yet" climax
+   also subtly warms in response. */
+
+.composition.is-pointing .question-mark {
+  text-shadow:
+    0 0 20px rgba(240, 212, 154, 0.5),
+    0 0 42px rgba(217, 176, 116, 0.3);
+  transition:
+    text-shadow 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.4s ease;
+}
+
+.composition.is-pointing .question-yet {
+  text-shadow:
+    0 0 18px rgba(240, 212, 154, 0.35),
+    0 0 40px rgba(217, 176, 116, 0.22);
+  transition:
+    text-shadow 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.4s ease;
+}
+
+/* ----- Vide annotation (left-margin scholastic gloss) -----
+   A small "vide · look" gloss in vermilion italic with a hairline
+   caret pointing down toward the answer. The whole annotation drifts
+   in once the answer has begun typing, and the caret gently brightens
+   when the reader engages the chapter. */
+
+.vide-annotation {
+  position: absolute;
+  left: clamp(8px, 3vw, 36px);
+  top: 58%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(4px, 0.4vw, 7px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition:
+    opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.95s cubic-bezier(0.2, 0.7, 0.2, 1);
+  z-index: 2;
+  width: clamp(60px, 7vw, 92px);
+}
+
+.vide-annotation.is-on {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.vide-annotation-rule {
+  display: block;
+  width: clamp(14px, 1.5vw, 22px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--vermilion) 0%,
+    var(--vermilion-soft) 60%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.2);
+  transform-origin: 0% 50%;
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s,
+    transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s;
+}
+
+.vide-annotation.is-on .vide-annotation-rule {
+  opacity: 0.78;
+  transform: scaleX(1);
+}
+
+.vide-annotation-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(3px, 0.3vw, 6px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, 1.05vw, 13px);
+  color: var(--vermilion);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s,
+    transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s,
+    color 0.4s ease;
+  text-shadow: 0 0 8px rgba(176, 83, 58, 0.18);
+}
+
+.vide-annotation.is-on .vide-annotation-text {
+  opacity: 0.92;
+  transform: translateX(0);
+}
+
+.vide-annotation-sep {
+  font-style: normal;
+  color: var(--gold-deep);
+  opacity: 0.7;
+  font-size: 0.92em;
+  transform: translateY(-0.04em);
+}
+
+.vide-annotation-en {
+  color: var(--ink-soft);
+  font-size: 0.92em;
+  letter-spacing: 0.005em;
+  opacity: 0.88;
+}
+
+.vide-annotation-caret {
+  display: block;
+  width: clamp(10px, 1vw, 14px);
+  height: clamp(22px, 2.4vw, 34px);
+  margin-left: clamp(3px, 0.4vw, 6px);
+  pointer-events: none;
+  overflow: visible;
+}
+
+.vide-annotation-caret-line {
+  fill: none;
+  stroke: var(--vermilion);
+  stroke-width: 0.85;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition:
+    opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s,
+    stroke-dashoffset 0.95s cubic-bezier(0.55, 0.04, 0.32, 1) 0.55s;
+}
+
+.vide-annotation.is-on .vide-annotation-caret-line {
+  opacity: 0.7;
+  stroke-dashoffset: 0;
+}
+
+.vide-annotation-caret-tip {
+  fill: none;
+  stroke: var(--vermilion);
+  stroke-width: 0.85;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transform: scale(0.5);
+  transition:
+    opacity 0.5s ease 1.2s,
+    transform 0.65s cubic-bezier(0.2, 1.2, 0.4, 1) 1.2s;
+}
+
+.vide-annotation.is-on .vide-annotation-caret-tip {
+  opacity: 0.85;
+  transform: scale(1);
+}
+
+.composition.is-pointing .vide-annotation-text {
+  color: var(--vermilion-bright);
+}
+
+.composition.is-pointing .vide-annotation-en {
+  color: var(--ink);
+}
+
+.composition.is-pointing .vide-annotation-caret-line,
+.composition.is-pointing .vide-annotation-caret-tip {
+  stroke: var(--vermilion-bright);
+}
+
+/* The annotation also warms when the answer has fully landed —
+   a subtle "look closer" emphasis once the chapter has spoken. */
+.vide-annotation.is-on .vide-annotation-text {
+  animation: videAnnotationBreath 14s ease-in-out 1s infinite;
+}
+
+@keyframes videAnnotationBreath {
+  0%, 100% { opacity: 0.92; }
+  50%      { opacity: 0.74; }
+}
+
+/* ----- Refined question text composition -----
+   Subtle improvements to the rhythm of the line: a slightly tighter
+   leading on the question verb, and a small breathing space between
+   the named subject and the predicate. The existing treatments stay —
+   these refinements only nudge the spacing. */
+
+.question-lead {
+  margin-right: clamp(1px, 0.05em, 2px);
+}
+
+.question-name {
+  margin-right: clamp(1px, 0.05em, 2px);
+}
+
+.question-yet {
+  margin-left: clamp(1px, 0.05em, 2px);
+}
+
+/* ----- Reduced motion overrides for iteration 30 ----- */
+
+@media (prefers-reduced-motion: reduce) {
+  .predicate-rule {
+    transition: none;
+    opacity: 0.72;
+    transform: scaleX(1);
+  }
+  .question-name-pause-dot,
+  .question-yet-pause-dot {
+    transition: none;
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .vide-annotation {
+    transition: opacity 0.2s ease;
+    opacity: 1;
+    transform: none;
+  }
+  .vide-annotation-rule {
+    transition: none;
+    opacity: 0.78;
+    transform: scaleX(1);
+  }
+  .vide-annotation-text {
+    transition: none;
+    opacity: 0.92;
+    transform: none;
+    animation: none;
+  }
+  .vide-annotation-caret-line {
+    transition: none;
+    opacity: 0.7;
+    stroke-dashoffset: 0;
+  }
+  .vide-annotation-caret-tip {
+    transition: none;
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  .composition.is-pointing .question-mark,
+  .composition.is-pointing .question-yet {
+    transition: none;
+  }
+}
+
+/* ----- Responsive behavior for iteration 30 ----- */
+
+@media (max-width: 880px) {
+  .predicate-rule { left: 4%; right: 4%; }
+  .question-name-pause,
+  .question-yet-pause { width: clamp(8px, 1.2vw, 12px); }
+  .vide-annotation {
+    left: clamp(4px, 2vw, 12px);
+    top: 62%;
+    width: clamp(52px, 8vw, 76px);
+  }
+  .vide-annotation-text { font-size: clamp(10px, 1.4vw, 12px); }
+}
+
+@media (max-width: 760px) {
+  .vide-annotation {
+    width: 60px;
+    top: 60%;
+  }
+}
+
+@media (max-width: 620px) {
+  .vide-annotation {
+    width: 54px;
+    left: clamp(4px, 1.6vw, 10px);
+  }
+  .vide-annotation-caret {
+    width: 10px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 520px) {
+  .question-name-pause,
+  .question-yet-pause { width: 7px; }
+  .question-name-pause-dot,
+  .question-yet-pause-dot { width: 2px; height: 2px; }
+  .vide-annotation {
+    display: none;
+  }
+  .predicate-rule {
+    bottom: -4px;
+  }
+}

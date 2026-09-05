@@ -1137,6 +1137,56 @@ function QuestionFlourish() {
   )
 }
 
+// VideAnnotation — a small scholastic gloss in the left margin that
+// asks the reader to "look" (Latin: vide) at the answer. A vermilion
+// caret at the foot of the rule points into the answer/reply text —
+// the page's gentle instruction to attend to what is written below.
+// Pairs with the existing "Qu." rubric (top) and the "Mm" inkpot
+// (middle) on the left margin, so the left side of the folio reads as
+// a chain of scholastic marginalia: a question, a writer, an
+// instruction. The whole annotation drifts in after the answer has
+// begun to write itself, like a scribe adding one more marginal mark
+// once the chapter has started to speak.
+function VideAnnotation({ visible }: { visible: boolean }) {
+  return (
+    <aside
+      className={`vide-annotation ${visible ? 'is-on' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="vide-annotation-rule" />
+      <span className="vide-annotation-text">
+        <em>vide</em>
+        <span className="vide-annotation-sep">·</span>
+        <span className="vide-annotation-en">look</span>
+      </span>
+      <svg
+        className="vide-annotation-caret"
+        viewBox="0 0 16 14"
+        preserveAspectRatio="none"
+      >
+        <path
+          className="vide-annotation-caret-line"
+          d="M 8 0 Q 7 6 8 13"
+        />
+        <path
+          className="vide-annotation-caret-tip"
+          d="M 5.6 10.4 L 8 13.2 L 10.6 10.6"
+        />
+      </svg>
+    </aside>
+  )
+}
+
+// PredicateRule — a thin gold ink rule drawn beneath the predicate
+// "good at frontend", mirroring the gold rule beneath the named
+// subject "Minimax M3". Two quiet underlines frame the verb phrase
+// being examined — the page's quiet way of marking the noun and the
+// predicate equally, so the reader sees the question as a balanced
+// triple: subject, predicate, climax.
+function PredicateRule() {
+  return <span className="predicate-rule" aria-hidden="true" />
+}
+
 // AnswerOrnament — a small printer's flourish that punctuates the
 // transition between answer and reply. Two rules flanking a
 // diamond and two pips.
@@ -1921,7 +1971,16 @@ export function App() {
 <em className="incipit-i">i</em><em className="question-lead">s</em>
               <span className="question-space"> </span>
                 <em className="question-name">Minimax&nbsp;M3</em>
-                <span className="question-verb"> good at frontend </span>
+                <span className="question-name-pause" aria-hidden="true">
+                  <span className="question-name-pause-dot" />
+                </span>
+                <span className="question-verb-wrap">
+                  <span className="question-verb"> good at frontend </span>
+                  <PredicateRule />
+                </span>
+                <span className="question-yet-pause" aria-hidden="true">
+                  <span className="question-yet-pause-dot" />
+                </span>
                 <em className="question-yet">yet</em>
                 <span className="question-mark-group">
                   <span className="question-mark">?</span>
@@ -1931,6 +1990,7 @@ export function App() {
             </h1>
              <Maniculum active={pointing} />
              <ScribeInkpot active={pointing} />
+             <VideAnnotation visible={answerOn && answerChars >= 6} />
              <p className="question-prompt">press the mark · the page answers</p>
             <span
               key={noteNonce}
