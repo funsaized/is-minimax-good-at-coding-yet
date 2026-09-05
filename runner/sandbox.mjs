@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import os from 'node:os'
-import { ROOT, command, filesIn, hash, parseUsage, writeJSON, config } from './lib.mjs'
+import { ROOT, command, filesIn, hash, parseUsage, writeJSON, config, summarizeChangelog } from './lib.mjs'
 
 const protectedFiles = ['package.json', 'tsconfig.json', 'vite.config.ts', 'index.html', 'src/main.tsx']
 export async function makeCandidate(attempt, context) {
@@ -61,7 +61,7 @@ export async function runModel(attempt) {
       onStderr: chunk => { void errFile.write(chunk) },
     })
   } finally { await outFile.close(); await errFile.close() }
-  const { usage, error } = parseUsage(output)
+  const { usage, error } = parseUsage(await fs.readFile(path.join(attempt, 'opencode.jsonl'), 'utf8'))
   if (error) throw new Error(`OpenCode: ${error}`)
   if (!usage.steps) throw new Error('OpenCode returned no completed model steps')
   return { usage, promptHash: hash(prompt) }
@@ -79,5 +79,5 @@ export async function verifyCandidate(attempt) {
   const changes = (await fs.readFile(path.join(work, 'CHANGELOG.md'), 'utf8')).trim()
   if (!changes) throw new Error('Model did not write CHANGELOG.md')
   await sandboxCommand(attempt, '/opt/node/bin/npm', ['run', 'build'], { timeout: 120_000 })
-  return changes.split('\n')[0].replace(/^#+\s*/, '').slice(0, 120)
+  return summarizeChangelog(changes)
 }

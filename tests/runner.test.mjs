@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
-import { parseUsage, dailyGate, config, filesIn, writeJSON, readJSON } from '../runner/lib.mjs'
+import { parseUsage, dailyGate, config, filesIn, writeJSON, readJSON, summarizeChangelog } from '../runner/lib.mjs'
 import { serve } from '../runner/browser.mjs'
 
 test('OpenCode failures are detected even when the process exits successfully', () => {
@@ -22,6 +22,12 @@ test('daily limits stop new runs and reset on the next UTC date', () => {
   assert.equal(dailyGate(state, new Date('2026-09-06T00:01:00Z')), null)
   state.days['2026-09-05'] = { runs: 1, estimatedCostUsd: config.maxEstimatedDailyCostUsd }
   assert.match(dailyGate(state, new Date('2026-09-05T01:00:00Z')), /cost allowance/)
+})
+
+test('timeline descriptions use the design summary rather than a generic changelog heading', () => {
+  assert.equal(summarizeChangelog('# Iteration 1\n\nA warm composition with drifting particles.\n\n- Added SVG.'), 'A warm composition with drifting particles.')
+  assert.equal(summarizeChangelog('Refined the typography.\n\nDetails'), 'Refined the typography.')
+  assert.equal(summarizeChangelog('a'.repeat(200)).length, 120)
 })
 
 test('snapshot validation rejects symlinks that could archive host files', async () => {

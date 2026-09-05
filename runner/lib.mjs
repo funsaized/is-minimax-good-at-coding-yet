@@ -74,6 +74,11 @@ export function parseUsage(output) {
   }
   return { usage, error }
 }
+export function summarizeChangelog(text) {
+  const lines = text.split('\n').map(line => line.trim()).filter(Boolean)
+  const meaningful = lines.find(line => !/^#{1,6}\s/.test(line)) ?? lines[0] ?? 'Updated the page'
+  return meaningful.replace(/^[-*]\s+/, '').replace(/^#+\s*/, '').slice(0, 120)
+}
 export function dailyGate(state, now = new Date()) {
   const day = now.toISOString().slice(0, 10)
   const entry = state.days?.[day] ?? { runs: 0, estimatedCostUsd: 0 }

@@ -86,6 +86,7 @@ async function once() {
   const gate = dailyGate(state)
   if (gate) throw new Error(gate)
   if (await git('status', '--porcelain')) throw new Error('Working tree has uncommitted changes; commit them before starting the worker')
+  await git('pull', '--ff-only', 'origin', 'main')
   const manifest = await readManifest()
   if (!manifest.iterations.length || !state.lastPublished) throw new Error('Publish the seed before starting MiniMax')
   if (await directorySize(path.join(ROOT, 'public/iterations')) >= config.maxArchiveBytes) throw new Error('Archive size limit reached; increase maxArchiveBytes deliberately before continuing')
