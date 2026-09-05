@@ -365,6 +365,137 @@ body {
   50%      { transform: scaleY(1.0); opacity: 0.78; }
 }
 
+/* ----- Candle flame (authored light source) -----
+   * A small drawn candle above the composition. Its three nested
+   * teardrops breathe and sway gently; the halo brightens with
+   * pointer proximity to the hero, driven by the --flame-warmth
+   * CSS variable set from the canvas loop. */
+
+.candle-flame {
+  position: absolute;
+  top: clamp(18px, 4.5vh, 54px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(34px, 5.2vw, 68px);
+  height: auto;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  filter:
+    drop-shadow(0 0 calc(10px + var(--flame-warmth, 0) * 22px)
+                rgba(240, 180, 110, calc(0.35 + var(--flame-warmth, 0) * 0.45)));
+  animation: flameIn 2.6s ease 1.25s forwards;
+  will-change: opacity, filter;
+  transition: filter 0.4s ease;
+}
+
+.candle-flame svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+@keyframes flameIn {
+  to { opacity: 1; }
+}
+
+.flame-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  mix-blend-mode: screen;
+  animation: haloBreathe 4.4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes haloBreathe {
+  0%, 100% { opacity: 1; transform: scale(calc(1 + var(--flame-warmth, 0) * 0.08)); }
+  50%      { opacity: 0.72; transform: scale(calc(1.08 + var(--flame-warmth, 0) * 0.1)); }
+}
+
+.flame-outer {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: flameSway 5.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes flameSway {
+  0%, 100% { transform: rotate(-2.6deg) scaleX(1); }
+  50%      { transform: rotate(3deg) scaleX(0.95); }
+}
+
+.flame-inner {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: flameSwayInner 3.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes flameSwayInner {
+  0%, 100% { transform: rotate(2.4deg) scaleX(0.92); }
+  50%      { transform: rotate(-2.8deg) scaleX(1.06); }
+}
+
+.flame-base {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: flameBase 0.85s ease-in-out infinite;
+  opacity: 0.55;
+}
+
+@keyframes flameBase {
+  0%, 100% { opacity: 0.45; transform: scaleX(0.94); }
+  50%      { opacity: 0.7; transform: scaleX(1.06); }
+}
+
+.flame-core {
+  opacity: 0.92;
+  animation: coreFlicker 0.7s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes coreFlicker {
+  0%, 100% { opacity: 0.78; transform: scaleY(0.96); }
+  50%      { opacity: 1; transform: scaleY(1.04); }
+}
+
+.flame-wick {
+  opacity: 0.55;
+}
+
+/* Brief flare when the reader acknowledges the question */
+.candle-flame.is-flaring .flame-halo {
+  animation: haloFlare 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.candle-flame.is-flaring .flame-outer {
+  animation: flameFlare 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.candle-flame.is-flaring .flame-inner {
+  animation: flameInnerFlare 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes haloFlare {
+  0%   { transform: scale(1); opacity: 1; }
+  35%  { transform: scale(1.55); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes flameFlare {
+  0%   { transform: rotate(0deg) scale(1); }
+  30%  { transform: rotate(4deg) scale(1.18); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+@keyframes flameInnerFlare {
+  0%   { transform: rotate(0deg) scale(1); }
+  30%  { transform: rotate(-3deg) scale(1.22); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
 /* ----- Bee (Aldine messenger + parchment carrier) ----- */
 
 .bee-flight {
@@ -1410,6 +1541,61 @@ body {
 
 .illuminated-star-pip { fill: var(--bg-deep); }
 
+/* The hero's center dot and ring — a slow breath that hints the
+ * question is interactive. Subtle enough to read as the question
+ * mark being alive, not as a button demanding to be pressed. */
+.hero-dot {
+  fill: var(--gold);
+  fill-opacity: 0.88;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: heroDotBreath 6.4s ease-in-out 2.8s infinite;
+  will-change: transform, opacity;
+}
+
+.hero-dot-ring {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.2;
+  stroke-opacity: 0.18;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: heroRingBreath 6.4s ease-in-out 2.8s infinite;
+  will-change: transform, opacity;
+}
+
+.hero:hover .hero-dot,
+.hero:focus-visible .hero-dot {
+  fill-opacity: 1;
+  animation: heroDotPress 2.4s ease-in-out infinite;
+}
+
+.hero:hover .hero-dot-ring,
+.hero:focus-visible .hero-dot-ring {
+  stroke-opacity: 0.45;
+  animation: heroRingPress 2.4s ease-in-out infinite;
+}
+
+@keyframes heroDotBreath {
+  0%, 100% { fill-opacity: 0.88; transform: scale(1); }
+  50%      { fill-opacity: 0.62; transform: scale(0.94); }
+}
+
+@keyframes heroRingBreath {
+  0%, 100% { stroke-opacity: 0.2; transform: scale(1); }
+  50%      { stroke-opacity: 0.08; transform: scale(1.14); }
+}
+
+@keyframes heroDotPress {
+  0%, 100% { fill-opacity: 1; transform: scale(1); }
+  50%      { fill-opacity: 0.86; transform: scale(0.96); }
+}
+
+@keyframes heroRingPress {
+  0%, 100% { stroke-opacity: 0.5; transform: scale(1); }
+  50%      { stroke-opacity: 0.22; transform: scale(1.2); }
+}
+
 .illuminated-star-rays line {
   stroke: var(--gold);
   stroke-width: 1.1;
@@ -1913,10 +2099,10 @@ body {
 
 .question-name {
   font-style: italic;
-  font-variant-caps: small-caps;
+  font-variant-caps: all-small-caps;
   font-feature-settings: "smcp" on, "c2sc" on, "liga" on;
-  letter-spacing: 0.14em;
-  font-size: 0.78em;
+  letter-spacing: 0.16em;
+  font-size: 0.8em;
   color: var(--gold);
   padding: 0 0.05em;
   position: relative;
@@ -2504,6 +2690,18 @@ body {
     filter: blur(7px);
   }
   .taper-fill { animation: none; transform: scaleY(1); }
+  .candle-flame {
+    animation: none;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 14px rgba(240, 180, 110, 0.32));
+  }
+  .flame-halo { animation: none; opacity: 0.85; transform: none; }
+  .flame-outer { animation: none; transform: none; }
+  .flame-inner { animation: none; transform: none; }
+  .flame-base { animation: none; opacity: 0.55; transform: none; }
+  .flame-core { animation: none; opacity: 0.9; transform: none; }
+  .hero-dot { animation: none; fill-opacity: 0.88; transform: none; }
+  .hero-dot-ring { animation: none; stroke-opacity: 0.2; transform: none; }
   .signature { animation: none; opacity: 0.92; transform: none; }
   .ribbon { animation: none; }
   .ribbon-inner { animation: none; opacity: 0.92; transform: none; }
@@ -2564,6 +2762,7 @@ body {
   .question-underline { left: 6%; right: 6%; }
   .watermark { width: min(130vmin, 760px); height: min(130vmin, 760px); }
   .reply { font-size: clamp(13px, 1.6vw, 16px); }
+  .candle-flame { width: clamp(30px, 4.4vw, 50px); top: clamp(14px, 3vh, 32px); }
   .taper { width: clamp(64px, 18vw, 130px); height: clamp(150px, 26vh, 260px); top: 16%; }
   .bee-glyph { width: 26px; height: 20px; }
   .bee-flight { margin-left: -13px; margin-top: -10px; }
@@ -2582,6 +2781,7 @@ body {
   .hero-svg { width: clamp(140px, 30vw, 200px); }
   .question { font-size: clamp(22px, 5.4vw, 34px); max-width: 18ch; gap: 8px; }
   .guide-rule { width: 48px; height: 48px; }
+  .candle-flame { width: 32px; top: 18px; opacity: 0.85; }
   .taper { width: clamp(56px, 24vw, 110px); height: clamp(120px, 24vh, 200px); top: 14%; filter: blur(6px); }
   .signature { width: 44px; }
   .bracket-flourish { width: clamp(12px, 2vw, 18px); height: clamp(56px, 7vw, 88px); }
@@ -2626,6 +2826,8 @@ body {
   .folio-mark { width: 48px; }
   .folio-mark-letter { font-size: 30px; }
   .hero-svg { width: 150px; }
+  .candle-flame { width: 26px; top: 12px; opacity: 0.75; }
+  .taper { width: clamp(48px, 30vw, 90px); height: clamp(96px, 22vh, 170px); top: 12%; filter: blur(5px); }
   .question { font-size: 23px; max-width: 100%; line-height: 1.2; gap: 6px; }
   .composition { gap: 16px; }
   .rubric {

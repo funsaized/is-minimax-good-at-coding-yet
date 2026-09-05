@@ -5,6 +5,7 @@ import {
   useCallback,
   type PointerEvent as ReactPointerEvent,
   type CSSProperties,
+  type RefObject,
 } from 'react'
 
 const HERO_PATH =
@@ -445,8 +446,10 @@ function Taper() {
       <defs>
         <linearGradient id="taper-grad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%"   stopColor="currentColor" stopOpacity="0" />
-          <stop offset="58%"  stopColor="currentColor" stopOpacity="0.18" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0.46" />
+          <stop offset="22%"  stopColor="currentColor" stopOpacity="0.06" />
+          <stop offset="58%"  stopColor="currentColor" stopOpacity="0.22" />
+          <stop offset="92%"  stopColor="currentColor" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0.42" />
         </linearGradient>
       </defs>
       <rect
@@ -458,6 +461,93 @@ function Taper() {
         className="taper-fill"
       />
     </svg>
+  )
+}
+
+// CandleFlame — a small drawn candle that is the page's authored light
+// source. Three nested teardrops (outer warm halo, inner gold body, hot
+// white core) plus a thin wick. The flame breathes and sways, and a
+// ref-based pointer proximity variable brightens the halo when the
+// reader approaches the question — the candle leaning towards what
+// the reader is reading.
+function CandleFlame({ wrapRef, flaring }: {
+  wrapRef: RefObject<HTMLSpanElement | null>
+  flaring: boolean
+}) {
+  return (
+    <span
+      ref={wrapRef}
+      className={`candle-flame${flaring ? ' is-flaring' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 48 92" focusable="false">
+        <defs>
+          <radialGradient id="flame-halo-grad" cx="50%" cy="46%" r="50%">
+            <stop offset="0%"   stopColor="#f5d99c" stopOpacity="0.55" />
+            <stop offset="48%"  stopColor="#e89a6a" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#b0533a" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="flame-outer-grad" cx="50%" cy="66%" r="58%">
+            <stop offset="0%"   stopColor="#f0a370" stopOpacity="0.95" />
+            <stop offset="55%"  stopColor="#d9b074" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#d9b074" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="flame-inner-grad" cx="50%" cy="58%" r="55%">
+            <stop offset="0%"   stopColor="#fff5d4" stopOpacity="1" />
+            <stop offset="50%"  stopColor="#f0d49a" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#f0d49a" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="flame-base-grad" cx="50%" cy="40%" r="55%">
+            <stop offset="0%"   stopColor="#d9b074" stopOpacity="0.0" />
+            <stop offset="55%"  stopColor="#7d9ab8" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#5e7593" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle
+          cx="24"
+          cy="42"
+          r="28"
+          fill="url(#flame-halo-grad)"
+          className="flame-halo"
+        />
+        <path
+          d="M 24 6 Q 16 22 16 40 Q 16 56 24 60 Q 32 56 32 40 Q 32 22 24 6 Z"
+          fill="url(#flame-outer-grad)"
+          className="flame-outer"
+        />
+        <path
+          d="M 24 14 Q 19 26 19 40 Q 19 48 24 52 Q 29 48 29 40 Q 29 26 24 14 Z"
+          fill="url(#flame-inner-grad)"
+          className="flame-inner"
+        />
+        <ellipse
+          cx="24"
+          cy="44"
+          rx="3.2"
+          ry="7.6"
+          fill="url(#flame-base-grad)"
+          className="flame-base"
+        />
+        <ellipse
+          cx="24"
+          cy="44"
+          rx="2.2"
+          ry="6"
+          fill="#fff5d4"
+          className="flame-core"
+        />
+        <line
+          x1="24"
+          y1="50"
+          x2="24"
+          y2="68"
+          stroke="#4a2e1a"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+          className="flame-wick"
+        />
+      </svg>
+    </span>
   )
 }
 
@@ -875,6 +965,8 @@ export function App() {
   const pointerRef = useRef({ x: 0, y: 0, over: false, active: false })
   const heroBoxRef = useRef<DOMRect | null>(null)
   const heroRef = useRef<HTMLButtonElement>(null)
+  const flameWrapRef = useRef<HTMLSpanElement>(null)
+  const flameWarmthRef = useRef(0)
   const waveTimeoutsRef = useRef<number[]>([])
 
   useEffect(() => {
@@ -1068,6 +1160,34 @@ export function App() {
       const ptr = pointerRef.current
       if (pulseRef.current > 0) pulseRef.current = Math.max(0, pulseRef.current - 0.014)
       if (echoRef.current > 0) echoRef.current = Math.max(0, echoRef.current - 0.0065)
+
+      // Drive the candle flame's warmth from pointer proximity to the
+      // hero — when the reader draws near the question, the flame
+      // leans toward them, halo brightening. Eased gently so the
+      // change feels like the candle, not the cursor.
+      const hb = heroBoxRef.current
+      let targetWarmth = 0
+      if (hb && ptr.over) {
+        const cxp = (hb.left + hb.right) / 2
+        const cyp = (hb.top + hb.bottom) / 2
+        const dx = ptr.x - cxp
+        const dy = ptr.y - cyp
+        const d2 = dx * dx + dy * dy
+        const R = 460
+        if (d2 < R * R) {
+          const d = Math.sqrt(d2) || 1
+          targetWarmth = 1 - d / R
+        }
+      }
+      flameWarmthRef.current += (targetWarmth - flameWarmthRef.current) * 0.06
+      const flameEl = flameWrapRef.current
+      if (flameEl) {
+        flameEl.style.setProperty(
+          '--flame-warmth',
+          flameWarmthRef.current.toFixed(3),
+        )
+      }
+
       for (const p of parts) {
         if (ptr.active) {
           const dx = ptr.x - p.x
@@ -1312,6 +1432,7 @@ export function App() {
       <Ribbon />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
+        <CandleFlame wrapRef={flameWrapRef} flaring={pulsing} />
         <Taper />
         <Marg
           corner="tl"
