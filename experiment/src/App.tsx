@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback, type PointerEvent as ReactPointerEvent } from 'react'
 
 const HERO_PATH = 'M 65 115 C 65 5 175 5 175 115 C 175 172 120 156 120 205 L 120 250'
 const HERO_DOT = { cx: 120, cy: 286, r: 17 }
@@ -15,6 +15,15 @@ function useReducedMotion() {
   return reduced
 }
 
+function useTick(intervalMs: number) {
+  const [now, setNow] = useState(() => Date.now())
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(Date.now()), intervalMs)
+    return () => clearInterval(id)
+  }, [intervalMs])
+  return now
+}
+
 type Particle = {
   x: number
   y: number
@@ -22,7 +31,52 @@ type Particle = {
   vy: number
   r: number
   a: number
-  warm: boolean
+  tone: 'warm' | 'cool' | 'pale'
+}
+
+type Corner = 'tl' | 'tr' | 'bl' | 'br'
+
+function Marg({
+  corner,
+  id,
+  label,
+  body,
+  active,
+  wave,
+  onHover,
+  ariaLabel,
+  children,
+}: {
+  corner: Corner
+  id: string
+  label: string
+  body?: string
+  active: string | null
+  wave: boolean
+  onHover: (id: string | null) => void
+  ariaLabel?: string
+  children?: React.ReactNode
+}) {
+  const dim = active !== null && active !== id
+  const classes = [`marg`, `marg-${corner}`]
+  if (dim) classes.push('dim')
+  if (wave) classes.push('echo-wave')
+  return (
+    <aside
+      className={classes.join(' ')}
+      onMouseEnter={() => onHover(id)}
+      onMouseLeave={() => onHover(null)}
+      onFocus={() => onHover(id)}
+      onBlur={() => onHover(null)}
+      tabIndex={0}
+      aria-label={ariaLabel ?? `${label}${body ? ': ' + body : ''}`}
+    >
+      <span className="marg-rule" />
+      <span className="marg-label">{label}</span>
+      {body !== undefined && <span className="marg-body">{body}</span>}
+      {children}
+    </aside>
+  )
 }
 
 export function App() {
@@ -31,10 +85,17 @@ export function App() {
   const [ready, setReady] = useState(false)
   const [drawn, setDrawn] = useState(false)
   const [pulsing, setPulsing] = useState(false)
+  const [tracing, setTracing] = useState(false)
+  const [active, setActive] = useState<string | null>(null)
+  const [echoIdx, setEchoIdx] = useState(-1)
   const pulseRef = useRef(0)
+  const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
   const dimsRef = useRef({ w: 0, h: 0 })
-  const pointerRef = useRef({ x: 0, y: 0, active: false })
+  const pointerRef = useRef({ x: 0, y: 0, active: false, over: false })
+  const heroBoxRef = useRef<DOMRect | null>(null)
+  const waveTimeoutsRef = useRef<number[]>([])
+  const now = useTick(reduced ? 60_000 : 1000)
 
   useEffect(() => {
     const t = setTimeout(() => setReady(true), 60)
@@ -42,7 +103,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const t = setTimeout(() => setDrawn(true), reduced ? 0 : 120)
+    const t = setTimeout(() => setDrawn(true), reduced ? 0 : 160)
     return () => clearTimeout(t)
   }, [reduced])
 
@@ -67,17 +128,19 @@ export function App() {
 
     const seed = () => {
       const { w, h } = dimsRef.current
-      const count = Math.min(110, Math.floor((w * h) / 15000))
+      const count = Math.min(150, Math.floor((w * h) / 11000))
       const arr: Particle[] = []
       for (let i = 0; i < count; i++) {
+        const r = Math.random()
+        const tone: Particle['tone'] = r < 0.16 ? 'warm' : r < 0.26 ? 'cool' : 'pale'
         arr.push({
           x: Math.random() * w,
           y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.1,
-          vy: (Math.random() - 0.5) * 0.1,
-          r: Math.random() * 1.1 + 0.35,
-          a: Math.random() * 0.45 + 0.15,
-          warm: Math.random() < 0.18,
+          vx: (Math.random() - 0.5) * 0.08,
+          vy: (Math.random() - 0.5) * 0.08,
+          r: Math.random() * 1.1 + 0.3,
+          a: Math.random() * 0.45 + 0.1,
+          tone,
         })
       }
       partsRef.current = arr
@@ -88,13 +151,44 @@ export function App() {
       const { w, h } = dimsRef.current
       ctx.clearRect(0, 0, w, h)
       const boost = pulseRef.current
+      const eBoost = echoRef.current
+      const ptr = pointerRef.current
+      const hb = heroBoxRef.current
+
       for (const p of partsRef.current) {
-        const alpha = p.a * (1 + boost * 1.1)
+        let alpha = p.a * (1 + boost * 1.1)
+        let radius = p.r * (1 + boost * 0.5)
+        if (ptr.over) {
+          const dx = ptr.x - p.x
+          const dy = ptr.y - p.y
+          const d2 = dx * dx + dy * dy
+          const R = 220
+          if (d2 < R * R) {
+            const d = Math.sqrt(d2) || 1
+            const k = 1 - d / R
+            alpha += k * 0.4
+            radius += k * 0.35
+          }
+        }
+        if (eBoost > 0 && hb) {
+          const cxp = (hb.left + hb.right) / 2
+          const cyp = (hb.top + hb.bottom) / 2
+          const dx = cxp - p.x
+          const dy = cyp - p.y
+          const d2 = dx * dx + dy * dy
+          const R = 360
+          if (d2 < R * R) {
+            const d = Math.sqrt(d2) || 1
+            const k = 1 - d / R
+            alpha += k * eBoost * 0.55
+            radius += k * eBoost * 0.5
+          }
+        }
         ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r * (1 + boost * 0.5), 0, Math.PI * 2)
-        ctx.fillStyle = p.warm
-          ? `rgba(217,176,116,${alpha})`
-          : `rgba(240,232,218,${alpha})`
+        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2)
+        if (p.tone === 'warm') ctx.fillStyle = `rgba(217,176,116,${Math.min(1, alpha)})`
+        else if (p.tone === 'cool') ctx.fillStyle = `rgba(150,170,196,${Math.min(1, alpha * 0.7)})`
+        else ctx.fillStyle = `rgba(240,232,218,${Math.min(1, alpha)})`
         ctx.fill()
       }
     }
@@ -104,6 +198,7 @@ export function App() {
       const parts = partsRef.current
       const ptr = pointerRef.current
       if (pulseRef.current > 0) pulseRef.current = Math.max(0, pulseRef.current - 0.014)
+      if (echoRef.current > 0) echoRef.current = Math.max(0, echoRef.current - 0.0065)
       for (const p of parts) {
         if (ptr.active) {
           const dx = ptr.x - p.x
@@ -138,6 +233,7 @@ export function App() {
     }
     const onLeave = () => {
       pointerRef.current.active = false
+      pointerRef.current.over = false
     }
     const onResize = () => {
       setupDims()
@@ -177,29 +273,147 @@ export function App() {
     return () => clearTimeout(t)
   }, [pulsing])
 
+  useEffect(() => {
+    if (!tracing) return
+    const t = setTimeout(() => setTracing(false), 1200)
+    return () => clearTimeout(t)
+  }, [tracing])
+
   const acknowledge = useCallback(() => {
     if (reduced) return
     pulseRef.current = 1
+    echoRef.current = 1
     setPulsing(true)
+    setTracing(true)
+    const order: Corner[] = ['tl', 'tr', 'bl', 'br']
+    waveTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
+    waveTimeoutsRef.current = []
+    order.forEach((_, i) => {
+      const t = window.setTimeout(() => setEchoIdx(i), 260 + i * 300)
+      waveTimeoutsRef.current.push(t)
+    })
+    const end = window.setTimeout(
+      () => setEchoIdx(-1),
+      260 + order.length * 300 + 260,
+    )
+    waveTimeoutsRef.current.push(end)
   }, [reduced])
+
+  const onHeroEnter = useCallback((e: ReactPointerEvent) => {
+    pointerRef.current.over = true
+    heroBoxRef.current = (e.currentTarget as HTMLElement).getBoundingClientRect()
+  }, [])
+  const onHeroLeave = useCallback(() => {
+    pointerRef.current.over = false
+  }, [])
+  const onHeroMove = useCallback((e: ReactPointerEvent) => {
+    heroBoxRef.current = (e.currentTarget as HTMLElement).getBoundingClientRect()
+  }, [])
+
+  const d = new Date(now)
+  const secAngle =
+    (d.getSeconds() / 60) * 360 + (d.getMilliseconds() / 1000) * (360 / 60)
+  const minAngle = (d.getMinutes() / 60) * 360 + (d.getSeconds() / 60) * 6
+  const hh = d.getHours().toString().padStart(2, '0')
+  const mm = d.getMinutes().toString().padStart(2, '0')
 
   return (
     <main className="stage">
       <canvas ref={canvasRef} className="dust" aria-hidden="true" />
-      <span className="index-mark" aria-hidden="true">—</span>
-      <div className={`composition ${ready ? 'ready' : ''}`}>
-        <button
-          type="button"
-          className={`hero ${drawn ? 'drawn' : ''} ${pulsing ? 'pulse' : ''}`}
-          onClick={acknowledge}
-          aria-label="the question"
+      <div className="rim" aria-hidden="true" />
+
+      <div className={`frame ${ready ? 'ready' : ''}`}>
+        <Marg
+          corner="tl"
+          id="tl"
+          label="folio"
+          body="a question, slowly composed"
+          active={active}
+          wave={echoIdx === 0}
+          onHover={setActive}
+        />
+        <Marg
+          corner="tr"
+          id="tr"
+          label="medium"
+          body="the browser is the paper"
+          active={active}
+          wave={echoIdx === 1}
+          onHover={setActive}
+        />
+        <Marg
+          corner="bl"
+          id="bl"
+          label="craft"
+          body="typeset in pixels, drawn in code"
+          active={active}
+          wave={echoIdx === 2}
+          onHover={setActive}
+        />
+        <Marg
+          corner="br"
+          id="br"
+          label="now"
+          active={active}
+          wave={echoIdx === 3}
+          onHover={setActive}
+          ariaLabel={`Local time ${hh}:${mm}`}
         >
-          <svg viewBox="0 0 240 340" className="hero-svg" aria-hidden="true">
-            <path className="hero-stroke" d={HERO_PATH} pathLength={100} />
-            <circle className="hero-dot" cx={HERO_DOT.cx} cy={HERO_DOT.cy} r={HERO_DOT.r} />
-          </svg>
-        </button>
-        <h1 className="question">is Minimax M3 good at frontend yet?</h1>
+          <span className="marg-now">
+            <span className="marg-now-time">
+              {hh}
+              <span className="clock-colon">:</span>
+              {mm}
+            </span>
+            <span className="clock" aria-hidden="true">
+              <span className="clock-ring" />
+              <span className="clock-pivot" />
+              <span
+                className="clock-hand clock-hand-min"
+                style={{ transform: `rotate(${minAngle}deg)` }}
+              />
+              <span
+                className="clock-hand clock-hand-sec"
+                style={{ transform: `rotate(${secAngle}deg)` }}
+              />
+            </span>
+          </span>
+        </Marg>
+
+        <div className={`composition ${ready ? 'ready' : ''}`}>
+          <button
+            type="button"
+            className={`hero ${drawn ? 'drawn' : ''} ${pulsing ? 'pulse' : ''} ${tracing ? 'echo' : ''}`}
+            onClick={acknowledge}
+            onPointerEnter={onHeroEnter}
+            onPointerLeave={onHeroLeave}
+            onPointerMove={onHeroMove}
+            aria-label="the question"
+          >
+            <svg viewBox="0 0 240 340" className="hero-svg" aria-hidden="true">
+              <path className="hero-stroke" d={HERO_PATH} pathLength={100} />
+              <path className="hero-trace" d={HERO_PATH} pathLength={100} />
+              <circle
+                className="hero-dot-ring"
+                cx={HERO_DOT.cx}
+                cy={HERO_DOT.cy}
+                r={HERO_DOT.r + 6}
+              />
+              <circle
+                className="hero-dot"
+                cx={HERO_DOT.cx}
+                cy={HERO_DOT.cy}
+                r={HERO_DOT.r}
+              />
+            </svg>
+          </button>
+          <div className="ruling" aria-hidden="true">
+            <span className="ruling-mark ruling-mark-l" />
+            <span className="ruling-line" />
+            <span className="ruling-mark ruling-mark-r" />
+          </div>
+          <h1 className="question">is Minimax M3 good at frontend yet?</h1>
+        </div>
       </div>
     </main>
   )
