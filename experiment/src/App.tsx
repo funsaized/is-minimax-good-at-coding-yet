@@ -569,6 +569,51 @@ function Signature() {
   )
 }
 
+// PenTrial — a small scribal flourish at the end of the colophon, the
+// kind a scribe leaves when finishing a page. A few small flourishes
+// and pips, like a quill being tested on the parchment. The whole
+// flourish draws in with a soft easing, just after the seal.
+function PenTrial() {
+  return (
+    <span className="pen-trial" aria-hidden="true">
+      <svg viewBox="0 0 60 10" className="pen-trial-svg" focusable="false">
+        <path
+          className="pen-trial-mark pen-trial-mark-1"
+          d="M 2 6 Q 8 1 14 6"
+        />
+        <circle cx="16.5" cy="6" r="0.7" className="pen-trial-pip pen-trial-pip-1" />
+        <path
+          className="pen-trial-mark pen-trial-mark-2"
+          d="M 20 6 L 28 6"
+        />
+        <path
+          className="pen-trial-mark pen-trial-mark-3"
+          d="M 32 2 Q 36 6 32 10"
+        />
+        <circle cx="40" cy="6" r="0.9" className="pen-trial-pip pen-trial-pip-2" />
+        <path
+          className="pen-trial-mark pen-trial-mark-4"
+          d="M 44 5 Q 50 1 54 5 Q 50 9 44 7"
+        />
+        <circle cx="57" cy="5" r="0.5" className="pen-trial-pip pen-trial-pip-3 pen-trial-pip-sm" />
+      </svg>
+    </span>
+  )
+}
+
+// InkStain — a small vermilion ink-blot that pools beside the answer
+// when it lands. Three concentric dots of diminishing opacity, like
+// a drop of ink that has just settled on the parchment.
+function InkStain() {
+  return (
+    <span className="ink-stain" aria-hidden="true">
+      <span className="ink-stain-halo" />
+      <span className="ink-stain-pool" />
+      <span className="ink-stain-dot" />
+    </span>
+  )
+}
+
 // Maniculum — the medieval reader's pointing hand that emerges from the
 // right margin to mark the question's climax word ("yet?"). Always present
 // as a quiet marginal mark; brightens and leans in when the reader engages
@@ -1575,6 +1620,7 @@ export function App() {
                 </span>
               )}
             </p>
+            <InkStain />
           </div>
         </div>
 
@@ -1587,6 +1633,7 @@ export function App() {
             <Signature />
             <span className="colophon-folio">folio · xviii</span>
           </span>
+          <PenTrial />
           <Catchword />
         </div>
       </div>

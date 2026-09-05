@@ -1479,6 +1479,85 @@ body {
   50%      { opacity: calc(var(--pip-alpha) * 0.45); transform: scale(0.82); }
 }
 
+/* The hero's main "?" curve. Drawn by an unseen quill on page load:
+   the stroke begins hidden, then traces the question mark from the
+   left of the bowl all the way to the bottom of the stem, like ink
+   being laid on parchment. */
+.hero-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  animation:
+    heroStrokeShow 0.4s ease 1.05s forwards,
+    heroStrokeDraw 2.6s cubic-bezier(0.55, 0.04, 0.32, 1) 1.15s forwards;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.hero-trace {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  animation:
+    heroTraceShow 0.5s ease 3.45s forwards,
+    heroTraceDraw 1.6s cubic-bezier(0.55, 0.04, 0.32, 1) 3.5s forwards;
+  will-change: stroke-dashoffset, opacity;
+}
+
+@keyframes heroStrokeShow {
+  to { opacity: 1; }
+}
+
+@keyframes heroStrokeDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes heroTraceShow {
+  to { opacity: 0.42; }
+}
+
+@keyframes heroTraceDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* When the reader acknowledges the question, the hero stroke briefly
+   redraws — like the quill pressing harder. */
+.hero.echo .hero-stroke {
+  animation:
+    heroStrokeEcho 0.9s cubic-bezier(0.4, 0.04, 0.2, 1);
+}
+
+@keyframes heroStrokeEcho {
+  0%   { stroke-dashoffset: 0; stroke-width: 5.4; }
+  35%  { stroke-dashoffset: 100; stroke-width: 5.9; }
+  100% { stroke-dashoffset: 0; stroke-width: 5.4; }
+}
+
+.hero.echo .hero-trace {
+  animation: heroTraceEcho 0.9s cubic-bezier(0.4, 0.04, 0.2, 1);
+}
+
+@keyframes heroTraceEcho {
+  0%   { stroke-dashoffset: 0; opacity: 0.42; }
+  35%  { stroke-dashoffset: 100; opacity: 0.85; }
+  100% { stroke-dashoffset: 0; opacity: 0.42; }
+}
+
+/* The brief press-pulse on acknowledge — a halo around the stroke. */
+.hero.pulse .hero-stroke {
+  filter: drop-shadow(0 0 14px rgba(240, 212, 154, 0.55));
+  transition: filter 0.6s ease;
+}
+
 /* Illuminated star inside the question's bowl */
 .hero-bowl-illumination {
   position: absolute;
@@ -2106,7 +2185,7 @@ body {
   position: absolute;
   right: 100%;
   top: 50%;
-  width: clamp(20px, 4vw, 56px);
+  width: clamp(40px, 7vw, 96px);
   height: 1px;
   background: linear-gradient(
     270deg,
@@ -2114,17 +2193,17 @@ body {
     var(--vermilion) 60%,
     var(--vermilion) 100%
   );
-  transform: translateY(-0.5px);
+  transform: translateY(-0.5px) scaleX(0.08);
   transform-origin: 100% 50%;
   opacity: 0;
   transition:
-    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s,
-    width 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s;
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s,
+    transform 0.85s cubic-bezier(0.55, 0.04, 0.32, 1) 0.18s;
 }
 
 .composition.is-pointing .maniculum-lead {
-  opacity: 0.7;
-  width: clamp(40px, 7vw, 96px);
+  opacity: 0.78;
+  transform: translateY(-0.5px) scaleX(1);
 }
 
 /* ----- Question text (the chapter's title) -----
@@ -2200,6 +2279,37 @@ body {
   position: relative;
   display: inline-block;
   font-weight: 500;
+}
+
+/* A small gold rule drawn beneath the named subject "Minimax M3" —
+   the page's quiet way of underlining the noun of the sentence. */
+.question-name::after {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: clamp(-6px, -0.55vw, -4px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(217, 176, 116, 0.65) 28%,
+    rgba(240, 212, 154, 0.85) 50%,
+    rgba(217, 176, 116, 0.65) 72%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.4);
+  transform-origin: 50% 50%;
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 2.95s,
+    transform 1.15s cubic-bezier(0.2, 0.7, 0.2, 1) 2.95s;
+  pointer-events: none;
+}
+
+.composition.ready .question-name::after {
+  opacity: 0.85;
+  transform: scaleX(1);
 }
 
 .question-verb {
@@ -2705,8 +2815,9 @@ body {
   .hero-svg { animation: none; transform: none; }
   .hero-svg-wrap { transform: none; transition: none; }
   .hero-dot-ring { animation: none; opacity: 0.18; transform: scale(1); }
-  .hero-stroke { stroke-dashoffset: 0; transition: none; }
+  .hero-stroke { stroke-dashoffset: 0; transition: none; opacity: 1; }
   .hero-trace { display: none; }
+  .hero.echo .hero-stroke, .hero.echo .hero-trace { animation: none; }
   .hero-dot { transform: scale(1); transition: none; }
   .hero-spatter { display: none; }
   .hero.pulse { animation: none; }
@@ -2835,7 +2946,12 @@ body {
     opacity: 1;
     transform: translate(0, -50%) rotate(0deg);
   }
-  .maniculum-lead { transition: opacity 0.2s ease; }
+  .maniculum-lead {
+    transition: none;
+    opacity: 0.55;
+    transform: translateY(-0.5px) scaleX(1);
+  }
+  .composition.is-pointing .maniculum-lead { opacity: 0.78; }
   .maniculum-tip { animation: none; opacity: 0.7; transform: scale(1); }
   .question-yet::after {
     transition: opacity 0.2s ease, transform 0.2s ease;
@@ -3382,4 +3498,194 @@ body {
   .pressed-leaf-label { font-size: 7.5px; letter-spacing: 0.16em; }
   .vine-corner { width: 11px; height: 11px; }
   .question-flourish { bottom: -0.5em; }
+}
+
+/* ----- Iteration 24: drawn hero stroke, named-subject underline,
+   pen-trial closing flourish, and an ink-stain beside the reply.
+   * Three small additions deepen the manuscript as a real reading:
+   * the "?" is now drawn by a quill on page load; the named subject
+   * "Minimax M3" is set with a gold ink rule; a small pen trial
+   * closes the colophon; and a vermilion ink-stain pools beside
+   * the reply as if the page has just been written. */
+
+/* ----- Hero stroke draw-in (extends existing hero elements) ----- */
+/* (styles placed in the main hero block above) */
+
+/* ----- Pen trial (scribal flourish at the end of the colophon) ----- */
+
+.pen-trial {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: clamp(2px, 0.3vw, 4px);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 0.9s ease 3.25s,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 3.25s;
+  pointer-events: none;
+}
+
+.frame.ready .pen-trial {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pen-trial-svg {
+  width: clamp(38px, 4.2vw, 60px);
+  height: auto;
+  display: block;
+  overflow: visible;
+  color: var(--gold);
+}
+
+.pen-trial-mark {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.pen-trial-mark-1 { animation: penTrialDraw 0.8s cubic-bezier(0.4, 0.04, 0.2, 1) 3.4s forwards; }
+.pen-trial-mark-2 { animation: penTrialDraw 0.6s cubic-bezier(0.4, 0.04, 0.2, 1) 3.75s forwards; }
+.pen-trial-mark-3 { animation: penTrialDraw 0.7s cubic-bezier(0.4, 0.04, 0.2, 1) 3.95s forwards; }
+.pen-trial-mark-4 { animation: penTrialDraw 0.9s cubic-bezier(0.4, 0.04, 0.2, 1) 4.2s forwards; }
+
+.pen-trial-pip {
+  fill: var(--vermilion);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  will-change: transform, opacity;
+}
+
+.pen-trial-pip-sm { fill: var(--gold); }
+
+.pen-trial-pip-1 { animation: penTrialPip 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) 3.7s forwards; }
+.pen-trial-pip-2 { animation: penTrialPip 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) 4.1s forwards; }
+.pen-trial-pip-3 { animation: penTrialPip 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) 4.75s forwards; }
+
+@keyframes penTrialDraw {
+  to { opacity: 0.85; stroke-dashoffset: 0; }
+}
+
+@keyframes penTrialPip {
+  to { opacity: 0.78; transform: scale(1); }
+}
+
+/* ----- Ink stain (vermilion pool beside the reply) ----- */
+
+.ink-stain {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: clamp(6px, 0.8vw, 10px);
+  margin-top: clamp(8px, 1.1vw, 14px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.reply.is-on ~ .ink-stain {
+  opacity: 1;
+}
+
+.ink-stain-halo,
+.ink-stain-pool,
+.ink-stain-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+.ink-stain-halo {
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle, rgba(176, 83, 58, 0.28) 0%, transparent 70%);
+  filter: blur(1.5px);
+}
+
+.ink-stain-pool {
+  width: 7px;
+  height: 7px;
+  background: radial-gradient(circle,
+    rgba(176, 83, 58, 0.55) 0%,
+    rgba(176, 83, 58, 0.18) 60%,
+    transparent 100%);
+  filter: blur(0.4px);
+}
+
+.ink-stain-dot {
+  width: 2.2px;
+  height: 2.2px;
+  background: var(--vermilion-bright);
+  border-radius: 50%;
+  box-shadow: 0 0 3px rgba(176, 83, 58, 0.55);
+}
+
+/* Animations only play once the reply has been written. */
+.reply.is-on ~ .ink-stain .ink-stain-pool {
+  animation: inkStainPool 0.8s cubic-bezier(0.2, 1.2, 0.4, 1) 0.15s forwards;
+}
+.reply.is-on ~ .ink-stain .ink-stain-dot {
+  animation: inkStainDot 0.55s cubic-bezier(0.2, 1.3, 0.4, 1) 0.3s forwards;
+}
+.reply.is-on ~ .ink-stain .ink-stain-halo {
+  animation: inkStainHalo 2.4s ease 0.5s forwards;
+}
+
+@keyframes inkStainHalo {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  60%  { opacity: 0.85; }
+  100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1.4); }
+}
+
+@keyframes inkStainPool {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+  70%  { opacity: 0.95; transform: translate(-50%, -50%) scale(1.15); }
+  100% { opacity: 0.78; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes inkStainDot {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+  100% { opacity: 0.95; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ----- Reduced motion overrides for the new details ----- */
+@media (prefers-reduced-motion: reduce) {
+  .pen-trial { transition: none; opacity: 1; transform: none; }
+  .pen-trial-mark { animation: none; opacity: 0.85; stroke-dashoffset: 0; }
+  .pen-trial-pip { animation: none; opacity: 0.78; transform: scale(1); }
+  .ink-stain { transition: none; opacity: 1; }
+  .reply.is-on ~ .ink-stain .ink-stain-halo { animation: none; opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
+  .reply.is-on ~ .ink-stain .ink-stain-pool { animation: none; opacity: 0.78; transform: translate(-50%, -50%) scale(1); }
+  .reply.is-on ~ .ink-stain .ink-stain-dot { animation: none; opacity: 0.95; transform: translate(-50%, -50%) scale(1); }
+  .question-name::after { transition: none; opacity: 0.85; transform: scaleX(1); }
+}
+
+/* ----- Mobile sizing for the new details ----- */
+@media (max-width: 880px) {
+  .pen-trial-svg { width: clamp(32px, 4vw, 50px); }
+  .ink-stain-halo { width: 12px; height: 12px; }
+  .ink-stain-pool { width: 6px; height: 6px; }
+}
+
+@media (max-width: 520px) {
+  .pen-trial-svg { width: 30px; }
+  .ink-stain-halo { width: 10px; height: 10px; }
+  .ink-stain-pool { width: 5px; height: 5px; }
+  .ink-stain-dot { width: 1.8px; height: 1.8px; }
 }

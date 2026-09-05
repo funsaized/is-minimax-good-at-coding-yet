@@ -1,10 +1,10 @@
-# Changelog
+# Iteration 24
 
-## Iteration 23 — A pressed leaf, a quill's slip, a vine corner
+A quill now draws the question mark, a gold ink rule underwrites the subject, and a small pen trial closes the chapter.
 
-- Added a small hand-drawn pressed leaf in the bottom-left margin, with a small `fol. press.` label beneath — a quiet reader's keepsake marking where the page was once stopped.
-- Replaced the plain gold L brackets on the question block with drawn vine corners (a stem and two leaves curling into the type, plus a vermilion pip).
-- Added a vermilion ink-stain flourish beneath the "yet?" question mark — a drawn curve that ends in a single drop, like a quill's slip.
-- Added a small printer's flourish (two rules flanking a diamond and two pips) that punctuates the transition between answer and reply.
-- Refined the prompt beneath the question from "Tap the mark when you have an opinion." to "press the mark · the page answers".
-- Added mobile and reduced-motion overrides for the new details so they remain visible and respectful at smaller sizes.
+- The hero "?" curve is now drawn on page load: a thick gold stroke traces from the bowl to the stem, then a fainter trace is drawn over the top, like ink laid by a quill. On acknowledge, the stroke briefly redraws in a quick echo.
+- "Minimax M3" — the named subject of the question — now carries a small gold ink rule beneath it, the page's quiet way of underlining the noun of the sentence.
+- A small scribal pen trial closes the colophon: four flourishes and three pips, drawn in sequence just after the wax seal settles, like a scribe testing their quill at the end of a page.
+- A small vermilion ink-stain pools beside the reply, three concentric dots of diminishing opacity that fade in once the page has finished writing, as if the reply has just been laid on the parchment.
+- The maniculum's lead line now draws in from the fingertip toward the question, with a smooth scaleX, instead of fading in with a width change.
+- Reduced-motion and mobile breakpoints updated for the new details.
