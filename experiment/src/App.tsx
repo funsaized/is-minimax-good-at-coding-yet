@@ -937,6 +937,35 @@ function PressedLeaf() {
   )
 }
 
+// ThumbPrint — a faint impression of a reader's thumb-mark in the
+// bottom-right margin, complementing the pressed leaf at the left.
+// An oval of soft ridges suggests a hand once rested here while
+// reading — the page's quiet physical history: a gift (leaf) and
+// a touch (thumb) framing the bottom of the folio. A paired mark
+// with the pressed leaf, mirroring its tilt and pacing so the two
+// margins read as a single sentence: "here was a gift, here was
+// a reader."
+function ThumbPrint() {
+  return (
+    <aside className="thumb-print" aria-label="a reader's thumb-mark">
+      <svg viewBox="0 0 48 64" className="thumb-print-svg" aria-hidden="true" focusable="false">
+        <ellipse cx="24" cy="34" rx="13" ry="24" className="thumb-print-oval" />
+        <path className="thumb-print-ridge" d="M 14 22 Q 24 16 34 22" />
+        <path className="thumb-print-ridge" d="M 12 30 Q 24 21 36 30" />
+        <path className="thumb-print-ridge" d="M 11 38 Q 24 28 37 38" />
+        <path className="thumb-print-ridge" d="M 12 46 Q 24 38 36 46" />
+        <path className="thumb-print-ridge" d="M 14 54 Q 24 46 34 54" />
+        <circle cx="32" cy="14" r="0.7" className="thumb-print-pip" />
+        <ellipse cx="26" cy="60" rx="9" ry="1.6" className="thumb-print-shadow" />
+      </svg>
+      <span className="thumb-print-label">
+        <span className="thumb-print-rule" />
+        <em className="thumb-print-text">manus</em>
+      </span>
+    </aside>
+  )
+}
+
 // VineCorner — small hand-drawn vine ornament that replaces the plain
 // gold L brackets on the question block. A leaf curls in from the
 // corner toward the text, like a printer's flourish painted over
@@ -1492,6 +1521,7 @@ export function App() {
       <Watermark />
       <Ribbon />
       <PressedLeaf />
+      <ThumbPrint />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
         <CandleFlame wrapRef={flameWrapRef} flaring={pulsing} />

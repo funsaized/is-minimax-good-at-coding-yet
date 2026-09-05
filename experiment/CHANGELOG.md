@@ -1,3 +1,10 @@
-A reader's attention — adds a third marginal note and a cursor-following reading lantern.
+# Changelog
 
-Added a top-right marginal note (label "reading", body "the candle, the reader, the page", whisper "the candle is patient; the reader is patient; the page, too — slow down"), completing the tri-corner marginalia scheme. The acknowledge wave now plays tl → tr → br. Added a soft, cursor-following warm radial gradient — a "reading lantern" — that fades in on pointermove and fades out 1.4s after the cursor rests, sitting beneath the dust layer; hidden in steady state on touch devices. Added transition-delays for the new tr label and body so its entrance matches the existing corners.
+## Iteration 26
+
+A reader's thumb-mark now rests in the bottom-right margin, mirroring the pressed leaf — together they frame the folio's physical history as a gift and a touch.
+
+- Added a thumb-print impression in the bottom-right margin: a faint oval of vermilion ridges with a small "manus" label, complementing the pressed leaf at the left. The two marks share vocabulary (Latin printer's hand), tilt direction (mirrored angles), and pacing (delayed, gentle entry), so the bottom of the folio now reads as a single sentence: a keepsake and a reader.
+- Refined the question text composition: bumped the type size to clamp(34px, 5.2vw, 62px) for a slightly more confident presence at the chapter's centerpiece.
+- Refined the answer text: nudged font-size and line-height so the reply reads with a touch more breathing room as it types itself into the page.
+- Added reduced-motion and mobile overrides for the new thumb-mark; hidden on the smallest screens to keep the colophon and answer clear.
