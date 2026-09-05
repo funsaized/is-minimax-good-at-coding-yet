@@ -4990,3 +4990,310 @@ body {
     bottom: -4px;
   }
 }
+
+/* ----- Iteration 31: a horologium and tightened typography -----
+ *
+ * One new authored element plus a few refinements:
+ *
+ *  - A small drawn sundial ("horologium") sits in the upper-left margin
+ *    of the hero, paired with the "Qu." rubric and the scribe's
+ *    inkpot. A semicircle dial face with five hour marks, a thin
+ *    gnomon rising from the center, and a faint vermilion shadow cast
+ *    toward the hour of reading. The dial is drawn in slowly on page
+ *    load — like an instrument being laid out at the start of a
+ *    reading session. Pairs thematically with the candle flame above
+ *    (light + time = the moment of reading).
+ *
+ *  - The question line gets a tighter rhythm: a small kerning nudge
+ *    between "is" and "Minimax M3", and a subtle "punctus" (gold
+ *    middle-dot) inserted between the named subject and the predicate,
+ *    so the line reads as a balanced triple (subject · predicate ·
+ *    climax) rather than a run-on.
+ *
+ *  - A faint hairline now connects the hero emblem's bowl to the
+ *    question's terminal "?" when the reader engages — the two
+ *    question marks (the emblem above, the punctuation in the text)
+ *    acknowledge each other, framed by the chapter's vertical axis. */
+
+/* ----- Horologium ----- */
+
+.horologium {
+  position: absolute;
+  right: calc(100% + clamp(4px, 0.7vw, 10px));
+  top: clamp(4px, 1.2vh, 18px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(3px, 0.3vw, 6px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-4px, 0);
+  will-change: opacity, transform;
+  animation: horologiumIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.35s forwards;
+  z-index: 1;
+}
+
+.horologium-svg {
+  width: clamp(40px, 4.6vw, 58px);
+  height: auto;
+  display: block;
+  overflow: visible;
+  color: var(--gold);
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
+}
+
+.horologium-dial {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.6;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  animation: horologiumDialDraw 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 3.45s forwards;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.horologium-base {
+  stroke: currentColor;
+  stroke-width: 0.55;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  animation: horologiumBaseDraw 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 3.55s forwards;
+}
+
+.horologium-tick {
+  stroke: currentColor;
+  stroke-width: 0.55;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: horologiumTickIn 0.5s ease 3.7s forwards;
+}
+
+.horologium-tick-sm {
+  stroke-width: 0.4;
+  animation-delay: 3.8s;
+}
+
+.horologium-gnomon {
+  stroke: currentColor;
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: horologiumGnomonIn 0.6s ease 3.85s forwards;
+}
+
+.horologium-shadow {
+  stroke: var(--vermilion);
+  stroke-width: 0.5;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  animation: horologiumShadowDraw 0.85s cubic-bezier(0.55, 0.04, 0.32, 1) 4.05s forwards;
+}
+
+.horologium-pip {
+  fill: var(--vermilion);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  animation: horologiumPipIn 0.6s cubic-bezier(0.2, 1.2, 0.4, 1) 4.35s forwards;
+  filter: drop-shadow(0 0 3px rgba(176, 83, 58, 0.35));
+}
+
+.horologium-center {
+  fill: currentColor;
+  opacity: 0;
+  animation: horologiumCenterIn 0.5s ease 3.85s forwards;
+}
+
+.horologium-label {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, 0.4vw, 7px);
+  font-family: var(--mono);
+  font-size: clamp(7.5px, 0.72vw, 9px);
+  letter-spacing: 0.2em;
+  text-transform: lowercase;
+  color: var(--ink-faint);
+  opacity: 0;
+  animation: horologiumLabelIn 1.0s ease 4.55s forwards;
+  white-space: nowrap;
+}
+
+.horologium-rule {
+  display: inline-block;
+  width: clamp(6px, 0.8vw, 10px);
+  height: 1px;
+  background: var(--ink-faint);
+  opacity: 0.55;
+}
+
+.horologium-text {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.14em;
+  opacity: 0.85;
+}
+
+@keyframes horologiumIn {
+  to { opacity: 0.92; transform: translate(0, 0); }
+}
+
+@keyframes horologiumDialDraw {
+  to { opacity: 0.6; stroke-dashoffset: 0; }
+}
+
+@keyframes horologiumBaseDraw {
+  to { opacity: 0.5; stroke-dashoffset: 0; }
+}
+
+@keyframes horologiumTickIn {
+  to { opacity: 0.72; }
+}
+
+@keyframes horologiumGnomonIn {
+  to { opacity: 0.82; }
+}
+
+@keyframes horologiumShadowDraw {
+  to { opacity: 0.7; stroke-dashoffset: 0; }
+}
+
+@keyframes horologiumPipIn {
+  to { opacity: 0.92; transform: scale(1); }
+}
+
+@keyframes horologiumCenterIn {
+  to { opacity: 0.7; }
+}
+
+@keyframes horologiumLabelIn {
+  to { opacity: 0.8; }
+}
+
+/* Once the dial has settled, a slow breath on the shadow keeps the
+   horologium alive — a tiny flicker like a real sundial on a still
+   afternoon. */
+.horologium-shadow {
+  animation:
+    horologiumShadowDraw 0.85s cubic-bezier(0.55, 0.04, 0.32, 1) 4.05s forwards,
+    horologiumShadowBreath 13s ease-in-out 5.5s infinite;
+}
+
+@keyframes horologiumShadowBreath {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 0.45; }
+}
+
+/* ----- Question line typography refinements -----
+   Tighten the kerning of "is" lead and the letter-spacing of "Minimax M3"
+   so the line reads as a single composed line. The existing pause-dots
+   (between subject–predicate and predicate–climax) are subtly enlarged
+   so they feel like proper "puncta" — small gold middle-dots that
+   rhythm the line. */
+
+.question-lead {
+  letter-spacing: -0.005em;
+  margin-right: clamp(2px, 0.18vw, 3px);
+}
+
+.question-name {
+  /* Slightly tighter letter-spacing so "Minimax M3" reads as a single
+     printed word rather than spaced letters. */
+  letter-spacing: 0.12em;
+  margin-right: clamp(1px, 0.05em, 2px);
+}
+
+.question-name-pause-dot,
+.question-yet-pause-dot {
+  width: 2.8px;
+  height: 2.8px;
+  background: var(--gold);
+  box-shadow: 0 0 5px rgba(217, 176, 116, 0.35);
+}
+
+/* ----- Hero ↔ question "?" visual connection -----
+   When the reader engages the hero, a thin vermilion hairline draws
+   between the emblem's bowl and the question's terminal "?" — the two
+   question marks (the emblem above, the punctuation in the text)
+   acknowledge each other along the chapter's vertical axis. Sits in
+   the gap between the hero and the question block, gradient-fading
+   so the connection reads as a quiet drip rather than a hard rule. */
+
+.hero-question-link {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: clamp(20px, 2.6vw, 34px);
+  margin-left: -0.5px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transform-origin: 50% 0%;
+  transform: scaleY(0);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--vermilion-soft) 38%,
+    var(--vermilion-bright) 100%
+  );
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 3px rgba(176, 83, 58, 0.4));
+}
+
+.composition.is-pointing .hero-question-link {
+  opacity: 0.6;
+  transform: scaleY(1);
+}
+
+/* ----- Reduced motion overrides for iteration 31 ----- */
+
+@media (prefers-reduced-motion: reduce) {
+  .horologium { animation: none; opacity: 0.92; transform: none; }
+  .horologium-dial { animation: none; opacity: 0.6; stroke-dashoffset: 0; }
+  .horologium-base { animation: none; opacity: 0.5; stroke-dashoffset: 0; }
+  .horologium-tick { animation: none; opacity: 0.72; }
+  .horologium-tick-sm { animation: none; opacity: 0.72; }
+  .horologium-gnomon { animation: none; opacity: 0.82; }
+  .horologium-shadow { animation: none; opacity: 0.7; stroke-dashoffset: 0; }
+  .horologium-pip { animation: none; opacity: 0.92; transform: scale(1); }
+  .horologium-center { animation: none; opacity: 0.7; }
+  .horologium-label { animation: none; opacity: 0.8; }
+  .hero-question-link { transition: none; }
+  .composition.is-pointing .hero-question-link { opacity: 0.55; transform: scaleY(1); }
+}
+
+/* ----- Responsive sizing for iteration 31 ----- */
+
+@media (max-width: 880px) {
+  .horologium { right: calc(100% + clamp(2px, 0.6vw, 6px)); }
+  .horologium-svg { width: clamp(34px, 4.2vw, 48px); }
+  .hero-question-link { height: clamp(16px, 2.2vw, 28px); }
+}
+
+@media (max-width: 760px) {
+  .horologium { top: clamp(2px, 0.8vh, 10px); }
+  .horologium-svg { width: clamp(30px, 4vw, 40px); }
+  .horologium-label { font-size: clamp(7px, 0.96vw, 8.5px); }
+}
+
+@media (max-width: 620px) {
+  .horologium-label { display: none; }
+  .hero-question-link { height: clamp(14px, 2vw, 22px); opacity: 0.4; }
+  .composition.is-pointing .hero-question-link { opacity: 0.5; }
+}
+
+@media (max-width: 520px) {
+  .horologium { display: none; }
+  .hero-question-link { display: none; }
+}

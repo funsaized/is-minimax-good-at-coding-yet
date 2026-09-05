@@ -829,6 +829,77 @@ function Maniculum({ active }: { active: boolean }) {
   )
 }
 
+// Horologium — a small drawn sundial in the upper-left margin of the
+// hero, paired with the marginal rubric. A semicircle dial face with
+// five hour marks, a thin gnomon rising from the center, and a faint
+// vermilion shadow line cast toward the current hour. The reader's
+// "now" is recorded quietly in the page's margin — the chapter is
+// being read at this hour, by this light (the candle above). The
+// whole dial draws in slowly on page load, like an instrument being
+// laid out at the start of a reading session.
+function Horologium() {
+  return (
+    <aside className="horologium" aria-label="the hour of reading">
+      <svg viewBox="0 0 40 32" className="horologium-svg" aria-hidden="true" focusable="false">
+        {/* Dial face — a hairline semicircle, upper half */}
+        <path
+          className="horologium-dial"
+          d="M 4 28 A 16 16 0 0 1 36 28"
+          pathLength="100"
+        />
+        {/* Base — the horizontal diameter, a quiet rule beneath the dial */}
+        <line
+          className="horologium-base"
+          x1="4"
+          y1="28"
+          x2="36"
+          y2="28"
+        />
+        {/* Hour marks — five major: IX, XI, XII, I, III */}
+        <line className="horologium-tick" x1="4"   y1="28" x2="6.5" y2="28" />
+        <line className="horologium-tick horologium-tick-sm" x1="10.7" y1="19.6" x2="12.5" y2="20.8" />
+        <line className="horologium-tick" x1="20"  y1="12" x2="20"  y2="15.2" />
+        <line className="horologium-tick horologium-tick-sm" x1="27.5" y1="20.8" x2="29.3" y2="19.6" />
+        <line className="horologium-tick" x1="33.5" y1="28" x2="36"  y2="28" />
+        {/* Gnomon — the vertical pin that casts the shadow */}
+        <line
+          className="horologium-gnomon"
+          x1="20"
+          y1="28"
+          x2="20"
+          y2="19.5"
+        />
+        {/* Shadow — a vermilion hairline cast toward the hour of reading */}
+        <line
+          className="horologium-shadow"
+          x1="20"
+          y1="20"
+          x2="27.5"
+          y2="22.6"
+        />
+        {/* Hour pip — a vermilion drop at the dial's east point */}
+        <circle
+          className="horologium-pip"
+          cx="36"
+          cy="28"
+          r="1.3"
+        />
+        {/* Center — a small gold pip at the gnomon's foot */}
+        <circle
+          className="horologium-center"
+          cx="20"
+          cy="28"
+          r="0.8"
+        />
+      </svg>
+      <span className="horologium-label">
+        <span className="horologium-rule" />
+        <em className="horologium-text">horologium</em>
+      </span>
+    </aside>
+  )
+}
+
 // MarginalRubric — a small vermilion annotation sitting in the left margin
 // of the hero, connected by a hairline to the bracket.
 function MarginalRubric() {
@@ -1860,6 +1931,7 @@ export function App() {
           </span>
           <Fleuron />
           <div className="hero-frame">
+            <Horologium />
             <MarginalRubric />
             <button
               type="button"
@@ -1959,6 +2031,7 @@ export function App() {
               </span>
             )}
             <SealImpression sealing={sealing} />
+            <span className="hero-question-link" aria-hidden="true" />
           </button>
           </div>
            <div className="question-block">
