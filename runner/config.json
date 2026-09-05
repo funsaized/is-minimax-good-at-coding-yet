@@ -2,7 +2,7 @@
   "model": "minimax-coding-plan/MiniMax-M3",
   "intervalMinutes": 15,
   "timeoutMinutes": 18,
-  "maxConsecutiveFailures": 3,
+  "maxConsecutiveFailures": 5,
   "maxRunsPerDay": 96,
   "maxEstimatedDailyCostUsd": 10,
   "maxSnapshotBytes": 12000000,

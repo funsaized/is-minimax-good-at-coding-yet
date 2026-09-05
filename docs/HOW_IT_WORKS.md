@@ -216,7 +216,7 @@ Defaults are in [`runner/config.json`](../runner/config.json):
 | Turn timeout | 18 minutes | Bounds a stuck model process |
 | Daily model runs | 96 per UTC day | Allows a full day at the target cadence |
 | Reported daily cost | $10 | Stops new turns when reported usage reaches it |
-| Consecutive failures | 3 | Pauses an unhealthy loop |
+| Consecutive failures | 5 | Pauses an unhealthy loop |
 | Snapshot / archive allowance | 12 MB / 75 MB | Keeps Git and static deployment sizes manageable |
 
 Cost reports may be zero for subscription providers. The cost allowance is checked between turns and is not a hard provider billing cap. Time and run-count limits still apply. Failed turns back off, and a successful publication clears the failure counter.
