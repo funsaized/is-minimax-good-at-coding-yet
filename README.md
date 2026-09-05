@@ -1,5 +1,17 @@
 # is-minimax-good-at-coding-yet
 
+## RUN THOSE TOKENS
+
+I've been subscribed to MiniMax for a long time and was grandfathered into the weekly unlimited plan. When the pricing changed, I was told existing users who kept their Monthly Plus Token plans would be unaffected. I kept mine. I'm getting weekly limits anyway.
+
+Apparently my grandfathered plan has a curfew. Fine. The question mark is getting a design department.
+
+This is my extremely normal response: give M3 a black page, ask it to make the page prettier, and keep asking. Every working attempt gets committed and published. There's a time machine so you can inspect what my subscription did to the margins. We're targeting a new turn every 15 minutes, because apparently I need a deployment schedule for my feelings.
+
+I paid for these tokens. This question mark is going to have the most thoroughly considered fucking margins on the internet.
+
+## The experiment
+
 MiniMax M3 keeps redesigning a page that begins black, with the title **is Minimax M3 good at frontend yet?** A permanent React + TanStack Router viewer lets anyone scrub backward through the actual interactive pages.
 
 - Website: [live!](https://is-minimax-good-at-coding-yet.vercel.app/)
@@ -38,7 +50,7 @@ journalctl --user -u is-minimax-good-at-coding-yet -f
 
 The transient service survives closing the terminal. Start it again after a reboot. A sleeping or powered-off machine cannot generate iterations; the deployed site stays available. Only one worker can run at once. `npm run iterate` refuses while the service holds the lock; stop the service first for a manual turn.
 
-Default cadence is 30 minutes **after a successful publication**, with at most 48 model runs per UTC day, an 18-minute turn timeout, and automatic pause after three consecutive failures. Change [runner/config.json](runner/config.json) to adjust these. After a configuration/code change, commit it and restart the service. The $10 daily allowance uses costs reported by OpenCode and is checked between turns; subscription providers may report zero, so this is not a hard billing cap. Wall-time and run-count limits still apply.
+The target is one iteration start every **15 minutes**, with at most 96 model runs per UTC day, an 18-minute turn timeout, and automatic pause after three consecutive failures. Generation, validation, and publishing count toward those 15 minutes. If a turn takes longer, the next one starts after it finishes; runs never overlap. Publication timing follows the model's actual speed. Change [runner/config.json](runner/config.json) to adjust these. After a configuration/code change, commit it and restart the service. The $10 daily allowance uses costs reported by OpenCode and is checked between turns; subscription providers may report zero, so this is not a hard billing cap. Wall-time and run-count limits still apply.
 
 ## Publication and recovery
 

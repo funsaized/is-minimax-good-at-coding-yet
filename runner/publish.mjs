@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import os from 'node:os'
-import { ROOT, RUNTIME, command, config, git, log, readJSON, readState, saveState, writeJSON, sleep } from './lib.mjs'
+import { ROOT, RUNTIME, command, config, git, log, readJSON, readState, saveState, writeJSON, sleep, nextRunAt } from './lib.mjs'
 import { SNAPSHOT_CSP, launchBrowser } from './browser.mjs'
 
 export async function vercelAPI(endpoint, options = {}) {
@@ -90,7 +90,7 @@ export async function publishPending() {
   await verifyDeployment(publicUrl, pending.id)
   state = await readState()
   state.lastPublished = { id: pending.id, commit: pending.archiveCommit, url: publicUrl, deployedAt: new Date().toISOString() }
-  state.nextRunAt = new Date(Date.now() + config.intervalMinutes * 60_000).toISOString()
+  state.nextRunAt = nextRunAt(pending)
   state.failures = 0
   delete state.pending; delete state.lastError
   await saveState(state)

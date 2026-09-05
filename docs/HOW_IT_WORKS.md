@@ -206,15 +206,15 @@ A lock directory records the worker PID. A second worker refuses to run while th
 
 ## 9. Wait, then repeat
 
-After publication, the runner records `nextRunAt` as 30 minutes in the future. The loop sleeps in short intervals and checks for pause markers and allowances. It does not start overlapping model turns.
+After publication, the runner targets the next start for 15 minutes after the previous turn began. Generation, validation, and deployment all count toward that interval. If they take longer than 15 minutes, the next turn can begin immediately after publication. The loop sleeps in short intervals and checks for pause markers and allowances. It does not start overlapping model turns, so a slow response delays publication rather than creating concurrent work.
 
 Defaults are in [`runner/config.json`](../runner/config.json):
 
 | Setting | Default | Purpose |
 | --- | --- | --- |
-| Interval | 30 minutes after publication | Controls the experiment's pace |
+| Interval | 15 minutes between starts | Controls the experiment's pace, including generation time |
 | Turn timeout | 18 minutes | Bounds a stuck model process |
-| Daily model runs | 48 per UTC day | Bounds repeated attempts |
+| Daily model runs | 96 per UTC day | Allows a full day at the target cadence |
 | Reported daily cost | $10 | Stops new turns when reported usage reaches it |
 | Consecutive failures | 3 | Pauses an unhealthy loop |
 | Snapshot / archive allowance | 12 MB / 75 MB | Keeps Git and static deployment sizes manageable |

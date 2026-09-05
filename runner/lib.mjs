@@ -86,6 +86,12 @@ export function dailyGate(state, now = new Date()) {
   if (entry.estimatedCostUsd >= config.maxEstimatedDailyCostUsd) return 'Reported daily cost allowance reached'
   return null
 }
+export function nextRunAt(iteration, now = Date.now(), intervalMinutes = config.intervalMinutes) {
+  const started = iteration.startedAt
+    ? Date.parse(iteration.startedAt)
+    : Date.parse(iteration.acceptedAt) - (iteration.durationSeconds ?? 0) * 1000
+  return new Date(Math.max(now, started + intervalMinutes * 60_000)).toISOString()
+}
 export async function acquireLock() {
   await fs.mkdir(RUNTIME, { recursive: true })
   const lock = path.join(RUNTIME, 'lock')

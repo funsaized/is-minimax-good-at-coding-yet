@@ -116,7 +116,7 @@ async function once() {
     if (size > config.maxSnapshotBytes) throw new Error('Snapshot exceeds the configured size allowance')
     if (size + await directorySize(path.join(ROOT, 'public/iterations')) > config.maxArchiveBytes) throw new Error('Archive would exceed configured size allowance')
     state = await readState()
-    state.pending = { id, attempt, stage: 'validated', acceptedAt: new Date().toISOString(), summary, durationSeconds: Math.round((Date.now() - started) / 1000), ...result }
+    state.pending = { id, attempt, stage: 'validated', startedAt: new Date(started).toISOString(), acceptedAt: new Date().toISOString(), summary, durationSeconds: Math.round((Date.now() - started) / 1000), ...result }
     await saveState(state)
   } finally {
     state = await readState()

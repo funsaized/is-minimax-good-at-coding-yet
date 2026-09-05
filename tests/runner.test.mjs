@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
-import { parseUsage, dailyGate, config, filesIn, writeJSON, readJSON, summarizeChangelog } from '../runner/lib.mjs'
+import { parseUsage, dailyGate, config, filesIn, writeJSON, readJSON, summarizeChangelog, nextRunAt } from '../runner/lib.mjs'
 import { serve } from '../runner/browser.mjs'
 
 test('OpenCode failures are detected even when the process exits successfully', () => {
@@ -28,6 +28,13 @@ test('timeline descriptions use the design summary rather than a generic changel
   assert.equal(summarizeChangelog('# Iteration 1\n\nA warm composition with drifting particles.\n\n- Added SVG.'), 'A warm composition with drifting particles.')
   assert.equal(summarizeChangelog('Refined the typography.\n\nDetails'), 'Refined the typography.')
   assert.equal(summarizeChangelog('a'.repeat(200)).length, 120)
+})
+
+test('15-minute cadence includes generation time and never overlaps long turns', () => {
+  const start = '2026-09-05T10:00:00.000Z'
+  assert.equal(nextRunAt({ startedAt: start }, Date.parse('2026-09-05T10:06:00Z'), 15), '2026-09-05T10:15:00.000Z')
+  assert.equal(nextRunAt({ startedAt: start }, Date.parse('2026-09-05T10:18:00Z'), 15), '2026-09-05T10:18:00.000Z')
+  assert.equal(nextRunAt({ acceptedAt: '2026-09-05T10:06:00Z', durationSeconds: 360 }, Date.parse('2026-09-05T10:07:00Z'), 15), '2026-09-05T10:15:00.000Z')
 })
 
 test('snapshot validation rejects symlinks that could archive host files', async () => {
