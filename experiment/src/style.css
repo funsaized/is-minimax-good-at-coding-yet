@@ -167,7 +167,7 @@ body {
 }
 
 @keyframes watermarkIn {
-  to { opacity: 0.04; }
+  to { opacity: 0.075; }
 }
 
 @keyframes watermarkDraw {
@@ -181,6 +181,41 @@ body {
 @keyframes watermarkBreathe {
   0%, 100% { opacity: 0.45; }
   50%      { opacity: 0.26; }
+}
+
+/* ----- Taper (candlelight beam onto the question mark) ----- */
+
+.taper {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(72px, 14vw, 180px);
+  height: clamp(180px, 30vh, 340px);
+  color: var(--gold);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  filter: blur(7px);
+  mix-blend-mode: screen;
+  animation: taperIn 2.6s ease 1.45s forwards;
+  will-change: opacity, transform;
+}
+
+.taper-fill {
+  transform-origin: 50% 0%;
+  transform: scaleY(0.92);
+  animation: taperBreath 11s ease-in-out 3.4s infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes taperIn {
+  to { opacity: 0.85; }
+}
+
+@keyframes taperBreath {
+  0%, 100% { transform: scaleY(0.92); opacity: 1; }
+  50%      { transform: scaleY(1.0); opacity: 0.78; }
 }
 
 /* ----- Ink-trail (cursor) ----- */
@@ -1064,6 +1099,17 @@ body {
   pointer-events: none;
 }
 
+.auriole-radial {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  mix-blend-mode: screen;
+  animation:
+    aurioleRadialIn 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) 1.5s forwards,
+    aurioleRadialBreathe 13s ease-in-out 4s infinite;
+  will-change: transform, opacity;
+}
+
 .auriole-ring {
   fill: none;
   stroke: currentColor;
@@ -1112,6 +1158,15 @@ body {
     opacity: calc(var(--auriole-alpha) * 0.55);
     transform: scale(1.018);
   }
+}
+
+@keyframes aurioleRadialIn {
+  to { opacity: 1; }
+}
+
+@keyframes aurioleRadialBreathe {
+  0%, 100% { opacity: 0.92; transform: scale(1); }
+  50%      { opacity: 0.62; transform: scale(1.025); }
 }
 
 .auriole-pips circle {
@@ -1354,6 +1409,7 @@ body {
   max-width: 22ch;
   margin: 0;
   text-wrap: balance;
+  text-shadow: 0 0 24px rgba(240, 232, 218, 0.06);
   opacity: 0;
   transform: translateY(12px);
   transition:
@@ -1633,6 +1689,44 @@ body {
 .colophon-line-1 { opacity: 0.78; }
 .colophon-line-2 { opacity: 0.58; }
 
+/* ----- Signature (typeset gathering mark, replaces 'folio v') ----- */
+
+.signature {
+  width: clamp(44px, 4.4vw, 64px);
+  height: auto;
+  display: block;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(2px);
+  animation: sigIn 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) 2.55s forwards;
+  will-change: transform, opacity;
+}
+
+.sig-letter {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 12px;
+  font-weight: 500;
+  fill: currentColor;
+  letter-spacing: -0.01em;
+}
+
+.sig-rule {
+  stroke: currentColor;
+  stroke-width: 0.55;
+  opacity: 0.55;
+  stroke-linecap: round;
+}
+
+.sig-pip {
+  fill: currentColor;
+  opacity: 0.7;
+}
+
+@keyframes sigIn {
+  to { opacity: 0.92; transform: translateY(0); }
+}
+
 .colophon-mark {
   display: flex;
   align-items: center;
@@ -1825,6 +1919,25 @@ body {
     opacity: var(--auriole-alpha, 0.32);
     transform: scale(1);
   }
+  .auriole-radial {
+    animation: none;
+    opacity: 0.92;
+    transform: scale(1);
+  }
+  .taper {
+    animation: none;
+    opacity: 0.7;
+    filter: blur(7px);
+  }
+  .taper-fill {
+    animation: none;
+    transform: scaleY(1);
+  }
+  .signature {
+    animation: none;
+    opacity: 0.92;
+    transform: none;
+  }
   .auriole-r3 { --auriole-alpha: 0.5; }
   .auriole-r2 { --auriole-alpha: 0.32; }
   .auriole-r1 { --auriole-alpha: 0.18; }
@@ -1846,6 +1959,7 @@ body {
   .question-underline { left: 6%; right: 6%; }
   .watermark { width: min(130vmin, 760px); height: min(130vmin, 760px); }
   .reply { font-size: clamp(12px, 1.5vw, 15px); }
+  .taper { width: clamp(64px, 18vw, 130px); height: clamp(150px, 26vh, 260px); top: 16%; }
 }
 
 @media (max-width: 760px) {
@@ -1857,6 +1971,8 @@ body {
   .guide-rule { width: 48px; height: 48px; }
   .colophon-line { letter-spacing: 0.22em; }
   .printer-seal { width: 24px; height: 24px; }
+  .taper { width: clamp(56px, 24vw, 110px); height: clamp(120px, 24vh, 200px); top: 14%; filter: blur(6px); }
+  .signature { width: 44px; }
 }
 
 @media (max-width: 620px) {
@@ -1890,6 +2006,8 @@ body {
   .reply-end .fleuron { width: 56px; }
   .printer-seal { width: 22px; height: 22px; }
   .ink-trail-halo { width: 22px; height: 22px; margin-left: -11px; margin-top: -11px; }
+  .taper { width: clamp(48px, 30vw, 90px); height: clamp(96px, 22vh, 170px); top: 12%; filter: blur(5px); }
+  .signature { width: 40px; }
 }
 
 /* tiny screens — keep only the corner clock and minimal marginalia */
@@ -1899,4 +2017,7 @@ body {
   .colophon { bottom: clamp(10px, 2.5vw, 18px); }
   .colophon-line-1 { display: none; }
   .watermark { width: min(150vmin, 620px); height: min(150vmin, 620px); }
+  .taper { width: clamp(44px, 32vw, 80px); height: clamp(86px, 20vh, 140px); top: 10%; filter: blur(4px); opacity: 0.65; }
+  .signature { width: 38px; }
+  .sig-letter { font-size: 11px; }
 }

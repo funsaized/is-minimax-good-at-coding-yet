@@ -405,6 +405,55 @@ function Watermark() {
   )
 }
 
+// Taper — a faint candlelight beam falling onto the question mark from above.
+// Reads as the page being read by lamplight: warm, vertical, almost a breath.
+function Taper() {
+  return (
+    <svg
+      className="taper"
+      viewBox="0 0 80 240"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <linearGradient id="taper-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor="currentColor" stopOpacity="0" />
+          <stop offset="58%"  stopColor="currentColor" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0.46" />
+        </linearGradient>
+      </defs>
+      <rect
+        x="0"
+        y="0"
+        width="80"
+        height="240"
+        fill="url(#taper-grad)"
+        className="taper-fill"
+      />
+    </svg>
+  )
+}
+
+// Signature — a typeset gathering mark for the colophon, in the manner of an
+// old printer's signature on a folio. Replaces a plain "folio v" label.
+function Signature() {
+  return (
+    <svg
+      className="signature"
+      viewBox="0 0 64 14"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <line x1="2"  y1="9" x2="14" y2="9" className="sig-rule" />
+      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">v</text>
+      <line x1="50" y1="9" x2="62" y2="9" className="sig-rule" />
+      <circle cx="18" cy="9" r="0.7" className="sig-pip" />
+      <circle cx="46" cy="9" r="0.7" className="sig-pip" />
+    </svg>
+  )
+}
+
 // A small ink-trail dot that lingers where the cursor has been.
 // It decays back to invisible when the cursor stops moving — the page
 // marks only what's being read.
@@ -695,19 +744,19 @@ export function App() {
 
     const seed = () => {
       const { w, h } = dimsRef.current
-      const count = Math.min(150, Math.floor((w * h) / 11000))
+      const count = Math.min(120, Math.floor((w * h) / 12500))
       const arr: Particle[] = []
       for (let i = 0; i < count; i++) {
         const r = Math.random()
         const tone: Particle['tone'] =
-          r < 0.14 ? 'warm' : r < 0.24 ? 'cool' : r < 0.5 ? 'pale' : 'cool'
+          r < 0.34 ? 'warm' : r < 0.62 ? 'pale' : 'cool'
         arr.push({
           x: Math.random() * w,
           y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.08,
-          vy: (Math.random() - 0.5) * 0.08,
-          r: Math.random() * 1.1 + 0.3,
-          a: Math.random() * 0.45 + 0.1,
+          vx: (Math.random() - 0.5) * 0.05,
+          vy: -Math.random() * 0.14 - 0.02,
+          r: Math.random() * 1.1 + 0.4,
+          a: Math.random() * 0.5 + 0.18,
           tone,
         })
       }
@@ -724,18 +773,37 @@ export function App() {
       const hb = heroBoxRef.current
 
       for (const p of partsRef.current) {
-        let alpha = p.a * (1 + boost * 1.1)
+        // Embers brighter near their source (bottom), fading as they rise —
+        // height-based attenuation so the column above the question feels lit.
+        const yRatio = Math.min(1, Math.max(0, p.y / Math.max(1, h)))
+        const heightFade = 0.32 + 0.68 * (1 - yRatio)
+        let alpha = p.a * heightFade * (1 + boost * 1.1)
         let radius = p.r * (1 + boost * 0.5)
+        // Always-on warm glow around the question mark — the candle.
+        if (hb) {
+          const cxp = (hb.left + hb.right) / 2
+          const cyp = (hb.top + hb.bottom) / 2
+          const dx = cxp - p.x
+          const dy = cyp - p.y
+          const d2 = dx * dx + dy * dy
+          const R = 280
+          if (d2 < R * R) {
+            const d = Math.sqrt(d2) || 1
+            const k = 1 - d / R
+            alpha += k * 0.22
+            radius += k * 0.18
+          }
+        }
         if (ptr.over) {
           const dx = ptr.x - p.x
           const dy = ptr.y - p.y
           const d2 = dx * dx + dy * dy
-          const R = 220
+          const R = 210
           if (d2 < R * R) {
             const d = Math.sqrt(d2) || 1
             const k = 1 - d / R
-            alpha += k * 0.4
-            radius += k * 0.35
+            alpha += k * 0.35
+            radius += k * 0.3
           }
         }
         if (eBoost > 0 && hb) {
@@ -755,10 +823,10 @@ export function App() {
         ctx.beginPath()
         ctx.arc(p.x, p.y, radius, 0, Math.PI * 2)
         if (p.tone === 'warm')
-          ctx.fillStyle = `rgba(217,176,116,${Math.min(1, alpha)})`
+          ctx.fillStyle = `rgba(232,188,124,${Math.min(1, alpha)})`
         else if (p.tone === 'cool')
-          ctx.fillStyle = `rgba(150,170,196,${Math.min(1, alpha * 0.7)})`
-        else ctx.fillStyle = `rgba(240,232,218,${Math.min(1, alpha)})`
+          ctx.fillStyle = `rgba(150,170,196,${Math.min(1, alpha * 0.6)})`
+        else ctx.fillStyle = `rgba(245,232,210,${Math.min(1, alpha * 0.85)})`
         ctx.fill()
       }
     }
@@ -774,24 +842,30 @@ export function App() {
           const dx = ptr.x - p.x
           const dy = ptr.y - p.y
           const d2 = dx * dx + dy * dy
-          const R = 240
+          const R = 220
           if (d2 < R * R && d2 > 1) {
             const d = Math.sqrt(d2)
-            const f = (1 - d / R) * 0.045
+            const f = (1 - d / R) * 0.035
             p.vx += (dx / d) * f
             p.vy += (dy / d) * f
           }
         }
-        p.vx *= 0.985
-        p.vy *= 0.985
+        // Embers drift gently upward; small random sway.
+        p.vx *= 0.984
+        p.vy = p.vy * 0.987 - 0.0085
         p.vx += (Math.random() - 0.5) * 0.012
-        p.vy += (Math.random() - 0.5) * 0.012
+        p.vy += (Math.random() - 0.5) * 0.008 - 0.0014
         p.x += p.vx
         p.y += p.vy
-        if (p.x < -2) p.x = w + 2
-        else if (p.x > w + 2) p.x = -2
-        if (p.y < -2) p.y = h + 2
-        else if (p.y > h + 2) p.y = -2
+        if (p.x < -4) p.x = w + 4
+        else if (p.x > w + 4) p.x = -4
+        // Top → bottom respawn, like fresh embers rising from the candle.
+        if (p.y < -4) {
+          p.y = h + 4
+          p.x = Math.random() * w
+          p.vy = -Math.random() * 0.14 - 0.02
+          p.vx = (Math.random() - 0.5) * 0.05
+        } else if (p.y > h + 4) p.y = h + 4
       }
       draw()
     }
@@ -939,6 +1013,7 @@ export function App() {
       <Watermark />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
+        <Taper />
         <Marg
           corner="tl"
           id="tl"
@@ -1040,7 +1115,26 @@ export function App() {
           >
             <span className="hero-svg-wrap">
               <svg viewBox="0 0 240 340" className="hero-svg" aria-hidden="true">
+                <defs>
+                  <radialGradient
+                    id="auriole-radial"
+                    cx="50%"
+                    cy="50%"
+                    r="50%"
+                  >
+                    <stop offset="0%"   stopColor="currentColor" stopOpacity="0.26" />
+                    <stop offset="55%"  stopColor="currentColor" stopOpacity="0.08" />
+                    <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+                  </radialGradient>
+                </defs>
                 <g className="auriole">
+                  <circle
+                    cx={120}
+                    cy={170}
+                    r={134}
+                    fill="url(#auriole-radial)"
+                    className="auriole-radial"
+                  />
                   <circle
                     cx={120}
                     cy={170}
@@ -1151,7 +1245,7 @@ export function App() {
         </div>
 
         <div className="colophon" aria-hidden="true">
-          <span className="colophon-folio">folio v</span>
+          <Signature />
           <span className="colophon-rule" />
           <span className="colophon-quaeritur">quaeritur</span>
           <span className="colophon-rule" />
