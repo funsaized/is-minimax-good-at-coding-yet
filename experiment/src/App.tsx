@@ -44,10 +44,13 @@ const DUST_GLYPHS = [
 
 type Whisper = { corner: Corner; text: string }
 
-// Two marginalia only — quiet top-left and bottom-right.
-// The chapter is a question; the margins hold two short notes.
+// Three marginalia — quiet top-left, top-right, and bottom-right.
+// The chapter is a question; the margins hold three short notes —
+// folio, reading, now — each a different aspect of how the page
+// is held open.
 const WHISPERS: Whisper[] = [
   { corner: 'tl', text: 'a folio, slowly composed; this page is its own footnote' },
+  { corner: 'tr', text: 'the candle is patient; the reader is patient; the page, too — slow down' },
   { corner: 'br', text: 'read at your own pace — the page will not move on without you' },
 ]
 
@@ -402,6 +405,67 @@ function PaperGrain() {
       <rect width="100%" height="100%" filter="url(#pg-noise)" />
     </svg>
   )
+}
+
+// ReadingLantern — a soft warm halo that follows the cursor, like a
+// reader's attention bringing its own light to the page. Fades in on
+// the first pointermove and tracks every subsequent one; fades out
+// shortly after the reader's attention drifts away. Hidden on touch
+// devices in steady state, since there is no cursor to follow once a
+// finger lifts. Falls back to the candle's position via CSS defaults
+// when idle, so the page still feels lit even before the reader
+// arrives.
+function ReadingLantern() {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let raf = 0
+    let hideTimer = 0
+    const show = () => {
+      if (!el.classList.contains('is-on')) el.classList.add('is-on')
+      if (hideTimer) {
+        window.clearTimeout(hideTimer)
+        hideTimer = 0
+      }
+    }
+    const scheduleHide = () => {
+      if (hideTimer) window.clearTimeout(hideTimer)
+      hideTimer = window.setTimeout(() => {
+        el.classList.remove('is-on')
+        hideTimer = 0
+      }, 1400)
+    }
+    const setVars = (x: number, y: number) => {
+      el.style.setProperty('--lantern-x', `${x}px`)
+      el.style.setProperty('--lantern-y', `${y}px`)
+    }
+    const onMove = (e: PointerEvent) => {
+      if (reduced) {
+        setVars(e.clientX, e.clientY)
+      } else if (!raf) {
+        raf = requestAnimationFrame(() => {
+          raf = 0
+          if (!ref.current) return
+          ref.current.style.setProperty('--lantern-x', `${e.clientX}px`)
+          ref.current.style.setProperty('--lantern-y', `${e.clientY}px`)
+        })
+      }
+      show()
+      scheduleHide()
+    }
+    const onLeave = () => el.classList.remove('is-on')
+    window.addEventListener('pointermove', onMove, { passive: true })
+    window.addEventListener('pointerleave', onLeave)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerleave', onLeave)
+      if (raf) cancelAnimationFrame(raf)
+      if (hideTimer) window.clearTimeout(hideTimer)
+    }
+  }, [])
+  return <div ref={ref} className="reading-lantern" aria-hidden="true" />
 }
 
 // Watermark — a faint oversized ghost of the hero curve behind everything.
@@ -1345,7 +1409,7 @@ export function App() {
     setNoteNonce((n) => n + 1)
     setPointing(true)
     setSealing(true)
-    const order: Corner[] = ['tl', 'br']
+    const order: Corner[] = ['tl', 'tr', 'br']
     waveTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
     waveTimeoutsRef.current = []
     const stagger = reduced ? 0 : 360
@@ -1423,6 +1487,7 @@ export function App() {
       <div className="rim" aria-hidden="true" />
       <div className="codex-edge" aria-hidden="true" />
       <PaperGrain />
+      <ReadingLantern />
       <BifolioSpine />
       <Watermark />
       <Ribbon />
@@ -1444,14 +1509,26 @@ export function App() {
           glyph={<Bifolio />}
         />
         <Marg
+          corner="tr"
+          id="tr"
+          label="reading"
+          body="the candle, the reader, the page"
+          whisper={whispersOn.tr}
+          whisperText={WHISPERS[1].text}
+          active={active}
+          wave={echoIdx === 1}
+          onHover={setActive}
+          ariaLabel="reading: the candle, the reader, the page"
+        />
+        <Marg
           corner="br"
           id="br"
           label="now"
           body="this instant, the only one that ever arrives"
           whisper={whispersOn.br}
-          whisperText={WHISPERS[1].text}
+          whisperText={WHISPERS[2].text}
           active={active}
-          wave={echoIdx === 1}
+          wave={echoIdx === 2}
           onHover={setActive}
           ariaLabel="now: this instant, the only one that ever arrives"
         />
