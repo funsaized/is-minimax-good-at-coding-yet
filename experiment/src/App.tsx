@@ -798,6 +798,91 @@ function SealImpression({ sealing }: { sealing: boolean }) {
   )
 }
 
+// PressedLeaf — a small dried botanical specimen tucked into the
+// bottom-left margin. Drawn with brown ink lines and a faint
+// vermilion shadow where it pressed into the page, like a reader's
+// keepsake marking where they once stopped.
+function PressedLeaf() {
+  return (
+    <aside className="pressed-leaf" aria-label="a pressed leaf">
+      <svg viewBox="0 0 56 76" className="pressed-leaf-svg" aria-hidden="true" focusable="false">
+        <path className="leaf-stem" d="M 28 5 Q 27 28 28 70" />
+        <path className="leaf-body" d="M 28 7 Q 17 13 13 26 Q 9 40 16 54 Q 22 62 28 67 Q 34 62 40 54 Q 47 40 43 26 Q 39 13 28 7 Z" />
+        <line className="leaf-vein-major" x1="28" y1="9" x2="28" y2="64" />
+        <path className="leaf-vein" d="M 28 18 Q 22 20 18 24" />
+        <path className="leaf-vein" d="M 28 18 Q 34 20 38 24" />
+        <path className="leaf-vein" d="M 28 28 Q 21 31 15 35" />
+        <path className="leaf-vein" d="M 28 28 Q 35 31 41 35" />
+        <path className="leaf-vein" d="M 28 38 Q 23 41 19 45" />
+        <path className="leaf-vein" d="M 28 38 Q 33 41 37 45" />
+        <path className="leaf-vein" d="M 28 48 Q 26 51 24 54" />
+        <path className="leaf-vein" d="M 28 48 Q 30 51 32 54" />
+        <ellipse className="leaf-shadow-soft" cx="36" cy="70" rx="10" ry="2.8" />
+        <ellipse className="leaf-shadow" cx="36" cy="70" rx="6" ry="1.6" />
+      </svg>
+      <span className="pressed-leaf-label">
+        <span className="pressed-leaf-rule" />
+        <em className="pressed-leaf-text">fol. press.</em>
+      </span>
+    </aside>
+  )
+}
+
+// VineCorner — small hand-drawn vine ornament that replaces the plain
+// gold L brackets on the question block. A leaf curls in from the
+// corner toward the text, like a printer's flourish painted over
+// the type.
+function VineCorner({ position }: { position: 'tl' | 'br' }) {
+  return (
+    <svg
+      className={`vine-corner vine-corner-${position}`}
+      viewBox="0 0 22 22"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path className="vine-stem" d="M 2 20 Q 9 13 19 4" />
+      <path className="vine-leaf" d="M 7 14 Q 11 10 16 8 Q 14 13 7 14 Z" />
+      <path className="vine-leaf vine-leaf-sm" d="M 4 18 Q 6 14 10 13 Q 9 17 4 18 Z" />
+      <circle cx="17" cy="6" r="0.9" className="vine-pip" />
+      <circle cx="13" cy="11" r="0.5" className="vine-pip vine-pip-sm" />
+    </svg>
+  )
+}
+
+// QuestionFlourish — a small vermilion ink-stain beneath the question
+// mark character. Drawn from a flourish that begins beneath the "?"
+// and ends in a single drop, like a quill's slip.
+function QuestionFlourish() {
+  return (
+    <svg
+      className="question-flourish"
+      viewBox="0 0 36 10"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path className="question-flourish-curve" d="M 3 6 Q 14 2 24 5 Q 30 7 34 4" />
+      <circle cx="32" cy="3.5" r="1.1" className="question-flourish-drop" />
+    </svg>
+  )
+}
+
+// AnswerOrnament — a small printer's flourish that punctuates the
+// transition between answer and reply. Two rules flanking a
+// diamond and two pips.
+function AnswerOrnament() {
+  return (
+    <span className="answer-ornament" aria-hidden="true">
+      <svg viewBox="0 0 64 8">
+        <line x1="2" y1="4" x2="22" y2="4" className="orn-rule" />
+        <circle cx="24" cy="4" r="1.1" className="orn-pip" />
+        <path d="M 28 4 L 32 1 L 36 4 L 32 7 Z" className="orn-diamond" />
+        <circle cx="40" cy="4" r="1.1" className="orn-pip" />
+        <line x1="42" y1="4" x2="62" y2="4" className="orn-rule" />
+      </svg>
+    </span>
+  )
+}
+
 function Marg({
   corner,
   id,
@@ -1296,6 +1381,7 @@ export function App() {
       <BifolioSpine />
       <Watermark />
       <Ribbon />
+      <PressedLeaf />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
         <CandleFlame wrapRef={flameWrapRef} flaring={pulsing} />
@@ -1438,6 +1524,8 @@ export function App() {
           </div>
            <div className="question-block">
              <ChapterStamp />
+             <VineCorner position="tl" />
+             <VineCorner position="br" />
              <span className="question-kicker">a question in public</span>
              <h1 className="question">
               <span className="question-line">
@@ -1446,11 +1534,14 @@ export function App() {
                 <em className="question-name">Minimax&nbsp;M3</em>
                 <span className="question-verb"> good at frontend </span>
                 <em className="question-yet">yet</em>
-                <span className="question-mark">?</span>
+                <span className="question-mark-group">
+                  <span className="question-mark">?</span>
+                  <QuestionFlourish />
+                </span>
               </span>
             </h1>
              <Maniculum active={pointing} />
-             <p className="question-prompt">Tap the mark when you have an opinion.</p>
+             <p className="question-prompt">press the mark · the page answers</p>
             <span
               key={noteNonce}
               className={`question-underline${noteNonce > 0 ? ' is-on' : ''}`}
@@ -1466,6 +1557,7 @@ export function App() {
                 <span className="answer-caret" aria-hidden="true">|</span>
               )}
             </p>
+            {replyOn && <AnswerOrnament />}
             <p
               className={`reply ${replyOn ? 'is-on' : ''}`}
               aria-live="polite"

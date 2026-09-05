@@ -2961,23 +2961,10 @@ body {
   position: relative;
   width: min(100%, 780px);
   padding: clamp(28px, 4vw, 48px) clamp(22px, 5vw, 70px) clamp(28px, 4vw, 50px);
-  border: 1px solid rgba(217, 176, 116, 0.22);
+  border: 1px solid rgba(217, 176, 116, 0.18);
   background: linear-gradient(135deg, rgba(240, 232, 218, 0.055), rgba(176, 83, 58, 0.035));
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24), inset 0 1px rgba(255, 244, 220, 0.06);
 }
-.question-block::before, .question-block::after {
-  content: '';
-  position: absolute;
-  width: 9px;
-  height: 9px;
-  border: 1px solid var(--gold);
-  opacity: 0;
-  transition: opacity 0.9s ease 2.45s;
-}
-.question-block::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
-.question-block::after { right: -1px; bottom: -1px; border-left: 0; border-top: 0; }
-.composition.ready .question-block::before,
-.composition.ready .question-block::after { opacity: 0.7; }
 .question-kicker { display: block; margin-bottom: clamp(12px, 2vw, 22px); color: var(--vermilion-bright); font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; }
 
 /* ----- Chapter stamp (top-right corner of the editorial card) ----- */
@@ -3055,4 +3042,344 @@ body {
   .ribbon { display: none; }
   .wax-seal { width: 22px; }
   .illuminated-star { width: 32px; height: 32px; }
+}
+
+/* ----- Iteration 23: pressed leaf, vine corners, ink flourish, ornament -----
+   * Three hand-drawn details extend the manuscript's vocabulary: a pressed
+   * leaf marking the bottom-left margin where someone once stopped; drawn
+   * vine corners that replace the previous plain gold L brackets on the
+   * question block; a vermilion ink-stain beneath the climax "?"; and a
+   * printer's flourish that punctuates the transition from answer to reply. */
+
+/* ----- Pressed leaf (bottom-left marginal keepsake) ----- */
+
+.pressed-leaf {
+  position: absolute;
+  bottom: clamp(70px, 9vw, 130px);
+  left: clamp(28px, 3.6vw, 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(4px, 0.5vw, 7px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px) rotate(-2.4deg);
+  animation: pressedLeafIn 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.7s forwards;
+  will-change: opacity, transform;
+}
+
+.pressed-leaf-svg {
+  width: clamp(38px, 4.6vw, 60px);
+  height: auto;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.45));
+}
+
+.leaf-stem {
+  stroke: var(--gold-deep);
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.65;
+}
+
+.leaf-body {
+  fill: rgba(240, 232, 218, 0.05);
+  stroke: var(--gold-deep);
+  stroke-width: 0.55;
+  stroke-linejoin: round;
+  fill-opacity: 0.22;
+  opacity: 0.78;
+}
+
+.leaf-vein-major {
+  stroke: var(--gold-deep);
+  stroke-width: 0.6;
+  stroke-linecap: round;
+  opacity: 0.65;
+}
+
+.leaf-vein {
+  stroke: var(--gold-deep);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.5;
+}
+
+.leaf-shadow-soft {
+  fill: var(--vermilion);
+  opacity: 0;
+  animation: leafShadowIn 3s ease 4s forwards;
+}
+
+.leaf-shadow {
+  fill: var(--vermilion);
+  opacity: 0;
+  animation: leafShadowIn 3s ease 4.2s forwards;
+}
+
+.pressed-leaf-label {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(5px, 0.55vw, 8px);
+  font-family: var(--mono);
+  font-size: clamp(8px, 0.72vw, 9.5px);
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+  color: var(--ink-faint);
+  opacity: 0;
+  transform: translateY(2px);
+  animation: pressedLeafLabelIn 1.8s ease 3.5s forwards;
+}
+
+.pressed-leaf-rule {
+  display: inline-block;
+  width: clamp(8px, 1vw, 14px);
+  height: 1px;
+  background: var(--ink-faint);
+  opacity: 0.6;
+}
+
+.pressed-leaf-text {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  opacity: 0.85;
+}
+
+@keyframes pressedLeafIn {
+  to { opacity: 0.92; transform: translateY(0) rotate(-2.4deg); }
+}
+
+@keyframes leafShadowIn {
+  to { opacity: 0.22; }
+}
+
+@keyframes pressedLeafLabelIn {
+  to { opacity: 0.85; transform: translateY(0); }
+}
+
+/* ----- Vine corners (replace plain gold L brackets on the question block) ----- */
+
+.vine-corner {
+  position: absolute;
+  width: clamp(16px, 1.8vw, 24px);
+  height: clamp(16px, 1.8vw, 24px);
+  pointer-events: none;
+  opacity: 0;
+  color: var(--gold);
+  transform-origin: center;
+  animation: vineCornerInTl 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.35s forwards;
+  will-change: opacity, transform;
+}
+
+.vine-corner-tl {
+  top: -3px;
+  left: -3px;
+}
+
+.vine-corner-br {
+  bottom: -3px;
+  right: -3px;
+  transform: rotate(180deg) scale(0.7);
+  animation: vineCornerInBr 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.45s forwards;
+}
+
+.vine-stem {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.65;
+  stroke-linecap: round;
+  opacity: 0.75;
+}
+
+.vine-leaf {
+  fill: currentColor;
+  fill-opacity: 0.55;
+  stroke: currentColor;
+  stroke-width: 0.4;
+  stroke-linejoin: round;
+}
+
+.vine-leaf-sm {
+  fill-opacity: 0.42;
+}
+
+.vine-pip {
+  fill: var(--vermilion);
+  opacity: 0.78;
+}
+
+.vine-pip-sm {
+  fill: var(--gold);
+}
+
+@keyframes vineCornerInTl {
+  0%   { opacity: 0; transform: scale(0.55); }
+  100% { opacity: 0.95; transform: scale(1); }
+}
+
+@keyframes vineCornerInBr {
+  0%   { opacity: 0; transform: rotate(180deg) scale(0.55); }
+  100% { opacity: 0.95; transform: rotate(180deg) scale(1); }
+}
+
+/* ----- Question mark group + vermilion ink-stain flourish ----- */
+
+.question-mark-group {
+  position: relative;
+  display: inline-block;
+}
+
+.question-flourish {
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  bottom: -0.62em;
+  width: 124%;
+  height: auto;
+  pointer-events: none;
+  opacity: 0;
+  animation: questionFlourishIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 2.55s forwards;
+}
+
+.question-flourish-curve {
+  fill: none;
+  stroke: var(--vermilion);
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: questionFlourishDraw 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.6s forwards;
+}
+
+.question-flourish-drop {
+  fill: var(--vermilion);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  animation: questionFlourishDrop 0.7s cubic-bezier(0.2, 1.2, 0.4, 1) 3.7s forwards;
+}
+
+@keyframes questionFlourishIn {
+  to { opacity: 1; }
+}
+
+@keyframes questionFlourishDraw {
+  to { opacity: 0.78; stroke-dashoffset: 0; }
+}
+
+@keyframes questionFlourishDrop {
+  to { opacity: 0.85; transform: scale(1); }
+}
+
+/* ----- Answer ornament (printer's flourish between answer and reply) ----- */
+
+.answer-ornament {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: clamp(14px, 1.6vw, 20px) 0 0;
+  opacity: 0;
+  color: var(--gold);
+  animation: answerOrnamentIn 0.9s ease 0.05s forwards;
+}
+
+.answer-ornament svg {
+  width: clamp(48px, 6vw, 80px);
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.orn-rule {
+  stroke: currentColor;
+  stroke-width: 0.55;
+  opacity: 0;
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: ornRuleDraw 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.3s forwards;
+}
+
+.orn-pip {
+  fill: var(--vermilion);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.4);
+  animation: ornPipIn 0.55s cubic-bezier(0.2, 1.1, 0.4, 1) 0.75s forwards;
+}
+
+.orn-diamond {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.65;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.5);
+  animation: ornDiamondIn 0.65s cubic-bezier(0.2, 1.1, 0.4, 1) 0.55s forwards;
+}
+
+@keyframes answerOrnamentIn {
+  to { opacity: 0.95; }
+}
+
+@keyframes ornRuleDraw {
+  to { opacity: 0.65; stroke-dashoffset: 0; }
+}
+
+@keyframes ornPipIn {
+  to { opacity: 0.78; transform: scale(1); }
+}
+
+@keyframes ornDiamondIn {
+  to { opacity: 0.85; transform: scale(1); }
+}
+
+/* ----- Reduced motion overrides for the new details ----- */
+@media (prefers-reduced-motion: reduce) {
+  .pressed-leaf { animation: none; opacity: 0.92; transform: translateY(0) rotate(-2.4deg); }
+  .leaf-shadow, .leaf-shadow-soft { animation: none; opacity: 0.22; }
+  .pressed-leaf-label { animation: none; opacity: 0.85; transform: none; }
+  .pressed-leaf-text { opacity: 0.85; }
+  .vine-corner { animation: none; opacity: 0.95; transform: scale(1); }
+  .vine-corner-br { animation: none; opacity: 0.95; transform: rotate(180deg) scale(1); }
+  .question-flourish { animation: none; opacity: 1; }
+  .question-flourish-curve { animation: none; opacity: 0.78; stroke-dashoffset: 0; }
+  .question-flourish-drop { animation: none; opacity: 0.85; transform: scale(1); }
+  .answer-ornament { animation: none; opacity: 0.95; }
+  .orn-rule { animation: none; opacity: 0.65; stroke-dashoffset: 0; }
+  .orn-pip { animation: none; opacity: 0.78; transform: scale(1); }
+  .orn-diamond { animation: none; opacity: 0.85; transform: scale(1); }
+}
+
+/* ----- Mobile sizing for the new details ----- */
+@media (max-width: 880px) {
+  .pressed-leaf { bottom: clamp(78px, 10vw, 140px); left: clamp(22px, 4vw, 40px); }
+  .pressed-leaf-svg { width: clamp(34px, 4.4vw, 50px); }
+  .vine-corner { width: clamp(14px, 1.8vw, 20px); height: clamp(14px, 1.8vw, 20px); }
+  .answer-ornament svg { width: clamp(42px, 6vw, 64px); }
+}
+
+@media (max-width: 760px) {
+  .pressed-leaf { bottom: clamp(96px, 14vw, 150px); left: clamp(18px, 4vw, 32px); }
+  .pressed-leaf-svg { width: 34px; }
+  .vine-corner { width: 13px; height: 13px; top: -2px; left: -2px; }
+  .vine-corner-br { bottom: -2px; right: -2px; }
+  .answer-ornament { margin-top: clamp(10px, 1.6vw, 16px); }
+}
+
+@media (max-width: 520px) {
+  .pressed-leaf { bottom: clamp(110px, 18vw, 180px); left: clamp(14px, 4vw, 24px); }
+  .pressed-leaf-svg { width: 30px; }
+  .pressed-leaf-label { font-size: 7.5px; letter-spacing: 0.16em; }
+  .vine-corner { width: 11px; height: 11px; }
+  .question-flourish { bottom: -0.5em; }
 }
