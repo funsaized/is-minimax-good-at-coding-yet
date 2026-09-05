@@ -1,0 +1,19 @@
+{
+  "id": 23,
+  "parentId": 22,
+  "createdAt": "2026-09-05T18:27:48.780Z",
+  "summary": "Added a small hand-drawn pressed leaf in the bottom-left margin, with a small `fol. press.` label beneath — a quiet read",
+  "path": "/iterations/000023/index.html",
+  "screenshot": "/iterations/000023/desktop.png",
+  "mobileScreenshot": "/iterations/000023/mobile.png",
+  "sourceCommit": "a7bd304299b009eab511b8b15c5c63170939ed43",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 309,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 100944,
+    "outputTokens": 8577,
+    "steps": 27
+  }
+}
