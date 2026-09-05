@@ -1272,6 +1272,43 @@ function VineCorner({ position }: { position: 'tl' | 'br' }) {
   )
 }
 
+// ChapterSpine — a thin vertical axis through the centerline of the
+// composition, deliberately understated: a column of small gold pin-
+// pricks running from above the hero down to the colophon. Two small
+// compass pips cap it at the top and bottom — the chapter's own axis,
+// distinct from the bifolio crease of the open book. Sits behind all
+// of the in-flow content so it reads as the page's quiet central
+// spine, gathering the hero, the question, the answer, and the reply
+// into a single vertical column.
+function ChapterSpine() {
+  return <div className="chapter-spine" aria-hidden="true" />
+}
+
+// CompassMark — a small four-pointed star that sits at the top of the
+// colophon, the chapter's formal terminus. Echoes the gold pips that
+// cap the chapter spine, so the axis reads as a single ornament from
+// hero to colophon: the page began at the hero's bowl and ends at
+// this star. Set in vermilion and gold, drawn in once the colophon
+// has settled.
+function CompassMark() {
+  return (
+    <span className="colophon-compass" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+          className="colophon-compass-star"
+          d="M 12 3 L 13.4 11 L 21 12 L 13.4 13 L 12 21 L 10.6 13 L 3 12 L 10.6 11 Z"
+        />
+        <circle
+          className="colophon-compass-core"
+          cx="12"
+          cy="12"
+          r="0.9"
+        />
+      </svg>
+    </span>
+  )
+}
+
 // QuestionFlourish — a small vermilion ink-stain beneath the question
 // mark character. Drawn from a flourish that begins beneath the "?"
 // and ends in a single drop, like a quill's slip.
@@ -2003,6 +2040,7 @@ export function App() {
         />
 
         <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''}`}>
+          <ChapterSpine />
           <Capitulum />
           <span className="rubric">
             <span className="rubric-pilcrow" aria-hidden="true">§</span>
@@ -2212,6 +2250,7 @@ export function App() {
         </div>
 
         <div className="colophon" aria-hidden="true">
+          <CompassMark />
           <WaxSeal />
           <span className="colophon-rule" />
           <span className="colophon-quaeritur">quaeritur</span>
