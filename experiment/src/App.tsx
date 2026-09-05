@@ -1918,8 +1918,8 @@ export function App() {
              <span className="question-kicker">a question in public</span>
              <h1 className="question">
               <span className="question-line">
-                <em className="question-lead">is</em>
-                <span className="question-space"> </span>
+<em className="incipit-i">i</em><em className="question-lead">s</em>
+              <span className="question-space"> </span>
                 <em className="question-name">Minimax&nbsp;M3</em>
                 <span className="question-verb"> good at frontend </span>
                 <em className="question-yet">yet</em>
@@ -1986,6 +1986,7 @@ export function App() {
           </span>
           <PenTrial />
           <Catchword />
+          <span className="colophon-provenance">legi · xviii</span>
         </div>
       </div>
     </main>

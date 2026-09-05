@@ -4451,3 +4451,140 @@ body {
 @media (max-width: 380px) {
   .explicit-text-faint { display: none; }
 }
+
+/* ----- Iteration 29: an illuminated opening -----
+ * Two small authored additions deepen the folio's vocabulary without
+ * piling on more elements:
+ *
+ *  - An illuminated incipit "i" opens the chapter inside the question
+ *    text. A small vermilion italic initial at ~1.4em, with a thin
+ *    vermilion scoring line drawn beneath it like a scribal mark under
+ *    a hand-illuminated letter. Ties the question's vocabulary to the
+ *    existing answer drop-cap and to the manuscript's vermilion thread.
+ *    Blooms in just after the question text appears.
+ *
+ *  - A quiet "legi · xviii" reader's mark closes the colophon, beneath
+ *    the catchword. "Legi" — "I have read" — is the manuscript notation
+ *    a careful reader would write after engaging with a passage, and
+ *    closes the colophon's Latin chain of quaeritur / respondetur /
+ *    explicit / relege with the reader's own voice.
+ */
+
+/* ----- Illuminated incipit initial ----- */
+
+.incipit-i {
+  display: inline-block;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.42em;
+  line-height: 1;
+  color: var(--vermilion);
+  text-shadow:
+    0 0 9px rgba(176, 83, 58, 0.32),
+    0 0 22px rgba(198, 104, 74, 0.16);
+  letter-spacing: 0;
+  vertical-align: -0.06em;
+  margin-right: 0.02em;
+  position: relative;
+  opacity: 0;
+  transform: scale(0.42) rotate(-7deg);
+  transform-origin: 50% 78%;
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.05s,
+    transform 0.75s cubic-bezier(0.2, 1.2, 0.4, 1) 2.05s;
+}
+
+.composition.ready .incipit-i {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+/* Scoring line beneath the incipit — drawn outward from the stem
+   like the scribal scoring under a hand-illuminated initial. */
+.incipit-i::after {
+  content: '';
+  position: absolute;
+  left: 14%;
+  right: 6%;
+  bottom: -0.16em;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--vermilion) 36%,
+    var(--vermilion-soft) 88%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.18);
+  transform-origin: 0% 50%;
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 2.55s,
+    transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 2.55s;
+}
+
+.composition.ready .incipit-i::after {
+  opacity: 0.78;
+  transform: scaleX(1);
+}
+
+/* ----- Colophon provenance ("legi · xviii") ----- */
+
+.colophon-provenance {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(7.5px, 0.72vw, 9px);
+  letter-spacing: 0.24em;
+  text-transform: lowercase;
+  color: var(--gold);
+  opacity: 0;
+  margin-top: clamp(1px, 0.2vw, 4px);
+  transition: opacity 0.95s ease 3.35s;
+}
+
+.frame.ready .colophon-provenance {
+  opacity: 0.72;
+}
+
+/* ----- Reduced motion overrides for iteration 29 ----- */
+
+@media (prefers-reduced-motion: reduce) {
+  .incipit-i {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+  .incipit-i::after {
+    transition: none;
+    opacity: 0.78;
+    transform: scaleX(1);
+  }
+  .colophon-provenance {
+    transition: none;
+    opacity: 0.72;
+  }
+}
+
+/* ----- Mobile sizing for iteration 29 ----- */
+
+@media (max-width: 880px) {
+  .incipit-i { font-size: 1.36em; }
+  .colophon-provenance { font-size: clamp(7px, 0.96vw, 8.5px); }
+}
+
+@media (max-width: 620px) {
+  .colophon-provenance { letter-spacing: 0.2em; }
+}
+
+@media (max-width: 520px) {
+  .incipit-i { font-size: 1.3em; vertical-align: -0.05em; }
+  .colophon-provenance {
+    font-size: 7.5px;
+    letter-spacing: 0.16em;
+  }
+}
+
+@media (max-width: 380px) {
+  .colophon-provenance { display: none; }
+}
