@@ -1808,7 +1808,10 @@ body {
 
 .question-name {
   font-style: italic;
-  letter-spacing: -0.015em;
+  font-variant-caps: small-caps;
+  font-feature-settings: "smcp" on, "ss01" on, "liga" on;
+  letter-spacing: 0.06em;
+  font-size: 0.95em;
 }
 
 .question-name::after {
@@ -2136,6 +2139,75 @@ body {
   opacity: 0.6;
 }
 
+/* ----- Catchword (printer's catch-line for the next folio) ----- */
+
+.catchword {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(5px, 0.6vw, 9px);
+  margin-top: clamp(6px, 0.7vw, 10px);
+  padding: 0;
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 1.0s ease 2.9s,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 2.9s;
+}
+
+.frame.ready .catchword {
+  opacity: 0.82;
+  transform: translateY(0);
+}
+
+.catchword-rule {
+  display: inline-block;
+  width: clamp(10px, 1.4vw, 18px);
+  height: 1px;
+  align-self: center;
+  background: linear-gradient(90deg, transparent, var(--gold-deep) 65%, var(--gold));
+  opacity: 0.7;
+  flex: 0 0 auto;
+  transform: scaleX(0.3);
+  transform-origin: left center;
+  transition: transform 1.0s cubic-bezier(0.2, 0.7, 0.2, 1) 3.05s;
+}
+
+.frame.ready .catchword-rule {
+  transform: scaleX(1);
+}
+
+.catchword-label {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(7.5px, 0.68vw, 8.5px);
+  letter-spacing: 0.32em;
+  text-transform: lowercase;
+  color: var(--ink-soft);
+  opacity: 0.7;
+  flex: 0 0 auto;
+}
+
+.catchword-dot {
+  color: var(--gold);
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: clamp(10px, 0.95vw, 12px);
+  opacity: 0.65;
+  flex: 0 0 auto;
+  transform: translateY(-0.05em);
+}
+
+.catchword-word {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, 1.05vw, 13px);
+  letter-spacing: 0.04em;
+  color: var(--gold);
+  opacity: 0.92;
+  flex: 0 0 auto;
+  text-shadow: 0 0 8px rgba(217, 176, 116, 0.18);
+}
+
 .register-cross {
   display: block;
 }
@@ -2287,6 +2359,8 @@ body {
   .reply-end { transition: none; animation: none; opacity: 0.9; }
   .colophon { opacity: 1; transition: none; }
   .colophon-seal { transition: none; opacity: 1; }
+  .catchword { transition: none; opacity: 0.82; transform: none; }
+  .catchword-rule { transition: none; transform: scaleX(1); }
   .printer-seal, .seal-ring-outer, .seal-ring-inner, .seal-letter, .seal-pip {
     transition: none;
     animation: none;

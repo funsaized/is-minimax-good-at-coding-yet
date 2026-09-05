@@ -143,7 +143,7 @@ function FolioMark() {
         textAnchor="middle"
         className="folio-mark-letter"
       >
-        xi
+        xii
       </text>
       <path
         className="folio-mark-flourish"
@@ -459,7 +459,7 @@ function Signature() {
       focusable="false"
     >
       <line x1="2"  y1="9" x2="14" y2="9" className="sig-rule" />
-      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">xi</text>
+      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">xii</text>
       <line x1="50" y1="9" x2="62" y2="9" className="sig-rule" />
       <circle cx="18" cy="9" r="0.7" className="sig-pip" />
       <circle cx="46" cy="9" r="0.7" className="sig-pip" />
@@ -1404,6 +1404,12 @@ export function App() {
           </span>
           <span className="colophon-mark">
             <RegisterCross />
+          </span>
+          <span className="catchword">
+            <span className="catchword-rule" />
+            <span className="catchword-label">catch</span>
+            <span className="catchword-dot" aria-hidden="true">·</span>
+            <span className="catchword-word">iterum</span>
           </span>
         </div>
       </div>
