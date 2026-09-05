@@ -173,7 +173,37 @@ body {
   opacity: 0;
   animation: giltIn 3.6s ease 1.4s forwards;
   mix-blend-mode: screen;
+  transition: filter 1.4s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
+
+/* Iteration 37: bifolio attention — the central gilt slightly
+   brightens and the crease deepens when the reader is attending to
+   the composition (their pointer is over the page). The book is being
+   held open more attentively. */
+.stage.is-attending .bifolio-gilt {
+  filter: blur(0.4px) drop-shadow(0 0 6px rgba(240, 212, 154, 0.32));
+  opacity: 0.95;
+}
+
+.stage.is-attending .bifolio-crease {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(184, 169, 143, 0.10) 12%,
+    rgba(184, 169, 143, 0.36) 50%,
+    rgba(184, 169, 143, 0.10) 88%,
+    transparent 100%
+  );
+  transition: background 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.stage.is-attending .bifolio-shadow {
+  opacity: 0.62;
+  transition: opacity 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.bifolio-crease { transition: background 1.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.bifolio-shadow { transition: opacity 1.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
 
 .bifolio-shadow {
   position: absolute;
@@ -5688,6 +5718,63 @@ body {
   }
 }
 
+/* ----- Iteration 37: chapter spine pulse and seal -----
+ *
+ * The spine is now a living channel. A small soft halo travels from
+ * the top of the column down to the compass mark whenever the
+ * chapter is engaged (welcome pulse after first settle, on every
+ * acknowledge), and the column briefly resolves into a continuous
+ * sealed hairline once the reader's "intellexi" has been written —
+ * the chapter has been read, the binding closed. The pulse element
+ * remounts via a key on the JS side, so the animation replays cleanly
+ * each time it is triggered without piling up timers.
+ */
+.chapter-spine-pulse {
+  position: absolute;
+  left: 50%;
+  top: -2%;
+  width: 11px;
+  height: 56px;
+  transform: translateX(-50%) translateY(0);
+  background:
+    radial-gradient(
+      ellipse 60% 60% at 50% 50%,
+      rgba(240, 212, 154, 0.85) 0%,
+      rgba(217, 176, 116, 0.45) 28%,
+      rgba(217, 176, 116, 0.18) 56%,
+      transparent 80%
+    );
+  filter: blur(0.4px);
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  animation: chapterSpinePulse 1.85s cubic-bezier(0.42, 0.04, 0.36, 1) forwards;
+  will-change: top, opacity;
+}
+
+.chapter-spine.is-sealed {
+  background-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--gold-deep) 6%,
+      var(--gold) 22%,
+      var(--gold-deep) 50%,
+      var(--gold) 78%,
+      var(--gold-deep) 94%,
+      transparent 100%
+    );
+  transition: background-image 0.6s ease;
+  opacity: 0.95;
+}
+
+@keyframes chapterSpinePulse {
+  0%   { top: -6%; opacity: 0; }
+  12%  { opacity: 0.95; }
+  85%  { opacity: 0.85; }
+  100% { top: 102%; opacity: 0; }
+}
+
 /* ----- Colophon compass mark ----- */
 
 .colophon-compass {
@@ -5760,6 +5847,17 @@ body {
     opacity: 0.8;
     transform: translate(-50%, -50%) scale(1);
   }
+  .chapter-spine-pulse {
+    animation: none;
+    opacity: 0;
+  }
+  .chapter-spine.is-sealed {
+    background-image: radial-gradient(
+      circle at 50% 50%,
+      var(--gold) 0.55px,
+      transparent 0.55px
+    );
+  }
   .colophon-compass {
     animation: none;
     opacity: 0.92;
@@ -5771,6 +5869,15 @@ body {
   .question,
   .question-name {
     transition: none;
+  }
+  .stage.is-attending .bifolio-gilt,
+  .stage.is-attending .bifolio-crease,
+  .stage.is-attending .bifolio-shadow {
+    transition: none;
+  }
+  .intellexi-nota-caret {
+    animation: none;
+    opacity: 0.55;
   }
 }
 
@@ -5811,6 +5918,9 @@ body {
 
 @media (max-width: 520px) {
   .chapter-spine {
+    display: none;
+  }
+  .chapter-spine-pulse {
     display: none;
   }
   .colophon-compass {
@@ -6263,6 +6373,24 @@ body {
   transform: translateX(-50%) scaleX(1);
 }
 
+/* Iteration 37: the gloss now writes itself. A blinking caret appears
+   after the typed text while the reader is still writing, mirroring
+   the carets that accompany the answer, reply, and footnote. */
+.intellexi-nota-text {
+  display: inline-block;
+}
+
+.intellexi-nota-caret {
+  display: inline-block;
+  color: var(--vermilion);
+  margin-left: 1px;
+  font-style: normal;
+  font-weight: 400;
+  animation: caretBlink 0.85s steps(2, end) infinite;
+  transform: translateY(-0.05em);
+  text-shadow: 0 0 6px rgba(176, 83, 58, 0.3);
+}
+
 /* The hero "quietus" — a single inward breath when the reader has
    understood the chapter. A subtle filter glow on the svg-wrap and
    an additional overlay ring (added via pseudo-element on the hero
@@ -6337,6 +6465,10 @@ body {
     animation: none;
   }
   .hero.is-quietus::after { opacity: 0; }
+  .intellexi-nota-caret {
+    animation: none;
+    opacity: 0.6;
+  }
 }
 
 /* Mobile sizing for the new details */

@@ -92,6 +92,7 @@ const MARGINAL_RUBRIC = 'Qu.'
 
 const ANSWER_STAGGER_MS = 34
 const REPLY_STAGGER_MS = 26
+const INTELLEXI_STAGGER_MS = 78
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
@@ -1371,16 +1372,33 @@ function Explicit() {
 // accepts) → legi (the colophon confirms) → explicit (the chapter
 // closes). A small drawn quill flourish above the word, like the reader
 // set down a single hairline stroke before writing their gloss.
-function IntellexiNota({ visible }: { visible: boolean }) {
+//
+// Iteration 37 lets the gloss write itself: the flourish draws in
+// first, then the word types itself out one character at a time, with
+// a blinking caret while the reader is still setting quill to page.
+// This unifies the chapter's verbal choreography — answer, reply,
+// footnote, and now the reader's own sign-off all share the same
+// manuscript cadence.
+function IntellexiNota({
+  visible,
+  text,
+  done,
+}: {
+  visible: boolean
+  text: string
+  done: boolean
+}) {
+  const typing = visible && !done
   return (
     <p
-      className={`intellexi-nota ${visible ? 'is-on' : ''}`}
-      aria-hidden="true"
+      className={`intellexi-nota ${visible ? 'is-on' : ''} ${done ? 'is-done' : ''}`}
+      aria-live="polite"
     >
       <svg
         className="intellexi-nota-flourish"
         viewBox="0 0 32 7"
         focusable="false"
+        aria-hidden="true"
       >
         <path
           className="intellexi-nota-flourish-curve"
@@ -1393,7 +1411,8 @@ function IntellexiNota({ visible }: { visible: boolean }) {
           r="0.55"
         />
       </svg>
-      <em className="intellexi-nota-text">intellexi</em>
+      <em className="intellexi-nota-text">{text}</em>
+      {typing && <span className="intellexi-nota-caret" aria-hidden="true">|</span>}
       <span className="intellexi-nota-strike" aria-hidden="true" />
     </p>
   )
@@ -1428,8 +1447,30 @@ function VineCorner({ position }: { position: 'tl' | 'br' }) {
 // of the in-flow content so it reads as the page's quiet central
 // spine, gathering the hero, the question, the answer, and the reply
 // into a single vertical column.
-function ChapterSpine() {
-  return <div className="chapter-spine" aria-hidden="true" />
+//
+// Iteration 37 activates this axis: a soft gold pulse travels from
+// the top of the column down to the compass mark whenever the chapter
+// is engaged (welcome on first settle, on every acknowledge, and a
+// final resolved glow when the reader has understood). The pulse
+// element is a single translucent halo that rides the spine; the
+// existing pin-pricks stay where they are so the column keeps its
+// manuscript texture. The pulse is purely additive — it never
+// replaces the existing ornament, it makes the orifice feel alive.
+function ChapterSpine({
+  pulseKey,
+  sealed,
+}: {
+  pulseKey: number
+  sealed: boolean
+}) {
+  return (
+    <div
+      className={`chapter-spine ${sealed ? 'is-sealed' : ''}`}
+      aria-hidden="true"
+    >
+      <span key={pulseKey} className="chapter-spine-pulse" />
+    </div>
+  )
 }
 
 // CompassMark — a small four-pointed star that sits at the top of the
@@ -1742,7 +1783,11 @@ export function App() {
   const [pointing, setPointing] = useState(false)
   const [sealing, setSealing] = useState(false)
   const [intellexiOn, setIntellexiOn] = useState(false)
+  const [intellexiChars, setIntellexiChars] = useState(0)
   const [quietus, setQuietus] = useState(false)
+  const [spinePulseKey, setSpinePulseKey] = useState(0)
+  const [spineSealed, setSpineSealed] = useState(false)
+  const [bifolioAttending, setBifolioAttending] = useState(false)
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
@@ -1848,7 +1893,10 @@ export function App() {
   // conclusion lands before the reader signs off, like closing a book
   // and writing a single word in the endpaper. The hero receives a
   // matching inward breath at the same moment, so the emblem above
-  // and the gloss below settle into the same quiet.
+  // and the gloss below settle into the same quiet. Iteration 37 lets
+  // the gloss write itself character by character so the reader's
+  // response shares the chapter's manuscript cadence — answer, reply,
+  // footnote, and now intellexi all use the same slow hand.
   useEffect(() => {
     if (!footnoteOn || footnoteChars < FOOTNOTE_TEXT.length) return
     const t = window.setTimeout(
@@ -1860,6 +1908,85 @@ export function App() {
     )
     return () => window.clearTimeout(t)
   }, [footnoteOn, footnoteChars, reduced])
+
+  // Intellexi typing — the reader's gloss writes itself in the same
+  // cadence as the answer, reply, and footnote. Staggered wider
+  // because it is a single short word, not a sentence, and the slower
+  // hand reads as deliberate ("I have understood") rather than hurried.
+  useEffect(() => {
+    if (!intellexiOn) {
+      setIntellexiChars(0)
+      return
+    }
+    const total = 'intellexi'.length
+    if (reduced) {
+      setIntellexiChars(total)
+      return
+    }
+    if (intellexiChars >= total) return
+    const id = window.setTimeout(
+      () => setIntellexiChars((c) => Math.min(total, c + 1)),
+      INTELLEXI_STAGGER_MS,
+    )
+    return () => window.clearTimeout(id)
+  }, [intellexiOn, intellexiChars, reduced])
+
+  // Spine pulse — a soft gold light travels from the top of the
+  // chapter spine to the compass mark at three narrative moments:
+  //   1. A welcome pulse after the spine has finished fading in, so
+  //      the reader knows the column is alive.
+  //   2. A reading pulse on every acknowledge, so the column carries
+  //      the chapter's first word down to its signature.
+  //   3. A final sealed glow when intellexi is fully written, so the
+  //      spine reads as a single settled hairline — the chapter has
+  //      been completed, the binding closed.
+  // The pulse uses an incrementing key so the keyed child element
+  // remounts and its CSS animation replays cleanly each time.
+  useEffect(() => {
+    if (reduced) return
+    const t = window.setTimeout(() => {
+      setSpinePulseKey((k) => k + 1)
+    }, 1900)
+    return () => window.clearTimeout(t)
+  }, [reduced])
+
+  useEffect(() => {
+    if (!intellexiOn) return
+    if (reduced) return
+    if (intellexiChars < 'intellexi'.length) return
+    const t = window.setTimeout(() => {
+      setSpineSealed(true)
+    }, 220)
+    return () => window.clearTimeout(t)
+  }, [intellexiOn, intellexiChars, reduced])
+
+  // Bifolio attention — the page's central gilt brightens subtly when
+  // the reader's pointer is over the composition (the book is being
+  // held open more attentively) and settles back when they wander
+  // off. A single listener is attached once on mount; the response is
+  // entirely CSS-driven so the gesture stays smooth.
+  useEffect(() => {
+    if (reduced) return
+    let leaveTimer = 0
+    const onMove = () => {
+      if (leaveTimer) {
+        window.clearTimeout(leaveTimer)
+        leaveTimer = 0
+      }
+      if (!bifolioAttending) setBifolioAttending(true)
+    }
+    const onLeave = () => {
+      if (leaveTimer) window.clearTimeout(leaveTimer)
+      leaveTimer = window.setTimeout(() => setBifolioAttending(false), 700)
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    document.addEventListener('pointerleave', onLeave)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      document.removeEventListener('pointerleave', onLeave)
+      if (leaveTimer) window.clearTimeout(leaveTimer)
+    }
+  }, [bifolioAttending, reduced])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -2130,6 +2257,8 @@ export function App() {
     setNoteNonce((n) => n + 1)
     setPointing(true)
     setSealing(true)
+    setSpineSealed(false)
+    if (!reduced) setSpinePulseKey((k) => k + 1)
     const order: Corner[] = ['tl', 'tr', 'br']
     waveTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
     waveTimeoutsRef.current = []
@@ -2157,6 +2286,7 @@ export function App() {
     setAnswerChars(0)
     setReplyChars(0)
     setFootnoteChars(0)
+    setIntellexiChars(0)
     setReplyOn(false)
     setFootnoteOn(false)
     setIntellexiOn(false)
@@ -2211,7 +2341,7 @@ export function App() {
   const answerDropCapVisible = answerOn
 
   return (
-    <main className="stage">
+    <main className={`stage ${bifolioAttending ? 'is-attending' : ''}`}>
       <canvas ref={canvasRef} className="dust" aria-hidden="true" />
       <div className="rim" aria-hidden="true" />
       <div className="codex-edge" aria-hidden="true" />
@@ -2265,7 +2395,7 @@ export function App() {
         />
 
         <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''} ${quietus ? 'is-quietus' : ''}`}>
-          <ChapterSpine />
+          <ChapterSpine pulseKey={spinePulseKey} sealed={spineSealed} />
           <Capitulum />
           <span className="rubric">
             <span className="rubric-pilcrow" aria-hidden="true">§</span>
@@ -2472,7 +2602,11 @@ export function App() {
               done={footnoteDone}
             />
             <Explicit />
-            <IntellexiNota visible={intellexiOn} />
+            <IntellexiNota
+              visible={intellexiOn}
+              text={intellexiOn ? 'intellexi'.slice(0, Math.max(0, intellexiChars)) : ''}
+              done={intellexiOn && intellexiChars >= 'intellexi'.length}
+            />
           </div>
         </div>
 
