@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import os from 'node:os'
-import { ROOT, RUNTIME, command, config, git, log, readJSON, readState, saveState, writeJSON } from './lib.mjs'
+import { ROOT, RUNTIME, command, config, git, log, readJSON, readState, saveState, writeJSON, sleep } from './lib.mjs'
 import { SNAPSHOT_CSP, launchBrowser } from './browser.mjs'
 
 export async function vercelAPI(endpoint, options = {}) {
@@ -34,9 +34,16 @@ export async function prepareOutput() {
 }
 
 export async function verifyDeployment(url, expectedId) {
-  const response = await fetch(`${url}/manifest.json?t=${Date.now()}`, { cache: 'no-store', signal: AbortSignal.timeout(30_000) })
-  if (!response.ok) throw new Error(`Public manifest returned ${response.status}`)
-  const manifest = await response.json()
+  let manifest
+  for (let retry = 0; retry < 12; retry++) {
+    const response = await fetch(`${url}/manifest.json?t=${Date.now()}`, { cache: 'no-store', signal: AbortSignal.timeout(30_000) })
+    if (response.ok) {
+      const data = await response.json()
+      if (data.iterations?.at(-1)?.id === expectedId) { manifest = data; break }
+    }
+    if (retry === 11) throw new Error(`Public manifest not ready for iteration ${expectedId} (HTTP ${response.status})`)
+    await sleep(2500)
+  }
   const version = manifest.iterations.at(-1)
   if (version?.id !== expectedId) throw new Error(`Expected iteration ${expectedId}, found ${version?.id}`)
   const browser = await launchBrowser()

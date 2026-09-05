@@ -2,5 +2,5 @@
   "name": "minimax-experiment",
   "private": true,
   "type": "module",
-  "scripts": { "build": "tsc --noEmit && vite build", "dev": "vite --host 127.0.0.1" }
+  "scripts": { "build": "tsc --noEmit && vite build --configLoader native", "dev": "vite --host 127.0.0.1 --configLoader native" }
 }
