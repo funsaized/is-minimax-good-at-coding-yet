@@ -5,6 +5,7 @@ MiniMax M3 keeps redesigning a page that begins black, with the title **is Minim
 - Website: [live!](https://is-minimax-good-at-coding-yet.vercel.app/)
 - Source and assets: https://github.com/funsaized/is-minimax-good-at-coding-yet
 - Fixed prompt: [runner/prompt.md](runner/prompt.md)
+- Technical walkthrough: [How the system works](docs/HOW_IT_WORKS.md), including the runner, sandboxes, commits, publication, and recovery.
 
 ## Local use
 
