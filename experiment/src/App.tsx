@@ -65,6 +65,18 @@ const ANSWER =
 const REPLY =
   'so read it once, then again — slower this time.'
 
+// Scholastic footnote — a small bilingual marginal gloss written into
+// the page after the reply has finished landing. Latin lemma in
+// vermilion italic, English gloss in the page's own ink-soft, joined
+// by a hand-cut middot. The footnote draws itself in like a scribe's
+// late addition to a finished folio — the kind of gloss a careful
+// reader might write in centuries after the page was set, connecting
+// the reply's invitation to read again with the page's own patience.
+const FOOTNOTE_TEXT = 'relege · without a reader, silence'
+const FOOTNOTE_ARIA =
+  'relege, without a reader, silence — read again, without a reader, silence'
+const FOOTNOTE_STAGGER_MS = 38
+
 // The rubricated initial that opens the answer — a small painted "I"
 // (for the manuscript em-dash's companion, the verb "imponitur"), set in
 // vermilion italic. Reads as the answer being a hand-illuminated reply.
@@ -1021,6 +1033,71 @@ function AnswerOrnament() {
   )
 }
 
+// ScholasticFootnote — a small bilingual marginal gloss that writes
+// itself into the page after the reply has finished. The rule above
+// draws first (a thin gold hairline growing outward from center); the
+// superscript "¹" then settles in; finally the body types itself out
+// in a slow, deliberate cadence. The Latin lemma ("relege") is set in
+// vermilion italic; the English gloss in the page's own ink-soft,
+// joined by a small hand-cut middot. A blinking caret mirrors the
+// answer/reply scribes. A small drawn flourish at the end suggests
+// the scribe's quill lifting from the page.
+function ScholasticFootnote({
+  visible,
+  text,
+  done,
+}: {
+  visible: boolean
+  text: string
+  done: boolean
+}) {
+  const dotIdx = text.indexOf('·')
+  const latin = dotIdx >= 0 ? text.slice(0, dotIdx) : text
+  const english = dotIdx >= 0 ? text.slice(dotIdx + 1).replace(/^\s+/, '') : ''
+  const typing = visible && !done
+  return (
+    <p
+      className={`footnote ${visible ? 'is-on' : ''} ${done ? 'is-done' : ''}`}
+      aria-live="polite"
+      aria-label={visible ? FOOTNOTE_ARIA : undefined}
+    >
+      <span className="footnote-rule" aria-hidden="true" />
+      <span className="footnote-row">
+        <span className="footnote-mark" aria-hidden="true">
+          ¹
+        </span>
+        <em className="footnote-latin">{latin}</em>
+        {dotIdx >= 0 && (
+          <span className="footnote-sep" aria-hidden="true">
+            ·
+          </span>
+        )}
+        {english !== '' && (
+          <span className="footnote-en">{english}</span>
+        )}
+        {typing && <span className="footnote-caret" aria-hidden="true">|</span>}
+      </span>
+      <svg
+        className="footnote-flourish"
+        viewBox="0 0 28 6"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          className="footnote-flourish-curve"
+          d="M 2 4 Q 8 1 14 3 Q 20 5 26 2"
+        />
+        <circle
+          className="footnote-flourish-pip"
+          cx="26"
+          cy="2"
+          r="0.55"
+        />
+      </svg>
+    </p>
+  )
+}
+
 function Marg({
   corner,
   id,
@@ -1111,6 +1188,8 @@ export function App() {
   const [answerChars, setAnswerChars] = useState(0)
   const [replyOn, setReplyOn] = useState(false)
   const [replyChars, setReplyChars] = useState(0)
+  const [footnoteOn, setFootnoteOn] = useState(false)
+  const [footnoteChars, setFootnoteChars] = useState(0)
   const [pointing, setPointing] = useState(false)
   const [sealing, setSealing] = useState(false)
   const pulseRef = useRef(0)
@@ -1181,6 +1260,37 @@ export function App() {
     )
     return () => clearTimeout(id)
   }, [replyOn, replyChars, reduced])
+
+  // The footnote arrives once the reply has finished being written.
+  // It waits a beat so the page's reply can land on its own before the
+  // scribe adds a marginal gloss — the cadence of someone who has just
+  // finished reading and reaches for the pen to write in the margin.
+  useEffect(() => {
+    if (!replyOn || replyChars < REPLY.length) return
+    const t = window.setTimeout(
+      () => setFootnoteOn(true),
+      reduced ? 60 : 760,
+    )
+    return () => window.clearTimeout(t)
+  }, [replyOn, replyChars, reduced])
+
+  useEffect(() => {
+    if (!footnoteOn) {
+      setFootnoteChars(0)
+      return
+    }
+    if (reduced) {
+      setFootnoteChars(FOOTNOTE_TEXT.length)
+      return
+    }
+    const total = FOOTNOTE_TEXT.length
+    if (footnoteChars >= total) return
+    const id = window.setTimeout(
+      () => setFootnoteChars((c) => Math.min(total, c + 1)),
+      FOOTNOTE_STAGGER_MS,
+    )
+    return () => window.clearTimeout(id)
+  }, [footnoteOn, footnoteChars, reduced])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -1464,7 +1574,9 @@ export function App() {
     waveTimeoutsRef.current.push(end)
     setAnswerChars(0)
     setReplyChars(0)
+    setFootnoteChars(0)
     setReplyOn(false)
+    setFootnoteOn(false)
     setAnswerOn(true)
     const ansOff = window.setTimeout(
       () => {
@@ -1505,6 +1617,10 @@ export function App() {
 
   const answerDisplay = answerOn ? ANSWER.slice(0, Math.max(0, answerChars)) : ''
   const replyDisplay = replyOn ? REPLY.slice(0, Math.max(0, replyChars)) : ''
+  const footnoteDisplay = footnoteOn
+    ? FOOTNOTE_TEXT.slice(0, Math.max(0, footnoteChars))
+    : ''
+  const footnoteDone = footnoteOn && footnoteChars >= FOOTNOTE_TEXT.length
 
   // Whether to render the rubricated initial: show it once the answer
   // has begun writing itself.
@@ -1728,6 +1844,11 @@ export function App() {
               )}
             </p>
             <InkStain />
+            <ScholasticFootnote
+              visible={footnoteOn}
+              text={footnoteDisplay}
+              done={footnoteDone}
+            />
           </div>
         </div>
 

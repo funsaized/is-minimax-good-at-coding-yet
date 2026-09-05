@@ -3857,3 +3857,258 @@ body {
 @media (max-width: 480px) {
   .thumb-print { display: none; }
 }
+
+/* ----- Iteration 27: scholastic footnote -----
+ * A small bilingual marginal gloss that the scribe writes into the
+ * page after the reply has landed. The footnote has three parts:
+ * a thin gold rule above (the chapter's hairline, drawn outward from
+ * center); a single line of body text set with a vermilion "¹"
+ * superscript marker, the Latin lemma "relege" in vermilion italic,
+ * a hand-cut middot, and the English gloss in ink-soft regular; and
+ * a small drawn flourish beneath the body — the curve of a quill
+ * lifting off the page after writing. The whole footnote types
+ * itself in slowly, after the reply has finished, the way a careful
+ * reader might add a margin note centuries after the page was set. */
+
+.footnote {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 0.7vw, 10px);
+  width: 100%;
+  max-width: 36ch;
+  margin: clamp(18px, 2.2vw, 28px) auto 0;
+  padding: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, 1.08vw, 13.5px);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--ink-soft);
+  text-align: center;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 0.8s ease,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.footnote.is-on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.footnote-rule {
+  display: block;
+  width: clamp(36px, 4.6vw, 64px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-deep) 30%,
+    var(--gold) 50%,
+    var(--gold-deep) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.1);
+  transform-origin: 50% 50%;
+  transition:
+    opacity 0.65s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s,
+    transform 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s;
+}
+
+.footnote.is-on .footnote-rule {
+  opacity: 0.55;
+  transform: scaleX(1);
+}
+
+.footnote-row {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: clamp(4px, 0.42vw, 7px);
+  row-gap: 2px;
+}
+
+.footnote-mark {
+  display: inline-block;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.78em;
+  color: var(--vermilion);
+  vertical-align: 0.36em;
+  line-height: 0;
+  opacity: 0;
+  transform: translateY(-2px) scale(0.55);
+  transform-origin: 50% 80%;
+  text-shadow: 0 0 8px rgba(176, 83, 58, 0.18);
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s,
+    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1) 0.55s,
+    color 0.4s ease;
+}
+
+.footnote.is-on .footnote-mark {
+  opacity: 0.92;
+  transform: translateY(-2px) scale(1);
+}
+
+.footnote:hover .footnote-mark,
+.footnote:focus-within .footnote-mark { color: var(--vermilion-bright); }
+
+.footnote-latin {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--vermilion);
+  letter-spacing: 0.015em;
+  text-shadow: 0 0 7px rgba(176, 83, 58, 0.16);
+  font-size: 1em;
+}
+
+.footnote-sep {
+  display: inline-block;
+  font-style: normal;
+  color: var(--gold-deep);
+  opacity: 0.7;
+  font-size: 0.95em;
+  transform: translateY(-0.05em);
+  margin: 0 0.04em;
+}
+
+.footnote-en {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink-soft);
+  letter-spacing: 0.005em;
+  font-size: 0.98em;
+}
+
+.footnote:hover .footnote-en,
+.footnote:focus-within .footnote-en { color: var(--ink); }
+
+.footnote-caret {
+  display: inline-block;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 0.92em;
+  color: var(--gold);
+  margin-left: 2px;
+  transform: translateY(-0.05em);
+  animation: footnoteCaret 0.85s steps(2, end) infinite;
+}
+
+@keyframes footnoteCaret {
+  0%, 50%   { opacity: 0.9; }
+  51%, 100% { opacity: 0.15; }
+}
+
+.footnote-flourish {
+  display: block;
+  width: clamp(28px, 3.4vw, 44px);
+  height: auto;
+  margin-top: clamp(2px, 0.3vw, 4px);
+  color: var(--vermilion);
+  opacity: 0;
+  overflow: visible;
+  transition: opacity 0.7s ease;
+}
+
+.footnote.is-done .footnote-flourish {
+  opacity: 0.85;
+  transition-delay: 0.2s;
+}
+
+.footnote-flourish-curve {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  opacity: 0;
+  transition:
+    opacity 0.4s ease,
+    stroke-dashoffset 1.0s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.footnote.is-done .footnote-flourish-curve {
+  opacity: 0.7;
+  stroke-dashoffset: 0;
+  transition-delay: 0.2s, 0.2s;
+}
+
+.footnote-flourish-pip {
+  fill: currentColor;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  transition:
+    opacity 0.4s ease 0.95s,
+    transform 0.55s cubic-bezier(0.2, 1.2, 0.4, 1) 0.95s;
+}
+
+.footnote.is-done .footnote-flourish-pip {
+  opacity: 0.85;
+  transform: scale(1);
+}
+
+/* A gentle "breath" on the footnote once the line is finished — the
+   gloss subtly thins and restores itself, like the ink settling into
+   the parchment. */
+.footnote.is-done {
+  animation: footnoteBreath 14s ease-in-out 1s infinite;
+}
+
+@keyframes footnoteBreath {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.86; }
+}
+
+/* Reduced motion overrides for the footnote */
+@media (prefers-reduced-motion: reduce) {
+  .footnote {
+    transition: opacity 0.2s ease;
+    transform: none;
+  }
+  .footnote.is-on { opacity: 1; transform: none; }
+  .footnote-rule { transition: none; opacity: 0.55; transform: scaleX(1); }
+  .footnote-mark { transition: none; opacity: 0.92; transform: none; }
+  .footnote-caret { animation: none; opacity: 0.5; }
+  .footnote-flourish { transition: none; opacity: 0.85; }
+  .footnote-flourish-curve { transition: none; opacity: 0.7; stroke-dashoffset: 0; }
+  .footnote-flourish-pip { transition: none; opacity: 0.85; transform: scale(1); }
+  .footnote { animation: none; }
+}
+
+/* Mobile sizing for the footnote */
+@media (max-width: 880px) {
+  .footnote { font-size: clamp(11px, 1.45vw, 13px); max-width: 30ch; }
+  .footnote-rule { width: clamp(30px, 4vw, 50px); }
+  .footnote-flourish { width: clamp(26px, 3.6vw, 36px); }
+}
+
+@media (max-width: 520px) {
+  .footnote {
+    margin-top: clamp(14px, 3vw, 22px);
+    font-size: 11.5px;
+    line-height: 1.45;
+    max-width: 26ch;
+  }
+  .footnote-rule { width: 26px; }
+  .footnote-mark { font-size: 0.84em; }
+  .footnote-latin { letter-spacing: 0.01em; }
+  .footnote-flourish { width: 24px; }
+}
+
+@media (max-width: 380px) {
+  .footnote-flourish { display: none; }
+}

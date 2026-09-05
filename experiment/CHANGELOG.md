@@ -1,10 +1,25 @@
 # Changelog
 
-## Iteration 26
+## Iteration 27 — a scribe's late gloss
 
-A reader's thumb-mark now rests in the bottom-right margin, mirroring the pressed leaf — together they frame the folio's physical history as a gift and a touch.
+A small bilingual footnote ("¹ relege · without a reader, silence")
+writes itself into the page after the reply has finished being set.
+A thin gold rule draws outward from center, a vermilion "¹" marker
+settles in, and the body types out in a slow, deliberate cadence;
+a drawn flourish beneath the line suggests the scribe's quill
+lifting from the parchment. Once finished, the gloss breathes gently
+in place. Honors prefers-reduced-motion and shrinks to mobile.
 
-- Added a thumb-print impression in the bottom-right margin: a faint oval of vermilion ridges with a small "manus" label, complementing the pressed leaf at the left. The two marks share vocabulary (Latin printer's hand), tilt direction (mirrored angles), and pacing (delayed, gentle entry), so the bottom of the folio now reads as a single sentence: a keepsake and a reader.
-- Refined the question text composition: bumped the type size to clamp(34px, 5.2vw, 62px) for a slightly more confident presence at the chapter's centerpiece.
-- Refined the answer text: nudged font-size and line-height so the reply reads with a touch more breathing room as it types itself into the page.
-- Added reduced-motion and mobile overrides for the new thumb-mark; hidden on the smallest screens to keep the colophon and answer clear.
+### Changed
+- `src/App.tsx`: added `FOOTNOTE_TEXT` and `FOOTNOTE_ARIA` constants,
+  `ScholasticFootnote` component, `footnoteOn` and `footnoteChars`
+  state, and a typing effect that fires after the reply finishes.
+  Reset footnote state alongside answer/reply state on acknowledge.
+- `src/style.css`: added `.footnote` block with rule, marker, latin
+  lemma, middot separator, English gloss, blinking caret, and a
+  small drawn flourish; added reduced-motion and mobile overrides.
+
+### Preserved
+- The page title, document title, and entry point remain unchanged.
+- All prior iterations' marginalia, ornaments, and gestures are
+  untouched; the footnote slots beneath the existing ink-stain.
