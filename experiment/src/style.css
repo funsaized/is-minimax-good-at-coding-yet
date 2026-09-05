@@ -279,6 +279,48 @@ body {
   50%      { opacity: 0.26; }
 }
 
+/* ----- Bookmark ribbon (vermilion fabric marker at the page edge) ----- */
+
+.ribbon {
+  position: fixed;
+  top: 0;
+  right: clamp(54px, 7.5vw, 120px);
+  width: clamp(14px, 1.4vw, 20px);
+  height: clamp(168px, 23vh, 232px);
+  z-index: 2;
+  pointer-events: none;
+  transform-origin: 50% 0%;
+  animation: ribbonSway 7.5s ease-in-out 2.4s infinite;
+  will-change: transform;
+}
+
+.ribbon-inner {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation:
+    ribbonIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.9s forwards;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.42));
+}
+
+.ribbon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+@keyframes ribbonIn {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 0.94; transform: translateY(0); }
+}
+
+@keyframes ribbonSway {
+  0%, 100% { transform: rotate(-1.6deg); }
+  50%      { transform: rotate(1.6deg); }
+}
+
 /* ----- Taper (candlelight beam onto the question mark) ----- */
 
 .taper {
@@ -454,6 +496,36 @@ body {
   stroke-width: 0.4;
   stroke-linecap: round;
   opacity: 0.8;
+}
+
+/* Launch echo — a brief bloom of small gold halos at the bee's origin
+   when it first takes flight. Reads as the bee shaking loose its wings
+   before lifting off, never as noise. */
+.bee-echo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bee-echo-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 10px;
+  margin-left: -7px;
+  margin-top: -5px;
+  background: radial-gradient(ellipse, rgba(217, 176, 116, 0.45) 0%, transparent 72%);
+  border-radius: 50%;
+  opacity: 0;
+  animation: beeEcho 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+@keyframes beeEcho {
+  0%   { opacity: 0.7; transform: scale(0.4); }
+  55%  { opacity: 0.32; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.7); }
 }
 
 /* ----- Marginalia ----- */
@@ -2285,6 +2357,51 @@ body {
   to { opacity: 0.9; }
 }
 
+/* ----- Footnote (manuscript gloss below the reply) ----- */
+
+.footnote {
+  position: relative;
+  margin: clamp(14px, 1.8vw, 22px) 0 0;
+  padding: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, 0.98vw, 12px);
+  line-height: 1.5;
+  letter-spacing: 0.012em;
+  color: var(--ink-faint);
+  text-align: center;
+  max-width: 36ch;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s;
+}
+
+.composition.ready .footnote {
+  opacity: 0.72;
+  transform: translateY(0);
+}
+
+.footnote-marker {
+  display: inline-block;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 0.7em;
+  vertical-align: 0.55em;
+  color: var(--vermilion);
+  opacity: 0.78;
+  margin-right: 4px;
+  letter-spacing: 0;
+  font-feature-settings: "sups" on;
+}
+
+.footnote-text {
+  display: inline;
+}
+
 /* ----- Colophon (closure under the folio) ----- */
 
 .colophon {
@@ -2346,18 +2463,64 @@ body {
   font-weight: 400;
 }
 
-.colophon-line-1 { opacity: 0.82; font-style: italic; font-family: var(--serif); letter-spacing: 0.12em; }
+.colophon-line-1 { display: none; }
 
-/* ----- Signature (typeset gathering mark, replaces 'folio v') ----- */
+/* The signature + folio pair sits on a single quiet row beneath the
+   second rule, like a printer's imprint at the bottom of the page. */
+.colophon-signature-row {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(10px, 1vw, 16px);
+  opacity: 0;
+  transition: opacity 0.9s ease 2.85s;
+}
+
+.frame.ready .colophon-signature-row { opacity: 0.95; }
+
+/* ----- Wax seal (pressed vermilion monogram at the colophon) ----- */
+
+.wax-seal {
+  width: clamp(28px, 3.2vw, 40px);
+  height: auto;
+  display: block;
+  opacity: 0;
+  transform: scale(0.7) rotate(-6deg);
+  transform-origin: center;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 2.55s,
+    transform 1.0s cubic-bezier(0.2, 1.1, 0.4, 1) 2.55s;
+}
+
+.frame.ready .wax-seal {
+  opacity: 0.95;
+  transform: scale(1) rotate(-3.5deg);
+}
+
+.frame .wax-seal:hover {
+  transform: scale(1.05) rotate(-1.5deg);
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.45));
+}
+
+.seal-letter {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 18px;
+  font-weight: 600;
+  fill: var(--bg-deep);
+  letter-spacing: 0.02em;
+}
+
+/* ----- Signature (typeset gathering mark, kept small alongside the seal) ----- */
 
 .signature {
-  width: clamp(44px, 4.4vw, 64px);
+  width: clamp(40px, 4vw, 56px);
   height: auto;
   display: block;
   color: var(--gold);
   opacity: 0;
   transform: translateY(2px);
-  animation: sigIn 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) 2.55s forwards;
+  animation: sigIn 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) 2.85s forwards;
   will-change: transform, opacity;
 }
 
@@ -2510,6 +2673,25 @@ body {
     opacity: 0.92;
     transform: none;
   }
+  .ribbon {
+    animation: none;
+  }
+  .ribbon-inner {
+    animation: none;
+    opacity: 0.92;
+    transform: none;
+  }
+  .wax-seal {
+    transition: none;
+    opacity: 0.95;
+    transform: scale(1) rotate(-3.5deg);
+  }
+  .bee-echo { display: none; }
+  .footnote {
+    transition: none;
+    opacity: 0.7;
+    transform: none;
+  }
   .auriole-r3 { --auriole-alpha: 0.62; }
   .auriole-r2 { --auriole-alpha: 0.4; }
   .auriole-r1 { --auriole-alpha: 0.24; }
@@ -2569,6 +2751,13 @@ body {
   .capitulum-sep { margin: 0 5px; }
   .printer-leaf { width: clamp(26px, 6vw, 44px); height: 7px; }
   .incipit { font-size: 10.5px; letter-spacing: 0.12em; }
+  .ribbon {
+    right: clamp(20px, 5vw, 60px);
+    width: 12px;
+    height: clamp(130px, 18vh, 180px);
+  }
+  .wax-seal { width: 30px; }
+  .footnote { font-size: 10.5px; margin-top: 12px; }
 }
 
 @media (max-width: 620px) {
@@ -2610,6 +2799,13 @@ body {
   .printer-leaf { width: 22px; height: 6px; }
   .incipit { font-size: 10px; letter-spacing: 0.1em; }
   .hover-gloss { font-size: 10.5px; }
+  .ribbon {
+    right: clamp(14px, 4vw, 32px);
+    width: 11px;
+    height: clamp(110px, 16vh, 160px);
+  }
+  .wax-seal { width: 26px; }
+  .footnote { font-size: 10px; margin-top: 10px; max-width: 28ch; }
 }
 
 /* tiny screens — keep only the corner clock and minimal marginalia */
@@ -2623,4 +2819,6 @@ body {
   .signature { width: 38px; }
   .sig-letter { font-size: 10px; }
   .marginal-rubric { display: none; }
+  .ribbon { display: none; }
+  .wax-seal { width: 22px; }
 }

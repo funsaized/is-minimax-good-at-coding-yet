@@ -59,6 +59,13 @@ const ANSWER =
 const REPLY =
   'so read it once, then again — slower this time.'
 
+// Footnote — a small italic manuscript note that closes the chapter,
+// marked with a roman numeral as a marginal gloss would be. The line
+// that used to live in the colophon earns its own placement here, where
+// the reader's eye is still on the question's reply.
+const FOOTNOTE = 'typeset in pixels · lit by attention'
+const FOOTNOTE_MARK = 'i'
+
 // Scholastic gloss in vermilion — a single rubricated marginal word
 // sitting just outside the hero, the medieval reader's "Qu." (quaeritur).
 const MARGINAL_RUBRIC = 'Qu.'
@@ -426,6 +433,100 @@ function PrinterSeal() {
       </text>
       <circle cx="20" cy="8.5" r="0.5" className="seal-pip" />
       <circle cx="20" cy="31.5" r="0.5" className="seal-pip" />
+    </svg>
+  )
+}
+
+// Bookmark ribbon — a slim vermilion fabric ribbon hanging from the top
+// of the page like a marker left in a bound volume. Gentle sway; the
+// forked end reads as the hand-cut notch of an old bookbinder. A vertical
+// color accent that earns its place without competing with the chapter.
+function Ribbon() {
+  return (
+    <div className="ribbon" aria-hidden="true">
+      <div className="ribbon-inner">
+        <svg viewBox="0 0 20 220" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="ribbon-shade" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%"   stopColor="#3e1a10" />
+              <stop offset="22%"  stopColor="#7d3a26" />
+              <stop offset="50%"  stopColor="#b15a3c" />
+              <stop offset="78%"  stopColor="#7d3a26" />
+              <stop offset="100%" stopColor="#3e1a10" />
+            </linearGradient>
+            <linearGradient id="ribbon-top" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"  stopColor="black" stopOpacity="0.55" />
+              <stop offset="22%" stopColor="black" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M 0 0 L 20 0 L 20 198 L 10 214 L 0 198 Z"
+            fill="url(#ribbon-shade)"
+          />
+          <path
+            d="M 0 0 L 20 0 L 20 48 L 0 48 Z"
+            fill="url(#ribbon-top)"
+          />
+          <line
+            x1="10"
+            y1="0"
+            x2="10"
+            y2="214"
+            stroke="rgba(255, 210, 180, 0.10)"
+            strokeWidth="0.7"
+          />
+        </svg>
+      </div>
+    </div>
+  )
+}
+
+// Wax seal — a pressed vermilion monogram "Mm" in the manner of a hand-
+// applied finishing seal at the close of a folio. Replaces the old
+// typeset signature at the colophon; serves the same role with more
+// physical presence and a quiet bit of color.
+function WaxSeal() {
+  return (
+    <svg
+      className="wax-seal"
+      viewBox="0 0 44 44"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <radialGradient id="wax-shade" cx="38%" cy="36%" r="72%">
+          <stop offset="0%"   stopColor="#cd6044" />
+          <stop offset="55%"  stopColor="#9c4530" />
+          <stop offset="100%" stopColor="#4f2114" />
+        </radialGradient>
+      </defs>
+      <circle cx="22" cy="22" r="20" fill="url(#wax-shade)" />
+      <circle
+        cx="22"
+        cy="22"
+        r="20"
+        fill="none"
+        stroke="rgba(36, 14, 6, 0.55)"
+        strokeWidth="0.7"
+      />
+      <circle
+        cx="22"
+        cy="22"
+        r="15.5"
+        fill="none"
+        stroke="rgba(255, 210, 180, 0.16)"
+        strokeWidth="0.5"
+      />
+      <text
+        x="22"
+        y="27"
+        textAnchor="middle"
+        className="seal-letter"
+      >
+        Mm
+      </text>
+      <circle cx="22" cy="9"  r="0.7" fill="rgba(255, 218, 188, 0.45)" />
+      <circle cx="22" cy="35" r="0.7" fill="rgba(20, 8, 4, 0.4)" />
     </svg>
   )
 }
@@ -1332,6 +1433,7 @@ export function App() {
       <PaperGrain />
       <BifolioSpine />
       <Watermark />
+      <Ribbon />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
         <Taper />
@@ -1549,17 +1651,21 @@ export function App() {
                 </span>
               )}
             </p>
+            <p className="footnote" aria-hidden="true">
+              <span className="footnote-marker">{FOOTNOTE_MARK}</span>
+              <span className="footnote-text">{FOOTNOTE}</span>
+            </p>
           </div>
         </div>
 
         <div className="colophon" aria-hidden="true">
-          <Signature />
+          <WaxSeal />
           <span className="colophon-rule" />
           <span className="colophon-quaeritur">quaeritur</span>
           <span className="colophon-rule" />
-          <span className="colophon-folio">folio · xiii</span>
-          <span className="colophon-line colophon-line-1">
-            typeset in pixels · lit by attention
+          <span className="colophon-signature-row">
+            <Signature />
+            <span className="colophon-folio">folio · xiii</span>
           </span>
         </div>
       </div>
@@ -1575,6 +1681,15 @@ export function App() {
           }}
           aria-hidden="true"
         >
+          {bee.flying && (
+            <span className="bee-echo">
+              <span className="bee-echo-dot" style={{ '--i': 0 } as CSSProperties} />
+              <span className="bee-echo-dot" style={{ '--i': 1 } as CSSProperties} />
+              <span className="bee-echo-dot" style={{ '--i': 2 } as CSSProperties} />
+              <span className="bee-echo-dot" style={{ '--i': 3 } as CSSProperties} />
+              <span className="bee-echo-dot" style={{ '--i': 4 } as CSSProperties} />
+            </span>
+          )}
           <span className="bee-hover">
             <Bee />
           </span>
