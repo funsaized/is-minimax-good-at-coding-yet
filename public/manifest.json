@@ -75,6 +75,25 @@
         "outputTokens": 57085,
         "steps": 69
       }
+    },
+    {
+      "id": 4,
+      "parentId": 3,
+      "createdAt": "2026-09-05T11:00:17.246Z",
+      "summary": "Folio iv: whispers, an inked note, and a paper grain beneath the question mark.",
+      "path": "/iterations/000004/index.html",
+      "screenshot": "/iterations/000004/desktop.png",
+      "mobileScreenshot": "/iterations/000004/mobile.png",
+      "sourceCommit": "52ca2e52c4e4a3594ba88e7fe3c7ca48a04bd90d",
+      "model": "minimax-coding-plan/MiniMax-M3",
+      "durationSeconds": 596,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": {
+        "estimatedCostUsd": 0,
+        "inputTokens": 137018,
+        "outputTokens": 35846,
+        "steps": 45
+      }
     }
   ]
 }
