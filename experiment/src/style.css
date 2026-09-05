@@ -535,6 +535,50 @@ body {
   opacity: 0.55;
 }
 
+/* Brass candle dish — anchors the flame to the page. Drawn in once
+   the candle has settled; the wick now rests in a small dish that
+   catches a glint from the flame above it. */
+.candle-dish {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: candleDishIn 2s cubic-bezier(0.2, 0.7, 0.2, 1) 1.7s forwards;
+}
+
+@keyframes candleDishIn {
+  0%   { opacity: 0; transform: scale(0.7) translateY(2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.candle-dish-shadow {
+  fill: rgba(0, 0, 0, 0.42);
+}
+
+.candle-dish-body {
+  stroke: rgba(36, 14, 6, 0.55);
+  stroke-width: 0.4;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.candle-dish-rim {
+  fill: rgba(168, 133, 86, 0.92);
+  stroke: rgba(74, 54, 31, 0.7);
+  stroke-width: 0.4;
+}
+
+.candle-dish-groove {
+  fill: none;
+  stroke: rgba(74, 54, 31, 0.55);
+  stroke-width: 0.35;
+  stroke-linecap: round;
+  opacity: 0.7;
+}
+
+.candle-dish-shine {
+  fill: rgba(240, 212, 154, 0.78);
+}
+
 /* Brief flare when the reader acknowledges the question */
 .candle-flame.is-flaring .flame-halo {
   animation: haloFlare 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -564,174 +608,6 @@ body {
   0%   { transform: rotate(0deg) scale(1); }
   30%  { transform: rotate(-3deg) scale(1.22); }
   100% { transform: rotate(0deg) scale(1); }
-}
-
-/* ----- Bee (Aldine messenger + parchment carrier) ----- */
-
-.bee-flight {
-  position: fixed;
-  pointer-events: none;
-  z-index: 3;
-  margin-left: -16px;
-  margin-top: -12px;
-  opacity: 0;
-  transform-origin: center;
-  transition:
-    opacity 0.5s ease,
-    transform 2.2s cubic-bezier(0.42, 0.05, 0.55, 0.96);
-  will-change: transform, opacity;
-}
-
-.bee-flight.is-flying { opacity: 1; }
-.bee-flight.is-arrived { opacity: 0.92; transition: opacity 0.6s ease; }
-
-.bee-hover {
-  display: block;
-  animation: beeHover 1.8s ease-in-out infinite;
-  transform-origin: center;
-  will-change: transform;
-}
-
-@keyframes beeHover {
-  0%, 100% { transform: translateY(0) rotate(-2deg); }
-  50%      { transform: translateY(-4px) rotate(2deg); }
-}
-
-.bee-glyph {
-  width: 32px;
-  height: 24px;
-  display: block;
-  overflow: visible;
-  color: var(--gold);
-  filter: drop-shadow(0 0 4px rgba(217, 176, 116, 0.25));
-}
-
-.bee-wing {
-  fill: var(--gold);
-  fill-opacity: 0.45;
-  stroke: var(--gold-deep);
-  stroke-width: 0.3;
-  transform-box: fill-box;
-  transform-origin: center bottom;
-  animation: beeFlutter 0.085s steps(2) infinite;
-  will-change: transform;
-}
-
-.bee-wing-r { animation-delay: 0.025s; }
-
-@keyframes beeFlutter {
-  0%, 100% { transform: scaleY(1) scaleX(1); }
-  50%      { transform: scaleY(0.32) scaleX(0.92); }
-}
-
-.bee-body {
-  fill: var(--gold);
-  stroke: var(--gold-deep);
-  stroke-width: 0.4;
-}
-
-.bee-stripe {
-  fill: none;
-  stroke: var(--vermilion);
-  stroke-width: 0.6;
-  stroke-linecap: round;
-  opacity: 0.9;
-}
-
-.bee-head {
-  fill: var(--vermilion-soft);
-  stroke: var(--gold-deep);
-  stroke-width: 0.3;
-}
-
-.bee-eye { fill: var(--bg-deep); }
-
-.bee-ant {
-  fill: none;
-  stroke: var(--gold-deep);
-  stroke-width: 0.4;
-  stroke-linecap: round;
-  opacity: 0.8;
-}
-
-/* Parchment — the tiny rolled vellum the bee carries when it arrives.
-   Stays hidden during flight, then unfurls at the corner the bee lands on. */
-.bee-parchment {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 24px;
-  height: 18px;
-  margin-left: -12px;
-  margin-top: 22px;
-  opacity: 0;
-  transform: translateY(-4px) scale(0.6);
-  transform-origin: 50% -8px;
-  transition:
-    opacity 0.55s ease,
-    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.bee-flight.is-arrived .bee-parchment {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.bee-parchment .parchment {
-  width: 100%;
-  height: 100%;
-  display: block;
-  overflow: visible;
-  color: var(--gold);
-}
-
-.parchment-roll {
-  fill: rgba(240, 222, 192, 0.92);
-  stroke: var(--gold-deep);
-  stroke-width: 0.5;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
-}
-
-.parchment-line {
-  fill: none;
-  stroke: var(--vermilion-soft);
-  stroke-width: 0.4;
-  stroke-linecap: round;
-  opacity: 0.7;
-}
-
-.parchment-cap {
-  fill: var(--gold-deep);
-  opacity: 0.8;
-}
-
-/* Launch echo — small gold halos that bloom at the bee's origin */
-.bee-echo {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.bee-echo-dot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 14px;
-  height: 10px;
-  margin-left: -7px;
-  margin-top: -5px;
-  background: radial-gradient(ellipse, rgba(217, 176, 116, 0.45) 0%, transparent 72%);
-  border-radius: 50%;
-  opacity: 0;
-  animation: beeEcho 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
-  animation-delay: calc(var(--i, 0) * 55ms);
-}
-
-@keyframes beeEcho {
-  0%   { opacity: 0.7; transform: scale(0.4); }
-  55%  { opacity: 0.32; transform: scale(1.05); }
-  100% { opacity: 0; transform: scale(1.7); }
 }
 
 /* ----- Marginalia ----- */
@@ -1102,6 +978,74 @@ body {
 }
 
 /* ----- Capitulum (running title above the chapter) ----- */
+
+.printer-date {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.2vw, 18px);
+  margin: 0 0 clamp(-8px, -1vw, -4px);
+  padding: 0;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(8px, 0.72vw, 9.5px);
+  line-height: 1.4;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(3px);
+  transition:
+    opacity 0.95s ease 0.32s,
+    transform 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 0.32s;
+}
+
+.composition.ready .printer-date {
+  opacity: 0.62;
+  transform: translateY(0);
+}
+
+.printer-date-rule {
+  display: inline-block;
+  width: clamp(16px, 2vw, 30px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ink-faint) 50%,
+    transparent
+  );
+  opacity: 0.65;
+  flex: 0 0 auto;
+}
+
+.printer-date-it {
+  font-family: var(--serif);
+  font-style: italic;
+  letter-spacing: 0.18em;
+  font-size: 1.05em;
+  color: var(--ink-soft);
+  text-transform: lowercase;
+}
+
+.printer-date-sep {
+  display: inline-block;
+  margin: 0 0.15em;
+  color: var(--gold-deep);
+  opacity: 0.7;
+  font-style: normal;
+}
+
+.printer-date-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--gold);
+  font-size: 1.1em;
+}
 
 .capitulum {
   display: inline-flex;
@@ -2256,9 +2200,9 @@ body {
   font-family: var(--display);
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(36px, 5.6vw, 68px);
-  line-height: 1.12;
-  letter-spacing: -0.014em;
+  font-size: clamp(34px, 5.2vw, 72px);
+  line-height: 1.14;
+  letter-spacing: -0.012em;
   text-align: center;
   color: var(--ink);
   max-width: 22ch;
@@ -2689,13 +2633,13 @@ body {
 
 .colophon {
   position: absolute;
-  bottom: clamp(14px, 2vw, 26px);
+  bottom: clamp(16px, 2.2vw, 28px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(4px, 0.6vw, 7px);
+  gap: clamp(6px, 0.8vw, 10px);
   color: var(--ink-faint);
   opacity: 0;
   transition: opacity 0.9s ease 2.1s;
@@ -2704,28 +2648,74 @@ body {
 
 .frame.ready .colophon { opacity: 0.9; }
 
-.colophon-folio,
+/* The seal group — compass star above the wax monogram, the chapter's
+   terminus and stamp paired as a single quiet closure. */
+.colophon-seal {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(-4px, -0.4vw, -1px);
+  margin-bottom: clamp(-4px, -0.4vw, 0px);
+}
+
+.colophon-pair {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, 0.7vw, 10px);
+  font-family: var(--serif);
+  font-style: italic;
+  letter-spacing: 0.05em;
+  font-size: clamp(11px, 1vw, 13px);
+  color: var(--ink-soft);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 0.9s ease 2.55s,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 2.55s;
+}
+
+.frame.ready .colophon-pair {
+  opacity: 0.92;
+  transform: translateY(0);
+}
+
 .colophon-quaeritur {
-  font-family: var(--mono);
-  font-size: clamp(8px, 0.78vw, 10px);
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  font-family: var(--serif);
+  font-size: clamp(11px, 1vw, 13px);
   color: var(--ink-faint);
-  font-weight: 400;
-  white-space: nowrap;
+  opacity: 0.78;
+}
+
+.colophon-respondetur {
+  font-style: italic;
+  letter-spacing: 0.06em;
+  font-family: var(--serif);
+  font-size: clamp(11px, 1vw, 13px);
+  color: var(--gold);
+  opacity: 0.9;
+}
+
+.colophon-pair-arrow {
+  display: inline-block;
+  font-family: var(--display);
+  font-style: normal;
+  font-size: 1.05em;
+  color: var(--gold-deep);
+  transform: translateY(-0.05em);
+  opacity: 0.7;
 }
 
 .colophon-folio {
-  color: var(--gold);
+  font-family: var(--mono);
+  font-size: clamp(8px, 0.78vw, 10px);
   letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 400;
+  white-space: nowrap;
   opacity: 0.85;
-}
-
-.colophon-quaeritur {
-  opacity: 0.7;
-  font-style: italic;
-  letter-spacing: 0.36em;
-  font-family: var(--serif);
 }
 
 .colophon-rule {
@@ -2873,6 +2863,8 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .bifolio { animation: none; opacity: 1; }
+  .candle-dish { animation: none; opacity: 1; transform: none; }
+  .printer-date { transition: none; opacity: 0.62; transform: none; }
   .incipit { transition: opacity 0.3s ease; opacity: 0.85; transform: none; }
   .incipit-caret { animation: none; opacity: 0.5; }
   .hero-svg { animation: none; transform: none; }
@@ -2973,7 +2965,6 @@ body {
   .ribbon { animation: none; }
   .ribbon-inner { animation: none; opacity: 0.92; transform: none; }
   .wax-seal { transition: none; opacity: 0.95; transform: scale(1) rotate(-3.5deg); }
-  .bee-echo { display: none; }
   .capitulum { transition: none; opacity: 0.9; transform: none; }
   .capitulum-mark { transition: none; opacity: 0.85; transform: none; }
   .rubric-pilcrow { transition: none; opacity: 1; transform: none; }
@@ -3043,9 +3034,6 @@ body {
   .reply { font-size: clamp(13px, 1.6vw, 16px); }
   .candle-flame { width: clamp(30px, 4.4vw, 50px); top: clamp(14px, 3vh, 32px); }
   .taper { width: clamp(64px, 18vw, 130px); height: clamp(150px, 26vh, 260px); top: 16%; }
-  .bee-glyph { width: 26px; height: 20px; }
-  .bee-flight { margin-left: -13px; margin-top: -10px; }
-  .bee-parchment { width: 20px; height: 15px; margin-left: -10px; margin-top: 18px; }
   .illuminated-star { width: 48px; height: 48px; }
   .question { font-size: clamp(28px, 5.4vw, 48px); }
   .question-yet { font-size: 1.12em; }
@@ -3103,7 +3091,8 @@ body {
 
 @media (max-width: 620px) {
   .colophon-folio { letter-spacing: 0.36em; }
-  .colophon-quaeritur { letter-spacing: 0.26em; }
+  .colophon-pair { font-size: 10.5px; gap: 6px; }
+  .colophon-pair-arrow { font-size: 1em; }
   .reply { max-width: 28ch; }
   .rubric { letter-spacing: 0.22em; }
   .catchword { font-size: 8.5px; gap: 4px; }
@@ -3142,6 +3131,10 @@ body {
   .capitulum-mono { letter-spacing: 0.22em; font-size: 0.78em; }
   .capitulum-sep { margin: 0 3px; font-size: 0.85em; }
   .printer-leaf { width: 22px; height: 6px; }
+  .printer-date { font-size: 7.5px; gap: 8px; letter-spacing: 0.32em; }
+  .printer-date-rule { width: clamp(10px, 3vw, 18px); }
+  .printer-date-it { font-size: 1em; }
+  .printer-date-num { font-size: 1em; }
   .incipit { font-size: 9.5px; letter-spacing: 0.12em; }
   .ribbon {
     right: clamp(14px, 4vw, 32px);
@@ -3260,116 +3253,7 @@ body {
    * question block; a vermilion ink-stain beneath the climax "?"; and a
    * printer's flourish that punctuates the transition from answer to reply. */
 
-/* ----- Pressed leaf (bottom-left marginal keepsake) ----- */
 
-.pressed-leaf {
-  position: absolute;
-  bottom: clamp(70px, 9vw, 130px);
-  left: clamp(28px, 3.6vw, 56px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(4px, 0.5vw, 7px);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px) rotate(-2.4deg);
-  animation: pressedLeafIn 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.7s forwards;
-  will-change: opacity, transform;
-}
-
-.pressed-leaf-svg {
-  width: clamp(38px, 4.6vw, 60px);
-  height: auto;
-  display: block;
-  overflow: visible;
-  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.45));
-}
-
-.leaf-stem {
-  stroke: var(--gold-deep);
-  stroke-width: 0.7;
-  stroke-linecap: round;
-  fill: none;
-  opacity: 0.65;
-}
-
-.leaf-body {
-  fill: rgba(240, 232, 218, 0.05);
-  stroke: var(--gold-deep);
-  stroke-width: 0.55;
-  stroke-linejoin: round;
-  fill-opacity: 0.22;
-  opacity: 0.78;
-}
-
-.leaf-vein-major {
-  stroke: var(--gold-deep);
-  stroke-width: 0.6;
-  stroke-linecap: round;
-  opacity: 0.65;
-}
-
-.leaf-vein {
-  stroke: var(--gold-deep);
-  stroke-width: 0.4;
-  stroke-linecap: round;
-  fill: none;
-  opacity: 0.5;
-}
-
-.leaf-shadow-soft {
-  fill: var(--vermilion);
-  opacity: 0;
-  animation: leafShadowIn 3s ease 4s forwards;
-}
-
-.leaf-shadow {
-  fill: var(--vermilion);
-  opacity: 0;
-  animation: leafShadowIn 3s ease 4.2s forwards;
-}
-
-.pressed-leaf-label {
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(5px, 0.55vw, 8px);
-  font-family: var(--mono);
-  font-size: clamp(8px, 0.72vw, 9.5px);
-  letter-spacing: 0.22em;
-  text-transform: lowercase;
-  color: var(--ink-faint);
-  opacity: 0;
-  transform: translateY(2px);
-  animation: pressedLeafLabelIn 1.8s ease 3.5s forwards;
-}
-
-.pressed-leaf-rule {
-  display: inline-block;
-  width: clamp(8px, 1vw, 14px);
-  height: 1px;
-  background: var(--ink-faint);
-  opacity: 0.6;
-}
-
-.pressed-leaf-text {
-  font-family: var(--serif);
-  font-style: italic;
-  color: var(--gold);
-  letter-spacing: 0.12em;
-  opacity: 0.85;
-}
-
-@keyframes pressedLeafIn {
-  to { opacity: 0.92; transform: translateY(0) rotate(-2.4deg); }
-}
-
-@keyframes leafShadowIn {
-  to { opacity: 0.22; }
-}
-
-@keyframes pressedLeafLabelIn {
-  to { opacity: 0.85; transform: translateY(0); }
-}
 
 /* ----- Vine corners (replace plain gold L brackets on the question block) ----- */
 
@@ -3554,10 +3438,6 @@ body {
 
 /* ----- Reduced motion overrides for the new details ----- */
 @media (prefers-reduced-motion: reduce) {
-  .pressed-leaf { animation: none; opacity: 0.92; transform: translateY(0) rotate(-2.4deg); }
-  .leaf-shadow, .leaf-shadow-soft { animation: none; opacity: 0.22; }
-  .pressed-leaf-label { animation: none; opacity: 0.85; transform: none; }
-  .pressed-leaf-text { opacity: 0.85; }
   .vine-corner { animation: none; opacity: 0.95; transform: scale(1); }
   .vine-corner-br { animation: none; opacity: 0.95; transform: rotate(180deg) scale(1); }
   .question-flourish { animation: none; opacity: 1; }
@@ -3571,24 +3451,17 @@ body {
 
 /* ----- Mobile sizing for the new details ----- */
 @media (max-width: 880px) {
-  .pressed-leaf { bottom: clamp(78px, 10vw, 140px); left: clamp(22px, 4vw, 40px); }
-  .pressed-leaf-svg { width: clamp(34px, 4.4vw, 50px); }
   .vine-corner { width: clamp(14px, 1.8vw, 20px); height: clamp(14px, 1.8vw, 20px); }
   .answer-ornament svg { width: clamp(42px, 6vw, 64px); }
 }
 
 @media (max-width: 760px) {
-  .pressed-leaf { bottom: clamp(96px, 14vw, 150px); left: clamp(18px, 4vw, 32px); }
-  .pressed-leaf-svg { width: 34px; }
   .vine-corner { width: 13px; height: 13px; top: -2px; left: -2px; }
   .vine-corner-br { bottom: -2px; right: -2px; }
   .answer-ornament { margin-top: clamp(10px, 1.6vw, 16px); }
 }
 
 @media (max-width: 520px) {
-  .pressed-leaf { bottom: clamp(110px, 18vw, 180px); left: clamp(14px, 4vw, 24px); }
-  .pressed-leaf-svg { width: 30px; }
-  .pressed-leaf-label { font-size: 7.5px; letter-spacing: 0.16em; }
   .vine-corner { width: 11px; height: 11px; }
   .question-flourish { bottom: -0.5em; }
 }
@@ -3672,243 +3545,21 @@ body {
   to { opacity: 0.78; transform: scale(1); }
 }
 
-/* ----- Ink stain (vermilion pool beside the reply) ----- */
-
-.ink-stain {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: clamp(6px, 0.8vw, 10px);
-  margin-top: clamp(8px, 1.1vw, 14px);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.7s ease;
-}
-
-.reply.is-on ~ .ink-stain {
-  opacity: 1;
-}
-
-.ink-stain-halo,
-.ink-stain-pool,
-.ink-stain-dot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  transform-box: fill-box;
-  transform-origin: center;
-  opacity: 0;
-}
-
-.ink-stain-halo {
-  width: 14px;
-  height: 14px;
-  background: radial-gradient(circle, rgba(176, 83, 58, 0.28) 0%, transparent 70%);
-  filter: blur(1.5px);
-}
-
-.ink-stain-pool {
-  width: 7px;
-  height: 7px;
-  background: radial-gradient(circle,
-    rgba(176, 83, 58, 0.55) 0%,
-    rgba(176, 83, 58, 0.18) 60%,
-    transparent 100%);
-  filter: blur(0.4px);
-}
-
-.ink-stain-dot {
-  width: 2.2px;
-  height: 2.2px;
-  background: var(--vermilion-bright);
-  border-radius: 50%;
-  box-shadow: 0 0 3px rgba(176, 83, 58, 0.55);
-}
-
-/* Animations only play once the reply has been written. */
-.reply.is-on ~ .ink-stain .ink-stain-pool {
-  animation: inkStainPool 0.8s cubic-bezier(0.2, 1.2, 0.4, 1) 0.15s forwards;
-}
-.reply.is-on ~ .ink-stain .ink-stain-dot {
-  animation: inkStainDot 0.55s cubic-bezier(0.2, 1.3, 0.4, 1) 0.3s forwards;
-}
-.reply.is-on ~ .ink-stain .ink-stain-halo {
-  animation: inkStainHalo 2.4s ease 0.5s forwards;
-}
-
-@keyframes inkStainHalo {
-  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-  60%  { opacity: 0.85; }
-  100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1.4); }
-}
-
-@keyframes inkStainPool {
-  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
-  70%  { opacity: 0.95; transform: translate(-50%, -50%) scale(1.15); }
-  100% { opacity: 0.78; transform: translate(-50%, -50%) scale(1); }
-}
-
-@keyframes inkStainDot {
-  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-  100% { opacity: 0.95; transform: translate(-50%, -50%) scale(1); }
-}
-
 /* ----- Reduced motion overrides for the new details ----- */
 @media (prefers-reduced-motion: reduce) {
   .pen-trial { transition: none; opacity: 1; transform: none; }
   .pen-trial-mark { animation: none; opacity: 0.85; stroke-dashoffset: 0; }
   .pen-trial-pip { animation: none; opacity: 0.78; transform: scale(1); }
-  .ink-stain { transition: none; opacity: 1; }
-  .reply.is-on ~ .ink-stain .ink-stain-halo { animation: none; opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
-  .reply.is-on ~ .ink-stain .ink-stain-pool { animation: none; opacity: 0.78; transform: translate(-50%, -50%) scale(1); }
-  .reply.is-on ~ .ink-stain .ink-stain-dot { animation: none; opacity: 0.95; transform: translate(-50%, -50%) scale(1); }
   .question-name::after { transition: none; opacity: 0.85; transform: scaleX(1); }
 }
 
 /* ----- Mobile sizing for the new details ----- */
 @media (max-width: 880px) {
   .pen-trial-svg { width: clamp(32px, 4vw, 50px); }
-  .ink-stain-halo { width: 12px; height: 12px; }
-  .ink-stain-pool { width: 6px; height: 6px; }
 }
 
 @media (max-width: 520px) {
   .pen-trial-svg { width: 30px; }
-  .ink-stain-halo { width: 10px; height: 10px; }
-  .ink-stain-pool { width: 5px; height: 5px; }
-  .ink-stain-dot { width: 1.8px; height: 1.8px; }
-}
-
-/* ----- Iteration 26: reader's thumb-mark in the bottom-right margin -----
-   * A faint impression of a thumb-print, mirroring the pressed leaf at the
-   * left. An oval of soft vermilion ridges — like the ghost of where a
-   * reader's hand once rested while reading. The two margins now read as
-   * a single sentence: a gift (botanical keepsake) and a touch (reader's
-   * mark) framing the bottom of the folio. The label "manus" — the
-   * scribal Latin for hand — sits beneath in the same printer's hand as
-   * the pressed leaf's "fol. press.", so the two marks share vocabulary. */
-
-.thumb-print {
-  position: absolute;
-  bottom: clamp(70px, 9vw, 130px);
-  right: clamp(28px, 3.6vw, 56px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(4px, 0.5vw, 7px);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px) rotate(5deg);
-  animation: thumbPrintIn 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.85s forwards;
-  will-change: opacity, transform;
-}
-
-.thumb-print-svg {
-  width: clamp(32px, 4vw, 52px);
-  height: auto;
-  display: block;
-  overflow: visible;
-  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.4));
-}
-
-.thumb-print-oval {
-  fill: rgba(176, 83, 58, 0.05);
-  stroke: rgba(176, 83, 58, 0.16);
-  stroke-width: 0.45;
-  fill-opacity: 0.55;
-}
-
-.thumb-print-ridge {
-  fill: none;
-  stroke: rgba(176, 83, 58, 0.22);
-  stroke-width: 0.4;
-  stroke-linecap: round;
-  opacity: 0.75;
-}
-
-.thumb-print-pip {
-  fill: rgba(176, 83, 58, 0.4);
-}
-
-.thumb-print-shadow {
-  fill: var(--vermilion);
-  opacity: 0;
-  animation: thumbPrintShadowIn 3s ease 4.1s forwards;
-}
-
-.thumb-print-label {
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(5px, 0.55vw, 8px);
-  font-family: var(--mono);
-  font-size: clamp(8px, 0.72vw, 9.5px);
-  letter-spacing: 0.22em;
-  text-transform: lowercase;
-  color: var(--ink-faint);
-  opacity: 0;
-  transform: translateY(2px);
-  animation: thumbPrintLabelIn 1.8s ease 3.6s forwards;
-}
-
-.thumb-print-rule {
-  display: inline-block;
-  width: clamp(8px, 1vw, 14px);
-  height: 1px;
-  background: var(--ink-faint);
-  opacity: 0.6;
-}
-
-.thumb-print-text {
-  font-family: var(--serif);
-  font-style: italic;
-  color: var(--vermilion);
-  letter-spacing: 0.12em;
-  opacity: 0.65;
-}
-
-@keyframes thumbPrintIn {
-  to { opacity: 0.92; transform: translateY(0) rotate(5deg); }
-}
-
-@keyframes thumbPrintLabelIn {
-  to { opacity: 0.85; transform: translateY(0); }
-}
-
-@keyframes thumbPrintShadowIn {
-  to { opacity: 0.22; }
-}
-
-/* Reduced motion overrides for the new detail */
-@media (prefers-reduced-motion: reduce) {
-  .thumb-print { animation: none; opacity: 0.92; transform: translateY(0) rotate(5deg); }
-  .thumb-print-shadow { animation: none; opacity: 0.22; }
-  .thumb-print-label { animation: none; opacity: 0.85; transform: none; }
-  .thumb-print-text { opacity: 0.65; }
-}
-
-/* Mobile sizing for the new detail */
-@media (max-width: 880px) {
-  .thumb-print { bottom: clamp(78px, 10vw, 140px); right: clamp(22px, 4vw, 40px); }
-  .thumb-print-svg { width: clamp(28px, 4vw, 42px); }
-}
-
-@media (max-width: 760px) {
-  .thumb-print { bottom: clamp(96px, 14vw, 150px); right: clamp(18px, 4vw, 32px); }
-  .thumb-print-svg { width: 30px; }
-}
-
-@media (max-width: 520px) {
-  .thumb-print { bottom: clamp(110px, 18vw, 180px); right: clamp(14px, 4vw, 24px); }
-  .thumb-print-svg { width: 26px; }
-  .thumb-print-label { font-size: 7.5px; letter-spacing: 0.16em; }
-}
-
-@media (max-width: 480px) {
-  .thumb-print { display: none; }
 }
 
 /* ----- Iteration 27: scholastic footnote -----
@@ -4177,170 +3828,8 @@ body {
  *    vermilion pilcrow. The chapter's formal end, drawn in once the
  *    footnote has finished.
  *  - The reading lantern now trails a second, softer halo at the
- *    previous cursor position (eased lag) — the page records the path
- *    of attention briefly, like light lingering where the reader paused. */
-
-/* ----- Scribe inkpot (left-margin writer's instruments) ----- */
-
-.scribe-inkpot {
-  position: absolute;
-  left: clamp(8px, 3vw, 36px);
-  top: 48%;
-  width: clamp(46px, 5.4vw, 70px);
-  height: auto;
-  display: block;
-  pointer-events: none;
-  opacity: 0;
-  transform: translate(-22px, -50%) rotate(-2.4deg);
-  transform-origin: 0% 50%;
-  transition:
-    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s,
-    transform 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s,
-    filter 0.65s ease;
-  filter: drop-shadow(0 0 4px rgba(217, 176, 116, 0.18));
-  will-change: opacity, transform;
-}
-
-.scribe-inkpot-svg-wrap {
-  display: block;
-  width: 100%;
-  height: auto;
-  transform-origin: 0% 50%;
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.scribe-inkpot-svg-wrap svg {
-  width: 100%;
-  height: auto;
-  display: block;
-  overflow: visible;
-}
-
-.composition.is-pointing .scribe-inkpot,
-.composition.ready .scribe-inkpot {
-  opacity: 0.46;
-  transform: translate(-10px, -50%) rotate(0deg);
-}
-
-.composition.is-pointing .scribe-inkpot {
-  opacity: 1;
-  transform: translate(-2px, -50%) rotate(0deg);
-  filter:
-    drop-shadow(0 0 10px rgba(217, 176, 116, 0.42))
-    drop-shadow(0 0 22px rgba(176, 83, 58, 0.18));
-}
-
-.composition.is-pointing .scribe-inkpot-svg-wrap {
-  transform: rotate(-5deg) translate(-1px, -1px);
-}
-
-.inkpot-body-shadow {
-  fill: rgba(0, 0, 0, 0.32);
-}
-
-.inkpot-body {
-  fill: var(--gold);
-  fill-opacity: 0.78;
-  stroke: var(--gold-deep);
-  stroke-width: 0.5;
-  stroke-linejoin: round;
-}
-
-.inkpot-lip {
-  fill: var(--gold);
-  fill-opacity: 0.92;
-  stroke: var(--gold-deep);
-  stroke-width: 0.4;
-  stroke-linejoin: round;
-}
-
-.inkpot-surface {
-  fill: var(--bg-deep);
-  stroke: var(--vermilion-soft);
-  stroke-width: 0.3;
-  fill-opacity: 0.96;
-}
-
-.inkpot-highlight {
-  fill: var(--gold-bright);
-  fill-opacity: 0.55;
-}
-
-.inkpot-quill {
-  transform-box: fill-box;
-  transform-origin: 0% 50%;
-  transition: transform 0.65s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.composition.is-pointing .inkpot-quill {
-  transform: rotate(-6deg);
-}
-
-.inkpot-quill-plume {
-  fill: var(--gold);
-  fill-opacity: 0.66;
-  stroke: var(--gold-deep);
-  stroke-width: 0.45;
-  stroke-linejoin: round;
-}
-
-.inkpot-quill-barb {
-  fill: none;
-  stroke: var(--gold-deep);
-  stroke-width: 0.32;
-  stroke-linecap: round;
-  opacity: 0.55;
-}
-
-.inkpot-quill-shaft {
-  stroke: var(--gold-deep);
-  stroke-width: 0.85;
-  stroke-linecap: round;
-  opacity: 0.78;
-}
-
-.inkpot-quill-nib {
-  fill: var(--vermilion-soft);
-  stroke: var(--vermilion);
-  stroke-width: 0.32;
-  stroke-linejoin: round;
-}
-
-.inkpot-quill-slit {
-  stroke: var(--bg-deep);
-  stroke-width: 0.25;
-  opacity: 0.6;
-}
-
-.inkpot-drip {
-  fill: var(--vermilion-bright);
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(0);
-}
-
-.composition.is-pointing .inkpot-drip {
-  animation: inkpotDripFall 2.4s cubic-bezier(0.55, 0.05, 0.55, 0.96) 0.8s infinite;
-}
-
-.composition.is-pointing .inkpot-drip-trail {
-  animation-name: inkpotDripFallTrail;
-  animation-delay: 1.4s;
-}
-
-@keyframes inkpotDripFall {
-  0%   { opacity: 0;    transform: scale(0.3) translateY(-2px); }
-  18%  { opacity: 0.95; transform: scale(1)   translateY(0); }
-  72%  { opacity: 0.7;  transform: scale(0.85) translateY(7px); }
-  100% { opacity: 0;    transform: scale(0.4)  translateY(13px); }
-}
-
-@keyframes inkpotDripFallTrail {
-  0%   { opacity: 0;    transform: scale(0.4) translateY(0); }
-  25%  { opacity: 0.85; transform: scale(0.85) translateY(2px); }
-  100% { opacity: 0;    transform: scale(0.3) translateY(10px); }
-}
+*    previous cursor position (eased lag) — the page records the path
+  *    of attention briefly, like light lingering where the reader paused. */
 
 /* ----- Explicit (chapter's formal closing mark) ----- */
 
@@ -4442,24 +3931,6 @@ body {
 /* ----- Reduced motion overrides for iteration 28 ----- */
 
 @media (prefers-reduced-motion: reduce) {
-  .scribe-inkpot {
-    transition: opacity 0.2s ease;
-    transform: translate(-2px, -50%) rotate(0deg);
-  }
-  .composition.ready .scribe-inkpot {
-    opacity: 0.5;
-    transform: translate(-2px, -50%) rotate(0deg);
-  }
-  .composition.is-pointing .scribe-inkpot {
-    opacity: 1;
-    transform: translate(-2px, -50%) rotate(0deg);
-    animation: none;
-  }
-  .scribe-inkpot-svg-wrap { transform: none; transition: none; }
-  .inkpot-quill { transform: none; transition: none; }
-  .inkpot-drip { animation: none; opacity: 0.55; transform: scale(1) translateY(2px); }
-  .inkpot-drip-trail { display: none; }
-
   .explicit { transition: opacity 0.25s ease; transform: none; }
   .footnote.is-done ~ .explicit { opacity: 0.88; transform: none; }
 
@@ -4476,22 +3947,10 @@ body {
 /* ----- Mobile sizing for iteration 28 ----- */
 
 @media (max-width: 880px) {
-  .scribe-inkpot {
-    width: clamp(38px, 5vw, 56px);
-    left: clamp(4px, 2vw, 16px);
-  }
   .explicit { font-size: clamp(9px, 1.2vw, 11px); }
 }
 
-@media (max-width: 760px) {
-  .scribe-inkpot {
-    width: 32px;
-    left: clamp(4px, 2vw, 12px);
-  }
-}
-
 @media (max-width: 520px) {
-  .scribe-inkpot { display: none; }
   .explicit {
     gap: clamp(6px, 1.6vw, 10px);
     letter-spacing: 0.24em;

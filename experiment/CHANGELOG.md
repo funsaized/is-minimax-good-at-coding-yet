@@ -1,53 +1,5 @@
 # Changelog
 
-## Iteration 37 — the chapter breathes through its spine
+## Iteration 38 — The page reads
 
-The chapter spine is now a living channel: a soft gold pulse travels from
-above the hero down to the colophon's compass mark at three narrative
-moments — a quiet welcome pulse shortly after the page settles, a reading
-pulse on every acknowledge, and a final sealed hairline that briefly
-replaces the pinpricks once the reader's `intellexi` has been written.
-The reader's gloss itself now types itself out, mirroring the cadence of
-the answer, reply, and footnote, so the chapter's verbal dialogue shares
-a single hand. The bifolio's gilt also responds to attention, deepening
-slightly while the reader is attending and softening when they wander
-off.
-
-### Changes
-
-- `src/App.tsx`
-  - Added `spinePulseKey`, `spineSealed`, `bifolioAttending`, and
-    `intellexiChars` state, plus `INTELLEXI_STAGGER_MS` cadence.
-  - `ChapterSpine` now renders a remounted `.chapter-spine-pulse`
-    element keyed on the pulse counter so the CSS animation replays
-    cleanly each time.
-  - `IntellexiNota` accepts `text` and `done` props and renders a
-    blinking caret while the reader's gloss is being typed, matching
-    the answer/reply/footnote cadence.
-  - Welcome pulse fires once after the spine has settled (~1.9s) via a
-    one-shot effect. Reading pulse fires on every acknowledge. A short
-    effect seals the spine once `intellexi` finishes typing.
-  - Bifolio attention is driven by a single `pointermove` /
-    `pointerleave` listener attached to `window` / `document`, with a
-    700ms idle delay before the gilt softens — the book has been put
-    down for a moment.
-  - `acknowledge` resets `intellexiChars` and `spineSealed` so each
-    reading cycle starts from the same baseline.
-
-- `src/style.css`
-  - New `.chapter-spine-pulse` halo and `chapterSpinePulse` keyframes;
-    the pulse is a soft elliptical gold glow that travels top-to-bottom
-    in 1.85s with eased opacity.
-  - New `.chapter-spine.is-sealed` state that replaces the pinprick
-    background-image with a continuous gold hairline once the reader
-    has understood, then resets on the next acknowledge.
-  - New `.intellexi-nota-caret` blinking caret and reduced-motion
-    fallback, plus a small caret blink for the typing reveal.
-  - New `.stage.is-attending .bifolio-gilt` / `.bifolio-crease` /
-    `.bifolio-shadow` attention states with smooth 1.2–1.6s eased
-    transitions. CSS `transition` declarations added to the base
-    bifolio children so the response stays smooth.
-  - Reduced-motion overrides for the new pulse, seal background-image,
-    bifolio transitions, and typing caret.
-
-- `CHANGELOG.md` — this entry.
+The chapter steps back from its margins so the question itself can speak. Four marginal ornaments that competed without earning their place are removed (the pressed leaf, the reader's thumb-print, the scribe's inkpot-and-quill, the ink-stain beside the reply); their CSS is deleted with them. A small printer's date — "comp. · mmxxvi" — is set above the running title, the manuscript's quiet record of its own year of composition, paired with the horologium at the hero that records the hour of reading. The colophon is restructured as a single elegant closing page: the compass mark and wax monogram share a seal group; "quaeritur › respondetur" answers the chapter's question in Latin in a single italic pair; the signature row carries the folio; the pen trial and provenance close beneath. The candle now rests in a small brass dish, a hand-drawn vessel that anchors the flame to the page and gives the candle's light somewhere to land. Dead bee CSS from earlier iterations is removed; reduced-motion and mobile overrides are cleaned up to match. The question typography is widened slightly with a calmer line height so the chapter's title reads with more confidence. Title and visible heading unchanged.

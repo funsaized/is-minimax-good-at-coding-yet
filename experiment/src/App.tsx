@@ -283,6 +283,25 @@ function PrinterLeaf() {
   )
 }
 
+// PrinterDate — a delicate hairline + a typeset "comp. mmxxvi" mark
+// that crowns the chapter above the capitulum, the manuscript's quiet
+// record of when it was set. Pairs with the horologium at the hero
+// (the hour of reading) — this is the year of composition, the
+// printer's date that lets a folio know its own place in time.
+function PrinterDate() {
+  return (
+    <p className="printer-date" aria-hidden="true">
+      <span className="printer-date-rule" />
+      <span className="printer-date-text">
+        <em className="printer-date-it">comp.</em>
+        <span className="printer-date-sep">·</span>
+        <span className="printer-date-num">mmxxvi</span>
+      </span>
+      <span className="printer-date-rule" />
+    </p>
+  )
+}
+
 // Capitulum — the running title that crowns the chapter.
 function Capitulum() {
   return (
@@ -693,7 +712,7 @@ function CandleFlame({ wrapRef, flaring }: {
       className={`candle-flame${flaring ? ' is-flaring' : ''}`}
       aria-hidden="true"
     >
-      <svg viewBox="0 0 48 92" focusable="false">
+      <svg viewBox="0 0 56 100" focusable="false">
         <defs>
           <radialGradient id="flame-halo-grad" cx="50%" cy="46%" r="50%">
             <stop offset="0%"   stopColor="#f5d99c" stopOpacity="0.55" />
@@ -715,26 +734,31 @@ function CandleFlame({ wrapRef, flaring }: {
             <stop offset="55%"  stopColor="#7d9ab8" stopOpacity="0.18" />
             <stop offset="100%" stopColor="#5e7593" stopOpacity="0" />
           </radialGradient>
+          <linearGradient id="dish-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#a88556" />
+            <stop offset="55%"  stopColor="#7d5e36" />
+            <stop offset="100%" stopColor="#4a361f" />
+          </linearGradient>
         </defs>
         <circle
-          cx="24"
+          cx="28"
           cy="42"
           r="28"
           fill="url(#flame-halo-grad)"
           className="flame-halo"
         />
         <path
-          d="M 24 6 Q 16 22 16 40 Q 16 56 24 60 Q 32 56 32 40 Q 32 22 24 6 Z"
+          d="M 28 6 Q 20 22 20 40 Q 20 56 28 60 Q 36 56 36 40 Q 36 22 28 6 Z"
           fill="url(#flame-outer-grad)"
           className="flame-outer"
         />
         <path
-          d="M 24 14 Q 19 26 19 40 Q 19 48 24 52 Q 29 48 29 40 Q 29 26 24 14 Z"
+          d="M 28 14 Q 23 26 23 40 Q 23 48 28 52 Q 33 48 33 40 Q 33 26 28 14 Z"
           fill="url(#flame-inner-grad)"
           className="flame-inner"
         />
         <ellipse
-          cx="24"
+          cx="28"
           cy="44"
           rx="3.2"
           ry="7.6"
@@ -742,7 +766,7 @@ function CandleFlame({ wrapRef, flaring }: {
           className="flame-base"
         />
         <ellipse
-          cx="24"
+          cx="28"
           cy="44"
           rx="2.2"
           ry="6"
@@ -750,15 +774,50 @@ function CandleFlame({ wrapRef, flaring }: {
           className="flame-core"
         />
         <line
-          x1="24"
+          x1="28"
           y1="50"
-          x2="24"
+          x2="28"
           y2="68"
           stroke="#4a2e1a"
           strokeWidth="0.9"
           strokeLinecap="round"
           className="flame-wick"
         />
+        {/* Brass candle dish — a small hand-drawn dish beneath the
+            candle, anchoring the flame to the page. Drawn in once the
+            candle has settled, so the light has somewhere to rest. */}
+        <g className="candle-dish">
+          <ellipse
+            cx="28"
+            cy="84"
+            rx="22"
+            ry="2.6"
+            className="candle-dish-shadow"
+          />
+          <path
+            d="M 10 76 Q 10 84 28 84 Q 46 84 46 76 L 44 73 L 12 73 Z"
+            className="candle-dish-body"
+            fill="url(#dish-grad)"
+          />
+          <ellipse
+            cx="28"
+            cy="73"
+            rx="16"
+            ry="2.4"
+            className="candle-dish-rim"
+          />
+          <path
+            d="M 14 78 Q 14 82 28 82 Q 42 82 42 78"
+            className="candle-dish-groove"
+          />
+          <ellipse
+            cx="22"
+            cy="79"
+            rx="2.6"
+            ry="0.6"
+            className="candle-dish-shine"
+          />
+        </g>
       </svg>
     </span>
   )
@@ -810,19 +869,6 @@ function PenTrial() {
         />
         <circle cx="57" cy="5" r="0.5" className="pen-trial-pip pen-trial-pip-3 pen-trial-pip-sm" />
       </svg>
-    </span>
-  )
-}
-
-// InkStain — a small vermilion ink-blot that pools beside the answer
-// when it lands. Three concentric dots of diminishing opacity, like
-// a drop of ink that has just settled on the parchment.
-function InkStain() {
-  return (
-    <span className="ink-stain" aria-hidden="true">
-      <span className="ink-stain-halo" />
-      <span className="ink-stain-pool" />
-      <span className="ink-stain-dot" />
     </span>
   )
 }
@@ -1213,135 +1259,6 @@ function SealImpression({ sealing }: { sealing: boolean }) {
       <span className="seal-impression-ring seal-impression-ring-1" />
       <span className="seal-impression-ring seal-impression-ring-2" />
       <span className="seal-impression-mark">Mm</span>
-    </span>
-  )
-}
-
-// PressedLeaf — a small dried botanical specimen tucked into the
-// bottom-left margin. Drawn with brown ink lines and a faint
-// vermilion shadow where it pressed into the page, like a reader's
-// keepsake marking where they once stopped.
-function PressedLeaf() {
-  return (
-    <aside className="pressed-leaf" aria-label="a pressed leaf">
-      <svg viewBox="0 0 56 76" className="pressed-leaf-svg" aria-hidden="true" focusable="false">
-        <path className="leaf-stem" d="M 28 5 Q 27 28 28 70" />
-        <path className="leaf-body" d="M 28 7 Q 17 13 13 26 Q 9 40 16 54 Q 22 62 28 67 Q 34 62 40 54 Q 47 40 43 26 Q 39 13 28 7 Z" />
-        <line className="leaf-vein-major" x1="28" y1="9" x2="28" y2="64" />
-        <path className="leaf-vein" d="M 28 18 Q 22 20 18 24" />
-        <path className="leaf-vein" d="M 28 18 Q 34 20 38 24" />
-        <path className="leaf-vein" d="M 28 28 Q 21 31 15 35" />
-        <path className="leaf-vein" d="M 28 28 Q 35 31 41 35" />
-        <path className="leaf-vein" d="M 28 38 Q 23 41 19 45" />
-        <path className="leaf-vein" d="M 28 38 Q 33 41 37 45" />
-        <path className="leaf-vein" d="M 28 48 Q 26 51 24 54" />
-        <path className="leaf-vein" d="M 28 48 Q 30 51 32 54" />
-        <ellipse className="leaf-shadow-soft" cx="36" cy="70" rx="10" ry="2.8" />
-        <ellipse className="leaf-shadow" cx="36" cy="70" rx="6" ry="1.6" />
-      </svg>
-      <span className="pressed-leaf-label">
-        <span className="pressed-leaf-rule" />
-        <em className="pressed-leaf-text">fol. press.</em>
-      </span>
-    </aside>
-  )
-}
-
-// ThumbPrint — a faint impression of a reader's thumb-mark in the
-// bottom-right margin, complementing the pressed leaf at the left.
-// An oval of soft ridges suggests a hand once rested here while
-// reading — the page's quiet physical history: a gift (leaf) and
-// a touch (thumb) framing the bottom of the folio. A paired mark
-// with the pressed leaf, mirroring its tilt and pacing so the two
-// margins read as a single sentence: "here was a gift, here was
-// a reader."
-function ThumbPrint() {
-  return (
-    <aside className="thumb-print" aria-label="a reader's thumb-mark">
-      <svg viewBox="0 0 48 64" className="thumb-print-svg" aria-hidden="true" focusable="false">
-        <ellipse cx="24" cy="34" rx="13" ry="24" className="thumb-print-oval" />
-        <path className="thumb-print-ridge" d="M 14 22 Q 24 16 34 22" />
-        <path className="thumb-print-ridge" d="M 12 30 Q 24 21 36 30" />
-        <path className="thumb-print-ridge" d="M 11 38 Q 24 28 37 38" />
-        <path className="thumb-print-ridge" d="M 12 46 Q 24 38 36 46" />
-        <path className="thumb-print-ridge" d="M 14 54 Q 24 46 34 54" />
-        <circle cx="32" cy="14" r="0.7" className="thumb-print-pip" />
-        <ellipse cx="26" cy="60" rx="9" ry="1.6" className="thumb-print-shadow" />
-      </svg>
-      <span className="thumb-print-label">
-        <span className="thumb-print-rule" />
-        <em className="thumb-print-text">manus</em>
-      </span>
-    </aside>
-  )
-}
-
-// ScribeInkpot — a small scribe's inkpot and resting quill drawn into
-// the left margin of the question, mirroring the maniculum on the right.
-// The reader's hand points; the writer's tools rest. The quill lifts
-// slightly when the reader approaches the hero, and a single vermilion
-// drop falls from the nib — the page's quiet record of being written.
-// Pairs with the maniculum so the question is framed on both sides:
-// a scholastic gloss and a reader's hand on the right, a scribe's
-// inkpot and quill on the left.
-function ScribeInkpot({ active }: { active: boolean }) {
-  return (
-    <span
-      className={`scribe-inkpot ${active ? 'is-active' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="scribe-inkpot-svg-wrap">
-        <svg viewBox="0 0 56 38" focusable="false">
-          {/* Inkpot body — a small round vessel, gold with a darker shadow */}
-          <ellipse className="inkpot-body-shadow" cx="22" cy="30" rx="14" ry="3" />
-          <path className="inkpot-body" d="M 8 26 Q 8 34 22 34 Q 36 34 36 26 L 36 22 L 8 22 Z" />
-          {/* Inkpot lip */}
-          <path className="inkpot-lip" d="M 12 22 L 32 22 L 30 19 L 14 19 Z" />
-          {/* Ink surface — a dark pool at the neck */}
-          <ellipse className="inkpot-surface" cx="22" cy="20.6" rx="8" ry="1.7" />
-          {/* Subtle highlight on the pot */}
-          <ellipse className="inkpot-highlight" cx="16" cy="27" rx="3" ry="0.7" />
-
-          {/* Quill resting diagonally across the pot */}
-          <g className="inkpot-quill">
-            {/* Feather plume */}
-            <path
-              className="inkpot-quill-plume"
-              d="M 4 8 Q 11 4 19 7 Q 22 9.5 19 11.5 Q 11 14 4 8 Z"
-            />
-            {/* Feather barbs */}
-            <path className="inkpot-quill-barb" d="M 7 6.6 Q 10 7 13 8.2" />
-            <path className="inkpot-quill-barb" d="M 6 8.6 Q 11 9.2 16 10" />
-            <path className="inkpot-quill-barb" d="M 6 10.4 Q 11 10.6 16 10.6" />
-            <path className="inkpot-quill-barb" d="M 7 12 Q 11 11.8 14 11.2" />
-            {/* Shaft */}
-            <line
-              className="inkpot-quill-shaft"
-              x1="18.5"
-              y1="9.2"
-              x2="44"
-              y2="22"
-            />
-            {/* Nib — vermilion wedge */}
-            <path
-              className="inkpot-quill-nib"
-              d="M 43 20.8 L 49 23 L 44 24 Z"
-            />
-            {/* Slit down the nib */}
-            <line
-              className="inkpot-quill-slit"
-              x1="44"
-              y1="22.4"
-              x2="48"
-              y2="23.1"
-            />
-          </g>
-
-          {/* Ink drop falling from the nib */}
-          <circle className="inkpot-drip" cx="48" cy="28" r="0.95" />
-          <circle className="inkpot-drip inkpot-drip-trail" cx="48" cy="32" r="0.6" />
-        </svg>
-      </span>
     </span>
   )
 }
@@ -2351,8 +2268,6 @@ export function App() {
       <Watermark />
       <DriftConstellation />
       <Ribbon />
-      <PressedLeaf />
-      <ThumbPrint />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
         <CandleFlame wrapRef={flameWrapRef} flaring={pulsing} />
@@ -2396,6 +2311,7 @@ export function App() {
 
         <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''} ${quietus ? 'is-quietus' : ''}`}>
           <ChapterSpine pulseKey={spinePulseKey} sealed={spineSealed} />
+          <PrinterDate />
           <Capitulum />
           <span className="rubric">
             <span className="rubric-pilcrow" aria-hidden="true">§</span>
@@ -2559,7 +2475,6 @@ export function App() {
               </span>
             </h1>
              <Maniculum active={pointing} />
-             <ScribeInkpot active={pointing} />
              <VideAnnotation visible={answerOn && answerChars >= 6} />
              <p className="question-prompt">press the mark · the page answers</p>
             <span
@@ -2595,7 +2510,6 @@ export function App() {
                 </span>
               )}
             </p>
-            <InkStain />
             <ScholasticFootnote
               visible={footnoteOn}
               text={footnoteDisplay}
@@ -2611,18 +2525,23 @@ export function App() {
         </div>
 
         <div className="colophon" aria-hidden="true">
-          <CompassMark />
-          <WaxSeal />
+          <span className="colophon-seal">
+            <CompassMark />
+            <WaxSeal />
+          </span>
           <span className="colophon-rule" />
-          <span className="colophon-quaeritur">quaeritur</span>
+          <span className="colophon-pair">
+            <em className="colophon-quaeritur">quaeritur</em>
+            <span className="colophon-pair-arrow" aria-hidden="true">›</span>
+            <em className="colophon-respondetur">respondetur</em>
+          </span>
           <span className="colophon-rule" />
           <span className="colophon-signature-row">
             <Signature />
             <span className="colophon-folio">folio · xviii</span>
           </span>
           <PenTrial />
-          <Catchword />
-          <span className="colophon-provenance">legi · xviii</span>
+          <span className="colophon-provenance">legi · mmxxvi</span>
         </div>
       </div>
     </main>
