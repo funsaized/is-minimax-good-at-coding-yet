@@ -680,8 +680,50 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(18px, 2.4vw, 28px);
+  gap: clamp(16px, 2.1vw, 24px);
   max-width: 100%;
+}
+
+/* ----- Printer's note (self-typed caption above the chapter piece) ----- */
+
+.printer-note {
+  margin: 0 0 clamp(-4px, -0.4vw, -2px);
+  padding: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, 0.98vw, 12.5px);
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  text-align: center;
+  max-width: 38ch;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.9s ease 2.55s,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 2.55s;
+}
+
+.printer-note.is-on {
+  opacity: 0.82;
+  transform: translateY(0);
+}
+
+.printer-note-text {
+  display: inline;
+}
+
+.printer-note-caret {
+  display: inline-block;
+  color: var(--gold);
+  margin-left: 1px;
+  font-weight: 400;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 0.92em;
+  transform: translateY(-0.08em);
+  animation: caretBlink 0.85s steps(2, end) infinite;
 }
 
 /* ----- Rubric (chapter piece) ----- */
@@ -904,6 +946,90 @@ body {
   will-change: transform;
 }
 
+/* ----- Illuminated auriole (halo) around the question mark ----- */
+
+.auriole {
+  pointer-events: none;
+}
+
+.auriole-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 0.5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform, opacity;
+  animation:
+    aurioleIn 1.7s ease var(--auriole-in, 1.6s) forwards,
+    aurioleBreathe 9s ease-in-out var(--auriole-breathe, 3.8s) infinite;
+}
+
+.auriole-r3 {
+  --auriole-alpha: 0.5;
+  stroke-width: 0.5;
+  --auriole-in: 1.55s;
+  --auriole-breathe: 3.7s;
+}
+
+.auriole-r2 {
+  --auriole-alpha: 0.32;
+  stroke-width: 0.45;
+  --auriole-in: 1.7s;
+  --auriole-breathe: 3.95s;
+}
+
+.auriole-r1 {
+  --auriole-alpha: 0.18;
+  stroke-width: 0.4;
+  --auriole-in: 1.85s;
+  --auriole-breathe: 4.2s;
+}
+
+@keyframes aurioleIn {
+  to { opacity: var(--auriole-alpha); }
+}
+
+@keyframes aurioleBreathe {
+  0%, 100% {
+    opacity: var(--auriole-alpha);
+    transform: scale(1);
+  }
+  50% {
+    opacity: calc(var(--auriole-alpha) * 0.55);
+    transform: scale(1.018);
+  }
+}
+
+.auriole-pips circle {
+  fill: currentColor;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation:
+    auriolePipIn 1.4s ease var(--pip-delay, 2.4s) forwards,
+    auriolePipBreathe 9s ease-in-out var(--pip-breathe, 4.6s) infinite;
+}
+
+.auriole-pips circle:nth-child(1) { --pip-alpha: 0.55; --pip-delay: 2.45s; --pip-breathe: 4.55s; }
+.auriole-pips circle:nth-child(2) { --pip-alpha: 0.55; --pip-delay: 2.55s; --pip-breathe: 4.6s; }
+.auriole-pips circle:nth-child(3) { --pip-alpha: 0.45; --pip-delay: 2.65s; --pip-breathe: 4.65s; }
+.auriole-pips circle:nth-child(4) { --pip-alpha: 0.45; --pip-delay: 2.65s; --pip-breathe: 4.65s; }
+.auriole-pips circle:nth-child(5) { --pip-alpha: 0.3;  --pip-delay: 2.8s;  --pip-breathe: 4.7s; }
+.auriole-pips circle:nth-child(6) { --pip-alpha: 0.3;  --pip-delay: 2.8s;  --pip-breathe: 4.7s; }
+.auriole-pips circle:nth-child(7) { --pip-alpha: 0.3;  --pip-delay: 2.9s;  --pip-breathe: 4.75s; }
+.auriole-pips circle:nth-child(8) { --pip-alpha: 0.3;  --pip-delay: 2.9s;  --pip-breathe: 4.75s; }
+
+@keyframes auriolePipIn {
+  to { opacity: var(--pip-alpha); }
+}
+
+@keyframes auriolePipBreathe {
+  0%, 100% { opacity: var(--pip-alpha); transform: scale(1); }
+  50%      { opacity: calc(var(--pip-alpha) * 0.4); transform: scale(0.78); }
+}
+
 .hero-stroke {
   fill: none;
   stroke: currentColor;
@@ -1030,6 +1156,69 @@ body {
   }
 }
 
+/* ----- Manicule (pointing hand, medieval "look here") ----- */
+
+.manicule-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: clamp(-2px, -0.2vw, 0) 0 clamp(-2px, -0.4vw, -1px);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 0.9s ease 1.95s,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.95s;
+}
+
+.composition.ready .manicule-wrap {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.manicule {
+  width: clamp(20px, 2.1vw, 28px);
+  height: auto;
+  display: block;
+  color: var(--gold);
+  transform-origin: 50% 80%;
+  animation: maniculeBob 4.6s ease-in-out infinite;
+  transition: color 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.manicule-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.05;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.92;
+}
+
+.manicule-knuckle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  opacity: 0.65;
+}
+
+.manicule-rule {
+  stroke: currentColor;
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.hero:hover + .manicule-wrap .manicule,
+.hero:focus-visible + .manicule-wrap .manicule {
+  color: var(--gold-bright);
+}
+
+@keyframes maniculeBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
 /* ----- Ruling line ----- */
 
 .ruling {
@@ -1076,9 +1265,9 @@ body {
 .question {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(22px, 3.4vw, 44px);
-  line-height: 1.16;
-  letter-spacing: -0.011em;
+  font-size: clamp(22px, 3.5vw, 46px);
+  line-height: 1.14;
+  letter-spacing: -0.013em;
   text-align: center;
   color: var(--ink);
   max-width: 22ch;
@@ -1087,8 +1276,8 @@ body {
   opacity: 0;
   transform: translateY(12px);
   transition:
-    opacity 1.1s ease 1.6s,
-    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 1.6s;
+    opacity 1.1s ease 1.65s,
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 1.65s;
 }
 
 .composition.ready .question {
@@ -1443,7 +1632,8 @@ body {
   .hero { animation: none; filter: drop-shadow(0 0 28px rgba(217, 176, 116, 0.18)); }
   .hero:hover { transform: none; }
   .question, .ruling, .rubric, .fleuron, .fleuron-rule line, .fleuron-ornament, .fleuron-dots,
-  .folio-mark, .folio-mark-flourish, .folio-mark-pearl {
+  .folio-mark, .folio-mark-flourish, .folio-mark-pearl,
+  .manicule-wrap, .manicule, .printer-note {
     opacity: 1;
     transform: none;
     transition: none;
@@ -1522,6 +1712,25 @@ body {
   .guide-rule:focus-visible .guide-rule-dot,
   .marg:hover .guide-rule-dot,
   .marg:focus-visible .guide-rule-dot { opacity: 0.75; transform: scale(1); }
+
+  .auriole-ring,
+  .auriole-pips circle {
+    animation: none;
+    opacity: var(--auriole-alpha, 0.32);
+    transform: scale(1);
+  }
+  .auriole-r3 { --auriole-alpha: 0.5; }
+  .auriole-r2 { --auriole-alpha: 0.32; }
+  .auriole-r1 { --auriole-alpha: 0.18; }
+  .printer-note-caret { animation: none; opacity: 0.5; }
+  .auriole-pips circle:nth-child(1),
+  .auriole-pips circle:nth-child(2) { opacity: 0.55; }
+  .auriole-pips circle:nth-child(3),
+  .auriole-pips circle:nth-child(4) { opacity: 0.45; }
+  .auriole-pips circle:nth-child(5),
+  .auriole-pips circle:nth-child(6),
+  .auriole-pips circle:nth-child(7),
+  .auriole-pips circle:nth-child(8) { opacity: 0.3; }
 }
 
 /* ----- Responsive ----- */
@@ -1559,11 +1768,13 @@ body {
   .folio-mark-letter { font-size: 30px; }
   .hero-svg { width: 150px; }
   .question { font-size: 21px; max-width: 100%; line-height: 1.22; }
-  .composition { gap: 18px; }
+  .composition { gap: 16px; }
   .ruling { width: clamp(100px, 40vw, 200px); }
   .marg-now-time { font-size: 10px; }
   .clock { width: 18px; height: 18px; }
   .rubric { letter-spacing: 0.32em; }
+  .printer-note { font-size: 10.5px; letter-spacing: 0.045em; max-width: 26ch; }
+  .manicule { width: 18px; }
   .colophon { gap: 4px; }
   .colophon-folio, .colophon-quaeritur { letter-spacing: 0.28em; }
   .colophon-line { font-size: 8.5px; letter-spacing: 0.2em; }

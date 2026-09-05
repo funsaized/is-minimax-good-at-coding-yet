@@ -51,6 +51,12 @@ const REPLY =
 const ANSWER_STAGGER_MS = 34
 const REPLY_STAGGER_MS = 26
 
+// A short self-typed caption that sits above the chapter piece, like a
+// printer's margin note introducing the folio without ceremony.
+const PRINTER_NOTE = '· composed in pixels — lit only while read ·'
+const PRINTER_NOTE_DELAY = 2400
+const PRINTER_NOTE_STEP = 42
+
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
   useEffect(() => {
@@ -203,6 +209,68 @@ function Asterism() {
       <circle cx="21.5" cy="17.7" r="0.7" className="glyph-bead" />
       <circle cx="4.5" cy="17.7" r="0.7" className="glyph-bead" />
       <circle cx="21.5" cy="8.3" r="0.7" className="glyph-bead" />
+    </svg>
+  )
+}
+
+// Manicule — a small pointing hand, the medieval reader's symbol for
+// "look here". Sits below the question mark like an invitation to press.
+function Manicule() {
+  return (
+    <svg
+      className="manicule"
+      viewBox="0 0 22 30"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {/* Sleeve cuff */}
+      <path
+        className="manicule-stroke"
+        d="M 4 26 L 4 28.5 L 18 28.5 L 18 26"
+      />
+      <line
+        x1="4.4"
+        y1="27.2"
+        x2="17.6"
+        y2="27.2"
+        className="manicule-rule"
+      />
+
+      {/* Wrist and palm */}
+      <path
+        className="manicule-stroke"
+        d="M 5.5 26 L 5.5 22.4 Q 5.5 20.4 7 19.6 L 14.5 19.6 Q 16 19.8 16.4 21.2 L 16.4 26"
+      />
+
+      {/* Curled fingers (three lines suggesting knuckles) */}
+      <path
+        className="manicule-knuckle"
+        d="M 7.2 19.6 Q 6.6 17.4 8.2 17 Q 9.4 17 9.4 19"
+      />
+      <path
+        className="manicule-knuckle"
+        d="M 9.6 19.4 Q 9.6 17.2 11 17 Q 12 17.2 11.6 19.4"
+      />
+      <path
+        className="manicule-knuckle"
+        d="M 13.8 19.4 Q 13.8 17.2 14.4 17 Q 15.6 16.8 15.4 19.4"
+      />
+
+      {/* Thumb wrap */}
+      <path
+        className="manicule-knuckle"
+        d="M 5.8 22 Q 4 21 4.4 19.2 Q 5 18 6.2 18.6"
+      />
+
+      {/* Index finger pointing up */}
+      <path
+        className="manicule-stroke"
+        d="M 11 19 L 11 4 Q 11 2.6 12 2.6 Q 13 2.6 13 4 L 13 18.6"
+      />
+      <path
+        className="manicule-knuckle"
+        d="M 11.2 14 Q 11.2 12.6 12 12.6 Q 12.8 12.6 12.8 14"
+      />
     </svg>
   )
 }
@@ -427,6 +495,8 @@ export function App() {
   const [answerChars, setAnswerChars] = useState(0)
   const [replyOn, setReplyOn] = useState(false)
   const [replyChars, setReplyChars] = useState(0)
+  const [printerNoteOn, setPrinterNoteOn] = useState(false)
+  const [printerNoteChars, setPrinterNoteChars] = useState(0)
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
@@ -495,6 +565,41 @@ export function App() {
     )
     return () => clearTimeout(id)
   }, [replyOn, replyChars, reduced])
+
+  // Printer's note — a self-typed caption that settles above the chapter
+  // piece once the rest of the folio has composed itself.
+  useEffect(() => {
+    if (reduced) {
+      const t = window.setTimeout(
+        () => setPrinterNoteOn(true),
+        Math.min(PRINTER_NOTE_DELAY, 800),
+      )
+      return () => clearTimeout(t)
+    }
+    const t = window.setTimeout(
+      () => setPrinterNoteOn(true),
+      PRINTER_NOTE_DELAY,
+    )
+    return () => clearTimeout(t)
+  }, [reduced])
+
+  useEffect(() => {
+    if (!printerNoteOn) {
+      setPrinterNoteChars(0)
+      return
+    }
+    if (reduced) {
+      setPrinterNoteChars(PRINTER_NOTE.length)
+      return
+    }
+    const total = PRINTER_NOTE.length
+    if (printerNoteChars >= total) return
+    const id = window.setTimeout(
+      () => setPrinterNoteChars((c) => Math.min(total, c + 1)),
+      PRINTER_NOTE_STEP,
+    )
+    return () => clearTimeout(id)
+  }, [printerNoteOn, printerNoteChars, reduced])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -834,6 +939,17 @@ export function App() {
         </Marg>
 
         <div className={`composition ${ready ? 'ready' : ''}`}>
+          <p
+            className={`printer-note ${printerNoteOn ? 'is-on' : ''}`}
+            aria-live="polite"
+          >
+            <span className="printer-note-text">
+              {PRINTER_NOTE.slice(0, Math.max(0, printerNoteChars))}
+            </span>
+            {printerNoteOn && printerNoteChars < PRINTER_NOTE.length && (
+              <span className="printer-note-caret" aria-hidden="true">_</span>
+            )}
+          </p>
           <FolioMark />
           <span className="rubric">an inquiry</span>
           <Fleuron />
@@ -849,20 +965,52 @@ export function App() {
           >
             <span className="hero-svg-wrap">
               <svg viewBox="0 0 240 340" className="hero-svg" aria-hidden="true">
-                <path className="hero-stroke" d={HERO_PATH} pathLength={100} />
-                <path className="hero-trace" d={HERO_PATH} pathLength={100} />
-                <circle
-                  className="hero-dot-ring"
-                  cx={HERO_DOT.cx}
-                  cy={HERO_DOT.cy}
-                  r={HERO_DOT.r + 6}
-                />
-                <circle
-                  className="hero-dot"
-                  cx={HERO_DOT.cx}
-                  cy={HERO_DOT.cy}
-                  r={HERO_DOT.r}
-                />
+                <g className="auriole">
+                  <circle
+                    cx={120}
+                    cy={170}
+                    r={36}
+                    className="auriole-ring auriole-r3"
+                  />
+                  <circle
+                    cx={120}
+                    cy={170}
+                    r={60}
+                    className="auriole-ring auriole-r2"
+                  />
+                  <circle
+                    cx={120}
+                    cy={170}
+                    r={86}
+                    className="auriole-ring auriole-r1"
+                  />
+                  <g className="auriole-pips">
+                    <circle cx={120} cy={56} r={1.2} />
+                    <circle cx={120} cy={284} r={1.2} />
+                    <circle cx={6} cy={170} r={1.2} />
+                    <circle cx={234} cy={170} r={1.2} />
+                    <circle cx={41} cy={91} r={0.9} />
+                    <circle cx={199} cy={91} r={0.9} />
+                    <circle cx={41} cy={249} r={0.9} />
+                    <circle cx={199} cy={249} r={0.9} />
+                  </g>
+                </g>
+                <g className="hero-stack">
+                  <path className="hero-stroke" d={HERO_PATH} pathLength={100} />
+                  <path className="hero-trace" d={HERO_PATH} pathLength={100} />
+                  <circle
+                    className="hero-dot-ring"
+                    cx={HERO_DOT.cx}
+                    cy={HERO_DOT.cy}
+                    r={HERO_DOT.r + 6}
+                  />
+                  <circle
+                    className="hero-dot"
+                    cx={HERO_DOT.cx}
+                    cy={HERO_DOT.cy}
+                    r={HERO_DOT.r}
+                  />
+                </g>
               </svg>
             </span>
             {spattering && (
@@ -885,6 +1033,9 @@ export function App() {
               </span>
             )}
           </button>
+          <div className="manicule-wrap" aria-hidden="true">
+            <Manicule />
+          </div>
           <div className="ruling" aria-hidden="true">
             <span className="ruling-mark ruling-mark-l" />
             <span className="ruling-line" />
