@@ -100,6 +100,24 @@ body {
   to { opacity: 0.18; }
 }
 
+/* Paper grain — a faint SVG turbulence overlay that hints at pressed paper */
+
+.paper-grain {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  mix-blend-mode: overlay;
+  animation: grainIn 2.4s ease 0.4s forwards;
+}
+
+@keyframes grainIn {
+  to { opacity: 0.5; }
+}
+
 .frame {
   position: relative;
   width: 100%;
@@ -116,7 +134,9 @@ body {
   position: absolute;
   display: flex;
   align-items: center;
-  gap: clamp(6px, 0.7vw, 10px);
+  flex-wrap: wrap;
+  row-gap: 8px;
+  column-gap: clamp(6px, 0.7vw, 10px);
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(11px, 1.05vw, 13px);
@@ -140,6 +160,21 @@ body {
 
 .marg-tl, .marg-bl { flex-direction: row; }
 .marg-tr, .marg-br { flex-direction: row-reverse; }
+
+.marg-whisper-slot {
+  display: flex;
+  flex: 0 0 100%;
+  width: 100%;
+}
+
+.marg-whisper-slot {
+  flex-direction: row;
+}
+
+.marg-tr .marg-whisper-slot,
+.marg-br .marg-whisper-slot {
+  justify-content: flex-end;
+}
 
 .marg-tl { top: clamp(18px, 3.2vw, 32px); left: clamp(20px, 4vw, 48px); }
 .marg-tr { top: clamp(18px, 3.2vw, 32px); right: clamp(20px, 4vw, 48px); text-align: right; }
@@ -245,6 +280,47 @@ body {
 
 .marg:hover .marg-label, .marg:focus-visible .marg-label,
 .marg:hover .marg-body, .marg:focus-visible .marg-body {
+  color: var(--ink);
+}
+
+.marg-whisper {
+  display: block;
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+  margin-top: 8px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, 1vw, 13px);
+  line-height: 1.4;
+  letter-spacing: 0.005em;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(-2px);
+  max-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease,
+    max-height 0.7s ease,
+    color 0.5s ease;
+  text-wrap: balance;
+}
+
+.marg-tr .marg-whisper,
+.marg-br .marg-whisper {
+  text-align: right;
+}
+
+.marg-whisper.is-shown {
+  opacity: 0.85;
+  transform: translateY(0);
+  max-height: 8em;
+}
+
+.marg:hover .marg-whisper,
+.marg:focus-visible .marg-whisper {
   color: var(--ink);
 }
 
@@ -750,6 +826,14 @@ body {
 
 /* ----- Question ----- */
 
+.question-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
 .question {
   font-family: var(--serif);
   font-weight: 400;
@@ -773,38 +857,161 @@ body {
   transform: translateY(0);
 }
 
-/* ----- Folio mark (bottom-center signature) ----- */
+.question-name,
+.question-yet {
+  font-style: italic;
+  font-feature-settings: "ss01" on, "liga" on;
+  color: var(--gold-bright);
+  letter-spacing: 0;
+}
 
-.folio-mark {
+.question-name {
+  font-style: italic;
+}
+
+.question-yet {
+  font-style: italic;
+}
+
+.question-underline {
+  display: block;
   position: absolute;
-  bottom: clamp(10px, 1.6vw, 20px);
+  left: 10%;
+  right: 10%;
+  bottom: clamp(-10px, -1vw, -6px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold) 14%,
+    var(--gold-bright) 50%,
+    var(--gold) 86%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.question-underline.is-on {
+  animation: inkUnderline 4.2s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes inkUnderline {
+  0%   { opacity: 0; transform: scaleX(0); }
+  18%  { opacity: 0.7; transform: scaleX(1); }
+  72%  { opacity: 0.7; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+
+/* ----- Answer line (revealed on click) ----- */
+
+.answer {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.15vw, 15px);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--ink-soft);
+  text-align: center;
+  max-width: 30ch;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(4px);
+  max-height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.7s ease 0.2s,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s,
+    max-height 0.7s ease 0.2s,
+    margin 0.7s ease 0.2s;
+}
+
+.answer.is-on {
+  opacity: 0.78;
+  transform: translateY(0);
+  max-height: 6em;
+  margin: clamp(14px, 1.8vw, 20px) 0 0;
+}
+
+/* ----- Colophon (closure under the folio) ----- */
+
+.colophon {
+  position: absolute;
+  bottom: clamp(14px, 2vw, 26px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: clamp(10px, 1.4vw, 18px);
+  gap: clamp(5px, 0.7vw, 8px);
+  color: var(--ink-faint);
   opacity: 0;
-  transition: opacity 0.8s ease 1.85s;
+  transition: opacity 0.9s ease 2.1s;
+  pointer-events: none;
 }
 
-.frame.ready .folio-mark { opacity: 1; }
+.frame.ready .colophon { opacity: 0.85; }
 
-.folio-mark-rule {
-  display: block;
-  width: clamp(10px, 1.8vw, 24px);
-  height: 1px;
-  background: var(--ink-faint);
-  opacity: 0.55;
-}
-
-.folio-mark-text {
+.colophon-folio,
+.colophon-quaeritur {
   font-family: var(--mono);
   font-size: clamp(8px, 0.78vw, 10px);
-  letter-spacing: 0.5em;
+  letter-spacing: 0.42em;
   text-transform: uppercase;
   color: var(--ink-faint);
   font-weight: 400;
   white-space: nowrap;
+}
+
+.colophon-folio {
+  color: var(--gold);
+  letter-spacing: 0.5em;
+  opacity: 0.7;
+}
+
+.colophon-quaeritur {
+  opacity: 0.6;
+  font-style: italic;
+  letter-spacing: 0.36em;
+  font-family: var(--serif);
+}
+
+.colophon-rule {
+  display: block;
+  width: clamp(36px, 6vw, 72px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ink-faint) 50%, transparent);
+  opacity: 0.55;
+}
+
+.colophon-line {
+  font-family: var(--mono);
+  font-size: clamp(8px, 0.74vw, 9.5px);
+  letter-spacing: 0.28em;
+  text-transform: lowercase;
+  color: var(--ink-faint);
+  white-space: nowrap;
+  font-weight: 400;
+}
+
+.colophon-line-1 { opacity: 0.78; }
+.colophon-line-2 { opacity: 0.58; }
+
+.colophon-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  color: var(--gold-deep);
+  opacity: 0.6;
+}
+
+.register-cross {
+  display: block;
 }
 
 /* ----- Reduced motion ----- */
@@ -828,10 +1035,28 @@ body {
     transform: none;
     transition: color 0.3s ease;
   }
+  .marg-whisper {
+    transition: opacity 0.15s ease, max-height 0.2s ease, color 0.3s ease;
+  }
+  .marg-whisper.is-shown { transform: none; max-height: 8em; }
   .marg-rule { transform: scaleX(1); }
   .dust { animation: none; opacity: 1; }
   .codex-edge { animation: none; opacity: 0.18; }
+  .paper-grain { animation: none; opacity: 0.32; }
   .colon-anim, .clock-colon { animation: none; }
+  .question-underline {
+    transition: none;
+    animation: none;
+    opacity: 0;
+    transform: none;
+  }
+  .question-underline.is-on {
+    opacity: 0.7;
+    transform: scaleX(1);
+  }
+  .answer { transition: opacity 0.15s ease; }
+  .answer.is-on { transform: none; }
+  .colophon { opacity: 1; transition: none; }
   .guide-rule:hover .guide-rule-line,
   .guide-rule:focus-visible .guide-rule-line,
   .marg:hover .guide-rule-line,
@@ -846,6 +1071,7 @@ body {
 
 @media (max-width: 880px) {
   .guide-rule { width: 60px; height: 60px; }
+  .question-underline { left: 6%; right: 6%; }
 }
 
 @media (max-width: 760px) {
@@ -855,6 +1081,12 @@ body {
   .hero-svg { width: clamp(140px, 30vw, 200px); }
   .question { font-size: clamp(20px, 5.4vw, 32px); max-width: 18ch; }
   .guide-rule { width: 48px; height: 48px; }
+  .colophon-line { letter-spacing: 0.22em; }
+}
+
+@media (max-width: 620px) {
+  .colophon-folio { letter-spacing: 0.36em; }
+  .colophon-quaeritur { letter-spacing: 0.26em; }
 }
 
 @media (max-width: 520px) {
@@ -868,13 +1100,15 @@ body {
   .marg-now-time { font-size: 10px; }
   .clock { width: 18px; height: 18px; }
   .rubric { letter-spacing: 0.32em; }
-  .folio-mark { gap: 10px; }
-  .folio-mark-text { letter-spacing: 0.36em; }
+  .colophon { gap: 4px; }
+  .colophon-folio, .colophon-quaeritur { letter-spacing: 0.28em; }
+  .colophon-line { font-size: 8.5px; letter-spacing: 0.2em; }
 }
 
-/* tiny screens — keep only the corner clock */
+/* tiny screens — keep only the corner clock and minimal marginalia */
 @media (max-width: 480px) {
   .marg-tl, .marg-tr, .marg-bl { display: none; }
-  .marg-br { bottom: clamp(28px, 6vw, 48px); right: clamp(14px, 4vw, 24px); }
-  .folio-mark { bottom: clamp(8px, 2vw, 14px); }
+  .marg-br { bottom: clamp(48px, 9vw, 64px); right: clamp(14px, 4vw, 24px); }
+  .colophon { bottom: clamp(10px, 2.5vw, 18px); }
+  .colophon-line-1 { display: none; }
 }

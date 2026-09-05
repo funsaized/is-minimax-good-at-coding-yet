@@ -23,6 +23,18 @@ const SPATTER = [
   { angle: 342, distance: 90, size: 2.1, delay: 86 },
 ]
 
+type Whisper = { corner: Corner; text: string }
+
+const WHISPERS: Whisper[] = [
+  { corner: 'tl', text: 'this page is its own footnote' },
+  { corner: 'tr', text: 'the browser is the chapter; the cursor, the pen' },
+  { corner: 'bl', text: 'lit not by display, but by attention' },
+  { corner: 'br', text: 'this instant, the only one that ever arrives' },
+]
+
+const ANSWER =
+  '— and the page itself, you are reading it now.'
+
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
   useEffect(() => {
@@ -81,6 +93,22 @@ function Fleuron() {
   )
 }
 
+function RegisterCross() {
+  return (
+    <svg
+      className="register-cross"
+      viewBox="0 0 10 10"
+      width="10"
+      height="10"
+      aria-hidden="true"
+    >
+      <circle cx="5" cy="5" r="3.4" fill="none" stroke="currentColor" strokeWidth="0.5" />
+      <line x1="0" y1="5" x2="10" y2="5" stroke="currentColor" strokeWidth="0.5" />
+      <line x1="5" y1="0" x2="5" y2="10" stroke="currentColor" strokeWidth="0.5" />
+    </svg>
+  )
+}
+
 function GuideRule({ corner }: { corner: Corner }) {
   return (
     <span className={`guide-rule guide-rule-${corner}`} aria-hidden="true">
@@ -99,11 +127,36 @@ function GuideRule({ corner }: { corner: Corner }) {
   )
 }
 
+function PaperGrain() {
+  return (
+    <svg className="paper-grain" aria-hidden="true" focusable="false">
+      <filter id="pg-noise">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.85"
+          numOctaves="2"
+          stitchTiles="stitch"
+          seed="7"
+        />
+        <feColorMatrix
+          values="0 0 0 0 0.94
+                  0 0 0 0 0.86
+                  0 0 0 0 0.66
+                  0 0 0 0.55 0"
+        />
+      </filter>
+      <rect width="100%" height="100%" filter="url(#pg-noise)" />
+    </svg>
+  )
+}
+
 function Marg({
   corner,
   id,
   label,
   body,
+  whisper,
+  whisperText,
   active,
   wave,
   onHover,
@@ -114,6 +167,8 @@ function Marg({
   id: string
   label: string
   body?: string
+  whisper: boolean
+  whisperText: string
   active: string | null
   wave: boolean
   onHover: (id: string | null) => void
@@ -139,6 +194,14 @@ function Marg({
       {body !== undefined && <span className="marg-body">{body}</span>}
       {children}
       <GuideRule corner={corner} />
+      <span className="marg-whisper-slot">
+        <span
+          className={`marg-whisper${whisper ? ' is-shown' : ''}`}
+          aria-hidden="true"
+        >
+          {whisperText}
+        </span>
+      </span>
     </aside>
   )
 }
@@ -153,6 +216,14 @@ export function App() {
   const [spattering, setSpattering] = useState(false)
   const [active, setActive] = useState<string | null>(null)
   const [echoIdx, setEchoIdx] = useState(-1)
+  const [whispersOn, setWhispersOn] = useState<Record<Corner, boolean>>({
+    tl: false,
+    tr: false,
+    bl: false,
+    br: false,
+  })
+  const [noteNonce, setNoteNonce] = useState(0)
+  const [answerOn, setAnswerOn] = useState(false)
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
@@ -354,24 +425,42 @@ export function App() {
   }, [spattering])
 
   const acknowledge = useCallback(() => {
-    if (reduced) return
-    pulseRef.current = 1
-    echoRef.current = 1
+    pulseRef.current = reduced ? 0 : 1
+    echoRef.current = reduced ? 0 : 1
     setPulsing(true)
     setTracing(true)
     setSpattering(true)
+    setNoteNonce((n) => n + 1)
     const order: Corner[] = ['tl', 'tr', 'bl', 'br']
     waveTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
     waveTimeoutsRef.current = []
-    order.forEach((_, i) => {
-      const t = window.setTimeout(() => setEchoIdx(i), 260 + i * 300)
-      waveTimeoutsRef.current.push(t)
+    const stagger = reduced ? 0 : 300
+    const stepDelay = reduced ? 0 : 260
+    const holdMs = reduced ? 1600 : 3400
+    order.forEach((corner, i) => {
+      const at = stepDelay + i * stagger
+      const t1 = window.setTimeout(() => setEchoIdx(i), at)
+      const t2 = window.setTimeout(
+        () => setWhispersOn((w) => ({ ...w, [corner]: true })),
+        at + (reduced ? 0 : 80),
+      )
+      const t3 = window.setTimeout(
+        () => setWhispersOn((w) => ({ ...w, [corner]: false })),
+        at + holdMs,
+      )
+      waveTimeoutsRef.current.push(t1, t2, t3)
     })
     const end = window.setTimeout(
       () => setEchoIdx(-1),
-      260 + order.length * 300 + 260,
+      stepDelay + order.length * stagger + (reduced ? 200 : 260),
     )
     waveTimeoutsRef.current.push(end)
+    setAnswerOn(true)
+    const ansOff = window.setTimeout(
+      () => setAnswerOn(false),
+      reduced ? 2200 : 4400,
+    )
+    waveTimeoutsRef.current.push(ansOff)
   }, [reduced])
 
   const onHeroEnter = useCallback((e: ReactPointerEvent) => {
@@ -397,6 +486,7 @@ export function App() {
       <canvas ref={canvasRef} className="dust" aria-hidden="true" />
       <div className="rim" aria-hidden="true" />
       <div className="codex-edge" aria-hidden="true" />
+      <PaperGrain />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
         <Marg
@@ -404,6 +494,8 @@ export function App() {
           id="tl"
           label="folio"
           body="a question, slowly composed"
+          whisper={whispersOn.tl}
+          whisperText={WHISPERS[0].text}
           active={active}
           wave={echoIdx === 0}
           onHover={setActive}
@@ -413,6 +505,8 @@ export function App() {
           id="tr"
           label="medium"
           body="the browser is the paper"
+          whisper={whispersOn.tr}
+          whisperText={WHISPERS[1].text}
           active={active}
           wave={echoIdx === 1}
           onHover={setActive}
@@ -422,6 +516,8 @@ export function App() {
           id="bl"
           label="craft"
           body="typeset in pixels, drawn in code"
+          whisper={whispersOn.bl}
+          whisperText={WHISPERS[2].text}
           active={active}
           wave={echoIdx === 2}
           onHover={setActive}
@@ -430,6 +526,8 @@ export function App() {
           corner="br"
           id="br"
           label="now"
+          whisper={whispersOn.br}
+          whisperText={WHISPERS[3].text}
           active={active}
           wave={echoIdx === 3}
           onHover={setActive}
@@ -508,13 +606,39 @@ export function App() {
             <span className="ruling-line" />
             <span className="ruling-mark ruling-mark-r" />
           </div>
-          <h1 className="question">is Minimax M3 good at frontend yet?</h1>
+          <div className="question-block">
+            <h1 className="question">
+              is <em className="question-name">Minimax M3</em> good at frontend{' '}
+              <em className="question-yet">yet</em>?
+            </h1>
+            <span
+              key={noteNonce}
+              className={`question-underline${noteNonce > 0 ? ' is-on' : ''}`}
+              aria-hidden="true"
+            />
+            <p
+              className={`answer ${answerOn ? 'is-on' : ''}`}
+              aria-live="polite"
+            >
+              {ANSWER}
+            </p>
+          </div>
         </div>
 
-        <div className="folio-mark" aria-hidden="true">
-          <span className="folio-mark-rule folio-mark-rule-l" />
-          <span className="folio-mark-text">quaeritur</span>
-          <span className="folio-mark-rule folio-mark-rule-r" />
+        <div className="colophon" aria-hidden="true">
+          <span className="colophon-folio">folio iv</span>
+          <span className="colophon-rule" />
+          <span className="colophon-quaeritur">quaeritur</span>
+          <span className="colophon-rule" />
+          <span className="colophon-line colophon-line-1">
+            set in serif · dotted in gold
+          </span>
+          <span className="colophon-line colophon-line-2">
+            breathed on canvas · answered in pixels
+          </span>
+          <span className="colophon-mark">
+            <RegisterCross />
+          </span>
         </div>
       </div>
     </main>

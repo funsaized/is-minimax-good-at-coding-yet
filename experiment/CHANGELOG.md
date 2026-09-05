@@ -1,10 +1,15 @@
-## Iteration 3 — a folio turned into a composed chapter page
+Folio iv: whispers, an inked note, and a paper grain beneath the question mark.
 
-- Added a rubric chapter piece ("an inquiry") and a custom SVG fleuron above the question mark, so the hero is now a typeset chapter heading rather than a standalone figure.
-- Added an ink-spatter flourish on click: nine small gold drops radiate briefly from the question mark alongside the existing pulse, trace, and echo-wave.
-- Added hover guide rules: each marginalium draws a thin gold hairline with a small terminus dot toward the central composition, turning the four corners into proper anchored annotations.
-- Added a Latin folio signature ("quaeritur") flanked by hairline rules at the bottom-center of the frame.
-- Added a subtle codex-edge border with two small printer's corner ornaments, suggesting a bound page.
-- Refined reduced-motion behavior so guide rules, spatter, and entrance animations remain visible only as state, never as motion.
-- Widened the marginalia max-width so the longer bl body no longer wraps at tablet widths.
-- Preserved the title, hero path, marginalia labels, clock, dust canvas, and overall dark/gold palette from iteration 2.
+Iteration 4 deepens the folio. Clicking the question mark now triggers a
+four-corner "whisper" — each marginalia unfolds a brief italic reflection in
+turn, layered and staggered, then fades. The question earns an editor-style ink
+underline that draws and holds; below it, a single italic line answers the
+page in its own voice. A new colophon closes the folio (folio iv, quaeritur,
+a two-line attribution, and a small printer's register cross). The whole page
+is overlaid with a very faint SVG turbulence grain so the dark ground reads as
+pressed paper rather than flat color.
+
+Typography: "Minimax M3" and "yet" are set in italic gold within the question
+for editorial emphasis. Responsive layout keeps three corner marginalia
+visible down to ~480px, then collapses to the clock corner with a smaller
+colophon. Reduced-motion users get static reveals instead of motion.
