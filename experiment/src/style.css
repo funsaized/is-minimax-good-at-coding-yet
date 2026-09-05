@@ -15,9 +15,9 @@ html, body, #root { margin: 0; min-height: 100%; }
   --vermilion-soft: #86402d;
   --cool: #95a8c2;
   --cool-deep: #5e7593;
-  --serif: "Iowan Old Style", "Apple Garamond", "Palatino Linotype", Baskerville, Georgia, "Times New Roman", serif;
-  --display: "Hoefler Text", "Iowan Old Style", "Apple Garamond", Baskerville, Georgia, serif;
-  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --serif: "Iowan Old Style", "Apple Garamond", "Palatino Linotype", Baskerville, "Hoefler Text", "Cambria", Georgia, "Times New Roman", serif;
+  --display: "Hoefler Text", "Iowan Old Style", "Apple Garamond", Baskerville, "Cambria", Georgia, serif;
+  --mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
 }
 
 html, body { background: var(--bg); color: var(--ink); }
@@ -163,7 +163,7 @@ body {
   width: clamp(160px, 22vw, 360px);
   pointer-events: none;
   mix-blend-mode: multiply;
-  opacity: 0.85;
+  opacity: 0.5;
 }
 
 .bifolio-shadow-l {
@@ -171,8 +171,8 @@ body {
   transform: translateX(-100%);
   background: linear-gradient(
     90deg,
-    rgba(0, 0, 0, 0.38) 0%,
-    rgba(0, 0, 0, 0.18) 32%,
+    rgba(0, 0, 0, 0.32) 0%,
+    rgba(0, 0, 0, 0.14) 32%,
     transparent 100%
   );
   background-position: right top;
@@ -183,8 +183,8 @@ body {
   transform: translateX(100%);
   background: linear-gradient(
     -90deg,
-    rgba(0, 0, 0, 0.38) 0%,
-    rgba(0, 0, 0, 0.18) 32%,
+    rgba(0, 0, 0, 0.32) 0%,
+    rgba(0, 0, 0, 0.14) 32%,
     transparent 100%
   );
 }
@@ -197,7 +197,8 @@ body {
   to { opacity: 0.85; }
 }
 
-/* Paper grain — a faint SVG turbulence overlay that hints at pressed paper */
+/* Paper grain — a faint SVG turbulence overlay that hints at pressed paper.
+   * Toned down so the question reads cleanly. */
 
 .paper-grain {
   position: fixed;
@@ -212,7 +213,7 @@ body {
 }
 
 @keyframes grainIn {
-  to { opacity: 0.5; }
+  to { opacity: 0.28; }
 }
 
 .frame {
@@ -244,7 +245,7 @@ body {
 }
 
 .watermark-stroke {
-  opacity: 0.45;
+  opacity: 0.35;
   stroke-dasharray: 3600;
   stroke-dashoffset: 3600;
   animation: watermarkDraw 5.2s cubic-bezier(0.6, 0.02, 0.2, 1) 1.9s forwards;
@@ -262,7 +263,7 @@ body {
 }
 
 @keyframes watermarkIn {
-  to { opacity: 0.075; }
+  to { opacity: 0.05; }
 }
 
 @keyframes watermarkDraw {
@@ -1020,7 +1021,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(12px, 1.6vw, 18px);
+  gap: clamp(14px, 1.8vw, 22px);
   max-width: 100%;
 }
 
@@ -1151,48 +1152,6 @@ body {
   color: var(--ink-soft);
 }
 
-/* ----- Printer's note (self-typed caption above the chapter piece) ----- */
-
-.printer-note {
-  margin: 0 0 clamp(-4px, -0.4vw, -2px);
-  padding: 0;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(10.5px, 0.98vw, 12.5px);
-  line-height: 1.5;
-  letter-spacing: 0.06em;
-  color: var(--ink-faint);
-  text-align: center;
-  max-width: 38ch;
-  text-wrap: balance;
-  opacity: 0;
-  transform: translateY(4px);
-  transition:
-    opacity 0.9s ease 2.55s,
-    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 2.55s;
-}
-
-.printer-note.is-on {
-  opacity: 0.82;
-  transform: translateY(0);
-}
-
-.printer-note-text {
-  display: inline;
-}
-
-.printer-note-caret {
-  display: inline-block;
-  color: var(--gold);
-  margin-left: 1px;
-  font-weight: 400;
-  font-style: normal;
-  font-family: var(--mono);
-  font-size: 0.92em;
-  transform: translateY(-0.08em);
-  animation: caretBlink 0.85s steps(2, end) infinite;
-}
-
 /* ----- Rubric (chapter piece) ----- */
 
 .folio-mark {
@@ -1270,7 +1229,7 @@ body {
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(11px, 1.15vw, 14px);
-  letter-spacing: 0.42em;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
   color: var(--gold);
   opacity: 0;
@@ -1411,7 +1370,7 @@ body {
   transition:
     filter 0.6s ease,
     transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-  filter: drop-shadow(0 0 28px rgba(217, 176, 116, 0.18));
+  filter: drop-shadow(0 0 30px rgba(217, 176, 116, 0.22));
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   border-radius: 2px;
@@ -1419,7 +1378,7 @@ body {
 }
 
 .hero:hover {
-  filter: drop-shadow(0 0 44px rgba(217, 176, 116, 0.42));
+  filter: drop-shadow(0 0 48px rgba(217, 176, 116, 0.48));
   transform: scale(1.04);
 }
 
@@ -1430,7 +1389,7 @@ body {
 }
 
 .hero-svg {
-  width: clamp(150px, 22vw, 240px);
+  width: clamp(160px, 23vw, 248px);
   height: auto;
   display: block;
   overflow: visible;
@@ -1584,7 +1543,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(4px, 0.6vw, 10px);
+  gap: clamp(6px, 0.8vw, 14px);
   width: 100%;
 }
 
@@ -1745,10 +1704,52 @@ body {
 
 .composition.ready .bracket-pip-faint { opacity: 0.55; }
 
-/* ----- Scholastic gloss (italic commentary near the hero) ----- */
+/* ----- Incipit (small Latin caption above the chapter piece) ----- */
 
-.scholastic-gloss {
-  margin: clamp(2px, 0.4vw, 6px) 0 clamp(-4px, -0.4vw, 0);
+.incipit {
+  margin: clamp(-2px, -0.3vw, 0) 0 clamp(-4px, -0.5vw, -1px);
+  padding: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, 1vw, 12.5px);
+  line-height: 1.5;
+  letter-spacing: 0.16em;
+  color: var(--ink-faint);
+  text-align: center;
+  max-width: 40ch;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(3px);
+  transition:
+    opacity 0.9s ease 1.5s,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.5s;
+}
+
+.incipit.is-on {
+  opacity: 0.78;
+  transform: translateY(0);
+}
+
+.incipit-text {
+  display: inline;
+}
+
+.incipit-caret {
+  display: inline-block;
+  color: var(--gold);
+  margin-left: 1px;
+  font-weight: 400;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 0.92em;
+  transform: translateY(-0.08em);
+  animation: caretBlink 0.85s steps(2, end) infinite;
+}
+
+/* ----- Hover gloss (a single italic line beneath the hero) ----- */
+
+.hover-gloss {
+  margin: clamp(2px, 0.4vw, 6px) 0 clamp(-2px, -0.2vw, 2px);
   padding: 0;
   display: flex;
   align-items: center;
@@ -1772,12 +1773,12 @@ body {
     color 0.5s ease;
 }
 
-.scholastic-gloss.is-on {
+.hover-gloss.is-on {
   opacity: 0.85;
   transform: translateY(0);
 }
 
-.scholastic-gloss-rule {
+.hover-gloss-rule {
   display: inline-block;
   width: clamp(14px, 1.6vw, 22px);
   height: 1px;
@@ -1789,11 +1790,11 @@ body {
   transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s;
 }
 
-.scholastic-gloss.is-on .scholastic-gloss-rule {
+.hover-gloss.is-on .hover-gloss-rule {
   transform: scaleX(1);
 }
 
-.scholastic-gloss-text {
+.hover-gloss-text {
   display: inline;
 }
 
@@ -2001,9 +2002,9 @@ body {
 .question {
   font-family: var(--display);
   font-weight: 400;
-  font-size: clamp(26px, 4vw, 50px);
-  line-height: 1.16;
-  letter-spacing: -0.005em;
+  font-size: clamp(28px, 4.4vw, 54px);
+  line-height: 1.12;
+  letter-spacing: -0.012em;
   text-align: center;
   color: var(--ink);
   max-width: 22ch;
@@ -2024,7 +2025,7 @@ body {
 
 .question-rule {
   display: inline-block;
-  vertical-align: 0.42em;
+  vertical-align: 0.45em;
   width: clamp(14px, 1.6vw, 24px);
   height: 1px;
   margin-right: clamp(10px, 1vw, 16px);
@@ -2047,6 +2048,8 @@ body {
   color: var(--gold);
   letter-spacing: 0.01em;
   position: relative;
+  font-size: 0.94em;
+  opacity: 0.95;
 }
 
 .question-name,
@@ -2062,8 +2065,9 @@ body {
   font-style: italic;
   font-variant-caps: small-caps;
   font-feature-settings: "smcp" on, "ss01" on, "liga" on;
-  letter-spacing: 0.06em;
-  font-size: 0.95em;
+  letter-spacing: 0.08em;
+  font-size: 0.78em;
+  padding: 0 0.05em;
 }
 
 .question-name::after {
@@ -2089,20 +2093,21 @@ body {
 .question-yet {
   font-style: italic;
   display: inline-block;
-  font-size: 1.06em;
+  font-size: 1.04em;
   letter-spacing: -0.02em;
   color: var(--gold-bright);
   position: relative;
+  padding: 0 0.04em;
 }
 
 .question-yet::after {
   content: '';
   position: absolute;
-  left: 14%;
-  right: 14%;
-  bottom: -0.08em;
+  left: 8%;
+  right: 8%;
+  bottom: -0.06em;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-deep) 30%, var(--vermilion) 50%, var(--gold-deep) 70%, transparent);
+  background: linear-gradient(90deg, transparent, var(--gold-deep) 22%, var(--vermilion) 50%, var(--gold-deep) 78%, transparent);
   opacity: 0;
   transform: scaleX(0.4);
   transform-origin: center;
@@ -2110,7 +2115,7 @@ body {
 }
 
 .composition.ready .question-yet::after {
-  opacity: 0.55;
+  opacity: 0.7;
   transform: scaleX(1);
   transition-delay: 2.55s;
 }
@@ -2153,12 +2158,12 @@ body {
   margin: 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(12px, 1.15vw, 15px);
-  line-height: 1.5;
-  letter-spacing: 0.01em;
+  font-size: clamp(12.5px, 1.18vw, 15.5px);
+  line-height: 1.55;
+  letter-spacing: 0.012em;
   color: var(--ink-soft);
   text-align: center;
-  max-width: 30ch;
+  max-width: 32ch;
   text-wrap: balance;
   opacity: 0;
   transform: translateY(4px);
@@ -2173,10 +2178,10 @@ body {
 }
 
 .answer.is-on {
-  opacity: 0.82;
+  opacity: 0.88;
   transform: translateY(0);
   max-height: 6em;
-  margin: clamp(14px, 1.8vw, 20px) 0 0;
+  margin: clamp(16px, 2vw, 22px) 0 0;
 }
 
 .answer-text {
@@ -2205,7 +2210,7 @@ body {
   padding: 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(13px, 1.28vw, 16px);
+  font-size: clamp(13px, 1.28vw, 16.5px);
   line-height: 1.55;
   letter-spacing: 0.005em;
   color: var(--ink);
@@ -2225,10 +2230,10 @@ body {
 }
 
 .reply.is-on {
-  opacity: 0.82;
+  opacity: 0.88;
   transform: translateY(0);
   max-height: 8em;
-  margin: clamp(6px, 0.9vw, 12px) 0 0;
+  margin: clamp(8px, 1vw, 14px) 0 0;
 }
 
 .reply-rule {
@@ -2290,7 +2295,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(5px, 0.7vw, 8px);
+  gap: clamp(4px, 0.6vw, 7px);
   color: var(--ink-faint);
   opacity: 0;
   transition: opacity 0.9s ease 2.1s;
@@ -2313,11 +2318,11 @@ body {
 .colophon-folio {
   color: var(--gold);
   letter-spacing: 0.5em;
-  opacity: 0.7;
+  opacity: 0.78;
 }
 
 .colophon-quaeritur {
-  opacity: 0.6;
+  opacity: 0.62;
   font-style: italic;
   letter-spacing: 0.36em;
   font-family: var(--serif);
@@ -2341,7 +2346,7 @@ body {
   font-weight: 400;
 }
 
-.colophon-line-1 { opacity: 0.82; }
+.colophon-line-1 { opacity: 0.82; font-style: italic; font-family: var(--serif); letter-spacing: 0.12em; }
 
 /* ----- Signature (typeset gathering mark, replaces 'folio v') ----- */
 
@@ -2381,163 +2386,6 @@ body {
   to { opacity: 0.92; transform: translateY(0); }
 }
 
-.colophon-mark {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2px;
-  color: var(--gold-deep);
-  opacity: 0.6;
-}
-
-/* ----- Catchword (printer's catch-line for the next folio) ----- */
-
-.catchword {
-  display: inline-flex;
-  align-items: baseline;
-  gap: clamp(5px, 0.6vw, 9px);
-  margin-top: clamp(6px, 0.7vw, 10px);
-  padding: 0;
-  opacity: 0;
-  transform: translateY(2px);
-  transition:
-    opacity 1.0s ease 2.9s,
-    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 2.9s;
-}
-
-.frame.ready .catchword {
-  opacity: 0.82;
-  transform: translateY(0);
-}
-
-.catchword-rule {
-  display: inline-block;
-  width: clamp(10px, 1.4vw, 18px);
-  height: 1px;
-  align-self: center;
-  background: linear-gradient(90deg, transparent, var(--gold-deep) 65%, var(--gold));
-  opacity: 0.7;
-  flex: 0 0 auto;
-  transform: scaleX(0.3);
-  transform-origin: left center;
-  transition: transform 1.0s cubic-bezier(0.2, 0.7, 0.2, 1) 3.05s;
-}
-
-.frame.ready .catchword-rule {
-  transform: scaleX(1);
-}
-
-.catchword-label {
-  font-family: var(--mono);
-  font-style: normal;
-  font-size: clamp(7.5px, 0.68vw, 8.5px);
-  letter-spacing: 0.32em;
-  text-transform: lowercase;
-  color: var(--ink-soft);
-  opacity: 0.7;
-  flex: 0 0 auto;
-}
-
-.catchword-dot {
-  color: var(--gold);
-  font-family: var(--serif);
-  font-style: normal;
-  font-size: clamp(10px, 0.95vw, 12px);
-  opacity: 0.65;
-  flex: 0 0 auto;
-  transform: translateY(-0.05em);
-}
-
-.catchword-word {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(11px, 1.05vw, 13px);
-  letter-spacing: 0.04em;
-  color: var(--gold);
-  opacity: 0.92;
-  flex: 0 0 auto;
-  text-shadow: 0 0 8px rgba(217, 176, 116, 0.18);
-}
-
-.register-cross {
-  display: block;
-}
-
-.colophon-seal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: clamp(4px, 0.6vw, 8px);
-  color: var(--gold);
-  opacity: 0;
-  transition: opacity 1.2s ease 2.5s;
-}
-
-.frame.ready .colophon-seal {
-  opacity: 0.85;
-}
-
-.printer-seal {
-  width: clamp(22px, 2.4vw, 30px);
-  height: clamp(22px, 2.4vw, 30px);
-  display: block;
-  overflow: visible;
-  color: inherit;
-}
-
-.seal-ring-outer {
-  opacity: 0;
-  stroke-dasharray: 116;
-  stroke-dashoffset: 116;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: rotate(-90deg);
-  animation: sealDraw 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.3s forwards;
-}
-
-.seal-ring-inner {
-  opacity: 0;
-  stroke-dasharray: 90;
-  stroke-dashoffset: 90;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: rotate(-90deg);
-  animation: sealDraw 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s forwards;
-  animation-delay: 2.45s;
-}
-
-.seal-letter {
-  font-family: var(--display);
-  font-style: italic;
-  font-size: 18px;
-  font-weight: 500;
-  fill: currentColor;
-  letter-spacing: -0.04em;
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(0.4);
-  animation: sealLetter 0.6s cubic-bezier(0.2, 1.2, 0.4, 1) 2.7s forwards;
-}
-
-.seal-pip {
-  fill: currentColor;
-  opacity: 0;
-  animation: sealPip 0.4s ease 2.85s forwards;
-}
-
-@keyframes sealDraw {
-  to { opacity: 1; stroke-dashoffset: 0; transform: rotate(0deg); }
-}
-
-@keyframes sealLetter {
-  to { opacity: 0.92; transform: scale(1); }
-}
-
-@keyframes sealPip {
-  to { opacity: 0.7; }
-}
-
 /* ----- Reduced motion ----- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -2549,8 +2397,10 @@ body {
   .bracket-pip { transition: opacity 0.3s ease; }
   .bracket-pip-halo { transition: opacity 0.3s ease; transform: scale(1); }
   .bracket-pip-faint { transition: opacity 0.3s ease; }
-  .scholastic-gloss { transition: opacity 0.3s ease; }
-  .scholastic-gloss-rule { transition: transform 0.3s ease; transform: scaleX(1); }
+  .hover-gloss { transition: opacity 0.3s ease; }
+  .hover-gloss-rule { transition: transform 0.3s ease; transform: scaleX(1); }
+  .incipit { transition: opacity 0.3s ease; opacity: 0.78; transform: none; }
+  .incipit-caret { animation: none; opacity: 0.5; }
   .hero-svg { animation: none; transform: none; }
   .hero-svg-wrap { transform: none; transition: none; }
   .hero-dot-ring { animation: none; opacity: 0.18; transform: scale(1); }
@@ -2563,7 +2413,7 @@ body {
   .hero:hover { transform: none; }
   .question, .rubric, .fleuron, .fleuron-rule line, .fleuron-ornament, .fleuron-dots,
   .folio-mark, .folio-mark-flourish, .folio-mark-pearl,
-  .manicule-wrap, .manicule, .printer-note {
+  .manicule-wrap, .manicule {
     opacity: 1;
     transform: none;
     transition: none;
@@ -2604,24 +2454,12 @@ body {
     transform: scaleX(1);
   }
   .answer { transition: opacity 0.15s ease; }
-  .answer.is-on { transform: none; }
-  .reply { transition: opacity 0.15s ease; }
+  .answer-caret, .reply-caret { animation: none; opacity: 0.5; }
+  .answer { transition: opacity 0.15s ease; }
   .reply.is-on { transform: none; opacity: 0.82; }
   .reply-rule { transition: none; animation: none; opacity: 0.6; transform: scaleX(1); }
   .reply-end { transition: none; animation: none; opacity: 0.9; }
   .colophon { opacity: 1; transition: none; }
-  .colophon-seal { transition: none; opacity: 1; }
-  .catchword { transition: none; opacity: 0.82; transform: none; }
-  .catchword-rule { transition: none; transform: scaleX(1); }
-  .printer-seal, .seal-ring-outer, .seal-ring-inner, .seal-letter, .seal-pip {
-    transition: none;
-    animation: none;
-    opacity: 1;
-    transform: none;
-    stroke-dashoffset: 0;
-  }
-  .seal-letter { opacity: 0.92; }
-  .seal-pip { opacity: 0.7; }
   .watermark {
     transition: none;
     animation: none;
@@ -2675,7 +2513,6 @@ body {
   .auriole-r3 { --auriole-alpha: 0.62; }
   .auriole-r2 { --auriole-alpha: 0.4; }
   .auriole-r1 { --auriole-alpha: 0.24; }
-  .printer-note-caret { animation: none; opacity: 0.5; }
   .capitulum { transition: none; opacity: 0.85; transform: none; }
   .capitulum-mark { transition: none; opacity: 0.78; transform: none; }
   .auriole-spinner { animation: none; opacity: 0.32; }
@@ -2713,11 +2550,10 @@ body {
   .marg-body { display: none; }
   .marg { max-width: min(40ch, 38vw); }
   .hero-svg { width: clamp(140px, 30vw, 200px); }
-  .question { font-size: clamp(20px, 5.4vw, 32px); max-width: 18ch; }
+  .question { font-size: clamp(22px, 5.4vw, 34px); max-width: 18ch; }
   .question-rule { width: 12px; margin-right: 8px; }
   .guide-rule { width: 48px; height: 48px; }
   .colophon-line { letter-spacing: 0.22em; }
-  .printer-seal { width: 24px; height: 24px; }
   .taper { width: clamp(56px, 24vw, 110px); height: clamp(120px, 24vh, 200px); top: 14%; filter: blur(6px); }
   .signature { width: 44px; }
   .bracket-flourish { width: clamp(12px, 2vw, 18px); height: clamp(56px, 7vw, 88px); }
@@ -2732,6 +2568,7 @@ body {
   .capitulum-mono { letter-spacing: 0.26em; font-size: 0.78em; }
   .capitulum-sep { margin: 0 5px; }
   .printer-leaf { width: clamp(26px, 6vw, 44px); height: 7px; }
+  .incipit { font-size: 10.5px; letter-spacing: 0.12em; }
 }
 
 @media (max-width: 620px) {
@@ -2750,20 +2587,18 @@ body {
   .folio-mark { width: 48px; }
   .folio-mark-letter { font-size: 30px; }
   .hero-svg { width: 150px; }
-  .question { font-size: 21px; max-width: 100%; line-height: 1.22; }
+  .question { font-size: 23px; max-width: 100%; line-height: 1.2; }
   .composition { gap: 14px; }
   .marg-now-time { font-size: 10px; }
   .clock { width: 18px; height: 18px; }
   .rubric { letter-spacing: 0.32em; }
-  .printer-note { font-size: 10.5px; letter-spacing: 0.045em; max-width: 26ch; }
   .manicule { width: 18px; }
   .colophon { gap: 4px; }
   .colophon-folio, .colophon-quaeritur { letter-spacing: 0.28em; }
-  .colophon-line { font-size: 8.5px; letter-spacing: 0.2em; }
+  .colophon-line { font-size: 8.5px; letter-spacing: 0.18em; }
   .reply { font-size: 13px; max-width: 26ch; }
   .reply-rule { width: 14px; margin-right: 8px; }
   .reply-end .fleuron { width: 56px; }
-  .printer-seal { width: 22px; height: 22px; }
   .ink-trail-halo { width: 22px; height: 22px; margin-left: -11px; margin-top: -11px; }
   .taper { width: clamp(48px, 30vw, 90px); height: clamp(96px, 22vh, 170px); top: 12%; filter: blur(5px); }
   .signature { width: 40px; }
@@ -2773,6 +2608,8 @@ body {
   .capitulum-mono { letter-spacing: 0.22em; font-size: 0.78em; }
   .capitulum-sep { margin: 0 3px; font-size: 0.85em; }
   .printer-leaf { width: 22px; height: 6px; }
+  .incipit { font-size: 10px; letter-spacing: 0.1em; }
+  .hover-gloss { font-size: 10.5px; }
 }
 
 /* tiny screens — keep only the corner clock and minimal marginalia */

@@ -34,20 +34,22 @@ const SPATTER = [
 ]
 
 // Letter dust — the alphabet motes that drift up through the chapter.
-// Each canvas particle carries one glyph from the question and the
-// manuscript's vocabulary, so the candle-glow above the question mark
-// reads as illuminated letterforms, not generic embers.
+// Bias the glyph set toward the question's own letters, with a few
+// manuscript abbreviations and punctuation dots, so the candle-glow
+// above the question mark reads as the question itself being typed
+// into the air — illuminated letterforms, not generic embers.
 const DUST_GLYPHS = [
-  'i', 's', 'M', 'm', 'r', 'n', 't', 'f', 'l', 'a',
+  'i', 's', 'm', 'm', 'r', 'n', 't', 'f', 'l', 'a',
+  'g', 'o', 'y', 'e', 'd',
   '·', '·', '·', '·', '·',
 ]
 
 type Whisper = { corner: Corner; text: string }
 
+// Two marginalia only — quiet top-left and bottom-right, nothing more.
+// The browser is the chapter; less is more.
 const WHISPERS: Whisper[] = [
-  { corner: 'tl', text: 'this page is its own footnote' },
-  { corner: 'tr', text: 'the browser is the chapter; the cursor, the pen' },
-  { corner: 'bl', text: 'lit not by display, but by attention' },
+  { corner: 'tl', text: 'a folio, slowly composed; this page is its own footnote' },
   { corner: 'br', text: 'this instant, the only one that ever arrives' },
 ]
 
@@ -64,20 +66,16 @@ const MARGINAL_RUBRIC = 'Qu.'
 const ANSWER_STAGGER_MS = 34
 const REPLY_STAGGER_MS = 26
 
-// Scholastic glosses — short italicized commentaries that surface near the
-// hero when the reader approaches. Three notes, cycled gently.
-const SCHOLASTIC_NOTES: string[] = [
-  'a question first asked, then asked again',
-  '— still being composed, never quite set',
-  'asked each time; settled each time differently',
-]
-const SCHOLASTIC_CYCLE_MS = 4400
+// Incipit — a single short italic Latin caption that fades in once
+// the chapter piece has composed itself. Sets the tone without ceremony.
+const INCIPIT = 'incipit · quaeritur de fronte'
+const INCIPIT_DELAY = 1100
+const INCIPIT_STEP = 38
 
-// A short self-typed caption that sits above the chapter piece, like a
-// printer's margin note introducing the folio without ceremony.
-const PRINTER_NOTE = '· a question, typeset in pixels ·'
-const PRINTER_NOTE_DELAY = 2400
-const PRINTER_NOTE_STEP = 42
+// Single hover gloss — replaces the cycling scholastic notes.
+// One quiet italic line appears beneath the hero when the reader
+// approaches, rather than three cycling phrases competing for attention.
+const HOVER_GLOSS = '— still being composed, never quite set'
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
@@ -163,6 +161,35 @@ function FolioMark() {
       <circle cx="14" cy="48" r="0.9" className="folio-mark-pearl" />
       <circle cx="66" cy="48" r="0.9" className="folio-mark-pearl" />
     </svg>
+  )
+}
+
+// IncipitCaption — a small italic Latin caption that types itself in
+// above the chapter piece once the rest of the folio has composed
+// itself. Like the rubricated "incipit" that opens an old chapter.
+function IncipitCaption() {
+  const [on, setOn] = useState(false)
+  const [chars, setChars] = useState(0)
+  useEffect(() => {
+    const t = window.setTimeout(() => setOn(true), INCIPIT_DELAY)
+    return () => clearTimeout(t)
+  }, [])
+  useEffect(() => {
+    if (!on) return
+    const id = window.setTimeout(
+      () => setChars((c) => Math.min(INCIPIT.length, c + 1)),
+      INCIPIT_STEP,
+    )
+    return () => clearTimeout(id)
+  }, [on, chars])
+  const text = on ? INCIPIT.slice(0, Math.max(0, chars)) : ''
+  return (
+    <p className={`incipit ${on ? 'is-on' : ''}`} aria-live="polite">
+      <span className="incipit-text">{text}</span>
+      {on && chars < INCIPIT.length && (
+        <span className="incipit-caret" aria-hidden="true">_</span>
+      )}
+    </p>
   )
 }
 
@@ -630,48 +657,24 @@ function BracketFlourish({ side }: { side: 'left' | 'right' }) {
   )
 }
 
-// ScholasticGloss — a single line of italicized scholarly commentary that
-// surfaces beneath the hero when the reader approaches. Cycles slowly
-// through three notes; in reduced motion a single static note stays.
-function ScholasticGloss({
+// HoverGloss — a single italic line that quietly surfaces beneath the
+// hero when the reader approaches. One phrase only; no cycling, no
+// competing for attention. The page has one thing to say in response
+// to being looked at, and it says it once.
+function HoverGloss({
   active,
   reduced,
 }: {
   active: boolean
   reduced: boolean
 }) {
-  const [idx, setIdx] = useState(0)
-  const [visible, setVisible] = useState(false)
-  const timerRef = useRef<number>(0)
-  const fadeTimerRef = useRef<number>(0)
-
-  useEffect(() => {
-    if (reduced) {
-      setIdx(0)
-      setVisible(active)
-      return
-    }
-    if (active) {
-      setVisible(true)
-      timerRef.current = window.setTimeout(() => {
-        setIdx((i) => (i + 1) % SCHOLASTIC_NOTES.length)
-      }, SCHOLASTIC_CYCLE_MS)
-      return () => clearTimeout(timerRef.current)
-    }
-    fadeTimerRef.current = window.setTimeout(() => setVisible(false), 420)
-    return () => clearTimeout(fadeTimerRef.current)
-  }, [active, idx, reduced])
-
-  const note = SCHOLASTIC_NOTES[idx]
   return (
     <p
-      className={`scholastic-gloss ${visible ? 'is-on' : ''}`}
+      className={`hover-gloss ${active ? 'is-on' : ''}`}
       aria-live="polite"
     >
-      <span className="scholastic-gloss-rule" aria-hidden="true" />
-      <span key={idx} className="scholastic-gloss-text">
-        {note}
-      </span>
+      <span className="hover-gloss-rule" aria-hidden="true" />
+      <span className="hover-gloss-text">{HOVER_GLOSS}</span>
     </p>
   )
 }
@@ -791,8 +794,6 @@ export function App() {
   const [answerChars, setAnswerChars] = useState(0)
   const [replyOn, setReplyOn] = useState(false)
   const [replyChars, setReplyChars] = useState(0)
-  const [printerNoteOn, setPrinterNoteOn] = useState(false)
-  const [printerNoteChars, setPrinterNoteChars] = useState(0)
   const [bee, setBee] = useState<{
     visible: boolean
     flying: boolean
@@ -884,41 +885,6 @@ export function App() {
     )
     return () => clearTimeout(id)
   }, [replyOn, replyChars, reduced])
-
-  // Printer's note — a self-typed caption that settles above the chapter
-  // piece once the rest of the folio has composed itself.
-  useEffect(() => {
-    if (reduced) {
-      const t = window.setTimeout(
-        () => setPrinterNoteOn(true),
-        Math.min(PRINTER_NOTE_DELAY, 800),
-      )
-      return () => clearTimeout(t)
-    }
-    const t = window.setTimeout(
-      () => setPrinterNoteOn(true),
-      PRINTER_NOTE_DELAY,
-    )
-    return () => clearTimeout(t)
-  }, [reduced])
-
-  useEffect(() => {
-    if (!printerNoteOn) {
-      setPrinterNoteChars(0)
-      return
-    }
-    if (reduced) {
-      setPrinterNoteChars(PRINTER_NOTE.length)
-      return
-    }
-    const total = PRINTER_NOTE.length
-    if (printerNoteChars >= total) return
-    const id = window.setTimeout(
-      () => setPrinterNoteChars((c) => Math.min(total, c + 1)),
-      PRINTER_NOTE_STEP,
-    )
-    return () => clearTimeout(id)
-  }, [printerNoteOn, printerNoteChars, reduced])
 
   // Cursor ink-trail — a single faint dot that lingers under the pointer
   // and fades when the cursor stops moving. Tracks in a rAF loop so the
@@ -1274,12 +1240,12 @@ export function App() {
     setTracing(true)
     setSpattering(true)
     setNoteNonce((n) => n + 1)
-    const order: Corner[] = ['tl', 'tr', 'bl', 'br']
+    const order: Corner[] = ['tl', 'br']
     waveTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
     waveTimeoutsRef.current = []
-    const stagger = reduced ? 0 : 300
-    const stepDelay = reduced ? 0 : 260
-    const holdMs = reduced ? 1600 : 3400
+    const stagger = reduced ? 0 : 360
+    const stepDelay = reduced ? 0 : 280
+    const holdMs = reduced ? 1800 : 3800
     order.forEach((corner, i) => {
       const at = stepDelay + i * stagger
       const t1 = window.setTimeout(() => setEchoIdx(i), at)
@@ -1382,37 +1348,13 @@ export function App() {
           glyph={<Bifolio />}
         />
         <Marg
-          corner="tr"
-          id="tr"
-          label="medium"
-          body="the browser is the paper"
-          whisper={whispersOn.tr}
-          whisperText={WHISPERS[1].text}
-          active={active}
-          wave={echoIdx === 1}
-          onHover={setActive}
-          glyph={<Nib />}
-        />
-        <Marg
-          corner="bl"
-          id="bl"
-          label="craft"
-          body="typeset in pixels, drawn in code"
-          whisper={whispersOn.bl}
-          whisperText={WHISPERS[2].text}
-          active={active}
-          wave={echoIdx === 2}
-          onHover={setActive}
-          glyph={<Asterism />}
-        />
-        <Marg
           corner="br"
           id="br"
           label="now"
           whisper={whispersOn.br}
-          whisperText={WHISPERS[3].text}
+          whisperText={WHISPERS[1].text}
           active={active}
-          wave={echoIdx === 3}
+          wave={echoIdx === 1}
           onHover={setActive}
           ariaLabel={`Local time ${hh}:${mm}. Reading since ${arrivedHH}:${arrivedMM}.`}
         >
@@ -1445,17 +1387,7 @@ export function App() {
 
         <div className={`composition ${ready ? 'ready' : ''}`}>
           <Capitulum />
-          <p
-            className={`printer-note ${printerNoteOn ? 'is-on' : ''}`}
-            aria-live="polite"
-          >
-            <span className="printer-note-text">
-              {PRINTER_NOTE.slice(0, Math.max(0, printerNoteChars))}
-            </span>
-            {printerNoteOn && printerNoteChars < PRINTER_NOTE.length && (
-              <span className="printer-note-caret" aria-hidden="true">_</span>
-            )}
-          </p>
+          <IncipitCaption />
           <FolioMark />
           <span className="rubric">
             <span className="rubric-pilcrow" aria-hidden="true">§</span>
@@ -1578,7 +1510,7 @@ export function App() {
           <div className="manicule-wrap" aria-hidden="true">
             <Manicule />
           </div>
-          <ScholasticGloss active={glossActive} reduced={reduced} />
+          <HoverGloss active={glossActive} reduced={reduced} />
           <div className="question-block">
             <h1 className="question">
               <span className="question-rule" aria-hidden="true" />
@@ -1628,18 +1560,6 @@ export function App() {
           <span className="colophon-folio">folio · xiii</span>
           <span className="colophon-line colophon-line-1">
             typeset in pixels · lit by attention
-          </span>
-          <span className="colophon-seal">
-            <PrinterSeal />
-          </span>
-          <span className="colophon-mark">
-            <RegisterCross />
-          </span>
-          <span className="catchword">
-            <span className="catchword-rule" />
-            <span className="catchword-label">catch</span>
-            <span className="catchword-dot" aria-hidden="true">·</span>
-            <span className="catchword-word">iterum</span>
           </span>
         </div>
       </div>
