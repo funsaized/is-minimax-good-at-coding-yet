@@ -1668,6 +1668,187 @@ body {
   animation: caretBlink 0.85s steps(2, end) infinite;
 }
 
+/* ----- Maniculum (the reader's pointing hand) -----
+   * Always present as a quiet marginal mark — a reader's annotation
+   * drawn into the right margin of the question. Brightens and leans
+   * toward the text when the chapter is engaged, marking the climax
+   * word "yet?" with a vermilion underline drawn simultaneously. */
+
+.maniculum {
+  position: absolute;
+  right: clamp(8px, 3vw, 36px);
+  top: 48%;
+  width: clamp(56px, 6.4vw, 84px);
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(18px, -50%) rotate(-2deg);
+  transform-origin: 100% 50%;
+  transition:
+    opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s,
+    transform 1.0s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s,
+    filter 0.6s ease;
+  filter: drop-shadow(0 0 4px rgba(217, 176, 116, 0.18));
+  will-change: opacity, transform;
+}
+
+.composition.is-pointing .maniculum,
+.composition.ready .maniculum {
+  opacity: 0.42;
+  transform: translate(8px, -50%) rotate(0deg);
+}
+
+.composition.is-pointing .maniculum {
+  opacity: 1;
+  transform: translate(0, -50%) rotate(0deg);
+  filter:
+    drop-shadow(0 0 10px rgba(217, 176, 116, 0.42))
+    drop-shadow(0 0 22px rgba(176, 83, 58, 0.22));
+  animation: maniculumTap 3.6s ease-in-out 1.2s infinite;
+}
+
+@keyframes maniculumTap {
+  0%, 100% { transform: translate(0, -50%) rotate(0deg); }
+  46%      { transform: translate(-2px, -50%) rotate(-0.6deg); }
+  52%      { transform: translate(-2px, -50%) rotate(-0.6deg); }
+}
+
+.maniculum-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.maniculum-cuff {
+  fill: var(--gold);
+  fill-opacity: 0.78;
+  stroke: var(--gold-deep);
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+}
+
+.maniculum-band {
+  fill: var(--vermilion);
+  fill-opacity: 0.7;
+  stroke: var(--vermilion-soft);
+  stroke-width: 0.3;
+}
+
+.maniculum-seam {
+  stroke: var(--gold-deep);
+  stroke-width: 0.35;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.55;
+}
+
+.maniculum-pip {
+  fill: var(--vermilion);
+  fill-opacity: 0.85;
+  stroke: var(--vermilion-soft);
+  stroke-width: 0.2;
+}
+
+.maniculum-hand {
+  fill: var(--gold);
+  fill-opacity: 0.82;
+  stroke: var(--gold-deep);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+}
+
+.maniculum-fold {
+  fill: none;
+  stroke: var(--gold-deep);
+  stroke-width: 0.55;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.maniculum-crease {
+  fill: none;
+  stroke: var(--gold-deep);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  opacity: 0.45;
+}
+
+.maniculum-finger {
+  fill: var(--gold);
+  fill-opacity: 0.85;
+  stroke: var(--gold-deep);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+}
+
+.maniculum-knuckle {
+  stroke: var(--gold-deep);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+
+.maniculum-nail {
+  fill: var(--gold-bright);
+  fill-opacity: 0.8;
+  stroke: var(--gold-deep);
+  stroke-width: 0.3;
+}
+
+.maniculum-tip {
+  fill: var(--gold-bright);
+  fill-opacity: 0.6;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: maniculumTip 1.6s ease-in-out infinite;
+}
+
+.composition.is-pointing .maniculum-tip {
+  animation: maniculumTipActive 1.1s ease-in-out infinite;
+}
+
+@keyframes maniculumTip {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50%      { opacity: 0.7; transform: scale(1); }
+}
+
+@keyframes maniculumTipActive {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.4); }
+}
+
+/* The lead line is a hairline drawn from the maniculum's fingertip
+   outward into the white space — a quiet lead that meets the question's
+   underline at the climax word. */
+.maniculum-lead {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  width: clamp(20px, 4vw, 56px);
+  height: 1px;
+  background: linear-gradient(
+    270deg,
+    transparent 0%,
+    var(--vermilion) 60%,
+    var(--vermilion) 100%
+  );
+  transform: translateY(-0.5px);
+  transform-origin: 100% 50%;
+  opacity: 0;
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s,
+    width 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s;
+}
+
+.composition.is-pointing .maniculum-lead {
+  opacity: 0.7;
+  width: clamp(40px, 7vw, 96px);
+}
+
 /* ----- Question text (the chapter's title) -----
    * The question is now the chapter's true centerpiece. A clear hierarchy:
    * "is" sets the stage, "Minimax M3" is the subject (gold small caps),
@@ -1693,7 +1874,7 @@ body {
   font-family: var(--display);
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(30px, 4.6vw, 56px);
+  font-size: clamp(32px, 5vw, 58px);
   line-height: 1.14;
   letter-spacing: -0.012em;
   text-align: center;
@@ -1762,6 +1943,38 @@ body {
     0 0 14px rgba(240, 212, 154, 0.22),
     0 0 32px rgba(217, 176, 116, 0.12);
   font-weight: 500;
+}
+
+/* The reader's mark — a thin vermilion underline drawn beneath "yet?"
+   when the maniculum points at it. Drawn from the maniculum's lead line
+   into the word, like the page has just been marked by a reader's pen. */
+.question-yet::after {
+  content: '';
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  bottom: -0.18em;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--vermilion) 22%,
+    var(--vermilion-bright) 78%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.15);
+  transform-origin: 100% 50%;
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s,
+    transform 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s;
+  pointer-events: none;
+}
+
+.composition.is-pointing .question-yet::after {
+  opacity: 0.85;
+  transform: scaleX(1);
+  transition-delay: 0.25s, 0.25s;
 }
 
 /* Small vermilion point before the question mark — the medieval
@@ -2321,6 +2534,27 @@ body {
   .bee-parchment { transition: none; opacity: 1; transform: none; }
   .answer-dropcap-wrap { transition: none; opacity: 1; transform: none; }
   .answer-dropcap-shadow { transition: none; opacity: 0.7; transform: scaleX(1); }
+  .maniculum {
+    transition: opacity 0.2s ease;
+    animation: none;
+    opacity: 0.5;
+    transform: translate(0, -50%) rotate(0deg);
+  }
+  .composition.is-pointing .maniculum {
+    opacity: 1;
+    transform: translate(0, -50%) rotate(0deg);
+  }
+  .maniculum-lead { transition: opacity 0.2s ease; }
+  .maniculum-tip { animation: none; opacity: 0.7; transform: scale(1); }
+  .question-yet::after {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: 0;
+    transform: scaleX(0.15);
+  }
+  .composition.is-pointing .question-yet::after {
+    opacity: 0.7;
+    transform: scaleX(1);
+  }
 }
 
 /* ----- Responsive ----- */
@@ -2336,6 +2570,9 @@ body {
   .bee-parchment { width: 20px; height: 15px; margin-left: -10px; margin-top: 18px; }
   .illuminated-star { width: 48px; height: 48px; }
   .question { font-size: clamp(26px, 5vw, 44px); }
+  .maniculum { width: clamp(44px, 7vw, 64px); right: clamp(4px, 2vw, 16px); }
+  .maniculum-lead { width: clamp(12px, 2vw, 24px); }
+  .composition.is-pointing .maniculum-lead { width: clamp(20px, 4vw, 40px); }
 }
 
 @media (max-width: 760px) {
@@ -2421,6 +2658,7 @@ body {
   .catchword { display: none; }
   .answer-dropcap-wrap { width: 22px; height: 18px; }
   .answer-dropcap { font-size: 22px; }
+  .maniculum { display: none; }
 }
 
 @media (max-width: 480px) {

@@ -530,6 +530,112 @@ function Parchment({ arrived }: { arrived: boolean }) {
   )
 }
 
+// Maniculum — the medieval reader's pointing hand that emerges from the
+// right margin to mark the question's climax word ("yet?"). Always present
+// as a quiet marginal mark; brightens and leans in when the reader engages
+// the hero. Pairs with the left-margin "Qu." rubric so the question is
+// framed by two gestures: a scholastic gloss on the left, a reader's hand
+// on the right.
+function Maniculum({ active }: { active: boolean }) {
+  return (
+    <span
+      className={`maniculum ${active ? 'is-active' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="maniculum-lead" />
+      <svg
+        className="maniculum-svg"
+        viewBox="0 0 70 38"
+        focusable="false"
+      >
+        {/* Sleeve band — a slim vermilion ribbon at the cuff */}
+        <rect
+          x="44"
+          y="5"
+          width="1.6"
+          height="28"
+          className="maniculum-band"
+        />
+
+        {/* Sleeve / cuff — gold, gently tapered */}
+        <path
+          className="maniculum-cuff"
+          d="M 45.5 4 L 66 7.5 L 66 30.5 L 45.5 34 Z"
+        />
+
+        {/* Cuff diagonal seams — suggest cut and drape */}
+        <line
+          x1="49"
+          y1="9"
+          x2="62.5"
+          y2="30"
+          className="maniculum-seam"
+        />
+        <line
+          x1="49"
+          y1="11.5"
+          x2="62.5"
+          y2="32"
+          className="maniculum-seam"
+        />
+
+        {/* Cuff embroidery pip */}
+        <circle cx="54" cy="18" r="0.9" className="maniculum-pip" />
+
+        {/* Hand back — gold, softens at the knuckles */}
+        <path
+          className="maniculum-hand"
+          d="M 22 11 L 44 11.5 L 46 14.5 L 46 23.5 L 44 26.5 L 22 27 Z"
+        />
+
+        {/* Folded fingers (three small ridges on the underside) */}
+        <path
+          d="M 25 27 Q 27 29 30 27"
+          className="maniculum-fold"
+        />
+        <path
+          d="M 31 27 Q 33 29 36 27"
+          className="maniculum-fold"
+        />
+        <path
+          d="M 37 27 Q 39 29 42 27"
+          className="maniculum-fold"
+        />
+
+        {/* Thumb crease — a small arc on top */}
+        <path
+          d="M 30 14 Q 33 12.5 36 14"
+          className="maniculum-crease"
+        />
+
+        {/* Index finger — extended, pointing left toward the question */}
+        <path
+          className="maniculum-finger"
+          d="M 0 15 L 22 14.5 L 22 23.5 L 0 23 Z"
+        />
+
+        {/* First knuckle crease on the finger */}
+        <line
+          x1="12"
+          y1="15"
+          x2="12"
+          y2="23"
+          className="maniculum-knuckle"
+        />
+
+        {/* Fingernail — a small gold-bright wedge at the tip */}
+        <path
+          className="maniculum-nail"
+          d="M 0 16 L 3.5 15.4 L 3.5 22.6 L 0 22 Z"
+        />
+
+        {/* Tip pulse — a tiny gold dot that flickers when active */}
+        <circle cx="-1" cy="19" r="0.7" className="maniculum-tip" />
+      </svg>
+    </span>
+  )
+}
+
 // MarginalRubric — a small vermilion annotation sitting in the left margin
 // of the hero, connected by a hairline to the bracket.
 function MarginalRubric() {
@@ -739,6 +845,7 @@ export function App() {
   const [answerChars, setAnswerChars] = useState(0)
   const [replyOn, setReplyOn] = useState(false)
   const [replyChars, setReplyChars] = useState(0)
+  const [pointing, setPointing] = useState(false)
   const [bee, setBee] = useState<{
     visible: boolean
     flying: boolean
@@ -1120,6 +1227,7 @@ export function App() {
     setTracing(true)
     setSpattering(true)
     setNoteNonce((n) => n + 1)
+    setPointing(true)
     const order: Corner[] = ['tl', 'br']
     waveTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
     waveTimeoutsRef.current = []
@@ -1149,7 +1257,10 @@ export function App() {
     setReplyOn(false)
     setAnswerOn(true)
     const ansOff = window.setTimeout(
-      () => setAnswerOn(false),
+      () => {
+        setAnswerOn(false)
+        setPointing(false)
+      },
       reduced ? 2600 : 5200,
     )
     waveTimeoutsRef.current.push(ansOff)
@@ -1227,7 +1338,7 @@ export function App() {
           ariaLabel="now: this instant, the only one that ever arrives"
         />
 
-        <div className={`composition ${ready ? 'ready' : ''}`}>
+        <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''}`}>
           <Capitulum />
           <FolioMark />
           <span className="rubric">
@@ -1245,9 +1356,17 @@ export function App() {
             ref={heroRef}
             className={`hero ${drawn ? 'drawn' : ''} ${pulsing ? 'pulse' : ''} ${tracing ? 'echo' : ''}`}
             onClick={acknowledge}
-            onPointerEnter={onHeroEnter}
-            onPointerLeave={onHeroLeave}
+            onPointerEnter={(e) => {
+              setPointing(true)
+              onHeroEnter(e)
+            }}
+            onPointerLeave={() => {
+              setPointing(false)
+              onHeroLeave()
+            }}
             onPointerMove={onHeroMove}
+            onFocus={() => setPointing(true)}
+            onBlur={() => setPointing(false)}
             aria-label="the question"
           >
             <span className="hero-svg-wrap">
@@ -1343,6 +1462,7 @@ export function App() {
                 <span className="question-mark">?</span>
               </span>
             </h1>
+            <Maniculum active={pointing} />
             <span
               key={noteNonce}
               className={`question-underline${noteNonce > 0 ? ' is-on' : ''}`}
