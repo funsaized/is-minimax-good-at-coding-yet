@@ -1338,8 +1338,15 @@ function IntellexiNota({
 // VineCorner — small hand-drawn vine ornament that replaces the plain
 // gold L brackets on the question block. A leaf curls in from the
 // corner toward the text, like a printer's flourish painted over
-// the type.
-function VineCorner({ position }: { position: 'tl' | 'br' }) {
+// the type. Iteration 39 completes the four-corner frame on the
+// chapter opening: top-left, top-right, bottom-left, and bottom-right,
+// so the question block reads as a proper opened folio rather than
+// a half-framed editorial card.
+function VineCorner({
+  position,
+}: {
+  position: 'tl' | 'tr' | 'bl' | 'br'
+}) {
   return (
     <svg
       className={`vine-corner vine-corner-${position}`}
@@ -1353,6 +1360,30 @@ function VineCorner({ position }: { position: 'tl' | 'br' }) {
       <circle cx="17" cy="6" r="0.9" className="vine-pip" />
       <circle cx="13" cy="11" r="0.5" className="vine-pip vine-pip-sm" />
     </svg>
+  )
+}
+
+// FolioOpener — a delicate rule + four-pointed mark that crowns the
+// chapter body inside the question block. Reads as the small fleuron
+// a printer would set at the formal opening of a section: two thin
+// gold rules that draw outward from a vermilion pip. Sits just above
+// the chapter's question and below its kicker, so the chapter body
+// has its own clear opening punctuation, distinct from the larger
+// fleuron that sits between the rubric and the hero.
+function FolioOpener() {
+  return (
+    <div className="folio-opener" aria-hidden="true">
+      <span className="folio-opener-rule folio-opener-rule-l" />
+      <span className="folio-opener-mark">
+        <svg viewBox="0 0 12 12" focusable="false">
+          <path
+            d="M 6 1.2 L 6.86 4.86 L 10.6 5.2 L 7.4 7.2 L 8.4 10.8 L 6 8.6 L 3.6 10.8 L 4.6 7.2 L 1.4 5.2 L 5.14 4.86 Z"
+            className="folio-opener-pip"
+          />
+        </svg>
+      </span>
+      <span className="folio-opener-rule folio-opener-rule-r" />
+    </div>
   )
 }
 
@@ -2446,8 +2477,11 @@ export function App() {
              <div className="question-block">
              <ChapterStamp />
              <VineCorner position="tl" />
+             <VineCorner position="tr" />
+             <VineCorner position="bl" />
              <VineCorner position="br" />
              <span className="question-kicker">a question in public</span>
+             <FolioOpener />
              <h1 className="question">
               <span className="question-line">
                 <span className="question-lead-punctus" aria-hidden="true">

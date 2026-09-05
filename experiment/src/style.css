@@ -3149,31 +3149,44 @@ body {
   .maniculum { display: none; }
 }
 
-/* ----- Iteration 21: the question as a small editorial desk ----- */
+/* ----- Iteration 21: the question as a small editorial desk -----
+ *
+ * Iteration 39 retires the hard 1px border in favor of an elegant
+ * soft inner glow. The frame is now implied by the four vine corners
+ * (tl, tr, bl, br) plus a faint inner shimmer that suggests the
+ * parchment's edge. The chapter block reads as an opened folio
+ * rather than a boxed editorial card. */
 .question-block {
   position: relative;
   width: min(100%, 780px);
   padding: clamp(28px, 4vw, 48px) clamp(22px, 5vw, 70px) clamp(28px, 4vw, 50px);
-  border: 1px solid rgba(217, 176, 116, 0.18);
   background:
     radial-gradient(
       100% 80% at 50% 32%,
-      rgba(240, 212, 154, 0.05) 0%,
+      rgba(240, 212, 154, 0.06) 0%,
       transparent 64%
+    ),
+    radial-gradient(
+      120% 110% at 0% 50%,
+      rgba(176, 83, 58, 0.04) 0%,
+      transparent 42%
     ),
     linear-gradient(135deg, rgba(240, 232, 218, 0.058), rgba(176, 83, 58, 0.038));
   box-shadow:
     0 24px 70px rgba(0, 0, 0, 0.24),
     inset 0 1px rgba(255, 244, 220, 0.07),
-    inset 0 0 0 1px rgba(176, 83, 58, 0.04);
+    inset 0 0 0 1px rgba(217, 176, 116, 0.06),
+    inset 0 0 24px rgba(0, 0, 0, 0.18);
 }
 .question-kicker { display: block; margin-bottom: clamp(12px, 2vw, 22px); color: var(--vermilion-bright); font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; }
 
-/* ----- Chapter stamp (top-right corner of the editorial card) ----- */
+/* ----- Chapter stamp (top-right corner of the editorial card) -----
+ * Iteration 39 moves the stamp down slightly so it shares the top-right
+ * space with the new vine-corner-tr ornament without crowding it. */
 .chapter-stamp {
   position: absolute;
-  top: clamp(8px, 1.3vw, 16px);
-  right: clamp(12px, 2vw, 24px);
+  top: clamp(10px, 1.7vw, 22px);
+  right: clamp(14px, 2.4vw, 32px);
   display: block;
   color: var(--gold);
   opacity: 0;
@@ -3274,6 +3287,20 @@ body {
   left: -3px;
 }
 
+.vine-corner-tr {
+  top: -3px;
+  right: -3px;
+  transform: scaleX(-1);
+  animation: vineCornerInTr 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.4s forwards;
+}
+
+.vine-corner-bl {
+  bottom: -3px;
+  left: -3px;
+  transform: scaleY(-1);
+  animation: vineCornerInBl 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s forwards;
+}
+
 .vine-corner-br {
   bottom: -3px;
   right: -3px;
@@ -3315,9 +3342,212 @@ body {
   100% { opacity: 0.95; transform: scale(1); }
 }
 
+@keyframes vineCornerInTr {
+  0%   { opacity: 0; transform: scaleX(-0.55); }
+  100% { opacity: 0.95; transform: scaleX(-1); }
+}
+
+@keyframes vineCornerInBl {
+  0%   { opacity: 0; transform: scaleY(-0.55); }
+  100% { opacity: 0.95; transform: scaleY(-1); }
+}
+
 @keyframes vineCornerInBr {
   0%   { opacity: 0; transform: rotate(180deg) scale(0.55); }
   100% { opacity: 0.95; transform: rotate(180deg) scale(1); }
+}
+
+/* ----- Folio opener (chapter-body opening mark) -----
+ *
+ * A small ornament that crowns the chapter body inside the question
+ * block: two thin gold rules that draw outward from a vermilion
+ * four-pointed mark. Sits just above the chapter's question and
+ * below its kicker, marking the formal opening of the section.
+ * Drawn in after the rubric has settled and before the question
+ * appears, so the chapter body has its own clear opening punctuation
+ * distinct from the larger fleuron that sits between the rubric
+ * and the hero. */
+
+.folio-opener {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  margin: clamp(4px, 0.8vw, 10px) auto clamp(6px, 1vw, 14px);
+  width: clamp(150px, 22vw, 240px);
+  max-width: 60%;
+  opacity: 0;
+  transform: translateY(3px);
+  transition:
+    opacity 0.85s ease 2.4s,
+    transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 2.4s;
+}
+
+.composition.ready .folio-opener {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.folio-opener-rule {
+  flex: 1 1 auto;
+  display: block;
+  height: 1px;
+  opacity: 0;
+  transform: scaleX(0.25);
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s,
+    transform 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s;
+}
+
+.folio-opener-rule-l {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-deep) 60%,
+    var(--gold) 100%
+  );
+  transform-origin: 100% 50%;
+}
+
+.folio-opener-rule-r {
+  background: linear-gradient(
+    -90deg,
+    transparent 0%,
+    var(--gold-deep) 60%,
+    var(--gold) 100%
+  );
+  transform-origin: 0% 50%;
+}
+
+.composition.ready .folio-opener-rule {
+  opacity: 0.6;
+  transform: scaleX(1);
+}
+
+.folio-opener-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(11px, 1.3vw, 16px);
+  height: clamp(11px, 1.3vw, 16px);
+  flex: 0 0 auto;
+  opacity: 0;
+  transform: scale(0.3) rotate(-90deg);
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) 2.78s,
+    transform 0.85s cubic-bezier(0.2, 1.2, 0.4, 1) 2.78s;
+  color: var(--vermilion);
+}
+
+.composition.ready .folio-opener-mark {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.folio-opener-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.folio-opener-pip {
+  fill: currentColor;
+  filter: drop-shadow(0 0 3px rgba(176, 83, 58, 0.42));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-opener { transition: none; opacity: 1; transform: none; }
+  .folio-opener-rule { transition: none; opacity: 0.6; transform: scaleX(1); }
+  .folio-opener-mark { transition: none; opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@media (max-width: 880px) {
+  .folio-opener {
+    width: clamp(130px, 24vw, 200px);
+    gap: clamp(6px, 1vw, 10px);
+  }
+}
+
+@media (max-width: 520px) {
+  .folio-opener {
+    width: clamp(110px, 30vw, 170px);
+    gap: 6px;
+    margin-top: 4px;
+    margin-bottom: 6px;
+  }
+  .folio-opener-mark { width: 10px; height: 10px; }
+}
+
+/* ----- Word hover ink highlight -----
+ *
+ * When the reader's pointer finds a word in the question, a soft
+ * ink-line highlight draws beneath it — like the candle's light
+ * follows the eye and leaves a quiet mark on the parchment.
+ * Gold for the gold-thread words ("s", "Minimax M3", "good at
+ * frontend", "yet"); vermilion for the illuminated incipit "i",
+ * so the chapter's opening voice stays distinct. The mark uses
+ * ::before so it does not collide with .question-name::after,
+ * which always draws a gold rule beneath the named subject.
+ */
+.question-word {
+  position: relative;
+}
+
+.question-word::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.18em;
+  height: 1.2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold) 18%,
+    var(--gold-bright) 50%,
+    var(--gold) 82%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.18);
+  transform-origin: 50% 50%;
+  transition:
+    opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.75s cubic-bezier(0.2, 0.7, 0.2, 1);
+  pointer-events: none;
+}
+
+.question-word.incipit-i::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--vermilion) 18%,
+    var(--vermilion-bright) 50%,
+    var(--vermilion) 82%,
+    transparent 100%
+  );
+}
+
+.question-word:hover::before,
+.question-word:focus-visible::before {
+  opacity: 0.9;
+  transform: scaleX(1);
+}
+
+/* Once the question has been engaged, the reader's mark can rest
+   slightly stronger — the page now knows the question has been
+   read. */
+.composition.is-pointing .question-word::before {
+  transition:
+    opacity 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.65s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question-word::before { transition: opacity 0.15s ease; transform: scaleX(1); }
+  .question-word:hover::before,
+  .question-word:focus-visible::before { opacity: 0.85; }
 }
 
 /* ----- Question mark group + vermilion ink-stain flourish ----- */
