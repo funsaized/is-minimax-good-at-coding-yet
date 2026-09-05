@@ -1,0 +1,12 @@
+{
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "intervalMinutes": 30,
+  "timeoutMinutes": 18,
+  "maxConsecutiveFailures": 3,
+  "maxRunsPerDay": 48,
+  "maxEstimatedDailyCostUsd": 10,
+  "maxSnapshotBytes": 12000000,
+  "maxArchiveBytes": 75000000,
+  "projectName": "is-minimax-good-at-coding-yet",
+  "serviceName": "is-minimax-good-at-coding-yet"
+}

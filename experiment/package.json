@@ -1,0 +1,6 @@
+{
+  "name": "minimax-experiment",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "tsc --noEmit && vite build", "dev": "vite --host 127.0.0.1" }
+}

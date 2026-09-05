@@ -1,0 +1,39 @@
+{
+  "name": "is-minimax-good-at-coding-yet",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/*.test.mjs",
+    "test:browser": "node tests/browser.mjs",
+    "seed": "node runner/index.mjs seed",
+    "iterate": "node runner/index.mjs once",
+    "loop": "node runner/index.mjs loop",
+    "status": "node runner/index.mjs status",
+    "pause": "node runner/index.mjs pause",
+    "resume": "node runner/index.mjs resume",
+    "publish": "node runner/index.mjs publish",
+    "service:start": "node runner/service.mjs start",
+    "service:stop": "node runner/service.mjs stop",
+    "service:status": "node runner/service.mjs status"
+  },
+  "dependencies": {
+    "@tanstack/react-router": "^1.170.32",
+    "lucide-react": "^1.41.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "playwright": "^1.63.0",
+    "typescript": "^7.0.2",
+    "vercel": "^59.11.7",
+    "vite": "^8.2.2"
+  }
+}

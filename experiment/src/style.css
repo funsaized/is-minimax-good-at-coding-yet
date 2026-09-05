@@ -1,0 +1,5 @@
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; min-height: 100%; background: #000; color: #fff; }
+body { font-family: Arial, sans-serif; }
+main { min-height: 100svh; display: grid; place-items: center; padding: 24px; }
+h1 { font-size: clamp(22px, 4vw, 48px); font-weight: 400; text-align: center; }

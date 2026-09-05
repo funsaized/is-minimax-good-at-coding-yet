@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "title": "is Minimax M3 good at frontend yet?",
+  "model": "MiniMax M3",
+  "repository": "https://github.com/funsaized/is-minimax-good-at-coding-yet",
+  "intervalMinutes": 30,
+  "iterations": []
+}
