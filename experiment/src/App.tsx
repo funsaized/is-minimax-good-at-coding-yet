@@ -33,6 +33,15 @@ const SPATTER = [
   { angle: 352, distance: 80,  size: 2.2, delay: 64,  op: 0.95 },
 ]
 
+// Letter dust — the alphabet motes that drift up through the chapter.
+// Each canvas particle carries one glyph from the question and the
+// manuscript's vocabulary, so the candle-glow above the question mark
+// reads as illuminated letterforms, not generic embers.
+const DUST_GLYPHS = [
+  'i', 's', 'M', 'm', 'r', 'n', 't', 'f', 'l', 'a',
+  '·', '·', '·', '·', '·',
+]
+
 type Whisper = { corner: Corner; text: string }
 
 const WHISPERS: Whisper[] = [
@@ -99,6 +108,8 @@ type Particle = {
   r: number
   a: number
   tone: 'warm' | 'cool' | 'pale'
+  glyph: string
+  spin: number
 }
 
 type Corner = 'tl' | 'tr' | 'bl' | 'br'
@@ -152,6 +163,68 @@ function FolioMark() {
       <circle cx="14" cy="48" r="0.9" className="folio-mark-pearl" />
       <circle cx="66" cy="48" r="0.9" className="folio-mark-pearl" />
     </svg>
+  )
+}
+
+// PrinterLeaf — a tiny diamond-and-rule ornament used to flank the
+// capitulum running title, in the manner of an old printer's typog-
+// raphic mark. Geometric strokes only, no organic curves.
+function PrinterLeaf() {
+  return (
+    <svg
+      className="printer-leaf"
+      viewBox="0 0 20 10"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <line
+        x1="0.5"
+        y1="5"
+        x2="4.5"
+        y2="5"
+        className="printer-leaf-rule"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 6 5 L 10 1.4 L 14 5 L 10 8.6 Z"
+        className="printer-leaf-blade"
+      />
+      <circle cx="10" cy="5" r="0.55" className="printer-leaf-pip" />
+      <line
+        x1="15.5"
+        y1="5"
+        x2="19.5"
+        y2="5"
+        className="printer-leaf-rule"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+// Capitulum — the running title that crowns the chapter, the way a real
+// manuscript folio declares where it sits in a bound volume. Mixed
+// typography: a manuscript abbreviation in small-caps mono, an italic
+// folio number, a Latin gloss for the chapter — flanked by twin printer's
+// leaves. Declares nothing the page can't fulfill.
+function Capitulum() {
+  return (
+    <p className="capitulum" aria-hidden="true">
+      <span className="capitulum-mark capitulum-mark-l">
+        <PrinterLeaf />
+      </span>
+      <span className="capitulum-text">
+        <span className="capitulum-mono">mss</span>
+        <span className="capitulum-sep">·</span>
+        <em className="capitulum-it">fol.</em>
+        <span className="capitulum-num">xiii</span>
+        <span className="capitulum-sep">·</span>
+        <em className="capitulum-it">de quaestione frontis</em>
+      </span>
+      <span className="capitulum-mark capitulum-mark-r">
+        <PrinterLeaf />
+      </span>
+    </p>
   )
 }
 
@@ -928,6 +1001,8 @@ export function App() {
           r: Math.random() * 1.0 + 0.35,
           a: Math.random() * 0.42 + 0.14,
           tone,
+          glyph: DUST_GLYPHS[Math.floor(Math.random() * DUST_GLYPHS.length)],
+          spin: (Math.random() - 0.5) * 0.4,
         })
       }
       partsRef.current = arr
@@ -998,6 +1073,29 @@ export function App() {
           ctx.fillStyle = `rgba(150,170,196,${Math.min(1, alpha * 0.6)})`
         else ctx.fillStyle = `rgba(245,232,210,${Math.min(1, alpha * 0.85)})`
         ctx.fill()
+
+        // Letter-mote: render a single small glyph on top of the halo,
+        // so the dust reads as a drift of illuminated letterforms.
+        // Larger dots carry larger letters; smaller dots become punctuation.
+        const isPunct = p.glyph === '·'
+        const baseSize = isPunct
+          ? 6 + radius * 4
+          : 7 + radius * 7
+        const pxSize = Math.max(6, Math.min(15, baseSize))
+        ctx.save()
+        ctx.translate(p.x, p.y)
+        ctx.rotate(p.spin)
+        ctx.font = `${pxSize}px "Iowan Old Style", "Apple Garamond", Baskerville, Georgia, "Times New Roman", serif`
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        const letterA = Math.min(1, alpha * 1.55)
+        if (p.tone === 'warm')
+          ctx.fillStyle = `rgba(248,218,168,${letterA})`
+        else if (p.tone === 'cool')
+          ctx.fillStyle = `rgba(202,220,236,${letterA * 0.78})`
+        else ctx.fillStyle = `rgba(250,238,214,${letterA * 0.92})`
+        ctx.fillText(p.glyph, 0, 0)
+        ctx.restore()
       }
     }
 
@@ -1346,6 +1444,7 @@ export function App() {
         </Marg>
 
         <div className={`composition ${ready ? 'ready' : ''}`}>
+          <Capitulum />
           <p
             className={`printer-note ${printerNoteOn ? 'is-on' : ''}`}
             aria-live="polite"
@@ -1405,6 +1504,13 @@ export function App() {
                     cy={170}
                     r={36}
                     className="auriole-ring auriole-r3"
+                  />
+                  <circle
+                    cx={120}
+                    cy={170}
+                    r={48}
+                    className="auriole-spinner"
+                    pathLength={100}
                   />
                   <circle
                     cx={120}
@@ -1522,9 +1628,6 @@ export function App() {
           <span className="colophon-folio">folio · xiii</span>
           <span className="colophon-line colophon-line-1">
             typeset in pixels · lit by attention
-          </span>
-          <span className="colophon-line colophon-line-2">
-            the question reads you back
           </span>
           <span className="colophon-seal">
             <PrinterSeal />
