@@ -904,6 +904,83 @@ function Horologium() {
   )
 }
 
+// Speculum — a small celestial almanac chart that mirrors the
+// horologium on the opposite margin of the hero. Three concentric
+// circles hold twelve hour marks, a sun at the top, a crescent moon
+// at the foot, and a single vermilion star — the configuration of
+// the heavens at the moment of reading, paired to its hour the way
+// the horologium is paired to its time on earth. Drawn in slowly
+// after the horologium has settled, so the two instruments feel
+// laid out together at the start of a reading session; the star
+// then twinkles faintly, like a still constellation on a clear
+// manuscript evening.
+function Speculum() {
+  const ticks = Array.from({ length: 12 }, (_, i) => {
+    const a = (i * 30 - 90) * Math.PI / 180
+    return {
+      x1: 28 + Math.cos(a) * 21.6,
+      y1: 28 + Math.sin(a) * 21.6,
+      x2: 28 + Math.cos(a) * 24,
+      y2: 28 + Math.sin(a) * 24,
+      major: i % 3 === 0,
+    }
+  })
+  return (
+    <aside className="speculum" aria-label="the configuration of the heavens">
+      <svg viewBox="0 0 56 56" className="speculum-svg" aria-hidden="true" focusable="false">
+        <defs>
+          <radialGradient id="speculum-bloom-grad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="currentColor" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="28" cy="28" r="22" fill="url(#speculum-bloom-grad)" className="speculum-bloom" />
+        <circle cx="28" cy="28" r="24" className="speculum-outer" pathLength="100" />
+        <circle cx="28" cy="28" r="17" className="speculum-middle" pathLength="100" />
+        <circle cx="28" cy="28" r="9" className="speculum-inner" pathLength="100" />
+        {ticks.map((t, i) => (
+          <line
+            key={i}
+            className={`speculum-tick${t.major ? ' speculum-tick-major' : ''}`}
+            x1={t.x1}
+            y1={t.y1}
+            x2={t.x2}
+            y2={t.y2}
+          />
+        ))}
+        <line x1="28" y1="22" x2="28" y2="34" className="speculum-axis" />
+        <line x1="22" y1="28" x2="34" y2="28" className="speculum-axis" />
+        <circle cx="28" cy="28" r="0.9" className="speculum-center" />
+        <g className="speculum-sun">
+          <circle cx="28" cy="12" r="2.4" className="speculum-sun-disc" />
+          <line x1="28" y1="6" x2="28" y2="8" className="speculum-sun-ray" />
+          <line x1="28" y1="16" x2="28" y2="18" className="speculum-sun-ray" />
+          <line x1="22" y1="12" x2="24" y2="12" className="speculum-sun-ray" />
+          <line x1="32" y1="12" x2="34" y2="12" className="speculum-sun-ray" />
+          <line x1="23.6" y1="7.6" x2="25" y2="9" className="speculum-sun-ray" />
+          <line x1="32.4" y1="7.6" x2="31" y2="9" className="speculum-sun-ray" />
+          <line x1="23.6" y1="16.4" x2="25" y2="15" className="speculum-sun-ray" />
+          <line x1="32.4" y1="16.4" x2="31" y2="15" className="speculum-sun-ray" />
+        </g>
+        <g className="speculum-moon">
+          <circle cx="28" cy="44" r="2.4" className="speculum-moon-disc" />
+          <circle cx="28.9" cy="43.5" r="2.0" className="speculum-moon-shadow" />
+        </g>
+        <g className="speculum-star-group">
+          <path
+            d="M 44 16 L 44.5 17.2 L 45.7 17.5 L 44.5 17.8 L 44 19 L 43.5 17.8 L 42.3 17.5 L 43.5 17.2 Z"
+            className="speculum-star"
+          />
+        </g>
+      </svg>
+      <span className="speculum-label">
+        <span className="speculum-rule" />
+        <em className="speculum-text">specvlvm</em>
+      </span>
+    </aside>
+  )
+}
+
 // MarginalRubric — a small vermilion annotation sitting in the left margin
 // of the hero, connected by a hairline to the bracket.
 function MarginalRubric() {
@@ -1936,6 +2013,7 @@ export function App() {
           <Fleuron />
           <div className="hero-frame">
             <Horologium />
+            <Speculum />
             <MarginalRubric />
             <button
               type="button"
