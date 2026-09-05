@@ -1,17 +1,28 @@
-# Chapter log
+# Changelog
 
-## Iteration 40 — A reader's evening
+## Iteration 41 — a tactile folio
+A drawn corner fold, a reader's ink-fleck, a candle smoke wisp, and tighter question rhythm.
 
-Candlelit pool of light now reads as the page's true atmosphere. The composition sits inside it.
+## Iteration 40 — candlelit pool of light
+The rim now reads as the page's true atmosphere; the composition sits inside it.
 
-- Strengthened the rim into a clear candlelit pool: a warmer top where the candle lives, an inner soft glow holding the chapter in a lit zone, a deeper vignette at the periphery, and a desk shadow at the bottom that grounds the folio.
-- Widened and softened the taper into a proper cone of warm light — the candle bathes the hero and upper chapter rather than casting a narrow shaft.
-- Eased the taper gradient stops so the wider beam reads as diffused candlelight, not as a hard column.
-- Enlarged the hero emblem slightly and strengthened its auriole and bowl bloom so the question mark sits more confidently at the chapter's center.
-- Enlarged and brightened the candle itself; the page now has a more present authored light source.
-- Strengthened the chapter spine's pulse and sealed state — a slightly larger pulse halo travels down the column, and the sealed hairline resolves into a brighter, more confident stroke with a faint outer glow.
-- Refined the question text shadow so the title carries a touch more warmth from the candle above.
-- Added a small breathing room around the composition so the chapter reads as a single open folio rather than a tightly packed column.
-- Updated all responsive breakpoints to match the new atmosphere: the candlelit pool and wider taper translate cleanly to tablet and mobile, with the corner marginalia and ribbon gracefully retiring as before.
+## Iteration 39 — opened folio
+The chapter block reads as a properly opened folio rather than a half-framed editorial card; the four vine corners now complete the frame.
 
-No new manuscript elements added; no existing ornaments removed. The change is one of weight and presence — the candle becomes the page's true light source and everything it touches settles into a quieter, more confident evening of reading.
+## Iteration 38 — chapter steps back
+The chapter steps back from its margins so the question itself can speak; four marginal ornaments that competed without earning their place were retired.
+
+## Iteration 37 — a living chapter spine
+The chapter spine is now a living channel: a soft gold pulse travels from the top of the column down to the compass mark on every acknowledge.
+
+## Iteration 36 — a reader's marginal response and hero breath
+A quiet reader's marginal response and a matching hero breath to close the chapter's reading dialogue.
+
+## Iteration 35 — drift constellation, word glow, illuminated answer
+A drift constellation, word hover glow, illuminated answer dropcap, and hero sparkle trace.
+
+## Iteration 34 — chapter spine and colophon terminus
+A quiet chapter spine runs through the folio's centerline, with a four-pointed star closing the colophon.
+
+## Iteration 33 — celestial almanac
+A small celestial almanac chart now pairs the horologium on the opposite margin of the hero, giving the chapter both its earth-time and its heaven-time.

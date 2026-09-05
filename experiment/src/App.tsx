@@ -1466,6 +1466,97 @@ function QuestionFlourish() {
   )
 }
 
+// PageCorner — a small drawn corner fold on the bottom-right of the
+// question block. A faint gold-tinted triangle with a hairline fold
+// edge and a soft shadow beneath, like the folio has just been
+// picked up and held open. Drawn in once the chapter has settled,
+// and gently lifts when the reader approaches.
+function PageCorner() {
+  return (
+    <svg
+      className="page-corner"
+      viewBox="0 0 42 42"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <linearGradient id="page-corner-shade" x1="1" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="rgba(240, 212, 154, 0.18)" />
+          <stop offset="62%" stopColor="rgba(217, 176, 116, 0.10)" />
+          <stop offset="100%" stopColor="rgba(176, 83, 58, 0.04)" />
+        </linearGradient>
+      </defs>
+      <path
+        className="page-corner-fill"
+        d="M 1 1 L 41 1 L 1 41 Z"
+        fill="url(#page-corner-shade)"
+      />
+      <line
+        className="page-corner-edge"
+        x1="1"
+        y1="1"
+        x2="41"
+        y2="41"
+      />
+      <line
+        className="page-corner-fold-edge"
+        x1="0.5"
+        y1="0.5"
+        x2="40.5"
+        y2="40.5"
+      />
+    </svg>
+  )
+}
+
+// InkFleck — a small cluster of ink-dots that appears in the
+// bottom-right of the question block once the reader has engaged
+// with the chapter. Reads as a fingerprint the reader left on the
+// parchment — five tiny gold and vermilion dots scattered with a
+// hairline mark through them, like the page has been touched.
+function InkFleck({ visible }: { visible: boolean }) {
+  return (
+    <span className={`ink-fleck ${visible ? 'is-on' : ''}`} aria-hidden="true">
+      <svg viewBox="0 0 36 16" className="ink-fleck-svg" focusable="false">
+        <line
+          x1="3"
+          y1="11"
+          x2="33"
+          y2="5"
+          className="ink-fleck-mark"
+        />
+        <circle cx="8"  cy="6"  r="0.7" className="ink-fleck-dot ink-fleck-dot-1" />
+        <circle cx="14" cy="9"  r="1.0" className="ink-fleck-dot ink-fleck-dot-2" />
+        <circle cx="19" cy="7"  r="0.6" className="ink-fleck-dot ink-fleck-dot-3" />
+        <circle cx="24" cy="10" r="0.8" className="ink-fleck-dot ink-fleck-dot-4" />
+        <circle cx="28" cy="6"  r="0.5" className="ink-fleck-dot ink-fleck-dot-5" />
+      </svg>
+    </span>
+  )
+}
+
+// CandleSmoke — a thin curl of smoke that rises from the wick when
+// the candle flares (after the reader acknowledges the question).
+// A single hairline curve with an animated dashoffset, lifts briefly
+// and fades, suggesting the chapter has just been lit. Hidden in
+// steady state and when motion is reduced.
+function CandleSmoke({ rising }: { rising: boolean }) {
+  return (
+    <span
+      className={`candle-smoke ${rising ? 'is-rising' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 28 84" className="candle-smoke-svg" focusable="false">
+        <path
+          className="candle-smoke-curl"
+          d="M 14 80 Q 10 64 16 48 Q 22 32 12 14"
+        />
+        <circle cx="13" cy="10" r="0.8" className="candle-smoke-tip" />
+      </svg>
+    </span>
+  )
+}
+
 // HeroSparkle — a small cluster of ink-dust motes that drift upward
 // from the bowl of the hero question mark when the reader approaches.
 // Reads as the candle's light catching the dust of the manuscript —
@@ -2305,6 +2396,7 @@ export function App() {
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
         <CandleFlame wrapRef={flameWrapRef} flaring={pulsing} />
+        <CandleSmoke key={noteNonce} rising={pulsing} />
         <Taper />
         <Marg
           corner="tl"
@@ -2483,6 +2575,8 @@ export function App() {
              <VineCorner position="tr" />
              <VineCorner position="bl" />
              <VineCorner position="br" />
+             <PageCorner />
+             <InkFleck key={noteNonce} visible={pointing || answerOn} />
              <span className="question-kicker">a question in public</span>
              <FolioOpener />
              <h1 className="question">

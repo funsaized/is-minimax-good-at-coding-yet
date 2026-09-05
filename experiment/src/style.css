@@ -6217,3 +6217,381 @@ body {
     opacity: 0.55;
   }
 }
+
+/* ----- Iteration 41: a tactile folio -----
+ *
+ * Three small additions deepen the page's manuscript feel without
+ * piling on more elements:
+ *
+ *  - A drawn page-corner fold on the bottom-right of the question
+ *    block. A faint gold-tinted triangle with a hairline fold edge
+ *    and a soft shadow, like the folio has just been picked up and
+ *    held open. Drawn in once the chapter has settled.
+ *
+ *  - A reader's ink-fleck mark in the bottom-right corner of the
+ *    question block. A small cluster of gold and vermilion dots with
+ *    a hairline through them, like a fingerprint the reader left on
+ *    the parchment. Appears once the reader has engaged the chapter.
+ *
+ *  - A candle smoke wisp that rises from the wick when the candle
+ *    flares. A thin curl of smoke that lifts and fades, suggesting
+ *    the chapter has just been lit. Hidden at rest and when motion
+ *    is reduced.
+ *
+ * The question typography is also tightened: the line-height and
+ * letter-spacing are slightly tightened for a more confident
+ * rhythm, and the answer/reply block now has a subtle press-shadow
+ * that intensifies once the reader has engaged the chapter — a
+ * soft warm pool beneath the answer, suggesting the page has been
+ * pressed on.
+ */
+
+/* ----- Page corner fold ----- */
+
+.page-corner {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: clamp(28px, 3.4vw, 42px);
+  height: clamp(28px, 3.4vw, 42px);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transform: translate(2px, 2px);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.28));
+  animation: pageCornerIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 2.7s forwards;
+  will-change: opacity, transform;
+}
+
+.page-corner-fill {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.page-corner-edge {
+  stroke: var(--gold);
+  stroke-width: 0.9;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  fill: none;
+  animation: pageCornerEdgeDraw 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 2.85s forwards;
+}
+
+.page-corner-fold-edge {
+  stroke: var(--gold-deep);
+  stroke-width: 0.35;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  fill: none;
+  animation: pageCornerFoldEdgeDraw 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 3.45s forwards;
+}
+
+@keyframes pageCornerIn {
+  0%   { opacity: 0; transform: translate(6px, 6px) rotate(-2deg); }
+  100% { opacity: 1; transform: translate(2px, 2px) rotate(0deg); }
+}
+
+@keyframes pageCornerEdgeDraw {
+  to { opacity: 0.55; stroke-dashoffset: 0; }
+}
+
+@keyframes pageCornerFoldEdgeDraw {
+  to { opacity: 0.42; stroke-dashoffset: 0; }
+}
+
+.composition.is-pointing .page-corner {
+  transform: translate(0, 0);
+  filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.34));
+  transition:
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.6s ease;
+}
+
+.composition.is-pointing .page-corner-fill {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-corner {
+    animation: none;
+    opacity: 1;
+    transform: translate(2px, 2px);
+  }
+  .page-corner-edge,
+  .page-corner-fold-edge {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .page-corner-edge { opacity: 0.55; }
+  .page-corner-fold-edge { opacity: 0.42; }
+  .page-corner-fill { opacity: 1; }
+}
+
+@media (max-width: 760px) {
+  .page-corner {
+    width: clamp(24px, 4.4vw, 34px);
+    height: clamp(24px, 4.4vw, 34px);
+  }
+}
+
+@media (max-width: 520px) {
+  .page-corner {
+    width: 22px;
+    height: 22px;
+    right: -1px;
+    bottom: -1px;
+  }
+}
+
+/* ----- Reader's ink-fleck ----- */
+
+.ink-fleck {
+  position: absolute;
+  right: clamp(20px, 4vw, 40px);
+  bottom: clamp(14px, 2.2vw, 26px);
+  width: clamp(30px, 3.6vw, 44px);
+  height: auto;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(2px) rotate(-6deg);
+  transition:
+    opacity 1.0s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 1.0s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.ink-fleck.is-on {
+  opacity: 1;
+  transform: translateY(0) rotate(-6deg);
+}
+
+.ink-fleck-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.ink-fleck-mark {
+  stroke: var(--gold-deep);
+  stroke-width: 0.45;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition:
+    opacity 0.6s ease 0.2s,
+    stroke-dashoffset 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s;
+}
+
+.ink-fleck.is-on .ink-fleck-mark {
+  opacity: 0.55;
+  stroke-dashoffset: 0;
+}
+
+.ink-fleck-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.4);
+  opacity: 0;
+  transition:
+    opacity 0.5s ease,
+    transform 0.65s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+.ink-fleck-dot-1 { transition-delay: 0.5s; }
+.ink-fleck-dot-2 { transition-delay: 0.6s; }
+.ink-fleck-dot-3 { transition-delay: 0.7s; }
+.ink-fleck-dot-4 { transition-delay: 0.8s; }
+.ink-fleck-dot-5 { transition-delay: 0.9s; }
+
+.ink-fleck.is-on .ink-fleck-dot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.ink-fleck-dot-1 { fill: var(--gold); }
+.ink-fleck-dot-2 { fill: var(--vermilion); }
+.ink-fleck-dot-3 { fill: var(--vermilion-bright); }
+.ink-fleck-dot-4 { fill: var(--gold-bright); }
+.ink-fleck-dot-5 { fill: var(--gold-deep); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ink-fleck {
+    transition: opacity 0.2s ease;
+    transform: translateY(0) rotate(-6deg);
+  }
+  .ink-fleck.is-on { opacity: 1; }
+  .ink-fleck-mark {
+    transition: none;
+    opacity: 0.55;
+    stroke-dashoffset: 0;
+  }
+  .ink-fleck-dot {
+    transition: none;
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 760px) {
+  .ink-fleck {
+    right: clamp(14px, 4vw, 24px);
+    bottom: clamp(10px, 2.4vw, 18px);
+  }
+}
+
+@media (max-width: 520px) {
+  .ink-fleck {
+    width: 28px;
+    right: 14px;
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .ink-fleck {
+    display: none;
+  }
+}
+
+/* ----- Candle smoke wisp ----- */
+
+.candle-smoke {
+  position: absolute;
+  top: clamp(-20px, -2vh, -2px);
+  left: 50%;
+  width: clamp(22px, 2.6vw, 32px);
+  height: clamp(56px, 7vh, 90px);
+  pointer-events: none;
+  z-index: 0;
+  transform: translate(-50%, 0);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.candle-smoke.is-rising {
+  opacity: 0.85;
+}
+
+.candle-smoke-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.candle-smoke-curl {
+  fill: none;
+  stroke: var(--ink-faint);
+  stroke-width: 0.6;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+
+.candle-smoke.is-rising .candle-smoke-curl {
+  animation: candleSmokeRise 1.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+.candle-smoke-tip {
+  fill: var(--ink-faint);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.4);
+}
+
+.candle-smoke.is-rising .candle-smoke-tip {
+  animation: candleSmokeTip 1.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes candleSmokeRise {
+  0%   { opacity: 0; stroke-dashoffset: 100; transform: translate(0, 6px); }
+  18%  { opacity: 0.78; }
+  100% { opacity: 0; stroke-dashoffset: 0; transform: translate(0, -10px); }
+}
+
+@keyframes candleSmokeTip {
+  0%   { opacity: 0; transform: scale(0.4); }
+  22%  { opacity: 0.7; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.6) translateY(-12px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .candle-smoke { display: none; }
+}
+
+@media (max-width: 760px) {
+  .candle-smoke {
+    height: clamp(40px, 6vh, 64px);
+    top: clamp(-14px, -1.6vh, -2px);
+  }
+}
+
+@media (max-width: 520px) {
+  .candle-smoke {
+    height: 36px;
+    top: -10px;
+  }
+}
+
+/* ----- Press-mark: a soft warm shadow beneath the question-block ----- */
+
+.question-block {
+  transition: box-shadow 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.composition.is-pointing .question-block {
+  box-shadow:
+    0 28px 78px rgba(0, 0, 0, 0.32),
+    0 12px 28px rgba(0, 0, 0, 0.22),
+    inset 0 1px rgba(255, 244, 220, 0.08),
+    inset 0 0 0 1px rgba(217, 176, 116, 0.08),
+    inset 0 0 24px rgba(0, 0, 0, 0.18),
+    inset 0 16px 38px rgba(176, 83, 58, 0.05);
+}
+
+/* ----- Question typography refinement -----
+ * A slightly tighter line-height and letter-spacing, plus a small
+ * extra optical adjustment on the named subject so the line reads as
+ * a single composed phrase.
+ */
+
+.question {
+  line-height: 1.12;
+  letter-spacing: -0.014em;
+}
+
+.question-lead {
+  margin-right: clamp(1px, 0.04em, 2px);
+}
+
+.question-name {
+  font-feature-settings: "smcp" on, "c2sc" on, "liga" on, "calt" on;
+}
+
+/* The predicate receives a tiny extra optical adjustment so the
+   relationship between subject and predicate reads cleanly. */
+.question-verb-wrap {
+  margin-left: clamp(1px, 0.05em, 2px);
+}
+
+@media (max-width: 880px) {
+  .question {
+    line-height: 1.13;
+    letter-spacing: -0.013em;
+  }
+}
+
+@media (max-width: 520px) {
+  .question {
+    line-height: 1.16;
+  }
+}
