@@ -11,12 +11,11 @@ const HERO_PATH =
   'M 65 115 C 65 5 175 5 175 115 C 175 172 120 156 120 205 L 120 250'
 const HERO_DOT = { cx: 120, cy: 286, r: 17 }
 
-// Watermark — same curve as the hero, blown up, ghosted into the page
 const WIDE_PATH =
-  'M 195 345 C 195 15 525 15 525 345 C 525 516 360 468 360 615 L 360 750'
+  'M 195 345 C 195 15 525 215 525 345 C 525 516 360 468 360 615 L 360 750'
 const WIDE_DOT = { cx: 360, cy: 858, r: 51 }
 
-// Deliberate ink-arc spatter: a flourish that reads as one gesture, not noise
+// Deliberate ink-arc spatter: a flourish that reads as one gesture, not noise.
 const SPATTER = [
   { angle: 8,  distance: 70,  size: 2.4, delay: 0,   op: 1.0 },
   { angle: 28, distance: 96,  size: 2.0, delay: 18,  op: 0.95 },
@@ -33,11 +32,9 @@ const SPATTER = [
   { angle: 352, distance: 80,  size: 2.2, delay: 64,  op: 0.95 },
 ]
 
-// Letter dust — the alphabet motes that drift up through the chapter.
-// Bias the glyph set toward the question's own letters, with a few
-// manuscript abbreviations and punctuation dots, so the candle-glow
-// above the question mark reads as the question itself being typed
-// into the air — illuminated letterforms, not generic embers.
+// Letter dust — biased toward the question's own letters, with a few
+// manuscript abbreviations, so the candle-glow reads as illuminated
+// letterforms being typed into the air, not generic embers.
 const DUST_GLYPHS = [
   'i', 's', 'm', 'm', 'r', 'n', 't', 'f', 'l', 'a',
   'g', 'o', 'y', 'e', 'd',
@@ -46,16 +43,16 @@ const DUST_GLYPHS = [
 
 type Whisper = { corner: Corner; text: string }
 
-// Two marginalia only — quiet top-left and bottom-right, nothing more.
-// The browser is the chapter; less is more.
+// Two marginalia only — quiet top-left and bottom-right.
+// The chapter is a question; the margins hold two short notes.
 const WHISPERS: Whisper[] = [
   { corner: 'tl', text: 'a folio, slowly composed; this page is its own footnote' },
-  { corner: 'br', text: 'this instant, the only one that ever arrives' },
+  { corner: 'br', text: 'read at your own pace — the page will not move on without you' },
 ]
 
 // Catchword — the first word of the (hypothetical) next folio, set as a
 // quiet italic at the bottom-right of the frame. A printer's mark that
-// signals where the binding continues; earned by the colophon, not added.
+// signals where the binding continues.
 const CATCHWORD = 'respondetur'
 
 const ANSWER =
@@ -64,12 +61,10 @@ const ANSWER =
 const REPLY =
   'so read it once, then again — slower this time.'
 
-// Footnote — a small italic manuscript note that closes the chapter,
-// marked with a roman numeral as a marginal gloss would be. The line
-// that used to live in the colophon earns its own placement here, where
-// the reader's eye is still on the question's reply.
-const FOOTNOTE = 'typeset in pixels · lit by attention'
-const FOOTNOTE_MARK = 'i'
+// The rubricated initial that opens the answer — a small painted "I"
+// (for the manuscript em-dash's companion, the verb "imponitur"), set in
+// vermilion italic. Reads as the answer being a hand-illuminated reply.
+const ANSWER_DROPCAP = 'I'
 
 // Scholastic gloss in vermilion — a single rubricated marginal word
 // sitting just outside the hero, the medieval reader's "Qu." (quaeritur).
@@ -77,11 +72,6 @@ const MARGINAL_RUBRIC = 'Qu.'
 
 const ANSWER_STAGGER_MS = 34
 const REPLY_STAGGER_MS = 26
-
-// Single hover gloss — replaces the cycling scholastic notes.
-// One quiet italic line appears beneath the hero when the reader
-// approaches, rather than three cycling phrases competing for attention.
-const HOVER_GLOSS = '— still being composed, never quite set'
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
@@ -93,15 +83,6 @@ function useReducedMotion() {
     return () => mq.removeEventListener('change', handler)
   }, [])
   return reduced
-}
-
-function useTick(intervalMs: number) {
-  const [now, setNow] = useState(() => Date.now())
-  useEffect(() => {
-    const id = window.setInterval(() => setNow(Date.now()), intervalMs)
-    return () => clearInterval(id)
-  }, [intervalMs])
-  return now
 }
 
 type Particle = {
@@ -158,7 +139,7 @@ function FolioMark() {
         textAnchor="middle"
         className="folio-mark-letter"
       >
-        xvii
+        xviii
       </text>
       <path
         className="folio-mark-flourish"
@@ -170,10 +151,8 @@ function FolioMark() {
   )
 }
 
-// IncipitCaption — kept as a typed-in Latin caption for the rubric line.
-// A single short italic that types itself in once the chapter piece has
-// composed itself — the rubricated "incipit" that opens an old chapter,
-// rendered as a quiet run of text beside the pilcrow, not a banner of its own.
+// IncipitCaption — a typed-in Latin caption for the rubric line. Opens
+// the chapter in the manner of a scholastic marginal gloss.
 const INCIPIT_TEXT = 'quaeritur · de fronte'
 const INCIPIT_DELAY = 1500
 const INCIPIT_STEP = 42
@@ -205,9 +184,8 @@ function IncipitCaption() {
 }
 
 // IlluminatedStar — a small vermilion asterisk-petal motif painted into
-// the bowl of the question mark. The "illumination" of this initial:
-// rotates slowly, breathes in opacity, and flares when the reader
-// approaches the hero. Sits inside the bowl, centered, never escaping it.
+// the bowl of the question mark. Sits inside the bowl, rotates slowly,
+// breathes in opacity, and flares when the reader approaches.
 function IlluminatedStar() {
   return (
     <svg
@@ -217,7 +195,6 @@ function IlluminatedStar() {
       focusable="false"
     >
       <g className="illuminated-star-petal-group">
-        {/* 5-pointed star: outer radius 22, inner radius 9 */}
         <path
           className="illuminated-star-petal"
           d="M 30 8 L 33.32 22.18 L 48 23.62 L 36 31.91 L 39.94 46 L 30 37.34 L 20.06 46 L 24 31.91 L 12 23.62 L 26.68 22.18 Z"
@@ -239,9 +216,7 @@ function IlluminatedStar() {
   )
 }
 
-// Catchword — the printer's bottom-right marker. A small italic Latin
-// word flanked by a hairline rule and a tiny caret, the way old books
-// previewed the first word of the next folio.
+// Catchword — the printer's bottom-right marker.
 function Catchword() {
   return (
     <span className="catchword" aria-hidden="true">
@@ -253,8 +228,7 @@ function Catchword() {
 }
 
 // PrinterLeaf — a tiny diamond-and-rule ornament used to flank the
-// capitulum running title, in the manner of an old printer's typog-
-// raphic mark. Geometric strokes only, no organic curves.
+// capitulum running title.
 function PrinterLeaf() {
   return (
     <svg
@@ -288,11 +262,7 @@ function PrinterLeaf() {
   )
 }
 
-// Capitulum — the running title that crowns the chapter, the way a real
-// manuscript folio declares where it sits in a bound volume. Mixed
-// typography: a manuscript abbreviation in small-caps mono, an italic
-// folio number, a Latin gloss for the chapter — flanked by twin printer's
-// leaves. Declares nothing the page can't fulfill.
+// Capitulum — the running title that crowns the chapter.
 function Capitulum() {
   return (
     <p className="capitulum" aria-hidden="true">
@@ -303,7 +273,7 @@ function Capitulum() {
         <span className="capitulum-mono">mss</span>
         <span className="capitulum-sep">·</span>
         <em className="capitulum-it">fol.</em>
-        <span className="capitulum-num">xvii</span>
+        <span className="capitulum-num">xviii</span>
         <span className="capitulum-sep">·</span>
         <em className="capitulum-it">de initiali lucente</em>
       </span>
@@ -341,202 +311,7 @@ function Bifolio() {
   )
 }
 
-function Nib() {
-  return (
-    <svg
-      className="orn-glyph"
-      viewBox="0 0 18 26"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        d="M 9 1.5 L 14.4 14 L 9 24.5 L 3.6 14 Z"
-        className="glyph-stroke"
-      />
-      <line x1="9" y1="3.6" x2="9" y2="11.5" className="glyph-spine" />
-      <circle cx="9" cy="13.6" r="0.9" className="glyph-inkwell" />
-      <line x1="6.6" y1="16.6" x2="11.4" y2="16.6" className="glyph-spine" />
-      <line x1="7.2" y1="19.2" x2="10.8" y2="19.2" className="glyph-spine" opacity="0.6" />
-    </svg>
-  )
-}
-
-function Asterism() {
-  return (
-    <svg
-      className="orn-glyph"
-      viewBox="0 0 26 26"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <g className="glyph-rays">
-        <line x1="13" y1="3" x2="13" y2="23" />
-        <line x1="4.3" y1="8" x2="21.7" y2="18" />
-        <line x1="4.3" y1="18" x2="21.7" y2="8" />
-      </g>
-      <circle cx="13" cy="13" r="1.7" className="glyph-core" />
-      <circle cx="13" cy="3.5" r="0.7" className="glyph-bead" />
-      <circle cx="13" cy="22.5" r="0.7" className="glyph-bead" />
-      <circle cx="4.5" cy="8.3" r="0.7" className="glyph-bead" />
-      <circle cx="21.5" cy="17.7" r="0.7" className="glyph-bead" />
-      <circle cx="4.5" cy="17.7" r="0.7" className="glyph-bead" />
-      <circle cx="21.5" cy="8.3" r="0.7" className="glyph-bead" />
-    </svg>
-  )
-}
-
-// Manicule — a small pointing hand, the medieval reader's symbol for
-// "look here". Sits below the question mark like an invitation to press.
-function Manicule() {
-  return (
-    <svg
-      className="manicule"
-      viewBox="0 0 22 30"
-      aria-hidden="true"
-      focusable="false"
-    >
-      {/* Sleeve cuff */}
-      <path
-        className="manicule-stroke"
-        d="M 4 26 L 4 28.5 L 18 28.5 L 18 26"
-      />
-      <line
-        x1="4.4"
-        y1="27.2"
-        x2="17.6"
-        y2="27.2"
-        className="manicule-rule"
-      />
-
-      {/* Wrist and palm */}
-      <path
-        className="manicule-stroke"
-        d="M 5.5 26 L 5.5 22.4 Q 5.5 20.4 7 19.6 L 14.5 19.6 Q 16 19.8 16.4 21.2 L 16.4 26"
-      />
-
-      {/* Curled fingers (three lines suggesting knuckles) */}
-      <path
-        className="manicule-knuckle"
-        d="M 7.2 19.6 Q 6.6 17.4 8.2 17 Q 9.4 17 9.4 19"
-      />
-      <path
-        className="manicule-knuckle"
-        d="M 9.6 19.4 Q 9.6 17.2 11 17 Q 12 17.2 11.6 19.4"
-      />
-      <path
-        className="manicule-knuckle"
-        d="M 13.8 19.4 Q 13.8 17.2 14.4 17 Q 15.6 16.8 15.4 19.4"
-      />
-
-      {/* Thumb wrap */}
-      <path
-        className="manicule-knuckle"
-        d="M 5.8 22 Q 4 21 4.4 19.2 Q 5 18 6.2 18.6"
-      />
-
-      {/* Index finger pointing up */}
-      <path
-        className="manicule-stroke"
-        d="M 11 19 L 11 4 Q 11 2.6 12 2.6 Q 13 2.6 13 4 L 13 18.6"
-      />
-      <path
-        className="manicule-knuckle"
-        d="M 11.2 14 Q 11.2 12.6 12 12.6 Q 12.8 12.6 12.8 14"
-      />
-    </svg>
-  )
-}
-
-// The printer's seal — a small italic "Mm" monogram inside a double ring,
-// standing in for a handwritten sign-manual. Renders between the colophon lines.
-function PrinterSeal() {
-  return (
-    <svg
-      className="printer-seal"
-      viewBox="0 0 40 40"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <circle
-        cx="20"
-        cy="20"
-        r="18"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="0.6"
-        className="seal-ring seal-ring-outer"
-      />
-      <circle
-        cx="20"
-        cy="20"
-        r="14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="0.4"
-        className="seal-ring seal-ring-inner"
-      />
-      <text
-        x="20"
-        y="25"
-        textAnchor="middle"
-        className="seal-letter"
-      >
-        Mm
-      </text>
-      <circle cx="20" cy="8.5" r="0.5" className="seal-pip" />
-      <circle cx="20" cy="31.5" r="0.5" className="seal-pip" />
-    </svg>
-  )
-}
-
-// Bookmark ribbon — a slim vermilion fabric ribbon hanging from the top
-// of the page like a marker left in a bound volume. Gentle sway; the
-// forked end reads as the hand-cut notch of an old bookbinder. A vertical
-// color accent that earns its place without competing with the chapter.
-function Ribbon() {
-  return (
-    <div className="ribbon" aria-hidden="true">
-      <div className="ribbon-inner">
-        <svg viewBox="0 0 20 220" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="ribbon-shade" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%"   stopColor="#3e1a10" />
-              <stop offset="22%"  stopColor="#7d3a26" />
-              <stop offset="50%"  stopColor="#b15a3c" />
-              <stop offset="78%"  stopColor="#7d3a26" />
-              <stop offset="100%" stopColor="#3e1a10" />
-            </linearGradient>
-            <linearGradient id="ribbon-top" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"  stopColor="black" stopOpacity="0.55" />
-              <stop offset="22%" stopColor="black" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M 0 0 L 20 0 L 20 198 L 10 214 L 0 198 Z"
-            fill="url(#ribbon-shade)"
-          />
-          <path
-            d="M 0 0 L 20 0 L 20 48 L 0 48 Z"
-            fill="url(#ribbon-top)"
-          />
-          <line
-            x1="10"
-            y1="0"
-            x2="10"
-            y2="214"
-            stroke="rgba(255, 210, 180, 0.10)"
-            strokeWidth="0.7"
-          />
-        </svg>
-      </div>
-    </div>
-  )
-}
-
-// Wax seal — a pressed vermilion monogram "Mm" in the manner of a hand-
-// applied finishing seal at the close of a folio. Replaces the old
-// typeset signature at the colophon; serves the same role with more
-// physical presence and a quiet bit of color.
+// Wax seal — a pressed vermilion monogram "Mm" at the close of the folio.
 function WaxSeal() {
   return (
     <svg
@@ -583,22 +358,8 @@ function WaxSeal() {
   )
 }
 
-function RegisterCross() {
-  return (
-    <svg
-      className="register-cross"
-      viewBox="0 0 10 10"
-      width="10"
-      height="10"
-      aria-hidden="true"
-    >
-      <circle cx="5" cy="5" r="3.4" fill="none" stroke="currentColor" strokeWidth="0.5" />
-      <line x1="0" y1="5" x2="10" y2="5" stroke="currentColor" strokeWidth="0.5" />
-      <line x1="5" y1="0" x2="5" y2="10" stroke="currentColor" strokeWidth="0.5" />
-    </svg>
-  )
-}
-
+// GuideRule — a hairline that runs from a margin towards the chapter
+// when the reader approaches a marginal note.
 function GuideRule({ corner }: { corner: Corner }) {
   return (
     <span className={`guide-rule guide-rule-${corner}`} aria-hidden="true">
@@ -642,7 +403,7 @@ function PaperGrain() {
   )
 }
 
-// A faint oversized ghost of the hero curve, behind everything — the page's shadow
+// Watermark — a faint oversized ghost of the hero curve behind everything.
 function Watermark() {
   return (
     <svg
@@ -672,7 +433,6 @@ function Watermark() {
 }
 
 // Taper — a faint candlelight beam falling onto the question mark from above.
-// Reads as the page being read by lamplight: warm, vertical, almost a breath.
 function Taper() {
   return (
     <svg
@@ -701,8 +461,7 @@ function Taper() {
   )
 }
 
-// Signature — a typeset gathering mark for the colophon, in the manner of an
-// old printer's signature on a folio. Replaces a plain "folio xi" label.
+// Signature — a typeset gathering mark for the colophon.
 function Signature() {
   return (
     <svg
@@ -712,7 +471,7 @@ function Signature() {
       focusable="false"
     >
       <line x1="2"  y1="9" x2="14" y2="9" className="sig-rule" />
-      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">xvii</text>
+      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">xviii</text>
       <line x1="50" y1="9" x2="62" y2="9" className="sig-rule" />
       <circle cx="18" cy="9" r="0.7" className="sig-pip" />
       <circle cx="46" cy="9" r="0.7" className="sig-pip" />
@@ -720,9 +479,7 @@ function Signature() {
   )
 }
 
-// Bee — the printer's bee, Aldine mark. A small messenger that emerges
-// from the question when it is acknowledged and carries the reply to one
-// of the four marginalia corners. Hovers in place once it has arrived.
+// Bee — the printer's bee, Aldine mark.
 function Bee() {
   return (
     <svg className="bee-glyph" viewBox="0 0 32 24" aria-hidden="true" focusable="false">
@@ -742,9 +499,39 @@ function Bee() {
   )
 }
 
+// Parchment — a tiny rolled vellum the bee carries when it arrives at
+// the margin. Reads as the bee bearing a written reply from the chapter
+// to the corner — a courier, not a flourish.
+function Parchment({ arrived }: { arrived: boolean }) {
+  return (
+    <svg
+      className={`parchment ${arrived ? 'is-arrived' : ''}`}
+      viewBox="0 0 24 18"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        className="parchment-roll"
+        d="M 2 4 Q 12 1.4 22 4 L 22 14 Q 12 16.6 2 14 Z"
+      />
+      <path
+        className="parchment-line"
+        d="M 6 8 Q 12 6.6 18 8"
+      />
+      <path
+        className="parchment-line"
+        d="M 6 10.5 Q 12 9.4 18 10.5"
+      />
+      <circle cx="3.4" cy="4" r="0.6" className="parchment-cap" />
+      <circle cx="20.6" cy="4" r="0.6" className="parchment-cap" />
+      <circle cx="3.4" cy="14" r="0.6" className="parchment-cap" />
+      <circle cx="20.6" cy="14" r="0.6" className="parchment-cap" />
+    </svg>
+  )
+}
+
 // MarginalRubric — a small vermilion annotation sitting in the left margin
-// of the hero, connected by a hairline to the bracket. The scribal "Qu."
-// (quaeritur) — a tag hung next to a passage to flag it as a question.
+// of the hero, connected by a hairline to the bracket.
 function MarginalRubric() {
   return (
     <span className="marginal-rubric" aria-hidden="true">
@@ -760,7 +547,6 @@ function MarginalRubric() {
 }
 
 // BifolioSpine — a soft vertical crease suggesting an open book spread.
-// Subtle enough to read as paper, never as a gimmick.
 function BifolioSpine() {
   return (
     <div className="bifolio" aria-hidden="true">
@@ -772,9 +558,8 @@ function BifolioSpine() {
   )
 }
 
-// BracketFlourish — a delicate curled bracket that flanks the hero like the
-// scoring around an illuminated initial. Pairs left and right; one tiny
-// vermillion pip gives it the rubric accent of a manuscript drop-cap.
+// BracketFlourish — a delicate curled bracket that flanks the hero like
+// the scoring around an illuminated initial.
 function BracketFlourish({ side }: { side: 'left' | 'right' }) {
   const d =
     side === 'left'
@@ -810,48 +595,56 @@ function BracketFlourish({ side }: { side: 'left' | 'right' }) {
   )
 }
 
-// HoverGloss — a single italic line that quietly surfaces beneath the
-// hero when the reader approaches. One phrase only; no cycling, no
-// competing for attention. The page has one thing to say in response
-// to being looked at, and it says it once.
-function HoverGloss({
-  active,
-  reduced,
-}: {
-  active: boolean
-  reduced: boolean
-}) {
+// Bookmark ribbon — a slim vermilion fabric ribbon hanging from the top
+// of the page like a marker left in a bound volume.
+function Ribbon() {
   return (
-    <p
-      className={`hover-gloss ${active ? 'is-on' : ''}`}
-      aria-live="polite"
-    >
-      <span className="hover-gloss-rule" aria-hidden="true" />
-      <span className="hover-gloss-text">{HOVER_GLOSS}</span>
-    </p>
+    <div className="ribbon" aria-hidden="true">
+      <div className="ribbon-inner">
+        <svg viewBox="0 0 20 220" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="ribbon-shade" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%"   stopColor="#3e1a10" />
+              <stop offset="22%"  stopColor="#7d3a26" />
+              <stop offset="50%"  stopColor="#b15a3c" />
+              <stop offset="78%"  stopColor="#7d3a26" />
+              <stop offset="100%" stopColor="#3e1a10" />
+            </linearGradient>
+            <linearGradient id="ribbon-top" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"  stopColor="black" stopOpacity="0.55" />
+              <stop offset="22%" stopColor="black" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M 0 0 L 20 0 L 20 198 L 10 214 L 0 198 Z"
+            fill="url(#ribbon-shade)"
+          />
+          <path
+            d="M 0 0 L 20 0 L 20 48 L 0 48 Z"
+            fill="url(#ribbon-top)"
+          />
+          <line
+            x1="10"
+            y1="0"
+            x2="10"
+            y2="214"
+            stroke="rgba(255, 210, 180, 0.10)"
+            strokeWidth="0.7"
+          />
+        </svg>
+      </div>
+    </div>
   )
 }
 
-// A small ink-trail dot that lingers where the cursor has been.
-// It decays back to invisible when the cursor stops moving — the page
-// marks only what's being read.
-function InkTrail({
-  x,
-  y,
-  active,
-}: {
-  x: number
-  y: number
-  active: boolean
-}) {
+// AnswerDropCap — a small painted "I" that opens the answer line, set
+// in vermilion italic as a manuscript illuminated initial. Pulls the eye
+// into the chapter's reply as the climax lands.
+function AnswerDropCap({ visible: show }: { visible: boolean }) {
   return (
-    <span
-      className={`ink-trail${active ? ' is-active' : ''}`}
-      style={{ transform: `translate(${x}px, ${y}px)` } as CSSProperties}
-      aria-hidden="true"
-    >
-      <span className="ink-trail-core" />
-      <span className="ink-trail-halo" />
+    <span className={`answer-dropcap-wrap ${show ? 'is-on' : ''}`} aria-hidden="true">
+      <span className="answer-dropcap">{ANSWER_DROPCAP}</span>
+      <span className="answer-dropcap-shadow" />
     </span>
   )
 }
@@ -941,7 +734,6 @@ export function App() {
     bl: false,
     br: false,
   })
-  const [glossActive, setGlossActive] = useState(false)
   const [noteNonce, setNoteNonce] = useState(0)
   const [answerOn, setAnswerOn] = useState(false)
   const [answerChars, setAnswerChars] = useState(0)
@@ -956,6 +748,7 @@ export function App() {
     tx: string
     ty: string
     rot: string
+    corner: Corner
   }>({
     visible: false,
     flying: false,
@@ -965,20 +758,17 @@ export function App() {
     tx: '0px',
     ty: '0px',
     rot: '0deg',
+    corner: 'br',
   })
   const beeTimeoutsRef = useRef<number[]>([])
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
   const dimsRef = useRef({ w: 0, h: 0 })
-  const pointerRef = useRef({ x: 0, y: 0, active: false, over: false })
+  const pointerRef = useRef({ x: 0, y: 0, over: false, active: false })
   const heroBoxRef = useRef<DOMRect | null>(null)
   const heroRef = useRef<HTMLButtonElement>(null)
   const waveTimeoutsRef = useRef<number[]>([])
-  const trailRef = useRef({ x: -100, y: -100, active: false, last: 0 })
-  const [trail, setTrail] = useState({ x: -100, y: -100, active: false })
-  const now = useTick(reduced ? 60_000 : 1000)
-  const arrivalRef = useRef<number>(Date.now())
 
   useEffect(() => {
     const t = setTimeout(() => setReady(true), 60)
@@ -1008,7 +798,6 @@ export function App() {
     return () => clearTimeout(id)
   }, [answerOn, answerChars, reduced])
 
-  // Begin typing the reply once the answer has finished writing itself out.
   useEffect(() => {
     if (!answerOn || answerChars < ANSWER.length) {
       if (!answerOn) setReplyOn(false)
@@ -1038,52 +827,6 @@ export function App() {
     )
     return () => clearTimeout(id)
   }, [replyOn, replyChars, reduced])
-
-  // Cursor ink-trail — a single faint dot that lingers under the pointer
-  // and fades when the cursor stops moving. Tracks in a rAF loop so the
-  // visual update isn't coupled to React's pointer event rate.
-  useEffect(() => {
-    if (reduced) return
-    let raf = 0
-    let alive = true
-    const tick = () => {
-      if (!alive) return
-      const t = trailRef.current
-      const dx = pointerRef.current.x - t.x
-      const dy = pointerRef.current.y - t.y
-      const dist2 = dx * dx + dy * dy
-      if (dist2 > 4 || t.active) {
-        t.x += dx * 0.28
-        t.y += dy * 0.28
-        const moving = dist2 > 36
-        t.active = moving
-        if (moving || performance.now() - t.last < 220) {
-          setTrail({ x: t.x, y: t.y, active: true })
-        } else {
-          setTrail((p) => ({ ...p, active: false }))
-        }
-      }
-      raf = requestAnimationFrame(tick)
-    }
-    const onMove = (e: PointerEvent) => {
-      pointerRef.current.x = e.clientX
-      pointerRef.current.y = e.clientY
-      trailRef.current.last = performance.now()
-      trailRef.current.active = true
-    }
-    const onLeave = () => {
-      trailRef.current.active = false
-    }
-    tick()
-    window.addEventListener('pointermove', onMove, { passive: true })
-    window.addEventListener('pointerleave', onLeave)
-    return () => {
-      alive = false
-      cancelAnimationFrame(raf)
-      window.removeEventListener('pointermove', onMove)
-      window.removeEventListener('pointerleave', onLeave)
-    }
-  }, [reduced])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -1137,13 +880,10 @@ export function App() {
       const hb = heroBoxRef.current
 
       for (const p of partsRef.current) {
-        // Embers brighter near their source (bottom), fading as they rise —
-        // height-based attenuation so the column above the question feels lit.
         const yRatio = Math.min(1, Math.max(0, p.y / Math.max(1, h)))
         const heightFade = 0.32 + 0.68 * (1 - yRatio)
         let alpha = p.a * heightFade * (1 + boost * 1.1)
         let radius = p.r * (1 + boost * 0.5)
-        // Always-on warm glow around the question mark — the candle.
         if (hb) {
           const cxp = (hb.left + hb.right) / 2
           const cyp = (hb.top + hb.bottom) / 2
@@ -1193,9 +933,6 @@ export function App() {
         else ctx.fillStyle = `rgba(245,232,210,${Math.min(1, alpha * 0.85)})`
         ctx.fill()
 
-        // Letter-mote: render a single small glyph on top of the halo,
-        // so the dust reads as a drift of illuminated letterforms.
-        // Larger dots carry larger letters; smaller dots become punctuation.
         const isPunct = p.glyph === '·'
         const baseSize = isPunct
           ? 6 + radius * 4
@@ -1237,7 +974,6 @@ export function App() {
             p.vy += (dy / d) * f
           }
         }
-        // Embers drift gently upward; small random sway.
         p.vx *= 0.978
         p.vy = p.vy * 0.982 - 0.0065
         p.vx += (Math.random() - 0.5) * 0.010
@@ -1246,7 +982,6 @@ export function App() {
         p.y += p.vy
         if (p.x < -4) p.x = w + 4
         else if (p.x > w + 4) p.x = -4
-        // Top → bottom respawn, like fresh embers rising from the candle.
         if (p.y < -4) {
           p.y = h + 4
           p.x = Math.random() * w
@@ -1312,9 +1047,6 @@ export function App() {
     const startY = rect.top + rect.height / 2
     const vw = window.innerWidth
     const vh = window.innerHeight
-    // Pick a random corner that isn't already occupied by an active whisper.
-    // If multiple are lit at this moment, prefer the one furthest from the
-    // mouse — bees, like questions, tend toward quiet corners.
     const corners: Corner[] = ['tl', 'tr', 'bl', 'br']
     const isSmall = vw < 520
     const padX = isSmall ? 70 : 150
@@ -1339,7 +1071,6 @@ export function App() {
     })
     const corner = corners[Math.floor(Math.random() * corners.length)]
     const target = baseTarget(corner)
-    // Reset to start position, invisible — the bee isn't on the page yet.
     beeTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
     beeTimeoutsRef.current = []
     setBee({
@@ -1351,10 +1082,8 @@ export function App() {
       tx: '0px',
       ty: '0px',
       rot: '0deg',
+      corner,
     })
-    // Summon: the bee is born from the question mark after a brief breath.
-    // Two-step state change so the element mounts at start before flying,
-    // which lets the CSS transition animate the flight instead of snapping.
     const showDelay = 720
     const flightMs = 2200
     const t1 = window.setTimeout(() => {
@@ -1366,7 +1095,6 @@ export function App() {
         ty: '0px',
         rot: '0deg',
       }))
-      // Next frame: kick off the flight.
       const t2 = window.setTimeout(() => {
         setBee((b) => ({
           ...b,
@@ -1375,7 +1103,6 @@ export function App() {
           ty: `${target.y - startY}px`,
           rot: `${(Math.random() - 0.5) * 26}deg`,
         }))
-        // Arrive: stop flying, begin gentle hovering at the corner.
         const t3 = window.setTimeout(() => {
           setBee((b) => ({ ...b, flying: false, arrived: true }))
         }, flightMs)
@@ -1432,11 +1159,9 @@ export function App() {
   const onHeroEnter = useCallback((e: ReactPointerEvent) => {
     pointerRef.current.over = true
     heroBoxRef.current = (e.currentTarget as HTMLElement).getBoundingClientRect()
-    setGlossActive(true)
   }, [])
   const onHeroLeave = useCallback(() => {
     pointerRef.current.over = false
-    setGlossActive(false)
     const el = heroRef.current
     if (el) {
       el.style.setProperty('--gaze-x', '0')
@@ -1458,24 +1183,12 @@ export function App() {
     el.style.setProperty('--gaze-y', String(y))
   }, [])
 
-  const d = new Date(now)
-  const secAngle =
-    (d.getSeconds() / 60) * 360 + (d.getMilliseconds() / 1000) * (360 / 60)
-  const minAngle = (d.getMinutes() / 60) * 360 + (d.getSeconds() / 60) * 6
-  const hh = d.getHours().toString().padStart(2, '0')
-  const mm = d.getMinutes().toString().padStart(2, '0')
-
-  // Reading-since — a quiet timestamp of when the page first noticed you.
-  const arrivedAt = new Date(arrivalRef.current)
-  const arrivedHH = arrivedAt.getHours().toString().padStart(2, '0')
-  const arrivedMM = arrivedAt.getMinutes().toString().padStart(2, '0')
-  const elapsedMin = Math.max(
-    0,
-    Math.floor((now - arrivalRef.current) / 60_000),
-  )
-
   const answerDisplay = answerOn ? ANSWER.slice(0, Math.max(0, answerChars)) : ''
   const replyDisplay = replyOn ? REPLY.slice(0, Math.max(0, replyChars)) : ''
+
+  // Whether to render the rubricated initial: show it once the answer
+  // has begun writing itself.
+  const answerDropCapVisible = answerOn
 
   return (
     <main className="stage">
@@ -1505,39 +1218,14 @@ export function App() {
           corner="br"
           id="br"
           label="now"
+          body="this instant, the only one that ever arrives"
           whisper={whispersOn.br}
           whisperText={WHISPERS[1].text}
           active={active}
           wave={echoIdx === 1}
           onHover={setActive}
-          ariaLabel={`Local time ${hh}:${mm}. Reading since ${arrivedHH}:${arrivedMM}.`}
-        >
-          <span className="marg-now">
-            <span className="marg-now-time">
-              {hh}
-              <span className="clock-colon">:</span>
-              {mm}
-            </span>
-            <span className="clock" aria-hidden="true">
-              <span className="clock-ring" />
-              <span className="clock-pivot" />
-              <span
-                className="clock-hand clock-hand-min"
-                style={{ transform: `rotate(${minAngle}deg)` }}
-              />
-              <span
-                className="clock-hand clock-hand-sec"
-                style={{ transform: `rotate(${secAngle}deg)` }}
-              />
-            </span>
-          </span>
-          <span className="marg-since" aria-hidden="true">
-            <span className="marg-since-rule" />
-            <span className="marg-since-label">since</span>
-            <span className="marg-since-time">{arrivedHH}:{arrivedMM}</span>
-            <span className="marg-since-dim">· {elapsedMin}m read</span>
-          </span>
-        </Marg>
+          ariaLabel="now: this instant, the only one that ever arrives"
+        />
 
         <div className={`composition ${ready ? 'ready' : ''}`}>
           <Capitulum />
@@ -1560,8 +1248,6 @@ export function App() {
             onPointerEnter={onHeroEnter}
             onPointerLeave={onHeroLeave}
             onPointerMove={onHeroMove}
-            onFocus={() => setGlossActive(true)}
-            onBlur={() => setGlossActive(false)}
             aria-label="the question"
           >
             <span className="hero-svg-wrap">
@@ -1646,16 +1332,8 @@ export function App() {
           </button>
             <BracketFlourish side="right" />
           </div>
-          <div className="manicule-wrap" aria-hidden="true">
-            <Manicule />
-          </div>
-          <HoverGloss active={glossActive} reduced={reduced} />
           <div className="question-block">
             <h1 className="question">
-              <span className="question-orn" aria-hidden="true">
-                <span className="question-orn-rule" />
-                <span className="question-orn-pip" />
-              </span>
               <span className="question-line">
                 <em className="question-lead">is</em>
                 <span className="question-space"> </span>
@@ -1674,6 +1352,7 @@ export function App() {
               className={`answer ${answerOn ? 'is-on' : ''}`}
               aria-live="polite"
             >
+              {answerDropCapVisible && <AnswerDropCap visible={answerOn} />}
               <span className="answer-text">{answerDisplay}</span>
               {answerOn && answerChars < ANSWER.length && (
                 <span className="answer-caret" aria-hidden="true">|</span>
@@ -1696,10 +1375,6 @@ export function App() {
                 </span>
               )}
             </p>
-            <p className="footnote" aria-hidden="true">
-              <span className="footnote-marker">{FOOTNOTE_MARK}</span>
-              <span className="footnote-text">{FOOTNOTE}</span>
-            </p>
           </div>
         </div>
 
@@ -1710,16 +1385,15 @@ export function App() {
           <span className="colophon-rule" />
           <span className="colophon-signature-row">
             <Signature />
-            <span className="colophon-folio">folio · xvii</span>
+            <span className="colophon-folio">folio · xviii</span>
           </span>
           <Catchword />
         </div>
       </div>
 
-      <InkTrail x={trail.x} y={trail.y} active={trail.active} />
       {bee.visible && (
         <div
-          className={`bee-flight ${bee.flying ? 'is-flying' : ''} ${bee.arrived ? 'is-arrived' : ''}`}
+          className={`bee-flight ${bee.flying ? 'is-flying' : ''} ${bee.arrived ? 'is-arrived' : ''} bee-corner-${bee.corner}`}
           style={{
             left: `${bee.startX}px`,
             top: `${bee.startY}px`,
@@ -1738,6 +1412,9 @@ export function App() {
           )}
           <span className="bee-hover">
             <Bee />
+          </span>
+          <span className="bee-parchment">
+            <Parchment arrived={bee.arrived} />
           </span>
         </div>
       )}

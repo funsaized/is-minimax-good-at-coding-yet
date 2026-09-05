@@ -1,3 +1,5 @@
+/* ----- Foundation ----- */
+
 * { box-sizing: border-box; }
 html, body, #root { margin: 0; min-height: 100%; }
 
@@ -13,6 +15,7 @@ html, body, #root { margin: 0; min-height: 100%; }
   --gold-deep: #a88556;
   --vermilion: #b0533a;
   --vermilion-soft: #86402d;
+  --vermilion-bright: #c6684a;
   --cool: #95a8c2;
   --cool-deep: #5e7593;
   --serif: "Iowan Old Style", "Apple Garamond", "Palatino Linotype", Baskerville, "Hoefler Text", "Cambria", Georgia, "Times New Roman", serif;
@@ -30,6 +33,8 @@ body {
   overflow-x: hidden;
 }
 
+/* ----- Stage (the page) ----- */
+
 .stage {
   position: relative;
   min-height: 100svh;
@@ -39,6 +44,8 @@ body {
   background:
     radial-gradient(120% 95% at 50% 42%, var(--bg-warm) 0%, var(--bg) 58%, var(--bg-deep) 100%);
 }
+
+/* ----- Dust canvas (embers rising) ----- */
 
 .dust {
   position: fixed;
@@ -54,6 +61,8 @@ body {
 @keyframes dustIn {
   to { opacity: 1; }
 }
+
+/* ----- Rim and codex edge ----- */
 
 .rim {
   position: fixed;
@@ -132,7 +141,6 @@ body {
   );
 }
 
-/* A whisper-thin gilt line at the spine — the page-edge gold leaf */
 .bifolio-gilt {
   position: absolute;
   top: 0;
@@ -197,9 +205,7 @@ body {
   to { opacity: 0.85; }
 }
 
-/* Paper grain — a faint SVG turbulence overlay that hints at pressed paper.
-   * Refined: subtler, blend mode softened, lower opacity so it reads as
-   * paper, not noise. The chapter owns the eye. */
+/* ----- Paper grain ----- */
 
 .paper-grain {
   position: fixed;
@@ -217,6 +223,8 @@ body {
   to { opacity: 0.18; }
 }
 
+/* ----- Frame (the folio) ----- */
+
 .frame {
   position: relative;
   width: 100%;
@@ -227,7 +235,7 @@ body {
   z-index: 1;
 }
 
-/* ----- Watermark (a ghost of the hero, far behind) ----- */
+/* ----- Watermark ----- */
 
 .watermark {
   position: fixed;
@@ -280,7 +288,7 @@ body {
   50%      { opacity: 0.26; }
 }
 
-/* ----- Bookmark ribbon (vermilion fabric marker at the page edge) ----- */
+/* ----- Bookmark ribbon ----- */
 
 .ribbon {
   position: fixed;
@@ -322,7 +330,7 @@ body {
   50%      { transform: rotate(1.6deg); }
 }
 
-/* ----- Taper (candlelight beam onto the question mark) ----- */
+/* ----- Taper ----- */
 
 .taper {
   position: absolute;
@@ -357,51 +365,7 @@ body {
   50%      { transform: scaleY(1.0); opacity: 0.78; }
 }
 
-/* ----- Ink-trail (cursor) ----- */
-
-.ink-trail {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-  z-index: 4;
-  mix-blend-mode: screen;
-  transition: opacity 0.6s ease;
-  opacity: 0;
-}
-
-.ink-trail.is-active { opacity: 1; transition-duration: 0.15s; }
-
-.ink-trail-core {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 6px;
-  height: 6px;
-  margin-left: -3px;
-  margin-top: -3px;
-  border-radius: 50%;
-  background: var(--gold-bright);
-  box-shadow: 0 0 8px rgba(240, 212, 154, 0.65);
-  opacity: 0.85;
-}
-
-.ink-trail-halo {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 28px;
-  height: 28px;
-  margin-left: -14px;
-  margin-top: -14px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, rgba(240, 212, 154, 0.18) 0%, rgba(240, 212, 154, 0.06) 40%, transparent 70%);
-  filter: blur(2px);
-}
-
-/* ----- Bee (printer's messenger; Aldine mark) ----- */
+/* ----- Bee (Aldine messenger + parchment carrier) ----- */
 
 .bee-flight {
   position: fixed;
@@ -417,14 +381,8 @@ body {
   will-change: transform, opacity;
 }
 
-.bee-flight.is-flying {
-  opacity: 1;
-}
-
-.bee-flight.is-arrived {
-  opacity: 0.92;
-  transition: opacity 0.6s ease;
-}
+.bee-flight.is-flying { opacity: 1; }
+.bee-flight.is-arrived { opacity: 0.92; transition: opacity 0.6s ease; }
 
 .bee-hover {
   display: block;
@@ -458,9 +416,7 @@ body {
   will-change: transform;
 }
 
-.bee-wing-r {
-  animation-delay: 0.025s;
-}
+.bee-wing-r { animation-delay: 0.025s; }
 
 @keyframes beeFlutter {
   0%, 100% { transform: scaleY(1) scaleX(1); }
@@ -487,9 +443,7 @@ body {
   stroke-width: 0.3;
 }
 
-.bee-eye {
-  fill: var(--bg-deep);
-}
+.bee-eye { fill: var(--bg-deep); }
 
 .bee-ant {
   fill: none;
@@ -499,9 +453,59 @@ body {
   opacity: 0.8;
 }
 
-/* Launch echo — a brief bloom of small gold halos at the bee's origin
-   when it first takes flight. Reads as the bee shaking loose its wings
-   before lifting off, never as noise. */
+/* Parchment — the tiny rolled vellum the bee carries when it arrives.
+   Stays hidden during flight, then unfurls at the corner the bee lands on. */
+.bee-parchment {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 18px;
+  margin-left: -12px;
+  margin-top: 22px;
+  opacity: 0;
+  transform: translateY(-4px) scale(0.6);
+  transform-origin: 50% -8px;
+  transition:
+    opacity 0.55s ease,
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.bee-flight.is-arrived .bee-parchment {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.bee-parchment .parchment {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  color: var(--gold);
+}
+
+.parchment-roll {
+  fill: rgba(240, 222, 192, 0.92);
+  stroke: var(--gold-deep);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+}
+
+.parchment-line {
+  fill: none;
+  stroke: var(--vermilion-soft);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  opacity: 0.7;
+}
+
+.parchment-cap {
+  fill: var(--gold-deep);
+  opacity: 0.8;
+}
+
+/* Launch echo — small gold halos that bloom at the bee's origin */
 .bee-echo {
   position: absolute;
   inset: 0;
@@ -568,10 +572,6 @@ body {
   width: 100%;
 }
 
-.marg-whisper-slot {
-  flex-direction: row;
-}
-
 .marg-tr .marg-whisper-slot,
 .marg-br .marg-whisper-slot {
   justify-content: flex-end;
@@ -582,7 +582,7 @@ body {
 .marg-bl { bottom: clamp(30px, 4vw, 50px); left: clamp(20px, 4vw, 48px); }
 .marg-br { bottom: clamp(30px, 4vw, 50px); right: clamp(20px, 4vw, 48px); text-align: right; }
 
-.frame.ready .marg { opacity: 0.72; }
+.frame.ready .marg { opacity: 0.78; }
 .marg:hover, .marg:focus-visible { opacity: 1; color: var(--ink); }
 .marg.dim { opacity: 0.22 !important; }
 
@@ -606,13 +606,13 @@ body {
 }
 
 .frame.ready .marg .marg-rule {
-  opacity: 0.45;
+  opacity: 0.5;
   transform: scaleX(1);
 }
 
 .marg:hover .marg-rule, .marg:focus-visible .marg-rule {
   background: var(--gold);
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .frame.ready .marg-tl .marg-rule { transition-delay: 0.45s; }
@@ -691,18 +691,11 @@ body {
   fill: none;
 }
 
-.glyph-core {
-  fill: currentColor;
-}
+.glyph-core { fill: currentColor; }
 
 .glyph-bead {
   fill: currentColor;
   opacity: 0.7;
-}
-
-.glyph-inkwell {
-  fill: currentColor;
-  opacity: 0.85;
 }
 
 .frame.ready .marg-glyph {
@@ -757,11 +750,8 @@ body {
 
 .frame.ready .marg-tl .marg-label { transition-delay: 0.55s; }
 .frame.ready .marg-tl .marg-body  { transition-delay: 0.65s; }
-.frame.ready .marg-tr .marg-label { transition-delay: 0.7s; }
-.frame.ready .marg-tr .marg-body  { transition-delay: 0.8s; }
-.frame.ready .marg-bl .marg-label { transition-delay: 0.85s; }
-.frame.ready .marg-bl .marg-body  { transition-delay: 0.95s; }
-.frame.ready .marg-br .marg-label { transition-delay: 1.0s; }
+.frame.ready .marg-br .marg-label { transition-delay: 0.7s; }
+.frame.ready .marg-br .marg-body  { transition-delay: 0.8s; }
 
 .marg:hover .marg-label, .marg:focus-visible .marg-label,
 .marg:hover .marg-body, .marg:focus-visible .marg-body {
@@ -794,14 +784,10 @@ body {
   text-align: right;
 }
 
-.marg-whisper.is-shown {
-  max-height: 8em;
-}
+.marg-whisper.is-shown { max-height: 8em; }
 
 .marg:hover .marg-whisper,
-.marg:focus-visible .marg-whisper {
-  color: var(--ink);
-}
+.marg:focus-visible .marg-whisper { color: var(--ink); }
 
 .whisper-word {
   display: inline-block;
@@ -822,181 +808,9 @@ body {
 }
 
 .marg:hover .whisper-word.is-shown,
-.marg:focus-visible .whisper-word.is-shown {
-  color: var(--ink);
-}
+.marg:focus-visible .whisper-word.is-shown { color: var(--ink); }
 
-.marg-now {
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(8px, 0.9vw, 12px);
-  opacity: 0;
-  transform: translateY(2px);
-  transition:
-    opacity 0.7s ease 1.1s,
-    transform 0.7s ease 1.1s;
-}
-
-.frame.ready .marg-now {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.marg-now-time {
-  font-family: var(--mono);
-  font-style: normal;
-  font-size: clamp(10px, 0.95vw, 11px);
-  letter-spacing: 0.08em;
-  color: var(--ink);
-  font-variant-numeric: tabular-nums;
-  min-width: 3.2em;
-  text-align: right;
-}
-
-.clock-colon {
-  display: inline-block;
-  transform: translateY(-0.05em);
-  margin: 0 0.05em;
-  opacity: 0.65;
-  animation: colon 2s steps(2, end) infinite;
-}
-
-@keyframes colon {
-  0%, 50% { opacity: 0.65; }
-  51%, 100% { opacity: 0.25; }
-}
-
-.clock {
-  position: relative;
-  width: clamp(18px, 1.7vw, 22px);
-  height: clamp(18px, 1.7vw, 22px);
-  display: inline-block;
-  flex: 0 0 auto;
-}
-
-.clock-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1px solid var(--ink-soft);
-  opacity: 0.55;
-  transition: border-color 0.5s ease, opacity 0.5s ease;
-}
-
-.marg:hover .clock-ring, .marg:focus-visible .clock-ring {
-  border-color: var(--gold);
-  opacity: 0.95;
-}
-
-.clock-pivot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 2px;
-  height: 2px;
-  margin-left: -1px;
-  margin-top: -1px;
-  border-radius: 50%;
-  background: var(--ink-soft);
-  opacity: 0.7;
-}
-
-.clock-hand {
-  position: absolute;
-  left: 50%;
-  bottom: 50%;
-  transform-origin: 50% 100%;
-  background: var(--ink-soft);
-  border-radius: 1px;
-  transition: background 0.5s ease;
-}
-
-.clock-hand-min {
-  width: 1.5px;
-  height: 38%;
-  margin-left: -0.75px;
-  opacity: 0.85;
-}
-
-.clock-hand-sec {
-  width: 1px;
-  height: 46%;
-  margin-left: -0.5px;
-  background: var(--gold);
-  opacity: 0.85;
-}
-
-.marg:hover .clock-hand, .marg:focus-visible .clock-hand {
-  background: var(--ink);
-}
-
-/* ----- "Since [time]" reading marker ----- */
-
-.marg-since {
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(6px, 0.7vw, 9px);
-  flex: 0 0 100%;
-  justify-content: flex-end;
-  margin-top: 2px;
-  font-family: var(--mono);
-  font-style: normal;
-  font-size: clamp(8.5px, 0.78vw, 9.5px);
-  letter-spacing: 0.16em;
-  text-transform: lowercase;
-  color: var(--ink-faint);
-  opacity: 0;
-  transform: translateY(2px);
-  transition:
-    opacity 0.8s ease 1.4s,
-    transform 0.8s ease 1.4s,
-    color 0.5s ease;
-  white-space: nowrap;
-}
-
-.frame.ready .marg-since {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.marg-since-rule {
-  display: inline-block;
-  width: clamp(14px, 2vw, 26px);
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--ink-faint));
-  opacity: 0.6;
-}
-
-.marg-since-label {
-  font-style: italic;
-  font-family: var(--serif);
-  letter-spacing: 0.08em;
-  opacity: 0.7;
-}
-
-.marg-since-time {
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-soft);
-  letter-spacing: 0.06em;
-  opacity: 0.9;
-}
-
-.marg-since-dim {
-  opacity: 0.55;
-  letter-spacing: 0.12em;
-}
-
-.marg-br:hover .marg-since,
-.marg-br:focus-visible .marg-since {
-  color: var(--ink-soft);
-}
-
-.marg-br:hover .marg-since-time,
-.marg-br:focus-visible .marg-since-time {
-  color: var(--gold);
-}
-
-/* ----- Guide rule (marginalia → center) ----- */
+/* ----- Guide rule ----- */
 
 .guide-rule {
   position: absolute;
@@ -1043,62 +857,48 @@ body {
 .marg:focus-visible .guide-rule-line { stroke-dashoffset: 0; }
 
 .marg:hover .guide-rule-dot,
-.marg:focus-visible .guide-rule-dot {
-  opacity: 0.75;
-  transform: scale(1);
-}
+.marg:focus-visible .guide-rule-dot { opacity: 0.75; transform: scale(1); }
 
 .marg-tl .guide-rule {
-  top: 100%;
-  left: 100%;
+  top: 100%; left: 100%;
   margin: 6px 0 0 -10px;
 }
-
 .marg-tr .guide-rule {
-  top: 100%;
-  right: 100%;
+  top: 100%; right: 100%;
   margin: 6px -10px 0 0;
   transform: scaleX(-1);
 }
-
 .marg-bl .guide-rule {
-  bottom: 100%;
-  left: 100%;
+  bottom: 100%; left: 100%;
   margin: 0 0 6px -10px;
   transform: scaleY(-1);
 }
-
 .marg-br .guide-rule {
-  bottom: 100%;
-  right: 100%;
+  bottom: 100%; right: 100%;
   margin: 0 -10px 6px 0;
   transform: scale(-1);
 }
 
-/* ----- Echo wave on marginalia (click ripple) ----- */
-
-.marg.echo-wave {
-  animation: wave 0.26s ease;
-}
+.marg.echo-wave { animation: wave 0.26s ease; }
 
 @keyframes wave {
-  0% { color: var(--ink-soft); }
-  50% { color: var(--gold-bright); }
+  0%   { color: var(--ink-soft); }
+  50%  { color: var(--gold-bright); }
   100% { color: var(--ink-soft); }
 }
 
-/* ----- Composition (rubric + fleuron + hero + ruling + question) ----- */
+/* ----- Composition ----- */
 
 .composition {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(14px, 1.8vw, 22px);
+  gap: clamp(16px, 1.9vw, 24px);
   max-width: 100%;
 }
 
-/* ----- Capitulum (running title above the chapter piece) ----- */
+/* ----- Capitulum (running title above the chapter) ----- */
 
 .capitulum {
   display: inline-flex;
@@ -1125,7 +925,7 @@ body {
 }
 
 .composition.ready .capitulum {
-  opacity: 0.85;
+  opacity: 0.9;
   transform: translateY(0);
 }
 
@@ -1144,12 +944,8 @@ body {
 }
 
 .composition.ready .capitulum-mark {
-  opacity: 0.78;
+  opacity: 0.85;
   transform: translateY(0);
-}
-
-.capitulum:hover .capitulum-mark {
-  color: var(--gold-bright);
 }
 
 .printer-leaf {
@@ -1225,7 +1021,7 @@ body {
   color: var(--ink-soft);
 }
 
-/* ----- Rubric (chapter piece) ----- */
+/* ----- Folio mark (chapter badge) ----- */
 
 .folio-mark {
   width: clamp(48px, 7.4vw, 78px);
@@ -1273,9 +1069,7 @@ body {
   transition: stroke-dashoffset 1.0s cubic-bezier(0.2, 0.7, 0.2, 1) 1.25s;
 }
 
-.composition.ready .folio-mark-flourish {
-  stroke-dashoffset: 0;
-}
+.composition.ready .folio-mark-flourish { stroke-dashoffset: 0; }
 
 .folio-mark-pearl {
   fill: currentColor;
@@ -1298,6 +1092,8 @@ body {
   50%      { opacity: 0.45; transform: scale(0.85); }
 }
 
+/* ----- Rubric (chapter piece) ----- */
+
 .rubric {
   font-family: var(--serif);
   font-style: italic;
@@ -1319,7 +1115,7 @@ body {
 }
 
 .composition.ready .rubric {
-  opacity: 0.88;
+  opacity: 0.92;
   transform: translateY(0);
 }
 
@@ -1344,14 +1140,7 @@ body {
   transform: scale(1) translateY(0);
 }
 
-.composition.ready .rubric:hover .rubric-pilcrow {
-  opacity: 1;
-  color: var(--vermilion);
-}
-
-.rubric-text {
-  display: inline-block;
-}
+.rubric-text { display: inline-block; }
 
 .rubric-sep {
   display: inline-block;
@@ -1363,11 +1152,9 @@ body {
   transition: opacity 0.7s ease 1.35s;
 }
 
-.composition.ready .rubric-sep {
-  opacity: 0.7;
-}
+.composition.ready .rubric-sep { opacity: 0.7; }
 
-/* ----- Fleuron (printer's ornament) ----- */
+/* ----- Fleuron ----- */
 
 .fleuron {
   width: clamp(80px, 12vw, 160px);
@@ -1395,9 +1182,7 @@ body {
   transition: stroke-dashoffset 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 1.4s;
 }
 
-.composition.ready .fleuron-rule line {
-  stroke-dashoffset: 0;
-}
+.composition.ready .fleuron-rule line { stroke-dashoffset: 0; }
 
 .fleuron-dots {
   opacity: 0;
@@ -1437,11 +1222,9 @@ body {
   opacity: 0.92;
 }
 
-.fleuron-pip {
-  fill: var(--bg-warm);
-}
+.fleuron-pip { fill: var(--bg-warm); }
 
-/* ----- Hero (question mark) ----- */
+/* ----- Hero (the question mark emblem) ----- */
 
 .hero {
   appearance: none;
@@ -1471,6 +1254,7 @@ body {
 }
 
 .hero:focus { outline: none; }
+
 .hero:focus-visible {
   outline: 1.5px solid var(--gold);
   outline-offset: 18px;
@@ -1493,15 +1277,8 @@ body {
   will-change: transform;
 }
 
-/* ----- Illuminated auriole (halo) around the question mark) -----
- * Iteration 17: refined. The previous three stacked rings + spinner
- * read as a tech loading indicator; replaced with a single dotted
- * trace that resolves around the hero like a sketched halo, plus the
- * warm radial vignette. The bowl now carries its own illumination. */
-
-.auriole {
-  pointer-events: none;
-}
+/* Auriole — the warm halo traced around the hero */
+.auriole { pointer-events: none; }
 
 .auriole-radial {
   opacity: 0;
@@ -1571,11 +1348,7 @@ body {
   50%      { opacity: calc(var(--pip-alpha) * 0.45); transform: scale(0.82); }
 }
 
-/* ----- Illuminated star inside the question's bowl -----
- * A small painted vermilion asterisk-petal motif — the "illumination"
- * of this initial. Sits inside the bowl via clip-path, rotates slowly,
- * breathes in opacity, and flares when the reader approaches. */
-
+/* Illuminated star inside the question's bowl */
 .hero-bowl-illumination {
   position: absolute;
   inset: 0;
@@ -1635,9 +1408,7 @@ body {
   opacity: 0.96;
 }
 
-.illuminated-star-pip {
-  fill: var(--bg-deep);
-}
+.illuminated-star-pip { fill: var(--bg-deep); }
 
 .illuminated-star-rays line {
   stroke: var(--gold);
@@ -1669,13 +1440,6 @@ body {
   50%      { opacity: 0.34; transform: scale(0.86); }
 }
 
-/* On hover/focus, the star flares — like the candle answering the
- * reader. Pulses faster, brightens. */
-.hero:hover ~ .illuminated-star,
-.hero:focus-visible ~ .illuminated-star {
-  /* hover handled inside .illuminated-star by the active descendant */
-}
-
 .hero:hover .illuminated-star,
 .hero:focus-visible .illuminated-star {
   animation:
@@ -1690,14 +1454,10 @@ body {
 }
 
 .hero:hover .illuminated-star-petal,
-.hero:focus-visible .illuminated-star-petal {
-  fill-opacity: 0.95;
-}
+.hero:focus-visible .illuminated-star-petal { fill-opacity: 0.95; }
 
 .hero:hover .illuminated-star-core,
-.hero:focus-visible .illuminated-star-core {
-  opacity: 1;
-}
+.hero:focus-visible .illuminated-star-core { opacity: 1; }
 
 .hero:hover .illuminated-star-rays line,
 .hero:focus-visible .illuminated-star-rays line {
@@ -1710,7 +1470,7 @@ body {
   50%      { opacity: 0.55; transform: scale(0.94); }
 }
 
-/* ----- Hero frame (brackets flanking the hero, like an illuminated initial) ----- */
+/* ----- Hero frame (brackets around the hero) ----- */
 
 .hero-frame {
   position: relative;
@@ -1721,8 +1481,6 @@ body {
   width: 100%;
 }
 
-/* Marginal rubric — a small vermilion "Qu." sitting outside the hero frame,
-   anchored to the left bracket by a hairline arc. */
 .marginal-rubric {
   position: absolute;
   right: calc(100% + clamp(4px, 0.7vw, 8px));
@@ -1762,9 +1520,7 @@ body {
   transition: stroke-dashoffset 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 2.4s;
 }
 
-.composition.ready .marginal-rubric-arc-line {
-  stroke-dashoffset: 0;
-}
+.composition.ready .marginal-rubric-arc-line { stroke-dashoffset: 0; }
 
 .marginal-rubric-text {
   font-family: var(--serif);
@@ -1806,22 +1562,17 @@ body {
 }
 
 .composition.ready .bracket-flourish {
-  opacity: 0.78;
+  opacity: 0.85;
   transform: translateY(0);
 }
 
 .hero-frame:hover .bracket-flourish,
 .hero-frame:focus-within .bracket-flourish {
-  opacity: 0.95;
+  opacity: 0.98;
 }
 
-.bracket-flourish-left {
-  animation: bracketBreatheL 11s ease-in-out 4s infinite;
-}
-
-.bracket-flourish-right {
-  animation: bracketBreatheR 11s ease-in-out 4s infinite;
-}
+.bracket-flourish-left  { animation: bracketBreatheL 11s ease-in-out 4s infinite; }
+.bracket-flourish-right { animation: bracketBreatheR 11s ease-in-out 4s infinite; }
 
 @keyframes bracketBreatheL {
   0%, 100% { scale: 1 1; }
@@ -1878,7 +1629,7 @@ body {
 
 .composition.ready .bracket-pip-faint { opacity: 0.55; }
 
-/* ----- Incipit (now inline with the rubric; types itself in) ----- */
+/* ----- Incipit (rubric caption) ----- */
 
 .incipit {
   display: inline-block;
@@ -1899,13 +1650,11 @@ body {
 }
 
 .incipit.is-on {
-  opacity: 0.78;
+  opacity: 0.85;
   transform: translateY(0);
 }
 
-.incipit-text {
-  display: inline;
-}
+.incipit-text { display: inline; }
 
 .incipit-caret {
   display: inline-block;
@@ -1919,250 +1668,12 @@ body {
   animation: caretBlink 0.85s steps(2, end) infinite;
 }
 
-/* ----- Hover gloss (a single italic line beneath the hero) ----- */
-
-.hover-gloss {
-  margin: clamp(2px, 0.4vw, 6px) 0 clamp(-2px, -0.2vw, 2px);
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(8px, 0.8vw, 14px);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(11px, 1.05vw, 13px);
-  line-height: 1.4;
-  letter-spacing: 0.02em;
-  color: var(--ink-soft);
-  max-width: min(46ch, 80vw);
-  text-align: center;
-  text-wrap: balance;
-  opacity: 0;
-  transform: translateY(4px);
-  pointer-events: none;
-  transition:
-    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
-    color 0.5s ease;
-}
-
-.hover-gloss.is-on {
-  opacity: 0.85;
-  transform: translateY(0);
-}
-
-.hover-gloss-rule {
-  display: inline-block;
-  width: clamp(14px, 1.6vw, 22px);
-  height: 1px;
-  background: var(--vermilion);
-  opacity: 0.65;
-  flex: 0 0 auto;
-  transform: scaleX(0.4);
-  transform-origin: left center;
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s;
-}
-
-.hover-gloss.is-on .hover-gloss-rule {
-  transform: scaleX(1);
-}
-
-.hover-gloss-text {
-  display: inline;
-}
-
-.hero-stroke {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 22;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  transition: stroke-dashoffset 1.6s cubic-bezier(0.65, 0.02, 0.2, 1);
-}
-
-.hero-trace {
-  fill: none;
-  stroke: rgba(245, 220, 175, 0.85);
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  filter: blur(2.5px);
-  pointer-events: none;
-}
-
-.hero.echo .hero-trace {
-  animation: trace 1.1s cubic-bezier(0.45, 0, 0.2, 1) 0.05s;
-}
-
-@keyframes trace {
-  0%   { stroke-dashoffset: 100; opacity: 0; }
-  18%  { opacity: 0.85; }
-  100% { stroke-dashoffset: 0; opacity: 0; }
-}
-
-.hero-dot-ring {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1;
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: ringBreathe 5.5s ease-in-out infinite;
-}
-
-@keyframes ringBreathe {
-  0%, 100% { opacity: 0; transform: scale(0.85); }
-  50%      { opacity: 0.28; transform: scale(1.06); }
-}
-
-.hero-dot {
-  fill: currentColor;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(0);
-  transition: transform 0.55s cubic-bezier(0.2, 1.3, 0.4, 1) 1.2s;
-}
-
-.hero.drawn .hero-dot { transform: scale(1); }
-.hero.drawn .hero-stroke { stroke-dashoffset: 0; }
-
-.hero.pulse { animation: nod 0.72s cubic-bezier(0.3, 0.1, 0.2, 1); }
-.hero.pulse .hero-dot-ring {
-  animation: ringNod 0.72s cubic-bezier(0.3, 0.1, 0.2, 1);
-}
-
-@keyframes nod {
-  0%   { transform: rotate(0deg) scale(1); }
-  30%  { transform: rotate(-7deg) scale(1.045); }
-  65%  { transform: rotate(2.5deg) scale(1.012); }
-  100% { transform: rotate(0deg) scale(1); }
-}
-
-@keyframes ringNod {
-  0%   { transform: scale(1); opacity: 0.28; }
-  40%  { transform: scale(1.4); opacity: 0.5; }
-  100% { transform: scale(1.06); opacity: 0.28; }
-}
-
-@keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.015); }
-}
-
-@keyframes heroShimmer {
-  0%, 100% { filter: drop-shadow(0 0 28px rgba(217, 176, 116, 0.18)); }
-  50%      { filter: drop-shadow(0 0 38px rgba(240, 212, 154, 0.30)); }
-}
-
-/* ----- Ink spatter (on click) ----- */
-
-.hero-spatter {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.spatter-dot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: var(--size, 2px);
-  height: var(--size, 2px);
-  background: var(--gold-bright);
-  border-radius: 50%;
-  opacity: 0;
-  box-shadow: 0 0 6px rgba(240, 212, 154, 0.5);
-  transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0) scale(1);
-  animation: spatter 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) var(--delay, 0ms) forwards;
-}
-
-@keyframes spatter {
-  0% {
-    opacity: calc(var(--op, 1) * 0.95);
-    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0) scale(1);
-  }
-  55% {
-    opacity: calc(var(--op, 1) * 0.55);
-    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(calc(var(--distance) * 0.62)) scale(0.85);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(var(--distance)) scale(0.3);
-  }
-}
-
-/* ----- Manicule (pointing hand, medieval "look here") ----- */
-
-.manicule-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: clamp(-6px, -0.7vw, -3px) 0 clamp(-2px, -0.2vw, 0);
-  opacity: 0;
-  transform: translateY(2px);
-  transition:
-    opacity 0.9s ease 1.95s,
-    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.95s;
-}
-
-.composition.ready .manicule-wrap {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.manicule {
-  width: clamp(20px, 2.1vw, 28px);
-  height: auto;
-  display: block;
-  color: var(--gold);
-  transform-origin: 50% 80%;
-  animation: maniculeBeckon 5.4s ease-in-out infinite;
-  transition: color 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.manicule-stroke {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.05;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0.92;
-}
-
-.manicule-knuckle {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 0.7;
-  stroke-linecap: round;
-  opacity: 0.65;
-}
-
-.manicule-rule {
-  stroke: currentColor;
-  stroke-width: 0.4;
-  stroke-linecap: round;
-  opacity: 0.55;
-}
-
-.hero:hover + .manicule-wrap .manicule,
-.hero:focus-visible + .manicule-wrap .manicule {
-  color: var(--gold-bright);
-  animation-duration: 2.4s;
-}
-
-@keyframes maniculeBeckon {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  35%      { transform: translateY(-3px) rotate(-4deg); }
-  65%      { transform: translateY(-1px) rotate(2deg); }
-}
-
-/* ----- Question ----- */
+/* ----- Question text (the chapter's title) -----
+   * The question is now the chapter's true centerpiece. A clear hierarchy:
+   * "is" sets the stage, "Minimax M3" is the subject (gold small caps),
+   * "good at frontend" carries the predicate, "yet?" lands as the climax —
+   * the only word treated with the display weight, in gold-bright, set
+   * apart by a single vermilion point. */
 
 .question-block {
   position: relative;
@@ -2170,87 +1681,37 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  margin-top: clamp(4px, 0.5vw, 8px);
 }
-
-/* The question as a single confident italic line, with a small ornament
- * hanging in the left margin to anchor it as the chapter's question. The
- * model name is set in small-caps italic — the only small-caps in the
- * question — so the eye finds it as the subject. "yet?" is the focal
- * accent: the brightest tone, the closest, the final word. */
 
 .question {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
-  gap: clamp(10px, 1.1vw, 16px);
+  flex-wrap: wrap;
+  gap: 0;
   font-family: var(--display);
   font-style: italic;
-  font-weight: 400;
-  font-size: clamp(27px, 4.3vw, 52px);
-  line-height: 1.18;
-  letter-spacing: -0.008em;
-  text-align: left;
+  font-weight: 500;
+  font-size: clamp(30px, 4.6vw, 56px);
+  line-height: 1.14;
+  letter-spacing: -0.012em;
+  text-align: center;
   color: var(--ink);
   max-width: 22ch;
   margin: 0;
   text-wrap: balance;
-  text-shadow: 0 0 24px rgba(240, 232, 218, 0.08);
+  text-shadow: 0 0 28px rgba(240, 232, 218, 0.08);
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(14px);
   transition:
-    opacity 1.1s ease 1.65s,
-    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 1.65s;
+    opacity 1.2s ease 1.7s,
+    transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 1.7s;
 }
 
 .composition.ready .question {
   opacity: 1;
   transform: translateY(0);
-}
-
-.question-orn {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  align-self: center;
-  padding-top: 0.05em;
-}
-
-.question-orn-rule {
-  display: inline-block;
-  width: clamp(14px, 1.6vw, 22px);
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold) 60%, var(--gold-bright));
-  opacity: 0;
-  transform: scaleX(0.2);
-  transform-origin: left center;
-  transition:
-    opacity 0.6s ease 1.85s,
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 1.85s;
-}
-
-.question-orn-pip {
-  display: inline-block;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--vermilion);
-  opacity: 0;
-  transform: scale(0.3);
-  transform-origin: center;
-  transition:
-    opacity 0.5s ease 2.2s,
-    transform 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) 2.2s;
-}
-
-.composition.ready .question-orn-rule {
-  opacity: 0.78;
-  transform: scaleX(1);
-}
-
-.composition.ready .question-orn-pip {
-  opacity: 0.92;
-  transform: scale(1);
 }
 
 .question-line {
@@ -2259,112 +1720,78 @@ body {
 
 .question-lead {
   font-style: italic;
-  color: var(--ink);
+  color: var(--ink-soft);
   letter-spacing: 0.01em;
   position: relative;
-  font-size: 0.94em;
-  opacity: 0.92;
+  font-size: 0.86em;
+  opacity: 0.9;
+  font-weight: 400;
 }
 
-.question-space {
-  display: inline-block;
-  white-space: pre;
-}
+.question-space { display: inline-block; white-space: pre; }
 
 .question-name {
   font-style: italic;
   font-variant-caps: small-caps;
   font-feature-settings: "smcp" on, "c2sc" on, "liga" on;
-  letter-spacing: 0.12em;
-  font-size: 0.82em;
+  letter-spacing: 0.14em;
+  font-size: 0.78em;
   color: var(--gold);
-  padding: 0 0.06em;
+  padding: 0 0.05em;
   position: relative;
   display: inline-block;
-}
-
-.question-name::after {
-  content: '';
-  position: absolute;
-  left: -4%;
-  right: -4%;
-  bottom: 0.06em;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-deep) 22%, var(--gold) 50%, var(--gold-deep) 78%, transparent);
-  opacity: 0;
-  transform: scaleX(0.5);
-  transform-origin: center;
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.composition.ready .question-name::after {
-  opacity: 0.7;
-  transform: scaleX(1);
-  transition-delay: 2.4s;
+  font-weight: 500;
 }
 
 .question-verb {
   font-style: italic;
-  color: var(--ink-soft);
+  color: var(--ink);
   letter-spacing: -0.005em;
+  font-weight: 400;
 }
 
 .question-yet {
   font-style: italic;
   display: inline-block;
-  font-size: 1.06em;
-  letter-spacing: -0.02em;
+  font-size: 1.08em;
+  letter-spacing: -0.022em;
   color: var(--gold-bright);
   position: relative;
-  padding: 0 0.04em;
-  text-shadow: 0 0 16px rgba(240, 212, 154, 0.18);
+  padding: 0 0.02em;
+  text-shadow:
+    0 0 14px rgba(240, 212, 154, 0.22),
+    0 0 32px rgba(217, 176, 116, 0.12);
+  font-weight: 500;
 }
 
-.question-yet::after {
-  content: '';
-  position: absolute;
-  left: 4%;
-  right: 4%;
-  bottom: -0.04em;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-deep) 18%, var(--vermilion) 50%, var(--gold-deep) 82%, transparent);
-  opacity: 0;
-  transform: scaleX(0.3);
-  transform-origin: center;
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.composition.ready .question-yet::after {
-  opacity: 0.78;
-  transform: scaleX(1);
-  transition-delay: 2.55s;
-}
-
+/* Small vermilion point before the question mark — the medieval
+   reader's "quaeritur" point. Anchors the climax to the question mark. */
 .question-mark {
   font-style: italic;
   color: var(--gold-bright);
-  font-size: 1.06em;
+  font-size: 1.08em;
   margin-left: 0.02em;
-  text-shadow: 0 0 16px rgba(240, 212, 154, 0.18);
+  text-shadow:
+    0 0 14px rgba(240, 212, 154, 0.22),
+    0 0 32px rgba(217, 176, 116, 0.12);
+  font-weight: 500;
 }
 
+/* Ink underline drawn beneath the question when it's been acknowledged —
+   * the page's quiet way of marking "yes, this is the question." */
 .question-underline {
   display: block;
   position: absolute;
-  left: 10%;
-  right: 10%;
-  bottom: clamp(-10px, -1vw, -6px);
+  left: 8%;
+  right: 8%;
+  bottom: clamp(-12px, -1.2vw, -8px);
   height: 1px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--gold) 14%,
+    var(--gold) 12%,
     var(--gold-bright) 50%,
-    var(--gold) 86%,
+    var(--gold) 88%,
     transparent 100%
   );
   opacity: 0;
@@ -2388,9 +1815,10 @@ body {
 
 .answer {
   margin: 0;
+  padding: 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(12.5px, 1.18vw, 15.5px);
+  font-size: clamp(13px, 1.25vw, 16px);
   line-height: 1.55;
   letter-spacing: 0.012em;
   color: var(--ink-soft);
@@ -2407,13 +1835,18 @@ body {
     transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s,
     max-height 0.7s ease 0.2s,
     margin 0.7s ease 0.2s;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(2px, 0.3vw, 5px);
 }
 
 .answer.is-on {
-  opacity: 0.88;
+  opacity: 0.92;
   transform: translateY(0);
   max-height: 6em;
-  margin: clamp(16px, 2vw, 22px) 0 0;
+  margin: clamp(22px, 2.6vw, 30px) 0 0;
 }
 
 .answer-text {
@@ -2430,8 +1863,76 @@ body {
 }
 
 @keyframes caretBlink {
-  0%, 50% { opacity: 0.9; }
+  0%, 50%   { opacity: 0.9; }
   51%, 100% { opacity: 0.15; }
+}
+
+/* Answer drop-cap — a small painted "I" that opens the answer, set as
+   a manuscript illuminated initial. Pulls the eye into the chapter's
+   reply as the climax lands. */
+.answer-dropcap-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: clamp(28px, 2.8vw, 38px);
+  height: clamp(22px, 2.2vw, 30px);
+  margin-right: 2px;
+  opacity: 0;
+  transform: scale(0.4) rotate(-6deg);
+  transform-origin: 50% 80%;
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+.answer-dropcap-wrap.is-on {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.answer-dropcap {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(28px, 2.8vw, 38px);
+  line-height: 1;
+  color: var(--vermilion);
+  text-shadow:
+    0 0 8px rgba(176, 83, 58, 0.32),
+    0 0 22px rgba(198, 104, 74, 0.16);
+  letter-spacing: 0;
+  display: inline-block;
+  transform: translateY(-0.06em);
+}
+
+/* A thin vermilion underline drawn beneath the drop-cap, like the
+   scoring under a hand-illuminated initial. */
+.answer-dropcap-shadow {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: clamp(-2px, -0.2vw, 0px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--vermilion) 30%,
+    var(--vermilion-soft) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.3);
+  transform-origin: center;
+  transition:
+    opacity 0.5s ease 0.35s,
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.35s;
+}
+
+.answer-dropcap-wrap.is-on .answer-dropcap-shadow {
+  opacity: 0.7;
+  transform: scaleX(1);
 }
 
 /* ----- Reply (second sentence the page says back) ----- */
@@ -2442,7 +1943,7 @@ body {
   padding: 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(13px, 1.28vw, 16.5px);
+  font-size: clamp(13.5px, 1.32vw, 17px);
   line-height: 1.55;
   letter-spacing: 0.005em;
   color: var(--ink);
@@ -2462,17 +1963,17 @@ body {
 }
 
 .reply.is-on {
-  opacity: 0.88;
+  opacity: 0.95;
   transform: translateY(0);
   max-height: 8em;
-  margin: clamp(8px, 1vw, 14px) 0 0;
+  margin: clamp(14px, 1.6vw, 20px) 0 0;
 }
 
 .reply-rule {
   display: inline-block;
-  width: clamp(18px, 2.2vw, 28px);
+  width: clamp(20px, 2.4vw, 32px);
   height: 1px;
-  background: var(--gold);
+  background: var(--vermilion);
   vertical-align: 0.45em;
   margin-right: clamp(8px, 0.8vw, 12px);
   opacity: 0;
@@ -2482,12 +1983,10 @@ body {
 }
 
 @keyframes replyRule {
-  to { opacity: 0.6; transform: scaleX(1); }
+  to { opacity: 0.7; transform: scaleX(1); }
 }
 
-.reply-text {
-  display: inline;
-}
+.reply-text { display: inline; }
 
 .reply-caret {
   display: inline-block;
@@ -2502,7 +2001,7 @@ body {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: clamp(8px, 1vw, 14px);
+  margin-top: clamp(12px, 1.4vw, 18px);
   opacity: 0;
   animation: replyEnd 0.9s ease 0.35s forwards;
   color: var(--gold);
@@ -2514,52 +2013,7 @@ body {
 }
 
 @keyframes replyEnd {
-  to { opacity: 0.9; }
-}
-
-/* ----- Footnote (manuscript gloss below the reply) ----- */
-
-.footnote {
-  position: relative;
-  margin: clamp(14px, 1.8vw, 22px) 0 0;
-  padding: 0;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(10.5px, 0.98vw, 12px);
-  line-height: 1.5;
-  letter-spacing: 0.012em;
-  color: var(--ink-faint);
-  text-align: center;
-  max-width: 36ch;
-  text-wrap: balance;
-  opacity: 0;
-  transform: translateY(4px);
-  pointer-events: none;
-  transition:
-    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s,
-    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s;
-}
-
-.composition.ready .footnote {
-  opacity: 0.72;
-  transform: translateY(0);
-}
-
-.footnote-marker {
-  display: inline-block;
-  font-family: var(--mono);
-  font-style: normal;
-  font-size: 0.7em;
-  vertical-align: 0.55em;
-  color: var(--vermilion);
-  opacity: 0.78;
-  margin-right: 4px;
-  letter-spacing: 0;
-  font-feature-settings: "sups" on;
-}
-
-.footnote-text {
-  display: inline;
+  to { opacity: 0.95; }
 }
 
 /* ----- Colophon (closure under the folio) ----- */
@@ -2579,7 +2033,7 @@ body {
   pointer-events: none;
 }
 
-.frame.ready .colophon { opacity: 0.85; }
+.frame.ready .colophon { opacity: 0.9; }
 
 .colophon-folio,
 .colophon-quaeritur {
@@ -2595,11 +2049,11 @@ body {
 .colophon-folio {
   color: var(--gold);
   letter-spacing: 0.5em;
-  opacity: 0.78;
+  opacity: 0.85;
 }
 
 .colophon-quaeritur {
-  opacity: 0.62;
+  opacity: 0.7;
   font-style: italic;
   letter-spacing: 0.36em;
   font-family: var(--serif);
@@ -2610,23 +2064,9 @@ body {
   width: clamp(36px, 6vw, 72px);
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--ink-faint) 50%, transparent);
-  opacity: 0.55;
+  opacity: 0.6;
 }
 
-.colophon-line {
-  font-family: var(--mono);
-  font-size: clamp(8px, 0.74vw, 9.5px);
-  letter-spacing: 0.28em;
-  text-transform: lowercase;
-  color: var(--ink-faint);
-  white-space: nowrap;
-  font-weight: 400;
-}
-
-.colophon-line-1 { display: none; }
-
-/* The signature + folio pair sits on a single quiet row beneath the
-   second rule, like a printer's imprint at the bottom of the page. */
 .colophon-signature-row {
   display: inline-flex;
   align-items: center;
@@ -2635,9 +2075,9 @@ body {
   transition: opacity 0.9s ease 2.85s;
 }
 
-.frame.ready .colophon-signature-row { opacity: 0.95; }
+.frame.ready .colophon-signature-row { opacity: 1; }
 
-/* ----- Catchword (printer's bottom-right marker) ----- */
+/* ----- Catchword ----- */
 
 .catchword {
   display: inline-flex;
@@ -2659,7 +2099,7 @@ body {
 }
 
 .frame.ready .catchword {
-  opacity: 0.78;
+  opacity: 0.82;
   transform: translateY(0);
 }
 
@@ -2677,7 +2117,7 @@ body {
   font-family: var(--serif);
   font-style: normal;
   color: var(--gold);
-  opacity: 0.85;
+  opacity: 0.9;
   font-size: 1.05em;
   transform: translateY(-0.05em);
   margin-right: 1px;
@@ -2688,7 +2128,7 @@ body {
   letter-spacing: 0.02em;
 }
 
-/* ----- Wax seal (pressed vermilion monogram at the colophon) ----- */
+/* ----- Wax seal ----- */
 
 .wax-seal {
   width: clamp(28px, 3.2vw, 40px);
@@ -2722,7 +2162,7 @@ body {
   letter-spacing: 0.02em;
 }
 
-/* ----- Signature (typeset gathering mark, kept small alongside the seal) ----- */
+/* ----- Signature ----- */
 
 .signature {
   width: clamp(40px, 4vw, 56px);
@@ -2763,17 +2203,13 @@ body {
 /* ----- Reduced motion ----- */
 
 @media (prefers-reduced-motion: reduce) {
-  .ink-trail { display: none; }
-  .bee-flight, .bee-glyph, .bee-hover, .bee-wing { display: none; }
   .bifolio { animation: none; opacity: 1; }
-  .bracket-flourish { animation: none; opacity: 0.78; transform: none; transition: opacity 0.3s ease; }
+  .bracket-flourish { animation: none; opacity: 0.85; transform: none; transition: opacity 0.3s ease; }
   .bracket-curve { transition: none; stroke-dashoffset: 0; }
   .bracket-pip { transition: opacity 0.3s ease; }
   .bracket-pip-halo { transition: opacity 0.3s ease; transform: scale(1); }
   .bracket-pip-faint { transition: opacity 0.3s ease; }
-  .hover-gloss { transition: opacity 0.3s ease; }
-  .hover-gloss-rule { transition: transform 0.3s ease; transform: scaleX(1); }
-  .incipit { transition: opacity 0.3s ease; opacity: 0.78; transform: none; }
+  .incipit { transition: opacity 0.3s ease; opacity: 0.85; transform: none; }
   .incipit-caret { animation: none; opacity: 0.5; }
   .hero-svg { animation: none; transform: none; }
   .hero-svg-wrap { transform: none; transition: none; }
@@ -2786,20 +2222,18 @@ body {
   .hero { animation: none; filter: drop-shadow(0 0 28px rgba(217, 176, 116, 0.18)); }
   .hero:hover { transform: none; }
   .question, .rubric, .fleuron, .fleuron-rule line, .fleuron-ornament, .fleuron-dots,
-  .folio-mark, .folio-mark-flourish, .folio-mark-pearl,
-  .manicule-wrap, .manicule {
+  .folio-mark, .folio-mark-flourish, .folio-mark-pearl {
     opacity: 1;
     transform: none;
     transition: none;
   }
   .question-name::after { opacity: 0.55; transform: scaleX(1); transition: none; }
   .folio-mark-dot { animation: none; }
-  .marg, .marg-rule, .marg-label, .marg-body, .marg-now, .marg-glyph {
+  .marg, .marg-rule, .marg-label, .marg-body, .marg-glyph {
     opacity: 1;
     transform: none;
     transition: color 0.3s ease;
   }
-  .marg-since { opacity: 1; transform: none; transition: color 0.3s ease; }
   .marg-whisper {
     transition: max-height 0.2s ease, color 0.3s ease;
   }
@@ -2815,7 +2249,6 @@ body {
   .dust { animation: none; opacity: 1; }
   .codex-edge { animation: none; opacity: 0.18; }
   .paper-grain { animation: none; opacity: 0.32; }
-  .colon-anim, .clock-colon { animation: none; }
   .answer-caret, .reply-caret { animation: none; opacity: 0.5; }
   .question-underline {
     transition: none;
@@ -2823,33 +2256,15 @@ body {
     opacity: 0;
     transform: none;
   }
-  .question-underline.is-on {
-    opacity: 0.7;
-    transform: scaleX(1);
-  }
+  .question-underline.is-on { opacity: 0.7; transform: scaleX(1); }
   .answer { transition: opacity 0.15s ease; }
-  .answer-caret, .reply-caret { animation: none; opacity: 0.5; }
-  .answer { transition: opacity 0.15s ease; }
-  .reply.is-on { transform: none; opacity: 0.82; }
-  .reply-rule { transition: none; animation: none; opacity: 0.6; transform: scaleX(1); }
-  .reply-end { transition: none; animation: none; opacity: 0.9; }
+  .reply.is-on { transform: none; opacity: 0.92; }
+  .reply-rule { transition: none; animation: none; opacity: 0.7; transform: scaleX(1); }
+  .reply-end { transition: none; animation: none; opacity: 0.95; }
   .colophon { opacity: 1; transition: none; }
-  .watermark {
-    transition: none;
-    animation: none;
-    opacity: 0.04;
-  }
-  .watermark-stroke {
-    transition: none;
-    animation: none;
-    stroke-dashoffset: 0;
-  }
-  .watermark-dot {
-    transition: none;
-    animation: none;
-    opacity: 0.45;
-    transform: none;
-  }
+  .watermark { transition: none; animation: none; opacity: 0.04; }
+  .watermark-stroke { transition: none; animation: none; stroke-dashoffset: 0; }
+  .watermark-dot { transition: none; animation: none; opacity: 0.45; transform: none; }
   .guide-rule:hover .guide-rule-line,
   .guide-rule:focus-visible .guide-rule-line,
   .marg:hover .guide-rule-line,
@@ -2875,42 +2290,16 @@ body {
     opacity: 0.6;
     filter: blur(7px);
   }
-  .taper-fill {
-    animation: none;
-    transform: scaleY(1);
-  }
-  .signature {
-    animation: none;
-    opacity: 0.92;
-    transform: none;
-  }
-  .ribbon {
-    animation: none;
-  }
-  .ribbon-inner {
-    animation: none;
-    opacity: 0.92;
-    transform: none;
-  }
-  .wax-seal {
-    transition: none;
-    opacity: 0.95;
-    transform: scale(1) rotate(-3.5deg);
-  }
+  .taper-fill { animation: none; transform: scaleY(1); }
+  .signature { animation: none; opacity: 0.92; transform: none; }
+  .ribbon { animation: none; }
+  .ribbon-inner { animation: none; opacity: 0.92; transform: none; }
+  .wax-seal { transition: none; opacity: 0.95; transform: scale(1) rotate(-3.5deg); }
   .bee-echo { display: none; }
-  .footnote {
-    transition: none;
-    opacity: 0.7;
-    transform: none;
-  }
-  .capitulum { transition: none; opacity: 0.85; transform: none; }
-  .capitulum-mark { transition: none; opacity: 0.78; transform: none; }
+  .capitulum { transition: none; opacity: 0.9; transform: none; }
+  .capitulum-mark { transition: none; opacity: 0.85; transform: none; }
   .rubric-pilcrow { transition: none; opacity: 1; transform: none; }
   .rubric-sep { transition: none; opacity: 0.6; }
-  .question-orn-rule { transition: none; opacity: 0.78; transform: scaleX(1); }
-  .question-orn-pip { transition: none; opacity: 0.92; transform: scale(1); }
-  .question-name::after { transition: none; opacity: 0.55; transform: scaleX(1); }
-  .question-yet::after { transition: none; opacity: 0.6; transform: scaleX(1); }
   .marginal-rubric { transition: none; opacity: 1; transform: translate(0, -50%); }
   .marginal-rubric-arc-line { transition: none; stroke-dashoffset: 0; }
   .marginal-rubric-text { transition: none; opacity: 0.85; transform: none; }
@@ -2927,7 +2316,11 @@ body {
   .illuminated-star-rays line { animation: none; opacity: 0.6; transform: scale(1); }
   .illuminated-star-petal { fill-opacity: 0.78; }
   .illuminated-star-core { opacity: 0.92; }
-  .catchword { transition: none; opacity: 0.78; transform: none; }
+  .catchword { transition: none; opacity: 0.82; transform: none; }
+
+  .bee-parchment { transition: none; opacity: 1; transform: none; }
+  .answer-dropcap-wrap { transition: none; opacity: 1; transform: none; }
+  .answer-dropcap-shadow { transition: none; opacity: 0.7; transform: scaleX(1); }
 }
 
 /* ----- Responsive ----- */
@@ -2936,11 +2329,13 @@ body {
   .guide-rule { width: 60px; height: 60px; }
   .question-underline { left: 6%; right: 6%; }
   .watermark { width: min(130vmin, 760px); height: min(130vmin, 760px); }
-  .reply { font-size: clamp(12px, 1.5vw, 15px); }
+  .reply { font-size: clamp(13px, 1.6vw, 16px); }
   .taper { width: clamp(64px, 18vw, 130px); height: clamp(150px, 26vh, 260px); top: 16%; }
   .bee-glyph { width: 26px; height: 20px; }
   .bee-flight { margin-left: -13px; margin-top: -10px; }
+  .bee-parchment { width: 20px; height: 15px; margin-left: -10px; margin-top: 18px; }
   .illuminated-star { width: 48px; height: 48px; }
+  .question { font-size: clamp(26px, 5vw, 44px); }
 }
 
 @media (max-width: 760px) {
@@ -2949,11 +2344,7 @@ body {
   .marg { max-width: min(40ch, 38vw); }
   .hero-svg { width: clamp(140px, 30vw, 200px); }
   .question { font-size: clamp(22px, 5.4vw, 34px); max-width: 18ch; gap: 8px; }
-  .question-orn-rule { width: 12px; }
-  .question-orn-pip { width: 3px; height: 3px; }
-  .question-name { letter-spacing: 0.08em; }
   .guide-rule { width: 48px; height: 48px; }
-  .colophon-line { letter-spacing: 0.22em; }
   .taper { width: clamp(56px, 24vw, 110px); height: clamp(120px, 24vh, 200px); top: 14%; filter: blur(6px); }
   .signature { width: 44px; }
   .bracket-flourish { width: clamp(12px, 2vw, 18px); height: clamp(56px, 7vw, 88px); }
@@ -2976,17 +2367,16 @@ body {
     height: clamp(130px, 18vh, 180px);
   }
   .wax-seal { width: 30px; }
-  .footnote { font-size: 10.5px; margin-top: 12px; }
   .illuminated-star { width: 44px; height: 44px; }
   .catchword { font-size: 9px; }
+  .answer-dropcap-wrap { width: 26px; height: 22px; }
+  .answer-dropcap { font-size: 26px; }
 }
 
 @media (max-width: 620px) {
   .colophon-folio { letter-spacing: 0.36em; }
   .colophon-quaeritur { letter-spacing: 0.26em; }
   .reply { max-width: 28ch; }
-  .marg-since { letter-spacing: 0.1em; }
-  .marg-since-rule { width: 14px; }
   .rubric { letter-spacing: 0.22em; }
   .catchword { font-size: 8.5px; gap: 4px; }
 }
@@ -3000,23 +2390,18 @@ body {
   .folio-mark-letter { font-size: 30px; }
   .hero-svg { width: 150px; }
   .question { font-size: 23px; max-width: 100%; line-height: 1.2; gap: 6px; }
-  .composition { gap: 14px; }
-  .marg-now-time { font-size: 10px; }
-  .clock { width: 18px; height: 18px; }
+  .composition { gap: 16px; }
   .rubric {
     letter-spacing: 0.18em;
     flex-wrap: wrap;
     justify-content: center;
     row-gap: 4px;
   }
-  .manicule { width: 18px; }
   .colophon { gap: 4px; }
   .colophon-folio, .colophon-quaeritur { letter-spacing: 0.28em; }
-  .colophon-line { font-size: 8.5px; letter-spacing: 0.18em; }
-  .reply { font-size: 13px; max-width: 26ch; }
-  .reply-rule { width: 14px; margin-right: 8px; }
+  .reply { font-size: 13.5px; max-width: 26ch; }
+  .reply-rule { width: 16px; margin-right: 8px; }
   .reply-end .fleuron { width: 56px; }
-  .ink-trail-halo { width: 22px; height: 22px; margin-left: -11px; margin-top: -11px; }
   .taper { width: clamp(48px, 30vw, 90px); height: clamp(96px, 22vh, 170px); top: 12%; filter: blur(5px); }
   .signature { width: 40px; }
   .bracket-flourish { display: none; }
@@ -3026,24 +2411,22 @@ body {
   .capitulum-sep { margin: 0 3px; font-size: 0.85em; }
   .printer-leaf { width: 22px; height: 6px; }
   .incipit { font-size: 9.5px; letter-spacing: 0.12em; }
-  .hover-gloss { font-size: 10.5px; }
   .ribbon {
     right: clamp(14px, 4vw, 32px);
     width: 11px;
     height: clamp(110px, 16vh, 160px);
   }
   .wax-seal { width: 26px; }
-  .footnote { font-size: 10px; margin-top: 10px; max-width: 28ch; }
   .illuminated-star { width: 38px; height: 38px; }
   .catchword { display: none; }
+  .answer-dropcap-wrap { width: 22px; height: 18px; }
+  .answer-dropcap { font-size: 22px; }
 }
 
-/* tiny screens — keep only the corner clock and minimal marginalia */
 @media (max-width: 480px) {
   .marg-tl, .marg-tr, .marg-bl { display: none; }
   .marg-br { bottom: clamp(48px, 9vw, 64px); right: clamp(14px, 4vw, 24px); }
   .colophon { bottom: clamp(10px, 2.5vw, 18px); }
-  .colophon-line-1 { display: none; }
   .watermark { width: min(150vmin, 620px); height: min(150vmin, 620px); }
   .taper { width: clamp(44px, 32vw, 80px); height: clamp(86px, 20vh, 140px); top: 10%; filter: blur(4px); opacity: 0.6; }
   .signature { width: 38px; }
