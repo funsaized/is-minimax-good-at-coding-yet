@@ -198,7 +198,8 @@ body {
 }
 
 /* Paper grain — a faint SVG turbulence overlay that hints at pressed paper.
-   * Toned down so the question reads cleanly. */
+   * Refined: subtler, blend mode softened, lower opacity so it reads as
+   * paper, not noise. The chapter owns the eye. */
 
 .paper-grain {
   position: fixed;
@@ -208,12 +209,12 @@ body {
   pointer-events: none;
   z-index: 0;
   opacity: 0;
-  mix-blend-mode: overlay;
+  mix-blend-mode: soft-light;
   animation: grainIn 2.4s ease 0.4s forwards;
 }
 
 @keyframes grainIn {
-  to { opacity: 0.28; }
+  to { opacity: 0.18; }
 }
 
 .frame {
@@ -348,7 +349,7 @@ body {
 }
 
 @keyframes taperIn {
-  to { opacity: 0.85; }
+  to { opacity: 0.7; }
 }
 
 @keyframes taperBreath {
@@ -1301,8 +1302,8 @@ body {
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(11px, 1.15vw, 14px);
-  letter-spacing: 0.5em;
-  text-transform: uppercase;
+  letter-spacing: 0.42em;
+  text-transform: lowercase;
   color: var(--gold);
   opacity: 0;
   transform: translateY(6px);
@@ -1314,6 +1315,7 @@ body {
   display: inline-flex;
   align-items: baseline;
   gap: clamp(8px, 1vw, 14px);
+  max-width: 92vw;
 }
 
 .composition.ready .rubric {
@@ -1325,7 +1327,7 @@ body {
   display: inline-block;
   font-family: var(--serif);
   font-style: normal;
-  font-size: 0.92em;
+  font-size: 0.94em;
   letter-spacing: 0;
   color: var(--vermilion);
   opacity: 0;
@@ -1349,6 +1351,20 @@ body {
 
 .rubric-text {
   display: inline-block;
+}
+
+.rubric-sep {
+  display: inline-block;
+  color: var(--gold-deep);
+  opacity: 0;
+  font-style: normal;
+  letter-spacing: 0;
+  margin: 0 0.05em;
+  transition: opacity 0.7s ease 1.35s;
+}
+
+.composition.ready .rubric-sep {
+  opacity: 0.7;
 }
 
 /* ----- Fleuron (printer's ornament) ----- */
@@ -1477,7 +1493,11 @@ body {
   will-change: transform;
 }
 
-/* ----- Illuminated auriole (halo) around the question mark ----- */
+/* ----- Illuminated auriole (halo) around the question mark) -----
+ * Iteration 17: refined. The previous three stacked rings + spinner
+ * read as a tech loading indicator; replaced with a single dotted
+ * trace that resolves around the hero like a sketched halo, plus the
+ * warm radial vignette. The bowl now carries its own illumination. */
 
 .auriole {
   pointer-events: none;
@@ -1494,54 +1514,28 @@ body {
   will-change: transform, opacity;
 }
 
-.auriole-ring {
+.auriole-trace {
   fill: none;
   stroke: currentColor;
+  stroke-width: 0.55;
   stroke-linecap: round;
-  stroke-width: 0.5;
+  stroke-dasharray: 1.6 4.2;
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
   will-change: transform, opacity;
   animation:
-    aurioleIn 1.7s ease var(--auriole-in, 1.6s) forwards,
-    aurioleBreathe 9s ease-in-out var(--auriole-breathe, 3.8s) infinite;
+    aurioleTraceIn 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) 1.6s forwards,
+    aurioleTraceBreathe 11s ease-in-out 4s infinite;
 }
 
-.auriole-r3 {
-  --auriole-alpha: 0.62;
-  stroke-width: 0.55;
-  --auriole-in: 1.55s;
-  --auriole-breathe: 3.7s;
+@keyframes aurioleTraceIn {
+  to { opacity: 0.42; }
 }
 
-.auriole-r2 {
-  --auriole-alpha: 0.4;
-  stroke-width: 0.5;
-  --auriole-in: 1.7s;
-  --auriole-breathe: 3.95s;
-}
-
-.auriole-r1 {
-  --auriole-alpha: 0.24;
-  stroke-width: 0.42;
-  --auriole-in: 1.85s;
-  --auriole-breathe: 4.2s;
-}
-
-@keyframes aurioleIn {
-  to { opacity: var(--auriole-alpha); }
-}
-
-@keyframes aurioleBreathe {
-  0%, 100% {
-    opacity: var(--auriole-alpha);
-    transform: scale(1);
-  }
-  50% {
-    opacity: calc(var(--auriole-alpha) * 0.55);
-    transform: scale(1.018);
-  }
+@keyframes aurioleTraceBreathe {
+  0%, 100% { opacity: 0.42; transform: scale(1) rotate(0deg); }
+  50%      { opacity: 0.22; transform: scale(1.012) rotate(1deg); }
 }
 
 @keyframes aurioleRadialIn {
@@ -1549,35 +1543,8 @@ body {
 }
 
 @keyframes aurioleRadialBreathe {
-  0%, 100% { opacity: 0.92; transform: scale(1); }
-  50%      { opacity: 0.62; transform: scale(1.025); }
-}
-
-/* Aureole spinner — a single short luminous arc that revolves slowly
-   around the question mark like a sundial's gnomon shadow. Subtle
-   inner motion detail that earns its place with restraint. */
-.auriole-spinner {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.05;
-  stroke-linecap: round;
-  stroke-dasharray: 22 78;
-  stroke-dashoffset: 0;
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  will-change: transform, opacity;
-  animation:
-    aurioleSpinnerIn 1.8s ease 3.05s forwards,
-    aurioleSpinner 32s linear 5.4s infinite;
-}
-
-@keyframes aurioleSpinnerIn {
-  to { opacity: 0.55; }
-}
-
-@keyframes aurioleSpinner {
-  to { transform: rotate(360deg); }
+  0%, 100% { opacity: 0.9; transform: scale(1); }
+  50%      { opacity: 0.6; transform: scale(1.025); }
 }
 
 .auriole-pips circle {
@@ -1590,14 +1557,10 @@ body {
     auriolePipBreathe 9s ease-in-out var(--pip-breathe, 4.6s) infinite;
 }
 
-.auriole-pips circle:nth-child(1) { --pip-alpha: 0.55; --pip-delay: 2.45s; --pip-breathe: 4.55s; }
-.auriole-pips circle:nth-child(2) { --pip-alpha: 0.55; --pip-delay: 2.55s; --pip-breathe: 4.6s; }
-.auriole-pips circle:nth-child(3) { --pip-alpha: 0.45; --pip-delay: 2.65s; --pip-breathe: 4.65s; }
-.auriole-pips circle:nth-child(4) { --pip-alpha: 0.45; --pip-delay: 2.65s; --pip-breathe: 4.65s; }
-.auriole-pips circle:nth-child(5) { --pip-alpha: 0.3;  --pip-delay: 2.8s;  --pip-breathe: 4.7s; }
-.auriole-pips circle:nth-child(6) { --pip-alpha: 0.3;  --pip-delay: 2.8s;  --pip-breathe: 4.7s; }
-.auriole-pips circle:nth-child(7) { --pip-alpha: 0.3;  --pip-delay: 2.9s;  --pip-breathe: 4.75s; }
-.auriole-pips circle:nth-child(8) { --pip-alpha: 0.3;  --pip-delay: 2.9s;  --pip-breathe: 4.75s; }
+.auriole-pips circle:nth-child(1) { --pip-alpha: 0.5; --pip-delay: 2.45s; --pip-breathe: 4.55s; }
+.auriole-pips circle:nth-child(2) { --pip-alpha: 0.5; --pip-delay: 2.55s; --pip-breathe: 4.6s; }
+.auriole-pips circle:nth-child(3) { --pip-alpha: 0.4; --pip-delay: 2.65s; --pip-breathe: 4.65s; }
+.auriole-pips circle:nth-child(4) { --pip-alpha: 0.4; --pip-delay: 2.65s; --pip-breathe: 4.65s; }
 
 @keyframes auriolePipIn {
   to { opacity: var(--pip-alpha); }
@@ -1605,7 +1568,146 @@ body {
 
 @keyframes auriolePipBreathe {
   0%, 100% { opacity: var(--pip-alpha); transform: scale(1); }
-  50%      { opacity: calc(var(--pip-alpha) * 0.4); transform: scale(0.78); }
+  50%      { opacity: calc(var(--pip-alpha) * 0.45); transform: scale(0.82); }
+}
+
+/* ----- Illuminated star inside the question's bowl -----
+ * A small painted vermilion asterisk-petal motif — the "illumination"
+ * of this initial. Sits inside the bowl via clip-path, rotates slowly,
+ * breathes in opacity, and flares when the reader approaches. */
+
+.hero-bowl-illumination {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  animation: bowlIlluminate 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) 2.4s forwards;
+}
+
+@keyframes bowlIlluminate {
+  to { opacity: 1; }
+}
+
+.illuminated-star {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  left: 50%;
+  top: 21.5%;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  pointer-events: none;
+  overflow: visible;
+  opacity: 0;
+  animation:
+    starOpacityEntry 2.4s ease 2.5s forwards,
+    starSpin 28s linear 2.5s infinite,
+    starBreathe 6.5s ease-in-out 4.2s infinite;
+}
+
+@keyframes starOpacityEntry {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes starSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes starBreathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.72; }
+}
+
+.illuminated-star-petal {
+  fill: var(--vermilion);
+  fill-opacity: 0.78;
+  stroke: var(--vermilion-soft);
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+}
+
+.illuminated-star-core {
+  fill: var(--gold-bright);
+  stroke: var(--vermilion-soft);
+  stroke-width: 0.6;
+  opacity: 0.96;
+}
+
+.illuminated-star-pip {
+  fill: var(--bg-deep);
+}
+
+.illuminated-star-rays line {
+  stroke: var(--gold);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 30px 30px;
+  animation:
+    rayEntry 2s ease 3.2s forwards,
+    rayPulse 4.2s ease-in-out 4.5s infinite;
+}
+
+.illuminated-star-rays line:nth-child(1) { animation-delay: 3.20s, 4.50s; }
+.illuminated-star-rays line:nth-child(2) { animation-delay: 3.25s, 4.60s; }
+.illuminated-star-rays line:nth-child(3) { animation-delay: 3.30s, 4.70s; }
+.illuminated-star-rays line:nth-child(4) { animation-delay: 3.30s, 4.70s; }
+.illuminated-star-rays line:nth-child(5) { animation-delay: 3.40s, 4.80s; }
+.illuminated-star-rays line:nth-child(6) { animation-delay: 3.40s, 4.80s; }
+.illuminated-star-rays line:nth-child(7) { animation-delay: 3.45s, 4.90s; }
+.illuminated-star-rays line:nth-child(8) { animation-delay: 3.45s, 4.90s; }
+
+@keyframes rayEntry {
+  to { opacity: 0.7; }
+}
+
+@keyframes rayPulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 0.34; transform: scale(0.86); }
+}
+
+/* On hover/focus, the star flares — like the candle answering the
+ * reader. Pulses faster, brightens. */
+.hero:hover ~ .illuminated-star,
+.hero:focus-visible ~ .illuminated-star {
+  /* hover handled inside .illuminated-star by the active descendant */
+}
+
+.hero:hover .illuminated-star,
+.hero:focus-visible .illuminated-star {
+  animation:
+    starOpacityEntry 2.4s ease 2.5s forwards,
+    starSpin 9s linear 2.5s infinite,
+    starFlare 1.6s ease-in-out infinite;
+}
+
+@keyframes starFlare {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+.hero:hover .illuminated-star-petal,
+.hero:focus-visible .illuminated-star-petal {
+  fill-opacity: 0.95;
+}
+
+.hero:hover .illuminated-star-core,
+.hero:focus-visible .illuminated-star-core {
+  opacity: 1;
+}
+
+.hero:hover .illuminated-star-rays line,
+.hero:focus-visible .illuminated-star-rays line {
+  opacity: 0.95;
+  animation: rayHover 1.4s ease-in-out infinite;
+}
+
+@keyframes rayHover {
+  0%, 100% { opacity: 0.95; transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.94); }
 }
 
 /* ----- Hero frame (brackets flanking the hero, like an illuminated initial) ----- */
@@ -1776,25 +1878,24 @@ body {
 
 .composition.ready .bracket-pip-faint { opacity: 0.55; }
 
-/* ----- Incipit (small Latin caption above the chapter piece) ----- */
+/* ----- Incipit (now inline with the rubric; types itself in) ----- */
 
 .incipit {
-  margin: clamp(-2px, -0.3vw, 0) 0 clamp(-4px, -0.5vw, -1px);
-  padding: 0;
+  display: inline-block;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(10.5px, 1vw, 12.5px);
+  font-size: clamp(9.5px, 0.92vw, 11px);
   line-height: 1.5;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   color: var(--ink-faint);
-  text-align: center;
-  max-width: 40ch;
-  text-wrap: balance;
+  text-transform: lowercase;
   opacity: 0;
-  transform: translateY(3px);
+  transform: translateY(2px);
   transition:
     opacity 0.9s ease 1.5s,
     transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.5s;
+  white-space: nowrap;
+  vertical-align: baseline;
 }
 
 .incipit.is-on {
@@ -2071,13 +2172,24 @@ body {
   width: 100%;
 }
 
+/* The question as a single confident italic line, with a small ornament
+ * hanging in the left margin to anchor it as the chapter's question. The
+ * model name is set in small-caps italic — the only small-caps in the
+ * question — so the eye finds it as the subject. "yet?" is the focal
+ * accent: the brightest tone, the closest, the final word. */
+
 .question {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.1vw, 16px);
   font-family: var(--display);
+  font-style: italic;
   font-weight: 400;
-  font-size: clamp(28px, 4.4vw, 54px);
-  line-height: 1.12;
-  letter-spacing: -0.012em;
-  text-align: center;
+  font-size: clamp(27px, 4.3vw, 52px);
+  line-height: 1.18;
+  letter-spacing: -0.008em;
+  text-align: left;
   color: var(--ink);
   max-width: 22ch;
   margin: 0;
@@ -2095,12 +2207,19 @@ body {
   transform: translateY(0);
 }
 
-.question-rule {
+.question-orn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  align-self: center;
+  padding-top: 0.05em;
+}
+
+.question-orn-rule {
   display: inline-block;
-  vertical-align: 0.45em;
-  width: clamp(14px, 1.6vw, 24px);
+  width: clamp(14px, 1.6vw, 22px);
   height: 1px;
-  margin-right: clamp(10px, 1vw, 16px);
   background: linear-gradient(90deg, transparent, var(--gold) 60%, var(--gold-bright));
   opacity: 0;
   transform: scaleX(0.2);
@@ -2110,86 +2229,127 @@ body {
     transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 1.85s;
 }
 
-.composition.ready .question-rule {
-  opacity: 0.7;
+.question-orn-pip {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--vermilion);
+  opacity: 0;
+  transform: scale(0.3);
+  transform-origin: center;
+  transition:
+    opacity 0.5s ease 2.2s,
+    transform 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) 2.2s;
+}
+
+.composition.ready .question-orn-rule {
+  opacity: 0.78;
   transform: scaleX(1);
+}
+
+.composition.ready .question-orn-pip {
+  opacity: 0.92;
+  transform: scale(1);
+}
+
+.question-line {
+  display: inline;
 }
 
 .question-lead {
   font-style: italic;
-  color: var(--gold);
+  color: var(--ink);
   letter-spacing: 0.01em;
   position: relative;
   font-size: 0.94em;
-  opacity: 0.95;
+  opacity: 0.92;
 }
 
-.question-name,
-.question-yet {
-  font-style: italic;
-  font-feature-settings: "ss01" on, "liga" on;
-  color: var(--gold-bright);
-  letter-spacing: 0;
-  position: relative;
+.question-space {
+  display: inline-block;
+  white-space: pre;
 }
 
 .question-name {
   font-style: italic;
   font-variant-caps: small-caps;
-  font-feature-settings: "smcp" on, "ss01" on, "liga" on;
-  letter-spacing: 0.08em;
-  font-size: 0.78em;
-  padding: 0 0.05em;
+  font-feature-settings: "smcp" on, "c2sc" on, "liga" on;
+  letter-spacing: 0.12em;
+  font-size: 0.82em;
+  color: var(--gold);
+  padding: 0 0.06em;
+  position: relative;
+  display: inline-block;
 }
 
 .question-name::after {
   content: '';
   position: absolute;
-  left: -2%;
-  right: -2%;
+  left: -4%;
+  right: -4%;
   bottom: 0.06em;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--gold-deep) 22%, var(--gold) 50%, var(--gold-deep) 78%, transparent);
   opacity: 0;
-  transform: scaleX(0.6);
+  transform: scaleX(0.5);
   transform-origin: center;
-  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .composition.ready .question-name::after {
-  opacity: 0.6;
+  opacity: 0.7;
   transform: scaleX(1);
   transition-delay: 2.4s;
+}
+
+.question-verb {
+  font-style: italic;
+  color: var(--ink-soft);
+  letter-spacing: -0.005em;
 }
 
 .question-yet {
   font-style: italic;
   display: inline-block;
-  font-size: 1.04em;
+  font-size: 1.06em;
   letter-spacing: -0.02em;
   color: var(--gold-bright);
   position: relative;
   padding: 0 0.04em;
+  text-shadow: 0 0 16px rgba(240, 212, 154, 0.18);
 }
 
 .question-yet::after {
   content: '';
   position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: -0.06em;
+  left: 4%;
+  right: 4%;
+  bottom: -0.04em;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-deep) 22%, var(--vermilion) 50%, var(--gold-deep) 78%, transparent);
+  background: linear-gradient(90deg, transparent, var(--gold-deep) 18%, var(--vermilion) 50%, var(--gold-deep) 82%, transparent);
   opacity: 0;
-  transform: scaleX(0.4);
+  transform: scaleX(0.3);
   transform-origin: center;
-  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .composition.ready .question-yet::after {
-  opacity: 0.7;
+  opacity: 0.78;
   transform: scaleX(1);
   transition-delay: 2.55s;
+}
+
+.question-mark {
+  font-style: italic;
+  color: var(--gold-bright);
+  font-size: 1.06em;
+  margin-left: 0.02em;
+  text-shadow: 0 0 16px rgba(240, 212, 154, 0.18);
 }
 
 .question-underline {
@@ -2477,6 +2637,57 @@ body {
 
 .frame.ready .colophon-signature-row { opacity: 0.95; }
 
+/* ----- Catchword (printer's bottom-right marker) ----- */
+
+.catchword {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(5px, 0.55vw, 8px);
+  margin-top: clamp(2px, 0.4vw, 6px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(8.5px, 0.82vw, 10.5px);
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 0.9s ease 3.15s,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 3.15s,
+    color 0.5s ease;
+}
+
+.frame.ready .catchword {
+  opacity: 0.78;
+  transform: translateY(0);
+}
+
+.catchword-rule {
+  display: inline-block;
+  width: clamp(14px, 1.8vw, 22px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ink-faint));
+  opacity: 0.7;
+  align-self: center;
+}
+
+.catchword-caret {
+  display: inline-block;
+  font-family: var(--serif);
+  font-style: normal;
+  color: var(--gold);
+  opacity: 0.85;
+  font-size: 1.05em;
+  transform: translateY(-0.05em);
+  margin-right: 1px;
+}
+
+.catchword-text {
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
 /* ----- Wax seal (pressed vermilion monogram at the colophon) ----- */
 
 .wax-seal {
@@ -2648,7 +2859,7 @@ body {
   .marg:hover .guide-rule-dot,
   .marg:focus-visible .guide-rule-dot { opacity: 0.75; transform: scale(1); }
 
-  .auriole-ring,
+  .auriole-trace,
   .auriole-pips circle {
     animation: none;
     opacity: var(--auriole-alpha, 0.32);
@@ -2661,7 +2872,7 @@ body {
   }
   .taper {
     animation: none;
-    opacity: 0.7;
+    opacity: 0.6;
     filter: blur(7px);
   }
   .taper-fill {
@@ -2692,27 +2903,31 @@ body {
     opacity: 0.7;
     transform: none;
   }
-  .auriole-r3 { --auriole-alpha: 0.62; }
-  .auriole-r2 { --auriole-alpha: 0.4; }
-  .auriole-r1 { --auriole-alpha: 0.24; }
   .capitulum { transition: none; opacity: 0.85; transform: none; }
   .capitulum-mark { transition: none; opacity: 0.78; transform: none; }
-  .auriole-spinner { animation: none; opacity: 0.32; }
   .rubric-pilcrow { transition: none; opacity: 1; transform: none; }
-  .question-rule { transition: none; opacity: 0.7; transform: scaleX(1); }
-  .question-yet::after { transition: none; opacity: 0.55; transform: scaleX(1); }
+  .rubric-sep { transition: none; opacity: 0.6; }
+  .question-orn-rule { transition: none; opacity: 0.78; transform: scaleX(1); }
+  .question-orn-pip { transition: none; opacity: 0.92; transform: scale(1); }
+  .question-name::after { transition: none; opacity: 0.55; transform: scaleX(1); }
+  .question-yet::after { transition: none; opacity: 0.6; transform: scaleX(1); }
   .marginal-rubric { transition: none; opacity: 1; transform: translate(0, -50%); }
   .marginal-rubric-arc-line { transition: none; stroke-dashoffset: 0; }
   .marginal-rubric-text { transition: none; opacity: 0.85; transform: none; }
   .bifolio-gilt { animation: none; opacity: 0.7; }
   .auriole-pips circle:nth-child(1),
-  .auriole-pips circle:nth-child(2) { opacity: 0.55; }
+  .auriole-pips circle:nth-child(2) { opacity: 0.5; }
   .auriole-pips circle:nth-child(3),
-  .auriole-pips circle:nth-child(4) { opacity: 0.45; }
-  .auriole-pips circle:nth-child(5),
-  .auriole-pips circle:nth-child(6),
-  .auriole-pips circle:nth-child(7),
-  .auriole-pips circle:nth-child(8) { opacity: 0.3; }
+  .auriole-pips circle:nth-child(4) { opacity: 0.4; }
+
+  .auriole-trace { --auriole-alpha: 0.42; }
+
+  .hero-bowl-illumination { animation: none; opacity: 1; }
+  .illuminated-star { animation: none; opacity: 1; transform: translate(-50%, -50%); }
+  .illuminated-star-rays line { animation: none; opacity: 0.6; transform: scale(1); }
+  .illuminated-star-petal { fill-opacity: 0.78; }
+  .illuminated-star-core { opacity: 0.92; }
+  .catchword { transition: none; opacity: 0.78; transform: none; }
 }
 
 /* ----- Responsive ----- */
@@ -2725,6 +2940,7 @@ body {
   .taper { width: clamp(64px, 18vw, 130px); height: clamp(150px, 26vh, 260px); top: 16%; }
   .bee-glyph { width: 26px; height: 20px; }
   .bee-flight { margin-left: -13px; margin-top: -10px; }
+  .illuminated-star { width: 48px; height: 48px; }
 }
 
 @media (max-width: 760px) {
@@ -2732,8 +2948,10 @@ body {
   .marg-body { display: none; }
   .marg { max-width: min(40ch, 38vw); }
   .hero-svg { width: clamp(140px, 30vw, 200px); }
-  .question { font-size: clamp(22px, 5.4vw, 34px); max-width: 18ch; }
-  .question-rule { width: 12px; margin-right: 8px; }
+  .question { font-size: clamp(22px, 5.4vw, 34px); max-width: 18ch; gap: 8px; }
+  .question-orn-rule { width: 12px; }
+  .question-orn-pip { width: 3px; height: 3px; }
+  .question-name { letter-spacing: 0.08em; }
   .guide-rule { width: 48px; height: 48px; }
   .colophon-line { letter-spacing: 0.22em; }
   .taper { width: clamp(56px, 24vw, 110px); height: clamp(120px, 24vh, 200px); top: 14%; filter: blur(6px); }
@@ -2745,12 +2963,13 @@ body {
   .marginal-rubric-arc { width: 24px; height: 22px; }
   .marginal-rubric-text { font-size: 11px; }
   .rubric-pilcrow { font-size: 0.9em; }
-  .rubric { letter-spacing: 0.32em; gap: 8px; }
+  .rubric { letter-spacing: 0.28em; gap: 7px; }
+  .rubric-sep { margin: 0 1px; }
   .capitulum { gap: 6px; font-size: 10px; letter-spacing: 0.025em; }
   .capitulum-mono { letter-spacing: 0.26em; font-size: 0.78em; }
   .capitulum-sep { margin: 0 5px; }
   .printer-leaf { width: clamp(26px, 6vw, 44px); height: 7px; }
-  .incipit { font-size: 10.5px; letter-spacing: 0.12em; }
+  .incipit { font-size: 9.5px; letter-spacing: 0.14em; }
   .ribbon {
     right: clamp(20px, 5vw, 60px);
     width: 12px;
@@ -2758,6 +2977,8 @@ body {
   }
   .wax-seal { width: 30px; }
   .footnote { font-size: 10.5px; margin-top: 12px; }
+  .illuminated-star { width: 44px; height: 44px; }
+  .catchword { font-size: 9px; }
 }
 
 @media (max-width: 620px) {
@@ -2766,6 +2987,8 @@ body {
   .reply { max-width: 28ch; }
   .marg-since { letter-spacing: 0.1em; }
   .marg-since-rule { width: 14px; }
+  .rubric { letter-spacing: 0.22em; }
+  .catchword { font-size: 8.5px; gap: 4px; }
 }
 
 @media (max-width: 520px) {
@@ -2776,11 +2999,16 @@ body {
   .folio-mark { width: 48px; }
   .folio-mark-letter { font-size: 30px; }
   .hero-svg { width: 150px; }
-  .question { font-size: 23px; max-width: 100%; line-height: 1.2; }
+  .question { font-size: 23px; max-width: 100%; line-height: 1.2; gap: 6px; }
   .composition { gap: 14px; }
   .marg-now-time { font-size: 10px; }
   .clock { width: 18px; height: 18px; }
-  .rubric { letter-spacing: 0.32em; }
+  .rubric {
+    letter-spacing: 0.18em;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 4px;
+  }
   .manicule { width: 18px; }
   .colophon { gap: 4px; }
   .colophon-folio, .colophon-quaeritur { letter-spacing: 0.28em; }
@@ -2797,7 +3025,7 @@ body {
   .capitulum-mono { letter-spacing: 0.22em; font-size: 0.78em; }
   .capitulum-sep { margin: 0 3px; font-size: 0.85em; }
   .printer-leaf { width: 22px; height: 6px; }
-  .incipit { font-size: 10px; letter-spacing: 0.1em; }
+  .incipit { font-size: 9.5px; letter-spacing: 0.12em; }
   .hover-gloss { font-size: 10.5px; }
   .ribbon {
     right: clamp(14px, 4vw, 32px);
@@ -2806,6 +3034,8 @@ body {
   }
   .wax-seal { width: 26px; }
   .footnote { font-size: 10px; margin-top: 10px; max-width: 28ch; }
+  .illuminated-star { width: 38px; height: 38px; }
+  .catchword { display: none; }
 }
 
 /* tiny screens — keep only the corner clock and minimal marginalia */
@@ -2815,10 +3045,11 @@ body {
   .colophon { bottom: clamp(10px, 2.5vw, 18px); }
   .colophon-line-1 { display: none; }
   .watermark { width: min(150vmin, 620px); height: min(150vmin, 620px); }
-  .taper { width: clamp(44px, 32vw, 80px); height: clamp(86px, 20vh, 140px); top: 10%; filter: blur(4px); opacity: 0.65; }
+  .taper { width: clamp(44px, 32vw, 80px); height: clamp(86px, 20vh, 140px); top: 10%; filter: blur(4px); opacity: 0.6; }
   .signature { width: 38px; }
   .sig-letter { font-size: 10px; }
   .marginal-rubric { display: none; }
   .ribbon { display: none; }
   .wax-seal { width: 22px; }
+  .illuminated-star { width: 32px; height: 32px; }
 }

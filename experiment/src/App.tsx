@@ -53,6 +53,11 @@ const WHISPERS: Whisper[] = [
   { corner: 'br', text: 'this instant, the only one that ever arrives' },
 ]
 
+// Catchword — the first word of the (hypothetical) next folio, set as a
+// quiet italic at the bottom-right of the frame. A printer's mark that
+// signals where the binding continues; earned by the colophon, not added.
+const CATCHWORD = 'respondetur'
+
 const ANSWER =
   '— and the page itself, which you are reading now.'
 
@@ -72,12 +77,6 @@ const MARGINAL_RUBRIC = 'Qu.'
 
 const ANSWER_STAGGER_MS = 34
 const REPLY_STAGGER_MS = 26
-
-// Incipit — a single short italic Latin caption that fades in once
-// the chapter piece has composed itself. Sets the tone without ceremony.
-const INCIPIT = 'incipit · quaeritur de fronte'
-const INCIPIT_DELAY = 1100
-const INCIPIT_STEP = 38
 
 // Single hover gloss — replaces the cycling scholastic notes.
 // One quiet italic line appears beneath the hero when the reader
@@ -159,7 +158,7 @@ function FolioMark() {
         textAnchor="middle"
         className="folio-mark-letter"
       >
-        xiii
+        xvii
       </text>
       <path
         className="folio-mark-flourish"
@@ -171,9 +170,14 @@ function FolioMark() {
   )
 }
 
-// IncipitCaption — a small italic Latin caption that types itself in
-// above the chapter piece once the rest of the folio has composed
-// itself. Like the rubricated "incipit" that opens an old chapter.
+// IncipitCaption — kept as a typed-in Latin caption for the rubric line.
+// A single short italic that types itself in once the chapter piece has
+// composed itself — the rubricated "incipit" that opens an old chapter,
+// rendered as a quiet run of text beside the pilcrow, not a banner of its own.
+const INCIPIT_TEXT = 'quaeritur · de fronte'
+const INCIPIT_DELAY = 1500
+const INCIPIT_STEP = 42
+
 function IncipitCaption() {
   const [on, setOn] = useState(false)
   const [chars, setChars] = useState(0)
@@ -184,19 +188,67 @@ function IncipitCaption() {
   useEffect(() => {
     if (!on) return
     const id = window.setTimeout(
-      () => setChars((c) => Math.min(INCIPIT.length, c + 1)),
+      () => setChars((c) => Math.min(INCIPIT_TEXT.length, c + 1)),
       INCIPIT_STEP,
     )
     return () => clearTimeout(id)
   }, [on, chars])
-  const text = on ? INCIPIT.slice(0, Math.max(0, chars)) : ''
+  const text = on ? INCIPIT_TEXT.slice(0, Math.max(0, chars)) : ''
   return (
-    <p className={`incipit ${on ? 'is-on' : ''}`} aria-live="polite">
+    <span className={`incipit ${on ? 'is-on' : ''}`} aria-live="polite">
       <span className="incipit-text">{text}</span>
-      {on && chars < INCIPIT.length && (
+      {on && chars < INCIPIT_TEXT.length && (
         <span className="incipit-caret" aria-hidden="true">_</span>
       )}
-    </p>
+    </span>
+  )
+}
+
+// IlluminatedStar — a small vermilion asterisk-petal motif painted into
+// the bowl of the question mark. The "illumination" of this initial:
+// rotates slowly, breathes in opacity, and flares when the reader
+// approaches the hero. Sits inside the bowl, centered, never escaping it.
+function IlluminatedStar() {
+  return (
+    <svg
+      className="illuminated-star"
+      viewBox="0 0 60 60"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <g className="illuminated-star-petal-group">
+        {/* 5-pointed star: outer radius 22, inner radius 9 */}
+        <path
+          className="illuminated-star-petal"
+          d="M 30 8 L 33.32 22.18 L 48 23.62 L 36 31.91 L 39.94 46 L 30 37.34 L 20.06 46 L 24 31.91 L 12 23.62 L 26.68 22.18 Z"
+        />
+      </g>
+      <g className="illuminated-star-rays">
+        <line x1="30" y1="2"  x2="30" y2="14" />
+        <line x1="30" y1="46" x2="30" y2="58" />
+        <line x1="2"  y1="30" x2="14" y2="30" />
+        <line x1="46" y1="30" x2="58" y2="30" />
+        <line x1="11" y1="11" x2="19" y2="19" />
+        <line x1="41" y1="11" x2="49" y2="19" />
+        <line x1="11" y1="49" x2="19" y2="41" />
+        <line x1="41" y1="49" x2="49" y2="41" />
+      </g>
+      <circle cx="30" cy="30" r="3.2" className="illuminated-star-core" />
+      <circle cx="30" cy="30" r="1.1" className="illuminated-star-pip" />
+    </svg>
+  )
+}
+
+// Catchword — the printer's bottom-right marker. A small italic Latin
+// word flanked by a hairline rule and a tiny caret, the way old books
+// previewed the first word of the next folio.
+function Catchword() {
+  return (
+    <span className="catchword" aria-hidden="true">
+      <span className="catchword-rule" />
+      <span className="catchword-caret">›</span>
+      <em className="catchword-text">{CATCHWORD}</em>
+    </span>
   )
 }
 
@@ -251,9 +303,9 @@ function Capitulum() {
         <span className="capitulum-mono">mss</span>
         <span className="capitulum-sep">·</span>
         <em className="capitulum-it">fol.</em>
-        <span className="capitulum-num">xiii</span>
+        <span className="capitulum-num">xvii</span>
         <span className="capitulum-sep">·</span>
-        <em className="capitulum-it">de quaestione frontis</em>
+        <em className="capitulum-it">de initiali lucente</em>
       </span>
       <span className="capitulum-mark capitulum-mark-r">
         <PrinterLeaf />
@@ -660,7 +712,7 @@ function Signature() {
       focusable="false"
     >
       <line x1="2"  y1="9" x2="14" y2="9" className="sig-rule" />
-      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">xiii</text>
+      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">xvii</text>
       <line x1="50" y1="9" x2="62" y2="9" className="sig-rule" />
       <circle cx="18" cy="9" r="0.7" className="sig-pip" />
       <circle cx="46" cy="9" r="0.7" className="sig-pip" />
@@ -1489,11 +1541,12 @@ export function App() {
 
         <div className={`composition ${ready ? 'ready' : ''}`}>
           <Capitulum />
-          <IncipitCaption />
           <FolioMark />
           <span className="rubric">
             <span className="rubric-pilcrow" aria-hidden="true">§</span>
             <span className="rubric-text">an inquiry</span>
+            <span className="rubric-sep" aria-hidden="true">·</span>
+            <IncipitCaption />
           </span>
           <Fleuron />
           <div className="hero-frame">
@@ -1520,58 +1573,42 @@ export function App() {
                     cy="50%"
                     r="50%"
                   >
-                    <stop offset="0%"   stopColor="currentColor" stopOpacity="0.26" />
+                    <stop offset="0%"   stopColor="currentColor" stopOpacity="0.28" />
                     <stop offset="55%"  stopColor="currentColor" stopOpacity="0.08" />
                     <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
                   </radialGradient>
+                  <clipPath id="bowl-clip">
+                    <ellipse cx="120" cy="73" rx="36" ry="28" />
+                  </clipPath>
                 </defs>
                 <g className="auriole">
                   <circle
                     cx={120}
                     cy={170}
-                    r={134}
+                    r={120}
                     fill="url(#auriole-radial)"
                     className="auriole-radial"
                   />
                   <circle
                     cx={120}
                     cy={170}
-                    r={36}
-                    className="auriole-ring auriole-r3"
-                  />
-                  <circle
-                    cx={120}
-                    cy={170}
-                    r={48}
-                    className="auriole-spinner"
+                    r={92}
+                    className="auriole-trace"
                     pathLength={100}
                   />
-                  <circle
-                    cx={120}
-                    cy={170}
-                    r={60}
-                    className="auriole-ring auriole-r2"
-                  />
-                  <circle
-                    cx={120}
-                    cy={170}
-                    r={86}
-                    className="auriole-ring auriole-r1"
-                  />
                   <g className="auriole-pips">
-                    <circle cx={120} cy={56} r={1.2} />
-                    <circle cx={120} cy={284} r={1.2} />
-                    <circle cx={6} cy={170} r={1.2} />
-                    <circle cx={234} cy={170} r={1.2} />
-                    <circle cx={41} cy={91} r={0.9} />
-                    <circle cx={199} cy={91} r={0.9} />
-                    <circle cx={41} cy={249} r={0.9} />
-                    <circle cx={199} cy={249} r={0.9} />
+                    <circle cx={120} cy={70} r={1.2} />
+                    <circle cx={120} cy={270} r={1.2} />
+                    <circle cx={20} cy={170} r={1.2} />
+                    <circle cx={220} cy={170} r={1.2} />
                   </g>
                 </g>
                 <g className="hero-stack">
                   <path className="hero-stroke" d={HERO_PATH} pathLength={100} />
                   <path className="hero-trace" d={HERO_PATH} pathLength={100} />
+                  <g className="hero-bowl-illumination" clipPath="url(#bowl-clip)">
+                    <IlluminatedStar />
+                  </g>
                   <circle
                     className="hero-dot-ring"
                     cx={HERO_DOT.cx}
@@ -1615,10 +1652,18 @@ export function App() {
           <HoverGloss active={glossActive} reduced={reduced} />
           <div className="question-block">
             <h1 className="question">
-              <span className="question-rule" aria-hidden="true" />
-              <em className="question-lead">is</em>{' '}
-              <em className="question-name">Minimax M3</em> good at frontend{' '}
-              <em className="question-yet">yet</em>?
+              <span className="question-orn" aria-hidden="true">
+                <span className="question-orn-rule" />
+                <span className="question-orn-pip" />
+              </span>
+              <span className="question-line">
+                <em className="question-lead">is</em>
+                <span className="question-space"> </span>
+                <em className="question-name">Minimax&nbsp;M3</em>
+                <span className="question-verb"> good at frontend </span>
+                <em className="question-yet">yet</em>
+                <span className="question-mark">?</span>
+              </span>
             </h1>
             <span
               key={noteNonce}
@@ -1665,8 +1710,9 @@ export function App() {
           <span className="colophon-rule" />
           <span className="colophon-signature-row">
             <Signature />
-            <span className="colophon-folio">folio · xiii</span>
+            <span className="colophon-folio">folio · xvii</span>
           </span>
+          <Catchword />
         </div>
       </div>
 
