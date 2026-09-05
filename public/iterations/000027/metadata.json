@@ -1,0 +1,19 @@
+{
+  "id": 27,
+  "parentId": 26,
+  "createdAt": "2026-09-05T19:40:05.552Z",
+  "summary": "A small bilingual footnote (\"¹ relege · without a reader, silence\")",
+  "path": "/iterations/000027/index.html",
+  "screenshot": "/iterations/000027/desktop.png",
+  "mobileScreenshot": "/iterations/000027/mobile.png",
+  "sourceCommit": "72c2c3e1d3987ecc8fbacc0f61007d300964d4cb",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 115,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 101697,
+    "outputTokens": 9317,
+    "steps": 55
+  }
+}
