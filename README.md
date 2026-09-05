@@ -60,6 +60,8 @@ After a valid turn the runner commits source, saves the immutable build and scre
 
 There is no aesthetic approval gate: every technically valid changed attempt is published. The title, build, runtime, self-contained assets, mobile overflow, and snapshot sizes are checked. These checks do not guarantee visual quality or full accessibility. Invalid attempts leave the published page intact and back off before trying again.
 
+If the model omits `CHANGELOG.md` (for example, when its output is truncated), the runner generates a labeled changelog listing actual added, modified, and deleted page files. Missing metadata alone does not reject a page; all build, browser, and page-change checks still apply.
+
 `npm run publish` resumes a pending publication without generating a new page. Stop the service before using it. Do not edit the repository while a publication is pending. If a run is paused, inspect `npm run status` and the local logs, resolve the issue, then resume. A killed model attempt is abandoned; the next turn starts from the last accepted source.
 
 For this small experiment, snapshots deliberately live in Git. The worker pauses before the archive exceeds 75 MB or a snapshot exceeds 12 MB. Raise the allowance deliberately or move to a larger archive later. Historical versions are never automatically deleted or rebuilt, and remote assets are disallowed so old versions remain self-contained.

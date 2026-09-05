@@ -1,7 +1,8 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import os from 'node:os'
-import { ROOT, command, filesIn, hash, parseUsage, writeJSON, config, summarizeChangelog } from './lib.mjs'
+import { ROOT, command, filesIn, hash, parseUsage, writeJSON, config } from './lib.mjs'
+import { ensureChangelog } from './changelog.mjs'
 
 const protectedFiles = ['package.json', 'tsconfig.json', 'vite.config.ts', 'index.html', 'src/main.tsx']
 export async function makeCandidate(attempt, context) {
@@ -76,8 +77,6 @@ export async function verifyCandidate(attempt) {
     if (file.startsWith('src/') || file.startsWith('public/') || file.startsWith('dist/') || [...protectedFiles, 'CHANGELOG.md', 'opencode.json', 'ITERATION_CONTEXT.md'].includes(file)) continue
     throw new Error(`Unexpected file created by model: ${file}`)
   }
-  const changes = (await fs.readFile(path.join(work, 'CHANGELOG.md'), 'utf8')).trim()
-  if (!changes) throw new Error('Model did not write CHANGELOG.md')
   await sandboxCommand(attempt, '/opt/node/bin/npm', ['run', 'build'], { timeout: 120_000 })
-  return summarizeChangelog(changes)
+  return ensureChangelog(work, path.join(ROOT, 'experiment'))
 }
