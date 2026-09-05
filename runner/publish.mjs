@@ -76,7 +76,16 @@ export async function publishPending() {
   }
   log(`Verifying ${pending.deploymentUrl}`)
   await verifyDeployment(pending.deploymentUrl, pending.id)
-  await command(path.join(ROOT, 'node_modules/.bin/vercel'), ['promote', pending.deploymentUrl, '--yes', '--no-color'], { timeout: 240_000, echo: true })
+  if (!pending.promotedAt) {
+    try {
+      await command(path.join(ROOT, 'node_modules/.bin/vercel'), ['promote', pending.deploymentUrl, '--yes', '--no-color'], { timeout: 240_000, echo: true })
+    } catch (error) {
+      // Promotion may have succeeded before a crash or a failed final smoke check.
+      if (!error.message.includes('already the current production deployment')) throw error
+    }
+    pending.promotedAt = new Date().toISOString()
+    state.pending = pending; await saveState(state)
+  }
   const publicUrl = config.publicUrl
   await verifyDeployment(publicUrl, pending.id)
   state = await readState()
