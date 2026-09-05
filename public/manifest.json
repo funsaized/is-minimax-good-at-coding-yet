@@ -398,6 +398,25 @@
         "outputTokens": 10876,
         "steps": 51
       }
+    },
+    {
+      "id": 21,
+      "parentId": 20,
+      "createdAt": "2026-09-05T17:26:44.017Z",
+      "summary": "Iteration 21 — Framed the central question as a quieter editorial desk.",
+      "path": "/iterations/000021/index.html",
+      "screenshot": "/iterations/000021/desktop.png",
+      "mobileScreenshot": "/iterations/000021/mobile.png",
+      "sourceCommit": "79f4e7a0f9a1c48a659140a8c41913187699b375",
+      "model": "minimax-coding-plan/MiniMax-M3",
+      "durationSeconds": 148,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": {
+        "estimatedCostUsd": 0,
+        "inputTokens": 45795,
+        "outputTokens": 2391,
+        "steps": 18
+      }
     }
   ]
 }
