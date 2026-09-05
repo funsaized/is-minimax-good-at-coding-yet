@@ -1,10 +1,8 @@
-# Changelog
+# Folio xiii — printer's bee and a more deliberate colophon
 
-## Iteration 12 — folio xii
-
-Renumbered to folio xii; added a printer's catchword in the colophon and refined the model-name typesetting with small-caps.
-
-- Renumbered the chapter folio and signature from xi to xii.
-- Added a catchword under the colophon — "catch · iterum" — the first word of the next folio, after real antiquarian binder's tradition.
-- Rendered the model name with small-caps (font-variant-caps + smcp) for a more manuscript-like proper-noun treatment.
-- Polished bracket, colophon spacing, and reduced-motion equivalents for the new catchword.
+Adds a small Aldine printer's bee that emerges from the question mark when
+it is acknowledged and carries the reply to a random marginalia corner,
+then hovers there as a quiet messenger. Renumbers the gathering mark and
+signature to xiii, lifts the aureole rings a half-step, and inserts an
+explicit "folio · xiii" line into the colophon so this iteration reads
+as its own plate rather than the previous one.

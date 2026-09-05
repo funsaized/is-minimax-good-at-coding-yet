@@ -143,7 +143,7 @@ function FolioMark() {
         textAnchor="middle"
         className="folio-mark-letter"
       >
-        xii
+        xiii
       </text>
       <path
         className="folio-mark-flourish"
@@ -459,10 +459,32 @@ function Signature() {
       focusable="false"
     >
       <line x1="2"  y1="9" x2="14" y2="9" className="sig-rule" />
-      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">xii</text>
+      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">xiii</text>
       <line x1="50" y1="9" x2="62" y2="9" className="sig-rule" />
       <circle cx="18" cy="9" r="0.7" className="sig-pip" />
       <circle cx="46" cy="9" r="0.7" className="sig-pip" />
+    </svg>
+  )
+}
+
+// Bee — the printer's bee, Aldine mark. A small messenger that emerges
+// from the question when it is acknowledged and carries the reply to one
+// of the four marginalia corners. Hovers in place once it has arrived.
+function Bee() {
+  return (
+    <svg className="bee-glyph" viewBox="0 0 32 24" aria-hidden="true" focusable="false">
+      <g className="bee-body-group">
+        <ellipse className="bee-wing bee-wing-l" cx="11" cy="6" rx="5.6" ry="3.7" />
+        <ellipse className="bee-wing bee-wing-r" cx="21" cy="6" rx="5.6" ry="3.7" />
+        <ellipse className="bee-body" cx="16" cy="14.2" rx="7.6" ry="4.6" />
+        <path className="bee-stripe" d="M 11.4 11.6 Q 11.8 14.2 11.4 16.9" />
+        <path className="bee-stripe" d="M 16 11.2 Q 16 14.2 16 17.2" />
+        <path className="bee-stripe" d="M 20.6 11.6 Q 20.2 14.2 20.6 16.9" />
+        <circle className="bee-head" cx="23.7" cy="13.7" r="2.4" />
+        <circle className="bee-eye" cx="24.5" cy="13.2" r="0.45" />
+        <path className="bee-ant" d="M 24.1 11.7 Q 25 10 25.8 8.6" />
+        <path className="bee-ant" d="M 25.1 12.1 Q 26.4 10.9 27.4 9.5" />
+      </g>
     </svg>
   )
 }
@@ -698,6 +720,26 @@ export function App() {
   const [replyChars, setReplyChars] = useState(0)
   const [printerNoteOn, setPrinterNoteOn] = useState(false)
   const [printerNoteChars, setPrinterNoteChars] = useState(0)
+  const [bee, setBee] = useState<{
+    visible: boolean
+    flying: boolean
+    arrived: boolean
+    startX: number
+    startY: number
+    tx: string
+    ty: string
+    rot: string
+  }>({
+    visible: false,
+    flying: false,
+    arrived: false,
+    startX: 0,
+    startY: 0,
+    tx: '0px',
+    ty: '0px',
+    rot: '0deg',
+  })
+  const beeTimeoutsRef = useRef<number[]>([])
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
@@ -1044,6 +1086,89 @@ export function App() {
     return () => clearTimeout(t)
   }, [spattering])
 
+  const launchBee = useCallback(() => {
+    if (reduced) return
+    const hero = heroRef.current
+    if (!hero) return
+    const rect = hero.getBoundingClientRect()
+    const startX = rect.left + rect.width / 2
+    const startY = rect.top + rect.height / 2
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    // Pick a random corner that isn't already occupied by an active whisper.
+    // If multiple are lit at this moment, prefer the one furthest from the
+    // mouse — bees, like questions, tend toward quiet corners.
+    const corners: Corner[] = ['tl', 'tr', 'bl', 'br']
+    const isSmall = vw < 520
+    const padX = isSmall ? 70 : 150
+    const padY = isSmall ? 70 : 95
+    const baseTarget = (corner: Corner) => ({
+      x:
+        corner === 'tl'
+          ? padX
+          : corner === 'tr'
+            ? vw - padX
+            : corner === 'bl'
+              ? padX
+              : vw - padX,
+      y:
+        corner === 'tl'
+          ? padY
+          : corner === 'tr'
+            ? padY
+            : corner === 'bl'
+              ? vh - padY
+              : vh - padY,
+    })
+    const corner = corners[Math.floor(Math.random() * corners.length)]
+    const target = baseTarget(corner)
+    // Reset to start position, invisible — the bee isn't on the page yet.
+    beeTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
+    beeTimeoutsRef.current = []
+    setBee({
+      visible: false,
+      flying: false,
+      arrived: false,
+      startX,
+      startY,
+      tx: '0px',
+      ty: '0px',
+      rot: '0deg',
+    })
+    // Summon: the bee is born from the question mark after a brief breath.
+    // Two-step state change so the element mounts at start before flying,
+    // which lets the CSS transition animate the flight instead of snapping.
+    const showDelay = 720
+    const flightMs = 2200
+    const t1 = window.setTimeout(() => {
+      setBee((b) => ({
+        ...b,
+        visible: true,
+        flying: false,
+        tx: '0px',
+        ty: '0px',
+        rot: '0deg',
+      }))
+      // Next frame: kick off the flight.
+      const t2 = window.setTimeout(() => {
+        setBee((b) => ({
+          ...b,
+          flying: true,
+          tx: `${target.x - startX}px`,
+          ty: `${target.y - startY}px`,
+          rot: `${(Math.random() - 0.5) * 26}deg`,
+        }))
+        // Arrive: stop flying, begin gentle hovering at the corner.
+        const t3 = window.setTimeout(() => {
+          setBee((b) => ({ ...b, flying: false, arrived: true }))
+        }, flightMs)
+        beeTimeoutsRef.current.push(t3)
+      }, 60)
+      beeTimeoutsRef.current.push(t2)
+    }, showDelay)
+    beeTimeoutsRef.current.push(t1)
+  }, [reduced])
+
   const acknowledge = useCallback(() => {
     pulseRef.current = reduced ? 0 : 1
     echoRef.current = reduced ? 0 : 1
@@ -1084,7 +1209,8 @@ export function App() {
       reduced ? 2600 : 5200,
     )
     waveTimeoutsRef.current.push(ansOff)
-  }, [reduced])
+    launchBee()
+  }, [reduced, launchBee])
 
   const onHeroEnter = useCallback((e: ReactPointerEvent) => {
     pointerRef.current.over = true
@@ -1393,6 +1519,7 @@ export function App() {
           <span className="colophon-rule" />
           <span className="colophon-quaeritur">quaeritur</span>
           <span className="colophon-rule" />
+          <span className="colophon-folio">folio · xiii</span>
           <span className="colophon-line colophon-line-1">
             typeset in pixels · lit by attention
           </span>
@@ -1415,6 +1542,21 @@ export function App() {
       </div>
 
       <InkTrail x={trail.x} y={trail.y} active={trail.active} />
+      {bee.visible && (
+        <div
+          className={`bee-flight ${bee.flying ? 'is-flying' : ''} ${bee.arrived ? 'is-arrived' : ''}`}
+          style={{
+            left: `${bee.startX}px`,
+            top: `${bee.startY}px`,
+            transform: `translate(${bee.tx}, ${bee.ty}) rotate(${bee.rot})`,
+          }}
+          aria-hidden="true"
+        >
+          <span className="bee-hover">
+            <Bee />
+          </span>
+        </div>
+      )}
     </main>
   )
 }

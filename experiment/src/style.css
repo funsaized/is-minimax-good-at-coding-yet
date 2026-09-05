@@ -357,6 +357,104 @@ body {
   filter: blur(2px);
 }
 
+/* ----- Bee (printer's messenger; Aldine mark) ----- */
+
+.bee-flight {
+  position: fixed;
+  pointer-events: none;
+  z-index: 3;
+  margin-left: -16px;
+  margin-top: -12px;
+  opacity: 0;
+  transform-origin: center;
+  transition:
+    opacity 0.5s ease,
+    transform 2.2s cubic-bezier(0.42, 0.05, 0.55, 0.96);
+  will-change: transform, opacity;
+}
+
+.bee-flight.is-flying {
+  opacity: 1;
+}
+
+.bee-flight.is-arrived {
+  opacity: 0.92;
+  transition: opacity 0.6s ease;
+}
+
+.bee-hover {
+  display: block;
+  animation: beeHover 1.8s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+
+@keyframes beeHover {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50%      { transform: translateY(-4px) rotate(2deg); }
+}
+
+.bee-glyph {
+  width: 32px;
+  height: 24px;
+  display: block;
+  overflow: visible;
+  color: var(--gold);
+  filter: drop-shadow(0 0 4px rgba(217, 176, 116, 0.25));
+}
+
+.bee-wing {
+  fill: var(--gold);
+  fill-opacity: 0.45;
+  stroke: var(--gold-deep);
+  stroke-width: 0.3;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: beeFlutter 0.085s steps(2) infinite;
+  will-change: transform;
+}
+
+.bee-wing-r {
+  animation-delay: 0.025s;
+}
+
+@keyframes beeFlutter {
+  0%, 100% { transform: scaleY(1) scaleX(1); }
+  50%      { transform: scaleY(0.32) scaleX(0.92); }
+}
+
+.bee-body {
+  fill: var(--gold);
+  stroke: var(--gold-deep);
+  stroke-width: 0.4;
+}
+
+.bee-stripe {
+  fill: none;
+  stroke: var(--vermilion);
+  stroke-width: 0.6;
+  stroke-linecap: round;
+  opacity: 0.9;
+}
+
+.bee-head {
+  fill: var(--vermilion-soft);
+  stroke: var(--gold-deep);
+  stroke-width: 0.3;
+}
+
+.bee-eye {
+  fill: var(--bg-deep);
+}
+
+.bee-ant {
+  fill: none;
+  stroke: var(--gold-deep);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  opacity: 0.8;
+}
+
 /* ----- Marginalia ----- */
 
 .marg {
@@ -1253,22 +1351,22 @@ body {
 }
 
 .auriole-r3 {
-  --auriole-alpha: 0.5;
-  stroke-width: 0.5;
+  --auriole-alpha: 0.62;
+  stroke-width: 0.55;
   --auriole-in: 1.55s;
   --auriole-breathe: 3.7s;
 }
 
 .auriole-r2 {
-  --auriole-alpha: 0.32;
-  stroke-width: 0.45;
+  --auriole-alpha: 0.4;
+  stroke-width: 0.5;
   --auriole-in: 1.7s;
   --auriole-breathe: 3.95s;
 }
 
 .auriole-r1 {
-  --auriole-alpha: 0.18;
-  stroke-width: 0.4;
+  --auriole-alpha: 0.24;
+  stroke-width: 0.42;
   --auriole-in: 1.85s;
   --auriole-breathe: 4.2s;
 }
@@ -2291,6 +2389,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .ink-trail { display: none; }
+  .bee-flight, .bee-glyph, .bee-hover, .bee-wing { display: none; }
   .bifolio { animation: none; opacity: 1; }
   .bracket-flourish { animation: none; opacity: 0.78; transform: none; transition: opacity 0.3s ease; }
   .bracket-curve { transition: none; stroke-dashoffset: 0; }
@@ -2420,9 +2519,9 @@ body {
     opacity: 0.92;
     transform: none;
   }
-  .auriole-r3 { --auriole-alpha: 0.5; }
-  .auriole-r2 { --auriole-alpha: 0.32; }
-  .auriole-r1 { --auriole-alpha: 0.18; }
+  .auriole-r3 { --auriole-alpha: 0.62; }
+  .auriole-r2 { --auriole-alpha: 0.4; }
+  .auriole-r1 { --auriole-alpha: 0.24; }
   .printer-note-caret { animation: none; opacity: 0.5; }
   .rubric-pilcrow { transition: none; opacity: 1; transform: none; }
   .question-rule { transition: none; opacity: 0.7; transform: scaleX(1); }
@@ -2449,6 +2548,8 @@ body {
   .watermark { width: min(130vmin, 760px); height: min(130vmin, 760px); }
   .reply { font-size: clamp(12px, 1.5vw, 15px); }
   .taper { width: clamp(64px, 18vw, 130px); height: clamp(150px, 26vh, 260px); top: 16%; }
+  .bee-glyph { width: 26px; height: 20px; }
+  .bee-flight { margin-left: -13px; margin-top: -10px; }
 }
 
 @media (max-width: 760px) {
