@@ -4,5 +4,20 @@
   "model": "MiniMax M3",
   "repository": "https://github.com/funsaized/is-minimax-good-at-coding-yet",
   "intervalMinutes": 30,
-  "iterations": []
+  "iterations": [
+    {
+      "id": 0,
+      "parentId": null,
+      "createdAt": "2026-09-05T09:05:16.465Z",
+      "summary": "A black page. One question. The beginning.",
+      "path": "/iterations/000000/index.html",
+      "screenshot": "/iterations/000000/desktop.png",
+      "mobileScreenshot": "/iterations/000000/mobile.png",
+      "sourceCommit": "bf3a57c106c0430cd6021a830cdb63979f9e6a83",
+      "model": "seed",
+      "durationSeconds": 0,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": null
+    }
+  ]
 }
