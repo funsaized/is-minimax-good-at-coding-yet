@@ -35,6 +35,8 @@ const WHISPERS: Whisper[] = [
 const ANSWER =
   '— and the page itself, you are reading it now.'
 
+const ANSWER_STAGGER_MS = 34
+
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
   useEffect(() => {
@@ -89,6 +91,104 @@ function Fleuron() {
         />
         <circle cx="80" cy="7" r="0.9" className="fleuron-pip" />
       </g>
+    </svg>
+  )
+}
+
+function FolioMark() {
+  return (
+    <svg
+      className="folio-mark"
+      viewBox="0 0 80 58"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle cx="40" cy="5" r="1.4" className="folio-mark-dot" />
+      <text
+        x="40"
+        y="40"
+        textAnchor="middle"
+        className="folio-mark-letter"
+      >
+        V
+      </text>
+      <path
+        className="folio-mark-flourish"
+        d="M 20 50 Q 40 54 60 50"
+      />
+      <circle cx="14" cy="48" r="0.9" className="folio-mark-pearl" />
+      <circle cx="66" cy="48" r="0.9" className="folio-mark-pearl" />
+    </svg>
+  )
+}
+
+function Bifolio() {
+  return (
+    <svg
+      className="orn-glyph"
+      viewBox="0 0 28 20"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M 14 2 L 2 5 L 2 17 L 14 14.5 Z"
+        className="glyph-stroke"
+      />
+      <path
+        d="M 14 2 L 26 5 L 26 17 L 14 14.5 Z"
+        className="glyph-stroke"
+      />
+      <line x1="14" y1="2.5" x2="14" y2="14.5" className="glyph-spine" />
+      <line x1="4.5" y1="8" x2="11" y2="7.4" className="glyph-rule" />
+      <line x1="4.5" y1="10.6" x2="11" y2="10" className="glyph-rule" />
+      <line x1="4.5" y1="13.2" x2="11" y2="12.6" className="glyph-rule" />
+      <line x1="17" y1="7.4" x2="23.5" y2="8" className="glyph-rule" />
+      <line x1="17" y1="10" x2="23.5" y2="10.6" className="glyph-rule" />
+      <line x1="17" y1="12.6" x2="23.5" y2="13.2" className="glyph-rule" />
+    </svg>
+  )
+}
+
+function Nib() {
+  return (
+    <svg
+      className="orn-glyph"
+      viewBox="0 0 18 26"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M 9 1.5 L 14.4 14 L 9 24.5 L 3.6 14 Z"
+        className="glyph-stroke"
+      />
+      <line x1="9" y1="3.6" x2="9" y2="11.5" className="glyph-spine" />
+      <circle cx="9" cy="13.6" r="0.9" className="glyph-inkwell" />
+      <line x1="6.6" y1="16.6" x2="11.4" y2="16.6" className="glyph-spine" />
+      <line x1="7.2" y1="19.2" x2="10.8" y2="19.2" className="glyph-spine" opacity="0.6" />
+    </svg>
+  )
+}
+
+function Asterism() {
+  return (
+    <svg
+      className="orn-glyph"
+      viewBox="0 0 26 26"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <g className="glyph-rays">
+        <line x1="13" y1="3" x2="13" y2="23" />
+        <line x1="4.3" y1="8" x2="21.7" y2="18" />
+        <line x1="4.3" y1="18" x2="21.7" y2="8" />
+      </g>
+      <circle cx="13" cy="13" r="1.7" className="glyph-core" />
+      <circle cx="13" cy="3.5" r="0.7" className="glyph-bead" />
+      <circle cx="13" cy="22.5" r="0.7" className="glyph-bead" />
+      <circle cx="4.5" cy="8.3" r="0.7" className="glyph-bead" />
+      <circle cx="21.5" cy="17.7" r="0.7" className="glyph-bead" />
+      <circle cx="4.5" cy="17.7" r="0.7" className="glyph-bead" />
+      <circle cx="21.5" cy="8.3" r="0.7" className="glyph-bead" />
     </svg>
   )
 }
@@ -161,6 +261,7 @@ function Marg({
   wave,
   onHover,
   ariaLabel,
+  glyph,
   children,
 }: {
   corner: Corner
@@ -173,12 +274,14 @@ function Marg({
   wave: boolean
   onHover: (id: string | null) => void
   ariaLabel?: string
+  glyph?: React.ReactNode
   children?: React.ReactNode
 }) {
   const dim = active !== null && active !== id
   const classes = [`marg`, `marg-${corner}`]
   if (dim) classes.push('dim')
   if (wave) classes.push('echo-wave')
+  const wordList = whisperText.split(' ')
   return (
     <aside
       className={classes.join(' ')}
@@ -190,6 +293,7 @@ function Marg({
       aria-label={ariaLabel ?? `${label}${body ? ': ' + body : ''}`}
     >
       <span className="marg-rule" />
+      {glyph && <span className="marg-glyph">{glyph}</span>}
       <span className="marg-label">{label}</span>
       {body !== undefined && <span className="marg-body">{body}</span>}
       {children}
@@ -199,7 +303,16 @@ function Marg({
           className={`marg-whisper${whisper ? ' is-shown' : ''}`}
           aria-hidden="true"
         >
-          {whisperText}
+          {wordList.map((word, i) => (
+            <span
+              key={i}
+              className={`whisper-word${whisper ? ' is-shown' : ''}`}
+              style={{ '--wi': i } as CSSProperties}
+            >
+              {word}
+              {i < wordList.length - 1 ? '\u00a0' : ''}
+            </span>
+          ))}
         </span>
       </span>
     </aside>
@@ -224,12 +337,14 @@ export function App() {
   })
   const [noteNonce, setNoteNonce] = useState(0)
   const [answerOn, setAnswerOn] = useState(false)
+  const [answerChars, setAnswerChars] = useState(0)
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
   const dimsRef = useRef({ w: 0, h: 0 })
   const pointerRef = useRef({ x: 0, y: 0, active: false, over: false })
   const heroBoxRef = useRef<DOMRect | null>(null)
+  const heroRef = useRef<HTMLButtonElement>(null)
   const waveTimeoutsRef = useRef<number[]>([])
   const now = useTick(reduced ? 60_000 : 1000)
 
@@ -242,6 +357,24 @@ export function App() {
     const t = setTimeout(() => setDrawn(true), reduced ? 0 : 160)
     return () => clearTimeout(t)
   }, [reduced])
+
+  useEffect(() => {
+    if (!answerOn) {
+      setAnswerChars(0)
+      return
+    }
+    if (reduced) {
+      setAnswerChars(ANSWER.length)
+      return
+    }
+    const total = ANSWER.length
+    if (answerChars >= total) return
+    const id = window.setTimeout(
+      () => setAnswerChars((c) => Math.min(total, c + 1)),
+      ANSWER_STAGGER_MS,
+    )
+    return () => clearTimeout(id)
+  }, [answerOn, answerChars, reduced])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -455,6 +588,7 @@ export function App() {
       stepDelay + order.length * stagger + (reduced ? 200 : 260),
     )
     waveTimeoutsRef.current.push(end)
+    setAnswerChars(0)
     setAnswerOn(true)
     const ansOff = window.setTimeout(
       () => setAnswerOn(false),
@@ -469,9 +603,25 @@ export function App() {
   }, [])
   const onHeroLeave = useCallback(() => {
     pointerRef.current.over = false
+    const el = heroRef.current
+    if (el) {
+      el.style.setProperty('--gaze-x', '0')
+      el.style.setProperty('--gaze-y', '0')
+    }
   }, [])
   const onHeroMove = useCallback((e: ReactPointerEvent) => {
-    heroBoxRef.current = (e.currentTarget as HTMLElement).getBoundingClientRect()
+    const el = e.currentTarget as HTMLElement
+    heroBoxRef.current = el.getBoundingClientRect()
+    const rect = heroBoxRef.current
+    if (!rect) return
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    const dx = (e.clientX - cx) / (rect.width / 2)
+    const dy = (e.clientY - cy) / (rect.height / 2)
+    const x = Math.max(-1, Math.min(1, dx))
+    const y = Math.max(-1, Math.min(1, dy))
+    el.style.setProperty('--gaze-x', String(x))
+    el.style.setProperty('--gaze-y', String(y))
   }, [])
 
   const d = new Date(now)
@@ -480,6 +630,8 @@ export function App() {
   const minAngle = (d.getMinutes() / 60) * 360 + (d.getSeconds() / 60) * 6
   const hh = d.getHours().toString().padStart(2, '0')
   const mm = d.getMinutes().toString().padStart(2, '0')
+
+  const answerDisplay = answerOn ? ANSWER.slice(0, Math.max(0, answerChars)) : ''
 
   return (
     <main className="stage">
@@ -499,6 +651,7 @@ export function App() {
           active={active}
           wave={echoIdx === 0}
           onHover={setActive}
+          glyph={<Bifolio />}
         />
         <Marg
           corner="tr"
@@ -510,6 +663,7 @@ export function App() {
           active={active}
           wave={echoIdx === 1}
           onHover={setActive}
+          glyph={<Nib />}
         />
         <Marg
           corner="bl"
@@ -521,6 +675,7 @@ export function App() {
           active={active}
           wave={echoIdx === 2}
           onHover={setActive}
+          glyph={<Asterism />}
         />
         <Marg
           corner="br"
@@ -555,10 +710,12 @@ export function App() {
         </Marg>
 
         <div className={`composition ${ready ? 'ready' : ''}`}>
+          <FolioMark />
           <span className="rubric">an inquiry</span>
           <Fleuron />
           <button
             type="button"
+            ref={heroRef}
             className={`hero ${drawn ? 'drawn' : ''} ${pulsing ? 'pulse' : ''} ${tracing ? 'echo' : ''}`}
             onClick={acknowledge}
             onPointerEnter={onHeroEnter}
@@ -566,22 +723,24 @@ export function App() {
             onPointerMove={onHeroMove}
             aria-label="the question"
           >
-            <svg viewBox="0 0 240 340" className="hero-svg" aria-hidden="true">
-              <path className="hero-stroke" d={HERO_PATH} pathLength={100} />
-              <path className="hero-trace" d={HERO_PATH} pathLength={100} />
-              <circle
-                className="hero-dot-ring"
-                cx={HERO_DOT.cx}
-                cy={HERO_DOT.cy}
-                r={HERO_DOT.r + 6}
-              />
-              <circle
-                className="hero-dot"
-                cx={HERO_DOT.cx}
-                cy={HERO_DOT.cy}
-                r={HERO_DOT.r}
-              />
-            </svg>
+            <span className="hero-svg-wrap">
+              <svg viewBox="0 0 240 340" className="hero-svg" aria-hidden="true">
+                <path className="hero-stroke" d={HERO_PATH} pathLength={100} />
+                <path className="hero-trace" d={HERO_PATH} pathLength={100} />
+                <circle
+                  className="hero-dot-ring"
+                  cx={HERO_DOT.cx}
+                  cy={HERO_DOT.cy}
+                  r={HERO_DOT.r + 6}
+                />
+                <circle
+                  className="hero-dot"
+                  cx={HERO_DOT.cx}
+                  cy={HERO_DOT.cy}
+                  r={HERO_DOT.r}
+                />
+              </svg>
+            </span>
             {spattering && (
               <span className="hero-spatter" aria-hidden="true">
                 {SPATTER.map((s, i) => (
@@ -620,21 +779,24 @@ export function App() {
               className={`answer ${answerOn ? 'is-on' : ''}`}
               aria-live="polite"
             >
-              {ANSWER}
+              <span className="answer-text">{answerDisplay}</span>
+              {answerOn && answerChars < ANSWER.length && (
+                <span className="answer-caret" aria-hidden="true">|</span>
+              )}
             </p>
           </div>
         </div>
 
         <div className="colophon" aria-hidden="true">
-          <span className="colophon-folio">folio iv</span>
+          <span className="colophon-folio">folio v</span>
           <span className="colophon-rule" />
           <span className="colophon-quaeritur">quaeritur</span>
           <span className="colophon-rule" />
           <span className="colophon-line colophon-line-1">
-            set in serif · dotted in gold
+            typeset in margins · read by cursor
           </span>
           <span className="colophon-line colophon-line-2">
-            breathed on canvas · answered in pixels
+            lit by attention · answered in kind
           </span>
           <span className="colophon-mark">
             <RegisterCross />

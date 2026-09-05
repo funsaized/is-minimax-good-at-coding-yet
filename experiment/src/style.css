@@ -236,6 +236,90 @@ body {
     color 0.5s ease;
 }
 
+.marg-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(16px, 1.7vw, 22px);
+  height: clamp(16px, 1.7vw, 22px);
+  flex: 0 0 auto;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(2px) scale(0.8);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.5s ease;
+}
+
+.orn-glyph {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.glyph-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.glyph-spine {
+  stroke: currentColor;
+  stroke-width: 0.55;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.7;
+}
+
+.glyph-rule {
+  stroke: currentColor;
+  stroke-width: 0.35;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.55;
+}
+
+.glyph-rays {
+  stroke: currentColor;
+  stroke-width: 0.55;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.glyph-core {
+  fill: currentColor;
+}
+
+.glyph-bead {
+  fill: currentColor;
+  opacity: 0.7;
+}
+
+.glyph-inkwell {
+  fill: currentColor;
+  opacity: 0.85;
+}
+
+.frame.ready .marg-glyph {
+  opacity: 0.7;
+  transform: translateY(0) scale(1);
+}
+
+.marg:hover .marg-glyph,
+.marg:focus-visible .marg-glyph {
+  opacity: 1;
+  color: var(--gold-bright);
+  transform: translateY(0) scale(1.08);
+}
+
+.frame.ready .marg-tl .marg-glyph { transition-delay: 0.4s; }
+.frame.ready .marg-tr .marg-glyph { transition-delay: 0.55s; }
+.frame.ready .marg-bl .marg-glyph { transition-delay: 0.7s; }
+
 .marg-label::before {
   content: '';
   display: inline-block;
@@ -295,15 +379,11 @@ body {
   line-height: 1.4;
   letter-spacing: 0.005em;
   color: var(--gold);
-  opacity: 0;
-  transform: translateY(-2px);
   max-height: 0;
   overflow: hidden;
   pointer-events: none;
   transition:
-    opacity 0.7s ease,
-    transform 0.7s ease,
-    max-height 0.7s ease,
+    max-height 0.8s ease,
     color 0.5s ease;
   text-wrap: balance;
 }
@@ -314,13 +394,34 @@ body {
 }
 
 .marg-whisper.is-shown {
-  opacity: 0.85;
-  transform: translateY(0);
   max-height: 8em;
 }
 
 .marg:hover .marg-whisper,
 .marg:focus-visible .marg-whisper {
+  color: var(--ink);
+}
+
+.whisper-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.5s ease;
+  transition-delay: 0ms;
+  white-space: pre;
+}
+
+.whisper-word.is-shown {
+  opacity: 0.95;
+  transform: translateY(0);
+  transition-delay: calc(var(--wi, 0) * 95ms);
+}
+
+.marg:hover .whisper-word.is-shown,
+.marg:focus-visible .whisper-word.is-shown {
   color: var(--ink);
 }
 
@@ -532,6 +633,77 @@ body {
 
 /* ----- Rubric (chapter piece) ----- */
 
+.folio-mark {
+  width: clamp(48px, 7.4vw, 78px);
+  height: auto;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(6px) scale(0.94);
+  transform-origin: center;
+  margin: 0 0 clamp(-4px, -0.6vw, -2px);
+  transition:
+    opacity 1s ease 0.85s,
+    transform 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.85s;
+}
+
+.composition.ready .folio-mark {
+  opacity: 0.95;
+  transform: translateY(0) scale(1);
+}
+
+.folio-mark-dot {
+  fill: currentColor;
+  opacity: 0.85;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pearlPulse 4.2s ease-in-out infinite;
+}
+
+.folio-mark-letter {
+  font-family: var(--serif);
+  font-size: 38px;
+  font-style: italic;
+  font-weight: 500;
+  fill: currentColor;
+  letter-spacing: 0;
+}
+
+.folio-mark-flourish {
+  stroke: currentColor;
+  stroke-width: 0.7;
+  fill: none;
+  stroke-linecap: round;
+  opacity: 0.8;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  transition: stroke-dashoffset 1.0s cubic-bezier(0.2, 0.7, 0.2, 1) 1.25s;
+}
+
+.composition.ready .folio-mark-flourish {
+  stroke-dashoffset: 0;
+}
+
+.folio-mark-pearl {
+  fill: currentColor;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  transition:
+    opacity 0.45s ease 1.55s,
+    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) 1.55s;
+}
+
+.composition.ready .folio-mark-pearl {
+  opacity: 0.7;
+  transform: scale(1);
+}
+
+@keyframes pearlPulse {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(0.85); }
+}
+
 .rubric {
   font-family: var(--serif);
   font-style: italic;
@@ -668,6 +840,14 @@ body {
   overflow: visible;
   transform-origin: center;
   animation: breathe 7s ease-in-out infinite;
+}
+
+.hero-svg-wrap {
+  display: block;
+  transform-origin: 50% 86%;
+  transform: rotate(calc(var(--gaze-x, 0) * 2.6deg)) translateY(calc(var(--gaze-y, 0) * -1.4px));
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
 }
 
 .hero-stroke {
@@ -937,6 +1117,24 @@ body {
   margin: clamp(14px, 1.8vw, 20px) 0 0;
 }
 
+.answer-text {
+  display: inline;
+}
+
+.answer-caret {
+  display: inline-block;
+  color: var(--gold);
+  margin-left: 1px;
+  animation: caretBlink 0.85s steps(2, end) infinite;
+  font-weight: 400;
+  transform: translateY(-0.05em);
+}
+
+@keyframes caretBlink {
+  0%, 50% { opacity: 0.9; }
+  51%, 100% { opacity: 0.15; }
+}
+
 /* ----- Colophon (closure under the folio) ----- */
 
 .colophon {
@@ -1018,6 +1216,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .hero-svg { animation: none; transform: none; }
+  .hero-svg-wrap { transform: none; transition: none; }
   .hero-dot-ring { animation: none; opacity: 0.18; transform: scale(1); }
   .hero-stroke { stroke-dashoffset: 0; transition: none; }
   .hero-trace { display: none; }
@@ -1025,25 +1224,35 @@ body {
   .hero-spatter { display: none; }
   .hero.pulse { animation: none; }
   .hero:hover { transform: none; }
-  .question, .ruling, .rubric, .fleuron, .fleuron-rule line, .fleuron-ornament, .fleuron-dots, .folio-mark {
+  .question, .ruling, .rubric, .fleuron, .fleuron-rule line, .fleuron-ornament, .fleuron-dots,
+  .folio-mark, .folio-mark-flourish, .folio-mark-pearl {
     opacity: 1;
     transform: none;
     transition: none;
   }
-  .marg, .marg-rule, .marg-label, .marg-body, .marg-now {
+  .folio-mark-dot { animation: none; }
+  .marg, .marg-rule, .marg-label, .marg-body, .marg-now, .marg-glyph {
     opacity: 1;
     transform: none;
     transition: color 0.3s ease;
   }
   .marg-whisper {
-    transition: opacity 0.15s ease, max-height 0.2s ease, color 0.3s ease;
+    transition: max-height 0.2s ease, color 0.3s ease;
   }
-  .marg-whisper.is-shown { transform: none; max-height: 8em; }
+  .marg-whisper.is-shown { max-height: 8em; }
+  .whisper-word {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.12s ease;
+    transition-delay: 0ms !important;
+  }
+  .whisper-word.is-shown { opacity: 0.95; }
   .marg-rule { transform: scaleX(1); }
   .dust { animation: none; opacity: 1; }
   .codex-edge { animation: none; opacity: 0.18; }
   .paper-grain { animation: none; opacity: 0.32; }
   .colon-anim, .clock-colon { animation: none; }
+  .answer-caret { animation: none; opacity: 0.5; }
   .question-underline {
     transition: none;
     animation: none;
@@ -1093,6 +1302,9 @@ body {
   .stage { padding: clamp(16px, 5vw, 28px); }
   .marg-label { font-size: 9px; }
   .marg-rule { width: clamp(14px, 5vw, 30px); }
+  .marg-glyph { width: 15px; height: 15px; }
+  .folio-mark { width: 48px; }
+  .folio-mark-letter { font-size: 30px; }
   .hero-svg { width: 150px; }
   .question { font-size: 21px; max-width: 100%; line-height: 1.22; }
   .composition { gap: 18px; }
