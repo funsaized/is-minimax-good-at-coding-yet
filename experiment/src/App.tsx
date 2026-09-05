@@ -8,13 +8,17 @@ import {
   type RefObject,
 } from 'react'
 
+// A hand-drawn question mark with a slightly fuller bowl and a longer,
+// more confident stem — the quill pressed harder at the bottom of the
+// stroke, and the curl at the top of the bowl opens a little more so
+// the terminal reads as a deliberate beginning, not a closed loop.
 const HERO_PATH =
-  'M 65 115 C 65 5 175 5 175 115 C 175 172 120 156 120 205 L 120 250'
-const HERO_DOT = { cx: 120, cy: 286, r: 17 }
+  'M 62 116 C 62 -10 178 -10 178 116 C 178 180 122 164 122 214 L 122 270'
+const HERO_DOT = { cx: 122, cy: 306, r: 17 }
 
 const WIDE_PATH =
-  'M 195 345 C 195 15 525 215 525 345 C 525 516 360 468 360 615 L 360 750'
-const WIDE_DOT = { cx: 360, cy: 858, r: 51 }
+  'M 192 348 C 192 0 528 218 528 348 C 528 522 362 472 362 620 L 362 762'
+const WIDE_DOT = { cx: 362, cy: 864, r: 51 }
 
 // Deliberate ink-arc spatter: a flourish that reads as one gesture, not noise.
 const SPATTER = [
@@ -1964,8 +1968,18 @@ export function App() {
                     <stop offset="55%"  stopColor="currentColor" stopOpacity="0.08" />
                     <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
                   </radialGradient>
+                  <radialGradient
+                    id="bowl-bloom"
+                    cx="50%"
+                    cy="46%"
+                    r="55%"
+                  >
+                    <stop offset="0%"   stopColor="currentColor" stopOpacity="0.42" />
+                    <stop offset="58%"  stopColor="currentColor" stopOpacity="0.16" />
+                    <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+                  </radialGradient>
                   <clipPath id="bowl-clip">
-                    <ellipse cx="120" cy="73" rx="36" ry="28" />
+                    <ellipse cx="120" cy="71" rx="40" ry="30" />
                   </clipPath>
                 </defs>
                 <g className="auriole">
@@ -1994,6 +2008,13 @@ export function App() {
                   <path className="hero-stroke" d={HERO_PATH} pathLength={100} />
                   <path className="hero-trace" d={HERO_PATH} pathLength={100} />
                   <g className="hero-bowl-illumination" clipPath="url(#bowl-clip)">
+                    <circle
+                      cx="120"
+                      cy="71"
+                      r="44"
+                      fill="url(#bowl-bloom)"
+                      className="hero-bowl-bloom"
+                    />
                     <IlluminatedStar />
                   </g>
                   <circle
@@ -2041,7 +2062,11 @@ export function App() {
              <span className="question-kicker">a question in public</span>
              <h1 className="question">
               <span className="question-line">
-<em className="incipit-i">i</em><em className="question-lead">s</em>
+                <span className="question-lead-punctus" aria-hidden="true">
+                  <span className="question-lead-punctus-dot" />
+                </span>
+                <em className="incipit-i">i</em>
+                <em className="question-lead">s</em>
               <span className="question-space"> </span>
                 <em className="question-name">Minimax&nbsp;M3</em>
                 <span className="question-name-pause" aria-hidden="true">
