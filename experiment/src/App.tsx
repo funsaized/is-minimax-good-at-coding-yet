@@ -3124,8 +3124,30 @@ export function App() {
                     d={HERO_PATH}
                     pathLength={100}
                   />
+                  {/* Scribal trail — a thin amber hairline that traces
+                      the path as the quill lays the question mark. It
+                      draws slightly behind the main stroke with a
+                      different easing, like the wet ink trailing the
+                      quill's nib across the parchment. Soft enough to
+                      read as a residue of the quill's passage, never
+                      competing with the main stroke. */}
+                  <path
+                    className="hero-scribal-trail"
+                    d={HERO_PATH}
+                    pathLength={100}
+                  />
                   <path className="hero-stroke" d={HERO_PATH} pathLength={100} />
                   <path className="hero-trace" d={HERO_PATH} pathLength={100} />
+                  {/* Quill-tip pip — a small bright amber drop that
+                      settles at the foot of the stem once the trail
+                      finishes drawing, like the place where the quill
+                      was just lifted from the parchment. */}
+                  <circle
+                    className="hero-quill-pip"
+                    cx={HERO_DOT.cx - 4}
+                    cy={HERO_DOT.cy + 36}
+                    r={2.2}
+                  />
                   <g className="hero-bowl-illumination" clipPath="url(#bowl-clip)">
                     <circle
                       cx="120"

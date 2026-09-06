@@ -345,13 +345,13 @@ body {
   z-index: 0;
   opacity: 0;
   mix-blend-mode: screen;
-  filter: blur(0.4px);
+  filter: blur(0.6px);
   animation: watermarkIn 4.4s ease 1.6s forwards;
   will-change: opacity;
 }
 
 .watermark-stroke {
-  opacity: 0.35;
+  opacity: 0.22;
   stroke-dasharray: 3600;
   stroke-dashoffset: 3600;
   animation: watermarkDraw 5.2s cubic-bezier(0.6, 0.02, 0.2, 1) 1.9s forwards;
@@ -369,7 +369,7 @@ body {
 }
 
 @keyframes watermarkIn {
-  to { opacity: 0.05; }
+  to { opacity: 0.035; }
 }
 
 @keyframes watermarkDraw {
@@ -377,12 +377,12 @@ body {
 }
 
 @keyframes watermarkDot {
-  to { opacity: 0.45; transform: scale(1); }
+  to { opacity: 0.32; transform: scale(1); }
 }
 
 @keyframes watermarkBreathe {
-  0%, 100% { opacity: 0.45; }
-  50%      { opacity: 0.26; }
+  0%, 100% { opacity: 0.32; }
+  50%      { opacity: 0.16; }
 }
 
 /* ----- Bookmark ribbon ----- */
@@ -435,16 +435,16 @@ body {
 
 .taper {
   position: absolute;
-  top: 12%;
+  top: 10%;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(180px, 36vw, 420px);
-  height: clamp(320px, 56vh, 620px);
+  width: clamp(190px, 32vw, 380px);
+  height: clamp(360px, 58vh, 640px);
   color: var(--gold);
   pointer-events: none;
   z-index: 0;
   opacity: 0;
-  filter: blur(13px);
+  filter: blur(11px);
   mix-blend-mode: screen;
   animation: taperIn 2.6s ease 1.45s forwards;
   will-change: opacity, transform;
@@ -458,7 +458,7 @@ body {
 }
 
 @keyframes taperIn {
-  to { opacity: 0.78; }
+  to { opacity: 0.88; }
 }
 
 @keyframes taperBreath {
@@ -477,14 +477,14 @@ body {
   top: clamp(18px, 4.5vh, 54px);
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(40px, 6vw, 78px);
+  width: clamp(44px, 6.4vw, 82px);
   height: auto;
   pointer-events: none;
   z-index: 1;
   opacity: 0;
   filter:
-    drop-shadow(0 0 calc(12px + var(--flame-warmth, 0) * 26px)
-                rgba(240, 180, 110, calc(0.4 + var(--flame-warmth, 0) * 0.5)));
+    drop-shadow(0 0 calc(14px + var(--flame-warmth, 0) * 28px)
+                rgba(240, 180, 110, calc(0.46 + var(--flame-warmth, 0) * 0.52)));
   animation: flameIn 2.6s ease 1.25s forwards;
   will-change: opacity, filter;
   transition: filter 0.4s ease;
@@ -1007,7 +1007,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(13px, 1.5vw, 20px);
+  gap: clamp(14px, 1.7vw, 24px);
   max-width: 100%;
   padding: clamp(6px, 1vw, 14px) 0 clamp(28px, 3.6vw, 44px);
 }
@@ -1696,7 +1696,7 @@ body {
 }
 
 .hero-svg {
-  width: clamp(178px, 25vw, 272px);
+  width: clamp(214px, 28.4vw, 332px);
   height: auto;
   display: block;
   overflow: visible;
@@ -1819,6 +1819,84 @@ body {
   to { stroke-dashoffset: 0; }
 }
 
+/* Scribal trail — a thin amber hairline that traces the hero's path as
+   the question mark is being written. Slightly softer and brighter than
+   the main stroke, it draws with a more leisurely easing so the ink
+   reads as a wet residue laid down by the nib, never competing with
+   the curve itself. The trail is rendered between the ink-wash shadow
+   and the main stroke, so it sits inside the soft warm halo without
+   overlapping the type. After it finishes drawing, a tiny quill-tip
+   pip settles at the foot of the stem — the place where the quill was
+   just lifted from the parchment. */
+.hero-scribal-trail {
+  fill: none;
+  stroke: var(--gold-bright);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  filter: blur(0.5px);
+  animation:
+    heroScribalTrailShow 0.5s ease 1.2s forwards,
+    heroScribalTrailDraw 3.0s cubic-bezier(0.45, 0.04, 0.28, 1) 1.25s forwards;
+  will-change: stroke-dashoffset, opacity;
+}
+
+@keyframes heroScribalTrailShow {
+  to { opacity: 0.55; }
+}
+
+@keyframes heroScribalTrailDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Quill-tip pip — a small bright amber drop that settles at the foot of
+   the stem when the trail has finished drawing. Reads as the place where
+   the quill was just lifted from the parchment. */
+.hero-quill-pip {
+  fill: var(--gold-bright);
+  opacity: 0;
+  filter: blur(0.4px);
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  animation: heroQuillPip 1.0s cubic-bezier(0.2, 1.2, 0.4, 1) 4.0s forwards;
+  will-change: opacity, transform;
+}
+
+@keyframes heroQuillPip {
+  0%   { opacity: 0;    transform: scale(0); }
+  60%  { opacity: 0.95; transform: scale(1.4); }
+  100% { opacity: 0.85; transform: scale(1); }
+}
+
+/* When the reader acknowledges the question, the trail briefly
+   brightens and the pip pulses — like the page has been touched by a
+   reader's hand pressing where the question was written. */
+.hero.echo .hero-scribal-trail {
+  animation:
+    heroStrokeEcho 0.9s cubic-bezier(0.4, 0.04, 0.2, 1),
+    heroScribalTrailEcho 0.95s cubic-bezier(0.4, 0.04, 0.2, 1);
+}
+
+@keyframes heroScribalTrailEcho {
+  0%   { opacity: 0.55; }
+  35%  { opacity: 0.92; }
+  100% { opacity: 0.55; }
+}
+
+.hero.echo .hero-quill-pip {
+  animation: heroQuillPipEcho 0.95s cubic-bezier(0.4, 0.04, 0.2, 1);
+}
+
+@keyframes heroQuillPipEcho {
+  0%   { transform: scale(1);    opacity: 0.85; }
+  35%  { transform: scale(1.55); opacity: 1; }
+  100% { transform: scale(1);    opacity: 0.85; }
+}
+
 /* The ink-pool — a small vermilion and gold pool at the foot of the
    stem, where the question's stroke presses into the parchment. Reads
    as a quill's slip that has settled into the page. Two pieces: a
@@ -1845,8 +1923,8 @@ body {
 
 @keyframes heroInkPoolIn {
   0%   { opacity: 0;    transform: scaleX(0.2); }
-  60%  { opacity: 0.34; }
-  100% { opacity: 0.28; transform: scaleX(1); }
+  60%  { opacity: 0.4; }
+  100% { opacity: 0.34; transform: scaleX(1); }
 }
 
 @keyframes heroInkPoolPip {
@@ -1977,12 +2055,12 @@ body {
 
 @keyframes bowlBloomIn {
   0%   { opacity: 0; transform: scale(0.55); }
-  100% { opacity: 0.92; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes bowlBloomBreathe {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.74; transform: scale(1.08); }
+  50%      { opacity: 0.78; transform: scale(1.08); }
 }
 
 .hero:hover .hero-bowl-bloom,
@@ -3764,10 +3842,13 @@ body {
   .hero-dot-ring { animation: none; opacity: 0.18; transform: scale(1); }
   .hero-stroke { stroke-dashoffset: 0; transition: none; opacity: 1; }
   .hero-shadow { animation: none; opacity: 0.32; stroke-dashoffset: 0; transform: none; }
+  .hero-scribal-trail { animation: none; opacity: 0.55; stroke-dashoffset: 0; }
+  .hero-quill-pip { animation: none; opacity: 0.85; transform: scale(1); }
   .hero-ink-pool { animation: none; opacity: 0.28; transform: scaleX(1); }
   .hero-ink-pool-pip { animation: none; opacity: 0.85; transform: scale(1); }
   .hero-trace { display: none; }
   .hero.echo .hero-stroke, .hero.echo .hero-trace,
+  .hero.echo .hero-scribal-trail, .hero.echo .hero-quill-pip,
   .hero.echo .hero-shadow, .hero.echo .hero-ink-pool { animation: none; }
   .hero-dot { transform: scale(1); transition: none; }
   .hero-spatter { display: none; }
@@ -3840,8 +3921,8 @@ body {
   }
   .taper {
     animation: none;
-    opacity: 0.65;
-    filter: blur(13px);
+    opacity: 0.78;
+    filter: blur(11px);
   }
   .taper-fill { animation: none; transform: scaleY(1); }
   .reading-lantern { transition: opacity 0.18s ease; }
@@ -3928,9 +4009,10 @@ body {
   .question-underline { left: 6%; right: 6%; }
   .watermark { width: min(130vmin, 760px); height: min(130vmin, 760px); }
   .reply { font-size: clamp(13px, 1.6vw, 16px); }
-  .candle-flame { width: clamp(34px, 5vw, 56px); top: clamp(14px, 3vh, 32px); }
+  .candle-flame { width: clamp(38px, 5.4vw, 60px); top: clamp(14px, 3vh, 32px); }
   .taper { width: clamp(140px, 30vw, 240px); height: clamp(240px, 42vh, 360px); top: 12%; filter: blur(11px); }
   .illuminated-star { width: 48px; height: 48px; }
+  .hero-svg { width: clamp(194px, 30vw, 296px); }
   .question { font-size: clamp(34px, 6.2vw, 56px); max-width: 20ch; }
   .question-yet { font-size: 1.12em; }
   .question-mark { font-size: 1.12em; }
@@ -3944,12 +4026,12 @@ body {
   .frame { max-width: 100%; }
   .marg-body { display: none; }
   .marg { max-width: min(40ch, 38vw); }
-  .hero-svg { width: clamp(150px, 28vw, 210px); }
+  .hero-svg { width: clamp(178px, 32vw, 248px); }
   .question { font-size: clamp(28px, 6.4vw, 44px); max-width: 20ch; row-gap: 4px; }
   .question-yet { font-size: 1.1em; }
   .question-mark { font-size: 1.1em; }
   .guide-rule { width: 48px; height: 48px; }
-  .candle-flame { width: clamp(32px, 5vw, 44px); top: 18px; opacity: 0.9; }
+  .candle-flame { width: clamp(36px, 5.4vw, 48px); top: 18px; opacity: 0.9; }
   .taper { width: clamp(110px, 32vw, 200px); height: clamp(190px, 32vh, 300px); top: 12%; filter: blur(9px); }
   .reading-lantern {
     background: radial-gradient(
@@ -4001,8 +4083,8 @@ body {
   .marg-glyph { width: 15px; height: 15px; }
   .folio-mark { width: 48px; }
   .folio-mark-letter { font-size: 30px; }
-  .hero-svg { width: 160px; }
-  .candle-flame { width: 30px; top: 12px; opacity: 0.85; }
+  .hero-svg { width: 188px; }
+  .candle-flame { width: 34px; top: 12px; opacity: 0.85; }
   .taper { width: clamp(90px, 36vw, 150px); height: clamp(150px, 28vh, 220px); top: 10%; filter: blur(7px); }
   .question { font-size: clamp(22px, 7.2vw, 30px); max-width: 100%; line-height: 1.14; row-gap: 4px; }
   .question-yet { font-size: 1.08em; }
@@ -8101,7 +8183,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(2px, 0.2vw, 4px);
+  gap: clamp(4px, 0.4vw, 8px);
   width: 100%;
   margin: clamp(2px, 0.3vw, 6px) 0 0;
   padding: 0;
