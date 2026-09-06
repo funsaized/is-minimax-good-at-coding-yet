@@ -2624,6 +2624,43 @@ function AnswerIllumination({ lit }: { lit: boolean }) {
   )
 }
 
+// PageSettling — the chapter's quiet composed moment of resolution,
+// placed beneath the answer once the answer has fully landed. A
+// short warm halo blooms outward from the line and a single small
+// vermilion pip presses into the parchment at its centre — the
+// page's own acknowledgment that it has answered the question.
+// Reads as the manuscript's "the moment has been held" gesture:
+// the answer is in place, the reply is about to begin, and the
+// reader pauses between them. Settles into a slow steady breath
+// thereafter, so the chapter's cadence below the answer feels
+// alive rather than static. Hidden in steady state; the bloom
+// briefly haloes when the answer lands, then dims toward rest.
+// Respects reduced-motion: in steady state the haloes appear in
+// their settled form, never bloom.
+function PageSettling({ settled }: { settled: boolean }) {
+  return (
+    <span
+      className={`page-settling${settled ? ' is-settled' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 120 22"
+        className="page-settling-svg"
+        focusable="false"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <line x1="2" y1="11" x2="50" y2="11" className="page-settling-rule page-settling-rule-l" />
+        <line x1="70" y1="11" x2="118" y2="11" className="page-settling-rule page-settling-rule-r" />
+        <path
+          className="page-settling-pip"
+          d="M 60 6.5 L 61.18 10.18 L 64.6 11 L 61.18 11.82 L 60 15.5 L 58.82 11.82 L 55.4 11 L 58.82 10.18 Z"
+        />
+        <circle cx="60" cy="11" r="0.7" className="page-settling-core" />
+      </svg>
+    </span>
+  )
+}
+
 // ColophonTie — two thin vertical hairlines that flank the colophon,
 // tightening the stack of seal, signature, inkpot, oculus, legi mark
 // and provenance into a single composed lower margin. Reads as the
@@ -4349,6 +4386,7 @@ export function App() {
                   <span className="answer-caret" aria-hidden="true">|</span>
                 )}
               </p>
+              <PageSettling settled={answerOn && answerChars >= ANSWER.length && !replyOn} />
               <ReadingGuide visible={answerOn} />
               <div
                 className={`chapter-body ${footnoteDone ? 'is-footnote-done' : ''} ${intellexiOn ? 'is-intellexi' : ''} ${lectorisDone ? 'is-annotavi' : ''}`}

@@ -435,10 +435,10 @@ body {
 
 .taper {
   position: absolute;
-  top: 10%;
+  top: 8%;
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(190px, 32vw, 380px);
+  width: clamp(210px, 36vw, 410px);
   height: clamp(360px, 58vh, 640px);
   color: var(--gold);
   pointer-events: none;
@@ -458,7 +458,7 @@ body {
 }
 
 @keyframes taperIn {
-  to { opacity: 0.88; }
+  to { opacity: 0.96; }
 }
 
 @keyframes taperBreath {
@@ -10125,17 +10125,17 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: clamp(280px, 56vw, 480px);
-  height: clamp(80px, 8vw, 130px);
+  width: clamp(320px, 60vw, 540px);
+  height: clamp(90px, 9vw, 150px);
   transform: translate(-50%, -50%);
   pointer-events: none;
   border-radius: 50%;
   background:
     radial-gradient(
       56% 56% at 50% 50%,
-      rgba(240, 212, 154, 0.18) 0%,
-      rgba(217, 176, 116, 0.08) 38%,
-      rgba(217, 176, 116, 0.03) 60%,
+      rgba(240, 212, 154, 0.24) 0%,
+      rgba(217, 176, 116, 0.11) 38%,
+      rgba(217, 176, 116, 0.045) 60%,
       transparent 78%
     );
   opacity: 0;
@@ -10168,6 +10168,157 @@ body {
 
 @media (max-width: 520px) {
   .answer-illumination { display: none; }
+}
+
+/* ----- Page settling (composed chapter-body moment of resolution) -----
+ *
+ * A composed gold-leaf mark that lands beneath the answer the moment
+ * the answer has finished writing itself. Two thin gold rules grow
+ * outward from a small four-pointed vermilion star with a gold pip
+ * at its heart — the page's own record that the chapter has just
+ * been answered. Reads as the manuscript's "the page, in answering,
+ * has just sealed itself" gesture: the answer is in place, the
+ * reply is about to begin, and the moment between them is held by
+ * this single quiet ornament.
+ *
+ * Settles into a slow steady breath once the answer has fully
+ * landed, so the chapter's lower cadence feels alive rather than
+ * static. Hidden in steady state; the rules grow out and the pip
+ * presses in once .is-settled is reached. Hidden on reduced-motion.
+ */
+.page-settling {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(160px, 24vw, 240px);
+  height: clamp(18px, 1.6vw, 24px);
+  margin: clamp(6px, 0.7vw, 12px) auto clamp(2px, 0.3vw, 6px);
+  position: relative;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s;
+  isolation: isolate;
+}
+
+.page-settling::before {
+  content: '';
+  position: absolute;
+  inset: -28% -10% -28% -10%;
+  background:
+    radial-gradient(
+      58% 100% at 50% 50%,
+      rgba(240, 212, 154, 0.18) 0%,
+      rgba(217, 176, 116, 0.085) 38%,
+      rgba(217, 176, 116, 0.035) 60%,
+      transparent 78%
+    );
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scaleX(0.32);
+  transform-origin: 50% 50%;
+  filter: blur(2px);
+  z-index: -1;
+  transition:
+    opacity 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0s,
+    transform 1.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0s;
+}
+
+.page-settling-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.page-settling-rule {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  transition:
+    opacity 0.7s ease 0.18s,
+    stroke-dashoffset 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.18s;
+}
+
+.page-settling-rule-r {
+  stroke: var(--gold);
+  stroke-width: 0.7;
+}
+
+.page-settling-pip {
+  fill: var(--vermilion);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.32) rotate(-90deg);
+  filter: drop-shadow(0 0 3px rgba(176, 83, 58, 0.32));
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s,
+    transform 0.75s cubic-bezier(0.2, 1.2, 0.4, 1) 0.55s;
+}
+
+.page-settling-core {
+  fill: var(--gold-bright);
+  opacity: 0;
+  filter: drop-shadow(0 0 2px rgba(240, 212, 154, 0.5));
+  transition: opacity 0.5s ease 0.78s;
+}
+
+.page-settling.is-settled {
+  opacity: 1;
+}
+
+.page-settling.is-settled::before {
+  opacity: 1;
+  transform: scaleX(1);
+  animation: pageSettlingHaloBreath 13s ease-in-out 2.6s infinite;
+}
+
+.page-settling.is-settled .page-settling-rule {
+  opacity: 0.78;
+  stroke-dashoffset: 0;
+}
+
+.page-settling.is-settled .page-settling-pip {
+  opacity: 0.92;
+  transform: scale(1) rotate(0deg);
+  animation: pageSettlingPipBreath 9s ease-in-out 3.4s infinite;
+}
+
+.page-settling.is-settled .page-settling-core {
+  opacity: 0.86;
+}
+
+@keyframes pageSettlingHaloBreath {
+  0%, 100% { opacity: 1;    transform: scaleX(1); }
+  50%      { opacity: 0.74; transform: scaleX(1.05); }
+}
+
+@keyframes pageSettlingPipBreath {
+  0%, 100% { opacity: 0.92; transform: scale(1) rotate(0deg); }
+  50%      { opacity: 0.72; transform: scale(1.04) rotate(2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-settling { transition: opacity 0.2s ease; }
+  .page-settling.is-settled { opacity: 1; }
+  .page-settling.is-settled::before { animation: none; opacity: 0.85; transform: scaleX(1); }
+  .page-settling.is-settled .page-settling-rule { transition: none; opacity: 0.78; stroke-dashoffset: 0; }
+  .page-settling.is-settled .page-settling-pip { animation: none; opacity: 0.86; transform: scale(1) rotate(0deg); }
+  .page-settling.is-settled .page-settling-core { transition: none; opacity: 0.78; }
+}
+
+@media (max-width: 760px) {
+  .page-settling { width: clamp(140px, 36vw, 200px); }
+}
+
+@media (max-width: 520px) {
+  .page-settling { width: clamp(110px, 44vw, 160px); margin-top: clamp(4px, 0.6vw, 8px); }
+  .page-settling::before { filter: blur(1.6px); }
 }
 
 /* ----- Colophon tie ----- */
