@@ -64,7 +64,7 @@ If the model omits `CHANGELOG.md` (for example, when its output is truncated), t
 
 `npm run publish` resumes a pending publication without generating a new page. Stop the service before using it. Do not edit the repository while a publication is pending. If a run is paused, inspect `npm run status` and the local logs, resolve the issue, then resume. A killed model attempt is abandoned; the next turn starts from the last accepted source.
 
-For this small experiment, snapshots deliberately live in Git. The worker pauses before the archive exceeds 75 MB or a snapshot exceeds 12 MB. Raise the allowance deliberately or move to a larger archive later. Historical versions are never automatically deleted or rebuilt, and remote assets are disallowed so old versions remain self-contained.
+Snapshots deliberately live in Git. The worker pauses before the archive exceeds 10 GB or a snapshot exceeds 12 MB. The larger archive allowance supports a multi-week run; move historical snapshots to dedicated storage before increasing it further. Historical versions are never automatically deleted or rebuilt, and remote assets are disallowed so old versions remain self-contained.
 
 ## First-time provisioning
 

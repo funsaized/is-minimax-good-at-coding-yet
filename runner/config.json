@@ -6,7 +6,7 @@
   "maxRunsPerDay": 96,
   "maxEstimatedDailyCostUsd": 10,
   "maxSnapshotBytes": 12000000,
-  "maxArchiveBytes": 75000000,
+  "maxArchiveBytes": 10000000000,
   "projectName": "is-minimax-good-at-coding-yet",
   "publicUrl": "https://is-minimax-good-at-coding-yet.vercel.app",
   "serviceName": "is-minimax-good-at-coding-yet"
