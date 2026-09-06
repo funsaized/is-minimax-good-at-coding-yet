@@ -2032,6 +2032,40 @@ function ChapterCrown() {
   )
 }
 
+// ChapterTitle — a single composed chapter subtitle that opens the
+// chapter between the existing crown and the fleuron. The crown
+// already names the folio in its capitulum ("mss · fol. xviii · de
+// initiali lucente"); this is the chapter's opening epigraph — a
+// quiet, centered inscription in a manuscript hand style, flanked by
+// two thin gold rules with a small vermilion asterisk-petal motif at
+// the pivot. Typesets itself in once the crown has settled, so the
+// chapter reads as: crown → epigraph → fleuron → hero. A short Latin
+// lemma paired with its English gloss, set small enough to feel like
+// a printer's epigraph, not a banner — the chapter's opening
+// sentiment, finally composed.
+function ChapterTitle() {
+  return (
+    <div className="chapter-title" aria-hidden="true">
+      <span className="chapter-title-rule chapter-title-rule-l" />
+      <span className="chapter-title-mark">
+        <svg viewBox="0 0 12 12" focusable="false">
+          <path
+            d="M 6 1.4 L 6.82 4.94 L 10.4 6 L 6.82 7.06 L 6 10.6 L 5.18 7.06 L 1.6 6 L 5.18 4.94 Z"
+            className="chapter-title-star"
+          />
+          <circle cx="6" cy="6" r="0.7" className="chapter-title-pip" />
+        </svg>
+      </span>
+      <span className="chapter-title-line">
+        <em className="chapter-title-latin">incipit</em>
+        <span className="chapter-title-sep" aria-hidden="true">·</span>
+        <span className="chapter-title-en">the first letter lights</span>
+      </span>
+      <span className="chapter-title-rule chapter-title-rule-r" />
+    </div>
+  )
+}
+
 // QuestionFlourish — a small vermilion ink-stain beneath the question
 // mark character. Drawn from a flourish that begins beneath the "?"
 // and ends in a single drop, like a quill's slip.
@@ -3576,6 +3610,7 @@ export function App() {
         <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''} ${quietus ? 'is-quietus' : ''}`}>
           <ChapterSpine pulseKey={spinePulseKey} sealed={spineSealed} annotavi={lectorisDone} />
           <ChapterCrown />
+          <ChapterTitle />
           <Fleuron />
           <div className="hero-frame">
             <Horologium wrapRef={horologiumRef} />

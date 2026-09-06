@@ -1602,8 +1602,8 @@ body {
   opacity: 0;
   transform: translateY(4px);
   transition:
-    opacity 0.9s ease 1.3s,
-    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.3s;
+    opacity 0.9s ease 1.95s,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 1.95s;
 }
 
 .composition.ready .fleuron {
@@ -1618,14 +1618,14 @@ body {
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
   opacity: 0.55;
-  transition: stroke-dashoffset 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 1.4s;
+  transition: stroke-dashoffset 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 2.05s;
 }
 
 .composition.ready .fleuron-rule line { stroke-dashoffset: 0; }
 
 .fleuron-dots {
   opacity: 0;
-  transition: opacity 0.5s ease 2.05s;
+  transition: opacity 0.5s ease 2.7s;
 }
 
 .composition.ready .fleuron-dots { opacity: 1; }
@@ -1640,8 +1640,8 @@ body {
   transform: scale(0.7);
   transform-origin: 80px 7px;
   transition:
-    opacity 0.7s ease 1.85s,
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 1.85s;
+    opacity 0.7s ease 2.5s,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s;
 }
 
 .composition.ready .fleuron-ornament {
@@ -1662,6 +1662,184 @@ body {
 }
 
 .fleuron-pip { fill: var(--bg-warm); }
+
+/* ----- Chapter Title (composed chapter subtitle) -----
+ * A small but composed chapter title that names the folio between the
+ * existing crown and the fleuron. The crown already holds date,
+ * capitulum, and rubric; this is the chapter's "named" title — a
+ * quiet, centered inscription in a manuscript hand style, flanked by
+ * two thin gold rules with a small vermilion asterisk-petal motif at
+ * the pivot. Typesets itself in once the crown has settled, so the
+ * chapter reads as: crown → title → fleuron → hero. A short Latin
+ * lemma paired with its English gloss, set small enough to feel like
+ * a printer's epigraph, not a banner — the chapter's name, finally
+ * visible. */
+
+.chapter-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  width: clamp(280px, 42vw, 460px);
+  margin: clamp(-2px, -0.2vw, 0px) auto clamp(8px, 1vw, 14px);
+  opacity: 0;
+  transform: translateY(3px);
+  transition:
+    opacity 1.0s cubic-bezier(0.2, 0.7, 0.2, 1) 1.15s,
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 1.15s;
+  pointer-events: none;
+}
+
+.composition.ready .chapter-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chapter-title-rule {
+  flex: 1 1 auto;
+  display: block;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-deep) 28%,
+    var(--gold) 72%,
+    var(--gold) 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.18);
+  transition:
+    opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 1.35s,
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 1.35s;
+}
+
+.chapter-title-rule-l { transform-origin: 100% 50%; }
+.chapter-title-rule-r {
+  transform-origin: 0% 50%;
+  background: linear-gradient(
+    -90deg,
+    transparent 0%,
+    var(--gold-deep) 28%,
+    var(--gold) 72%,
+    var(--gold) 100%
+  );
+}
+
+.composition.ready .chapter-title-rule {
+  opacity: 0.7;
+  transform: scaleX(1);
+}
+
+.chapter-title-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(11px, 1.2vw, 14px);
+  height: clamp(11px, 1.2vw, 14px);
+  flex: 0 0 auto;
+  opacity: 0;
+  transform: scale(0.32) rotate(-90deg);
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 1.45s,
+    transform 0.85s cubic-bezier(0.2, 1.2, 0.4, 1) 1.45s;
+  color: var(--vermilion);
+  filter: drop-shadow(0 0 2.5px rgba(176, 83, 58, 0.32));
+}
+
+.composition.ready .chapter-title-mark {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.chapter-title-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.chapter-title-star { fill: currentColor; }
+
+.chapter-title-pip {
+  fill: var(--gold-bright);
+  filter: drop-shadow(0 0 1.5px rgba(240, 212, 154, 0.55));
+}
+
+.chapter-title-line {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(5px, 0.55vw, 8px);
+  font-family: var(--serif);
+  font-size: clamp(10.5px, 1.04vw, 13px);
+  line-height: 1.4;
+  letter-spacing: 0.16em;
+  text-transform: lowercase;
+  color: var(--ink-soft);
+  opacity: 0;
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 1.55s;
+}
+
+.composition.ready .chapter-title-line {
+  opacity: 1;
+}
+
+.chapter-title-latin {
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-shadow: 0 0 6px rgba(217, 176, 116, 0.18);
+}
+
+.chapter-title-sep {
+  display: inline-block;
+  font-style: normal;
+  color: var(--gold-deep);
+  opacity: 0.65;
+  letter-spacing: 0;
+  transform: translateY(-0.06em);
+}
+
+.chapter-title-en {
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+
+.composition.is-pointing .chapter-title-latin {
+  color: var(--gold-bright);
+  text-shadow: 0 0 9px rgba(240, 212, 154, 0.32);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter-title { transition: none; opacity: 1; transform: none; }
+  .chapter-title-rule { transition: none; opacity: 0.7; transform: scaleX(1); }
+  .chapter-title-mark { transition: none; opacity: 1; transform: scale(1) rotate(0deg); }
+  .chapter-title-line { transition: none; opacity: 1; }
+}
+
+@media (max-width: 880px) {
+  .chapter-title { width: clamp(240px, 50vw, 380px); gap: clamp(6px, 0.9vw, 10px); }
+}
+
+@media (max-width: 620px) {
+  .chapter-title {
+    width: clamp(220px, 56vw, 320px);
+    gap: 6px;
+    margin-bottom: clamp(6px, 1vw, 10px);
+  }
+  .chapter-title-mark { width: 10px; height: 10px; }
+  .chapter-title-line { letter-spacing: 0.1em; }
+  .chapter-title-latin { letter-spacing: 0.14em; }
+}
+
+@media (max-width: 480px) {
+  .chapter-title { width: clamp(190px, 64vw, 280px); gap: 5px; }
+  .chapter-title-line { font-size: clamp(9.5px, 1.6vw, 11.5px); }
+  .chapter-title-en { display: none; }
+  .chapter-title-sep { display: none; }
+}
 
 /* ----- Hero (the question mark emblem) ----- */
 
@@ -3562,7 +3740,7 @@ body {
   opacity: 0.94;
   transform: translateY(0);
   max-height: 6em;
-  margin: clamp(24px, 2.8vw, 34px) 0 0;
+  margin: clamp(28px, 3.2vw, 40px) 0 0;
 }
 
 .answer-text {
@@ -3682,7 +3860,7 @@ body {
   opacity: 0.97;
   transform: translateY(0);
   max-height: 8em;
-  margin: clamp(16px, 1.8vw, 22px) 0 0;
+  margin: clamp(18px, 2.05vw, 26px) 0 0;
 }
 
 .reply-rule {
@@ -3736,13 +3914,13 @@ body {
 
 .colophon {
   position: absolute;
-  bottom: clamp(16px, 2.2vw, 28px);
+  bottom: clamp(14px, 1.9vw, 26px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(7px, 0.9vw, 12px);
+  gap: clamp(6px, 0.78vw, 10px);
   color: var(--ink-faint);
   opacity: 0;
   transition: opacity 0.9s ease 2.1s;
@@ -3764,11 +3942,11 @@ body {
 .colophon-pair {
   display: inline-flex;
   align-items: baseline;
-  gap: clamp(6px, 0.7vw, 10px);
+  gap: clamp(7px, 0.78vw, 12px);
   font-family: var(--serif);
   font-style: italic;
-  letter-spacing: 0.06em;
-  font-size: clamp(11px, 1vw, 13px);
+  letter-spacing: 0.08em;
+  font-size: clamp(11.5px, 1.05vw, 14px);
   color: var(--ink-soft);
   opacity: 0;
   transform: translateY(2px);
@@ -3784,20 +3962,20 @@ body {
 
 .colophon-quaeritur {
   font-style: italic;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   font-family: var(--serif);
-  font-size: clamp(11px, 1vw, 13px);
+  font-size: clamp(11.5px, 1.05vw, 14px);
   color: var(--ink-faint);
-  opacity: 0.78;
+  opacity: 0.85;
 }
 
 .colophon-respondetur {
   font-style: italic;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   font-family: var(--serif);
-  font-size: clamp(11px, 1vw, 13px);
+  font-size: clamp(11.5px, 1.05vw, 14px);
   color: var(--gold);
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
 .colophon-pair-arrow {
@@ -8458,9 +8636,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(4px, 0.4vw, 8px);
+  gap: clamp(6px, 0.55vw, 11px);
   width: 100%;
-  margin: clamp(2px, 0.3vw, 6px) 0 0;
+  margin: clamp(4px, 0.5vw, 10px) 0 0;
   padding: 0;
 }
 
