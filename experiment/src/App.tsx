@@ -1693,6 +1693,24 @@ function PredicateRule() {
   return <span className="predicate-rule" aria-hidden="true" />
 }
 
+// QuestionPressmark — a single vermilion ink-stroke that blooms
+// beneath the question text the first time the reader engages the
+// chapter. The page's "you've touched me" gesture — a small hairline
+// that draws outward from center, like a quill pressed into the
+// parchment. Joins the existing question-underline (the transient
+// gold rule) and the hero-question-link (the vertical vermilion drip),
+// so the chapter has three quiet authorial marks responding to one
+// gesture of attention. Settles in once on the first acknowledge and
+// stays.
+function QuestionPressmark({ visible }: { visible: boolean }) {
+  return (
+    <span
+      className={`question-pressmark${visible ? ' is-on' : ''}`}
+      aria-hidden="true"
+    />
+  )
+}
+
 // AnswerOrnament — a small printer's flourish that punctuates the
 // transition between answer and reply. Two rules flanking a
 // diamond and two pips.
@@ -2751,34 +2769,34 @@ export function App() {
              <VineCorner position="br" />
              <PageCorner />
              <InkFleck key={noteNonce} visible={pointing || answerOn} />
-             <span className="question-kicker">a question in public</span>
-             <FolioOpener />
-             <h1 className="question">
-              <span className="question-line">
-                <span className="question-lead-punctus" aria-hidden="true">
-                  <span className="question-lead-punctus-dot" />
-                </span>
-                <em className="incipit-i question-word">i</em>
-                <em className="question-lead question-word">s</em>
-              <span className="question-space"> </span>
-                <em className="question-name question-word">Minimax&nbsp;M3</em>
-                <span className="question-name-pause" aria-hidden="true">
-                  <span className="question-name-pause-dot" />
-                </span>
-                <span className="question-verb-wrap">
-                  <span className="question-verb question-word"> good at frontend </span>
-                  <PredicateRule />
-                </span>
-                <span className="question-yet-pause" aria-hidden="true">
-                  <span className="question-yet-pause-dot" />
-                </span>
-                <em className="question-yet question-word">yet</em>
-                <span className="question-mark-group">
-                  <span className="question-mark question-word">?</span>
-                  <QuestionFlourish />
-                </span>
-              </span>
-            </h1>
+<span className="question-kicker">a question in public</span>
+              <FolioOpener />
+              <h1 className="question">
+               <span className="question-line">
+                 <span className="question-lead-punctus" aria-hidden="true">
+                   <span className="question-lead-punctus-dot" />
+                 </span>
+                 <em className="incipit-i question-word" style={{ '--wi': 0 } as CSSProperties}>i</em>
+                 <em className="question-lead question-word" style={{ '--wi': 1 } as CSSProperties}>s</em>
+               <span className="question-space" style={{ '--wi': 2 } as CSSProperties}> </span>
+                 <em className="question-name question-word" style={{ '--wi': 3 } as CSSProperties}>Minimax&nbsp;M3</em>
+                 <span className="question-name-pause" aria-hidden="true" style={{ '--wi': 4 } as CSSProperties}>
+                   <span className="question-name-pause-dot" />
+                 </span>
+                 <span className="question-verb-wrap" style={{ '--wi': 5 } as CSSProperties}>
+                   <span className="question-verb question-word"> good at frontend </span>
+                   <PredicateRule />
+                 </span>
+                 <span className="question-yet-pause" aria-hidden="true" style={{ '--wi': 6 } as CSSProperties}>
+                   <span className="question-yet-pause-dot" />
+                 </span>
+                 <em className="question-yet question-word" style={{ '--wi': 7 } as CSSProperties}>yet</em>
+                 <span className="question-mark-group">
+                   <span className="question-mark question-word" style={{ '--wi': 8 } as CSSProperties}>?</span>
+                   <QuestionFlourish />
+                 </span>
+               </span>
+             </h1>
               <Maniculum active={pointing} />
               <VideAnnotation visible={answerOn && answerChars >= 6} />
               <span className="question-prompt" aria-hidden="true">
@@ -2786,6 +2804,7 @@ export function App() {
                 <span className="question-prompt-mark" />
                 <span className="question-prompt-pip question-prompt-pip-r" />
               </span>
+            <QuestionPressmark visible={noteNonce > 0 || answerOn} />
             <span
               key={noteNonce}
               className={`question-underline${noteNonce > 0 ? ' is-on' : ''}`}
