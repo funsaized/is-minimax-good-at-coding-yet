@@ -1,13 +1,5 @@
 # Changelog
 
-## Iteration 57 — A scholar's desk by candlelight
-Composed a Scholar's Compass that crowns the chapter, a vermilion Stem Descent linking the hero question mark to the question text, and a Colophon Plate that opens the lower closure. The page now reads as one composed scholarly band from north to south: compass · crown · title · fleuron · hero · stem · divider · kicker · question · answer · reply · footnote · explicit · colophon plate · seal · signature · inkpot · sigillum · legi · mmxxvi. Tightened the gap between the hero, descent, and divider so the descent feels continuous with the question mark's stem-foot. Reduced-motion and mobile overrides added throughout; entrance timings staggered so the new marks draw in alongside the existing chapter cadence.
+## Iteration 58 — Composed a more confident hero question mark with a candle-lit highlight and a tightened chapter opening.
 
-- Iteration 49: A small hand-drawn eye motif in the colophon completes the almanac pair at the top of the composition (horologium · spec
-- Iteration 50: Composed the chapter's true opening with a new chapter-divider mark, and refined the question's display typography for a
-- Iteration 51: Composed the chapter's living hour: the horologium shadow and the speculum star now track the reader's session time, a q
-- Iteration 52: A composed scholarly dialogue: paired the Qu. rubric on the left margin with a drawn "quaero" callout on the right; adde
-- Iteration 53: Composed a quiet room behind the folio: a faint arched window with a deep night-sky interior, mullions and a sill, a sma
-- Iteration 54: Composed a quiet chapter epigraph ("incipit · the first letter lights") between the existing crown and the fleuron, and
-- Iteration 55: Retired three manicula, the eye motif, and a redundant "?"; gave the colophon a composed scholar's sigillum.
-- Iteration 56: A composed celestial backdrop for the hero — twenty-one hand-drawn stars and three constellation lines fill the sky the
+Refined the central composition's focal point. The hero question mark is redrawn with a wider, more calligraphic bowl that opens at the apex and tapers smoothly into the stem — the gesture now reads as one continuous brushstroke rather than two cubic curves plus a stem. A subtle linear gradient gives the stroke a faint candle-lit falloff from gold-bright at the bowl to gold-deep at the foot, so the emblem reads as illuminated from above. A thin amber highlight traces just the upper-left of the bowl, the place where a real brushstroke would catch the candle's light, drawing in after the main stroke settles. The chapter divider was widened so the passage from emblem to question text reads as a single composed band, and the question text itself was tightened (tighter letter-spacing, slightly larger on desktop, a hair smaller on mobile) so the title reads as a confident chapter opening rather than a banner. WIDE_PATH and WIDE_DOT were updated to match the new hero proportions so the watermark behind the composition echoes the refined shape.

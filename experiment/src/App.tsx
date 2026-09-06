@@ -8,17 +8,29 @@ import {
   type RefObject,
 } from 'react'
 
-// A hand-drawn question mark with a slightly fuller bowl and a longer,
-// more confident stem — the quill pressed harder at the bottom of the
-// stroke, and the curl at the top of the bowl opens a little more so
-// the terminal reads as a deliberate beginning, not a closed loop.
+// A hand-drawn question mark with a fuller bowl and a longer, more
+// confident stem — the bowl opens wider at the top (the quill started
+// here, finished there) and tapers into the stem via a smooth curve
+// rather than a straight line, so the gesture reads as one continuous
+// brushstroke instead of two cubic curves + a stem. The terminal of
+// the stroke is slightly off-center so the dot reads as a natural
+// continuation, not a centered punctuation mark.
 const HERO_PATH =
-  'M 62 116 C 62 -10 178 -10 178 116 C 178 180 122 164 122 214 L 122 270'
-const HERO_DOT = { cx: 122, cy: 306, r: 17 }
+  'M 64 112 C 44 -22 200 -22 180 112 C 172 184 130 170 126 222 C 124 244 124 262 124 284'
+const HERO_DOT = { cx: 124, cy: 310, r: 17 }
+
+// A subtler "echo" path that traces just the upper bowl and the stem's
+// inner curve, drawn after the main stroke with a thinner, brighter
+// stroke — the page's highlight where candlelight catches the ink.
+// Reads as the upper-left curve of the bowl catching more light than
+// the downstroke, the way a real brushstroke does when held at an
+// angle to the candle.
+const HERO_HIGHLIGHT_PATH =
+  'M 68 106 C 56 -8 184 -10 176 108'
 
 const WIDE_PATH =
-  'M 192 348 C 192 0 528 218 528 348 C 528 522 362 472 362 620 L 362 762'
-const WIDE_DOT = { cx: 362, cy: 864, r: 51 }
+  'M 192 336 C 132 -66 600 -66 540 336 C 516 552 390 510 378 666 C 372 732 372 786 372 852'
+const WIDE_DOT = { cx: 372, cy: 930, r: 51 }
 
 // Deliberate ink-arc spatter: a flourish that reads as one gesture, not noise.
 const SPATTER = [
@@ -3649,8 +3661,19 @@ export function App() {
                     <stop offset="58%"  stopColor="currentColor" stopOpacity="0.16" />
                     <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
                   </radialGradient>
+                  <linearGradient
+                    id="hero-stroke-grad"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="0%"   stopColor="#f0d49a" />
+                    <stop offset="38%"  stopColor="currentColor" />
+                    <stop offset="100%" stopColor="#a88556" />
+                  </linearGradient>
                   <clipPath id="bowl-clip">
-                    <ellipse cx="120" cy="71" rx="40" ry="30" />
+                    <ellipse cx="124" cy="98" rx="46" ry="44" />
                   </clipPath>
                 </defs>
                 <g className="auriole">
@@ -3684,7 +3707,23 @@ export function App() {
                     d={HERO_PATH}
                     pathLength={100}
                   />
-                  <path className="hero-stroke" d={HERO_PATH} pathLength={100} />
+                  <path
+                    className="hero-stroke"
+                    d={HERO_PATH}
+                    pathLength={100}
+                    stroke="url(#hero-stroke-grad)"
+                  />
+                  {/* Inner highlight — a subtler stroke that traces just
+                      the upper-left of the bowl, where candlelight
+                      catches the wet ink. Reads as a glint along the
+                      bowl's upper rim, drawn after the main stroke so
+                      the question mark feels illuminated from above
+                      rather than uniformly lit. */}
+                  <path
+                    className="hero-highlight"
+                    d={HERO_HIGHLIGHT_PATH}
+                    pathLength={100}
+                  />
                   <path className="hero-trace" d={HERO_PATH} pathLength={100} />
                   {/* Quill-tip pip — a small bright amber drop that
                       settles at the foot of the stem once the trail
