@@ -108,6 +108,46 @@ function WaxSealInitial() {
   )
 }
 
+function PrintedInitial({ letter }: { letter: string }) {
+  return (
+    <span className="printed-initial" aria-hidden="true">
+      <svg viewBox="0 0 60 60" focusable="false">
+        <defs>
+          <pattern id="initial-hatch" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+            <line x1="0" y1="0" x2="0" y2="3" stroke="currentColor" strokeWidth="0.6" />
+          </pattern>
+        </defs>
+        <rect
+          x="2"
+          y="2"
+          width="56"
+          height="56"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.2"
+          rx="2"
+        />
+        <rect
+          x="5"
+          y="5"
+          width="50"
+          height="50"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.5"
+          strokeDasharray="1.2 1.6"
+          opacity="0.7"
+        />
+        <text x="30" y="44" textAnchor="middle" className="printed-initial-letter">
+          {letter}
+        </text>
+        <line x1="6" y1="55" x2="54" y2="55" stroke="currentColor" strokeWidth="0.4" opacity="0.45" />
+        <line x1="6" y1="5" x2="54" y2="5" stroke="currentColor" strokeWidth="0.4" opacity="0.45" />
+      </svg>
+    </span>
+  )
+}
+
 function ManuscriptStamp() {
   return (
     <div className="ms-stamp" aria-hidden="true">
@@ -115,7 +155,7 @@ function ManuscriptStamp() {
       <span className="ms-stamp-rule" />
       <span className="ms-stamp-row ms-stamp-row--mid">FRONTEND</span>
       <span className="ms-stamp-rule ms-stamp-rule--short" />
-      <span className="ms-stamp-row ms-stamp-row--bot">cap. xviii · rect.</span>
+      <span className="ms-stamp-row ms-stamp-row--bot">cap. xviii · vers.</span>
     </div>
   )
 }
@@ -157,50 +197,39 @@ function ChapterHead() {
   )
 }
 
-function Asterism({ label }: { label: string }) {
-  return (
-    <div className="asterism" role="separator" aria-hidden="true">
-      <span className="asterism-line" />
-      <AsterismGlyph />
-      <span className="asterism-label">{label}</span>
-      <AsterismGlyph />
-      <span className="asterism-line" />
-    </div>
-  )
-}
-
-function QuillFlourish({
-  drawing,
-  progress,
+function LeafCluster({
+  className,
+  label,
 }: {
-  drawing: boolean
-  progress: number
+  className?: string
+  label?: string
 }) {
-  const strokeOffset = (1 - progress).toFixed(3)
   return (
-    <svg
-      className={`quill-flourish ${drawing ? 'is-drawing' : ''}`}
-      viewBox="0 0 320 30"
-      preserveAspectRatio="none"
+    <div
+      className={`leaf-cluster ${className ?? ''}`}
+      role={label ? 'separator' : undefined}
       aria-hidden="true"
-      focusable="false"
     >
-      <circle className="quill-flourish-nib" cx="4" cy="22" r="1.8" />
-      <path
-        className="quill-flourish-path"
-        d="M 5 22 C 22 8, 58 30, 98 16 S 172 4, 220 18 S 284 8, 302 4"
-        pathLength="1"
-        strokeDasharray="1 1"
-        strokeDashoffset={strokeOffset}
-      />
-      <path
-        className="quill-flourish-curl"
-        d="M 302 4 C 314 0, 318 10, 310 13 C 304 16, 300 9, 306 5"
-        pathLength="1"
-        strokeDasharray="1 1"
-        strokeDashoffset={strokeOffset}
-      />
-    </svg>
+      <span className="leaf-cluster-stem leaf-cluster-stem--left" />
+      <svg className="leaf-cluster-glyph" viewBox="0 0 132 36" focusable="false">
+        <g className="leaf-cluster-leaves">
+          <path d="M 18 18 Q 28 6 38 14 Q 30 22 18 18 Z" />
+          <path d="M 38 14 Q 46 4 58 12 Q 50 24 38 14 Z" />
+          <path d="M 22 22 Q 30 32 42 26 Q 32 18 22 22 Z" />
+          <path d="M 42 26 Q 52 32 60 22 Q 52 18 42 26 Z" />
+          <circle cx="66" cy="18" r="1.6" />
+          <path d="M 114 18 Q 104 6 94 14 Q 102 22 114 18 Z" />
+          <path d="M 94 14 Q 86 4 74 12 Q 82 24 94 14 Z" />
+          <path d="M 110 22 Q 102 32 90 26 Q 100 18 110 22 Z" />
+          <path d="M 90 26 Q 80 32 72 22 Q 80 18 90 26 Z" />
+          <line x1="42" y1="26" x2="56" y2="22" stroke="currentColor" strokeWidth="0.35" />
+          <line x1="90" y1="26" x2="76" y2="22" stroke="currentColor" strokeWidth="0.35" />
+        </g>
+        <line x1="60" y1="18" x2="72" y2="18" stroke="currentColor" strokeWidth="0.5" />
+      </svg>
+      {label && <span className="leaf-cluster-label">{label}</span>}
+      <span className="leaf-cluster-stem leaf-cluster-stem--right" />
+    </div>
   )
 }
 
@@ -298,16 +327,6 @@ function BookmarkRibbon() {
         </text>
       </g>
     </svg>
-  )
-}
-
-function Catchword() {
-  return (
-    <div className="catchword" aria-hidden="true">
-      <span className="catchword-rule" />
-      <span className="catchword-text">reply</span>
-      <span className="catchword-arrow">⤳</span>
-    </div>
   )
 }
 
@@ -538,6 +557,7 @@ export function App() {
   const answerDisplay = ANSWER.slice(0, answerChars)
   const replyDisplay = REPLY.slice(0, replyChars)
   const isTyping = phase === 'answering' || phase === 'replying'
+  const replyShown = phase === 'replying' || phase === 'complete'
 
   const inkProgress =
     phase === 'idle'
@@ -576,7 +596,7 @@ export function App() {
           <PrinterDevice />
         </span>
 
-        <header className="sheet-header">
+        <header className="sheet-header sheet-header--recto">
           <p className="running-head-title">
             <span aria-hidden="true">§</span> cap. xviii · an experiment in questioning
           </p>
@@ -609,17 +629,35 @@ export function App() {
 
             <p className="question-deck">
               A small typeset test of whether a page can ask well before it answers —
-              an initial in wax, three marginalia, and a quiet reply beneath.
+              an initial in wax, three marginalia, and a quiet reply that turns the leaf.
             </p>
 
-            <QuillFlourish drawing={isTyping || phase === 'complete'} progress={inkProgress} />
+            <LeafCluster
+              className={`leaf-cluster--turn ${isTyping || phase === 'complete' ? 'is-sealed' : ''}`}
+              label="turn the leaf"
+            />
 
-            <Asterism label="the reply follows" />
-
-            <Catchword />
+            <p className="catchword">
+              <span className="catchword-rule" aria-hidden="true" />
+              <span className="catchword-text">verso · reply</span>
+              <span className="catchword-arrow" aria-hidden="true">↘</span>
+            </p>
           </section>
 
-          <section className="response-panel" aria-labelledby="response-title">
+          <section
+            className={`response-panel response-panel--verso ${replyShown ? 'is-revealed' : ''}`}
+            aria-labelledby="response-title"
+          >
+            <header className="sheet-header sheet-header--verso">
+              <p className="running-head-title">
+                <span aria-hidden="true">§</span> the reply · set in italic
+              </p>
+              <span className="running-head-pilcrow" aria-hidden="true">¶</span>
+              <p className="running-head-folio">
+                verso · <span>sig. A3</span>
+              </p>
+            </header>
+
             <ManuscriptStamp />
 
             <div className="response-heading">
@@ -652,12 +690,23 @@ export function App() {
             </div>
 
             <div
-              className={`reply-copy ${phase === 'replying' || phase === 'complete' ? 'is-visible' : ''}`}
+              className={`reply-copy ${replyShown ? 'is-visible' : ''}`}
               aria-live="polite"
             >
-              {phase === 'complete' && <Manicule />}
-              <span className="reply-text">{replyDisplay}</span>
-              {phase === 'replying' && <span className="typing-caret" aria-hidden="true">|</span>}
+              <span className="reply-paragraph">
+                {replyChars > 0 && (
+                  <span className="reply-initial" aria-hidden="true">
+                    <PrintedInitial letter={REPLY.charAt(0)} />
+                  </span>
+                )}
+                <span className="reply-text">{replyDisplay}</span>
+                {phase === 'replying' && <span className="typing-caret" aria-hidden="true">|</span>}
+              </span>
+              {phase === 'complete' && (
+                <span className="reply-manicule">
+                  <Manicule />
+                </span>
+              )}
             </div>
 
             {phase === 'complete' && (
@@ -687,7 +736,7 @@ export function App() {
         <footer className="sheet-footer">
           <span className="footer-rule" aria-hidden="true" />
           <p className="footer-line">the interface is part of the answer</p>
-          <SignatureMark sig="A3" side="r" />
+          <SignatureMark sig="A3" side="v" />
           <PrinterDevice />
         </footer>
 
