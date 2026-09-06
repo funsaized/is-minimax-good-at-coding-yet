@@ -2289,6 +2289,69 @@ function LectorisNota({
   )
 }
 
+// ScholarOculus — a small hand-drawn eye motif that completes the
+// almanac pair at the top of the composition. Where the horologium
+// records the hour of reading and the speculum charts the heavens, the
+// oculus is the observer: a quiet gaze that watches the chapter from
+// the foot of the colophon. Drawn as line art only, with a pupil that
+// drifts on a faint parallax with the reader's pointer, so the eye
+// reads as alive without ever breaking the manuscript's quiet. Sits
+// between the inkpot-and-quill and the colophon's provenance, like
+// the page's final authorial glance over the chapter it just composed.
+function ScholarOculus() {
+  const ref = useRef<HTMLSpanElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let raf = 0
+    let tx = 0
+    let ty = 0
+    let px = 0
+    let py = 0
+    const onMove = (e: PointerEvent) => {
+      const w = window.innerWidth || 1
+      const h = window.innerHeight || 1
+      tx = (e.clientX - w / 2) / (w / 2)
+      ty = (e.clientY - h / 2) / (h / 2)
+    }
+    const tick = () => {
+      raf = requestAnimationFrame(tick)
+      px += (tx - px) * 0.035
+      py += (ty - py) * 0.035
+      el.style.setProperty('--oc-x', px.toFixed(3))
+      el.style.setProperty('--oc-y', py.toFixed(3))
+    }
+    if (reduced) {
+      el.style.setProperty('--oc-x', '0')
+      el.style.setProperty('--oc-y', '0')
+    } else {
+      window.addEventListener('pointermove', onMove, { passive: true })
+      raf = requestAnimationFrame(tick)
+    }
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+  return (
+    <span className="scholar-oculus" aria-hidden="true" ref={ref}>
+      <svg viewBox="0 0 32 18" focusable="false">
+        {/* Outer almond — the eye's shape, drawn as a single closed line */}
+        <path className="oculus-shape" d="M 1 9 Q 16 1 31 9 Q 16 17 1 9 Z" />
+        {/* Iris — a thin ring around the pupil */}
+        <circle className="oculus-iris" cx="16" cy="9" r="2.6" />
+        {/* Pupil — a single filled dot, the chapter's eye */}
+        <circle className="oculus-pupil" cx="16" cy="9" r="1" />
+        {/* Highlight — a tiny gold pip on the iris */}
+        <circle className="oculus-highlight" cx="15.2" cy="8.2" r="0.32" />
+        {/* Upper lid emphasis — a slightly heavier stroke above */}
+        <path className="oculus-lid" d="M 2.5 7.6 Q 16 1.5 29.5 7.6" />
+      </svg>
+    </span>
+  )
+}
+
 function Marg({
   corner,
   id,
@@ -3344,6 +3407,7 @@ export function App() {
             acknowledged={sealing || pulsing}
             annotavi={lectorisDone}
           />
+          <ScholarOculus />
           <span className="colophon-provenance">legi · mmxxvi</span>
         </div>
       </div>

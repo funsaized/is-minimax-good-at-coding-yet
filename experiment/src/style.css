@@ -1000,16 +1000,20 @@ body {
 /* ----- Composition -----
    * Iteration 40: the composition gains a small additional breathing
    * room around the question block, so the chapter reads as a single
-   * open folio rather than a tightly packed column. */
+   * open folio rather than a tightly packed column.
+   * Iteration 49: the rhythm is refined once more — slightly more
+   * air between the hero and the question so the chapter opens as a
+   * single deliberate gesture, and a touch more space before the
+   * colophon so the chapter close feels unhurried. */
 
 .composition {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(14px, 1.7vw, 24px);
+  gap: clamp(16px, 1.85vw, 26px);
   max-width: 100%;
-  padding: clamp(6px, 1vw, 14px) 0 clamp(28px, 3.6vw, 44px);
+  padding: clamp(6px, 1vw, 14px) 0 clamp(36px, 4.4vw, 56px);
 }
 
 /* ----- Capitulum (running title above the chapter) ----- */
@@ -2662,8 +2666,8 @@ body {
   font-style: italic;
   font-weight: 500;
   font-size: clamp(44px, 6.4vw, 82px);
-  line-height: 1.06;
-  letter-spacing: -0.022em;
+  line-height: 1.08;
+  letter-spacing: -0.018em;
   text-align: center;
   color: var(--ink);
   max-width: 22ch;
@@ -3401,9 +3405,9 @@ body {
   padding: 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(13.5px, 1.3vw, 17px);
-  line-height: 1.6;
-  letter-spacing: 0.008em;
+  font-size: clamp(14px, 1.36vw, 18px);
+  line-height: 1.58;
+  letter-spacing: 0.012em;
   color: var(--ink-soft);
   text-align: center;
   max-width: 32ch;
@@ -3426,10 +3430,10 @@ body {
 }
 
 .answer.is-on {
-  opacity: 0.92;
+  opacity: 0.94;
   transform: translateY(0);
   max-height: 6em;
-  margin: clamp(22px, 2.6vw, 30px) 0 0;
+  margin: clamp(24px, 2.8vw, 34px) 0 0;
 }
 
 .answer-text {
@@ -3526,9 +3530,9 @@ body {
   padding: 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(13.5px, 1.32vw, 17px);
-  line-height: 1.55;
-  letter-spacing: 0.005em;
+  font-size: clamp(14px, 1.38vw, 18px);
+  line-height: 1.52;
+  letter-spacing: 0.008em;
   color: var(--ink);
   text-align: center;
   max-width: 32ch;
@@ -3546,10 +3550,10 @@ body {
 }
 
 .reply.is-on {
-  opacity: 0.95;
+  opacity: 0.97;
   transform: translateY(0);
   max-height: 8em;
-  margin: clamp(14px, 1.6vw, 20px) 0 0;
+  margin: clamp(16px, 1.8vw, 22px) 0 0;
 }
 
 .reply-rule {
@@ -8498,6 +8502,104 @@ body {
   transform: translateX(-0.5px) scaleY(1);
 }
 
+/* ----- Iteration 49: scholar's oculus (the third almanac instrument) -----
+ * A small hand-drawn eye motif that completes the almanac pair at the
+ * top of the composition (horologium · speculum · oculus — time, the
+ * heavens, and the observer). Sits in the colophon between the writer's
+ * inkpot-and-quill and the chapter's provenance mark, like the page's
+ * quiet authorial gaze watching the chapter close. The pupil drifts on
+ * a faint parallax with the reader's pointer, so the eye reads as
+ * alive without ever breaking the manuscript's quiet. */
+
+.scholar-oculus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(26px, 2.6vw, 36px);
+  height: auto;
+  margin-top: clamp(-2px, -0.2vw, 0px);
+  color: var(--gold);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(2px) scale(0.88);
+  transition:
+    opacity 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 3.25s,
+    transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 3.25s,
+    color 0.5s ease;
+  filter: drop-shadow(0 0 4px rgba(217, 176, 116, 0.18));
+}
+
+.frame.ready .scholar-oculus {
+  opacity: 0.88;
+  transform: translateY(0) scale(1);
+}
+
+.scholar-oculus svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* The almond — drawn as a single closed line, like a quill's stroke. */
+.oculus-shape {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.7;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  opacity: 0.72;
+  transition: opacity 0.5s ease, stroke-width 0.5s ease;
+}
+
+/* The iris — a thin ring around the pupil. */
+.oculus-iris {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.45;
+  opacity: 0.55;
+  transition: opacity 0.5s ease;
+}
+
+/* The pupil — drifts with the cursor via the --oc-x/--oc-y vars set
+   by the component. Stays centered when reduced motion is on. */
+.oculus-pupil {
+  fill: var(--vermilion);
+  opacity: 0.92;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: translate(calc(var(--oc-x, 0) * 0.8px), calc(var(--oc-y, 0) * 0.8px));
+  transition: opacity 0.5s ease, fill 0.5s ease;
+}
+
+/* The highlight — a tiny gold pip on the iris, catching the candle. */
+.oculus-highlight {
+  fill: var(--gold-bright);
+  opacity: 0.92;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: translate(calc(var(--oc-x, 0) * 0.4px), calc(var(--oc-y, 0) * 0.4px));
+}
+
+/* The upper lid — slightly heavier stroke above the eye. */
+.oculus-lid {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.5;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+
+/* Subtle warm pulse on the pupil — the page's eye softly breathing. */
+@keyframes oculusBreathe {
+  0%, 100% { opacity: 0.92; }
+  50%      { opacity: 0.65; }
+}
+
+.oculus-pupil {
+  animation: oculusBreathe 6.4s ease-in-out 3.6s infinite;
+}
+
 /* ----- Reduced motion overrides for iteration 46 ----- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -8519,6 +8621,14 @@ body {
   .maniculum-fin.is-active { animation: none; }
   .maniculum-fin-tip { animation: none; opacity: 0.6; }
   .maniculum-fin-lead { transition: none; opacity: 0.6; transform: translateX(-0.5px) scaleY(1); }
+
+  .scholar-oculus {
+    transition: opacity 0.2s ease;
+    transform: none;
+  }
+  .frame.ready .scholar-oculus { opacity: 0.88; transform: none; }
+  .oculus-pupil { animation: none; transform: none; }
+  .oculus-highlight { transform: none; }
 }
 
 /* ----- Mobile sizing for iteration 46 ----- */
@@ -8532,6 +8642,7 @@ body {
     right: clamp(6px, 2.4vw, 22px);
   }
   .maniculum-fin-lead { height: clamp(20px, 4.4vw, 44px); }
+  .scholar-oculus { width: clamp(22px, 3vw, 30px); margin-top: 0; }
 }
 
 @media (max-width: 520px) {
@@ -8544,10 +8655,12 @@ body {
     right: clamp(2px, 1.5vw, 12px);
   }
   .maniculum-fin-lead { height: clamp(14px, 4.2vw, 32px); }
+  .scholar-oculus { width: 22px; }
 }
 
 @media (max-width: 380px) {
   .reply-pilcrow-rule { display: none; }
   .maniculum-fin-lead { display: none; }
   .tail-piece { width: 36px; }
+  .scholar-oculus { width: 20px; opacity: 0.78; }
 }
