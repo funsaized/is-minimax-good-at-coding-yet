@@ -3668,9 +3668,10 @@ body {
   padding: 0;
   font-family: var(--display);
   font-style: italic;
-  font-size: clamp(20px, 2.18vw, 29px);
-  line-height: 1.58;
-  letter-spacing: 0.006em;
+  font-weight: 500;
+  font-size: clamp(22px, 2.46vw, 33px);
+  line-height: 1.5;
+  letter-spacing: -0.004em;
   color: var(--ink-soft);
   text-align: center;
   max-width: 30ch;
@@ -3681,27 +3682,29 @@ body {
   overflow: hidden;
   pointer-events: none;
   transition:
-    opacity 0.7s ease 0.2s,
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s,
-    max-height 0.7s ease 0.2s,
-    margin 0.7s ease 0.2s;
+    opacity 0.85s ease 0.2s,
+    transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s,
+    max-height 0.85s ease 0.2s,
+    margin 0.85s ease 0.2s,
+    color 0.6s ease 0.55s;
   display: inline-flex;
   align-items: baseline;
   justify-content: center;
   flex-wrap: wrap;
   gap: clamp(2px, 0.3vw, 5px);
   text-shadow:
-    0 0 28px rgba(217, 176, 116, 0.08),
-    0 0 56px rgba(240, 232, 218, 0.03),
+    0 0 26px rgba(217, 176, 116, 0.10),
+    0 0 54px rgba(240, 232, 218, 0.045),
+    0 0 88px rgba(217, 176, 116, 0.025),
     0.5px 0.7px 0 rgba(20, 12, 6, 0.30);
   font-feature-settings: "kern" on, "liga" on, "calt" on, "dlig" on, "salt" on;
 }
 
 .answer.is-on {
-  opacity: 0.98;
+  opacity: 1;
   transform: translateY(0);
   max-height: 8em;
-  margin: clamp(34px, 3.8vw, 52px) 0 0;
+  margin: clamp(38px, 4.2vw, 58px) 0 0;
   color: var(--ink);
 }
 
@@ -3736,15 +3739,16 @@ body {
   align-items: flex-start;
   justify-content: center;
   flex: 0 0 auto;
-  width: clamp(38px, 3.85vw, 52px);
-  height: clamp(38px, 3.85vw, 52px);
-  margin-right: clamp(4px, 0.36vw, 6px);
+  width: clamp(48px, 4.6vw, 62px);
+  height: clamp(48px, 4.6vw, 62px);
+  margin-right: clamp(4px, 0.4vw, 7px);
+  margin-top: clamp(-3px, -0.3vw, -1px);
   opacity: 0;
-  transform: scale(0.4) rotate(-6deg);
-  transform-origin: 50% 80%;
+  transform: scale(0.4) rotate(-7deg);
+  transform-origin: 50% 78%;
   transition:
-    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1);
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.78s cubic-bezier(0.2, 1.2, 0.4, 1);
   isolation: isolate;
 }
 
@@ -3756,17 +3760,18 @@ body {
 .answer-dropcap {
   font-family: var(--display);
   font-style: italic;
-  font-weight: 600;
-  font-size: clamp(38px, 3.85vw, 52px);
-  line-height: 1;
+  font-weight: 700;
+  font-size: clamp(48px, 4.6vw, 62px);
+  line-height: 0.92;
   color: var(--vermilion);
   text-shadow:
-    0 0 8px rgba(176, 83, 58, 0.36),
-    0 0 24px rgba(198, 104, 74, 0.20),
-    0 0 48px rgba(176, 83, 58, 0.10);
+    0 0 10px rgba(176, 83, 58, 0.42),
+    0 0 26px rgba(198, 104, 74, 0.26),
+    0 0 54px rgba(176, 83, 58, 0.12),
+    0 1px 0 rgba(38, 14, 8, 0.30);
   letter-spacing: 0;
   display: inline-block;
-  transform: translateY(-0.04em);
+  transform: translateY(-0.02em);
   z-index: 1;
 }
 
@@ -3774,20 +3779,23 @@ body {
    hand-cut marking a careful scribe would set under an illuminated
    initial. Iteration 59 reframes the marking as a composed piece:
    a thin gold leaf-rule, with a small vermilion dot at its center,
-   flanked by two drawn gold end-pips — the initial's own plate. */
+   flanked by two drawn gold end-pips — the initial's own plate.
+   Iteration 69 elevates this plate: a thicker, more present gold-
+   leaf bar with a brighter end-pip, drawn beneath the monumental
+   capital as a single confident scribal score. */
 .answer-dropcap-shadow {
   position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: clamp(-3px, -0.25vw, -1px);
+  left: 4%;
+  right: 4%;
+  bottom: clamp(-5px, -0.45vw, -2px);
   height: 2px;
   pointer-events: none;
   opacity: 0;
   transform: scaleX(0.3);
   transform-origin: center;
   transition:
-    opacity 0.55s ease 0.35s,
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.35s;
+    opacity 0.65s ease 0.4s,
+    transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 0.4s;
 }
 
 .answer-dropcap-shadow::before,
@@ -3796,19 +3804,20 @@ body {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 5px;
-  height: 1px;
+  width: 7px;
+  height: 1.5px;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--gold) 50%,
+    var(--gold-bright) 50%,
     transparent 100%
   );
-  opacity: 0.85;
+  opacity: 0.9;
+  box-shadow: 0 0 4px rgba(240, 212, 154, 0.32);
 }
 
-.answer-dropcap-shadow::before { left: -2px; }
-.answer-dropcap-shadow::after { right: -2px; }
+.answer-dropcap-shadow::before { left: -4px; }
+.answer-dropcap-shadow::after { right: -4px; }
 
 .answer-dropcap-wrap.is-on .answer-dropcap-shadow {
   opacity: 1;
@@ -3816,11 +3825,14 @@ body {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--gold-deep) 22%,
-    var(--gold) 50%,
-    var(--gold-deep) 78%,
+    var(--gold-deep) 18%,
+    var(--gold) 42%,
+    var(--gold-bright) 50%,
+    var(--gold) 58%,
+    var(--gold-deep) 82%,
     transparent 100%
   );
+  box-shadow: 0 0 6px rgba(217, 176, 116, 0.30);
 }
 
 .answer-dropcap-wrap.is-on .answer-dropcap-shadow::before,
@@ -3829,12 +3841,19 @@ body {
     90deg,
     transparent 0%,
     var(--gold-deep) 50%,
-    var(--gold) 100%
+    var(--gold-bright) 100%
   );
-  opacity: 0.8;
+  opacity: 0.92;
 }
 
-/* ----- Reply (second sentence the page says back) ----- */
+/* ----- Reply (second sentence the page says back) -----
+ * Iteration 69 elevates the reply's typography: a slightly larger
+ * size, a more confident italic weight, and a tighter letter-spacing
+ * so the second sentence reads as a single composed manuscript
+ * paragraph — the page's invitation to the reader, after the answer
+ * has spoken. The pilcrow that introduces it earns more presence;
+ * the rule that flanks it warms slightly when the chapter is in its
+ * quietus state, so the page reads as having just spoken. */
 
 .reply {
   position: relative;
@@ -3842,9 +3861,10 @@ body {
   padding: 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(18px, 2.05vw, 25px);
-  line-height: 1.58;
-  letter-spacing: 0.005em;
+  font-weight: 500;
+  font-size: clamp(19px, 2.2vw, 27px);
+  line-height: 1.55;
+  letter-spacing: -0.002em;
   color: var(--ink);
   text-align: center;
   max-width: 32ch;
@@ -3855,39 +3875,46 @@ body {
   overflow: hidden;
   pointer-events: none;
   transition:
-    opacity 0.8s ease 0.05s,
-    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s,
-    max-height 0.8s ease 0.05s,
-    margin 0.8s ease 0.05s;
+    opacity 0.85s ease 0.05s,
+    transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s,
+    max-height 0.85s ease 0.05s,
+    margin 0.85s ease 0.05s;
   text-shadow:
-    0 0 32px rgba(217, 176, 116, 0.08),
-    0 0 64px rgba(240, 232, 218, 0.04),
+    0 0 30px rgba(217, 176, 116, 0.10),
+    0 0 60px rgba(240, 232, 218, 0.045),
     0.5px 0.7px 0 rgba(20, 12, 6, 0.30);
-  font-feature-settings: "kern" on, "liga" on, "calt" on, "dlig" on;
+  font-feature-settings: "kern" on, "liga" on, "calt" on, "dlig" on, "salt" on;
 }
 
 .reply.is-on {
-  opacity: 0.98;
+  opacity: 1;
   transform: translateY(0);
   max-height: 10em;
-  margin: clamp(30px, 3.6vw, 46px) 0 0;
+  margin: clamp(34px, 3.8vw, 50px) 0 0;
 }
 
 .reply-rule {
   display: inline-block;
-  width: clamp(20px, 2.4vw, 32px);
-  height: 1px;
-  background: var(--vermilion);
+  width: clamp(24px, 2.6vw, 36px);
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--vermilion) 22%,
+    var(--vermilion-bright) 78%,
+    transparent 100%
+  );
   vertical-align: 0.45em;
-  margin-right: clamp(8px, 0.8vw, 12px);
+  margin-right: clamp(10px, 0.9vw, 14px);
   opacity: 0;
   transform: scaleX(0);
   transform-origin: left center;
-  animation: replyRule 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s forwards;
+  box-shadow: 0 0 4px rgba(176, 83, 58, 0.18);
+  animation: replyRule 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s forwards;
 }
 
 @keyframes replyRule {
-  to { opacity: 0.7; transform: scaleX(1); }
+  to { opacity: 0.85; transform: scaleX(1); }
 }
 
 .reply-text { display: inline; }
@@ -4301,9 +4328,9 @@ body {
   .guide-rule { width: 60px; height: 60px; }
   .question-underline { left: 6%; right: 6%; }
   .watermark { width: min(130vmin, 760px); height: min(130vmin, 760px); }
-  .reply { font-size: clamp(14.5px, 1.78vw, 19px); }
-  .answer { font-size: clamp(15px, 1.86vw, 19.5px); }
-  .footnote { font-size: clamp(11.5px, 1.25vw, 13.5px); }
+  .reply { font-size: clamp(15.5px, 1.96vw, 21px); }
+  .answer { font-size: clamp(16.5px, 2.04vw, 22px); }
+  .footnote { font-size: clamp(12px, 1.4vw, 14px); }
   .intellexi-nota { font-size: clamp(10.5px, 1.05vw, 12px); letter-spacing: 0.18em; }
   .candle-flame { width: clamp(38px, 5.4vw, 60px); top: clamp(14px, 3vh, 32px); }
   .taper { width: clamp(140px, 30vw, 240px); height: clamp(240px, 42vh, 360px); top: 12%; filter: blur(11px); }
@@ -4356,8 +4383,8 @@ body {
   .wax-seal { width: 30px; }
   .illuminated-star { width: 44px; height: 44px; }
   .catchword { font-size: 9px; }
-  .answer-dropcap-wrap { width: 30px; height: 30px; }
-  .answer-dropcap { font-size: 30px; }
+  .answer-dropcap-wrap { width: 38px; height: 38px; }
+  .answer-dropcap { font-size: 38px; }
 }
 
 @media (max-width: 620px) {
@@ -4365,8 +4392,8 @@ body {
   .colophon-pair { font-size: 10.5px; gap: 6px; }
   .colophon-pair-arrow { font-size: 1em; }
   .reply { max-width: 28ch; }
-  .answer { font-size: clamp(14.5px, 4.4vw, 17px); max-width: 28ch; }
-  .footnote { font-size: clamp(11.5px, 3.2vw, 13px); }
+  .answer { font-size: clamp(15.5px, 4.7vw, 18.5px); max-width: 28ch; }
+  .footnote { font-size: clamp(12px, 3.4vw, 13.5px); }
   .rubric { letter-spacing: 0.22em; }
   .catchword { font-size: 8.5px; gap: 4px; }
 }
@@ -4394,9 +4421,9 @@ body {
   }
   .colophon { gap: 4px; }
   .colophon-folio, .colophon-quaeritur { letter-spacing: 0.28em; }
-  .reply { font-size: clamp(13.5px, 4.1vw, 16px); max-width: 26ch; }
-  .answer { font-size: clamp(14px, 4.4vw, 16.5px); max-width: 26ch; }
-  .footnote { font-size: 11.5px; max-width: 24ch; margin-top: clamp(18px, 3.4vw, 24px); }
+  .reply { font-size: clamp(14.5px, 4.3vw, 17px); max-width: 26ch; }
+  .answer { font-size: clamp(15px, 4.7vw, 18px); max-width: 26ch; }
+  .footnote { font-size: 12px; max-width: 24ch; margin-top: clamp(18px, 3.4vw, 24px); }
   .intellexi-nota { font-size: 10.5px; letter-spacing: 0.18em; }
   .reply-rule { width: 16px; margin-right: 8px; }
   .reply-end .fleuron { width: 56px; }
@@ -4419,8 +4446,8 @@ body {
   .wax-seal { width: 26px; }
   .illuminated-star { width: 38px; height: 38px; }
   .catchword { display: none; }
-  .answer-dropcap-wrap { width: 26px; height: 26px; }
-  .answer-dropcap { font-size: 26px; }
+  .answer-dropcap-wrap { width: 32px; height: 32px; }
+  .answer-dropcap { font-size: 32px; }
 }
 
 /* ----- Iteration 21: the question as a small editorial desk -----
@@ -4553,8 +4580,8 @@ body {
   .sigillum-svg { width: clamp(24px, 7vw, 32px); }
   .composition { gap: clamp(14px, 2.2vw, 22px); }
   .question-block { padding: clamp(20px, 4vw, 30px) clamp(18px, 4vw, 26px) clamp(22px, 4vw, 32px); }
-  .answer { font-size: clamp(18px, 4.6vw, 22px); line-height: 1.5; }
-  .reply { font-size: clamp(16px, 4.2vw, 19.5px); line-height: 1.5; }
+  .answer { font-size: clamp(19px, 4.8vw, 23px); line-height: 1.5; }
+  .reply { font-size: clamp(17px, 4.4vw, 20.5px); line-height: 1.5; }
   .predicate-rule::before { width: 3px; height: 3px; }
   .composition.is-pointing .predicate-rule::before { width: 4px; height: 4px; }
 }
@@ -5760,9 +5787,10 @@ body {
   padding: 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(12.5px, 1.2vw, 14.5px);
+  font-weight: 400;
+  font-size: clamp(13px, 1.34vw, 15.5px);
   line-height: 1.55;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.008em;
   color: var(--ink-soft);
   text-align: center;
   text-wrap: balance;
@@ -9910,19 +9938,25 @@ body {
  * mark: a small vermilion paragraph glyph set at full italic scale,
  * followed by a longer drawn vermilion rule with its own little
  * pip-end. Reads as the chapter's second voice opening — a printer's
- * hand on the page, not a typographic decoration. */
+ * hand on the page, not a typographic decoration.
+ *
+ * Iteration 69 elevates the pilcrow's confidence: a slightly bolder
+ * paragraph glyph, a longer drawn rule, and a more present pip-end —
+ * the chapter's second voice opens with the same ceremony as the
+ * answer's opening initial. The pilcrow now reads as a true
+ * manuscript mark, not a typographic aside. */
 
 .reply-pilcrow {
   display: inline-flex;
   align-items: center;
-  gap: clamp(3px, 0.3vw, 5px);
-  margin-right: clamp(5px, 0.5vw, 8px);
+  gap: clamp(4px, 0.4vw, 6px);
+  margin-right: clamp(7px, 0.7vw, 10px);
   flex: 0 0 auto;
   opacity: 0;
   transform: translateX(-3px);
   transition:
-    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.75s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .reply.is-on .reply-pilcrow {
@@ -9933,13 +9967,13 @@ body {
 .reply-pilcrow-mark {
   font-family: var(--display);
   font-style: italic;
-  font-weight: 500;
-  font-size: 1.04em;
+  font-weight: 600;
+  font-size: 1.18em;
   color: var(--vermilion);
   line-height: 1;
   text-shadow:
-    0 0 6px rgba(176, 83, 58, 0.32),
-    0 0 14px rgba(198, 104, 74, 0.16);
+    0 0 7px rgba(176, 83, 58, 0.36),
+    0 0 16px rgba(198, 104, 74, 0.18);
   transform: translateY(-0.04em);
   display: inline-block;
 }
@@ -9947,16 +9981,17 @@ body {
 .reply-pilcrow-rule {
   display: inline-flex;
   align-items: center;
-  width: clamp(20px, 2vw, 30px);
-  height: 1px;
+  width: clamp(28px, 2.8vw, 40px);
+  height: 1.5px;
   background: linear-gradient(
     90deg,
     var(--vermilion) 0%,
-    var(--vermilion-soft) 60%,
-    transparent 100%
+    var(--vermilion-bright) 60%,
+    var(--vermilion-soft) 100%
   );
-  opacity: 0.65;
+  opacity: 0.75;
   position: relative;
+  box-shadow: 0 0 4px rgba(176, 83, 58, 0.18);
 }
 
 .reply-pilcrow-rule::after {
@@ -9965,12 +10000,12 @@ body {
   right: -1px;
   top: 50%;
   transform: translateY(-50%);
-  width: 2px;
-  height: 2px;
+  width: 2.5px;
+  height: 2.5px;
   border-radius: 50%;
-  background: var(--vermilion);
-  opacity: 0.85;
-  box-shadow: 0 0 4px rgba(176, 83, 58, 0.42);
+  background: var(--vermilion-bright);
+  opacity: 0.95;
+  box-shadow: 0 0 5px rgba(198, 104, 74, 0.55);
 }
 
 /* ----- Reading guide -----
@@ -10319,6 +10354,175 @@ body {
 @media (max-width: 520px) {
   .page-settling { width: clamp(110px, 44vw, 160px); margin-top: clamp(4px, 0.6vw, 8px); }
   .page-settling::before { filter: blur(1.6px); }
+}
+
+/* ----- Answer finial (composed ink-seal beneath the answer) -----
+ * Iteration 69 composes a refined gold-leaf finial that lands just
+ * beneath the answer the moment it has fully written itself. Two
+ * short gold rules draw outward from a small composed diamond-and-pip
+ * at centre, flanked by two tiny gold end-pips. A faint warm halo
+ * presses into the parchment at its feet. Reads as the page's own
+ * ink-mark on the answer — the quill has lifted, the answer is in
+ * place, the page acknowledges it. Sits in parallel with the existing
+ * PageSettling mark (which is the chapter's first settling breath);
+ * AnswerFinial is the answer's terminal seal — the manuscript's
+ * "the ink has dried" mark.
+ *
+ * Hidden in steady state; the rules draw out, the diamond presses
+ * in, and the halo blooms briefly once .is-settled is reached.
+ * Respects reduced-motion: in steady state the finial appears in
+ * its settled form, never animates. */
+.answer-finial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(132px, 16vw, 200px);
+  height: clamp(14px, 1.4vw, 18px);
+  margin: clamp(2px, 0.4vw, 6px) auto clamp(4px, 0.5vw, 8px);
+  position: relative;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.16s;
+  isolation: isolate;
+}
+
+.answer-finial::before {
+  content: '';
+  position: absolute;
+  inset: -36% -14% -36% -14%;
+  background:
+    radial-gradient(
+      46% 100% at 50% 50%,
+      rgba(240, 212, 154, 0.20) 0%,
+      rgba(217, 176, 116, 0.085) 38%,
+      rgba(217, 176, 116, 0.030) 60%,
+      transparent 78%
+    );
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scaleX(0.30);
+  transform-origin: 50% 50%;
+  filter: blur(2.4px);
+  z-index: -1;
+  transition:
+    opacity 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0s,
+    transform 1.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0s;
+}
+
+.answer-finial-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.answer-finial-rule {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 0.65;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 28;
+  stroke-dashoffset: 28;
+  transition:
+    opacity 0.7s ease 0.32s,
+    stroke-dashoffset 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) 0.32s;
+}
+
+.answer-finial-rule-r {
+  stroke: var(--gold);
+  stroke-width: 0.65;
+}
+
+.answer-finial-pip {
+  fill: var(--gold-bright);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.3);
+  filter: drop-shadow(0 0 2px rgba(240, 212, 154, 0.45));
+  transition:
+    opacity 0.5s ease 1.0s,
+    transform 0.65s cubic-bezier(0.2, 1.2, 0.4, 1) 1.0s;
+}
+
+.answer-finial-diamond {
+  fill: var(--vermilion);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.34) rotate(-90deg);
+  filter: drop-shadow(0 0 3px rgba(176, 83, 58, 0.36));
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) 0.7s,
+    transform 0.78s cubic-bezier(0.2, 1.2, 0.4, 1) 0.7s;
+}
+
+.answer-finial-core {
+  fill: var(--gold-bright);
+  opacity: 0;
+  filter: drop-shadow(0 0 1.6px rgba(240, 212, 154, 0.55));
+  transition: opacity 0.5s ease 0.95s;
+}
+
+.answer-finial.is-settled {
+  opacity: 1;
+}
+
+.answer-finial.is-settled::before {
+  opacity: 1;
+  transform: scaleX(1);
+  animation: answerFinialHaloBreath 14s ease-in-out 2.6s infinite;
+}
+
+.answer-finial.is-settled .answer-finial-rule {
+  opacity: 0.78;
+  stroke-dashoffset: 0;
+}
+
+.answer-finial.is-settled .answer-finial-pip {
+  opacity: 0.85;
+  transform: scale(1);
+}
+
+.answer-finial.is-settled .answer-finial-diamond {
+  opacity: 0.95;
+  transform: scale(1) rotate(0deg);
+  animation: answerFinialDiamondBreath 11s ease-in-out 3.4s infinite;
+}
+
+.answer-finial.is-settled .answer-finial-core {
+  opacity: 0.88;
+}
+
+@keyframes answerFinialHaloBreath {
+  0%, 100% { opacity: 1;   transform: scaleX(1); }
+  50%      { opacity: 0.7; transform: scaleX(1.06); }
+}
+
+@keyframes answerFinialDiamondBreath {
+  0%, 100% { opacity: 0.95; transform: scale(1) rotate(0deg); }
+  50%      { opacity: 0.78; transform: scale(1.04) rotate(2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-finial { transition: opacity 0.2s ease; }
+  .answer-finial.is-settled { opacity: 1; }
+  .answer-finial.is-settled::before { animation: none; opacity: 0.85; transform: scaleX(1); }
+  .answer-finial.is-settled .answer-finial-rule { transition: none; opacity: 0.78; stroke-dashoffset: 0; }
+  .answer-finial.is-settled .answer-finial-pip { transition: none; opacity: 0.85; transform: scale(1); }
+  .answer-finial.is-settled .answer-finial-diamond { transition: none; animation: none; opacity: 0.92; transform: scale(1) rotate(0deg); }
+  .answer-finial.is-settled .answer-finial-core { transition: none; opacity: 0.85; }
+}
+
+@media (max-width: 760px) {
+  .answer-finial { width: clamp(110px, 28vw, 170px); }
+}
+
+@media (max-width: 520px) {
+  .answer-finial { width: clamp(96px, 38vw, 140px); margin-top: 2px; }
+  .answer-finial::before { filter: blur(1.8px); }
 }
 
 /* ----- Colophon tie ----- */

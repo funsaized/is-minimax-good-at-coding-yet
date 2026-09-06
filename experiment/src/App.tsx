@@ -3573,6 +3573,57 @@ function Marg({
   )
 }
 
+// AnswerFinial — a small composed gold-leaf mark that settles just
+// beneath the answer as it finishes writing itself. A single quiet
+// gesture: two short gold rules drawn outward from a small composed
+// diamond-and-pip at centre, with a faint warm halo pressing into the
+// parchment at its feet. Reads as the page's own ink-mark on the
+// answer — the quill has lifted, the answer is in place, the page
+// acknowledges it. Sits in parallel with the existing PageSettling
+// mark, but where PageSettling is the chapter's first settling breath,
+// AnswerFinial is the answer's terminal seal — the manuscript's
+// "the ink has dried" mark. Hidden until the answer has fully landed,
+// then briefly haloes and settles. Respects reduced-motion.
+function AnswerFinial({ settled }: { settled: boolean }) {
+  return (
+    <span
+      className={`answer-finial${settled ? ' is-settled' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 80 14"
+        className="answer-finial-svg"
+        focusable="false"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <line
+          x1="2"
+          y1="7"
+          x2="28"
+          y2="7"
+          className="answer-finial-rule answer-finial-rule-l"
+          pathLength="100"
+        />
+        <line
+          x1="52"
+          y1="7"
+          x2="78"
+          y2="7"
+          className="answer-finial-rule answer-finial-rule-r"
+          pathLength="100"
+        />
+        <path
+          d="M 40 3.2 L 42.4 6.5 L 45.7 7 L 42.4 7.5 L 40 10.8 L 37.6 7.5 L 34.3 7 L 37.6 6.5 Z"
+          className="answer-finial-diamond"
+        />
+        <circle cx="40" cy="7" r="1.05" className="answer-finial-core" />
+        <circle cx="2" cy="7" r="0.5" className="answer-finial-pip answer-finial-pip-l" />
+        <circle cx="78" cy="7" r="0.5" className="answer-finial-pip answer-finial-pip-r" />
+      </svg>
+    </span>
+  )
+}
+
 // ReadingSeal — a single composed authorial mark that closes the
 // chapter's compositional loop. A small vermilion-and-gold seal with
 // a miniature hero question mark inscribed within it, sitting as the
@@ -4673,6 +4724,7 @@ export function App() {
                 )}
               </p>
               <PageSettling settled={answerOn && answerChars >= ANSWER.length && !replyOn} />
+              <AnswerFinial settled={answerOn && answerChars >= ANSWER.length && !replyOn} />
               <ReadingGuide visible={answerOn} />
               <div
                 className={`chapter-body ${footnoteDone ? 'is-footnote-done' : ''} ${intellexiOn ? 'is-intellexi' : ''} ${lectorisDone ? 'is-annotavi' : ''}`}
