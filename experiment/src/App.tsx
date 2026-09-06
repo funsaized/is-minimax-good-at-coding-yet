@@ -2427,9 +2427,13 @@ function ColophonPlate() {
 // explicit → intellexi) into a single continuous reading flow. The
 // rule is drawn outward from the chapter's centerline so the body
 // reads as one composed passage rather than a vertical stack of
-// separate paragraphs. Two thin gold pips cap its ends. Hidden in
-// steady state; fades in once the answer has begun writing itself,
-// settles beneath the footnote, and holds beneath the explicit.
+// separate paragraphs. Two thin gold pips cap its ends. Iteration 59
+// lifts the line into a composed scholarly mark: a small vermilion
+// diamond sits at its center, flanked by two drawn gold pips on either
+// side — the chapter pause between the answer's voice and the reply's
+// invitation, set as one quiet ornament. Hidden in steady state; fades
+// in once the answer has begun writing itself, settles beneath the
+// footnote, and holds beneath the explicit.
 function ReadingGuide({ visible }: { visible: boolean }) {
   return (
     <div
@@ -2438,6 +2442,21 @@ function ReadingGuide({ visible }: { visible: boolean }) {
     >
       <span className="reading-guide-pip reading-guide-pip-l" />
       <span className="reading-guide-line" />
+      <span className="reading-guide-center" aria-hidden="true">
+        <svg viewBox="0 0 8 8" focusable="false">
+          <path
+            d="M 4 0.6 L 7 4 L 4 7.4 L 1 4 Z"
+            className="reading-guide-diamond"
+          />
+          <circle
+            cx="4"
+            cy="4"
+            r="0.5"
+            className="reading-guide-center-pip"
+          />
+        </svg>
+      </span>
+      <span className="reading-guide-line reading-guide-line-r" />
       <span className="reading-guide-pip reading-guide-pip-r" />
     </div>
   )

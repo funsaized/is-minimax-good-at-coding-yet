@@ -1,5 +1,38 @@
 # Changelog
 
-## Iteration 58 — Composed a more confident hero question mark with a candle-lit highlight and a tightened chapter opening.
+## Iteration 59 — 2026-09-06
 
-Refined the central composition's focal point. The hero question mark is redrawn with a wider, more calligraphic bowl that opens at the apex and tapers smoothly into the stem — the gesture now reads as one continuous brushstroke rather than two cubic curves plus a stem. A subtle linear gradient gives the stroke a faint candle-lit falloff from gold-bright at the bowl to gold-deep at the foot, so the emblem reads as illuminated from above. A thin amber highlight traces just the upper-left of the bowl, the place where a real brushstroke would catch the candle's light, drawing in after the main stroke settles. The chapter divider was widened so the passage from emblem to question text reads as a single composed band, and the question text itself was tightened (tighter letter-spacing, slightly larger on desktop, a hair smaller on mobile) so the title reads as a confident chapter opening rather than a banner. WIDE_PATH and WIDE_DOT were updated to match the new hero proportions so the watermark behind the composition echoes the refined shape.
+Composed the chapter body as one authored scholarly passage; answer, reply, footnote, intellexi read as a single voice.
+
+### Chapter body typography
+- Answer: 14–18px → 15.5–20.5px, line-height 1.6 → 1.62, max-width 32ch → 30ch, color now ink (was ink-soft), subtle warm text-shadow added
+- Reply: 14–18px → 15.5–20.5px, line-height 1.52 → 1.58, max-width 32ch → 30ch, subtle warm text-shadow
+- Footnote: 11.5–13.5px → 12.5–14.5px, max-width 36ch → 34ch, longer rule, more present superscript, more confident middot
+- Intellexi sign-off: 10–12px → 11–13px, letter-spacing 0.18em → 0.22em, larger flourish
+- Explicit: 9.5–11.5px → 10–12px, more breathing room, brighter gold
+
+### Illuminated answer drop-cap
+- Drop-cap "I" lifted from 28–38px to 34–46px (more truly illuminated)
+- Drop-cap plate replaced with a composed gold leaf-rule flanked by two drawn gold end-pips (was a plain vermilion hairline)
+- Drop-cap gold halo widened (–8%–22% → –12%–24%) with slightly warmer core
+
+### Reply pilcrow
+- Larger paragraph glyph (0.88em → 1.04em italic) with stronger vermilion glow
+- Longer drawn rule (clamp 10–18px → clamp 20–30px) ending in a small vermilion pip-cap
+
+### Reading guide
+- Now a composed scholarly ornament: gold rule — vermilion diamond — gold rule
+- Central diamond has a tiny vermilion pip at its heart; both end-pips retained (gold left, vermilion right)
+- Slightly wider and with more breathing room above the reply
+
+### Paragraph rhythm
+- Chapter-body container: tightened internal gap; each element now owns its top margin for clearer rhythm
+- Answer → reading-guide → reply → footnote → tail-piece → explicit → intellexi now reads as one composed descent with confident spacing at each joint
+
+### Mobile responsiveness
+- Answer / reply / footnote / intellexi all carry dedicated mid- and narrow-viewport font sizes
+- Reading-guide center diamond scales down gracefully on small screens
+
+### Composition
+- All existing elements preserved; no fabricated metrics, fake status, or decoration for its own sake
+- Title, framework, and entry point unchanged
