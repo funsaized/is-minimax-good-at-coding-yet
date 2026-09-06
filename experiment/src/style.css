@@ -3653,14 +3653,24 @@ body {
 
 /* ----- Answer line (revealed on click) ----- */
 
+/* ----- Iteration 66: the answer reads as one breath -----
+ *
+ * Slightly larger type, a touch more breathing room in line-height,
+ * and a hint of optical adjustment on the lettering so the answer
+ * reads as a single composed scholarly sentence rather than a
+ * fragmented display block. The drop-cap's vermilion weight
+ * supports the chapter's hand; the answer's text wears the ink-
+ * soft against the candle's glow, not a competing glow of its
+ * own. */
+
 .answer {
   margin: 0;
   padding: 0;
   font-family: var(--display);
   font-style: italic;
-  font-size: clamp(19px, 2.05vw, 27px);
-  line-height: 1.5;
-  letter-spacing: 0.002em;
+  font-size: clamp(20px, 2.18vw, 29px);
+  line-height: 1.58;
+  letter-spacing: 0.006em;
   color: var(--ink-soft);
   text-align: center;
   max-width: 30ch;
@@ -3681,10 +3691,10 @@ body {
   flex-wrap: wrap;
   gap: clamp(2px, 0.3vw, 5px);
   text-shadow:
-    0 0 28px rgba(217, 176, 116, 0.10),
-    0 0 56px rgba(240, 232, 218, 0.04),
-    0.5px 0.7px 0 rgba(20, 12, 6, 0.32);
-  font-feature-settings: "kern" on, "liga" on, "calt" on, "dlig" on;
+    0 0 28px rgba(217, 176, 116, 0.08),
+    0 0 56px rgba(240, 232, 218, 0.03),
+    0.5px 0.7px 0 rgba(20, 12, 6, 0.30);
+  font-feature-settings: "kern" on, "liga" on, "calt" on, "dlig" on, "salt" on;
 }
 
 .answer.is-on {
@@ -3832,9 +3842,9 @@ body {
   padding: 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(17.5px, 1.95vw, 24px);
-  line-height: 1.5;
-  letter-spacing: 0.002em;
+  font-size: clamp(18px, 2.05vw, 25px);
+  line-height: 1.58;
+  letter-spacing: 0.005em;
   color: var(--ink);
   text-align: center;
   max-width: 32ch;
@@ -3860,7 +3870,7 @@ body {
   opacity: 0.98;
   transform: translateY(0);
   max-height: 10em;
-  margin: clamp(28px, 3.4vw, 44px) 0 0;
+  margin: clamp(30px, 3.6vw, 46px) 0 0;
 }
 
 .reply-rule {
@@ -4420,27 +4430,30 @@ body {
  * (tl, tr, bl, br) plus a faint inner shimmer that suggests the
  * parchment's edge. The chapter block reads as an opened folio
  * rather than a boxed editorial card. */
+/* ----- Iteration 66: the question as a true inscribed folio -----
+ *
+ * Replaces the iteration-21 "card on a desk" feel (heavy inset
+ * shadows, layered gradients, a subtle 1px gold border) with the
+ * chapter inked directly into the parchment. The question no
+ * longer sits inside a card — it sits inside the folio. A single,
+ * very faint warm halo (the candle's reflected light catching the
+ * page) sits behind the chapter; an extra-soft inner shadow at
+ * the chapter's centre suggests the parchment dipping under the
+ * type. The four vine corners, the page-corner, the chapter
+ * stamp, and the existing CodexFrame already supply the framing
+ * — the block itself stops pretending to be a card. */
 .question-block {
   position: relative;
   width: min(100%, 780px);
   padding: clamp(28px, 4vw, 48px) clamp(22px, 5vw, 70px) clamp(28px, 4vw, 50px);
   background:
     radial-gradient(
-      100% 80% at 50% 32%,
-      rgba(240, 212, 154, 0.06) 0%,
+      78% 60% at 50% 38%,
+      rgba(240, 212, 154, 0.045) 0%,
+      rgba(217, 176, 116, 0.02) 40%,
       transparent 64%
-    ),
-    radial-gradient(
-      120% 110% at 0% 50%,
-      rgba(176, 83, 58, 0.04) 0%,
-      transparent 42%
-    ),
-    linear-gradient(135deg, rgba(240, 232, 218, 0.058), rgba(176, 83, 58, 0.038));
-  box-shadow:
-    0 24px 70px rgba(0, 0, 0, 0.24),
-    inset 0 1px rgba(255, 244, 220, 0.07),
-    inset 0 0 0 1px rgba(217, 176, 116, 0.06),
-    inset 0 0 24px rgba(0, 0, 0, 0.18);
+    );
+  box-shadow: none;
 }
 /* .question-kicker styling lives in the iteration 45 styles above. */
 
@@ -4540,6 +4553,10 @@ body {
   .sigillum-svg { width: clamp(24px, 7vw, 32px); }
   .composition { gap: clamp(14px, 2.2vw, 22px); }
   .question-block { padding: clamp(20px, 4vw, 30px) clamp(18px, 4vw, 26px) clamp(22px, 4vw, 32px); }
+  .answer { font-size: clamp(18px, 4.6vw, 22px); line-height: 1.5; }
+  .reply { font-size: clamp(16px, 4.2vw, 19.5px); line-height: 1.5; }
+  .predicate-rule::before { width: 3px; height: 3px; }
+  .composition.is-pointing .predicate-rule::before { width: 4px; height: 4px; }
 }
 
 @media (max-width: 380px) {
@@ -5187,17 +5204,17 @@ body {
   to { opacity: 0.85; transform: scale(1); }
 }
 
-/* ----- Answer ornament (printer's flourish between answer and reply) ----- */
+/* ----- Answer ornament (printer's flourish between answer and reply) -----
+ *
+ * Iteration 66 retires the old diamond-and-pip ornament — the
+ * reading-guide that sits between answer and reply now owns the
+ * page's mid-paragraph breath, and a second printer's mark at the
+ * same moment was rhyme-by-repetition. The element stays in the
+ * JSX so the markup doesn't shift, but the ornament itself is
+ * suppressed. */
 
 .answer-ornament {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin: clamp(14px, 1.6vw, 20px) 0 0;
-  opacity: 0;
-  color: var(--gold);
-  animation: answerOrnamentIn 0.9s ease 0.05s forwards;
+  display: none;
 }
 
 .answer-ornament svg {
@@ -6657,7 +6674,18 @@ body {
  * "?" when the reader engages — the two question marks (the emblem
  * above, the punctuation in the text) acknowledge each other. */
 
-/* ----- Predicate rule (gold ink rule beneath "good at frontend") ----- */
+/* ----- Predicate rule (gold ink rule beneath "good at frontend") -----
+ *
+ * Iteration 66 elevates the predicate rule into a real "reader's
+ * pencil" gesture: a thin gold hairline that sits beneath the
+ * verb phrase in steady state, with a small vermilion tap-mark
+ * tucked at its right end. On `is-pointing`, the rule warms from
+ * gold toward vermilion (a quick 220ms crossfade), and the tap
+ * extends rightward like a hesitant pencil-tap that just
+ * underlined the verb. The page now has three ink-marks responding
+ * to one gesture of attention: the predicate rule (verb), the
+ * question press-mark (whole question), and the vermilion underline
+ * beneath "yet?" (the chapter's terminal concern). */
 
 .predicate-rule {
   display: block;
@@ -6665,12 +6693,12 @@ body {
   left: 4%;
   right: 4%;
   bottom: clamp(-6px, -0.55vw, -4px);
-  height: 1px;
+  height: 1.2px;
   background: linear-gradient(
     90deg,
     transparent 0%,
     rgba(217, 176, 116, 0.55) 30%,
-    rgba(240, 212, 154, 0.75) 50%,
+    rgba(240, 212, 154, 0.78) 50%,
     rgba(217, 176, 116, 0.55) 70%,
     transparent 100%
   );
@@ -6680,12 +6708,73 @@ body {
   pointer-events: none;
   transition:
     opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 2.6s,
-    transform 1.15s cubic-bezier(0.2, 0.7, 0.2, 1) 2.6s;
+    transform 1.15s cubic-bezier(0.2, 0.7, 0.2, 1) 2.6s,
+    background 0.45s ease;
 }
 
 .composition.ready .predicate-rule {
   opacity: 0.72;
   transform: scaleX(1);
+}
+
+/* On pointing, the rule crosses from gold toward vermilion — a
+   reader's pencil tap just underlined the verb. The change stays
+   under half a second so it reads as a gesture, not an animation. */
+.composition.is-pointing .predicate-rule {
+  opacity: 0.92;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(176, 83, 58, 0.55) 22%,
+    rgba(198, 104, 74, 0.82) 50%,
+    rgba(176, 83, 58, 0.55) 78%,
+    transparent 100%
+  );
+}
+
+/* The right-end "tap" — a single small vermilion drop tucked at
+   the rule's far edge in steady state. On pointing, it grows a
+   hair and leans a fraction brighter, like a pencil drawing back
+   from the underline. */
+.predicate-rule::before {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--vermilion);
+  opacity: 0;
+  transform: translate(0, -50%) scale(0.3);
+  box-shadow: 0 0 4px rgba(176, 83, 58, 0.38);
+  transition:
+    opacity 0.55s ease 2.9s,
+    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1) 2.9s,
+    width 0.4s ease,
+    height 0.4s ease;
+}
+
+.composition.ready .predicate-rule::before {
+  opacity: 0.6;
+  transform: translate(0, -50%) scale(1);
+}
+
+.composition.is-pointing .predicate-rule::before {
+  opacity: 0.95;
+  width: 5px;
+  height: 5px;
+  transform: translate(2px, -50%) scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .predicate-rule { transition: opacity 0.2s ease; }
+  .composition.ready .predicate-rule { transform: scaleX(1); opacity: 0.72; }
+  .predicate-rule::before { transition: opacity 0.2s ease; transform: translate(0, -50%) scale(1); }
+  .composition.is-pointing .predicate-rule::before {
+    transform: translate(2px, -50%) scale(1);
+    opacity: 0.95;
+  }
 }
 
 /* The verb wrapper establishes a positioning context for the predicate rule */
@@ -8796,20 +8885,28 @@ body {
   }
 }
 
-/* ----- Press-mark: a soft warm shadow beneath the question-block ----- */
+/* ----- Press-mark: a soft warm pool beneath the chapter -----
+ *
+ * Iteration 66 returns the press-mark to its true intention: a
+ * single soft warm pool — the candle's reflection brightening on
+ * the parchment when the reader touches the question — rather
+ * than the iteration-44 "card lifted off the desk" stack of
+ * shadows. The chapter now lives on the parchment; the press-mark
+ * is just a brief warming in the candle's pooled light. */
 
 .question-block {
-  transition: box-shadow 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: background 0.7s ease, transform 0.45s ease;
 }
 
 .composition.is-pointing .question-block {
-  box-shadow:
-    0 28px 78px rgba(0, 0, 0, 0.32),
-    0 12px 28px rgba(0, 0, 0, 0.22),
-    inset 0 1px rgba(255, 244, 220, 0.08),
-    inset 0 0 0 1px rgba(217, 176, 116, 0.08),
-    inset 0 0 24px rgba(0, 0, 0, 0.18),
-    inset 0 16px 38px rgba(176, 83, 58, 0.05);
+  background:
+    radial-gradient(
+      62% 48% at 50% 42%,
+      rgba(240, 212, 154, 0.10) 0%,
+      rgba(217, 176, 116, 0.045) 40%,
+      rgba(176, 83, 58, 0.018) 64%,
+      transparent 82%
+    );
 }
 
 /* ----- Question typography refinement -----
@@ -8906,14 +9003,22 @@ body {
  * same star-pip motif at the same scale) so the chapter opens and
  * closes with marks from the same vocabulary. */
 
+/* ----- Iteration 66: the chapter body breathes -----
+ *
+ * Lifts the chapter-plate-frame's breathing space slightly so the
+ * body reads as a single composed passage rather than as a stack
+ * of close-set paragraphs. The inscribed codex frame, the
+ * foliated opening, and the explicit pilcrow remain in place; the
+ * air around them increases. */
+
 .chapter-plate-frame {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin: clamp(10px, 1.2vw, 18px) 0 0;
-  padding: clamp(22px, 2.6vw, 36px) clamp(16px, 2vw, 26px) clamp(10px, 1.2vw, 18px);
+  margin: clamp(14px, 1.5vw, 22px) 0 0;
+  padding: clamp(26px, 3vw, 42px) clamp(20px, 2.4vw, 32px) clamp(14px, 1.5vw, 22px);
   isolation: isolate;
 }
 
@@ -9697,13 +9802,17 @@ body {
   .chapter-cadence-mark { width: 9px; height: 9px; }
 }
 
-/* ----- Tail-piece (chapter close ornament) ----- */
+/* ----- Tail-piece (chapter close ornament) -----
+ *
+ * Iteration 66 trims the tail-piece to a thinner, quieter scale
+ * so it reads as one continuous breath with the explicit's pilcrow
+ * below it, not as a competing ornament. */
 
 .tail-piece {
   display: block;
-  width: clamp(48px, 6vw, 84px);
+  width: clamp(40px, 5vw, 70px);
   height: auto;
-  margin: clamp(6px, 0.8vw, 12px) auto 0;
+  margin: clamp(4px, 0.5vw, 8px) auto 0;
   color: var(--gold);
   opacity: 0;
   transform: translateY(2px);
@@ -9878,8 +9987,8 @@ body {
   align-items: center;
   justify-content: center;
   gap: clamp(4px, 0.4vw, 7px);
-  width: clamp(150px, 26vw, 250px);
-  margin: clamp(14px, 1.6vw, 20px) auto clamp(2px, 0.2vw, 4px);
+  width: clamp(110px, 18vw, 180px);
+  margin: clamp(10px, 1.2vw, 16px) auto clamp(4px, 0.4vw, 7px);
   opacity: 0;
   transform: translateY(2px);
   transition:
@@ -9889,7 +9998,7 @@ body {
 }
 
 .reading-guide.is-on {
-  opacity: 1;
+  opacity: 0.78;
   transform: translateY(0);
 }
 
@@ -9918,7 +10027,7 @@ body {
 }
 
 .reading-guide.is-on .reading-guide-line {
-  opacity: 0.55;
+  opacity: 0.4;
   transform: scaleX(1);
 }
 

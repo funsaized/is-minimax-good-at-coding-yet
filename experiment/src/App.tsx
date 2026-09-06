@@ -63,11 +63,14 @@ type Whisper = { corner: Corner; text: string }
 // Three marginalia — quiet top-left, top-right, and bottom-right.
 // The chapter is a question; the margins hold three short notes —
 // folio, reading, now — each a different aspect of how the page
-// is held open.
+// is held open. Iteration 66 tightens each into a single short
+// line of true marginalium, the way a careful reader would
+// scribble in the margin of a borrowed codex: terse, hand-cut,
+// never explanatory.
 const WHISPERS: Whisper[] = [
-  { corner: 'tl', text: 'a folio, slowly composed; this page is its own footnote' },
-  { corner: 'tr', text: 'the candle is patient; the reader is patient; the page, too — slow down' },
-  { corner: 'br', text: 'read at your own pace — the page will not move on without you' },
+  { corner: 'tl', text: 'a folio, slowly composed' },
+  { corner: 'tr', text: 'candle · reader · page — slow down' },
+  { corner: 'br', text: 'the page will wait for you' },
 ]
 
 // Catchword — the first word of the (hypothetical) next folio, set as a
