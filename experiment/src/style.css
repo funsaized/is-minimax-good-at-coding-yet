@@ -2591,6 +2591,9 @@ body {
   max-width: 22ch;
   margin: 0;
   text-wrap: balance;
+  font-feature-settings: "kern" on, "liga" on, "calt" on, "salt" on, "dlig" on;
+  font-variant-numeric: oldstyle-nums;
+  text-rendering: optimizeLegibility;
   text-shadow:
     0 0 32px rgba(240, 232, 218, 0.10),
     0 0 64px rgba(217, 176, 116, 0.04),
@@ -2922,6 +2925,395 @@ body {
 @media (max-width: 520px) {
   .question-pressmark { width: 64px; margin-top: 6px; margin-bottom: clamp(14px, 3vw, 22px); }
   .question-pressmark::after { width: 3px; height: 3px; }
+}
+
+/* ----- Question title rule (composed printer's setting line) -----
+ * Iteration 45 composes a single typed-rule beneath the chapter's
+ * question. Two thin gold rules grow outward from a vermilion pip,
+ * flanked by two small end-pips, like the printer's hairline that
+ * closes a printed chapter title. Drawn in once the chapter has
+ * settled, after the question's word cadence has finished, so the
+ * rule reads as the chapter's setting line — the chapter now reads
+ * as a deliberate stack: kicker · opener · question · title-rule ·
+ * press-mark · pressmark · answer.
+ */
+.question-title-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(3px, 0.3vw, 5px);
+  width: clamp(120px, 22vw, 220px);
+  margin: clamp(2px, 0.4vw, 6px) auto clamp(2px, -0.2vw, 2px);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) 2.6s,
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 2.6s;
+}
+
+.composition.ready .question-title-rule {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.question-title-rule-line {
+  display: block;
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-deep) 22%,
+    var(--gold) 50%,
+    var(--gold-deep) 78%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.18);
+  transform-origin: 50% 50%;
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 2.75s,
+    transform 1.15s cubic-bezier(0.2, 0.7, 0.2, 1) 2.75s;
+}
+
+.question-title-rule-line-l { transform-origin: 100% 50%; }
+.question-title-rule-line-r { transform-origin: 0% 50%; }
+
+.composition.ready .question-title-rule-line {
+  opacity: 0.7;
+  transform: scaleX(1);
+}
+
+.question-title-rule-end {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  transform: scale(0.2);
+  transition:
+    opacity 0.55s ease 2.95s,
+    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1) 2.95s;
+  flex: 0 0 auto;
+  box-shadow: 0 0 5px rgba(217, 176, 116, 0.34);
+}
+
+.composition.ready .question-title-rule-end {
+  opacity: 0.85;
+  transform: scale(1);
+}
+
+.question-title-rule-pip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  opacity: 0;
+  transform: scale(0.2);
+  transition:
+    opacity 0.6s ease 2.85s,
+    transform 0.75s cubic-bezier(0.2, 1.2, 0.4, 1) 2.85s;
+  color: var(--vermilion);
+}
+
+.composition.ready .question-title-rule-pip {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.question-title-rule-pip svg {
+  width: clamp(6px, 0.7vw, 8px);
+  height: clamp(6px, 0.7vw, 8px);
+  display: block;
+  overflow: visible;
+}
+
+.question-title-rule-pip-disc {
+  fill: currentColor;
+  filter: drop-shadow(0 0 3px rgba(176, 83, 58, 0.45));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question-title-rule {
+    transition: opacity 0.18s ease;
+    opacity: 1;
+    transform: none;
+  }
+  .question-title-rule-line {
+    transition: none;
+    opacity: 0.7;
+    transform: scaleX(1);
+  }
+  .question-title-rule-end {
+    transition: none;
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  .question-title-rule-pip {
+    transition: none;
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 520px) {
+  .question-title-rule { width: clamp(72px, 28vw, 120px); gap: 2px; }
+  .question-title-rule-end { width: 3px; height: 3px; }
+  .question-title-rule-pip svg { width: 5px; height: 5px; }
+}
+
+/* ----- Question kicker refinement (iteration 45) -----
+ * The chapter's running label is composed as a single manuscript
+ * band: two flanking pips, a small-caps vermilion rubric, a centered
+ * sep middot, and a second italic phrase. Reads as the chapter's
+ * editorial kicker set in the manner of a printer's prepared margin
+ * caption rather than as a single monochrome tag.
+ */
+.question-kicker {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  row-gap: 4px;
+  column-gap: clamp(6px, 0.7vw, 10px);
+  margin: 0 0 clamp(14px, 2vw, 24px);
+  padding: 0;
+  font-family: var(--serif);
+  font-size: clamp(10.5px, 1.05vw, 13px);
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  color: var(--ink-soft);
+  opacity: 0;
+  transform: translateY(3px);
+  transition:
+    opacity 0.95s ease 0.85s,
+    transform 1.0s cubic-bezier(0.2, 0.7, 0.2, 1) 0.85s,
+    color 0.5s ease;
+}
+
+.composition.ready .question-kicker {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.question-kicker-pip {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--vermilion);
+  box-shadow: 0 0 5px rgba(176, 83, 58, 0.42);
+  opacity: 0.9;
+  transform: translateY(-0.18em);
+  flex: 0 0 auto;
+  transition:
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.5s ease;
+}
+
+.question-kicker-pip-r { background: var(--gold); box-shadow: 0 0 5px rgba(217, 176, 116, 0.42); }
+
+.composition.is-pointing .question-kicker-pip { transform: translateY(-0.18em) scale(1.18); }
+.composition.is-pointing .question-kicker-pip-l { box-shadow: 0 0 7px rgba(176, 83, 58, 0.6); }
+.composition.is-pointing .question-kicker-pip-r { box-shadow: 0 0 7px rgba(240, 212, 154, 0.55); }
+
+.question-kicker-text {
+  font-style: italic;
+  font-weight: 500;
+  font-feature-settings: "smcp" on, "c2sc" on, "liga" on, "calt" on;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.32em;
+  color: var(--vermilion-bright);
+  text-shadow: 0 0 8px rgba(176, 83, 58, 0.16);
+}
+
+.question-kicker-sep {
+  display: inline-block;
+  font-style: normal;
+  color: var(--gold-deep);
+  opacity: 0.7;
+  letter-spacing: 0;
+  transform: translateY(-0.1em);
+}
+
+.question-kicker-italic {
+  font-style: italic;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question-kicker { transition: none; opacity: 1; transform: none; }
+  .question-kicker-pip { transition: none; transform: translateY(-0.18em); }
+}
+
+@media (max-width: 620px) {
+  .question-kicker {
+    column-gap: 6px;
+    letter-spacing: 0.14em;
+  }
+  .question-kicker-text { letter-spacing: 0.28em; }
+}
+
+@media (max-width: 520px) {
+  .question-kicker { font-size: clamp(9.5px, 1.4vw, 11.5px); column-gap: 5px; }
+  .question-kicker-text { letter-spacing: 0.22em; }
+  .question-kicker-pip { width: 3px; height: 3px; }
+}
+
+/* ----- Scroll curl (the chapter's terminal seal, after ¶) -----
+ * A small hand-drawn flourish that trails the explicit's pilcrow.
+ * Two thin arcs tapering into a single point, like the end of a scroll
+ * whose roll is curving into view. Drawn in once the explicit has
+ * settled, so it reads as the chapter's terminal seal — completing
+ * the closure pair: explicit · ¶ ✦.
+ */
+.scroll-curl {
+  display: inline-block;
+  width: clamp(14px, 1.6vw, 22px);
+  height: clamp(5px, 0.6vw, 8px);
+  margin-left: clamp(4px, 0.4vw, 6px);
+  vertical-align: -0.05em;
+  opacity: 0;
+  transform: translateX(-3px) scaleX(0.5);
+  transform-origin: 0% 50%;
+  transition:
+    opacity 1.1s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 1.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.footnote.is-done ~ .explicit .scroll-curl {
+  opacity: 0.85;
+  transform: translateX(0) scaleX(1);
+  transition-delay: 0.55s;
+}
+
+.scroll-curl-arc {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 0.85;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.78;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  transition:
+    stroke-dashoffset 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) 0.8s;
+}
+
+.footnote.is-done ~ .explicit .scroll-curl-arc {
+  stroke-dashoffset: 0;
+}
+
+.scroll-curl-arc-2 {
+  stroke: var(--gold-deep);
+  stroke-width: 0.65;
+  opacity: 0.55;
+  transition-delay: 1.05s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-curl { transition: none; opacity: 0.85; transform: none; }
+  .scroll-curl-arc { transition: none; stroke-dashoffset: 0; }
+}
+
+@media (max-width: 520px) {
+  .scroll-curl { width: 12px; height: 4px; margin-left: 3px; }
+}
+
+/* ----- Binding stitches (open folio, sewing thread) -----
+ * A pair of small drawn stitches that cross the spine of the bifolio
+ * — a hand-drawn + sign in vermilion at the top and bottom of the
+ * crease, like the binding thread of a sewn folio. Quiet additive
+ * detail; never competes with the gilt.
+ */
+.binding-stitch {
+  position: absolute;
+  left: 50%;
+  width: clamp(8px, 1vw, 12px);
+  height: clamp(8px, 1vw, 12px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transform: translate(-50%, 0) scale(0.3);
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 1.8s,
+    transform 1.05s cubic-bezier(0.2, 1.2, 0.4, 1) 1.8s;
+  color: var(--vermilion);
+}
+
+.frame.ready .binding-stitch {
+  opacity: 0.78;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.frame.ready .binding-stitch-bottom {
+  transition-delay: 2.05s;
+}
+
+.binding-stitch-top { top: clamp(74px, 9vh, 110px); }
+.binding-stitch-bottom { bottom: clamp(64px, 8vh, 100px); }
+
+.binding-stitch svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 0 2px rgba(176, 83, 58, 0.32));
+}
+
+.binding-stitch-line {
+  stroke: currentColor;
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 14;
+  stroke-dashoffset: 14;
+  transition:
+    stroke-dashoffset 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 2.1s,
+    opacity 0.55s ease 2.1s;
+}
+
+.frame.ready .binding-stitch-line { opacity: 0.78; stroke-dashoffset: 0; }
+
+.frame.ready .binding-stitch-bottom .binding-stitch-line {
+  transition-delay: 2.35s, 2.35s;
+}
+
+.binding-stitch-knot {
+  fill: currentColor;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  transition:
+    opacity 0.45s ease 2.5s,
+    transform 0.55s cubic-bezier(0.2, 1.2, 0.4, 1) 2.5s;
+}
+
+.frame.ready .binding-stitch-knot { opacity: 0.95; transform: scale(1); }
+
+.frame.ready .binding-stitch-bottom .binding-stitch-knot {
+  transition-delay: 2.75s, 2.75s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .binding-stitch { transition: none; opacity: 0.78; transform: translate(-50%, 0) scale(1); }
+  .binding-stitch-line { transition: none; opacity: 0.78; stroke-dashoffset: 0; }
+  .binding-stitch-knot { transition: none; opacity: 0.9; transform: scale(1); }
+}
+
+@media (max-width: 760px) {
+  .binding-stitch { width: 9px; height: 9px; }
+  .binding-stitch-top { top: clamp(54px, 8vh, 90px); }
+  .binding-stitch-bottom { bottom: clamp(48px, 7vh, 80px); }
+}
+
+@media (max-width: 520px) {
+  .binding-stitch { width: 7px; height: 7px; }
+  .binding-stitch-top { top: 56px; }
+  .binding-stitch-bottom { bottom: 44px; }
 }
 
 /* ----- Answer line (revealed on click) ----- */
@@ -3681,7 +4073,7 @@ body {
     inset 0 0 0 1px rgba(217, 176, 116, 0.06),
     inset 0 0 24px rgba(0, 0, 0, 0.18);
 }
-.question-kicker { display: block; margin-bottom: clamp(12px, 2vw, 22px); color: var(--vermilion-bright); font-family: var(--mono); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; }
+/* .question-kicker styling lives in the iteration 45 styles above. */
 
 /* ----- Chapter stamp (top-right corner of the editorial card) -----
  * Iteration 39 moves the stamp down slightly so it shares the top-right

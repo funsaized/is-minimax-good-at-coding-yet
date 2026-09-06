@@ -1161,6 +1161,11 @@ function MarginalRubric() {
 }
 
 // BifolioSpine — a soft vertical crease suggesting an open book spread.
+// Iteration 45 adds two drawn binding-stitches at the top and bottom of
+// the crease — small + signs traced in vermilion, like the sewing
+// thread of a bound folio holding the spread together. They are small
+// and quiet, drawn in once the page has settled, and never compete
+// with the gilt.
 function BifolioSpine() {
   return (
     <div className="bifolio" aria-hidden="true">
@@ -1168,6 +1173,8 @@ function BifolioSpine() {
       <span className="bifolio-gilt" />
       <span className="bifolio-shadow bifolio-shadow-l" />
       <span className="bifolio-shadow bifolio-shadow-r" />
+      <BindingStitch position="top" />
+      <BindingStitch position="bottom" />
     </div>
   )
 }
@@ -1283,9 +1290,13 @@ function SealImpression({ sealing }: { sealing: boolean }) {
 // Explicit — the chapter's formal closing mark, set beneath the footnote
 // once the gloss has finished. A single gold rule, the Latin "explicit"
 // set in serif italic between flanking gold-deep middots, and a small
-// vermilion pilcrow to mark the chapter's true end. Reads as the final
-// line a scribe would add when a folio is complete — "the chapter is
-// ended; the binding continues on the next folio."
+// vermilion pilcrow followed by a hand-drawn scroll-curl to mark the
+// chapter's true end — the roll curving into view, like the end of a
+// finished folio being unrolled. Reads as the final line a scribe
+// would add when a folio is complete — "the chapter is ended; the
+// binding continues on the next folio." Iteration 45 appends the
+// scroll-curl as the chapter's terminal seal, completing the closing
+// trio: explicit · fol. xviii · ¶ ✦.
 function Explicit() {
   return (
     <p className="explicit" aria-hidden="true">
@@ -1294,6 +1305,7 @@ function Explicit() {
       <span className="explicit-sep">·</span>
       <em className="explicit-text explicit-text-faint">fol. xviii</em>
       <span className="explicit-pilcrow">¶</span>
+      <ScrollCurl />
     </p>
   )
 }
@@ -1377,6 +1389,94 @@ function VineCorner({
       <circle cx="17" cy="6" r="0.9" className="vine-pip" />
       <circle cx="13" cy="11" r="0.5" className="vine-pip vine-pip-sm" />
     </svg>
+  )
+}
+
+// QuestionTitleRule — a single composed title rule drawn beneath the
+// chapter's question, the printed page's setting-line. A thin gold
+// hairline flanked by two small end-pips, like the printer's rule that
+// closes a chapter's title block. Composed of two outward-growing
+// rules with a vermilion pip at center; sits beneath the question and
+// the question's press-mark, so the chapter title now reads as a
+// deliberate stack: kicker → opener → question → title-rule → press-mark
+// → pressmark → answer. Iteration 45 composes this rule into the
+// chapter's printed structure.
+function QuestionTitleRule() {
+  return (
+    <div className="question-title-rule" aria-hidden="true">
+      <span className="question-title-rule-end question-title-rule-end-l" />
+      <span className="question-title-rule-line question-title-rule-line-l" />
+      <span className="question-title-rule-pip">
+        <svg viewBox="0 0 8 8" focusable="false">
+          <circle cx="4" cy="4" r="1.4" className="question-title-rule-pip-disc" />
+        </svg>
+      </span>
+      <span className="question-title-rule-line question-title-rule-line-r" />
+      <span className="question-title-rule-end question-title-rule-end-r" />
+    </div>
+  )
+}
+
+// ScrollCurl — a small trailing hand-drawn flourish at the chapter's
+// terminal pilcrow. Two thin arcs tapering into a single point, like
+// the end of a scroll whose roll is curving into view. Additive,
+// quiet; completes the chapter's closure alongside the explicit's
+// pilcrow, tying the chapter's end to the physical gesture of a
+// finished folio.
+function ScrollCurl() {
+  return (
+    <svg
+      className="scroll-curl"
+      viewBox="0 0 20 8"
+      focusable="false"
+      aria-hidden="true"
+    >
+      <path
+        className="scroll-curl-arc"
+        d="M 2 4 Q 9 0.6 17 4"
+      />
+      <path
+        className="scroll-curl-arc scroll-curl-arc-2"
+        d="M 4 6 Q 11 3.4 18 6"
+      />
+    </svg>
+  )
+}
+
+// BindingStitch — a single short drawn stitch that crosses the spine
+// of the open book, like a sewing thread through a bound folio. Two
+// stitches sit at the top and bottom of the bifolio: a small + sign
+// traced in vermilion, the page's quiet acknowledgment that the
+// chapter has been bound into a codex.
+function BindingStitch({ position }: { position: 'top' | 'bottom' }) {
+  return (
+    <span
+      className={`binding-stitch binding-stitch-${position}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 12 12" focusable="false">
+        <line
+          className="binding-stitch-line binding-stitch-line-1"
+          x1="2.6"
+          y1="9.4"
+          x2="9.4"
+          y2="2.6"
+        />
+        <line
+          className="binding-stitch-line binding-stitch-line-2"
+          x1="2.6"
+          y1="2.6"
+          x2="9.4"
+          y2="9.4"
+        />
+        <circle
+          className="binding-stitch-knot"
+          cx="6"
+          cy="6"
+          r="0.7"
+        />
+      </svg>
+    </span>
   )
 }
 
@@ -2768,9 +2868,15 @@ export function App() {
              <VineCorner position="bl" />
              <VineCorner position="br" />
              <PageCorner />
-             <InkFleck key={noteNonce} visible={pointing || answerOn} />
-<span className="question-kicker">a question in public</span>
-              <FolioOpener />
+<InkFleck key={noteNonce} visible={pointing || answerOn} />
+             <span className="question-kicker">
+               <span className="question-kicker-pip question-kicker-pip-l" aria-hidden="true" />
+               <em className="question-kicker-text">a question in public</em>
+               <span className="question-kicker-sep" aria-hidden="true">·</span>
+               <span className="question-kicker-italic">set by candlelight</span>
+               <span className="question-kicker-pip question-kicker-pip-r" aria-hidden="true" />
+             </span>
+               <FolioOpener />
               <h1 className="question">
                <span className="question-line">
                  <span className="question-lead-punctus" aria-hidden="true">
@@ -2804,6 +2910,7 @@ export function App() {
                 <span className="question-prompt-mark" />
                 <span className="question-prompt-pip question-prompt-pip-r" />
               </span>
+            <QuestionTitleRule />
             <QuestionPressmark visible={noteNonce > 0 || answerOn} />
             <span
               key={noteNonce}
