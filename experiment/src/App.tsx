@@ -8,48 +8,41 @@ import {
   type RefObject,
 } from 'react'
 
-// A hand-drawn question mark with a fuller bowl and a longer, more
-// confident stem — the bowl opens wider at the top (the quill started
-// here, finished there) and tapers into the stem via a smooth curve
-// rather than a straight line, so the gesture reads as one continuous
-// brushstroke instead of two cubic curves + a stem. The terminal of
-// the stroke is slightly off-center so the dot reads as a natural
-// continuation, not a centered punctuation mark.
+// ─────────────────────────────────────────────────────────────────────────────
+// Iteration 71 — direction: "the page, distilled."
+//
+// After seventy iterations the chapter had grown into a museum of small
+// ornaments: four corner marginalia, a bifolio open-book spread, a
+// window arch with its own moon and stars, a watermark that drew itself
+// behind everything, a compass at the top, a crown of stacked bands, a
+// rubric in the margin, a catchword at the foot, vine corners on every
+// block, a ribbon hanging from the page, a press-mark and an underline
+// and a descent and a press-mark beneath the question, a wax seal in
+// the colophon and a reading seal and a legi-mark and an inkpot and a
+// quill and an oculus — each small, each authored, each speaking.
+//
+// None of them weakened on its own. Together they weakened the page.
+//
+// This iteration cuts the ornaments that competed with the question
+// for the reader's attention and keeps the elements that earn their
+// place: the hero, the candle (now with a real first-light ignition),
+// the dust, the paper, the reading pace, the body's quiet cadence,
+// and the colophon's small closing mark. One new detail is added that
+// the rest of the composition now has room to receive: a single soft
+// halo behind the question that brightens when the reader approaches,
+// reading the chapter as one continuous gesture of attention.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// The hero question mark — a hand-drawn bowl that opens wider at the top,
+// tapers into the stem via a smooth curve, and finishes with a slightly
+// off-centre dot that reads as a natural continuation of the stroke.
 const HERO_PATH =
   'M 64 112 C 44 -22 200 -22 180 112 C 172 184 130 170 126 222 C 124 244 124 262 124 284'
 const HERO_DOT = { cx: 124, cy: 310, r: 17 }
-
-// A subtler "echo" path that traces just the upper bowl and the stem's
-// inner curve, drawn after the main stroke with a thinner, brighter
-// stroke — the page's highlight where candlelight catches the ink.
-// Reads as the upper-left curve of the bowl catching more light than
-// the downstroke, the way a real brushstroke does when held at an
-// angle to the candle.
 const HERO_HIGHLIGHT_PATH =
   'M 68 106 C 56 -8 184 -10 176 108'
 
-const WIDE_PATH =
-  'M 192 336 C 132 -66 600 -66 540 336 C 516 552 390 510 378 666 C 372 732 372 786 372 852'
-const WIDE_DOT = { cx: 372, cy: 930, r: 51 }
-
-// Deliberate ink-arc spatter: a flourish that reads as one gesture, not noise.
-const SPATTER = [
-  { angle: 8,  distance: 70,  size: 2.4, delay: 0,   op: 1.0 },
-  { angle: 28, distance: 96,  size: 2.0, delay: 18,  op: 0.95 },
-  { angle: 48, distance: 118, size: 1.6, delay: 38,  op: 0.85 },
-  { angle: 68, distance: 104, size: 1.4, delay: 58,  op: 0.75 },
-  { angle: 122, distance: 88,  size: 1.7, delay: 30,  op: 0.8 },
-  { angle: 152, distance: 110, size: 2.2, delay: 12,  op: 0.95 },
-  { angle: 178, distance: 82,  size: 2.4, delay: 46,  op: 1.0 },
-  { angle: 202, distance: 96,  size: 1.5, delay: 70,  op: 0.8 },
-  { angle: 232, distance: 116, size: 1.8, delay: 22,  op: 0.9 },
-  { angle: 262, distance: 104, size: 1.6, delay: 52,  op: 0.8 },
-  { angle: 292, distance: 92,  size: 2.0, delay: 8,   op: 0.9 },
-  { angle: 322, distance: 118, size: 1.7, delay: 36,  op: 0.85 },
-  { angle: 352, distance: 80,  size: 2.2, delay: 64,  op: 0.95 },
-]
-
-// Letter dust — biased toward the question's own letters, with a few
+// Lettered dust — biased toward the question's own letters, with a few
 // manuscript abbreviations, so the candle-glow reads as illuminated
 // letterforms being typed into the air, not generic embers.
 const DUST_GLYPHS = [
@@ -57,83 +50,6 @@ const DUST_GLYPHS = [
   'g', 'o', 'y', 'e', 'd',
   '·', '·', '·', '·', '·',
 ]
-
-type Whisper = { corner: Corner; text: string }
-
-// Three marginalia — quiet top-left, top-right, and bottom-right.
-// The chapter is a question; the margins hold three short notes —
-// folio, reading, now — each a different aspect of how the page
-// is held open. Iteration 66 tightens each into a single short
-// line of true marginalium, the way a careful reader would
-// scribble in the margin of a borrowed codex: terse, hand-cut,
-// never explanatory.
-const WHISPERS: Whisper[] = [
-  { corner: 'tl', text: 'a folio, slowly composed' },
-  { corner: 'tr', text: 'candle · reader · page — slow down' },
-  { corner: 'br', text: 'the page will wait for you' },
-]
-
-// Catchword — the first word of the (hypothetical) next folio, set as a
-// quiet italic at the bottom-right of the frame. A printer's mark that
-// signals where the binding continues.
-const CATCHWORD = 'respondetur'
-
-const ANSWER =
-  '— and the page itself, which you are reading now.'
-
-const REPLY =
-  'so read it once, then again — slower this time.'
-
-// Scholastic footnote — a small bilingual marginal gloss written into
-// the page after the reply has finished landing. Latin lemma in
-// vermilion italic, English gloss in the page's own ink-soft, joined
-// by a hand-cut middot. The footnote draws itself in like a scribe's
-// late addition to a finished folio — the kind of gloss a careful
-// reader might write in centuries after the page was set, connecting
-// the reply's invitation to read again with the page's own patience.
-const FOOTNOTE_TEXT = 'relege · without a reader, silence'
-const FOOTNOTE_ARIA =
-  'relege, without a reader, silence — read again, without a reader, silence'
-const FOOTNOTE_STAGGER_MS = 38
-
-// The rubricated initial that opens the answer — a small painted "I"
-// (for the manuscript em-dash's companion, the verb "imponitur"), set in
-// vermilion italic. Reads as the answer being a hand-illuminated reply.
-const ANSWER_DROPCAP = 'I'
-
-// Scholastic gloss in vermilion — a single rubricated marginal word
-// sitting just outside the hero, the medieval reader's "Qu." (quaeritur).
-const MARGINAL_RUBRIC = 'Qu.'
-
-const ANSWER_STAGGER_MS = 34
-const REPLY_STAGGER_MS = 26
-const INTELLEXI_STAGGER_MS = 78
-
-// The reader's quiet mark in the bottom-left margin — the fourth voice
-// of the folio's left-margin dialogue. The page asks ("Qu."), the page
-// invites ("vide · look"), the reader accepts ("intellexi"), and now
-// the reader marks — "annotavi". Types itself in once the reader has
-// understood the chapter, completing the page's four-corner marginal
-// scheme (top-left, top-right, bottom-left, bottom-right) and the
-// manuscript's Latin chain: quaeritur → respondetur → relege →
-// intellexi → annotavi → legi → explicit.
-const LECTORIS_NOTA_TEXT = 'annotavi · I have marked it'
-const LECTORIS_NOTA_ARIA =
-  "annotavi: I have marked it — the reader's mark in the bottom-left margin"
-const LECTORIS_NOTA_STAGGER_MS = 54
-const LECTORIS_NOTA_DELAY_MS = 620
-
-function useReducedMotion() {
-  const [reduced, setReduced] = useState(false)
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReduced(mq.matches)
-    const handler = (e: MediaQueryListEvent) => setReduced(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
-  return reduced
-}
 
 type Particle = {
   x: number
@@ -147,306 +63,21 @@ type Particle = {
   spin: number
 }
 
-type Corner = 'tl' | 'tr' | 'bl' | 'br'
-
-function Fleuron() {
-  return (
-    <svg className="fleuron" viewBox="0 0 160 14" aria-hidden="true">
-      <g className="fleuron-rule fleuron-rule-l">
-        <line x1="0" y1="7" x2="58" y2="7" pathLength="100" />
-      </g>
-      <g className="fleuron-rule fleuron-rule-r">
-        <line x1="102" y1="7" x2="160" y2="7" pathLength="100" />
-      </g>
-      <g className="fleuron-dots">
-        <circle cx="66" cy="7" r="1.1" />
-        <circle cx="94" cy="7" r="1.1" />
-      </g>
-      <g className="fleuron-ornament">
-        <circle cx="80" cy="7" r="3.2" className="fleuron-disc" />
-        <path
-          className="fleuron-bloom"
-          d="M 80 1.4 L 81.9 5 L 85.6 7 L 81.9 9 L 80 12.6 L 78.1 9 L 74.4 7 L 78.1 5 Z"
-        />
-        <circle cx="80" cy="7" r="0.9" className="fleuron-pip" />
-      </g>
-    </svg>
-  )
-}
-
-function FolioMark() {
-  return (
-    <svg
-      className="folio-mark"
-      viewBox="0 0 80 58"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <circle cx="40" cy="5" r="1.4" className="folio-mark-dot" />
-      <text
-        x="40"
-        y="40"
-        textAnchor="middle"
-        className="folio-mark-letter"
-      >
-        xviii
-      </text>
-      <path
-        className="folio-mark-flourish"
-        d="M 20 50 Q 40 54 60 50"
-      />
-      <circle cx="14" cy="48" r="0.9" className="folio-mark-pearl" />
-      <circle cx="66" cy="48" r="0.9" className="folio-mark-pearl" />
-    </svg>
-  )
-}
-
-// IncipitCaption — a typed-in Latin caption for the rubric line. Opens
-// the chapter in the manner of a scholastic marginal gloss.
-const INCIPIT_TEXT = 'quaeritur · de fronte'
-const INCIPIT_DELAY = 1500
-const INCIPIT_STEP = 42
-
-function IncipitCaption() {
-  const [on, setOn] = useState(false)
-  const [chars, setChars] = useState(0)
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false)
   useEffect(() => {
-    const t = window.setTimeout(() => setOn(true), INCIPIT_DELAY)
-    return () => clearTimeout(t)
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReduced(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setReduced(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
   }, [])
-  useEffect(() => {
-    if (!on) return
-    const id = window.setTimeout(
-      () => setChars((c) => Math.min(INCIPIT_TEXT.length, c + 1)),
-      INCIPIT_STEP,
-    )
-    return () => clearTimeout(id)
-  }, [on, chars])
-  const text = on ? INCIPIT_TEXT.slice(0, Math.max(0, chars)) : ''
-  return (
-    <span className={`incipit ${on ? 'is-on' : ''}`} aria-live="polite">
-      <span className="incipit-text">{text}</span>
-      {on && chars < INCIPIT_TEXT.length && (
-        <span className="incipit-caret" aria-hidden="true">_</span>
-      )}
-    </span>
-  )
+  return reduced
 }
 
-// IlluminatedStar — a small vermilion asterisk-petal motif painted into
-// the bowl of the question mark. Sits inside the bowl, rotates slowly,
-// breathes in opacity, and flares when the reader approaches.
-function IlluminatedStar() {
-  return (
-    <svg
-      className="illuminated-star"
-      viewBox="0 0 60 60"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <g className="illuminated-star-petal-group">
-        <path
-          className="illuminated-star-petal"
-          d="M 30 8 L 33.32 22.18 L 48 23.62 L 36 31.91 L 39.94 46 L 30 37.34 L 20.06 46 L 24 31.91 L 12 23.62 L 26.68 22.18 Z"
-        />
-      </g>
-      <g className="illuminated-star-rays">
-        <line x1="30" y1="2"  x2="30" y2="14" />
-        <line x1="30" y1="46" x2="30" y2="58" />
-        <line x1="2"  y1="30" x2="14" y2="30" />
-        <line x1="46" y1="30" x2="58" y2="30" />
-        <line x1="11" y1="11" x2="19" y2="19" />
-        <line x1="41" y1="11" x2="49" y2="19" />
-        <line x1="11" y1="49" x2="19" y2="41" />
-        <line x1="41" y1="49" x2="49" y2="41" />
-      </g>
-      <circle cx="30" cy="30" r="3.2" className="illuminated-star-core" />
-      <circle cx="30" cy="30" r="1.1" className="illuminated-star-pip" />
-    </svg>
-  )
-}
-
-// Catchword — the printer's bottom-right marker.
-function Catchword() {
-  return (
-    <span className="catchword" aria-hidden="true">
-      <span className="catchword-rule" />
-      <span className="catchword-caret">›</span>
-      <em className="catchword-text">{CATCHWORD}</em>
-    </span>
-  )
-}
-
-// PrinterLeaf — a tiny diamond-and-rule ornament used to flank the
-// capitulum running title.
-function PrinterLeaf() {
-  return (
-    <svg
-      className="printer-leaf"
-      viewBox="0 0 20 10"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <line
-        x1="0.5"
-        y1="5"
-        x2="4.5"
-        y2="5"
-        className="printer-leaf-rule"
-        strokeLinecap="round"
-      />
-      <path
-        d="M 6 5 L 10 1.4 L 14 5 L 10 8.6 Z"
-        className="printer-leaf-blade"
-      />
-      <circle cx="10" cy="5" r="0.55" className="printer-leaf-pip" />
-      <line
-        x1="15.5"
-        y1="5"
-        x2="19.5"
-        y2="5"
-        className="printer-leaf-rule"
-        strokeLinecap="round"
-      />
-    </svg>
-  )
-}
-
-// PrinterDate — a delicate hairline + a typeset "comp. mmxxvi" mark
-// that crowns the chapter above the capitulum, the manuscript's quiet
-// record of when it was set. Pairs with the horologium at the hero
-// (the hour of reading) — this is the year of composition, the
-// printer's date that lets a folio know its own place in time.
-function PrinterDate() {
-  return (
-    <p className="printer-date" aria-hidden="true">
-      <span className="printer-date-rule" />
-      <span className="printer-date-text">
-        <em className="printer-date-it">comp.</em>
-        <span className="printer-date-sep">·</span>
-        <span className="printer-date-num">mmxxvi</span>
-      </span>
-      <span className="printer-date-rule" />
-    </p>
-  )
-}
-
-// Capitulum — the running title that crowns the chapter.
-function Capitulum() {
-  return (
-    <p className="capitulum" aria-hidden="true">
-      <span className="capitulum-mark capitulum-mark-l">
-        <PrinterLeaf />
-      </span>
-      <span className="capitulum-text">
-        <span className="capitulum-mono">mss</span>
-        <span className="capitulum-sep">·</span>
-        <em className="capitulum-it">fol.</em>
-        <span className="capitulum-num">xviii</span>
-        <span className="capitulum-sep">·</span>
-        <em className="capitulum-it">de initiali lucente</em>
-      </span>
-      <span className="capitulum-mark capitulum-mark-r">
-        <PrinterLeaf />
-      </span>
-    </p>
-  )
-}
-
-function Bifolio() {
-  return (
-    <svg
-      className="orn-glyph"
-      viewBox="0 0 28 20"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        d="M 14 2 L 2 5 L 2 17 L 14 14.5 Z"
-        className="glyph-stroke"
-      />
-      <path
-        d="M 14 2 L 26 5 L 26 17 L 14 14.5 Z"
-        className="glyph-stroke"
-      />
-      <line x1="14" y1="2.5" x2="14" y2="14.5" className="glyph-spine" />
-      <line x1="4.5" y1="8" x2="11" y2="7.4" className="glyph-rule" />
-      <line x1="4.5" y1="10.6" x2="11" y2="10" className="glyph-rule" />
-      <line x1="4.5" y1="13.2" x2="11" y2="12.6" className="glyph-rule" />
-      <line x1="17" y1="7.4" x2="23.5" y2="8" className="glyph-rule" />
-      <line x1="17" y1="10" x2="23.5" y2="10.6" className="glyph-rule" />
-      <line x1="17" y1="12.6" x2="23.5" y2="13.2" className="glyph-rule" />
-    </svg>
-  )
-}
-
-// Wax seal — a pressed vermilion monogram "Mm" at the close of the folio.
-function WaxSeal() {
-  return (
-    <svg
-      className="wax-seal"
-      viewBox="0 0 44 44"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <defs>
-        <radialGradient id="wax-shade" cx="38%" cy="36%" r="72%">
-          <stop offset="0%"   stopColor="#cd6044" />
-          <stop offset="55%"  stopColor="#9c4530" />
-          <stop offset="100%" stopColor="#4f2114" />
-        </radialGradient>
-      </defs>
-      <circle cx="22" cy="22" r="20" fill="url(#wax-shade)" />
-      <circle
-        cx="22"
-        cy="22"
-        r="20"
-        fill="none"
-        stroke="rgba(36, 14, 6, 0.55)"
-        strokeWidth="0.7"
-      />
-      <circle
-        cx="22"
-        cy="22"
-        r="15.5"
-        fill="none"
-        stroke="rgba(255, 210, 180, 0.16)"
-        strokeWidth="0.5"
-      />
-      <text
-        x="22"
-        y="27"
-        textAnchor="middle"
-        className="seal-letter"
-      >
-        Mm
-      </text>
-      <circle cx="22" cy="9"  r="0.7" fill="rgba(255, 218, 188, 0.45)" />
-      <circle cx="22" cy="35" r="0.7" fill="rgba(20, 8, 4, 0.4)" />
-    </svg>
-  )
-}
-
-// GuideRule — a hairline that runs from a margin towards the chapter
-// when the reader approaches a marginal note.
-function GuideRule({ corner }: { corner: Corner }) {
-  return (
-    <span className={`guide-rule guide-rule-${corner}`} aria-hidden="true">
-      <svg viewBox="0 0 100 100" preserveAspectRatio="xMinYMin meet">
-        <line
-          className="guide-rule-line"
-          x1="0"
-          y1="0"
-          x2="100"
-          y2="100"
-          pathLength="100"
-        />
-        <circle className="guide-rule-dot" cx="100" cy="100" r="2.6" />
-      </svg>
-    </span>
-  )
-}
-
+// ─── Paper grain ────────────────────────────────────────────────────────────
+// A subtle warm noise painted across the whole stage — the page's
+// parchment texture. Stays soft; never reads as visible noise.
 function PaperGrain() {
   return (
     <svg className="paper-grain" aria-hidden="true" focusable="false">
@@ -472,16 +103,11 @@ function PaperGrain() {
   )
 }
 
-// ReadingLantern — a soft warm halo that follows the cursor, like a
-// reader's attention bringing its own light to the page. Fades in on
-// the first pointermove and tracks every subsequent one; fades out
-// shortly after the reader's attention drifts away. Hidden on touch
-// devices in steady state, since there is no cursor to follow once a
-// finger lifts. Falls back to the candle's position via CSS defaults
-// when idle, so the page still feels lit even before the reader
-// arrives. A second, softer halo trails the cursor with eased lag,
-// so the reader's passage leaves a brief trace of warm light on the
-// parchment — the page quietly records the path of attention.
+// ─── Reading lantern ────────────────────────────────────────────────────────
+// A soft warm halo that follows the cursor, like the reader's attention
+// bringing its own light to the page. Fades in on the first pointermove
+// and out shortly after the reader's attention drifts. Hidden on touch
+// devices in steady state.
 function ReadingLantern() {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -566,249 +192,10 @@ function ReadingLantern() {
   return <div ref={ref} className="reading-lantern" aria-hidden="true" />
 }
 
-// WindowArch — a faint arched window that sits behind the composition,
-// giving the chapter its first true home. The candle above is the only
-// light because it's night outside; the horologium and speculum now
-// have a literal sky to chart, the watermark behind the parchment
-// rhymes with the night beyond the glass, and the candle's warm pool
-// reads as the page's only light against a quiet dark world. The
-// whole arch is the quietest layer of the composition — barely there,
-// just enough to register. A hairline gold gothic arch with a deep
-// night-sky interior, three thin mullions and a sill at the foot, a
-// quiet moon and a handful of faint stars that twinkle softly. On the
-// reader's acknowledge, the stars briefly flare together — the night
-// sky leaning in to listen, the way the candle flares for the reader
-// who has touched the question. Parallaxes gently with the reader's
-// pointer so the window reads as suspended in real depth, painted on
-// the far wall of the room rather than on the parchment itself.
-type WindowStar = {
-  x: number
-  y: number
-  r: number
-  phase: number
-  twinkle: number
-  tone: 'pale' | 'gold' | 'cool'
-}
-
-const WINDOW_STARS: WindowStar[] = [
-  { x: 18, y: 22, r: 0.16, phase: 0.0, twinkle: 6.4, tone: 'pale' },
-  { x: 28, y: 14, r: 0.12, phase: 1.2, twinkle: 5.8, tone: 'gold' },
-  { x: 39, y: 24, r: 0.18, phase: 2.6, twinkle: 7.2, tone: 'pale' },
-  { x: 50, y: 17, r: 0.14, phase: 3.4, twinkle: 6.0, tone: 'cool' },
-  { x: 60, y: 27, r: 0.20, phase: 1.8, twinkle: 7.8, tone: 'pale' },
-  { x: 70, y: 15, r: 0.12, phase: 0.6, twinkle: 5.4, tone: 'gold' },
-  { x: 80, y: 24, r: 0.15, phase: 2.2, twinkle: 6.6, tone: 'pale' },
-  { x: 26, y: 36, r: 0.10, phase: 4.0, twinkle: 7.4, tone: 'cool' },
-  { x: 73, y: 38, r: 0.11, phase: 1.0, twinkle: 6.2, tone: 'gold' },
-  { x: 45, y:  9, r: 0.10, phase: 3.0, twinkle: 6.8, tone: 'pale' },
-  { x: 88, y: 11, r: 0.10, phase: 2.0, twinkle: 5.6, tone: 'cool' },
-]
-
-function WindowArch({ flaring }: { flaring: boolean }) {
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    let raf = 0
-    let px = 0
-    let py = 0
-    let tx = 0
-    let ty = 0
-    const onMove = (e: PointerEvent) => {
-      const w = window.innerWidth || 1
-      const h = window.innerHeight || 1
-      tx = (e.clientX - w / 2) / (w / 2)
-      ty = (e.clientY - h / 2) / (h / 2)
-    }
-    const tick = () => {
-      raf = requestAnimationFrame(tick)
-      px += (tx - px) * 0.04
-      py += (ty - py) * 0.04
-      el.style.setProperty('--win-x', px.toFixed(3))
-      el.style.setProperty('--win-y', py.toFixed(3))
-    }
-    if (reduced) {
-      el.style.setProperty('--win-x', '0')
-      el.style.setProperty('--win-y', '0')
-    } else {
-      window.addEventListener('pointermove', onMove, { passive: true })
-      raf = requestAnimationFrame(tick)
-    }
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
-  return (
-    <div
-      ref={ref}
-      className={`window-arch ${flaring ? 'is-flaring' : ''}`}
-      aria-hidden="true"
-    >
-      <svg
-        className="window-arch-svg"
-        viewBox="0 0 200 240"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <defs>
-          <linearGradient id="window-sky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="rgba(38, 56, 86, 0.55)" />
-            <stop offset="55%"  stopColor="rgba(28, 40, 62, 0.40)" />
-            <stop offset="100%" stopColor="rgba(18, 26, 40, 0.26)" />
-          </linearGradient>
-          <radialGradient id="window-halo" cx="50%" cy="34%" r="62%">
-            <stop offset="0%"   stopColor="rgba(150, 170, 200, 0.10)" />
-            <stop offset="100%" stopColor="rgba(150, 170, 200, 0)" />
-          </radialGradient>
-          <radialGradient id="window-moon-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="rgba(245, 232, 210, 0.18)" />
-            <stop offset="100%" stopColor="rgba(245, 232, 210, 0)" />
-          </radialGradient>
-          <clipPath id="window-clip">
-            <path d="M 10 240 L 10 92 Q 10 18 100 10 Q 190 18 190 92 L 190 240 Z" />
-          </clipPath>
-        </defs>
-        {/* A faint halo behind the whole arch, suggesting the window
-            glows faintly in the dark room. */}
-        <rect x="0" y="0" width="200" height="240" fill="url(#window-halo)" />
-        {/* The sky and stars, clipped to the arched opening. */}
-        <g clipPath="url(#window-clip)">
-          <rect x="0" y="0" width="200" height="240" fill="url(#window-sky)" />
-          {/* Soft moon glow behind the moon disc. */}
-          <circle cx="148" cy="40" r="14" fill="url(#window-moon-glow)" />
-          <g className="window-stars">
-            {WINDOW_STARS.map((s, i) => (
-              <circle
-                key={i}
-                className={`window-star window-star-${s.tone}`}
-                cx={s.x * 2}
-                cy={s.y * 2.4}
-                r={s.r * 4}
-                style={
-                  {
-                    '--star-i': i,
-                    '--star-phase': `${s.phase}s`,
-                    '--star-twinkle': `${s.twinkle}s`,
-                  } as CSSProperties
-                }
-              />
-            ))}
-            {/* The moon — a quiet disc with a darker shadow on its
-                eastern face. Just barely visible, the way a real moon
-                looks through a window on a quiet night. */}
-            <circle cx="148" cy="40" r="5.4" className="window-moon" />
-            <circle cx="150.6" cy="38.6" r="4.6" className="window-moon-shadow" />
-          </g>
-        </g>
-        {/* The arch outline — a single hairline that reads as the
-            window frame's edge, drawn last so it sits on top of the
-            sky and defines the opening. */}
-        <path
-          className="window-outline"
-          d="M 10 240 L 10 92 Q 10 18 100 10 Q 190 18 190 92 L 190 240"
-        />
-        {/* Mullions — the central vertical that divides the window
-            into two halves, and two thinner verticals that suggest
-            four panes. */}
-        <line x1="100" y1="14" x2="100" y2="240" className="window-mullion" />
-        <line x1="55" y1="68" x2="55" y2="240" className="window-mullion window-mullion-fine" />
-        <line x1="145" y1="68" x2="145" y2="240" className="window-mullion window-mullion-fine" />
-        {/* Transom — a thin horizontal hairline where the arch springs. */}
-        <line x1="10" y1="92" x2="190" y2="92" className="window-cross" />
-        {/* Sill — the deepest line of the window, the page's resting
-            place at the foot of the world. */}
-        <line x1="6" y1="240" x2="194" y2="240" className="window-sill" />
-        <circle cx="6" cy="240" r="0.9" className="window-pip" />
-        <circle cx="194" cy="240" r="0.9" className="window-pip" />
-        {/* A single drawn starburst in the apex of the arch — a
-            manuscript painter's quatrefoil carved into the stone, the
-            room's smallest architectural ornament. */}
-        <path
-          className="window-apex"
-          d="M 100 4 L 101.6 8.6 L 106.6 8.8 L 102.6 11.6 L 104 16.2 L 100 13.4 L 96 16.2 L 97.4 11.6 L 93.4 8.8 L 98.4 8.6 Z"
-        />
-      </svg>
-      <span className="window-arch-caption">
-        <span className="window-arch-rule" />
-        <em className="window-arch-text">fenestra</em>
-        <span className="window-arch-rule" />
-      </span>
-    </div>
-  )
-}
-
-// Watermark — a faint oversized ghost of the hero curve behind everything.
-function Watermark() {
-  return (
-    <svg
-      className="watermark"
-      viewBox="0 0 720 1020"
-      preserveAspectRatio="xMidYMid meet"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        className="watermark-stroke"
-        d={WIDE_PATH}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="58"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle
-        className="watermark-dot"
-        cx={WIDE_DOT.cx}
-        cy={WIDE_DOT.cy}
-        r={WIDE_DOT.r}
-      />
-    </svg>
-  )
-}
-
-// LegiMark — a small composed vermilion ink-mark that blooms above the
-// colophon's "legi · mmxxvi" provenance once the reader has lingered on
-// the page long enough that the reading counts as a sitting. A thin
-// gold rule and a single painted drop with a tiny secondary pip, set as
-// the page's own record that a reader has dwelt. Sits between the
-// inkpot-and-quill and the provenance, completing the colophon's small
-// vertical chain: inkpot → oculus → legi-mark → legi · mmxxvi.
-function LegiMark({ visible }: { visible: boolean }) {
-  return (
-    <span
-      className={`legi-mark ${visible ? 'is-on' : ''}`}
-      aria-hidden="true"
-    >
-      <svg viewBox="0 0 38 10" focusable="false">
-        <line x1="2" y1="5" x2="22" y2="5" className="legi-mark-rule" />
-        <circle cx="3" cy="5" r="0.45" className="legi-mark-pip legi-mark-pip-l" />
-        <circle cx="22" cy="5" r="0.45" className="legi-mark-pip legi-mark-pip-r" />
-        <path
-          d="M 25 5 L 31 1.6 L 28.5 5 L 31 8.4 Z"
-          className="legi-mark-drop"
-        />
-        <circle cx="31" cy="5" r="0.95" className="legi-mark-drop-pip" />
-      </svg>
-    </span>
-  )
-}
-
-// ParchmentBreath — a quiet warm pulse that sits behind the frame and
-// breathes in time with the candle's long rhythm. The candle already
-// flickers; this is its wider field — a slow opacity pulse on a soft
-// warm pool that sits above the composition, so the page feels held
-// rather than static. Hidden on reduced-motion devices.
-function ParchmentBreath() {
-  return <span className="parchment-breath" aria-hidden="true" />
-}
-
-
-
-// Taper — a faint candlelight beam falling onto the question mark from above.
-// Iteration 40 widens the beam into a softer, more diffused cone so the
-// candle feels like the page's true light source. Stops are eased so the
-// falloff reads as candlelight, not as a hard shaft.
+// ─── Taper (candle's cone of light) ─────────────────────────────────────────
+// A diffused cone of warm light falling from the candle onto the chapter.
+// Wider and softer than a shaft of light, so the candle feels like the
+// page's true light source rather than a spotlight.
 function Taper() {
   return (
     <svg
@@ -828,31 +215,36 @@ function Taper() {
         </linearGradient>
       </defs>
       <rect
-        x="0"
-        y="0"
-        width="80"
-        height="240"
-        fill="url(#taper-grad)"
-        className="taper-fill"
+        x="0" y="0" width="80" height="240"
+        fill="url(#taper-grad)" className="taper-fill"
       />
     </svg>
   )
 }
 
-// CandleFlame — a small drawn candle that is the page's authored light
-// source. Three nested teardrops (outer warm halo, inner gold body, hot
-// white core) plus a thin wick. The flame breathes and sways, and a
-// ref-based pointer proximity variable brightens the halo when the
-// reader approaches the question — the candle leaning towards what
-// the reader is reading.
-function CandleFlame({ wrapRef, flaring }: {
+// ─── Candle flame ───────────────────────────────────────────────────────────
+// The page's authored light source. Three nested teardrops (outer warm
+// halo, inner gold body, hot white core) plus a thin wick and a brass
+// dish. The flame breathes and sways; a ref-based pointer proximity
+// variable brightens the halo when the reader approaches the question.
+//
+// Iteration 71 adds a real first-light ignition: the candle begins as a
+// single faint ember on first paint and ignites into its full flame over
+// ~2.6 seconds after the page has settled, so the candle itself is
+// "being lit by the reader's arrival." A quiet gesture, but a real one.
+function CandleFlame({
+  wrapRef,
+  lit,
+  flaring,
+}: {
   wrapRef: RefObject<HTMLSpanElement | null>
+  lit: boolean
   flaring: boolean
 }) {
   return (
     <span
       ref={wrapRef}
-      className={`candle-flame${flaring ? ' is-flaring' : ''}`}
+      className={`candle-flame${flaring ? ' is-flaring' : ''} ${lit ? 'is-lit' : 'is-ember'}`}
       aria-hidden="true"
     >
       <svg viewBox="0 0 56 100" focusable="false">
@@ -883,90 +275,114 @@ function CandleFlame({ wrapRef, flaring }: {
             <stop offset="100%" stopColor="#4a361f" />
           </linearGradient>
         </defs>
-        <circle
-          cx="28"
-          cy="42"
-          r="28"
-          fill="url(#flame-halo-grad)"
-          className="flame-halo"
-        />
+        <circle cx="28" cy="42" r="28" fill="url(#flame-halo-grad)" className="flame-halo" />
         <path
           d="M 28 6 Q 20 22 20 40 Q 20 56 28 60 Q 36 56 36 40 Q 36 22 28 6 Z"
-          fill="url(#flame-outer-grad)"
-          className="flame-outer"
+          fill="url(#flame-outer-grad)" className="flame-outer"
         />
         <path
           d="M 28 14 Q 23 26 23 40 Q 23 48 28 52 Q 33 48 33 40 Q 33 26 28 14 Z"
-          fill="url(#flame-inner-grad)"
-          className="flame-inner"
+          fill="url(#flame-inner-grad)" className="flame-inner"
         />
-        <ellipse
-          cx="28"
-          cy="44"
-          rx="3.2"
-          ry="7.6"
-          fill="url(#flame-base-grad)"
-          className="flame-base"
-        />
-        <ellipse
-          cx="28"
-          cy="44"
-          rx="2.2"
-          ry="6"
-          fill="#fff5d4"
-          className="flame-core"
-        />
-        <line
-          x1="28"
-          y1="50"
-          x2="28"
-          y2="68"
-          stroke="#4a2e1a"
-          strokeWidth="0.9"
-          strokeLinecap="round"
-          className="flame-wick"
-        />
-        {/* Brass candle dish — a small hand-drawn dish beneath the
-            candle, anchoring the flame to the page. Drawn in once the
-            candle has settled, so the light has somewhere to rest. */}
+        <ellipse cx="28" cy="44" rx="3.2" ry="7.6"
+          fill="url(#flame-base-grad)" className="flame-base" />
+        <ellipse cx="28" cy="44" rx="2.2" ry="6"
+          fill="#fff5d4" className="flame-core" />
+        <line x1="28" y1="50" x2="28" y2="68"
+          stroke="#4a2e1a" strokeWidth="0.9" strokeLinecap="round"
+          className="flame-wick" />
+        {/* First-light ember — a single faint amber pip visible only
+            while the candle is in its ember phase. Settles as the
+            candle ignites. */}
+        <circle cx="28" cy="56" r="1.4" className="flame-ember" />
+        {/* Brass candle dish — anchors the flame to the page. */}
         <g className="candle-dish">
-          <ellipse
-            cx="28"
-            cy="84"
-            rx="22"
-            ry="2.6"
-            className="candle-dish-shadow"
-          />
+          <ellipse cx="28" cy="84" rx="22" ry="2.6" className="candle-dish-shadow" />
           <path
             d="M 10 76 Q 10 84 28 84 Q 46 84 46 76 L 44 73 L 12 73 Z"
-            className="candle-dish-body"
-            fill="url(#dish-grad)"
+            className="candle-dish-body" fill="url(#dish-grad)"
           />
-          <ellipse
-            cx="28"
-            cy="73"
-            rx="16"
-            ry="2.4"
-            className="candle-dish-rim"
-          />
-          <path
-            d="M 14 78 Q 14 82 28 82 Q 42 82 42 78"
-            className="candle-dish-groove"
-          />
-          <ellipse
-            cx="22"
-            cy="79"
-            rx="2.6"
-            ry="0.6"
-            className="candle-dish-shine"
-          />
+          <ellipse cx="28" cy="73" rx="16" ry="2.4" className="candle-dish-rim" />
+          <path d="M 14 78 Q 14 82 28 82 Q 42 82 42 78" className="candle-dish-groove" />
+          <ellipse cx="22" cy="79" rx="2.6" ry="0.6" className="candle-dish-shine" />
         </g>
       </svg>
     </span>
   )
 }
 
-// Signature — a typeset gathering mark for the colophon.
+// ─── Page glow (behind the question) ───────────────────────────────────────
+// A single soft warm halo that breathes behind the hero and the question
+// when the reader is hovering the chapter. The page acknowledges the
+// reader's attention by glowing — a continuous gesture that ties the
+// hero above to the question text below into one lit body. Hidden in
+// steady state; brightens with cursor proximity; briefly flares on
+// acknowledge, then settles into the steady reading state.
+function PageGlow({ lit, flaring }: { lit: boolean; flaring: boolean }) {
+  return (
+    <span
+      className={`page-glow${lit ? ' is-lit' : ''} ${flaring ? 'is-flaring' : ''}`}
+      aria-hidden="true"
+    />
+  )
+}
+
+// ─── Inkpot and quill (chapter's closing mark) ─────────────────────────────
+// A small composed still life at the chapter's foot: a glass inkpot
+// with vermilion ink inside, a quill laid across the rim, a single
+// ink-drop hanging from the nib. Reads as the writer's instrument
+// beside the chapter it just composed.
+function InkpotAndQuill({
+  active,
+  acknowledged,
+}: {
+  active: boolean
+  acknowledged: boolean
+}) {
+  return (
+    <span
+      className={`inkpot-and-quill${active ? ' is-active' : ''}${acknowledged ? ' is-acknowledged' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 120 42" focusable="false">
+        <defs>
+          <linearGradient id="inkpot-ink-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#c6684a" />
+            <stop offset="55%" stopColor="#9c4530" />
+            <stop offset="100%" stopColor="#7d3a26" />
+          </linearGradient>
+          <linearGradient id="inkpot-glass-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(240, 212, 154, 0.18)" />
+            <stop offset="60%" stopColor="rgba(184, 169, 143, 0.06)" />
+            <stop offset="100%" stopColor="rgba(150, 116, 76, 0.04)" />
+          </linearGradient>
+        </defs>
+        <line x1="8" y1="37" x2="112" y2="37" className="inkpot-rest-line" />
+        <g className="inkpot-pot">
+          <ellipse cx="60" cy="35" rx="20" ry="1.4" className="inkpot-shadow" />
+          <path
+            d="M 42 14 Q 39 22 42 32 L 78 32 Q 81 22 78 14 Z"
+            className="inkpot-glass" fill="url(#inkpot-glass-grad)"
+          />
+          <ellipse
+            cx="60" cy="22" rx="15" ry="5.2"
+            className="inkpot-ink-fill" fill="url(#inkpot-ink-grad)"
+          />
+          <ellipse cx="60" cy="14" rx="18" ry="2.4" className="inkpot-rim" />
+          <ellipse cx="60" cy="14" rx="13" ry="1.5" className="inkpot-opening" />
+        </g>
+        <g className="inkpot-quill">
+          <line x1="22" y1="22" x2="84" y2="11" className="inkpot-quill-shaft" />
+          <path d="M 82 11 L 102 4 L 105 8 L 86 12.5 Z" className="inkpot-quill-feather" />
+          <path d="M 20 21.6 L 25 22.4 L 22 23.6 Z" className="inkpot-quill-nib" />
+        </g>
+        <circle cx="19" cy="24.5" r="1.05" className="inkpot-drop" />
+      </svg>
+    </span>
+  )
+}
+
+// ─── Signature ──────────────────────────────────────────────────────────────
 function Signature() {
   return (
     <svg
@@ -975,7 +391,7 @@ function Signature() {
       aria-hidden="true"
       focusable="false"
     >
-      <line x1="2"  y1="9" x2="14" y2="9" className="sig-rule" />
+      <line x1="2" y1="9" x2="14" y2="9" className="sig-rule" />
       <text x="32" y="11.5" textAnchor="middle" className="sig-letter">xviii</text>
       <line x1="50" y1="9" x2="62" y2="9" className="sig-rule" />
       <circle cx="18" cy="9" r="0.7" className="sig-pip" />
@@ -984,1641 +400,40 @@ function Signature() {
   )
 }
 
-// InkpotAndQuill — a small composed still life at the chapter's foot:
-// a glass inkpot with vermilion ink visible inside, a quill laid across
-// the rim with feather to the right and nib to the left, a single ink-
-// drop hanging from the nib, and a faint hairline on the parchment
-// where the quill was last set down. Reads as the writer's instrument
-// beside the chapter it just composed — the candle above lit the page,
-// this inkpot beneath signed it. A vermilion ink-mark blooms on the
-// parchment on the first acknowledge (the writer dipped the quill),
-// another smaller fleck appears once the reader has marked the margin
-// (the reader took up the pen). Iteration 47's composed terminus.
-//
-// All shapes are drawn — no images. Vermilion ink uses a vertical
-// gradient from bright to deep so the level reads as liquid, not paint.
-// The quill is angled upward toward the feather with a subtle taper on
-// the shaft; the nib is vermilion, drawn as a small wedge that meets
-// the parchment at the inkpot's left edge.
-function InkpotAndQuill({
-  active,
-  acknowledged,
-  annotavi,
-}: {
-  active: boolean
-  acknowledged: boolean
-  annotavi: boolean
-}) {
-  return (
-    <span
-      className={`inkpot-and-quill${active ? ' is-active' : ''}${acknowledged ? ' is-acknowledged' : ''}${annotavi ? ' is-annotavi' : ''}`}
-      aria-hidden="true"
-    >
-      <svg viewBox="0 0 120 42" focusable="false">
-        <defs>
-          <linearGradient id="inkpot-ink-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="#c6684a" />
-            <stop offset="55%"  stopColor="#9c4530" />
-            <stop offset="100%" stopColor="#7d3a26" />
-          </linearGradient>
-          <linearGradient id="inkpot-glass-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="rgba(240, 212, 154, 0.18)" />
-            <stop offset="60%"  stopColor="rgba(184, 169, 143, 0.06)" />
-            <stop offset="100%" stopColor="rgba(150, 116, 76, 0.04)" />
-          </linearGradient>
-          <radialGradient id="inkpot-glow" cx="50%" cy="36%" r="60%">
-            <stop offset="0%"   stopColor="rgba(217, 176, 116, 0.22)" />
-            <stop offset="100%" stopColor="rgba(217, 176, 116, 0)" />
-          </radialGradient>
-        </defs>
-
-        {/* Soft warm glow — the inkpot catches the candle's light from above */}
-        <ellipse
-          cx="60"
-          cy="14"
-          rx="46"
-          ry="22"
-          fill="url(#inkpot-glow)"
-          className="inkpot-glow"
-        />
-
-        {/* Quill-rest hairline — a faint mark where the quill was set down */}
-        <line
-          x1="8"
-          y1="37"
-          x2="112"
-          y2="37"
-          className="inkpot-rest-line"
-        />
-
-        {/* Subtle ink-flecks on the parchment beside the rest line */}
-        <circle cx="6"   cy="36" r="0.5" className="inkpot-fleck inkpot-fleck-1" />
-        <circle cx="114" cy="36" r="0.45" className="inkpot-fleck inkpot-fleck-2" />
-        <circle cx="100" cy="35" r="0.3" className="inkpot-fleck inkpot-fleck-3" />
-        <circle cx="18"  cy="35" r="0.35" className="inkpot-fleck inkpot-fleck-4" />
-
-        {/* Ink-mark that blooms on acknowledge (the quill's test mark) */}
-        <ellipse
-          cx="98"
-          cy="34.5"
-          rx="2.4"
-          ry="0.7"
-          className="inkpot-mark"
-        />
-
-        {/* Inkpot body — glass with vermilion ink inside */}
-        <g className="inkpot-pot">
-          {/* Base shadow on the parchment */}
-          <ellipse
-            cx="60"
-            cy="35"
-            rx="20"
-            ry="1.4"
-            className="inkpot-shadow"
-          />
-          {/* Glass body */}
-          <path
-            d="M 42 14 Q 39 22 42 32 L 78 32 Q 81 22 78 14 Z"
-            className="inkpot-glass"
-            fill="url(#inkpot-glass-grad)"
-          />
-          {/* Vermilion ink fill — slightly inset so the glass shows above */}
-          <ellipse
-            cx="60"
-            cy="22"
-            rx="15"
-            ry="5.2"
-            className="inkpot-ink-fill"
-            fill="url(#inkpot-ink-grad)"
-          />
-          {/* Ink surface highlight — a tiny brighter sliver at the meniscus */}
-          <ellipse
-            cx="56"
-            cy="20"
-            rx="3"
-            ry="0.55"
-            className="inkpot-ink-shine"
-          />
-          {/* Rim — outer ellipse */}
-          <ellipse
-            cx="60"
-            cy="14"
-            rx="18"
-            ry="2.4"
-            className="inkpot-rim"
-          />
-          {/* Rim opening — inner ellipse */}
-          <ellipse
-            cx="60"
-            cy="14"
-            rx="13"
-            ry="1.5"
-            className="inkpot-opening"
-          />
-          {/* Rim highlight — a thin gold sliver on the upper-left of the rim */}
-          <path
-            d="M 47 12.6 Q 53 11.4 60 11.4"
-            className="inkpot-rim-shine"
-          />
-          {/* Glass highlight — a vertical bright stroke on the body */}
-          <path
-            d="M 46 18 Q 45 24 46.5 29"
-            className="inkpot-glass-shine"
-          />
-        </g>
-
-        {/* Quill laid across the rim — angled upward toward the feather */}
-        <g className="inkpot-quill">
-          {/* Shaft */}
-          <line
-            x1="22"
-            y1="22"
-            x2="84"
-            y2="11"
-            className="inkpot-quill-shaft"
-          />
-          {/* Subtle taper mid-shaft */}
-          <line
-            x1="22"
-            y1="22.4"
-            x2="84"
-            y2="11.4"
-            className="inkpot-quill-shaft inkpot-quill-shaft-2"
-          />
-          {/* Feather — a leaf-like blade pointing up-right */}
-          <path
-            d="M 82 11 L 102 4 L 105 8 L 86 12.5 Z"
-            className="inkpot-quill-feather"
-          />
-          {/* Feather barbs — three thin hairlines */}
-          <line x1="84" y1="11.4" x2="98"  y2="5.6"  className="inkpot-quill-barb" />
-          <line x1="86" y1="11.8" x2="100" y2="6.8"  className="inkpot-quill-barb" />
-          <line x1="88" y1="12.2" x2="102" y2="8"    className="inkpot-quill-barb" />
-          {/* Quill-tip at the feather end — a small dark cap */}
-          <circle cx="103" cy="6" r="0.5" className="inkpot-quill-cap" />
-          {/* Nib — a vermilion wedge at the writing end */}
-          <path
-            d="M 20 21.6 L 25 22.4 L 22 23.6 Z"
-            className="inkpot-quill-nib"
-          />
-          {/* Nib slit */}
-          <line
-            x1="22"
-            y1="22.5"
-            x2="24"
-            y2="22.8"
-            className="inkpot-quill-slit"
-          />
-        </g>
-
-        {/* Ink drop hanging from the nib — pulses, trembles on acknowledge */}
-        <circle cx="19" cy="24.5" r="1.05" className="inkpot-drop" />
-        {/* Faint trail beneath the drop */}
-        <line
-          x1="19"
-          y1="25.6"
-          x2="19"
-          y2="32"
-          className="inkpot-drop-trail"
-        />
-      </svg>
-    </span>
-  )
-}
-
-// MarginalRubric — a small vermilion annotation sitting in the left margin
-// of the hero, connected by a hairline to the bracket.
-function MarginalRubric() {
-  return (
-    <span className="marginal-rubric" aria-hidden="true">
-      <span className="marginal-rubric-text">{MARGINAL_RUBRIC}</span>
-      <svg className="marginal-rubric-arc" viewBox="0 0 60 24" preserveAspectRatio="none">
-        <path
-          d="M 0 14 Q 28 8 56 14"
-          className="marginal-rubric-arc-line"
-        />
-      </svg>
-    </span>
-  )
-}
-
-// BifolioSpine — a soft vertical crease suggesting an open book spread.
-// Iteration 45 adds two drawn binding-stitches at the top and bottom of
-// the crease — small + signs traced in vermilion, like the sewing
-// thread of a bound folio holding the spread together. They are small
-// and quiet, drawn in once the page has settled, and never compete
-// with the gilt.
-function BifolioSpine() {
-  return (
-    <div className="bifolio" aria-hidden="true">
-      <span className="bifolio-crease" />
-      <span className="bifolio-gilt" />
-      <span className="bifolio-shadow bifolio-shadow-l" />
-      <span className="bifolio-shadow bifolio-shadow-r" />
-      <BindingStitch position="top" />
-      <BindingStitch position="bottom" />
-    </div>
-  )
-}
-
-// Bookmark ribbon — a slim vermilion fabric ribbon hanging from the top
-// of the page like a marker left in a bound volume.
-function Ribbon() {
-  return (
-    <div className="ribbon" aria-hidden="true">
-      <div className="ribbon-inner">
-        <svg viewBox="0 0 20 220" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="ribbon-shade" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%"   stopColor="#3e1a10" />
-              <stop offset="22%"  stopColor="#7d3a26" />
-              <stop offset="50%"  stopColor="#b15a3c" />
-              <stop offset="78%"  stopColor="#7d3a26" />
-              <stop offset="100%" stopColor="#3e1a10" />
-            </linearGradient>
-            <linearGradient id="ribbon-top" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"  stopColor="black" stopOpacity="0.55" />
-              <stop offset="22%" stopColor="black" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M 0 0 L 20 0 L 20 198 L 10 214 L 0 198 Z"
-            fill="url(#ribbon-shade)"
-          />
-          <path
-            d="M 0 0 L 20 0 L 20 48 L 0 48 Z"
-            fill="url(#ribbon-top)"
-          />
-          <line
-            x1="10"
-            y1="0"
-            x2="10"
-            y2="214"
-            stroke="rgba(255, 210, 180, 0.10)"
-            strokeWidth="0.7"
-          />
-        </svg>
-      </div>
-    </div>
-  )
-}
-
-// AnswerDropCap — a small painted "I" that opens the answer line, set
-// in vermilion italic as a manuscript illuminated initial. Pulls the eye
-// into the chapter's reply as the climax lands. Iteration 35 elevates
-// it to a true illuminated initial: a taller, more present vermilion
-// capital, with gold-leaf flourishes above and below and a tiny four-
-// pointed star nested inside its body — the answer opens like the
-// opening of a sacramentary, with the same celestial mark that closes
-// the colophon now answering the chapter's question.
-function AnswerDropCap({ visible: show }: { visible: boolean }) {
-  return (
-    <span className={`answer-dropcap-wrap ${show ? 'is-on' : ''}`} aria-hidden="true">
-      <span className="answer-dropcap-gold" />
-      <span className="answer-dropcap">{ANSWER_DROPCAP}</span>
-      <span className="answer-dropcap-star" aria-hidden="true">
-        <svg viewBox="0 0 12 12" focusable="false">
-          <path
-            d="M 6 1.2 L 6.86 4.86 L 10.6 5.2 L 7.4 7.2 L 8.4 10.8 L 6 8.6 L 3.6 10.8 L 4.6 7.2 L 1.4 5.2 L 5.14 4.86 Z"
-          />
-        </svg>
-      </span>
-      <span className="answer-dropcap-shadow" />
-    </span>
-  )
-}
-
-// ChapterStamp — a small typeset gathering mark placed in the top-right
-// corner of the editorial card. Replaces the standalone folio mark
-// above the rubric, tucking the chapter reference into the desk frame
-// where it reads as a marginal stamp rather than a centered emblem.
-function ChapterStamp() {
-  return (
-    <span className="chapter-stamp" aria-hidden="true">
-      <svg viewBox="0 0 64 30" className="chapter-stamp-svg">
-        <line x1="4" y1="10" x2="22" y2="10" className="chapter-stamp-rule" />
-        <circle cx="4"  cy="10" r="0.85" className="chapter-stamp-pip" />
-        <circle cx="22" cy="10" r="0.85" className="chapter-stamp-pip" />
-        <text x="32" y="14.5" textAnchor="middle" className="chapter-stamp-num">xviii</text>
-        <line x1="42" y1="10" x2="60" y2="10" className="chapter-stamp-rule" />
-        <circle cx="42" cy="10" r="0.85" className="chapter-stamp-pip" />
-        <circle cx="60" cy="10" r="0.85" className="chapter-stamp-pip" />
-        <text x="32" y="25" textAnchor="middle" className="chapter-stamp-label">fol · mss</text>
-      </svg>
-    </span>
-  )
-}
-
-// SealImpression — a quiet vermilion ink stamp that blooms outward
-// from the hero when the reader acknowledges the question. Replaces
-// the prior bee messenger with a more deliberate gesture: a small
-// "Mm" monogram pressed into the page, expanding and fading. Ties
-// visually to the wax seal that closes the colophon — the question
-// is answered by the same mark that closes the chapter.
-function SealImpression({ sealing }: { sealing: boolean }) {
-  return (
-    <span
-      className={`seal-impression${sealing ? ' is-stamping' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="seal-impression-halo" />
-      <span className="seal-impression-ring seal-impression-ring-1" />
-      <span className="seal-impression-ring seal-impression-ring-2" />
-      <span className="seal-impression-mark">Mm</span>
-    </span>
-  )
-}
-
-// Explicit — the chapter's formal closing mark, set beneath the footnote
-// once the gloss has finished. A single gold rule, the Latin "explicit"
-// set in serif italic between flanking gold-deep middots, and a small
-// vermilion pilcrow followed by a hand-drawn scroll-curl to mark the
-// chapter's true end — the roll curving into view, like the end of a
-// finished folio being unrolled. Reads as the final line a scribe
-// would add when a folio is complete — "the chapter is ended; the
-// binding continues on the next folio." Iteration 45 appends the
-// scroll-curl as the chapter's terminal seal, completing the closing
-// trio: explicit · fol. xviii · ¶ ✦.
-function Explicit() {
-  return (
-    <p className="explicit" aria-hidden="true">
-      <span className="explicit-rule" />
-      <em className="explicit-text">explicit</em>
-      <span className="explicit-sep">·</span>
-      <em className="explicit-text explicit-text-faint">fol. xviii</em>
-      <span className="explicit-pilcrow">¶</span>
-      <ScrollCurl />
-    </p>
-  )
-}
-
-// IntellexiNota — the reader's quiet response to the chapter, written
-// into the page once the footnote has settled. The note is "intellexi"
-// — "I have understood" — completing the chapter's Latin dialogue:
-// quaeritur (the page asks) → respondetur (the catchword answers) →
-// relege (the footnote invites another reading) → intellexi (the reader
-// accepts) → legi (the colophon confirms) → explicit (the chapter
-// closes). A small drawn quill flourish above the word, like the reader
-// set down a single hairline stroke before writing their gloss.
-//
-// Iteration 37 lets the gloss write itself: the flourish draws in
-// first, then the word types itself out one character at a time, with
-// a blinking caret while the reader is still setting quill to page.
-// This unifies the chapter's verbal choreography — answer, reply,
-// footnote, and now the reader's own sign-off all share the same
-// manuscript cadence.
-function IntellexiNota({
-  visible,
-  text,
-  done,
-}: {
-  visible: boolean
-  text: string
-  done: boolean
-}) {
-  const typing = visible && !done
-  return (
-    <p
-      className={`intellexi-nota ${visible ? 'is-on' : ''} ${done ? 'is-done' : ''}`}
-      aria-live="polite"
-    >
-      <svg
-        className="intellexi-nota-flourish"
-        viewBox="0 0 32 7"
-        focusable="false"
-        aria-hidden="true"
-      >
-        <path
-          className="intellexi-nota-flourish-curve"
-          d="M 2 4 Q 9 1 16 3.5 Q 23 6 30 2"
-        />
-        <circle
-          className="intellexi-nota-flourish-pip"
-          cx="30"
-          cy="2"
-          r="0.55"
-        />
-      </svg>
-      <em className="intellexi-nota-text">{text}</em>
-      {typing && <span className="intellexi-nota-caret" aria-hidden="true">|</span>}
-      <span className="intellexi-nota-strike" aria-hidden="true" />
-    </p>
-  )
-}
-
-// VineCorner — small hand-drawn vine ornament that replaces the plain
-// gold L brackets on the question block. A leaf curls in from the
-// corner toward the text, like a printer's flourish painted over
-// the type. Iteration 39 completes the four-corner frame on the
-// chapter opening: top-left, top-right, bottom-left, and bottom-right,
-// so the question block reads as a proper opened folio rather than
-// a half-framed editorial card.
-function VineCorner({
-  position,
-}: {
-  position: 'tl' | 'tr' | 'bl' | 'br'
-}) {
+// ─── Wax seal (colophon's closing mark) ────────────────────────────────────
+function WaxSeal() {
   return (
     <svg
-      className={`vine-corner vine-corner-${position}`}
-      viewBox="0 0 22 22"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path className="vine-stem" d="M 2 20 Q 9 13 19 4" />
-      <path className="vine-leaf" d="M 7 14 Q 11 10 16 8 Q 14 13 7 14 Z" />
-      <path className="vine-leaf vine-leaf-sm" d="M 4 18 Q 6 14 10 13 Q 9 17 4 18 Z" />
-      <circle cx="17" cy="6" r="0.9" className="vine-pip" />
-      <circle cx="13" cy="11" r="0.5" className="vine-pip vine-pip-sm" />
-    </svg>
-  )
-}
-
-// QuestionTitleRule — a single composed title rule drawn beneath the
-// chapter's question, the printed page's setting-line. A thin gold
-// hairline flanked by two small end-pips, like the printer's rule that
-// closes a chapter's title block. Composed of two outward-growing
-// rules with a vermilion pip at center; sits beneath the question and
-// the question's press-mark, so the chapter title now reads as a
-// deliberate stack: kicker → opener → question → title-rule → press-mark
-// → pressmark → answer. Iteration 45 composes this rule into the
-// chapter's printed structure.
-function QuestionTitleRule() {
-  return (
-    <div className="question-title-rule" aria-hidden="true">
-      <span className="question-title-rule-end question-title-rule-end-l" />
-      <span className="question-title-rule-line question-title-rule-line-l" />
-      <span className="question-title-rule-pip">
-        <svg viewBox="0 0 8 8" focusable="false">
-          <circle cx="4" cy="4" r="1.4" className="question-title-rule-pip-disc" />
-        </svg>
-      </span>
-      <span className="question-title-rule-line question-title-rule-line-r" />
-      <span className="question-title-rule-end question-title-rule-end-r" />
-    </div>
-  )
-}
-
-// ScrollCurl — a small trailing hand-drawn flourish at the chapter's
-// terminal pilcrow. Two thin arcs tapering into a single point, like
-// the end of a scroll whose roll is curving into view. Additive,
-// quiet; completes the chapter's closure alongside the explicit's
-// pilcrow, tying the chapter's end to the physical gesture of a
-// finished folio.
-function ScrollCurl() {
-  return (
-    <svg
-      className="scroll-curl"
-      viewBox="0 0 20 8"
-      focusable="false"
-      aria-hidden="true"
-    >
-      <path
-        className="scroll-curl-arc"
-        d="M 2 4 Q 9 0.6 17 4"
-      />
-      <path
-        className="scroll-curl-arc scroll-curl-arc-2"
-        d="M 4 6 Q 11 3.4 18 6"
-      />
-    </svg>
-  )
-}
-
-// BindingStitch — a single short drawn stitch that crosses the spine
-// of the open book, like a sewing thread through a bound folio. Two
-// stitches sit at the top and bottom of the bifolio: a small + sign
-// traced in vermilion, the page's quiet acknowledgment that the
-// chapter has been bound into a codex.
-function BindingStitch({ position }: { position: 'top' | 'bottom' }) {
-  return (
-    <span
-      className={`binding-stitch binding-stitch-${position}`}
-      aria-hidden="true"
-    >
-      <svg viewBox="0 0 12 12" focusable="false">
-        <line
-          className="binding-stitch-line binding-stitch-line-1"
-          x1="2.6"
-          y1="9.4"
-          x2="9.4"
-          y2="2.6"
-        />
-        <line
-          className="binding-stitch-line binding-stitch-line-2"
-          x1="2.6"
-          y1="2.6"
-          x2="9.4"
-          y2="9.4"
-        />
-        <circle
-          className="binding-stitch-knot"
-          cx="6"
-          cy="6"
-          r="0.7"
-        />
-      </svg>
-    </span>
-  )
-}
-
-// FolioOpener — a delicate rule + four-pointed mark that crowns the
-// chapter body inside the question block. Reads as the small fleuron
-// a printer would set at the formal opening of a section: two thin
-// gold rules that draw outward from a vermilion pip. Sits just above
-// the chapter's question and below its kicker, so the chapter body
-// has its own clear opening punctuation, distinct from the larger
-// fleuron that sits between the rubric and the hero.
-function FolioOpener() {
-  return (
-    <div className="folio-opener" aria-hidden="true">
-      <span className="folio-opener-rule folio-opener-rule-l" />
-      <span className="folio-opener-mark">
-        <svg viewBox="0 0 12 12" focusable="false">
-          <path
-            d="M 6 1.2 L 6.86 4.86 L 10.6 5.2 L 7.4 7.2 L 8.4 10.8 L 6 8.6 L 3.6 10.8 L 4.6 7.2 L 1.4 5.2 L 5.14 4.86 Z"
-            className="folio-opener-pip"
-          />
-        </svg>
-      </span>
-      <span className="folio-opener-rule folio-opener-rule-r" />
-    </div>
-  )
-}
-
-// BodyOpener — a composed opening mark that crowns the chapter body
-// proper, parallel to FolioOpener at body scale. Two thin gold rules
-// draw outward from a small vermilion asterisk-petal motif with a
-// gold pip at its heart. Drawn in once the chapter has settled, just
-// above the AnswerIllumination, so the body opens as a single framed
-// scholarly passage rather than as a paragraph that simply appears.
-// Pairs with the ChapterCadence that closes the body (same star-pip
-// motif at the same scale) so the chapter's opening and closing
-// headpieces rhyme as composed marks of the same vocabulary — the
-// body opens with a single quiet gesture and closes with its twin.
-function BodyOpener() {
-  return (
-    <div className="body-opener" aria-hidden="true">
-      <span className="body-opener-rule body-opener-rule-l" />
-      <span className="body-opener-mark">
-        <svg viewBox="0 0 14 14" focusable="false">
-          <path
-            d="M 7 1.2 L 8.06 5.4 L 12.6 6 L 8.06 6.6 L 7 11.4 L 5.94 6.6 L 1.4 6 L 5.94 5.4 Z"
-            className="body-opener-star"
-          />
-          <circle cx="7" cy="6" r="1.05" className="body-opener-pip" />
-        </svg>
-      </span>
-      <span className="body-opener-rule body-opener-rule-r" />
-    </div>
-  )
-}
-
-// ChapterSpine — a thin vertical axis through the centerline of the
-// composition, deliberately understated: a column of small gold pin-
-// pricks running from above the hero down to the colophon. Two small
-// compass pips cap it at the top and bottom — the chapter's own axis,
-// distinct from the bifolio crease of the open book. Sits behind all
-// of the in-flow content so it reads as the page's quiet central
-// spine, gathering the hero, the question, the answer, and the reply
-// into a single vertical column.
-//
-// Iteration 37 activates this axis: a soft gold pulse travels from
-// the top of the column down to the compass mark whenever the chapter
-// is engaged (welcome on first settle, on every acknowledge, and a
-// final resolved glow when the reader has understood). The pulse
-// element is a single translucent halo that rides the spine; the
-// existing pin-pricks stay where they are so the column keeps its
-// manuscript texture. The pulse is purely additive — it never
-// replaces the existing ornament, it makes the orifice feel alive.
-function ChapterSpine({
-  pulseKey,
-  sealed,
-  annotavi,
-}: {
-  pulseKey: number
-  sealed: boolean
-  annotavi: boolean
-}) {
-  return (
-    <div
-      className={`chapter-spine ${sealed ? 'is-sealed' : ''} ${annotavi ? 'is-annotavi' : ''}`}
-      aria-hidden="true"
-    >
-      <span key={pulseKey} className="chapter-spine-pulse" />
-      {annotavi && <span key={`annotavi-${pulseKey}`} className="chapter-spine-drop" />}
-    </div>
-  )
-}
-
-// CompassMark — a small four-pointed star that sits at the top of the
-// colophon, the chapter's formal terminus. Echoes the gold pips that
-// cap the chapter spine, so the axis reads as a single ornament from
-// hero to colophon: the page began at the hero's bowl and ends at
-// this star. Set in vermilion and gold, drawn in once the colophon
-// has settled.
-function CompassMark() {
-  return (
-    <span className="colophon-compass" aria-hidden="true">
-      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-        <path
-          className="colophon-compass-star"
-          d="M 12 3 L 13.4 11 L 21 12 L 13.4 13 L 12 21 L 10.6 13 L 3 12 L 10.6 11 Z"
-        />
-        <circle
-          className="colophon-compass-core"
-          cx="12"
-          cy="12"
-          r="0.9"
-        />
-      </svg>
-    </span>
-  )
-}
-
-// ChapterCrown — a single composed authored unit at the top of the
-// chapter that frames the printer-date, running title (capitulum),
-// and rubric ("an inquiry · quaeritur") as one manuscript crown. Two
-// thin gold rules grow outward from a small vermilion pip; the
-// dated line, the capitulum, and the rubric each settle into the
-// framed band as one composed gesture. Sits above the fleuron, so
-// the chapter opening reads as: framed crown → fleuron → hero.
-function ChapterCrown() {
-  return (
-    <div className="chapter-crown" aria-hidden="true">
-      <span className="chapter-crown-rule chapter-crown-rule-t" />
-      <div className="chapter-crown-band">
-        <PrinterDate />
-        <span className="chapter-crown-pip" />
-        <Capitulum />
-        <span className="chapter-crown-pip chapter-crown-pip-alt" />
-        <span className="chapter-crown-rubric">
-          <span className="chapter-crown-pilcrow">§</span>
-          <span className="chapter-crown-rubric-text">an inquiry</span>
-          <span className="chapter-crown-sep">·</span>
-          <IncipitCaption />
-        </span>
-      </div>
-      <span className="chapter-crown-rule chapter-crown-rule-b" />
-    </div>
-  )
-}
-
-// ChapterTitle — a single composed chapter subtitle that opens the
-// chapter between the existing crown and the fleuron. The crown
-// already names the folio in its capitulum ("mss · fol. xviii · de
-// initiali lucente"); this is the chapter's opening epigraph — a
-// quiet, centered inscription in a manuscript hand style, flanked by
-// two thin gold rules with a small vermilion asterisk-petal motif at
-// the pivot. Typesets itself in once the crown has settled, so the
-// chapter reads as: crown → epigraph → fleuron → hero. A short Latin
-// lemma paired with its English gloss, set small enough to feel like
-// a printer's epigraph, not a banner — the chapter's opening
-// sentiment, finally composed.
-function ChapterTitle() {
-  return (
-    <div className="chapter-title" aria-hidden="true">
-      <span className="chapter-title-rule chapter-title-rule-l" />
-      <span className="chapter-title-mark">
-        <svg viewBox="0 0 12 12" focusable="false">
-          <path
-            d="M 6 1.4 L 6.82 4.94 L 10.4 6 L 6.82 7.06 L 6 10.6 L 5.18 7.06 L 1.6 6 L 5.18 4.94 Z"
-            className="chapter-title-star"
-          />
-          <circle cx="6" cy="6" r="0.7" className="chapter-title-pip" />
-        </svg>
-      </span>
-      <span className="chapter-title-line">
-        <em className="chapter-title-latin">incipit</em>
-        <span className="chapter-title-sep" aria-hidden="true">·</span>
-        <span className="chapter-title-en">the first letter lights</span>
-      </span>
-      <span className="chapter-title-rule chapter-title-rule-r" />
-    </div>
-  )
-}
-
-// QuestionFlourish — a small vermilion ink-stain beneath the question
-// mark character. Drawn from a flourish that begins beneath the "?"
-// and ends in a single drop, like a quill's slip.
-function QuestionFlourish() {
-  return (
-    <svg
-      className="question-flourish"
-      viewBox="0 0 36 10"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path className="question-flourish-curve" d="M 3 6 Q 14 2 24 5 Q 30 7 34 4" />
-      <circle cx="32" cy="3.5" r="1.1" className="question-flourish-drop" />
-    </svg>
-  )
-}
-
-// PageCorner — a small drawn corner fold on the bottom-right of the
-// question block. A faint gold-tinted triangle with a hairline fold
-// edge and a soft shadow beneath, like the folio has just been
-// picked up and held open. Drawn in once the chapter has settled,
-// and gently lifts when the reader approaches.
-function PageCorner() {
-  return (
-    <svg
-      className="page-corner"
-      viewBox="0 0 42 42"
+      className="wax-seal"
+      viewBox="0 0 44 44"
       aria-hidden="true"
       focusable="false"
     >
       <defs>
-        <linearGradient id="page-corner-shade" x1="1" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgba(240, 212, 154, 0.18)" />
-          <stop offset="62%" stopColor="rgba(217, 176, 116, 0.10)" />
-          <stop offset="100%" stopColor="rgba(176, 83, 58, 0.04)" />
-        </linearGradient>
+        <radialGradient id="wax-shade" cx="38%" cy="36%" r="72%">
+          <stop offset="0%" stopColor="#cd6044" />
+          <stop offset="55%" stopColor="#9c4530" />
+          <stop offset="100%" stopColor="#4f2114" />
+        </radialGradient>
       </defs>
-      <path
-        className="page-corner-fill"
-        d="M 1 1 L 41 1 L 1 41 Z"
-        fill="url(#page-corner-shade)"
-      />
-      <line
-        className="page-corner-edge"
-        x1="1"
-        y1="1"
-        x2="41"
-        y2="41"
-      />
-      <line
-        className="page-corner-fold-edge"
-        x1="0.5"
-        y1="0.5"
-        x2="40.5"
-        y2="40.5"
-      />
+      <circle cx="22" cy="22" r="20" fill="url(#wax-shade)" />
+      <circle cx="22" cy="22" r="20"
+        fill="none" stroke="rgba(36, 14, 6, 0.55)" strokeWidth="0.7" />
+      <circle cx="22" cy="22" r="15.5"
+        fill="none" stroke="rgba(255, 210, 180, 0.16)" strokeWidth="0.5" />
+      <text x="22" y="27" textAnchor="middle" className="seal-letter">Mm</text>
     </svg>
   )
 }
 
-// ScholarCompass — a small drawn compass-rose that crowns the
-// composition, sitting above the chapter's headpiece as the manuscript's
-// quiet "north" mark. A four-pointed gold star at centre, with four
-// thinner diagonal rays and a slim cardinal ring; a vermilion needle
-// pointing up. Drawn in once the chapter has settled, so the entire
-// scholarly opening reads as one composed band: compass · crown ·
-// title · fleuron · hero. Reads as a printer's orientation mark — the
-// page's quiet declaration of where the chapter begins.
-function ScholarCompass() {
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el
-    ) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) {
-      el.style.setProperty('--compass-x', '0')
-      el.style.setProperty('--compass-y', '0')
-      return
-    }
-    let raf = 0
-    let tx = 0
-    let ty = 0
-    let px = 0
-    let py = 0
-    const onMove = (e: PointerEvent) => {
-      const w = window.innerWidth || 1
-      const h = window.innerHeight || 1
-      tx = (e.clientX - w / 2) / (w / 2)
-      ty = (e.clientY - h / 2) / (h / 2)
-    }
-    const tick = () => {
-      px += (tx - px) * 0.04
-      py += (ty - py) * 0.04
-      el.style.setProperty('--compass-x', px.toFixed(3))
-      el.style.setProperty('--compass-y', py.toFixed(3))
-      raf = requestAnimationFrame(tick)
-    }
-    window.addEventListener('pointermove', onMove, { passive: true })
-    raf = requestAnimationFrame(tick)
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      cancelAnimationFrame(raf)
-    }
-  }, [])
-  return (
-    <div className="scholar-compass" aria-hidden="true" ref={ref}>
-      <span className="scholar-compass-rule scholar-compass-rule-l" />
-      <svg
-        viewBox="0 0 32 32"
-        className="scholar-compass-svg"
-        focusable="false"
-      >
-        <circle
-          cx="16"
-          cy="16"
-          r="11"
-          className="scholar-compass-ring"
-        />
-        <circle
-          cx="16"
-          cy="16"
-          r="13.5"
-          className="scholar-compass-ring scholar-compass-ring-outer"
-        />
-        <g className="scholar-compass-star">
-          <path
-            className="scholar-compass-blade scholar-compass-blade-n"
-            d="M 16 4 L 17.6 14 L 16 16 L 14.4 14 Z"
-          />
-          <path
-            className="scholar-compass-blade scholar-compass-blade-s"
-            d="M 16 28 L 14.4 18 L 16 16 L 17.6 18 Z"
-          />
-          <path
-            className="scholar-compass-blade scholar-compass-blade-e"
-            d="M 28 16 L 18 14.4 L 16 16 L 18 17.6 Z"
-          />
-          <path
-            className="scholar-compass-blade scholar-compass-blade-w"
-            d="M 4 16 L 14 17.6 L 16 16 L 14 14.4 Z"
-          />
-          <path
-            className="scholar-compass-blade scholar-compass-blade-ne"
-            d="M 24.4 7.6 L 17 14 L 16 16 L 14 17 Z"
-          />
-          <path
-            className="scholar-compass-blade scholar-compass-blade-sw"
-            d="M 7.6 24.4 L 15 18 L 16 16 L 18 15 Z"
-          />
-          <path
-            className="scholar-compass-blade scholar-compass-blade-nw"
-            d="M 7.6 7.6 L 14 15 L 16 16 L 17 14 Z"
-          />
-          <path
-            className="scholar-compass-blade scholar-compass-blade-se"
-            d="M 24.4 24.4 L 18 17 L 16 16 L 15 18 Z"
-          />
-        </g>
-        <circle cx="16" cy="16" r="1.4" className="scholar-compass-core" />
-      </svg>
-      <span className="scholar-compass-rule scholar-compass-rule-r" />
-    </div>
-  )
-}
+// ─── Scholastic footnote ───────────────────────────────────────────────────
+const ANSWER = '— and the page itself, which you are reading now.'
+const REPLY = 'so read it once, then again — slower this time.'
+const FOOTNOTE_TEXT = 'relege · without a reader, silence'
+const FOOTNOTE_ARIA =
+  'relege, without a reader, silence — read again, without a reader, silence'
+const FOOTNOTE_STAGGER_MS = 38
 
-// StemDescent — a single composed vertical hairline that descends
-// from the hero question mark's stem-foot down to the top of the
-// question text. The question mark above and the question text below
-// acknowledge each other: the emblem's stem becomes the text's first
-// stroke. A vermilion hairline with a tiny gold terminal pip at its
-// foot, drawn on the first acknowledge and held; fades in when the
-// reader first engages the hero and persists through the rest of the
-// chapter. The line parallels the existing chapter spine but reads as
-// a single authored descent — the question mark literally writing
-// itself into the question text. Hidden on reduced-motion devices so
-// the chapter reads as the same composition without the connecting
-// gesture.
-function StemDescent({ engaged }: { engaged: boolean }) {
-  return (
-    <span
-      className={`stem-descent${engaged ? ' is-on' : ''}`}
-      aria-hidden="true"
-    >
-      <svg
-        viewBox="0 0 8 84"
-        preserveAspectRatio="none"
-        className="stem-descent-svg"
-        focusable="false"
-      >
-        <line
-          x1="4"
-          y1="0"
-          x2="4"
-          y2="78"
-          className="stem-descent-line"
-          pathLength="100"
-        />
-        <circle cx="4" cy="80" r="1.6" className="stem-descent-pip" />
-      </svg>
-    </span>
-  )
-}
-
-// ReadingTitle — the chapter body's own name plate, set just inside
-// the codex frame at its head. A composed scholarly inscription: two
-// thin gold rules growing outward from a small vermilion four-pointed
-// star, with "lectio · the reading" inscribed between them in vermilion
-// italic and ink-soft roman. Reads as the printer's running title for
-// the chapter body itself — the folio above is named (mss · fol. xviii
-// · de initiali lucente) and the colophon below is named (legi · mmxxvi);
-// this is the missing middle term that names the text-block where the
-// chapter actually speaks. Drawn in after the codex frame has settled,
-// so the chapter body opens as one framed scholarly passage rather than
-// an empty inscribed rectangle. Parallels the colophon plate below
-// (same star-pip motif at the same scale) so the chapter's terminal
-// headpiece and the body's headpiece pair as composed marks of the
-// same vocabulary.
-function ReadingTitle() {
-  return (
-    <p className="reading-title" aria-hidden="true">
-      <span className="reading-title-rule reading-title-rule-l" />
-      <span className="reading-title-mark">
-        <svg viewBox="0 0 12 12" focusable="false">
-          <path
-            className="reading-title-star"
-            d="M 6 0.6 L 6.94 4.6 L 11.4 6 L 6.94 7.4 L 6 11.4 L 5.06 7.4 L 0.6 6 L 5.06 4.6 Z"
-          />
-          <circle cx="6" cy="6" r="0.95" className="reading-title-pip" />
-        </svg>
-      </span>
-      <span className="reading-title-text">
-        <em className="reading-title-latin">lectio</em>
-        <span className="reading-title-sep">·</span>
-        <span className="reading-title-en">the reading</span>
-      </span>
-      <span className="reading-title-rule reading-title-rule-r" />
-    </p>
-  )
-}
-
-// MarginBookmark — a small hand-drawn silk bookmark that hangs in the
-// right margin of the codex frame, just past the chapter's body text.
-// A slim vermilion ribbon with a thin gold rule beside it, like a
-// silk marker pressed between the folios of an open codex. The bookmark
-// parallaxes gently with the reader's pointer (the silk shifts a hair
-// when the reader leans toward the chapter) and fades in once the
-// answer has begun settling, so the bookmark reads as a separate piece
-// of cloth left in the open codex rather than a flourish of the
-// inscription. Hidden on reduced-motion devices so the bookmark
-// appears in its rest state.
-function MarginBookmark() {
-  const ref = useRef<HTMLSpanElement>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) {
-      el.style.setProperty('--bm-x', '0')
-      el.style.setProperty('--bm-y', '0')
-      return
-    }
-    let raf = 0
-    let tx = 0
-    let ty = 0
-    let px = 0
-    let py = 0
-    const onMove = (e: PointerEvent) => {
-      const w = window.innerWidth || 1
-      const h = window.innerHeight || 1
-      tx = (e.clientX - w / 2) / (w / 2)
-      ty = (e.clientY - h / 2) / (h / 2)
-    }
-    const tick = () => {
-      px += (tx - px) * 0.035
-      py += (ty - py) * 0.035
-      el.style.setProperty('--bm-x', px.toFixed(3))
-      el.style.setProperty('--bm-y', py.toFixed(3))
-      raf = requestAnimationFrame(tick)
-    }
-    window.addEventListener('pointermove', onMove, { passive: true })
-    raf = requestAnimationFrame(tick)
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      cancelAnimationFrame(raf)
-    }
-  }, [])
-  return (
-    <span className="margin-bookmark" aria-hidden="true" ref={ref}>
-      <svg viewBox="0 0 14 56" focusable="false" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="bm-silk" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="#3e1a10" />
-            <stop offset="22%"  stopColor="#7d3a26" />
-            <stop offset="50%"  stopColor="#b15a3c" />
-            <stop offset="78%"  stopColor="#7d3a26" />
-            <stop offset="100%" stopColor="#3e1a10" />
-          </linearGradient>
-          <linearGradient id="bm-shade" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"  stopColor="black" stopOpacity="0.5" />
-            <stop offset="22%" stopColor="black" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <line x1="3" y1="0" x2="3" y2="56" className="bm-rule" />
-        <path
-          className="bm-silk"
-          d="M 5 0 L 13 0 L 13 48 L 9 56 L 5 48 Z"
-          fill="url(#bm-silk)"
-        />
-        <path
-          d="M 5 0 L 13 0 L 13 14 L 5 14 Z"
-          fill="url(#bm-shade)"
-        />
-        <line x1="9" y1="0" x2="9" y2="48" className="bm-silk-seam" />
-      </svg>
-      <span className="bm-tag">xviii</span>
-    </span>
-  )
-}
-
-// ColophonPlate — a composed gold-and-vermilion mark at the very
-// top of the colophon that opens the lower composition as one framed
-// scholarly block. A short gold rule on each side of a small vermilion
-// four-pointed star with a gold pip at its heart, drawn in once the
-// chapter has settled. Reads as the printer's rule that frames a
-// colophon plate in early printed books — the chapter's terminal
-// headpiece, paired to the ScholarCompass that crowns the top of the
-// composition, so the page opens and closes with composed marks of
-// the same vocabulary.
-function ColophonPlate() {
-  return (
-    <div className="colophon-plate" aria-hidden="true">
-      <span className="colophon-plate-rule colophon-plate-rule-l" />
-      <span className="colophon-plate-mark">
-        <svg viewBox="0 0 12 12" focusable="false">
-          <path
-            className="colophon-plate-star"
-            d="M 6 0.6 L 6.94 4.6 L 11.4 6 L 6.94 7.4 L 6 11.4 L 5.06 7.4 L 0.6 6 L 5.06 4.6 Z"
-          />
-          <circle cx="6" cy="6" r="0.95" className="colophon-plate-pip" />
-        </svg>
-      </span>
-      <span className="colophon-plate-rule colophon-plate-rule-r" />
-    </div>
-  )
-}
-
-// ReadingGuide — a quiet horizontal hairline that runs beneath the
-// chapter body, tying the textual core (answer → reply → footnote →
-// explicit → intellexi) into a single continuous reading flow. The
-// rule is drawn outward from the chapter's centerline so the body
-// reads as one composed passage rather than a vertical stack of
-// separate paragraphs. Two thin gold pips cap its ends. Iteration 59
-// lifts the line into a composed scholarly mark: a small vermilion
-// diamond sits at its center, flanked by two drawn gold pips on either
-// side — the chapter pause between the answer's voice and the reply's
-// invitation, set as one quiet ornament. Hidden in steady state; fades
-// in once the answer has begun writing itself, settles beneath the
-// footnote, and holds beneath the explicit.
-function ReadingGuide({ visible }: { visible: boolean }) {
-  return (
-    <div
-      className={`reading-guide ${visible ? 'is-on' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="reading-guide-pip reading-guide-pip-l" />
-      <span className="reading-guide-line" />
-      <span className="reading-guide-center" aria-hidden="true">
-        <svg viewBox="0 0 8 8" focusable="false">
-          <path
-            d="M 4 0.6 L 7 4 L 4 7.4 L 1 4 Z"
-            className="reading-guide-diamond"
-          />
-          <circle
-            cx="4"
-            cy="4"
-            r="0.5"
-            className="reading-guide-center-pip"
-          />
-        </svg>
-      </span>
-      <span className="reading-guide-line reading-guide-line-r" />
-      <span className="reading-guide-pip reading-guide-pip-r" />
-    </div>
-  )
-}
-
-// AnswerIllumination — a subtle gold-leaf glow that sits behind the
-// answer text once the answer has finished writing itself. The page
-// has just spoken; the question has been answered. Reads as a soft
-// warm pool that catches the candlelight and briefly haloes the
-// reply's opening, then settles into the steady reading state.
-// Hidden entirely on reduced motion.
-function AnswerIllumination({ lit }: { lit: boolean }) {
-  return (
-    <span
-      className={`answer-illumination ${lit ? 'is-lit' : ''}`}
-      aria-hidden="true"
-    />
-  )
-}
-
-// PageSettling — the chapter's quiet composed moment of resolution,
-// placed beneath the answer once the answer has fully landed. A
-// short warm halo blooms outward from the line and a single small
-// vermilion pip presses into the parchment at its centre — the
-// page's own acknowledgment that it has answered the question.
-// Reads as the manuscript's "the moment has been held" gesture:
-// the answer is in place, the reply is about to begin, and the
-// reader pauses between them. Settles into a slow steady breath
-// thereafter, so the chapter's cadence below the answer feels
-// alive rather than static. Hidden in steady state; the bloom
-// briefly haloes when the answer lands, then dims toward rest.
-// Respects reduced-motion: in steady state the haloes appear in
-// their settled form, never bloom.
-function PageSettling({ settled }: { settled: boolean }) {
-  return (
-    <span
-      className={`page-settling${settled ? ' is-settled' : ''}`}
-      aria-hidden="true"
-    >
-      <svg
-        viewBox="0 0 120 22"
-        className="page-settling-svg"
-        focusable="false"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <line x1="2" y1="11" x2="50" y2="11" className="page-settling-rule page-settling-rule-l" />
-        <line x1="70" y1="11" x2="118" y2="11" className="page-settling-rule page-settling-rule-r" />
-        <path
-          className="page-settling-pip"
-          d="M 60 6.5 L 61.18 10.18 L 64.6 11 L 61.18 11.82 L 60 15.5 L 58.82 11.82 L 55.4 11 L 58.82 10.18 Z"
-        />
-        <circle cx="60" cy="11" r="0.7" className="page-settling-core" />
-      </svg>
-    </span>
-  )
-}
-
-// ColophonTie — two thin vertical hairlines that flank the colophon,
-// tightening the stack of seal, signature, inkpot, oculus, legi mark
-// and provenance into a single composed lower margin. Reads as the
-// "page-end brackets" of the manuscript — quiet framing that turns
-// the colophon's six elements into one finished end-piece. Drawn in
-// once the colophon has settled, in parallel with the existing
-// colophon-pair-arrow, so the closure feels authored.
-function ColophonTie() {
-  return (
-    <span className="colophon-tie" aria-hidden="true">
-      <span className="colophon-tie-rule colophon-tie-rule-l" />
-      <span className="colophon-tie-rule colophon-tie-rule-r" />
-    </span>
-  )
-}
-
-// CandleSmoke — a thin curl of smoke that rises from the wick when
-// the candle flares (after the reader acknowledges the question).
-// A single hairline curve with an animated dashoffset, lifts briefly
-// and fades, suggesting the chapter has just been lit. Hidden in
-// steady state and when motion is reduced.
-function CandleSmoke({ rising }: { rising: boolean }) {
-  return (
-    <span
-      className={`candle-smoke ${rising ? 'is-rising' : ''}`}
-      aria-hidden="true"
-    >
-      <svg viewBox="0 0 28 84" className="candle-smoke-svg" focusable="false">
-        <path
-          className="candle-smoke-curl"
-          d="M 14 80 Q 10 64 16 48 Q 22 32 12 14"
-        />
-        <circle cx="13" cy="10" r="0.8" className="candle-smoke-tip" />
-      </svg>
-    </span>
-  )
-}
-
-// HeroSparkle — a small cluster of ink-dust motes that drift upward
-// from the bowl of the hero question mark when the reader approaches.
-// Reads as the candle's light catching the dust of the manuscript —
-// three vermilion and three gold motes, each on a slightly different
-// cadence, so the cluster never feels like a loop. Respects reduced
-// motion: the cluster is hidden entirely when motion is reduced, so
-// the hover state stays calm and the existing hero choreography is
-// never doubled.
-const HERO_SPARKLES: Array<{
-  x: number; y: number; dx: number; dy: number; delay: number
-}> = [
-  { x: 50, y: 18, dx:  6, dy: -22, delay:   0 },
-  { x: 38, y: 22, dx: -8, dy: -18, delay: 220 },
-  { x: 62, y: 24, dx: 10, dy: -14, delay: 480 },
-  { x: 46, y: 28, dx: -4, dy: -26, delay: 720 },
-  { x: 56, y: 30, dx:  4, dy: -28, delay: 980 },
-  { x: 42, y: 34, dx: -10, dy: -20, delay:1240 },
-]
-
-function HeroSparkle() {
-  return (
-    <span className="hero-sparkle" aria-hidden="true">
-      {HERO_SPARKLES.map((s, i) => (
-        <span
-          key={i}
-          className="hero-sparkle-dot"
-          style={
-            {
-              '--sp-x': `${s.x}%`,
-              '--sp-y': `${s.y}%`,
-              '--sp-dx': `${s.dx}px`,
-              '--sp-dy': `${s.dy}px`,
-              '--sp-delay': `${s.delay}ms`,
-            } as CSSProperties
-          }
-        />
-      ))}
-    </span>
-  )
-}
-
-// PredicateRule — a thin gold ink rule drawn beneath the predicate
-// "good at frontend", mirroring the gold rule beneath the named
-// subject "Minimax M3". Two quiet underlines frame the verb phrase
-// being examined — the page's quiet way of marking the noun and the
-// predicate equally, so the reader sees the question as a balanced
-// triple: subject, predicate, climax.
-function PredicateRule() {
-  return <span className="predicate-rule" aria-hidden="true" />
-}
-
-// QuestionPressmark — a single vermilion ink-stroke that blooms
-// beneath the question text the first time the reader engages the
-// chapter. The page's "you've touched me" gesture — a small hairline
-// that draws outward from center, like a quill pressed into the
-// parchment. Joins the existing question-underline (the transient
-// gold rule) and the hero-question-link (the vertical vermilion drip),
-// so the chapter has three quiet authorial marks responding to one
-// gesture of attention. Settles in once on the first acknowledge and
-// stays.
-function QuestionPressmark({ visible }: { visible: boolean }) {
-  return (
-    <span
-      className={`question-pressmark${visible ? ' is-on' : ''}`}
-      aria-hidden="true"
-    />
-  )
-}
-
-// AnswerOrnament — a small printer's flourish that punctuates the
-// transition between answer and reply. Two rules flanking a
-// diamond and two pips.
-function AnswerOrnament() {
-  return (
-    <span className="answer-ornament" aria-hidden="true">
-      <svg viewBox="0 0 64 8">
-        <line x1="2" y1="4" x2="22" y2="4" className="orn-rule" />
-        <circle cx="24" cy="4" r="1.1" className="orn-pip" />
-        <path d="M 28 4 L 32 1 L 36 4 L 32 7 Z" className="orn-diamond" />
-        <circle cx="40" cy="4" r="1.1" className="orn-pip" />
-        <line x1="42" y1="4" x2="62" y2="4" className="orn-rule" />
-      </svg>
-    </span>
-  )
-}
-
-// TailPiece — a small printer's tail-piece that closes the chapter
-// body. Two thin gold rules grow outward from a central diamond-and-pip,
-// like the closing ornament that finishes a printed chapter before the
-// colophon. Reads as the printer's quiet flourish at the end of the
-// text proper — the body has finished speaking, the colophon has not
-// yet begun. Drawn in once the footnote has settled, paired with the
-// explicit that follows. Iteration 46 composes the chapter's close.
-function TailPiece() {
-  return (
-    <svg
-      className="tail-piece"
-      viewBox="0 0 64 12"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <line
-        x1="2"
-        y1="6"
-        x2="24"
-        y2="6"
-        className="tail-piece-rule tail-piece-rule-l"
-        pathLength="100"
-      />
-      <line
-        x1="40"
-        y1="6"
-        x2="62"
-        y2="6"
-        className="tail-piece-rule tail-piece-rule-r"
-        pathLength="100"
-      />
-      <path
-        d="M 27 6 L 32 2.2 L 37 6 L 32 9.8 Z"
-        className="tail-piece-diamond"
-      />
-      <circle cx="32" cy="6" r="0.85" className="tail-piece-pip" />
-      <circle cx="24" cy="6" r="0.5" className="tail-piece-pip tail-piece-pip-end" />
-      <circle cx="40" cy="6" r="0.5" className="tail-piece-pip tail-piece-pip-end" />
-    </svg>
-  )
-}
-
-// (Iteration 55 retires the maniculum-fin — the colophon's sigillum
-// now closes the composition without a pointing gesture at its foot.)
-
-// ChapterCadence — the chapter's final exhale, a small composed mark
-// that breathes between the last written gloss (intellexi) and the
-// colophon's formal closure. Three pieces reading as a single quiet
-// gesture: a thin gold rule that draws outward from a small vermilion
-// pip, a single composed asterisk-petal motif at the center, and a
-// faint trailing hairline that suggests the page is finishing its
-// last breath. Settles in once the reader has understood the chapter,
-// so the cadence sits between "intellexi" and the colophon as one
-// composed manuscript pause — the page has spoken, the reader has
-// heard, the binding waits for the next folio.
-function ChapterCadence({ visible }: { visible: boolean }) {
-  return (
-    <p
-      className={`chapter-cadence ${visible ? 'is-on' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="chapter-cadence-rule chapter-cadence-rule-l" />
-      <span className="chapter-cadence-mark" aria-hidden="true">
-        <svg viewBox="0 0 14 14" focusable="false">
-          <path
-            className="chapter-cadence-star"
-            d="M 7 1.2 L 8.06 5.4 L 12.6 6 L 8.06 6.6 L 7 11.4 L 5.94 6.6 L 1.4 6 L 5.94 5.4 Z"
-          />
-          <circle cx="7" cy="6" r="0.85" className="chapter-cadence-pip" />
-        </svg>
-      </span>
-      <span className="chapter-cadence-rule chapter-cadence-rule-r" />
-    </p>
-  )
-}
-
-// CodexFrame — the inscribed rectangle around the chapter body. A
-// real authored frame: four gold rule edges meeting at four composed
-// corner ornaments, with a small four-pointed star-and-pip center-
-// mark on each horizontal rule. Replaces the previous four-L-corner
-// chapter plate with a single inscribed text-block — the chapter's
-// composed body (answer → reply → footnote → intellexi) now reads
-// as a manuscript folio plate rather than as four floating
-// brackets. The rules draw outward from their corners, the corner
-// ornaments bloom in once the rules have settled, and the two
-// center-marks complete the frame last — like a printer inscribing
-// the body of a folio one pass at a time. Parallels the chapter
-// cadence above the colophon (it shares the same star-pip motif at
-// the same scale) so the chapter opens and closes with marks from
-// the same vocabulary.
-function CodexFrame() {
-  return (
-    <div className="codex-frame" aria-hidden="true">
-      {/* Four rule edges — drawn as stretched SVGs so the stroke stays
-          consistent at any container size (vector-effect non-scaling). */}
-      <svg
-        className="codex-frame-rule-svg codex-frame-rule-svg-t"
-        viewBox="0 0 100 4"
-        preserveAspectRatio="none"
-      >
-        <line
-          x1="0"
-          y1="2"
-          x2="100"
-          y2="2"
-          className="codex-frame-rule"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-      <svg
-        className="codex-frame-rule-svg codex-frame-rule-svg-b"
-        viewBox="0 0 100 4"
-        preserveAspectRatio="none"
-      >
-        <line
-          x1="0"
-          y1="2"
-          x2="100"
-          y2="2"
-          className="codex-frame-rule"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-      <svg
-        className="codex-frame-rule-svg codex-frame-rule-svg-l"
-        viewBox="0 0 4 100"
-        preserveAspectRatio="none"
-      >
-        <line
-          x1="2"
-          y1="0"
-          x2="2"
-          y2="100"
-          className="codex-frame-rule codex-frame-rule-v"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-      <svg
-        className="codex-frame-rule-svg codex-frame-rule-svg-r"
-        viewBox="0 0 4 100"
-        preserveAspectRatio="none"
-      >
-        <line
-          x1="2"
-          y1="0"
-          x2="2"
-          y2="100"
-          className="codex-frame-rule codex-frame-rule-v"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-
-      {/* Top center mark — a small composed four-pointed star with a
-          gold pip at its heart, flanked by short hairlines that read
-          as the rule's own mid-line pause. */}
-      <span className="codex-frame-mark codex-frame-mark-t">
-        <svg viewBox="0 0 18 8" focusable="false">
-          <line
-            x1="0"
-            y1="4"
-            x2="6"
-            y2="4"
-            className="codex-frame-mark-rule"
-          />
-          <line
-            x1="12"
-            y1="4"
-            x2="18"
-            y2="4"
-            className="codex-frame-mark-rule"
-          />
-          <path
-            d="M 9 0.6 L 9.86 3.36 L 12.6 4 L 9.86 4.64 L 9 7.4 L 8.14 4.64 L 5.4 4 L 8.14 3.36 Z"
-            className="codex-frame-mark-star"
-          />
-          <circle
-            cx="9"
-            cy="4"
-            r="0.7"
-            className="codex-frame-mark-pip"
-          />
-        </svg>
-      </span>
-
-      {/* Bottom center mark — the same composed four-pointed mark,
-          mirrored across the chapter body so the frame opens and
-          closes with marks of the same vocabulary. */}
-      <span className="codex-frame-mark codex-frame-mark-b">
-        <svg viewBox="0 0 18 8" focusable="false">
-          <line
-            x1="0"
-            y1="4"
-            x2="6"
-            y2="4"
-            className="codex-frame-mark-rule"
-          />
-          <line
-            x1="12"
-            y1="4"
-            x2="18"
-            y2="4"
-            className="codex-frame-mark-rule"
-          />
-          <path
-            d="M 9 0.6 L 9.86 3.36 L 12.6 4 L 9.86 4.64 L 9 7.4 L 8.14 4.64 L 5.4 4 L 8.14 3.36 Z"
-            className="codex-frame-mark-star"
-          />
-          <circle
-            cx="9"
-            cy="4"
-            r="0.7"
-            className="codex-frame-mark-pip"
-          />
-        </svg>
-      </span>
-
-      {/* Four corner ornaments — a small composed ring with a
-          vermilion pip at its heart, sitting on the rules at the
-          four corners. A small leaf flourish grows inward on each
-          corner, like the printer's hand-mark at each frame joint. */}
-      <span className="codex-frame-corner codex-frame-corner-tl">
-        <svg viewBox="0 0 18 18" focusable="false">
-          <path
-            className="codex-frame-corner-flourish"
-            d="M 14 4 Q 11 6 9 9 Q 7 7 5 5"
-          />
-          <circle
-            cx="9"
-            cy="9"
-            r="3.4"
-            className="codex-frame-corner-ring"
-          />
-          <circle
-            cx="9"
-            cy="9"
-            r="1"
-            className="codex-frame-corner-pip"
-          />
-        </svg>
-      </span>
-      <span className="codex-frame-corner codex-frame-corner-tr">
-        <svg viewBox="0 0 18 18" focusable="false">
-          <path
-            className="codex-frame-corner-flourish"
-            d="M 4 4 Q 7 6 9 9 Q 11 7 13 5"
-          />
-          <circle
-            cx="9"
-            cy="9"
-            r="3.4"
-            className="codex-frame-corner-ring"
-          />
-          <circle
-            cx="9"
-            cy="9"
-            r="1"
-            className="codex-frame-corner-pip"
-          />
-        </svg>
-      </span>
-      <span className="codex-frame-corner codex-frame-corner-bl">
-        <svg viewBox="0 0 18 18" focusable="false">
-          <path
-            className="codex-frame-corner-flourish"
-            d="M 14 14 Q 11 12 9 9 Q 7 11 5 13"
-          />
-          <circle
-            cx="9"
-            cy="9"
-            r="3.4"
-            className="codex-frame-corner-ring"
-          />
-          <circle
-            cx="9"
-            cy="9"
-            r="1"
-            className="codex-frame-corner-pip"
-          />
-        </svg>
-      </span>
-      <span className="codex-frame-corner codex-frame-corner-br">
-        <svg viewBox="0 0 18 18" focusable="false">
-          <path
-            className="codex-frame-corner-flourish"
-            d="M 4 14 Q 7 12 9 9 Q 11 11 13 13"
-          />
-          <circle
-            cx="9"
-            cy="9"
-            r="3.4"
-            className="codex-frame-corner-ring"
-          />
-          <circle
-            cx="9"
-            cy="9"
-            r="1"
-            className="codex-frame-corner-pip"
-          />
-        </svg>
-      </span>
-    </div>
-  )
-}
-
-// Pilcrow — a small vermilion paragraph mark that introduces the
-// reply paragraph. The page's printer-mark for "new paragraph begins
-// here" — quieter than the existing explicit pilcrow, set at the
-// opening of the chapter's second sentence rather than its close.
-// Drawn in vermilion italic, sized to the line, with a hairline that
-// fades from vermilion to ink-soft so the mark reads as part of the
-// manuscript rather than a separate annotation.
-// ChapterDivider — a small composed mark between the hero emblem and
-// the question block. Three pieces reading as a single quiet ornament:
-// a thin gold rule drawing outward from the center on each side, a
-// vermilion four-pointed star at the pivot, and two tiny gold pips
-// tucked into the ends of the rules. Sits as the chapter's formal
-// transition from "the emblem above" to "the text below" — the place
-// where the chapter spine opens its arms to receive the question.
-// Pairs thematically with the FolioOpener that sits between the kicker
-// and the question, so the chapter reads as: emblem → divider → kicker
-// → opener → question. The whole mark draws in once the chapter has
-// settled, with the rules growing outward from the central star.
-function ChapterDivider() {
-  return (
-    <div className="chapter-divider" aria-hidden="true">
-      <span className="chapter-divider-rule chapter-divider-rule-l" />
-      <span className="chapter-divider-mark">
-        <svg viewBox="0 0 12 12" focusable="false">
-          <path
-            d="M 6 0.6 L 6.94 4.6 L 11.4 6 L 6.94 7.4 L 6 11.4 L 5.06 7.4 L 0.6 6 L 5.06 4.6 Z"
-            className="chapter-divider-star"
-          />
-          <circle cx="6" cy="6" r="0.95" className="chapter-divider-pip" />
-        </svg>
-      </span>
-      <span className="chapter-divider-rule chapter-divider-rule-r" />
-    </div>
-  )
-}
-
-function ReplyPilcrow() {
-  return (
-    <span className="reply-pilcrow" aria-hidden="true">
-      <span className="reply-pilcrow-mark">¶</span>
-      <span className="reply-pilcrow-rule" />
-    </span>
-  )
-}
-
-// ScholasticFootnote — a small bilingual marginal gloss that writes
-// itself into the page after the reply has finished. The rule above
-// draws first (a thin gold hairline growing outward from center); the
-// superscript "¹" then settles in; finally the body types itself out
-// in a slow, deliberate cadence. The Latin lemma ("relege") is set in
-// vermilion italic; the English gloss in the page's own ink-soft,
-// joined by a small hand-cut middot. A blinking caret mirrors the
-// answer/reply scribes. A small drawn flourish at the end suggests
-// the scribe's quill lifting from the page.
 function ScholasticFootnote({
   visible,
   text,
@@ -2638,55 +453,24 @@ function ScholasticFootnote({
       aria-live="polite"
       aria-label={visible ? FOOTNOTE_ARIA : undefined}
     >
-      <span className="footnote-rule" aria-hidden="true" />
       <span className="footnote-row">
-        <span className="footnote-mark" aria-hidden="true">
-          ¹
-        </span>
         <em className="footnote-latin">{latin}</em>
         {dotIdx >= 0 && (
-          <span className="footnote-sep" aria-hidden="true">
-            ·
-          </span>
+          <span className="footnote-sep" aria-hidden="true">·</span>
         )}
         {english !== '' && (
           <span className="footnote-en">{english}</span>
         )}
         {typing && <span className="footnote-caret" aria-hidden="true">|</span>}
       </span>
-      <svg
-        className="footnote-flourish"
-        viewBox="0 0 28 6"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          className="footnote-flourish-curve"
-          d="M 2 4 Q 8 1 14 3 Q 20 5 26 2"
-        />
-        <circle
-          className="footnote-flourish-pip"
-          cx="26"
-          cy="2"
-          r="0.55"
-        />
-      </svg>
     </p>
   )
 }
 
-// LectorisNota — the reader's quiet mark in the bottom-left margin,
-// completing the folio's four-corner marginal scheme and the chapter's
-// Latin dialogue chain. A small bilingual gloss, set in vermilion
-// italic with an English translation, that types itself in once the
-// reader has understood the chapter (intellexi). Pairs with the
-// existing "Qu." rubric (top of the left margin) and the "vide ·
-// look" gloss (middle) so the left margin now reads as a single
-// vertical dialogue: the page asks (Qu.), the page invites (vide),
-// the reader marks (annotavi). A small caret beneath points toward
-// the colophon, like the reader's eye has just lifted from the
-// chapter's last word and set down a mark in the margin.
-function LectorisNota({
+// ─── Intellexi (the reader's quiet sign-off) ───────────────────────────────
+const INTELLEXI_STAGGER_MS = 78
+
+function IntellexiNota({
   visible,
   text,
   done,
@@ -2696,236 +480,23 @@ function LectorisNota({
   done: boolean
 }) {
   const typing = visible && !done
-  const dotIdx = text.indexOf('·')
-  const latin = dotIdx >= 0 ? text.slice(0, dotIdx) : text
-  const english = dotIdx >= 0 ? text.slice(dotIdx + 1).replace(/^\s+/, '') : ''
   return (
-    <aside
-      className={`lectoris-nota ${visible ? 'is-on' : ''} ${done ? 'is-done' : ''}`}
+    <p
+      className={`intellexi-nota ${visible ? 'is-on' : ''} ${done ? 'is-done' : ''}`}
       aria-live="polite"
-      aria-label={visible ? LECTORIS_NOTA_ARIA : undefined}
     >
-      <span className="lectoris-nota-rule" aria-hidden="true" />
-      <span className="lectoris-nota-row">
-        <em className="lectoris-nota-latin">{latin}</em>
-        {dotIdx >= 0 && (
-          <span className="lectoris-nota-sep" aria-hidden="true">
-            ·
-          </span>
-        )}
-        {english !== '' && (
-          <span className="lectoris-nota-en">{english}</span>
-        )}
-        {typing && (
-          <span className="lectoris-nota-caret" aria-hidden="true">|</span>
-        )}
-      </span>
-      <svg
-        className="lectoris-nota-caret-svg"
-        viewBox="0 0 14 18"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          className="lectoris-nota-caret-line"
-          d="M 7 0 Q 5.6 8 8 16"
-        />
-        <path
-          className="lectoris-nota-caret-tip"
-          d="M 5 13.6 L 8 16.2 L 10.6 13.2"
-        />
-      </svg>
-    </aside>
+      <em className="intellexi-nota-text">{text}</em>
+      {typing && <span className="intellexi-nota-caret" aria-hidden="true">|</span>}
+    </p>
   )
 }
 
-// (Iteration 55 retires the scholar's oculus — the colophon's new
-// composed sigillum replaces the watching eye with a stamp.)
-
-function Marg({
-  corner,
-  id,
-  label,
-  body,
-  whisper,
-  whisperText,
-  active,
-  wave,
-  onHover,
-  ariaLabel,
-  glyph,
-  children,
-}: {
-  corner: Corner
-  id: string
-  label: string
-  body?: string
-  whisper: boolean
-  whisperText: string
-  active: string | null
-  wave: boolean
-  onHover: (id: string | null) => void
-  ariaLabel?: string
-  glyph?: React.ReactNode
-  children?: React.ReactNode
-}) {
-  const dim = active !== null && active !== id
-  const classes = [`marg`, `marg-${corner}`]
-  if (dim) classes.push('dim')
-  if (wave) classes.push('echo-wave')
-  const wordList = whisperText.split(' ')
-  return (
-    <aside
-      className={classes.join(' ')}
-      onMouseEnter={() => onHover(id)}
-      onMouseLeave={() => onHover(null)}
-      onFocus={() => onHover(id)}
-      onBlur={() => onHover(null)}
-      tabIndex={0}
-      aria-label={ariaLabel ?? `${label}${body ? ': ' + body : ''}`}
-    >
-      <span className="marg-rule" />
-      {glyph && <span className="marg-glyph">{glyph}</span>}
-      <span className="marg-label">{label}</span>
-      {body !== undefined && <span className="marg-body">{body}</span>}
-      {children}
-      <GuideRule corner={corner} />
-      <span className="marg-whisper-slot">
-        <span
-          className={`marg-whisper${whisper ? ' is-shown' : ''}`}
-          aria-hidden="true"
-        >
-          {wordList.map((word, i) => (
-            <span
-              key={i}
-              className={`whisper-word${whisper ? ' is-shown' : ''}`}
-              style={{ '--wi': i } as CSSProperties}
-            >
-              {word}
-              {i < wordList.length - 1 ? '\u00a0' : ''}
-            </span>
-          ))}
-        </span>
-      </span>
-    </aside>
-  )
-}
-
-// AnswerFinial — a small composed gold-leaf mark that settles just
-// beneath the answer as it finishes writing itself. A single quiet
-// gesture: two short gold rules drawn outward from a small composed
-// diamond-and-pip at centre, with a faint warm halo pressing into the
-// parchment at its feet. Reads as the page's own ink-mark on the
-// answer — the quill has lifted, the answer is in place, the page
-// acknowledges it. Sits in parallel with the existing PageSettling
-// mark, but where PageSettling is the chapter's first settling breath,
-// AnswerFinial is the answer's terminal seal — the manuscript's
-// "the ink has dried" mark. Hidden until the answer has fully landed,
-// then briefly haloes and settles. Respects reduced-motion.
-function AnswerFinial({ settled }: { settled: boolean }) {
-  return (
-    <span
-      className={`answer-finial${settled ? ' is-settled' : ''}`}
-      aria-hidden="true"
-    >
-      <svg
-        viewBox="0 0 80 14"
-        className="answer-finial-svg"
-        focusable="false"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        <line
-          x1="2"
-          y1="7"
-          x2="28"
-          y2="7"
-          className="answer-finial-rule answer-finial-rule-l"
-          pathLength="100"
-        />
-        <line
-          x1="52"
-          y1="7"
-          x2="78"
-          y2="7"
-          className="answer-finial-rule answer-finial-rule-r"
-          pathLength="100"
-        />
-        <path
-          d="M 40 3.2 L 42.4 6.5 L 45.7 7 L 42.4 7.5 L 40 10.8 L 37.6 7.5 L 34.3 7 L 37.6 6.5 Z"
-          className="answer-finial-diamond"
-        />
-        <circle cx="40" cy="7" r="1.05" className="answer-finial-core" />
-        <circle cx="2" cy="7" r="0.5" className="answer-finial-pip answer-finial-pip-l" />
-        <circle cx="78" cy="7" r="0.5" className="answer-finial-pip answer-finial-pip-r" />
-      </svg>
-    </span>
-  )
-}
-
-// ReadingSeal — a single composed authorial mark that closes the
-// chapter's compositional loop. A small vermilion-and-gold seal with
-// a miniature hero question mark inscribed within it, sitting as the
-// colophon's terminal mark beneath the "legi · mmxxvi" provenance line.
-// The hero "?" above opened the chapter; the same "?" below closes it,
-// pressed into the page as the chapter's final authorial signature.
-// Three concentric circles hold the mark: an outer soft vermilion halo
-// (the press-stain), a gold hairline ring (the seal's edge), and an
-// inner vermilion field (the seal's wax), with the miniature question
-// stroke drawn in pale gold at its heart. Presses into the page once
-// the reading has fully settled (intellexi + annotavi + legi are all
-// in place), with a brief ink-stain pulse that says the chapter has
-// been signed. Hidden in steady state; respects reduced-motion.
-function ReadingSeal({ pressed }: { pressed: boolean }) {
-  return (
-    <span
-      className={`reading-seal${pressed ? ' is-pressed' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="reading-seal-halo" />
-      <svg viewBox="0 0 40 40" className="reading-seal-svg" focusable="false">
-        <defs>
-          <radialGradient id="rs-wax" cx="38%" cy="34%" r="72%">
-            <stop offset="0%"   stopColor="#cd6044" />
-            <stop offset="55%"  stopColor="#9c4530" />
-            <stop offset="100%" stopColor="#4f2114" />
-          </radialGradient>
-          <radialGradient id="rs-halo" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="rgba(176, 83, 58, 0.32)" />
-            <stop offset="55%"  stopColor="rgba(176, 83, 58, 0.10)" />
-            <stop offset="100%" stopColor="rgba(176, 83, 58, 0)" />
-          </radialGradient>
-        </defs>
-        <circle cx="20" cy="20" r="19" fill="url(#rs-halo)" className="reading-seal-halo-fill" />
-        <circle cx="20" cy="20" r="14.5" fill="url(#rs-wax)" className="reading-seal-wax" />
-        <circle cx="20" cy="20" r="14.5" fill="none" className="reading-seal-ring" />
-        <circle cx="20" cy="20" r="11.5" fill="none" className="reading-seal-ring-inner" />
-        {/* The miniature hero "?" — a quiet echo of the chapter's
-            emblem, inscribed within the seal in pale gold. The same
-            calligraphic gesture that opened the chapter above now
-            closes it below, drawn smaller and inverted in tone. */}
-        <path
-          className="reading-seal-mark"
-          d="M 23.4 14.6 C 21.8 11.2 16.4 11.4 17.8 14.6 C 18.6 16.4 19.6 17.4 19.6 19.2 C 19.6 21 18.6 22 19 23.4"
-          fill="none"
-        />
-        <circle cx="19.2" cy="25.4" r="1.1" className="reading-seal-dot" />
-      </svg>
-    </span>
-  )
-}
-
-// ReadingPace — the reader's own rubric, set between the chapter and
-// the colophon. Until now the chapter could only be read by pressing
-// the emblem, which is a lovely gesture but an unlabelled one. This is
-// the page's plain instruction, in the manuscript's own two voices:
-// a vermilion Latin imperative and its English gloss. It does exactly
-// what it says — it reads the chapter out onto the page — and pressing
-// it a second time slows the whole cadence down, because the chapter's
-// own reply asks the reader to read it again, slower. Pressing once
-// more restores the reading pace. A real control with a real, single
-// behaviour; the rule beneath it draws outward when it takes focus so
-// keyboard readers see the mark move.
+// ─── Reading pace ──────────────────────────────────────────────────────────
+// The chapter's only interactive control. Press once to read the
+// answer at the page's pace; press again to slow the cadence (because
+// the chapter's reply asks the reader to read again, slower); press
+// once more to return to the page's pace. A real control with a real,
+// single behaviour.
 function ReadingPace({
   hasRead,
   slow,
@@ -2964,49 +535,42 @@ function ReadingPace({
   )
 }
 
+// ─── Explicit (chapter closure) ────────────────────────────────────────────
+function Explicit() {
+  return (
+    <p className="explicit" aria-hidden="true">
+      <span className="explicit-rule" />
+      <em className="explicit-text">explicit · fol. xviii</em>
+      <span className="explicit-rule" />
+    </p>
+  )
+}
+
+// ─── App ───────────────────────────────────────────────────────────────────
+
+const ANSWER_STAGGER_MS = 34
+const REPLY_STAGGER_MS = 26
+
 export function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const reduced = useReducedMotion()
   const [ready, setReady] = useState(false)
   const [drawn, setDrawn] = useState(false)
   const [pulsing, setPulsing] = useState(false)
-  const [tracing, setTracing] = useState(false)
-  const [spattering, setSpattering] = useState(false)
-  const [active, setActive] = useState<string | null>(null)
-  const [echoIdx, setEchoIdx] = useState(-1)
-  const [whispersOn, setWhispersOn] = useState<Record<Corner, boolean>>({
-    tl: false,
-    tr: false,
-    bl: false,
-    br: false,
-  })
-  const [noteNonce, setNoteNonce] = useState(0)
+  const [candleLit, setCandleLit] = useState(false)
+  const [active, setActive] = useState(false)
   const [answerOn, setAnswerOn] = useState(false)
   const [answerChars, setAnswerChars] = useState(0)
   const [replyOn, setReplyOn] = useState(false)
   const [replyChars, setReplyChars] = useState(0)
   const [footnoteOn, setFootnoteOn] = useState(false)
   const [footnoteChars, setFootnoteChars] = useState(0)
-  const [pointing, setPointing] = useState(false)
-  const [sealing, setSealing] = useState(false)
   const [intellexiOn, setIntellexiOn] = useState(false)
   const [intellexiChars, setIntellexiChars] = useState(0)
-  const [lectorisOn, setLectorisOn] = useState(false)
-  const [lectorisChars, setLectorisChars] = useState(0)
   const [quietus, setQuietus] = useState(false)
-  const [spinePulseKey, setSpinePulseKey] = useState(0)
-  const [spineSealed, setSpineSealed] = useState(false)
-  const [bifolioAttending, setBifolioAttending] = useState(false)
-  const [legiOn, setLegiOn] = useState(false)
-  // Reading pace — the whole answer→reply→footnote→gloss cadence is
-  // scaled by a single multiplier so the page can be read twice: once
-  // at its own speed, and once slower, when the reader asks it to.
-  // Held in a ref so the typing effects pick up the current pace on
-  // their next tick without needing to re-subscribe.
   const [slowRead, setSlowRead] = useState(false)
   const paceRef = useRef(1)
   const pulseRef = useRef(0)
-  const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
   const dimsRef = useRef({ w: 0, h: 0 })
   const pointerRef = useRef({ x: 0, y: 0, over: false, active: false })
@@ -3014,8 +578,8 @@ export function App() {
   const heroRef = useRef<HTMLButtonElement>(null)
   const flameWrapRef = useRef<HTMLSpanElement>(null)
   const flameWarmthRef = useRef(0)
-  const waveTimeoutsRef = useRef<number[]>([])
 
+  // First paint and first-light ignition.
   useEffect(() => {
     const t = setTimeout(() => setReady(true), 60)
     return () => clearTimeout(t)
@@ -3026,6 +590,15 @@ export function App() {
     return () => clearTimeout(t)
   }, [reduced])
 
+  // The candle begins as an ember and ignites into its full flame a
+  // couple of seconds after the page has settled, so the reader's
+  // arrival lights the page.
+  useEffect(() => {
+    const t = window.setTimeout(() => setCandleLit(true), reduced ? 80 : 2400)
+    return () => window.clearTimeout(t)
+  }, [reduced])
+
+  // Typing cadence — answer → reply → footnote → intellexi.
   useEffect(() => {
     if (!answerOn) {
       setAnswerChars(0)
@@ -3074,10 +647,6 @@ export function App() {
     return () => clearTimeout(id)
   }, [replyOn, replyChars, reduced])
 
-  // The footnote arrives once the reply has finished being written.
-  // It waits a beat so the page's reply can land on its own before the
-  // scribe adds a marginal gloss — the cadence of someone who has just
-  // finished reading and reaches for the pen to write in the margin.
   useEffect(() => {
     if (!replyOn || replyChars < REPLY.length) return
     const t = window.setTimeout(
@@ -3105,15 +674,6 @@ export function App() {
     return () => clearTimeout(id)
   }, [footnoteOn, footnoteChars, reduced])
 
-  // The reader's quiet response — "intellexi" — appears after the
-  // footnote has fully settled. It waits a beat so the chapter's own
-  // conclusion lands before the reader signs off, like closing a book
-  // and writing a single word in the endpaper. The hero receives a
-  // matching inward breath at the same moment, so the emblem above
-  // and the gloss below settle into the same quiet. Iteration 37 lets
-  // the gloss write itself character by character so the reader's
-  // response shares the chapter's manuscript cadence — answer, reply,
-  // footnote, and now intellexi all use the same slow hand.
   useEffect(() => {
     if (!footnoteOn || footnoteChars < FOOTNOTE_TEXT.length) return
     const t = window.setTimeout(
@@ -3126,10 +686,6 @@ export function App() {
     return () => window.clearTimeout(t)
   }, [footnoteOn, footnoteChars, reduced])
 
-  // Intellexi typing — the reader's gloss writes itself in the same
-  // cadence as the answer, reply, and footnote. Staggered wider
-  // because it is a single short word, not a sentence, and the slower
-  // hand reads as deliberate ("I have understood") rather than hurried.
   useEffect(() => {
     if (!intellexiOn) {
       setIntellexiChars(0)
@@ -3148,112 +704,81 @@ export function App() {
     return () => clearTimeout(id)
   }, [intellexiOn, intellexiChars, reduced])
 
-  // The reader's left-margin mark ("annotavi") arrives once the
-  // reader has finished writing "intellexi". The cadence waits a beat
-  // so the reader's acceptance can settle before the marginal gloss
-  // joins it — like a reader who has just understood a passage and
-  // reaches for the quill to mark the margin. Types itself in the
-  // same manuscript cadence as the other glosses (slower stagger, so
-  // the brief Latin + English pair reads as a single deliberate
-  // gesture, not a hurried scrawl).
   useEffect(() => {
-    if (!intellexiOn) return
-    if (intellexiChars < 'intellexi'.length) return
+    if (!pulsing) return
+    const t = setTimeout(() => setPulsing(false), 720)
+    return () => clearTimeout(t)
+  }, [pulsing])
+
+  useEffect(() => {
+    if (!quietus) return
     const t = window.setTimeout(
-      () => setLectorisOn(true),
-      reduced ? 60 : Math.round(LECTORIS_NOTA_DELAY_MS * paceRef.current),
+      () => setQuietus(false),
+      reduced ? 1100 : 1900,
     )
     return () => window.clearTimeout(t)
-  }, [intellexiOn, intellexiChars, reduced])
+  }, [quietus, reduced])
 
-  useEffect(() => {
-    if (!lectorisOn) {
-      setLectorisChars(0)
-      return
-    }
-    const total = LECTORIS_NOTA_TEXT.length
-    if (reduced) {
-      setLectorisChars(total)
-      return
-    }
-    if (lectorisChars >= total) return
-    const id = window.setTimeout(
-      () => setLectorisChars((c) => Math.min(total, c + 1)),
-      Math.round(LECTORIS_NOTA_STAGGER_MS * paceRef.current),
+  const acknowledge = useCallback((pace: number = 1) => {
+    paceRef.current = pace
+    setSlowRead(pace > 1)
+    pulseRef.current = reduced ? 0 : 1
+    setPulsing(true)
+    setAnswerChars(0)
+    setReplyChars(0)
+    setFootnoteChars(0)
+    setIntellexiChars(0)
+    setReplyOn(false)
+    setFootnoteOn(false)
+    setIntellexiOn(false)
+    setQuietus(false)
+    setAnswerOn(true)
+    const ansOff = window.setTimeout(
+      () => setAnswerOn(false),
+      reduced ? 2600 : Math.round(5200 * paceRef.current),
     )
-    return () => clearTimeout(id)
-  }, [lectorisOn, lectorisChars, reduced])
-
-  // Spine pulse — a soft gold light travels from the top of the
-  // chapter spine to the compass mark at three narrative moments:
-  //   1. A welcome pulse after the spine has finished fading in, so
-  //      the reader knows the column is alive.
-  //   2. A reading pulse on every acknowledge, so the column carries
-  //      the chapter's first word down to its signature.
-  //   3. A final sealed glow when intellexi is fully written, so the
-  //      spine reads as a single settled hairline — the chapter has
-  //      been completed, the binding closed.
-  // The pulse uses an incrementing key so the keyed child element
-  // remounts and its CSS animation replays cleanly each time.
-  useEffect(() => {
-    if (reduced) return
-    const t = window.setTimeout(() => {
-      setSpinePulseKey((k) => k + 1)
-    }, 1900)
-    return () => window.clearTimeout(t)
+    return () => window.clearTimeout(ansOff)
   }, [reduced])
 
-  useEffect(() => {
-    if (!intellexiOn) return
-    if (reduced) return
-    if (intellexiChars < 'intellexi'.length) return
-    const t = window.setTimeout(() => {
-      setSpineSealed(true)
-    }, 220)
-    return () => window.clearTimeout(t)
-  }, [intellexiOn, intellexiChars, reduced])
-
-  // Bifolio attention — the page's central gilt brightens subtly when
-  // the reader's pointer is over the composition (the book is being
-  // held open more attentively) and settles back when they wander
-  // off. A single listener is attached once on mount; the response is
-  // entirely CSS-driven so the gesture stays smooth.
-  useEffect(() => {
-    if (reduced) return
-    let leaveTimer = 0
-    const onMove = () => {
-      if (leaveTimer) {
-        window.clearTimeout(leaveTimer)
-        leaveTimer = 0
-      }
-      if (!bifolioAttending) setBifolioAttending(true)
+  // Hero pointer handling — track proximity for flame warmth and
+  // question glow.
+  const onHeroEnter = useCallback((e: ReactPointerEvent) => {
+    setActive(true)
+    pointerRef.current.over = true
+    heroBoxRef.current = (e.currentTarget as HTMLElement).getBoundingClientRect()
+  }, [])
+  const onHeroLeave = useCallback(() => {
+    setActive(false)
+    pointerRef.current.over = false
+    const el = heroRef.current
+    if (el) {
+      el.style.setProperty('--gaze-x', '0')
+      el.style.setProperty('--gaze-y', '0')
     }
-    const onLeave = () => {
-      if (leaveTimer) window.clearTimeout(leaveTimer)
-      leaveTimer = window.setTimeout(() => setBifolioAttending(false), 700)
-    }
-    window.addEventListener('pointermove', onMove, { passive: true })
-    document.addEventListener('pointerleave', onLeave)
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      document.removeEventListener('pointerleave', onLeave)
-      if (leaveTimer) window.clearTimeout(leaveTimer)
-    }
-  }, [bifolioAttending, reduced])
+  }, [])
+  const onHeroMove = useCallback((e: ReactPointerEvent) => {
+    const el = e.currentTarget as HTMLElement
+    heroBoxRef.current = el.getBoundingClientRect()
+    const rect = heroBoxRef.current
+    if (!rect) return
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    const dx = (e.clientX - cx) / (rect.width / 2)
+    const dy = (e.clientY - cy) / (rect.height / 2)
+    const x = Math.max(-1, Math.min(1, dx))
+    const y = Math.max(-1, Math.min(1, dy))
+    el.style.setProperty('--gaze-x', String(x))
+    el.style.setProperty('--gaze-y', String(y))
+  }, [])
 
-  // Legi mark — a quiet vermilion ink-mark that blooms above the
-  // colophon's "legi · mmxxvi" provenance once the reader has lingered
-  // long enough that the reading counts as a sitting. The chapter is
-  // "legi" only when there has been a reader; the mark waits a
-  // deliberate pause (longer than the answer-reply-footnote cadence)
-  // and then blooms in once, like a quiet record of the reading.
-  useEffect(() => {
-    if (legiOn) return
-    const t = window.setTimeout(() => setLegiOn(true), reduced ? 0 : 22000)
-    return () => window.clearTimeout(t)
-  }, [legiOn, reduced])
+  const answerDisplay = answerOn ? ANSWER.slice(0, Math.max(0, answerChars)) : ''
+  const replyDisplay = replyOn ? REPLY.slice(0, Math.max(0, replyChars)) : ''
+  const footnoteDisplay = footnoteOn
+    ? FOOTNOTE_TEXT.slice(0, Math.max(0, footnoteChars))
+    : ''
+  const footnoteDone = footnoteOn && footnoteChars >= FOOTNOTE_TEXT.length
 
-
+  // Dust canvas — the embers rising from the candle.
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -3301,7 +826,6 @@ export function App() {
       const { w, h } = dimsRef.current
       ctx.clearRect(0, 0, w, h)
       const boost = pulseRef.current
-      const eBoost = echoRef.current
       const ptr = pointerRef.current
       const hb = heroBoxRef.current
 
@@ -3334,20 +858,6 @@ export function App() {
             const k = 1 - d / R
             alpha += k * 0.35
             radius += k * 0.3
-          }
-        }
-        if (eBoost > 0 && hb) {
-          const cxp = (hb.left + hb.right) / 2
-          const cyp = (hb.top + hb.bottom) / 2
-          const dx = cxp - p.x
-          const dy = cyp - p.y
-          const d2 = dx * dx + dy * dy
-          const R = 360
-          if (d2 < R * R) {
-            const d = Math.sqrt(d2) || 1
-            const k = 1 - d / R
-            alpha += k * eBoost * 0.55
-            radius += k * eBoost * 0.5
           }
         }
         ctx.beginPath()
@@ -3386,12 +896,10 @@ export function App() {
       const parts = partsRef.current
       const ptr = pointerRef.current
       if (pulseRef.current > 0) pulseRef.current = Math.max(0, pulseRef.current - 0.014)
-      if (echoRef.current > 0) echoRef.current = Math.max(0, echoRef.current - 0.0065)
 
       // Drive the candle flame's warmth from pointer proximity to the
       // hero — when the reader draws near the question, the flame
-      // leans toward them, halo brightening. Eased gently so the
-      // change feels like the candle, not the cursor.
+      // leans toward them, halo brightening.
       const hb = heroBoxRef.current
       let targetWarmth = 0
       if (hb && ptr.over) {
@@ -3474,338 +982,70 @@ export function App() {
     }
   }, [reduced])
 
-  useEffect(() => {
-    if (!pulsing) return
-    const t = setTimeout(() => setPulsing(false), 720)
-    return () => clearTimeout(t)
-  }, [pulsing])
-
-  useEffect(() => {
-    if (!tracing) return
-    const t = setTimeout(() => setTracing(false), 1200)
-    return () => clearTimeout(t)
-  }, [tracing])
-
-  useEffect(() => {
-    if (!spattering) return
-    const t = setTimeout(() => setSpattering(false), 1000)
-    return () => clearTimeout(t)
-  }, [spattering])
-
-  useEffect(() => {
-    if (!sealing) return
-    const t = window.setTimeout(
-      () => setSealing(false),
-      reduced ? 900 : 1600,
-    )
-    return () => window.clearTimeout(t)
-  }, [sealing, reduced])
-
-  // The hero "quietus" — a single inward breath when the reader has
-  // understood the chapter. Once the breath has settled, the flag is
-  // cleared so the page returns to its idle state and the chapter
-  // can be re-engaged from a quiet baseline.
-  useEffect(() => {
-    if (!quietus) return
-    const t = window.setTimeout(
-      () => setQuietus(false),
-      reduced ? 1100 : 1900,
-    )
-    return () => window.clearTimeout(t)
-  }, [quietus, reduced])
-
-  const acknowledge = useCallback((pace: number = 1) => {
-    paceRef.current = pace
-    setSlowRead(pace > 1)
-    pulseRef.current = reduced ? 0 : 1
-    echoRef.current = reduced ? 0 : 1
-    setPulsing(true)
-    setTracing(true)
-    setSpattering(true)
-    setNoteNonce((n) => n + 1)
-    setPointing(true)
-    setSealing(true)
-    setSpineSealed(false)
-    if (!reduced) setSpinePulseKey((k) => k + 1)
-    const order: Corner[] = ['tl', 'tr', 'br']
-    waveTimeoutsRef.current.forEach((t) => window.clearTimeout(t))
-    waveTimeoutsRef.current = []
-    const stagger = reduced ? 0 : 360
-    const stepDelay = reduced ? 0 : 280
-    const holdMs = reduced ? 1800 : 3800
-    order.forEach((corner, i) => {
-      const at = stepDelay + i * stagger
-      const t1 = window.setTimeout(() => setEchoIdx(i), at)
-      const t2 = window.setTimeout(
-        () => setWhispersOn((w) => ({ ...w, [corner]: true })),
-        at + (reduced ? 0 : 80),
-      )
-      const t3 = window.setTimeout(
-        () => setWhispersOn((w) => ({ ...w, [corner]: false })),
-        at + holdMs,
-      )
-      waveTimeoutsRef.current.push(t1, t2, t3)
-    })
-    const end = window.setTimeout(
-      () => setEchoIdx(-1),
-      stepDelay + order.length * stagger + (reduced ? 200 : 260),
-    )
-    waveTimeoutsRef.current.push(end)
-    setAnswerChars(0)
-    setReplyChars(0)
-    setFootnoteChars(0)
-    setIntellexiChars(0)
-    setLectorisChars(0)
-    setReplyOn(false)
-    setFootnoteOn(false)
-    setIntellexiOn(false)
-    setLectorisOn(false)
-    setQuietus(false)
-    setAnswerOn(true)
-    const ansOff = window.setTimeout(
-      () => {
-        setAnswerOn(false)
-        setPointing(false)
-      },
-      reduced ? 2600 : Math.round(5200 * paceRef.current),
-    )
-    waveTimeoutsRef.current.push(ansOff)
-  }, [reduced])
-
-  const onHeroEnter = useCallback((e: ReactPointerEvent) => {
-    pointerRef.current.over = true
-    heroBoxRef.current = (e.currentTarget as HTMLElement).getBoundingClientRect()
-  }, [])
-  const onHeroLeave = useCallback(() => {
-    pointerRef.current.over = false
-    const el = heroRef.current
-    if (el) {
-      el.style.setProperty('--gaze-x', '0')
-      el.style.setProperty('--gaze-y', '0')
-    }
-  }, [])
-  const onHeroMove = useCallback((e: ReactPointerEvent) => {
-    const el = e.currentTarget as HTMLElement
-    heroBoxRef.current = el.getBoundingClientRect()
-    const rect = heroBoxRef.current
-    if (!rect) return
-    const cx = rect.left + rect.width / 2
-    const cy = rect.top + rect.height / 2
-    const dx = (e.clientX - cx) / (rect.width / 2)
-    const dy = (e.clientY - cy) / (rect.height / 2)
-    const x = Math.max(-1, Math.min(1, dx))
-    const y = Math.max(-1, Math.min(1, dy))
-    el.style.setProperty('--gaze-x', String(x))
-    el.style.setProperty('--gaze-y', String(y))
-  }, [])
-
-  const answerDisplay = answerOn ? ANSWER.slice(0, Math.max(0, answerChars)) : ''
-  const replyDisplay = replyOn ? REPLY.slice(0, Math.max(0, replyChars)) : ''
-  const footnoteDisplay = footnoteOn
-    ? FOOTNOTE_TEXT.slice(0, Math.max(0, footnoteChars))
-    : ''
-  const footnoteDone = footnoteOn && footnoteChars >= FOOTNOTE_TEXT.length
-  const lectorisDisplay = lectorisOn
-    ? LECTORIS_NOTA_TEXT.slice(0, Math.max(0, lectorisChars))
-    : ''
-  const lectorisDone =
-    lectorisOn && lectorisChars >= LECTORIS_NOTA_TEXT.length
-
-  // Whether to render the rubricated initial: show it once the answer
-  // has begun writing itself.
-  const answerDropCapVisible = answerOn
-
   return (
-    <main className={`stage ${bifolioAttending ? 'is-attending' : ''}`}>
-      <WindowArch flaring={pulsing} />
+    <main className={`stage ${active ? 'is-attending' : ''}`}>
       <canvas ref={canvasRef} className="dust" aria-hidden="true" />
       <div className="rim" aria-hidden="true" />
-      <div className="codex-edge" aria-hidden="true" />
       <PaperGrain />
       <ReadingLantern />
-      <BifolioSpine />
-      <Watermark />
-      <Ribbon />
-      <ParchmentBreath />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
-        <CandleFlame wrapRef={flameWrapRef} flaring={pulsing} />
-        <CandleSmoke key={noteNonce} rising={pulsing} />
+        <CandleFlame
+          wrapRef={flameWrapRef}
+          lit={candleLit}
+          flaring={pulsing}
+        />
         <Taper />
-        <Marg
-          corner="tl"
-          id="tl"
-          label="folio"
-          body="a question, slowly composed"
-          whisper={whispersOn.tl}
-          whisperText={WHISPERS[0].text}
-          active={active}
-          wave={echoIdx === 0}
-          onHover={setActive}
-          glyph={<Bifolio />}
-        />
-        <Marg
-          corner="tr"
-          id="tr"
-          label="reading"
-          body="the candle, the reader, the page"
-          whisper={whispersOn.tr}
-          whisperText={WHISPERS[1].text}
-          active={active}
-          wave={echoIdx === 1}
-          onHover={setActive}
-          ariaLabel="reading: the candle, the reader, the page"
-        />
-        <Marg
-          corner="br"
-          id="br"
-          label="now"
-          body="this instant, the only one that ever arrives"
-          whisper={whispersOn.br}
-          whisperText={WHISPERS[2].text}
-          active={active}
-          wave={echoIdx === 2}
-          onHover={setActive}
-          ariaLabel="now: this instant, the only one that ever arrives"
-        />
 
-        <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''} ${quietus ? 'is-quietus' : ''}`}>
-          <ChapterSpine pulseKey={spinePulseKey} sealed={spineSealed} annotavi={lectorisDone} />
-          <ScholarCompass />
-          <ChapterCrown />
-          <ChapterTitle />
-          <Fleuron />
-          <div className="hero-frame">
-            <MarginalRubric />
-            <button
-              type="button"
+        <div className={`composition ${ready ? 'ready' : ''} ${quietus ? 'is-quietus' : ''}`}>
+          <PageGlow lit={active} flaring={pulsing} />
+
+          <button
+            type="button"
             ref={heroRef}
-            className={`hero ${drawn ? 'drawn' : ''} ${pulsing ? 'pulse' : ''} ${tracing ? 'echo' : ''} ${quietus ? 'is-quietus' : ''}`}
+            className={`hero ${drawn ? 'drawn' : ''} ${pulsing ? 'pulse' : ''} ${quietus ? 'is-quietus' : ''}`}
             onClick={() => acknowledge(paceRef.current)}
             onPointerEnter={(e) => {
-              setPointing(true)
               onHeroEnter(e)
             }}
             onPointerLeave={() => {
-              setPointing(false)
               onHeroLeave()
             }}
             onPointerMove={onHeroMove}
-            onFocus={() => setPointing(true)}
-            onBlur={() => setPointing(false)}
+            onFocus={() => setActive(true)}
+            onBlur={() => setActive(false)}
             aria-label="read the answer to the question"
           >
             <span className="hero-svg-wrap">
               <svg viewBox="0 0 240 340" className="hero-svg" aria-hidden="true">
                 <defs>
-                  <radialGradient
-                    id="auriole-radial"
-                    cx="50%"
-                    cy="50%"
-                    r="50%"
-                  >
+                  <radialGradient id="auriole-radial" cx="50%" cy="50%" r="50%">
                     <stop offset="0%"   stopColor="currentColor" stopOpacity="0.28" />
                     <stop offset="55%"  stopColor="currentColor" stopOpacity="0.08" />
                     <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
                   </radialGradient>
-                  <radialGradient
-                    id="bowl-bloom"
-                    cx="50%"
-                    cy="46%"
-                    r="55%"
-                  >
+                  <radialGradient id="bowl-bloom" cx="50%" cy="46%" r="55%">
                     <stop offset="0%"   stopColor="currentColor" stopOpacity="0.42" />
                     <stop offset="58%"  stopColor="currentColor" stopOpacity="0.16" />
                     <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
                   </radialGradient>
-                  <linearGradient
-                    id="hero-stroke-grad"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
+                  <linearGradient id="hero-stroke-grad" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%"   stopColor="#f0d49a" />
                     <stop offset="38%"  stopColor="currentColor" />
                     <stop offset="100%" stopColor="#a88556" />
                   </linearGradient>
-                  <clipPath id="bowl-clip">
-                    <ellipse cx="124" cy="98" rx="46" ry="44" />
-                  </clipPath>
                 </defs>
                 <g className="auriole">
-                  <circle
-                    cx={120}
-                    cy={170}
-                    r={120}
-                    fill="url(#auriole-radial)"
-                    className="auriole-radial"
-                  />
+                  <circle cx={120} cy={170} r={120}
+                    fill="url(#auriole-radial)" className="auriole-radial" />
                 </g>
                 <g className="hero-stack">
-                  {/* Ink-wash shadow — a wide, soft warm wash rendered
-                      beneath the main stroke, like ink that has bled
-                      slightly into the parchment. Gives the question
-                      mark depth without obscuring the curve. */}
-                  <path
-                    className="hero-shadow"
-                    d={HERO_PATH}
-                    pathLength={100}
-                  />
-                  {/* Scribal trail — a thin amber hairline that traces
-                      the path as the quill lays the question mark. It
-                      draws slightly behind the main stroke with a
-                      different easing, like the wet ink trailing the
-                      quill's nib across the parchment. Soft enough to
-                      read as a residue of the quill's passage, never
-                      competing with the main stroke. */}
-                  <path
-                    className="hero-scribal-trail"
-                    d={HERO_PATH}
-                    pathLength={100}
-                  />
-                  <path
-                    className="hero-stroke"
-                    d={HERO_PATH}
-                    pathLength={100}
-                    stroke="url(#hero-stroke-grad)"
-                  />
-                  {/* Inner highlight — a subtler stroke that traces just
-                      the upper-left of the bowl, where candlelight
-                      catches the wet ink. Reads as a glint along the
-                      bowl's upper rim, drawn after the main stroke so
-                      the question mark feels illuminated from above
-                      rather than uniformly lit. */}
-                  <path
-                    className="hero-highlight"
-                    d={HERO_HIGHLIGHT_PATH}
-                    pathLength={100}
-                  />
+                  <path className="hero-shadow" d={HERO_PATH} pathLength={100} />
+                  <path className="hero-scribal-trail" d={HERO_PATH} pathLength={100} />
+                  <path className="hero-stroke" d={HERO_PATH} pathLength={100}
+                    stroke="url(#hero-stroke-grad)" />
+                  <path className="hero-highlight" d={HERO_HIGHLIGHT_PATH} pathLength={100} />
                   <path className="hero-trace" d={HERO_PATH} pathLength={100} />
-                  {/* Quill-tip pip — a small bright amber drop that
-                      settles at the foot of the stem once the trail
-                      finishes drawing, like the place where the quill
-                      was just lifted from the parchment. */}
-                  <circle
-                    className="hero-quill-pip"
-                    cx={HERO_DOT.cx - 4}
-                    cy={HERO_DOT.cy + 36}
-                    r={2.2}
-                  />
-                  <g className="hero-bowl-illumination" clipPath="url(#bowl-clip)">
-                    <circle
-                      cx="120"
-                      cy="71"
-                      r="44"
-                      fill="url(#bowl-bloom)"
-                      className="hero-bowl-bloom"
-                    />
-                    <IlluminatedStar />
-                  </g>
-                  {/* Ink-pool — a small vermilion and gold pool at the
-                      foot of the stem, where the question's stroke
-                      presses into the parchment. Reads as a quill's
-                      slip that has settled into the page. */}
                   <ellipse
                     className="hero-ink-pool"
                     cx={HERO_DOT.cx}
@@ -3834,179 +1074,90 @@ export function App() {
                 </g>
               </svg>
             </span>
-            {spattering && (
-              <span className="hero-spatter" aria-hidden="true">
-                {SPATTER.map((s, i) => (
-                  <span
-                    key={i}
-                    className="spatter-dot"
-                    style={
-                      {
-                        '--angle': `${s.angle}deg`,
-                        '--distance': `${s.distance}px`,
-                        '--size': `${s.size}px`,
-                        '--delay': `${s.delay}ms`,
-                        '--op': `${s.op}`,
-                      } as CSSProperties
-                    }
-                  />
-                ))}
-              </span>
-            )}
-            <SealImpression sealing={sealing} />
-            <HeroSparkle />
-            <span className="hero-question-link" aria-hidden="true" />
           </button>
-          </div>
-             <StemDescent engaged={noteNonce > 0 || pointing} />
-             <ChapterDivider />
-             <div className="question-block">
-             <ChapterStamp />
-             <VineCorner position="tl" />
-             <VineCorner position="tr" />
-             <VineCorner position="bl" />
-             <VineCorner position="br" />
-<PageCorner />
-              <span className="question-kicker">
-               <span className="question-kicker-pip question-kicker-pip-l" aria-hidden="true" />
-               <em className="question-kicker-text">a question in public</em>
-               <span className="question-kicker-sep" aria-hidden="true">·</span>
-               <span className="question-kicker-italic">set by candlelight</span>
-               <span className="question-kicker-pip question-kicker-pip-r" aria-hidden="true" />
-             </span>
-               <FolioOpener />
-              <h1 className="question">
-               <span className="question-line">
-                 <span className="question-lead-punctus" aria-hidden="true">
-                   <span className="question-lead-punctus-dot" />
-                 </span>
-                 <em className="incipit-i question-word" style={{ '--wi': 0 } as CSSProperties}>i</em>
-                 <em className="question-lead question-word" style={{ '--wi': 1 } as CSSProperties}>s</em>
-               <span className="question-space" style={{ '--wi': 2 } as CSSProperties}> </span>
-                 <em className="question-name question-word" style={{ '--wi': 3 } as CSSProperties}>Minimax&nbsp;M3</em>
-                 <span className="question-name-pause" aria-hidden="true" style={{ '--wi': 4 } as CSSProperties}>
-                   <span className="question-name-pause-dot" />
-                 </span>
-                 <span className="question-verb-wrap" style={{ '--wi': 5 } as CSSProperties}>
-                   <span className="question-verb question-word"> good at frontend </span>
-                   <PredicateRule />
-                 </span>
-                 <span className="question-yet-pause" aria-hidden="true" style={{ '--wi': 6 } as CSSProperties}>
-                   <span className="question-yet-pause-dot" />
-                 </span>
-                 <em className="question-yet question-word" style={{ '--wi': 7 } as CSSProperties}>yet</em>
-                 <span className="question-mark-group">
-                   <span className="question-mark question-word" style={{ '--wi': 8 } as CSSProperties}>?</span>
-                   <QuestionFlourish />
-                 </span>
-               </span>
-             </h1>
-              <span className="question-prompt" aria-hidden="true">
-                <span className="question-prompt-pip" />
-                <span className="question-prompt-mark" />
-                <span className="question-prompt-pip question-prompt-pip-r" />
+
+          <div className="question-block">
+            <h1 className="question">
+              <span className="question-line">
+                <em className="question-word question-lead-i" style={{ '--wi': 0 } as CSSProperties}>is</em>
+                <span className="question-space" style={{ '--wi': 1 } as CSSProperties}> </span>
+                <em className="question-word question-name" style={{ '--wi': 2 } as CSSProperties}>Minimax&nbsp;M3</em>
+                <span className="question-space" style={{ '--wi': 3 } as CSSProperties}> </span>
+                <em className="question-word question-verb" style={{ '--wi': 4 } as CSSProperties}>good at frontend</em>
+                <span className="question-space" style={{ '--wi': 5 } as CSSProperties}> </span>
+                <em className="question-word question-yet" style={{ '--wi': 6 } as CSSProperties}>yet</em>
+                <span className="question-mark-wrap">
+                  <span className="question-mark" style={{ '--wi': 7 } as CSSProperties}>?</span>
+                </span>
               </span>
-            <QuestionTitleRule />
-            <QuestionPressmark visible={noteNonce > 0 || answerOn} />
-            <span
-              key={noteNonce}
-              className={`question-underline${noteNonce > 0 ? ' is-on' : ''}`}
-              aria-hidden="true"
-            />
-            <div className="chapter-plate-frame">
-              <CodexFrame />
-              <MarginBookmark />
-              <ReadingTitle />
-              <BodyOpener />
-              <AnswerIllumination lit={answerOn && answerChars >= ANSWER.length && !replyOn} />
-              <p
-                className={`answer ${answerOn ? 'is-on' : ''}`}
-                aria-live="polite"
-              >
-                {answerDropCapVisible && <AnswerDropCap visible={answerOn} />}
-                <span className="answer-text">{answerDisplay}</span>
-                {answerOn && answerChars < ANSWER.length && (
-                  <span className="answer-caret" aria-hidden="true">|</span>
-                )}
-              </p>
-              <PageSettling settled={answerOn && answerChars >= ANSWER.length && !replyOn} />
-              <AnswerFinial settled={answerOn && answerChars >= ANSWER.length && !replyOn} />
-              <ReadingGuide visible={answerOn} />
-              <div
-                className={`chapter-body ${footnoteDone ? 'is-footnote-done' : ''} ${intellexiOn ? 'is-intellexi' : ''} ${lectorisDone ? 'is-annotavi' : ''}`}
-              >
-                {replyOn && <AnswerOrnament />}
-                <p
-                  className={`reply ${replyOn ? 'is-on' : ''}`}
-                  aria-live="polite"
-                >
-                  {replyOn && <ReplyPilcrow />}
-                  <span className="reply-text">{replyDisplay}</span>
-                  {replyOn && replyChars < REPLY.length && (
-                    <span className="reply-caret" aria-hidden="true">|</span>
-                  )}
-                  {replyOn && replyChars >= REPLY.length && (
-                    <span className="reply-end" aria-hidden="true">
-                      <Fleuron />
-                    </span>
-                  )}
-                </p>
-                <ScholasticFootnote
-                  visible={footnoteOn}
-                  text={footnoteDisplay}
-                  done={footnoteDone}
-                />
-                {footnoteDone && <TailPiece />}
-                <Explicit />
-                <IntellexiNota
-                  visible={intellexiOn}
-                  text={intellexiOn ? 'intellexi'.slice(0, Math.max(0, intellexiChars)) : ''}
-                  done={intellexiOn && intellexiChars >= 'intellexi'.length}
-                />
-              </div>
-              <ChapterCadence
-                visible={intellexiOn && intellexiChars >= 'intellexi'.length}
-              />
-            </div>
+            </h1>
           </div>
+
+          <div className="chapter-body">
+            <p
+              className={`answer ${answerOn ? 'is-on' : ''}`}
+              aria-live="polite"
+            >
+              <span className="answer-text">{answerDisplay}</span>
+              {answerOn && answerChars < ANSWER.length && (
+                <span className="answer-caret" aria-hidden="true">|</span>
+              )}
+            </p>
+
+            <p
+              className={`reply ${replyOn ? 'is-on' : ''}`}
+              aria-live="polite"
+            >
+              <span className="reply-text">{replyDisplay}</span>
+              {replyOn && replyChars < REPLY.length && (
+                <span className="reply-caret" aria-hidden="true">|</span>
+              )}
+            </p>
+
+            <ScholasticFootnote
+              visible={footnoteOn}
+              text={footnoteDisplay}
+              done={footnoteDone}
+            />
+
+            {footnoteDone && (
+              <IntellexiNota
+                visible={intellexiOn}
+                text={intellexiOn ? 'intellexi'.slice(0, Math.max(0, intellexiChars)) : ''}
+                done={intellexiOn && intellexiChars >= 'intellexi'.length}
+              />
+            )}
+
+            {footnoteDone && <Explicit />}
+          </div>
+
           <ReadingPace
-            hasRead={noteNonce > 0}
+            hasRead={answerOn || intellexiChars > 0}
             slow={slowRead}
             onRead={() => acknowledge(slowRead ? 1 : 1.75)}
           />
-        </div>
 
-        <LectorisNota
-          visible={lectorisOn}
-          text={lectorisDisplay}
-          done={lectorisDone}
-        />
-        <div className="colophon" aria-hidden="true">
-          <ColophonPlate />
-          <ColophonTie />
-          <span className="colophon-seal">
-            <CompassMark />
-            <WaxSeal />
-          </span>
-          <span className="colophon-rule" />
-          <span className="colophon-pair">
-            <em className="colophon-quaeritur">quaeritur</em>
-            <span className="colophon-pair-arrow" aria-hidden="true">›</span>
-            <em className="colophon-respondetur">respondetur</em>
-          </span>
-          <span className="colophon-rule" />
-          <span className="colophon-signature-row">
-            <Signature />
-            <span className="colophon-folio">folio · xviii</span>
-          </span>
-          <InkpotAndQuill
-            active={intellexiOn && intellexiChars >= 'intellexi'.length}
-            acknowledged={sealing || pulsing}
-            annotavi={lectorisDone}
-          />
-          <LegiMark visible={legiOn} />
-          <span className="colophon-provenance">legi · mmxxvi</span>
-          <ReadingSeal pressed={legiOn && lectorisDone} />
+          <div className="colophon" aria-hidden="true">
+            <span className="colophon-rule" />
+            <span className="colophon-pair">
+              <em className="colophon-quaeritur">quaeritur</em>
+              <span className="colophon-pair-arrow" aria-hidden="true">›</span>
+              <em className="colophon-respondetur">respondetur</em>
+            </span>
+            <span className="colophon-signature-row">
+              <Signature />
+              <span className="colophon-folio">folio · xviii</span>
+            </span>
+            <InkpotAndQuill
+              active={footnoteDone && intellexiOn && intellexiChars >= 'intellexi'.length}
+              acknowledged={pulsing}
+            />
+            <span className="colophon-provenance">legi · mmxxvi</span>
+            <span className="colophon-seal">
+              <WaxSeal />
+            </span>
+            <span className="colophon-rule" />
+          </div>
         </div>
       </div>
     </main>
