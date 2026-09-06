@@ -1,14 +1,14 @@
 /* ════════════════════════════════════════════════════════════════════════════
- * Iteration 73 — direction: "the chapter, marked by its reader."
+ * Iteration 74 — direction: "the marked question."
  *
- * The composition is refined into something that reads as a real,
- * annotated printed chapter. Three coordinated changes strengthen what
- * the existing pieces already imply: a small vermilion pilcrow (¶)
- * sits in the left margin next to the question's active verb as a
- * printer's reference mark; the hero's bowl and stem are redrawn with
- * cleaner proportions so the question reads as one continuous gesture;
- * the reading pace's "slow" state becomes a hand-drawn ink-drop, the
- * way a real reader would mark a chapter being read twice.
+ * The chapter reaches the full expression of its scholarly language when
+ * the question itself reads as a real manuscript title, properly marked
+ * by its printer. A small vermilion manicule (☞) sits in the right
+ * margin as the classic medieval pointing-hand reference mark, balancing
+ * the pilcrow on the left; a hand-drawn vermilion stroke sits beneath
+ * "Minimax M3" as a manuscript emphasis mark on the chapter's subject.
+ * Both fade in once the question has settled; both build on the
+ * printer's-reference-mark language without replacing anything.
  * ════════════════════════════════════════════════════════════════════════════ */
 
 /* ----- Foundation ----- */
@@ -964,6 +964,138 @@ body {
   .pilcrow:hover { animation: none; }
 }
 
+/* ----- Marginal manicule (printer's pointing hand) -----
+   The mirror partner to the pilcrow. Sits in the right margin at
+   the height of "yet", in vermilion, finger pointing left toward
+   the text. Drawn with a stylised cuff at the wrist, a flat palm,
+   an extended index finger, and a small thumb bump. The classic
+   medieval/early-modern printer's reference mark — its bilateral
+   partner to the pilcrow on the left, so the question now reads
+   with paired marginalia. Fades in once the question has settled,
+   brightens on hover, and nudges slightly toward the text it
+   points at. On mobile it stacks above the question alongside
+   the pilcrow, like paired chapter initials. */
+.manicule {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: clamp(20px, 1.7vw, 26px);
+  height: auto;
+  color: var(--vermilion-bright);
+  opacity: 0;
+  transform: translateX(4px);
+  transition:
+    opacity 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s,
+    transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s,
+    color 0.6s ease;
+  cursor: default;
+}
+
+.manicule-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 3px rgba(198, 104, 74, 0.4));
+  transition: filter 0.6s ease;
+}
+
+.composition.ready .manicule {
+  opacity: 0.58;
+  transform: translateX(0);
+}
+
+.stage.is-attending .manicule {
+  opacity: 0.78;
+}
+
+.manicule:hover {
+  opacity: 1;
+  animation: maniculeNudge 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.manicule:hover .manicule-svg {
+  filter: drop-shadow(0 0 6px rgba(198, 104, 74, 0.7));
+}
+
+@keyframes maniculeNudge {
+  0%   { transform: translateX(0); }
+  35%  { transform: translateX(-2px); }
+  70%  { transform: translateX(0.5px); }
+  100% { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .manicule {
+    transition: opacity 0.5s ease;
+    transform: none;
+  }
+  .composition.ready .manicule,
+  .stage.is-attending .manicule {
+    opacity: 0.7;
+    transform: none;
+  }
+  .manicule:hover { animation: none; }
+}
+
+/* ----- Subject underline (manuscript emphasis mark) -----
+   A hand-drawn vermilion stroke sits beneath "Minimax M3" as a
+   manuscript emphasis mark on the chapter's subject. Drawn with
+   a subtle wave so it reads as hand-cut with a quill, not
+   typeset. The stroke draws itself in from left to right once
+   the question has settled, like a scholar's pen arriving at
+   the subject. */
+.question-name-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.emphasis-underline {
+  position: absolute;
+  left: -3%;
+  right: -3%;
+  bottom: -10px;
+  height: 10px;
+  pointer-events: none;
+  color: var(--vermilion-bright);
+  opacity: 0;
+  transform: scaleX(0.3);
+  transform-origin: 8% 50%;
+  transition:
+    opacity 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s,
+    transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s;
+}
+
+.emphasis-underline svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 0 3px rgba(198, 104, 74, 0.45));
+}
+
+.composition.ready .emphasis-underline {
+  opacity: 0.82;
+  transform: scaleX(1);
+}
+
+.stage.is-attending .emphasis-underline {
+  opacity: 0.95;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emphasis-underline {
+    transition: opacity 0.5s ease;
+    transform: none;
+  }
+  .composition.ready .emphasis-underline,
+  .stage.is-attending .emphasis-underline {
+    opacity: 0.82;
+    transform: none;
+  }
+}
+
 .question {
   display: flex;
   align-items: baseline;
@@ -1664,6 +1796,7 @@ body {
   .composition { gap: 14px; padding-bottom: clamp(20px, 5vw, 28px); }
   .question-block { flex-direction: column; gap: 10px; }
   .pilcrow { width: 16px; }
+  .manicule { width: 22px; }
   .question { font-size: clamp(30px, 6.4vw, 46px); max-width: 18ch; row-gap: 4px; line-height: 1.08; }
   .hero { margin-top: clamp(8px, 1.4vh, 16px); }
   .hero-svg { width: clamp(184px, 32vw, 256px); }

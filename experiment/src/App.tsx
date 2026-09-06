@@ -9,30 +9,26 @@ import {
 } from 'react'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Iteration 73 — direction: "the chapter, marked by its reader."
+// Iteration 74 — direction: "the marked question."
 //
-// The composition is refined into something that reads as a real,
-// annotated printed chapter. Three changes strengthen what the
-// existing pieces already imply:
+// The chapter reaches the full expression of its scholarly language
+// when the question itself reads as a real manuscript title, properly
+// marked by its printer. Two new printer's-reference marks balance
+// what iteration 73's pilcrow already implies:
 //
-//   1. Marginal pilcrow — a small printer's reference mark (¶) sits
-//      in the left margin at the height of the question's verb,
-//      in vermilion, like a scholar's marginal hand pointing to the
-//      active word. Appears once the question has settled, fades to
-//      a quiet presence, and wiggles gently when the reader brings
-//      the cursor to it. Reads as the chapter having been read once
-//      already — by the printer, or by the last reader, or by the
-//      author.
-//   2. The hero (the big ?) is redrawn with cleaner bowl-to-stem
-//      proportions — a slightly wider bowl, a more graceful taper
-//      into the stem, and a stem that settles a touch lower so the
-//      dot reads as a natural continuation of the stroke rather
-//      than a separate mark.
-//   3. The reading pace control's "slow" state is upgraded from a
-//      coloured CSS dot to a hand-drawn vermilion ink-drop, the
-//      way a real reader would have a fresh ink-mark on the page
-//      after reading twice. The drop breathes softly while the
-//      pace is set to slow.
+//   1. Marginal manicule — a small printer's pointing hand (☞) sits
+//      in the right margin at the height of "yet", in vermilion, like
+//      a scholar's pointing hand marking the chapter's temporal
+//      adverb. The pilcrow on the left and the manicule on the right
+//      now balance each other as the chapter's bilateral marginalia.
+//      Appears once the question has settled, brightens on hover,
+//      and nudges slightly toward the text it points at.
+//   2. Subject underline — a hand-drawn vermilion stroke sits beneath
+//      "Minimax M3" as a manuscript emphasis mark, marking the
+//      chapter's subject as its concern. Drawn with a subtle wave so
+//      it reads as hand-cut, not typeset; fades in once the question
+//      has settled, drawing itself from left to right under the
+//      model's name.
 // ─────────────────────────────────────────────────────────────────────────────
 
 // The hero question mark — a hand-drawn bowl that opens wider at the top,
@@ -371,6 +367,83 @@ function Pilcrow() {
         <rect x="7" y="3.6" width="2.2" height="20.8" fill="currentColor" />
         <path d="M 4.6 3 L 11.6 3 L 11.6 4.8 L 4.6 4.8 Z" fill="currentColor" />
         <path d="M 4.6 24.4 L 11.6 24.4 L 11.6 26.2 L 4.6 26.2 Z" fill="currentColor" />
+      </svg>
+    </span>
+  )
+}
+
+// ─── Marginal manicule (printer's pointing hand) ──────────────────────────
+// A small printer's pointing hand (☞) sits in the right margin at the
+// height of "yet", in vermilion, like a scholar's marginal hand marking
+// the chapter's temporal adverb. Drawn with a stylised cuff at the
+// wrist, a flat palm, an extended index finger pointing left toward
+// the text, and a small thumb bump. The classic medieval/early-modern
+// printer's reference mark — its mirror partner to the pilcrow on the
+// left, so the question now reads with bilateral marginalia. Fades in
+// once the question has settled, brightens on hover, and nudges a touch
+// left (toward the text it points at) when the reader brings the
+// cursor to it.
+function Manicule() {
+  return (
+    <span className="manicule" aria-hidden="true">
+      <svg viewBox="0 0 22 16" focusable="false" className="manicule-svg">
+        <path
+          d="M 14.5 2.6 L 19 2.6 L 19 4.2 L 17.6 4.2 L 17.6 11.8 L 19 11.8 L 19 13.4 L 14.5 13.4 Z"
+          fill="currentColor"
+        />
+        <path
+          d="M 14.5 3.2 L 10.2 3.2 C 8 3.2 5.8 3.8 3.6 4.4 L 1.6 5 L 0.8 6 L 0.8 10 L 1.6 11 L 3.6 11.6 C 5.8 12.2 8 12.8 10.2 12.8 L 14.5 12.8 Z"
+          fill="currentColor"
+        />
+        <path
+          d="M 10.6 3.2 Q 12.6 3.2 12.6 5 Q 12.6 6.8 10.6 6.8"
+          fill="currentColor"
+        />
+        <path
+          d="M 6.4 4.6 L 6.4 11.4"
+          stroke="rgba(11,9,7,0.32)"
+          strokeWidth="0.42"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 14.5 4.2 L 17.6 4.2"
+          stroke="rgba(11,9,7,0.3)"
+          strokeWidth="0.32"
+        />
+        <path
+          d="M 14.5 11.8 L 17.6 11.8"
+          stroke="rgba(11,9,7,0.3)"
+          strokeWidth="0.32"
+        />
+        <path
+          d="M 8.2 5.6 Q 7 6.4 8.2 7.2"
+          stroke="rgba(11,9,7,0.28)"
+          strokeWidth="0.4"
+          strokeLinecap="round"
+          fill="none"
+        />
+      </svg>
+    </span>
+  )
+}
+
+// ─── Emphasis underline (manuscript subject mark) ─────────────────────────
+// A hand-drawn vermilion stroke sits beneath "Minimax M3" as a manuscript
+// emphasis mark, marking the chapter's subject as its concern. Drawn
+// with a subtle cubic-Bezier wave so it reads as hand-cut with a quill,
+// not typeset; the stroke draws itself in from left to right once the
+// question has settled, like a scholar's pen arriving at the subject.
+function EmphasisUnderline() {
+  return (
+    <span className="emphasis-underline" aria-hidden="true">
+      <svg viewBox="0 0 200 10" preserveAspectRatio="none" focusable="false">
+        <path
+          d="M 4 5.6 C 30 3 60 7.2 100 5.4 C 140 3.8 170 7.2 196 5.4"
+          stroke="currentColor"
+          strokeWidth="2.6"
+          strokeLinecap="round"
+          fill="none"
+        />
       </svg>
     </span>
   )
@@ -1149,7 +1222,10 @@ export function App() {
               <span className="question-line">
                 <em className="question-word question-lead-i" style={{ '--wi': 0 } as CSSProperties}>is</em>
                 <span className="question-space" style={{ '--wi': 1 } as CSSProperties}> </span>
-                <em className="question-word question-name" style={{ '--wi': 2 } as CSSProperties}>Minimax&nbsp;M3</em>
+                <span className="question-name-wrap">
+                  <em className="question-word question-name" style={{ '--wi': 2 } as CSSProperties}>Minimax&nbsp;M3</em>
+                  <EmphasisUnderline />
+                </span>
                 <span className="question-space" style={{ '--wi': 3 } as CSSProperties}> </span>
                 <em className="question-word question-verb" style={{ '--wi': 4 } as CSSProperties}>good at frontend</em>
                 <span className="question-space" style={{ '--wi': 5 } as CSSProperties}> </span>
@@ -1159,6 +1235,7 @@ export function App() {
                 </span>
               </span>
             </h1>
+            <Manicule />
           </div>
 
           <ReadingPace
