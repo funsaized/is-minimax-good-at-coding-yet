@@ -2665,20 +2665,20 @@ body {
   font-family: var(--display);
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(44px, 6.4vw, 82px);
-  line-height: 1.08;
-  letter-spacing: -0.018em;
+  font-size: clamp(46px, 6.6vw, 84px);
+  line-height: 1.04;
+  letter-spacing: -0.022em;
   text-align: center;
   color: var(--ink);
   max-width: 22ch;
   margin: 0;
   text-wrap: balance;
-  font-feature-settings: "kern" on, "liga" on, "calt" on, "salt" on, "dlig" on;
+  font-feature-settings: "kern" on, "liga" on, "calt" on, "salt" on, "dlig" on, "swsh" on;
   font-variant-numeric: oldstyle-nums;
   text-rendering: optimizeLegibility;
   text-shadow:
-    0 0 32px rgba(240, 232, 218, 0.10),
-    0 0 64px rgba(217, 176, 116, 0.04),
+    0 0 32px rgba(240, 232, 218, 0.12),
+    0 0 64px rgba(217, 176, 116, 0.05),
     0 1px 0 rgba(0, 0, 0, 0.32);
   opacity: 0;
   transform: translateY(14px);
@@ -2690,6 +2690,135 @@ body {
 .composition.ready .question {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ----- Chapter divider (between emblem and text body) -----
+ * A small composed mark that opens the chapter's text. Two thin gold
+ * rules grow outward from a central vermilion four-pointed star with
+ * a gold pip at its heart — the page's "the chapter's text begins
+ * here" gesture, mirroring the FolioOpener that sits between the
+ * kicker and the question. Pairs thematically so the chapter reads
+ * as: emblem (above) → chapter-divider → kicker → opener → question
+ * (below). The rules draw outward from the central star, the star
+ * blooms in from a small scale, and two end-pips settle in last.
+ */
+.chapter-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  width: clamp(160px, 24vw, 260px);
+  margin: clamp(2px, 0.4vw, 6px) auto clamp(6px, 0.9vw, 12px);
+  opacity: 0;
+  transform: translateY(3px);
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 2.2s,
+    transform 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) 2.2s;
+  pointer-events: none;
+}
+
+.composition.ready .chapter-divider {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chapter-divider-rule {
+  flex: 1 1 auto;
+  display: block;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-deep) 32%,
+    var(--gold) 64%,
+    var(--gold) 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.18);
+  transition:
+    opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 2.4s,
+    transform 1.15s cubic-bezier(0.2, 0.7, 0.2, 1) 2.4s;
+}
+
+.chapter-divider-rule-l { transform-origin: 100% 50%; }
+.chapter-divider-rule-r {
+  transform-origin: 0% 50%;
+  background: linear-gradient(
+    -90deg,
+    transparent 0%,
+    var(--gold-deep) 32%,
+    var(--gold) 64%,
+    var(--gold) 100%
+  );
+}
+
+.composition.ready .chapter-divider-rule {
+  opacity: 0.7;
+  transform: scaleX(1);
+}
+
+.chapter-divider-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(14px, 1.6vw, 18px);
+  height: clamp(14px, 1.6vw, 18px);
+  flex: 0 0 auto;
+  opacity: 0;
+  transform: scale(0.32) rotate(-90deg);
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.65s,
+    transform 0.85s cubic-bezier(0.2, 1.2, 0.4, 1) 2.65s;
+  color: var(--vermilion);
+  filter: drop-shadow(0 0 3px rgba(176, 83, 58, 0.32));
+}
+
+.composition.ready .chapter-divider-mark {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.chapter-divider-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.chapter-divider-star {
+  fill: currentColor;
+}
+
+.chapter-divider-pip {
+  fill: var(--gold-bright);
+  filter: drop-shadow(0 0 2px rgba(240, 212, 154, 0.55));
+}
+
+/* Once the chapter has been engaged (the reader has acknowledged the
+   question), the divider warms subtly — the page knows its chapter has
+   been touched. */
+.composition.is-pointing .chapter-divider-mark {
+  color: var(--vermilion-bright);
+  filter: drop-shadow(0 0 5px rgba(198, 104, 74, 0.5));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter-divider { transition: none; opacity: 1; transform: none; }
+  .chapter-divider-rule { transition: none; opacity: 0.7; transform: scaleX(1); }
+  .chapter-divider-mark { transition: none; opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@media (max-width: 880px) {
+  .chapter-divider { width: clamp(140px, 28vw, 220px); gap: clamp(6px, 0.9vw, 10px); }
+}
+
+@media (max-width: 520px) {
+  .chapter-divider {
+    width: clamp(110px, 36vw, 170px);
+    gap: 6px;
+    margin-bottom: clamp(4px, 1vw, 8px);
+  }
+  .chapter-divider-mark { width: 12px; height: 12px; }
 }
 
 .question-line {
@@ -2775,9 +2904,9 @@ body {
 .question-name {
   font-style: italic;
   font-variant-caps: all-small-caps;
-  font-feature-settings: "smcp" on, "c2sc" on, "liga" on;
-  letter-spacing: 0.16em;
-  font-size: 0.8em;
+  font-feature-settings: "smcp" on, "c2sc" on, "liga" on, "calt" on;
+  letter-spacing: 0.13em;
+  font-size: 0.78em;
   color: var(--gold);
   padding: 0 0.05em;
   position: relative;
@@ -2826,15 +2955,15 @@ body {
 .question-yet {
   font-style: italic;
   display: inline-block;
-  font-size: 1.16em;
-  letter-spacing: -0.028em;
+  font-size: 1.18em;
+  letter-spacing: -0.032em;
   color: var(--gold-bright);
   position: relative;
   padding: 0 0.02em;
   text-shadow:
-    0 0 16px rgba(240, 212, 154, 0.32),
-    0 0 38px rgba(217, 176, 116, 0.18),
-    0 0 64px rgba(217, 176, 116, 0.08);
+    0 0 18px rgba(240, 212, 154, 0.36),
+    0 0 42px rgba(217, 176, 116, 0.22),
+    0 0 72px rgba(217, 176, 116, 0.10);
   font-weight: 500;
 }
 
@@ -2875,12 +3004,12 @@ body {
 .question-mark {
   font-style: italic;
   color: var(--gold-bright);
-  font-size: 1.16em;
+  font-size: 1.18em;
   margin-left: 0.02em;
   text-shadow:
-    0 0 18px rgba(240, 212, 154, 0.32),
-    0 0 40px rgba(217, 176, 116, 0.18),
-    0 0 64px rgba(217, 176, 116, 0.08);
+    0 0 20px rgba(240, 212, 154, 0.36),
+    0 0 44px rgba(217, 176, 116, 0.22),
+    0 0 72px rgba(217, 176, 116, 0.10);
   font-weight: 500;
 }
 
@@ -3613,7 +3742,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(6px, 0.8vw, 10px);
+  gap: clamp(7px, 0.9vw, 12px);
   color: var(--ink-faint);
   opacity: 0;
   transition: opacity 0.9s ease 2.1s;
@@ -3638,7 +3767,7 @@ body {
   gap: clamp(6px, 0.7vw, 10px);
   font-family: var(--serif);
   font-style: italic;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   font-size: clamp(11px, 1vw, 13px);
   color: var(--ink-soft);
   opacity: 0;
@@ -3649,7 +3778,7 @@ body {
 }
 
 .frame.ready .colophon-pair {
-  opacity: 0.92;
+  opacity: 0.94;
   transform: translateY(0);
 }
 
@@ -3684,12 +3813,12 @@ body {
 .colophon-folio {
   font-family: var(--mono);
   font-size: clamp(8px, 0.78vw, 10px);
-  letter-spacing: 0.5em;
+  letter-spacing: 0.52em;
   text-transform: uppercase;
   color: var(--gold);
   font-weight: 400;
   white-space: nowrap;
-  opacity: 0.85;
+  opacity: 0.88;
 }
 
 .colophon-rule {
@@ -4017,9 +4146,9 @@ body {
   .taper { width: clamp(140px, 30vw, 240px); height: clamp(240px, 42vh, 360px); top: 12%; filter: blur(11px); }
   .illuminated-star { width: 48px; height: 48px; }
   .hero-svg { width: clamp(194px, 30vw, 296px); }
-  .question { font-size: clamp(34px, 6.2vw, 56px); max-width: 20ch; }
-  .question-yet { font-size: 1.12em; }
-  .question-mark { font-size: 1.12em; }
+  .question { font-size: clamp(34px, 6.2vw, 56px); max-width: 20ch; line-height: 1.06; letter-spacing: -0.02em; }
+  .question-yet { font-size: 1.14em; }
+  .question-mark { font-size: 1.14em; }
   .question-lead-punctus { width: 9px; margin-right: 2px; margin-left: 2px; }
   .maniculum { width: clamp(44px, 7vw, 64px); right: clamp(4px, 2vw, 16px); }
   .maniculum-lead { width: clamp(12px, 2vw, 24px); }
@@ -4031,9 +4160,9 @@ body {
   .marg-body { display: none; }
   .marg { max-width: min(40ch, 38vw); }
   .hero-svg { width: clamp(178px, 32vw, 248px); }
-  .question { font-size: clamp(28px, 6.4vw, 44px); max-width: 20ch; row-gap: 4px; }
-  .question-yet { font-size: 1.1em; }
-  .question-mark { font-size: 1.1em; }
+  .question { font-size: clamp(28px, 6.4vw, 44px); max-width: 18ch; row-gap: 4px; line-height: 1.08; }
+  .question-yet { font-size: 1.12em; }
+  .question-mark { font-size: 1.12em; }
   .guide-rule { width: 48px; height: 48px; }
   .candle-flame { width: clamp(36px, 5.4vw, 48px); top: 18px; opacity: 0.9; }
   .taper { width: clamp(110px, 32vw, 200px); height: clamp(190px, 32vh, 300px); top: 12%; filter: blur(9px); }
@@ -4090,9 +4219,9 @@ body {
   .hero-svg { width: 188px; }
   .candle-flame { width: 34px; top: 12px; opacity: 0.85; }
   .taper { width: clamp(90px, 36vw, 150px); height: clamp(150px, 28vh, 220px); top: 10%; filter: blur(7px); }
-  .question { font-size: clamp(22px, 7.2vw, 30px); max-width: 100%; line-height: 1.14; row-gap: 4px; }
-  .question-yet { font-size: 1.08em; }
-  .question-mark { font-size: 1.08em; }
+  .question { font-size: clamp(22px, 7.2vw, 30px); max-width: 100%; line-height: 1.14; row-gap: 4px; letter-spacing: -0.018em; }
+  .question-yet { font-size: 1.1em; }
+  .question-mark { font-size: 1.1em; }
   .question-lead-punctus { width: 7px; }
   .composition { gap: 12px; padding-bottom: clamp(20px, 5vw, 28px); }
   .rubric {
@@ -5596,16 +5725,27 @@ body {
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(7.5px, 0.72vw, 9px);
-  letter-spacing: 0.24em;
+  letter-spacing: 0.26em;
   text-transform: lowercase;
   color: var(--gold);
   opacity: 0;
-  margin-top: clamp(1px, 0.2vw, 4px);
+  margin-top: clamp(2px, 0.25vw, 5px);
+  padding-top: clamp(4px, 0.4vw, 7px);
+  border-top: 1px solid transparent;
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(217, 176, 116, 0.32) 50%,
+    transparent
+  );
+  background-position: top center;
+  background-size: 56px 1px;
+  background-repeat: no-repeat;
   transition: opacity 0.95s ease 3.35s;
 }
 
 .frame.ready .colophon-provenance {
-  opacity: 0.72;
+  opacity: 0.78;
 }
 
 /* ----- Reduced motion overrides for iteration 29 ----- */

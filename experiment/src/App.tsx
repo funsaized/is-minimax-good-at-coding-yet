@@ -2150,6 +2150,35 @@ function ManiculumFinis({ active }: { active: boolean }) {
 // Drawn in vermilion italic, sized to the line, with a hairline that
 // fades from vermilion to ink-soft so the mark reads as part of the
 // manuscript rather than a separate annotation.
+// ChapterDivider — a small composed mark between the hero emblem and
+// the question block. Three pieces reading as a single quiet ornament:
+// a thin gold rule drawing outward from the center on each side, a
+// vermilion four-pointed star at the pivot, and two tiny gold pips
+// tucked into the ends of the rules. Sits as the chapter's formal
+// transition from "the emblem above" to "the text below" — the place
+// where the chapter spine opens its arms to receive the question.
+// Pairs thematically with the FolioOpener that sits between the kicker
+// and the question, so the chapter reads as: emblem → divider → kicker
+// → opener → question. The whole mark draws in once the chapter has
+// settled, with the rules growing outward from the central star.
+function ChapterDivider() {
+  return (
+    <div className="chapter-divider" aria-hidden="true">
+      <span className="chapter-divider-rule chapter-divider-rule-l" />
+      <span className="chapter-divider-mark">
+        <svg viewBox="0 0 12 12" focusable="false">
+          <path
+            d="M 6 0.6 L 6.94 4.6 L 11.4 6 L 6.94 7.4 L 6 11.4 L 5.06 7.4 L 0.6 6 L 5.06 4.6 Z"
+            className="chapter-divider-star"
+          />
+          <circle cx="6" cy="6" r="0.95" className="chapter-divider-pip" />
+        </svg>
+      </span>
+      <span className="chapter-divider-rule chapter-divider-rule-r" />
+    </div>
+  )
+}
+
 function ReplyPilcrow() {
   return (
     <span className="reply-pilcrow" aria-hidden="true">
@@ -3277,6 +3306,7 @@ export function App() {
             <span className="hero-question-link" aria-hidden="true" />
           </button>
           </div>
+             <ChapterDivider />
              <div className="question-block">
              <ChapterStamp />
              <VineCorner position="tl" />
