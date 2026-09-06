@@ -851,6 +851,143 @@ function DriftConstellation() {
   )
 }
 
+// Stellatum — a delicate hand-drawn star chart that sits behind the hero
+// question mark, completing the chapter's small "observatory." Where the
+// horologium charts the hour of reading and the speculum charts the
+// configuration of the heavens, the Stellatum is the night sky those
+// instruments observe — the celestial backdrop the question mark floats
+// in, painted faintly on the parchment itself. Twenty-one small four-
+// pointed stars in gold, vermilion, and the dim cool of distant stars,
+// with three faint constellation lines drawn between the brighter
+// ones, each star twinkling on its own cadence. Parallaxes gently
+// with the reader's pointer so the sky feels suspended in depth rather
+// than flush with the question. Fades in after the speculum has settled,
+// once the chapter's instruments are laid out, so the reader reads the
+// Stellatum as part of the same composed ensemble.
+
+type StellatumStar = {
+  cx: number
+  cy: number
+  r: number
+  phase: number
+  twinkle: number
+  tone: 'gold' | 'vermilion' | 'cool'
+}
+
+const STELLATUM_STARS: StellatumStar[] = [
+  // Top arc — small stars above the bowl
+  { cx: 122, cy:  20, r: 1.6, phase: 0.0, twinkle: 5.6, tone: 'gold' },
+  { cx:  68, cy:  46, r: 1.2, phase: 1.4, twinkle: 6.4, tone: 'gold' },
+  { cx: 176, cy:  54, r: 1.0, phase: 2.8, twinkle: 7.2, tone: 'cool' },
+  // Side stars in the bowl's height
+  { cx:  44, cy: 122, r: 1.3, phase: 0.7, twinkle: 6.8, tone: 'gold' },
+  { cx: 198, cy: 126, r: 1.2, phase: 3.2, twinkle: 5.4, tone: 'vermilion' },
+  { cx:  86, cy: 144, r: 0.9, phase: 4.4, twinkle: 7.6, tone: 'cool' },
+  // Wide middle stars
+  { cx:  28, cy: 188, r: 1.8, phase: 1.0, twinkle: 6.0, tone: 'gold' },
+  { cx: 212, cy: 194, r: 1.7, phase: 2.2, twinkle: 7.0, tone: 'vermilion' },
+  { cx: 156, cy: 184, r: 1.0, phase: 3.6, twinkle: 5.8, tone: 'cool' },
+  { cx:  60, cy: 230, r: 1.3, phase: 0.4, twinkle: 6.6, tone: 'gold' },
+  { cx: 184, cy: 242, r: 1.1, phase: 5.0, twinkle: 7.4, tone: 'cool' },
+  // Lower arc — under the stem
+  { cx: 114, cy: 264, r: 1.5, phase: 1.8, twinkle: 6.2, tone: 'gold' },
+  { cx:  44, cy: 288, r: 1.0, phase: 4.0, twinkle: 7.0, tone: 'gold' },
+  { cx: 198, cy: 294, r: 1.2, phase: 2.6, twinkle: 5.6, tone: 'vermilion' },
+  { cx:  72, cy: 320, r: 1.3, phase: 3.4, twinkle: 6.8, tone: 'cool' },
+  { cx: 168, cy: 326, r: 1.0, phase: 0.8, twinkle: 7.6, tone: 'gold' },
+  { cx: 122, cy: 350, r: 1.4, phase: 4.6, twinkle: 6.4, tone: 'gold' },
+  // Faint dust-stars — the four-pointed glints, not real stars
+  { cx:  18, cy: 162, r: 0.55, phase: 5.8, twinkle: 8.0, tone: 'cool' },
+  { cx: 224, cy: 168, r: 0.55, phase: 4.4, twinkle: 7.8, tone: 'cool' },
+  { cx:  30, cy: 248, r: 0.5,  phase: 6.2, twinkle: 8.4, tone: 'gold' },
+  { cx: 218, cy: 254, r: 0.5,  phase: 5.4, twinkle: 8.2, tone: 'gold' },
+]
+
+// Constellation lines — three very faint hairlines connecting a few
+// of the brighter stars, like the draughtsman's constellation lines
+// in an almanac. Drawn after the stars are visible, so the chart reads
+// as a single composed backdrop.
+const STELLATUM_LINES = [
+  'M 68 46 Q 44 110 44 188 Q 50 250 60 288',
+  'M 176 54 Q 200 120 212 194 Q 200 260 198 294',
+  'M 122 20 Q 100 100 122 188 Q 142 264 122 350',
+]
+
+function Stellatum() {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      el.style.setProperty('--stell-x', '0')
+      el.style.setProperty('--stell-y', '0')
+      return
+    }
+    let raf = 0
+    let tx = 0
+    let ty = 0
+    let px = 0
+    let py = 0
+    const onMove = (e: PointerEvent) => {
+      const w = window.innerWidth || 1
+      const h = window.innerHeight || 1
+      tx = (e.clientX - w / 2) / (w / 2)
+      ty = (e.clientY - h / 2) / (h / 2)
+    }
+    const tick = () => {
+      px += (tx - px) * 0.04
+      py += (ty - py) * 0.04
+      el.style.setProperty('--stell-x', px.toFixed(3))
+      el.style.setProperty('--stell-y', py.toFixed(3))
+      raf = requestAnimationFrame(tick)
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    raf = requestAnimationFrame(tick)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+  return (
+    <div className="stellatum" aria-hidden="true" ref={ref}>
+      <svg
+        viewBox="0 0 240 400"
+        preserveAspectRatio="xMidYMid meet"
+        className="stellatum-svg"
+      >
+        <g className="stellatum-lines">
+          {STELLATUM_LINES.map((d, i) => (
+            <path
+              key={i}
+              d={d}
+              className="stellatum-line"
+              pathLength="100"
+              style={{ '--li': i } as CSSProperties}
+            />
+          ))}
+        </g>
+        <g className="stellatum-stars">
+          {STELLATUM_STARS.map((s, i) => (
+            <path
+              key={i}
+              className={`stellatum-star stellatum-star-${s.tone}`}
+              d={`M ${s.cx} ${s.cy - s.r * 4.2} L ${s.cx + s.r * 1.25} ${s.cy - s.r * 1.25} L ${s.cx + s.r * 4.2} ${s.cy} L ${s.cx + s.r * 1.25} ${s.cy + s.r * 1.25} L ${s.cx} ${s.cy + s.r * 4.2} L ${s.cx - s.r * 1.25} ${s.cy + s.r * 1.25} L ${s.cx - s.r * 4.2} ${s.cy} L ${s.cx - s.r * 1.25} ${s.cy - s.r * 1.25} Z`}
+              style={
+                {
+                  '--star-i': i,
+                  '--star-phase': `${s.phase}s`,
+                  '--star-twinkle': `${s.twinkle}s`,
+                } as CSSProperties
+              }
+            />
+          ))}
+        </g>
+      </svg>
+    </div>
+  )
+}
+
 // LegiMark — a small composed vermilion ink-mark that blooms above the
 // colophon's "legi · mmxxvi" provenance once the reader has lingered on
 // the page long enough that the reading counts as a sitting. A thin
@@ -3295,6 +3432,7 @@ export function App() {
           <ChapterTitle />
           <Fleuron />
           <div className="hero-frame">
+            <Stellatum />
             <Horologium wrapRef={horologiumRef} />
             <Speculum wrapRef={speculumRef} />
             <MarginalRubric />

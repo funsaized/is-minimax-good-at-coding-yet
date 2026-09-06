@@ -1,24 +1,12 @@
 # Changelog
 
-## Iteration 55
+## Iteration 56
 
-Retired three manicula, the eye motif, and a redundant "?"; gave the colophon a composed scholar's sigillum.
+A composed celestial backdrop for the hero — twenty-one hand-drawn stars and three constellation lines fill the sky the chapter's instruments observe.
 
-### Composition
-- Retired the three manicula (the right-margin reader's hand at the question, the paired left-margin hand at the answer, and the upward-pointing hand at the chapter's foot). The chapter's narrative is now carried by text rather than by gestures.
-- Retired the scholar's oculus in the colophon. Replaced it with a composed `Sigillum` — a round seal with a thin gold border, a dashed inner ring, a vermilion four-pointed star at the centre, "sigillum" along the upper rim and "fol · xviii" along the lower. Parallaxes gently with the reader's pointer so the colophon keeps its quiet life.
-- Retired the right-margin `QuaeroCallout` (a second drawn "?" redundant with the question's own terminal).
-- Retired the left-margin `VideAnnotation` and the bottom-right `InkFleck` cluster.
-- Simplified the hero `auriole` to its soft radial glow, removing the dashed trace circle and the four compass pips so the question mark reads as the chapter's only emblem.
+- Added **Stellatum**, a delicate star-chart backdrop that sits behind the hero question mark. Twenty-one four-pointed stars (gold, vermilion, and cool tones), three faint constellation lines, each star twinkling on its own phase, parallaxes gently with the reader's pointer.
+- Tightened the **chapter body's vertical rhythm** — increased the gap between answer, reply, footnote, tail-piece, explicit, and intellexi so the chapter's textual core breathes more deliberately.
+- Brightened the **Stellatum constellation lines** when the reader engages with the question, so the celestial field leans in as the candle flares.
+- Honoured reduced-motion preference: the parallax and twinkle gracefully bow out; the stars remain visible as a static chart.
 
-### Typography & color
-- Loosened the question's letter-spacing slightly (-`0.018em`), lifted its size (now `clamp(48px, 6.8vw, 90px)`), and widened its measure to `24ch` with `text-wrap: balance` so the line breathes more confidently. The chapter title now reads as one composed sentence.
-- Tightened the answer's letter-spacing a hair and nudged its line-height to `1.6` so the manuscript's reply reads cleaner.
-- Refined the stage's vertical rhythm — the chapter now sits on a wider, slightly more luminous warm pool.
-
-### Responsive
-- Tightened the mobile composition: the question gets a touch of negative letter-spacing at narrow widths, the colophon sits closer to the page, and the new `Sigillum` scales with the rest of the marks.
-
-### Notes
-- Built `npm run build` clean (`tsc --noEmit && vite build`). CSS: 164.6 kB → 144.3 kB. JS: 263.6 kB → 257.2 kB.
-- Reduced-motion paths preserved: the sigillum honours `prefers-reduced-motion` and holds its centred position.
+Preserved visible title and document title: `is Minimax M3 good at frontend yet?`

@@ -1917,6 +1917,140 @@ body {
   50%      { opacity: 0.74; transform: scale(1.032); }
 }
 
+/* ----- Stellatum (the chapter's small observatory backdrop) -----
+ * Iteration 56 composes a delicate hand-drawn star chart that sits
+ * behind the hero question mark. Where the horologium charts the hour
+ * and the speculum charts the heavens, the Stellatum is the sky those
+ * instruments observe — a faint celestial field the question mark floats
+ * in. Twenty-one small four-pointed stars and three faint constellation
+ * lines, each star twinkling on its own cadence. Parallaxes gently with
+ * the reader's pointer so the sky feels suspended in depth rather than
+ * flush with the question. Fades in once the speculum has settled, so
+ * the reader reads it as part of the same composed ensemble. */
+
+.stellatum {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transform: translate(
+    calc(var(--stell-x, 0) * 5px),
+    calc(var(--stell-y, 0) * 7px)
+  );
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform, opacity;
+  animation: stellatumFadeIn 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.4s forwards;
+}
+
+@keyframes stellatumFadeIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.stellatum-svg {
+  width: clamp(214px, 28.4vw, 332px);
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.stellatum-lines {
+  opacity: 0;
+  transition: opacity 1.6s ease 4.6s;
+}
+
+.composition.ready .stellatum-lines {
+  opacity: 1;
+}
+
+.stellatum-line {
+  fill: none;
+  stroke: var(--gold-deep);
+  stroke-width: 0.42;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  transition:
+    stroke-dashoffset 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) calc(4.6s + var(--li, 0) * 0.32s),
+    opacity 0.9s ease calc(4.6s + var(--li, 0) * 0.32s);
+}
+
+.composition.ready .stellatum-line {
+  opacity: 0.32;
+  stroke-dashoffset: 0;
+}
+
+.stellatum-star {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+.stellatum-star-gold      { fill: var(--gold); }
+.stellatum-star-vermilion { fill: var(--vermilion); }
+.stellatum-star-cool      { fill: var(--cool); }
+
+.composition.ready .stellatum-star {
+  animation:
+    stellatumStarIn 0.9s cubic-bezier(0.2, 1.2, 0.4, 1) calc(4.4s + var(--star-i) * 0.05s) forwards,
+    stellatumTwinkle var(--star-twinkle) ease-in-out infinite;
+  animation-delay:
+    calc(4.4s + var(--star-i) * 0.05s),
+    calc(5.6s + var(--star-phase));
+}
+
+@keyframes stellatumStarIn {
+  0%   { opacity: 0; transform: scale(0.2); }
+  100% { opacity: 0.78; transform: scale(1); }
+}
+
+@keyframes stellatumTwinkle {
+  0%, 100% { opacity: 0.72; transform: scale(1); }
+  50%      { opacity: 0.32; transform: scale(0.82); }
+}
+
+/* The reader's attention draws the constellation lines slightly
+   brighter when they approach the question. */
+.composition.is-pointing .stellatum-line {
+  opacity: 0.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stellatum {
+    transform: none;
+    animation: none;
+    opacity: 1;
+    transition: opacity 0.4s ease 0.6s;
+  }
+  .stellatum-line {
+    transition: opacity 0.4s ease, stroke-dashoffset 0.8s ease;
+    stroke-dashoffset: 0;
+  }
+  .composition.ready .stellatum-line {
+    opacity: 0.32;
+  }
+  .stellatum-star {
+    opacity: 0;
+    transition: opacity 0.5s ease calc(0.4s + var(--star-i) * 0.04s);
+  }
+  .composition.ready .stellatum-star {
+    opacity: 0.6;
+    animation: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .stellatum-svg { width: clamp(200px, 56vw, 280px); }
+}
+
+@media (max-width: 520px) {
+  .stellatum-svg { width: 78vw; max-width: 240px; }
+}
+
 /* The hero's main "?" curve. Drawn by an unseen quill on page load:
    the stroke begins hidden, then traces the question mark from the
    left of the bowl all the way to the bottom of the stem, like ink
@@ -8173,7 +8307,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(6px, 0.55vw, 11px);
+  gap: clamp(8px, 0.85vw, 14px);
   width: 100%;
   margin: clamp(4px, 0.5vw, 10px) 0 0;
   padding: 0;
