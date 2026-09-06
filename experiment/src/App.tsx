@@ -679,6 +679,44 @@ function DriftConstellation() {
   )
 }
 
+// LegiMark — a small composed vermilion ink-mark that blooms above the
+// colophon's "legi · mmxxvi" provenance once the reader has lingered on
+// the page long enough that the reading counts as a sitting. A thin
+// gold rule and a single painted drop with a tiny secondary pip, set as
+// the page's own record that a reader has dwelt. Sits between the
+// inkpot-and-quill and the provenance, completing the colophon's small
+// vertical chain: inkpot → oculus → legi-mark → legi · mmxxvi.
+function LegiMark({ visible }: { visible: boolean }) {
+  return (
+    <span
+      className={`legi-mark ${visible ? 'is-on' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 38 10" focusable="false">
+        <line x1="2" y1="5" x2="22" y2="5" className="legi-mark-rule" />
+        <circle cx="3" cy="5" r="0.45" className="legi-mark-pip legi-mark-pip-l" />
+        <circle cx="22" cy="5" r="0.45" className="legi-mark-pip legi-mark-pip-r" />
+        <path
+          d="M 25 5 L 31 1.6 L 28.5 5 L 31 8.4 Z"
+          className="legi-mark-drop"
+        />
+        <circle cx="31" cy="5" r="0.95" className="legi-mark-drop-pip" />
+      </svg>
+    </span>
+  )
+}
+
+// ParchmentBreath — a quiet warm pulse that sits behind the frame and
+// breathes in time with the candle's long rhythm. The candle already
+// flickers; this is its wider field — a slow opacity pulse on a soft
+// warm pool that sits above the composition, so the page feels held
+// rather than static. Hidden on reduced-motion devices.
+function ParchmentBreath() {
+  return <span className="parchment-breath" aria-hidden="true" />
+}
+
+
+
 // Taper — a faint candlelight beam falling onto the question mark from above.
 // Iteration 40 widens the beam into a softer, more diffused cone so the
 // candle feels like the page's true light source. Stops are eased so the
@@ -1209,9 +1247,17 @@ function Maniculum({ active }: { active: boolean }) {
 // being read at this hour, by this light (the candle above). The
 // whole dial draws in slowly on page load, like an instrument being
 // laid out at the start of a reading session.
-function Horologium() {
+function Horologium({
+  wrapRef,
+}: {
+  wrapRef?: RefObject<HTMLElement | null>
+}) {
   return (
-    <aside className="horologium" aria-label="the hour of reading">
+    <aside
+      ref={wrapRef}
+      className="horologium"
+      aria-label="the hour of reading"
+    >
       <svg viewBox="0 0 40 32" className="horologium-svg" aria-hidden="true" focusable="false">
         {/* Dial face — a hairline semicircle, upper half */}
         <path
@@ -1241,14 +1287,19 @@ function Horologium() {
           x2="20"
           y2="19.5"
         />
-        {/* Shadow — a vermilion hairline cast toward the hour of reading */}
-        <line
-          className="horologium-shadow"
-          x1="20"
-          y1="20"
-          x2="27.5"
-          y2="22.6"
-        />
+        {/* Shadow arm — the vermilion hairline is wrapped in a group
+            that rotates around the gnomon tip, so the shadow sweeps
+            the dial face as the reading hour advances. Driven by the
+            --shadow-angle custom property set in JS. */}
+        <g className="horologium-shadow-arm">
+          <line
+            className="horologium-shadow"
+            x1="20"
+            y1="19.5"
+            x2="27.5"
+            y2="22.6"
+          />
+        </g>
         {/* Hour pip — a vermilion drop at the dial's east point */}
         <circle
           className="horologium-pip"
@@ -1282,7 +1333,11 @@ function Horologium() {
 // laid out together at the start of a reading session; the star
 // then twinkles faintly, like a still constellation on a clear
 // manuscript evening.
-function Speculum() {
+function Speculum({
+  wrapRef,
+}: {
+  wrapRef?: RefObject<HTMLElement | null>
+}) {
   const ticks = Array.from({ length: 12 }, (_, i) => {
     const a = (i * 30 - 90) * Math.PI / 180
     return {
@@ -1294,7 +1349,11 @@ function Speculum() {
     }
   })
   return (
-    <aside className="speculum" aria-label="the configuration of the heavens">
+    <aside
+      ref={wrapRef}
+      className="speculum"
+      aria-label="the configuration of the heavens"
+    >
       <svg viewBox="0 0 56 56" className="speculum-svg" aria-hidden="true" focusable="false">
         <defs>
           <radialGradient id="speculum-bloom-grad" cx="50%" cy="50%" r="50%">
@@ -1334,11 +1393,13 @@ function Speculum() {
           <circle cx="28" cy="44" r="2.4" className="speculum-moon-disc" />
           <circle cx="28.9" cy="43.5" r="2.0" className="speculum-moon-shadow" />
         </g>
-        <g className="speculum-star-group">
-          <path
-            d="M 44 16 L 44.5 17.2 L 45.7 17.5 L 44.5 17.8 L 44 19 L 43.5 17.8 L 42.3 17.5 L 43.5 17.2 Z"
-            className="speculum-star"
-          />
+        <g className="speculum-star-orbit">
+          <g className="speculum-star-group">
+            <path
+              d="M 44 16 L 44.5 17.2 L 45.7 17.5 L 44.5 17.8 L 44 19 L 43.5 17.8 L 42.3 17.5 L 43.5 17.2 Z"
+              className="speculum-star"
+            />
+          </g>
         </g>
       </svg>
       <span className="speculum-label">
@@ -2483,6 +2544,7 @@ export function App() {
   const [spinePulseKey, setSpinePulseKey] = useState(0)
   const [spineSealed, setSpineSealed] = useState(false)
   const [bifolioAttending, setBifolioAttending] = useState(false)
+  const [legiOn, setLegiOn] = useState(false)
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
@@ -2491,6 +2553,8 @@ export function App() {
   const heroBoxRef = useRef<DOMRect | null>(null)
   const heroRef = useRef<HTMLButtonElement>(null)
   const flameWrapRef = useRef<HTMLSpanElement>(null)
+  const horologiumRef = useRef<HTMLElement | null>(null)
+  const speculumRef = useRef<HTMLElement | null>(null)
   const flameWarmthRef = useRef(0)
   const waveTimeoutsRef = useRef<number[]>([])
 
@@ -2718,6 +2782,55 @@ export function App() {
       if (leaveTimer) window.clearTimeout(leaveTimer)
     }
   }, [bifolioAttending, reduced])
+
+  // Legi mark — a quiet vermilion ink-mark that blooms above the
+  // colophon's "legi · mmxxvi" provenance once the reader has lingered
+  // long enough that the reading counts as a sitting. The chapter is
+  // "legi" only when there has been a reader; the mark waits a
+  // deliberate pause (longer than the answer-reply-footnote cadence)
+  // and then blooms in once, like a quiet record of the reading.
+  useEffect(() => {
+    if (legiOn) return
+    const t = window.setTimeout(() => setLegiOn(true), reduced ? 0 : 22000)
+    return () => window.clearTimeout(t)
+  }, [legiOn, reduced])
+
+  // Reading hour — the horologium shadow and the speculum star track
+  // the reader's session time, so the two marginal instruments come
+  // alive and the page records its own hour. The shadow sweeps from
+  // dawn (-85°) to dusk (+85°) across the dial face; the star makes one
+  // full orbit around the speculum in the same period, so the hour and
+  // the heavens stay paired. The motion starts once the instruments
+  // have finished fading in (so the page settles before it begins to
+  // keep time) and respects reduced-motion preference — both
+  // instruments hold their static position when motion is reduced.
+  useEffect(() => {
+    if (reduced) return
+    let raf = 0
+    let alive = true
+    const t0 = performance.now()
+    const PERIOD_MS = 180000
+    const tick = () => {
+      if (!alive) return
+      const elapsed = (performance.now() - t0) % PERIOD_MS
+      const norm = elapsed / PERIOD_MS
+      const shadowAngle = -85 + norm * 170
+      const starAngle = norm * 360
+      const h = horologiumRef.current
+      const s = speculumRef.current
+      if (h) h.style.setProperty('--shadow-angle', `${shadowAngle.toFixed(2)}deg`)
+      if (s) s.style.setProperty('--star-angle', `${starAngle.toFixed(2)}deg`)
+      raf = requestAnimationFrame(tick)
+    }
+    const start = window.setTimeout(() => {
+      raf = requestAnimationFrame(tick)
+    }, 5600)
+    return () => {
+      alive = false
+      cancelAnimationFrame(raf)
+      window.clearTimeout(start)
+    }
+  }, [reduced])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -3089,6 +3202,7 @@ export function App() {
       <Watermark />
       <DriftConstellation />
       <Ribbon />
+      <ParchmentBreath />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
         <CandleFlame wrapRef={flameWrapRef} flaring={pulsing} />
@@ -3136,8 +3250,8 @@ export function App() {
           <ChapterCrown />
           <Fleuron />
           <div className="hero-frame">
-            <Horologium />
-            <Speculum />
+            <Horologium wrapRef={horologiumRef} />
+            <Speculum wrapRef={speculumRef} />
             <MarginalRubric />
             <button
               type="button"
@@ -3438,6 +3552,7 @@ export function App() {
             annotavi={lectorisDone}
           />
           <ScholarOculus />
+          <LegiMark visible={legiOn} />
           <span className="colophon-provenance">legi · mmxxvi</span>
         </div>
       </div>

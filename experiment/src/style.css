@@ -5790,6 +5790,109 @@ body {
   .colophon-provenance { display: none; }
 }
 
+/* ----- Iteration 51: legi mark (colophon "legi" sitter mark) -----
+ * A small composed vermilion ink-mark that blooms above the
+ * colophon's "legi · mmxxvi" provenance once the reader has lingered
+ * on the page long enough that the reading counts as a sitting. A
+ * thin gold rule with two end-pips, and a single painted vermilion
+ * drop with a tiny secondary pip — the page's own quiet record that
+ * someone read this. Sits between the inkpot-and-quill / scholar
+ * oculus and the provenance, completing the colophon's small
+ * vertical chain. Hidden until JS sets the is-on class. */
+.legi-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: clamp(2px, 0.2vw, 4px);
+  margin-bottom: clamp(1px, 0.1vw, 2px);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 1.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  pointer-events: none;
+}
+
+.legi-mark.is-on {
+  opacity: 0.82;
+  transform: translateY(0);
+}
+
+.legi-mark svg {
+  width: clamp(28px, 2.4vw, 38px);
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.legi-mark-rule {
+  stroke: var(--gold);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.legi-mark-pip {
+  fill: var(--gold);
+  opacity: 0.6;
+}
+
+.legi-mark-drop {
+  fill: var(--vermilion);
+  filter: drop-shadow(0 0 2px rgba(176, 83, 58, 0.45));
+}
+
+.legi-mark-drop-pip {
+  fill: var(--vermilion-bright);
+  filter: drop-shadow(0 0 2.5px rgba(198, 104, 74, 0.6));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .legi-mark { opacity: 0.82; transform: none; transition: none; }
+}
+
+/* ----- Iteration 51: parchment breath (held-page warmth pulse) -----
+ * A very soft warm pool that sits behind the composition and breathes
+ * on the candle's long rhythm — the candle already flickers; this is
+ * its wider field, so the page feels held rather than static. The
+ * pulse is intentionally subtle: the warm pool sits above the
+ * composition and modulates in opacity, so the upper region of the
+ * page reads as a candle-lit reading area whose light is alive.
+ * Hidden entirely on reduced-motion devices, since there is no
+ * candle to breathe with. */
+.parchment-breath {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(
+      58% 38% at 50% 24%,
+      rgba(240, 212, 154, 0.06) 0%,
+      rgba(217, 176, 116, 0.025) 38%,
+      transparent 64%
+    );
+  opacity: 0;
+  animation:
+    parchmentBreathIn 2.4s ease 2.0s forwards,
+    parchmentBreath 13s ease-in-out 4.4s infinite;
+  mix-blend-mode: screen;
+  will-change: opacity;
+}
+
+@keyframes parchmentBreathIn {
+  to { opacity: 0.7; }
+}
+
+@keyframes parchmentBreath {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 0.92; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parchment-breath { animation: none; opacity: 0.78; }
+}
+
 /* ----- Iteration 30: a vide annotation, predicate rule, and quieter question -----
  *
  * The page gains one new authored mark — a small "vide" scholastic gloss
@@ -6629,6 +6732,32 @@ body {
   50%      { opacity: 0.45; }
 }
 
+/* ----- Living horologium (iteration 51) -----
+ * The shadow arm rotates around the gnomon tip as the reader's
+ * session time advances, so the sundial begins to keep the hour of
+ * reading. The JS sets --shadow-angle on the Horologium element; the
+ * arm follows that angle. Rotation transform-origin is the gnomon tip
+ * (20, 19.5) in the SVG's user space. Falls back to the static
+ * settled position (22.4°, the angle the original shadow already sat
+ * at) when --shadow-angle is not set, so the instrument still reads
+ * the same on first paint. */
+.horologium-shadow-arm {
+  transform-origin: 20px 19.5px;
+  transform: rotate(var(--shadow-angle, 22.4deg));
+}
+
+/* ----- Living speculum (iteration 51) -----
+ * The vermilion star orbits the dial face as the reader's session
+ * time advances, paired with the horologium's shadow so the hour and
+ * the heavens stay coupled. The JS sets --star-angle on the Speculum
+ * element; the orbit group rotates the star around the dial center
+ * (28, 28). Falls back to 0° (the star's drawn position) when the
+ * variable is not yet set. */
+.speculum-star-orbit {
+  transform-origin: 28px 28px;
+  transform: rotate(var(--star-angle, 0deg));
+}
+
 /* ----- Question line typography refinements -----
    Tighten the kerning of "is" lead and the letter-spacing of "Minimax M3"
    so the line reads as a single composed line. The existing pause-dots
@@ -6704,6 +6833,7 @@ body {
   .horologium-tick-sm { animation: none; opacity: 0.72; }
   .horologium-gnomon { animation: none; opacity: 0.82; }
   .horologium-shadow { animation: none; opacity: 0.7; stroke-dashoffset: 0; }
+  .horologium-shadow-arm { transform: rotate(22.4deg); }
   .horologium-pip { animation: none; opacity: 0.92; transform: scale(1); }
   .horologium-center { animation: none; opacity: 0.7; }
   .horologium-label { animation: none; opacity: 0.8; }
@@ -6995,6 +7125,7 @@ body {
   .speculum-center { animation: none; opacity: 0.7; }
   .speculum-sun, .speculum-moon { animation: none; opacity: 1; transform: scale(1); }
   .speculum-star-group { animation: none; opacity: 0.95; transform: scale(1); }
+  .speculum-star-orbit { transform: rotate(0deg); }
   .speculum-label { animation: none; opacity: 0.8; }
 }
 

@@ -1,16 +1,15 @@
-# Changelog
+# Iteration 51 — The Reading Hour
 
-## Iteration 50 — A composed opening, refined question
+Composed the chapter's living hour: the horologium shadow and the speculum star now track the reader's session time, a quiet parchment breath pulses behind the composition, and a vermilion "legi" mark blooms above the colophon's provenance after a sitting.
 
-Composed the chapter's true opening with a new chapter-divider mark, and refined the question's display typography for a more confident, elegant manuscript rhythm.
+## What changed
+- **Living horologium** — the shadow arm rotates around the gnomon tip from dawn (-85°) to dusk (+85°) over a 180-second sweep, so the sundial begins to keep the hour of reading.
+- **Living speculum** — the vermilion star orbits the dial face in the same period, paired with the shadow so the hour and the heavens stay coupled.
+- **Parchment breath** — a soft warm pool behind the composition pulses on a 13-second cycle, the wider field of the candle's flicker; the page reads as held rather than static.
+- **Legi mark** — a small composed gold-and-vermilion ink-mark above the colophon's "legi · mmxxvi" provenance; blooms in once after the reader has lingered, like the page's own quiet record that someone read this.
+- All four additions respect `prefers-reduced-motion`: the instruments hold their static positions, the breath is held at a steady opacity, and the legi mark is shown immediately.
 
-### Added
-- **Chapter divider** between the hero emblem and the question block. A small composed mark of two thin gold rules growing outward from a central vermilion four-pointed star with a gold pip at its heart, plus two end-pips settling into the rules' tips. Reads as the chapter's "the text begins here" gesture, pairing with the FolioOpener that sits between the kicker and the question so the chapter reads as emblem → divider → kicker → opener → question. The rules draw outward from the central star once the chapter has settled, and the mark warms gently when the reader engages the question.
-
-### Refined
-- **Question display typography** — slightly larger, tighter, more confident. Letter-spacing tightened to -0.022em, line-height to 1.04, named-subject letter-spacing to 0.13em, and a stronger text-shadow on both the climax word "yet" and the terminal "?". The line now reads as a single composed title rather than a stacked phrase.
-- **Mobile question rhythm** — the question's max-width on small screens tightens so the line breaks after "yet?" rather than splitting the predicate from its climax. Smaller-screen sizes also receive a tighter letter-spacing for cleaner optical balance.
-- **Colophon hierarchy** — slightly more generous gap between elements, the legi provenance gains a delicate top hairline above it, and the quaeritur › respondetur pair lifts in opacity for a more authored feel.
-
-### Preserved
-- Every existing manuscript element (horologium, speculum, oculus, maniculum, inkpot-and-quill, wax seal, chapter stamp, scholastic footnote, lectoris nota, candle flame, taper, ribbon, watermark, dust, bifolio, etc.) keeps its identity and timing. The new chapter-divider is purely additive — it slots into the empty space between the hero-frame and the question-block without displacing any existing element.
+## Files touched
+- `src/App.tsx` — ref forwarding on `Horologium` and `Speculum`, new `LegiMark` and `ParchmentBreath` components, a `useEffect` that drives `--shadow-angle` and `--star-angle` from session time, and a delayed `legiOn` flag.
+- `src/style.css` — `.horologium-shadow-arm`, `.speculum-star-orbit`, `.legi-mark`, `.parchment-breath`, and matching reduced-motion overrides.
+- `CHANGELOG.md` — this entry.
