@@ -9,37 +9,40 @@ import {
 } from 'react'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Iteration 72 — direction: "the chapter, opened."
+// Iteration 73 — direction: "the chapter, marked by its reader."
 //
-// The composition now reads as a single opened chapter page. Three new
-// touches strengthen what the existing pieces already imply:
+// The composition is refined into something that reads as a real,
+// annotated printed chapter. Three changes strengthen what the
+// existing pieces already imply:
 //
-//   1. Chapter heading — a small "cap. xviii" mark sits in the upper
-//      margin like a real chapter opener, with a printer's fleuron.
-//   2. Bookmark ribbon — a slim vermilion ribbon hangs from the page's
-//      upper edge, pinned through the folio number. Quiet detail;
-//      earns its place as the page's only ornament not in the reading
-//      order itself.
-//   3. The reading pace control moves from the colophon's foot up to
-//      sit directly beneath the question, where the reader's eye
-//      naturally falls after the title — and where it can answer
-//      the question rather than summarise the chapter.
-//
-// The answer's typography is also gently enlarged so the chapter's
-// voice carries the weight of the question it answers, and the
-// colophon's competing rules and seals are simplified into a single
-// clean signature line — chapter → reading pace → answer → body
-// cadence → colophon, in the order a scholar's reader would meet it.
+//   1. Marginal pilcrow — a small printer's reference mark (¶) sits
+//      in the left margin at the height of the question's verb,
+//      in vermilion, like a scholar's marginal hand pointing to the
+//      active word. Appears once the question has settled, fades to
+//      a quiet presence, and wiggles gently when the reader brings
+//      the cursor to it. Reads as the chapter having been read once
+//      already — by the printer, or by the last reader, or by the
+//      author.
+//   2. The hero (the big ?) is redrawn with cleaner bowl-to-stem
+//      proportions — a slightly wider bowl, a more graceful taper
+//      into the stem, and a stem that settles a touch lower so the
+//      dot reads as a natural continuation of the stroke rather
+//      than a separate mark.
+//   3. The reading pace control's "slow" state is upgraded from a
+//      coloured CSS dot to a hand-drawn vermilion ink-drop, the
+//      way a real reader would have a fresh ink-mark on the page
+//      after reading twice. The drop breathes softly while the
+//      pace is set to slow.
 // ─────────────────────────────────────────────────────────────────────────────
 
 // The hero question mark — a hand-drawn bowl that opens wider at the top,
 // tapers into the stem via a smooth curve, and finishes with a slightly
 // off-centre dot that reads as a natural continuation of the stroke.
 const HERO_PATH =
-  'M 64 112 C 44 -22 200 -22 180 112 C 172 184 130 170 126 222 C 124 244 124 262 124 284'
-const HERO_DOT = { cx: 124, cy: 310, r: 17 }
+  'M 60 116 C 40 -16 200 -16 180 116 C 173 180 134 174 124 226 C 121 248 121 270 121 288'
+const HERO_DOT = { cx: 121, cy: 316, r: 18 }
 const HERO_HIGHLIGHT_PATH =
-  'M 68 106 C 56 -8 184 -10 176 108'
+  'M 66 110 C 52 -2 188 -4 174 112'
 
 // Lettered dust — biased toward the question's own letters, with a few
 // manuscript abbreviations, so the candle-glow reads as illuminated
@@ -347,6 +350,32 @@ function PageGlow({ lit, flaring }: { lit: boolean; flaring: boolean }) {
   )
 }
 
+// ─── Marginal pilcrow (printer's reference mark) ──────────────────────────
+// A small vermilion pilcrow (¶) sits in the left margin at the height of
+// the question's verb, like a scholar's marginal hand pointing to the
+// active word. Drawn with proper serifs — a vertical stem, a top serif,
+// a bottom serif, and a hollow bowl on the upper right. Appears once the
+// question has settled; brightens and wiggles gently when the reader
+// brings the cursor to it; fades to a quiet presence in steady state.
+// Reads as the chapter having been read once already — by the printer,
+// or by the last reader, or by the author.
+function Pilcrow() {
+  return (
+    <span className="pilcrow" aria-hidden="true">
+      <svg viewBox="0 0 20 28" focusable="false" className="pilcrow-svg">
+        <path
+          fillRule="evenodd"
+          d="M 9.2 3.6 C 15.6 3.6 17.8 5.6 17.8 10 C 17.8 14.4 15.6 16.4 9.2 16.4 L 9.2 14.6 C 14.4 14.6 15.6 13.2 15.6 10 C 15.6 6.8 14.4 5.4 9.2 5.4 Z"
+          fill="currentColor"
+        />
+        <rect x="7" y="3.6" width="2.2" height="20.8" fill="currentColor" />
+        <path d="M 4.6 3 L 11.6 3 L 11.6 4.8 L 4.6 4.8 Z" fill="currentColor" />
+        <path d="M 4.6 24.4 L 11.6 24.4 L 11.6 26.2 L 4.6 26.2 Z" fill="currentColor" />
+      </svg>
+    </span>
+  )
+}
+
 // ─── Bookmark ribbon ────────────────────────────────────────────────────────
 // A slim vermilion ribbon hangs from the page's upper-right corner,
 // tucked behind the chapter heading. Pinned through the folio number,
@@ -516,7 +545,9 @@ function IntellexiNota({
 // answer at the page's pace; press again to slow the cadence (because
 // the chapter's reply asks the reader to read again, slower); press
 // once more to return to the page's pace. A real control with a real,
-// single behaviour.
+// single behaviour. In the slow state the pip becomes a hand-drawn
+// vermilion ink-drop, the way a real reader would have a fresh ink
+// mark on the page after reading twice.
 function ReadingPace({
   hasRead,
   slow,
@@ -545,7 +576,18 @@ function ReadingPace({
         onClick={onRead}
         aria-label={label}
       >
-        <span className="reading-pace-pip" aria-hidden="true" />
+        <span className="reading-pace-pip" aria-hidden="true">
+          {slow ? (
+            <svg viewBox="0 0 10 12" focusable="false" className="reading-pace-drop">
+              <path
+                d="M 5 0.6 C 5 0.6 1.4 4.6 1.4 7.8 C 1.4 10.2 3 11.4 5 11.4 C 7 11.4 8.6 10.2 8.6 7.8 C 8.6 4.6 5 0.6 5 0.6 Z"
+                fill="currentColor"
+              />
+            </svg>
+          ) : (
+            <span className="reading-pace-dot" />
+          )}
+        </span>
         <em className="reading-pace-latin">{latin}</em>
         <span className="reading-pace-sep" aria-hidden="true">·</span>
         <span className="reading-pace-gloss">{gloss}</span>
@@ -1102,6 +1144,7 @@ export function App() {
           </button>
 
           <div className="question-block">
+            <Pilcrow />
             <h1 className="question">
               <span className="question-line">
                 <em className="question-word question-lead-i" style={{ '--wi': 0 } as CSSProperties}>is</em>

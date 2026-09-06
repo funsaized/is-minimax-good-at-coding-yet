@@ -1,18 +1,14 @@
 /* ════════════════════════════════════════════════════════════════════════════
- * Iteration 72 — direction: "the chapter, opened."
+ * Iteration 73 — direction: "the chapter, marked by its reader."
  *
- * Three new touches strengthen what the existing pieces already imply:
- * a small chapter heading ("cap. xviii · de scriptore et lumine") in
- * the upper margin, a slim vermilion bookmark ribbon tucked behind it
- * on the page edge, and the reading pace control moved from the
- * colophon's foot to directly under the question where it answers
- * the title rather than summarising the chapter. The answer's
- * typography is gently enlarged and a slim rule sits above it as a
- * printer's separator. The colophon's competing seals are pruned to
- * one rule, the quaeritur › responditur pair, the inkpot, and the
- * provenance — chapter opener → candle → hero → question → reading
- * pace → answer → body cadence → colophon, in the order a scholar's
- * reader would meet it.
+ * The composition is refined into something that reads as a real,
+ * annotated printed chapter. Three coordinated changes strengthen what
+ * the existing pieces already imply: a small vermilion pilcrow (¶)
+ * sits in the left margin next to the question's active verb as a
+ * printer's reference mark; the hero's bowl and stem are redrawn with
+ * cleaner proportions so the question reads as one continuous gesture;
+ * the reading pace's "slow" state becomes a hand-drawn ink-drop, the
+ * way a real reader would mark a chapter being read twice.
  * ════════════════════════════════════════════════════════════════════════════ */
 
 /* ----- Foundation ----- */
@@ -883,13 +879,89 @@ body {
    typesets itself in word-by-word after the hero has drawn, like a
    printer's setting-mark before the chapter begins. The "?"
    settles last, slightly larger and in vermilion, so the question
-   marks the climax of its own title. */
+   marks the climax of its own title. A small vermilion pilcrow
+   sits as a flex sibling in the left margin, like a printer's
+   reference mark pointing to the question's most active verb. */
 
 .question-block {
   display: flex;
+  flex-direction: row;
+  align-items: center;
   justify-content: center;
+  gap: clamp(16px, 2.4vw, 36px);
   width: 100%;
   margin-top: clamp(4px, 0.5vw, 10px);
+}
+
+/* ----- Marginal pilcrow (printer's reference mark) -----
+   A small vermilion pilcrow (¶) sits at the height of the question's
+   verb, like a scholar's marginal hand pointing to the active word.
+   Drawn with proper serifs — vertical stem, top serif, bottom serif,
+   and a hollow bowl on the upper right. Quiet in steady state;
+   brightens and wiggles gently when the reader brings the cursor to
+   it; fades up out of nothing once the question has settled. On
+   mobile it stacks above the question, like a chapter initial. */
+.pilcrow {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(13px, 1.2vw, 17px);
+  height: auto;
+  color: var(--vermilion-bright);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s,
+    transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s,
+    color 0.6s ease;
+  cursor: default;
+}
+
+.pilcrow-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 3px rgba(198, 104, 74, 0.4));
+  transition: filter 0.6s ease;
+}
+
+.composition.ready .pilcrow {
+  opacity: 0.58;
+  transform: translateY(0);
+}
+
+.stage.is-attending .pilcrow {
+  opacity: 0.78;
+}
+
+.pilcrow:hover {
+  opacity: 1;
+  animation: pilcrowWiggle 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.pilcrow:hover .pilcrow-svg {
+  filter: drop-shadow(0 0 6px rgba(198, 104, 74, 0.7));
+}
+
+@keyframes pilcrowWiggle {
+  0%   { transform: rotate(0deg); }
+  32%  { transform: rotate(-5deg) translateY(-0.5px); }
+  62%  { transform: rotate(4deg) translateY(0.5px); }
+  100% { transform: rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pilcrow {
+    transition: opacity 0.5s ease;
+    transform: none;
+  }
+  .composition.ready .pilcrow,
+  .stage.is-attending .pilcrow {
+    opacity: 0.7;
+    transform: none;
+  }
+  .pilcrow:hover { animation: none; }
 }
 
 .question {
@@ -1054,10 +1126,23 @@ body {
 
 .reading-pace-pip {
   align-self: center;
+  width: 12px;
+  height: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-deep);
+  transition:
+    color 0.5s ease,
+    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reading-pace-dot {
+  display: block;
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--gold-deep);
+  background: currentColor;
   box-shadow: 0 0 0 0 rgba(217, 176, 116, 0);
   transition:
     background 0.45s ease,
@@ -1065,16 +1150,50 @@ body {
     transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
+.reading-pace-drop {
+  width: 8px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 3px rgba(198, 104, 74, 0.5));
+  animation: dropSettle 0.7s cubic-bezier(0.4, 1.2, 0.4, 1),
+             dropBreathe 3.4s ease-in-out 0.7s infinite;
+  transform-origin: 50% 0%;
+}
+
 .reading-pace-btn:hover .reading-pace-pip,
 .reading-pace-btn:focus-visible .reading-pace-pip {
+  color: var(--gold-bright);
+}
+
+.reading-pace-btn:hover .reading-pace-dot,
+.reading-pace-btn:focus-visible .reading-pace-dot {
   background: var(--gold-bright);
   box-shadow: 0 0 8px rgba(240, 212, 154, 0.6);
-  transform: scale(1.25);
+  transform: scale(1.4);
 }
 
 .reading-pace-btn.is-slow .reading-pace-pip {
-  background: var(--vermilion-bright);
-  box-shadow: 0 0 0 3px rgba(217, 176, 116, 0.28);
+  color: var(--vermilion-bright);
+}
+
+.reading-pace-btn.is-slow:hover .reading-pace-pip,
+.reading-pace-btn.is-slow:focus-visible .reading-pace-pip {
+  color: var(--vermilion-bright);
+}
+
+.reading-pace-btn.is-slow:hover .reading-pace-drop {
+  filter: drop-shadow(0 0 5px rgba(198, 104, 74, 0.7));
+}
+
+@keyframes dropSettle {
+  0%   { transform: translateY(-4px) scale(0.6); opacity: 0.4; }
+  60%  { transform: translateY(1px) scale(1.06); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes dropBreathe {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 3px rgba(198, 104, 74, 0.5)); }
+  50%      { transform: scale(1.08); filter: drop-shadow(0 0 5px rgba(198, 104, 74, 0.7)); }
 }
 
 .reading-pace-rule {
@@ -1108,7 +1227,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .reading-pace { transition: none; opacity: 1; transform: none; }
   .reading-pace-rule { transition: opacity 0.2s ease; }
-  .reading-pace-pip { transition: none; }
+  .reading-pace-pip,
+  .reading-pace-dot,
+  .reading-pace-drop { transition: none; animation: none; transform: none; }
 }
 
 /* ----- Chapter body (the reading) ----- */
@@ -1541,6 +1662,8 @@ body {
 
 @media (max-width: 620px) {
   .composition { gap: 14px; padding-bottom: clamp(20px, 5vw, 28px); }
+  .question-block { flex-direction: column; gap: 10px; }
+  .pilcrow { width: 16px; }
   .question { font-size: clamp(30px, 6.4vw, 46px); max-width: 18ch; row-gap: 4px; line-height: 1.08; }
   .hero { margin-top: clamp(8px, 1.4vh, 16px); }
   .hero-svg { width: clamp(184px, 32vw, 256px); }

@@ -1,74 +1,11 @@
-# Changelog
+# Iteration 73 — the chapter, marked by its reader
 
-Opened the chapter: cap. xviii heading, vermilion bookmark ribbon, and reading pace lifted to sit under the question.
+Refined the chapter into something that reads as a real, annotated printed page: a vermilion pilcrow now sits in the left margin next to the question's active verb like a printer's reference mark; the hero question mark is redrawn with a wider bowl and a more graceful taper into the stem; the reading pace control's slow state becomes a hand-drawn ink-drop rather than a coloured dot.
 
-## Iteration 72 — "the chapter, opened"
+## Changes
 
-The composition now reads as a single opened chapter page. Three new
-touches strengthen what the existing pieces already imply, and a few
-existing elements are retuned to fit.
-
-### Added
-
-- **`ChapterHeading`** — a small italic "cap. xviii" mark with a
-  printer's fleuron either side, the chapter roman in gold, and the
-  Latin chapter title "de scriptore et lumine" in faint ink,
-  separated by thin fading rules. Hovers into view above the candle
-  as the page settles; the title collapses to just the caput mark on
-  small screens.
-- **`BookmarkRibbon`** — a slim vermilion ribbon hanging from the
-  page's upper-right edge with the folio "xviii" rendered
-  vertically down its centre in italic display serif. Drops into
-  place shortly after the chapter heading; its body catches a slow
-  brightness pulse so it reads as fabric, not flat colour. Tucked
-  further inward on tablet, shortened on phone.
-- **`CandleStation`** — a flex wrapper grouping the candle and
-  taper so the candle sits in an authored station with its own
-  vertical space rather than floating over the composition.
-- **`answer-rule`** — a thin gold separator above the answer that
-  fades in with the answer, the way a printer's rule sits between
-  a chapter title and its body.
-
-### Changed
-
-- Reading pace control (`lege / relege · read the answer`) relocated
-  from below the colophon to directly under the question. Pressing
-  the question now feels like turning a page rather than rewinding a
-  recording; the chapter body sits in its own breathing block below.
-- Question text sized up slightly (clamp `42→92px`, was `40→88px`)
-  and the question-mark scale a touch larger, so the title fills the
-  room the chapter-heading gains in the upper margin.
-- Answer typography enlarged (`19→24px`, was `17→21px`) and fronted
-  by the new separator rule; reply, footnote, intellexi, and
-  explicit typography retuned to the new answer size; column width
-  retuned so the answer reads as the chapter's voice rather than a
-  soft footnote.
-- Colophon pruned: the `xviii` signature mark, the `folio · xviii`
-  line, the wax seal, and the inner rule pair are removed. What
-  remains is one rule, the `quaeritur › respondetur` pair in gold
-  and vermilion, the inkpot-and-quill (slightly enlarged), the
-  `legi · mmxxvi` provenance, and a closing rule.
-- Hero `margin-top` retuned so the hero sits closer to the candle
-  station (which now reserves its own vertical space); the candle's
-  drop-ignition still reads as "the reader's arrival lighting the
-  page".
-
-### Responsive
-
-Breakpoints retuned at 880 / 620 / 520 / 380. Chapter heading title
-collapses under 620px; bookmark ribbon tucks further inward on
-tablet and shortens on phone; candle station height tapers from
-~200px desktop to ~70px on the narrowest phones; the taper is hidden
-under 520px.
-
-### Accessibility & motion
-
-- `prefers-reduced-motion: reduce`: the ribbon drop and brightness
-  pulse are disabled; all other animations continue to respect the
-  existing reduced-motion rules.
-- Reading-pace button remains keyboard-focusable; the chapter
-  heading, bookmark ribbon, candle dish, inkpot, and answer rule
-  remain `aria-hidden` decorative so they do not add to the
-  screen-reader narrative.
-- Bookmark, chapter heading, and answer rule use the existing warm
-  palette and obey the existing contrast rules.
+- **Marginal pilcrow.** A small printer's reference mark (¶) sits in the left margin at the height of "good at frontend" in the question. Drawn in vermilion with proper serifs — vertical stem, top and bottom serifs, and a hollow bowl. Quiet in steady state, brightens when the reader attends the chapter, wiggles gently on hover, and stacks above the question on mobile. The chapter now reads as having been touched by a reader.
+- **Hero redrawn.** The big question mark's bowl is widened and its curve into the stem is smoothed, so the bowl reads as a single gesture rather than a bowl-then-stem assembly. The dot sits slightly lower and a touch larger, reading as a natural continuation of the stroke.
+- **Reading pace, slow state.** The pip is replaced with a hand-drawn SVG ink-drop when the pace is set to slow. The drop settles in with a slight overshoot, then breathes softly while slow — the way a fresh ink mark on a real page would have a slight wet sheen.
+- **Mobile pilcrow stacking.** On screens narrower than 620px the pilcrow stacks above the question, centred, like a chapter initial.
+- **Reduced motion respected.** The pilcrow's wiggle and the ink-drop's breathing are disabled under `prefers-reduced-motion`; the marks still appear in their final states.
