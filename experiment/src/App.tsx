@@ -1985,6 +1985,34 @@ function FolioOpener() {
   )
 }
 
+// BodyOpener — a composed opening mark that crowns the chapter body
+// proper, parallel to FolioOpener at body scale. Two thin gold rules
+// draw outward from a small vermilion asterisk-petal motif with a
+// gold pip at its heart. Drawn in once the chapter has settled, just
+// above the AnswerIllumination, so the body opens as a single framed
+// scholarly passage rather than as a paragraph that simply appears.
+// Pairs with the ChapterCadence that closes the body (same star-pip
+// motif at the same scale) so the chapter's opening and closing
+// headpieces rhyme as composed marks of the same vocabulary — the
+// body opens with a single quiet gesture and closes with its twin.
+function BodyOpener() {
+  return (
+    <div className="body-opener" aria-hidden="true">
+      <span className="body-opener-rule body-opener-rule-l" />
+      <span className="body-opener-mark">
+        <svg viewBox="0 0 14 14" focusable="false">
+          <path
+            d="M 7 1.2 L 8.06 5.4 L 12.6 6 L 8.06 6.6 L 7 11.4 L 5.94 6.6 L 1.4 6 L 5.94 5.4 Z"
+            className="body-opener-star"
+          />
+          <circle cx="7" cy="6" r="1.05" className="body-opener-pip" />
+        </svg>
+      </span>
+      <span className="body-opener-rule body-opener-rule-r" />
+    </div>
+  )
+}
+
 // ChapterSpine — a thin vertical axis through the centerline of the
 // composition, deliberately understated: a column of small gold pin-
 // pricks running from above the hero down to the colophon. Two small
@@ -4254,6 +4282,7 @@ export function App() {
               <CodexFrame />
               <MarginBookmark />
               <ReadingTitle />
+              <BodyOpener />
               <AnswerIllumination lit={answerOn && answerChars >= ANSWER.length && !replyOn} />
               <p
                 className={`answer ${answerOn ? 'is-on' : ''}`}

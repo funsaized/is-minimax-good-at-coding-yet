@@ -2784,17 +2784,17 @@ body {
   align-items: baseline;
   justify-content: center;
   flex-wrap: wrap;
-  row-gap: clamp(2px, 0.3vw, 6px);
+  row-gap: clamp(4px, 0.55vw, 10px);
   column-gap: 0;
   font-family: var(--display);
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(48px, 7.2vw, 96px);
-  line-height: 1.02;
+  font-size: clamp(40px, 6.4vw, 88px);
+  line-height: 1.04;
   letter-spacing: -0.022em;
   text-align: center;
   color: var(--ink);
-  max-width: 22ch;
+  max-width: 24ch;
   margin: 0;
   text-wrap: balance;
   font-feature-settings: "kern" on, "liga" on, "calt" on, "salt" on, "dlig" on, "swsh" on;
@@ -3658,12 +3658,12 @@ body {
   padding: 0;
   font-family: var(--display);
   font-style: italic;
-  font-size: clamp(17px, 1.84vw, 24px);
+  font-size: clamp(19px, 2.05vw, 27px);
   line-height: 1.5;
   letter-spacing: 0.002em;
   color: var(--ink-soft);
   text-align: center;
-  max-width: 28ch;
+  max-width: 30ch;
   text-wrap: balance;
   opacity: 0;
   transform: translateY(4px);
@@ -3680,7 +3680,9 @@ body {
   justify-content: center;
   flex-wrap: wrap;
   gap: clamp(2px, 0.3vw, 5px);
-  text-shadow: 0 0 28px rgba(217, 176, 116, 0.08);
+  text-shadow:
+    0 0 28px rgba(217, 176, 116, 0.10),
+    0 0 56px rgba(240, 232, 218, 0.04);
   font-feature-settings: "kern" on, "liga" on, "calt" on, "dlig" on;
 }
 
@@ -3688,7 +3690,7 @@ body {
   opacity: 0.98;
   transform: translateY(0);
   max-height: 8em;
-  margin: clamp(38px, 4.2vw, 56px) 0 0;
+  margin: clamp(34px, 3.8vw, 52px) 0 0;
   color: var(--ink);
 }
 
@@ -3723,9 +3725,9 @@ body {
   align-items: flex-start;
   justify-content: center;
   flex: 0 0 auto;
-  width: clamp(34px, 3.4vw, 46px);
-  height: clamp(34px, 3.4vw, 46px);
-  margin-right: clamp(3px, 0.3vw, 5px);
+  width: clamp(38px, 3.85vw, 52px);
+  height: clamp(38px, 3.85vw, 52px);
+  margin-right: clamp(4px, 0.36vw, 6px);
   opacity: 0;
   transform: scale(0.4) rotate(-6deg);
   transform-origin: 50% 80%;
@@ -3744,12 +3746,13 @@ body {
   font-family: var(--display);
   font-style: italic;
   font-weight: 600;
-  font-size: clamp(34px, 3.4vw, 46px);
+  font-size: clamp(38px, 3.85vw, 52px);
   line-height: 1;
   color: var(--vermilion);
   text-shadow:
-    0 0 8px rgba(176, 83, 58, 0.32),
-    0 0 22px rgba(198, 104, 74, 0.16);
+    0 0 8px rgba(176, 83, 58, 0.36),
+    0 0 24px rgba(198, 104, 74, 0.20),
+    0 0 48px rgba(176, 83, 58, 0.10);
   letter-spacing: 0;
   display: inline-block;
   transform: translateY(-0.04em);
@@ -3828,12 +3831,12 @@ body {
   padding: 0;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(16.5px, 1.76vw, 22px);
+  font-size: clamp(17.5px, 1.95vw, 24px);
   line-height: 1.5;
   letter-spacing: 0.002em;
   color: var(--ink);
   text-align: center;
-  max-width: 30ch;
+  max-width: 32ch;
   text-wrap: balance;
   opacity: 0;
   transform: translateY(6px);
@@ -3845,7 +3848,9 @@ body {
     transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s,
     max-height 0.8s ease 0.05s,
     margin 0.8s ease 0.05s;
-  text-shadow: 0 0 32px rgba(217, 176, 116, 0.06);
+  text-shadow:
+    0 0 32px rgba(217, 176, 116, 0.08),
+    0 0 64px rgba(240, 232, 218, 0.04);
   font-feature-settings: "kern" on, "liga" on, "calt" on, "dlig" on;
 }
 
@@ -3853,7 +3858,7 @@ body {
   opacity: 0.98;
   transform: translateY(0);
   max-height: 10em;
-  margin: clamp(30px, 3.6vw, 46px) 0 0;
+  margin: clamp(28px, 3.4vw, 44px) 0 0;
 }
 
 .reply-rule {
@@ -4759,6 +4764,155 @@ body {
     margin-bottom: 6px;
   }
   .folio-opener-mark { width: 10px; height: 10px; }
+}
+
+/* ----- Body opener (chapter-body opening mark) -----
+ *
+ * Iteration 64 composes the chapter body's own opening mark, parallel
+ * to FolioOpener at body scale. Two thin gold rules draw outward from
+ * a small vermilion asterisk-petal motif with a gold pip at its heart.
+ * Sits just below the ReadingTitle inscription, so the chapter body
+ * opens with a single framed scholarly gesture before the answer
+ * speaks — the body's "the text begins here" mark. Drawn in once the
+ * ReadingTitle has settled, so the body's composed opening and the
+ * chapter's terminal cadence rhyme as marks of the same vocabulary:
+ * the page opens with one quiet gesture and closes with its twin. */
+
+.body-opener {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  margin: clamp(2px, 0.32vw, 6px) auto clamp(10px, 1.2vw, 18px);
+  width: clamp(150px, 22vw, 240px);
+  max-width: 70%;
+  opacity: 0;
+  transform: translateY(3px);
+  pointer-events: none;
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 3.0s,
+    transform 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) 3.0s;
+}
+
+.composition.ready .body-opener {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.body-opener-rule {
+  flex: 1 1 auto;
+  display: block;
+  height: 1px;
+  opacity: 0;
+  transform: scaleX(0.22);
+  transition:
+    opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 3.15s,
+    transform 1.15s cubic-bezier(0.2, 0.7, 0.2, 1) 3.15s;
+}
+
+.body-opener-rule-l {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-deep) 32%,
+    var(--gold) 64%,
+    var(--gold) 100%
+  );
+  transform-origin: 100% 50%;
+}
+
+.body-opener-rule-r {
+  background: linear-gradient(
+    -90deg,
+    transparent 0%,
+    var(--gold-deep) 32%,
+    var(--gold) 64%,
+    var(--gold) 100%
+  );
+  transform-origin: 0% 50%;
+}
+
+.composition.ready .body-opener-rule {
+  opacity: 0.62;
+  transform: scaleX(1);
+}
+
+.body-opener-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(12px, 1.4vw, 16px);
+  height: clamp(12px, 1.4vw, 16px);
+  flex: 0 0 auto;
+  opacity: 0;
+  transform: scale(0.32) rotate(-90deg);
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 3.42s,
+    transform 0.95s cubic-bezier(0.2, 1.2, 0.4, 1) 3.42s;
+  color: var(--vermilion);
+  filter: drop-shadow(0 0 3px rgba(176, 83, 58, 0.36));
+}
+
+.composition.ready .body-opener-mark {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.body-opener-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.body-opener-star {
+  fill: currentColor;
+}
+
+.body-opener-pip {
+  fill: var(--gold-bright);
+  filter: drop-shadow(0 0 2px rgba(240, 212, 154, 0.55));
+}
+
+/* When the reader engages the chapter, the body's opener warms —
+ * the page knows its chapter has been touched. */
+.composition.is-pointing .body-opener-mark {
+  color: var(--vermilion-bright);
+  filter: drop-shadow(0 0 5px rgba(198, 104, 74, 0.5));
+}
+
+/* When the reader has understood the chapter, the body's opener
+   settles into a steady warm glow — the body knows it has been
+   read to its end. */
+.composition.is-quietus .body-opener-mark {
+  color: var(--vermilion-bright);
+  filter: drop-shadow(0 0 4px rgba(198, 104, 74, 0.42));
+}
+
+.composition.is-quietus .body-opener-rule {
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .body-opener { transition: none; opacity: 1; transform: none; }
+  .body-opener-rule { transition: none; opacity: 0.62; transform: scaleX(1); }
+  .body-opener-mark { transition: none; opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@media (max-width: 880px) {
+  .body-opener {
+    width: clamp(130px, 24vw, 200px);
+    gap: clamp(6px, 0.9vw, 10px);
+  }
+}
+
+@media (max-width: 520px) {
+  .body-opener {
+    width: clamp(108px, 32vw, 160px);
+    gap: 6px;
+    margin-bottom: clamp(8px, 1.4vw, 12px);
+  }
+  .body-opener-mark { width: 10px; height: 10px; }
 }
 
 /* ----- Word hover ink highlight -----
@@ -8516,12 +8670,20 @@ body {
   .question {
     line-height: 1.08;
     letter-spacing: -0.02em;
+    max-width: 26ch;
+  }
+}
+
+@media (max-width: 620px) {
+  .question {
+    font-size: clamp(34px, 7.4vw, 64px);
   }
 }
 
 @media (max-width: 520px) {
   .question {
     line-height: 1.12;
+    max-width: 22ch;
   }
 }
 
@@ -8553,7 +8715,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(2px, 0.3vw, 6px);
+  gap: clamp(4px, 0.42vw, 8px);
   width: 100%;
   margin: clamp(12px, 1.4vw, 20px) 0 0;
   padding: 0;
