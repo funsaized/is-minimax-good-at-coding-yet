@@ -551,6 +551,178 @@ function ReadingLantern() {
   return <div ref={ref} className="reading-lantern" aria-hidden="true" />
 }
 
+// WindowArch — a faint arched window that sits behind the composition,
+// giving the chapter its first true home. The candle above is the only
+// light because it's night outside; the horologium and speculum now
+// have a literal sky to chart, the watermark behind the parchment
+// rhymes with the night beyond the glass, and the candle's warm pool
+// reads as the page's only light against a quiet dark world. The
+// whole arch is the quietest layer of the composition — barely there,
+// just enough to register. A hairline gold gothic arch with a deep
+// night-sky interior, three thin mullions and a sill at the foot, a
+// quiet moon and a handful of faint stars that twinkle softly. On the
+// reader's acknowledge, the stars briefly flare together — the night
+// sky leaning in to listen, the way the candle flares for the reader
+// who has touched the question. Parallaxes gently with the reader's
+// pointer so the window reads as suspended in real depth, painted on
+// the far wall of the room rather than on the parchment itself.
+type WindowStar = {
+  x: number
+  y: number
+  r: number
+  phase: number
+  twinkle: number
+  tone: 'pale' | 'gold' | 'cool'
+}
+
+const WINDOW_STARS: WindowStar[] = [
+  { x: 18, y: 22, r: 0.16, phase: 0.0, twinkle: 6.4, tone: 'pale' },
+  { x: 28, y: 14, r: 0.12, phase: 1.2, twinkle: 5.8, tone: 'gold' },
+  { x: 39, y: 24, r: 0.18, phase: 2.6, twinkle: 7.2, tone: 'pale' },
+  { x: 50, y: 17, r: 0.14, phase: 3.4, twinkle: 6.0, tone: 'cool' },
+  { x: 60, y: 27, r: 0.20, phase: 1.8, twinkle: 7.8, tone: 'pale' },
+  { x: 70, y: 15, r: 0.12, phase: 0.6, twinkle: 5.4, tone: 'gold' },
+  { x: 80, y: 24, r: 0.15, phase: 2.2, twinkle: 6.6, tone: 'pale' },
+  { x: 26, y: 36, r: 0.10, phase: 4.0, twinkle: 7.4, tone: 'cool' },
+  { x: 73, y: 38, r: 0.11, phase: 1.0, twinkle: 6.2, tone: 'gold' },
+  { x: 45, y:  9, r: 0.10, phase: 3.0, twinkle: 6.8, tone: 'pale' },
+  { x: 88, y: 11, r: 0.10, phase: 2.0, twinkle: 5.6, tone: 'cool' },
+]
+
+function WindowArch({ flaring }: { flaring: boolean }) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let raf = 0
+    let px = 0
+    let py = 0
+    let tx = 0
+    let ty = 0
+    const onMove = (e: PointerEvent) => {
+      const w = window.innerWidth || 1
+      const h = window.innerHeight || 1
+      tx = (e.clientX - w / 2) / (w / 2)
+      ty = (e.clientY - h / 2) / (h / 2)
+    }
+    const tick = () => {
+      raf = requestAnimationFrame(tick)
+      px += (tx - px) * 0.04
+      py += (ty - py) * 0.04
+      el.style.setProperty('--win-x', px.toFixed(3))
+      el.style.setProperty('--win-y', py.toFixed(3))
+    }
+    if (reduced) {
+      el.style.setProperty('--win-x', '0')
+      el.style.setProperty('--win-y', '0')
+    } else {
+      window.addEventListener('pointermove', onMove, { passive: true })
+      raf = requestAnimationFrame(tick)
+    }
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+  return (
+    <div
+      ref={ref}
+      className={`window-arch ${flaring ? 'is-flaring' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="window-arch-svg"
+        viewBox="0 0 200 240"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <defs>
+          <linearGradient id="window-sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="rgba(38, 56, 86, 0.55)" />
+            <stop offset="55%"  stopColor="rgba(28, 40, 62, 0.40)" />
+            <stop offset="100%" stopColor="rgba(18, 26, 40, 0.26)" />
+          </linearGradient>
+          <radialGradient id="window-halo" cx="50%" cy="34%" r="62%">
+            <stop offset="0%"   stopColor="rgba(150, 170, 200, 0.10)" />
+            <stop offset="100%" stopColor="rgba(150, 170, 200, 0)" />
+          </radialGradient>
+          <radialGradient id="window-moon-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="rgba(245, 232, 210, 0.18)" />
+            <stop offset="100%" stopColor="rgba(245, 232, 210, 0)" />
+          </radialGradient>
+          <clipPath id="window-clip">
+            <path d="M 10 240 L 10 92 Q 10 18 100 10 Q 190 18 190 92 L 190 240 Z" />
+          </clipPath>
+        </defs>
+        {/* A faint halo behind the whole arch, suggesting the window
+            glows faintly in the dark room. */}
+        <rect x="0" y="0" width="200" height="240" fill="url(#window-halo)" />
+        {/* The sky and stars, clipped to the arched opening. */}
+        <g clipPath="url(#window-clip)">
+          <rect x="0" y="0" width="200" height="240" fill="url(#window-sky)" />
+          {/* Soft moon glow behind the moon disc. */}
+          <circle cx="148" cy="40" r="14" fill="url(#window-moon-glow)" />
+          <g className="window-stars">
+            {WINDOW_STARS.map((s, i) => (
+              <circle
+                key={i}
+                className={`window-star window-star-${s.tone}`}
+                cx={s.x * 2}
+                cy={s.y * 2.4}
+                r={s.r * 4}
+                style={
+                  {
+                    '--star-i': i,
+                    '--star-phase': `${s.phase}s`,
+                    '--star-twinkle': `${s.twinkle}s`,
+                  } as CSSProperties
+                }
+              />
+            ))}
+            {/* The moon — a quiet disc with a darker shadow on its
+                eastern face. Just barely visible, the way a real moon
+                looks through a window on a quiet night. */}
+            <circle cx="148" cy="40" r="5.4" className="window-moon" />
+            <circle cx="150.6" cy="38.6" r="4.6" className="window-moon-shadow" />
+          </g>
+        </g>
+        {/* The arch outline — a single hairline that reads as the
+            window frame's edge, drawn last so it sits on top of the
+            sky and defines the opening. */}
+        <path
+          className="window-outline"
+          d="M 10 240 L 10 92 Q 10 18 100 10 Q 190 18 190 92 L 190 240"
+        />
+        {/* Mullions — the central vertical that divides the window
+            into two halves, and two thinner verticals that suggest
+            four panes. */}
+        <line x1="100" y1="14" x2="100" y2="240" className="window-mullion" />
+        <line x1="55" y1="68" x2="55" y2="240" className="window-mullion window-mullion-fine" />
+        <line x1="145" y1="68" x2="145" y2="240" className="window-mullion window-mullion-fine" />
+        {/* Transom — a thin horizontal hairline where the arch springs. */}
+        <line x1="10" y1="92" x2="190" y2="92" className="window-cross" />
+        {/* Sill — the deepest line of the window, the page's resting
+            place at the foot of the world. */}
+        <line x1="6" y1="240" x2="194" y2="240" className="window-sill" />
+        <circle cx="6" cy="240" r="0.9" className="window-pip" />
+        <circle cx="194" cy="240" r="0.9" className="window-pip" />
+        {/* A single drawn starburst in the apex of the arch — a
+            manuscript painter's quatrefoil carved into the stone, the
+            room's smallest architectural ornament. */}
+        <path
+          className="window-apex"
+          d="M 100 4 L 101.6 8.6 L 106.6 8.8 L 102.6 11.6 L 104 16.2 L 100 13.4 L 96 16.2 L 97.4 11.6 L 93.4 8.8 L 98.4 8.6 Z"
+        />
+      </svg>
+      <span className="window-arch-caption">
+        <span className="window-arch-rule" />
+        <em className="window-arch-text">fenestra</em>
+        <span className="window-arch-rule" />
+      </span>
+    </div>
+  )
+}
+
 // Watermark — a faint oversized ghost of the hero curve behind everything.
 function Watermark() {
   return (
@@ -3348,6 +3520,7 @@ export function App() {
 
   return (
     <main className={`stage ${bifolioAttending ? 'is-attending' : ''}`}>
+      <WindowArch flaring={pulsing} />
       <canvas ref={canvasRef} className="dust" aria-hidden="true" />
       <div className="rim" aria-hidden="true" />
       <div className="codex-edge" aria-hidden="true" />

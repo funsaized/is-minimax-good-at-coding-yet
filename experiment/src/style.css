@@ -9490,3 +9490,243 @@ body {
   /* No-op selector placeholder; kept for clarity that the rubric
      pairs with the callout without changing its rendering. */
 }
+
+/* ----- Window arch (the room behind the folio) -----
+ * The chapter is being read by candlelight in a quiet room at night.
+ * This faint arched window sits as the deepest background layer —
+ * barely there, just enough to give the scene its home. The candle
+ * above is the only light because the night sky is visible through
+ * the glass; the horologium and speculum now have a literal sky to
+ * chart; the watermark behind the parchment rhymes with the night
+ * beyond the window. The arch is a hairline gold gothic profile
+ * with a deep blue night interior, three thin mullions, a sill, a
+ * quiet moon, and a handful of faint stars that twinkle softly. On
+ * the reader's acknowledge, the stars briefly flare together —
+ * the night sky leaning in to listen, the way the candle flares for
+ * the reader who has touched the question. The arch parallaxes
+ * gently with the reader's pointer so it reads as suspended on the
+ * far wall of the room rather than painted onto the parchment.
+ */
+.window-arch {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  animation: windowArchIn 4.6s ease 1.6s forwards;
+  transform: translate3d(
+    calc(var(--win-x, 0) * -6px),
+    calc(var(--win-y, 0) * -6px),
+    0
+  );
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes windowArchIn {
+  to { opacity: 1; }
+}
+
+.window-arch-svg {
+  width: clamp(300px, 56vw, 760px);
+  height: clamp(380px, 72vh, 740px);
+  display: block;
+  filter: drop-shadow(0 0 28px rgba(0, 0, 0, 0.45));
+}
+
+.window-outline {
+  fill: none;
+  stroke: rgba(217, 176, 116, 0.24);
+  stroke-width: 0.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.window-mullion {
+  stroke: rgba(217, 176, 116, 0.18);
+  stroke-width: 0.32;
+  stroke-linecap: round;
+}
+
+.window-mullion-fine {
+  stroke-width: 0.22;
+  opacity: 0.55;
+}
+
+.window-cross {
+  stroke: rgba(217, 176, 116, 0.12);
+  stroke-width: 0.22;
+  stroke-linecap: round;
+}
+
+.window-sill {
+  stroke: rgba(217, 176, 116, 0.42);
+  stroke-width: 0.6;
+  stroke-linecap: round;
+}
+
+.window-pip {
+  fill: rgba(217, 176, 116, 0.5);
+}
+
+.window-apex {
+  fill: rgba(217, 176, 116, 0.28);
+  filter: drop-shadow(0 0 3px rgba(217, 176, 116, 0.18));
+}
+
+.window-star {
+  fill: currentColor;
+  opacity: 0;
+  transform-origin: center;
+  transform-box: fill-box;
+  animation:
+    windowStarIn 1.6s ease forwards,
+    windowStarTwinkle var(--star-twinkle, 6s) ease-in-out infinite;
+  animation-delay:
+    calc(3.4s + var(--star-phase, 0s) * 0.32s),
+    calc(5.2s + var(--star-phase, 0s) * 0.32s);
+}
+
+.window-star-pale { color: rgba(245, 232, 210, 0.58); }
+.window-star-gold { color: rgba(240, 212, 154, 0.62); }
+.window-star-cool { color: rgba(150, 170, 200, 0.5); }
+
+.window-moon {
+  fill: rgba(245, 232, 210, 0.42);
+  filter: blur(0.4px);
+  opacity: 0;
+  animation: windowMoonIn 2.4s ease 4.6s forwards;
+}
+
+.window-moon-shadow {
+  fill: rgba(38, 56, 86, 0.7);
+  filter: blur(0.3px);
+  opacity: 0;
+  animation: windowMoonIn 2.4s ease 4.8s forwards;
+}
+
+@keyframes windowStarIn {
+  to { opacity: 0.5; }
+}
+
+@keyframes windowStarTwinkle {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.78; }
+}
+
+@keyframes windowMoonIn {
+  to { opacity: 1; }
+}
+
+.window-arch.is-flaring .window-star {
+  animation:
+    windowStarIn 1.6s ease forwards,
+    windowStarTwinkle var(--star-twinkle, 6s) ease-in-out infinite,
+    windowStarFlare 1.6s ease forwards;
+  animation-delay:
+    calc(3.4s + var(--star-phase, 0s) * 0.32s),
+    calc(5.2s + var(--star-phase, 0s) * 0.32s),
+    0s;
+}
+
+@keyframes windowStarFlare {
+  0%   { opacity: 0.95; transform: scale(1.6); }
+  60%  { opacity: 0.85; transform: scale(1.2); }
+  100% { opacity: 0.5;  transform: scale(1); }
+}
+
+.window-arch.is-flaring .window-moon {
+  animation:
+    windowMoonIn 2.4s ease 4.6s forwards,
+    windowMoonFlare 1.6s ease forwards;
+}
+
+@keyframes windowMoonFlare {
+  0%   { opacity: 1;    filter: blur(0.4px) drop-shadow(0 0 8px rgba(245, 232, 210, 0.4)); }
+  100% { opacity: 1;    filter: blur(0.4px); }
+}
+
+.window-arch-caption {
+  position: absolute;
+  bottom: clamp(-22px, -1.6vh, -16px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 0.8vw, 10px);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: rgba(217, 176, 116, 0.5);
+  text-transform: lowercase;
+  opacity: 0;
+  animation: windowCaptionIn 1.4s ease 5.4s forwards;
+  white-space: nowrap;
+}
+
+.window-arch-rule {
+  display: inline-block;
+  width: clamp(20px, 2vw, 32px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(217, 176, 116, 0.4),
+    transparent
+  );
+}
+
+.window-arch-text {
+  font-style: italic;
+  font-family: var(--serif);
+  font-size: clamp(10px, 0.78vw, 12px);
+  letter-spacing: 0.1em;
+  color: rgba(217, 176, 116, 0.6);
+}
+
+@keyframes windowCaptionIn {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .window-arch {
+    transform: none;
+    transition: none;
+    opacity: 1;
+    animation: none;
+  }
+  .window-star {
+    animation: none;
+    opacity: 0.5;
+  }
+  .window-moon,
+  .window-moon-shadow {
+    animation: none;
+    opacity: 1;
+  }
+  .window-arch-caption {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .window-arch-svg {
+    width: clamp(220px, 78vw, 380px);
+    height: clamp(280px, 56vh, 480px);
+  }
+  .window-arch-caption {
+    bottom: -14px;
+    font-size: 8px;
+    letter-spacing: 0.14em;
+  }
+  .window-arch-text { font-size: 9px; }
+}
+
+@media (max-width: 420px) {
+  .window-arch-svg {
+    width: clamp(180px, 84vw, 320px);
+    height: clamp(240px, 50vh, 420px);
+  }
+}
