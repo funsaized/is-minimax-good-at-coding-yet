@@ -1014,6 +1014,259 @@ body {
 
 /* ----- Capitulum (running title above the chapter) ----- */
 
+/* ----- Chapter Crown (composed opening frame) -----
+ * Iteration 43 composes the chapter's top — printer-date, capitulum,
+ * and rubric — into a single authored "crown" framed by two thin gold
+ * rules that grow outward from a small vermilion pip. The chapter
+ * opening now reads as a single manuscript band, not three stacked
+ * fragments. */
+
+.chapter-crown {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 0.7vw, 10px);
+  width: min(100%, 620px);
+  margin: 0;
+  padding: clamp(6px, 0.7vw, 10px) clamp(18px, 3vw, 36px) clamp(4px, 0.5vw, 8px);
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 1.0s ease 0.55s,
+    transform 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s;
+}
+
+.composition.ready .chapter-crown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chapter-crown-rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-deep) 18%,
+    var(--gold) 50%,
+    var(--gold-deep) 82%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.18);
+  transform-origin: 50% 50%;
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 0.85s,
+    transform 1.25s cubic-bezier(0.2, 0.7, 0.2, 1) 0.85s;
+}
+
+.composition.ready .chapter-crown-rule {
+  opacity: 0.55;
+  transform: scaleX(1);
+}
+
+.chapter-crown-rule-t {
+  margin-bottom: clamp(2px, 0.2vw, 4px);
+}
+
+.chapter-crown-rule-b {
+  margin-top: clamp(2px, 0.2vw, 4px);
+}
+
+.chapter-crown-band {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  row-gap: clamp(4px, 0.5vw, 7px);
+  column-gap: clamp(8px, 1vw, 14px);
+  width: 100%;
+  padding: 0 clamp(4px, 0.6vw, 8px);
+}
+
+/* Two small pips between the chapter-crown's elements — one vermilion
+   between the printer-date and capitulum, one gold between the
+   capitulum and rubric. Like the catchword's outer pips, they mark
+   the joints of the band. */
+.chapter-crown-pip {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--vermilion);
+  opacity: 0;
+  transform: scale(0.3);
+  box-shadow: 0 0 5px rgba(176, 83, 58, 0.4);
+  flex: 0 0 auto;
+  align-self: center;
+  transition:
+    opacity 0.6s ease 1.15s,
+    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1) 1.15s;
+}
+
+.chapter-crown-pip-alt {
+  background: var(--gold);
+  box-shadow: 0 0 5px rgba(217, 176, 116, 0.4);
+  transition-delay: 1.35s, 1.35s;
+}
+
+.composition.ready .chapter-crown-pip {
+  opacity: 0.85;
+  transform: scale(1);
+}
+
+.chapter-crown-rubric {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, 0.7vw, 10px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, 1.05vw, 13px);
+  letter-spacing: 0.36em;
+  text-transform: lowercase;
+  color: var(--gold);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 0.85s ease 1.2s,
+    transform 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 1.2s,
+    color 0.5s ease;
+}
+
+.composition.ready .chapter-crown-rubric {
+  opacity: 0.92;
+  transform: translateY(0);
+}
+
+.chapter-crown-pilcrow {
+  display: inline-block;
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: 0.96em;
+  letter-spacing: 0;
+  color: var(--vermilion);
+  opacity: 0.85;
+  transform: translateY(-0.05em);
+  text-shadow: 0 0 6px rgba(176, 83, 58, 0.25);
+}
+
+.chapter-crown-rubric-text {
+  letter-spacing: 0.36em;
+}
+
+.chapter-crown-sep {
+  font-style: normal;
+  color: var(--gold-deep);
+  opacity: 0.7;
+  letter-spacing: 0;
+  transform: translateY(-0.04em);
+}
+
+/* ----- When ChapterCrown is composed, the children's individual
+ * margins are zeroed so the band reads as one composed unit. The
+ * elements keep their original opacity transitions; the band
+ * container, the rules, and the pips do the unifying work. */
+.chapter-crown .printer-date,
+.chapter-crown .capitulum {
+  margin: 0;
+}
+
+.chapter-crown .printer-date {
+  transition-delay: 0.85s, 0.85s;
+}
+
+.chapter-crown .capitulum {
+  transition-delay: 1.0s, 1.0s;
+}
+
+/* Question prompt — a tiny ornament-only cue in place of the
+   previous instruction text. Two gold pips flanking a hand-cut
+   mark, drawn in after the chapter has settled. */
+.question-prompt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(5px, 0.55vw, 8px);
+  margin: clamp(10px, 1.4vw, 18px) 0 0;
+  padding: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 2.6s,
+    color 0.5s ease;
+}
+
+.composition.ready .question-prompt { opacity: 1; }
+.composition.is-pointing .question-prompt { color: var(--gold); }
+
+.question-prompt-pip {
+  display: inline-block;
+  width: 3.4px;
+  height: 3.4px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.55;
+  box-shadow: 0 0 6px rgba(217, 176, 116, 0.32);
+  transition: opacity 0.5s ease, box-shadow 0.5s ease;
+}
+
+.question-prompt-pip-r {
+  background: var(--vermilion);
+  box-shadow: 0 0 6px rgba(176, 83, 58, 0.32);
+}
+
+.question-prompt-mark {
+  display: inline-block;
+  width: clamp(14px, 1.5vw, 22px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-deep) 24%,
+    var(--gold) 50%,
+    var(--gold-deep) 76%,
+    transparent 100%
+  );
+  opacity: 0.6;
+}
+
+.composition.is-pointing .question-prompt-pip {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter-crown { transition: opacity 0.2s ease; transform: none; opacity: 1; }
+  .chapter-crown-rule { transition: none; opacity: 0.55; transform: scaleX(1); }
+  .chapter-crown-pip { transition: none; opacity: 0.85; transform: scale(1); }
+  .chapter-crown-rubric { transition: none; opacity: 0.92; transform: none; }
+  .question-prompt { transition: none; opacity: 1; }
+}
+
+@media (max-width: 760px) {
+  .chapter-crown { width: min(100%, 540px); padding-inline: clamp(10px, 2.4vw, 20px); }
+  .chapter-crown-band { column-gap: 6px; }
+  .chapter-crown-rubric { letter-spacing: 0.3em; font-size: clamp(10px, 1.4vw, 12px); }
+}
+
+@media (max-width: 620px) {
+  .chapter-crown-rubric { letter-spacing: 0.22em; gap: 5px; }
+  .chapter-crown-rubric-text { letter-spacing: 0.22em; }
+  .question-prompt { margin-top: clamp(8px, 1.6vw, 14px); }
+}
+
+@media (max-width: 520px) {
+  .chapter-crown { padding-inline: 8px; }
+  .chapter-crown-band { column-gap: 5px; row-gap: 3px; }
+  .chapter-crown-pip { width: 3px; height: 3px; }
+  .chapter-crown-rubric { letter-spacing: 0.16em; gap: 4px; }
+  .chapter-crown-rubric-text { letter-spacing: 0.16em; }
+  .question-prompt-mark { width: clamp(10px, 2vw, 16px); }
+  .question-prompt-pip { width: 3px; height: 3px; }
+}
+
 .printer-date {
   display: inline-flex;
   align-items: center;
@@ -1535,6 +1788,73 @@ body {
    the stroke begins hidden, then traces the question mark from the
    left of the bowl all the way to the bottom of the stem, like ink
    being laid on parchment. */
+
+/* Ink-wash shadow — a wide, soft warm wash rendered beneath the main
+   stroke, like ink that has bled slightly into the parchment. Gives
+   the question mark depth without obscuring the curve; sits behind
+   every other hero element so it never competes with the bowl's
+   illumination. */
+.hero-shadow {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 13;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  filter: blur(7px);
+  transform: translate(0, 4px);
+  animation:
+    heroShadowShow 1.6s ease 1.4s forwards,
+    heroShadowDraw 3.0s cubic-bezier(0.55, 0.04, 0.32, 1) 1.5s forwards;
+  will-change: stroke-dashoffset, opacity, transform;
+}
+
+@keyframes heroShadowShow {
+  to { opacity: 0.32; }
+}
+
+@keyframes heroShadowDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* The ink-pool — a small vermilion and gold pool at the foot of the
+   stem, where the question's stroke presses into the parchment. Reads
+   as a quill's slip that has settled into the page. Two pieces: a
+   horizontal soft pool and a tiny pip at its right edge, like the
+   drop that just landed. */
+.hero-ink-pool {
+  fill: var(--vermilion);
+  opacity: 0;
+  filter: blur(2.6px);
+  transform-origin: 50% 50%;
+  transform: scaleX(0.2);
+  animation: heroInkPoolIn 2.2s cubic-bezier(0.2, 0.7, 0.2, 1) 3.0s forwards;
+  will-change: opacity, transform;
+}
+
+.hero-ink-pool-pip {
+  fill: var(--gold-bright);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0);
+  animation: heroInkPoolPip 1.0s cubic-bezier(0.2, 1.2, 0.4, 1) 4.1s forwards;
+}
+
+@keyframes heroInkPoolIn {
+  0%   { opacity: 0;    transform: scaleX(0.2); }
+  60%  { opacity: 0.34; }
+  100% { opacity: 0.28; transform: scaleX(1); }
+}
+
+@keyframes heroInkPoolPip {
+  0%   { opacity: 0;    transform: scale(0); }
+  60%  { opacity: 0.92; transform: scale(1.1); }
+  100% { opacity: 0.85; transform: scale(1); }
+}
+
 .hero-stroke {
   fill: none;
   stroke: currentColor;
@@ -1602,6 +1922,29 @@ body {
   0%   { stroke-dashoffset: 0; opacity: 0.42; }
   35%  { stroke-dashoffset: 100; opacity: 0.85; }
   100% { stroke-dashoffset: 0; opacity: 0.42; }
+}
+
+/* When the reader acknowledges, the shadow wash brightens and
+   the ink-pool widens — the quill pressed harder, and a little
+   more ink slipped into the page. */
+.hero.echo .hero-shadow {
+  animation: heroShadowEcho 0.95s cubic-bezier(0.4, 0.04, 0.2, 1);
+}
+
+@keyframes heroShadowEcho {
+  0%   { opacity: 0.32; filter: blur(7px); }
+  35%  { opacity: 0.62; filter: blur(9px); }
+  100% { opacity: 0.32; filter: blur(7px); }
+}
+
+.hero.echo .hero-ink-pool {
+  animation: heroInkPoolEcho 0.95s cubic-bezier(0.4, 0.04, 0.2, 1);
+}
+
+@keyframes heroInkPoolEcho {
+  0%   { transform: scaleX(1); opacity: 0.28; }
+  35%  { transform: scaleX(1.34); opacity: 0.55; }
+  100% { transform: scaleX(1); opacity: 0.28; }
 }
 
 /* The brief press-pulse on acknowledge — a halo around the stroke. */
@@ -2237,8 +2580,8 @@ body {
   font-style: italic;
   font-weight: 500;
   font-size: clamp(34px, 5.2vw, 72px);
-  line-height: 1.14;
-  letter-spacing: -0.012em;
+  line-height: 1.1;
+  letter-spacing: -0.014em;
   text-align: center;
   color: var(--ink);
   max-width: 22ch;
@@ -2246,7 +2589,8 @@ body {
   text-wrap: balance;
   text-shadow:
     0 0 32px rgba(240, 232, 218, 0.10),
-    0 0 64px rgba(217, 176, 116, 0.04);
+    0 0 64px rgba(217, 176, 116, 0.04),
+    0 1px 0 rgba(0, 0, 0, 0.32);
   opacity: 0;
   transform: translateY(14px);
   transition:
@@ -2909,8 +3253,12 @@ body {
   .hero-svg-wrap { transform: none; transition: none; }
   .hero-dot-ring { animation: none; opacity: 0.18; transform: scale(1); }
   .hero-stroke { stroke-dashoffset: 0; transition: none; opacity: 1; }
+  .hero-shadow { animation: none; opacity: 0.32; stroke-dashoffset: 0; transform: none; }
+  .hero-ink-pool { animation: none; opacity: 0.28; transform: scaleX(1); }
+  .hero-ink-pool-pip { animation: none; opacity: 0.85; transform: scale(1); }
   .hero-trace { display: none; }
-  .hero.echo .hero-stroke, .hero.echo .hero-trace { animation: none; }
+  .hero.echo .hero-stroke, .hero.echo .hero-trace,
+  .hero.echo .hero-shadow, .hero.echo .hero-ink-pool { animation: none; }
   .hero-dot { transform: scale(1); transition: none; }
   .hero-spatter { display: none; }
   .hero.pulse { animation: none; }
@@ -3277,10 +3625,8 @@ body {
   text-transform: lowercase;
   opacity: 0.7;
 }
-.question-prompt { margin: clamp(18px, 2.4vw, 28px) 0 0; color: var(--ink-faint); font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-align: center; text-transform: uppercase; transition: color 0.35s ease; }
-.composition.is-pointing .question-prompt { color: var(--gold); }
-@media (max-width: 620px) { .question-block { padding-inline: 18px; } .question-kicker { letter-spacing: 0.14em; } .question-prompt { line-height: 1.6; } .chapter-stamp { right: clamp(10px, 2.6vw, 18px); top: clamp(6px, 1.8vw, 12px); } .chapter-stamp-svg { width: 38px; } }
-@media (prefers-reduced-motion: reduce) { .question-prompt { transition: none; } }
+.question-prompt { display: none; }
+@media (max-width: 620px) { .question-block { padding-inline: 18px; } .question-kicker { letter-spacing: 0.14em; } .chapter-stamp { right: clamp(10px, 2.6vw, 18px); top: clamp(6px, 1.8vw, 12px); } .chapter-stamp-svg { width: 38px; } }
 
 @media (max-width: 480px) {
   .marg-tl, .marg-tr, .marg-bl { display: none; }

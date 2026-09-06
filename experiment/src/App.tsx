@@ -1466,6 +1466,34 @@ function CompassMark() {
   )
 }
 
+// ChapterCrown — a single composed authored unit at the top of the
+// chapter that frames the printer-date, running title (capitulum),
+// and rubric ("an inquiry · quaeritur") as one manuscript crown. Two
+// thin gold rules grow outward from a small vermilion pip; the
+// dated line, the capitulum, and the rubric each settle into the
+// framed band as one composed gesture. Sits above the fleuron, so
+// the chapter opening reads as: framed crown → fleuron → hero.
+function ChapterCrown() {
+  return (
+    <div className="chapter-crown" aria-hidden="true">
+      <span className="chapter-crown-rule chapter-crown-rule-t" />
+      <div className="chapter-crown-band">
+        <PrinterDate />
+        <span className="chapter-crown-pip" />
+        <Capitulum />
+        <span className="chapter-crown-pip chapter-crown-pip-alt" />
+        <span className="chapter-crown-rubric">
+          <span className="chapter-crown-pilcrow">§</span>
+          <span className="chapter-crown-rubric-text">an inquiry</span>
+          <span className="chapter-crown-sep">·</span>
+          <IncipitCaption />
+        </span>
+      </div>
+      <span className="chapter-crown-rule chapter-crown-rule-b" />
+    </div>
+  )
+}
+
 // QuestionFlourish — a small vermilion ink-stain beneath the question
 // mark character. Drawn from a flourish that begins beneath the "?"
 // and ends in a single drop, like a quill's slip.
@@ -2564,14 +2592,7 @@ export function App() {
 
         <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''} ${quietus ? 'is-quietus' : ''}`}>
           <ChapterSpine pulseKey={spinePulseKey} sealed={spineSealed} annotavi={lectorisDone} />
-          <PrinterDate />
-          <Capitulum />
-          <span className="rubric">
-            <span className="rubric-pilcrow" aria-hidden="true">§</span>
-            <span className="rubric-text">an inquiry</span>
-            <span className="rubric-sep" aria-hidden="true">·</span>
-            <IncipitCaption />
-          </span>
+          <ChapterCrown />
           <Fleuron />
           <div className="hero-frame">
             <Horologium />
@@ -2645,6 +2666,15 @@ export function App() {
                   </g>
                 </g>
                 <g className="hero-stack">
+                  {/* Ink-wash shadow — a wide, soft warm wash rendered
+                      beneath the main stroke, like ink that has bled
+                      slightly into the parchment. Gives the question
+                      mark depth without obscuring the curve. */}
+                  <path
+                    className="hero-shadow"
+                    d={HERO_PATH}
+                    pathLength={100}
+                  />
                   <path className="hero-stroke" d={HERO_PATH} pathLength={100} />
                   <path className="hero-trace" d={HERO_PATH} pathLength={100} />
                   <g className="hero-bowl-illumination" clipPath="url(#bowl-clip)">
@@ -2657,6 +2687,23 @@ export function App() {
                     />
                     <IlluminatedStar />
                   </g>
+                  {/* Ink-pool — a small vermilion and gold pool at the
+                      foot of the stem, where the question's stroke
+                      presses into the parchment. Reads as a quill's
+                      slip that has settled into the page. */}
+                  <ellipse
+                    className="hero-ink-pool"
+                    cx={HERO_DOT.cx}
+                    cy={HERO_DOT.cy + 14}
+                    rx={HERO_DOT.r + 9}
+                    ry={2.4}
+                  />
+                  <circle
+                    className="hero-ink-pool-pip"
+                    cx={HERO_DOT.cx + 1}
+                    cy={HERO_DOT.cy + 14}
+                    r={1.1}
+                  />
                   <circle
                     className="hero-dot-ring"
                     cx={HERO_DOT.cx}
@@ -2732,9 +2779,13 @@ export function App() {
                 </span>
               </span>
             </h1>
-             <Maniculum active={pointing} />
-             <VideAnnotation visible={answerOn && answerChars >= 6} />
-             <p className="question-prompt">press the mark · the page answers</p>
+              <Maniculum active={pointing} />
+              <VideAnnotation visible={answerOn && answerChars >= 6} />
+              <span className="question-prompt" aria-hidden="true">
+                <span className="question-prompt-pip" />
+                <span className="question-prompt-mark" />
+                <span className="question-prompt-pip question-prompt-pip-r" />
+              </span>
             <span
               key={noteNonce}
               className={`question-underline${noteNonce > 0 ? ' is-on' : ''}`}
