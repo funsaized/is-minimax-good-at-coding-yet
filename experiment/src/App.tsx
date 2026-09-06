@@ -767,242 +767,6 @@ function Watermark() {
   )
 }
 
-// DriftConstellation — a small arc of seven asterisks that drift slowly
-// across the upper region of the composition, like the heavens the
-// speculum charts. Each star twinkles on its own phase and translates
-// with parallax — the reader's pointer subtly shifts the constellation
-// in the opposite direction, so the celestial field feels suspended in
-// depth rather than painted onto the page. The constellation appears
-// after the speculum has settled, so the two instruments feel like a
-// single quiet observatory laid out at the start of a reading session.
-type DriftStar = {
-  x: number   // percentage across (0-100)
-  y: number   // pixels from top of arc
-  r: number   // radius of the asterisk in px
-  phase: number
-  drift: number
-  twinkle: number
-  color: 'gold' | 'vermilion' | 'pale'
-}
-
-const DRIFT_STARS: DriftStar[] = [
-  { x:  8, y: 10, r: 1.8, phase: 0.0,  drift: 0.42, twinkle: 5.6, color: 'gold' },
-  { x: 21, y:  4, r: 1.2, phase: 1.4,  drift: 0.28, twinkle: 6.8, color: 'pale' },
-  { x: 38, y:  9, r: 2.1, phase: 2.6,  drift: 0.36, twinkle: 7.4, color: 'gold' },
-  { x: 51, y:  2, r: 1.4, phase: 0.7,  drift: 0.22, twinkle: 5.2, color: 'gold' },
-  { x: 64, y:  7, r: 1.9, phase: 3.2,  drift: 0.34, twinkle: 6.4, color: 'vermilion' },
-  { x: 78, y:  3, r: 1.3, phase: 1.9,  drift: 0.26, twinkle: 7.0, color: 'pale' },
-  { x: 92, y: 11, r: 2.0, phase: 4.1,  drift: 0.40, twinkle: 5.8, color: 'gold' },
-]
-
-function DriftConstellation() {
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    let raf = 0
-    let px = 0
-    let py = 0
-    let tx = 0
-    let ty = 0
-    let cx = 0
-    let cy = 0
-    const onMove = (e: PointerEvent) => {
-      const w = window.innerWidth || 1
-      const h = window.innerHeight || 1
-      tx = (e.clientX - w / 2) / (w / 2)
-      ty = (e.clientY - h / 2) / (h / 2)
-    }
-    const tick = () => {
-      raf = requestAnimationFrame(tick)
-      px += (tx - px) * 0.05
-      py += (ty - py) * 0.05
-      cx += (-px - cx) * 0.18
-      cy += (-py - cy) * 0.18
-      el.style.setProperty('--const-x', cx.toFixed(3))
-      el.style.setProperty('--const-y', cy.toFixed(3))
-    }
-    if (reduced) {
-      el.style.setProperty('--const-x', '0')
-      el.style.setProperty('--const-y', '0')
-    } else {
-      window.addEventListener('pointermove', onMove, { passive: true })
-      raf = requestAnimationFrame(tick)
-    }
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
-  return (
-    <div className="drift-constellation" aria-hidden="true" ref={ref}>
-      {DRIFT_STARS.map((s, i) => (
-        <span
-          key={i}
-          className={`drift-star drift-star-${s.color}`}
-          style={
-            {
-              '--star-x': `${s.x}%`,
-              '--star-y': `${s.y}px`,
-              '--star-r': `${s.r}px`,
-              '--star-phase': `${s.phase}s`,
-              '--star-drift': `${s.drift}s`,
-              '--star-twinkle': `${s.twinkle}s`,
-              '--star-i': i,
-            } as CSSProperties
-          }
-        />
-      ))}
-      <svg className="drift-arc" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
-        <path
-          className="drift-arc-curve"
-          d="M 4 24 Q 100 -4 196 24"
-        />
-        <circle cx="4"   cy="24" r="0.7" className="drift-arc-end" />
-        <circle cx="196" cy="24" r="0.7" className="drift-arc-end" />
-      </svg>
-    </div>
-  )
-}
-
-// Stellatum — a delicate hand-drawn star chart that sits behind the hero
-// question mark, completing the chapter's small "observatory." Where the
-// horologium charts the hour of reading and the speculum charts the
-// configuration of the heavens, the Stellatum is the night sky those
-// instruments observe — the celestial backdrop the question mark floats
-// in, painted faintly on the parchment itself. Twenty-one small four-
-// pointed stars in gold, vermilion, and the dim cool of distant stars,
-// with three faint constellation lines drawn between the brighter
-// ones, each star twinkling on its own cadence. Parallaxes gently
-// with the reader's pointer so the sky feels suspended in depth rather
-// than flush with the question. Fades in after the speculum has settled,
-// once the chapter's instruments are laid out, so the reader reads the
-// Stellatum as part of the same composed ensemble.
-
-type StellatumStar = {
-  cx: number
-  cy: number
-  r: number
-  phase: number
-  twinkle: number
-  tone: 'gold' | 'vermilion' | 'cool'
-}
-
-const STELLATUM_STARS: StellatumStar[] = [
-  // Top arc — small stars above the bowl
-  { cx: 122, cy:  20, r: 1.6, phase: 0.0, twinkle: 5.6, tone: 'gold' },
-  { cx:  68, cy:  46, r: 1.2, phase: 1.4, twinkle: 6.4, tone: 'gold' },
-  { cx: 176, cy:  54, r: 1.0, phase: 2.8, twinkle: 7.2, tone: 'cool' },
-  // Side stars in the bowl's height
-  { cx:  44, cy: 122, r: 1.3, phase: 0.7, twinkle: 6.8, tone: 'gold' },
-  { cx: 198, cy: 126, r: 1.2, phase: 3.2, twinkle: 5.4, tone: 'vermilion' },
-  { cx:  86, cy: 144, r: 0.9, phase: 4.4, twinkle: 7.6, tone: 'cool' },
-  // Wide middle stars
-  { cx:  28, cy: 188, r: 1.8, phase: 1.0, twinkle: 6.0, tone: 'gold' },
-  { cx: 212, cy: 194, r: 1.7, phase: 2.2, twinkle: 7.0, tone: 'vermilion' },
-  { cx: 156, cy: 184, r: 1.0, phase: 3.6, twinkle: 5.8, tone: 'cool' },
-  { cx:  60, cy: 230, r: 1.3, phase: 0.4, twinkle: 6.6, tone: 'gold' },
-  { cx: 184, cy: 242, r: 1.1, phase: 5.0, twinkle: 7.4, tone: 'cool' },
-  // Lower arc — under the stem
-  { cx: 114, cy: 264, r: 1.5, phase: 1.8, twinkle: 6.2, tone: 'gold' },
-  { cx:  44, cy: 288, r: 1.0, phase: 4.0, twinkle: 7.0, tone: 'gold' },
-  { cx: 198, cy: 294, r: 1.2, phase: 2.6, twinkle: 5.6, tone: 'vermilion' },
-  { cx:  72, cy: 320, r: 1.3, phase: 3.4, twinkle: 6.8, tone: 'cool' },
-  { cx: 168, cy: 326, r: 1.0, phase: 0.8, twinkle: 7.6, tone: 'gold' },
-  { cx: 122, cy: 350, r: 1.4, phase: 4.6, twinkle: 6.4, tone: 'gold' },
-  // Faint dust-stars — the four-pointed glints, not real stars
-  { cx:  18, cy: 162, r: 0.55, phase: 5.8, twinkle: 8.0, tone: 'cool' },
-  { cx: 224, cy: 168, r: 0.55, phase: 4.4, twinkle: 7.8, tone: 'cool' },
-  { cx:  30, cy: 248, r: 0.5,  phase: 6.2, twinkle: 8.4, tone: 'gold' },
-  { cx: 218, cy: 254, r: 0.5,  phase: 5.4, twinkle: 8.2, tone: 'gold' },
-]
-
-// Constellation lines — three very faint hairlines connecting a few
-// of the brighter stars, like the draughtsman's constellation lines
-// in an almanac. Drawn after the stars are visible, so the chart reads
-// as a single composed backdrop.
-const STELLATUM_LINES = [
-  'M 68 46 Q 44 110 44 188 Q 50 250 60 288',
-  'M 176 54 Q 200 120 212 194 Q 200 260 198 294',
-  'M 122 20 Q 100 100 122 188 Q 142 264 122 350',
-]
-
-function Stellatum() {
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) {
-      el.style.setProperty('--stell-x', '0')
-      el.style.setProperty('--stell-y', '0')
-      return
-    }
-    let raf = 0
-    let tx = 0
-    let ty = 0
-    let px = 0
-    let py = 0
-    const onMove = (e: PointerEvent) => {
-      const w = window.innerWidth || 1
-      const h = window.innerHeight || 1
-      tx = (e.clientX - w / 2) / (w / 2)
-      ty = (e.clientY - h / 2) / (h / 2)
-    }
-    const tick = () => {
-      px += (tx - px) * 0.04
-      py += (ty - py) * 0.04
-      el.style.setProperty('--stell-x', px.toFixed(3))
-      el.style.setProperty('--stell-y', py.toFixed(3))
-      raf = requestAnimationFrame(tick)
-    }
-    window.addEventListener('pointermove', onMove, { passive: true })
-    raf = requestAnimationFrame(tick)
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      cancelAnimationFrame(raf)
-    }
-  }, [])
-  return (
-    <div className="stellatum" aria-hidden="true" ref={ref}>
-      <svg
-        viewBox="0 0 240 400"
-        preserveAspectRatio="xMidYMid meet"
-        className="stellatum-svg"
-      >
-        <g className="stellatum-lines">
-          {STELLATUM_LINES.map((d, i) => (
-            <path
-              key={i}
-              d={d}
-              className="stellatum-line"
-              pathLength="100"
-              style={{ '--li': i } as CSSProperties}
-            />
-          ))}
-        </g>
-        <g className="stellatum-stars">
-          {STELLATUM_STARS.map((s, i) => (
-            <path
-              key={i}
-              className={`stellatum-star stellatum-star-${s.tone}`}
-              d={`M ${s.cx} ${s.cy - s.r * 4.2} L ${s.cx + s.r * 1.25} ${s.cy - s.r * 1.25} L ${s.cx + s.r * 4.2} ${s.cy} L ${s.cx + s.r * 1.25} ${s.cy + s.r * 1.25} L ${s.cx} ${s.cy + s.r * 4.2} L ${s.cx - s.r * 1.25} ${s.cy + s.r * 1.25} L ${s.cx - s.r * 4.2} ${s.cy} L ${s.cx - s.r * 1.25} ${s.cy - s.r * 1.25} Z`}
-              style={
-                {
-                  '--star-i': i,
-                  '--star-phase': `${s.phase}s`,
-                  '--star-twinkle': `${s.twinkle}s`,
-                } as CSSProperties
-              }
-            />
-          ))}
-        </g>
-      </svg>
-    </div>
-  )
-}
-
 // LegiMark — a small composed vermilion ink-mark that blooms above the
 // colophon's "legi · mmxxvi" provenance once the reader has lingered on
 // the page long enough that the reading counts as a sitting. A thin
@@ -1220,41 +984,6 @@ function Signature() {
   )
 }
 
-// PenTrial — a small scribal flourish at the end of the colophon, the
-// kind a scribe leaves when finishing a page. A few small flourishes
-// and pips, like a quill being tested on the parchment. The whole
-// flourish draws in with a soft easing, just after the seal. Iteration
-// 47 keeps this flourish as a quiet ink-test above the inkpot scene
-// that now sits beneath it — the scribal flourish and the writer's
-// instrument pair as one composed closure.
-function PenTrial() {
-  return (
-    <span className="pen-trial" aria-hidden="true">
-      <svg viewBox="0 0 60 10" className="pen-trial-svg" focusable="false">
-        <path
-          className="pen-trial-mark pen-trial-mark-1"
-          d="M 2 6 Q 8 1 14 6"
-        />
-        <circle cx="16.5" cy="6" r="0.7" className="pen-trial-pip pen-trial-pip-1" />
-        <path
-          className="pen-trial-mark pen-trial-mark-2"
-          d="M 20 6 L 28 6"
-        />
-        <path
-          className="pen-trial-mark pen-trial-mark-3"
-          d="M 32 2 Q 36 6 32 10"
-        />
-        <circle cx="40" cy="6" r="0.9" className="pen-trial-pip pen-trial-pip-2" />
-        <path
-          className="pen-trial-mark pen-trial-mark-4"
-          d="M 44 5 Q 50 1 54 5 Q 50 9 44 7"
-        />
-        <circle cx="57" cy="5" r="0.5" className="pen-trial-pip pen-trial-pip-3 pen-trial-pip-sm" />
-      </svg>
-    </span>
-  )
-}
-
 // InkpotAndQuill — a small composed still life at the chapter's foot:
 // a glass inkpot with vermilion ink visible inside, a quill laid across
 // the rim with feather to the right and nib to the left, a single ink-
@@ -1454,177 +1183,6 @@ function InkpotAndQuill({
         />
       </svg>
     </span>
-  )
-}
-
-// Horologium — a small drawn sundial in the upper-left margin of the
-// hero, paired with the marginal rubric. A semicircle dial face with
-// five hour marks, a thin gnomon rising from the center, and a faint
-// vermilion shadow line cast toward the current hour. The reader's
-// "now" is recorded quietly in the page's margin — the chapter is
-// being read at this hour, by this light (the candle above). The
-// whole dial draws in slowly on page load, like an instrument being
-// laid out at the start of a reading session.
-function Horologium({
-  wrapRef,
-}: {
-  wrapRef?: RefObject<HTMLElement | null>
-}) {
-  return (
-    <aside
-      ref={wrapRef}
-      className="horologium"
-      aria-label="the hour of reading"
-    >
-      <svg viewBox="0 0 40 32" className="horologium-svg" aria-hidden="true" focusable="false">
-        {/* Dial face — a hairline semicircle, upper half */}
-        <path
-          className="horologium-dial"
-          d="M 4 28 A 16 16 0 0 1 36 28"
-          pathLength="100"
-        />
-        {/* Base — the horizontal diameter, a quiet rule beneath the dial */}
-        <line
-          className="horologium-base"
-          x1="4"
-          y1="28"
-          x2="36"
-          y2="28"
-        />
-        {/* Hour marks — five major: IX, XI, XII, I, III */}
-        <line className="horologium-tick" x1="4"   y1="28" x2="6.5" y2="28" />
-        <line className="horologium-tick horologium-tick-sm" x1="10.7" y1="19.6" x2="12.5" y2="20.8" />
-        <line className="horologium-tick" x1="20"  y1="12" x2="20"  y2="15.2" />
-        <line className="horologium-tick horologium-tick-sm" x1="27.5" y1="20.8" x2="29.3" y2="19.6" />
-        <line className="horologium-tick" x1="33.5" y1="28" x2="36"  y2="28" />
-        {/* Gnomon — the vertical pin that casts the shadow */}
-        <line
-          className="horologium-gnomon"
-          x1="20"
-          y1="28"
-          x2="20"
-          y2="19.5"
-        />
-        {/* Shadow arm — the vermilion hairline is wrapped in a group
-            that rotates around the gnomon tip, so the shadow sweeps
-            the dial face as the reading hour advances. Driven by the
-            --shadow-angle custom property set in JS. */}
-        <g className="horologium-shadow-arm">
-          <line
-            className="horologium-shadow"
-            x1="20"
-            y1="19.5"
-            x2="27.5"
-            y2="22.6"
-          />
-        </g>
-        {/* Hour pip — a vermilion drop at the dial's east point */}
-        <circle
-          className="horologium-pip"
-          cx="36"
-          cy="28"
-          r="1.3"
-        />
-        {/* Center — a small gold pip at the gnomon's foot */}
-        <circle
-          className="horologium-center"
-          cx="20"
-          cy="28"
-          r="0.8"
-        />
-      </svg>
-      <span className="horologium-label">
-        <span className="horologium-rule" />
-        <em className="horologium-text">horologium</em>
-      </span>
-    </aside>
-  )
-}
-
-// Speculum — a small celestial almanac chart that mirrors the
-// horologium on the opposite margin of the hero. Three concentric
-// circles hold twelve hour marks, a sun at the top, a crescent moon
-// at the foot, and a single vermilion star — the configuration of
-// the heavens at the moment of reading, paired to its hour the way
-// the horologium is paired to its time on earth. Drawn in slowly
-// after the horologium has settled, so the two instruments feel
-// laid out together at the start of a reading session; the star
-// then twinkles faintly, like a still constellation on a clear
-// manuscript evening.
-function Speculum({
-  wrapRef,
-}: {
-  wrapRef?: RefObject<HTMLElement | null>
-}) {
-  const ticks = Array.from({ length: 12 }, (_, i) => {
-    const a = (i * 30 - 90) * Math.PI / 180
-    return {
-      x1: 28 + Math.cos(a) * 21.6,
-      y1: 28 + Math.sin(a) * 21.6,
-      x2: 28 + Math.cos(a) * 24,
-      y2: 28 + Math.sin(a) * 24,
-      major: i % 3 === 0,
-    }
-  })
-  return (
-    <aside
-      ref={wrapRef}
-      className="speculum"
-      aria-label="the configuration of the heavens"
-    >
-      <svg viewBox="0 0 56 56" className="speculum-svg" aria-hidden="true" focusable="false">
-        <defs>
-          <radialGradient id="speculum-bloom-grad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="currentColor" stopOpacity="0.18" />
-            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx="28" cy="28" r="22" fill="url(#speculum-bloom-grad)" className="speculum-bloom" />
-        <circle cx="28" cy="28" r="24" className="speculum-outer" pathLength="100" />
-        <circle cx="28" cy="28" r="17" className="speculum-middle" pathLength="100" />
-        <circle cx="28" cy="28" r="9" className="speculum-inner" pathLength="100" />
-        {ticks.map((t, i) => (
-          <line
-            key={i}
-            className={`speculum-tick${t.major ? ' speculum-tick-major' : ''}`}
-            x1={t.x1}
-            y1={t.y1}
-            x2={t.x2}
-            y2={t.y2}
-          />
-        ))}
-        <line x1="28" y1="22" x2="28" y2="34" className="speculum-axis" />
-        <line x1="22" y1="28" x2="34" y2="28" className="speculum-axis" />
-        <circle cx="28" cy="28" r="0.9" className="speculum-center" />
-        <g className="speculum-sun">
-          <circle cx="28" cy="12" r="2.4" className="speculum-sun-disc" />
-          <line x1="28" y1="6" x2="28" y2="8" className="speculum-sun-ray" />
-          <line x1="28" y1="16" x2="28" y2="18" className="speculum-sun-ray" />
-          <line x1="22" y1="12" x2="24" y2="12" className="speculum-sun-ray" />
-          <line x1="32" y1="12" x2="34" y2="12" className="speculum-sun-ray" />
-          <line x1="23.6" y1="7.6" x2="25" y2="9" className="speculum-sun-ray" />
-          <line x1="32.4" y1="7.6" x2="31" y2="9" className="speculum-sun-ray" />
-          <line x1="23.6" y1="16.4" x2="25" y2="15" className="speculum-sun-ray" />
-          <line x1="32.4" y1="16.4" x2="31" y2="15" className="speculum-sun-ray" />
-        </g>
-        <g className="speculum-moon">
-          <circle cx="28" cy="44" r="2.4" className="speculum-moon-disc" />
-          <circle cx="28.9" cy="43.5" r="2.0" className="speculum-moon-shadow" />
-        </g>
-        <g className="speculum-star-orbit">
-          <g className="speculum-star-group">
-            <path
-              d="M 44 16 L 44.5 17.2 L 45.7 17.5 L 44.5 17.8 L 44 19 L 43.5 17.8 L 42.3 17.5 L 43.5 17.2 Z"
-              className="speculum-star"
-            />
-          </g>
-        </g>
-      </svg>
-      <span className="speculum-label">
-        <span className="speculum-rule" />
-        <em className="speculum-text">specvlvm</em>
-      </span>
-    </aside>
   )
 }
 
@@ -2200,88 +1758,6 @@ function PageCorner() {
   )
 }
 
-// Sigillum — a small composed seal that takes the place of the
-// previous eye motif in the colophon's vertical chain (inkpot →
-// sigillum → legi-mark → legi · mmxxvi). Where the eye watched,
-// the sigillum declares: a thin gold border and an inner hairline,
-// a four-pointed vermilion star at the centre, and a quiet
-// inscription along the upper rim — "sigillum" in italic. The
-// seal parallaxes gently with the reader's pointer so the
-// colophon keeps its quiet life, but the gesture reads as a
-// scholar's stamp rather than a watching eye: the chapter has
-// been finished, the page knows it, the seal closes the
-// composition with dignity instead of a glance.
-function Sigillum() {
-  const ref = useRef<HTMLSpanElement>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    let raf = 0
-    let tx = 0
-    let ty = 0
-    let px = 0
-    let py = 0
-    const onMove = (e: PointerEvent) => {
-      const w = window.innerWidth || 1
-      const h = window.innerHeight || 1
-      tx = (e.clientX - w / 2) / (w / 2)
-      ty = (e.clientY - h / 2) / (h / 2)
-    }
-    const tick = () => {
-      raf = requestAnimationFrame(tick)
-      px += (tx - px) * 0.035
-      py += (ty - py) * 0.035
-      el.style.setProperty('--sig-x', px.toFixed(3))
-      el.style.setProperty('--sig-y', py.toFixed(3))
-    }
-    if (reduced) {
-      el.style.setProperty('--sig-x', '0')
-      el.style.setProperty('--sig-y', '0')
-    } else {
-      window.addEventListener('pointermove', onMove, { passive: true })
-      raf = requestAnimationFrame(tick)
-    }
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
-  return (
-    <span className="sigillum" aria-hidden="true" ref={ref}>
-      <svg viewBox="0 0 40 40" className="sigillum-svg" focusable="false">
-        <circle cx="20" cy="20" r="18" className="sigillum-ring" />
-        <circle cx="20" cy="20" r="15.5" className="sigillum-ring-inner" />
-        <text
-          x="20"
-          y="9.4"
-          textAnchor="middle"
-          className="sigillum-word"
-        >
-          sigillum
-        </text>
-        <text
-          x="20"
-          y="33.4"
-          textAnchor="middle"
-          className="sigillum-word sigillum-word-low"
-        >
-          fol · xviii
-        </text>
-        <path
-          className="sigillum-star"
-          d="M 20 14.6 L 21.18 18.92 L 25.7 19.8 L 22 22.18 L 23 26.6 L 20 24.14 L 17 26.6 L 18 22.18 L 14.3 19.8 L 18.82 18.92 Z"
-        />
-        <circle cx="20" cy="20" r="0.85" className="sigillum-core" />
-      </svg>
-    </span>
-  )
-}
-
-// (Iteration 55 retires the quaero callout — the question's own
-// terminal "?" already lifts the question into the margin, and a
-// second drawn "?" beside it was repetition, not rhyme.)
-
 // ScholarCompass — a small drawn compass-rose that crowns the
 // composition, sitting above the chapter's headpiece as the manuscript's
 // quiet "north" mark. A four-pointed gold star at centre, with four
@@ -2736,243 +2212,6 @@ function HeroSparkle() {
           }
         />
       ))}
-    </span>
-  )
-}
-
-// MarginalSalamander — a small drawn fire-salamander in the bottom-
-// right of the page, the manuscript's quiet bestiary companion. The
-// four corners of the chapter each carry a voice: top-left folio,
-// top-right reading, bottom-left the reader's "annotavi" gloss. The
-// bottom-right carries this creature — a tiny vermilion-and-gold
-// salamander that lives where the candle's warm pool meets the
-// colophon's quiet. It sits at rest when the page is being read,
-// breathes slowly with a faint gold belly-glow, looks up toward the
-// reader when the pointer approaches, briefly flares when the
-// reader acknowledges the question, and crawls a little way along
-// the chapter's foot once the reader has understood (intellexi +
-// annotavi). Behind it a faint vermilion hairline trail of small
-// paw-prints, drawn once, like the manuscript's own marginalia:
-// medieval illuminators left tiny creatures and signatures in their
-// margins, and this salamander is the page's own signature. Reads as
-// the chapter's fourth living voice, paired to the three textual
-// voices in the other corners, so the four-corner scheme now
-// completes as: folio · reading · annotavi · salamander. Hidden on
-// reduced-motion devices — the creature stays at rest without
-// breathing or crawling.
-type SalamanderFootprint = {
-  x: number
-  y: number
-  delay: number
-  tone: 'vermilion' | 'gold'
-}
-
-const SALAMANDER_FOOTPRINTS: SalamanderFootprint[] = [
-  { x:  0, y: 0, delay:  120, tone: 'vermilion' },
-  { x:  3, y: 2, delay:  240, tone: 'vermilion' },
-  { x:  6, y: 0, delay:  360, tone: 'gold' },
-  { x:  9, y: 1, delay:  480, tone: 'vermilion' },
-  { x: 12, y: 0, delay:  600, tone: 'vermilion' },
-  { x: 15, y: 1, delay:  720, tone: 'gold' },
-  { x: 18, y: 0, delay:  840, tone: 'vermilion' },
-  { x: 21, y: 1, delay:  960, tone: 'vermilion' },
-  { x: 24, y: 0, delay: 1080, tone: 'gold' },
-]
-// Print SVG coordinates — placed in the lower band of the 36×22 view
-// (y ≈ 18–20) so the paw-prints read as marks on the parchment
-// beneath the salamander's belly rather than overlapping its body.
-// The horizontal span (x ≈ 4 → 22) is shorter than the body so the
-// trail sits behind/beneath the creature, never under the head.
-
-function MarginalSalamander({
-  crawling,
-  flaring,
-  awake,
-  pointerNear,
-  onBox,
-}: {
-  crawling: boolean
-  flaring: boolean
-  awake: boolean
-  pointerNear: boolean
-  onBox?: (box: DOMRect | null) => void
-}) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const onBoxRef = useRef(onBox)
-  onBoxRef.current = onBox
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) {
-      el.style.setProperty('--salam-x', '0')
-      el.style.setProperty('--salam-y', '0')
-      return
-    }
-    let raf = 0
-    let tx = 0
-    let ty = 0
-    let px = 0
-    let py = 0
-    const onMove = (e: PointerEvent) => {
-      const w = window.innerWidth || 1
-      const h = window.innerHeight || 1
-      // Inverse direction (the creature leans away from the pointer,
-      // as if curious, then follows with its eye rather than its
-      // body) — a soft opposite-direction parallax.
-      tx = -(e.clientX - w / 2) / (w / 2)
-      ty = -(e.clientY - h / 2) / (h / 2)
-    }
-    const tick = () => {
-      px += (tx - px) * 0.045
-      py += (ty - py) * 0.045
-      el.style.setProperty('--salam-x', px.toFixed(3))
-      el.style.setProperty('--salam-y', py.toFixed(3))
-      raf = requestAnimationFrame(tick)
-    }
-    window.addEventListener('pointermove', onMove, { passive: true })
-    raf = requestAnimationFrame(tick)
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      cancelAnimationFrame(raf)
-    }
-  }, [])
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const update = () => {
-      if (onBoxRef.current) onBoxRef.current(el.getBoundingClientRect())
-    }
-    update()
-    window.addEventListener('resize', update, { passive: true })
-    window.addEventListener('scroll', update, { passive: true })
-    let raf = 0
-    const tick = () => {
-      raf = requestAnimationFrame(tick)
-      update()
-    }
-    raf = requestAnimationFrame(tick)
-    return () => {
-      window.removeEventListener('resize', update)
-      window.removeEventListener('scroll', update)
-      cancelAnimationFrame(raf)
-    }
-  }, [])
-  const classes = ['marginal-salamander']
-  if (awake) classes.push('is-awake')
-  if (crawling) classes.push('is-crawling')
-  if (flaring) classes.push('is-flaring')
-  if (pointerNear) classes.push('is-near')
-  return (
-    <span
-      ref={ref}
-      className={classes.join(' ')}
-      aria-hidden="true"
-      aria-label="the manuscript's salamander, sitting at the bottom-right of the page"
-    >
-      <svg viewBox="0 0 36 22" className="salamander-svg" focusable="false">
-        <defs>
-          <radialGradient id="salam-belly" cx="50%" cy="55%" r="55%">
-            <stop offset="0%"   stopColor="#f5d99c" stopOpacity="0.85" />
-            <stop offset="55%"  stopColor="#e0a85a" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#9c4530" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        {/* Trail of paw-prints — a faint vermilion hairline of small
-            ink-dots that draws in once the reader has understood. The
-            trail sits beneath the creature on the parchment and never
-            moves; only the prints themselves bloom in. */}
-        <g className="salamander-trail">
-          {SALAMANDER_FOOTPRINTS.map((f, i) => (
-            <circle
-              key={i}
-              cx={4 + f.x}
-              cy={18.6 + f.y * 0.4}
-              r="0.5"
-              className={`salamander-print salamander-print-${f.tone}`}
-              style={{ '--print-i': i, '--print-delay': `${f.delay}ms` } as CSSProperties}
-            />
-          ))}
-        </g>
-        {/* The salamander itself — a small drawn vermilion lizard with
-            a curling tail, gold dorsal markings, and a tiny gold belly-
-            glow. Drawn as a single quiet beast, the page's own
-            marginal bestiary. */}
-        <g className="salamander-body">
-          {/* Body — vermilion outline, filled with the page's own ink */}
-          <path
-            className="salamander-back"
-            d="M 6 12
-               Q 5 9 8 8
-               Q 12 6.4 17 7
-               Q 22 7.4 25 8
-               Q 28 8.4 30 9
-               Q 32 10 31 11.5
-               Q 30 13 28 13
-               Q 24 13.4 20 13
-               Q 14 12.6 9 13
-               Q 6 13.2 6 12 Z"
-          />
-          {/* Belly — a softer, brighter underside in pale gold-warm,
-              catching the candle's light from above. */}
-          <path
-            className="salamander-belly"
-            d="M 7 12
-               Q 8 12.4 11 12.6
-               Q 16 12.8 20 12.6
-               Q 25 12.4 29 12
-               Q 30 12 29.4 12.6
-               Q 27 13.4 22 13.4
-               Q 15 13.6 9 13.2
-               Q 6.6 13 7 12 Z"
-          />
-          {/* Tail — curling up and back, the salamander's signature
-              flourish. */}
-          <path
-            className="salamander-tail"
-            d="M 6 12 Q 3 11 2 9 Q 2 7 4 7"
-          />
-          <circle cx="4" cy="7.2" r="0.55" className="salamander-tail-tip" />
-          {/* Head — a small pointed snout facing right, the creature's
-              gaze. */}
-          <path
-            className="salamander-head"
-            d="M 30 9 Q 32.5 9.6 33.4 11 Q 33.6 12 32 12.2 Q 30.5 12.2 30 11 Z"
-          />
-          {/* Eye — a small gold dot that brightens on flare */}
-          <circle cx="31.6" cy="10.6" r="0.45" className="salamander-eye" />
-          <circle cx="31.6" cy="10.6" r="0.18" className="salamander-eye-pip" />
-          {/* Dorsal markings — three small gold dots along the back,
-              the salamander's signature spots. */}
-          <circle cx="12" cy="8" r="0.55" className="salamander-spot" />
-          <circle cx="18" cy="7.4" r="0.6" className="salamander-spot" />
-          <circle cx="24" cy="8.2" r="0.55" className="salamander-spot" />
-          {/* Legs — two small drawn limbs, suggesting the creature's
-              stance. */}
-          <path
-            className="salamander-leg salamander-leg-f"
-            d="M 14 13.2 L 14 14.6 L 13 14.8"
-          />
-          <path
-            className="salamander-leg salamander-leg-b"
-            d="M 23 13.2 L 23 14.6 L 24 14.8"
-          />
-          {/* Belly-glow halo — a soft warm pool beneath the salamander,
-              catching the candle's light. */}
-          <ellipse
-            cx="18"
-            cy="13.5"
-            rx="13"
-            ry="3.6"
-            fill="url(#salam-belly)"
-            className="salamander-glow"
-          />
-        </g>
-      </svg>
-      <span className="salamander-caption" aria-hidden="true">
-        <span className="salamander-caption-rule" />
-        <em className="salamander-caption-text">bestiola</em>
-      </span>
     </span>
   )
 }
@@ -3676,6 +2915,55 @@ function ReadingSeal({ pressed }: { pressed: boolean }) {
   )
 }
 
+// ReadingPace — the reader's own rubric, set between the chapter and
+// the colophon. Until now the chapter could only be read by pressing
+// the emblem, which is a lovely gesture but an unlabelled one. This is
+// the page's plain instruction, in the manuscript's own two voices:
+// a vermilion Latin imperative and its English gloss. It does exactly
+// what it says — it reads the chapter out onto the page — and pressing
+// it a second time slows the whole cadence down, because the chapter's
+// own reply asks the reader to read it again, slower. Pressing once
+// more restores the reading pace. A real control with a real, single
+// behaviour; the rule beneath it draws outward when it takes focus so
+// keyboard readers see the mark move.
+function ReadingPace({
+  hasRead,
+  slow,
+  onRead,
+}: {
+  hasRead: boolean
+  slow: boolean
+  onRead: () => void
+}) {
+  const latin = hasRead ? 'relege' : 'lege'
+  const gloss = slow
+    ? 'again, at reading pace'
+    : hasRead
+      ? 'again, slower'
+      : 'read the answer'
+  const label = slow
+    ? 'read the answer again at reading pace'
+    : hasRead
+      ? 'read the answer again, more slowly'
+      : 'read the answer'
+  return (
+    <div className="reading-pace">
+      <button
+        type="button"
+        className={`reading-pace-btn${slow ? ' is-slow' : ''}`}
+        onClick={onRead}
+        aria-label={label}
+      >
+        <span className="reading-pace-pip" aria-hidden="true" />
+        <em className="reading-pace-latin">{latin}</em>
+        <span className="reading-pace-sep" aria-hidden="true">·</span>
+        <span className="reading-pace-gloss">{gloss}</span>
+        <span className="reading-pace-rule" aria-hidden="true" />
+      </button>
+    </div>
+  )
+}
+
 export function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const reduced = useReducedMotion()
@@ -3710,8 +2998,13 @@ export function App() {
   const [spineSealed, setSpineSealed] = useState(false)
   const [bifolioAttending, setBifolioAttending] = useState(false)
   const [legiOn, setLegiOn] = useState(false)
-  const [salamPointerNear, setSalamPointerNear] = useState(false)
-  const salamBoxRef = useRef<DOMRect | null>(null)
+  // Reading pace — the whole answer→reply→footnote→gloss cadence is
+  // scaled by a single multiplier so the page can be read twice: once
+  // at its own speed, and once slower, when the reader asks it to.
+  // Held in a ref so the typing effects pick up the current pace on
+  // their next tick without needing to re-subscribe.
+  const [slowRead, setSlowRead] = useState(false)
+  const paceRef = useRef(1)
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
@@ -3720,8 +3013,6 @@ export function App() {
   const heroBoxRef = useRef<DOMRect | null>(null)
   const heroRef = useRef<HTMLButtonElement>(null)
   const flameWrapRef = useRef<HTMLSpanElement>(null)
-  const horologiumRef = useRef<HTMLElement | null>(null)
-  const speculumRef = useRef<HTMLElement | null>(null)
   const flameWarmthRef = useRef(0)
   const waveTimeoutsRef = useRef<number[]>([])
 
@@ -3748,7 +3039,7 @@ export function App() {
     if (answerChars >= total) return
     const id = window.setTimeout(
       () => setAnswerChars((c) => Math.min(total, c + 1)),
-      ANSWER_STAGGER_MS,
+      Math.round(ANSWER_STAGGER_MS * paceRef.current),
     )
     return () => clearTimeout(id)
   }, [answerOn, answerChars, reduced])
@@ -3760,7 +3051,7 @@ export function App() {
     }
     const t = window.setTimeout(
       () => setReplyOn(true),
-      reduced ? 80 : 520,
+      reduced ? 80 : Math.round(520 * paceRef.current),
     )
     return () => clearTimeout(t)
   }, [answerOn, answerChars, reduced])
@@ -3778,7 +3069,7 @@ export function App() {
     if (replyChars >= total) return
     const id = window.setTimeout(
       () => setReplyChars((c) => Math.min(total, c + 1)),
-      REPLY_STAGGER_MS,
+      Math.round(REPLY_STAGGER_MS * paceRef.current),
     )
     return () => clearTimeout(id)
   }, [replyOn, replyChars, reduced])
@@ -3791,7 +3082,7 @@ export function App() {
     if (!replyOn || replyChars < REPLY.length) return
     const t = window.setTimeout(
       () => setFootnoteOn(true),
-      reduced ? 60 : 760,
+      reduced ? 60 : Math.round(760 * paceRef.current),
     )
     return () => window.clearTimeout(t)
   }, [replyOn, replyChars, reduced])
@@ -3809,7 +3100,7 @@ export function App() {
     if (footnoteChars >= total) return
     const id = window.setTimeout(
       () => setFootnoteChars((c) => Math.min(total, c + 1)),
-      FOOTNOTE_STAGGER_MS,
+      Math.round(FOOTNOTE_STAGGER_MS * paceRef.current),
     )
     return () => clearTimeout(id)
   }, [footnoteOn, footnoteChars, reduced])
@@ -3830,7 +3121,7 @@ export function App() {
         setIntellexiOn(true)
         setQuietus(true)
       },
-      reduced ? 80 : 720,
+      reduced ? 80 : Math.round(720 * paceRef.current),
     )
     return () => window.clearTimeout(t)
   }, [footnoteOn, footnoteChars, reduced])
@@ -3852,7 +3143,7 @@ export function App() {
     if (intellexiChars >= total) return
     const id = window.setTimeout(
       () => setIntellexiChars((c) => Math.min(total, c + 1)),
-      INTELLEXI_STAGGER_MS,
+      Math.round(INTELLEXI_STAGGER_MS * paceRef.current),
     )
     return () => clearTimeout(id)
   }, [intellexiOn, intellexiChars, reduced])
@@ -3870,7 +3161,7 @@ export function App() {
     if (intellexiChars < 'intellexi'.length) return
     const t = window.setTimeout(
       () => setLectorisOn(true),
-      reduced ? 60 : LECTORIS_NOTA_DELAY_MS,
+      reduced ? 60 : Math.round(LECTORIS_NOTA_DELAY_MS * paceRef.current),
     )
     return () => window.clearTimeout(t)
   }, [intellexiOn, intellexiChars, reduced])
@@ -3888,7 +3179,7 @@ export function App() {
     if (lectorisChars >= total) return
     const id = window.setTimeout(
       () => setLectorisChars((c) => Math.min(total, c + 1)),
-      LECTORIS_NOTA_STAGGER_MS,
+      Math.round(LECTORIS_NOTA_STAGGER_MS * paceRef.current),
     )
     return () => clearTimeout(id)
   }, [lectorisOn, lectorisChars, reduced])
@@ -3950,53 +3241,6 @@ export function App() {
     }
   }, [bifolioAttending, reduced])
 
-  // Salamander awareness — track whether the reader's pointer is
-  // within reach of the marginal creature, so it can lift its head
-  // and look toward them. Falls back to false on touch devices where
-  // there is no pointer to track.
-  useEffect(() => {
-    if (reduced) return
-    let raf = 0
-    let near = false
-    let pendingBox: DOMRect | null = null
-    const R = 140
-    const tick = () => {
-      raf = 0
-      const box = salamBoxRef.current
-      const ptr = pointerRef.current
-      if (box && ptr.over) {
-        const cx = (box.left + box.right) / 2
-        const cy = (box.top + box.bottom) / 2
-        const dx = ptr.x - cx
-        const dy = ptr.y - cy
-        const d2 = dx * dx + dy * dy
-        const next = d2 < R * R
-        if (next !== near) {
-          near = next
-          setSalamPointerNear(next)
-        }
-      } else if (near) {
-        near = false
-        setSalamPointerNear(false)
-      }
-      raf = requestAnimationFrame(tick)
-    }
-    const refreshBox = () => {
-      if (pendingBox) salamBoxRef.current = pendingBox
-    }
-    const onResizeScroll = () => {
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    window.addEventListener('resize', onResizeScroll, { passive: true })
-    window.addEventListener('scroll', onResizeScroll, { passive: true })
-    return () => {
-      window.removeEventListener('resize', onResizeScroll)
-      window.removeEventListener('scroll', onResizeScroll)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [reduced])
-
   // Legi mark — a quiet vermilion ink-mark that blooms above the
   // colophon's "legi · mmxxvi" provenance once the reader has lingered
   // long enough that the reading counts as a sitting. The chapter is
@@ -4009,42 +3253,6 @@ export function App() {
     return () => window.clearTimeout(t)
   }, [legiOn, reduced])
 
-  // Reading hour — the horologium shadow and the speculum star track
-  // the reader's session time, so the two marginal instruments come
-  // alive and the page records its own hour. The shadow sweeps from
-  // dawn (-85°) to dusk (+85°) across the dial face; the star makes one
-  // full orbit around the speculum in the same period, so the hour and
-  // the heavens stay paired. The motion starts once the instruments
-  // have finished fading in (so the page settles before it begins to
-  // keep time) and respects reduced-motion preference — both
-  // instruments hold their static position when motion is reduced.
-  useEffect(() => {
-    if (reduced) return
-    let raf = 0
-    let alive = true
-    const t0 = performance.now()
-    const PERIOD_MS = 180000
-    const tick = () => {
-      if (!alive) return
-      const elapsed = (performance.now() - t0) % PERIOD_MS
-      const norm = elapsed / PERIOD_MS
-      const shadowAngle = -85 + norm * 170
-      const starAngle = norm * 360
-      const h = horologiumRef.current
-      const s = speculumRef.current
-      if (h) h.style.setProperty('--shadow-angle', `${shadowAngle.toFixed(2)}deg`)
-      if (s) s.style.setProperty('--star-angle', `${starAngle.toFixed(2)}deg`)
-      raf = requestAnimationFrame(tick)
-    }
-    const start = window.setTimeout(() => {
-      raf = requestAnimationFrame(tick)
-    }, 5600)
-    return () => {
-      alive = false
-      cancelAnimationFrame(raf)
-      window.clearTimeout(start)
-    }
-  }, [reduced])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -4306,7 +3514,9 @@ export function App() {
     return () => window.clearTimeout(t)
   }, [quietus, reduced])
 
-  const acknowledge = useCallback(() => {
+  const acknowledge = useCallback((pace: number = 1) => {
+    paceRef.current = pace
+    setSlowRead(pace > 1)
     pulseRef.current = reduced ? 0 : 1
     echoRef.current = reduced ? 0 : 1
     setPulsing(true)
@@ -4357,7 +3567,7 @@ export function App() {
         setAnswerOn(false)
         setPointing(false)
       },
-      reduced ? 2600 : 5200,
+      reduced ? 2600 : Math.round(5200 * paceRef.current),
     )
     waveTimeoutsRef.current.push(ansOff)
   }, [reduced])
@@ -4415,7 +3625,6 @@ export function App() {
       <ReadingLantern />
       <BifolioSpine />
       <Watermark />
-      <DriftConstellation />
       <Ribbon />
       <ParchmentBreath />
 
@@ -4467,15 +3676,12 @@ export function App() {
           <ChapterTitle />
           <Fleuron />
           <div className="hero-frame">
-            <Stellatum />
-            <Horologium wrapRef={horologiumRef} />
-            <Speculum wrapRef={speculumRef} />
             <MarginalRubric />
             <button
               type="button"
             ref={heroRef}
             className={`hero ${drawn ? 'drawn' : ''} ${pulsing ? 'pulse' : ''} ${tracing ? 'echo' : ''} ${quietus ? 'is-quietus' : ''}`}
-            onClick={acknowledge}
+            onClick={() => acknowledge(paceRef.current)}
             onPointerEnter={(e) => {
               setPointing(true)
               onHeroEnter(e)
@@ -4487,7 +3693,7 @@ export function App() {
             onPointerMove={onHeroMove}
             onFocus={() => setPointing(true)}
             onBlur={() => setPointing(false)}
-            aria-label="the question"
+            aria-label="read the answer to the question"
           >
             <span className="hero-svg-wrap">
               <svg viewBox="0 0 240 340" className="hero-svg" aria-hidden="true">
@@ -4763,6 +3969,11 @@ export function App() {
               />
             </div>
           </div>
+          <ReadingPace
+            hasRead={noteNonce > 0}
+            slow={slowRead}
+            onRead={() => acknowledge(slowRead ? 1 : 1.75)}
+          />
         </div>
 
         <LectorisNota
@@ -4770,15 +3981,6 @@ export function App() {
           text={lectorisDisplay}
           done={lectorisDone}
         />
-
-        <MarginalSalamander
-          crawling={intellexiOn && intellexiChars >= 'intellexi'.length && lectorisDone}
-          flaring={pulsing}
-          awake={ready}
-          pointerNear={salamPointerNear}
-          onBox={(box) => { salamBoxRef.current = box }}
-        />
-
         <div className="colophon" aria-hidden="true">
           <ColophonPlate />
           <ColophonTie />
@@ -4797,13 +3999,11 @@ export function App() {
             <Signature />
             <span className="colophon-folio">folio · xviii</span>
           </span>
-          <PenTrial />
           <InkpotAndQuill
             active={intellexiOn && intellexiChars >= 'intellexi'.length}
             acknowledged={sealing || pulsing}
             annotavi={lectorisDone}
           />
-          <Sigillum />
           <LegiMark visible={legiOn} />
           <span className="colophon-provenance">legi · mmxxvi</span>
           <ReadingSeal pressed={legiOn && lectorisDone} />

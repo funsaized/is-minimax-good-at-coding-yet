@@ -1917,140 +1917,6 @@ body {
   50%      { opacity: 0.74; transform: scale(1.032); }
 }
 
-/* ----- Stellatum (the chapter's small observatory backdrop) -----
- * Iteration 56 composes a delicate hand-drawn star chart that sits
- * behind the hero question mark. Where the horologium charts the hour
- * and the speculum charts the heavens, the Stellatum is the sky those
- * instruments observe — a faint celestial field the question mark floats
- * in. Twenty-one small four-pointed stars and three faint constellation
- * lines, each star twinkling on its own cadence. Parallaxes gently with
- * the reader's pointer so the sky feels suspended in depth rather than
- * flush with the question. Fades in once the speculum has settled, so
- * the reader reads it as part of the same composed ensemble. */
-
-.stellatum {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-  transform: translate(
-    calc(var(--stell-x, 0) * 5px),
-    calc(var(--stell-y, 0) * 7px)
-  );
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-  will-change: transform, opacity;
-  animation: stellatumFadeIn 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.4s forwards;
-}
-
-@keyframes stellatumFadeIn {
-  0%   { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-.stellatum-svg {
-  width: clamp(214px, 28.4vw, 332px);
-  height: auto;
-  display: block;
-  overflow: visible;
-}
-
-.stellatum-lines {
-  opacity: 0;
-  transition: opacity 1.6s ease 4.6s;
-}
-
-.composition.ready .stellatum-lines {
-  opacity: 1;
-}
-
-.stellatum-line {
-  fill: none;
-  stroke: var(--gold-deep);
-  stroke-width: 0.42;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  transition:
-    stroke-dashoffset 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) calc(4.6s + var(--li, 0) * 0.32s),
-    opacity 0.9s ease calc(4.6s + var(--li, 0) * 0.32s);
-}
-
-.composition.ready .stellatum-line {
-  opacity: 0.32;
-  stroke-dashoffset: 0;
-}
-
-.stellatum-star {
-  transform-box: fill-box;
-  transform-origin: center;
-  opacity: 0;
-}
-
-.stellatum-star-gold      { fill: var(--gold); }
-.stellatum-star-vermilion { fill: var(--vermilion); }
-.stellatum-star-cool      { fill: var(--cool); }
-
-.composition.ready .stellatum-star {
-  animation:
-    stellatumStarIn 0.9s cubic-bezier(0.2, 1.2, 0.4, 1) calc(4.4s + var(--star-i) * 0.05s) forwards,
-    stellatumTwinkle var(--star-twinkle) ease-in-out infinite;
-  animation-delay:
-    calc(4.4s + var(--star-i) * 0.05s),
-    calc(5.6s + var(--star-phase));
-}
-
-@keyframes stellatumStarIn {
-  0%   { opacity: 0; transform: scale(0.2); }
-  100% { opacity: 0.78; transform: scale(1); }
-}
-
-@keyframes stellatumTwinkle {
-  0%, 100% { opacity: 0.72; transform: scale(1); }
-  50%      { opacity: 0.32; transform: scale(0.82); }
-}
-
-/* The reader's attention draws the constellation lines slightly
-   brighter when they approach the question. */
-.composition.is-pointing .stellatum-line {
-  opacity: 0.45;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .stellatum {
-    transform: none;
-    animation: none;
-    opacity: 1;
-    transition: opacity 0.4s ease 0.6s;
-  }
-  .stellatum-line {
-    transition: opacity 0.4s ease, stroke-dashoffset 0.8s ease;
-    stroke-dashoffset: 0;
-  }
-  .composition.ready .stellatum-line {
-    opacity: 0.32;
-  }
-  .stellatum-star {
-    opacity: 0;
-    transition: opacity 0.5s ease calc(0.4s + var(--star-i) * 0.04s);
-  }
-  .composition.ready .stellatum-star {
-    opacity: 0.6;
-    animation: none;
-  }
-}
-
-@media (max-width: 760px) {
-  .stellatum-svg { width: clamp(200px, 56vw, 280px); }
-}
-
-@media (max-width: 520px) {
-  .stellatum-svg { width: 78vw; max-width: 240px; }
-}
-
 /* The hero's main "?" curve. Drawn by an unseen quill on page load:
    the stroke begins hidden, then traces the question mark from the
    left of the bowl all the way to the bottom of the stem, like ink
@@ -4562,9 +4428,7 @@ body {
 }
 
 /* ----- Iteration 55: tightened mobile composition -----
- * The question gets a touch more breathing room at narrow widths,
- * the chapter's right margin only carries one whisper at the bottom,
- * and the colophon's sigillum reads as a quieter stamp. */
+ * The question gets a touch more breathing room at narrow widths. */
 @media (max-width: 620px) {
   .question { letter-spacing: -0.012em; }
 }
@@ -4577,7 +4441,6 @@ body {
     letter-spacing: -0.008em;
   }
   .question-verb-wrap { display: inline-block; }
-  .sigillum-svg { width: clamp(24px, 7vw, 32px); }
   .composition { gap: clamp(14px, 2.2vw, 22px); }
   .question-block { padding: clamp(20px, 4vw, 30px) clamp(18px, 4vw, 26px) clamp(22px, 4vw, 32px); }
   .answer { font-size: clamp(19px, 4.8vw, 23px); line-height: 1.5; }
@@ -5326,20 +5189,8 @@ body {
   .question-flourish { bottom: -0.5em; }
 }
 
-/* ----- Iteration 24: drawn hero stroke, named-subject underline,
-   pen-trial closing flourish, and an ink-stain beside the reply.
-   * Three small additions deepen the manuscript as a real reading:
-   * the "?" is now drawn by a quill on page load; the named subject
-   * "Minimax M3" is set with a gold ink rule; a small pen trial
-   * closes the colophon; and a vermilion ink-stain pools beside
-   * the reply as if the page has just been written. */
-
-/* ----- Hero stroke draw-in (extends existing hero elements) ----- */
-/* (styles placed in the main hero block above) */
-
-/* ----- Pen trial (scribal flourish at the end of the colophon) ----- */
-
-.pen-trial {
+/* ----- Iteration 24: drawn hero stroke,
+named-subject underline{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -5352,105 +5203,19 @@ body {
   pointer-events: none;
 }
 
-.frame.ready .pen-trial {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.pen-trial-svg {
-  width: clamp(38px, 4.2vw, 60px);
-  height: auto;
-  display: block;
-  overflow: visible;
-  color: var(--gold);
-}
-
-.pen-trial-mark {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 0.9;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.pen-trial-mark-1 { animation: penTrialDraw 0.8s cubic-bezier(0.4, 0.04, 0.2, 1) 3.4s forwards; }
-.pen-trial-mark-2 { animation: penTrialDraw 0.6s cubic-bezier(0.4, 0.04, 0.2, 1) 3.75s forwards; }
-.pen-trial-mark-3 { animation: penTrialDraw 0.7s cubic-bezier(0.4, 0.04, 0.2, 1) 3.95s forwards; }
-.pen-trial-mark-4 { animation: penTrialDraw 0.9s cubic-bezier(0.4, 0.04, 0.2, 1) 4.2s forwards; }
-
-.pen-trial-pip {
-  fill: var(--vermilion);
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(0);
-  will-change: transform, opacity;
-}
-
-.pen-trial-pip-sm { fill: var(--gold); }
-
-.pen-trial-pip-1 { animation: penTrialPip 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) 3.7s forwards; }
-.pen-trial-pip-2 { animation: penTrialPip 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) 4.1s forwards; }
-.pen-trial-pip-3 { animation: penTrialPip 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) 4.75s forwards; }
-
-@keyframes penTrialDraw {
-  to { opacity: 0.85; stroke-dashoffset: 0; }
-}
-
-@keyframes penTrialPip {
-  to { opacity: 0.78; transform: scale(1); }
-}
-
 /* ----- Reduced motion overrides for the new details ----- */
 @media (prefers-reduced-motion: reduce) {
-  .pen-trial { transition: none; opacity: 1; transform: none; }
-  .pen-trial-mark { animation: none; opacity: 0.85; stroke-dashoffset: 0; }
-  .pen-trial-pip { animation: none; opacity: 0.78; transform: scale(1); }
   .question-name::after { transition: none; opacity: 0.85; transform: scaleX(1); }
 }
 
-/* ----- Mobile sizing for the new details ----- */
-@media (max-width: 880px) {
-  .pen-trial-svg { width: clamp(32px, 4vw, 50px); }
-}
+/* ----- Inkpot and quill (colophon still life) -----
+ * A glass inkpot with vermilion ink, a quill laid across the rim, a
+ * single ink-drop at the nib, and a faint hairline on the parchment
+ * where the quill was last set down. Three beats: idle (the drop
+ * pulses), acknowledge (an ink-mark blooms beside the pot), annotavi
+ * (a smaller fleck appears, the reader has taken up the pen). */
 
-@media (max-width: 520px) {
-  .pen-trial-svg { width: 30px; }
-}
-
-/* ----- Iteration 47: a composed inkpot-and-quill still life -----
- * The chapter is read by candlelight at the top of the page (the
- * candle and its dish) and signed at the foot by the writer's own
- * instrument (the inkpot and quill). The colophon used to close with
- * a small pen-trial flourish; now it closes with a still life of the
- * tools that composed the chapter — a glass inkpot with vermilion ink
- * visible inside, a quill laid across the rim, a single ink-drop at
- * the nib, and a faint hairline on the parchment where the quill was
- * last set down. The scene draws in once the colophon has settled,
- * like a writer's instrument being laid out at the close of a
- * reading session.
- *
- * Three interactive beats, each purely additive:
- *
- *   1. Idle — the ink-drop pulses gently, the scene reads as a quiet
- *      still life. The quill is angled upward toward its feather.
- *
- *   2. Acknowledge (reader presses the question) — the ink-drop
- *      trembles, a vermilion ink-mark blooms on the parchment beside
- *      the pot (the writer has just dipped the quill), and the
- *      inkpot's warm glow brightens. The bloom is one-shot and stays.
- *
- *   3. Annotavi (reader marks the margin) — a smaller ink-fleck
- *      appears on the parchment, as if the reader has reached for the
- *      pen. The scene reads as the chapter and its reader both having
- *      taken up the instrument.
- */
-
-.inkpot-and-quill {
+.inkpot-and-quill{
   display: block;
   width: clamp(90px, 10vw, 140px);
   height: auto;
@@ -6542,102 +6307,6 @@ body {
   .reading-seal { width: 22px; height: 22px; }
 }
 
-/* ----- Iteration 55: sigillum (colophon seal, replaces the oculus) -----
- * A composed round seal that takes the place of the retired scholar's
- * oculus. The seal reads as a scholar's stamp rather than a watching
- * eye — a quiet declaration that the chapter is finished. A thin gold
- * border with a finer inner ring; a small italic "sigillum" along the
- * upper rim and "fol · xviii" along the lower; a four-pointed
- * vermilion star at the centre with a gold pip at its heart. Parallaxes
- * gently with the reader's pointer so the colophon keeps its quiet
- * life, but the gesture closes the composition with a stamp instead of
- * a glance. */
-.sigillum {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: clamp(2px, 0.2vw, 5px);
-  margin-bottom: clamp(1px, 0.1vw, 2px);
-  opacity: 0;
-  transform: translateY(3px);
-  transition:
-    opacity 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) 3.05s,
-    transform 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) 3.05s;
-  pointer-events: none;
-}
-
-.frame.ready .sigillum {
-  opacity: 0.95;
-}
-
-.sigillum-svg {
-  width: clamp(28px, 2.6vw, 40px);
-  height: auto;
-  display: block;
-  overflow: visible;
-  transform: translate3d(
-    calc(var(--sig-x, 0) * -1.2px),
-    calc(var(--sig-y, 0) * -0.9px),
-    0
-  );
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-  will-change: transform;
-}
-
-.sigillum-ring {
-  fill: none;
-  stroke: var(--gold);
-  stroke-width: 0.55;
-  opacity: 0.72;
-}
-
-.sigillum-ring-inner {
-  fill: none;
-  stroke: var(--gold-deep);
-  stroke-width: 0.32;
-  opacity: 0.5;
-  stroke-dasharray: 1.2 2.4;
-}
-
-.sigillum-word {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 500;
-  font-size: 4.2px;
-  letter-spacing: 0.18em;
-  fill: var(--ink-faint);
-  opacity: 0.78;
-  text-transform: lowercase;
-}
-
-.sigillum-word-low {
-  fill: var(--gold);
-  opacity: 0.7;
-}
-
-.sigillum-star {
-  fill: var(--vermilion);
-  opacity: 0.92;
-  filter: drop-shadow(0 0 1.8px rgba(176, 83, 58, 0.45));
-}
-
-.sigillum-core {
-  fill: var(--gold-bright);
-  opacity: 0.95;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sigillum {
-    opacity: 0.95;
-    transform: none;
-    transition: none;
-  }
-  .sigillum-svg {
-    transform: none;
-    transition: none;
-  }
-}
-
 /* ----- Iteration 51: parchment breath (held-page warmth pulse) -----
  * A very soft warm pool that sits behind the composition and breathes
  * on the candle's long rhythm — the candle already flickers; this is
@@ -6855,9 +6524,7 @@ body {
     color 0.4s ease;
 }
 
-/* ----- Vide annotation (left-margin scholastic gloss) -----
-   A small "vide · look" gloss in vermilion italic with a hairline
-   /* ----- Lectoris nota (the reader's bottom-left mark) -----
+/* ----- Lectoris nota (the reader's bottom-left mark) -----
  *
  * Iteration 42: a quiet reader's gloss in the bottom-left margin that
  * completes the folio's four-corner marginal scheme. The chapter
@@ -7178,232 +6845,6 @@ body {
   }
 }
 
-/* ----- Iteration 31: a horologium and tightened typography -----
- *
- * One new authored element plus a few refinements:
- *
- *  - A small drawn sundial ("horologium") sits in the upper-left margin
- *    of the hero, paired with the "Qu." rubric and the scribe's
- *    inkpot. A semicircle dial face with five hour marks, a thin
- *    gnomon rising from the center, and a faint vermilion shadow cast
- *    toward the hour of reading. The dial is drawn in slowly on page
- *    load — like an instrument being laid out at the start of a
- *    reading session. Pairs thematically with the candle flame above
- *    (light + time = the moment of reading).
- *
- *  - The question line gets a tighter rhythm: a small kerning nudge
- *    between "is" and "Minimax M3", and a subtle "punctus" (gold
- *    middle-dot) inserted between the named subject and the predicate,
- *    so the line reads as a balanced triple (subject · predicate ·
- *    climax) rather than a run-on.
- *
- *  - A faint hairline now connects the hero emblem's bowl to the
- *    question's terminal "?" when the reader engages — the two
- *    question marks (the emblem above, the punctuation in the text)
- *    acknowledge each other, framed by the chapter's vertical axis. */
-
-/* ----- Horologium ----- */
-
-.horologium {
-  position: absolute;
-  right: calc(100% + clamp(4px, 0.7vw, 10px));
-  top: clamp(4px, 1.2vh, 18px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(3px, 0.3vw, 6px);
-  pointer-events: none;
-  opacity: 0;
-  transform: translate(-4px, 0);
-  will-change: opacity, transform;
-  animation: horologiumIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.35s forwards;
-  z-index: 1;
-}
-
-.horologium-svg {
-  width: clamp(40px, 4.6vw, 58px);
-  height: auto;
-  display: block;
-  overflow: visible;
-  color: var(--gold);
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
-}
-
-.horologium-dial {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 0.6;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  animation: horologiumDialDraw 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 3.45s forwards;
-  will-change: stroke-dashoffset, opacity;
-}
-
-.horologium-base {
-  stroke: currentColor;
-  stroke-width: 0.55;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  animation: horologiumBaseDraw 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) 3.55s forwards;
-}
-
-.horologium-tick {
-  stroke: currentColor;
-  stroke-width: 0.55;
-  stroke-linecap: round;
-  opacity: 0;
-  animation: horologiumTickIn 0.5s ease 3.7s forwards;
-}
-
-.horologium-tick-sm {
-  stroke-width: 0.4;
-  animation-delay: 3.8s;
-}
-
-.horologium-gnomon {
-  stroke: currentColor;
-  stroke-width: 0.7;
-  stroke-linecap: round;
-  opacity: 0;
-  animation: horologiumGnomonIn 0.6s ease 3.85s forwards;
-}
-
-.horologium-shadow {
-  stroke: var(--vermilion);
-  stroke-width: 0.5;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  animation: horologiumShadowDraw 0.85s cubic-bezier(0.55, 0.04, 0.32, 1) 4.05s forwards;
-}
-
-.horologium-pip {
-  fill: var(--vermilion);
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(0);
-  animation: horologiumPipIn 0.6s cubic-bezier(0.2, 1.2, 0.4, 1) 4.35s forwards;
-  filter: drop-shadow(0 0 3px rgba(176, 83, 58, 0.35));
-}
-
-.horologium-center {
-  fill: currentColor;
-  opacity: 0;
-  animation: horologiumCenterIn 0.5s ease 3.85s forwards;
-}
-
-.horologium-label {
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(4px, 0.4vw, 7px);
-  font-family: var(--mono);
-  font-size: clamp(7.5px, 0.72vw, 9px);
-  letter-spacing: 0.2em;
-  text-transform: lowercase;
-  color: var(--ink-faint);
-  opacity: 0;
-  animation: horologiumLabelIn 1.0s ease 4.55s forwards;
-  white-space: nowrap;
-}
-
-.horologium-rule {
-  display: inline-block;
-  width: clamp(6px, 0.8vw, 10px);
-  height: 1px;
-  background: var(--ink-faint);
-  opacity: 0.55;
-}
-
-.horologium-text {
-  font-family: var(--serif);
-  font-style: italic;
-  color: var(--gold);
-  letter-spacing: 0.14em;
-  opacity: 0.85;
-}
-
-@keyframes horologiumIn {
-  to { opacity: 0.92; transform: translate(0, 0); }
-}
-
-@keyframes horologiumDialDraw {
-  to { opacity: 0.6; stroke-dashoffset: 0; }
-}
-
-@keyframes horologiumBaseDraw {
-  to { opacity: 0.5; stroke-dashoffset: 0; }
-}
-
-@keyframes horologiumTickIn {
-  to { opacity: 0.72; }
-}
-
-@keyframes horologiumGnomonIn {
-  to { opacity: 0.82; }
-}
-
-@keyframes horologiumShadowDraw {
-  to { opacity: 0.7; stroke-dashoffset: 0; }
-}
-
-@keyframes horologiumPipIn {
-  to { opacity: 0.92; transform: scale(1); }
-}
-
-@keyframes horologiumCenterIn {
-  to { opacity: 0.7; }
-}
-
-@keyframes horologiumLabelIn {
-  to { opacity: 0.8; }
-}
-
-/* Once the dial has settled, a slow breath on the shadow keeps the
-   horologium alive — a tiny flicker like a real sundial on a still
-   afternoon. */
-.horologium-shadow {
-  animation:
-    horologiumShadowDraw 0.85s cubic-bezier(0.55, 0.04, 0.32, 1) 4.05s forwards,
-    horologiumShadowBreath 13s ease-in-out 5.5s infinite;
-}
-
-@keyframes horologiumShadowBreath {
-  0%, 100% { opacity: 0.7; }
-  50%      { opacity: 0.45; }
-}
-
-/* ----- Living horologium (iteration 51) -----
- * The shadow arm rotates around the gnomon tip as the reader's
- * session time advances, so the sundial begins to keep the hour of
- * reading. The JS sets --shadow-angle on the Horologium element; the
- * arm follows that angle. Rotation transform-origin is the gnomon tip
- * (20, 19.5) in the SVG's user space. Falls back to the static
- * settled position (22.4°, the angle the original shadow already sat
- * at) when --shadow-angle is not set, so the instrument still reads
- * the same on first paint. */
-.horologium-shadow-arm {
-  transform-origin: 20px 19.5px;
-  transform: rotate(var(--shadow-angle, 22.4deg));
-}
-
-/* ----- Living speculum (iteration 51) -----
- * The vermilion star orbits the dial face as the reader's session
- * time advances, paired with the horologium's shadow so the hour and
- * the heavens stay coupled. The JS sets --star-angle on the Speculum
- * element; the orbit group rotates the star around the dial center
- * (28, 28). Falls back to 0° (the star's drawn position) when the
- * variable is not yet set. */
-.speculum-star-orbit {
-  transform-origin: 28px 28px;
-  transform: rotate(var(--star-angle, 0deg));
-}
-
 /* ----- Question line typography refinements -----
    Tighten the kerning of "is" lead and the letter-spacing of "Minimax M3"
    so the line reads as a single composed line. The existing pause-dots
@@ -7472,17 +6913,6 @@ body {
 /* ----- Reduced motion overrides for iteration 31 ----- */
 
 @media (prefers-reduced-motion: reduce) {
-  .horologium { animation: none; opacity: 0.92; transform: none; }
-  .horologium-dial { animation: none; opacity: 0.6; stroke-dashoffset: 0; }
-  .horologium-base { animation: none; opacity: 0.5; stroke-dashoffset: 0; }
-  .horologium-tick { animation: none; opacity: 0.72; }
-  .horologium-tick-sm { animation: none; opacity: 0.72; }
-  .horologium-gnomon { animation: none; opacity: 0.82; }
-  .horologium-shadow { animation: none; opacity: 0.7; stroke-dashoffset: 0; }
-  .horologium-shadow-arm { transform: rotate(22.4deg); }
-  .horologium-pip { animation: none; opacity: 0.92; transform: scale(1); }
-  .horologium-center { animation: none; opacity: 0.7; }
-  .horologium-label { animation: none; opacity: 0.8; }
   .hero-question-link { transition: none; }
   .composition.is-pointing .hero-question-link { opacity: 0.55; transform: scaleY(1); }
 }
@@ -7490,309 +6920,16 @@ body {
 /* ----- Responsive sizing for iteration 31 ----- */
 
 @media (max-width: 880px) {
-  .horologium { right: calc(100% + clamp(2px, 0.6vw, 6px)); }
-  .horologium-svg { width: clamp(34px, 4.2vw, 48px); }
   .hero-question-link { height: clamp(16px, 2.2vw, 28px); }
 }
 
-@media (max-width: 760px) {
-  .horologium { top: clamp(2px, 0.8vh, 10px); }
-  .horologium-svg { width: clamp(30px, 4vw, 40px); }
-  .horologium-label { font-size: clamp(7px, 0.96vw, 8.5px); }
-}
-
 @media (max-width: 620px) {
-  .horologium-label { display: none; }
   .hero-question-link { height: clamp(14px, 2vw, 22px); opacity: 0.4; }
   .composition.is-pointing .hero-question-link { opacity: 0.5; }
 }
 
 @media (max-width: 520px) {
-  .horologium { display: none; }
   .hero-question-link { display: none; }
-}
-
-/* ----- Iteration 33: speculum — a small celestial almanac chart -----
- *
- * A drawn almanac that mirrors the horologium on the opposite margin
- * of the hero. Three concentric rings hold twelve hour marks, a sun
- * at the top, a crescent moon at the foot, and a single vermilion
- * star. Pairs with the horologium so the chapter has both its
- * earth-time and its heaven-time: the horologium marks the hour on
- * earth; the speculum marks the configuration of the heavens at
- * that hour. Drawn in slowly after the horologium has settled; the
- * star then twinkles faintly, like a still constellation. */
-
-.speculum {
-  position: absolute;
-  left: calc(100% + clamp(4px, 0.7vw, 10px));
-  top: clamp(4px, 1.2vh, 18px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(3px, 0.3vw, 6px);
-  pointer-events: none;
-  opacity: 0;
-  will-change: opacity, transform;
-  animation: speculumIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.55s forwards;
-  z-index: 1;
-}
-
-.speculum-svg {
-  width: clamp(40px, 4.6vw, 58px);
-  height: auto;
-  display: block;
-  overflow: visible;
-  color: var(--gold);
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
-}
-
-.speculum-bloom {
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  mix-blend-mode: screen;
-  animation:
-    speculumBloomIn 2.4s ease 4.0s forwards,
-    speculumBreath 14s ease-in-out 6.5s infinite;
-}
-
-.speculum-outer {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 0.55;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  animation: speculumOuterDraw 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) 3.65s forwards;
-}
-
-.speculum-middle {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 0.4;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  animation: speculumMiddleDraw 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 4.0s forwards;
-}
-
-.speculum-inner {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 0.4;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  animation: speculumInnerDraw 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 4.25s forwards;
-}
-
-.speculum-tick {
-  stroke: currentColor;
-  stroke-width: 0.4;
-  stroke-linecap: round;
-  opacity: 0;
-  animation: speculumTickIn 0.5s ease 4.45s forwards;
-}
-
-.speculum-tick-major {
-  stroke-width: 0.55;
-  animation: speculumTickMajorIn 0.55s ease 4.55s forwards;
-}
-
-.speculum-axis {
-  stroke: currentColor;
-  stroke-width: 0.35;
-  stroke-linecap: round;
-  opacity: 0;
-  animation: speculumAxisIn 0.6s ease 4.7s forwards;
-}
-
-.speculum-center {
-  fill: currentColor;
-  opacity: 0;
-  animation: speculumCenterIn 0.5s ease 4.85s forwards;
-}
-
-.speculum-sun {
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: speculumCelestialIn 0.8s cubic-bezier(0.2, 1.2, 0.4, 1) 4.6s forwards;
-}
-
-.speculum-sun-disc {
-  fill: var(--gold-bright);
-  filter: drop-shadow(0 0 2.5px rgba(240, 212, 154, 0.55));
-}
-
-.speculum-sun-ray {
-  stroke: var(--gold);
-  stroke-width: 0.55;
-  stroke-linecap: round;
-}
-
-.speculum-moon {
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: speculumCelestialIn 0.8s cubic-bezier(0.2, 1.2, 0.4, 1) 4.75s forwards;
-}
-
-.speculum-moon-disc {
-  fill: var(--ink-faint);
-  stroke: var(--gold-deep);
-  stroke-width: 0.3;
-  fill-opacity: 0.92;
-}
-
-.speculum-moon-shadow {
-  fill: var(--bg-deep);
-  fill-opacity: 0.95;
-}
-
-.speculum-star-group {
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation:
-    speculumStarIn 0.7s cubic-bezier(0.2, 1.2, 0.4, 1) 4.85s forwards,
-    speculumStarTwinkle 4.8s ease-in-out 5.6s infinite;
-}
-
-.speculum-star {
-  fill: var(--vermilion);
-  filter: drop-shadow(0 0 2px rgba(176, 83, 58, 0.6));
-}
-
-.speculum-label {
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(4px, 0.4vw, 7px);
-  font-family: var(--mono);
-  font-size: clamp(7.5px, 0.72vw, 9px);
-  letter-spacing: 0.2em;
-  text-transform: lowercase;
-  color: var(--ink-faint);
-  opacity: 0;
-  animation: speculumLabelIn 1.0s ease 5.05s forwards;
-  white-space: nowrap;
-}
-
-.speculum-rule {
-  display: inline-block;
-  width: clamp(6px, 0.8vw, 10px);
-  height: 1px;
-  background: var(--ink-faint);
-  opacity: 0.55;
-}
-
-.speculum-text {
-  font-family: var(--serif);
-  font-style: italic;
-  color: var(--gold);
-  letter-spacing: 0.14em;
-  opacity: 0.85;
-}
-
-@keyframes speculumIn {
-  to { opacity: 0.92; transform: translate(0, 0); }
-}
-
-@keyframes speculumBloomIn {
-  to { opacity: 1; }
-}
-
-@keyframes speculumBreath {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.62; }
-}
-
-@keyframes speculumOuterDraw {
-  to { opacity: 0.72; stroke-dashoffset: 0; }
-}
-
-@keyframes speculumMiddleDraw {
-  to { opacity: 0.52; stroke-dashoffset: 0; }
-}
-
-@keyframes speculumInnerDraw {
-  to { opacity: 0.52; stroke-dashoffset: 0; }
-}
-
-@keyframes speculumTickIn {
-  to { opacity: 0.5; }
-}
-
-@keyframes speculumTickMajorIn {
-  to { opacity: 0.78; }
-}
-
-@keyframes speculumAxisIn {
-  to { opacity: 0.6; }
-}
-
-@keyframes speculumCenterIn {
-  to { opacity: 0.7; }
-}
-
-@keyframes speculumCelestialIn {
-  0%   { opacity: 0; transform: scale(0.3); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-@keyframes speculumStarIn {
-  0%   { opacity: 0; transform: scale(0); }
-  100% { opacity: 0.95; transform: scale(1); }
-}
-
-@keyframes speculumStarTwinkle {
-  0%, 100% { opacity: 0.95; transform: scale(1); }
-  50%      { opacity: 0.55; transform: scale(0.82); }
-}
-
-@keyframes speculumLabelIn {
-  to { opacity: 0.8; }
-}
-
-/* Reduced motion: skip the entry, hold the settled state. */
-@media (prefers-reduced-motion: reduce) {
-  .speculum { animation: none; opacity: 0.92; transform: none; }
-  .speculum-bloom { animation: none; opacity: 1; }
-  .speculum-outer { animation: none; opacity: 0.72; stroke-dashoffset: 0; }
-  .speculum-middle { animation: none; opacity: 0.52; stroke-dashoffset: 0; }
-  .speculum-inner { animation: none; opacity: 0.52; stroke-dashoffset: 0; }
-  .speculum-tick { animation: none; opacity: 0.5; }
-  .speculum-tick-major { animation: none; opacity: 0.78; }
-  .speculum-axis { animation: none; opacity: 0.6; }
-  .speculum-center { animation: none; opacity: 0.7; }
-  .speculum-sun, .speculum-moon { animation: none; opacity: 1; transform: scale(1); }
-  .speculum-star-group { animation: none; opacity: 0.95; transform: scale(1); }
-  .speculum-star-orbit { transform: rotate(0deg); }
-  .speculum-label { animation: none; opacity: 0.8; }
-}
-
-/* Responsive sizing, matching the horologium's rhythm. */
-@media (max-width: 880px) {
-  .speculum { left: calc(100% + clamp(2px, 0.6vw, 6px)); }
-  .speculum-svg { width: clamp(34px, 4.2vw, 48px); }
-}
-
-@media (max-width: 760px) {
-  .speculum { top: clamp(2px, 0.8vh, 10px); }
-  .speculum-svg { width: clamp(30px, 4vw, 40px); }
-  .speculum-label { font-size: clamp(7px, 0.96vw, 8.5px); }
-}
-
-@media (max-width: 620px) {
-  .speculum-label { display: none; }
-}
-
-@media (max-width: 520px) {
-  .speculum { display: none; }
 }
 
 /* ----- Iteration 34: chapter spine and colophon terminus -----
@@ -8134,142 +7271,12 @@ body {
   }
 }
 
-/* ----- Iteration 35: drift constellation, word glow, illuminated answer -----
- *
- * Three small extensions bind the existing manuscript to a sense of
- * reading light. Above the composition, a quiet arc of seven asterisks
- * drifts across the upper area like the celestial field the speculum
- * charts — each star twinkles on its own phase, and the cluster is
- * nudged gently against the reader's pointer so the field feels
- * suspended in depth rather than painted onto the page. Each word of
- * the central question receives a soft gold halo when it is the
- * reader's focus, so the candle's light follows the eye. And the
- * answer's dropcap "I" becomes a true illuminated initial: vermilion
- * stem with gold-leaf flourishes and a tiny four-pointed star nested
- * in its body, so the answer opens with the same celestial mark that
- * closes the colophon.
- */
-
-/* ----- Drift constellation (upper celestial arc) ----- */
-
-.drift-constellation {
-  position: fixed;
-  top: clamp(28px, 5.5vh, 64px);
-  left: 0;
-  right: 0;
-  height: clamp(68px, 11vh, 124px);
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0;
-  animation: driftConstellationIn 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) 2.2s forwards;
-  transform: translate3d(
-      calc(var(--const-x, 0) * 6px),
-      calc(var(--const-y, 0) * 4px),
-      0
-    );
-  will-change: transform, opacity;
-}
-
-@keyframes driftConstellationIn {
-  to { opacity: 1; }
-}
-
-.drift-star {
-  position: absolute;
-  left: var(--star-x, 50%);
-  top: var(--star-y, 0px);
-  width: calc(var(--star-r, 1.6px) * 6);
-  height: calc(var(--star-r, 1.6px) * 6);
-  margin-left: calc(var(--star-r, 1.6px) * -3);
-  margin-top: calc(var(--star-r, 1.6px) * -3);
-  display: block;
-  opacity: 0;
-  animation:
-    driftStarIn 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) calc(2.3s + var(--star-i, 0) * 0.12s) forwards,
-    driftStarTwinkle var(--star-twinkle, 6s) ease-in-out calc(var(--star-phase, 0s) + 4s) infinite;
-  will-change: opacity, transform;
-}
-
-.drift-star::before,
-.drift-star::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  background: currentColor;
-  box-shadow: 0 0 calc(var(--star-r, 1.6px) * 4) currentColor;
-  border-radius: 0;
-  opacity: 0.92;
-}
-
-.drift-star::before {
-  width: calc(var(--star-r, 1.6px) * 6);
-  height: 1px;
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.drift-star::after {
-  width: 1px;
-  height: calc(var(--star-r, 1.6px) * 6);
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.drift-star-gold { color: var(--gold); }
-.drift-star-vermilion { color: var(--vermilion); }
-.drift-star-pale { color: var(--gold-bright); }
-
-@keyframes driftStarIn {
-  0%   { opacity: 0; transform: scale(0.4) translateY(2px); }
-  100% { opacity: 0.85; transform: scale(1) translateY(0); }
-}
-
-@keyframes driftStarTwinkle {
-  0%, 100% { opacity: 0.85; transform: scale(1); }
-  38%      { opacity: 0.32; transform: scale(0.86); }
-  62%      { opacity: 1;    transform: scale(1.08); }
-}
-
-/* The faint arc that threads through the stars — a hairline curve the
-   reader almost reads as the constellation's own horizon. */
-.drift-arc {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  opacity: 0;
-  animation: driftArcIn 2.4s ease 2.6s forwards;
-  pointer-events: none;
-}
-
-.drift-arc-curve {
-  fill: none;
-  stroke: var(--gold);
-  stroke-width: 0.45;
-  stroke-dasharray: 1.2 5.4;
-  stroke-linecap: round;
-  opacity: 0;
-  animation: driftArcDraw 2.6s ease 2.6s forwards;
-}
-
-.drift-arc-end {
-  fill: var(--gold);
-  opacity: 0;
-  animation: driftArcEnd 1.2s ease 3.6s forwards;
-}
-
-@keyframes driftArcIn {
-  to { opacity: 1; }
-}
-
-@keyframes driftArcDraw {
-  to { opacity: 0.45; }
-}
-
-@keyframes driftArcEnd {
-  to { opacity: 0.65; }
-}
-
+/* ----- Iteration 35: word glow, illuminated answer -----
+ * Each word of the central question receives a soft gold halo when it
+ * is the reader's focus, so the candle's light follows the eye. The
+ * answer's dropcap "I" is a true illuminated initial: vermilion stem
+ * with gold-leaf flourishes and a tiny four-pointed star nested in its
+ * body. */
 /* ----- Word hover glow on the question ----- */
 
 .question-word {
@@ -8430,22 +7437,7 @@ body {
   .hero-sparkle-dot { animation: none; opacity: 0; }
 }
 
-/* ----- Responsive: hide constellation on small screens ----- */
-
-@media (max-width: 760px) {
-  .drift-constellation {
-    height: clamp(46px, 7vh, 70px);
-    top: clamp(20px, 4vh, 36px);
-  }
-  .drift-star {
-    transform: scale(0.78);
-  }
-}
-
 @media (max-width: 520px) {
-  .drift-constellation {
-    display: none;
-  }
   .answer-dropcap-star {
     width: 7px;
     height: 7px;
@@ -10582,20 +9574,21 @@ body {
 /* ----- Window arch (the room behind the folio) -----
  * The chapter is being read by candlelight in a quiet room at night.
  * This faint arched window sits as the deepest background layer —
- * barely there, just enough to give the scene its home. The candle
- * above is the only light because the night sky is visible through
- * the glass; the horologium and speculum now have a literal sky to
- * chart; the watermark behind the parchment rhymes with the night
- * beyond the window. The arch is a hairline gold gothic profile
- * with a deep blue night interior, three thin mullions, a sill, a
- * quiet moon, and a handful of faint stars that twinkle softly. On
- * the reader's acknowledge, the stars briefly flare together —
- * the night sky leaning in to listen, the way the candle flares for
+ * barely there,
+three thin mullions,
+a sill,
+a
+ * quiet moon,
+and a handful of faint stars that twinkle softly. On
+ * the reader's acknowledge,
+the stars briefly flare together —
+ * the night sky leaning in to listen,
+the way the candle flares for
  * the reader who has touched the question. The arch parallaxes
  * gently with the reader's pointer so it reads as suspended on the
  * far wall of the room rather than painted onto the parchment.
  */
-.window-arch {
+.window-arch{
   position: fixed;
   inset: 0;
   display: grid;
@@ -11291,365 +10284,264 @@ body {
   .hero-frame + .stem-descent { margin-top: -8px; }
 }
 
-/* ----- Iteration 68: the manuscript's salamander -----
+/* ============================================================
+ * Iteration 70 — "editio minor": the folio, edited
  *
- * A small drawn fire-salamander lives at the bottom-right of the
- * page's frame, completing the chapter's four-corner marginal
- * scheme (folio · reading · annotavi · bestiola). The creature
- * mirrors the bottom-left LectorisNota in scale and quietness, but
- * speaks in a different vocabulary — it is the page's own
- * marginalia, the medieval illuminator's tiny signature.
- *
- * Behavior:
- *   - At rest, the salamander breathes slowly (the gold belly-glow
- *     pulses faintly) and parallaxes gently against the pointer.
- *   - When the reader draws near (within ~140px of the creature),
- *     it lifts its head and looks toward them — the eye brightens
- *     and the snout tilts upward by a hair.
- *   - When the reader acknowledges the question (pulse), the
- *     belly flares briefly in gold and a single extra print drops
- *     behind the creature, like a quill's slip.
- *   - Once the chapter has been understood (intellexi + annotavi),
- *     the salamander crawls a little way along the bottom edge of
- *     the page, leaving a trail of nine small vermilion and gold
- *     paw-prints drawn in one slow pass.
- *
- * Hidden on reduced-motion devices: the salamander remains visible
- * but does not breathe, flare, crawl, or parallax — it simply sits
- * in the margin, a quiet drawn mark. */
+ * The chapter had accumulated a shelf of marginal instruments
+ * (sundial, celestial chart, drifting constellation, seal, pen-trial,
+ * bestiary salamander) that crowded the two things the page is
+ * actually about: the drawn question and the question in words. They
+ * are gone. What remains is given room, and the reading itself gets a
+ * named, keyboard-reachable control.
+ * ============================================================ */
 
-.marginal-salamander {
+/* ----- Breathing room -----
+ * With the hero's flanking instruments removed, the vertical rhythm
+ * can open up: the emblem, the question, and the chapter plate each
+ * get a wider band of quiet around them. */
+
+.composition { gap: clamp(18px, 2.3vw, 30px); }
+.hero-frame { margin-bottom: clamp(2px, 0.5vw, 6px); }
+
+/* Hierarchy — the four corner marginalia sit further back so the
+ * chapter reads first and the margins second. They come fully forward
+ * on hover and focus, as before. */
+.frame.ready .marg { opacity: 0.62; }
+.marg:hover, .marg:focus-visible { opacity: 1; }
+
+/* The emblem carries a touch more light now that nothing sits beside
+ * it — the candle has only one thing left to illuminate. */
+.hero { filter: drop-shadow(0 0 34px rgba(217, 176, 116, 0.26)); }
+
+/* ----- Ink spatter (re-authored) -----
+ * The flourish thrown from the emblem when the chapter is read: an arc
+ * of small gold drops that fly outward along their own angle and
+ * settle. Driven entirely by the per-dot custom properties set in the
+ * markup (--angle, --distance, --size, --delay, --op). */
+
+.hero-spatter {
   position: absolute;
-  bottom: clamp(36px, 4.6vw, 64px);
-  right: clamp(20px, 4vw, 48px);
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: clamp(3px, 0.32vw, 5px);
-  width: clamp(72px, 8vw, 108px);
+  left: 50%;
+  top: 46%;
+  width: 0;
+  height: 0;
   pointer-events: none;
-  opacity: 0;
-  transform: translate3d(
-    calc(var(--salam-x, 0) * 1.6px),
-    calc(var(--salam-y, 0) * 1.2px),
-    0
-  );
-  transition:
-    opacity 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 1.85s,
-    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   z-index: 2;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.32));
-  will-change: transform, opacity;
 }
 
-.frame.ready .marginal-salamander {
-  opacity: 0.94;
-}
-
-/* The creature's body group parallaxes slightly inside the wrapper
-   in the opposite direction (so it leans toward the pointer's
-   gaze) — a quiet inverse parallax, like the creature following
-   the reader with its body rather than its eye. */
-.marginal-salamander .salamander-svg {
-  display: block;
-  width: clamp(48px, 5.6vw, 78px);
-  height: auto;
-  overflow: visible;
-  transform: translate3d(
-    calc(var(--salam-x, 0) * -0.8px),
-    calc(var(--salam-y, 0) * -0.8px),
-    0
-  );
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.marginal-salamander .salamander-body {
-  transform-box: fill-box;
-  transform-origin: 50% 60%;
-  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-/* When the reader draws near, the salamander lifts its head —
- * the body group tilts up and forward, and the eye brightens. */
-.marginal-salamander.is-near .salamander-body {
-  transform: translateY(-0.4px) rotate(-3deg);
-}
-
-.marginal-salamander.is-near .salamander-eye {
-  fill: var(--gold-bright);
-  filter: drop-shadow(0 0 1.6px rgba(240, 212, 154, 0.85));
-}
-
-.marginal-salamander .salamander-back {
-  fill: var(--vermilion);
-  fill-opacity: 0.92;
-  stroke: rgba(36, 14, 6, 0.55);
-  stroke-width: 0.18;
-  stroke-linejoin: round;
-}
-
-.marginal-salamander .salamander-belly {
-  fill: var(--gold);
-  fill-opacity: 0.62;
-  stroke: rgba(36, 14, 6, 0.35);
-  stroke-width: 0.14;
-}
-
-.marginal-salamander .salamander-tail {
-  fill: none;
-  stroke: var(--vermilion);
-  stroke-width: 0.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0.92;
-}
-
-.marginal-salamander .salamander-tail-tip {
-  fill: var(--gold);
-  fill-opacity: 0.85;
-}
-
-.marginal-salamander .salamander-head {
-  fill: var(--vermilion);
-  fill-opacity: 0.94;
-  stroke: rgba(36, 14, 6, 0.5);
-  stroke-width: 0.18;
-  stroke-linejoin: round;
-}
-
-.marginal-salamander .salamander-eye {
-  fill: var(--gold);
-  transition:
-    fill 0.4s ease,
-    filter 0.4s ease;
-}
-
-.marginal-salamander .salamander-eye-pip {
-  fill: rgba(36, 14, 6, 0.85);
-}
-
-.marginal-salamander .salamander-spot {
-  fill: var(--gold-bright);
-  fill-opacity: 0.85;
-  filter: drop-shadow(0 0 0.6px rgba(240, 212, 154, 0.4));
-}
-
-.marginal-salamander .salamander-leg {
-  fill: none;
-  stroke: rgba(36, 14, 6, 0.78);
-  stroke-width: 0.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* Belly-glow halo — breathes slowly when the salamander is at
- * rest, flares brighter on acknowledge, settles to a slow steady
- * glow once the chapter has been understood. */
-.marginal-salamander .salamander-glow {
+.spatter-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--size, 2px);
+  height: var(--size, 2px);
+  margin: calc(var(--size, 2px) / -2);
+  border-radius: 50%;
+  background: var(--gold-bright);
+  box-shadow: 0 0 6px rgba(240, 212, 154, 0.55);
   opacity: 0;
-  transform-origin: 50% 50%;
-  transform-box: fill-box;
-  animation: salamanderBreathe 5.6s ease-in-out 2.4s infinite;
+  transform: rotate(var(--angle, 0deg)) translateX(0) scale(0.4);
+  animation: spatterThrow 0.9s cubic-bezier(0.16, 0.84, 0.3, 1) var(--delay, 0ms) both;
 }
 
-.marginal-salamander.is-awake .salamander-glow {
-  opacity: 0.78;
+@keyframes spatterThrow {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--angle, 0deg)) translateX(0) scale(0.3);
+  }
+  22% {
+    opacity: var(--op, 1);
+    transform: rotate(var(--angle, 0deg))
+      translateX(calc(var(--distance, 80px) * 0.55)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--angle, 0deg))
+      translateX(var(--distance, 80px)) scale(0.5);
+  }
 }
 
-.marginal-salamander.is-flaring .salamander-glow {
-  opacity: 1;
-  filter: drop-shadow(0 0 3px rgba(240, 212, 154, 0.55));
-  animation: salamanderFlare 1.4s ease-out 0s 1;
-}
-
-@keyframes salamanderBreathe {
-  0%, 100% { opacity: 0.7; transform: scale(1); }
-  50%      { opacity: 0.92; transform: scale(1.06); }
-}
-
-@keyframes salamanderFlare {
-  0%   { opacity: 0.78; transform: scale(1); }
-  40%  { opacity: 1; transform: scale(1.22); }
-  100% { opacity: 0.78; transform: scale(1); }
-}
-
-/* Paw-print trail — drawn in once the chapter has been understood
- * (intellexi + annotavi). Each print fades in on its own staggered
- * delay, then settles. The trail sits behind the creature's body
- * and never moves; only the prints themselves bloom in. */
-.marginal-salamander .salamander-trail {
-  opacity: 0;
-  transition: opacity 0.5s ease 0.4s;
-}
-
-.marginal-salamander.is-crawling .salamander-trail {
-  opacity: 1;
-}
-
-.marginal-salamander .salamander-print {
-  fill: var(--vermilion);
-  fill-opacity: 0;
-  stroke: rgba(36, 14, 6, 0.42);
-  stroke-width: 0.08;
-  opacity: 0;
-  transition:
-    fill-opacity 0.6s ease,
-    opacity 0.6s ease;
-}
-
-.marginal-salamander.is-crawling .salamander-print {
-  fill-opacity: 0.78;
-  opacity: 1;
-  transition-delay: calc(var(--print-delay, 0ms));
-}
-
-.marginal-salamander .salamander-print-gold {
-  fill: var(--gold);
-  fill-opacity: 0;
-  stroke: rgba(36, 14, 6, 0.32);
-  stroke-width: 0.08;
-}
-
-.marginal-salamander.is-crawling .salamander-print-gold {
-  fill-opacity: 0.85;
-}
-
-/* When crawling, the creature slides a little way along the
- * bottom edge of the page. The translation is small — the
- * salamander only takes a few steps — so it reads as "the
- * creature walked" rather than "the creature left". */
-.marginal-salamander.is-crawling .salamander-svg {
-  transform: translate3d(18px, 0, 0);
-  transition: transform 5.2s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s;
-}
-
-.marginal-salamander.is-crawling .salamander-body {
-  animation: salamanderStride 1.2s steps(1, end) 0.4s 4;
-}
-
-@keyframes salamanderStride {
-  0%   { transform: translateY(0) rotate(0deg); }
-  50%  { transform: translateY(-0.6px) rotate(-2deg); }
-  100% { transform: translateY(0) rotate(0deg); }
-}
-
-/* Caption — the small italic "bestiola" label that sits beneath
- * the creature, with a hairline gold rule. Reads as the creature's
- * own marginal caption, the way a printer would name a marginal
- * bestiary in a scholarly edition. */
-.marginal-salamander .salamander-caption {
+/* The printer's date sets its three parts as one small line. */
+.printer-date-text {
   display: inline-flex;
-  align-items: center;
-  gap: clamp(4px, 0.4vw, 6px);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(8px, 0.78vw, 10px);
-  letter-spacing: 0.18em;
-  color: var(--gold);
-  opacity: 0;
-  transform: translateY(-2px);
-  transition:
-    opacity 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 2.45s,
-    transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 2.45s;
+  align-items: baseline;
+  gap: clamp(3px, 0.4vw, 6px);
+  white-space: nowrap;
 }
 
-.frame.ready .marginal-salamander .salamander-caption {
-  opacity: 0.78;
+/* ----- Reading pace (the reader's rubric) -----
+ * A named control, in the manuscript's two voices: vermilion Latin
+ * imperative, English gloss. It reads the chapter; pressed again it
+ * reads it more slowly; again, at pace. The hairline beneath it draws
+ * outward from the centre on hover and focus, so the mark answers a
+ * keyboard as legibly as a pointer. */
+
+.reading-pace {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: clamp(6px, 1vw, 14px);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 1.1s ease 2.5s,
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s;
+}
+
+.composition.ready .reading-pace {
+  opacity: 1;
   transform: translateY(0);
 }
 
-.marginal-salamander .salamander-caption-rule {
-  display: inline-block;
-  width: clamp(8px, 0.9vw, 12px);
+.reading-pace-btn {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(5px, 0.6vw, 8px);
+  padding: clamp(10px, 1.1vw, 14px) clamp(12px, 1.4vw, 18px);
+  font-family: var(--serif);
+  font-size: clamp(10.5px, 1.02vw, 12.5px);
+  letter-spacing: 0.2em;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.45s ease;
+}
+
+.reading-pace-btn:hover,
+.reading-pace-btn:focus-visible { color: var(--ink); }
+
+.reading-pace-btn:focus-visible {
+  outline: 1px solid rgba(217, 176, 116, 0.65);
+  outline-offset: 3px;
+}
+
+.reading-pace-latin {
+  font-style: italic;
+  color: var(--vermilion-bright);
+  letter-spacing: 0.14em;
+  transition: color 0.45s ease, text-shadow 0.45s ease;
+}
+
+.reading-pace-btn:hover .reading-pace-latin,
+.reading-pace-btn:focus-visible .reading-pace-latin {
+  text-shadow: 0 0 10px rgba(198, 104, 74, 0.45);
+}
+
+.reading-pace-sep { color: var(--ink-faint); }
+
+.reading-pace-gloss {
+  font-style: italic;
+  letter-spacing: 0.16em;
+}
+
+.reading-pace-pip {
+  align-self: center;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold-deep);
+  box-shadow: 0 0 0 0 rgba(217, 176, 116, 0);
+  transition:
+    background 0.45s ease,
+    box-shadow 0.5s ease,
+    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reading-pace-btn:hover .reading-pace-pip,
+.reading-pace-btn:focus-visible .reading-pace-pip {
+  background: var(--gold-bright);
+  box-shadow: 0 0 8px rgba(240, 212, 154, 0.6);
+  transform: scale(1.25);
+}
+
+/* Slower reading — the pip gains a quiet gold ring, the way a scribe
+ * would circle a word to mark the pace of a passage. */
+.reading-pace-btn.is-slow .reading-pace-pip {
+  background: var(--vermilion-bright);
+  box-shadow: 0 0 0 3px rgba(217, 176, 116, 0.28);
+}
+
+.reading-pace-rule {
+  position: absolute;
+  left: 50%;
+  right: auto;
+  bottom: clamp(4px, 0.6vw, 8px);
+  width: 0;
   height: 1px;
+  transform: translateX(-50%);
   background: linear-gradient(
     90deg,
-    var(--gold-deep) 0%,
-    var(--gold) 60%,
+    transparent 0%,
+    var(--gold-deep) 22%,
+    var(--gold) 50%,
+    var(--gold-deep) 78%,
     transparent 100%
   );
-  opacity: 0.7;
+  opacity: 0;
+  transition:
+    width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.45s ease;
 }
 
-.marginal-salamander .salamander-caption-text {
-  font-style: italic;
-  letter-spacing: 0.18em;
+.reading-pace-btn:hover .reading-pace-rule,
+.reading-pace-btn:focus-visible .reading-pace-rule {
+  width: calc(100% - clamp(16px, 2vw, 26px));
+  opacity: 0.85;
 }
 
-/* Reader engagement — when the question is being read (cursor
- * over the hero), the salamander's eye tracks the hero's flare
- * and the gold belly brightens a touch. */
-.stage.is-attending .marginal-salamander .salamander-glow {
-  filter: drop-shadow(0 0 2.4px rgba(240, 212, 154, 0.32));
-}
-
-/* Reduced motion — the salamander sits at rest without breath,
- * flare, crawl, or parallax. The trail remains hidden so the
- * creature is a single drawn mark, never animated. */
 @media (prefers-reduced-motion: reduce) {
-  .marginal-salamander {
-    transition: opacity 0.4s ease 1.85s;
-    transform: none !important;
-  }
-  .marginal-salamander .salamander-svg,
-  .marginal-salamander .salamander-body {
-    transform: none !important;
-    transition: none;
-  }
-  .marginal-salamander .salamander-glow {
-    opacity: 0.55;
-    animation: none;
-  }
-  .marginal-salamander .salamander-print {
-    opacity: 0;
-    fill-opacity: 0;
-  }
-  .marginal-salamander .salamander-eye {
-    fill: var(--gold);
-    filter: none;
-  }
-}
-
-@media (max-width: 880px) {
-  .marginal-salamander {
-    bottom: clamp(30px, 4vw, 50px);
-    right: clamp(14px, 2.6vw, 28px);
-    width: clamp(64px, 9vw, 88px);
-  }
-  .marginal-salamander .salamander-svg {
-    width: clamp(40px, 6.4vw, 60px);
-  }
+  .reading-pace { transition: none; opacity: 1; transform: none; }
+  .reading-pace-rule { transition: opacity 0.2s ease; width: calc(100% - 20px); }
+  .reading-pace-btn:hover .reading-pace-rule,
+  .reading-pace-btn:focus-visible .reading-pace-rule { opacity: 0.85; }
+  .reading-pace-pip { transition: none; }
+  .spatter-dot { animation: none; opacity: 0; }
 }
 
 @media (max-width: 620px) {
-  .marginal-salamander {
-    bottom: clamp(20px, 4.2vw, 38px);
-    right: clamp(10px, 2.4vw, 18px);
-    width: clamp(54px, 12vw, 72px);
+  .reading-pace-btn {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.16em;
+    padding: 12px 16px;
   }
-  .marginal-salamander .salamander-svg {
-    width: clamp(34px, 8.4vw, 50px);
-  }
-  .marginal-salamander .salamander-caption {
-    font-size: 8px;
-    letter-spacing: 0.14em;
-  }
+  .reading-pace-sep { display: none; }
+  .reading-pace-gloss { font-size: 0.94em; }
+  .composition { gap: clamp(14px, 2.4vw, 22px); }
 }
 
-@media (max-width: 480px) {
-  .marginal-salamander .salamander-caption { display: none; }
-  .marginal-salamander {
-    bottom: clamp(12px, 3vw, 22px);
-    right: clamp(8px, 2.2vw, 14px);
-    width: clamp(46px, 12vw, 62px);
-  }
+/* ----- The question, given its full voice -----
+ * The chapter title is the page's one loud thing; with the marginal
+ * instruments gone it can be set a size larger and a shade brighter
+ * without shouting over anything. The measure stays short so the line
+ * still breaks into a composed two- or three-line block. */
+
+.question {
+  font-size: clamp(42px, 6.9vw, 96px);
+  max-width: 22ch;
+  row-gap: clamp(6px, 0.7vw, 12px);
+  color: #f6f0e6;
+  text-shadow:
+    0 0 40px rgba(240, 232, 218, 0.16),
+    0 0 84px rgba(217, 176, 116, 0.07),
+    0 1px 0 rgba(0, 0, 0, 0.34);
 }
 
-@media (max-width: 380px) {
-  .marginal-salamander {
-    bottom: 8px;
-    right: 6px;
-    width: 42px;
-  }
-  .marginal-salamander .salamander-svg { width: 32px; }
+@media (max-width: 880px) {
+  .question { font-size: clamp(38px, 7.6vw, 68px); max-width: 24ch; }
+}
+
+@media (max-width: 620px) {
+  .question { font-size: clamp(34px, 8.6vw, 58px); max-width: 18ch; }
+}
+
+@media (max-width: 420px) {
+  .question { font-size: clamp(31px, 10.4vw, 46px); max-width: 15ch; }
 }
