@@ -3296,6 +3296,58 @@ function Marg({
   )
 }
 
+// ReadingSeal — a single composed authorial mark that closes the
+// chapter's compositional loop. A small vermilion-and-gold seal with
+// a miniature hero question mark inscribed within it, sitting as the
+// colophon's terminal mark beneath the "legi · mmxxvi" provenance line.
+// The hero "?" above opened the chapter; the same "?" below closes it,
+// pressed into the page as the chapter's final authorial signature.
+// Three concentric circles hold the mark: an outer soft vermilion halo
+// (the press-stain), a gold hairline ring (the seal's edge), and an
+// inner vermilion field (the seal's wax), with the miniature question
+// stroke drawn in pale gold at its heart. Presses into the page once
+// the reading has fully settled (intellexi + annotavi + legi are all
+// in place), with a brief ink-stain pulse that says the chapter has
+// been signed. Hidden in steady state; respects reduced-motion.
+function ReadingSeal({ pressed }: { pressed: boolean }) {
+  return (
+    <span
+      className={`reading-seal${pressed ? ' is-pressed' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="reading-seal-halo" />
+      <svg viewBox="0 0 40 40" className="reading-seal-svg" focusable="false">
+        <defs>
+          <radialGradient id="rs-wax" cx="38%" cy="34%" r="72%">
+            <stop offset="0%"   stopColor="#cd6044" />
+            <stop offset="55%"  stopColor="#9c4530" />
+            <stop offset="100%" stopColor="#4f2114" />
+          </radialGradient>
+          <radialGradient id="rs-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stopColor="rgba(176, 83, 58, 0.32)" />
+            <stop offset="55%"  stopColor="rgba(176, 83, 58, 0.10)" />
+            <stop offset="100%" stopColor="rgba(176, 83, 58, 0)" />
+          </radialGradient>
+        </defs>
+        <circle cx="20" cy="20" r="19" fill="url(#rs-halo)" className="reading-seal-halo-fill" />
+        <circle cx="20" cy="20" r="14.5" fill="url(#rs-wax)" className="reading-seal-wax" />
+        <circle cx="20" cy="20" r="14.5" fill="none" className="reading-seal-ring" />
+        <circle cx="20" cy="20" r="11.5" fill="none" className="reading-seal-ring-inner" />
+        {/* The miniature hero "?" — a quiet echo of the chapter's
+            emblem, inscribed within the seal in pale gold. The same
+            calligraphic gesture that opened the chapter above now
+            closes it below, drawn smaller and inverted in tone. */}
+        <path
+          className="reading-seal-mark"
+          d="M 23.4 14.6 C 21.8 11.2 16.4 11.4 17.8 14.6 C 18.6 16.4 19.6 17.4 19.6 19.2 C 19.6 21 18.6 22 19 23.4"
+          fill="none"
+        />
+        <circle cx="19.2" cy="25.4" r="1.1" className="reading-seal-dot" />
+      </svg>
+    </span>
+  )
+}
+
 export function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const reduced = useReducedMotion()
@@ -4367,6 +4419,7 @@ export function App() {
           <Sigillum />
           <LegiMark visible={legiOn} />
           <span className="colophon-provenance">legi · mmxxvi</span>
+          <ReadingSeal pressed={legiOn && lectorisDone} />
         </div>
       </div>
     </main>
