@@ -106,7 +106,7 @@ button {
 .sheet {
   position: relative;
   width: min(100%, 1180px);
-  min-height: min(760px, calc(100svh - 48px));
+  min-height: min(820px, calc(100svh - 48px));
   display: flex;
   flex-direction: column;
   padding: clamp(20px, 3vw, 36px) clamp(22px, 5vw, 78px) clamp(16px, 2vw, 28px);
@@ -154,6 +154,48 @@ button {
   to {
     opacity: 1;
     transform: translateY(0) rotate(0);
+  }
+}
+
+/* ───────── watermark (faint printer's device on paper) ───────── */
+
+.sheet-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: clamp(180px, 26vw, 320px);
+  height: clamp(180px, 26vw, 320px);
+  pointer-events: none;
+  opacity: 0.045;
+  color: var(--ink);
+  transform: translate(-50%, -50%) rotate(-3deg);
+  animation: watermark-in 1400ms 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.sheet-watermark .printer-device {
+  width: 100%;
+  height: 100%;
+}
+
+.sheet-watermark .printer-device svg {
+  width: 100%;
+  height: 100%;
+  color: var(--ink);
+}
+
+.sheet-watermark .printer-device-text {
+  display: none;
+}
+
+@keyframes watermark-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-3deg) scale(0.96);
+  }
+  to {
+    opacity: 0.045;
+    transform: translate(-50%, -50%) rotate(-3deg) scale(1);
   }
 }
 
@@ -253,6 +295,7 @@ button {
   justify-self: end;
   color: var(--ink-faint);
   letter-spacing: 0.18em;
+  white-space: nowrap;
 }
 
 .running-head-folio span {
@@ -264,18 +307,26 @@ button {
   text-transform: none;
 }
 
-.running-head-ornament {
+.running-head-pilcrow {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
+  width: 14px;
   height: 18px;
   color: var(--coral);
-  opacity: 0.85;
+  font-family: var(--serif);
+  font-size: 17px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1;
+  opacity: 0.72;
+  transform: translateY(-1px);
+  transition: opacity 320ms ease, transform 320ms ease;
 }
 
-.running-head-ornament svg {
-  display: block;
+.sheet:hover .running-head-pilcrow {
+  opacity: 0.95;
+  transform: translateY(-1px) rotate(-2deg);
 }
 
 /* ───────── shared type roles ───────── */
@@ -288,12 +339,118 @@ button {
 .completion-note,
 .reader-note,
 .footer-line,
-.footer-folio,
-.running-head-title,
-.running-head-folio,
 .catchword-text,
-.catchword-arrow {
+.catchword-arrow,
+.signature-mark {
   font-family: var(--sans);
+}
+
+/* ───────── chapter opener (full-width) ───────── */
+
+.chapter-opener {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  padding: clamp(22px, 3.2vw, 40px) 0 clamp(24px, 3.4vw, 42px);
+  animation: content-in 900ms 160ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.chapter-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 0.7vw, 9px);
+  text-align: center;
+  max-width: 88%;
+}
+
+.chapter-mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.34em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--blue-deep);
+  opacity: 0;
+  animation: chapter-rise 700ms 320ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+.chapter-prefix {
+  letter-spacing: 0.34em;
+}
+
+.chapter-numeral {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--coral);
+  transform: translateY(2px);
+}
+
+.headpiece {
+  display: block;
+  width: clamp(190px, 32%, 280px);
+  height: clamp(20px, 2.4vw, 26px);
+  flex: none;
+  margin: clamp(2px, 0.4vw, 5px) 0;
+  color: var(--coral);
+  opacity: 0;
+  animation: chapter-rise 700ms 480ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+.headpiece-rules line,
+.headpiece-rules path {
+  stroke: currentColor;
+  stroke-width: 0.6;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.headpiece-cluster {
+  fill: currentColor;
+}
+
+.headpiece-cluster path {
+  fill: currentColor;
+}
+
+.chapter-subtitle {
+  font-family: var(--serif);
+  font-size: clamp(12px, 1.3vw, 14px);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.015em;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  opacity: 0;
+  animation: chapter-rise 700ms 640ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes chapter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chapter-numeral {
+  animation-name: chapter-rise;
+  animation-duration: 700ms;
+  animation-delay: 320ms;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  animation-fill-mode: forwards;
 }
 
 /* ───────── sheet content grid ───────── */
@@ -306,7 +463,7 @@ button {
   grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.78fr);
   align-items: center;
   gap: clamp(36px, 7vw, 110px);
-  padding: clamp(40px, 6.5vh, 84px) clamp(6px, 0.8vw, 14px) clamp(40px, 6.5vh, 76px);
+  padding: clamp(20px, 3.2vh, 36px) clamp(6px, 0.8vw, 14px) clamp(40px, 6.5vh, 76px);
 }
 
 .question-panel,
@@ -337,7 +494,7 @@ button {
   display: inline-flex;
   align-items: baseline;
   gap: 9px;
-  margin: 0 0 clamp(20px, 2.8vw, 34px) 3px;
+  margin: 0 0 clamp(16px, 2.4vw, 26px) 3px;
   color: var(--coral-dark);
   font-size: 10px;
   font-weight: 750;
@@ -472,24 +629,93 @@ h1 {
 }
 
 .marginalia-note {
+  position: relative;
   display: inline-flex;
   align-items: baseline;
   gap: 7px;
+  padding: 3px 4px;
+  margin: -3px -4px;
+  cursor: help;
   opacity: 0;
   transform: translateY(4px);
   animation: marginalia-rise 620ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  transition: color 220ms ease;
+}
+
+.marginalia-note:hover,
+.marginalia-note:focus-visible {
+  color: var(--ink);
+  outline: none;
+}
+
+.marginalia-note:hover .marginalia-mark,
+.marginalia-note:focus-visible .marginalia-mark {
+  color: var(--coral-dark);
+  transform: scale(1.1);
+}
+
+.marginalia-note::after {
+  content: attr(data-gloss);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  z-index: 12;
+  padding: 7px 11px 8px;
+  background: var(--paper-light);
+  border: 1px solid rgba(36, 82, 165, 0.32);
+  box-shadow: 3px 4px 0 rgba(36, 82, 165, 0.06);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 1.35;
+  white-space: nowrap;
+  max-width: 220px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px) scale(0.96);
+  transition: opacity 220ms ease, transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.marginalia-note::before {
+  content: "";
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: 50%;
+  z-index: 12;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--paper-light);
+  filter: drop-shadow(0 1px 0 rgba(36, 82, 165, 0.18));
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(4px);
+  transition: opacity 220ms ease, transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.marginalia-note:hover::after,
+.marginalia-note:focus-visible::after,
+.marginalia-note:hover::before,
+.marginalia-note:focus-visible::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .marginalia-note--0 {
-  animation-delay: 720ms;
+  animation-delay: 800ms;
 }
 
 .marginalia-note--1 {
-  animation-delay: 920ms;
+  animation-delay: 1000ms;
 }
 
 .marginalia-note--2 {
-  animation-delay: 1120ms;
+  animation-delay: 1200ms;
 }
 
 .marginalia-divider {
@@ -510,6 +736,8 @@ h1 {
   font-size: 14px;
   line-height: 1;
   color: var(--coral);
+  transition: transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1), color 220ms ease;
+  transform-origin: 50% 50%;
 }
 
 .marginalia-text {
@@ -581,7 +809,7 @@ h1 {
   gap: 14px;
   margin: clamp(28px, 3.4vw, 40px) 0 clamp(18px, 2.2vw, 26px);
   color: var(--coral);
-  animation: asterism-in 700ms 1300ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: asterism-in 700ms 1500ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 .asterism-line {
@@ -639,7 +867,7 @@ h1 {
   justify-content: flex-end;
   gap: clamp(8px, 1vw, 12px);
   margin: clamp(20px, 2.6vw, 30px) 6px 0 0;
-  animation: catchword-in 700ms 1700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: catchword-in 700ms 1900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 .catchword-rule {
@@ -747,6 +975,7 @@ h1 {
   transition: transform 280ms cubic-bezier(0.2, 0.7, 0.2, 1);
   filter:
     drop-shadow(0 1px 0 rgba(180, 60, 50, 0.12))
+    drop-shadow(0 0 0.3px rgba(180, 60, 50, 0.18))
     contrast(1.05);
   animation: stamp-press 700ms 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   pointer-events: auto;
@@ -1155,9 +1384,9 @@ h1 {
   display: grid;
   grid-template-columns: 1fr auto auto auto;
   align-items: center;
-  gap: 14px;
+  gap: clamp(10px, 1.4vw, 18px);
   margin-top: clamp(10px, 1.6vw, 18px);
-  padding-top: clamp(10px, 1.4vw, 18px);
+  padding-top: clamp(12px, 1.8vw, 22px);
   border-top: 1px solid rgba(36, 82, 165, 0.18);
   color: var(--ink-faint);
   font-size: 9px;
@@ -1182,47 +1411,109 @@ h1 {
   color: var(--ink-soft);
 }
 
-.footer-folio {
-  color: var(--ink-faint);
+.signature-mark {
+  display: inline-flex;
+  align-items: baseline;
   white-space: nowrap;
-  letter-spacing: 0.22em;
+  color: var(--ink-faint);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.18em;
 }
 
-.footer-folio span {
-  color: var(--coral);
+.sig-prefix {
+  margin-right: 4px;
   font-family: var(--serif);
   font-style: italic;
   font-weight: 500;
-  letter-spacing: 0;
+  font-size: 10px;
+  letter-spacing: 0.04em;
   text-transform: none;
+  color: var(--coral);
 }
 
-/* ───────── colophon ───────── */
+.sig-letter {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--blue-deep);
+}
 
-.colophon {
+.sig-side {
+  margin-left: 1px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 7px;
+  color: var(--coral);
+  letter-spacing: 0;
+  vertical-align: super;
+  line-height: 1;
+}
+
+/* ───────── printer device (colophon) ───────── */
+
+.printer-device {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding-left: 6px;
+  padding-left: clamp(6px, 0.8vw, 10px);
   border-left: 1px solid rgba(36, 82, 165, 0.18);
   color: var(--coral);
 }
 
-.colophon svg {
-  width: clamp(15px, 1.6vw, 20px);
-  height: clamp(15px, 1.6vw, 20px);
+.printer-device svg {
+  width: clamp(24px, 2.6vw, 30px);
+  height: clamp(24px, 2.6vw, 30px);
   display: block;
   flex: none;
+  transition: transform 380ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.colophon-text {
+.sheet:hover .printer-device svg {
+  transform: rotate(-4deg) scale(1.06);
+}
+
+.device-frame {
+  stroke: currentColor;
+  stroke-width: 0.55;
+  opacity: 0.6;
+}
+
+.device-frame-inner {
+  stroke: currentColor;
+  stroke-width: 0.4;
+  stroke-dasharray: 0.8 2;
+  opacity: 0.5;
+}
+
+.device-laurel ellipse {
+  fill: currentColor;
+  opacity: 0.85;
+}
+
+.device-star path {
+  fill: currentColor;
+  opacity: 0.92;
+}
+
+.device-ribbon path {
+  fill: currentColor;
+  opacity: 0.78;
+}
+
+.printer-device-text {
   font-family: var(--serif);
-  font-size: 10px;
+  font-size: 11px;
   font-style: italic;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--blue-deep);
   text-transform: none;
+  white-space: nowrap;
 }
 
 /* ───────── paper corners ───────── */
@@ -1266,6 +1557,14 @@ h1 {
     font-size: clamp(50px, 7.6vw, 76px);
   }
 
+  .chapter-opener {
+    padding: clamp(18px, 2.6vw, 30px) 0 clamp(20px, 2.8vw, 32px);
+  }
+
+  .headpiece {
+    width: clamp(170px, 36%, 260px);
+  }
+
   .bookmark-ribbon {
     width: clamp(20px, 2.6vw, 26px);
     height: clamp(380px, 58%, 500px);
@@ -1282,6 +1581,19 @@ h1 {
   .ms-stamp-row--mid { font-size: 7.5px; }
   .ms-stamp-row--bot { font-size: 8px; }
   .ms-stamp-rule { width: 30px; }
+
+  .signature-mark {
+    font-size: 8.5px;
+  }
+
+  .sig-prefix { font-size: 9.5px; }
+  .sig-letter { font-size: 10px; }
+  .sig-side { font-size: 6.5px; }
+
+  .printer-device svg {
+    width: 22px;
+    height: 22px;
+  }
 }
 
 /* ───────── mobile ───────── */
@@ -1313,8 +1625,32 @@ h1 {
     font-size: 11px;
   }
 
-  .running-head-ornament {
-    width: 22px;
+  .running-head-pilcrow {
+    font-size: 14px;
+    width: 11px;
+    height: 14px;
+  }
+
+  .chapter-opener {
+    padding: clamp(16px, 4.5vw, 26px) 0 clamp(18px, 5vw, 28px);
+  }
+
+  .chapter-mark {
+    font-size: 9px;
+    letter-spacing: 0.28em;
+  }
+
+  .chapter-numeral {
+    font-size: 12.5px;
+  }
+
+  .headpiece {
+    width: clamp(160px, 50%, 230px);
+    height: 20px;
+  }
+
+  .chapter-subtitle {
+    font-size: 11.5px;
   }
 
   .sheet-content {
@@ -1322,7 +1658,7 @@ h1 {
     flex-direction: column;
     align-items: stretch;
     gap: 44px;
-    padding: clamp(34px, 8vw, 56px) 4px 48px;
+    padding: clamp(24px, 5.5vw, 38px) 4px 48px;
   }
 
   .question-panel {
@@ -1347,6 +1683,11 @@ h1 {
 
   .marginalia-divider {
     margin: 0 9px;
+  }
+
+  .marginalia-note::after {
+    font-size: 11px;
+    max-width: 180px;
   }
 
   .question-deck {
@@ -1425,6 +1766,12 @@ h1 {
     left: 6px;
   }
 
+  .sheet-watermark {
+    width: clamp(140px, 38vw, 220px);
+    height: clamp(140px, 38vw, 220px);
+    opacity: 0.035;
+  }
+
   .sheet-footer {
     grid-template-columns: 1fr auto auto;
     gap: 8px 10px;
@@ -1436,17 +1783,22 @@ h1 {
     grid-column: 1 / 3;
   }
 
-  .footer-folio {
+  .signature-mark {
     grid-column: 3 / 4;
     justify-self: end;
+    font-size: 8px;
   }
 
-  .colophon {
+  .sig-prefix { font-size: 9px; }
+  .sig-letter { font-size: 9.5px; }
+  .sig-side { font-size: 6px; }
+
+  .printer-device {
     grid-column: 1 / 4;
     padding-left: 0;
     border-left: 0;
     justify-self: start;
-    padding-top: 8px;
+    padding-top: 6px;
     border-top: 1px solid rgba(36, 82, 165, 0.12);
     margin-top: 4px;
   }
@@ -1557,9 +1909,39 @@ h1 {
     height: clamp(220px, 32%, 280px);
   }
 
+  .chapter-mark {
+    font-size: 8.5px;
+    letter-spacing: 0.22em;
+    gap: 7px;
+  }
+
+  .chapter-numeral {
+    font-size: 11.5px;
+  }
+
+  .headpiece {
+    width: clamp(140px, 50%, 200px);
+  }
+
+  .chapter-subtitle {
+    font-size: 10.5px;
+  }
+
   .sheet-footer {
     font-size: 7.5px;
     letter-spacing: 0.1em;
+  }
+
+  .signature-mark {
+    font-size: 7.5px;
+  }
+
+  .sig-prefix { font-size: 8.5px; }
+  .sig-letter { font-size: 9px; }
+  .sig-side { font-size: 5.5px; }
+
+  .printer-device-text {
+    font-size: 10px;
   }
 }
 
@@ -1573,8 +1955,7 @@ h1 {
     padding-inline: 16px;
   }
 
-  .running-head-folio span,
-  .footer-folio span {
+  .running-head-folio span {
     display: none;
   }
 
@@ -1589,6 +1970,10 @@ h1 {
   .sheet-footer {
     font-size: 7px;
     letter-spacing: 0.08em;
+  }
+
+  .signature-mark {
+    font-size: 7px;
   }
 }
 
@@ -1606,9 +1991,14 @@ h1 {
 
   .sheet,
   .sheet-header,
+  .chapter-opener,
   .question-panel,
   .response-panel,
-  .sheet-footer {
+  .sheet-footer,
+  .chapter-mark,
+  .headpiece,
+  .chapter-subtitle,
+  .chapter-numeral {
     opacity: 1;
     transform: none;
   }
@@ -1640,5 +2030,24 @@ h1 {
 
   .ms-stamp {
     transform: rotate(3.5deg);
+  }
+
+  .sheet-watermark {
+    opacity: 0.045;
+    transform: translate(-50%, -50%) rotate(-3deg);
+  }
+
+  .marginalia-note::after,
+  .marginalia-note::before {
+    opacity: 0;
+    transform: translate(-50%, 4px) scale(0.96);
+  }
+
+  .marginalia-note:focus-visible::after,
+  .marginalia-note:focus-visible::before,
+  .marginalia-note:hover::after,
+  .marginalia-note:hover::before {
+    opacity: 1;
+    transform: translate(-50%, 0);
   }
 }

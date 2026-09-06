@@ -10,12 +10,13 @@ type Phase = 'idle' | 'answering' | 'replying' | 'complete'
 interface MarginaliaItem {
   mark: string
   note: string
+  gloss: string
 }
 
 const MARGINALIA: MarginaliaItem[] = [
-  { mark: '¶', note: 'the question, plainly set' },
-  { mark: '†', note: 'see folio lxxvii, rect.' },
-  { mark: '‡', note: 'a self-answering page' },
+  { mark: '¶', note: 'the question, plainly set', gloss: 'set plain as the day it was asked' },
+  { mark: '†', note: 'see folio lxxvii, rect.', gloss: 'the same folio, turned to face you' },
+  { mark: '‡', note: 'a self-answering page', gloss: 'a page that names itself in the act' },
 ]
 
 function useReducedMotion() {
@@ -119,6 +120,43 @@ function ManuscriptStamp() {
   )
 }
 
+function Headpiece() {
+  return (
+    <svg
+      className="headpiece"
+      viewBox="0 0 260 24"
+      focusable="false"
+      aria-hidden="true"
+    >
+      <g className="headpiece-rules">
+        <line x1="0" y1="12" x2="78" y2="12" />
+        <path d="M 78 12 C 88 5, 98 19, 108 12" fill="none" />
+        <path d="M 182 12 C 172 5, 162 19, 152 12" fill="none" />
+        <line x1="182" y1="12" x2="260" y2="12" />
+      </g>
+      <g className="headpiece-cluster">
+        <circle cx="118" cy="12" r="1.1" />
+        <path d="M 130 12 L 135 6 L 140 12 L 135 18 Z" />
+        <circle cx="130" cy="12" r="1.2" fill="var(--paper)" />
+        <circle cx="150" cy="12" r="1.1" />
+      </g>
+    </svg>
+  )
+}
+
+function ChapterHead() {
+  return (
+    <div className="chapter-head" aria-hidden="true">
+      <span className="chapter-mark">
+        <span className="chapter-prefix">Caput</span>
+        <span className="chapter-numeral">XVIII</span>
+      </span>
+      <Headpiece />
+      <span className="chapter-subtitle">of folio lxxvii, set in question</span>
+    </div>
+  )
+}
+
 function Asterism({ label }: { label: string }) {
   return (
     <div className="asterism" role="separator" aria-hidden="true">
@@ -171,8 +209,12 @@ function MarginaliaStrip({ items }: { items: MarginaliaItem[] }) {
     <aside className="marginalia-strip" aria-label="marginalia">
       {items.map((item, i) => (
         <span key={item.mark} className="marginalia-row">
-          <span className={`marginalia-note marginalia-note--${i}`}>
-            <span className="marginalia-mark">{item.mark}</span>
+          <span
+            className={`marginalia-note marginalia-note--${i}`}
+            data-gloss={item.gloss}
+            tabIndex={0}
+          >
+            <span className="marginalia-mark" aria-hidden="true">{item.mark}</span>
             <span className="marginalia-text">{item.note}</span>
           </span>
           {i < items.length - 1 && (
@@ -242,6 +284,19 @@ function BookmarkRibbon() {
         stroke="rgba(255, 230, 210, 0.12)"
         strokeWidth="0.4"
       />
+      <g transform="translate(16 200) rotate(-90)" opacity="0.55">
+        <text
+          x="0"
+          y="0"
+          textAnchor="middle"
+          fontFamily="serif"
+          fontStyle="italic"
+          fontSize="6"
+          fill="rgba(255, 220, 200, 0.7)"
+        >
+          m · iii
+        </text>
+      </g>
     </svg>
   )
 }
@@ -291,20 +346,126 @@ function Manicule() {
   )
 }
 
-function Colophon() {
+function PrinterDevice() {
   return (
-    <div className="colophon" aria-hidden="true">
-      <svg viewBox="0 0 22 22" focusable="false">
-        <g fill="none" stroke="currentColor" strokeLinecap="round">
-          <circle cx="11" cy="11" r="9" strokeWidth="0.5" opacity="0.55" />
-          <circle cx="11" cy="11" r="6.5" strokeWidth="0.4" strokeDasharray="0.6 1.8" opacity="0.45" />
+    <div className="printer-device" aria-hidden="true">
+      <svg viewBox="0 0 60 60" focusable="false">
+        <circle className="device-frame" cx="30" cy="30" r="27" fill="none" />
+        <circle
+          className="device-frame-inner"
+          cx="30"
+          cy="30"
+          r="22.5"
+          fill="none"
+        />
+        <g className="device-laurel">
+          <ellipse
+            cx="20"
+            cy="13"
+            rx="3.6"
+            ry="1.4"
+            transform="rotate(-32 20 13)"
+          />
+          <ellipse cx="30" cy="9" rx="4" ry="1.4" />
+          <ellipse
+            cx="40"
+            cy="13"
+            rx="3.6"
+            ry="1.4"
+            transform="rotate(32 40 13)"
+          />
+          <ellipse
+            cx="24"
+            cy="18"
+            rx="2.6"
+            ry="1.2"
+            transform="rotate(-18 24 18)"
+          />
+          <ellipse
+            cx="36"
+            cy="18"
+            rx="2.6"
+            ry="1.2"
+            transform="rotate(18 36 18)"
+          />
+          <ellipse
+            cx="9"
+            cy="30"
+            rx="1.4"
+            ry="3.6"
+            transform="rotate(58 9 30)"
+          />
+          <ellipse
+            cx="11"
+            cy="22"
+            rx="1.2"
+            ry="3"
+            transform="rotate(80 11 22)"
+          />
+          <ellipse
+            cx="11"
+            cy="38"
+            rx="1.2"
+            ry="3"
+            transform="rotate(38 11 38)"
+          />
+          <ellipse
+            cx="51"
+            cy="30"
+            rx="1.4"
+            ry="3.6"
+            transform="rotate(-58 51 30)"
+          />
+          <ellipse
+            cx="49"
+            cy="22"
+            rx="1.2"
+            ry="3"
+            transform="rotate(-80 49 22)"
+          />
+          <ellipse
+            cx="49"
+            cy="38"
+            rx="1.2"
+            ry="3"
+            transform="rotate(-38 49 38)"
+          />
+          <ellipse
+            cx="22"
+            cy="46"
+            rx="2.6"
+            ry="1.2"
+            transform="rotate(-50 22 46)"
+          />
+          <ellipse
+            cx="38"
+            cy="46"
+            rx="2.6"
+            ry="1.2"
+            transform="rotate(50 38 46)"
+          />
         </g>
-        <g fill="currentColor">
-          <path d="M 11 4.5 L 12 9 L 16.5 9 L 12.7 11.5 L 13.7 16 L 11 13.5 L 8.3 16 L 9.3 11.5 L 5.5 9 L 10 9 Z" opacity="0.88" />
+        <g className="device-star">
+          <path d="M 30 20 L 32 26 L 38.5 26 L 33 30 L 35.2 36.5 L 30 32.7 L 24.8 36.5 L 27 30 L 21.5 26 L 28 26 Z" />
+        </g>
+        <g className="device-ribbon">
+          <path d="M 14 49 Q 30 53.5 46 49 L 43.5 52 Q 30 55.5 16.5 52 Z" />
+          <path d="M 11 47.5 L 14 49 L 14.5 52.5 L 11.2 51 Z" />
+          <path d="M 49 47.5 L 46 49 L 45.5 52.5 L 48.8 51 Z" />
         </g>
       </svg>
-      <span className="colophon-text">m · iii</span>
+      <span className="printer-device-text">m · iii</span>
     </div>
+  )
+}
+
+function SignatureMark({ sig, side }: { sig: string; side: 'r' | 'v' }) {
+  return (
+    <span className="signature-mark" aria-hidden="true">
+      <em className="sig-prefix">sig.</em>
+      <span className="sig-letter">{sig}</span>
+      <sup className="sig-side">{side}</sup>
+    </span>
   )
 }
 
@@ -411,17 +572,23 @@ export function App() {
         <BookmarkRibbon />
         <span className="gilded-edge" aria-hidden="true" />
 
+        <span className="sheet-watermark" aria-hidden="true">
+          <PrinterDevice />
+        </span>
+
         <header className="sheet-header">
           <p className="running-head-title">
-            <span aria-hidden="true">§</span> an experiment in questioning
+            <span aria-hidden="true">§</span> cap. xviii · an experiment in questioning
           </p>
-          <span className="running-head-ornament" aria-hidden="true">
-            <svg width="18" height="12" viewBox="0 0 18 12" focusable="false">
-              <path d="M 9 1 L 10.2 5.4 L 14.6 5.4 L 10.9 8.1 L 12.1 12.5 L 9 9.8 L 5.9 12.5 L 7.1 8.1 L 3.4 5.4 L 7.8 5.4 Z" />
-            </svg>
-          </span>
-          <p className="running-head-folio">folio <span>lxxvii</span></p>
+          <span className="running-head-pilcrow" aria-hidden="true">¶</span>
+          <p className="running-head-folio">
+            recto · <span>sig. A2</span>
+          </p>
         </header>
+
+        <div className="chapter-opener">
+          <ChapterHead />
+        </div>
 
         <div className="sheet-content">
           <section className="question-panel" aria-labelledby="page-title">
@@ -520,10 +687,8 @@ export function App() {
         <footer className="sheet-footer">
           <span className="footer-rule" aria-hidden="true" />
           <p className="footer-line">the interface is part of the answer</p>
-          <p className="footer-folio">
-            <span aria-hidden="true">— </span>exper. lxxvii<span aria-hidden="true"> —</span>
-          </p>
-          <Colophon />
+          <SignatureMark sig="A3" side="r" />
+          <PrinterDevice />
         </footer>
 
         <span className="paper-corner paper-corner--one" aria-hidden="true" />
