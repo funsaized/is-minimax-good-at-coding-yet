@@ -2646,6 +2646,121 @@ function TailPiece() {
 // (Iteration 55 retires the maniculum-fin — the colophon's sigillum
 // now closes the composition without a pointing gesture at its foot.)
 
+// ChapterCadence — the chapter's final exhale, a small composed mark
+// that breathes between the last written gloss (intellexi) and the
+// colophon's formal closure. Three pieces reading as a single quiet
+// gesture: a thin gold rule that draws outward from a small vermilion
+// pip, a single composed asterisk-petal motif at the center, and a
+// faint trailing hairline that suggests the page is finishing its
+// last breath. Settles in once the reader has understood the chapter,
+// so the cadence sits between "intellexi" and the colophon as one
+// composed manuscript pause — the page has spoken, the reader has
+// heard, the binding waits for the next folio.
+function ChapterCadence({ visible }: { visible: boolean }) {
+  return (
+    <p
+      className={`chapter-cadence ${visible ? 'is-on' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="chapter-cadence-rule chapter-cadence-rule-l" />
+      <span className="chapter-cadence-mark" aria-hidden="true">
+        <svg viewBox="0 0 14 14" focusable="false">
+          <path
+            className="chapter-cadence-star"
+            d="M 7 1.2 L 8.06 5.4 L 12.6 6 L 8.06 6.6 L 7 11.4 L 5.94 6.6 L 1.4 6 L 5.94 5.4 Z"
+          />
+          <circle cx="7" cy="6" r="0.85" className="chapter-cadence-pip" />
+        </svg>
+      </span>
+      <span className="chapter-cadence-rule chapter-cadence-rule-r" />
+    </p>
+  )
+}
+
+// ChapterPlateCorner — one of four small hand-drawn L-brackets that
+// form the inscribed corners of the chapter body's plate. A short
+// gold hairline L with a small composed accent at its joint — the
+// plate's scholar's framing mark, distinct from the vine corners
+// that flank the question above. Drawn in once the chapter body has
+// settled, so the plate reads as a single authored frame around
+// the answer, reply, footnote, and the reader's gloss.
+function ChapterPlateCorner({
+  position,
+}: {
+  position: 'tl' | 'tr' | 'bl' | 'br'
+}) {
+  return (
+    <svg
+      className={`chapter-plate-corner chapter-plate-corner-${position}`}
+      viewBox="0 0 28 28"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        className="chapter-plate-corner-arm chapter-plate-corner-arm-h"
+        d={
+          position.startsWith('t')
+            ? 'M 4 4 L 24 4'
+            : 'M 4 24 L 24 24'
+        }
+      />
+      <path
+        className="chapter-plate-corner-arm chapter-plate-corner-arm-v"
+        d={
+          position.endsWith('l')
+            ? 'M 4 4 L 4 24'
+            : 'M 24 4 L 24 24'
+        }
+      />
+      <circle
+        className="chapter-plate-corner-joint"
+        cx="4"
+        cy={position.startsWith('t') ? 4 : 24}
+        r="1"
+      />
+      <path
+        className="chapter-plate-corner-leaf"
+        d={
+          position === 'tl'
+            ? 'M 8 4 Q 12 5 14 8 Q 12 11 8 12'
+            : position === 'tr'
+            ? 'M 20 4 Q 16 5 14 8 Q 16 11 20 12'
+            : position === 'bl'
+            ? 'M 8 24 Q 12 23 14 20 Q 12 17 8 16'
+            : 'M 20 24 Q 16 23 14 20 Q 16 17 20 16'
+        }
+      />
+      <circle
+        className="chapter-plate-corner-pearl"
+        cx={position.endsWith('l') ? 14 : 14}
+        cy={position.startsWith('t') ? 4 : 24}
+        r="0.55"
+      />
+    </svg>
+  )
+}
+
+// ChapterPlate — the inscribed frame around the chapter body. A
+// delicate four-corner gold border that hugs the substantive text of
+// the chapter (answer → reply → footnote → intellexi), distinct
+// from the vine corners that frame the question above. The plate
+// reads as a scholar's inscribed text-block — the chapter's
+// composed body, not the question's open invitation. Four L-bracket
+// corners with a small hand-drawn leaf flourish at each joint,
+// drawn in once the chapter body has begun writing. Subtle enough
+// to disappear at rest, present enough to give the body its own
+// quiet authored frame.
+function ChapterPlate() {
+  return (
+    <div className="chapter-plate" aria-hidden="true">
+      <ChapterPlateCorner position="tl" />
+      <ChapterPlateCorner position="tr" />
+      <ChapterPlateCorner position="bl" />
+      <ChapterPlateCorner position="br" />
+    </div>
+  )
+}
+
 // Pilcrow — a small vermilion paragraph mark that introduces the
 // reply paragraph. The page's printer-mark for "new paragraph begins
 // here" — quieter than the existing explicit pilcrow, set at the
@@ -3875,48 +3990,54 @@ export function App() {
               className={`question-underline${noteNonce > 0 ? ' is-on' : ''}`}
               aria-hidden="true"
             />
-            <AnswerIllumination lit={answerOn && answerChars >= ANSWER.length && !replyOn} />
-            <p
-              className={`answer ${answerOn ? 'is-on' : ''}`}
-              aria-live="polite"
-            >
-              {answerDropCapVisible && <AnswerDropCap visible={answerOn} />}
-              <span className="answer-text">{answerDisplay}</span>
-              {answerOn && answerChars < ANSWER.length && (
-                <span className="answer-caret" aria-hidden="true">|</span>
-              )}
-            </p>
-            <ReadingGuide visible={answerOn} />
-            <div
-              className={`chapter-body ${footnoteDone ? 'is-footnote-done' : ''} ${intellexiOn ? 'is-intellexi' : ''} ${lectorisDone ? 'is-annotavi' : ''}`}
-            >
-              {replyOn && <AnswerOrnament />}
+            <div className="chapter-plate-frame">
+              <ChapterPlate />
+              <AnswerIllumination lit={answerOn && answerChars >= ANSWER.length && !replyOn} />
               <p
-                className={`reply ${replyOn ? 'is-on' : ''}`}
+                className={`answer ${answerOn ? 'is-on' : ''}`}
                 aria-live="polite"
               >
-                {replyOn && <ReplyPilcrow />}
-                <span className="reply-text">{replyDisplay}</span>
-                {replyOn && replyChars < REPLY.length && (
-                  <span className="reply-caret" aria-hidden="true">|</span>
-                )}
-                {replyOn && replyChars >= REPLY.length && (
-                  <span className="reply-end" aria-hidden="true">
-                    <Fleuron />
-                  </span>
+                {answerDropCapVisible && <AnswerDropCap visible={answerOn} />}
+                <span className="answer-text">{answerDisplay}</span>
+                {answerOn && answerChars < ANSWER.length && (
+                  <span className="answer-caret" aria-hidden="true">|</span>
                 )}
               </p>
-              <ScholasticFootnote
-                visible={footnoteOn}
-                text={footnoteDisplay}
-                done={footnoteDone}
-              />
-              {footnoteDone && <TailPiece />}
-              <Explicit />
-              <IntellexiNota
-                visible={intellexiOn}
-                text={intellexiOn ? 'intellexi'.slice(0, Math.max(0, intellexiChars)) : ''}
-                done={intellexiOn && intellexiChars >= 'intellexi'.length}
+              <ReadingGuide visible={answerOn} />
+              <div
+                className={`chapter-body ${footnoteDone ? 'is-footnote-done' : ''} ${intellexiOn ? 'is-intellexi' : ''} ${lectorisDone ? 'is-annotavi' : ''}`}
+              >
+                {replyOn && <AnswerOrnament />}
+                <p
+                  className={`reply ${replyOn ? 'is-on' : ''}`}
+                  aria-live="polite"
+                >
+                  {replyOn && <ReplyPilcrow />}
+                  <span className="reply-text">{replyDisplay}</span>
+                  {replyOn && replyChars < REPLY.length && (
+                    <span className="reply-caret" aria-hidden="true">|</span>
+                  )}
+                  {replyOn && replyChars >= REPLY.length && (
+                    <span className="reply-end" aria-hidden="true">
+                      <Fleuron />
+                    </span>
+                  )}
+                </p>
+                <ScholasticFootnote
+                  visible={footnoteOn}
+                  text={footnoteDisplay}
+                  done={footnoteDone}
+                />
+                {footnoteDone && <TailPiece />}
+                <Explicit />
+                <IntellexiNota
+                  visible={intellexiOn}
+                  text={intellexiOn ? 'intellexi'.slice(0, Math.max(0, intellexiChars)) : ''}
+                  done={intellexiOn && intellexiChars >= 'intellexi'.length}
+                />
+              </div>
+              <ChapterCadence
+                visible={intellexiOn && intellexiChars >= 'intellexi'.length}
               />
             </div>
           </div>
