@@ -1,15 +1,17 @@
-# Iteration 51 — The Reading Hour
+# Changelog
 
-Composed the chapter's living hour: the horologium shadow and the speculum star now track the reader's session time, a quiet parchment breath pulses behind the composition, and a vermilion "legi" mark blooms above the colophon's provenance after a sitting.
+## Iteration 52
+A composed scholarly dialogue: paired the Qu. rubric on the left margin with a drawn "quaero" callout on the right; added a paired reader's-hand (Librarius) at the answer; lit the answer with a quiet gold-leaf glow when it lands; tied the textual core with a reading guide; tightened the colophon into a single composed lower margin.
 
-## What changed
-- **Living horologium** — the shadow arm rotates around the gnomon tip from dawn (-85°) to dusk (+85°) over a 180-second sweep, so the sundial begins to keep the hour of reading.
-- **Living speculum** — the vermilion star orbits the dial face in the same period, paired with the shadow so the hour and the heavens stay coupled.
-- **Parchment breath** — a soft warm pool behind the composition pulses on a 13-second cycle, the wider field of the candle's flicker; the page reads as held rather than static.
-- **Legi mark** — a small composed gold-and-vermilion ink-mark above the colophon's "legi · mmxxvi" provenance; blooms in once after the reader has lingered, like the page's own quiet record that someone read this.
-- All four additions respect `prefers-reduced-motion`: the instruments hold their static positions, the breath is held at a steady opacity, and the legi mark is shown immediately.
+### Added
+- **Quaero callout** — a drawn "?" with the Latin label "quaero" in the right margin of the hero, paired with the existing "Qu." rubric on the left. Appears when the reader engages the hero, fades when the answer begins writing itself. The pair says: the question is asked (left) and the question itself (right).
+- **Librarius** — a small paired reader's-hand at the answer, emerging from the left margin to point at the answer's dropcap. Mirrors the existing maniculum (right margin → question) so the chapter reads as bracketed by the reader's hand: reader opens at the question, reader confirms at the answer.
+- **Answer illumination** — a subtle gold-leaf glow that sits behind the answer once it has finished writing itself, briefly catching the candlelight before settling into the reading state.
+- **Reading guide** — a quiet horizontal hairline between the answer and the chapter body, tying answer → reply → footnote → explicit into one composed passage.
+- **Colophon tie** — two thin vertical hairlines flanking the colophon, turning the seal / signature / inkpot / oculus / legi / provenance stack into a single composed lower margin.
 
-## Files touched
-- `src/App.tsx` — ref forwarding on `Horologium` and `Speculum`, new `LegiMark` and `ParchmentBreath` components, a `useEffect` that drives `--shadow-angle` and `--star-angle` from session time, and a delayed `legiOn` flag.
-- `src/style.css` — `.horologium-shadow-arm`, `.speculum-star-orbit`, `.legi-mark`, `.parchment-breath`, and matching reduced-motion overrides.
-- `CHANGELOG.md` — this entry.
+### Preserved
+- All existing marginalia (Qu., horologium, speculum, maniculum, vide, lectoris nota, maniculum finis)
+- The chapter's Latin dialogue chain (quaeritur → respondetur → relege → intellexi → annotavi → legi → explicit)
+- Existing element timings and the candle/horologium/speculum reading-hour choreography
+- Reduced-motion, mobile, and accessibility behavior for all new elements

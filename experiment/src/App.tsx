@@ -1946,6 +1946,161 @@ function InkFleck({ visible }: { visible: boolean }) {
   )
 }
 
+// QuaeroCallout — a drawn "?" in the right margin that pairs with the
+// existing "Qu." rubric on the left. Where the left margin declares
+// "the question is asked," the right margin lifts the question itself
+// out of the text and sets it as a callout in the margin — the page
+// marking, for the reader, the thing to attend to. Drawn in vermilion
+// and gold so it reads as a manuscript annotation, with a hairline
+// tail that reaches toward the question's terminal "?" in the text.
+// Appears when the reader engages the hero, holds while the reader
+// attends to the question, and fades once the answer begins writing
+// itself — the question has been answered, the callout is no longer
+// needed. Hidden until is-on; hidden entirely on reduced motion.
+function QuaeroCallout({ visible }: { visible: boolean }) {
+  return (
+    <span
+      className={`quaero-callout ${visible ? 'is-on' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 36 36" className="quaero-callout-svg" focusable="false">
+        <path
+          className="quaero-callout-stem"
+          d="M 18 5 C 8 5 8 17 16 19 C 19 19.6 19 22 19 25"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.1"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <circle cx="19" cy="29.4" r="1.5" className="quaero-callout-dot" />
+      </svg>
+      <span className="quaero-callout-rule" aria-hidden="true" />
+      <em className="quaero-callout-label">quaero</em>
+    </span>
+  )
+}
+
+// Librarius — a small paired reader's-hand at the answer. Mirrors
+// the existing Maniculum (which points AT the question from the
+// right margin) but emerges from the LEFT margin to point AT the
+// answer, with a thin vermilion hairline that reaches from the
+// fingertip toward the answer's dropcap. The pair creates a small
+// visual rhyme: a reader's hand opens the chapter (pointing at the
+// question) → a reader's hand confirms the answer (pointing at the
+// "I"). Appears once the answer has finished writing itself, holds
+// for the life of the reply, and fades as the footnote settles —
+// the reader's eye has moved on to the gloss. Hidden until is-on;
+// hidden entirely on reduced motion.
+function Librarius({ active }: { active: boolean }) {
+  return (
+    <span
+      className={`librarius ${active ? 'is-active' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="librarius-lead" />
+      <svg
+        className="librarius-svg"
+        viewBox="0 0 70 38"
+        focusable="false"
+      >
+        {/* Sleeve band — slim vermilion ribbon at the cuff */}
+        <rect
+          x="44"
+          y="5"
+          width="1.6"
+          height="28"
+          className="librarius-band"
+        />
+        {/* Cuff — gold, gently tapered */}
+        <path
+          className="librarius-cuff"
+          d="M 45.5 4 L 66 7.5 L 66 30.5 L 45.5 34 Z"
+        />
+        {/* Cuff diagonal seams */}
+        <line x1="49" y1="9" x2="62.5" y2="30" className="librarius-seam" />
+        <line x1="49" y1="11.5" x2="62.5" y2="32" className="librarius-seam" />
+        {/* Cuff embroidery pip */}
+        <circle cx="54" cy="18" r="0.9" className="librarius-pip" />
+        {/* Hand back — gold, softens at the knuckles */}
+        <path
+          className="librarius-hand"
+          d="M 22 11 L 44 11.5 L 46 14.5 L 46 23.5 L 44 26.5 L 22 27 Z"
+        />
+        {/* Folded fingers */}
+        <path d="M 25 27 Q 27 29 30 27" className="librarius-fold" />
+        <path d="M 31 27 Q 33 29 36 27" className="librarius-fold" />
+        <path d="M 37 27 Q 39 29 42 27" className="librarius-fold" />
+        {/* Thumb crease */}
+        <path d="M 30 14 Q 33 12.5 36 14" className="librarius-crease" />
+        {/* Index finger — extended, pointing right toward the answer */}
+        <path
+          className="librarius-finger"
+          d="M 0 15 L 22 14.5 L 22 23.5 L 0 23 Z"
+        />
+        {/* Knuckle crease */}
+        <line x1="12" y1="15" x2="12" y2="23" className="librarius-knuckle" />
+        {/* Fingernail — gold wedge */}
+        <path className="librarius-nail" d="M 0 16 L 3.5 15.4 L 3.5 22.6 L 0 22 Z" />
+        {/* Tip pulse */}
+        <circle cx="-1" cy="19" r="0.7" className="librarius-tip" />
+      </svg>
+    </span>
+  )
+}
+
+// ReadingGuide — a quiet horizontal hairline that runs beneath the
+// chapter body, tying the textual core (answer → reply → footnote →
+// explicit → intellexi) into a single continuous reading flow. The
+// rule is drawn outward from the chapter's centerline so the body
+// reads as one composed passage rather than a vertical stack of
+// separate paragraphs. Two thin gold pips cap its ends. Hidden in
+// steady state; fades in once the answer has begun writing itself,
+// settles beneath the footnote, and holds beneath the explicit.
+function ReadingGuide({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`reading-guide ${visible ? 'is-on' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="reading-guide-pip reading-guide-pip-l" />
+      <span className="reading-guide-line" />
+      <span className="reading-guide-pip reading-guide-pip-r" />
+    </div>
+  )
+}
+
+// AnswerIllumination — a subtle gold-leaf glow that sits behind the
+// answer text once the answer has finished writing itself. The page
+// has just spoken; the question has been answered. Reads as a soft
+// warm pool that catches the candlelight and briefly haloes the
+// reply's opening, then settles into the steady reading state.
+// Hidden entirely on reduced motion.
+function AnswerIllumination({ lit }: { lit: boolean }) {
+  return (
+    <span
+      className={`answer-illumination ${lit ? 'is-lit' : ''}`}
+      aria-hidden="true"
+    />
+  )
+}
+
+// ColophonTie — two thin vertical hairlines that flank the colophon,
+// tightening the stack of seal, signature, inkpot, oculus, legi mark
+// and provenance into a single composed lower margin. Reads as the
+// "page-end brackets" of the manuscript — quiet framing that turns
+// the colophon's six elements into one finished end-piece. Drawn in
+// once the colophon has settled, in parallel with the existing
+// colophon-pair-arrow, so the closure feels authored.
+function ColophonTie() {
+  return (
+    <span className="colophon-tie" aria-hidden="true">
+      <span className="colophon-tie-rule colophon-tie-rule-l" />
+      <span className="colophon-tie-rule colophon-tie-rule-r" />
+    </span>
+  )
+}
+
 // CandleSmoke — a thin curl of smoke that rises from the wick when
 // the candle flares (after the reader acknowledges the question).
 // A single hairline curve with an animated dashoffset, lifts briefly
@@ -3253,6 +3408,7 @@ export function App() {
             <Horologium wrapRef={horologiumRef} />
             <Speculum wrapRef={speculumRef} />
             <MarginalRubric />
+            <QuaeroCallout visible={pointing && !answerOn} />
             <button
               type="button"
             ref={heroRef}
@@ -3463,8 +3619,9 @@ export function App() {
                  </span>
                </span>
              </h1>
-              <Maniculum active={pointing} />
-              <VideAnnotation visible={answerOn && answerChars >= 6} />
+<Maniculum active={pointing} />
+              <Librarius active={answerOn && answerChars >= ANSWER.length && !footnoteOn} />
+               <VideAnnotation visible={answerOn && answerChars >= 6} />
               <span className="question-prompt" aria-hidden="true">
                 <span className="question-prompt-pip" />
                 <span className="question-prompt-mark" />
@@ -3477,6 +3634,7 @@ export function App() {
               className={`question-underline${noteNonce > 0 ? ' is-on' : ''}`}
               aria-hidden="true"
             />
+            <AnswerIllumination lit={answerOn && answerChars >= ANSWER.length && !replyOn} />
             <p
               className={`answer ${answerOn ? 'is-on' : ''}`}
               aria-live="polite"
@@ -3487,6 +3645,7 @@ export function App() {
                 <span className="answer-caret" aria-hidden="true">|</span>
               )}
             </p>
+            <ReadingGuide visible={answerOn} />
             <div
               className={`chapter-body ${footnoteDone ? 'is-footnote-done' : ''} ${intellexiOn ? 'is-intellexi' : ''} ${lectorisDone ? 'is-annotavi' : ''}`}
             >
@@ -3530,6 +3689,7 @@ export function App() {
         />
 
         <div className="colophon" aria-hidden="true">
+          <ColophonTie />
           <span className="colophon-seal">
             <CompassMark />
             <WaxSeal />
