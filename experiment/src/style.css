@@ -8881,3 +8881,475 @@ body {
     height: clamp(240px, 50vh, 420px);
   }
 }
+
+/* ----- Scholar's Compass (chapter north-mark) -----
+ * A small drawn compass-rose that crowns the composition, sitting
+ * above the chapter headpiece as the manuscript's quiet orientation
+ * mark. Two thin gold rules flank a four-pointed gold star with four
+ * thinner diagonal rays and a slim cardinal ring; a vermilion needle
+ * points up. Parallaxes gently with the reader's pointer so the page
+ * reads as suspended in real depth, like a compass needle drawn into
+ * the parchment. Drawn in once the chapter has settled (the same
+ * cadence as the colophon plate), so the entire scholarly opening
+ * reads as one composed band: compass · crown · title · fleuron ·
+ * hero — paired to the colophon plate that opens the chapter's
+ * closure as the same vocabulary. */
+.scholar-compass {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 0.95vw, 14px);
+  width: clamp(160px, 22vw, 240px);
+  max-width: 56%;
+  margin: clamp(0px, 0.05vw, 2px) auto clamp(2px, 0.18vw, 6px);
+  opacity: 0;
+  transform: translateY(-3px);
+  transition:
+    opacity 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s,
+    transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s;
+  pointer-events: none;
+}
+
+.composition.ready .scholar-compass {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scholar-compass-rule {
+  flex: 1 1 auto;
+  display: block;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-deep) 28%,
+    var(--gold) 64%,
+    var(--gold) 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.18);
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s,
+    transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s;
+}
+
+.scholar-compass-rule-l {
+  transform-origin: 100% 50%;
+}
+
+.scholar-compass-rule-r {
+  transform-origin: 0% 50%;
+  background: linear-gradient(
+    -90deg,
+    transparent 0%,
+    var(--gold-deep) 28%,
+    var(--gold) 64%,
+    var(--gold) 100%
+  );
+}
+
+.composition.ready .scholar-compass-rule {
+  opacity: 0.6;
+  transform: scaleX(1);
+}
+
+.scholar-compass-svg {
+  display: block;
+  flex: 0 0 auto;
+  width: clamp(20px, 1.9vw, 28px);
+  height: clamp(20px, 1.9vw, 28px);
+  overflow: visible;
+  color: var(--gold);
+  transform: translate3d(
+    calc(var(--compass-x, 0) * 0.9px),
+    calc(var(--compass-y, 0) * 0.6px),
+    0
+  );
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+
+.scholar-compass-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.4;
+  opacity: 0;
+  stroke-dasharray: 2.4 2.4;
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 0.85s,
+    stroke-dashoffset 8s linear infinite;
+  animation: scholarCompassRing 14s linear 1.4s infinite;
+}
+
+.scholar-compass-ring-outer {
+  stroke: var(--gold-deep);
+  stroke-width: 0.3;
+  opacity: 0.4;
+  stroke-dasharray: 1.6 3.2;
+  animation: scholarCompassRing 22s linear 1.4s infinite reverse;
+}
+
+.composition.ready .scholar-compass-ring {
+  opacity: 0.62;
+}
+
+.scholar-compass-blade {
+  fill: currentColor;
+  fill-opacity: 0;
+  stroke: currentColor;
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transition:
+    opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 0.7s,
+    fill-opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 0.7s;
+}
+
+.scholar-compass-blade-n {
+  fill: var(--vermilion);
+  fill-opacity: 0.62;
+}
+
+.scholar-compass-blade-s {
+  fill-opacity: 0.32;
+}
+
+.scholar-compass-blade-ne,
+.scholar-compass-blade-sw,
+.scholar-compass-blade-nw,
+.scholar-compass-blade-se {
+  fill-opacity: 0.22;
+  stroke-opacity: 0.7;
+}
+
+.composition.ready .scholar-compass-blade {
+  opacity: 0.9;
+}
+
+.scholar-compass-core {
+  fill: var(--gold-bright);
+  opacity: 0;
+  filter: drop-shadow(0 0 2.5px rgba(240, 212, 154, 0.6));
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.4);
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) 0.95s,
+    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1) 0.95s;
+}
+
+.composition.ready .scholar-compass-core {
+  opacity: 0.95;
+  transform: scale(1);
+}
+
+@keyframes scholarCompassRing {
+  to { stroke-dashoffset: -100; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scholar-compass {
+    transition: opacity 0.2s ease;
+    opacity: 1;
+    transform: none;
+  }
+  .scholar-compass-rule {
+    transition: none;
+    opacity: 0.6;
+    transform: scaleX(1);
+  }
+  .scholar-compass-svg {
+    transform: none;
+    transition: none;
+  }
+  .scholar-compass-ring {
+    transition: none;
+    opacity: 0.62;
+    animation: none;
+  }
+  .scholar-compass-ring-outer {
+    opacity: 0.4;
+    animation: none;
+  }
+  .scholar-compass-blade {
+    transition: none;
+    opacity: 0.9;
+  }
+  .scholar-compass-core {
+    transition: none;
+    opacity: 0.95;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 880px) {
+  .scholar-compass {
+    width: clamp(140px, 26vw, 200px);
+    gap: clamp(6px, 0.85vw, 10px);
+  }
+  .scholar-compass-svg {
+    width: clamp(18px, 2.2vw, 24px);
+    height: clamp(18px, 2.2vw, 24px);
+  }
+}
+
+@media (max-width: 520px) {
+  .scholar-compass {
+    width: clamp(110px, 36vw, 160px);
+    gap: 6px;
+  }
+  .scholar-compass-svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* ----- Stem Descent (hero stem → question text) -----
+ * A single composed vertical hairline that descends from the hero
+ * question mark's stem-foot down to the top of the question text.
+ * The question mark above and the question text below acknowledge
+ * each other: the emblem's stem becomes the text's first stroke.
+ * A vermilion hairline with a tiny gold terminal pip at its foot,
+ * drawn in on the first acknowledge and held. Parallels the
+ * existing chapter spine but reads as a single authored descent —
+ * the question mark literally writing itself into the question
+ * text. Fades out for reduced-motion users so the chapter reads
+ * as the same composition without the connecting gesture. */
+.stem-descent {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  height: clamp(28px, 4.2vw, 48px);
+  margin: clamp(-4px, -0.4vw, -1px) 0 clamp(2px, 0.25vw, 6px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.stem-descent.is-on {
+  opacity: 0.78;
+}
+
+.stem-descent-svg {
+  display: block;
+  width: clamp(6px, 0.7vw, 10px);
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 4px rgba(176, 83, 58, 0.32));
+}
+
+.stem-descent-line {
+  stroke: var(--vermilion);
+  stroke-width: 0.85;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+    stroke-dashoffset 1.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.stem-descent.is-on .stem-descent-line {
+  opacity: 0.78;
+  stroke-dashoffset: 0;
+}
+
+.stem-descent-pip {
+  fill: var(--gold);
+  opacity: 0;
+  filter: drop-shadow(0 0 3px rgba(240, 212, 154, 0.55));
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.3);
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) 0.7s,
+    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1) 0.7s;
+}
+
+.stem-descent.is-on .stem-descent-pip {
+  opacity: 0.85;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stem-descent {
+    transition: none;
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .stem-descent {
+    height: clamp(20px, 4vw, 30px);
+    margin: clamp(-2px, -0.2vw, 0px) 0 2px;
+  }
+  .stem-descent-svg {
+    width: 6px;
+  }
+}
+
+/* ----- Colophon Plate (composition's terminal headpiece) -----
+ * A composed gold-and-vermilion mark at the very top of the
+ * colophon that opens the lower composition as one framed scholarly
+ * block. A short gold rule on each side of a small vermilion
+ * four-pointed star with a gold pip at its heart, drawn in once
+ * the chapter has settled. Reads as the printer's rule that frames
+ * a colophon plate in early printed books — the chapter's terminal
+ * headpiece, paired to the ScholarCompass that crowns the top of
+ * the composition, so the page opens and closes with composed
+ * marks of the same vocabulary. */
+.colophon-plate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 0.7vw, 10px);
+  width: clamp(120px, 18vw, 180px);
+  margin: 0 auto clamp(2px, 0.2vw, 5px);
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 1.0s cubic-bezier(0.2, 0.7, 0.2, 1) 2.0s,
+    transform 1.05s cubic-bezier(0.2, 0.7, 0.2, 1) 2.0s;
+  pointer-events: none;
+}
+
+.frame.ready .colophon-plate {
+  opacity: 0.85;
+  transform: translateY(0);
+}
+
+.colophon-plate-rule {
+  flex: 1 1 auto;
+  display: block;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-deep) 38%,
+    var(--gold) 70%,
+    var(--gold) 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.18);
+  transition:
+    opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 2.2s,
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 2.2s;
+}
+
+.colophon-plate-rule-l {
+  transform-origin: 100% 50%;
+}
+
+.colophon-plate-rule-r {
+  transform-origin: 0% 50%;
+  background: linear-gradient(
+    -90deg,
+    transparent 0%,
+    var(--gold-deep) 38%,
+    var(--gold) 70%,
+    var(--gold) 100%
+  );
+}
+
+.frame.ready .colophon-plate-rule {
+  opacity: 0.6;
+  transform: scaleX(1);
+}
+
+.colophon-plate-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(12px, 1.4vw, 16px);
+  height: clamp(12px, 1.4vw, 16px);
+  flex: 0 0 auto;
+  opacity: 0;
+  transform: scale(0.32) rotate(-90deg);
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) 2.45s,
+    transform 0.85s cubic-bezier(0.2, 1.2, 0.4, 1) 2.45s;
+  color: var(--vermilion);
+  filter: drop-shadow(0 0 3px rgba(176, 83, 58, 0.42));
+}
+
+.frame.ready .colophon-plate-mark {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.colophon-plate-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.colophon-plate-star {
+  fill: currentColor;
+}
+
+.colophon-plate-pip {
+  fill: var(--gold-bright);
+  filter: drop-shadow(0 0 2px rgba(240, 212, 154, 0.55));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .colophon-plate {
+    transition: none;
+    opacity: 0.85;
+    transform: none;
+  }
+  .colophon-plate-rule {
+    transition: none;
+    opacity: 0.6;
+    transform: scaleX(1);
+  }
+  .colophon-plate-mark {
+    transition: none;
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@media (max-width: 880px) {
+  .colophon-plate {
+    width: clamp(108px, 22vw, 160px);
+    gap: clamp(5px, 0.6vw, 8px);
+  }
+}
+
+@media (max-width: 520px) {
+  .colophon-plate {
+    width: clamp(82px, 28vw, 120px);
+    gap: 4px;
+  }
+  .colophon-plate-mark {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* ----- Composition spacing refinement (iteration 57) -----
+ * Tighten the gap between the hero-frame and the stem-descent so
+ * the descent reads as continuous with the hero's stem-foot; tighten
+ * the gap between the stem-descent and the chapter-divider so the
+ * three marks feel like a single composed descent rather than
+ * three separate ornaments. */
+.composition { gap: clamp(14px, 1.7vw, 22px); }
+
+.hero-frame + .stem-descent { margin-top: clamp(-12px, -1vw, -6px); }
+.stem-descent + .chapter-divider { margin-top: clamp(-2px, -0.18vw, 0px); }
+
+@media (max-width: 760px) {
+  .hero-frame + .stem-descent { margin-top: clamp(-10px, -1.4vw, -6px); }
+}
+
+@media (max-width: 520px) {
+  .composition { gap: clamp(12px, 2.2vw, 18px); }
+  .hero-frame + .stem-descent { margin-top: -8px; }
+}

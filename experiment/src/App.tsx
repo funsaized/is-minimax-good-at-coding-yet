@@ -2239,6 +2239,177 @@ function Sigillum() {
 // terminal "?" already lifts the question into the margin, and a
 // second drawn "?" beside it was repetition, not rhyme.)
 
+// ScholarCompass — a small drawn compass-rose that crowns the
+// composition, sitting above the chapter's headpiece as the manuscript's
+// quiet "north" mark. A four-pointed gold star at centre, with four
+// thinner diagonal rays and a slim cardinal ring; a vermilion needle
+// pointing up. Drawn in once the chapter has settled, so the entire
+// scholarly opening reads as one composed band: compass · crown ·
+// title · fleuron · hero. Reads as a printer's orientation mark — the
+// page's quiet declaration of where the chapter begins.
+function ScholarCompass() {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el
+    ) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      el.style.setProperty('--compass-x', '0')
+      el.style.setProperty('--compass-y', '0')
+      return
+    }
+    let raf = 0
+    let tx = 0
+    let ty = 0
+    let px = 0
+    let py = 0
+    const onMove = (e: PointerEvent) => {
+      const w = window.innerWidth || 1
+      const h = window.innerHeight || 1
+      tx = (e.clientX - w / 2) / (w / 2)
+      ty = (e.clientY - h / 2) / (h / 2)
+    }
+    const tick = () => {
+      px += (tx - px) * 0.04
+      py += (ty - py) * 0.04
+      el.style.setProperty('--compass-x', px.toFixed(3))
+      el.style.setProperty('--compass-y', py.toFixed(3))
+      raf = requestAnimationFrame(tick)
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    raf = requestAnimationFrame(tick)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+  return (
+    <div className="scholar-compass" aria-hidden="true" ref={ref}>
+      <span className="scholar-compass-rule scholar-compass-rule-l" />
+      <svg
+        viewBox="0 0 32 32"
+        className="scholar-compass-svg"
+        focusable="false"
+      >
+        <circle
+          cx="16"
+          cy="16"
+          r="11"
+          className="scholar-compass-ring"
+        />
+        <circle
+          cx="16"
+          cy="16"
+          r="13.5"
+          className="scholar-compass-ring scholar-compass-ring-outer"
+        />
+        <g className="scholar-compass-star">
+          <path
+            className="scholar-compass-blade scholar-compass-blade-n"
+            d="M 16 4 L 17.6 14 L 16 16 L 14.4 14 Z"
+          />
+          <path
+            className="scholar-compass-blade scholar-compass-blade-s"
+            d="M 16 28 L 14.4 18 L 16 16 L 17.6 18 Z"
+          />
+          <path
+            className="scholar-compass-blade scholar-compass-blade-e"
+            d="M 28 16 L 18 14.4 L 16 16 L 18 17.6 Z"
+          />
+          <path
+            className="scholar-compass-blade scholar-compass-blade-w"
+            d="M 4 16 L 14 17.6 L 16 16 L 14 14.4 Z"
+          />
+          <path
+            className="scholar-compass-blade scholar-compass-blade-ne"
+            d="M 24.4 7.6 L 17 14 L 16 16 L 14 17 Z"
+          />
+          <path
+            className="scholar-compass-blade scholar-compass-blade-sw"
+            d="M 7.6 24.4 L 15 18 L 16 16 L 18 15 Z"
+          />
+          <path
+            className="scholar-compass-blade scholar-compass-blade-nw"
+            d="M 7.6 7.6 L 14 15 L 16 16 L 17 14 Z"
+          />
+          <path
+            className="scholar-compass-blade scholar-compass-blade-se"
+            d="M 24.4 24.4 L 18 17 L 16 16 L 15 18 Z"
+          />
+        </g>
+        <circle cx="16" cy="16" r="1.4" className="scholar-compass-core" />
+      </svg>
+      <span className="scholar-compass-rule scholar-compass-rule-r" />
+    </div>
+  )
+}
+
+// StemDescent — a single composed vertical hairline that descends
+// from the hero question mark's stem-foot down to the top of the
+// question text. The question mark above and the question text below
+// acknowledge each other: the emblem's stem becomes the text's first
+// stroke. A vermilion hairline with a tiny gold terminal pip at its
+// foot, drawn on the first acknowledge and held; fades in when the
+// reader first engages the hero and persists through the rest of the
+// chapter. The line parallels the existing chapter spine but reads as
+// a single authored descent — the question mark literally writing
+// itself into the question text. Hidden on reduced-motion devices so
+// the chapter reads as the same composition without the connecting
+// gesture.
+function StemDescent({ engaged }: { engaged: boolean }) {
+  return (
+    <span
+      className={`stem-descent${engaged ? ' is-on' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 8 84"
+        preserveAspectRatio="none"
+        className="stem-descent-svg"
+        focusable="false"
+      >
+        <line
+          x1="4"
+          y1="0"
+          x2="4"
+          y2="78"
+          className="stem-descent-line"
+          pathLength="100"
+        />
+        <circle cx="4" cy="80" r="1.6" className="stem-descent-pip" />
+      </svg>
+    </span>
+  )
+}
+
+// ColophonPlate — a composed gold-and-vermilion mark at the very
+// top of the colophon that opens the lower composition as one framed
+// scholarly block. A short gold rule on each side of a small vermilion
+// four-pointed star with a gold pip at its heart, drawn in once the
+// chapter has settled. Reads as the printer's rule that frames a
+// colophon plate in early printed books — the chapter's terminal
+// headpiece, paired to the ScholarCompass that crowns the top of the
+// composition, so the page opens and closes with composed marks of
+// the same vocabulary.
+function ColophonPlate() {
+  return (
+    <div className="colophon-plate" aria-hidden="true">
+      <span className="colophon-plate-rule colophon-plate-rule-l" />
+      <span className="colophon-plate-mark">
+        <svg viewBox="0 0 12 12" focusable="false">
+          <path
+            className="colophon-plate-star"
+            d="M 6 0.6 L 6.94 4.6 L 11.4 6 L 6.94 7.4 L 6 11.4 L 5.06 7.4 L 0.6 6 L 5.06 4.6 Z"
+          />
+          <circle cx="6" cy="6" r="0.95" className="colophon-plate-pip" />
+        </svg>
+      </span>
+      <span className="colophon-plate-rule colophon-plate-rule-r" />
+    </div>
+  )
+}
+
 // ReadingGuide — a quiet horizontal hairline that runs beneath the
 // chapter body, tying the textual core (answer → reply → footnote →
 // explicit → intellexi) into a single continuous reading flow. The
@@ -3428,6 +3599,7 @@ export function App() {
 
         <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''} ${quietus ? 'is-quietus' : ''}`}>
           <ChapterSpine pulseKey={spinePulseKey} sealed={spineSealed} annotavi={lectorisDone} />
+          <ScholarCompass />
           <ChapterCrown />
           <ChapterTitle />
           <Fleuron />
@@ -3590,6 +3762,7 @@ export function App() {
             <span className="hero-question-link" aria-hidden="true" />
           </button>
           </div>
+             <StemDescent engaged={noteNonce > 0 || pointing} />
              <ChapterDivider />
              <div className="question-block">
              <ChapterStamp />
@@ -3698,6 +3871,7 @@ export function App() {
         />
 
         <div className="colophon" aria-hidden="true">
+          <ColophonPlate />
           <ColophonTie />
           <span className="colophon-seal">
             <CompassMark />
