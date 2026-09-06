@@ -4661,6 +4661,271 @@ body {
   50%      { opacity: 0.74; }
 }
 
+/* ----- Lectoris nota (the reader's bottom-left mark) -----
+ *
+ * Iteration 42: a quiet reader's gloss in the bottom-left margin that
+ * completes the folio's four-corner marginal scheme. The chapter
+ * already had three corners (top-left: folio, top-right: reading,
+ * bottom-right: now) plus a left-margin scholastic gloss (vide).
+ * The bottom-left was empty. This new mark fills that corner with
+ * a single italic gloss — "annotavi · I have marked it" — that
+ * types itself in once the reader has understood the chapter
+ * (intellexi done), so the page's four corners become a single
+ * complete frame and the chapter's Latin chain closes:
+ * quaeritur → respondetur → relege → intellexi → annotavi →
+ * legi → explicit. The Latin word is set in vermilion italic to
+ * match the existing "Qu." rubric and the "vide · look" gloss;
+ * the English gloss is set in the page's own ink-soft italic.
+ * A small caret beneath points toward the colophon, like the
+ * reader's eye has just lifted from the chapter's last word and
+ * set down a mark in the margin. */
+
+.lectoris-nota {
+  position: absolute;
+  bottom: clamp(46px, 6.5vw, 88px);
+  left: clamp(20px, 4vw, 48px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(3px, 0.32vw, 5px);
+  max-width: clamp(180px, 24vw, 280px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-6px) translateY(2px);
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 1.05s cubic-bezier(0.2, 0.7, 0.2, 1);
+  z-index: 2;
+}
+
+.lectoris-nota.is-on {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+}
+
+.lectoris-nota-rule {
+  display: block;
+  width: clamp(22px, 2.6vw, 36px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--gold) 0%,
+    var(--gold-deep) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.18);
+  transform-origin: 0% 50%;
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s,
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.05s;
+}
+
+.lectoris-nota.is-on .lectoris-nota-rule {
+  opacity: 0.62;
+  transform: scaleX(1);
+}
+
+.lectoris-nota-row {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  row-gap: 2px;
+  column-gap: clamp(4px, 0.5vw, 8px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, 1.05vw, 13px);
+  line-height: 1.4;
+  letter-spacing: 0.015em;
+  text-shadow: 0 0 9px rgba(176, 83, 58, 0.18);
+}
+
+.lectoris-nota-latin {
+  font-style: italic;
+  color: var(--vermilion);
+  letter-spacing: 0.06em;
+  opacity: 0.94;
+}
+
+.lectoris-nota-sep {
+  font-style: normal;
+  color: var(--gold-deep);
+  opacity: 0.7;
+  font-size: 0.94em;
+  transform: translateY(-0.04em);
+}
+
+.lectoris-nota-en {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-size: 0.92em;
+  letter-spacing: 0.005em;
+  opacity: 0.88;
+}
+
+.lectoris-nota-caret {
+  display: inline-block;
+  color: var(--vermilion);
+  font-style: normal;
+  margin-left: 1px;
+  animation: caretBlink 0.85s steps(2, end) infinite;
+  transform: translateY(-0.05em);
+  text-shadow: 0 0 6px rgba(176, 83, 58, 0.3);
+}
+
+.lectoris-nota-caret-svg {
+  display: block;
+  width: clamp(12px, 1.2vw, 16px);
+  height: clamp(16px, 1.6vw, 22px);
+  margin-left: clamp(4px, 0.5vw, 8px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.lectoris-nota-caret-line {
+  fill: none;
+  stroke: var(--vermilion);
+  stroke-width: 0.85;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition:
+    opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.6s,
+    stroke-dashoffset 0.95s cubic-bezier(0.55, 0.04, 0.32, 1) 0.6s;
+}
+
+.lectoris-nota.is-on .lectoris-nota-caret-line {
+  opacity: 0.66;
+  stroke-dashoffset: 0;
+}
+
+.lectoris-nota-caret-tip {
+  fill: none;
+  stroke: var(--vermilion);
+  stroke-width: 0.85;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transform: scale(0.5);
+  transition:
+    opacity 0.45s ease 1.35s,
+    transform 0.65s cubic-bezier(0.2, 1.2, 0.4, 1) 1.35s;
+}
+
+.lectoris-nota.is-on .lectoris-nota-caret-tip {
+  opacity: 0.78;
+  transform: scale(1);
+}
+
+/* A small warm halo behind the mark — like the reader's quill
+   leaves a quiet pool of warmth on the parchment where they wrote. */
+.lectoris-nota::before {
+  content: '';
+  position: absolute;
+  inset: -12% -16% -8% -10%;
+  background: radial-gradient(
+    56% 70% at 30% 40%,
+    rgba(240, 212, 154, 0.06) 0%,
+    rgba(217, 176, 116, 0.025) 50%,
+    transparent 78%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease 0.4s;
+  z-index: -1;
+}
+
+.lectoris-nota.is-on::before {
+  opacity: 1;
+}
+
+/* Once the gloss has fully landed, it settles into the page's
+   steady breathing rhythm — a quiet glow that holds for a beat,
+   then dims to the mark's natural state. */
+.lectoris-nota.is-done .lectoris-nota-latin {
+  animation: lectorisNotaSettle 16s ease-in-out 1s infinite;
+}
+
+@keyframes lectorisNotaSettle {
+  0%, 100% { opacity: 0.94; }
+  50%      { opacity: 0.78; }
+}
+
+/* Reduced motion: skip the entry, hold the settled state. */
+@media (prefers-reduced-motion: reduce) {
+  .lectoris-nota {
+    transition: opacity 0.2s ease;
+    opacity: 1;
+    transform: none;
+  }
+  .lectoris-nota-rule {
+    transition: none;
+    opacity: 0.62;
+    transform: scaleX(1);
+  }
+  .lectoris-nota-caret-line {
+    transition: none;
+    opacity: 0.66;
+    stroke-dashoffset: 0;
+  }
+  .lectoris-nota-caret-tip {
+    transition: none;
+    opacity: 0.78;
+    transform: scale(1);
+  }
+  .lectoris-nota::before {
+    transition: none;
+    opacity: 1;
+  }
+  .lectoris-nota.is-done .lectoris-nota-latin {
+    animation: none;
+    opacity: 0.94;
+  }
+  .lectoris-nota-caret {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* Responsive sizing — hide on the smallest screens where the
+   margins have already collapsed, and tighten on tablets. */
+@media (max-width: 880px) {
+  .lectoris-nota {
+    bottom: clamp(40px, 6vw, 70px);
+    left: clamp(14px, 3vw, 28px);
+    max-width: clamp(160px, 30vw, 240px);
+  }
+  .lectoris-nota-row { font-size: clamp(10px, 1.3vw, 12px); }
+}
+
+@media (max-width: 620px) {
+  .lectoris-nota {
+    bottom: clamp(34px, 5.4vw, 56px);
+    left: clamp(10px, 2.4vw, 20px);
+  }
+  .lectoris-nota-rule { width: clamp(16px, 3vw, 24px); }
+  .lectoris-nota-en { font-size: 0.9em; }
+}
+
+@media (max-width: 520px) {
+  .lectoris-nota {
+    bottom: clamp(28px, 5vw, 44px);
+    left: clamp(8px, 2vw, 16px);
+    max-width: clamp(140px, 42vw, 200px);
+  }
+  .lectoris-nota-row { font-size: 10px; line-height: 1.35; }
+  .lectoris-nota-caret-svg { width: 10px; height: 14px; }
+}
+
+@media (max-width: 380px) {
+  .lectoris-nota {
+    display: none;
+  }
+}
+
 /* ----- Refined question text composition -----
    Subtle improvements to the rhythm of the line: a slightly tighter
    leading on the question verb, and a small breathing space between
@@ -5495,6 +5760,44 @@ body {
   box-shadow: 0 0 6px rgba(217, 176, 116, 0.22);
 }
 
+/* The reader's mark landing at the colophon — a small vermilion pip
+   that appears at the bottom of the chapter spine once the
+   LectorisNota has fully written itself, like the reader's
+   "annotavi" has descended the chapter's axis and arrived at the
+   colophon. Subtle, additive, never overwriting the existing
+   seal or pulse animation. */
+.chapter-spine-drop {
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--vermilion);
+  box-shadow:
+    0 0 4px rgba(176, 83, 58, 0.45),
+    0 0 8px rgba(176, 83, 58, 0.18);
+  transform: translate(-50%, 0) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  animation: chapterSpineDrop 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.chapter-spine.is-annotavi {
+  box-shadow:
+    0 0 6px rgba(217, 176, 116, 0.22),
+    0 0 12px rgba(176, 83, 58, 0.06);
+  transition: box-shadow 0.9s ease 0.4s;
+}
+
+@keyframes chapterSpineDrop {
+  0%   { opacity: 0; transform: translate(-50%, -10px) scale(0); }
+  40%  { opacity: 0.95; transform: translate(-50%, 0) scale(1); }
+  70%  { opacity: 0.95; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0.9; transform: translate(-50%, 0) scale(1); }
+}
+
 @keyframes chapterSpinePulse {
   0%   { top: -6%; opacity: 0; }
   10%  { opacity: 1; }
@@ -5584,6 +5887,14 @@ body {
       var(--gold) 0.55px,
       transparent 0.55px
     );
+  }
+  .chapter-spine-drop {
+    animation: none;
+    opacity: 0.9;
+    transform: translate(-50%, 0) scale(1);
+  }
+  .chapter-spine.is-annotavi {
+    box-shadow: 0 0 6px rgba(217, 176, 116, 0.22);
   }
   .colophon-compass {
     animation: none;

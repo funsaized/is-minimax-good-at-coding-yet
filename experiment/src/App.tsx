@@ -94,6 +94,20 @@ const ANSWER_STAGGER_MS = 34
 const REPLY_STAGGER_MS = 26
 const INTELLEXI_STAGGER_MS = 78
 
+// The reader's quiet mark in the bottom-left margin — the fourth voice
+// of the folio's left-margin dialogue. The page asks ("Qu."), the page
+// invites ("vide · look"), the reader accepts ("intellexi"), and now
+// the reader marks — "annotavi". Types itself in once the reader has
+// understood the chapter, completing the page's four-corner marginal
+// scheme (top-left, top-right, bottom-left, bottom-right) and the
+// manuscript's Latin chain: quaeritur → respondetur → relege →
+// intellexi → annotavi → legi → explicit.
+const LECTORIS_NOTA_TEXT = 'annotavi · I have marked it'
+const LECTORIS_NOTA_ARIA =
+  "annotavi: I have marked it — the reader's mark in the bottom-left margin"
+const LECTORIS_NOTA_STAGGER_MS = 54
+const LECTORIS_NOTA_DELAY_MS = 620
+
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
   useEffect(() => {
@@ -1410,16 +1424,19 @@ function FolioOpener() {
 function ChapterSpine({
   pulseKey,
   sealed,
+  annotavi,
 }: {
   pulseKey: number
   sealed: boolean
+  annotavi: boolean
 }) {
   return (
     <div
-      className={`chapter-spine ${sealed ? 'is-sealed' : ''}`}
+      className={`chapter-spine ${sealed ? 'is-sealed' : ''} ${annotavi ? 'is-annotavi' : ''}`}
       aria-hidden="true"
     >
       <span key={pulseKey} className="chapter-spine-pulse" />
+      {annotavi && <span key={`annotavi-${pulseKey}`} className="chapter-spine-drop" />}
     </div>
   )
 }
@@ -1730,6 +1747,71 @@ function ScholasticFootnote({
   )
 }
 
+// LectorisNota — the reader's quiet mark in the bottom-left margin,
+// completing the folio's four-corner marginal scheme and the chapter's
+// Latin dialogue chain. A small bilingual gloss, set in vermilion
+// italic with an English translation, that types itself in once the
+// reader has understood the chapter (intellexi). Pairs with the
+// existing "Qu." rubric (top of the left margin) and the "vide ·
+// look" gloss (middle) so the left margin now reads as a single
+// vertical dialogue: the page asks (Qu.), the page invites (vide),
+// the reader marks (annotavi). A small caret beneath points toward
+// the colophon, like the reader's eye has just lifted from the
+// chapter's last word and set down a mark in the margin.
+function LectorisNota({
+  visible,
+  text,
+  done,
+}: {
+  visible: boolean
+  text: string
+  done: boolean
+}) {
+  const typing = visible && !done
+  const dotIdx = text.indexOf('·')
+  const latin = dotIdx >= 0 ? text.slice(0, dotIdx) : text
+  const english = dotIdx >= 0 ? text.slice(dotIdx + 1).replace(/^\s+/, '') : ''
+  return (
+    <aside
+      className={`lectoris-nota ${visible ? 'is-on' : ''} ${done ? 'is-done' : ''}`}
+      aria-live="polite"
+      aria-label={visible ? LECTORIS_NOTA_ARIA : undefined}
+    >
+      <span className="lectoris-nota-rule" aria-hidden="true" />
+      <span className="lectoris-nota-row">
+        <em className="lectoris-nota-latin">{latin}</em>
+        {dotIdx >= 0 && (
+          <span className="lectoris-nota-sep" aria-hidden="true">
+            ·
+          </span>
+        )}
+        {english !== '' && (
+          <span className="lectoris-nota-en">{english}</span>
+        )}
+        {typing && (
+          <span className="lectoris-nota-caret" aria-hidden="true">|</span>
+        )}
+      </span>
+      <svg
+        className="lectoris-nota-caret-svg"
+        viewBox="0 0 14 18"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          className="lectoris-nota-caret-line"
+          d="M 7 0 Q 5.6 8 8 16"
+        />
+        <path
+          className="lectoris-nota-caret-tip"
+          d="M 5 13.6 L 8 16.2 L 10.6 13.2"
+        />
+      </svg>
+    </aside>
+  )
+}
+
 function Marg({
   corner,
   id,
@@ -1826,6 +1908,8 @@ export function App() {
   const [sealing, setSealing] = useState(false)
   const [intellexiOn, setIntellexiOn] = useState(false)
   const [intellexiChars, setIntellexiChars] = useState(0)
+  const [lectorisOn, setLectorisOn] = useState(false)
+  const [lectorisChars, setLectorisChars] = useState(0)
   const [quietus, setQuietus] = useState(false)
   const [spinePulseKey, setSpinePulseKey] = useState(0)
   const [spineSealed, setSpineSealed] = useState(false)
@@ -1970,8 +2054,44 @@ export function App() {
       () => setIntellexiChars((c) => Math.min(total, c + 1)),
       INTELLEXI_STAGGER_MS,
     )
-    return () => window.clearTimeout(id)
+    return () => clearTimeout(id)
   }, [intellexiOn, intellexiChars, reduced])
+
+  // The reader's left-margin mark ("annotavi") arrives once the
+  // reader has finished writing "intellexi". The cadence waits a beat
+  // so the reader's acceptance can settle before the marginal gloss
+  // joins it — like a reader who has just understood a passage and
+  // reaches for the quill to mark the margin. Types itself in the
+  // same manuscript cadence as the other glosses (slower stagger, so
+  // the brief Latin + English pair reads as a single deliberate
+  // gesture, not a hurried scrawl).
+  useEffect(() => {
+    if (!intellexiOn) return
+    if (intellexiChars < 'intellexi'.length) return
+    const t = window.setTimeout(
+      () => setLectorisOn(true),
+      reduced ? 60 : LECTORIS_NOTA_DELAY_MS,
+    )
+    return () => window.clearTimeout(t)
+  }, [intellexiOn, intellexiChars, reduced])
+
+  useEffect(() => {
+    if (!lectorisOn) {
+      setLectorisChars(0)
+      return
+    }
+    const total = LECTORIS_NOTA_TEXT.length
+    if (reduced) {
+      setLectorisChars(total)
+      return
+    }
+    if (lectorisChars >= total) return
+    const id = window.setTimeout(
+      () => setLectorisChars((c) => Math.min(total, c + 1)),
+      LECTORIS_NOTA_STAGGER_MS,
+    )
+    return () => clearTimeout(id)
+  }, [lectorisOn, lectorisChars, reduced])
 
   // Spine pulse — a soft gold light travels from the top of the
   // chapter spine to the compass mark at three narrative moments:
@@ -2329,9 +2449,11 @@ export function App() {
     setReplyChars(0)
     setFootnoteChars(0)
     setIntellexiChars(0)
+    setLectorisChars(0)
     setReplyOn(false)
     setFootnoteOn(false)
     setIntellexiOn(false)
+    setLectorisOn(false)
     setQuietus(false)
     setAnswerOn(true)
     const ansOff = window.setTimeout(
@@ -2377,6 +2499,11 @@ export function App() {
     ? FOOTNOTE_TEXT.slice(0, Math.max(0, footnoteChars))
     : ''
   const footnoteDone = footnoteOn && footnoteChars >= FOOTNOTE_TEXT.length
+  const lectorisDisplay = lectorisOn
+    ? LECTORIS_NOTA_TEXT.slice(0, Math.max(0, lectorisChars))
+    : ''
+  const lectorisDone =
+    lectorisOn && lectorisChars >= LECTORIS_NOTA_TEXT.length
 
   // Whether to render the rubricated initial: show it once the answer
   // has begun writing itself.
@@ -2436,7 +2563,7 @@ export function App() {
         />
 
         <div className={`composition ${ready ? 'ready' : ''} ${pointing ? 'is-pointing' : ''} ${quietus ? 'is-quietus' : ''}`}>
-          <ChapterSpine pulseKey={spinePulseKey} sealed={spineSealed} />
+          <ChapterSpine pulseKey={spinePulseKey} sealed={spineSealed} annotavi={lectorisDone} />
           <PrinterDate />
           <Capitulum />
           <span className="rubric">
@@ -2654,6 +2781,12 @@ export function App() {
             />
           </div>
         </div>
+
+        <LectorisNota
+          visible={lectorisOn}
+          text={lectorisDisplay}
+          done={lectorisDone}
+        />
 
         <div className="colophon" aria-hidden="true">
           <span className="colophon-seal">
