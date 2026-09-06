@@ -1828,6 +1828,132 @@ function AnswerOrnament() {
   )
 }
 
+// TailPiece — a small printer's tail-piece that closes the chapter
+// body. Two thin gold rules grow outward from a central diamond-and-pip,
+// like the closing ornament that finishes a printed chapter before the
+// colophon. Reads as the printer's quiet flourish at the end of the
+// text proper — the body has finished speaking, the colophon has not
+// yet begun. Drawn in once the footnote has settled, paired with the
+// explicit that follows. Iteration 46 composes the chapter's close.
+function TailPiece() {
+  return (
+    <svg
+      className="tail-piece"
+      viewBox="0 0 64 12"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <line
+        x1="2"
+        y1="6"
+        x2="24"
+        y2="6"
+        className="tail-piece-rule tail-piece-rule-l"
+        pathLength="100"
+      />
+      <line
+        x1="40"
+        y1="6"
+        x2="62"
+        y2="6"
+        className="tail-piece-rule tail-piece-rule-r"
+        pathLength="100"
+      />
+      <path
+        d="M 27 6 L 32 2.2 L 37 6 L 32 9.8 Z"
+        className="tail-piece-diamond"
+      />
+      <circle cx="32" cy="6" r="0.85" className="tail-piece-pip" />
+      <circle cx="24" cy="6" r="0.5" className="tail-piece-pip tail-piece-pip-end" />
+      <circle cx="40" cy="6" r="0.5" className="tail-piece-pip tail-piece-pip-end" />
+    </svg>
+  )
+}
+
+// ManiculumFinis — the reader's paired pointing hand at the chapter's
+// foot. Mirrors the existing maniculum at the question (which points
+// AT the question from the right margin) but is rotated 90° counter-
+// clockwise so it points UP toward the colophon. The pair reads as a
+// single visual rhyme: a reader's hand opened the chapter (pointing
+// at the question) and a reader's hand closes it (pointing at the
+// colophon). Hidden until the chapter has settled, fades in once the
+// reader has understood (intellexi) — the same gesture that completes
+// the four-corner marginal dialogue. A thin vermilion lead rises from
+// the fingertip toward the colophon, like the reader's eye has lifted
+// from the chapter's last word and is now reaching for the seal.
+function ManiculumFinis({ active }: { active: boolean }) {
+  return (
+    <span
+      className={`maniculum-fin ${active ? 'is-active' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="maniculum-fin-lead" />
+      <svg
+        className="maniculum-fin-svg"
+        viewBox="0 0 38 60"
+        focusable="false"
+      >
+        {/* Cuff — gold, gently tapered, anchored at the bottom */}
+        <path
+          className="maniculum-fin-cuff"
+          d="M 6 38 L 32 38 L 30 56 L 8 56 Z"
+        />
+        {/* Cuff diagonal seams — suggest cut and drape */}
+        <line x1="11" y1="42" x2="28" y2="56" className="maniculum-fin-seam" />
+        <line x1="11" y1="46" x2="28" y2="56" className="maniculum-fin-seam" />
+        {/* Cuff embroidery pip */}
+        <circle cx="19" cy="48" r="0.7" className="maniculum-fin-pip" />
+        {/* Sleeve band — a slim vermilion ribbon at the cuff */}
+        <rect
+          x="6.4"
+          y="35"
+          width="25.2"
+          height="1.4"
+          className="maniculum-fin-band"
+        />
+        {/* Hand back — gold, softens at the knuckles */}
+        <path
+          className="maniculum-fin-hand"
+          d="M 7 22 L 31 22 L 31 38 L 7 38 Z"
+        />
+        {/* Knuckle creases on the hand (small horizontal lines) */}
+        <line x1="10" y1="26" x2="28" y2="26" className="maniculum-fin-fold" />
+        <line x1="11" y1="32" x2="27" y2="32" className="maniculum-fin-fold" />
+        {/* Index finger — extended, pointing up toward the colophon */}
+        <path
+          className="maniculum-fin-finger"
+          d="M 14 0 L 24 0 L 24 22 L 14 22 Z"
+        />
+        {/* First knuckle crease on the finger */}
+        <line x1="14" y1="10" x2="24" y2="10" className="maniculum-fin-knuckle" />
+        {/* Fingernail — a small gold-bright wedge at the tip */}
+        <path
+          className="maniculum-fin-nail"
+          d="M 14 0 L 24 0 L 22 -2.4 L 16 -2.4 Z"
+        />
+        {/* Tip pulse — a tiny gold dot that flickers when active */}
+        <circle cx="19" cy="-3" r="0.7" className="maniculum-fin-tip" />
+      </svg>
+    </span>
+  )
+}
+
+// Pilcrow — a small vermilion paragraph mark that introduces the
+// reply paragraph. The page's printer-mark for "new paragraph begins
+// here" — quieter than the existing explicit pilcrow, set at the
+// opening of the chapter's second sentence rather than its close.
+// Drawn in vermilion italic, sized to the line, with a hairline that
+// fades from vermilion to ink-soft so the mark reads as part of the
+// manuscript rather than a separate annotation.
+function ReplyPilcrow() {
+  return (
+    <span className="reply-pilcrow" aria-hidden="true">
+      <span className="reply-pilcrow-mark">¶</span>
+      <span className="reply-pilcrow-rule" />
+    </span>
+  )
+}
+
 // ScholasticFootnote — a small bilingual marginal gloss that writes
 // itself into the page after the reply has finished. The rule above
 // draws first (a thin gold hairline growing outward from center); the
@@ -2927,35 +3053,39 @@ export function App() {
                 <span className="answer-caret" aria-hidden="true">|</span>
               )}
             </p>
-            {replyOn && <AnswerOrnament />}
-            <p
-              className={`reply ${replyOn ? 'is-on' : ''}`}
-              aria-live="polite"
+            <div
+              className={`chapter-body ${footnoteDone ? 'is-footnote-done' : ''} ${intellexiOn ? 'is-intellexi' : ''} ${lectorisDone ? 'is-annotavi' : ''}`}
             >
-              {replyOn && (
-                <span className="reply-rule" aria-hidden="true" />
-              )}
-              <span className="reply-text">{replyDisplay}</span>
-              {replyOn && replyChars < REPLY.length && (
-                <span className="reply-caret" aria-hidden="true">|</span>
-              )}
-              {replyOn && replyChars >= REPLY.length && (
-                <span className="reply-end" aria-hidden="true">
-                  <Fleuron />
-                </span>
-              )}
-            </p>
-            <ScholasticFootnote
-              visible={footnoteOn}
-              text={footnoteDisplay}
-              done={footnoteDone}
-            />
-            <Explicit />
-            <IntellexiNota
-              visible={intellexiOn}
-              text={intellexiOn ? 'intellexi'.slice(0, Math.max(0, intellexiChars)) : ''}
-              done={intellexiOn && intellexiChars >= 'intellexi'.length}
-            />
+              {replyOn && <AnswerOrnament />}
+              <p
+                className={`reply ${replyOn ? 'is-on' : ''}`}
+                aria-live="polite"
+              >
+                {replyOn && <ReplyPilcrow />}
+                <span className="reply-text">{replyDisplay}</span>
+                {replyOn && replyChars < REPLY.length && (
+                  <span className="reply-caret" aria-hidden="true">|</span>
+                )}
+                {replyOn && replyChars >= REPLY.length && (
+                  <span className="reply-end" aria-hidden="true">
+                    <Fleuron />
+                  </span>
+                )}
+              </p>
+              <ScholasticFootnote
+                visible={footnoteOn}
+                text={footnoteDisplay}
+                done={footnoteDone}
+              />
+              {footnoteDone && <TailPiece />}
+              <Explicit />
+              <IntellexiNota
+                visible={intellexiOn}
+                text={intellexiOn ? 'intellexi'.slice(0, Math.max(0, intellexiChars)) : ''}
+                done={intellexiOn && intellexiChars >= 'intellexi'.length}
+              />
+              <ManiculumFinis active={intellexiOn && intellexiChars >= 'intellexi'.length} />
+            </div>
           </div>
         </div>
 

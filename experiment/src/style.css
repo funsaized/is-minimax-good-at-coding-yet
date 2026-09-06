@@ -7732,3 +7732,400 @@ body {
     line-height: 1.12;
   }
 }
+
+/* ----- Iteration 46: composed chapter close -----
+ * The chapter body (answer → reply → footnote → close) is wrapped as
+ * one composed illuminated passage so the textual core reads as a
+ * single authored manuscript block. Three new elements earn their
+ * place here:
+ *
+ *   1. A printer's tail-piece drawn between the footnote and the
+ *      explicit — the chapter's quiet "end-of-text" ornament, drawn
+ *      outward from a central diamond once the footnote has settled.
+ *
+ *   2. A paired ManiculumFinis at the chapter's bottom-right margin,
+ *      pointing UP toward the colophon. It rhymes with the existing
+ *      maniculum at the question (which points AT the question), so
+ *      the chapter reads as bracketed by the reader's hand: open
+ *      (pointing at the question) → close (pointing at the seal).
+ *
+ *   3. A small vermilion pilcrow ¶ at the start of the reply
+ *      paragraph — a printer's "new paragraph" mark, lighter than
+ *      the explicit pilcrow that closes the chapter. Together they
+ *      bracket the chapter body the way the two maniculums bracket
+ *      the composition.
+ */
+
+.chapter-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2px, 0.2vw, 4px);
+  width: 100%;
+  margin: clamp(2px, 0.3vw, 6px) 0 0;
+  padding: 0;
+}
+
+/* ----- Tail-piece (chapter close ornament) ----- */
+
+.tail-piece {
+  display: block;
+  width: clamp(48px, 6vw, 84px);
+  height: auto;
+  margin: clamp(6px, 0.8vw, 12px) auto 0;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(2px);
+  overflow: visible;
+  pointer-events: none;
+  transition:
+    opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 1.0s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.chapter-body.is-footnote-done .tail-piece {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tail-piece-rule {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.55;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0.7;
+  transition:
+    stroke-dashoffset 0.85s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.6s ease;
+}
+
+.chapter-body.is-footnote-done .tail-piece-rule-l {
+  stroke-dashoffset: 0;
+  transition-delay: 0.1s;
+}
+
+.chapter-body.is-footnote-done .tail-piece-rule-r {
+  stroke-dashoffset: 0;
+  transition-delay: 0.18s;
+}
+
+.tail-piece-diamond {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.3);
+  transition:
+    opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1);
+  transition-delay: 0.05s;
+}
+
+.chapter-body.is-footnote-done .tail-piece-diamond {
+  opacity: 0.85;
+  transform: scale(1);
+}
+
+.tail-piece-pip {
+  fill: currentColor;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.2);
+  transition:
+    opacity 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.55s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+.tail-piece-pip-end {
+  fill: var(--vermilion);
+}
+
+.chapter-body.is-footnote-done .tail-piece-pip {
+  opacity: 0.85;
+  transform: scale(1);
+}
+
+.chapter-body.is-footnote-done .tail-piece-pip:not(.tail-piece-pip-end) {
+  transition-delay: 0.2s;
+}
+
+.chapter-body.is-footnote-done .tail-piece-pip-end {
+  transition-delay: 0.32s, 0.32s;
+}
+
+/* The tail-piece dims slightly once the intellexi has settled, so the
+   next ornament (explicit) carries the closure without competing. */
+.chapter-body.is-intellexi .tail-piece {
+  opacity: 0.72;
+}
+
+/* ----- Reply pilcrow (new-paragraph mark) ----- */
+
+.reply-pilcrow {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(3px, 0.3vw, 5px);
+  margin-right: clamp(4px, 0.45vw, 7px);
+  flex: 0 0 auto;
+  opacity: 0;
+  transform: translateX(-3px);
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reply.is-on .reply-pilcrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reply-pilcrow-mark {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 0.88em;
+  color: var(--vermilion);
+  line-height: 1;
+  text-shadow: 0 0 6px rgba(176, 83, 58, 0.28);
+  transform: translateY(-0.05em);
+  display: inline-block;
+}
+
+.reply-pilcrow-rule {
+  display: inline-block;
+  width: clamp(10px, 1.2vw, 18px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--vermilion) 0%,
+    var(--vermilion-soft) 60%,
+    transparent 100%
+  );
+  opacity: 0.6;
+}
+
+/* ----- ManiculumFinis (paired reader's hand at chapter close) ----- */
+
+.maniculum-fin {
+  position: absolute;
+  right: clamp(8px, 3vw, 36px);
+  bottom: clamp(38px, 4.6vw, 56px);
+  width: clamp(36px, 4vw, 54px);
+  height: auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(12px, 14px) rotate(2deg);
+  transform-origin: 50% 100%;
+  transition:
+    opacity 1.0s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 1.15s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.6s ease;
+  filter: drop-shadow(0 0 4px rgba(217, 176, 116, 0.18));
+}
+
+.chapter-body.is-annotavi .maniculum-fin {
+  opacity: 0.42;
+  transform: translate(6px, 6px) rotate(0deg);
+}
+
+.chapter-body.is-annotavi .maniculum-fin.is-active {
+  opacity: 1;
+  transform: translate(0, 0) rotate(0deg);
+  filter:
+    drop-shadow(0 0 10px rgba(217, 176, 116, 0.42))
+    drop-shadow(0 0 22px rgba(176, 83, 58, 0.22));
+  animation: maniculumFinSettle 4.4s ease-in-out 1.4s infinite;
+}
+
+@keyframes maniculumFinSettle {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  46%      { transform: translate(0, -2px) rotate(-0.4deg); }
+  52%      { transform: translate(0, -2px) rotate(-0.4deg); }
+}
+
+.maniculum-fin-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.maniculum-fin-cuff {
+  fill: var(--gold);
+  fill-opacity: 0.78;
+  stroke: var(--gold-deep);
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+}
+
+.maniculum-fin-band {
+  fill: var(--vermilion);
+  fill-opacity: 0.7;
+  stroke: var(--vermilion-soft);
+  stroke-width: 0.2;
+}
+
+.maniculum-fin-seam {
+  stroke: var(--gold-deep);
+  stroke-width: 0.35;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.55;
+}
+
+.maniculum-fin-pip {
+  fill: var(--vermilion);
+  fill-opacity: 0.85;
+}
+
+.maniculum-fin-hand {
+  fill: var(--gold);
+  fill-opacity: 0.82;
+  stroke: var(--gold-deep);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+}
+
+.maniculum-fin-fold {
+  stroke: var(--gold-deep);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.5;
+}
+
+.maniculum-fin-finger {
+  fill: var(--gold);
+  fill-opacity: 0.85;
+  stroke: var(--gold-deep);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+}
+
+.maniculum-fin-knuckle {
+  stroke: var(--gold-deep);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  opacity: 0.5;
+}
+
+.maniculum-fin-nail {
+  fill: var(--gold-bright);
+  fill-opacity: 0.8;
+  stroke: var(--gold-deep);
+  stroke-width: 0.3;
+}
+
+.maniculum-fin-tip {
+  fill: var(--gold-bright);
+  fill-opacity: 0.6;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: maniculumFinTip 1.6s ease-in-out infinite;
+}
+
+.maniculum-fin.is-active .maniculum-fin-tip {
+  animation: maniculumFinTipActive 1.1s ease-in-out infinite;
+}
+
+@keyframes maniculumFinTip {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50%      { opacity: 0.7; transform: scale(1); }
+}
+
+@keyframes maniculumFinTipActive {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.4); }
+}
+
+/* The lead rises from the fingertip upward toward the colophon — a
+   quiet hairline that meets the colophon's bottom rule, like the
+   reader's eye has lifted from the chapter and is reaching for the
+   seal. */
+.maniculum-fin-lead {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 1px;
+  height: clamp(28px, 5vw, 64px);
+  background: linear-gradient(
+    0deg,
+    transparent 0%,
+    var(--vermilion) 60%,
+    var(--vermilion) 100%
+  );
+  transform: translateX(-0.5px) scaleY(0.04);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.95s cubic-bezier(0.55, 0.04, 0.32, 1);
+}
+
+.chapter-body.is-annotavi .maniculum-fin-lead {
+  opacity: 0.7;
+  transform: translateX(-0.5px) scaleY(1);
+}
+
+/* ----- Reduced motion overrides for iteration 46 ----- */
+
+@media (prefers-reduced-motion: reduce) {
+  .tail-piece {
+    transition: opacity 0.2s ease;
+    transform: none;
+  }
+  .chapter-body.is-footnote-done .tail-piece { opacity: 1; transform: none; }
+  .tail-piece-rule { transition: none; stroke-dashoffset: 0; }
+  .tail-piece-diamond { transition: none; opacity: 0.85; transform: scale(1); }
+  .tail-piece-pip { transition: none; opacity: 0.85; transform: scale(1); }
+  .chapter-body.is-intellexi .tail-piece { opacity: 0.85; }
+
+  .reply-pilcrow { transition: opacity 0.2s ease; transform: none; }
+  .reply.is-on .reply-pilcrow { opacity: 1; transform: none; }
+
+  .maniculum-fin { transition: opacity 0.25s ease; transform: none; }
+  .chapter-body.is-annotavi .maniculum-fin { opacity: 0.6; transform: none; }
+  .maniculum-fin.is-active { animation: none; }
+  .maniculum-fin-tip { animation: none; opacity: 0.6; }
+  .maniculum-fin-lead { transition: none; opacity: 0.6; transform: translateX(-0.5px) scaleY(1); }
+}
+
+/* ----- Mobile sizing for iteration 46 ----- */
+
+@media (max-width: 880px) {
+  .tail-piece { width: clamp(44px, 7vw, 64px); }
+  .reply-pilcrow-mark { font-size: 0.92em; }
+  .reply-pilcrow-rule { width: clamp(8px, 1.4vw, 14px); }
+  .maniculum-fin {
+    width: clamp(30px, 4.6vw, 42px);
+    right: clamp(6px, 2.4vw, 22px);
+  }
+  .maniculum-fin-lead { height: clamp(20px, 4.4vw, 44px); }
+}
+
+@media (max-width: 520px) {
+  .chapter-body { gap: 1px; margin-top: 0; }
+  .tail-piece { width: 40px; margin-top: 6px; }
+  .reply-pilcrow-mark { font-size: 0.95em; }
+  .reply-pilcrow-rule { width: 8px; }
+  .maniculum-fin {
+    width: 26px;
+    right: clamp(2px, 1.5vw, 12px);
+  }
+  .maniculum-fin-lead { height: clamp(14px, 4.2vw, 32px); }
+}
+
+@media (max-width: 380px) {
+  .reply-pilcrow-rule { display: none; }
+  .maniculum-fin-lead { display: none; }
+  .tail-piece { width: 36px; }
+}
