@@ -1,0 +1,19 @@
+{
+  "id": 73,
+  "parentId": 72,
+  "createdAt": "2026-09-06T20:01:48.423Z",
+  "summary": "Refined the chapter into something that reads as a real, annotated printed page: a vermilion pilcrow now sits in the lef",
+  "path": "/iterations/000073/index.html",
+  "screenshot": "/iterations/000073/desktop.png",
+  "mobileScreenshot": "/iterations/000073/mobile.png",
+  "sourceCommit": "4ce687211c8875bc06d32b095ec25c889c47e7b0",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 374,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 93528,
+    "outputTokens": 12284,
+    "steps": 42
+  }
+}
