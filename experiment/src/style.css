@@ -1,1839 +1,988 @@
-/* ════════════════════════════════════════════════════════════════════════════
- * Iteration 74 — direction: "the marked question."
- *
- * The chapter reaches the full expression of its scholarly language when
- * the question itself reads as a real manuscript title, properly marked
- * by its printer. A small vermilion manicule (☞) sits in the right
- * margin as the classic medieval pointing-hand reference mark, balancing
- * the pilcrow on the left; a hand-drawn vermilion stroke sits beneath
- * "Minimax M3" as a manuscript emphasis mark on the chapter's subject.
- * Both fade in once the question has settled; both build on the
- * printer's-reference-mark language without replacing anything.
- * ════════════════════════════════════════════════════════════════════════════ */
-
-/* ----- Foundation ----- */
-
-* { box-sizing: border-box; }
-html, body, #root { margin: 0; min-height: 100%; }
-
-:root {
-  --bg: #0b0907;
-  --bg-warm: #18120c;
-  --bg-deep: #050402;
-  --ink: #f0e8da;
-  --ink-soft: #b8a98f;
-  --ink-faint: #6b5f4a;
-  --gold: #d9b074;
-  --gold-bright: #f0d49a;
-  --gold-deep: #a88556;
-  --vermilion: #b0533a;
-  --vermilion-soft: #86402d;
-  --vermilion-bright: #c6684a;
-  --cool: #95a8c2;
-  --cool-deep: #5e7593;
-  --serif: "Iowan Old Style", "Apple Garamond", "Palatino Linotype", Baskerville, "Hoefler Text", "Cambria", Georgia, "Times New Roman", serif;
-  --display: "Hoefler Text", "Iowan Old Style", "Apple Garamond", Baskerville, "Cambria", Georgia, serif;
-  --mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
+* {
+  box-sizing: border-box;
 }
 
-html, body { background: var(--bg); color: var(--ink); }
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+:root {
+  --night: #15171d;
+  --night-deep: #0d0f15;
+  --paper: #f3eadb;
+  --paper-light: #fffaf0;
+  --paper-shadow: #d7c8b4;
+  --ink: #1c2740;
+  --ink-soft: #536078;
+  --ink-faint: #8992a2;
+  --blue: #2452a5;
+  --blue-dark: #16366f;
+  --coral: #eb5b48;
+  --coral-dark: #b73e3f;
+  --gold: #d6a849;
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+html {
+  background: var(--night-deep);
+}
 
 body {
-  font-family: var(--mono);
+  background: var(--night);
+  color: var(--ink);
+  font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
-/* ----- Stage (the page) ----- */
+button {
+  font: inherit;
+}
 
-.stage {
+.experiment-shell {
   position: relative;
   min-height: 100svh;
   display: grid;
   place-items: center;
-  padding: clamp(28px, 4.4vw, 56px);
-  padding-top: clamp(36px, 5.2vw, 68px);
-  background:
-    radial-gradient(
-      80% 56% at 50% 24%,
-      rgba(217, 176, 116, 0.11) 0%,
-      rgba(176, 83, 58, 0.05) 30%,
-      transparent 62%
-    ),
-    radial-gradient(120% 95% at 50% 44%, var(--bg-warm) 0%, var(--bg) 58%, var(--bg-deep) 100%);
-}
-
-/* ----- Dust canvas (embers rising) ----- */
-
-.dust {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-  animation: dustIn 1.8s ease 0.1s forwards;
-}
-
-@keyframes dustIn {
-  to { opacity: 1; }
-}
-
-/* ----- Rim (candlelit atmosphere) -----
-   The candle at the top casts a warm pool that bathes the upper
-   composition; the inner soft halo holds the chapter in a clearly
-   lit zone; the periphery darkens into the room's shadow; a faint
-   desk shadow at the bottom grounds the folio on a reading surface.
-   Reads as "a chapter being read by candlelight," not "a page with
-   a vignette." */
-
-.rim {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(
-      60% 38% at 50% 17%,
-      rgba(240, 212, 154, 0.24) 0%,
-      rgba(217, 176, 116, 0.14) 26%,
-      rgba(176, 83, 58, 0.06) 48%,
-      transparent 66%
-    ),
-    radial-gradient(
-      78% 62% at 50% 48%,
-      rgba(240, 212, 154, 0.065) 0%,
-      rgba(217, 176, 116, 0.03) 30%,
-      transparent 56%
-    ),
-    radial-gradient(ellipse 110% 90% at 50% 50%, transparent 26%, rgba(0, 0, 0, 0.78) 100%),
-    linear-gradient(180deg,
-      rgba(38, 50, 64, 0.19) 0%,
-      rgba(28, 22, 16, 0.075) 14%,
-      transparent 36%,
-      transparent 64%,
-      rgba(8, 4, 2, 0.62) 100%
-    );
-}
-
-/* ----- Paper grain ----- */
-
-.paper-grain {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-  mix-blend-mode: soft-light;
-  animation: grainIn 2.4s ease 0.4s forwards;
-}
-
-@keyframes grainIn {
-  to { opacity: 0.18; }
-}
-
-/* ----- Reading Lantern (cursor-following warm pool) ----- */
-
-.reading-lantern {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-  transition: opacity 0.9s ease;
-  background:
-    radial-gradient(
-      220px 220px at var(--lantern-x, 50%) var(--lantern-y, 36%),
-      rgba(240, 212, 154, 0.13) 0%,
-      rgba(240, 212, 154, 0.06) 22%,
-      transparent 60%
-    ),
-    radial-gradient(
-      320px 320px at var(--lantern-x-prev, 50%) var(--lantern-y-prev, 36%),
-      rgba(217, 176, 116, 0.04) 0%,
-      transparent 56%
-    );
-}
-
-.reading-lantern.is-on {
-  opacity: 1;
-}
-
-/* ----- Bookmark Ribbon (page-edge bookmark) -----
-   A slim vermilion ribbon hangs from the page's upper-right corner,
-   tucked behind the chapter heading. Pinned through the folio number
-   "xviii" so the folio marks itself. The page's only ornament
-   outside the reading order. */
-
-.bookmark-ribbon {
-  position: absolute;
-  top: 0;
-  right: clamp(20px, 3.4vw, 56px);
-  width: clamp(20px, 1.7vw, 28px);
-  height: clamp(170px, 26vh, 240px);
-  pointer-events: none;
-  z-index: 6;
-  opacity: 0;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.32));
-  animation: ribbonDrop 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.9s forwards;
-}
-
-.bookmark-ribbon svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  overflow: visible;
-}
-
-.ribbon-numeral {
-  font-family: var(--display);
-  font-style: italic;
-  font-size: 11px;
-  fill: rgba(255, 226, 196, 0.86);
-  letter-spacing: 0.32em;
-}
-
-@keyframes ribbonDrop {
-  0%   { opacity: 0; transform: translateY(-26px); }
-  60%  { opacity: 1; transform: translateY(2px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-.bookmark-ribbon svg path:first-of-type {
-  animation: ribbonSheen 8s ease-in-out 2.4s infinite;
-  transform-origin: center;
-}
-
-@keyframes ribbonSheen {
-  0%, 100% { filter: brightness(1); }
-  50%      { filter: brightness(1.18); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .bookmark-ribbon { animation: none; opacity: 1; transform: none; }
-  .bookmark-ribbon svg path:first-of-type { animation: none; }
-}
-
-/* ----- Frame (the folio) ----- */
-
-.frame {
-  position: relative;
-  width: 100%;
-  max-width: 1100px;
-  min-height: calc(100svh - clamp(56px, 9vw, 112px));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 1;
+  padding: clamp(16px, 3vw, 42px);
   isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 56% 70% at 50% 46%, rgba(55, 77, 128, 0.18), transparent 72%),
+    linear-gradient(135deg, var(--night) 0%, #1b1c24 48%, var(--night-deep) 100%);
 }
 
-/* ----- Chapter heading (cap. xviii mark) -----
-   A small printer's chapter heading sits above the candle, in the
-   upper margin: a thin rule on either side of a fleuron-bookended
-   chapter roman and the chapter title in Latin. Anchors the page as
-   a real chapter opener. The candle is reading this folio in
-   particular. */
-
-.chapter-heading {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(8px, 0.9vw, 14px);
-  margin: 0 0 clamp(10px, 1.4vw, 18px);
-  padding: 0 clamp(8px, 1.6vw, 16px);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(9.5px, 0.95vw, 11.5px);
-  letter-spacing: 0.32em;
-  color: var(--ink-soft);
-  text-transform: lowercase;
-  white-space: nowrap;
-  max-width: 100%;
-  opacity: 0;
-  z-index: 5;
-  animation: chapterHeadingIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s forwards;
-}
-
-@keyframes chapterHeadingIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.chapter-heading-rule {
-  display: inline-block;
-  width: clamp(18px, 3vw, 48px);
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(184, 169, 143, 0.55) 50%,
-    transparent 100%
-  );
-}
-
-.chapter-heading-rule--left {
-  background: linear-gradient(
-    270deg,
-    transparent 0%,
-    rgba(184, 169, 143, 0.55) 50%,
-    transparent 100%
-  );
-}
-
-.chapter-heading-mark {
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(5px, 0.55vw, 8px);
-  color: var(--gold);
-}
-
-.chapter-heading-fleuron {
-  width: clamp(6px, 0.6vw, 9px);
-  height: clamp(6px, 0.6vw, 9px);
-  display: inline-block;
-  filter: drop-shadow(0 0 4px rgba(240, 212, 154, 0.32));
-}
-
-.chapter-heading-caput {
-  font-style: italic;
-  letter-spacing: 0.36em;
-  color: var(--gold-bright);
-}
-
-.chapter-heading-title {
-  font-style: italic;
-  letter-spacing: 0.28em;
-  color: var(--ink-faint);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .chapter-heading { animation: none; opacity: 1; transform: none; }
-}
-
-/* ----- Candle station (candle + taper, anchored above the hero) ----- */
-
-.candle-station {
-  position: relative;
-  width: 100%;
-  height: clamp(120px, 17vh, 200px);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  margin-bottom: clamp(-32px, -3vh, -8px);
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* ----- Taper (candle's cone of light) -----
-   A diffused cone of warm light falling from the candle onto the
-   chapter. Wider and softer than a shaft of light, so the candle
-   feels like the page's true light source. */
-
-.taper {
-  position: absolute;
-  top: clamp(36px, 6.5vh, 70px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: clamp(210px, 36vw, 410px);
-  height: clamp(360px, 58vh, 640px);
-  color: var(--gold);
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-  filter: blur(11px);
-  mix-blend-mode: screen;
-  animation: taperIn 2.6s ease 1.45s forwards;
-  will-change: opacity, transform;
-}
-
-.taper-fill {
-  transform-origin: 50% 0%;
-  transform: scaleY(0.94);
-  animation: taperBreath 11s ease-in-out 3.4s infinite;
-  will-change: transform, opacity;
-}
-
-@keyframes taperIn {
-  to { opacity: 0.96; }
-}
-
-@keyframes taperBreath {
-  0%, 100% { transform: scaleY(0.94); opacity: 1; }
-  50%      { transform: scaleY(1.02); opacity: 0.82; }
-}
-
-/* ----- Candle flame (authored light source) -----
-   Three nested teardrops (outer warm halo, inner gold body, hot white
-   core) plus a thin wick and a brass dish. The flame breathes and
-   sways; the halo brightens with pointer proximity to the hero,
-   driven by the --flame-warmth CSS variable set from the canvas loop.
-   First-light ignition: begins as a single faint ember and ignites
-   into its full flame ~2.4 seconds after the page has settled. */
-
-.candle-flame {
-  position: absolute;
-  top: clamp(8px, 1.6vh, 24px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: clamp(44px, 6.4vw, 82px);
-  height: auto;
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0;
-  filter:
-    drop-shadow(0 0 calc(14px + var(--flame-warmth, 0) * 28px)
-                rgba(240, 180, 110, calc(0.46 + var(--flame-warmth, 0) * 0.52)));
-  animation: flameIn 2.6s ease 1.25s forwards;
-  will-change: opacity, filter;
-  transition: filter 0.4s ease;
-}
-
-.candle-flame svg {
-  width: 100%;
-  height: auto;
-  display: block;
-  overflow: visible;
-}
-
-@keyframes flameIn {
-  to { opacity: 1; }
-}
-
-.candle-flame.is-ember .flame-outer,
-.candle-flame.is-ember .flame-inner,
-.candle-flame.is-ember .flame-base,
-.candle-flame.is-ember .flame-core,
-.candle-flame.is-ember .flame-halo,
-.candle-flame.is-ember .flame-wick {
-  opacity: 0;
-}
-
-.candle-flame.is-ember .flame-ember {
-  opacity: 1;
-}
-
-.flame-ember {
-  fill: #f5b068;
-  opacity: 0;
-  filter: drop-shadow(0 0 5px rgba(245, 176, 104, 0.65));
-  animation: emberGlow 1.6s ease-in-out infinite alternate;
-  transform-origin: center;
-}
-
-@keyframes emberGlow {
-  0%   { opacity: 0.55; transform: scale(0.95); }
-  100% { opacity: 0.95; transform: scale(1.05); }
-}
-
-.candle-flame.is-lit .flame-ember {
-  animation: emberOut 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes emberOut {
-  0%   { opacity: 1; transform: scale(1); }
-  60%  { opacity: 0.6; transform: scale(1.6); }
-  100% { opacity: 0; transform: scale(2.2); }
-}
-
-.candle-flame.is-lit .flame-wick {
-  animation: flameWickIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.05s forwards;
-}
-
-@keyframes flameWickIn {
-  to { opacity: 1; }
-}
-
-.candle-flame.is-lit .flame-base {
-  animation: flameBaseIn 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
-}
-
-@keyframes flameBaseIn {
-  to { opacity: 1; }
-}
-
-.candle-flame.is-lit .flame-core {
-  animation: flameCoreIn 1.6s cubic-bezier(0.4, 0, 0.2, 1) 0.4s forwards;
-}
-
-@keyframes flameCoreIn {
-  from { opacity: 0; transform: scale(0.5); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-.candle-flame.is-lit .flame-inner {
-  animation: flameInnerIn 1.8s cubic-bezier(0.4, 0, 0.2, 1) 0.55s forwards,
-             flameBreath 4.5s ease-in-out 2.0s infinite;
-  transform-origin: 50% 100%;
-}
-
-@keyframes flameInnerIn {
-  from { opacity: 0; transform: scaleY(0.3); }
-  to   { opacity: 1; transform: scaleY(1); }
-}
-
-.candle-flame.is-lit .flame-outer {
-  animation: flameOuterIn 2.0s cubic-bezier(0.4, 0, 0.2, 1) 0.7s forwards,
-             flameBreath 4.5s ease-in-out 2.0s infinite;
-  transform-origin: 50% 100%;
-}
-
-@keyframes flameOuterIn {
-  from { opacity: 0; transform: scaleY(0.4) scaleX(0.7); }
-  to   { opacity: 1; transform: scaleY(1) scaleX(1); }
-}
-
-@keyframes flameBreath {
-  0%, 100% { transform: scaleY(1) scaleX(1); }
-  50%      { transform: scaleY(0.96) scaleX(0.99); }
-}
-
-.candle-flame.is-lit .flame-halo {
-  animation: flameHaloIn 2.4s cubic-bezier(0.4, 0, 0.2, 1) 0.9s forwards,
-             flameHaloBreath 6s ease-in-out 2.6s infinite;
-  transform-origin: 50% 50%;
-}
-
-@keyframes flameHaloIn {
-  from { opacity: 0; transform: scale(0.5); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-@keyframes flameHaloBreath {
-  0%, 100% { opacity: 0.92; transform: scale(1); }
-  50%      { opacity: 1; transform: scale(1.06); }
-}
-
-.candle-dish {
-  opacity: 0;
-  animation: dishIn 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s forwards;
-}
-
-@keyframes dishIn {
-  to { opacity: 1; }
-}
-
-.candle-dish-shadow {
-  fill: rgba(0, 0, 0, 0.36);
-  filter: blur(0.4px);
-}
-
-.candle-dish-groove {
-  fill: none;
-  stroke: rgba(0, 0, 0, 0.4);
-  stroke-width: 0.4;
-}
-
-.candle-dish-shine {
-  fill: rgba(240, 212, 154, 0.5);
-}
-
-.candle-flame.is-flaring .flame-halo {
-  animation: flameHaloFlare 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes flameHaloFlare {
-  0%   { transform: scale(1); opacity: 1; }
-  45%  { transform: scale(1.55); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .candle-flame,
-  .candle-flame .flame-ember,
-  .candle-flame .flame-wick,
-  .candle-flame .flame-base,
-  .candle-flame .flame-core,
-  .candle-flame .flame-inner,
-  .candle-flame .flame-outer,
-  .candle-flame .flame-halo,
-  .candle-dish {
-    animation: none;
-    transition: none;
-  }
-  .candle-flame { opacity: 1; }
-  .candle-flame.is-ember .flame-ember,
-  .candle-flame.is-ember .flame-wick,
-  .candle-flame.is-ember .flame-base,
-  .candle-flame.is-ember .flame-core,
-  .candle-flame.is-ember .flame-inner,
-  .candle-flame.is-ember .flame-outer,
-  .candle-flame.is-ember .flame-halo {
-    opacity: 1;
-  }
-}
-
-/* ----- Composition ----- */
-
-.composition {
-  position: relative;
-  width: 100%;
-  max-width: 920px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(10px, 1.4vw, 20px);
-  padding-bottom: clamp(40px, 6vw, 80px);
-  z-index: 1;
-}
-
-.composition.is-quietus {
-  transition: opacity 0.6s ease;
-}
-
-/* ----- Page glow (behind the question) -----
-   A single soft warm halo that breathes behind the chapter when the
-   reader is attending. The hero above and the question text below
-   now read as one lit body — the candle lights the question, and the
-   question glows back. Hidden in steady state; brightens with cursor
-   proximity; briefly flares on acknowledge, then settles into the
-   steady reading state. */
-
-.page-glow {
-  position: absolute;
+.ambient-grid {
+  position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
-  opacity: 0;
-  mix-blend-mode: screen;
-  transition: opacity 1.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  opacity: 0.3;
+  background-image:
+    linear-gradient(rgba(171, 187, 220, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(171, 187, 220, 0.055) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
 }
 
-.page-glow.is-lit {
-  opacity: 1;
-  background: radial-gradient(
-    ellipse 56% 44% at 50% 38%,
-    rgba(240, 212, 154, 0.10) 0%,
-    rgba(217, 176, 116, 0.05) 38%,
-    transparent 72%
-  );
-  animation: pageGlowBreath 7s ease-in-out 0.4s infinite;
-}
-
-.page-glow.is-flaring {
-  opacity: 1;
-  background: radial-gradient(
-    ellipse 64% 52% at 50% 38%,
-    rgba(240, 212, 154, 0.20) 0%,
-    rgba(217, 176, 116, 0.10) 38%,
-    transparent 70%
-  );
-  animation: pageGlowFlare 1.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes pageGlowBreath {
-  0%, 100% { opacity: 0.85; }
-  50%      { opacity: 1; }
-}
-
-@keyframes pageGlowFlare {
-  0%   { opacity: 0; transform: scale(0.94); }
-  35%  { opacity: 1; transform: scale(1.06); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .page-glow { transition: none; animation: none; opacity: 1; }
-  .page-glow.is-lit { animation: none; }
-}
-
-/* ----- Hero (the question mark emblem) -----
-   The chapter's title visualised: a hand-drawn bowl that opens
-   wider at the top, tapers into the stem via a smooth curve, and
-   finishes with a slightly off-centre dot. The whole emblem draws
-   itself in once the chapter has settled, with a soft amber
-   highlight on the upper bowl and a small ink-pool at the foot
-   of the stem — the place where the quill was just lifted. */
-
-.hero {
-  appearance: none;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  position: relative;
-  display: block;
-  color: var(--ink);
-  -webkit-tap-highlight-color: transparent;
-  margin-top: clamp(8px, 1.6vh, 24px);
-  outline: none;
-}
-
-.hero:focus-visible .hero-svg-wrap {
-  outline: 1px solid rgba(217, 176, 116, 0.55);
-  outline-offset: 8px;
-  border-radius: 4px;
-}
-
-.hero-svg-wrap {
-  display: block;
-  position: relative;
-}
-
-.hero-svg {
-  display: block;
-  width: clamp(220px, 30vw, 320px);
-  height: auto;
-  overflow: visible;
-  transform:
-    translate(calc(var(--gaze-x, 0) * -3px), calc(var(--gaze-y, 0) * -3px));
-  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.auriole-radial {
-  opacity: 0;
-  animation: auroleIn 2.4s ease 1.4s forwards;
-}
-
-@keyframes auroleIn {
-  to { opacity: 1; }
-}
-
-.hero-shadow {
-  fill: rgba(176, 83, 58, 0);
-  stroke: rgba(176, 83, 58, 0.18);
-  stroke-width: 16;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  filter: blur(6px);
-  opacity: 0;
-  animation: shadowIn 2.6s cubic-bezier(0.4, 0, 0.2, 1) 1.6s forwards;
-}
-
-@keyframes shadowIn {
-  to {
-    stroke-dashoffset: 0;
-    opacity: 0.9;
-  }
-}
-
-.hero-scribal-trail {
-  fill: none;
-  stroke: rgba(240, 212, 154, 0.42);
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  animation: trailDraw 2.8s cubic-bezier(0.6, 0.02, 0.2, 1) 2.4s forwards;
-}
-
-@keyframes trailDraw {
-  to { stroke-dashoffset: 0; opacity: 1; }
-}
-
-.hero-stroke {
-  fill: none;
-  stroke-width: 11;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  filter: drop-shadow(0 0 6px rgba(240, 212, 154, 0.32));
-  animation: strokeDraw 2.6s cubic-bezier(0.6, 0.02, 0.2, 1) 1.9s forwards,
-             strokeBreath 7s ease-in-out 4.6s infinite;
-}
-
-@keyframes strokeDraw {
-  to { stroke-dashoffset: 0; }
-}
-
-@keyframes strokeBreath {
-  0%, 100% { stroke-width: 11; }
-  50%      { stroke-width: 10.4; }
-}
-
-.hero-highlight {
-  fill: none;
-  stroke: rgba(248, 230, 188, 0.78);
-  stroke-width: 2.2;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  filter: drop-shadow(0 0 4px rgba(248, 230, 188, 0.65));
-  animation: highlightDraw 1.6s cubic-bezier(0.6, 0.02, 0.2, 1) 4.2s forwards;
-}
-
-@keyframes highlightDraw {
-  to { stroke-dashoffset: 0; }
-}
-
-.hero-trace {
-  fill: none;
-  stroke: transparent;
-  stroke-width: 14;
-  stroke-linecap: round;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  opacity: 0;
-  animation: traceDraw 2.6s cubic-bezier(0.6, 0.02, 0.2, 1) 1.9s forwards;
-}
-
-@keyframes traceDraw {
-  to { stroke-dashoffset: 0; opacity: 1; }
-}
-
-.hero-ink-pool {
-  fill: rgba(176, 83, 58, 0);
-  stroke: rgba(176, 83, 58, 0.42);
-  stroke-width: 1;
-  opacity: 0;
-  animation: inkPoolIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 4.2s forwards;
-}
-
-.hero-ink-pool-pip {
-  fill: var(--vermilion-bright);
-  filter: drop-shadow(0 0 2px rgba(198, 104, 74, 0.6));
-  opacity: 0;
-  animation: inkPoolPipIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 4.4s forwards;
-}
-
-.hero-dot-ring {
-  fill: none;
-  stroke: var(--gold);
-  stroke-width: 0.7;
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: dotRingIn 1.4s cubic-bezier(0.2, 1.2, 0.4, 1) 4.6s forwards,
-             dotRingBreath 6s ease-in-out 6.0s infinite;
-}
-
-.hero-dot {
-  fill: currentColor;
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(0);
-  animation: dotIn 1.4s cubic-bezier(0.2, 1.2, 0.4, 1) 4.6s forwards,
-             dotBreath 6s ease-in-out 6.0s infinite;
-}
-
-@keyframes inkPoolIn { to { opacity: 1; } }
-@keyframes inkPoolPipIn { to { opacity: 1; } }
-@keyframes dotRingIn {
-  to { opacity: 0.65; }
-}
-@keyframes dotRingBreath {
-  0%, 100% { opacity: 0.65; transform: scale(1); }
-  50%      { opacity: 0.85; transform: scale(1.04); }
-}
-@keyframes dotIn {
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes dotBreath {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.9; transform: scale(0.98); }
-}
-
-.hero.pulse .auriole-radial {
-  animation: aurolePulse 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hero.pulse .hero-stroke {
-  animation: strokePulse 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes aurolePulse {
-  0%   { transform: scale(1); opacity: 1; }
-  50%  { transform: scale(1.16); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes strokePulse {
-  0%   { filter: drop-shadow(0 0 6px rgba(240, 212, 154, 0.32)); }
-  50%  { filter: drop-shadow(0 0 18px rgba(248, 230, 188, 0.72)); }
-  100% { filter: drop-shadow(0 0 6px rgba(240, 212, 154, 0.32)); }
-}
-
-.hero.is-quietus .hero-stroke {
-  filter: drop-shadow(0 0 9px rgba(240, 212, 154, 0.5));
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-svg,
-  .auriole-radial,
-  .hero-shadow,
-  .hero-scribal-trail,
-  .hero-stroke,
-  .hero-highlight,
-  .hero-trace,
-  .hero-ink-pool,
-  .hero-ink-pool-pip,
-  .hero-dot-ring,
-  .hero-dot { transition: none; animation: none; opacity: 1; stroke-dashoffset: 0; transform: none; }
-}
-
-/* ----- Question text (the chapter's title) -----
-   The chapter's unmistakable focal point. The full question
-   typesets itself in word-by-word after the hero has drawn, like a
-   printer's setting-mark before the chapter begins. The "?"
-   settles last, slightly larger and in vermilion, so the question
-   marks the climax of its own title. A small vermilion pilcrow
-   sits as a flex sibling in the left margin, like a printer's
-   reference mark pointing to the question's most active verb. */
-
-.question-block {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(16px, 2.4vw, 36px);
-  width: 100%;
-  margin-top: clamp(4px, 0.5vw, 10px);
-}
-
-/* ----- Marginal pilcrow (printer's reference mark) -----
-   A small vermilion pilcrow (¶) sits at the height of the question's
-   verb, like a scholar's marginal hand pointing to the active word.
-   Drawn with proper serifs — vertical stem, top serif, bottom serif,
-   and a hollow bowl on the upper right. Quiet in steady state;
-   brightens and wiggles gently when the reader brings the cursor to
-   it; fades up out of nothing once the question has settled. On
-   mobile it stacks above the question, like a chapter initial. */
-.pilcrow {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: clamp(13px, 1.2vw, 17px);
-  height: auto;
-  color: var(--vermilion-bright);
-  opacity: 0;
-  transform: translateY(2px);
-  transition:
-    opacity 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s,
-    transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s,
-    color 0.6s ease;
-  cursor: default;
-}
-
-.pilcrow-svg {
-  width: 100%;
-  height: auto;
-  display: block;
-  filter: drop-shadow(0 0 3px rgba(198, 104, 74, 0.4));
-  transition: filter 0.6s ease;
-}
-
-.composition.ready .pilcrow {
-  opacity: 0.58;
-  transform: translateY(0);
-}
-
-.stage.is-attending .pilcrow {
-  opacity: 0.78;
-}
-
-.pilcrow:hover {
-  opacity: 1;
-  animation: pilcrowWiggle 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.pilcrow:hover .pilcrow-svg {
-  filter: drop-shadow(0 0 6px rgba(198, 104, 74, 0.7));
-}
-
-@keyframes pilcrowWiggle {
-  0%   { transform: rotate(0deg); }
-  32%  { transform: rotate(-5deg) translateY(-0.5px); }
-  62%  { transform: rotate(4deg) translateY(0.5px); }
-  100% { transform: rotate(0deg); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pilcrow {
-    transition: opacity 0.5s ease;
-    transform: none;
-  }
-  .composition.ready .pilcrow,
-  .stage.is-attending .pilcrow {
-    opacity: 0.7;
-    transform: none;
-  }
-  .pilcrow:hover { animation: none; }
-}
-
-/* ----- Marginal manicule (printer's pointing hand) -----
-   The mirror partner to the pilcrow. Sits in the right margin at
-   the height of "yet", in vermilion, finger pointing left toward
-   the text. Drawn with a stylised cuff at the wrist, a flat palm,
-   an extended index finger, and a small thumb bump. The classic
-   medieval/early-modern printer's reference mark — its bilateral
-   partner to the pilcrow on the left, so the question now reads
-   with paired marginalia. Fades in once the question has settled,
-   brightens on hover, and nudges slightly toward the text it
-   points at. On mobile it stacks above the question alongside
-   the pilcrow, like paired chapter initials. */
-.manicule {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  align-self: center;
-  width: clamp(20px, 1.7vw, 26px);
-  height: auto;
-  color: var(--vermilion-bright);
-  opacity: 0;
-  transform: translateX(4px);
-  transition:
-    opacity 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s,
-    transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s,
-    color 0.6s ease;
-  cursor: default;
-}
-
-.manicule-svg {
-  width: 100%;
-  height: auto;
-  display: block;
-  filter: drop-shadow(0 0 3px rgba(198, 104, 74, 0.4));
-  transition: filter 0.6s ease;
-}
-
-.composition.ready .manicule {
-  opacity: 0.58;
-  transform: translateX(0);
-}
-
-.stage.is-attending .manicule {
-  opacity: 0.78;
-}
-
-.manicule:hover {
-  opacity: 1;
-  animation: maniculeNudge 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.manicule:hover .manicule-svg {
-  filter: drop-shadow(0 0 6px rgba(198, 104, 74, 0.7));
-}
-
-@keyframes maniculeNudge {
-  0%   { transform: translateX(0); }
-  35%  { transform: translateX(-2px); }
-  70%  { transform: translateX(0.5px); }
-  100% { transform: translateX(0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .manicule {
-    transition: opacity 0.5s ease;
-    transform: none;
-  }
-  .composition.ready .manicule,
-  .stage.is-attending .manicule {
-    opacity: 0.7;
-    transform: none;
-  }
-  .manicule:hover { animation: none; }
-}
-
-/* ----- Subject underline (manuscript emphasis mark) -----
-   A hand-drawn vermilion stroke sits beneath "Minimax M3" as a
-   manuscript emphasis mark on the chapter's subject. Drawn with
-   a subtle wave so it reads as hand-cut with a quill, not
-   typeset. The stroke draws itself in from left to right once
-   the question has settled, like a scholar's pen arriving at
-   the subject. */
-.question-name-wrap {
-  position: relative;
-  display: inline-block;
-}
-
-.emphasis-underline {
-  position: absolute;
-  left: -3%;
-  right: -3%;
-  bottom: -10px;
-  height: 10px;
+.ambient-glow {
+  position: fixed;
+  width: min(42vw, 620px);
+  aspect-ratio: 1;
+  border-radius: 50%;
   pointer-events: none;
-  color: var(--vermilion-bright);
-  opacity: 0;
-  transform: scaleX(0.3);
-  transform-origin: 8% 50%;
-  transition:
-    opacity 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s,
-    transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s;
+  filter: blur(2px);
+  opacity: 0.46;
 }
 
-.emphasis-underline svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  overflow: visible;
-  filter: drop-shadow(0 0 3px rgba(198, 104, 74, 0.45));
+.ambient-glow--one {
+  top: -35%;
+  left: -13%;
+  background: radial-gradient(circle, rgba(235, 91, 72, 0.16), transparent 68%);
 }
 
-.composition.ready .emphasis-underline {
-  opacity: 0.82;
-  transform: scaleX(1);
+.ambient-glow--two {
+  right: -16%;
+  bottom: -35%;
+  background: radial-gradient(circle, rgba(36, 82, 165, 0.22), transparent 68%);
 }
 
-.stage.is-attending .emphasis-underline {
-  opacity: 0.95;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .emphasis-underline {
-    transition: opacity 0.5s ease;
-    transform: none;
-  }
-  .composition.ready .emphasis-underline,
-  .stage.is-attending .emphasis-underline {
-    opacity: 0.82;
-    transform: none;
-  }
-}
-
-.question {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  flex-wrap: wrap;
-  row-gap: clamp(4px, 0.55vw, 10px);
-  column-gap: 0;
-  font-family: var(--display);
-  font-style: italic;
-  font-weight: 500;
-  font-size: clamp(42px, 6.8vw, 92px);
-  line-height: 1.02;
-  letter-spacing: -0.024em;
-  text-align: center;
-  color: var(--ink);
-  max-width: 22ch;
-  margin: 0;
-  text-wrap: balance;
-  font-feature-settings: "kern" on, "liga" on, "calt" on, "salt" on, "dlig" on, "swsh" on;
-  font-variant-numeric: oldstyle-nums;
-  text-rendering: optimizeLegibility;
-  text-shadow:
-    0 0 36px rgba(240, 232, 218, 0.14),
-    0 0 72px rgba(217, 176, 116, 0.06),
-    0 1px 0 rgba(0, 0, 0, 0.32);
-  opacity: 0;
-  transform: translateY(14px);
-  transition:
-    opacity 1.2s ease 1.55s,
-    transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 1.55s,
-    text-shadow 1.4s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.composition.ready .question {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.stage.is-attending .question {
-  text-shadow:
-    0 0 44px rgba(240, 232, 218, 0.20),
-    0 0 88px rgba(217, 176, 116, 0.10),
-    0 1px 0 rgba(0, 0, 0, 0.32);
-}
-
-.question-line {
-  display: inline;
-}
-
-.question-word {
-  font-style: italic;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
-  transition-delay: calc(1.8s + var(--wi, 0) * 0.06s);
-}
-
-.composition.ready .question-word {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.question-mark-wrap {
-  display: inline-block;
-}
-
-.question-mark {
-  color: var(--vermilion-bright);
-  font-style: italic;
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(6px) scale(0.92);
-  transition:
-    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 0.9s cubic-bezier(0.2, 1.2, 0.4, 1);
-  transition-delay: 2.3s;
-}
-
-.composition.ready .question-mark {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .question { transition: none; opacity: 1; transform: none; }
-  .question-word, .question-mark { transition: none; opacity: 1; transform: none; }
-}
-
-/* ----- Reading pace (the only interactive control) -----
-   Now sits directly under the question, where the reader's eye
-   naturally falls after the title — the control can answer the
-   question rather than summarise the chapter. */
-
-.reading-pace {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: clamp(10px, 1.2vw, 16px);
-  margin-bottom: clamp(4px, 0.6vw, 10px);
-  opacity: 0;
-  transform: translateY(4px);
-  transition:
-    opacity 1.1s ease 2.4s,
-    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 2.4s;
-}
-
-.composition.ready .reading-pace {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.reading-pace-btn {
-  appearance: none;
-  background: transparent;
-  border: 0;
-  border-radius: 3px;
-  cursor: pointer;
+.sheet {
   position: relative;
-  display: inline-flex;
-  align-items: baseline;
-  gap: clamp(5px, 0.6vw, 8px);
-  padding: clamp(8px, 0.95vw, 12px) clamp(14px, 1.6vw, 20px);
-  font-family: var(--serif);
-  font-size: clamp(10.5px, 1.02vw, 12.5px);
-  letter-spacing: 0.2em;
-  line-height: 1.4;
-  color: var(--ink-soft);
-  -webkit-tap-highlight-color: transparent;
-  transition: color 0.45s ease;
-}
-
-.reading-pace-btn:hover,
-.reading-pace-btn:focus-visible { color: var(--ink); }
-
-.reading-pace-btn:focus-visible {
-  outline: 1px solid rgba(217, 176, 116, 0.65);
-  outline-offset: 3px;
-}
-
-.reading-pace-latin {
-  font-style: italic;
-  color: var(--vermilion-bright);
-  letter-spacing: 0.14em;
-  transition: color 0.45s ease, text-shadow 0.45s ease;
-}
-
-.reading-pace-btn:hover .reading-pace-latin,
-.reading-pace-btn:focus-visible .reading-pace-latin {
-  text-shadow: 0 0 10px rgba(198, 104, 74, 0.45);
-}
-
-.reading-pace-sep { color: var(--ink-faint); }
-
-.reading-pace-gloss {
-  font-style: italic;
-  letter-spacing: 0.16em;
-}
-
-.reading-pace-pip {
-  align-self: center;
-  width: 12px;
-  height: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--gold-deep);
-  transition:
-    color 0.5s ease,
-    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.reading-pace-dot {
-  display: block;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: currentColor;
-  box-shadow: 0 0 0 0 rgba(217, 176, 116, 0);
-  transition:
-    background 0.45s ease,
-    box-shadow 0.5s ease,
-    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.reading-pace-drop {
-  width: 8px;
-  height: auto;
-  display: block;
-  filter: drop-shadow(0 0 3px rgba(198, 104, 74, 0.5));
-  animation: dropSettle 0.7s cubic-bezier(0.4, 1.2, 0.4, 1),
-             dropBreathe 3.4s ease-in-out 0.7s infinite;
-  transform-origin: 50% 0%;
-}
-
-.reading-pace-btn:hover .reading-pace-pip,
-.reading-pace-btn:focus-visible .reading-pace-pip {
-  color: var(--gold-bright);
-}
-
-.reading-pace-btn:hover .reading-pace-dot,
-.reading-pace-btn:focus-visible .reading-pace-dot {
-  background: var(--gold-bright);
-  box-shadow: 0 0 8px rgba(240, 212, 154, 0.6);
-  transform: scale(1.4);
-}
-
-.reading-pace-btn.is-slow .reading-pace-pip {
-  color: var(--vermilion-bright);
-}
-
-.reading-pace-btn.is-slow:hover .reading-pace-pip,
-.reading-pace-btn.is-slow:focus-visible .reading-pace-pip {
-  color: var(--vermilion-bright);
-}
-
-.reading-pace-btn.is-slow:hover .reading-pace-drop {
-  filter: drop-shadow(0 0 5px rgba(198, 104, 74, 0.7));
-}
-
-@keyframes dropSettle {
-  0%   { transform: translateY(-4px) scale(0.6); opacity: 0.4; }
-  60%  { transform: translateY(1px) scale(1.06); opacity: 1; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-@keyframes dropBreathe {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 3px rgba(198, 104, 74, 0.5)); }
-  50%      { transform: scale(1.08); filter: drop-shadow(0 0 5px rgba(198, 104, 74, 0.7)); }
-}
-
-.reading-pace-rule {
-  position: absolute;
-  left: 50%;
-  right: auto;
-  bottom: clamp(4px, 0.6vw, 8px);
-  width: 0;
-  height: 1px;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--gold-deep) 22%,
-    var(--gold) 50%,
-    var(--gold-deep) 78%,
-    transparent 100%
-  );
-  opacity: 0;
-  transition:
-    width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
-    opacity 0.45s ease;
-}
-
-.reading-pace-btn:hover .reading-pace-rule,
-.reading-pace-btn:focus-visible .reading-pace-rule {
-  width: calc(100% - clamp(16px, 2vw, 26px));
-  opacity: 0.85;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reading-pace { transition: none; opacity: 1; transform: none; }
-  .reading-pace-rule { transition: opacity 0.2s ease; }
-  .reading-pace-pip,
-  .reading-pace-dot,
-  .reading-pace-drop { transition: none; animation: none; transform: none; }
-}
-
-/* ----- Chapter body (the reading) ----- */
-
-.chapter-body {
-  width: 100%;
-  max-width: 58ch;
+  width: min(100%, 1170px);
+  min-height: min(760px, calc(100svh - 48px));
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: clamp(10px, 1.4vw, 16px);
-  margin-top: clamp(14px, 2.2vw, 26px);
-  padding: 0 clamp(8px, 1.8vw, 16px);
+  padding: clamp(22px, 3.5vw, 52px) clamp(22px, 5vw, 74px) clamp(18px, 2.5vw, 34px);
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid rgba(255, 250, 240, 0.55);
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(circle at 18% 10%, rgba(255, 255, 255, 0.72), transparent 29%),
+    radial-gradient(circle at 86% 78%, rgba(208, 181, 145, 0.14), transparent 32%),
+    linear-gradient(102deg, rgba(255, 255, 255, 0.2), transparent 30%, rgba(178, 151, 117, 0.08));
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.35),
+    0 7px 0 rgba(0, 0, 0, 0.08),
+    inset 0 0 0 8px rgba(255, 255, 255, 0.12);
+  animation: sheet-arrives 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-/* The answer — the chapter's reply, set as the page's own italic
-   voice. A subtle gold-foil gradient on the text gives the answer
-   a hint of being illuminated, distinct from the rest of the body.
-   Gently enlarged so the chapter's voice carries the weight of
-   the question it answers. A slim warm hairline above separates
-   the answer from the question, the way a printer's separator
-   sits between title and body. */
-.answer {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(19px, 1.95vw, 24px);
-  line-height: 1.5;
-  letter-spacing: 0.006em;
-  color: var(--ink);
-  text-align: center;
-  max-width: 34ch;
-  margin: 0;
-  padding-top: clamp(16px, 2.2vw, 24px);
-  position: relative;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 0.8s ease,
-    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.answer.is-on {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.answer-rule {
+.sheet::before {
+  content: "";
   position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: clamp(40px, 5.5vw, 72px);
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(217, 176, 116, 0.55) 50%,
-    transparent 100%
-  );
-  opacity: 0;
-  transition: opacity 0.9s ease 0.2s;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.23;
+  background-image: radial-gradient(rgba(28, 39, 64, 0.28) 0.55px, transparent 0.7px);
+  background-size: 7px 7px;
+  mix-blend-mode: multiply;
 }
 
-.answer.is-on .answer-rule {
-  opacity: 1;
-}
-
-.answer-text {
-  background: linear-gradient(180deg, var(--ink) 0%, var(--ink-soft) 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-.answer-caret {
-  display: inline-block;
-  margin-left: 1px;
-  color: var(--vermilion-bright);
-  font-weight: 300;
-  animation: caretBlink 0.95s steps(2) infinite;
-}
-
-@keyframes caretBlink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-
-/* The reply — set smaller and softer than the answer, the way a
-   reader's invitation might sit a step below the chapter's reply. */
-.reply {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(15px, 1.5vw, 18px);
-  line-height: 1.5;
-  letter-spacing: 0.012em;
-  color: var(--ink-soft);
-  text-align: center;
-  max-width: 34ch;
-  margin: 0;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 0.8s ease,
-    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.reply.is-on {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.reply-caret {
-  display: inline-block;
-  margin-left: 1px;
-  color: var(--vermilion-bright);
-  font-weight: 300;
-  animation: caretBlink 0.95s steps(2) infinite;
-}
-
-/* The footnote — the chapter's bilingual marginal gloss, set
-   smaller and lighter still. The Latin lemma in vermilion italic;
-   the English gloss in the page's own ink-soft. Joined by a small
-   hand-cut middot. A thin warm hairline above separates the gloss
-   from the chapter proper, the way a scribe's marginal note sits
-   apart from the text it glosses. */
-.footnote {
-  font-family: var(--serif);
-  font-size: clamp(11.5px, 1.15vw, 13.5px);
-  font-style: italic;
-  letter-spacing: 0.16em;
-  color: var(--ink-faint);
-  text-align: center;
-  max-width: 34ch;
-  margin: clamp(16px, 2.4vw, 26px) 0 0;
-  padding-top: clamp(14px, 2vw, 22px);
-  border-top: 1px solid rgba(184, 169, 143, 0.22);
-  position: relative;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 0.9s ease,
-    transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.footnote::before {
-  content: '';
+.sheet::after {
+  content: "";
   position: absolute;
-  top: -3px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--gold-deep);
-  opacity: 0.85;
+  inset: 12px;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid rgba(36, 82, 165, 0.11);
 }
 
-.footnote.is-on {
-  opacity: 1;
-  transform: translateY(0);
+@keyframes sheet-arrives {
+  from {
+    opacity: 0;
+    transform: translateY(16px) rotate(-0.35deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
 }
 
-.footnote-row {
-  display: inline-block;
-}
-
-.footnote-latin {
-  color: var(--vermilion-bright);
-  font-style: italic;
-  letter-spacing: 0.18em;
-  margin-right: 0.2em;
-}
-
-.footnote-sep {
-  margin: 0 0.4em;
-  color: var(--ink-faint);
-}
-
-.footnote-en {
-  color: var(--ink-soft);
-  letter-spacing: 0.14em;
-}
-
-.footnote-caret {
-  display: inline-block;
-  margin-left: 1px;
-  color: var(--vermilion-bright);
-  font-weight: 300;
-  animation: caretBlink 0.95s steps(2) infinite;
-}
-
-/* The reader's quiet sign-off — "intellexi", "I have understood".
-   The most typographically distinct line in the body: set in wide
-   letter-spaced vermilion-gold italic, the way a Latin inscription
-   is carved under a coat of arms. Reads as the reader accepting
-   the chapter. */
-.intellexi-nota {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(11px, 1.1vw, 13px);
-  letter-spacing: 0.42em;
-  color: var(--gold-bright);
-  text-align: center;
-  margin: clamp(12px, 1.6vw, 18px) 0 0;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 1.1s ease,
-    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.intellexi-nota.is-on {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.intellexi-nota-text {
-  font-style: italic;
-  filter: drop-shadow(0 0 8px rgba(240, 212, 154, 0.35));
-}
-
-.intellexi-nota-caret {
-  display: inline-block;
-  margin-left: 1px;
-  color: var(--gold-bright);
-  font-weight: 300;
-  animation: caretBlink 0.95s steps(2) infinite;
-}
-
-/* Explicit — the chapter's formal closure. Two thin gold rules
-   flanking the Latin "explicit · fol. xviii", set in serif italic
-   with the same hand that opens the question. */
-.explicit {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(9.5px, 0.92vw, 11px);
-  letter-spacing: 0.38em;
-  color: var(--ink-faint);
-  text-align: center;
-  margin: clamp(20px, 2.6vw, 30px) 0 0;
+.sheet-header {
+  position: relative;
+  z-index: 4;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: clamp(8px, 1vw, 14px);
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: clamp(18px, 2.5vw, 30px);
+  border-bottom: 1px solid rgba(36, 82, 165, 0.2);
+  animation: content-in 900ms 120ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-.explicit-rule {
-  display: inline-block;
-  width: clamp(28px, 5vw, 70px);
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--ink-faint) 60%,
-    transparent 100%
-  );
+.eyebrow,
+.header-note,
+.annotation,
+.signature-text,
+.response-label,
+.reader-note,
+.sheet-footer,
+.answer-placeholder,
+.completion-note {
+  font-family: var(--sans);
 }
 
-.explicit-text {
-  font-style: italic;
-  text-transform: lowercase;
+.eyebrow,
+.header-note {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.17em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
-/* ----- Colophon (chapter close, simplified) -----
-   The competing seal + folio + signature row are pruned to a single
-   rule, the quaeritur › respondetur pair, the inkpot-and-quill, and
-   the provenance. One composed closing, not a museum of closings. */
-
-.colophon {
-  width: 100%;
-  max-width: 58ch;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(10px, 1.2vw, 16px);
-  margin-top: clamp(28px, 4vw, 44px);
-  padding: 0 clamp(8px, 1.8vw, 16px);
-  opacity: 0;
-  transition: opacity 1.6s ease 3.0s;
-}
-
-.composition.ready .colophon {
-  opacity: 1;
-}
-
-.colophon-rule {
-  display: block;
-  width: clamp(80px, 16vw, 180px);
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--ink-faint) 50%,
-    transparent 100%
-  );
-  opacity: 0.7;
-}
-
-.colophon-pair {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(11.5px, 1.1vw, 13.5px);
-  letter-spacing: 0.24em;
+.eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: clamp(6px, 0.7vw, 10px);
-  color: var(--ink-soft);
+  gap: 10px;
+  color: var(--blue);
 }
 
-.colophon-quaeritur {
-  color: var(--gold-bright);
-}
-
-.colophon-pair-arrow {
-  color: var(--vermilion-bright);
-  font-size: 1em;
-}
-
-.colophon-respondetur {
-  color: var(--gold);
-}
-
-.inkpot-and-quill {
+.eyebrow-mark {
   display: inline-block;
-  width: clamp(78px, 8.6vw, 128px);
-  color: var(--vermilion);
+  width: 9px;
+  height: 9px;
+  background: var(--coral);
+  transform: rotate(45deg);
 }
 
-.inkpot-rest-line {
-  stroke: currentColor;
-  stroke-width: 0.4;
-  opacity: 0.42;
-  stroke-dasharray: 1 1.4;
+.header-note {
+  padding-right: 34px;
+  color: var(--ink-faint);
+  font-weight: 600;
+  letter-spacing: 0.23em;
 }
 
-.inkpot-shadow {
-  fill: rgba(0, 0, 0, 0.32);
-  filter: blur(0.4px);
-}
-
-.inkpot-glass {
+.corner-glyph {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 32px;
+  height: 32px;
+  color: var(--coral);
+  fill: currentColor;
+  transform: translateY(-50%) rotate(8deg);
   opacity: 0.86;
 }
 
-.inkpot-ink-fill {
-  filter: drop-shadow(0 0 4px rgba(176, 83, 58, 0.4));
+.corner-glyph circle {
+  fill: var(--paper);
 }
 
-.inkpot-rim {
-  fill: none;
-  stroke: rgba(184, 169, 143, 0.6);
-  stroke-width: 0.4;
+.sheet-content {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(340px, 0.78fr);
+  align-items: center;
+  gap: clamp(40px, 8vw, 124px);
+  padding: clamp(45px, 7vh, 90px) clamp(8px, 1vw, 16px) clamp(44px, 7vh, 82px);
 }
 
-.inkpot-opening {
-  fill: rgba(11, 9, 7, 0.5);
+.question-panel,
+.response-panel {
+  animation: content-in 900ms 240ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-.inkpot-quill-shaft {
-  stroke: var(--gold);
-  stroke-width: 1.1;
-  stroke-linecap: round;
-  opacity: 0.85;
+@keyframes content-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.inkpot-quill-feather {
-  fill: var(--gold);
-  fill-opacity: 0.85;
-  stroke: var(--gold-deep);
-  stroke-width: 0.3;
+.question-panel {
+  position: relative;
+  align-self: center;
+  max-width: 640px;
 }
 
-.inkpot-quill-nib {
-  fill: var(--vermilion-bright);
+.annotation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 clamp(22px, 3vw, 38px) 3px;
+  color: var(--coral-dark);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.3;
+  text-transform: uppercase;
 }
 
-.inkpot-drop {
-  fill: var(--vermilion-bright);
-  filter: drop-shadow(0 0 1.5px rgba(198, 104, 74, 0.6));
-  animation: dropPulse 3s ease-in-out infinite;
+.annotation span {
+  width: 28px;
+  height: 1px;
+  background: var(--coral);
+}
+
+h1 {
+  max-width: 9.1ch;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(58px, 7.7vw, 106px);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.075em;
+  line-height: 0.89;
+  text-wrap: balance;
+}
+
+.title-subject {
+  position: relative;
+  display: inline-block;
+  color: var(--blue);
+  white-space: nowrap;
+}
+
+.title-subject::after {
+  content: "";
+  position: absolute;
+  right: -0.05em;
+  bottom: -0.11em;
+  left: -0.04em;
+  height: 0.075em;
+  min-height: 4px;
+  background: var(--coral);
+  border-radius: 60% 40% 55% 45%;
+  transform: rotate(-1.7deg);
+  transform-origin: left center;
+  opacity: 0.9;
+}
+
+.question-deck {
+  max-width: 32ch;
+  margin: clamp(28px, 4vw, 46px) 0 0 4px;
+  color: var(--ink-soft);
+  font-size: clamp(14px, 1.45vw, 17px);
+  letter-spacing: -0.01em;
+  line-height: 1.55;
+}
+
+.question-signature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: clamp(28px, 4vw, 48px) 0 0 4px;
+  color: var(--blue);
+}
+
+.signature-line {
+  width: clamp(48px, 7vw, 90px);
+  height: 2px;
+  background: var(--blue);
+  transform: rotate(-2deg);
+}
+
+.signature-text {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.response-panel {
+  position: relative;
+  align-self: center;
+  width: 100%;
+  max-width: 430px;
+  padding-left: clamp(28px, 4vw, 54px);
+  border-left: 1px solid rgba(36, 82, 165, 0.25);
+}
+
+.response-heading {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 22px;
+}
+
+.response-label {
+  flex: none;
+  color: var(--blue-dark);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.response-rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(36, 82, 165, 0.25);
+}
+
+.response-arrow {
+  color: var(--coral);
+  font-family: var(--serif);
+  font-size: 21px;
+  line-height: 0.7;
+  transform: rotate(-10deg);
+}
+
+.answer-surface {
+  position: relative;
+  min-height: 188px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 34px clamp(28px, 4vw, 46px);
+  background: rgba(255, 250, 240, 0.56);
+  border: 1px solid rgba(36, 82, 165, 0.34);
+  box-shadow: 6px 6px 0 rgba(36, 82, 165, 0.07);
+  transition: background-color 500ms ease, box-shadow 500ms ease, border-color 500ms ease;
+}
+
+.answer-surface--answering,
+.answer-surface--replying,
+.answer-surface--complete {
+  background: rgba(255, 250, 240, 0.82);
+  border-color: rgba(36, 82, 165, 0.54);
+  box-shadow: 6px 6px 0 rgba(235, 91, 72, 0.13);
+}
+
+.answer-bracket {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  color: var(--coral);
+  font-family: var(--serif);
+  font-size: 55px;
+  font-weight: 300;
+  line-height: 1;
+  opacity: 0.7;
+  transform: translateY(-50%);
+}
+
+.answer-bracket--right {
+  right: 14px;
+  left: auto;
+}
+
+.answer-placeholder {
+  margin: 0;
+  color: var(--ink-faint);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  line-height: 1.65;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.answer-copy {
+  max-width: 18ch;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-style: italic;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+  text-align: center;
+}
+
+.typing-caret {
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--coral);
+  font-family: var(--sans);
+  font-size: 0.82em;
+  font-style: normal;
+  animation: caret-blink 900ms steps(2, end) infinite;
+}
+
+@keyframes caret-blink {
+  0%, 48% {
+    opacity: 1;
+  }
+  49%, 100% {
+    opacity: 0;
+  }
+}
+
+.reply-copy {
+  min-height: 27px;
+  margin: 22px 4px 0;
+  color: var(--coral-dark);
+  font-family: var(--serif);
+  font-size: clamp(15px, 1.5vw, 18px);
+  font-style: italic;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  opacity: 0;
+  text-align: center;
+  transform: translateY(5px);
+  transition: opacity 500ms ease, transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reply-copy.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.completion-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 19px;
+  color: var(--ink-faint);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  opacity: 0;
+  text-align: center;
+  text-transform: uppercase;
+  animation: completion-in 700ms ease forwards;
+}
+
+.completion-dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+@keyframes completion-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.read-button {
+  width: 100%;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  margin-top: clamp(27px, 3.2vw, 38px);
+  padding: 14px 20px;
+  color: var(--paper-light);
+  background: var(--blue-dark);
+  border: 1px solid var(--blue-dark);
+  border-radius: 0;
+  box-shadow: 4px 4px 0 var(--coral);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.17em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  transition: background-color 220ms ease, box-shadow 220ms ease, transform 220ms ease, color 220ms ease;
+}
+
+.read-button:hover {
+  color: #fff;
+  background: var(--blue);
+  box-shadow: 6px 6px 0 var(--coral);
+  transform: translate(-2px, -2px);
+}
+
+.read-button:active {
+  box-shadow: 1px 1px 0 var(--coral);
+  transform: translate(3px, 3px);
+}
+
+.read-button:focus-visible {
+  outline: 3px solid rgba(235, 91, 72, 0.44);
+  outline-offset: 4px;
+}
+
+.read-button.is-slow {
+  background: var(--coral-dark);
+  border-color: var(--coral-dark);
+}
+
+.read-button.is-slow:hover {
+  background: var(--coral);
+}
+
+.button-mark {
+  color: #ffb09a;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 0.7;
+}
+
+.reader-note {
+  min-height: 17px;
+  margin: 17px 0 0;
+  color: var(--ink-faint);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.sheet-footer {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--ink-faint);
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.15em;
+  line-height: 1.3;
+  text-align: center;
+  text-transform: uppercase;
+  animation: content-in 900ms 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.sheet-footer p {
+  flex: none;
+  margin: 0;
+}
+
+.footer-rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(36, 82, 165, 0.2);
+}
+
+.question-orbit {
+  position: absolute;
+  z-index: 1;
+  right: -4%;
+  bottom: 1%;
+  width: min(48%, 535px);
+  pointer-events: none;
+  color: var(--blue);
+  opacity: 0.95;
+  transform: rotate(-8deg);
+}
+
+.question-orbit svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.orbit-wash {
+  animation: wash-breathe 7s ease-in-out infinite;
+  transform-box: fill-box;
   transform-origin: center;
 }
 
-@keyframes dropPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50%      { transform: scale(1.08); opacity: 0.92; }
-}
-
-.inkpot-and-quill.is-active .inkpot-drop {
-  animation: dropFall 1.2s cubic-bezier(0.6, 0, 0.6, 1) forwards;
-}
-
-@keyframes dropFall {
-  0%   { transform: translateY(0); opacity: 1; }
-  60%  { transform: translateY(7px); opacity: 1; }
-  100% { transform: translateY(10px); opacity: 0; }
-}
-
-.colophon-provenance {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(11px, 1.05vw, 13px);
-  letter-spacing: 0.28em;
-  color: var(--gold);
-}
-
-/* ----- Responsive ----- */
-
-@media (max-width: 880px) {
-  .composition { gap: clamp(8px, 1.4vw, 16px); }
-  .question { font-size: clamp(36px, 6.4vw, 60px); max-width: 20ch; line-height: 1.06; letter-spacing: -0.02em; }
-  .hero { margin-top: clamp(8px, 1.4vh, 16px); }
-  .hero-svg { width: clamp(200px, 30vw, 300px); }
-  .candle-station { height: clamp(96px, 14vh, 168px); }
-  .candle-flame { width: clamp(38px, 5.4vw, 60px); top: clamp(4px, 0.8vh, 14px); }
-  .taper { width: clamp(140px, 30vw, 240px); height: clamp(240px, 42vh, 360px); top: clamp(20px, 4vh, 48px); filter: blur(11px); }
-  .reading-lantern {
-    background:
-      radial-gradient(180px 180px at var(--lantern-x, 50%) var(--lantern-y, 36%),
-        rgba(240, 212, 154, 0.10) 0%, rgba(240, 212, 154, 0.05) 22%, transparent 60%),
-      radial-gradient(280px 280px at var(--lantern-x-prev, 50%) var(--lantern-y-prev, 36%),
-        rgba(217, 176, 116, 0.03) 0%, transparent 56%);
+@keyframes wash-breathe {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(0.96);
   }
-  .answer { font-size: clamp(17.5px, 4.6vw, 22px); max-width: 28ch; }
-  .reply { font-size: clamp(13.5px, 4vw, 16px); max-width: 28ch; }
-  .footnote { font-size: clamp(12px, 3.4vw, 13.5px); max-width: 28ch; }
-  .intellexi-nota { font-size: clamp(10.5px, 1.05vw, 12px); letter-spacing: 0.18em; }
-  .bookmark-ribbon { right: clamp(12px, 3vw, 28px); height: clamp(140px, 22vh, 200px); }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
 }
 
-@media (max-width: 620px) {
-  .composition { gap: 14px; padding-bottom: clamp(20px, 5vw, 28px); }
-  .question-block { flex-direction: column; gap: 10px; }
-  .pilcrow { width: 16px; }
-  .manicule { width: 22px; }
-  .question { font-size: clamp(30px, 6.4vw, 46px); max-width: 18ch; row-gap: 4px; line-height: 1.08; }
-  .hero { margin-top: clamp(8px, 1.4vh, 16px); }
-  .hero-svg { width: clamp(184px, 32vw, 256px); }
-  .candle-station { height: clamp(80px, 12vh, 130px); }
-  .candle-flame { width: clamp(36px, 5.4vw, 48px); top: clamp(2px, 0.6vh, 8px); }
-  .taper { width: clamp(110px, 32vw, 200px); height: clamp(190px, 32vh, 300px); top: clamp(14px, 2.6vh, 28px); filter: blur(9px); }
-  .reading-pace-btn { padding: 8px 12px; }
-  .colophon-pair { font-size: 10.5px; gap: 6px; }
-  .chapter-heading { font-size: 9.5px; gap: 6px; letter-spacing: 0.24em; }
-  .chapter-heading-rule { width: clamp(14px, 3vw, 28px); }
-  .chapter-heading-title { display: none; }
-  .bookmark-ribbon { right: clamp(10px, 2.4vw, 22px); height: clamp(110px, 18vh, 170px); width: clamp(18px, 1.5vw, 24px); }
+.orbit-track ellipse {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-dasharray: 3 13;
+  opacity: 0.3;
 }
 
-@media (max-width: 520px) {
-  .stage { padding: clamp(16px, 5vw, 28px); padding-top: clamp(24px, 4vw, 36px); }
-  .composition { gap: 12px; padding-bottom: clamp(20px, 5vw, 28px); }
-  .question { font-size: clamp(24px, 7.2vw, 32px); max-width: 100%; line-height: 1.14; row-gap: 4px; letter-spacing: -0.018em; }
-  .hero { margin-top: clamp(8px, 1.2vh, 14px); }
-  .hero-svg { width: 188px; }
-  .candle-station { height: clamp(70px, 11vh, 110px); }
-  .candle-flame { width: 34px; top: 2px; }
-  .taper { display: none; }
-  .answer { font-size: clamp(16px, 4.7vw, 19px); max-width: 26ch; }
-  .reply { font-size: clamp(14.5px, 4.3vw, 17px); max-width: 26ch; }
-  .footnote { font-size: 12px; max-width: 24ch; }
-  .intellexi-nota { font-size: 10.5px; letter-spacing: 0.18em; }
-  .colophon-pair { font-size: 10px; letter-spacing: 0.18em; }
-  .colophon-provenance { font-size: 11px; }
-  .inkpot-and-quill { width: clamp(60px, 18vw, 90px); }
-  .bookmark-ribbon { right: 14px; height: clamp(96px, 14vh, 140px); width: clamp(16px, 1.4vw, 22px); }
-  .ribbon-numeral { font-size: 9.5px; }
+.orbit-track {
+  animation: orbit-turn 24s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
-@media (max-width: 380px) {
-  .question { font-size: 22px; }
-  .stage { padding: 14px; padding-top: 22px; }
-  .chapter-heading { font-size: 8.5px; letter-spacing: 0.2em; gap: 4px; }
-  .chapter-heading-caput { letter-spacing: 0.28em; }
+@keyframes orbit-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbit-dots circle {
+  fill: var(--gold);
+  stroke: var(--paper);
+  stroke-width: 3;
+  animation: dot-drift 5s ease-in-out infinite alternate;
+}
+
+.orbit-dots circle:nth-child(2) {
+  animation-delay: -1.8s;
+}
+
+.orbit-dots circle:nth-child(3) {
+  animation-delay: -3.1s;
+}
+
+.orbit-dots circle:nth-child(4) {
+  animation-delay: -0.7s;
+}
+
+@keyframes dot-drift {
+  from {
+    transform: translateY(-3px);
+  }
+  to {
+    transform: translateY(4px);
+  }
+}
+
+.question-ink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ink-hover 6s ease-in-out infinite;
+}
+
+@keyframes ink-hover {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-3px, -5px);
+  }
+}
+
+.orbit-pencil-line {
+  fill: none;
+  stroke: var(--coral);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1 10;
+  opacity: 0.66;
+}
+
+.orbit-caption {
+  fill: var(--blue-dark);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.27em;
+  opacity: 0.22;
+}
+
+.paper-corner {
+  position: absolute;
+  z-index: 4;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  border-color: var(--coral);
+  border-style: solid;
+  opacity: 0.7;
+}
+
+.paper-corner--one {
+  top: 22px;
+  left: 22px;
+  border-width: 2px 0 0 2px;
+}
+
+.paper-corner--two {
+  right: 22px;
+  bottom: 22px;
+  border-width: 0 2px 2px 0;
+}
+
+.paper-edge {
+  position: absolute;
+  z-index: 4;
+  top: 12px;
+  bottom: 12px;
+  left: 12px;
+  width: 3px;
+  background: var(--coral);
+  opacity: 0.78;
+}
+
+.motion-trace {
+  position: absolute;
+  z-index: 4;
+  right: 8%;
+  bottom: 31px;
+  width: 86px;
+  height: 2px;
+  background: var(--coral);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: right center;
+}
+
+.motion-trace.is-active {
+  opacity: 0.72;
+  animation: trace-across 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) infinite alternate;
+}
+
+@keyframes trace-across {
+  from {
+    transform: scaleX(0.18);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (max-width: 920px) {
+  .sheet {
+    min-height: calc(100svh - 32px);
+  }
+
+  .sheet-content {
+    grid-template-columns: minmax(0, 1fr) minmax(290px, 0.72fr);
+    gap: clamp(28px, 5vw, 56px);
+  }
+
+  h1 {
+    font-size: clamp(54px, 8vw, 78px);
+  }
+
+  .question-orbit {
+    right: -13%;
+    bottom: 4%;
+    width: 54%;
+    opacity: 0.7;
+  }
+}
+
+@media (max-width: 720px) {
+  .experiment-shell {
+    display: block;
+    padding: 12px;
+  }
+
+  .sheet {
+    width: 100%;
+    min-height: calc(100svh - 24px);
+    padding: 24px clamp(21px, 6vw, 38px) 22px;
+  }
+
+  .sheet-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 52px;
+    padding: clamp(40px, 9vw, 66px) 5px 54px;
+  }
+
+  .question-panel {
+    max-width: none;
+  }
+
+  h1 {
+    max-width: 11ch;
+    font-size: clamp(54px, 14vw, 86px);
+    line-height: 0.9;
+  }
+
+  .question-deck {
+    max-width: 34ch;
+  }
+
+  .response-panel {
+    max-width: 520px;
+    padding: 30px 0 0;
+    border-top: 1px solid rgba(36, 82, 165, 0.25);
+    border-left: 0;
+  }
+
+  .question-orbit {
+    right: -12%;
+    bottom: 30%;
+    width: 63%;
+    opacity: 0.32;
+  }
+
+  .sheet-footer {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 500px) {
+  .header-note {
+    padding-right: 26px;
+    font-size: 8px;
+    letter-spacing: 0.15em;
+  }
+
+  .corner-glyph {
+    width: 26px;
+    height: 26px;
+  }
+
+  .sheet-content {
+    gap: 42px;
+    padding-top: 48px;
+  }
+
+  .annotation {
+    margin-bottom: 24px;
+    font-size: 9px;
+  }
+
+  h1 {
+    max-width: 10.5ch;
+    font-size: clamp(46px, 14.6vw, 70px);
+  }
+
+  .question-deck {
+    margin-top: 28px;
+    font-size: 14px;
+  }
+
+  .question-signature {
+    margin-top: 30px;
+  }
+
+  .answer-surface {
+    min-height: 170px;
+    padding: 30px 32px;
+  }
+
+  .answer-copy {
+    font-size: clamp(22px, 7vw, 28px);
+  }
+
+  .reply-copy {
+    font-size: 15px;
+  }
+
+  .read-button {
+    min-height: 51px;
+    padding-inline: 14px;
+    font-size: 10px;
+    letter-spacing: 0.13em;
+  }
+
+  .reader-note {
+    font-size: 9px;
+  }
+
+  .question-orbit {
+    bottom: 36%;
+    right: -22%;
+    width: 78%;
+    opacity: 0.18;
+  }
+
+  .paper-corner--one {
+    top: 18px;
+    left: 18px;
+  }
+
+  .paper-corner--two {
+    right: 18px;
+    bottom: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .experiment-shell {
+    padding: 7px;
+  }
+
+  .sheet {
+    min-height: calc(100svh - 14px);
+    padding-inline: 18px;
+  }
+
+  .header-note {
+    display: none;
+  }
+
+  h1 {
+    font-size: 43px;
+  }
+
+  .sheet-footer {
+    gap: 8px;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .sheet,
+  .sheet-header,
+  .question-panel,
+  .response-panel,
+  .sheet-footer {
+    opacity: 1;
+    transform: none;
+  }
+
+  .orbit-track,
+  .question-ink,
+  .orbit-wash,
+  .motion-trace {
+    animation: none;
+  }
 }
