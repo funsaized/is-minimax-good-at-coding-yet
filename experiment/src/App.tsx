@@ -2395,6 +2395,122 @@ function StemDescent({ engaged }: { engaged: boolean }) {
   )
 }
 
+// ReadingTitle — the chapter body's own name plate, set just inside
+// the codex frame at its head. A composed scholarly inscription: two
+// thin gold rules growing outward from a small vermilion four-pointed
+// star, with "lectio · the reading" inscribed between them in vermilion
+// italic and ink-soft roman. Reads as the printer's running title for
+// the chapter body itself — the folio above is named (mss · fol. xviii
+// · de initiali lucente) and the colophon below is named (legi · mmxxvi);
+// this is the missing middle term that names the text-block where the
+// chapter actually speaks. Drawn in after the codex frame has settled,
+// so the chapter body opens as one framed scholarly passage rather than
+// an empty inscribed rectangle. Parallels the colophon plate below
+// (same star-pip motif at the same scale) so the chapter's terminal
+// headpiece and the body's headpiece pair as composed marks of the
+// same vocabulary.
+function ReadingTitle() {
+  return (
+    <p className="reading-title" aria-hidden="true">
+      <span className="reading-title-rule reading-title-rule-l" />
+      <span className="reading-title-mark">
+        <svg viewBox="0 0 12 12" focusable="false">
+          <path
+            className="reading-title-star"
+            d="M 6 0.6 L 6.94 4.6 L 11.4 6 L 6.94 7.4 L 6 11.4 L 5.06 7.4 L 0.6 6 L 5.06 4.6 Z"
+          />
+          <circle cx="6" cy="6" r="0.95" className="reading-title-pip" />
+        </svg>
+      </span>
+      <span className="reading-title-text">
+        <em className="reading-title-latin">lectio</em>
+        <span className="reading-title-sep">·</span>
+        <span className="reading-title-en">the reading</span>
+      </span>
+      <span className="reading-title-rule reading-title-rule-r" />
+    </p>
+  )
+}
+
+// MarginBookmark — a small hand-drawn silk bookmark that hangs in the
+// right margin of the codex frame, just past the chapter's body text.
+// A slim vermilion ribbon with a thin gold rule beside it, like a
+// silk marker pressed between the folios of an open codex. The bookmark
+// parallaxes gently with the reader's pointer (the silk shifts a hair
+// when the reader leans toward the chapter) and fades in once the
+// answer has begun settling, so the bookmark reads as a separate piece
+// of cloth left in the open codex rather than a flourish of the
+// inscription. Hidden on reduced-motion devices so the bookmark
+// appears in its rest state.
+function MarginBookmark() {
+  const ref = useRef<HTMLSpanElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      el.style.setProperty('--bm-x', '0')
+      el.style.setProperty('--bm-y', '0')
+      return
+    }
+    let raf = 0
+    let tx = 0
+    let ty = 0
+    let px = 0
+    let py = 0
+    const onMove = (e: PointerEvent) => {
+      const w = window.innerWidth || 1
+      const h = window.innerHeight || 1
+      tx = (e.clientX - w / 2) / (w / 2)
+      ty = (e.clientY - h / 2) / (h / 2)
+    }
+    const tick = () => {
+      px += (tx - px) * 0.035
+      py += (ty - py) * 0.035
+      el.style.setProperty('--bm-x', px.toFixed(3))
+      el.style.setProperty('--bm-y', py.toFixed(3))
+      raf = requestAnimationFrame(tick)
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    raf = requestAnimationFrame(tick)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+  return (
+    <span className="margin-bookmark" aria-hidden="true" ref={ref}>
+      <svg viewBox="0 0 14 56" focusable="false" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="bm-silk" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#3e1a10" />
+            <stop offset="22%"  stopColor="#7d3a26" />
+            <stop offset="50%"  stopColor="#b15a3c" />
+            <stop offset="78%"  stopColor="#7d3a26" />
+            <stop offset="100%" stopColor="#3e1a10" />
+          </linearGradient>
+          <linearGradient id="bm-shade" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"  stopColor="black" stopOpacity="0.5" />
+            <stop offset="22%" stopColor="black" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <line x1="3" y1="0" x2="3" y2="56" className="bm-rule" />
+        <path
+          className="bm-silk"
+          d="M 5 0 L 13 0 L 13 48 L 9 56 L 5 48 Z"
+          fill="url(#bm-silk)"
+        />
+        <path
+          d="M 5 0 L 13 0 L 13 14 L 5 14 Z"
+          fill="url(#bm-shade)"
+        />
+        <line x1="9" y1="0" x2="9" y2="48" className="bm-silk-seam" />
+      </svg>
+      <span className="bm-tag">xviii</span>
+    </span>
+  )
+}
+
 // ColophonPlate — a composed gold-and-vermilion mark at the very
 // top of the colophon that opens the lower composition as one framed
 // scholarly block. A short gold rule on each side of a small vermilion
@@ -4136,6 +4252,8 @@ export function App() {
             />
             <div className="chapter-plate-frame">
               <CodexFrame />
+              <MarginBookmark />
+              <ReadingTitle />
               <AnswerIllumination lit={answerOn && answerChars >= ANSWER.length && !replyOn} />
               <p
                 className={`answer ${answerOn ? 'is-on' : ''}`}
