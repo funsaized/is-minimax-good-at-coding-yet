@@ -1,25 +1,18 @@
 /* ════════════════════════════════════════════════════════════════════════════
- * Iteration 71 — direction: "the page, distilled."
+ * Iteration 72 — direction: "the chapter, opened."
  *
- * After seventy iterations the chapter had grown into a museum of small
- * ornaments: four corner marginalia, a bifolio open-book spread, a window
- * arch with its own moon and stars, a watermark that drew itself behind
- * everything, a compass at the top, a crown of stacked bands, a rubric in
- * the margin, a catchword at the foot, vine corners on every block, a
- * ribbon hanging from the page, a press-mark and an underline and a
- * descent and a press-mark beneath the question, a wax seal in the
- * colophon and a reading seal and a legi-mark and an inkpot and a quill
- * and an oculus — each small, each authored, each speaking.
- *
- * None of them weakened on its own. Together they weakened the page.
- *
- * This stylesheet is a clean rewrite for the distilled composition:
- * stage · rim · paper grain · reading lantern · taper · candle flame
- * (with a real first-light ignition) · hero (the question mark) · page
- * glow (a new soft halo behind the question) · question text · chapter
- * body (answer · reply · footnote · intellexi · explicit) · reading pace
- * (the only interactive control) · colophon (signature · inkpot · seal
- * · provenance). One composed chapter, fully lit.
+ * Three new touches strengthen what the existing pieces already imply:
+ * a small chapter heading ("cap. xviii · de scriptore et lumine") in
+ * the upper margin, a slim vermilion bookmark ribbon tucked behind it
+ * on the page edge, and the reading pace control moved from the
+ * colophon's foot to directly under the question where it answers
+ * the title rather than summarising the chapter. The answer's
+ * typography is gently enlarged and a slim rule sits above it as a
+ * printer's separator. The colophon's competing seals are pruned to
+ * one rule, the quaeritur › responditur pair, the inkpot, and the
+ * provenance — chapter opener → candle → hero → question → reading
+ * pace → answer → body cadence → colophon, in the order a scholar's
+ * reader would meet it.
  * ════════════════════════════════════════════════════════════════════════════ */
 
 /* ----- Foundation ----- */
@@ -64,7 +57,8 @@ body {
   min-height: 100svh;
   display: grid;
   place-items: center;
-  padding: clamp(24px, 4.4vw, 56px);
+  padding: clamp(28px, 4.4vw, 56px);
+  padding-top: clamp(36px, 5.2vw, 68px);
   background:
     radial-gradient(
       80% 56% at 50% 24%,
@@ -106,7 +100,6 @@ body {
   pointer-events: none;
   z-index: 0;
   background:
-    /* warm pool — the candle illuminates the air above the composition */
     radial-gradient(
       60% 38% at 50% 17%,
       rgba(240, 212, 154, 0.24) 0%,
@@ -114,17 +107,13 @@ body {
       rgba(176, 83, 58, 0.06) 48%,
       transparent 66%
     ),
-    /* inner glow — the chapter sits in a softly bright zone */
     radial-gradient(
       78% 62% at 50% 48%,
       rgba(240, 212, 154, 0.065) 0%,
       rgba(217, 176, 116, 0.03) 30%,
       transparent 56%
     ),
-    /* periphery vignette — corners darken into the room beyond */
     radial-gradient(ellipse 110% 90% at 50% 50%, transparent 26%, rgba(0, 0, 0, 0.78) 100%),
-    /* vertical tone — cool above (out of candlelight), warmer through middle,
-       desk shadow at the bottom */
     linear-gradient(180deg,
       rgba(38, 50, 64, 0.19) 0%,
       rgba(28, 22, 16, 0.075) 14%,
@@ -181,27 +170,181 @@ body {
   opacity: 1;
 }
 
+/* ----- Bookmark Ribbon (page-edge bookmark) -----
+   A slim vermilion ribbon hangs from the page's upper-right corner,
+   tucked behind the chapter heading. Pinned through the folio number
+   "xviii" so the folio marks itself. The page's only ornament
+   outside the reading order. */
+
+.bookmark-ribbon {
+  position: absolute;
+  top: 0;
+  right: clamp(20px, 3.4vw, 56px);
+  width: clamp(20px, 1.7vw, 28px);
+  height: clamp(170px, 26vh, 240px);
+  pointer-events: none;
+  z-index: 6;
+  opacity: 0;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.32));
+  animation: ribbonDrop 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) 0.9s forwards;
+}
+
+.bookmark-ribbon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.ribbon-numeral {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 11px;
+  fill: rgba(255, 226, 196, 0.86);
+  letter-spacing: 0.32em;
+}
+
+@keyframes ribbonDrop {
+  0%   { opacity: 0; transform: translateY(-26px); }
+  60%  { opacity: 1; transform: translateY(2px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.bookmark-ribbon svg path:first-of-type {
+  animation: ribbonSheen 8s ease-in-out 2.4s infinite;
+  transform-origin: center;
+}
+
+@keyframes ribbonSheen {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.18); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bookmark-ribbon { animation: none; opacity: 1; transform: none; }
+  .bookmark-ribbon svg path:first-of-type { animation: none; }
+}
+
 /* ----- Frame (the folio) ----- */
 
 .frame {
   position: relative;
   width: 100%;
   max-width: 1100px;
-  min-height: calc(100svh - clamp(40px, 8vw, 96px));
-  display: grid;
-  place-items: center;
+  min-height: calc(100svh - clamp(56px, 9vw, 112px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   z-index: 1;
   isolation: isolate;
 }
 
+/* ----- Chapter heading (cap. xviii mark) -----
+   A small printer's chapter heading sits above the candle, in the
+   upper margin: a thin rule on either side of a fleuron-bookended
+   chapter roman and the chapter title in Latin. Anchors the page as
+   a real chapter opener. The candle is reading this folio in
+   particular. */
+
+.chapter-heading {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 0.9vw, 14px);
+  margin: 0 0 clamp(10px, 1.4vw, 18px);
+  padding: 0 clamp(8px, 1.6vw, 16px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(9.5px, 0.95vw, 11.5px);
+  letter-spacing: 0.32em;
+  color: var(--ink-soft);
+  text-transform: lowercase;
+  white-space: nowrap;
+  max-width: 100%;
+  opacity: 0;
+  z-index: 5;
+  animation: chapterHeadingIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s forwards;
+}
+
+@keyframes chapterHeadingIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.chapter-heading-rule {
+  display: inline-block;
+  width: clamp(18px, 3vw, 48px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(184, 169, 143, 0.55) 50%,
+    transparent 100%
+  );
+}
+
+.chapter-heading-rule--left {
+  background: linear-gradient(
+    270deg,
+    transparent 0%,
+    rgba(184, 169, 143, 0.55) 50%,
+    transparent 100%
+  );
+}
+
+.chapter-heading-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(5px, 0.55vw, 8px);
+  color: var(--gold);
+}
+
+.chapter-heading-fleuron {
+  width: clamp(6px, 0.6vw, 9px);
+  height: clamp(6px, 0.6vw, 9px);
+  display: inline-block;
+  filter: drop-shadow(0 0 4px rgba(240, 212, 154, 0.32));
+}
+
+.chapter-heading-caput {
+  font-style: italic;
+  letter-spacing: 0.36em;
+  color: var(--gold-bright);
+}
+
+.chapter-heading-title {
+  font-style: italic;
+  letter-spacing: 0.28em;
+  color: var(--ink-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter-heading { animation: none; opacity: 1; transform: none; }
+}
+
+/* ----- Candle station (candle + taper, anchored above the hero) ----- */
+
+.candle-station {
+  position: relative;
+  width: 100%;
+  height: clamp(120px, 17vh, 200px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: clamp(-32px, -3vh, -8px);
+  z-index: 1;
+  pointer-events: none;
+}
+
 /* ----- Taper (candle's cone of light) -----
    A diffused cone of warm light falling from the candle onto the
-   chapter. Wider and softer than a spotlight, so the candle feels
-   like the page's true light source. */
+   chapter. Wider and softer than a shaft of light, so the candle
+   feels like the page's true light source. */
 
 .taper {
   position: absolute;
-  top: 8%;
+  top: clamp(36px, 6.5vh, 70px);
   left: 50%;
   transform: translateX(-50%);
   width: clamp(210px, 36vw, 410px);
@@ -237,21 +380,18 @@ body {
    core) plus a thin wick and a brass dish. The flame breathes and
    sways; the halo brightens with pointer proximity to the hero,
    driven by the --flame-warmth CSS variable set from the canvas loop.
-
-   Iteration 71 adds a real first-light ignition: the candle begins
-   as a single faint ember and ignites into its full flame ~2.4
-   seconds after the page has settled, so the candle itself is being
-   lit by the reader's arrival. */
+   First-light ignition: begins as a single faint ember and ignites
+   into its full flame ~2.4 seconds after the page has settled. */
 
 .candle-flame {
   position: absolute;
-  top: clamp(18px, 4.5vh, 54px);
+  top: clamp(8px, 1.6vh, 24px);
   left: 50%;
   transform: translateX(-50%);
   width: clamp(44px, 6.4vw, 82px);
   height: auto;
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
   opacity: 0;
   filter:
     drop-shadow(0 0 calc(14px + var(--flame-warmth, 0) * 28px)
@@ -272,9 +412,6 @@ body {
   to { opacity: 1; }
 }
 
-/* Ember phase — only the ember pip is visible, the flame layers are
-   hidden. The candle is "unlit" but already present, the way a wick
-   is in the dish before the flame catches. */
 .candle-flame.is-ember .flame-outer,
 .candle-flame.is-ember .flame-inner,
 .candle-flame.is-ember .flame-base,
@@ -301,9 +438,6 @@ body {
   100% { opacity: 0.95; transform: scale(1.05); }
 }
 
-/* Lit phase — the ember fades out and each flame layer grows in.
-   A few hundred milliseconds apart so the ignition reads as the
-   flame catching in sequence, not as a single switch. */
 .candle-flame.is-lit .flame-ember {
   animation: emberOut 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
@@ -382,8 +516,6 @@ body {
   50%      { opacity: 1; transform: scale(1.06); }
 }
 
-/* The dish settles in immediately — the brass is already there before
-   the wick lights. */
 .candle-dish {
   opacity: 0;
   animation: dishIn 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s forwards;
@@ -408,7 +540,6 @@ body {
   fill: rgba(240, 212, 154, 0.5);
 }
 
-/* Brief flare when the reader acknowledges the question */
 .candle-flame.is-flaring .flame-halo {
   animation: flameHaloFlare 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -453,7 +584,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(8px, 1.2vw, 18px);
+  gap: clamp(10px, 1.4vw, 20px);
   padding-bottom: clamp(40px, 6vw, 80px);
   z-index: 1;
 }
@@ -466,9 +597,7 @@ body {
    A single soft warm halo that breathes behind the chapter when the
    reader is attending. The hero above and the question text below
    now read as one lit body — the candle lights the question, and the
-   question glows back. New in iteration 71: the page glows as a
-   single continuous gesture of attention, not as two stacked
-   light sources. Hidden in steady state; brightens with cursor
+   question glows back. Hidden in steady state; brightens with cursor
    proximity; briefly flares on acknowledge, then settles into the
    steady reading state. */
 
@@ -538,7 +667,7 @@ body {
   display: block;
   color: var(--ink);
   -webkit-tap-highlight-color: transparent;
-  margin-top: clamp(40px, 7vh, 84px);
+  margin-top: clamp(8px, 1.6vh, 24px);
   outline: none;
 }
 
@@ -711,7 +840,6 @@ body {
   50%      { opacity: 0.9; transform: scale(0.98); }
 }
 
-/* Brief pulse when the reader acknowledges the question */
 .hero.pulse .auriole-radial {
   animation: aurolePulse 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -732,7 +860,6 @@ body {
   100% { filter: drop-shadow(0 0 6px rgba(240, 212, 154, 0.32)); }
 }
 
-/* The chapter has been understood — the stroke glows a touch warmer */
 .hero.is-quietus .hero-stroke {
   filter: drop-shadow(0 0 9px rgba(240, 212, 154, 0.5));
 }
@@ -762,7 +889,7 @@ body {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: clamp(2px, 0.3vw, 6px);
+  margin-top: clamp(4px, 0.5vw, 10px);
 }
 
 .question {
@@ -775,12 +902,12 @@ body {
   font-family: var(--display);
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(40px, 6.4vw, 88px);
-  line-height: 1.04;
-  letter-spacing: -0.022em;
+  font-size: clamp(42px, 6.8vw, 92px);
+  line-height: 1.02;
+  letter-spacing: -0.024em;
   text-align: center;
   color: var(--ink);
-  max-width: 24ch;
+  max-width: 22ch;
   margin: 0;
   text-wrap: balance;
   font-feature-settings: "kern" on, "liga" on, "calt" on, "salt" on, "dlig" on, "swsh" on;
@@ -803,8 +930,6 @@ body {
   transform: translateY(0);
 }
 
-/* When the page is attended, the question glows softly — the candle
-   lights the chapter and the chapter responds to being read. */
 .stage.is-attending .question {
   text-shadow:
     0 0 44px rgba(240, 232, 218, 0.20),
@@ -857,32 +982,167 @@ body {
   .question-word, .question-mark { transition: none; opacity: 1; transform: none; }
 }
 
+/* ----- Reading pace (the only interactive control) -----
+   Now sits directly under the question, where the reader's eye
+   naturally falls after the title — the control can answer the
+   question rather than summarise the chapter. */
+
+.reading-pace {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: clamp(10px, 1.2vw, 16px);
+  margin-bottom: clamp(4px, 0.6vw, 10px);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 1.1s ease 2.4s,
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 2.4s;
+}
+
+.composition.ready .reading-pace {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reading-pace-btn {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(5px, 0.6vw, 8px);
+  padding: clamp(8px, 0.95vw, 12px) clamp(14px, 1.6vw, 20px);
+  font-family: var(--serif);
+  font-size: clamp(10.5px, 1.02vw, 12.5px);
+  letter-spacing: 0.2em;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.45s ease;
+}
+
+.reading-pace-btn:hover,
+.reading-pace-btn:focus-visible { color: var(--ink); }
+
+.reading-pace-btn:focus-visible {
+  outline: 1px solid rgba(217, 176, 116, 0.65);
+  outline-offset: 3px;
+}
+
+.reading-pace-latin {
+  font-style: italic;
+  color: var(--vermilion-bright);
+  letter-spacing: 0.14em;
+  transition: color 0.45s ease, text-shadow 0.45s ease;
+}
+
+.reading-pace-btn:hover .reading-pace-latin,
+.reading-pace-btn:focus-visible .reading-pace-latin {
+  text-shadow: 0 0 10px rgba(198, 104, 74, 0.45);
+}
+
+.reading-pace-sep { color: var(--ink-faint); }
+
+.reading-pace-gloss {
+  font-style: italic;
+  letter-spacing: 0.16em;
+}
+
+.reading-pace-pip {
+  align-self: center;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold-deep);
+  box-shadow: 0 0 0 0 rgba(217, 176, 116, 0);
+  transition:
+    background 0.45s ease,
+    box-shadow 0.5s ease,
+    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reading-pace-btn:hover .reading-pace-pip,
+.reading-pace-btn:focus-visible .reading-pace-pip {
+  background: var(--gold-bright);
+  box-shadow: 0 0 8px rgba(240, 212, 154, 0.6);
+  transform: scale(1.25);
+}
+
+.reading-pace-btn.is-slow .reading-pace-pip {
+  background: var(--vermilion-bright);
+  box-shadow: 0 0 0 3px rgba(217, 176, 116, 0.28);
+}
+
+.reading-pace-rule {
+  position: absolute;
+  left: 50%;
+  right: auto;
+  bottom: clamp(4px, 0.6vw, 8px);
+  width: 0;
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gold-deep) 22%,
+    var(--gold) 50%,
+    var(--gold-deep) 78%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition:
+    width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.45s ease;
+}
+
+.reading-pace-btn:hover .reading-pace-rule,
+.reading-pace-btn:focus-visible .reading-pace-rule {
+  width: calc(100% - clamp(16px, 2vw, 26px));
+  opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-pace { transition: none; opacity: 1; transform: none; }
+  .reading-pace-rule { transition: opacity 0.2s ease; }
+  .reading-pace-pip { transition: none; }
+}
+
 /* ----- Chapter body (the reading) ----- */
 
 .chapter-body {
   width: 100%;
-  max-width: 56ch;
+  max-width: 58ch;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(8px, 1.2vw, 14px);
-  margin-top: clamp(18px, 2.6vw, 32px);
+  gap: clamp(10px, 1.4vw, 16px);
+  margin-top: clamp(14px, 2.2vw, 26px);
   padding: 0 clamp(8px, 1.8vw, 16px);
 }
 
 /* The answer — the chapter's reply, set as the page's own italic
    voice. A subtle gold-foil gradient on the text gives the answer
-   a hint of being illuminated, distinct from the rest of the body. */
+   a hint of being illuminated, distinct from the rest of the body.
+   Gently enlarged so the chapter's voice carries the weight of
+   the question it answers. A slim warm hairline above separates
+   the answer from the question, the way a printer's separator
+   sits between title and body. */
 .answer {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(17px, 1.7vw, 21px);
+  font-size: clamp(19px, 1.95vw, 24px);
   line-height: 1.5;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.006em;
   color: var(--ink);
   text-align: center;
-  max-width: 36ch;
+  max-width: 34ch;
   margin: 0;
+  padding-top: clamp(16px, 2.2vw, 24px);
+  position: relative;
   opacity: 0;
   transform: translateY(6px);
   transition:
@@ -893,6 +1153,27 @@ body {
 .answer.is-on {
   opacity: 1;
   transform: translateY(0);
+}
+
+.answer-rule {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(40px, 5.5vw, 72px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(217, 176, 116, 0.55) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.9s ease 0.2s;
+}
+
+.answer.is-on .answer-rule {
+  opacity: 1;
 }
 
 .answer-text {
@@ -920,12 +1201,12 @@ body {
 .reply {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(14.5px, 1.4vw, 17px);
+  font-size: clamp(15px, 1.5vw, 18px);
   line-height: 1.5;
   letter-spacing: 0.012em;
   color: var(--ink-soft);
   text-align: center;
-  max-width: 36ch;
+  max-width: 34ch;
   margin: 0;
   opacity: 0;
   transform: translateY(6px);
@@ -960,7 +1241,7 @@ body {
   letter-spacing: 0.16em;
   color: var(--ink-faint);
   text-align: center;
-  max-width: 36ch;
+  max-width: 34ch;
   margin: clamp(16px, 2.4vw, 26px) 0 0;
   padding-top: clamp(14px, 2vw, 22px);
   border-top: 1px solid rgba(184, 169, 143, 0.22);
@@ -1091,140 +1372,18 @@ body {
   text-transform: lowercase;
 }
 
-/* ----- Reading pace (the only interactive control) ----- */
-
-.reading-pace {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: clamp(20px, 2.6vw, 32px);
-  opacity: 0;
-  transform: translateY(4px);
-  transition:
-    opacity 1.1s ease 2.5s,
-    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 2.5s;
-}
-
-.composition.ready .reading-pace {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.reading-pace-btn {
-  appearance: none;
-  background: transparent;
-  border: 0;
-  border-radius: 3px;
-  cursor: pointer;
-  position: relative;
-  display: inline-flex;
-  align-items: baseline;
-  gap: clamp(5px, 0.6vw, 8px);
-  padding: clamp(10px, 1.1vw, 14px) clamp(12px, 1.4vw, 18px);
-  font-family: var(--serif);
-  font-size: clamp(10.5px, 1.02vw, 12.5px);
-  letter-spacing: 0.2em;
-  line-height: 1.4;
-  color: var(--ink-soft);
-  -webkit-tap-highlight-color: transparent;
-  transition: color 0.45s ease;
-}
-
-.reading-pace-btn:hover,
-.reading-pace-btn:focus-visible { color: var(--ink); }
-
-.reading-pace-btn:focus-visible {
-  outline: 1px solid rgba(217, 176, 116, 0.65);
-  outline-offset: 3px;
-}
-
-.reading-pace-latin {
-  font-style: italic;
-  color: var(--vermilion-bright);
-  letter-spacing: 0.14em;
-  transition: color 0.45s ease, text-shadow 0.45s ease;
-}
-
-.reading-pace-btn:hover .reading-pace-latin,
-.reading-pace-btn:focus-visible .reading-pace-latin {
-  text-shadow: 0 0 10px rgba(198, 104, 74, 0.45);
-}
-
-.reading-pace-sep { color: var(--ink-faint); }
-
-.reading-pace-gloss {
-  font-style: italic;
-  letter-spacing: 0.16em;
-}
-
-.reading-pace-pip {
-  align-self: center;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--gold-deep);
-  box-shadow: 0 0 0 0 rgba(217, 176, 116, 0);
-  transition:
-    background 0.45s ease,
-    box-shadow 0.5s ease,
-    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.reading-pace-btn:hover .reading-pace-pip,
-.reading-pace-btn:focus-visible .reading-pace-pip {
-  background: var(--gold-bright);
-  box-shadow: 0 0 8px rgba(240, 212, 154, 0.6);
-  transform: scale(1.25);
-}
-
-.reading-pace-btn.is-slow .reading-pace-pip {
-  background: var(--vermilion-bright);
-  box-shadow: 0 0 0 3px rgba(217, 176, 116, 0.28);
-}
-
-.reading-pace-rule {
-  position: absolute;
-  left: 50%;
-  right: auto;
-  bottom: clamp(4px, 0.6vw, 8px);
-  width: 0;
-  height: 1px;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--gold-deep) 22%,
-    var(--gold) 50%,
-    var(--gold-deep) 78%,
-    transparent 100%
-  );
-  opacity: 0;
-  transition:
-    width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
-    opacity 0.45s ease;
-}
-
-.reading-pace-btn:hover .reading-pace-rule,
-.reading-pace-btn:focus-visible .reading-pace-rule {
-  width: calc(100% - clamp(16px, 2vw, 26px));
-  opacity: 0.85;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reading-pace { transition: none; opacity: 1; transform: none; }
-  .reading-pace-rule { transition: opacity 0.2s ease; }
-  .reading-pace-pip { transition: none; }
-}
-
-/* ----- Colophon (chapter close) ----- */
+/* ----- Colophon (chapter close, simplified) -----
+   The competing seal + folio + signature row are pruned to a single
+   rule, the quaeritur › respondetur pair, the inkpot-and-quill, and
+   the provenance. One composed closing, not a museum of closings. */
 
 .colophon {
   width: 100%;
-  max-width: 56ch;
+  max-width: 58ch;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(6px, 0.9vw, 12px);
+  gap: clamp(10px, 1.2vw, 16px);
   margin-top: clamp(28px, 4vw, 44px);
   padding: 0 clamp(8px, 1.8vw, 16px);
   opacity: 0;
@@ -1237,7 +1396,7 @@ body {
 
 .colophon-rule {
   display: block;
-  width: clamp(60px, 12vw, 140px);
+  width: clamp(80px, 16vw, 180px);
   height: 1px;
   background: linear-gradient(
     90deg,
@@ -1251,8 +1410,8 @@ body {
 .colophon-pair {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(11px, 1.05vw, 13px);
-  letter-spacing: 0.22em;
+  font-size: clamp(11.5px, 1.1vw, 13.5px);
+  letter-spacing: 0.24em;
   display: inline-flex;
   align-items: center;
   gap: clamp(6px, 0.7vw, 10px);
@@ -1272,49 +1431,9 @@ body {
   color: var(--gold);
 }
 
-.colophon-signature-row {
-  display: flex;
-  align-items: center;
-  gap: clamp(8px, 1vw, 14px);
-}
-
-.signature {
-  width: clamp(40px, 4.4vw, 64px);
-  height: auto;
-  color: var(--gold);
-  display: block;
-}
-
-.sig-rule {
-  stroke: currentColor;
-  stroke-width: 0.7;
-  opacity: 0.55;
-}
-
-.sig-letter {
-  font-family: var(--display);
-  font-style: italic;
-  font-size: 8.5px;
-  fill: currentColor;
-  letter-spacing: 0.18em;
-}
-
-.sig-pip {
-  fill: currentColor;
-  opacity: 0.7;
-}
-
-.colophon-folio {
-  font-family: var(--mono);
-  font-size: clamp(9px, 0.85vw, 10px);
-  letter-spacing: 0.32em;
-  color: var(--ink-faint);
-  text-transform: lowercase;
-}
-
 .inkpot-and-quill {
   display: inline-block;
-  width: clamp(72px, 8vw, 120px);
+  width: clamp(78px, 8.6vw, 128px);
   color: var(--vermilion);
 }
 
@@ -1396,34 +1515,16 @@ body {
   color: var(--gold);
 }
 
-.colophon-seal {
-  display: inline-block;
-  width: clamp(28px, 3.2vw, 44px);
-}
-
-.wax-seal {
-  width: 100%;
-  height: auto;
-  display: block;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
-}
-
-.seal-letter {
-  font-family: var(--display);
-  font-style: italic;
-  font-size: 14px;
-  fill: rgba(255, 220, 180, 0.85);
-}
-
 /* ----- Responsive ----- */
 
 @media (max-width: 880px) {
   .composition { gap: clamp(8px, 1.4vw, 16px); }
-  .question { font-size: clamp(34px, 6.2vw, 56px); max-width: 20ch; line-height: 1.06; letter-spacing: -0.02em; }
-  .hero { margin-top: clamp(32px, 6vh, 60px); }
-  .hero-svg { width: clamp(194px, 30vw, 296px); }
-  .candle-flame { width: clamp(38px, 5.4vw, 60px); top: clamp(14px, 3vh, 32px); }
-  .taper { width: clamp(140px, 30vw, 240px); height: clamp(240px, 42vh, 360px); top: 12%; filter: blur(11px); }
+  .question { font-size: clamp(36px, 6.4vw, 60px); max-width: 20ch; line-height: 1.06; letter-spacing: -0.02em; }
+  .hero { margin-top: clamp(8px, 1.4vh, 16px); }
+  .hero-svg { width: clamp(200px, 30vw, 300px); }
+  .candle-station { height: clamp(96px, 14vh, 168px); }
+  .candle-flame { width: clamp(38px, 5.4vw, 60px); top: clamp(4px, 0.8vh, 14px); }
+  .taper { width: clamp(140px, 30vw, 240px); height: clamp(240px, 42vh, 360px); top: clamp(20px, 4vh, 48px); filter: blur(11px); }
   .reading-lantern {
     background:
       radial-gradient(180px 180px at var(--lantern-x, 50%) var(--lantern-y, 36%),
@@ -1431,43 +1532,52 @@ body {
       radial-gradient(280px 280px at var(--lantern-x-prev, 50%) var(--lantern-y-prev, 36%),
         rgba(217, 176, 116, 0.03) 0%, transparent 56%);
   }
-  .answer { font-size: clamp(15.5px, 4.7vw, 18.5px); max-width: 28ch; }
+  .answer { font-size: clamp(17.5px, 4.6vw, 22px); max-width: 28ch; }
   .reply { font-size: clamp(13.5px, 4vw, 16px); max-width: 28ch; }
   .footnote { font-size: clamp(12px, 3.4vw, 13.5px); max-width: 28ch; }
   .intellexi-nota { font-size: clamp(10.5px, 1.05vw, 12px); letter-spacing: 0.18em; }
+  .bookmark-ribbon { right: clamp(12px, 3vw, 28px); height: clamp(140px, 22vh, 200px); }
 }
 
 @media (max-width: 620px) {
   .composition { gap: 14px; padding-bottom: clamp(20px, 5vw, 28px); }
-  .question { font-size: clamp(28px, 6.4vw, 44px); max-width: 18ch; row-gap: 4px; line-height: 1.08; }
-  .hero { margin-top: clamp(32px, 5.6vh, 48px); }
-  .hero-svg { width: clamp(178px, 32vw, 248px); }
-  .candle-flame { width: clamp(36px, 5.4vw, 48px); top: 18px; }
-  .taper { width: clamp(110px, 32vw, 200px); height: clamp(190px, 32vh, 300px); top: 12%; filter: blur(9px); }
+  .question { font-size: clamp(30px, 6.4vw, 46px); max-width: 18ch; row-gap: 4px; line-height: 1.08; }
+  .hero { margin-top: clamp(8px, 1.4vh, 16px); }
+  .hero-svg { width: clamp(184px, 32vw, 256px); }
+  .candle-station { height: clamp(80px, 12vh, 130px); }
+  .candle-flame { width: clamp(36px, 5.4vw, 48px); top: clamp(2px, 0.6vh, 8px); }
+  .taper { width: clamp(110px, 32vw, 200px); height: clamp(190px, 32vh, 300px); top: clamp(14px, 2.6vh, 28px); filter: blur(9px); }
   .reading-pace-btn { padding: 8px 12px; }
   .colophon-pair { font-size: 10.5px; gap: 6px; }
+  .chapter-heading { font-size: 9.5px; gap: 6px; letter-spacing: 0.24em; }
+  .chapter-heading-rule { width: clamp(14px, 3vw, 28px); }
+  .chapter-heading-title { display: none; }
+  .bookmark-ribbon { right: clamp(10px, 2.4vw, 22px); height: clamp(110px, 18vh, 170px); width: clamp(18px, 1.5vw, 24px); }
 }
 
 @media (max-width: 520px) {
-  .stage { padding: clamp(16px, 5vw, 28px); }
+  .stage { padding: clamp(16px, 5vw, 28px); padding-top: clamp(24px, 4vw, 36px); }
   .composition { gap: 12px; padding-bottom: clamp(20px, 5vw, 28px); }
-  .question { font-size: clamp(22px, 7.2vw, 30px); max-width: 100%; line-height: 1.14; row-gap: 4px; letter-spacing: -0.018em; }
-  .hero { margin-top: clamp(28px, 5vh, 40px); }
+  .question { font-size: clamp(24px, 7.2vw, 32px); max-width: 100%; line-height: 1.14; row-gap: 4px; letter-spacing: -0.018em; }
+  .hero { margin-top: clamp(8px, 1.2vh, 14px); }
   .hero-svg { width: 188px; }
-  .candle-flame { width: 34px; top: 12px; }
+  .candle-station { height: clamp(70px, 11vh, 110px); }
+  .candle-flame { width: 34px; top: 2px; }
   .taper { display: none; }
-  .answer { font-size: clamp(15px, 4.7vw, 18px); max-width: 26ch; }
+  .answer { font-size: clamp(16px, 4.7vw, 19px); max-width: 26ch; }
   .reply { font-size: clamp(14.5px, 4.3vw, 17px); max-width: 26ch; }
   .footnote { font-size: 12px; max-width: 24ch; }
   .intellexi-nota { font-size: 10.5px; letter-spacing: 0.18em; }
-  .colophon-folio { letter-spacing: 0.28em; }
-  .colophon-pair { font-size: 10px; letter-spacing: 0.16em; }
+  .colophon-pair { font-size: 10px; letter-spacing: 0.18em; }
   .colophon-provenance { font-size: 11px; }
-  .signature { width: 40px; }
-  .wax-seal { width: 32px; }
+  .inkpot-and-quill { width: clamp(60px, 18vw, 90px); }
+  .bookmark-ribbon { right: 14px; height: clamp(96px, 14vh, 140px); width: clamp(16px, 1.4vw, 22px); }
+  .ribbon-numeral { font-size: 9.5px; }
 }
 
 @media (max-width: 380px) {
   .question { font-size: 22px; }
-  .stage { padding: 14px; }
+  .stage { padding: 14px; padding-top: 22px; }
+  .chapter-heading { font-size: 8.5px; letter-spacing: 0.2em; gap: 4px; }
+  .chapter-heading-caput { letter-spacing: 0.28em; }
 }

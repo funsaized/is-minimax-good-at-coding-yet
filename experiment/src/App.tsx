@@ -9,28 +9,27 @@ import {
 } from 'react'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Iteration 71 — direction: "the page, distilled."
+// Iteration 72 — direction: "the chapter, opened."
 //
-// After seventy iterations the chapter had grown into a museum of small
-// ornaments: four corner marginalia, a bifolio open-book spread, a
-// window arch with its own moon and stars, a watermark that drew itself
-// behind everything, a compass at the top, a crown of stacked bands, a
-// rubric in the margin, a catchword at the foot, vine corners on every
-// block, a ribbon hanging from the page, a press-mark and an underline
-// and a descent and a press-mark beneath the question, a wax seal in
-// the colophon and a reading seal and a legi-mark and an inkpot and a
-// quill and an oculus — each small, each authored, each speaking.
+// The composition now reads as a single opened chapter page. Three new
+// touches strengthen what the existing pieces already imply:
 //
-// None of them weakened on its own. Together they weakened the page.
+//   1. Chapter heading — a small "cap. xviii" mark sits in the upper
+//      margin like a real chapter opener, with a printer's fleuron.
+//   2. Bookmark ribbon — a slim vermilion ribbon hangs from the page's
+//      upper edge, pinned through the folio number. Quiet detail;
+//      earns its place as the page's only ornament not in the reading
+//      order itself.
+//   3. The reading pace control moves from the colophon's foot up to
+//      sit directly beneath the question, where the reader's eye
+//      naturally falls after the title — and where it can answer
+//      the question rather than summarise the chapter.
 //
-// This iteration cuts the ornaments that competed with the question
-// for the reader's attention and keeps the elements that earn their
-// place: the hero, the candle (now with a real first-light ignition),
-// the dust, the paper, the reading pace, the body's quiet cadence,
-// and the colophon's small closing mark. One new detail is added that
-// the rest of the composition now has room to receive: a single soft
-// halo behind the question that brightens when the reader approaches,
-// reading the chapter as one continuous gesture of attention.
+// The answer's typography is also gently enlarged so the chapter's
+// voice carries the weight of the question it answers, and the
+// colophon's competing rules and seals are simplified into a single
+// clean signature line — chapter → reading pace → answer → body
+// cadence → colophon, in the order a scholar's reader would meet it.
 // ─────────────────────────────────────────────────────────────────────────────
 
 // The hero question mark — a hand-drawn bowl that opens wider at the top,
@@ -227,11 +226,6 @@ function Taper() {
 // halo, inner gold body, hot white core) plus a thin wick and a brass
 // dish. The flame breathes and sways; a ref-based pointer proximity
 // variable brightens the halo when the reader approaches the question.
-//
-// Iteration 71 adds a real first-light ignition: the candle begins as a
-// single faint ember on first paint and ignites into its full flame over
-// ~2.6 seconds after the page has settled, so the candle itself is
-// "being lit by the reader's arrival." A quiet gesture, but a real one.
 function CandleFlame({
   wrapRef,
   lit,
@@ -291,11 +285,7 @@ function CandleFlame({
         <line x1="28" y1="50" x2="28" y2="68"
           stroke="#4a2e1a" strokeWidth="0.9" strokeLinecap="round"
           className="flame-wick" />
-        {/* First-light ember — a single faint amber pip visible only
-            while the candle is in its ember phase. Settles as the
-            candle ignites. */}
         <circle cx="28" cy="56" r="1.4" className="flame-ember" />
-        {/* Brass candle dish — anchors the flame to the page. */}
         <g className="candle-dish">
           <ellipse cx="28" cy="84" rx="22" ry="2.6" className="candle-dish-shadow" />
           <path
@@ -308,6 +298,36 @@ function CandleFlame({
         </g>
       </svg>
     </span>
+  )
+}
+
+// ─── Chapter heading (cap. xviii mark) ──────────────────────────────────────
+// A small printer's chapter heading sits above the candle, in the upper
+// margin: a thin rule, a small fleuron, the chapter roman, the chapter
+// title in Latin. It anchors the page as a real chapter opener from a
+// real manuscript — the candle is reading this folio in particular.
+function ChapterHeading() {
+  return (
+    <p className="chapter-heading" aria-hidden="true">
+      <span className="chapter-heading-rule chapter-heading-rule--left" />
+      <span className="chapter-heading-mark">
+        <svg viewBox="0 0 10 10" focusable="false" className="chapter-heading-fleuron">
+          <path
+            d="M 5 1 C 5 3 4 4 2 5 C 4 6 5 7 5 9 C 5 7 6 6 8 5 C 6 4 5 3 5 1 Z"
+            fill="currentColor"
+          />
+        </svg>
+        <span className="chapter-heading-caput">cap. xviii</span>
+        <svg viewBox="0 0 10 10" focusable="false" className="chapter-heading-fleuron">
+          <path
+            d="M 5 1 C 5 3 4 4 2 5 C 4 6 5 7 5 9 C 5 7 6 6 8 5 C 6 4 5 3 5 1 Z"
+            fill="currentColor"
+          />
+        </svg>
+      </span>
+      <span className="chapter-heading-title">de scriptore et lumine</span>
+      <span className="chapter-heading-rule chapter-heading-rule--right" />
+    </p>
   )
 }
 
@@ -324,6 +344,50 @@ function PageGlow({ lit, flaring }: { lit: boolean; flaring: boolean }) {
       className={`page-glow${lit ? ' is-lit' : ''} ${flaring ? 'is-flaring' : ''}`}
       aria-hidden="true"
     />
+  )
+}
+
+// ─── Bookmark ribbon ────────────────────────────────────────────────────────
+// A slim vermilion ribbon hangs from the page's upper-right corner,
+// tucked behind the chapter heading. Pinned through the folio number,
+// so the folio marks itself. The page's only ornament outside the
+// reading order — quietly earns its place.
+function BookmarkRibbon() {
+  return (
+    <span className="bookmark-ribbon" aria-hidden="true">
+      <svg viewBox="0 0 28 240" preserveAspectRatio="none" focusable="false">
+        <defs>
+          <linearGradient id="ribbon-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stopColor="#7d3a26" />
+            <stop offset="50%"  stopColor="#c6684a" />
+            <stop offset="100%" stopColor="#7d3a26" />
+          </linearGradient>
+          <linearGradient id="ribbon-shade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="rgba(0,0,0,0)" />
+            <stop offset="40%"  stopColor="rgba(0,0,0,0.18)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,0.34)" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M 0 0 L 28 0 L 28 218 L 14 234 L 0 218 Z"
+          fill="url(#ribbon-grad)"
+        />
+        <path
+          d="M 0 0 L 28 0 L 28 218 L 14 234 L 0 218 Z"
+          fill="url(#ribbon-shade)"
+        />
+        <line x1="14" y1="6" x2="14" y2="222"
+          stroke="rgba(0,0,0,0.22)" strokeWidth="0.5" />
+        <text
+          x="14" y="118"
+          textAnchor="middle"
+          transform="rotate(-90 14 118)"
+          className="ribbon-numeral"
+        >
+          xviii
+        </text>
+      </svg>
+    </span>
   )
 }
 
@@ -379,50 +443,6 @@ function InkpotAndQuill({
         <circle cx="19" cy="24.5" r="1.05" className="inkpot-drop" />
       </svg>
     </span>
-  )
-}
-
-// ─── Signature ──────────────────────────────────────────────────────────────
-function Signature() {
-  return (
-    <svg
-      className="signature"
-      viewBox="0 0 64 14"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <line x1="2" y1="9" x2="14" y2="9" className="sig-rule" />
-      <text x="32" y="11.5" textAnchor="middle" className="sig-letter">xviii</text>
-      <line x1="50" y1="9" x2="62" y2="9" className="sig-rule" />
-      <circle cx="18" cy="9" r="0.7" className="sig-pip" />
-      <circle cx="46" cy="9" r="0.7" className="sig-pip" />
-    </svg>
-  )
-}
-
-// ─── Wax seal (colophon's closing mark) ────────────────────────────────────
-function WaxSeal() {
-  return (
-    <svg
-      className="wax-seal"
-      viewBox="0 0 44 44"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <defs>
-        <radialGradient id="wax-shade" cx="38%" cy="36%" r="72%">
-          <stop offset="0%" stopColor="#cd6044" />
-          <stop offset="55%" stopColor="#9c4530" />
-          <stop offset="100%" stopColor="#4f2114" />
-        </radialGradient>
-      </defs>
-      <circle cx="22" cy="22" r="20" fill="url(#wax-shade)" />
-      <circle cx="22" cy="22" r="20"
-        fill="none" stroke="rgba(36, 14, 6, 0.55)" strokeWidth="0.7" />
-      <circle cx="22" cy="22" r="15.5"
-        fill="none" stroke="rgba(255, 210, 180, 0.16)" strokeWidth="0.5" />
-      <text x="22" y="27" textAnchor="middle" className="seal-letter">Mm</text>
-    </svg>
   )
 }
 
@@ -626,7 +646,7 @@ export function App() {
       () => setReplyOn(true),
       reduced ? 80 : Math.round(520 * paceRef.current),
     )
-    return () => clearTimeout(t)
+    return () => window.clearTimeout(t)
   }, [answerOn, answerChars, reduced])
 
   useEffect(() => {
@@ -990,12 +1010,17 @@ export function App() {
       <ReadingLantern />
 
       <div className={`frame ${ready ? 'ready' : ''}`}>
-        <CandleFlame
-          wrapRef={flameWrapRef}
-          lit={candleLit}
-          flaring={pulsing}
-        />
-        <Taper />
+        <ChapterHeading />
+        <BookmarkRibbon />
+
+        <div className="candle-station">
+          <Taper />
+          <CandleFlame
+            wrapRef={flameWrapRef}
+            lit={candleLit}
+            flaring={pulsing}
+          />
+        </div>
 
         <div className={`composition ${ready ? 'ready' : ''} ${quietus ? 'is-quietus' : ''}`}>
           <PageGlow lit={active} flaring={pulsing} />
@@ -1093,11 +1118,18 @@ export function App() {
             </h1>
           </div>
 
+          <ReadingPace
+            hasRead={answerOn || intellexiChars > 0}
+            slow={slowRead}
+            onRead={() => acknowledge(slowRead ? 1 : 1.75)}
+          />
+
           <div className="chapter-body">
             <p
               className={`answer ${answerOn ? 'is-on' : ''}`}
               aria-live="polite"
             >
+              <span className="answer-rule" aria-hidden="true" />
               <span className="answer-text">{answerDisplay}</span>
               {answerOn && answerChars < ANSWER.length && (
                 <span className="answer-caret" aria-hidden="true">|</span>
@@ -1131,12 +1163,6 @@ export function App() {
             {footnoteDone && <Explicit />}
           </div>
 
-          <ReadingPace
-            hasRead={answerOn || intellexiChars > 0}
-            slow={slowRead}
-            onRead={() => acknowledge(slowRead ? 1 : 1.75)}
-          />
-
           <div className="colophon" aria-hidden="true">
             <span className="colophon-rule" />
             <span className="colophon-pair">
@@ -1144,18 +1170,11 @@ export function App() {
               <span className="colophon-pair-arrow" aria-hidden="true">›</span>
               <em className="colophon-respondetur">respondetur</em>
             </span>
-            <span className="colophon-signature-row">
-              <Signature />
-              <span className="colophon-folio">folio · xviii</span>
-            </span>
             <InkpotAndQuill
               active={footnoteDone && intellexiOn && intellexiChars >= 'intellexi'.length}
               acknowledged={pulsing}
             />
             <span className="colophon-provenance">legi · mmxxvi</span>
-            <span className="colophon-seal">
-              <WaxSeal />
-            </span>
             <span className="colophon-rule" />
           </div>
         </div>
