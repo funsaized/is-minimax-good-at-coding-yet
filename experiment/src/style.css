@@ -159,48 +159,6 @@ button {
   }
 }
 
-/* ───────── watermark (faint printer's device on paper) ───────── */
-
-.sheet-watermark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 0;
-  width: clamp(180px, 26vw, 320px);
-  height: clamp(180px, 26vw, 320px);
-  pointer-events: none;
-  opacity: 0.045;
-  color: var(--ink);
-  transform: translate(-50%, -50%) rotate(-3deg);
-  animation: watermark-in 1400ms 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-
-.sheet-watermark .printer-device {
-  width: 100%;
-  height: 100%;
-}
-
-.sheet-watermark .printer-device svg {
-  width: 100%;
-  height: 100%;
-  color: var(--ink);
-}
-
-.sheet-watermark .printer-device-text {
-  display: none;
-}
-
-@keyframes watermark-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) rotate(-3deg) scale(0.96);
-  }
-  to {
-    opacity: 0.045;
-    transform: translate(-50%, -50%) rotate(-3deg) scale(1);
-  }
-}
-
 /* ───────── bookmark ribbon ───────── */
 
 .bookmark-ribbon {
@@ -954,21 +912,16 @@ h1 {
     linear-gradient(
       92deg,
       rgba(255, 250, 240, 0) 0%,
-      rgba(255, 250, 240, 0.45) 6%,
+      rgba(255, 250, 240, 0.32) 6%,
       rgba(255, 250, 240, 0) 14%
     ),
     linear-gradient(
       90deg,
-      rgba(107, 74, 37, 0.12) 0%,
+      rgba(107, 74, 37, 0.10) 0%,
       rgba(107, 74, 37, 0.04) 32%,
       transparent 100%
     );
-  opacity: 0;
-  transform-origin: 0% 50%;
-  transform: rotateY(-22deg) translateX(-12px);
-  transition:
-    opacity 900ms cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 1100ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  opacity: 1;
 }
 
 .response-panel--verso::after {
@@ -990,14 +943,35 @@ h1 {
   opacity: 0.78;
 }
 
-.response-panel--verso.is-revealed::before {
-  opacity: 1;
-  transform: rotateY(0deg) translateX(0);
-}
-
 .response-panel--verso > * {
   position: relative;
   z-index: 1;
+}
+
+.verso-shine {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-105%);
+  background: linear-gradient(
+    92deg,
+    transparent 0%,
+    rgba(255, 250, 240, 0) 38%,
+    rgba(255, 250, 240, 0.78) 50%,
+    rgba(255, 250, 240, 0) 62%,
+    transparent 100%
+  );
+  border-radius: inherit;
+}
+
+.response-panel--verso.is-revealed .verso-shine {
+  opacity: 1;
+  transform: translateX(105%);
+  transition:
+    opacity 540ms ease,
+    transform 1300ms cubic-bezier(0.32, 0.04, 0.16, 1);
 }
 
 .response-panel--verso .sheet-header--verso {
@@ -1688,6 +1662,217 @@ h1 {
   border-width: 0 2px 2px 0;
 }
 
+/* ───────── fleuron (typographic printer's flower) ───────── */
+
+.sheet-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: clamp(200px, 28vw, 340px);
+  height: clamp(200px, 28vw, 340px);
+  pointer-events: none;
+  color: var(--ink);
+  transform: translate(-50%, -50%) rotate(-4deg);
+  opacity: 0;
+  animation: fleuron-in 1500ms 600ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+.fleuron {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  color: var(--ink);
+}
+
+.fleuron svg {
+  width: 100%;
+  height: 100%;
+  color: var(--ink);
+  animation: fleuron-breathe 11s ease-in-out infinite;
+}
+
+.fleuron-rings {
+  transform-origin: 110px 110px;
+  animation: fleuron-slow 60s linear infinite;
+}
+
+.fleuron-major {
+  opacity: 0.85;
+}
+
+.fleuron-accent {
+  transform-origin: 110px 110px;
+  animation: fleuron-rotate 80s linear infinite;
+}
+
+.fleuron-core {
+  filter: drop-shadow(0 0.4px 0 rgba(40, 12, 6, 0.18));
+}
+
+@keyframes fleuron-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-4deg) scale(0.96);
+  }
+  to {
+    opacity: 0.062;
+    transform: translate(-50%, -50%) rotate(-4deg) scale(1);
+  }
+}
+
+@keyframes fleuron-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(28, 39, 64, 0));
+  }
+  50% {
+    transform: scale(1.012);
+    filter: drop-shadow(0 0 1.2px rgba(28, 39, 64, 0.12));
+  }
+}
+
+@keyframes fleuron-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fleuron-rotate {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* ───────── dust motes (paper grain breathing) ───────── */
+
+.dust-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  animation: dust-canvas-in 1400ms 800ms ease-out forwards;
+  mix-blend-mode: multiply;
+}
+
+@keyframes dust-canvas-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ───────── leaf-hour dial (real-time mark) ───────── */
+
+.leaf-hour-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  margin-right: 4px;
+  min-height: 90px;
+}
+
+.leaf-hour {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 84px;
+  padding: 6px 6px 8px;
+  background: rgba(255, 248, 234, 0.55);
+  border: 1px solid rgba(107, 74, 37, 0.36);
+  box-shadow: 3px 3px 0 rgba(107, 74, 37, 0.08);
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(8px) rotate(-3deg);
+  transform-origin: 50% 50%;
+  pointer-events: none;
+  transition:
+    opacity 760ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 820ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.leaf-hour.is-visible {
+  opacity: 1;
+  transform: translateY(0) rotate(-2deg);
+}
+
+.leaf-hour-dial {
+  display: block;
+  width: 64px;
+  height: 64px;
+  flex: none;
+  color: var(--ink);
+  filter: drop-shadow(0 1px 0 rgba(40, 12, 6, 0.06));
+}
+
+.dial-numerals text {
+  fill: var(--ink);
+  font-family: var(--serif);
+  font-size: 8.5px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.dial-second {
+  transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.leaf-hour-label {
+  font-family: var(--serif);
+  font-size: 9px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--sepia);
+  text-transform: lowercase;
+}
+
+.leaf-hour-readout {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───────── scribal quill (writing accompaniment) ───────── */
+
+.scribal-quill {
+  position: absolute;
+  top: 28px;
+  right: 26px;
+  z-index: 4;
+  width: 100px;
+  height: 32px;
+  pointer-events: none;
+  color: var(--sepia);
+  opacity: 0;
+  transform: translateX(20px) rotate(8deg);
+  transform-origin: 100% 50%;
+  filter: drop-shadow(0 1px 0 rgba(40, 12, 6, 0.18));
+  transition:
+    opacity 480ms ease,
+    transform 620ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.scribal-quill.is-active {
+  opacity: 0.78;
+  transform: translateX(0) rotate(0deg);
+}
+
+.scribal-quill svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: transform 200ms ease-out;
+}
+
 /* ───────── tablet ───────── */
 
 @media (max-width: 980px) {
@@ -1731,6 +1916,27 @@ h1 {
 
   .signature-mark {
     font-size: 8.5px;
+  }
+
+  .leaf-hour-row {
+    min-height: 84px;
+    margin-top: 14px;
+  }
+
+  .leaf-hour {
+    width: 78px;
+  }
+
+  .leaf-hour-dial {
+    width: 58px;
+    height: 58px;
+  }
+
+  .scribal-quill {
+    width: 86px;
+    height: 28px;
+    top: 22px;
+    right: 22px;
   }
 
   .sig-prefix { font-size: 9.5px; }
@@ -1989,6 +2195,29 @@ h1 {
     font-size: 8px;
   }
 
+  .leaf-hour-row {
+    justify-content: center;
+    margin-top: 18px;
+    min-height: 80px;
+  }
+
+  .leaf-hour {
+    width: 76px;
+    padding: 5px 5px 7px;
+  }
+
+  .leaf-hour-dial {
+    width: 56px;
+    height: 56px;
+  }
+
+  .scribal-quill {
+    width: 76px;
+    height: 26px;
+    top: 22px;
+    right: 20px;
+  }
+
   .sig-prefix { font-size: 9px; }
   .sig-letter { font-size: 9.5px; }
   .sig-side { font-size: 6px; }
@@ -2143,6 +2372,40 @@ h1 {
   .reader-note {
     font-size: 10.5px;
   }
+
+  .leaf-hour-row {
+    margin-top: 14px;
+    min-height: 76px;
+  }
+
+  .leaf-hour {
+    width: 70px;
+    padding: 4px 5px 6px;
+  }
+
+  .leaf-hour-dial {
+    width: 52px;
+    height: 52px;
+  }
+
+  .dial-numerals text {
+    font-size: 7.5px;
+  }
+
+  .leaf-hour-label {
+    font-size: 8.5px;
+  }
+
+  .leaf-hour-readout {
+    font-size: 8.5px;
+  }
+
+  .scribal-quill {
+    width: 64px;
+    height: 22px;
+    top: 18px;
+    right: 14px;
+  }
 }
 
 @media (max-width: 360px) {
@@ -2178,6 +2441,28 @@ h1 {
 
   .signature-mark {
     font-size: 7px;
+  }
+
+  .leaf-hour-row {
+    margin-top: 12px;
+    min-height: 70px;
+  }
+
+  .leaf-hour {
+    width: 64px;
+    padding: 4px 4px 6px;
+  }
+
+  .leaf-hour-dial {
+    width: 46px;
+    height: 46px;
+  }
+
+  .scribal-quill {
+    width: 56px;
+    height: 20px;
+    top: 16px;
+    right: 12px;
   }
 }
 
@@ -2239,8 +2524,15 @@ h1 {
   }
 
   .sheet-watermark {
-    opacity: 0.045;
-    transform: translate(-50%, -50%) rotate(-3deg);
+    opacity: 0.062;
+    transform: translate(-50%, -50%) rotate(-4deg);
+  }
+
+  .fleuron svg,
+  .fleuron-rings,
+  .fleuron-accent {
+    animation: none !important;
+    transform: none !important;
   }
 
   .marginalia-note::after,
@@ -2260,5 +2552,34 @@ h1 {
   .response-panel--verso::before {
     opacity: 1;
     transform: none;
+  }
+
+  .verso-shine {
+    opacity: 0;
+    transform: translateX(0);
+  }
+
+  .response-panel--verso.is-revealed .verso-shine {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .leaf-hour {
+    transform: rotate(-2deg);
+    animation: none;
+  }
+
+  .dial-second {
+    transition: none;
+  }
+
+  .scribal-quill {
+    transform: translateX(0) rotate(0deg);
+    animation: none;
+  }
+
+  .dust-canvas {
+    animation: none;
+    opacity: 1;
   }
 }

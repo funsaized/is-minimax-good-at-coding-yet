@@ -33,6 +33,24 @@ function useReducedMotion() {
   return reduced
 }
 
+function useNow() {
+  const [now, setNow] = useState<Date>(() => new Date())
+  useEffect(() => {
+    let raf = 0
+    let last = 0
+    const tick = (t: number) => {
+      if (t - last > 970) {
+        last = t
+        setNow(new Date())
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+  return now
+}
+
 function AsterismGlyph({ className }: { className?: string }) {
   return (
     <svg
@@ -478,6 +496,339 @@ function PrinterDevice() {
   )
 }
 
+function Fleuron() {
+  return (
+    <div className="fleuron" aria-hidden="true">
+      <svg viewBox="0 0 220 220" focusable="false">
+        <g className="fleuron-rings">
+          <circle cx="110" cy="110" r="103" fill="none" stroke="currentColor" strokeWidth="0.6" />
+          <circle
+            cx="110"
+            cy="110"
+            r="94"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.4"
+            strokeDasharray="0.6 2.2"
+            opacity="0.7"
+          />
+        </g>
+        <g className="fleuron-major" fill="currentColor">
+          <path d="M 110 22 Q 134 70 110 110 Q 86 70 110 22 Z" />
+          <path d="M 110 198 Q 86 150 110 110 Q 134 150 110 198 Z" />
+          <path d="M 198 110 Q 150 86 110 110 Q 150 134 198 110 Z" />
+          <path d="M 22 110 Q 70 134 110 110 Q 70 86 22 110 Z" />
+        </g>
+        <g className="fleuron-accent" fill="currentColor" opacity="0.78">
+          <g transform="translate(110 110) rotate(45)">
+            <path d="M 0 -88 Q 11 -64 0 -40 Q -11 -64 0 -88 Z" />
+            <path d="M 0 88 Q -11 64 0 40 Q 11 64 0 88 Z" />
+            <path d="M 88 0 Q 64 11 40 0 Q 64 -11 88 0 Z" />
+            <path d="M -88 0 Q -64 -11 -40 0 Q -64 11 -88 0 Z" />
+          </g>
+        </g>
+        <g className="fleuron-petals" fill="currentColor">
+          <circle cx="110" cy="42" r="0.9" opacity="0.6" />
+          <circle cx="178" cy="110" r="0.9" opacity="0.6" />
+          <circle cx="110" cy="178" r="0.9" opacity="0.6" />
+          <circle cx="42" cy="110" r="0.9" opacity="0.6" />
+        </g>
+        <g className="fleuron-core" fill="currentColor" transform="translate(110 110)">
+          <ellipse cx="0" cy="-13" rx="4" ry="8" />
+          <ellipse cx="12.4" cy="-4" rx="4" ry="8" transform="rotate(72 12.4 -4)" />
+          <ellipse cx="7.7" cy="10.6" rx="4" ry="8" transform="rotate(144 7.7 10.6)" />
+          <ellipse cx="-7.7" cy="10.6" rx="4" ry="8" transform="rotate(216 -7.7 10.6)" />
+          <ellipse cx="-12.4" cy="-4" rx="4" ry="8" transform="rotate(288 -12.4 -4)" />
+          <circle r="2.6" />
+          <circle r="1" fill="#f3eadb" />
+        </g>
+      </svg>
+    </div>
+  )
+}
+
+function LeafHourDial({
+  hours,
+  minutes,
+  seconds,
+  visible,
+}: {
+  hours: number
+  minutes: number
+  seconds: number
+  visible: boolean
+}) {
+  const secondColor = 'rgba(235, 91, 72, 0.92)'
+  const hourAngle = (hours % 12) * 30 + minutes * 0.5
+  const minuteAngle = minutes * 6 + seconds * 0.1
+  const secondAngle = seconds * 6
+
+  const hourText = String(hours).padStart(2, '0')
+  const minText = String(minutes).padStart(2, '0')
+
+  return (
+    <div
+      className={`leaf-hour${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="leaf-hour-dial" viewBox="0 0 70 70" focusable="false">
+        <defs>
+          <radialGradient id="dial-face" cx="50%" cy="38%" r="72%">
+            <stop offset="0%" stopColor="rgba(255, 248, 234, 0.95)" />
+            <stop offset="78%" stopColor="rgba(245, 232, 200, 0.78)" />
+            <stop offset="100%" stopColor="rgba(232, 216, 178, 0.62)" />
+          </radialGradient>
+        </defs>
+        <circle cx="35" cy="35" r="33" fill="url(#dial-face)" stroke="rgba(107, 74, 37, 0.68)" strokeWidth="0.8" />
+        <circle
+          cx="35"
+          cy="35"
+          r="30"
+          fill="none"
+          stroke="rgba(107, 74, 37, 0.34)"
+          strokeWidth="0.4"
+          strokeDasharray="0.4 1.4"
+        />
+        <g className="dial-hour-ticks" stroke="rgba(28, 39, 64, 0.7)" strokeWidth="1" strokeLinecap="round">
+          <line x1="35" y1="6" x2="35" y2="10" />
+          <line x1="35" y1="60" x2="35" y2="64" />
+          <line x1="6" y1="35" x2="10" y2="35" />
+          <line x1="60" y1="35" x2="64" y2="35" />
+        </g>
+        <g className="dial-tick-minor" stroke="rgba(28, 39, 64, 0.4)" strokeWidth="0.5" strokeLinecap="round">
+          <line x1="50.4" y1="13.1" x2="49.1" y2="14.4" />
+          <line x1="56.9" y1="19.6" x2="55.6" y2="20.9" />
+          <line x1="56.9" y1="50.4" x2="55.6" y2="49.1" />
+          <line x1="50.4" y1="56.9" x2="49.1" y2="55.6" />
+          <line x1="19.6" y1="56.9" x2="20.9" y2="55.6" />
+          <line x1="13.1" y1="50.4" x2="14.4" y2="49.1" />
+          <line x1="13.1" y1="19.6" x2="14.4" y2="20.9" />
+          <line x1="19.6" y1="13.1" x2="20.9" y2="14.4" />
+        </g>
+        <g className="dial-numerals">
+          <text x="35" y="19" textAnchor="middle">12</text>
+          <text x="52" y="38" textAnchor="middle">3</text>
+          <text x="35" y="56" textAnchor="middle">6</text>
+          <text x="18" y="38" textAnchor="middle">9</text>
+        </g>
+        <g transform={`rotate(${hourAngle} 35 35)`}>
+          <line x1="35" y1="35" x2="35" y2="17" stroke="rgba(28, 39, 64, 0.85)" strokeWidth="1.8" strokeLinecap="round" />
+        </g>
+        <g transform={`rotate(${minuteAngle} 35 35)`}>
+          <line x1="35" y1="35" x2="35" y2="13" stroke="rgba(28, 39, 64, 0.95)" strokeWidth="1.0" strokeLinecap="round" />
+        </g>
+        <g transform={`rotate(${secondAngle} 35 35)`} className="dial-second">
+          <line x1="35" y1="36" x2="35" y2="10" stroke={secondColor} strokeWidth="0.8" strokeLinecap="round" />
+          <circle cx="35" cy="10" r="1" fill={secondColor} />
+          <line x1="35" y1="36" x2="35" y2="44" stroke={secondColor} strokeWidth="0.6" strokeLinecap="round" />
+        </g>
+        <circle cx="35" cy="35" r="1.6" fill="rgba(28, 39, 64, 0.92)" />
+        <circle cx="35" cy="35" r="0.6" fill={secondColor} />
+      </svg>
+      <span className="leaf-hour-label">this hour</span>
+      <span className="leaf-hour-readout">{hourText}:{minText}</span>
+    </div>
+  )
+}
+
+function ScribalQuill({ active, progress }: { active: boolean; progress: number }) {
+  const tilt = active ? Math.sin(progress * 0.42) * 4 + Math.sin(progress * 0.18) * 1.4 : 0
+  const xShift = active ? Math.sin(progress * 0.34) * 1.6 : 0
+  const yShift = active ? Math.sin(progress * 0.58) * 0.9 : 0
+
+  return (
+    <div
+      className={`scribal-quill${active ? ' is-active' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 110 36"
+        focusable="false"
+        style={
+          active
+            ? {
+                transform: `translate(${xShift}px, ${yShift}px) rotate(${tilt}deg)`,
+              }
+            : undefined
+        }
+      >
+        <defs>
+          <linearGradient id="quill-shaft" x1="0" y1="0" x2="1" y2="0.1">
+            <stop offset="0%" stopColor="rgba(60, 30, 8, 0.55)" />
+            <stop offset="55%" stopColor="rgba(86, 56, 28, 0.85)" />
+            <stop offset="100%" stopColor="rgba(40, 22, 8, 0.92)" />
+          </linearGradient>
+          <linearGradient id="quill-feather-fill" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(70, 42, 18, 0.42)" />
+            <stop offset="50%" stopColor="rgba(138, 90, 50, 0.78)" />
+            <stop offset="100%" stopColor="rgba(190, 150, 100, 0.88)" />
+          </linearGradient>
+        </defs>
+        <g className="quill-feather">
+          <path
+            d="M 6 32 Q 12 4 32 6 Q 34 16 26 26 Q 18 32 10 32 Z"
+            fill="url(#quill-feather-fill)"
+          />
+          <path
+            d="M 8 30 Q 12 10 28 8"
+            stroke="rgba(255, 240, 220, 0.35)"
+            strokeWidth="0.4"
+            fill="none"
+          />
+          <path
+            d="M 12 27 Q 16 14 30 12"
+            stroke="rgba(255, 240, 220, 0.22)"
+            strokeWidth="0.4"
+            fill="none"
+          />
+          <path
+            d="M 16 24 Q 20 18 30 16"
+            stroke="rgba(255, 240, 220, 0.14)"
+            strokeWidth="0.4"
+            fill="none"
+          />
+        </g>
+        <g className="quill-shaft">
+          <line
+            x1="30"
+            y1="6"
+            x2="86"
+            y2="2"
+            stroke="url(#quill-shaft)"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+          />
+        </g>
+        <g className="quill-nib">
+          <path d="M 86 2 L 102 -1 L 104 2 L 100 5 Z" fill="#2a1106" />
+          <path d="M 102 -1 L 104 2 L 100 5 Z" fill="#0d0502" />
+          <line x1="90" y1="1.4" x2="104" y2="2" stroke="rgba(255, 240, 220, 0.45)" strokeWidth="0.3" />
+          <ellipse cx="100" cy="2" rx="0.7" ry="0.5" fill="rgba(0, 0, 0, 0.7)" />
+        </g>
+      </svg>
+    </div>
+  )
+}
+
+function DustMotes({ reduced }: { reduced: boolean }) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const motesRef = useRef<
+    { x: number; y: number; vx: number; vy: number; r: number; alpha: number; wob: number }[]
+  >([])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    let raf = 0
+    let last = performance.now()
+
+    const sizeCanvas = () => {
+      const parent = canvas.parentElement
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      canvas.width = Math.max(1, Math.floor(rect.width * dpr))
+      canvas.height = Math.max(1, Math.floor(rect.height * dpr))
+      canvas.style.width = `${rect.width}px`
+      canvas.style.height = `${rect.height}px`
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      seed()
+    }
+
+    const seed = () => {
+      const parent = canvas.parentElement
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
+      motesRef.current = Array.from({ length: 12 }, () => ({
+        x: Math.random() * rect.width,
+        y: Math.random() * rect.height,
+        vx: (Math.random() - 0.5) * 5,
+        vy: -(0.4 + Math.random() * 0.7),
+        r: 0.7 + Math.random() * 1.4,
+        alpha: 0.16 + Math.random() * 0.18,
+        wob: Math.random() * Math.PI * 2,
+      }))
+    }
+
+    const onPointer = (e: PointerEvent) => {
+      const parent = canvas.parentElement
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
+      const mx = e.clientX - rect.left
+      const my = e.clientY - rect.top
+      for (const m of motesRef.current) {
+        const dx = m.x - mx
+        const dy = m.y - my
+        const dist = Math.hypot(dx, dy)
+        if (dist > 0 && dist < 130) {
+          const force = (1 - dist / 130) * 22
+          m.vx += (dx / dist) * force * 0.05
+          m.vy += (dy / dist) * force * 0.05
+        }
+      }
+    }
+
+    const draw = (now: number) => {
+      const dt = Math.min(50, now - last) / 1000
+      last = now
+
+      const parent = canvas.parentElement
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
+      ctx.clearRect(0, 0, rect.width, rect.height)
+
+      for (const m of motesRef.current) {
+        if (!reduced) {
+          m.wob += dt * 0.6
+          m.vx += Math.sin(m.wob) * 0.07
+          m.vy -= dt * 1.6
+          m.vx *= 0.992
+          m.vy *= 0.992
+          m.x += m.vx * dt * 24
+          m.y += m.vy * dt * 24
+          if (m.y < -10) {
+            m.y = rect.height + 10
+            m.x = Math.random() * rect.width
+          }
+          if (m.x < -10) m.x = rect.width + 10
+          if (m.x > rect.width + 10) m.x = -10
+        }
+        ctx.beginPath()
+        ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2)
+        ctx.fillStyle = reduced
+          ? `rgba(28, 39, 64, 0.16)`
+          : `rgba(28, 39, 64, ${m.alpha})`
+        ctx.fill()
+      }
+
+      if (!reduced) raf = requestAnimationFrame(draw)
+    }
+
+    sizeCanvas()
+    if (reduced) {
+      draw(performance.now())
+    } else {
+      raf = requestAnimationFrame(draw)
+    }
+
+    const ro = new ResizeObserver(() => sizeCanvas())
+    if (canvas.parentElement) ro.observe(canvas.parentElement)
+
+    window.addEventListener('pointermove', onPointer, { passive: true })
+
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+      ro.disconnect()
+      window.removeEventListener('pointermove', onPointer)
+    }
+  }, [reduced])
+
+  return <canvas ref={canvasRef} className="dust-canvas" aria-hidden="true" />
+}
+
 function SignatureMark({ sig, side }: { sig: string; side: 'r' | 'v' }) {
   return (
     <span className="signature-mark" aria-hidden="true">
@@ -490,6 +841,7 @@ function SignatureMark({ sig, side }: { sig: string; side: 'r' | 'v' }) {
 
 export function App() {
   const reduced = useReducedMotion()
+  const now = useNow()
   const [phase, setPhase] = useState<Phase>('idle')
   const [slow, setSlow] = useState(false)
   const [answerChars, setAnswerChars] = useState(0)
@@ -558,6 +910,8 @@ export function App() {
   const replyDisplay = REPLY.slice(0, replyChars)
   const isTyping = phase === 'answering' || phase === 'replying'
   const replyShown = phase === 'replying' || phase === 'complete'
+  const quillActive = phase === 'answering'
+  const quillProgress = answerChars + replyChars
 
   const inkProgress =
     phase === 'idle'
@@ -582,6 +936,11 @@ export function App() {
       ? 'The second reading changes the pace, not the answer.'
       : 'One press opens it. The next asks you to slow down.'
 
+  const hourDialVisible = phase !== 'idle'
+  const hours = now.getHours()
+  const minutes = now.getMinutes()
+  const seconds = now.getSeconds()
+
   return (
     <main className="experiment-shell">
       <div className="ambient-grid" aria-hidden="true" />
@@ -589,11 +948,12 @@ export function App() {
       <div className="ambient-glow ambient-glow--two" aria-hidden="true" />
 
       <article className={`sheet ${phase !== 'idle' ? 'has-answer' : ''}`}>
+        <DustMotes reduced={reduced} />
         <BookmarkRibbon />
         <span className="gilded-edge" aria-hidden="true" />
 
         <span className="sheet-watermark" aria-hidden="true">
-          <PrinterDevice />
+          <Fleuron />
         </span>
 
         <header className="sheet-header sheet-header--recto">
@@ -648,6 +1008,7 @@ export function App() {
             className={`response-panel response-panel--verso ${replyShown ? 'is-revealed' : ''}`}
             aria-labelledby="response-title"
           >
+            <span className="verso-shine" aria-hidden="true" />
             <header className="sheet-header sheet-header--verso">
               <p className="running-head-title">
                 <span aria-hidden="true">§</span> the reply · set in italic
@@ -687,6 +1048,7 @@ export function App() {
               )}
               <span className="answer-quote answer-quote--close" aria-hidden="true">”</span>
               <span className="answer-attribution" aria-hidden="true">— set in italic</span>
+              <ScribalQuill active={quillActive} progress={quillProgress} />
             </div>
 
             <div
@@ -730,6 +1092,15 @@ export function App() {
               </span>
             </button>
             <p className="reader-note" id="reader-note">{readerNote}</p>
+
+            <div className="leaf-hour-row">
+              <LeafHourDial
+                hours={hours}
+                minutes={minutes}
+                seconds={seconds}
+                visible={hourDialVisible}
+              />
+            </div>
           </section>
         </div>
 
