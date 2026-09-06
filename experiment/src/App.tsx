@@ -2740,6 +2740,243 @@ function HeroSparkle() {
   )
 }
 
+// MarginalSalamander — a small drawn fire-salamander in the bottom-
+// right of the page, the manuscript's quiet bestiary companion. The
+// four corners of the chapter each carry a voice: top-left folio,
+// top-right reading, bottom-left the reader's "annotavi" gloss. The
+// bottom-right carries this creature — a tiny vermilion-and-gold
+// salamander that lives where the candle's warm pool meets the
+// colophon's quiet. It sits at rest when the page is being read,
+// breathes slowly with a faint gold belly-glow, looks up toward the
+// reader when the pointer approaches, briefly flares when the
+// reader acknowledges the question, and crawls a little way along
+// the chapter's foot once the reader has understood (intellexi +
+// annotavi). Behind it a faint vermilion hairline trail of small
+// paw-prints, drawn once, like the manuscript's own marginalia:
+// medieval illuminators left tiny creatures and signatures in their
+// margins, and this salamander is the page's own signature. Reads as
+// the chapter's fourth living voice, paired to the three textual
+// voices in the other corners, so the four-corner scheme now
+// completes as: folio · reading · annotavi · salamander. Hidden on
+// reduced-motion devices — the creature stays at rest without
+// breathing or crawling.
+type SalamanderFootprint = {
+  x: number
+  y: number
+  delay: number
+  tone: 'vermilion' | 'gold'
+}
+
+const SALAMANDER_FOOTPRINTS: SalamanderFootprint[] = [
+  { x:  0, y: 0, delay:  120, tone: 'vermilion' },
+  { x:  3, y: 2, delay:  240, tone: 'vermilion' },
+  { x:  6, y: 0, delay:  360, tone: 'gold' },
+  { x:  9, y: 1, delay:  480, tone: 'vermilion' },
+  { x: 12, y: 0, delay:  600, tone: 'vermilion' },
+  { x: 15, y: 1, delay:  720, tone: 'gold' },
+  { x: 18, y: 0, delay:  840, tone: 'vermilion' },
+  { x: 21, y: 1, delay:  960, tone: 'vermilion' },
+  { x: 24, y: 0, delay: 1080, tone: 'gold' },
+]
+// Print SVG coordinates — placed in the lower band of the 36×22 view
+// (y ≈ 18–20) so the paw-prints read as marks on the parchment
+// beneath the salamander's belly rather than overlapping its body.
+// The horizontal span (x ≈ 4 → 22) is shorter than the body so the
+// trail sits behind/beneath the creature, never under the head.
+
+function MarginalSalamander({
+  crawling,
+  flaring,
+  awake,
+  pointerNear,
+  onBox,
+}: {
+  crawling: boolean
+  flaring: boolean
+  awake: boolean
+  pointerNear: boolean
+  onBox?: (box: DOMRect | null) => void
+}) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const onBoxRef = useRef(onBox)
+  onBoxRef.current = onBox
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      el.style.setProperty('--salam-x', '0')
+      el.style.setProperty('--salam-y', '0')
+      return
+    }
+    let raf = 0
+    let tx = 0
+    let ty = 0
+    let px = 0
+    let py = 0
+    const onMove = (e: PointerEvent) => {
+      const w = window.innerWidth || 1
+      const h = window.innerHeight || 1
+      // Inverse direction (the creature leans away from the pointer,
+      // as if curious, then follows with its eye rather than its
+      // body) — a soft opposite-direction parallax.
+      tx = -(e.clientX - w / 2) / (w / 2)
+      ty = -(e.clientY - h / 2) / (h / 2)
+    }
+    const tick = () => {
+      px += (tx - px) * 0.045
+      py += (ty - py) * 0.045
+      el.style.setProperty('--salam-x', px.toFixed(3))
+      el.style.setProperty('--salam-y', py.toFixed(3))
+      raf = requestAnimationFrame(tick)
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    raf = requestAnimationFrame(tick)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const update = () => {
+      if (onBoxRef.current) onBoxRef.current(el.getBoundingClientRect())
+    }
+    update()
+    window.addEventListener('resize', update, { passive: true })
+    window.addEventListener('scroll', update, { passive: true })
+    let raf = 0
+    const tick = () => {
+      raf = requestAnimationFrame(tick)
+      update()
+    }
+    raf = requestAnimationFrame(tick)
+    return () => {
+      window.removeEventListener('resize', update)
+      window.removeEventListener('scroll', update)
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+  const classes = ['marginal-salamander']
+  if (awake) classes.push('is-awake')
+  if (crawling) classes.push('is-crawling')
+  if (flaring) classes.push('is-flaring')
+  if (pointerNear) classes.push('is-near')
+  return (
+    <span
+      ref={ref}
+      className={classes.join(' ')}
+      aria-hidden="true"
+      aria-label="the manuscript's salamander, sitting at the bottom-right of the page"
+    >
+      <svg viewBox="0 0 36 22" className="salamander-svg" focusable="false">
+        <defs>
+          <radialGradient id="salam-belly" cx="50%" cy="55%" r="55%">
+            <stop offset="0%"   stopColor="#f5d99c" stopOpacity="0.85" />
+            <stop offset="55%"  stopColor="#e0a85a" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#9c4530" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        {/* Trail of paw-prints — a faint vermilion hairline of small
+            ink-dots that draws in once the reader has understood. The
+            trail sits beneath the creature on the parchment and never
+            moves; only the prints themselves bloom in. */}
+        <g className="salamander-trail">
+          {SALAMANDER_FOOTPRINTS.map((f, i) => (
+            <circle
+              key={i}
+              cx={4 + f.x}
+              cy={18.6 + f.y * 0.4}
+              r="0.5"
+              className={`salamander-print salamander-print-${f.tone}`}
+              style={{ '--print-i': i, '--print-delay': `${f.delay}ms` } as CSSProperties}
+            />
+          ))}
+        </g>
+        {/* The salamander itself — a small drawn vermilion lizard with
+            a curling tail, gold dorsal markings, and a tiny gold belly-
+            glow. Drawn as a single quiet beast, the page's own
+            marginal bestiary. */}
+        <g className="salamander-body">
+          {/* Body — vermilion outline, filled with the page's own ink */}
+          <path
+            className="salamander-back"
+            d="M 6 12
+               Q 5 9 8 8
+               Q 12 6.4 17 7
+               Q 22 7.4 25 8
+               Q 28 8.4 30 9
+               Q 32 10 31 11.5
+               Q 30 13 28 13
+               Q 24 13.4 20 13
+               Q 14 12.6 9 13
+               Q 6 13.2 6 12 Z"
+          />
+          {/* Belly — a softer, brighter underside in pale gold-warm,
+              catching the candle's light from above. */}
+          <path
+            className="salamander-belly"
+            d="M 7 12
+               Q 8 12.4 11 12.6
+               Q 16 12.8 20 12.6
+               Q 25 12.4 29 12
+               Q 30 12 29.4 12.6
+               Q 27 13.4 22 13.4
+               Q 15 13.6 9 13.2
+               Q 6.6 13 7 12 Z"
+          />
+          {/* Tail — curling up and back, the salamander's signature
+              flourish. */}
+          <path
+            className="salamander-tail"
+            d="M 6 12 Q 3 11 2 9 Q 2 7 4 7"
+          />
+          <circle cx="4" cy="7.2" r="0.55" className="salamander-tail-tip" />
+          {/* Head — a small pointed snout facing right, the creature's
+              gaze. */}
+          <path
+            className="salamander-head"
+            d="M 30 9 Q 32.5 9.6 33.4 11 Q 33.6 12 32 12.2 Q 30.5 12.2 30 11 Z"
+          />
+          {/* Eye — a small gold dot that brightens on flare */}
+          <circle cx="31.6" cy="10.6" r="0.45" className="salamander-eye" />
+          <circle cx="31.6" cy="10.6" r="0.18" className="salamander-eye-pip" />
+          {/* Dorsal markings — three small gold dots along the back,
+              the salamander's signature spots. */}
+          <circle cx="12" cy="8" r="0.55" className="salamander-spot" />
+          <circle cx="18" cy="7.4" r="0.6" className="salamander-spot" />
+          <circle cx="24" cy="8.2" r="0.55" className="salamander-spot" />
+          {/* Legs — two small drawn limbs, suggesting the creature's
+              stance. */}
+          <path
+            className="salamander-leg salamander-leg-f"
+            d="M 14 13.2 L 14 14.6 L 13 14.8"
+          />
+          <path
+            className="salamander-leg salamander-leg-b"
+            d="M 23 13.2 L 23 14.6 L 24 14.8"
+          />
+          {/* Belly-glow halo — a soft warm pool beneath the salamander,
+              catching the candle's light. */}
+          <ellipse
+            cx="18"
+            cy="13.5"
+            rx="13"
+            ry="3.6"
+            fill="url(#salam-belly)"
+            className="salamander-glow"
+          />
+        </g>
+      </svg>
+      <span className="salamander-caption" aria-hidden="true">
+        <span className="salamander-caption-rule" />
+        <em className="salamander-caption-text">bestiola</em>
+      </span>
+    </span>
+  )
+}
+
 // PredicateRule — a thin gold ink rule drawn beneath the predicate
 // "good at frontend", mirroring the gold rule beneath the named
 // subject "Minimax M3". Two quiet underlines frame the verb phrase
@@ -3422,6 +3659,8 @@ export function App() {
   const [spineSealed, setSpineSealed] = useState(false)
   const [bifolioAttending, setBifolioAttending] = useState(false)
   const [legiOn, setLegiOn] = useState(false)
+  const [salamPointerNear, setSalamPointerNear] = useState(false)
+  const salamBoxRef = useRef<DOMRect | null>(null)
   const pulseRef = useRef(0)
   const echoRef = useRef(0)
   const partsRef = useRef<Particle[]>([])
@@ -3659,6 +3898,53 @@ export function App() {
       if (leaveTimer) window.clearTimeout(leaveTimer)
     }
   }, [bifolioAttending, reduced])
+
+  // Salamander awareness — track whether the reader's pointer is
+  // within reach of the marginal creature, so it can lift its head
+  // and look toward them. Falls back to false on touch devices where
+  // there is no pointer to track.
+  useEffect(() => {
+    if (reduced) return
+    let raf = 0
+    let near = false
+    let pendingBox: DOMRect | null = null
+    const R = 140
+    const tick = () => {
+      raf = 0
+      const box = salamBoxRef.current
+      const ptr = pointerRef.current
+      if (box && ptr.over) {
+        const cx = (box.left + box.right) / 2
+        const cy = (box.top + box.bottom) / 2
+        const dx = ptr.x - cx
+        const dy = ptr.y - cy
+        const d2 = dx * dx + dy * dy
+        const next = d2 < R * R
+        if (next !== near) {
+          near = next
+          setSalamPointerNear(next)
+        }
+      } else if (near) {
+        near = false
+        setSalamPointerNear(false)
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    const refreshBox = () => {
+      if (pendingBox) salamBoxRef.current = pendingBox
+    }
+    const onResizeScroll = () => {
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    window.addEventListener('resize', onResizeScroll, { passive: true })
+    window.addEventListener('scroll', onResizeScroll, { passive: true })
+    return () => {
+      window.removeEventListener('resize', onResizeScroll)
+      window.removeEventListener('scroll', onResizeScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [reduced])
 
   // Legi mark — a quiet vermilion ink-mark that blooms above the
   // colophon's "legi · mmxxvi" provenance once the reader has lingered
@@ -4431,6 +4717,14 @@ export function App() {
           visible={lectorisOn}
           text={lectorisDisplay}
           done={lectorisDone}
+        />
+
+        <MarginalSalamander
+          crawling={intellexiOn && intellexiChars >= 'intellexi'.length && lectorisDone}
+          flaring={pulsing}
+          awake={ready}
+          pointerNear={salamPointerNear}
+          onBox={(box) => { salamBoxRef.current = box }}
         />
 
         <div className="colophon" aria-hidden="true">

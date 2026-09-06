@@ -11086,3 +11086,366 @@ body {
   .composition { gap: clamp(12px, 2.2vw, 18px); }
   .hero-frame + .stem-descent { margin-top: -8px; }
 }
+
+/* ----- Iteration 68: the manuscript's salamander -----
+ *
+ * A small drawn fire-salamander lives at the bottom-right of the
+ * page's frame, completing the chapter's four-corner marginal
+ * scheme (folio · reading · annotavi · bestiola). The creature
+ * mirrors the bottom-left LectorisNota in scale and quietness, but
+ * speaks in a different vocabulary — it is the page's own
+ * marginalia, the medieval illuminator's tiny signature.
+ *
+ * Behavior:
+ *   - At rest, the salamander breathes slowly (the gold belly-glow
+ *     pulses faintly) and parallaxes gently against the pointer.
+ *   - When the reader draws near (within ~140px of the creature),
+ *     it lifts its head and looks toward them — the eye brightens
+ *     and the snout tilts upward by a hair.
+ *   - When the reader acknowledges the question (pulse), the
+ *     belly flares briefly in gold and a single extra print drops
+ *     behind the creature, like a quill's slip.
+ *   - Once the chapter has been understood (intellexi + annotavi),
+ *     the salamander crawls a little way along the bottom edge of
+ *     the page, leaving a trail of nine small vermilion and gold
+ *     paw-prints drawn in one slow pass.
+ *
+ * Hidden on reduced-motion devices: the salamander remains visible
+ * but does not breathe, flare, crawl, or parallax — it simply sits
+ * in the margin, a quiet drawn mark. */
+
+.marginal-salamander {
+  position: absolute;
+  bottom: clamp(36px, 4.6vw, 64px);
+  right: clamp(20px, 4vw, 48px);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: clamp(3px, 0.32vw, 5px);
+  width: clamp(72px, 8vw, 108px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(
+    calc(var(--salam-x, 0) * 1.6px),
+    calc(var(--salam-y, 0) * 1.2px),
+    0
+  );
+  transition:
+    opacity 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 1.85s,
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.32));
+  will-change: transform, opacity;
+}
+
+.frame.ready .marginal-salamander {
+  opacity: 0.94;
+}
+
+/* The creature's body group parallaxes slightly inside the wrapper
+   in the opposite direction (so it leans toward the pointer's
+   gaze) — a quiet inverse parallax, like the creature following
+   the reader with its body rather than its eye. */
+.marginal-salamander .salamander-svg {
+  display: block;
+  width: clamp(48px, 5.6vw, 78px);
+  height: auto;
+  overflow: visible;
+  transform: translate3d(
+    calc(var(--salam-x, 0) * -0.8px),
+    calc(var(--salam-y, 0) * -0.8px),
+    0
+  );
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.marginal-salamander .salamander-body {
+  transform-box: fill-box;
+  transform-origin: 50% 60%;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* When the reader draws near, the salamander lifts its head —
+ * the body group tilts up and forward, and the eye brightens. */
+.marginal-salamander.is-near .salamander-body {
+  transform: translateY(-0.4px) rotate(-3deg);
+}
+
+.marginal-salamander.is-near .salamander-eye {
+  fill: var(--gold-bright);
+  filter: drop-shadow(0 0 1.6px rgba(240, 212, 154, 0.85));
+}
+
+.marginal-salamander .salamander-back {
+  fill: var(--vermilion);
+  fill-opacity: 0.92;
+  stroke: rgba(36, 14, 6, 0.55);
+  stroke-width: 0.18;
+  stroke-linejoin: round;
+}
+
+.marginal-salamander .salamander-belly {
+  fill: var(--gold);
+  fill-opacity: 0.62;
+  stroke: rgba(36, 14, 6, 0.35);
+  stroke-width: 0.14;
+}
+
+.marginal-salamander .salamander-tail {
+  fill: none;
+  stroke: var(--vermilion);
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.92;
+}
+
+.marginal-salamander .salamander-tail-tip {
+  fill: var(--gold);
+  fill-opacity: 0.85;
+}
+
+.marginal-salamander .salamander-head {
+  fill: var(--vermilion);
+  fill-opacity: 0.94;
+  stroke: rgba(36, 14, 6, 0.5);
+  stroke-width: 0.18;
+  stroke-linejoin: round;
+}
+
+.marginal-salamander .salamander-eye {
+  fill: var(--gold);
+  transition:
+    fill 0.4s ease,
+    filter 0.4s ease;
+}
+
+.marginal-salamander .salamander-eye-pip {
+  fill: rgba(36, 14, 6, 0.85);
+}
+
+.marginal-salamander .salamander-spot {
+  fill: var(--gold-bright);
+  fill-opacity: 0.85;
+  filter: drop-shadow(0 0 0.6px rgba(240, 212, 154, 0.4));
+}
+
+.marginal-salamander .salamander-leg {
+  fill: none;
+  stroke: rgba(36, 14, 6, 0.78);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Belly-glow halo — breathes slowly when the salamander is at
+ * rest, flares brighter on acknowledge, settles to a slow steady
+ * glow once the chapter has been understood. */
+.marginal-salamander .salamander-glow {
+  opacity: 0;
+  transform-origin: 50% 50%;
+  transform-box: fill-box;
+  animation: salamanderBreathe 5.6s ease-in-out 2.4s infinite;
+}
+
+.marginal-salamander.is-awake .salamander-glow {
+  opacity: 0.78;
+}
+
+.marginal-salamander.is-flaring .salamander-glow {
+  opacity: 1;
+  filter: drop-shadow(0 0 3px rgba(240, 212, 154, 0.55));
+  animation: salamanderFlare 1.4s ease-out 0s 1;
+}
+
+@keyframes salamanderBreathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 0.92; transform: scale(1.06); }
+}
+
+@keyframes salamanderFlare {
+  0%   { opacity: 0.78; transform: scale(1); }
+  40%  { opacity: 1; transform: scale(1.22); }
+  100% { opacity: 0.78; transform: scale(1); }
+}
+
+/* Paw-print trail — drawn in once the chapter has been understood
+ * (intellexi + annotavi). Each print fades in on its own staggered
+ * delay, then settles. The trail sits behind the creature's body
+ * and never moves; only the prints themselves bloom in. */
+.marginal-salamander .salamander-trail {
+  opacity: 0;
+  transition: opacity 0.5s ease 0.4s;
+}
+
+.marginal-salamander.is-crawling .salamander-trail {
+  opacity: 1;
+}
+
+.marginal-salamander .salamander-print {
+  fill: var(--vermilion);
+  fill-opacity: 0;
+  stroke: rgba(36, 14, 6, 0.42);
+  stroke-width: 0.08;
+  opacity: 0;
+  transition:
+    fill-opacity 0.6s ease,
+    opacity 0.6s ease;
+}
+
+.marginal-salamander.is-crawling .salamander-print {
+  fill-opacity: 0.78;
+  opacity: 1;
+  transition-delay: calc(var(--print-delay, 0ms));
+}
+
+.marginal-salamander .salamander-print-gold {
+  fill: var(--gold);
+  fill-opacity: 0;
+  stroke: rgba(36, 14, 6, 0.32);
+  stroke-width: 0.08;
+}
+
+.marginal-salamander.is-crawling .salamander-print-gold {
+  fill-opacity: 0.85;
+}
+
+/* When crawling, the creature slides a little way along the
+ * bottom edge of the page. The translation is small — the
+ * salamander only takes a few steps — so it reads as "the
+ * creature walked" rather than "the creature left". */
+.marginal-salamander.is-crawling .salamander-svg {
+  transform: translate3d(18px, 0, 0);
+  transition: transform 5.2s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s;
+}
+
+.marginal-salamander.is-crawling .salamander-body {
+  animation: salamanderStride 1.2s steps(1, end) 0.4s 4;
+}
+
+@keyframes salamanderStride {
+  0%   { transform: translateY(0) rotate(0deg); }
+  50%  { transform: translateY(-0.6px) rotate(-2deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* Caption — the small italic "bestiola" label that sits beneath
+ * the creature, with a hairline gold rule. Reads as the creature's
+ * own marginal caption, the way a printer would name a marginal
+ * bestiary in a scholarly edition. */
+.marginal-salamander .salamander-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, 0.4vw, 6px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(8px, 0.78vw, 10px);
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 2.45s,
+    transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 2.45s;
+}
+
+.frame.ready .marginal-salamander .salamander-caption {
+  opacity: 0.78;
+  transform: translateY(0);
+}
+
+.marginal-salamander .salamander-caption-rule {
+  display: inline-block;
+  width: clamp(8px, 0.9vw, 12px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--gold-deep) 0%,
+    var(--gold) 60%,
+    transparent 100%
+  );
+  opacity: 0.7;
+}
+
+.marginal-salamander .salamander-caption-text {
+  font-style: italic;
+  letter-spacing: 0.18em;
+}
+
+/* Reader engagement — when the question is being read (cursor
+ * over the hero), the salamander's eye tracks the hero's flare
+ * and the gold belly brightens a touch. */
+.stage.is-attending .marginal-salamander .salamander-glow {
+  filter: drop-shadow(0 0 2.4px rgba(240, 212, 154, 0.32));
+}
+
+/* Reduced motion — the salamander sits at rest without breath,
+ * flare, crawl, or parallax. The trail remains hidden so the
+ * creature is a single drawn mark, never animated. */
+@media (prefers-reduced-motion: reduce) {
+  .marginal-salamander {
+    transition: opacity 0.4s ease 1.85s;
+    transform: none !important;
+  }
+  .marginal-salamander .salamander-svg,
+  .marginal-salamander .salamander-body {
+    transform: none !important;
+    transition: none;
+  }
+  .marginal-salamander .salamander-glow {
+    opacity: 0.55;
+    animation: none;
+  }
+  .marginal-salamander .salamander-print {
+    opacity: 0;
+    fill-opacity: 0;
+  }
+  .marginal-salamander .salamander-eye {
+    fill: var(--gold);
+    filter: none;
+  }
+}
+
+@media (max-width: 880px) {
+  .marginal-salamander {
+    bottom: clamp(30px, 4vw, 50px);
+    right: clamp(14px, 2.6vw, 28px);
+    width: clamp(64px, 9vw, 88px);
+  }
+  .marginal-salamander .salamander-svg {
+    width: clamp(40px, 6.4vw, 60px);
+  }
+}
+
+@media (max-width: 620px) {
+  .marginal-salamander {
+    bottom: clamp(20px, 4.2vw, 38px);
+    right: clamp(10px, 2.4vw, 18px);
+    width: clamp(54px, 12vw, 72px);
+  }
+  .marginal-salamander .salamander-svg {
+    width: clamp(34px, 8.4vw, 50px);
+  }
+  .marginal-salamander .salamander-caption {
+    font-size: 8px;
+    letter-spacing: 0.14em;
+  }
+}
+
+@media (max-width: 480px) {
+  .marginal-salamander .salamander-caption { display: none; }
+  .marginal-salamander {
+    bottom: clamp(12px, 3vw, 22px);
+    right: clamp(8px, 2.2vw, 14px);
+    width: clamp(46px, 12vw, 62px);
+  }
+}
+
+@media (max-width: 380px) {
+  .marginal-salamander {
+    bottom: 8px;
+    right: 6px;
+    width: 42px;
+  }
+  .marginal-salamander .salamander-svg { width: 32px; }
+}
