@@ -1,4 +1,14 @@
 # Changelog
 
-## Iteration 77 — Annotator's folio with wax-sealed initial, asterism, and three marginalia
-Deepened the printed-folio metaphor with a wax-seal impression as the drop-cap "i", a true typographic asterism section break (custom SVG glyph of three asterisks in triangular formation), a tilted manuscript classification stamp ("MS · lxxvii · FRONTEND · cap. xviii · rect."), and a horizontal marginalia strip of three printer's-mark notes (¶, †, ‡). Replaced the ink stroke with a richer quill flourish featuring a main sweep, a terminal curl, and a coral nib dot. Added four bookplate corner brackets to the answer surface that fade in with the answer. Updated the folio number from lxxvi to lxxvii and the footer correspondingly. Subtle staggered fade-in animations for marginalia, stamp, and asterism; all motion respects prefers-reduced-motion. Responsive behavior refined for every new element across desktop, tablet, mobile, and small-phone breakpoints.
+Added bookmark ribbon, gilded edge, catchword, manicule, and colophon — deepening the folio metaphor.
+
+- Added a hanging vermilion bookmark ribbon that drapes down the left side of the sheet with a satin sheen, fold-over shadow, subtle sway animation, and a swallowtail cut at the bottom. It deepens on hover.
+- Added a thin gilded edge accent along the left edge of the sheet, evoking gilded page trim.
+- Replaced the "follow the mark" signature line with a printer's catchword — a short gradient rule, the italicised uppercase word "reply", and a typographic arrow — that previews the next column in real folio fashion.
+- Added a printer's pointing hand (manicule) that slides in beside the reply copy when reading completes, marking the end of the marginal annotation.
+- Replaced the floating PrinterEmblem with an integrated colophon (typographic star + italic "m · iii" monogram) seated at the right of the sheet footer, separated from the folio reference by a hairline rule.
+- Removed the previous coral paper-edge stripe on the left, which the bookmark ribbon now supersedes.
+- Refined the title letter-spacing from -0.072em to -0.065em and the reply-copy layout to flex, so the manicule can sit beside the reply text without disrupting its centre alignment.
+- Added responsive behaviour for the new elements: the ribbon narrows and shortens on tablet/mobile, the manicule shrinks, and the colophon stacks below the footer line on small screens.
+- Honoured `prefers-reduced-motion`: the bookmark sway, catchword slide, and manicule slide are disabled under reduced motion.
+- Title preserved: "is Minimax M3 good at frontend yet?"

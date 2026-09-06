@@ -186,39 +186,125 @@ function MarginaliaStrip({ items }: { items: MarginaliaItem[] }) {
   )
 }
 
-function PrinterEmblem() {
+function BookmarkRibbon() {
   return (
-    <svg className="printer-emblem" viewBox="0 0 160 160" aria-hidden="true" focusable="false">
+    <svg
+      className="bookmark-ribbon"
+      viewBox="0 0 32 400"
+      preserveAspectRatio="none"
+      focusable="false"
+      aria-hidden="true"
+    >
       <defs>
-        <radialGradient id="emblem-wash" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#ff755b" stopOpacity="0.12" />
-          <stop offset="62%" stopColor="#ff755b" stopOpacity="0.03" />
-          <stop offset="100%" stopColor="#ff755b" stopOpacity="0" />
-        </radialGradient>
+        <linearGradient id="ribbon-front" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#7a1a0e" />
+          <stop offset="22%" stopColor="#b8301f" />
+          <stop offset="50%" stopColor="#dc4a30" />
+          <stop offset="78%" stopColor="#b8301f" />
+          <stop offset="100%" stopColor="#7a1a0e" />
+        </linearGradient>
+        <linearGradient id="ribbon-fold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#5a1408" />
+          <stop offset="100%" stopColor="#7a1a0e" />
+        </linearGradient>
       </defs>
-      <circle cx="80" cy="80" r="74" fill="url(#emblem-wash)" />
-      <g className="emblem-rings">
-        <circle cx="80" cy="80" r="64" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.45" />
-        <circle cx="80" cy="80" r="56" fill="none" stroke="currentColor" strokeWidth="0.4" strokeDasharray="1 5" opacity="0.5" />
-        <circle cx="80" cy="80" r="44" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
-      </g>
-      <g className="emblem-points" fill="currentColor" opacity="0.75">
-        <path d="M 80 18 L 83 28 L 77 28 Z" />
-        <path d="M 80 142 L 83 132 L 77 132 Z" />
-        <path d="M 18 80 L 28 77 L 28 83 Z" />
-        <path d="M 142 80 L 132 77 L 132 83 Z" />
-      </g>
-      <g className="emblem-ticks" stroke="currentColor" opacity="0.55" strokeWidth="0.9" strokeLinecap="round">
-        <line x1="40" y1="40" x2="46" y2="46" />
-        <line x1="120" y1="120" x2="114" y2="114" />
-        <line x1="40" y1="120" x2="46" y2="114" />
-        <line x1="120" y1="40" x2="114" y2="46" />
-      </g>
-      <text x="80" y="86" textAnchor="middle" className="emblem-question">?</text>
-      <text x="80" y="105" textAnchor="middle" className="emblem-monogram">M · III</text>
-      <text x="80" y="28" textAnchor="middle" className="emblem-rim">N · E</text>
-      <text x="80" y="140" textAnchor="middle" className="emblem-rim">— adytum —</text>
+      <path
+        d="M 2 0 L 30 0 L 30 16 Q 28 19 26 17 L 16 23 L 6 17 Q 4 19 2 16 Z"
+        fill="url(#ribbon-fold)"
+      />
+      <path
+        d="M 2 16 L 30 16 L 30 360 L 16 388 L 2 360 Z"
+        fill="url(#ribbon-front)"
+      />
+      <line
+        x1="16"
+        y1="18"
+        x2="16"
+        y2="358"
+        stroke="rgba(50, 8, 4, 0.42)"
+        strokeWidth="0.5"
+      />
+      <path
+        d="M 7 18 Q 7 188 7 358"
+        fill="none"
+        stroke="rgba(255, 220, 200, 0.22)"
+        strokeWidth="0.7"
+      />
+      <path
+        d="M 25 18 Q 25 188 25 358"
+        fill="none"
+        stroke="rgba(40, 8, 4, 0.22)"
+        strokeWidth="0.7"
+      />
+      <path
+        d="M 12 22 Q 12 188 12 354"
+        fill="none"
+        stroke="rgba(255, 230, 210, 0.12)"
+        strokeWidth="0.4"
+      />
     </svg>
+  )
+}
+
+function Catchword() {
+  return (
+    <div className="catchword" aria-hidden="true">
+      <span className="catchword-rule" />
+      <span className="catchword-text">reply</span>
+      <span className="catchword-arrow">⤳</span>
+    </div>
+  )
+}
+
+function Manicule() {
+  return (
+    <svg
+      className="manicule"
+      viewBox="0 0 64 26"
+      focusable="false"
+      aria-hidden="true"
+    >
+      <g fill="currentColor">
+        <path d="M 0 8 Q 2 5 4 8 L 6 7 Q 8 5 10 8 L 12 7 Q 14 5 16 8 L 18 10 L 18 16 L 16 18 L 12 21 Q 10 19 8 21 L 6 19 Q 4 21 2 18 L 0 20 Z" />
+        <path d="M 18 10 Q 22 9 26 12 L 26 14 Q 22 17 18 16 Z" />
+        <path d="M 26 12 L 60 12 Q 62 12 62 13 Q 62 14 60 14 L 26 14 Z" />
+        <path
+          d="M 3 11 L 15 12"
+          stroke="rgba(255, 250, 240, 0.55)"
+          strokeWidth="0.5"
+          fill="none"
+        />
+        <path
+          d="M 4 14 L 16 15"
+          stroke="rgba(255, 250, 240, 0.42)"
+          strokeWidth="0.5"
+          fill="none"
+        />
+        <path
+          d="M 3 17 L 15 18"
+          stroke="rgba(255, 250, 240, 0.3)"
+          strokeWidth="0.5"
+          fill="none"
+        />
+      </g>
+    </svg>
+  )
+}
+
+function Colophon() {
+  return (
+    <div className="colophon" aria-hidden="true">
+      <svg viewBox="0 0 22 22" focusable="false">
+        <g fill="none" stroke="currentColor" strokeLinecap="round">
+          <circle cx="11" cy="11" r="9" strokeWidth="0.5" opacity="0.55" />
+          <circle cx="11" cy="11" r="6.5" strokeWidth="0.4" strokeDasharray="0.6 1.8" opacity="0.45" />
+        </g>
+        <g fill="currentColor">
+          <path d="M 11 4.5 L 12 9 L 16.5 9 L 12.7 11.5 L 13.7 16 L 11 13.5 L 8.3 16 L 9.3 11.5 L 5.5 9 L 10 9 Z" opacity="0.88" />
+        </g>
+      </svg>
+      <span className="colophon-text">m · iii</span>
+    </div>
   )
 }
 
@@ -322,6 +408,9 @@ export function App() {
       <div className="ambient-glow ambient-glow--two" aria-hidden="true" />
 
       <article className={`sheet ${phase !== 'idle' ? 'has-answer' : ''}`}>
+        <BookmarkRibbon />
+        <span className="gilded-edge" aria-hidden="true" />
+
         <header className="sheet-header">
           <p className="running-head-title">
             <span aria-hidden="true">§</span> an experiment in questioning
@@ -360,11 +449,7 @@ export function App() {
 
             <Asterism label="the reply follows" />
 
-            <div className="question-signature" aria-hidden="true">
-              <span className="signature-line" />
-              <span className="signature-text">follow the mark</span>
-              <span className="signature-arrow">→</span>
-            </div>
+            <Catchword />
           </section>
 
           <section className="response-panel" aria-labelledby="response-title">
@@ -403,7 +488,8 @@ export function App() {
               className={`reply-copy ${phase === 'replying' || phase === 'complete' ? 'is-visible' : ''}`}
               aria-live="polite"
             >
-              {replyDisplay}
+              {phase === 'complete' && <Manicule />}
+              <span className="reply-text">{replyDisplay}</span>
               {phase === 'replying' && <span className="typing-caret" aria-hidden="true">|</span>}
             </div>
 
@@ -437,13 +523,11 @@ export function App() {
           <p className="footer-folio">
             <span aria-hidden="true">— </span>exper. lxxvii<span aria-hidden="true"> —</span>
           </p>
-          <span className="footer-rule" aria-hidden="true" />
+          <Colophon />
         </footer>
 
-        <PrinterEmblem />
         <span className="paper-corner paper-corner--one" aria-hidden="true" />
         <span className="paper-corner paper-corner--two" aria-hidden="true" />
-        <span className="paper-edge" aria-hidden="true" />
       </article>
     </main>
   )
