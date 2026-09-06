@@ -1305,112 +1305,6 @@ function InkpotAndQuill({
   )
 }
 
-// Maniculum — the medieval reader's pointing hand that emerges from the
-// right margin to mark the question's climax word ("yet?"). Always present
-// as a quiet marginal mark; brightens and leans in when the reader engages
-// the hero. Pairs with the left-margin "Qu." rubric so the question is
-// framed by two gestures: a scholastic gloss on the left, a reader's hand
-// on the right.
-function Maniculum({ active }: { active: boolean }) {
-  return (
-    <span
-      className={`maniculum ${active ? 'is-active' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="maniculum-lead" />
-      <svg
-        className="maniculum-svg"
-        viewBox="0 0 70 38"
-        focusable="false"
-      >
-        {/* Sleeve band — a slim vermilion ribbon at the cuff */}
-        <rect
-          x="44"
-          y="5"
-          width="1.6"
-          height="28"
-          className="maniculum-band"
-        />
-
-        {/* Sleeve / cuff — gold, gently tapered */}
-        <path
-          className="maniculum-cuff"
-          d="M 45.5 4 L 66 7.5 L 66 30.5 L 45.5 34 Z"
-        />
-
-        {/* Cuff diagonal seams — suggest cut and drape */}
-        <line
-          x1="49"
-          y1="9"
-          x2="62.5"
-          y2="30"
-          className="maniculum-seam"
-        />
-        <line
-          x1="49"
-          y1="11.5"
-          x2="62.5"
-          y2="32"
-          className="maniculum-seam"
-        />
-
-        {/* Cuff embroidery pip */}
-        <circle cx="54" cy="18" r="0.9" className="maniculum-pip" />
-
-        {/* Hand back — gold, softens at the knuckles */}
-        <path
-          className="maniculum-hand"
-          d="M 22 11 L 44 11.5 L 46 14.5 L 46 23.5 L 44 26.5 L 22 27 Z"
-        />
-
-        {/* Folded fingers (three small ridges on the underside) */}
-        <path
-          d="M 25 27 Q 27 29 30 27"
-          className="maniculum-fold"
-        />
-        <path
-          d="M 31 27 Q 33 29 36 27"
-          className="maniculum-fold"
-        />
-        <path
-          d="M 37 27 Q 39 29 42 27"
-          className="maniculum-fold"
-        />
-
-        {/* Thumb crease — a small arc on top */}
-        <path
-          d="M 30 14 Q 33 12.5 36 14"
-          className="maniculum-crease"
-        />
-
-        {/* Index finger — extended, pointing left toward the question */}
-        <path
-          className="maniculum-finger"
-          d="M 0 15 L 22 14.5 L 22 23.5 L 0 23 Z"
-        />
-
-        {/* First knuckle crease on the finger */}
-        <line
-          x1="12"
-          y1="15"
-          x2="12"
-          y2="23"
-          className="maniculum-knuckle"
-        />
-
-        {/* Fingernail — a small gold-bright wedge at the tip */}
-        <path
-          className="maniculum-nail"
-          d="M 0 16 L 3.5 15.4 L 3.5 22.6 L 0 22 Z"
-        />
-
-        {/* Tip pulse — a tiny gold dot that flickers when active */}
-        <circle cx="-1" cy="19" r="0.7" className="maniculum-tip" />
-      </svg>
-    </span>
-  )
-}
-
 // Horologium — a small drawn sundial in the upper-left margin of the
 // hero, paired with the marginal rubric. A semicircle dial face with
 // five hour marks, a thin gnomon rising from the center, and a faint
@@ -2126,134 +2020,87 @@ function PageCorner() {
   )
 }
 
-// InkFleck — a small cluster of ink-dots that appears in the
-// bottom-right of the question block once the reader has engaged
-// with the chapter. Reads as a fingerprint the reader left on the
-// parchment — five tiny gold and vermilion dots scattered with a
-// hairline mark through them, like the page has been touched.
-function InkFleck({ visible }: { visible: boolean }) {
+// Sigillum — a small composed seal that takes the place of the
+// previous eye motif in the colophon's vertical chain (inkpot →
+// sigillum → legi-mark → legi · mmxxvi). Where the eye watched,
+// the sigillum declares: a thin gold border and an inner hairline,
+// a four-pointed vermilion star at the centre, and a quiet
+// inscription along the upper rim — "sigillum" in italic. The
+// seal parallaxes gently with the reader's pointer so the
+// colophon keeps its quiet life, but the gesture reads as a
+// scholar's stamp rather than a watching eye: the chapter has
+// been finished, the page knows it, the seal closes the
+// composition with dignity instead of a glance.
+function Sigillum() {
+  const ref = useRef<HTMLSpanElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let raf = 0
+    let tx = 0
+    let ty = 0
+    let px = 0
+    let py = 0
+    const onMove = (e: PointerEvent) => {
+      const w = window.innerWidth || 1
+      const h = window.innerHeight || 1
+      tx = (e.clientX - w / 2) / (w / 2)
+      ty = (e.clientY - h / 2) / (h / 2)
+    }
+    const tick = () => {
+      raf = requestAnimationFrame(tick)
+      px += (tx - px) * 0.035
+      py += (ty - py) * 0.035
+      el.style.setProperty('--sig-x', px.toFixed(3))
+      el.style.setProperty('--sig-y', py.toFixed(3))
+    }
+    if (reduced) {
+      el.style.setProperty('--sig-x', '0')
+      el.style.setProperty('--sig-y', '0')
+    } else {
+      window.addEventListener('pointermove', onMove, { passive: true })
+      raf = requestAnimationFrame(tick)
+    }
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
   return (
-    <span className={`ink-fleck ${visible ? 'is-on' : ''}`} aria-hidden="true">
-      <svg viewBox="0 0 36 16" className="ink-fleck-svg" focusable="false">
-        <line
-          x1="3"
-          y1="11"
-          x2="33"
-          y2="5"
-          className="ink-fleck-mark"
+    <span className="sigillum" aria-hidden="true" ref={ref}>
+      <svg viewBox="0 0 40 40" className="sigillum-svg" focusable="false">
+        <circle cx="20" cy="20" r="18" className="sigillum-ring" />
+        <circle cx="20" cy="20" r="15.5" className="sigillum-ring-inner" />
+        <text
+          x="20"
+          y="9.4"
+          textAnchor="middle"
+          className="sigillum-word"
+        >
+          sigillum
+        </text>
+        <text
+          x="20"
+          y="33.4"
+          textAnchor="middle"
+          className="sigillum-word sigillum-word-low"
+        >
+          fol · xviii
+        </text>
+        <path
+          className="sigillum-star"
+          d="M 20 14.6 L 21.18 18.92 L 25.7 19.8 L 22 22.18 L 23 26.6 L 20 24.14 L 17 26.6 L 18 22.18 L 14.3 19.8 L 18.82 18.92 Z"
         />
-        <circle cx="8"  cy="6"  r="0.7" className="ink-fleck-dot ink-fleck-dot-1" />
-        <circle cx="14" cy="9"  r="1.0" className="ink-fleck-dot ink-fleck-dot-2" />
-        <circle cx="19" cy="7"  r="0.6" className="ink-fleck-dot ink-fleck-dot-3" />
-        <circle cx="24" cy="10" r="0.8" className="ink-fleck-dot ink-fleck-dot-4" />
-        <circle cx="28" cy="6"  r="0.5" className="ink-fleck-dot ink-fleck-dot-5" />
+        <circle cx="20" cy="20" r="0.85" className="sigillum-core" />
       </svg>
     </span>
   )
 }
 
-// QuaeroCallout — a drawn "?" in the right margin that pairs with the
-// existing "Qu." rubric on the left. Where the left margin declares
-// "the question is asked," the right margin lifts the question itself
-// out of the text and sets it as a callout in the margin — the page
-// marking, for the reader, the thing to attend to. Drawn in vermilion
-// and gold so it reads as a manuscript annotation, with a hairline
-// tail that reaches toward the question's terminal "?" in the text.
-// Appears when the reader engages the hero, holds while the reader
-// attends to the question, and fades once the answer begins writing
-// itself — the question has been answered, the callout is no longer
-// needed. Hidden until is-on; hidden entirely on reduced motion.
-function QuaeroCallout({ visible }: { visible: boolean }) {
-  return (
-    <span
-      className={`quaero-callout ${visible ? 'is-on' : ''}`}
-      aria-hidden="true"
-    >
-      <svg viewBox="0 0 36 36" className="quaero-callout-svg" focusable="false">
-        <path
-          className="quaero-callout-stem"
-          d="M 18 5 C 8 5 8 17 16 19 C 19 19.6 19 22 19 25"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.1"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle cx="19" cy="29.4" r="1.5" className="quaero-callout-dot" />
-      </svg>
-      <span className="quaero-callout-rule" aria-hidden="true" />
-      <em className="quaero-callout-label">quaero</em>
-    </span>
-  )
-}
-
-// Librarius — a small paired reader's-hand at the answer. Mirrors
-// the existing Maniculum (which points AT the question from the
-// right margin) but emerges from the LEFT margin to point AT the
-// answer, with a thin vermilion hairline that reaches from the
-// fingertip toward the answer's dropcap. The pair creates a small
-// visual rhyme: a reader's hand opens the chapter (pointing at the
-// question) → a reader's hand confirms the answer (pointing at the
-// "I"). Appears once the answer has finished writing itself, holds
-// for the life of the reply, and fades as the footnote settles —
-// the reader's eye has moved on to the gloss. Hidden until is-on;
-// hidden entirely on reduced motion.
-function Librarius({ active }: { active: boolean }) {
-  return (
-    <span
-      className={`librarius ${active ? 'is-active' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="librarius-lead" />
-      <svg
-        className="librarius-svg"
-        viewBox="0 0 70 38"
-        focusable="false"
-      >
-        {/* Sleeve band — slim vermilion ribbon at the cuff */}
-        <rect
-          x="44"
-          y="5"
-          width="1.6"
-          height="28"
-          className="librarius-band"
-        />
-        {/* Cuff — gold, gently tapered */}
-        <path
-          className="librarius-cuff"
-          d="M 45.5 4 L 66 7.5 L 66 30.5 L 45.5 34 Z"
-        />
-        {/* Cuff diagonal seams */}
-        <line x1="49" y1="9" x2="62.5" y2="30" className="librarius-seam" />
-        <line x1="49" y1="11.5" x2="62.5" y2="32" className="librarius-seam" />
-        {/* Cuff embroidery pip */}
-        <circle cx="54" cy="18" r="0.9" className="librarius-pip" />
-        {/* Hand back — gold, softens at the knuckles */}
-        <path
-          className="librarius-hand"
-          d="M 22 11 L 44 11.5 L 46 14.5 L 46 23.5 L 44 26.5 L 22 27 Z"
-        />
-        {/* Folded fingers */}
-        <path d="M 25 27 Q 27 29 30 27" className="librarius-fold" />
-        <path d="M 31 27 Q 33 29 36 27" className="librarius-fold" />
-        <path d="M 37 27 Q 39 29 42 27" className="librarius-fold" />
-        {/* Thumb crease */}
-        <path d="M 30 14 Q 33 12.5 36 14" className="librarius-crease" />
-        {/* Index finger — extended, pointing right toward the answer */}
-        <path
-          className="librarius-finger"
-          d="M 0 15 L 22 14.5 L 22 23.5 L 0 23 Z"
-        />
-        {/* Knuckle crease */}
-        <line x1="12" y1="15" x2="12" y2="23" className="librarius-knuckle" />
-        {/* Fingernail — gold wedge */}
-        <path className="librarius-nail" d="M 0 16 L 3.5 15.4 L 3.5 22.6 L 0 22 Z" />
-        {/* Tip pulse */}
-        <circle cx="-1" cy="19" r="0.7" className="librarius-tip" />
-      </svg>
-    </span>
-  )
-}
+// (Iteration 55 retires the quaero callout — the question's own
+// terminal "?" already lifts the question into the margin, and a
+// second drawn "?" beside it was repetition, not rhyme.)
 
 // ReadingGuide — a quiet horizontal hairline that runs beneath the
 // chapter body, tying the textual core (answer → reply → footnote →
@@ -2370,46 +2217,6 @@ function HeroSparkle() {
   )
 }
 
-// VideAnnotation — a small scholastic gloss in the left margin that
-// asks the reader to "look" (Latin: vide) at the answer. A vermilion
-// caret at the foot of the rule points into the answer/reply text —
-// the page's gentle instruction to attend to what is written below.
-// Pairs with the existing "Qu." rubric (top) and the "Mm" inkpot
-// (middle) on the left margin, so the left side of the folio reads as
-// a chain of scholastic marginalia: a question, a writer, an
-// instruction. The whole annotation drifts in after the answer has
-// begun to write itself, like a scribe adding one more marginal mark
-// once the chapter has started to speak.
-function VideAnnotation({ visible }: { visible: boolean }) {
-  return (
-    <aside
-      className={`vide-annotation ${visible ? 'is-on' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="vide-annotation-rule" />
-      <span className="vide-annotation-text">
-        <em>vide</em>
-        <span className="vide-annotation-sep">·</span>
-        <span className="vide-annotation-en">look</span>
-      </span>
-      <svg
-        className="vide-annotation-caret"
-        viewBox="0 0 16 14"
-        preserveAspectRatio="none"
-      >
-        <path
-          className="vide-annotation-caret-line"
-          d="M 8 0 Q 7 6 8 13"
-        />
-        <path
-          className="vide-annotation-caret-tip"
-          d="M 5.6 10.4 L 8 13.2 L 10.6 10.6"
-        />
-      </svg>
-    </aside>
-  )
-}
-
 // PredicateRule — a thin gold ink rule drawn beneath the predicate
 // "good at frontend", mirroring the gold rule beneath the named
 // subject "Minimax M3". Two quiet underlines frame the verb phrase
@@ -2497,73 +2304,8 @@ function TailPiece() {
   )
 }
 
-// ManiculumFinis — the reader's paired pointing hand at the chapter's
-// foot. Mirrors the existing maniculum at the question (which points
-// AT the question from the right margin) but is rotated 90° counter-
-// clockwise so it points UP toward the colophon. The pair reads as a
-// single visual rhyme: a reader's hand opened the chapter (pointing
-// at the question) and a reader's hand closes it (pointing at the
-// colophon). Hidden until the chapter has settled, fades in once the
-// reader has understood (intellexi) — the same gesture that completes
-// the four-corner marginal dialogue. A thin vermilion lead rises from
-// the fingertip toward the colophon, like the reader's eye has lifted
-// from the chapter's last word and is now reaching for the seal.
-function ManiculumFinis({ active }: { active: boolean }) {
-  return (
-    <span
-      className={`maniculum-fin ${active ? 'is-active' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="maniculum-fin-lead" />
-      <svg
-        className="maniculum-fin-svg"
-        viewBox="0 0 38 60"
-        focusable="false"
-      >
-        {/* Cuff — gold, gently tapered, anchored at the bottom */}
-        <path
-          className="maniculum-fin-cuff"
-          d="M 6 38 L 32 38 L 30 56 L 8 56 Z"
-        />
-        {/* Cuff diagonal seams — suggest cut and drape */}
-        <line x1="11" y1="42" x2="28" y2="56" className="maniculum-fin-seam" />
-        <line x1="11" y1="46" x2="28" y2="56" className="maniculum-fin-seam" />
-        {/* Cuff embroidery pip */}
-        <circle cx="19" cy="48" r="0.7" className="maniculum-fin-pip" />
-        {/* Sleeve band — a slim vermilion ribbon at the cuff */}
-        <rect
-          x="6.4"
-          y="35"
-          width="25.2"
-          height="1.4"
-          className="maniculum-fin-band"
-        />
-        {/* Hand back — gold, softens at the knuckles */}
-        <path
-          className="maniculum-fin-hand"
-          d="M 7 22 L 31 22 L 31 38 L 7 38 Z"
-        />
-        {/* Knuckle creases on the hand (small horizontal lines) */}
-        <line x1="10" y1="26" x2="28" y2="26" className="maniculum-fin-fold" />
-        <line x1="11" y1="32" x2="27" y2="32" className="maniculum-fin-fold" />
-        {/* Index finger — extended, pointing up toward the colophon */}
-        <path
-          className="maniculum-fin-finger"
-          d="M 14 0 L 24 0 L 24 22 L 14 22 Z"
-        />
-        {/* First knuckle crease on the finger */}
-        <line x1="14" y1="10" x2="24" y2="10" className="maniculum-fin-knuckle" />
-        {/* Fingernail — a small gold-bright wedge at the tip */}
-        <path
-          className="maniculum-fin-nail"
-          d="M 14 0 L 24 0 L 22 -2.4 L 16 -2.4 Z"
-        />
-        {/* Tip pulse — a tiny gold dot that flickers when active */}
-        <circle cx="19" cy="-3" r="0.7" className="maniculum-fin-tip" />
-      </svg>
-    </span>
-  )
-}
+// (Iteration 55 retires the maniculum-fin — the colophon's sigillum
+// now closes the composition without a pointing gesture at its foot.)
 
 // Pilcrow — a small vermilion paragraph mark that introduces the
 // reply paragraph. The page's printer-mark for "new paragraph begins
@@ -2740,68 +2482,8 @@ function LectorisNota({
   )
 }
 
-// ScholarOculus — a small hand-drawn eye motif that completes the
-// almanac pair at the top of the composition. Where the horologium
-// records the hour of reading and the speculum charts the heavens, the
-// oculus is the observer: a quiet gaze that watches the chapter from
-// the foot of the colophon. Drawn as line art only, with a pupil that
-// drifts on a faint parallax with the reader's pointer, so the eye
-// reads as alive without ever breaking the manuscript's quiet. Sits
-// between the inkpot-and-quill and the colophon's provenance, like
-// the page's final authorial glance over the chapter it just composed.
-function ScholarOculus() {
-  const ref = useRef<HTMLSpanElement>(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    let raf = 0
-    let tx = 0
-    let ty = 0
-    let px = 0
-    let py = 0
-    const onMove = (e: PointerEvent) => {
-      const w = window.innerWidth || 1
-      const h = window.innerHeight || 1
-      tx = (e.clientX - w / 2) / (w / 2)
-      ty = (e.clientY - h / 2) / (h / 2)
-    }
-    const tick = () => {
-      raf = requestAnimationFrame(tick)
-      px += (tx - px) * 0.035
-      py += (ty - py) * 0.035
-      el.style.setProperty('--oc-x', px.toFixed(3))
-      el.style.setProperty('--oc-y', py.toFixed(3))
-    }
-    if (reduced) {
-      el.style.setProperty('--oc-x', '0')
-      el.style.setProperty('--oc-y', '0')
-    } else {
-      window.addEventListener('pointermove', onMove, { passive: true })
-      raf = requestAnimationFrame(tick)
-    }
-    return () => {
-      window.removeEventListener('pointermove', onMove)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
-  return (
-    <span className="scholar-oculus" aria-hidden="true" ref={ref}>
-      <svg viewBox="0 0 32 18" focusable="false">
-        {/* Outer almond — the eye's shape, drawn as a single closed line */}
-        <path className="oculus-shape" d="M 1 9 Q 16 1 31 9 Q 16 17 1 9 Z" />
-        {/* Iris — a thin ring around the pupil */}
-        <circle className="oculus-iris" cx="16" cy="9" r="2.6" />
-        {/* Pupil — a single filled dot, the chapter's eye */}
-        <circle className="oculus-pupil" cx="16" cy="9" r="1" />
-        {/* Highlight — a tiny gold pip on the iris */}
-        <circle className="oculus-highlight" cx="15.2" cy="8.2" r="0.32" />
-        {/* Upper lid emphasis — a slightly heavier stroke above */}
-        <path className="oculus-lid" d="M 2.5 7.6 Q 16 1.5 29.5 7.6" />
-      </svg>
-    </span>
-  )
-}
+// (Iteration 55 retires the scholar's oculus — the colophon's new
+// composed sigillum replaces the watching eye with a stamp.)
 
 function Marg({
   corner,
@@ -3616,7 +3298,6 @@ export function App() {
             <Horologium wrapRef={horologiumRef} />
             <Speculum wrapRef={speculumRef} />
             <MarginalRubric />
-            <QuaeroCallout visible={pointing && !answerOn} />
             <button
               type="button"
             ref={heroRef}
@@ -3670,19 +3351,6 @@ export function App() {
                     fill="url(#auriole-radial)"
                     className="auriole-radial"
                   />
-                  <circle
-                    cx={120}
-                    cy={170}
-                    r={92}
-                    className="auriole-trace"
-                    pathLength={100}
-                  />
-                  <g className="auriole-pips">
-                    <circle cx={120} cy={70} r={1.2} />
-                    <circle cx={120} cy={270} r={1.2} />
-                    <circle cx={20} cy={170} r={1.2} />
-                    <circle cx={220} cy={170} r={1.2} />
-                  </g>
                 </g>
                 <g className="hero-stack">
                   {/* Ink-wash shadow — a wide, soft warm wash rendered
@@ -3791,9 +3459,8 @@ export function App() {
              <VineCorner position="tr" />
              <VineCorner position="bl" />
              <VineCorner position="br" />
-             <PageCorner />
-<InkFleck key={noteNonce} visible={pointing || answerOn} />
-             <span className="question-kicker">
+<PageCorner />
+              <span className="question-kicker">
                <span className="question-kicker-pip question-kicker-pip-l" aria-hidden="true" />
                <em className="question-kicker-text">a question in public</em>
                <span className="question-kicker-sep" aria-hidden="true">·</span>
@@ -3827,9 +3494,6 @@ export function App() {
                  </span>
                </span>
              </h1>
-<Maniculum active={pointing} />
-              <Librarius active={answerOn && answerChars >= ANSWER.length && !footnoteOn} />
-               <VideAnnotation visible={answerOn && answerChars >= 6} />
               <span className="question-prompt" aria-hidden="true">
                 <span className="question-prompt-pip" />
                 <span className="question-prompt-mark" />
@@ -3885,7 +3549,6 @@ export function App() {
                 text={intellexiOn ? 'intellexi'.slice(0, Math.max(0, intellexiChars)) : ''}
                 done={intellexiOn && intellexiChars >= 'intellexi'.length}
               />
-              <ManiculumFinis active={intellexiOn && intellexiChars >= 'intellexi'.length} />
             </div>
           </div>
         </div>
@@ -3919,7 +3582,7 @@ export function App() {
             acknowledged={sealing || pulsing}
             annotavi={lectorisDone}
           />
-          <ScholarOculus />
+          <Sigillum />
           <LegiMark visible={legiOn} />
           <span className="colophon-provenance">legi · mmxxvi</span>
         </div>
