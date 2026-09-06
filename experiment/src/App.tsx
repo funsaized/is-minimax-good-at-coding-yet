@@ -21,52 +21,38 @@ function useReducedMotion() {
   return reduced
 }
 
-function QuestionOrbit() {
+function PrinterEmblem() {
   return (
-    <div className="question-orbit" aria-hidden="true">
-      <svg viewBox="0 0 520 520" focusable="false">
-        <defs>
-          <radialGradient id="orbit-wash" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ff755b" stopOpacity="0.16" />
-            <stop offset="62%" stopColor="#ff755b" stopOpacity="0.04" />
-            <stop offset="100%" stopColor="#ff755b" stopOpacity="0" />
-          </radialGradient>
-          <linearGradient id="question-ink" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#ff8369" />
-            <stop offset="52%" stopColor="#ef6047" />
-            <stop offset="100%" stopColor="#b73545" />
-          </linearGradient>
-        </defs>
-        <circle className="orbit-wash" cx="260" cy="260" r="214" fill="url(#orbit-wash)" />
-        <g className="orbit-track">
-          <ellipse cx="260" cy="260" rx="212" ry="112" />
-          <ellipse cx="260" cy="260" rx="212" ry="112" transform="rotate(62 260 260)" />
-          <ellipse cx="260" cy="260" rx="212" ry="112" transform="rotate(-62 260 260)" />
-        </g>
-        <g className="orbit-dots">
-          <circle cx="84" cy="266" r="5" />
-          <circle cx="393" cy="91" r="4" />
-          <circle cx="430" cy="369" r="7" />
-          <circle cx="183" cy="461" r="3" />
-        </g>
-        <g className="question-ink">
-          <path d="M 205 180 C 197 104 286 76 337 120 C 390 166 367 232 322 255 C 283 275 271 299 272 335" fill="none" stroke="url(#question-ink)" strokeWidth="25" strokeLinecap="round" />
-          <path d="M 218 176 C 213 120 283 98 324 131" fill="none" stroke="#ffb09a" strokeOpacity="0.78" strokeWidth="4" strokeLinecap="round" />
-          <circle cx="272" cy="398" r="17" fill="#ef6047" />
-          <circle cx="268" cy="394" r="4" fill="#ffd9c9" fillOpacity="0.72" />
-        </g>
-        <path className="orbit-pencil-line" d="M 111 372 C 159 420 217 441 278 441 C 347 441 405 413 431 363" />
-        <text className="orbit-caption" x="260" y="262" textAnchor="middle">ASK / LOOK / READ</text>
-      </svg>
-    </div>
-  )
-}
-
-function CornerGlyph() {
-  return (
-    <svg className="corner-glyph" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-      <path d="M 24 5 L 27 20 L 43 24 L 27 28 L 24 43 L 21 28 L 5 24 L 21 20 Z" />
-      <circle cx="24" cy="24" r="3" />
+    <svg className="printer-emblem" viewBox="0 0 160 160" aria-hidden="true" focusable="false">
+      <defs>
+        <radialGradient id="emblem-wash" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#ff755b" stopOpacity="0.1" />
+          <stop offset="62%" stopColor="#ff755b" stopOpacity="0.02" />
+          <stop offset="100%" stopColor="#ff755b" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="80" cy="80" r="74" fill="url(#emblem-wash)" />
+      <g className="emblem-rings">
+        <circle cx="80" cy="80" r="64" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.45" />
+        <circle cx="80" cy="80" r="56" fill="none" stroke="currentColor" strokeWidth="0.4" strokeDasharray="1 5" opacity="0.5" />
+        <circle cx="80" cy="80" r="44" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.3" />
+      </g>
+      <g className="emblem-points" fill="currentColor" opacity="0.75">
+        <path d="M 80 18 L 83 28 L 77 28 Z" />
+        <path d="M 80 142 L 83 132 L 77 132 Z" />
+        <path d="M 18 80 L 28 77 L 28 83 Z" />
+        <path d="M 142 80 L 132 77 L 132 83 Z" />
+      </g>
+      <g className="emblem-ticks" stroke="currentColor" opacity="0.55" strokeWidth="0.9" strokeLinecap="round">
+        <line x1="40" y1="40" x2="46" y2="46" />
+        <line x1="120" y1="120" x2="114" y2="114" />
+        <line x1="40" y1="120" x2="46" y2="114" />
+        <line x1="120" y1="40" x2="114" y2="46" />
+      </g>
+      <text x="80" y="86" textAnchor="middle" className="emblem-question">?</text>
+      <text x="80" y="105" textAnchor="middle" className="emblem-monogram">M · III</text>
+      <text x="80" y="28" textAnchor="middle" className="emblem-rim">N E</text>
+      <text x="80" y="140" textAnchor="middle" className="emblem-rim">— adytum —</text>
     </svg>
   )
 }
@@ -126,14 +112,31 @@ export function App() {
   const answerDisplay = ANSWER.slice(0, answerChars)
   const replyDisplay = REPLY.slice(0, replyChars)
   const isTyping = phase === 'answering' || phase === 'replying'
-  const buttonLabel = phase === 'idle'
-    ? 'read the answer'
-    : phase === 'complete'
-      ? slow ? 'read again · page pace' : 'read again · slower'
-      : 'setting the answer…'
-  const readerNote = phase === 'complete'
-    ? 'The second reading changes the pace, not the answer.'
-    : 'One press opens it. The next asks you to slow down.'
+
+  const inkProgress =
+    phase === 'idle'
+      ? 0
+      : phase === 'answering'
+        ? answerChars / ANSWER.length
+        : phase === 'replying'
+          ? Math.min(1, (answerChars / ANSWER.length) + (replyChars / REPLY.length) * 0.45)
+          : 1
+
+  const strokeOffset = (1 - inkProgress).toFixed(3)
+
+  const buttonLabel =
+    phase === 'idle'
+      ? 'read the answer'
+      : phase === 'complete'
+        ? slow
+          ? 'read again · page pace'
+          : 'read again · slower'
+        : 'setting the answer…'
+
+  const readerNote =
+    phase === 'complete'
+      ? 'The second reading changes the pace, not the answer.'
+      : 'One press opens it. The next asks you to slow down.'
 
   return (
     <main className="experiment-shell">
@@ -143,23 +146,55 @@ export function App() {
 
       <article className={`sheet ${phase !== 'idle' ? 'has-answer' : ''}`}>
         <header className="sheet-header">
-          <p className="eyebrow"><span className="eyebrow-mark" aria-hidden="true" />a frontend question</p>
-          <p className="header-note">question / answer / repeat</p>
-          <CornerGlyph />
+          <p className="running-head-title">
+            <span aria-hidden="true">§</span> an experiment in questioning
+          </p>
+          <span className="running-head-ornament" aria-hidden="true">
+            <svg width="18" height="12" viewBox="0 0 18 12" focusable="false">
+              <path d="M 9 1 L 10.2 5.4 L 14.6 5.4 L 10.9 8.1 L 12.1 12.5 L 9 9.8 L 5.9 12.5 L 7.1 8.1 L 3.4 5.4 L 7.8 5.4 Z" />
+            </svg>
+          </span>
+          <p className="running-head-folio">folio <span>lxxvi</span></p>
         </header>
 
         <div className="sheet-content">
           <section className="question-panel" aria-labelledby="page-title">
-            <div className="annotation annotation--top"><span />written to be looked at</div>
+            <div className="annotation annotation--top">
+              <span className="annotation-mark" aria-hidden="true">¶</span>
+              <span>the question</span>
+            </div>
             <h1 id="page-title" aria-label={TITLE}>
-              <span>is </span>
-              <span className="title-subject">Minimax M3</span>
-              <span> good at frontend yet?</span>
+              <span className="drop-cap" aria-hidden="true">i</span>
+              <span className="title-text" aria-hidden="true">s </span>
+              <span className="title-subject" aria-hidden="true">Minimax M3</span>
+              <span className="title-text" aria-hidden="true"> good at frontend yet?</span>
             </h1>
-            <p className="question-deck">A small test of whether a page can ask well before it answers.</p>
+
+            <p className="question-deck">
+              A small typeset test of whether a page can ask well before it answers —
+              set in italic display, with a coral pilrow and a quiet reply beneath.
+            </p>
+
+            <svg
+              className={`ink-stroke ${isTyping || phase === 'complete' ? 'is-drawing' : ''}`}
+              viewBox="0 0 320 12"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                className="ink-stroke-path"
+                d="M 2 6 C 28 1, 56 11, 96 6 S 168 1, 220 8 S 282 3, 318 7"
+                pathLength="1"
+                strokeDasharray="1 1"
+                strokeDashoffset={strokeOffset}
+              />
+            </svg>
+
             <div className="question-signature" aria-hidden="true">
               <span className="signature-line" />
               <span className="signature-text">follow the mark</span>
+              <span className="signature-arrow">→</span>
             </div>
           </section>
 
@@ -171,9 +206,13 @@ export function App() {
             </div>
 
             <div className={`answer-surface answer-surface--${phase}`}>
-              <span className="answer-bracket" aria-hidden="true">[</span>
+              <span className="answer-quote answer-quote--open" aria-hidden="true">“</span>
               {!answerVisible && (
-                <p className="answer-placeholder">press below<br />and let it arrive.</p>
+                <p className="answer-placeholder">
+                  press below
+                  <br />
+                  and let it arrive.
+                </p>
               )}
               {answerVisible && (
                 <p className="answer-copy" aria-live="polite">
@@ -181,10 +220,14 @@ export function App() {
                   {phase === 'answering' && <span className="typing-caret" aria-hidden="true">|</span>}
                 </p>
               )}
-              <span className="answer-bracket answer-bracket--right" aria-hidden="true">]</span>
+              <span className="answer-quote answer-quote--close" aria-hidden="true">”</span>
+              <span className="answer-attribution" aria-hidden="true">— set in italic</span>
             </div>
 
-            <div className={`reply-copy ${phase === 'replying' || phase === 'complete' ? 'is-visible' : ''}`} aria-live="polite">
+            <div
+              className={`reply-copy ${phase === 'replying' || phase === 'complete' ? 'is-visible' : ''}`}
+              aria-live="polite"
+            >
               {replyDisplay}
               {phase === 'replying' && <span className="typing-caret" aria-hidden="true">|</span>}
             </div>
@@ -193,12 +236,21 @@ export function App() {
               <div className="completion-note">
                 <span className="completion-dot" aria-hidden="true" />
                 <span>{FOOTNOTE}</span>
+                <span className="completion-dot" aria-hidden="true" />
               </div>
             )}
 
-            <button className={`read-button${slow ? ' is-slow' : ''}`} type="button" onClick={readAnswer} aria-describedby="reader-note">
+            <button
+              className={`read-button${slow ? ' is-slow' : ''}`}
+              type="button"
+              onClick={readAnswer}
+              aria-describedby="reader-note"
+            >
               <span className="button-mark" aria-hidden="true">↗</span>
-              <span>{buttonLabel}</span>
+              <span className="button-label">{buttonLabel}</span>
+              <span className="button-pace" aria-hidden="true">
+                {slow ? '· slow' : '· fast'}
+              </span>
             </button>
             <p className="reader-note" id="reader-note">{readerNote}</p>
           </section>
@@ -206,15 +258,17 @@ export function App() {
 
         <footer className="sheet-footer">
           <span className="footer-rule" aria-hidden="true" />
-          <p>the interface is part of the answer</p>
+          <p className="footer-line">the interface is part of the answer</p>
+          <p className="footer-folio">
+            <span aria-hidden="true">— </span>exper. lxxvi<span aria-hidden="true"> —</span>
+          </p>
           <span className="footer-rule" aria-hidden="true" />
         </footer>
 
-        <QuestionOrbit />
+        <PrinterEmblem />
         <span className="paper-corner paper-corner--one" aria-hidden="true" />
         <span className="paper-corner paper-corner--two" aria-hidden="true" />
         <span className="paper-edge" aria-hidden="true" />
-        <span className={`motion-trace ${isTyping ? 'is-active' : ''}`} aria-hidden="true" />
       </article>
     </main>
   )

@@ -1,8 +1,4 @@
-Reframed the page as a tactile editorial question sheet.
+# Changelog
 
-- Replaced the candlelit manuscript composition with a warm paper sheet on a dark, gridded field.
-- Preserved the required visible question and document title.
-- Added a custom orbiting question-mark illustration, ink-blue hierarchy, coral annotations, and responsive paper details.
-- Kept the answer interaction client-only: read once to reveal the answer, then read again at a slower pace.
-- Added keyboard focus states, polite live regions, mobile layout adjustments, and reduced-motion behavior.
-- Verified the production build with `npm run build`.
+## Iteration 76 — A scholar's folio: drop-cap, drawn ink, and a printer's compass
+Rebuilt the page as a printed scholar's folio. Replaced the bracket answer with a real pull-quote; added a drop-cap "i" on the question title and an ink-stroke that draws under the title as the answer reveals. The giant rotating orbit was swapped for a small, refined printer's compass-rose emblem in the corner with a coral "?" and an "M · III" monogram. The header now carries a real running head with chapter and folio; the footer carries an explicit folio mark. Refined the typography stack (Iowan Old Style / Charter for serif), tightened spacing and contrast, and rebalanced the mobile layout so the emblem and folio stack without crowding. No remote assets; no new dependencies; respects reduced motion; keyboard-accessible.
