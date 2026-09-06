@@ -85,29 +85,29 @@ body {
   background:
     /* Warm pool — the candle illuminates the air above the composition */
     radial-gradient(
-      62% 40% at 50% 18%,
-      rgba(240, 212, 154, 0.20) 0%,
-      rgba(217, 176, 116, 0.11) 28%,
-      rgba(176, 83, 58, 0.045) 50%,
-      transparent 70%
+      60% 38% at 50% 17%,
+      rgba(240, 212, 154, 0.24) 0%,
+      rgba(217, 176, 116, 0.14) 26%,
+      rgba(176, 83, 58, 0.06) 48%,
+      transparent 66%
     ),
     /* Inner glow — the chapter sits in a softly bright zone */
     radial-gradient(
       78% 62% at 50% 48%,
-      rgba(240, 212, 154, 0.055) 0%,
-      rgba(217, 176, 116, 0.025) 30%,
+      rgba(240, 212, 154, 0.065) 0%,
+      rgba(217, 176, 116, 0.03) 30%,
       transparent 56%
     ),
     /* Periphery vignette — corners darken into the room beyond */
-    radial-gradient(ellipse 112% 92% at 50% 50%, transparent 28%, rgba(0, 0, 0, 0.68) 100%),
+    radial-gradient(ellipse 110% 90% at 50% 50%, transparent 26%, rgba(0, 0, 0, 0.78) 100%),
     /* Vertical tone — cool above (out of candlelight), warmer through middle,
        desk shadow at the bottom */
     linear-gradient(180deg,
-      rgba(38, 50, 64, 0.16) 0%,
-      rgba(28, 22, 16, 0.06) 14%,
+      rgba(38, 50, 64, 0.19) 0%,
+      rgba(28, 22, 16, 0.075) 14%,
       transparent 36%,
       transparent 64%,
-      rgba(8, 4, 2, 0.52) 100%
+      rgba(8, 4, 2, 0.62) 100%
     );
 }
 
@@ -8557,18 +8557,20 @@ body {
   padding: 0;
 }
 
-/* ----- Chapter Plate (inscribed frame around the chapter body) -----
- * Iteration 61 composes a delicate inscribed frame around the chapter
- * body — the actual substantive text (answer → reply → footnote →
- * intellexi). The plate uses four hand-drawn L-bracket corners with a
- * small composed leaf flourish at each joint, distinct from the vine
- * corners that flank the question above. The frame reads as a scholar's
- * inscribed text-block — the chapter's composed body, not the
- * question's open invitation. Drawn in once the answer has begun
- * settling, so the plate welcomes the answer into its frame rather
- * than competing with it. The corners draw first, then the page is
- * held as the body unfolds beneath them.
- */
+/* ----- Codex Frame (inscribed frame around the chapter body) -----
+ * Iteration 62 reframes the inscribed frame around the chapter body
+ * (answer → reply → footnote → intellexi) as a real composed
+ * rectangle — four gold rule edges meeting at four composed corner
+ * ornaments, with a small four-pointed star-and-pip center-mark on
+ * each horizontal rule. Replaces the previous four-L-corner chapter
+ * plate with a single inscribed text-block so the chapter body now
+ * reads as a manuscript folio plate rather than four floating
+ * brackets. The rules draw outward from their corners after the
+ * answer has begun settling, the corner ornaments bloom in once
+ * the rules have settled, and the center-marks complete the frame.
+ * Parallels the chapter cadence above the colophon (it shares the
+ * same star-pip motif at the same scale) so the chapter opens and
+ * closes with marks from the same vocabulary. */
 
 .chapter-plate-frame {
   position: relative;
@@ -8577,210 +8579,368 @@ body {
   align-items: center;
   width: 100%;
   margin: clamp(10px, 1.2vw, 18px) 0 0;
-  padding: clamp(22px, 2.6vw, 36px) clamp(20px, 2.4vw, 32px) clamp(8px, 1vw, 14px);
+  padding: clamp(18px, 2.2vw, 30px) clamp(16px, 2vw, 26px) clamp(10px, 1.2vw, 18px);
   isolation: isolate;
 }
 
-.chapter-plate {
+.codex-frame {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 0;
   opacity: 0;
-  transition: opacity 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.6s;
+  transition: opacity 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s;
 }
 
-.composition.ready .chapter-plate {
+.composition.ready .codex-frame {
   opacity: 1;
 }
 
-.chapter-plate-corner {
+/* Four rule edges drawn as stretched SVGs (preserveAspectRatio="none")
+   with vector-effect="non-scaling-stroke" so the stroke width stays
+   consistent regardless of the container's aspect ratio. */
+.codex-frame-rule-svg {
   position: absolute;
-  width: clamp(22px, 2.6vw, 30px);
-  height: clamp(22px, 2.6vw, 30px);
-  color: var(--gold);
-  opacity: 0;
-  transform: scale(0.7);
-  transition:
-    opacity 0.85s cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 1.0s cubic-bezier(0.2, 0.7, 0.2, 1);
-  filter: drop-shadow(0 0 3px rgba(217, 176, 116, 0.18));
+  pointer-events: none;
+  display: block;
 }
 
-.chapter-plate-corner-tl {
-  top: clamp(4px, 0.4vw, 8px);
-  left: clamp(4px, 0.4vw, 8px);
-  transition-delay: 0.5s, 0.5s;
-}
-.chapter-plate-corner-tr {
-  top: clamp(4px, 0.4vw, 8px);
-  right: clamp(4px, 0.4vw, 8px);
-  transition-delay: 0.55s, 0.55s;
-}
-.chapter-plate-corner-bl {
-  bottom: clamp(4px, 0.4vw, 8px);
-  left: clamp(4px, 0.4vw, 8px);
-  transition-delay: 0.6s, 0.6s;
-}
-.chapter-plate-corner-br {
-  bottom: clamp(4px, 0.4vw, 8px);
-  right: clamp(4px, 0.4vw, 8px);
-  transition-delay: 0.65s, 0.65s;
+.codex-frame-rule-svg-t {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
 }
 
-.composition.ready .chapter-plate-corner {
-  opacity: 1;
-  transform: scale(1);
+.codex-frame-rule-svg-b {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
 }
 
-.chapter-plate-corner-arm {
+.codex-frame-rule-svg-l {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+}
+
+.codex-frame-rule-svg-r {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 2px;
+}
+
+.codex-frame-rule {
   fill: none;
-  stroke: currentColor;
-  stroke-width: 0.85;
+  stroke: var(--gold);
+  stroke-width: 0.7;
   stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0.78;
-  pathLength: 100;
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
-  transition: stroke-dashoffset 0.85s cubic-bezier(0.2, 0.7, 0.2, 1);
+  opacity: 0;
+  transition:
+    stroke-dashoffset 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.7s,
+    opacity 0.7s ease 0.7s,
+    stroke 0.6s ease;
 }
 
-.chapter-plate-corner-tl .chapter-plate-corner-arm,
-.chapter-plate-corner-tr .chapter-plate-corner-arm {
-  transition-delay: 0.85s;
-}
-.chapter-plate-corner-bl .chapter-plate-corner-arm,
-.chapter-plate-corner-br .chapter-plate-corner-arm {
-  transition-delay: 0.95s;
+.codex-frame-rule-v {
+  stroke: var(--gold-deep);
+  stroke-width: 0.5;
+  opacity: 0;
+  stroke-dashoffset: 100;
+  transition:
+    stroke-dashoffset 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.85s,
+    opacity 0.7s ease 0.85s,
+    stroke 0.6s ease;
 }
 
-.composition.ready .chapter-plate-corner-arm {
+.composition.ready .codex-frame-rule {
+  opacity: 0.62;
   stroke-dashoffset: 0;
 }
 
-.chapter-plate-corner-joint {
-  fill: currentColor;
+.composition.ready .codex-frame-rule-v {
+  opacity: 0.42;
+  stroke-dashoffset: 0;
+}
+
+/* Four corner ornaments — small ring + vermilion pip + a leaf
+   flourish that grows inward from the corner, like the printer's
+   hand-mark at each frame joint. */
+.codex-frame-corner {
+  position: absolute;
+  width: clamp(16px, 1.7vw, 22px);
+  height: clamp(16px, 1.7vw, 22px);
+  pointer-events: none;
+  z-index: 2;
   opacity: 0;
-  transform-box: fill-box;
+  transform: scale(0.32) rotate(-72deg);
   transform-origin: center;
-  transform: scale(0.3);
   transition:
-    opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1);
+    opacity 0.55s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.85s cubic-bezier(0.2, 1.2, 0.4, 1);
+  color: var(--gold);
+  filter: drop-shadow(0 0 3px rgba(217, 176, 116, 0.22));
 }
 
-.chapter-plate-corner-tl .chapter-plate-corner-joint { transition-delay: 1.05s; }
-.chapter-plate-corner-tr .chapter-plate-corner-joint { transition-delay: 1.1s; }
-.chapter-plate-corner-bl .chapter-plate-corner-joint { transition-delay: 1.15s; }
-.chapter-plate-corner-br .chapter-plate-corner-joint { transition-delay: 1.2s; }
-
-.composition.ready .chapter-plate-corner-joint {
-  opacity: 0.85;
-  transform: scale(1);
+.codex-frame-corner-tl {
+  top: clamp(-3px, -0.3vw, -2px);
+  left: clamp(-3px, -0.3vw, -2px);
+  transition-delay: 1.5s, 1.5s;
 }
 
-.chapter-plate-corner-leaf {
+.codex-frame-corner-tr {
+  top: clamp(-3px, -0.3vw, -2px);
+  right: clamp(-3px, -0.3vw, -2px);
+  transition-delay: 1.6s, 1.6s;
+}
+
+.codex-frame-corner-bl {
+  bottom: clamp(-3px, -0.3vw, -2px);
+  left: clamp(-3px, -0.3vw, -2px);
+  transition-delay: 1.7s, 1.7s;
+}
+
+.codex-frame-corner-br {
+  bottom: clamp(-3px, -0.3vw, -2px);
+  right: clamp(-3px, -0.3vw, -2px);
+  transition-delay: 1.8s, 1.8s;
+}
+
+.composition.ready .codex-frame-corner {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.codex-frame-corner svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.codex-frame-corner-flourish {
   fill: none;
   stroke: currentColor;
   stroke-width: 0.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-  opacity: 0;
   pathLength: 100;
   stroke-dasharray: 100;
   stroke-dashoffset: 100;
-  transition:
-    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
-    stroke-dashoffset 0.85s cubic-bezier(0.2, 0.7, 0.2, 1);
+  opacity: 0;
+  transition: stroke-dashoffset 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 2.1s;
 }
 
-.chapter-plate-corner-tl .chapter-plate-corner-leaf,
-.chapter-plate-corner-tr .chapter-plate-corner-leaf {
-  transition-delay: 1.25s, 1.25s;
-}
-.chapter-plate-corner-bl .chapter-plate-corner-leaf,
-.chapter-plate-corner-br .chapter-plate-corner-leaf {
-  transition-delay: 1.35s, 1.35s;
-}
-
-.composition.ready .chapter-plate-corner-leaf {
-  opacity: 0.55;
+.composition.ready .codex-frame-corner-flourish {
+  opacity: 0.62;
   stroke-dashoffset: 0;
 }
 
-.chapter-plate-corner-pearl {
+.codex-frame-corner-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.4);
+  transition:
+    opacity 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 1.2, 0.4, 1),
+    stroke 0.6s ease;
+}
+
+.codex-frame-corner-tl .codex-frame-corner-ring,
+.codex-frame-corner-tr .codex-frame-corner-ring,
+.codex-frame-corner-bl .codex-frame-corner-ring,
+.codex-frame-corner-br .codex-frame-corner-ring {
+  transition-delay: 1.95s, 1.95s, 1.95s;
+}
+
+.composition.ready .codex-frame-corner-ring {
+  opacity: 0.82;
+  transform: scale(1);
+}
+
+.codex-frame-corner-pip {
   fill: var(--vermilion);
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  transform: scale(0.2);
+  transform: scale(0.18);
+  filter: drop-shadow(0 0 2.5px rgba(176, 83, 58, 0.45));
   transition:
     opacity 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
     transform 0.6s cubic-bezier(0.2, 1.2, 0.4, 1);
 }
 
-.chapter-plate-corner-tl .chapter-plate-corner-pearl { transition-delay: 1.45s; }
-.chapter-plate-corner-tr .chapter-plate-corner-pearl { transition-delay: 1.5s; }
-.chapter-plate-corner-bl .chapter-plate-corner-pearl { transition-delay: 1.55s; }
-.chapter-plate-corner-br .chapter-plate-corner-pearl { transition-delay: 1.6s; }
+.codex-frame-corner-tl .codex-frame-corner-pip { transition-delay: 2.15s, 2.15s; }
+.codex-frame-corner-tr .codex-frame-corner-pip { transition-delay: 2.22s, 2.22s; }
+.codex-frame-corner-bl .codex-frame-corner-pip { transition-delay: 2.29s, 2.29s; }
+.codex-frame-corner-br .codex-frame-corner-pip { transition-delay: 2.36s, 2.36s; }
 
-.composition.ready .chapter-plate-corner-pearl {
-  opacity: 0.78;
+.composition.ready .codex-frame-corner-pip {
+  opacity: 0.85;
   transform: scale(1);
 }
 
+/* Center marks — small composed four-pointed stars with a gold pip
+   at their hearts, sitting on the top and bottom rules at the
+   frame's centerline. Each mark is flanked by two short hairlines
+   that read as the rule's own mid-line pause. */
+.codex-frame-mark {
+  position: absolute;
+  left: 50%;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition:
+    opacity 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 2.45s,
+    transform 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 2.45s;
+}
+
+.codex-frame-mark-t {
+  top: clamp(-5px, -0.4vw, -3px);
+  transform: translateX(-50%) scale(0.32) rotate(-90deg);
+}
+
+.codex-frame-mark-b {
+  bottom: clamp(-5px, -0.4vw, -3px);
+  transform: translateX(-50%) scale(0.32) rotate(90deg);
+}
+
+.composition.ready .codex-frame-mark-t {
+  opacity: 1;
+  transform: translateX(-50%) scale(1) rotate(0deg);
+}
+
+.composition.ready .codex-frame-mark-b {
+  opacity: 1;
+  transform: translateX(-50%) scale(1) rotate(0deg);
+}
+
+.codex-frame-mark svg {
+  width: clamp(22px, 2.6vw, 32px);
+  height: clamp(8px, 0.95vw, 12px);
+  display: block;
+  overflow: visible;
+}
+
+.codex-frame-mark-rule {
+  stroke: var(--gold);
+  stroke-width: 0.55;
+  stroke-linecap: round;
+  opacity: 0;
+  stroke-dasharray: 6;
+  stroke-dashoffset: 6;
+  transition: stroke-dashoffset 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 2.85s;
+}
+
+.composition.ready .codex-frame-mark-rule {
+  opacity: 0.7;
+  stroke-dashoffset: 0;
+}
+
+.codex-frame-mark-star {
+  fill: var(--vermilion);
+  filter: drop-shadow(0 0 2.5px rgba(176, 83, 58, 0.4));
+}
+
+.codex-frame-mark-pip {
+  fill: var(--gold-bright);
+  filter: drop-shadow(0 0 1.8px rgba(240, 212, 154, 0.62));
+}
+
 /* Once the chapter has been engaged (the reader has acknowledged the
-   question), the plate warms subtly — the page knows its body is being
-   read. */
-.composition.is-pointing .chapter-plate-corner {
-  color: var(--gold-bright);
-  filter: drop-shadow(0 0 5px rgba(240, 212, 154, 0.32));
+   question), the frame warms subtly — the page knows its body is
+   being read. */
+.composition.is-pointing .codex-frame-rule {
+  stroke: var(--gold-bright);
 }
 
-/* The plate brightens further once the reader has understood the
-   chapter (intellexi has settled) — the body has been read. */
-.chapter-body.is-intellexi ~ .chapter-plate-corner,
-.composition.is-quietus .chapter-plate-corner {
+.composition.is-pointing .codex-frame-corner {
   color: var(--gold-bright);
-  filter: drop-shadow(0 0 6px rgba(240, 212, 154, 0.36));
 }
 
-/* On smaller screens the corners tuck closer to the frame so the
-   plate does not crowd the text. */
+/* Once the chapter has been fully read (intellexi settled), the
+   frame resolves into its quiet terminus state — the inscribed
+   rectangle holds like a closed text-block. */
+.composition.is-quietus .codex-frame-corner-ring {
+  stroke: var(--gold-bright);
+}
+
+.composition.is-quietus .codex-frame-rule {
+  stroke: var(--gold-bright);
+}
+
+/* On smaller screens the frame tucks closer to the body so the
+   rules do not crowd the text. */
 @media (max-width: 760px) {
   .chapter-plate-frame {
-    padding: clamp(18px, 3vw, 28px) clamp(16px, 3vw, 24px) clamp(6px, 1vw, 10px);
+    padding: clamp(14px, 2vw, 22px) clamp(13px, 1.8vw, 20px) clamp(8px, 1vw, 14px);
   }
-  .chapter-plate-corner {
-    width: clamp(18px, 3.4vw, 24px);
-    height: clamp(18px, 3.4vw, 24px);
+  .codex-frame-corner {
+    width: clamp(14px, 2vw, 18px);
+    height: clamp(14px, 2vw, 18px);
   }
 }
 
 @media (max-width: 520px) {
   .chapter-plate-frame {
-    padding: clamp(14px, 3vw, 20px) clamp(12px, 3vw, 18px) clamp(4px, 1vw, 8px);
+    padding: clamp(12px, 2.2vw, 18px) clamp(10px, 1.6vw, 16px) clamp(6px, 0.8vw, 10px);
     margin-top: clamp(8px, 1.4vw, 12px);
   }
-  .chapter-plate-corner {
-    width: 16px;
-    height: 16px;
+  .codex-frame-corner {
+    width: 13px;
+    height: 13px;
   }
-  .chapter-plate-corner-tl { top: 2px; left: 2px; }
-  .chapter-plate-corner-tr { top: 2px; right: 2px; }
-  .chapter-plate-corner-bl { bottom: 2px; left: 2px; }
-  .chapter-plate-corner-br { bottom: 2px; right: 2px; }
+  .codex-frame-mark svg {
+    width: clamp(18px, 4vw, 26px);
+    height: clamp(7px, 1.2vw, 10px);
+  }
 }
 
-/* Reduced-motion overrides for the plate */
+/* Reduced-motion overrides for the frame */
 @media (prefers-reduced-motion: reduce) {
-  .chapter-plate { transition: opacity 0.2s ease; opacity: 1; }
-  .chapter-plate-corner { transition: none; opacity: 1; transform: none; }
-  .chapter-plate-corner-arm { transition: none; stroke-dashoffset: 0; }
-  .chapter-plate-corner-joint { transition: none; opacity: 0.85; transform: scale(1); }
-  .chapter-plate-corner-leaf { transition: none; opacity: 0.55; stroke-dashoffset: 0; }
-  .chapter-plate-corner-pearl { transition: none; opacity: 0.78; transform: scale(1); }
+  .codex-frame { transition: none; opacity: 1; }
+  .codex-frame-rule,
+  .codex-frame-rule-v { transition: none; opacity: 0.62; stroke-dashoffset: 0; }
+  .codex-frame-rule-v { opacity: 0.42; }
+  .codex-frame-corner {
+    transition: none;
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  .codex-frame-corner-flourish {
+    transition: none;
+    opacity: 0.62;
+    stroke-dashoffset: 0;
+  }
+  .codex-frame-corner-ring {
+    transition: none;
+    opacity: 0.82;
+    transform: scale(1);
+  }
+  .codex-frame-corner-pip {
+    transition: none;
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  .codex-frame-mark {
+    transition: none;
+    opacity: 1;
+    transform: translateX(-50%) scale(1) rotate(0deg);
+  }
+  .codex-frame-mark-rule {
+    transition: none;
+    opacity: 0.7;
+    stroke-dashoffset: 0;
+  }
 }
 
 /* ----- Chapter Cadence (the chapter's final exhale) -----

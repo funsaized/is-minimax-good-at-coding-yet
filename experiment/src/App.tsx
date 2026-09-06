@@ -2677,86 +2677,230 @@ function ChapterCadence({ visible }: { visible: boolean }) {
   )
 }
 
-// ChapterPlateCorner — one of four small hand-drawn L-brackets that
-// form the inscribed corners of the chapter body's plate. A short
-// gold hairline L with a small composed accent at its joint — the
-// plate's scholar's framing mark, distinct from the vine corners
-// that flank the question above. Drawn in once the chapter body has
-// settled, so the plate reads as a single authored frame around
-// the answer, reply, footnote, and the reader's gloss.
-function ChapterPlateCorner({
-  position,
-}: {
-  position: 'tl' | 'tr' | 'bl' | 'br'
-}) {
+// CodexFrame — the inscribed rectangle around the chapter body. A
+// real authored frame: four gold rule edges meeting at four composed
+// corner ornaments, with a small four-pointed star-and-pip center-
+// mark on each horizontal rule. Replaces the previous four-L-corner
+// chapter plate with a single inscribed text-block — the chapter's
+// composed body (answer → reply → footnote → intellexi) now reads
+// as a manuscript folio plate rather than as four floating
+// brackets. The rules draw outward from their corners, the corner
+// ornaments bloom in once the rules have settled, and the two
+// center-marks complete the frame last — like a printer inscribing
+// the body of a folio one pass at a time. Parallels the chapter
+// cadence above the colophon (it shares the same star-pip motif at
+// the same scale) so the chapter opens and closes with marks from
+// the same vocabulary.
+function CodexFrame() {
   return (
-    <svg
-      className={`chapter-plate-corner chapter-plate-corner-${position}`}
-      viewBox="0 0 28 28"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        className="chapter-plate-corner-arm chapter-plate-corner-arm-h"
-        d={
-          position.startsWith('t')
-            ? 'M 4 4 L 24 4'
-            : 'M 4 24 L 24 24'
-        }
-      />
-      <path
-        className="chapter-plate-corner-arm chapter-plate-corner-arm-v"
-        d={
-          position.endsWith('l')
-            ? 'M 4 4 L 4 24'
-            : 'M 24 4 L 24 24'
-        }
-      />
-      <circle
-        className="chapter-plate-corner-joint"
-        cx="4"
-        cy={position.startsWith('t') ? 4 : 24}
-        r="1"
-      />
-      <path
-        className="chapter-plate-corner-leaf"
-        d={
-          position === 'tl'
-            ? 'M 8 4 Q 12 5 14 8 Q 12 11 8 12'
-            : position === 'tr'
-            ? 'M 20 4 Q 16 5 14 8 Q 16 11 20 12'
-            : position === 'bl'
-            ? 'M 8 24 Q 12 23 14 20 Q 12 17 8 16'
-            : 'M 20 24 Q 16 23 14 20 Q 16 17 20 16'
-        }
-      />
-      <circle
-        className="chapter-plate-corner-pearl"
-        cx={position.endsWith('l') ? 14 : 14}
-        cy={position.startsWith('t') ? 4 : 24}
-        r="0.55"
-      />
-    </svg>
-  )
-}
+    <div className="codex-frame" aria-hidden="true">
+      {/* Four rule edges — drawn as stretched SVGs so the stroke stays
+          consistent at any container size (vector-effect non-scaling). */}
+      <svg
+        className="codex-frame-rule-svg codex-frame-rule-svg-t"
+        viewBox="0 0 100 4"
+        preserveAspectRatio="none"
+      >
+        <line
+          x1="0"
+          y1="2"
+          x2="100"
+          y2="2"
+          className="codex-frame-rule"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      <svg
+        className="codex-frame-rule-svg codex-frame-rule-svg-b"
+        viewBox="0 0 100 4"
+        preserveAspectRatio="none"
+      >
+        <line
+          x1="0"
+          y1="2"
+          x2="100"
+          y2="2"
+          className="codex-frame-rule"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      <svg
+        className="codex-frame-rule-svg codex-frame-rule-svg-l"
+        viewBox="0 0 4 100"
+        preserveAspectRatio="none"
+      >
+        <line
+          x1="2"
+          y1="0"
+          x2="2"
+          y2="100"
+          className="codex-frame-rule codex-frame-rule-v"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      <svg
+        className="codex-frame-rule-svg codex-frame-rule-svg-r"
+        viewBox="0 0 4 100"
+        preserveAspectRatio="none"
+      >
+        <line
+          x1="2"
+          y1="0"
+          x2="2"
+          y2="100"
+          className="codex-frame-rule codex-frame-rule-v"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
 
-// ChapterPlate — the inscribed frame around the chapter body. A
-// delicate four-corner gold border that hugs the substantive text of
-// the chapter (answer → reply → footnote → intellexi), distinct
-// from the vine corners that frame the question above. The plate
-// reads as a scholar's inscribed text-block — the chapter's
-// composed body, not the question's open invitation. Four L-bracket
-// corners with a small hand-drawn leaf flourish at each joint,
-// drawn in once the chapter body has begun writing. Subtle enough
-// to disappear at rest, present enough to give the body its own
-// quiet authored frame.
-function ChapterPlate() {
-  return (
-    <div className="chapter-plate" aria-hidden="true">
-      <ChapterPlateCorner position="tl" />
-      <ChapterPlateCorner position="tr" />
-      <ChapterPlateCorner position="bl" />
-      <ChapterPlateCorner position="br" />
+      {/* Top center mark — a small composed four-pointed star with a
+          gold pip at its heart, flanked by short hairlines that read
+          as the rule's own mid-line pause. */}
+      <span className="codex-frame-mark codex-frame-mark-t">
+        <svg viewBox="0 0 18 8" focusable="false">
+          <line
+            x1="0"
+            y1="4"
+            x2="6"
+            y2="4"
+            className="codex-frame-mark-rule"
+          />
+          <line
+            x1="12"
+            y1="4"
+            x2="18"
+            y2="4"
+            className="codex-frame-mark-rule"
+          />
+          <path
+            d="M 9 0.6 L 9.86 3.36 L 12.6 4 L 9.86 4.64 L 9 7.4 L 8.14 4.64 L 5.4 4 L 8.14 3.36 Z"
+            className="codex-frame-mark-star"
+          />
+          <circle
+            cx="9"
+            cy="4"
+            r="0.7"
+            className="codex-frame-mark-pip"
+          />
+        </svg>
+      </span>
+
+      {/* Bottom center mark — the same composed four-pointed mark,
+          mirrored across the chapter body so the frame opens and
+          closes with marks of the same vocabulary. */}
+      <span className="codex-frame-mark codex-frame-mark-b">
+        <svg viewBox="0 0 18 8" focusable="false">
+          <line
+            x1="0"
+            y1="4"
+            x2="6"
+            y2="4"
+            className="codex-frame-mark-rule"
+          />
+          <line
+            x1="12"
+            y1="4"
+            x2="18"
+            y2="4"
+            className="codex-frame-mark-rule"
+          />
+          <path
+            d="M 9 0.6 L 9.86 3.36 L 12.6 4 L 9.86 4.64 L 9 7.4 L 8.14 4.64 L 5.4 4 L 8.14 3.36 Z"
+            className="codex-frame-mark-star"
+          />
+          <circle
+            cx="9"
+            cy="4"
+            r="0.7"
+            className="codex-frame-mark-pip"
+          />
+        </svg>
+      </span>
+
+      {/* Four corner ornaments — a small composed ring with a
+          vermilion pip at its heart, sitting on the rules at the
+          four corners. A small leaf flourish grows inward on each
+          corner, like the printer's hand-mark at each frame joint. */}
+      <span className="codex-frame-corner codex-frame-corner-tl">
+        <svg viewBox="0 0 18 18" focusable="false">
+          <path
+            className="codex-frame-corner-flourish"
+            d="M 14 4 Q 11 6 9 9 Q 7 7 5 5"
+          />
+          <circle
+            cx="9"
+            cy="9"
+            r="3.4"
+            className="codex-frame-corner-ring"
+          />
+          <circle
+            cx="9"
+            cy="9"
+            r="1"
+            className="codex-frame-corner-pip"
+          />
+        </svg>
+      </span>
+      <span className="codex-frame-corner codex-frame-corner-tr">
+        <svg viewBox="0 0 18 18" focusable="false">
+          <path
+            className="codex-frame-corner-flourish"
+            d="M 4 4 Q 7 6 9 9 Q 11 7 13 5"
+          />
+          <circle
+            cx="9"
+            cy="9"
+            r="3.4"
+            className="codex-frame-corner-ring"
+          />
+          <circle
+            cx="9"
+            cy="9"
+            r="1"
+            className="codex-frame-corner-pip"
+          />
+        </svg>
+      </span>
+      <span className="codex-frame-corner codex-frame-corner-bl">
+        <svg viewBox="0 0 18 18" focusable="false">
+          <path
+            className="codex-frame-corner-flourish"
+            d="M 14 14 Q 11 12 9 9 Q 7 11 5 13"
+          />
+          <circle
+            cx="9"
+            cy="9"
+            r="3.4"
+            className="codex-frame-corner-ring"
+          />
+          <circle
+            cx="9"
+            cy="9"
+            r="1"
+            className="codex-frame-corner-pip"
+          />
+        </svg>
+      </span>
+      <span className="codex-frame-corner codex-frame-corner-br">
+        <svg viewBox="0 0 18 18" focusable="false">
+          <path
+            className="codex-frame-corner-flourish"
+            d="M 4 14 Q 7 12 9 9 Q 11 11 13 13"
+          />
+          <circle
+            cx="9"
+            cy="9"
+            r="3.4"
+            className="codex-frame-corner-ring"
+          />
+          <circle
+            cx="9"
+            cy="9"
+            r="1"
+            className="codex-frame-corner-pip"
+          />
+        </svg>
+      </span>
     </div>
   )
 }
@@ -3991,7 +4135,7 @@ export function App() {
               aria-hidden="true"
             />
             <div className="chapter-plate-frame">
-              <ChapterPlate />
+              <CodexFrame />
               <AnswerIllumination lit={answerOn && answerChars >= ANSWER.length && !replyOn} />
               <p
                 className={`answer ${answerOn ? 'is-on' : ''}`}
