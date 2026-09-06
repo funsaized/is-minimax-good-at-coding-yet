@@ -1,19 +1,8 @@
-# Changelog
+# Iteration 47
 
-## Iteration 46 — composed chapter close
+A composed inkpot-and-quill still life at the chapter's foot, grounding the candlelit reader's scene in a writer's instrument.
 
-Summary: composed chapter close with a tail-piece, paired reader's hand at the foot, and a pilcrow before the reply.
-
-### Added
-- `TailPiece` SVG: two outward-growing gold rules, a central diamond, and three pips (gold center, vermilion flanking). Drawn in once the footnote has settled, then dims slightly when intellexi arrives so the explicit can carry the closure.
-- `ManiculumFinis` SVG: a paired pointing hand at the bottom-right of the chapter body, finger pointing up toward the colophon. Mirrors the existing maniculum at the question (which points at the climax word), so the chapter reads as bracketed by the reader's hand: open (pointing at the question) → close (pointing at the seal). A vermilion lead rises from the fingertip. Fades in once the reader has marked the chapter (annotavi).
-- `ReplyPilcrow`: a small vermilion ¶ followed by a hairline rule, set before the reply text. Marks the reply as the chapter's second paragraph.
-- `.chapter-body` container wrapping the reply, footnote, tail-piece, explicit, intellexi-nota, and ManiculumFinis as one composed illuminated passage. Three state classes drive the new elements: `is-footnote-done` (TailPiece), `is-intellexi` (TailPiece dims), `is-annotavi` (ManiculumFinis).
-
-### Changed
-- Removed the old `.reply-rule` hairline; its role is now served by the new `ReplyPilcrow`'s trailing rule, which composes paragraph-mark + hairline as one printer's gesture.
-- The chapter body is now positioned as a single flex column beneath the answer, so the textual core reads as one authored block rather than three floating utterances.
-
-### Style
-- New CSS section: chapter-body, tail-piece, reply-pilcrow, maniculum-fin (with cuff, band, hand, finger, knuckle, nail, tip, and rising lead), plus reduced-motion overrides and mobile sizing for 880px / 520px / 380px breakpoints.
-- Title and document title preserved: "is Minimax M3 good at frontend yet?".
+- Added an InkpotAndQuill scene beneath the pen-trial flourish at the colophon: a glass inkpot with vermilion ink inside, a quill laid across the rim, a single ink-drop at the nib, and a faint hairline on the parchment where the quill was last set down.
+- The scene draws in once the colophon has settled, the ink-drop pulses gently, and a vermilion ink-mark blooms on the parchment on the first acknowledge.
+- A smaller ink-fleck appears on annotavi, so the chapter and its reader both take up the instrument.
+- Reduced-motion and responsive sizing added.

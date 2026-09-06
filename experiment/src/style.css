@@ -4685,6 +4685,346 @@ body {
   .pen-trial-svg { width: 30px; }
 }
 
+/* ----- Iteration 47: a composed inkpot-and-quill still life -----
+ * The chapter is read by candlelight at the top of the page (the
+ * candle and its dish) and signed at the foot by the writer's own
+ * instrument (the inkpot and quill). The colophon used to close with
+ * a small pen-trial flourish; now it closes with a still life of the
+ * tools that composed the chapter — a glass inkpot with vermilion ink
+ * visible inside, a quill laid across the rim, a single ink-drop at
+ * the nib, and a faint hairline on the parchment where the quill was
+ * last set down. The scene draws in once the colophon has settled,
+ * like a writer's instrument being laid out at the close of a
+ * reading session.
+ *
+ * Three interactive beats, each purely additive:
+ *
+ *   1. Idle — the ink-drop pulses gently, the scene reads as a quiet
+ *      still life. The quill is angled upward toward its feather.
+ *
+ *   2. Acknowledge (reader presses the question) — the ink-drop
+ *      trembles, a vermilion ink-mark blooms on the parchment beside
+ *      the pot (the writer has just dipped the quill), and the
+ *      inkpot's warm glow brightens. The bloom is one-shot and stays.
+ *
+ *   3. Annotavi (reader marks the margin) — a smaller ink-fleck
+ *      appears on the parchment, as if the reader has reached for the
+ *      pen. The scene reads as the chapter and its reader both having
+ *      taken up the instrument.
+ */
+
+.inkpot-and-quill {
+  display: block;
+  width: clamp(90px, 10vw, 140px);
+  height: auto;
+  margin: clamp(8px, 0.8vw, 14px) auto 0;
+  pointer-events: none;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(4px);
+  animation: inkpotIn 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) 2.95s forwards;
+}
+
+@keyframes inkpotIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.inkpot-and-quill svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* The soft warm glow above the inkpot — the candle's light catches
+   the glass. Brightens gently on acknowledge. */
+.inkpot-glow {
+  opacity: 0;
+  animation: inkpotGlow 2.6s ease-out 3.4s forwards;
+}
+
+@keyframes inkpotGlow {
+  to { opacity: 0.8; }
+}
+
+.inkpot-and-quill.is-acknowledged .inkpot-glow {
+  animation: inkpotGlowAck 1.6s ease-out forwards;
+}
+
+@keyframes inkpotGlowAck {
+  0%   { opacity: 0.8; }
+  40%  { opacity: 1.05; }
+  100% { opacity: 0.95; }
+}
+
+/* The quill-rest hairline on the parchment — draws outward from center
+   once the scene has settled, like a quiet mark the quill left when
+   it was set down. */
+.inkpot-rest-line {
+  stroke: var(--gold-deep);
+  stroke-width: 0.35;
+  stroke-linecap: round;
+  fill: none;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  animation: inkpotRestDraw 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 3.6s forwards;
+}
+
+@keyframes inkpotRestDraw {
+  to { stroke-dashoffset: 0; opacity: 0.55; }
+}
+
+/* Small ink-flecks beside the rest line — the writer's casual dots. */
+.inkpot-fleck {
+  fill: var(--vermilion);
+  opacity: 0;
+  animation: inkpotFleck 0.6s ease-out forwards;
+}
+
+.inkpot-fleck-1 { animation-delay: 3.95s; opacity: 0.6; }
+.inkpot-fleck-2 { animation-delay: 4.05s; opacity: 0.55; }
+.inkpot-fleck-3 { animation-delay: 4.15s; opacity: 0.45; }
+.inkpot-fleck-4 { animation-delay: 4.25s; opacity: 0.5; }
+
+@keyframes inkpotFleck {
+  from { opacity: 0; transform: scale(0.4); transform-box: fill-box; transform-origin: center; }
+  to   { opacity: 1;  transform: scale(1); }
+}
+
+/* On annotavi, a smaller ink-fleck appears beside the pot — the
+   reader has just reached for the pen. */
+.inkpot-and-quill.is-annotavi .inkpot-fleck {
+  animation: inkpotFleck 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.inkpot-and-quill.is-annotavi .inkpot-fleck-3 { opacity: 0.85; }
+.inkpot-and-quill.is-annotavi .inkpot-fleck-4 { opacity: 0.8; }
+
+/* The vermilion ink-mark that blooms on acknowledge — a small
+   horizontal stain beside the inkpot, like the writer has just
+   dipped and tested the quill on the parchment. */
+.inkpot-mark {
+  fill: var(--vermilion);
+  fill-opacity: 0.55;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scaleX(0.2);
+  animation: inkpotMarkBloom 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+.inkpot-and-quill.is-acknowledged .inkpot-mark {
+  animation: inkpotMarkBloom 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes inkpotMarkBloom {
+  to { opacity: 0.85; transform: scaleX(1); }
+}
+
+/* The inkpot pot */
+.inkpot-shadow {
+  fill: rgba(8, 4, 2, 0.55);
+  filter: blur(0.4px);
+}
+
+.inkpot-glass {
+  fill: url(#inkpot-glass-grad);
+  stroke: var(--gold);
+  stroke-width: 0.55;
+  stroke-linejoin: round;
+  fill-opacity: 0.92;
+}
+
+.inkpot-ink-fill {
+  opacity: 0.92;
+  animation: inkpotSettle 2.0s cubic-bezier(0.2, 0.7, 0.2, 1) 3.2s backwards;
+}
+
+@keyframes inkpotSettle {
+  from { opacity: 0; transform: scaleY(0.4); transform-box: fill-box; transform-origin: center bottom; }
+  to   { opacity: 0.92; transform: scaleY(1); }
+}
+
+.inkpot-ink-shine {
+  fill: rgba(248, 218, 168, 0.5);
+}
+
+.inkpot-rim {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 0.5;
+  stroke-linecap: round;
+}
+
+.inkpot-opening {
+  fill: rgba(11, 9, 7, 0.5);
+  stroke: var(--gold-deep);
+  stroke-width: 0.35;
+}
+
+.inkpot-rim-shine {
+  fill: none;
+  stroke: rgba(240, 212, 154, 0.6);
+  stroke-width: 0.45;
+  stroke-linecap: round;
+}
+
+.inkpot-glass-shine {
+  fill: none;
+  stroke: rgba(240, 212, 154, 0.42);
+  stroke-width: 0.4;
+  stroke-linecap: round;
+}
+
+/* The quill */
+.inkpot-quill-shaft {
+  stroke: var(--gold);
+  stroke-width: 0.5;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.92;
+}
+
+.inkpot-quill-shaft-2 {
+  stroke-width: 0.3;
+  opacity: 0.55;
+  stroke: var(--gold-deep);
+}
+
+.inkpot-quill-feather {
+  fill: var(--gold);
+  fill-opacity: 0.42;
+  stroke: var(--gold-deep);
+  stroke-width: 0.35;
+  stroke-linejoin: round;
+}
+
+.inkpot-quill-barb {
+  stroke: var(--gold-deep);
+  stroke-width: 0.25;
+  stroke-linecap: round;
+  opacity: 0.6;
+  fill: none;
+}
+
+.inkpot-quill-cap {
+  fill: var(--gold-deep);
+  fill-opacity: 0.7;
+}
+
+.inkpot-quill-nib {
+  fill: var(--vermilion);
+  fill-opacity: 0.85;
+  stroke: var(--vermilion-soft);
+  stroke-width: 0.2;
+  stroke-linejoin: round;
+}
+
+.inkpot-quill-slit {
+  stroke: var(--vermilion-soft);
+  stroke-width: 0.2;
+  stroke-linecap: round;
+  opacity: 0.8;
+}
+
+/* The ink drop — pulses gently, trembles on acknowledge, then settles
+   with a brief drop. */
+.inkpot-drop {
+  fill: var(--vermilion);
+  fill-opacity: 0.92;
+  stroke: var(--vermilion-bright);
+  stroke-width: 0.15;
+  transform-box: fill-box;
+  transform-origin: 50% 30%;
+  animation: inkpotDropPulse 2.6s ease-in-out 4.0s infinite;
+}
+
+@keyframes inkpotDropPulse {
+  0%, 100% { transform: translateY(0)   scaleY(1)    scaleX(1); opacity: 0.92; }
+  50%      { transform: translateY(0.6px) scaleY(0.92) scaleX(1.06); opacity: 0.78; }
+}
+
+.inkpot-drop-trail {
+  stroke: var(--vermilion);
+  stroke-width: 0.18;
+  stroke-linecap: round;
+  opacity: 0;
+  fill: none;
+  animation: inkpotDropTrail 2.6s ease-in-out 4.0s infinite;
+}
+
+@keyframes inkpotDropTrail {
+  0%, 100% { opacity: 0; }
+  50%      { opacity: 0.32; }
+}
+
+.inkpot-and-quill.is-acknowledged .inkpot-drop {
+  animation: inkpotDropTremble 0.85s ease-in-out forwards;
+}
+
+.inkpot-and-quill.is-acknowledged .inkpot-drop-trail {
+  animation: inkpotDropTrailTremble 0.85s ease-in-out forwards;
+}
+
+@keyframes inkpotDropTremble {
+  0%   { transform: translate(0,    0)    scale(1);    opacity: 0.92; }
+  20%  { transform: translate(1.2px, -0.6px) scale(0.78); opacity: 0.6; }
+  40%  { transform: translate(-1px, 0.4px) scale(1.08); opacity: 1; }
+  60%  { transform: translate(0.8px, 0)   scale(0.92); opacity: 0.78; }
+  100% { transform: translate(0,    0)    scale(1);    opacity: 0.92; }
+}
+
+@keyframes inkpotDropTrailTremble {
+  0%   { opacity: 0; }
+  35%  { opacity: 0.42; }
+  100% { opacity: 0.22; }
+}
+
+/* The whole scene dims slightly when the colophon has fully settled
+   into its quiet terminus, so the inkpot reads as a still life
+   rather than a focal point. */
+.colophon.is-quietus .inkpot-and-quill,
+.inkpot-and-quill.is-annotavi {
+  filter: brightness(0.95);
+  transition: filter 1.6s ease;
+}
+
+/* ----- Reduced motion overrides for iteration 47 ----- */
+
+@media (prefers-reduced-motion: reduce) {
+  .inkpot-and-quill {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .inkpot-glow { animation: none; opacity: 0.8; }
+  .inkpot-rest-line { animation: none; stroke-dashoffset: 0; opacity: 0.55; }
+  .inkpot-fleck { animation: none; opacity: 0.55; }
+  .inkpot-fleck-1, .inkpot-fleck-2, .inkpot-fleck-3, .inkpot-fleck-4 { opacity: 0.55; }
+  .inkpot-mark { animation: none; opacity: 0.85; transform: scaleX(1); }
+  .inkpot-and-quill.is-acknowledged .inkpot-mark { animation: none; opacity: 0.85; }
+  .inkpot-ink-fill { animation: none; opacity: 0.92; transform: none; }
+  .inkpot-drop { animation: none; opacity: 0.92; transform: none; }
+  .inkpot-drop-trail { animation: none; opacity: 0.22; }
+  .inkpot-and-quill.is-acknowledged .inkpot-drop { animation: none; opacity: 0.92; transform: none; }
+  .inkpot-and-quill.is-acknowledged .inkpot-drop-trail { animation: none; opacity: 0.22; }
+  .inkpot-and-quill.is-annotavi { filter: none; }
+}
+
+/* ----- Responsive sizing for iteration 47 ----- */
+
+@media (max-width: 880px) {
+  .inkpot-and-quill { width: clamp(76px, 11vw, 110px); }
+}
+
+@media (max-width: 520px) {
+  .inkpot-and-quill { width: 72px; margin-top: 6px; }
+}
+
+@media (max-width: 380px) {
+  .inkpot-and-quill { width: 64px; }
+}
+
 /* ----- Iteration 27: scholastic footnote -----
  * A small bilingual marginal gloss that the scribe writes into the
  * page after the reply has landed. The footnote has three parts:

@@ -861,7 +861,10 @@ function Signature() {
 // PenTrial — a small scribal flourish at the end of the colophon, the
 // kind a scribe leaves when finishing a page. A few small flourishes
 // and pips, like a quill being tested on the parchment. The whole
-// flourish draws in with a soft easing, just after the seal.
+// flourish draws in with a soft easing, just after the seal. Iteration
+// 47 keeps this flourish as a quiet ink-test above the inkpot scene
+// that now sits beneath it — the scribal flourish and the writer's
+// instrument pair as one composed closure.
 function PenTrial() {
   return (
     <span className="pen-trial" aria-hidden="true">
@@ -885,6 +888,208 @@ function PenTrial() {
           d="M 44 5 Q 50 1 54 5 Q 50 9 44 7"
         />
         <circle cx="57" cy="5" r="0.5" className="pen-trial-pip pen-trial-pip-3 pen-trial-pip-sm" />
+      </svg>
+    </span>
+  )
+}
+
+// InkpotAndQuill — a small composed still life at the chapter's foot:
+// a glass inkpot with vermilion ink visible inside, a quill laid across
+// the rim with feather to the right and nib to the left, a single ink-
+// drop hanging from the nib, and a faint hairline on the parchment
+// where the quill was last set down. Reads as the writer's instrument
+// beside the chapter it just composed — the candle above lit the page,
+// this inkpot beneath signed it. A vermilion ink-mark blooms on the
+// parchment on the first acknowledge (the writer dipped the quill),
+// another smaller fleck appears once the reader has marked the margin
+// (the reader took up the pen). Iteration 47's composed terminus.
+//
+// All shapes are drawn — no images. Vermilion ink uses a vertical
+// gradient from bright to deep so the level reads as liquid, not paint.
+// The quill is angled upward toward the feather with a subtle taper on
+// the shaft; the nib is vermilion, drawn as a small wedge that meets
+// the parchment at the inkpot's left edge.
+function InkpotAndQuill({
+  active,
+  acknowledged,
+  annotavi,
+}: {
+  active: boolean
+  acknowledged: boolean
+  annotavi: boolean
+}) {
+  return (
+    <span
+      className={`inkpot-and-quill${active ? ' is-active' : ''}${acknowledged ? ' is-acknowledged' : ''}${annotavi ? ' is-annotavi' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 120 42" focusable="false">
+        <defs>
+          <linearGradient id="inkpot-ink-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#c6684a" />
+            <stop offset="55%"  stopColor="#9c4530" />
+            <stop offset="100%" stopColor="#7d3a26" />
+          </linearGradient>
+          <linearGradient id="inkpot-glass-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="rgba(240, 212, 154, 0.18)" />
+            <stop offset="60%"  stopColor="rgba(184, 169, 143, 0.06)" />
+            <stop offset="100%" stopColor="rgba(150, 116, 76, 0.04)" />
+          </linearGradient>
+          <radialGradient id="inkpot-glow" cx="50%" cy="36%" r="60%">
+            <stop offset="0%"   stopColor="rgba(217, 176, 116, 0.22)" />
+            <stop offset="100%" stopColor="rgba(217, 176, 116, 0)" />
+          </radialGradient>
+        </defs>
+
+        {/* Soft warm glow — the inkpot catches the candle's light from above */}
+        <ellipse
+          cx="60"
+          cy="14"
+          rx="46"
+          ry="22"
+          fill="url(#inkpot-glow)"
+          className="inkpot-glow"
+        />
+
+        {/* Quill-rest hairline — a faint mark where the quill was set down */}
+        <line
+          x1="8"
+          y1="37"
+          x2="112"
+          y2="37"
+          className="inkpot-rest-line"
+        />
+
+        {/* Subtle ink-flecks on the parchment beside the rest line */}
+        <circle cx="6"   cy="36" r="0.5" className="inkpot-fleck inkpot-fleck-1" />
+        <circle cx="114" cy="36" r="0.45" className="inkpot-fleck inkpot-fleck-2" />
+        <circle cx="100" cy="35" r="0.3" className="inkpot-fleck inkpot-fleck-3" />
+        <circle cx="18"  cy="35" r="0.35" className="inkpot-fleck inkpot-fleck-4" />
+
+        {/* Ink-mark that blooms on acknowledge (the quill's test mark) */}
+        <ellipse
+          cx="98"
+          cy="34.5"
+          rx="2.4"
+          ry="0.7"
+          className="inkpot-mark"
+        />
+
+        {/* Inkpot body — glass with vermilion ink inside */}
+        <g className="inkpot-pot">
+          {/* Base shadow on the parchment */}
+          <ellipse
+            cx="60"
+            cy="35"
+            rx="20"
+            ry="1.4"
+            className="inkpot-shadow"
+          />
+          {/* Glass body */}
+          <path
+            d="M 42 14 Q 39 22 42 32 L 78 32 Q 81 22 78 14 Z"
+            className="inkpot-glass"
+            fill="url(#inkpot-glass-grad)"
+          />
+          {/* Vermilion ink fill — slightly inset so the glass shows above */}
+          <ellipse
+            cx="60"
+            cy="22"
+            rx="15"
+            ry="5.2"
+            className="inkpot-ink-fill"
+            fill="url(#inkpot-ink-grad)"
+          />
+          {/* Ink surface highlight — a tiny brighter sliver at the meniscus */}
+          <ellipse
+            cx="56"
+            cy="20"
+            rx="3"
+            ry="0.55"
+            className="inkpot-ink-shine"
+          />
+          {/* Rim — outer ellipse */}
+          <ellipse
+            cx="60"
+            cy="14"
+            rx="18"
+            ry="2.4"
+            className="inkpot-rim"
+          />
+          {/* Rim opening — inner ellipse */}
+          <ellipse
+            cx="60"
+            cy="14"
+            rx="13"
+            ry="1.5"
+            className="inkpot-opening"
+          />
+          {/* Rim highlight — a thin gold sliver on the upper-left of the rim */}
+          <path
+            d="M 47 12.6 Q 53 11.4 60 11.4"
+            className="inkpot-rim-shine"
+          />
+          {/* Glass highlight — a vertical bright stroke on the body */}
+          <path
+            d="M 46 18 Q 45 24 46.5 29"
+            className="inkpot-glass-shine"
+          />
+        </g>
+
+        {/* Quill laid across the rim — angled upward toward the feather */}
+        <g className="inkpot-quill">
+          {/* Shaft */}
+          <line
+            x1="22"
+            y1="22"
+            x2="84"
+            y2="11"
+            className="inkpot-quill-shaft"
+          />
+          {/* Subtle taper mid-shaft */}
+          <line
+            x1="22"
+            y1="22.4"
+            x2="84"
+            y2="11.4"
+            className="inkpot-quill-shaft inkpot-quill-shaft-2"
+          />
+          {/* Feather — a leaf-like blade pointing up-right */}
+          <path
+            d="M 82 11 L 102 4 L 105 8 L 86 12.5 Z"
+            className="inkpot-quill-feather"
+          />
+          {/* Feather barbs — three thin hairlines */}
+          <line x1="84" y1="11.4" x2="98"  y2="5.6"  className="inkpot-quill-barb" />
+          <line x1="86" y1="11.8" x2="100" y2="6.8"  className="inkpot-quill-barb" />
+          <line x1="88" y1="12.2" x2="102" y2="8"    className="inkpot-quill-barb" />
+          {/* Quill-tip at the feather end — a small dark cap */}
+          <circle cx="103" cy="6" r="0.5" className="inkpot-quill-cap" />
+          {/* Nib — a vermilion wedge at the writing end */}
+          <path
+            d="M 20 21.6 L 25 22.4 L 22 23.6 Z"
+            className="inkpot-quill-nib"
+          />
+          {/* Nib slit */}
+          <line
+            x1="22"
+            y1="22.5"
+            x2="24"
+            y2="22.8"
+            className="inkpot-quill-slit"
+          />
+        </g>
+
+        {/* Ink drop hanging from the nib — pulses, trembles on acknowledge */}
+        <circle cx="19" cy="24.5" r="1.05" className="inkpot-drop" />
+        {/* Faint trail beneath the drop */}
+        <line
+          x1="19"
+          y1="25.6"
+          x2="19"
+          y2="32"
+          className="inkpot-drop-trail"
+        />
       </svg>
     </span>
   )
@@ -3112,6 +3317,11 @@ export function App() {
             <span className="colophon-folio">folio · xviii</span>
           </span>
           <PenTrial />
+          <InkpotAndQuill
+            active={intellexiOn && intellexiChars >= 'intellexi'.length}
+            acknowledged={sealing || pulsing}
+            annotavi={lectorisDone}
+          />
           <span className="colophon-provenance">legi · mmxxvi</span>
         </div>
       </div>
