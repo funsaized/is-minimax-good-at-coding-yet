@@ -416,16 +416,15 @@ h1 {
 
 .wax-seal-wrap {
   display: inline-block;
-  vertical-align: 0.1em;
-  margin-right: 0.04em;
-  margin-left: -0.05em;
-  transform: rotate(-7deg) scale(0.86);
+  vertical-align: 0;
+  margin: 0;
+  transform: rotate(-6deg) scale(0.78);
   transform-origin: center;
   transition: transform 480ms var(--ease), filter 480ms var(--ease);
   filter: drop-shadow(0 2px 4px rgba(50, 10, 4, 0.25));
 }
 .wax-seal-wrap.is-pressing {
-  transform: rotate(-3deg) scale(0.74);
+  transform: rotate(-3deg) scale(0.68);
   filter: drop-shadow(0 1px 2px rgba(50, 10, 4, 0.18)) brightness(1.06);
 }
 .wax-seal {
@@ -614,7 +613,7 @@ h1 {
 .response-panel--verso::before {
   content: "";
   position: absolute;
-  inset: -22px -28px -32px;
+  inset: -22px -28px -32px -42px;
   z-index: -1;
   background:
     radial-gradient(ellipse at 50% 20%, rgba(255, 250, 240, 0.32), transparent 70%),
@@ -633,6 +632,278 @@ h1 {
   width: 1px;
   background: linear-gradient(to bottom, transparent, rgba(255, 250, 240, 0.55) 25%, transparent 60%);
   pointer-events: none;
+}
+
+/* ────────── title cartouche ────────── */
+
+.title-cartouche {
+  display: inline-block;
+  position: relative;
+  width: 1.35em;
+  height: 1.35em;
+  vertical-align: 0.05em;
+  margin-right: 0.02em;
+  margin-left: -0.04em;
+}
+.title-cartouche-frame {
+  position: absolute;
+  inset: -8% -8% -8% -8%;
+  width: 116%;
+  height: 116%;
+  color: var(--coral-deep);
+  opacity: 0;
+  transform: rotate(-2deg);
+  transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+  pointer-events: none;
+}
+.has-answer .title-cartouche-frame {
+  opacity: 0.85;
+  transform: rotate(-1deg);
+}
+.title-cartouche-inner {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+.cartouche-outer rect {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.7;
+}
+.cartouche-outer rect:last-of-type {
+  stroke-width: 0.35;
+  opacity: 0.7;
+}
+.cartouche-corner path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.7;
+  stroke-linecap: round;
+}
+.cartouche-marks circle {
+  fill: currentColor;
+}
+.cartouche-corner--tl { color: var(--coral); }
+.cartouche-corner--tr { color: var(--coral); }
+.cartouche-corner--bl { color: var(--coral-deep); }
+.cartouche-corner--br { color: var(--coral-deep); }
+
+/* ────────── reading lines (verso margin) ────────── */
+
+.reading-lines {
+  position: absolute;
+  top: 92px;
+  bottom: 92px;
+  left: -34px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 500ms var(--ease);
+}
+.reading-lines.is-visible { opacity: 1; }
+.reading-line {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  padding-right: 0;
+  color: var(--coral);
+  position: relative;
+}
+.reading-line::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 18px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor);
+  opacity: 0.32;
+  transform: translateY(-0.5px);
+}
+.reading-line:last-child::after { opacity: 0.55; }
+.reading-line-mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  border-radius: 1px;
+  background: var(--paper);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity 280ms var(--ease) calc(var(--i) * 60ms),
+    transform 280ms var(--ease) calc(var(--i) * 60ms),
+    background 280ms var(--ease),
+    border-color 280ms var(--ease),
+    color 280ms var(--ease);
+}
+.reading-lines.is-visible .reading-line-mark {
+  opacity: 1;
+  transform: none;
+}
+.reading-line:last-child .reading-line-mark {
+  border-color: var(--coral);
+  color: var(--coral-deep);
+  background: rgba(217, 101, 74, 0.06);
+}
+.reading-line-pilcrow {
+  font: italic 13px/1 var(--display);
+  color: var(--coral);
+}
+.reading-line-numeral {
+  font: 700 8.5px/1 var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--coral-deep);
+}
+
+/* ────────── fold corner ────────── */
+
+.fold-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+  z-index: 4;
+  filter: drop-shadow(-1px 1px 1px rgba(107, 74, 37, 0.1));
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition:
+    opacity 700ms var(--ease) 200ms,
+    transform 900ms var(--ease) 200ms;
+}
+.response-panel.is-revealed .fold-corner {
+  opacity: 1;
+  transform: none;
+}
+.fold-corner-fold {
+  transform-origin: top right;
+  transition: transform 700ms var(--ease);
+}
+.response-panel.is-revealed .fold-corner-fold {
+  animation: fold-corner-flip 1200ms cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes fold-corner-flip {
+  0% { transform: rotate(0deg); }
+  60% { transform: rotate(-8deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* ────────── page turn fold ────────── */
+
+.page-turn-fold {
+  position: absolute;
+  top: 56px;
+  right: 0;
+  width: 64px;
+  height: 80px;
+  pointer-events: none;
+  z-index: 6;
+  opacity: 0;
+}
+.page-turn-fold.is-active {
+  opacity: 1;
+  animation: page-turn-fade 1100ms cubic-bezier(.65,.05,.36,1) both;
+}
+.page-turn-fold-sheet {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      100deg,
+      rgba(245, 232, 200, 0) 0%,
+      rgba(245, 232, 200, 0.6) 30%,
+      rgba(255, 250, 240, 0.96) 60%,
+      rgba(255, 250, 240, 0.5) 100%
+    );
+  border-bottom-left-radius: 70% 90%;
+  transform-origin: right center;
+  transform: translateX(100%);
+  box-shadow:
+    -2px 0 0 rgba(107, 74, 37, 0.18),
+    -4px 4px 12px rgba(107, 74, 37, 0.12);
+}
+.page-turn-fold.is-active .page-turn-fold-sheet {
+  animation: page-turn-sheet 1100ms cubic-bezier(.65,.05,.36,1) both;
+}
+@keyframes page-turn-fade {
+  0% { opacity: 1; }
+  78% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes page-turn-sheet {
+  0% { transform: translateX(100%) skewY(-3deg); }
+  45% { transform: translateX(-20%) skewY(2deg); }
+  100% { transform: translateX(-120%) skewY(-1deg); }
+}
+
+/* ────────── typeface specimen ────────── */
+
+.typeface-specimen {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 8px 0;
+  color: var(--ink-soft);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 700ms var(--ease) 80ms,
+    transform 700ms var(--ease) 80ms;
+}
+.typeface-specimen.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.typeface-specimen-rule {
+  flex: 0 0 14px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(107, 74, 37, 0.32));
+}
+.typeface-specimen-row {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 7px;
+  color: var(--ink);
+}
+.typeface-specimen-label {
+  font: 770 9px var(--sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--moss);
+}
+.typeface-specimen-sample {
+  font: italic 13.5px/1.3 var(--display);
+  color: var(--ink);
+  letter-spacing: 0.005em;
+  position: relative;
+}
+.typeface-specimen-sample:nth-child(3)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 8%;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(to right, var(--gold-glow), transparent);
+  opacity: 0.7;
+}
+.typeface-specimen-dot {
+  color: var(--coral);
+  font: 700 12px var(--display);
 }
 
 .ms-stamp {
@@ -1412,6 +1683,14 @@ h1 {
   .reading-tide-label { display: none; }
   .ms-stamp { right: 6px; top: -2px; }
   .scholars-bench-row { gap: 16px; }
+  .reading-lines {
+    top: 84px;
+    bottom: 84px;
+    left: -26px;
+  }
+  .fold-corner { width: 30px; height: 30px; }
+  .page-turn-fold { width: 50px; height: 64px; top: 42px; }
+  .typeface-specimen { flex-wrap: wrap; }
 }
 
 @media (max-width: 560px) {
@@ -1480,6 +1759,11 @@ h1 {
   .ms-stamp { right: 4px; top: 6px; width: 48px; padding: 4px 3px; }
   .ms-stamp-row { font-size: 6px; }
   .ms-stamp-row--mid { font-size: 8px; }
+  .reading-lines { display: none; }
+  .fold-corner { width: 26px; height: 26px; }
+  .page-turn-fold { display: none; }
+  .typeface-specimen-row { font-size: 12px; }
+  .title-cartouche { width: 1.25em; height: 1.25em; }
 }
 
 /* ────────── reduced motion ────────── */
@@ -1497,4 +1781,8 @@ h1 {
   .marginalia-owl { opacity: 1; transform: none; }
   .sky-rotation { animation: none !important; }
   .reading-tide-marker { transition: none; }
+  .page-turn-fold { display: none; }
+  .fold-corner-fold { animation: none !important; }
+  .reading-line-mark { opacity: 1; transform: none; }
+  .title-cartouche-frame { opacity: 0.85; transform: rotate(-1deg); }
 }

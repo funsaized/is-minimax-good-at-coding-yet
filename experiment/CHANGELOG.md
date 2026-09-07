@@ -1,7 +1,14 @@
-# Changelog
+# Iteration 89
 
-## Iteration 88 — a reading tide
+Editorial reading guide: title cartouche, marginal line numbers, typeface specimen, folded corner, and page-turn fold.
 
-Restored the editorial apparatus to a calmer folio and added a right-edge reading-tide ruler.
+## Changes
 
-The right-edge reading-tide sits opposite the gilded edge: four labelled stops (set, answer, reply, out) with a gold marker that lifts through them as the reader advances, plus a "re-reading" mark after the first cycle. The marginalia owl now appears at the catchword once reading begins; its pupils follow the cursor and it offers a single blink on completion. The scholar's bench at the foot of the reply carries a live leaf-hour dial and a sidereal pocket (polaris over ur. minor, slowly turning). A press-correction slip pastes in at angle during the reply and inks over a beat when the page settles. A typeset apparatus / index rises below with seven numbered entries that stagger into view, a manu mea · impressum colophon, and a second-reading footnote when the reader revisits. The wax-seal initial gains a halo and five gold bezants when lit; the running heads, the manuscript stamp, the cul-de-lampe, and its inscription reveal through the reading. Refit the palette (warmer paper, deeper ink, refined gold and coral) and the typography (display italic with ligature and swash alternates, focus-visible marginalia tooltips). An inkwell with vapor and a live scribal quill sit on the answer surface during the answer; the gilded edge pulses; the fleuron drifts in the watermark layer; the bookmark ribbon continues its sway. Reduced-motion, keyboard accessibility, and responsive breakpoints are preserved.
+- Added `TitleCartouche`, a hand-drawn rectangular frame with corner brackets and corner marks that surrounds the wax-seal initial. The frame fades in once the answer is set, giving the initial the weight of a printed dropcap.
+- Added `ReadingLines`, a column of numbered pilcrow marks (`¶·i`, `¶·ii`, …) in the left margin of the verso. Lines appear in cadence with the typing (one every ~14 characters) and the current line is highlighted with a coral rule.
+- Added `TypefaceSpecimen`, a small italic note beneath the answer surface that names the typography: `set in · italic · 30pt · leaded · with gilt`. A faint gold underline on the third term reinforces the gilded-leaf conceit.
+- Added `FoldCorner`, a folded-corner SVG on the top-right of the verso panel. It animates in with a small rotation when the verso reveals, signalling that this is the back of the leaf.
+- Added `PageTurnFold`, a brief fold overlay that sweeps across the top of the verso when answering begins, evoking the gesture of turning the leaf.
+- Adjusted the wax-seal scale to sit comfortably inside the new cartouche and extended the verso's left padding so the reading lines have room to breathe.
+- Added matching responsive rules for narrow viewports (reading lines and page-turn fold hide below 560px).
+- Extended the reduced-motion media query so the page-turn overlay and fold-corner flip are disabled when motion is reduced.

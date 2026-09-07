@@ -1717,6 +1717,159 @@ function ReadingTide({ stage, cycle }: { stage: number; cycle: number }) {
   )
 }
 
+const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x']
+
+function ReadingLines({
+  count,
+  visible,
+}: {
+  count: number
+  visible: boolean
+}) {
+  const lines = Math.min(count, ROMAN.length)
+  return (
+    <ol
+      className={`reading-lines${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      {Array.from({ length: lines }, (_, i) => (
+        <li
+          key={i}
+          className="reading-line"
+          style={{ '--i': i } as React.CSSProperties}
+        >
+          <span className="reading-line-rule" />
+          <span className="reading-line-mark">
+            <span className="reading-line-pilcrow">¶</span>
+            <span className="reading-line-numeral">{ROMAN[i]}</span>
+          </span>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+function TitleCartouche({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="title-cartouche" aria-hidden="true">
+      <svg className="title-cartouche-frame" viewBox="0 0 110 110" focusable="false">
+        <g className="cartouche-outer">
+          <rect x="6" y="6" width="98" height="98" rx="2" />
+          <rect
+            x="10"
+            y="10"
+            width="90"
+            height="90"
+            rx="1"
+            fill="none"
+            strokeDasharray="1.4 2.2"
+          />
+        </g>
+        <g className="cartouche-corner cartouche-corner--tl">
+          <path d="M 6 18 Q 6 6 18 6" fill="none" />
+          <path d="M 12 18 Q 12 12 18 12" fill="none" />
+        </g>
+        <g className="cartouche-corner cartouche-corner--tr">
+          <path d="M 92 6 Q 104 6 104 18" fill="none" />
+          <path d="M 92 12 Q 98 12 98 18" fill="none" />
+        </g>
+        <g className="cartouche-corner cartouche-corner--bl">
+          <path d="M 6 92 Q 6 104 18 104" fill="none" />
+          <path d="M 12 92 Q 12 98 18 98" fill="none" />
+        </g>
+        <g className="cartouche-corner cartouche-corner--br">
+          <path d="M 92 104 Q 104 104 104 92" fill="none" />
+          <path d="M 92 98 Q 98 98 98 92" fill="none" />
+        </g>
+        <g className="cartouche-marks">
+          <circle cx="55" cy="9" r="0.9" />
+          <circle cx="55" cy="101" r="0.9" />
+          <circle cx="9" cy="55" r="0.9" />
+          <circle cx="101" cy="55" r="0.9" />
+        </g>
+      </svg>
+      <span className="title-cartouche-inner">{children}</span>
+    </span>
+  )
+}
+
+function TypefaceSpecimen({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`typeface-specimen${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="typeface-specimen-rule" />
+      <span className="typeface-specimen-row">
+        <span className="typeface-specimen-label">set in</span>
+        <em className="typeface-specimen-sample">italic</em>
+        <span className="typeface-specimen-dot">·</span>
+        <em className="typeface-specimen-sample">30pt</em>
+        <span className="typeface-specimen-dot">·</span>
+        <em className="typeface-specimen-sample">leaded</em>
+        <span className="typeface-specimen-dot">·</span>
+        <em className="typeface-specimen-sample">with gilt</em>
+      </span>
+      <span className="typeface-specimen-rule" />
+    </div>
+  )
+}
+
+function FoldCorner() {
+  return (
+    <svg
+      className="fold-corner"
+      viewBox="0 0 60 60"
+      focusable="false"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="fold-fold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="rgba(255, 250, 240, 0.96)" />
+          <stop offset="100%" stopColor="rgba(232, 216, 178, 0.92)" />
+        </linearGradient>
+        <linearGradient id="fold-shadow" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="rgba(107, 74, 37, 0)" />
+          <stop offset="100%" stopColor="rgba(107, 74, 37, 0.16)" />
+        </linearGradient>
+      </defs>
+      <path
+        className="fold-corner-fold"
+        d="M 0 0 L 60 0 L 0 60 Z"
+        fill="url(#fold-fold)"
+        stroke="rgba(107, 74, 37, 0.34)"
+        strokeWidth="0.6"
+      />
+      <path
+        className="fold-corner-shadow"
+        d="M 0 60 L 60 0 L 58 2 L 4 56 Z"
+        fill="url(#fold-shadow)"
+      />
+      <path
+        className="fold-corner-line"
+        d="M 0 0 L 60 60"
+        stroke="rgba(107, 74, 37, 0.32)"
+        strokeWidth="0.5"
+        strokeDasharray="1.6 2.4"
+      />
+      <circle cx="20" cy="20" r="0.7" fill="rgba(107, 74, 37, 0.55)" />
+      <circle cx="40" cy="40" r="0.7" fill="rgba(107, 74, 37, 0.55)" />
+    </svg>
+  )
+}
+
+function PageTurnFold({ active }: { active: boolean }) {
+  return (
+    <span
+      className={`page-turn-fold${active ? ' is-active' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="page-turn-fold-sheet" />
+      <span className="page-turn-fold-shade" />
+    </span>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
@@ -1866,6 +2019,14 @@ export function App() {
   const minutes = now.getMinutes()
   const seconds = now.getSeconds()
 
+  const totalChars = answerChars + replyChars
+  const lineCount =
+    totalChars > 0
+      ? Math.min(ROMAN.length, Math.ceil(totalChars / 14))
+      : 0
+  const readingLinesVisible = answerVisible
+  const specimenVisible = phase === 'answering' || phase === 'replying' || phase === 'complete'
+
   return (
     <main className="experiment-shell">
       <div className="ambient-grid" aria-hidden="true" />
@@ -1907,9 +2068,11 @@ export function App() {
               <span>the question</span>
             </div>
             <h1 id="page-title" aria-label={TITLE}>
-              <span className={`wax-seal-wrap${sealPressing ? ' is-pressing' : ''}`}>
-                <WaxSealInitial />
-              </span>
+              <TitleCartouche>
+                <span className={`wax-seal-wrap${sealPressing ? ' is-pressing' : ''}`}>
+                  <WaxSealInitial />
+                </span>
+              </TitleCartouche>
               <span className="title-text" aria-hidden="true">s </span>
               <span className="title-subject" aria-hidden="true">Minimax M3</span>
               <span className="title-text" aria-hidden="true"> good at frontend yet?</span>
@@ -1953,6 +2116,9 @@ export function App() {
             aria-labelledby="response-title"
           >
             <span className="verso-shine" aria-hidden="true" />
+            <ReadingLines count={lineCount} visible={readingLinesVisible} />
+            <FoldCorner />
+            <PageTurnFold active={phase === 'answering' && answerChars < 6} />
             <header className="sheet-header sheet-header--verso">
               <p className="running-head-title">
                 <span aria-hidden="true">§</span> the reply · set in italic
@@ -2004,6 +2170,8 @@ export function App() {
               <Inkwell active={quillActive} />
               <ScribalQuill active={quillActive} progress={quillProgress} />
             </div>
+
+            <TypefaceSpecimen visible={specimenVisible} />
 
             <div
               className={`reply-copy ${replyShown ? 'is-visible' : ''}`}
