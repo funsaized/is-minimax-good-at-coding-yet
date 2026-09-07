@@ -519,37 +519,51 @@ button { font: inherit; }
   margin-top: 6px;
 }
 .chapter-mark {
-  display: inline-flex; align-items: baseline; gap: 11px;
-  font: 800 9.5px/1.2 var(--sans);
-  letter-spacing: 0.36em;
+  display: inline-flex; align-items: baseline; gap: 12px;
+  font: 800 9px/1.2 var(--sans);
+  letter-spacing: 0.42em;
   text-transform: uppercase;
   color: var(--moss);
   position: relative;
-  padding: 2px 4px 0;
+  padding: 4px 6px 0;
+}
+.chapter-prefix {
+  position: relative;
+  display: inline-block;
+}
+.chapter-prefix::before {
+  content: "·";
+  display: inline-block;
+  margin-right: 9px;
+  margin-left: -3px;
+  color: var(--coral);
+  font-weight: 600;
+  opacity: 0.6;
 }
 .chapter-numeral {
   color: var(--coral);
-  font: italic 600 22px/1 var(--display);
-  letter-spacing: 0.04em;
+  font: italic 620 24px/1 var(--display);
+  letter-spacing: 0.05em;
   position: relative;
-  padding: 0 1px 4px;
+  padding: 0 2px 4px;
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
 }
 .chapter-numeral::after {
   content: "";
   position: absolute;
-  left: -3px;
-  right: -3px;
-  bottom: -2px;
+  left: -4px;
+  right: -4px;
+  bottom: -1px;
   height: 1px;
   background: linear-gradient(
     to right,
     transparent,
-    rgba(245, 198, 91, 0.7) 22%,
-    rgba(167, 60, 44, 0.55) 50%,
-    rgba(245, 198, 91, 0.7) 78%,
+    rgba(245, 198, 91, 0.78) 18%,
+    rgba(167, 60, 44, 0.62) 50%,
+    rgba(245, 198, 91, 0.78) 82%,
     transparent
   );
-  opacity: 0.85;
+  opacity: 0.9;
   transition: opacity 700ms var(--ease);
 }
 .chapter-mark-orb {
@@ -627,37 +641,37 @@ button { font: inherit; }
   align-items: center;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px 12px;
-  margin: 6px 0 -2px;
+  gap: 8px 14px;
+  margin: 8px 0 -2px;
   max-width: 100%;
   padding: 0 16px;
   color: var(--ink-soft);
-  font-size: 11px;
+  font-size: 11.5px;
   text-align: center;
   opacity: 0;
   transform: translateY(-2px);
   animation: witness-in 900ms var(--ease) 380ms both;
 }
 .chapter-witness-rule {
-  flex: 0 0 22px;
+  flex: 0 0 24px;
   height: 1px;
   background: linear-gradient(
     to right,
     transparent,
-    rgba(167, 60, 44, 0.32)
+    rgba(167, 60, 44, 0.36)
   );
 }
 .chapter-witness-rule--right {
   background: linear-gradient(
     to left,
     transparent,
-    rgba(167, 60, 44, 0.32)
+    rgba(167, 60, 44, 0.36)
   );
 }
 .chapter-witness-text {
   display: inline-flex;
   align-items: baseline;
-  gap: 5px;
+  gap: 6px;
   font-style: italic;
   letter-spacing: 0.04em;
   color: var(--ink);
@@ -668,60 +682,63 @@ button { font: inherit; }
   font-weight: 500;
 }
 .chapter-witness-key {
-  font: italic 600 10px/1 var(--sans);
+  font: italic 600 9.5px/1 var(--sans);
   text-transform: uppercase;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.36em;
   color: var(--coral-deep) !important;
-  text-transform: uppercase;
   background: transparent !important;
 }
 .chapter-witness-day {
   font: 770 9.5px/1 var(--sans);
-  letter-spacing: 0.22em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--moss) !important;
 }
 .chapter-witness-tail {
   color: var(--ink-soft);
   font-style: italic;
+  letter-spacing: 0.012em;
 }
 .chapter-witness-tail em {
   color: var(--coral-deep);
   font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.005em;
 }
 .chapter-witness-sep {
   color: var(--coral);
-  font: 700 11px/1 var(--display);
-  opacity: 0.7;
+  font: 700 12px/1 var(--display);
+  opacity: 0.72;
 }
 .chapter-witness-hour {
   color: var(--ink) !important;
-  font: italic 600 12.5px/1 var(--display);
+  font: italic 600 13.5px/1 var(--display);
   letter-spacing: -0.01em;
+  font-feature-settings: "kern" 1, "onum" 1;
 }
 .chapter-witness-min {
   color: var(--ink-soft);
-  font: italic 600 11px/1 var(--display);
+  font: italic 600 11.5px/1 var(--display);
   letter-spacing: -0.005em;
 }
 .chapter-witness-period {
   font: italic 600 9.5px/1 var(--display);
   color: var(--coral-deep) !important;
-  margin-left: 1px;
-  letter-spacing: 0.06em;
+  margin-left: 2px;
+  letter-spacing: 0.08em;
 }
 .chapter-witness-year {
   color: var(--moss) !important;
-  font: 770 9px/1 var(--sans);
-  letter-spacing: 0.18em;
+  font: 770 9.5px/1 var(--sans);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 @keyframes witness-in {
   from { opacity: 0; transform: translateY(-2px); }
-  to   { opacity: 0.92; transform: none; }
+  to   { opacity: 0.94; transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .chapter-witness { opacity: 0.92; transform: none; animation: none; }
+  .chapter-witness { opacity: 0.94; transform: none; animation: none; }
 }
 
 /* ────────── reading trace (small ink dots that accumulate) ────────── */
@@ -917,6 +934,108 @@ button { font: inherit; }
   }
 }
 
+/* ────────── questioner-mark — a typographic specimen that mirrors the printer's specimen plate ────────── */
+
+.questioner-mark {
+  position: absolute;
+  top: -18px;
+  left: clamp(-32px, -3vw, -16px);
+  width: clamp(76px, 10vw, 112px);
+  pointer-events: none;
+  z-index: 3;
+  filter: drop-shadow(0 10px 18px rgba(40, 22, 8, 0.22));
+  opacity: 0;
+  transition: opacity 700ms var(--ease);
+}
+.questioner-mark.is-visible {
+  opacity: 1;
+}
+.questioner-mark-card {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: rotate(-2deg);
+  transform-origin: 38% 30%;
+}
+.questioner-mark:not(.is-static) .questioner-mark-card {
+  animation: questioner-mark-arrive 1200ms var(--ease) 1080ms both;
+}
+@keyframes questioner-mark-arrive {
+  from { opacity: 0; transform: translate(6px, -10px) rotate(2deg); }
+  to   { opacity: 1; transform: translate(0, 0) rotate(-2deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .questioner-mark {
+    opacity: 1;
+    transition: none;
+  }
+  .questioner-mark-card {
+    animation: none;
+    transform: rotate(-2deg);
+  }
+}
+
+.qmk-glyph {
+  fill: url(#qmk-gold);
+  font: italic 760 56px/1 var(--display);
+  letter-spacing: -0.02em;
+  paint-order: stroke fill;
+}
+.qmk-glyph-flourish {
+  transform-origin: 46px 80px;
+  animation: qmk-flourish-drift 7s ease-in-out infinite;
+}
+@keyframes qmk-flourish-drift {
+  0%, 100% { transform: translateX(-1px); }
+  50%      { transform: translateX(1px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qmk-glyph-flourish { animation: none; }
+}
+
+.qmk-label {
+  fill: rgba(107, 74, 37, 0.78);
+  font: italic 500 9px/1 var(--serif);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.qmk-label-sub {
+  fill: rgba(17, 32, 42, 0.55);
+  font: italic 400 7.5px/1 var(--serif);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 720px) {
+  .questioner-mark {
+    width: 66px;
+    top: -10px;
+    left: -10px;
+  }
+  .qmk-glyph { font-size: 42px; }
+  .qmk-label { font-size: 7.5px; letter-spacing: 0.14em; }
+  .qmk-label-sub { font-size: 6.5px; }
+}
+@media (max-width: 520px) {
+  .questioner-mark {
+    width: 54px;
+    top: -4px;
+    left: -4px;
+  }
+  .qmk-glyph { font-size: 34px; }
+  .qmk-label { font-size: 6.5px; letter-spacing: 0.1em; }
+  .qmk-label-sub { display: none; }
+}
+@media (max-width: 420px) {
+  .questioner-mark {
+    width: 46px;
+    top: -2px;
+    left: -2px;
+    opacity: 0.72;
+  }
+  .qmk-glyph { font-size: 28px; }
+  .qmk-label { display: none; }
+}
+
 /* ────────── broadsheet title (dominant drop-cap) ────────── */
 
 .broadsheet-title {
@@ -997,10 +1116,39 @@ button { font: inherit; }
   font-style: italic;
   color: var(--coral-deep);
   font-weight: 600;
-  margin-left: 0.005em;
+  margin-left: 0.02em;
   display: inline-block;
-  transform: translateY(0.02em);
-  text-shadow: 0 0.04em 0 rgba(167, 60, 44, 0.08);
+  font-size: 1.1em;
+  line-height: 0.86;
+  transform: translateY(0.06em);
+  text-shadow: 0 0.04em 0 rgba(167, 60, 44, 0.1);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1;
+  position: relative;
+  padding: 0 0.02em 0 0.04em;
+}
+.title-questions::after {
+  content: "";
+  position: absolute;
+  left: 0.04em;
+  right: 0.02em;
+  bottom: -0.18em;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(167, 60, 44, 0.5) 18%,
+    rgba(167, 60, 44, 0.7) 50%,
+    rgba(167, 60, 44, 0.5) 82%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: scaleX(0.4);
+  transform-origin: center;
+  transition: opacity 900ms var(--ease) 600ms, transform 1200ms var(--ease) 600ms;
+}
+.has-answer .title-questions::after {
+  opacity: 0.85;
+  transform: scaleX(1);
 }
 .title-flourish-trail {
   position: absolute;
@@ -2461,20 +2609,20 @@ button { font: inherit; }
 .reply-paragraph {
   display: block;
   position: relative;
-  font: italic clamp(19px, 2.4vw, 23px)/1.66 var(--display);
-  letter-spacing: 0.012em;
+  font: italic clamp(19px, 2.4vw, 23.5px)/1.62 var(--display);
+  letter-spacing: 0.01em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
   color: var(--ink);
   text-wrap: pretty;
   text-wrap: balance;
   hanging-punctuation: first last;
   text-indent: 0.02em;
-  max-width: 58ch;
+  max-width: 32em;
   margin-inline: auto;
+  padding-inline: 0.4em;
   text-shadow: 0 0 0.4px rgba(17, 32, 42, 0.08);
 }
 .reply-paragraph::first-letter {
-  /* baseline tweak so italic letters don't snag against the body */
   margin-right: 0.01em;
 }
 .reply-paragraph .reply-ampersand {
@@ -6363,13 +6511,13 @@ button { font: inherit; }
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 8px 12px;
+  gap: 10px 14px;
   color: var(--ink-soft);
 }
 .press-plate-mark {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   margin: 0;
   opacity: 0;
   animation: press-mark-in 700ms var(--ease) calc(var(--i, 0) * 110ms + 280ms) both;
@@ -6382,17 +6530,22 @@ button { font: inherit; }
   position: relative;
   display: inline-flex;
   align-items: baseline;
-  gap: 5px;
-  padding: 2px 4px 3px;
+  gap: 6px;
+  padding: 3px 6px 4px;
   outline: none;
   border-bottom: 1px dotted transparent;
   cursor: help;
-  transition: color 0.22s var(--ease), border-color 0.22s var(--ease), background 0.22s var(--ease);
+  border-radius: 2px;
+  transition:
+    color 0.22s var(--ease),
+    border-color 0.22s var(--ease),
+    background 0.22s var(--ease);
 }
 .press-plate-mark-note:hover,
 .press-plate-mark-note:focus-visible {
   color: var(--coral-deep);
   border-bottom-color: currentColor;
+  background: rgba(217, 101, 74, 0.06);
 }
 .press-plate-mark-note::after {
   content: attr(data-gloss);
@@ -6434,16 +6587,21 @@ button { font: inherit; }
 .press-plate-mark-note:focus-visible::before { opacity: 1; }
 .press-plate-mark-glyph {
   color: var(--coral);
-  font: italic 16px/1 var(--display);
+  font: italic 17px/1 var(--display);
+  letter-spacing: -0.005em;
 }
 .press-plate-mark-text {
   font: italic 12.5px/1 var(--display);
   color: var(--ink-soft);
+  letter-spacing: 0.005em;
 }
 .press-plate-mark-dot {
   color: var(--coral);
   opacity: 0.55;
   font: 700 14px/1 var(--display);
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
 }
 
 .press-plate-divider {

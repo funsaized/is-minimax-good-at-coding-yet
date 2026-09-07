@@ -3813,6 +3813,114 @@ function SpecimenImprint({
   )
 }
 
+function QuestionerMark({ visible, reduced }: { visible: boolean; reduced: boolean }) {
+  return (
+    <figure
+      className={`questioner-mark${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg className="questioner-mark-card" viewBox="0 0 92 124" focusable="false">
+        <defs>
+          <linearGradient id="qmk-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="48%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#8a5d1f" />
+          </linearGradient>
+          <linearGradient id="qmk-gold-soft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#a47026" />
+          </linearGradient>
+          <radialGradient id="qmk-face" cx="50%" cy="22%" r="92%">
+            <stop offset="0%" stopColor="rgba(255, 248, 224, 0.96)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.78)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0.56)" />
+          </radialGradient>
+          <pattern id="qmk-grain" width="3" height="3" patternUnits="userSpaceOnUse">
+            <circle cx="0.6" cy="0.4" r="0.32" fill="rgba(107, 74, 37, 0.05)" />
+            <circle cx="2.2" cy="1.6" r="0.24" fill="rgba(107, 74, 37, 0.04)" />
+          </pattern>
+        </defs>
+
+        <ellipse cx="46" cy="120" rx="34" ry="2.2" fill="rgba(40, 22, 8, 0.18)" />
+
+        <rect
+          x="2"
+          y="2"
+          width="88"
+          height="118"
+          rx="1.5"
+          fill="url(#qmk-face)"
+          stroke="url(#qmk-gold)"
+          strokeWidth="0.85"
+        />
+        <rect
+          x="2"
+          y="2"
+          width="88"
+          height="118"
+          rx="1.5"
+          fill="url(#qmk-grain)"
+          opacity="0.7"
+        />
+        <rect
+          x="6"
+          y="6"
+          width="80"
+          height="110"
+          rx="1"
+          fill="none"
+          stroke="url(#qmk-gold)"
+          strokeWidth="0.32"
+          strokeDasharray="1.2 1.6"
+          opacity="0.78"
+        />
+
+        <g className="qmk-corners" fill="#cf3b29" fillOpacity="0.55">
+          <path d="M 9 9 L 16 9 Q 16 12.5 12.5 13.5 L 12.5 17 L 9 17 Z" />
+          <circle cx="11" cy="11" r="0.6" />
+          <path d="M 83 9 L 76 9 Q 76 12.5 79.5 13.5 L 79.5 17 L 83 17 Z" />
+          <circle cx="81" cy="11" r="0.6" />
+          <path d="M 9 113 L 16 113 Q 16 109.5 12.5 108.5 L 12.5 105 L 9 105 Z" />
+          <circle cx="11" cy="111" r="0.6" />
+          <path d="M 83 113 L 76 113 Q 76 109.5 79.5 108.5 L 79.5 105 L 83 105 Z" />
+          <circle cx="81" cy="111" r="0.6" />
+        </g>
+
+        <g className="qmk-pips" fill="url(#qmk-gold-soft)">
+          <circle cx="46" cy="9" r="0.7" />
+          <circle cx="46" cy="113" r="0.7" />
+          <circle cx="9" cy="60" r="0.6" />
+          <circle cx="83" cy="60" r="0.6" />
+        </g>
+
+        <line x1="22" y1="22" x2="70" y2="22" stroke="url(#qmk-gold)" strokeWidth="0.4" strokeLinecap="round" />
+        <circle cx="46" cy="22" r="1.2" fill="url(#qmk-gold)" />
+        <line x1="36" y1="26" x2="56" y2="26" stroke="url(#qmk-gold)" strokeWidth="0.3" strokeDasharray="0.5 1.4" />
+
+        <g className="qmk-glyph-group">
+          <text x="46" y="72" textAnchor="middle" className="qmk-glyph">?</text>
+          <path
+            className="qmk-glyph-flourish"
+            d="M 30 78 Q 40 84 50 80 Q 58 76 62 80"
+            stroke="url(#qmk-gold)"
+            strokeWidth="0.45"
+            fill="none"
+            strokeLinecap="round"
+            opacity="0.7"
+          />
+        </g>
+
+        <line x1="22" y1="88" x2="70" y2="88" stroke="url(#qmk-gold)" strokeWidth="0.4" strokeLinecap="round" />
+        <text x="46" y="98" textAnchor="middle" className="qmk-label">the question</text>
+        <text x="46" y="105" textAnchor="middle" className="qmk-label-sub">a mark of inquiry</text>
+        <line x1="32" y1="109" x2="60" y2="109" stroke="url(#qmk-gold)" strokeWidth="0.3" strokeDasharray="0.4 1.4" opacity="0.7" />
+      </svg>
+    </figure>
+  )
+}
+
 function SpecimenPlate({ visible, reduced }: { visible: boolean; reduced: boolean }) {
   return (
     <figure
@@ -5974,6 +6082,7 @@ export function App() {
         <div className="sheet-content">
           <section className="question-panel" aria-labelledby="page-title">
             <RectoEdgeShadow active={versoOpened} />
+            <QuestionerMark visible={!versoOpened} reduced={reduced} />
             <SpecimenPlate visible={!versoOpened} reduced={reduced} />
             <div className="annotation annotation--top">
               <span className="annotation-mark" aria-hidden="true">¶</span>
