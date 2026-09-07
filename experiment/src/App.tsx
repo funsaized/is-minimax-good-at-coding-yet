@@ -51,6 +51,50 @@ function useNow() {
   return now
 }
 
+function useSheetPointer() {
+  const [point, setPoint] = useState<{
+    x: number
+    y: number
+    inside: boolean
+  }>({ x: 0, y: 0, inside: false })
+
+  useEffect(() => {
+    let raf = 0
+    let pending: { x: number; y: number; inside: boolean } | null = null
+
+    const flush = () => {
+      if (pending) {
+        setPoint(pending)
+        pending = null
+      }
+      raf = 0
+    }
+
+    const onMove = (e: PointerEvent) => {
+      const sheet = document.querySelector('.sheet')
+      if (!sheet) return
+      const rect = sheet.getBoundingClientRect()
+      const inside =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1
+      const y = ((e.clientY - rect.top) / rect.height) * 2 - 1
+      pending = { x, y, inside }
+      if (!raf) raf = requestAnimationFrame(flush)
+    }
+
+    window.addEventListener('pointermove', onMove, { passive: true })
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  return point
+}
+
 function AsterismGlyph({ className }: { className?: string }) {
   return (
     <svg
@@ -86,6 +130,12 @@ function AsterismGlyph({ className }: { className?: string }) {
 function WaxSealInitial() {
   return (
     <span className="wax-seal" aria-hidden="true">
+      <span className="wax-halo" />
+      <span className="wax-bezant wax-bezant--one" />
+      <span className="wax-bezant wax-bezant--two" />
+      <span className="wax-bezant wax-bezant--three" />
+      <span className="wax-bezant wax-bezant--four" />
+      <span className="wax-bezant wax-bezant--five" />
       <svg viewBox="0 0 100 100" focusable="false">
         <defs>
           <radialGradient id="wax-radial" cx="36%" cy="30%" r="72%">
@@ -296,6 +346,10 @@ function BookmarkRibbon() {
           <stop offset="0%" stopColor="#5a1408" />
           <stop offset="100%" stopColor="#7a1a0e" />
         </linearGradient>
+        <pattern id="ribbon-weave" width="2.4" height="4" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="0" y2="4" stroke="rgba(255, 220, 200, 0.1)" strokeWidth="0.4" />
+          <line x1="1.2" y1="0" x2="1.2" y2="4" stroke="rgba(40, 8, 4, 0.18)" strokeWidth="0.35" />
+        </pattern>
       </defs>
       <path
         d="M 2 0 L 30 0 L 30 16 Q 28 19 26 17 L 16 23 L 6 17 Q 4 19 2 16 Z"
@@ -304,6 +358,10 @@ function BookmarkRibbon() {
       <path
         d="M 2 16 L 30 16 L 30 360 L 16 388 L 2 360 Z"
         fill="url(#ribbon-front)"
+      />
+      <path
+        d="M 2 16 L 30 16 L 30 360 L 16 388 L 2 360 Z"
+        fill="url(#ribbon-weave)"
       />
       <line
         x1="16"
@@ -839,9 +897,194 @@ function SignatureMark({ sig, side }: { sig: string; side: 'r' | 'v' }) {
   )
 }
 
+function MarginaliaOwl({
+  active,
+  reduced,
+  watchPoint,
+}: {
+  active: boolean
+  reduced: boolean
+  watchPoint: { x: number; y: number; inside: boolean }
+}) {
+  const clamp = (v: number, lo: number, hi: number) =>
+    Math.max(lo, Math.min(hi, v))
+  const px = watchPoint.inside ? clamp(watchPoint.x * 2.6, -2.6, 2.6) : 0
+  const py = watchPoint.inside ? clamp(watchPoint.y * 1.6, -1.6, 1.6) : 0
+
+  return (
+    <div
+      className={`marginalia-owl${active ? ' is-active' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 90 100" focusable="false">
+        <defs>
+          <linearGradient id="owl-feather" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(196, 156, 112, 0.92)" />
+            <stop offset="100%" stopColor="rgba(112, 80, 50, 0.95)" />
+          </linearGradient>
+          <radialGradient id="owl-belly" cx="50%" cy="55%" r="62%">
+            <stop offset="0%" stopColor="rgba(255, 248, 230, 0.96)" />
+            <stop offset="100%" stopColor="rgba(218, 192, 148, 0.42)" />
+          </radialGradient>
+          <radialGradient id="owl-eye-disc" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.98)" />
+            <stop offset="100%" stopColor="rgba(238, 220, 178, 0.62)" />
+          </radialGradient>
+          <linearGradient id="owl-perch" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(107, 74, 37, 0.0)" />
+            <stop offset="22%" stopColor="rgba(107, 74, 37, 0.85)" />
+            <stop offset="78%" stopColor="rgba(107, 74, 37, 0.85)" />
+            <stop offset="100%" stopColor="rgba(107, 74, 37, 0.0)" />
+          </linearGradient>
+        </defs>
+
+        <path
+          d="M 6 92 Q 25 89 45 92 Q 65 95 84 92"
+          stroke="url(#owl-perch)"
+          strokeWidth="0.9"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 14 91 L 11 88 M 18 92 L 16 88"
+          stroke="rgba(107, 74, 37, 0.7)"
+          strokeWidth="0.45"
+          strokeLinecap="round"
+          fill="none"
+        />
+        <path
+          d="M 72 93 L 75 89 M 76 93 L 72 88"
+          stroke="rgba(107, 74, 37, 0.7)"
+          strokeWidth="0.45"
+          strokeLinecap="round"
+          fill="none"
+        />
+
+        <ellipse cx="45" cy="94" rx="22" ry="1.8" fill="rgba(40, 12, 6, 0.16)" />
+
+        <g className="owl-body">
+          <path
+            d="M 26 30 L 22 16 L 32 26 Z"
+            fill="url(#owl-feather)"
+          />
+          <path
+            d="M 64 30 L 68 16 L 58 26 Z"
+            fill="url(#owl-feather)"
+          />
+          <ellipse cx="45" cy="56" rx="24" ry="30" fill="url(#owl-feather)" />
+          <ellipse cx="45" cy="64" rx="15" ry="19" fill="url(#owl-belly)" />
+
+          <path
+            d="M 22 58 Q 17 70 23 84 L 28 84 Q 22 70 27 58 Z"
+            fill="rgba(107, 74, 37, 0.35)"
+          />
+          <path
+            d="M 68 58 Q 73 70 67 84 L 62 84 Q 68 70 63 58 Z"
+            fill="rgba(107, 74, 37, 0.35)"
+          />
+
+          <g
+            className="owl-chest"
+            stroke="rgba(107, 74, 37, 0.32)"
+            strokeWidth="0.45"
+            fill="none"
+          >
+            <path d="M 38 70 Q 40 72 38 74" />
+            <path d="M 45 72 Q 47 74 45 76" />
+            <path d="M 52 70 Q 54 72 52 74" />
+            <path d="M 38 78 Q 40 80 38 82" />
+            <path d="M 45 80 Q 47 82 45 84" />
+            <path d="M 52 78 Q 54 80 52 82" />
+          </g>
+
+          <circle cx="33" cy="48" r="9" fill="url(#owl-eye-disc)" />
+          <circle cx="57" cy="48" r="9" fill="url(#owl-eye-disc)" />
+          <circle
+            cx="33"
+            cy="48"
+            r="9"
+            fill="none"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.55"
+          />
+          <circle
+            cx="57"
+            cy="48"
+            r="9"
+            fill="none"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.55"
+          />
+
+          <g
+            className="owl-pupil owl-pupil-left"
+            style={
+              reduced
+                ? undefined
+                : { transform: `translate(${px}px, ${py}px)` }
+            }
+          >
+            <circle cx="33" cy="48" r="3.2" fill="rgba(20, 22, 32, 0.96)" />
+            <circle cx="32" cy="47" r="0.9" fill="rgba(255, 248, 230, 0.95)" />
+          </g>
+          <g
+            className="owl-pupil owl-pupil-right"
+            style={
+              reduced
+                ? undefined
+                : { transform: `translate(${px}px, ${py}px)` }
+            }
+          >
+            <circle cx="57" cy="48" r="3.2" fill="rgba(20, 22, 32, 0.96)" />
+            <circle cx="56" cy="47" r="0.9" fill="rgba(255, 248, 230, 0.95)" />
+          </g>
+
+          <ellipse
+            cx="33"
+            cy="48"
+            rx="9"
+            ry="9"
+            fill="rgba(112, 80, 50, 0.94)"
+            className="owl-eyelid owl-eyelid-left"
+          />
+          <ellipse
+            cx="57"
+            cy="48"
+            rx="9"
+            ry="9"
+            fill="rgba(112, 80, 50, 0.94)"
+            className="owl-eyelid owl-eyelid-right"
+          />
+
+          <g className="owl-beak">
+            <path
+              d="M 42 56 L 48 56 L 45 62 Z"
+              fill="var(--coral)"
+            />
+          </g>
+
+          <g
+            className="owl-feet"
+            stroke="var(--coral-dark)"
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            fill="none"
+          >
+            <path d="M 38 86 L 36 92" />
+            <path d="M 33 92 L 40 92" />
+            <path d="M 52 86 L 54 92" />
+            <path d="M 50 92 L 57 92" />
+          </g>
+        </g>
+      </svg>
+    </div>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
+  const watchPoint = useSheetPointer()
   const [phase, setPhase] = useState<Phase>('idle')
   const [slow, setSlow] = useState(false)
   const [answerChars, setAnswerChars] = useState(0)
@@ -948,6 +1191,10 @@ export function App() {
       <div className="ambient-glow ambient-glow--two" aria-hidden="true" />
 
       <article className={`sheet ${phase !== 'idle' ? 'has-answer' : ''}`}>
+        <span
+          className={`sheet-ambient${phase !== 'idle' ? ' is-lit' : ''}`}
+          aria-hidden="true"
+        />
         <DustMotes reduced={reduced} />
         <BookmarkRibbon />
         <span className="gilded-edge" aria-hidden="true" />
@@ -1000,6 +1247,11 @@ export function App() {
             <p className="catchword">
               <span className="catchword-rule" aria-hidden="true" />
               <span className="catchword-text">verso · reply</span>
+              <MarginaliaOwl
+                active={phase !== 'idle'}
+                reduced={reduced}
+                watchPoint={watchPoint}
+              />
               <span className="catchword-arrow" aria-hidden="true">↘</span>
             </p>
           </section>
@@ -1032,7 +1284,7 @@ export function App() {
               <span className="answer-corner answer-corner--tr" aria-hidden="true" />
               <span className="answer-corner answer-corner--bl" aria-hidden="true" />
               <span className="answer-corner answer-corner--br" aria-hidden="true" />
-              <span className="answer-quote answer-quote--open" aria-hidden="true">“</span>
+              <span className="answer-quote answer-quote--open" aria-hidden="true">"</span>
               {!answerVisible && (
                 <p className="answer-placeholder">
                   press below
@@ -1046,8 +1298,17 @@ export function App() {
                   {phase === 'answering' && <span className="typing-caret" aria-hidden="true">|</span>}
                 </p>
               )}
-              <span className="answer-quote answer-quote--close" aria-hidden="true">”</span>
+              <span className="answer-quote answer-quote--close" aria-hidden="true">"</span>
               <span className="answer-attribution" aria-hidden="true">— set in italic</span>
+              <span
+                className="answer-sweep"
+                style={{
+                  transform: `translateX(${
+                    phase === 'complete' ? 200 : (inkProgress - 0.5) * 200
+                  }%)`,
+                }}
+                aria-hidden="true"
+              />
               <ScribalQuill active={quillActive} progress={quillProgress} />
             </div>
 
