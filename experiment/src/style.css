@@ -1868,6 +1868,244 @@ button { font: inherit; }
   letter-spacing: 0.005em;
 }
 
+/* ────────── almanac daybook (ephemeris of this reading) ────────── */
+
+.almanac-daybook {
+  position: relative;
+  margin: 28px -8px 6px;
+  padding: 13px 20px 16px;
+  color: var(--ink);
+  border-top: 1px solid rgba(107, 74, 37, 0.32);
+  border-bottom: 1px solid rgba(107, 74, 37, 0.32);
+  background:
+    linear-gradient(180deg, rgba(245, 220, 168, 0.18), rgba(245, 220, 168, 0.05)),
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 6px,
+      rgba(107, 74, 37, 0.025) 6px 7px
+    );
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 950ms var(--ease), transform 950ms var(--ease);
+}
+.response-panel.is-revealed .almanac-daybook {
+  opacity: 1;
+  transform: none;
+}
+.almanac-daybook::before {
+  content: "";
+  position: absolute;
+  left: 26%; right: 26%; top: -1px; height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(107, 74, 37, 0.45) 30%,
+    rgba(107, 74, 37, 0.45) 70%,
+    transparent
+  );
+}
+.almanac-daybook::after {
+  content: "";
+  position: absolute;
+  left: 26%; right: 26%; bottom: -1px; height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(107, 74, 37, 0.45) 30%,
+    rgba(107, 74, 37, 0.45) 70%,
+    transparent
+  );
+}
+
+.almanac-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.almanac-mark {
+  display: inline-flex;
+  align-items: center;
+  width: 22px;
+  height: 22px;
+  color: var(--coral);
+  opacity: 0.85;
+  flex: 0 0 auto;
+}
+.almanac-mark svg { width: 100%; height: 100%; }
+.almanac-mark--right { transform: scaleX(-1); }
+.almanac-head-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 9px;
+}
+.almanac-head-key {
+  font: 800 9px var(--sans);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+}
+.almanac-head-sep {
+  color: var(--coral);
+  opacity: 0.72;
+  font: 700 14px/1 var(--display);
+}
+.almanac-head-title {
+  font: italic 13px var(--display);
+  color: var(--ink);
+  letter-spacing: 0.005em;
+}
+.almanac-head-press {
+  font: 800 8.5px var(--sans);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  background: linear-gradient(180deg, rgba(217, 101, 74, 0.08), rgba(217, 101, 74, 0.04));
+  padding: 2px 7px;
+  border: 1px solid rgba(167, 60, 44, 0.32);
+  transform: rotate(-2deg);
+}
+
+.almanac-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1px 1.05fr 1px 1.1fr 1px 1.1fr;
+  align-items: stretch;
+  gap: 0;
+}
+.almanac-cell,
+.almanac-divider {
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+}
+.response-panel.is-revealed .almanac-cell {
+  opacity: 1;
+  transform: none;
+}
+.response-panel.is-revealed .almanac-cell:nth-child(1) { transition-delay: 360ms; }
+.response-panel.is-revealed .almanac-cell:nth-child(3) { transition-delay: 460ms; }
+.response-panel.is-revealed .almanac-cell:nth-child(5) { transition-delay: 560ms; }
+.response-panel.is-revealed .almanac-cell:nth-child(7) { transition-delay: 660ms; }
+.response-panel.is-revealed .almanac-divider {
+  opacity: 1;
+  transform: none;
+  transition: opacity 700ms var(--ease) 280ms;
+}
+.almanac-cell {
+  padding: 8px 14px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  position: relative;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+.almanac-cell--day { justify-content: center; }
+.almanac-cell::before {
+  content: "";
+  position: absolute;
+  left: 14px; right: 14px;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(107, 74, 37, 0.22) 50%,
+    transparent
+  );
+}
+.almanac-cell:first-child::before { display: none; }
+
+.almanac-key {
+  display: block;
+  font: 800 8.5px var(--sans);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--moss);
+  opacity: 0.92;
+}
+.almanac-val {
+  display: block;
+  color: var(--ink);
+  font: italic 13.5px/1.4 var(--display);
+  letter-spacing: 0.005em;
+}
+.almanac-val em { font-style: italic; }
+
+.almanac-day-name,
+.almanac-day-month {
+  color: var(--coral-deep);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.almanac-day-ord { color: var(--ink); font-weight: 500; }
+.almanac-day-year {
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.almanac-day-tail {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.almanac-val--hour {
+  display: inline-flex;
+  align-items: baseline;
+}
+.almanac-hour-h {
+  font: italic 600 19px var(--display);
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.almanac-hour-m {
+  font: italic 600 16px var(--display);
+  color: var(--ink-soft);
+  margin-left: 1px;
+}
+.almanac-hour-period {
+  font: italic 11.5px var(--display);
+  color: var(--coral-deep);
+  margin-left: 6px;
+}
+
+.almanac-moon-name,
+.almanac-sky-name {
+  color: var(--coral-deep);
+  font-weight: 600;
+}
+.almanac-moon-tail,
+.almanac-sky-tail {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.almanac-aux {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font: italic 10.5px var(--display);
+  letter-spacing: 0.04em;
+}
+.almanac-aux em { font-style: italic; }
+.almanac-aux-strong { color: var(--ink); font-weight: 500; }
+
+.almanac-divider {
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(107, 74, 37, 0.36) 18%,
+    rgba(107, 74, 37, 0.36) 82%,
+    transparent
+  );
+  align-self: stretch;
+  margin: 6px 0;
+}
+
 /* ────────── scholar's bench ────────── */
 
 .scholars-bench {
@@ -2488,6 +2726,13 @@ button { font: inherit; }
   .answer-copy-initial {
     margin: 4px 10px 4px 0;
   }
+  .almanac-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 0;
+  }
+  .almanac-divider { display: none; }
+  .almanac-cell::before { display: none; }
+  .almanac-cell { padding: 4px 12px 4px; }
 }
 
 @media (max-width: 560px) {
@@ -2629,6 +2874,17 @@ button { font: inherit; }
   .answer-letter-close { left: 22px; bottom: 8px; font-size: 10px; }
   .answer-letter-close-rule { width: 12px; }
   .button-keys { display: none; }
+  .almanac-daybook {
+    margin: 22px -4px 4px;
+    padding: 12px 14px 14px;
+  }
+  .almanac-head { gap: 8px; margin-bottom: 8px; }
+  .almanac-head-text { gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .almanac-head-title { font-size: 12px; }
+  .almanac-cell { padding: 6px 10px 4px; }
+  .almanac-val { font-size: 12px; line-height: 1.32; }
+  .almanac-hour-h { font-size: 16px; }
+  .almanac-aux { font-size: 9.5px; }
 }
 
 /* ────────── new composition pieces ────────── */
@@ -2638,8 +2894,12 @@ button { font: inherit; }
 .owl-anchor,
 .bench-item,
 .answer-surface,
-.reply-copy {
+.reply-copy,
+.almanac-anchor {
   scroll-margin-top: clamp(70px, 8vh, 110px);
+}
+.almanac-anchor {
+  display: block;
 }
 
 /* ────────── reader cat ────────── */
@@ -2939,6 +3199,8 @@ button { font: inherit; }
   .bs-vine--tr, .bs-vine--bl { animation: none !important; }
   .pressed-leaf-body { animation: none !important; }
   .reading-breath-mark { animation: none !important; }
+  .almanac-daybook { opacity: 1; transform: none; transition: none; }
+  .almanac-cell::before { display: none; }
 }
 
 /* ────────── pressed leaf (tucked botanical) ────────── */

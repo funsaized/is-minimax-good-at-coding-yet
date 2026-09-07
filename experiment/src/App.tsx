@@ -1192,6 +1192,7 @@ function Apparatus({
     { numeral: 'iv', name: 'this hour', gloss: 'the dial of the leaf', hash: 'sec-hour' },
     { numeral: 'v', name: 'this sky', gloss: 'polaris above ur. minor', hash: 'sec-sky' },
     { numeral: 'vi', name: 'this moon', gloss: 'tide & illumination', hash: 'sec-moon' },
+    { numeral: 'vii', name: 'this almanac', gloss: 'today, set in this folio', hash: 'sec-almanac' },
   ]
 
   return (
@@ -2911,6 +2912,40 @@ function ordinal(n: number) {
 
 const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x']
 
+const WEEKDAYS = [
+  'Sunday', 'Monday', 'Tuesday', 'Wednesday',
+  'Thursday', 'Friday', 'Saturday',
+]
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+]
+const ORDINALS = [
+  'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh',
+  'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth',
+  'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth',
+  'nineteenth', 'twentieth', 'twenty-first', 'twenty-second', 'twenty-third',
+  'twenty-fourth', 'twenty-fifth', 'twenty-sixth', 'twenty-seventh',
+  'twenty-eighth', 'twenty-ninth', 'thirtieth', 'thirty-first',
+]
+
+function toRomanYear(year: number): string {
+  const map: Array<[number, string]> = [
+    [1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'],
+    [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'],
+    [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I'],
+  ]
+  let result = ''
+  let n = Math.max(1, Math.floor(year))
+  for (const [value, sym] of map) {
+    while (n >= value) {
+      result += sym
+      n -= value
+    }
+  }
+  return result
+}
+
 function ReadingLines({
   count,
   visible,
@@ -3357,6 +3392,134 @@ function ReaderCat({ visible }: { visible: boolean }) {
         <span className="reader-cat-caption-tail" aria-hidden="true">· settled at the foot of the page</span>
       </span>
     </div>
+  )
+}
+
+function AlmanacDaybook({ now, moonPhase, cycle }: { now: Date; moonPhase: number; cycle: number }) {
+  const dayName = WEEKDAYS[now.getDay()]
+  const monthName = MONTHS[now.getMonth()]
+  const dayOrdinal = ORDINALS[Math.min(ORDINALS.length - 1, now.getDate() - 1)]
+  const yearRoman = toRomanYear(now.getFullYear())
+
+  const hour24 = now.getHours()
+  const minutes = now.getMinutes()
+  const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
+  const h12 = ((hour24 + 11) % 12) + 1
+  const mm = String(minutes).padStart(2, '0')
+
+  const siderealMinutes = (((hour24 * 60 + minutes + 558) / 60) % 24 + 24) % 24
+  const sidH = String(Math.floor(siderealMinutes)).padStart(2, '0')
+  const sidM = String(
+    Math.floor((siderealMinutes - Math.floor(siderealMinutes)) * 60),
+  ).padStart(2, '0')
+
+  const moonName = moonPhaseName(moonPhase)
+  const illumination = Math.round((1 - Math.cos(moonPhase * 2 * Math.PI)) * 50)
+  const impression =
+    cycle === 0 ? 'first impression' : cycle === 1 ? 'second press' : `press ${ordinal(cycle + 1)}`
+
+  return (
+    <aside
+      className="almanac-daybook"
+      aria-label="ephemeris of this reading"
+    >
+      <span className="almanac-frame" aria-hidden="true">
+        <svg viewBox="0 0 600 8" focusable="false" preserveAspectRatio="none">
+          <line x1="0" y1="0" x2="600" y2="0" stroke="currentColor" strokeWidth="0.4" strokeDasharray="1.4 2.4" opacity="0.6" />
+        </svg>
+      </span>
+
+      <header className="almanac-head">
+        <span className="almanac-mark" aria-hidden="true">
+          <svg viewBox="0 0 26 26" focusable="false">
+            <circle cx="13" cy="13" r="10" fill="none" stroke="currentColor" strokeWidth="0.5" />
+            <circle cx="13" cy="13" r="5.5" fill="none" stroke="currentColor" strokeWidth="0.35" strokeDasharray="0.4 1.4" />
+            <circle cx="13" cy="13" r="1.1" fill="currentColor" />
+            <line x1="13" y1="1.5" x2="13" y2="5" stroke="currentColor" strokeWidth="0.35" />
+            <line x1="13" y1="21" x2="13" y2="24.5" stroke="currentColor" strokeWidth="0.35" />
+            <line x1="1.5" y1="13" x2="5" y2="13" stroke="currentColor" strokeWidth="0.35" />
+            <line x1="21" y1="13" x2="24.5" y2="13" stroke="currentColor" strokeWidth="0.35" />
+          </svg>
+        </span>
+        <span className="almanac-head-text">
+          <em className="almanac-head-key">almanac</em>
+          <span className="almanac-head-sep" aria-hidden="true">·</span>
+          <em className="almanac-head-title">daybook of this reading</em>
+          {cycle > 0 && (
+            <>
+              <span className="almanac-head-sep" aria-hidden="true">·</span>
+              <em className="almanac-head-press">{impression}</em>
+            </>
+          )}
+        </span>
+        <span className="almanac-mark almanac-mark--right" aria-hidden="true">
+          <svg viewBox="0 0 26 26" focusable="false">
+            <circle cx="13" cy="13" r="10" fill="none" stroke="currentColor" strokeWidth="0.5" />
+            <circle cx="13" cy="13" r="5.5" fill="none" stroke="currentColor" strokeWidth="0.35" strokeDasharray="0.4 1.4" />
+            <circle cx="13" cy="13" r="1.1" fill="currentColor" />
+            <line x1="13" y1="1.5" x2="13" y2="5" stroke="currentColor" strokeWidth="0.35" />
+            <line x1="13" y1="21" x2="13" y2="24.5" stroke="currentColor" strokeWidth="0.35" />
+            <line x1="1.5" y1="13" x2="5" y2="13" stroke="currentColor" strokeWidth="0.35" />
+            <line x1="21" y1="13" x2="24.5" y2="13" stroke="currentColor" strokeWidth="0.35" />
+          </svg>
+        </span>
+      </header>
+
+      <div className="almanac-grid">
+        <div className="almanac-cell almanac-cell--day">
+          <span className="almanac-key">today</span>
+          <span className="almanac-val almanac-val--day">
+            <em className="almanac-day-name">{dayName}</em>
+            <span className="almanac-day-tail">
+              , the <em className="almanac-day-ord">{dayOrdinal}</em>
+            </span>
+            <span className="almanac-day-tail">
+              {' '}of <em className="almanac-day-month">{monthName}</em>
+            </span>
+            <span className="almanac-day-tail">
+              {' '}· <em className="almanac-day-year">{yearRoman}</em>
+            </span>
+          </span>
+        </div>
+
+        <span className="almanac-divider" aria-hidden="true" />
+
+        <div className="almanac-cell almanac-cell--hour">
+          <span className="almanac-key">hour</span>
+          <span className="almanac-val almanac-val--hour">
+            <em className="almanac-hour-h">{h12}</em>
+            <span className="almanac-hour-m">:{mm}</span>
+            <em className="almanac-hour-period">{period}</em>
+          </span>
+          <span className="almanac-aux">
+            sidereal <em className="almanac-aux-strong">{sidH}h{sidM}</em>
+          </span>
+        </div>
+
+        <span className="almanac-divider" aria-hidden="true" />
+
+        <div className="almanac-cell almanac-cell--moon">
+          <span className="almanac-key">moon</span>
+          <span className="almanac-val almanac-val--moon">
+            <em className="almanac-moon-name">{moonName}</em>
+            <span className="almanac-moon-tail"> · {illumination}% lit</span>
+          </span>
+        </div>
+
+        <span className="almanac-divider" aria-hidden="true" />
+
+        <div className="almanac-cell almanac-cell--sky">
+          <span className="almanac-key">stella</span>
+          <span className="almanac-val almanac-val--sky">
+            <em className="almanac-sky-name">Polaris</em>
+            <span className="almanac-sky-tail"> · Ursae Minoris</span>
+          </span>
+          <span className="almanac-aux">
+            above the folio, <em className="almanac-aux-strong">always still</em>
+          </span>
+        </div>
+      </div>
+    </aside>
   )
 }
 
@@ -3893,6 +4056,14 @@ export function App() {
                   <MoonPhase phase={moonPhase} visible={hourDialVisible} />
                 </div>
               </div>
+            </div>
+
+            <div
+              data-section="sec-almanac"
+              ref={(el) => { sectionRefs.current['sec-almanac'] = el }}
+              className="almanac-anchor"
+            >
+              <AlmanacDaybook now={now} moonPhase={moonPhase} cycle={cycle} />
             </div>
 
             <CulDeLampe inscriptionVisible={phase === 'complete'} />
