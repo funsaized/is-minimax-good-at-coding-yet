@@ -5315,3 +5315,213 @@ button { font: inherit; }
 .chapter-opener {
   position: relative;
 }
+
+/* ────────── iteration 108 · recto seal (closing imprint for the question) ────────── */
+
+.recto-seal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  margin: 26px 0 4px;
+  padding: 4px 4px 0;
+  max-width: 96%;
+  color: var(--coral-deep);
+  animation: recto-seal-in 1100ms var(--ease) 380ms both;
+}
+@keyframes recto-seal-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+.recto-seal-rule {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.36) 32%,
+    rgba(167, 60, 44, 0.42) 50%,
+    rgba(167, 60, 44, 0.36) 68%,
+    transparent
+  );
+}
+.recto-seal-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(167, 60, 44, 0.36) 32%,
+    rgba(167, 60, 44, 0.42) 50%,
+    rgba(167, 60, 44, 0.36) 68%,
+    transparent
+  );
+}
+.recto-seal-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.12));
+}
+.recto-seal-mark svg { display: block; width: 44px; height: 44px; }
+.recto-seal-rays {
+  transform-origin: 24px 24px;
+  animation: recto-seal-rays 7s ease-in-out infinite;
+}
+@keyframes recto-seal-rays {
+  0%, 100% { transform: rotate(0deg); opacity: 0.85; }
+  50%      { transform: rotate(8deg); opacity: 1; }
+}
+.recto-seal-letter-glyph {
+  font: italic 700 18px/1 var(--display);
+  letter-spacing: -0.02em;
+}
+.recto-seal-roman {
+  fill: url(#recto-seal-gold);
+  font: italic 700 7px/1 var(--display);
+  letter-spacing: 0.04em;
+}
+.recto-seal-text {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  font: italic 12px/1.4 var(--display);
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  text-align: center;
+  white-space: nowrap;
+}
+.recto-seal-key {
+  color: var(--coral-deep);
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+}
+.recto-seal-sep {
+  color: var(--coral);
+  font: 700 13px/1 var(--display);
+  opacity: 0.7;
+}
+.recto-seal-tail {
+  font-style: italic;
+  color: var(--ink);
+  font-weight: 500;
+}
+.recto-seal.is-reread .recto-seal-tail { color: var(--coral-deep); }
+
+@media (max-width: 880px) {
+  .recto-seal { gap: 10px; margin: 22px 0 4px; }
+  .recto-seal-mark { width: 38px; height: 38px; }
+  .recto-seal-mark svg { width: 38px; height: 38px; }
+  .recto-seal-text { font-size: 11.5px; }
+}
+@media (max-width: 560px) {
+  .recto-seal {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin: 18px 0 4px;
+    padding: 4px 0 0;
+  }
+  .recto-seal-rule { display: none; }
+  .recto-seal-mark { margin: 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .recto-seal { animation: none; opacity: 1; transform: none; }
+  .recto-seal-rays { animation: none; }
+}
+
+/* ────────── iteration 108 · reading breath (a soft pulse in the question) ────────── */
+
+.reading-breath {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+  color: var(--coral);
+  vertical-align: -3px;
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 700ms var(--ease),
+    transform 700ms var(--ease);
+  pointer-events: none;
+}
+.reading-breath.is-active {
+  opacity: 0.9;
+  transform: scale(1);
+  animation: reading-breath-pulse 4.6s ease-in-out infinite;
+}
+.reading-breath svg { display: block; width: 100%; height: 100%; }
+@keyframes reading-breath-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  35%      { transform: scale(1.22); opacity: 0.55; }
+  70%      { transform: scale(0.96); opacity: 0.78; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-breath.is-active {
+    animation: none;
+    transform: none;
+    opacity: 0.78;
+  }
+}
+@media (max-width: 560px) {
+  .reading-breath { width: 16px; height: 16px; margin-left: 6px; }
+}
+
+/* ────────── iteration 108 · edition line breathes while the page is being read ────────── */
+
+.edition-line.is-breathing .edition-line-rule {
+  animation: edition-line-breath 4.2s ease-in-out infinite;
+}
+@keyframes edition-line-breath {
+  0%, 100% { opacity: 0.65; }
+  50%      { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .edition-line.is-breathing .edition-line-rule { animation: none; opacity: 0.78; }
+}
+
+/* ────────── iteration 108 · folio spine breathes while the page is being read ────────── */
+
+.folio-spine-cord {
+  transform-origin: center;
+  animation: spine-cord-breathe 9s ease-in-out infinite;
+}
+.folio-spine-cord--top { animation-delay: 0.2s; }
+.folio-spine-cord--bottom { animation-delay: 0.6s; }
+@keyframes spine-cord-breathe {
+  0%, 100% { opacity: 0.7; filter: brightness(0.96); }
+  50%      { opacity: 1; filter: brightness(1.05); }
+}
+.folio-spine-rule {
+  animation: spine-rule-breathe 9s ease-in-out infinite 0.4s;
+}
+@keyframes spine-rule-breathe {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .folio-spine-cord,
+  .folio-spine-cord--top,
+  .folio-spine-cord--bottom,
+  .folio-spine-rule { animation: none; }
+  .folio-spine-cord { opacity: 0.92; }
+}
+
+/* ────────── iteration 108 · recto refinements (compose the question more confidently) ────────── */
+
+.question-panel .annotation--top {
+  align-items: center;
+}
+@media (min-width: 881px) {
+  .question-panel {
+    padding-right: 6px;
+  }
+}
+@media (max-width: 880px) {
+  .question-panel .annotation--top {
+    flex-wrap: wrap;
+  }
+}

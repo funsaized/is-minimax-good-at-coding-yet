@@ -3552,7 +3552,7 @@ function ReadingLines({
   )
 }
 
-function EditionLine({ cycle }: { cycle: number }) {
+function EditionLine({ cycle, breathing }: { cycle: number; breathing: boolean }) {
   const impression =
     cycle === 0 ? 'first impression' : `${ordinal(cycle + 1)} impression`
   const pressNote =
@@ -3563,7 +3563,7 @@ function EditionLine({ cycle }: { cycle: number }) {
         : 'pressed again · the answer deepens'
   return (
     <div
-      className={`edition-line${cycle > 0 ? ' is-reread' : ''}`}
+      className={`edition-line${cycle > 0 ? ' is-reread' : ''}${breathing ? ' is-breathing' : ''}`}
       aria-hidden="true"
     >
       <span className="edition-line-rule edition-line-rule--left" />
@@ -4265,6 +4265,110 @@ function SignaturePression({ cycle }: { cycle: number }) {
   )
 }
 
+function RectoSeal({ cycle }: { cycle: number }) {
+  const impression =
+    cycle === 0
+      ? 'the question, set'
+      : cycle === 1
+        ? 'the question, set again'
+        : `the question, set ${ordinal(cycle + 1)} times`
+  return (
+    <div className={`recto-seal${cycle > 0 ? ' is-reread' : ''}`} aria-hidden="true">
+      <span className="recto-seal-rule recto-seal-rule--left" />
+      <span className="recto-seal-mark">
+        <svg viewBox="0 0 48 48" focusable="false">
+          <defs>
+            <radialGradient id="recto-seal-gold" cx="50%" cy="42%" r="58%">
+              <stop offset="0%" stopColor="#f5c65b" />
+              <stop offset="60%" stopColor="#c8923e" />
+              <stop offset="100%" stopColor="#9c6e26" />
+            </radialGradient>
+          </defs>
+          <circle
+            cx="24"
+            cy="24"
+            r="22"
+            fill="none"
+            stroke="url(#recto-seal-gold)"
+            strokeWidth="0.55"
+          />
+          <circle
+            cx="24"
+            cy="24"
+            r="18.5"
+            fill="none"
+            stroke="url(#recto-seal-gold)"
+            strokeWidth="0.3"
+            strokeDasharray="0.4 1.2"
+            opacity="0.7"
+          />
+          <g className="recto-seal-rays" stroke="url(#recto-seal-gold)" strokeWidth="0.4" strokeLinecap="round">
+            <line x1="24" y1="3.6" x2="24" y2="6.6" />
+            <line x1="24" y1="41.4" x2="24" y2="44.4" />
+            <line x1="3.6" y1="24" x2="6.6" y2="24" />
+            <line x1="41.4" y1="24" x2="44.4" y2="24" />
+          </g>
+          <g className="recto-seal-letter" fill="url(#recto-seal-gold)">
+            <text x="24" y="29" textAnchor="middle" className="recto-seal-letter-glyph">
+              q
+            </text>
+          </g>
+          <text x="24" y="36.6" textAnchor="middle" className="recto-seal-roman">
+            recto
+          </text>
+        </svg>
+      </span>
+      <span className="recto-seal-text">
+        <em className="recto-seal-key">explicit</em>
+        <span className="recto-seal-sep" aria-hidden="true">·</span>
+        <em className="recto-seal-tail">{impression}</em>
+      </span>
+      <span className="recto-seal-rule recto-seal-rule--right" />
+    </div>
+  )
+}
+
+function ReadingBreath({ active }: { active: boolean }) {
+  return (
+    <span
+      className={`reading-breath${active ? ' is-active' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 24 24" focusable="false">
+        <defs>
+          <radialGradient id="reading-breath-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.55)" />
+            <stop offset="55%" stopColor="rgba(245, 198, 91, 0.18)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+        </defs>
+        <circle
+          cx="12"
+          cy="12"
+          r="11"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.4"
+          strokeDasharray="0.4 1.4"
+          opacity="0.55"
+        />
+        <circle
+          cx="12"
+          cy="12"
+          r="8"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.4"
+          opacity="0.6"
+        />
+        <circle cx="12" cy="12" r="5" fill="url(#reading-breath-glow)" />
+        <circle cx="12" cy="12" r="1.6" fill="currentColor" />
+        <circle cx="12" cy="12" r="0.55" fill="var(--paper)" />
+      </svg>
+    </span>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
@@ -4562,6 +4666,7 @@ export function App() {
             <div className="annotation annotation--top">
               <span className="annotation-mark" aria-hidden="true">¶</span>
               <span>the question · plainly set</span>
+              <ReadingBreath active={phase === 'answering' || phase === 'replying'} />
             </div>
             <h1
               id="page-title"
@@ -4585,7 +4690,7 @@ export function App() {
                 <span className="title-text"> good at frontend yet?</span>
               </span>
             </h1>
-            <EditionLine cycle={cycle} />
+            <EditionLine cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
             <TitleFlourish />
 
             <div
@@ -4595,6 +4700,8 @@ export function App() {
             >
               <MarginaliaStrip items={MARGINALIA} />
             </div>
+
+            <RectoSeal cycle={cycle} />
           </section>
 
           <FolioSpine stage={tideStage} cycle={cycle} reduced={reduced} />
