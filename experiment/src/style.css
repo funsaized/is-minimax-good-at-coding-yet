@@ -4237,6 +4237,362 @@ button { font: inherit; }
   50%      { filter: drop-shadow(0 0 6px rgba(245, 198, 91, 0.55)); }
 }
 
+/* ────────── reader tide — a horizontal progress strip ────────── */
+
+.reader-tide {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px clamp(16px, 3vw, 32px) 22px;
+  margin: 26px 0 8px;
+  color: var(--ink-soft);
+  background:
+    linear-gradient(180deg, rgba(245, 220, 168, 0.18), rgba(245, 220, 168, 0) 80%),
+    radial-gradient(ellipse at 50% 0%, rgba(245, 198, 91, 0.12), transparent 70%);
+  border-top: 1px solid rgba(107, 74, 37, 0.28);
+  border-bottom: 1px solid rgba(107, 74, 37, 0.22);
+  animation: content-in 0.85s 0.34s both;
+}
+.reader-tide-rule {
+  position: absolute;
+  left: clamp(16px, 3vw, 32px);
+  right: clamp(16px, 3vw, 32px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(167, 60, 44, 0.5) 20%,
+    rgba(167, 60, 44, 0.5) 80%,
+    transparent 100%
+  );
+}
+.reader-tide-rule--top { top: 0; }
+.reader-tide-rule--bottom { bottom: 0; opacity: 0.45; }
+.reader-tide-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  font: 770 10px/1 var(--sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  flex-wrap: wrap;
+  padding: 0 8px;
+}
+.reader-tide-head-key { color: var(--coral-deep); }
+.reader-tide-head-sep { color: var(--coral); opacity: 0.6; }
+.reader-tide-head-tail {
+  color: var(--ink-soft);
+  font: italic 500 12.5px/1 var(--display);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-feature-settings: "onum" 1, "salt" 1;
+}
+.reader-tide-head-count {
+  margin-left: auto;
+  font: italic 600 11px/1 var(--display);
+  letter-spacing: 0.16em;
+  color: var(--coral-deep);
+  font-feature-settings: "onum" 1;
+  background: rgba(245, 220, 168, 0.55);
+  padding: 4px 9px 5px;
+  border: 1px solid rgba(107, 74, 37, 0.28);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.reader-tide-stage {
+  position: relative;
+  height: 86px;
+  margin: 4px 4px 0;
+}
+
+.reader-tide-line {
+  position: absolute;
+  inset: 18px 0 auto 0;
+  width: 100%;
+  height: 14px;
+  z-index: 1;
+  pointer-events: none;
+}
+.reader-tide-line-faded {
+  stroke-dasharray: 0.8 1.4;
+  opacity: 0.7;
+}
+.reader-tide-line-active {
+  transition: stroke-dasharray 1100ms var(--ease);
+  filter: drop-shadow(0 0 4px rgba(245, 198, 91, 0.4));
+}
+
+.reader-tide-crest {
+  position: absolute;
+  top: 18px;
+  width: 0;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+.reader-tide-crest circle {
+  filter: drop-shadow(0 0 4px rgba(245, 198, 91, 0.7));
+}
+.reader-tide.is-static .reader-tide-crest { display: none; }
+
+.reader-tide-vessel {
+  position: absolute;
+  top: 8px;
+  z-index: 3;
+  width: 36px;
+  height: 26px;
+  transform: translateX(-50%);
+  transition: left 1100ms var(--ease);
+  filter: drop-shadow(0 4px 6px rgba(40, 22, 8, 0.32));
+  pointer-events: none;
+}
+.reader-tide-vessel svg { width: 100%; height: 100%; display: block; }
+.reader-tide-vessel-hull {
+  transform-origin: 18px 21px;
+  animation: vessel-bob 3.8s ease-in-out infinite;
+}
+.reader-tide-vessel-sail {
+  transform-origin: 18px 16px;
+  animation: vessel-sail 5.4s ease-in-out infinite;
+}
+@keyframes vessel-bob {
+  0%, 100% { transform: translateY(0) rotate(-1.2deg); }
+  50%      { transform: translateY(1px) rotate(1.4deg); }
+}
+@keyframes vessel-sail {
+  0%, 100% { transform: rotate(-1deg); }
+  50%      { transform: rotate(1.6deg); }
+}
+.reader-tide.is-static .reader-tide-vessel-hull,
+.reader-tide.is-static .reader-tide-vessel-sail { animation: none; }
+
+.reader-tide-stations {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.reader-tide-station {
+  position: absolute;
+  top: 12px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 0;
+}
+.reader-tide-station-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--ink-mute);
+  border-radius: 50%;
+  transition: color 600ms var(--ease), transform 400ms var(--ease);
+}
+.reader-tide-station-button:hover,
+.reader-tide-station-button:focus-visible {
+  color: var(--coral-deep);
+  transform: scale(1.06);
+  outline: none;
+}
+.reader-tide-station-button:focus-visible::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1px dashed currentColor;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+.reader-tide-station-glyph {
+  position: absolute;
+  inset: 4px;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  border: 1px solid rgba(107, 74, 37, 0.36);
+  border-radius: 50%;
+  color: var(--ink-mute);
+  box-shadow: 0 4px 9px rgba(40, 22, 8, 0.18);
+  transition: color 600ms var(--ease), border-color 600ms var(--ease),
+              box-shadow 600ms var(--ease), background 600ms var(--ease);
+}
+.reader-tide-station-glyph svg { width: 16px; height: 16px; }
+.reader-tide-station-pip {
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translate(-50%, 0) rotate(45deg);
+  width: 6px;
+  height: 6px;
+  background: var(--paper);
+  border-right: 1px solid rgba(107, 74, 37, 0.36);
+  border-bottom: 1px solid rgba(107, 74, 37, 0.36);
+}
+.reader-tide-station-tick {
+  position: absolute;
+  top: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 8px;
+  color: rgba(107, 74, 37, 0.4);
+}
+.reader-tide-station-tick svg { width: 100%; height: 100%; display: block; }
+
+.reader-tide-station-label {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+  font: italic 500 11.5px/1.2 var(--display);
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  transition: color 600ms var(--ease);
+}
+.reader-tide-station-roman {
+  color: var(--coral-deep);
+  font: italic 600 10px/1 var(--display);
+  letter-spacing: 0.18em;
+  font-feature-settings: "onum" 1;
+}
+.reader-tide-station-name {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.reader-tide-station.is-reached .reader-tide-station-glyph {
+  color: var(--coral-deep);
+  border-color: rgba(167, 60, 44, 0.55);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(245, 232, 200, 0.95), rgba(245, 220, 168, 0.92));
+  box-shadow:
+    0 6px 14px rgba(40, 22, 8, 0.22),
+    0 0 0 1px rgba(245, 198, 91, 0.4);
+}
+.reader-tide-station.is-reached .reader-tide-station-roman { color: var(--coral); }
+.reader-tide-station.is-active .reader-tide-station-glyph {
+  color: var(--coral-deep);
+  border-color: rgba(167, 60, 44, 0.7);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 246, 218, 0.98), rgba(245, 220, 168, 0.94));
+  box-shadow:
+    0 6px 14px rgba(40, 22, 8, 0.26),
+    0 0 0 3px rgba(245, 198, 91, 0.55);
+}
+.reader-tide-station.is-active .reader-tide-station-tick { color: var(--coral-deep); }
+.reader-tide-station.is-active .reader-tide-station-name { color: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reader-tide-line-active { transition: none; }
+  .reader-tide-vessel { transition: none; }
+  .reader-tide-vessel-hull,
+  .reader-tide-vessel-sail { animation: none !important; }
+  .reader-tide-station-button { transition: none; }
+}
+
+@media (max-width: 760px) {
+  .reader-tide { padding: 16px 14px 20px; }
+  .reader-tide-rule { left: 14px; right: 14px; }
+  .reader-tide-head { gap: 7px; font-size: 9px; }
+  .reader-tide-head-tail { font-size: 11px; }
+  .reader-tide-head-count { font-size: 9.5px; padding: 3px 8px; }
+  .reader-tide-stage { height: 78px; margin: 2px 0 0; }
+  .reader-tide-station-glyph { inset: 2px; }
+  .reader-tide-station-glyph svg { width: 14px; height: 14px; }
+  .reader-tide-station-label {
+    font-size: 10px;
+    top: 56px;
+  }
+  .reader-tide-station-roman { font-size: 9px; }
+  .reader-tide-station-tick { top: 38px; }
+  .reader-tide-vessel { width: 30px; height: 22px; top: 10px; }
+}
+@media (max-width: 520px) {
+  .reader-tide-stage { height: 72px; }
+  .reader-tide-line { top: 14px; }
+  .reader-tide-station-button { width: 32px; height: 32px; }
+  .reader-tide-station-glyph svg { width: 12px; height: 12px; }
+  .reader-tide-station-label {
+    font-size: 9.5px;
+    top: 48px;
+    white-space: normal;
+    width: 78px;
+    text-align: center;
+  }
+  .reader-tide-station-roman { font-size: 8.5px; letter-spacing: 0.14em; }
+  .reader-tide-station-name { font-size: 9.5px; line-height: 1.15; }
+  .reader-tide-station-tick { top: 32px; }
+  .reader-tide-vessel { width: 26px; height: 18px; top: 12px; }
+  .reader-tide-head-tail { font-size: 10px; }
+}
+
+/* ────────── breath halo — a soft pulse near the title ────────── */
+
+.breath-halo {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  color: var(--coral-deep);
+  pointer-events: none;
+  vertical-align: -3px;
+  margin: 0 2px 0 4px;
+  --breath-cycle: 3.4s;
+}
+.breath-halo svg { width: 100%; height: 100%; display: block; }
+.breath-halo-ring,
+.breath-halo-core {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.breath-halo.is-active .breath-halo-ring {
+  animation: breath-ring var(--breath-cycle) ease-in-out infinite;
+}
+.breath-halo.is-active .breath-halo-core {
+  animation: breath-core var(--breath-cycle) ease-in-out infinite;
+}
+.breath-halo.is-static .breath-halo-ring,
+.breath-halo.is-static .breath-halo-core { animation: none !important; }
+@keyframes breath-ring {
+  0%, 100% { transform: scale(0.74); opacity: 0.36; }
+  50%      { transform: scale(1.16); opacity: 0.95; }
+}
+@keyframes breath-core {
+  0%, 100% { transform: scale(0.6); opacity: 0.5; }
+  50%      { transform: scale(1.32); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .breath-halo-ring,
+  .breath-halo-core { animation: none !important; }
+}
+@media (max-width: 560px) {
+  .breath-halo { width: 18px; height: 18px; margin-left: 2px; }
+}
+
 /* ────────── sheet footer ────────── */
 
 .sheet-footer {

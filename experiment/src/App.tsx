@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 const ANSWER = '— and the page itself, which you are reading now.'
@@ -5210,6 +5210,347 @@ function ReadingTrace({ cycle, reduced }: { cycle: number; reduced: boolean }) {
   )
 }
 
+interface TideStation {
+  roman: string
+  name: string
+  key: string
+  glyph: React.ReactNode
+}
+
+const TIDE_STATIONS: TideStation[] = [
+  {
+    roman: 'i',
+    name: 'the question',
+    key: 'sec-question',
+    glyph: (
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+          d="M 9 8 Q 9 5 12 5 Q 15 5 15 8 Q 15 11 12 12 L 12 14"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+        />
+        <circle cx="12" cy="17.4" r="0.9" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
+    roman: 'ii',
+    name: 'the press',
+    key: 'sec-marginalia',
+    glyph: (
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <circle cx="12" cy="12" r="6.4" fill="currentColor" fillOpacity="0.18" stroke="currentColor" strokeWidth="0.9" />
+        <circle cx="12" cy="12" r="2.2" fill="currentColor" />
+        <path d="M 12 4.6 L 12 3 M 12 19.4 L 12 21 M 4.6 12 L 3 12 M 19.4 12 L 21 12" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    roman: 'iii',
+    name: 'the answer',
+    key: 'sec-answer',
+    glyph: (
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+          d="M 4 11 L 9 17 L 20 6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path d="M 4 19 L 20 19" stroke="currentColor" strokeWidth="0.45" strokeDasharray="1 1.6" opacity="0.6" />
+      </svg>
+    ),
+  },
+  {
+    roman: 'iv',
+    name: 'the reply',
+    key: 'sec-reply',
+    glyph: (
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+          d="M 3 6 Q 9 4 12 8 Q 15 12 21 10"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 21 7.5 L 21.5 11 L 18 10.4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    roman: 'v',
+    name: 'the colophon',
+    key: 'sec-almanac',
+    glyph: (
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+          d="M 12 3 L 14.2 9.4 L 21 9.6 L 15.6 13.6 L 17.6 20 L 12 16.2 L 6.4 20 L 8.4 13.6 L 3 9.6 L 9.8 9.4 Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.85"
+          strokeLinejoin="round"
+        />
+        <circle cx="12" cy="12" r="1.2" fill="currentColor" />
+      </svg>
+    ),
+  },
+]
+
+const TIDE_BEAT_COUNT = TIDE_STATIONS.length - 1
+
+function ReaderTide({
+  phase,
+  slow,
+  cycle,
+  activeSection,
+  onSelect,
+  reduced,
+  answerChars,
+  replyChars,
+}: {
+  phase: Phase
+  slow: boolean
+  cycle: number
+  activeSection: string
+  onSelect: (id: string) => void
+  reduced: boolean
+  answerChars: number
+  replyChars: number
+}) {
+  const activeIndex = Math.max(
+    0,
+    TIDE_STATIONS.findIndex((s) => s.key === activeSection),
+  )
+  const progressRatio = Math.max(
+    0,
+    Math.min(
+      1,
+      phase === 'idle'
+        ? 0
+        : phase === 'answering'
+          ? ANSWER.length > 0
+            ? Math.min(1, answerChars / ANSWER.length)
+            : 0
+          : phase === 'replying'
+            ? 0.6 + Math.min(
+                0.35,
+                REPLY.length > 0 ? (replyChars / REPLY.length) * 0.35 : 0,
+              )
+          : 1,
+    ),
+  )
+  const beat = progressRatio * TIDE_BEAT_COUNT
+
+  const position = beat / TIDE_BEAT_COUNT
+  const tidePath = useMemo(() => {
+    const w = 100
+    const h = 12
+    const cy = h / 2
+    const amp = 2.6
+    const segs = 28
+    let d = `M 0 ${cy.toFixed(2)}`
+    for (let i = 1; i <= segs; i++) {
+      const x = (i / segs) * w
+      const phaseStep = (i / segs) * Math.PI * 4.4
+      const y = cy + Math.sin(phaseStep) * amp * (0.78 + 0.22 * Math.sin(i * 0.4))
+      d += ` L ${x.toFixed(2)} ${y.toFixed(2)}`
+    }
+    return d
+  }, [])
+
+  const vesselX = (position * 100).toFixed(2)
+  const vesselLabel =
+    phase === 'idle'
+      ? 'awaiting the press'
+      : phase === 'answering'
+        ? 'the answer, setting'
+        : phase === 'replying'
+          ? 'the reply, slow'
+          : slow
+            ? 'page pace · colophon'
+            : 'second reading · colophon'
+
+  return (
+    <nav
+      className={`reader-tide${reduced ? ' is-static' : ''}`}
+      aria-label="reading tide · progress through the folio"
+    >
+      <span className="reader-tide-rule reader-tide-rule--top" aria-hidden="true" />
+      <span className="reader-tide-head">
+        <span className="reader-tide-head-key">reading tide</span>
+        <span className="reader-tide-head-sep" aria-hidden="true">·</span>
+        <span className="reader-tide-head-tail">{vesselLabel}</span>
+        <span className="reader-tide-head-count" aria-hidden="true">
+          {TIDE_STATIONS[Math.min(beat, TIDE_STATIONS.length - 1)].roman} / {ROMAN[TIDE_STATIONS.length - 1]}
+        </span>
+      </span>
+
+      <div className="reader-tide-stage">
+        <svg
+          className="reader-tide-line"
+          viewBox="0 0 100 14"
+          preserveAspectRatio="none"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="tide-ink" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="rgba(167, 60, 44, 0.85)" />
+              <stop offset="50%" stopColor="rgba(156, 110, 38, 0.95)" />
+              <stop offset="100%" stopColor="rgba(245, 198, 91, 0.92)" />
+            </linearGradient>
+            <linearGradient id="tide-faded" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="rgba(107, 74, 37, 0.42)" />
+              <stop offset="100%" stopColor="rgba(107, 74, 37, 0.42)" />
+            </linearGradient>
+          </defs>
+          <path
+            d={tidePath}
+            className="reader-tide-line-faded"
+            stroke="url(#tide-faded)"
+            strokeWidth="0.45"
+            strokeDasharray="0.8 1.4"
+            fill="none"
+          />
+          <path
+            d={tidePath}
+            className="reader-tide-line-active"
+            stroke="url(#tide-ink)"
+            strokeWidth="0.7"
+            fill="none"
+            pathLength="100"
+            strokeDasharray={`${position * 100} 100`}
+          />
+          <g
+            className="reader-tide-crest"
+            style={{ left: `${(position * 100).toFixed(2)}%` } as React.CSSProperties}
+          >
+            <circle r="0.9" fill="rgba(245, 198, 91, 0.9)" />
+          </g>
+        </svg>
+
+        <span
+          className="reader-tide-vessel"
+          style={{ left: `${vesselX}%` } as React.CSSProperties}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 36 26" focusable="false">
+            <g className="reader-tide-vessel-hull">
+              <path
+                d="M 4 18 Q 18 24 32 18 L 28 22 Q 18 25 8 22 Z"
+                fill="rgba(107, 74, 37, 0.95)"
+                stroke="rgba(40, 22, 8, 0.6)"
+                strokeWidth="0.45"
+              />
+              <path d="M 4 18 Q 18 21 32 18" stroke="rgba(245, 198, 91, 0.7)" strokeWidth="0.4" fill="none" />
+              <line x1="18" y1="9" x2="18" y2="20" stroke="rgba(40, 22, 8, 0.7)" strokeWidth="0.6" strokeLinecap="round" />
+            </g>
+            <g className="reader-tide-vessel-sail">
+              <path
+                d="M 18 4 L 27 16 L 18 16 Z"
+                fill="rgba(245, 232, 200, 0.92)"
+                stroke="rgba(107, 74, 37, 0.55)"
+                strokeWidth="0.45"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M 18 6 L 18 15"
+                stroke="rgba(167, 60, 44, 0.45)"
+                strokeWidth="0.32"
+                fill="none"
+              />
+              <circle cx="22" cy="11" r="0.55" fill="rgba(167, 60, 44, 0.7)" />
+            </g>
+            <g className="reader-tide-vessel-wake">
+              <path d="M 2 24 Q 6 25 10 24" stroke="rgba(107, 74, 37, 0.4)" strokeWidth="0.4" fill="none" strokeLinecap="round" />
+              <path d="M 26 24 Q 30 25 34 24" stroke="rgba(107, 74, 37, 0.4)" strokeWidth="0.4" fill="none" strokeLinecap="round" />
+            </g>
+          </svg>
+        </span>
+
+        <ol className="reader-tide-stations">
+          {TIDE_STATIONS.map((station, i) => {
+            const reached = beat >= i
+            const isActive = activeIndex === i
+            return (
+              <li
+                key={station.roman}
+                className={`reader-tide-station${reached ? ' is-reached' : ''}${
+                  isActive ? ' is-active' : ''
+                }`}
+                style={{ left: `${(i / TIDE_BEAT_COUNT) * 100}%` } as React.CSSProperties}
+              >
+                <button
+                  type="button"
+                  className="reader-tide-station-button"
+                  onClick={() => onSelect(station.key)}
+                  aria-label={`jump to ${station.name}`}
+                  aria-current={isActive ? 'true' : undefined}
+                >
+                  <span className="reader-tide-station-glyph" aria-hidden="true">
+                    {station.glyph}
+                  </span>
+                  <span className="reader-tide-station-pip" aria-hidden="true" />
+                  <span className="reader-tide-station-tick" aria-hidden="true">
+                    <svg viewBox="0 0 4 8" focusable="false">
+                      <line x1="2" y1="0" x2="2" y2="8" stroke="currentColor" strokeWidth="0.6" strokeLinecap="round" />
+                    </svg>
+                  </span>
+                </button>
+                <span className="reader-tide-station-label" aria-hidden="true">
+                  <em className="reader-tide-station-roman">{station.roman}.</em>
+                  <em className="reader-tide-station-name">{station.name}</em>
+                </span>
+              </li>
+            )
+          })}
+        </ol>
+      </div>
+
+      <span className="reader-tide-rule reader-tide-rule--bottom" aria-hidden="true" />
+    </nav>
+  )
+}
+
+function BreathHalo({ slow, active, reduced }: { slow: boolean; active: boolean; reduced: boolean }) {
+  const cycle = slow ? 5.4 : 3.4
+  return (
+    <span
+      className={`breath-halo${active ? ' is-active' : ''}${reduced ? ' is-static' : ''}`}
+      style={{ '--breath-cycle': `${cycle}s` } as React.CSSProperties}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 36 36" focusable="false">
+        <circle
+          cx="18"
+          cy="18"
+          r="14.4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.32"
+          strokeDasharray="0.6 1.4"
+          opacity="0.5"
+        />
+        <circle className="breath-halo-ring" cx="18" cy="18" r="9" fill="none" stroke="currentColor" strokeWidth="0.45" />
+        <circle className="breath-halo-core" cx="18" cy="18" r="3.6" fill="currentColor" fillOpacity="0.12" />
+        <circle cx="18" cy="18" r="1.1" fill="currentColor" />
+      </svg>
+    </span>
+  )
+}
+
 function FoldCorner() {
   return (
     <svg
@@ -6345,6 +6686,11 @@ export function App() {
             <div className="annotation annotation--top">
               <span className="annotation-mark" aria-hidden="true">¶</span>
               <span>the question · plainly set</span>
+              <BreathHalo
+                slow={slow && phase === 'complete'}
+                active={phase === 'answering' || phase === 'replying' || phase === 'complete'}
+                reduced={reduced}
+              />
               <ReadingBreath active={phase === 'answering' || phase === 'replying'} />
             </div>
             <h1
@@ -6657,6 +7003,17 @@ export function App() {
           <p className="footer-line">the interface is part of the answer</p>
           <Bookplate cycle={cycle} />
         </footer>
+
+        <ReaderTide
+          phase={phase}
+          slow={slow}
+          cycle={cycle}
+          activeSection={activeSection}
+          onSelect={handleSelectSection}
+          reduced={reduced}
+          answerChars={answerChars}
+          replyChars={replyChars}
+        />
 
         <FolioAnatomy visible={replyShown} />
 
