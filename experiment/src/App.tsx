@@ -786,6 +786,321 @@ function BroadsheetDropCap({
   )
 }
 
+function IncipitMark({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className ?? 'incipit-mark'}
+      viewBox="0 0 120 16"
+      focusable="false"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="incipit-gold" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#9c6e26" />
+          <stop offset="50%" stopColor="#c8923e" />
+          <stop offset="100%" stopColor="#9c6e26" />
+        </linearGradient>
+      </defs>
+      <line x1="0" y1="8" x2="44" y2="8" stroke="url(#incipit-gold)" strokeWidth="0.5" />
+      <line x1="76" y1="8" x2="120" y2="8" stroke="url(#incipit-gold)" strokeWidth="0.5" />
+      <line x1="0" y1="11" x2="38" y2="11" stroke="url(#incipit-gold)" strokeWidth="0.3" strokeDasharray="0.6 1.4" opacity="0.6" />
+      <line x1="82" y1="11" x2="120" y2="11" stroke="url(#incipit-gold)" strokeWidth="0.3" strokeDasharray="0.6 1.4" opacity="0.6" />
+      <g transform="translate(60 8)" fill="currentColor">
+        <path d="M -8 0 L -6 -2 L -4 0 L -6 2 Z" />
+        <circle r="1.4" fill="none" stroke="currentColor" strokeWidth="0.4" />
+        <circle r="0.6" fill="currentColor" />
+        <path d="M 6 0 L 4 -2 L 2 0 L 4 2 Z" />
+      </g>
+    </svg>
+  )
+}
+
+function Incipit() {
+  return (
+    <div className="incipit" aria-hidden="true">
+      <span className="incipit-rule incipit-rule--left" />
+      <IncipitMark />
+      <span className="incipit-text">
+        <em className="incipit-key">incipit</em>
+        <span className="incipit-sep" aria-hidden="true">·</span>
+        <em className="incipit-tail">the question, set in this folio</em>
+      </span>
+      <IncipitMark className="incipit-mark incipit-mark--right" />
+      <span className="incipit-rule incipit-rule--right" />
+    </div>
+  )
+}
+
+function AnswerPlateCorner({ corner }: { corner: 'tl' | 'tr' | 'bl' | 'br' }) {
+  return (
+    <svg viewBox="0 0 32 32" focusable="false" aria-hidden="true">
+      <defs>
+        <linearGradient id={`apc-${corner}-gold`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#9c6e26" />
+          <stop offset="50%" stopColor="#f5c65b" />
+          <stop offset="100%" stopColor="#9c6e26" />
+        </linearGradient>
+      </defs>
+      {corner === 'tl' && (
+        <>
+          <path d="M 2 14 L 2 2 L 14 2" fill="none" stroke="url(#apc-tl-gold)" strokeWidth="0.85" />
+          <path d="M 6 14 L 6 6 L 14 6" fill="none" stroke="url(#apc-tl-gold)" strokeWidth="0.42" opacity="0.7" />
+          <path d="M 10 6 L 14 10" fill="none" stroke="url(#apc-tl-gold)" strokeWidth="0.32" opacity="0.55" />
+          <circle cx="4" cy="4" r="1.1" fill="url(#apc-tl-gold)" />
+          <circle cx="4" cy="4" r="2.4" fill="none" stroke="url(#apc-tl-gold)" strokeWidth="0.25" opacity="0.55" />
+        </>
+      )}
+      {corner === 'tr' && (
+        <>
+          <path d="M 18 2 L 30 2 L 30 14" fill="none" stroke="url(#apc-tr-gold)" strokeWidth="0.85" />
+          <path d="M 18 6 L 26 6 L 26 14" fill="none" stroke="url(#apc-tr-gold)" strokeWidth="0.42" opacity="0.7" />
+          <path d="M 22 6 L 18 10" fill="none" stroke="url(#apc-tr-gold)" strokeWidth="0.32" opacity="0.55" />
+          <circle cx="28" cy="4" r="1.1" fill="url(#apc-tr-gold)" />
+          <circle cx="28" cy="4" r="2.4" fill="none" stroke="url(#apc-tr-gold)" strokeWidth="0.25" opacity="0.55" />
+        </>
+      )}
+      {corner === 'bl' && (
+        <>
+          <path d="M 2 18 L 2 30 L 14 30" fill="none" stroke="url(#apc-bl-gold)" strokeWidth="0.85" />
+          <path d="M 6 18 L 6 26 L 14 26" fill="none" stroke="url(#apc-bl-gold)" strokeWidth="0.42" opacity="0.7" />
+          <path d="M 10 26 L 14 22" fill="none" stroke="url(#apc-bl-gold)" strokeWidth="0.32" opacity="0.55" />
+          <circle cx="4" cy="28" r="1.1" fill="url(#apc-bl-gold)" />
+          <circle cx="4" cy="28" r="2.4" fill="none" stroke="url(#apc-bl-gold)" strokeWidth="0.25" opacity="0.55" />
+        </>
+      )}
+      {corner === 'br' && (
+        <>
+          <path d="M 18 30 L 30 30 L 30 18" fill="none" stroke="url(#apc-br-gold)" strokeWidth="0.85" />
+          <path d="M 18 26 L 26 26 L 26 18" fill="none" stroke="url(#apc-br-gold)" strokeWidth="0.42" opacity="0.7" />
+          <path d="M 22 26 L 18 22" fill="none" stroke="url(#apc-br-gold)" strokeWidth="0.32" opacity="0.55" />
+          <circle cx="28" cy="28" r="1.1" fill="url(#apc-br-gold)" />
+          <circle cx="28" cy="28" r="2.4" fill="none" stroke="url(#apc-br-gold)" strokeWidth="0.25" opacity="0.55" />
+        </>
+      )}
+    </svg>
+  )
+}
+
+function AnswerPlateFrame({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`answer-plate-frame${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="answer-plate-rim"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="apf-ink-rule" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(58, 40, 22, 0.95)" />
+            <stop offset="100%" stopColor="rgba(28, 30, 26, 0.85)" />
+          </linearGradient>
+          <linearGradient id="apf-gold-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#9c6e26" />
+            <stop offset="50%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+        </defs>
+        <rect
+          x="0.6"
+          y="0.6"
+          width="98.8"
+          height="98.8"
+          rx="0.4"
+          fill="none"
+          stroke="url(#apf-ink-rule)"
+          strokeWidth="0.45"
+        />
+        <rect
+          x="3"
+          y="3"
+          width="94"
+          height="94"
+          rx="0.2"
+          fill="none"
+          stroke="url(#apf-ink-rule)"
+          strokeWidth="0.18"
+          strokeDasharray="0.7 1.3"
+          opacity="0.55"
+        />
+
+        <g className="apf-title-block">
+          <rect x="38" y="3.2" width="24" height="6.8" fill="var(--paper)" opacity="0" />
+          <line x1="38" y1="3.4" x2="62" y2="3.4" stroke="url(#apf-ink-rule)" strokeWidth="0.4" />
+          <line x1="38" y1="8.6" x2="62" y2="8.6" stroke="url(#apf-ink-rule)" strokeWidth="0.4" />
+          <text x="50" y="7.0" textAnchor="middle" className="apf-title">THE ANSWER</text>
+        </g>
+
+        <g className="apf-foot-block">
+          <line x1="32" y1="93.2" x2="46" y2="93.2" stroke="url(#apf-gold-rule)" strokeWidth="0.32" />
+          <line x1="54" y1="93.2" x2="68" y2="93.2" stroke="url(#apf-gold-rule)" strokeWidth="0.32" />
+          <text x="50" y="94.4" textAnchor="middle" className="apf-foot">cap · xviii</text>
+        </g>
+
+        <g className="apf-side-ticks">
+          <line x1="50" y1="3" x2="50" y2="5" stroke="url(#apf-ink-rule)" strokeWidth="0.3" opacity="0.55" />
+          <line x1="50" y1="95" x2="50" y2="97" stroke="url(#apf-ink-rule)" strokeWidth="0.3" opacity="0.55" />
+        </g>
+      </svg>
+
+      <span className="answer-plate-corner answer-plate-corner--tl">
+        <AnswerPlateCorner corner="tl" />
+      </span>
+      <span className="answer-plate-corner answer-plate-corner--tr">
+        <AnswerPlateCorner corner="tr" />
+      </span>
+      <span className="answer-plate-corner answer-plate-corner--bl">
+        <AnswerPlateCorner corner="bl" />
+      </span>
+      <span className="answer-plate-corner answer-plate-corner--br">
+        <AnswerPlateCorner corner="br" />
+      </span>
+    </div>
+  )
+}
+
+function InkTrail({ active }: { active: boolean }) {
+  const items = [
+    { id: 0, x: 6, scale: 1 },
+    { id: 1, x: 18, scale: 0.7 },
+    { id: 2, x: 32, scale: 0.9 },
+  ]
+  return (
+    <div className={`ink-trail${active ? ' is-active' : ''}`} aria-hidden="true">
+      <svg viewBox="0 0 42 14" focusable="false" preserveAspectRatio="none">
+        {items.map((it) => (
+          <ellipse
+            key={it.id}
+            cx={it.x}
+            cy={11}
+            rx={1.6 * it.scale}
+            ry={0.8 * it.scale}
+            fill="rgba(28, 30, 40, 0.6)"
+            className={`ink-trail-dot ink-trail-dot--${it.id}${active ? ' is-active' : ''}`}
+          />
+        ))}
+      </svg>
+    </div>
+  )
+}
+
+function EphemerisPlate({
+  visible,
+  now,
+  moonPhase,
+  cycle,
+  hours,
+  minutes,
+  seconds,
+  reduced,
+  registerHour,
+  registerSky,
+  registerMoon,
+  registerDaybook,
+}: {
+  visible: boolean
+  now: Date
+  moonPhase: number
+  cycle: number
+  hours: number
+  minutes: number
+  seconds: number
+  reduced: boolean
+  registerHour: (el: HTMLElement | null) => void
+  registerSky: (el: HTMLElement | null) => void
+  registerMoon: (el: HTMLElement | null) => void
+  registerDaybook: (el: HTMLElement | null) => void
+}) {
+  return (
+    <aside
+      className={`ephemeris-plate${visible ? ' is-visible' : ''}`}
+      aria-label="ephemeris of this folio"
+    >
+      <span className="ephemeris-corner ephemeris-corner--tl" aria-hidden="true">
+        <AnswerPlateCorner corner="tl" />
+      </span>
+      <span className="ephemeris-corner ephemeris-corner--tr" aria-hidden="true">
+        <AnswerPlateCorner corner="tr" />
+      </span>
+      <span className="ephemeris-corner ephemeris-corner--bl" aria-hidden="true">
+        <AnswerPlateCorner corner="bl" />
+      </span>
+      <span className="ephemeris-corner ephemeris-corner--br" aria-hidden="true">
+        <AnswerPlateCorner corner="br" />
+      </span>
+
+      <header className="ephemeris-head">
+        <span className="ephemeris-head-rule ephemeris-head-rule--left" />
+        <span className="ephemeris-head-text">
+          <em className="ephemeris-head-key">ephemeris</em>
+          <span className="ephemeris-head-sep" aria-hidden="true">·</span>
+          <em className="ephemeris-head-title">a printed table of this reading</em>
+        </span>
+        <span className="ephemeris-head-rule ephemeris-head-rule--right" />
+      </header>
+
+      <div
+        data-section="sec-almanac"
+        ref={registerDaybook}
+        className="ephemeris-daybook-slot"
+      >
+        <AlmanacDaybook now={now} moonPhase={moonPhase} cycle={cycle} />
+      </div>
+
+      <div className="ephemeris-divider" aria-hidden="true">
+        <span className="ephemeris-divider-line ephemeris-divider-line--left" />
+        <span className="ephemeris-divider-glyph">§</span>
+        <span className="ephemeris-divider-line ephemeris-divider-line--right" />
+      </div>
+
+      <div className="ephemeris-bench-row">
+        <div ref={registerHour} data-section="sec-hour" className="bench-item">
+          <LeafHourDial
+            hours={hours}
+            minutes={minutes}
+            seconds={seconds}
+            visible={visible}
+          />
+        </div>
+        <div ref={registerSky} data-section="sec-sky" className="bench-item">
+          <SiderealPocket visible={visible} reduced={reduced} />
+        </div>
+        <div ref={registerMoon} data-section="sec-moon" className="bench-item">
+          <MoonPhase phase={moonPhase} visible={visible} />
+        </div>
+      </div>
+
+      <footer className="ephemeris-foot">
+        <span className="ephemeris-foot-rule ephemeris-foot-rule--left" />
+        <span className="ephemeris-foot-text">
+          <em>pressed in this browser</em>
+          <span className="ephemeris-foot-sep" aria-hidden="true">·</span>
+          <em>m. iii · mmxxvi</em>
+        </span>
+        <span className="ephemeris-foot-rule ephemeris-foot-rule--right" />
+      </footer>
+    </aside>
+  )
+}
+
+function RepressMark({ cycle }: { cycle: number }) {
+  if (cycle === 0) return null
+  const label =
+    cycle === 1
+      ? 're-pressed · once'
+      : `re-pressed · ${cycle} times`
+  return (
+    <span className="repress-mark" aria-hidden="true">
+      <span className="repress-mark-rule" />
+      <em className="repress-mark-text">{label}</em>
+      <span className="repress-mark-rule" />
+    </span>
+  )
+}
+
 function PressedLeaf({ visible, reduced }: { visible: boolean; reduced: boolean }) {
   return (
     <div
@@ -4186,8 +4501,11 @@ export function App() {
 
         <Epigraph />
 
+        <Incipit />
+
         <div className="chapter-opener">
           <ChapterHead now={now} />
+          <RepressMark cycle={cycle} />
         </div>
 
         <div className="sheet-content">
@@ -4331,35 +4649,9 @@ export function App() {
               ref={(el) => { sectionRefs.current['sec-answer'] = el }}
               className={`answer-surface answer-surface--${phase}`}
             >
-              <span className="answer-corner answer-corner--tl" aria-hidden="true" />
-              <span className="answer-corner answer-corner--tr" aria-hidden="true" />
-              <span className="answer-corner answer-corner--bl" aria-hidden="true" />
-              <span className="answer-corner answer-corner--br" aria-hidden="true" />
+              <AnswerPlateFrame visible={phase !== 'idle'} />
               <InkFingerprint visible={phase !== 'idle'} />
               <FingerSmudges visible={phase === 'complete' || phase === 'replying'} />
-              {answerVisible && (
-                <span className="answer-letter-head" aria-hidden="true">
-                  <span className="answer-letter-head-mark">¶</span>
-                  <span className="answer-letter-head-text">set in italic · 30 pt · leaded</span>
-                  <span className="answer-letter-head-rule" />
-                  <svg className="answer-letter-head-aster" viewBox="0 0 14 14" focusable="false">
-                    <defs>
-                      <linearGradient id="answer-press-gold" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stopColor="#9c6e26" />
-                        <stop offset="50%" stopColor="#f5c65b" />
-                        <stop offset="100%" stopColor="#c8923e" />
-                      </linearGradient>
-                    </defs>
-                    <g stroke="url(#answer-press-gold)" strokeWidth="0.7" strokeLinecap="round">
-                      <line x1="7" y1="1.5" x2="7" y2="12.5" />
-                      <line x1="1.5" y1="7" x2="12.5" y2="7" />
-                      <line x1="3" y1="3" x2="11" y2="11" />
-                      <line x1="11" y1="3" x2="3" y2="11" />
-                    </g>
-                    <circle cx="7" cy="7" r="1.2" fill="url(#answer-press-gold)" />
-                  </svg>
-                </span>
-              )}
               <span className="answer-quote answer-quote--open" aria-hidden="true">"</span>
               {!answerVisible && (
                 <p className="answer-placeholder">
@@ -4388,12 +4680,6 @@ export function App() {
                 </div>
               )}
               <span className="answer-quote answer-quote--close" aria-hidden="true">"</span>
-              {phase === 'complete' && (
-                <span className="answer-letter-close" aria-hidden="true">
-                  <span className="answer-letter-close-rule" />
-                  <em>— cap. xviii · sig. m.iii</em>
-                </span>
-              )}
               <span
                 className="answer-sweep"
                 style={{
@@ -4405,6 +4691,9 @@ export function App() {
               />
               <Inkwell active={quillActive} />
               <ScribalQuill active={quillActive} progress={quillProgress} />
+              {(phase === 'answering' || phase === 'replying') && (
+                <InkTrail active />
+              )}
             </div>
 
             <TypefaceSpecimen visible={specimenVisible} />
@@ -4492,52 +4781,20 @@ export function App() {
 
             <ImpressionLedger cycle={cycle} now={now} />
 
-            <div className={`scholars-bench ${benchShown ? 'is-revealed' : ''}`}>
-              <span className="scholars-bench-label" aria-hidden="true">
-                <span className="scholars-bench-label-mark">§</span>
-                <em>the scholar's bench</em>
-                <span className="scholars-bench-label-mark">§</span>
-              </span>
-              <EngravedRule className="scholars-bench-rule" />
-              <AlmanacPlateFrame>
-                <div className="scholars-bench-row">
-                  <div
-                    data-section="sec-hour"
-                    ref={(el) => { sectionRefs.current['sec-hour'] = el }}
-                    className="bench-item"
-                  >
-                    <LeafHourDial
-                      hours={hours}
-                      minutes={minutes}
-                      seconds={seconds}
-                      visible={hourDialVisible}
-                    />
-                  </div>
-                  <div
-                    data-section="sec-sky"
-                    ref={(el) => { sectionRefs.current['sec-sky'] = el }}
-                    className="bench-item"
-                  >
-                    <SiderealPocket visible={hourDialVisible} reduced={reduced} />
-                  </div>
-                  <div
-                    data-section="sec-moon"
-                    ref={(el) => { sectionRefs.current['sec-moon'] = el }}
-                    className="bench-item"
-                  >
-                    <MoonPhase phase={moonPhase} visible={hourDialVisible} />
-                  </div>
-                </div>
-              </AlmanacPlateFrame>
-            </div>
-
-            <div
-              data-section="sec-almanac"
-              ref={(el) => { sectionRefs.current['sec-almanac'] = el }}
-              className="almanac-anchor"
-            >
-              <AlmanacDaybook now={now} moonPhase={moonPhase} cycle={cycle} />
-            </div>
+            <EphemerisPlate
+              visible={benchShown}
+              now={now}
+              moonPhase={moonPhase}
+              cycle={cycle}
+              hours={hours}
+              minutes={minutes}
+              seconds={seconds}
+              reduced={reduced}
+              registerHour={(el) => { sectionRefs.current['sec-hour'] = el }}
+              registerSky={(el) => { sectionRefs.current['sec-sky'] = el }}
+              registerMoon={(el) => { sectionRefs.current['sec-moon'] = el }}
+              registerDaybook={(el) => { sectionRefs.current['sec-almanac'] = el }}
+            />
 
             <CulDeLampe inscriptionVisible={phase === 'complete'} />
 
