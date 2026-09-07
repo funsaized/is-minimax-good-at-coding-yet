@@ -2279,6 +2279,197 @@ function Apparatus({
   )
 }
 
+function ProofSlip({
+  visible,
+  slow,
+  reduced,
+}: {
+  visible: boolean
+  slow: boolean
+  reduced: boolean
+}) {
+  return (
+    <aside
+      className={`proof-slip${visible ? ' is-visible' : ''}${
+        slow ? ' is-slow' : ''
+      }${reduced ? ' is-static' : ''}`}
+      aria-label="printer's proof sheet, the answer set a second time"
+    >
+      <span className="proof-slip-corner proof-slip-corner--tl" aria-hidden="true">
+        <AnswerPlateCorner corner="tl" />
+      </span>
+      <span className="proof-slip-corner proof-slip-corner--tr" aria-hidden="true">
+        <AnswerPlateCorner corner="tr" />
+      </span>
+      <span className="proof-slip-corner proof-slip-corner--bl" aria-hidden="true">
+        <AnswerPlateCorner corner="bl" />
+      </span>
+      <span className="proof-slip-corner proof-slip-corner--br" aria-hidden="true">
+        <AnswerPlateCorner corner="br" />
+      </span>
+
+      <span className="proof-slip-rim" aria-hidden="true">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">
+          <defs>
+            <linearGradient id="proof-slip-ink" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(58, 40, 22, 0.92)" />
+              <stop offset="100%" stopColor="rgba(28, 30, 26, 0.82)" />
+            </linearGradient>
+            <linearGradient id="proof-slip-gold" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#9c6e26" />
+              <stop offset="50%" stopColor="#f5c65b" />
+              <stop offset="100%" stopColor="#9c6e26" />
+            </linearGradient>
+          </defs>
+          <rect
+            x="0.6"
+            y="0.6"
+            width="98.8"
+            height="98.8"
+            rx="0.4"
+            fill="none"
+            stroke="url(#proof-slip-ink)"
+            strokeWidth="0.45"
+          />
+          <rect
+            x="3.2"
+            y="3.2"
+            width="93.6"
+            height="93.6"
+            rx="0.2"
+            fill="none"
+            stroke="url(#proof-slip-ink)"
+            strokeWidth="0.18"
+            strokeDasharray="0.7 1.3"
+            opacity="0.55"
+          />
+          <g className="proof-slip-rim-title">
+            <line x1="32" y1="3.6" x2="68" y2="3.6" stroke="url(#proof-slip-ink)" strokeWidth="0.4" />
+            <line x1="32" y1="8.6" x2="68" y2="8.6" stroke="url(#proof-slip-ink)" strokeWidth="0.4" />
+            <text x="50" y="7.0" textAnchor="middle" className="proof-slip-rim-title-text">
+              PROOF SHEET
+            </text>
+          </g>
+          <g className="proof-slip-rim-foot">
+            <line x1="30" y1="93.2" x2="46" y2="93.2" stroke="url(#proof-slip-gold)" strokeWidth="0.32" />
+            <line x1="54" y1="93.2" x2="70" y2="93.2" stroke="url(#proof-slip-gold)" strokeWidth="0.32" />
+            <text x="50" y="94.4" textAnchor="middle" className="proof-slip-rim-foot-text">
+              second reading
+            </text>
+          </g>
+          <line x1="50" y1="3" x2="50" y2="5" stroke="url(#proof-slip-ink)" strokeWidth="0.3" opacity="0.55" />
+          <line x1="50" y1="95" x2="50" y2="97" stroke="url(#proof-slip-ink)" strokeWidth="0.3" opacity="0.55" />
+        </svg>
+      </span>
+
+      <header className="proof-slip-head">
+        <span className="proof-slip-head-rule proof-slip-head-rule--left" />
+        <span className="proof-slip-head-cluster">
+          <span className="proof-slip-head-mark" aria-hidden="true">
+            <svg viewBox="0 0 14 14" focusable="false">
+              <circle cx="7" cy="7" r="5.6" fill="none" stroke="currentColor" strokeWidth="0.5" />
+              <path d="M 7 3 L 9 7 L 7 11 L 5 7 Z" fill="currentColor" fillOpacity="0.78" />
+              <circle cx="7" cy="7" r="0.9" fill="var(--paper)" />
+            </svg>
+          </span>
+          <em className="proof-slip-head-key">the proof sheet</em>
+          <span className="proof-slip-head-sep" aria-hidden="true">·</span>
+          <em className="proof-slip-head-tail">a galley proof of the answer</em>
+        </span>
+        <span className="proof-slip-head-rule proof-slip-head-rule--right" />
+      </header>
+
+      <div className="proof-slip-stage">
+        <span className="proof-slip-margin proof-slip-margin--left" aria-hidden="true">
+          <span className="proof-slip-margin-rule" />
+          <span className="proof-slip-margin-numeral">a</span>
+        </span>
+
+        <div className="proof-slip-copy-wrap">
+          <p className="proof-slip-copy">
+            <span className="proof-slip-dash" aria-hidden="true">— </span>
+            <span className="proof-slip-word">and</span>
+            {' '}
+            <span className="proof-slip-word">the</span>
+            {' '}
+            <span className="proof-slip-word">page</span>
+            {' '}
+            <span className="proof-slip-word proof-slip-word--caret">
+              <span className="proof-slip-word-text">itself</span>
+              <span className="proof-slip-mark proof-slip-mark--caret" aria-hidden="true">
+                <svg className="proof-slip-mark-symbol" viewBox="0 0 24 10" focusable="false" preserveAspectRatio="none">
+                  <path d="M 2 8 Q 12 2 22 8" stroke="currentColor" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+                </svg>
+                <span className="proof-slip-mark-tail">still</span>
+              </span>
+            </span>
+            <span className="proof-slip-sep">,</span>
+            {' '}
+            <span className="proof-slip-word proof-slip-word--struck">
+              <span className="proof-slip-word-text">which you are reading</span>
+              <span className="proof-slip-mark proof-slip-mark--strike" aria-hidden="true">
+                <span className="proof-slip-mark-tail">the attentive reader</span>
+              </span>
+            </span>
+            {' '}
+            <span className="proof-slip-word proof-slip-word--em">
+              <span className="proof-slip-word-text">now</span>
+              <span className="proof-slip-mark proof-slip-mark--margin" aria-hidden="true">
+                <span className="proof-slip-mark-tail">at your pace</span>
+              </span>
+            </span>
+            <span className="proof-slip-sep">.</span>
+          </p>
+
+          <span className="proof-slip-line proof-slip-line--one" aria-hidden="true">
+            <span className="proof-slip-line-rule" />
+            <span className="proof-slip-line-tag">a · caret</span>
+          </span>
+          <span className="proof-slip-line proof-slip-line--two" aria-hidden="true">
+            <span className="proof-slip-line-rule" />
+            <span className="proof-slip-line-tag">b · struck</span>
+          </span>
+          <span className="proof-slip-line proof-slip-line--three" aria-hidden="true">
+            <span className="proof-slip-line-rule" />
+            <span className="proof-slip-line-tag">c · margin</span>
+          </span>
+        </div>
+
+        <span className="proof-slip-margin proof-slip-margin--right" aria-hidden="true">
+          <span className="proof-slip-margin-rule" />
+          <span className="proof-slip-margin-numeral">b</span>
+        </span>
+      </div>
+
+      <footer className="proof-slip-foot">
+        <span className="proof-slip-foot-rule proof-slip-foot-rule--left" />
+        <span className="proof-slip-foot-cluster">
+          <span className="proof-slip-foot-mark" aria-hidden="true">¶</span>
+          <em className="proof-slip-foot-key">pressed again</em>
+          <span className="proof-slip-foot-sep" aria-hidden="true">·</span>
+          <em className="proof-slip-foot-tail">read again, slower</em>
+          <svg
+            className="proof-slip-foot-fleuron"
+            viewBox="0 0 24 12"
+            focusable="false"
+            aria-hidden="true"
+          >
+            <path
+              d="M 4 6 Q 8 2 12 6 Q 16 10 20 6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="0.5"
+              strokeLinecap="round"
+            />
+            <circle cx="12" cy="6" r="0.8" fill="currentColor" />
+          </svg>
+        </span>
+        <span className="proof-slip-foot-rule proof-slip-foot-rule--right" />
+      </footer>
+    </aside>
+  )
+}
+
 function BookmarkRibbon() {
   return (
     <svg
@@ -6362,6 +6553,12 @@ export function App() {
                 <InkTrail active />
               )}
             </div>
+
+            <ProofSlip
+              visible={phase === 'complete' && slow}
+              slow={slow}
+              reduced={reduced}
+            />
 
             <div
               data-section="sec-reply"

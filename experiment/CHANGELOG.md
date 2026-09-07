@@ -1,11 +1,5 @@
 # Changelog
 
-Quieted the recto, monumentalised the answer, and threaded a gilded rule through the spine.
+## Iteration 124 — proof sheet for the second reading
 
-## Iteration 123 — the press seam
-
-- Bound the folio at last with a slim gilded rule that runs through the spine: a press seam that fades from gold to coral across three beats (set, answer, reply), with a small pulse that travels downward as the leaf is read.
-- Made the italic answer truly monumental: a larger, slightly tighter display italic, a confident baseline, and a card-less surface that lets the typography breathe. The inkwell and quill now sit quietly at the corners, atmospheric rather than central.
-- Composed the press-plate's marginalia as a single italic-line gloss, the three marks (¶, †, ‡) reading as one printer's note instead of three pills.
-- Tightened the verso's closing — a slim drop-rule binds the cul-de-lampe, the colophon, and the press-signature as one composed ending.
-- Mobile: refined the answer-copy sizing, inkwell, quill, and seam for narrow screens.
+A galley proof of the answer emerges between the answer plate and the reply when the seal is pressed a second time and slow-reading is engaged. The proof sheet re-sets the same words in italic display with hand-pressed editorial marks — a caret insertion ("still"), a struck passage with a marginal gloss ("the attentive reader"), and a margin note at the close ("at your pace"). Gilded rim, corner ornaments, and a "PROOF SHEET · second reading" title block match the answer plate; the slip arrives with a subtle slide and a gentle breathing motion while slow-reading is held. Editorial marks stack into the flow on small screens, and the slip respects reduced-motion preferences.
