@@ -5,6 +5,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { parseUsage, dailyGate, config, filesIn, writeJSON, readJSON, summarizeChangelog, nextRunAt } from '../runner/lib.mjs'
 import { serve } from '../runner/browser.mjs'
+import { retryVercel } from '../runner/publish.mjs'
 
 test('OpenCode failures are detected even when the process exits successfully', () => {
   const output = [
@@ -35,6 +36,28 @@ test('15-minute cadence includes generation time and never overlaps long turns',
   assert.equal(nextRunAt({ startedAt: start }, Date.parse('2026-09-05T10:06:00Z'), 15), '2026-09-05T10:15:00.000Z')
   assert.equal(nextRunAt({ startedAt: start }, Date.parse('2026-09-05T10:18:00Z'), 15), '2026-09-05T10:18:00.000Z')
   assert.equal(nextRunAt({ acceptedAt: '2026-09-05T10:06:00Z', durationSeconds: 360 }, Date.parse('2026-09-05T10:07:00Z'), 15), '2026-09-05T10:15:00.000Z')
+})
+
+test('transient Vercel failures retry with exponential backoff', async () => {
+  const delays = []
+  let calls = 0
+  const result = await retryVercel('test deployment', async () => {
+    calls++
+    if (calls < 3) throw new Error('Vercel exited 1: Error: Not authorized')
+    return 'deployed'
+  }, { attempts: 4, baseDelayMs: 10, wait: async delay => delays.push(delay) })
+  assert.equal(result, 'deployed')
+  assert.equal(calls, 3)
+  assert.deepEqual(delays, [10, 20])
+})
+
+test('non-transient Vercel failures are not retried', async () => {
+  let calls = 0
+  await assert.rejects(retryVercel('test deployment', async () => {
+    calls++
+    throw new Error('Invalid project configuration')
+  }, { wait: async () => {} }), /Invalid project configuration/)
+  assert.equal(calls, 1)
 })
 
 test('snapshot validation rejects symlinks that could archive host files', async () => {

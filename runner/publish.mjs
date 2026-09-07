@@ -4,6 +4,26 @@ import os from 'node:os'
 import { ROOT, RUNTIME, command, config, git, log, readJSON, readState, saveState, writeJSON, sleep, nextRunAt } from './lib.mjs'
 import { SNAPSHOT_CSP, launchBrowser } from './browser.mjs'
 
+const RETRYABLE_VERCEL_ERROR = /not authorized|\b429\b|rate.?limit|timed out|econn(?:reset|refused)|enotfound|fetch failed|\b5\d\d\b/i
+
+export async function retryVercel(label, action, options = {}) {
+  const attempts = options.attempts ?? 4
+  const baseDelayMs = options.baseDelayMs ?? 5_000
+  const wait = options.wait ?? sleep
+  let lastError
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try { return await action() }
+    catch (error) {
+      lastError = error
+      if (attempt === attempts || !RETRYABLE_VERCEL_ERROR.test(error.message)) throw error
+      const delay = baseDelayMs * 2 ** (attempt - 1)
+      log(`${label} failed transiently (attempt ${attempt}/${attempts}); retrying in ${delay / 1000}s`)
+      await wait(delay)
+    }
+  }
+  throw lastError
+}
+
 export async function vercelAPI(endpoint, options = {}) {
   const { token } = await readJSON(path.join(os.homedir(), '.local/share/com.vercel.cli/auth.json'))
   const project = await readJSON(path.join(ROOT, '.vercel/project.json'))
@@ -68,7 +88,7 @@ export async function publishPending() {
   if (!pending.deploymentUrl) {
     await prepareOutput()
     // The deployment is created without moving the public production domain.
-    const output = await command(path.join(ROOT, 'node_modules/.bin/vercel'), ['deploy', '--prebuilt', '--prod', '--skip-domain', '--yes', '--no-color'], { timeout: 600_000, onStderr: chunk => process.stderr.write(chunk) })
+    const output = await retryVercel('Vercel deployment', () => command(path.join(ROOT, 'node_modules/.bin/vercel'), ['deploy', '--prebuilt', '--prod', '--skip-domain', '--yes', '--no-color'], { timeout: 600_000, onStderr: chunk => process.stderr.write(chunk) }))
     const urls = output.match(/https:\/\/[^\s]+\.vercel\.app/g)
     if (!urls?.length) throw new Error('Vercel did not return a deployment URL')
     pending.deploymentUrl = urls.at(-1)
@@ -78,7 +98,7 @@ export async function publishPending() {
   await verifyDeployment(pending.deploymentUrl, pending.id)
   if (!pending.promotedAt) {
     try {
-      await command(path.join(ROOT, 'node_modules/.bin/vercel'), ['promote', pending.deploymentUrl, '--yes', '--no-color'], { timeout: 240_000, echo: true })
+      await retryVercel('Vercel promotion', () => command(path.join(ROOT, 'node_modules/.bin/vercel'), ['promote', pending.deploymentUrl, '--yes', '--no-color'], { timeout: 240_000, echo: true }))
     } catch (error) {
       // Promotion may have succeeded before a crash or a failed final smoke check.
       if (!error.message.includes('already the current production deployment')) throw error
