@@ -5,6 +5,50 @@ const ANSWER = '— and the page itself, which you are reading now.'
 const REPLY = 'so read it once, then again — slower this time.'
 const FOOTNOTE = 'relege · without a reader, silence'
 
+const SYNODIC = 29.530588853
+const NEW_MOON_REF = Date.UTC(2000, 0, 6, 18, 14, 0)
+
+function moonPhaseOf(date: Date): number {
+  const days = (date.getTime() - NEW_MOON_REF) / 86400000
+  const phase = ((days % SYNODIC) + SYNODIC) % SYNODIC
+  return phase / SYNODIC
+}
+
+function moonPhaseName(phase: number): string {
+  if (phase < 0.03 || phase > 0.97) return 'new'
+  if (phase < 0.22) return 'waxing crescent'
+  if (phase < 0.28) return 'first quarter'
+  if (phase < 0.47) return 'waxing gibbous'
+  if (phase < 0.53) return 'full'
+  if (phase < 0.72) return 'waning gibbous'
+  if (phase < 0.78) return 'last quarter'
+  return 'waning crescent'
+}
+
+function moonTerminatorPath(phase: number, cx: number, cy: number, r: number): string {
+  if (phase <= 0.001 || phase >= 0.999) {
+    return `M ${cx} ${cy - r} A 0.001 0.001 0 1 1 ${cx} ${cy - r} Z`
+  }
+  const angle = phase * 2 * Math.PI
+  const rx = Math.max(0, Math.abs(Math.cos(angle)) * r)
+  const waxing = phase < 0.5
+  const limbSweep = waxing ? 1 : 0
+  let termSweep: number
+  if (waxing) {
+    termSweep = phase < 0.25 ? 0 : 1
+  } else {
+    termSweep = phase < 0.75 ? 0 : 1
+  }
+  if (rx < 0.05) {
+    return `M ${cx} ${cy - r} A ${r} ${r} 0 0 ${limbSweep} ${cx} ${cy + r} L ${cx} ${cy - r} Z`
+  }
+  return (
+    `M ${cx} ${cy - r} ` +
+    `A ${r} ${r} 0 0 ${limbSweep} ${cx} ${cy + r} ` +
+    `A ${rx} ${r} 0 0 ${termSweep} ${cx} ${cy - r} Z`
+  )
+}
+
 type Phase = 'idle' | 'answering' | 'replying' | 'complete'
 
 interface MarginaliaItem {
@@ -1147,6 +1191,7 @@ function Apparatus({
     { numeral: 'iii', name: 'the reply', gloss: 'the second reading', hash: 'sec-reply' },
     { numeral: 'iv', name: 'this hour', gloss: 'the dial of the leaf', hash: 'sec-hour' },
     { numeral: 'v', name: 'this sky', gloss: 'polaris above ur. minor', hash: 'sec-sky' },
+    { numeral: 'vi', name: 'this moon', gloss: 'tide & illumination', hash: 'sec-moon' },
   ]
 
   return (
@@ -1620,6 +1665,97 @@ function SiderealPocket({
       </svg>
       <span className="sidereal-pocket-label">this sky</span>
       <span className="sidereal-pocket-sub">polaris · ur · minor</span>
+    </div>
+  )
+}
+
+function MoonPhase({
+  phase,
+  visible,
+}: {
+  phase: number
+  visible: boolean
+}) {
+  const cx = 35
+  const cy = 35
+  const r = 28
+  const litPath = moonTerminatorPath(phase, cx, cy, r)
+  const name = moonPhaseName(phase)
+  const illumination = Math.round((1 - Math.cos(phase * 2 * Math.PI)) * 50)
+
+  return (
+    <div
+      className={`moon-phase${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="moon-phase-dial" viewBox="0 0 70 70" focusable="false">
+        <defs>
+          <radialGradient id="moon-disk" cx="38%" cy="34%" r="80%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.96)" />
+            <stop offset="62%" stopColor="rgba(238, 220, 178, 0.86)" />
+            <stop offset="100%" stopColor="rgba(196, 162, 110, 0.62)" />
+          </radialGradient>
+          <radialGradient id="moon-shadow" cx="60%" cy="60%" r="80%">
+            <stop offset="0%" stopColor="rgba(28, 36, 48, 0.78)" />
+            <stop offset="68%" stopColor="rgba(14, 22, 32, 0.92)" />
+            <stop offset="100%" stopColor="rgba(6, 12, 22, 0.96)" />
+          </radialGradient>
+          <pattern id="moon-craters" width="6" height="6" patternUnits="userSpaceOnUse">
+            <circle cx="1.6" cy="1.4" r="0.6" fill="rgba(154, 122, 70, 0.18)" />
+            <circle cx="4.2" cy="3.6" r="0.4" fill="rgba(154, 122, 70, 0.14)" />
+          </pattern>
+        </defs>
+
+        <circle
+          cx={cx}
+          cy={cy}
+          r={r}
+          fill="url(#moon-shadow)"
+        />
+        <path
+          d={litPath}
+          fill="url(#moon-disk)"
+        />
+        <path
+          d={litPath}
+          fill="url(#moon-craters)"
+          opacity="0.55"
+        />
+        <circle
+          cx={cx}
+          cy={cy}
+          r={r}
+          fill="none"
+          stroke="rgba(214, 168, 73, 0.5)"
+          strokeWidth="0.4"
+          strokeDasharray="0.6 1.6"
+        />
+        <circle
+          cx={cx}
+          cy={cy - r - 3}
+          r="0.55"
+          fill="rgba(214, 168, 73, 0.7)"
+        />
+        <circle
+          cx={cx - r + 2}
+          cy={cy}
+          r="0.4"
+          fill="rgba(214, 168, 73, 0.45)"
+        />
+        <circle
+          cx={cx + r - 2}
+          cy={cy}
+          r="0.4"
+          fill="rgba(214, 168, 73, 0.45)"
+        />
+      </svg>
+      <span className="moon-phase-label">this moon</span>
+      <span className="moon-phase-sub">
+        <em>{name}</em>
+        <span className="moon-phase-pct" aria-hidden="true">
+          {illumination}%
+        </span>
+      </span>
     </div>
   )
 }
@@ -3466,6 +3602,7 @@ export function App() {
   const hours = now.getHours()
   const minutes = now.getMinutes()
   const seconds = now.getSeconds()
+  const moonPhase = moonPhaseOf(now)
 
   const totalChars = answerChars + replyChars
   const lineCount =
@@ -3747,6 +3884,13 @@ export function App() {
                   className="bench-item"
                 >
                   <SiderealPocket visible={hourDialVisible} reduced={reduced} />
+                </div>
+                <div
+                  data-section="sec-moon"
+                  ref={(el) => { sectionRefs.current['sec-moon'] = el }}
+                  className="bench-item"
+                >
+                  <MoonPhase phase={moonPhase} visible={hourDialVisible} />
                 </div>
               </div>
             </div>

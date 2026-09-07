@@ -717,13 +717,17 @@ button { font: inherit; }
   padding-top: 0.05em;
 }
 .title-text { font-style: italic; }
-.title-text:first-of-type { font-feature-settings: "swsh" 1, "salt" 1; }
+.title-text:first-of-type {
+  font-feature-settings: "swsh" 1, "salt" 1;
+  padding-right: 0.02em;
+}
 .title-subject {
   color: #1d4a59;
   position: relative;
   font-style: italic;
   display: inline-block;
-  padding-right: 0.04em;
+  padding: 0 0.06em;
+  letter-spacing: -0.022em;
 }
 .title-subject-rule {
   position: absolute;
@@ -1066,6 +1070,12 @@ button { font: inherit; }
 .answer-copy-dash {
   display: inline-block;
   margin-right: 2px;
+  font-feature-settings: "smcp" 1;
+  font-size: 0.78em;
+  vertical-align: 0.18em;
+  color: var(--coral-deep);
+  opacity: 0.85;
+  letter-spacing: 0.04em;
 }
 .illuminated-initial svg { display: block; width: 100%; height: 100%; }
 .illum-letter-glyph {
@@ -1498,9 +1508,10 @@ button { font: inherit; }
   font: italic 30px/1.22 var(--display);
   letter-spacing: -0.005em;
   text-indent: 0;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1;
   padding-right: 8px;
   hanging-punctuation: first last;
+  text-wrap: pretty;
 }
 
 .typing-caret {
@@ -1879,8 +1890,8 @@ button { font: inherit; }
 }
 .scholars-bench-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(12px, 2vw, 22px);
   align-items: end;
 }
 
@@ -1893,7 +1904,7 @@ button { font: inherit; }
   transition: opacity 800ms var(--ease);
 }
 .leaf-hour.is-visible { opacity: 1; }
-.leaf-hour-dial { display: block; width: 78px; height: 78px; }
+.leaf-hour-dial { display: block; width: 72px; height: 72px; }
 .leaf-hour-label {
   display: block;
   margin-top: 8px;
@@ -1921,7 +1932,7 @@ button { font: inherit; }
   transition: opacity 800ms var(--ease);
 }
 .sidereal-pocket.is-visible { opacity: 1; }
-.sidereal-pocket-dial { display: block; width: 88px; height: 88px; }
+.sidereal-pocket-dial { display: block; width: 78px; height: 78px; }
 .sidereal-pocket-label {
   display: block;
   margin-top: 8px;
@@ -1961,7 +1972,56 @@ button { font: inherit; }
 }
 @keyframes polaris-twinkle {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.82; transform: scale(0.94); }
+  50%      { opacity: 0.82; transform: scale(0.94); }
+}
+
+/* moon phase */
+.moon-phase {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  opacity: 0.4;
+  transition: opacity 800ms var(--ease);
+}
+.moon-phase.is-visible { opacity: 1; }
+.moon-phase-dial {
+  display: block;
+  width: 72px;
+  height: 72px;
+  filter: drop-shadow(0 0 6px rgba(255, 246, 218, 0.18));
+}
+.moon-phase-label {
+  display: block;
+  margin-top: 8px;
+  font: 770 9px var(--sans);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.moon-phase-sub {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 3px;
+  font: italic 11px var(--display);
+  color: var(--ink);
+}
+.moon-phase-sub em {
+  font-style: italic;
+  color: var(--ink);
+}
+.moon-phase-pct {
+  font: 600 9px var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--coral-deep);
+  opacity: 0.78;
+}
+.moon-phase.is-visible .moon-phase-dial {
+  animation: moon-rise 1400ms var(--ease) both;
+}
+@keyframes moon-rise {
+  from { opacity: 0; transform: translateY(4px) scale(0.94); }
+  to   { opacity: 1; transform: none; }
 }
 
 /* ────────── cul-de-lampe ────────── */
@@ -2402,7 +2462,7 @@ button { font: inherit; }
   .reading-tide { width: 28px; right: 8px; }
   .reading-tide-label { display: none; }
   .ms-stamp { right: 6px; top: -2px; }
-  .scholars-bench-row { gap: 16px; }
+  .scholars-bench-row { gap: 16px; grid-template-columns: repeat(3, 1fr); }
   .reading-lines {
     top: 84px;
     bottom: 84px;
@@ -2479,9 +2539,10 @@ button { font: inherit; }
   }
   .apparatus-name { font-size: 11px; }
   .apparatus-gloss { font-size: 11.5px; }
-  .scholars-bench-row { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .leaf-hour-dial { width: 64px; height: 64px; }
-  .sidereal-pocket-dial { width: 70px; height: 70px; }
+  .scholars-bench-row { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .leaf-hour-dial { width: 60px; height: 60px; }
+  .sidereal-pocket-dial { width: 62px; height: 62px; }
+  .moon-phase-dial { width: 58px; height: 58px; }
   .cul-de-lampe { width: 150px; }
   .sheet-footer { gap: 10px; padding-top: 14px; }
   .footer-line { font-size: 11.5px; }
