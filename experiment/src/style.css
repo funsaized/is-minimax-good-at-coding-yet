@@ -882,6 +882,49 @@ button { font: inherit; }
   letter-spacing: 0.005em;
 }
 
+/* typographic stanzas — a small argument set as verse */
+
+.question-stanzas {
+  max-width: 480px;
+  margin: 32px 0 0 2px;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+.question-stanza {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  align-items: baseline;
+  margin: 0;
+  color: var(--ink-soft);
+  font: 400 17px/1.55 var(--serif);
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+.question-stanza-mark {
+  color: var(--coral);
+  font: italic 17px/1 var(--display);
+  opacity: 0.78;
+  justify-self: start;
+  margin-top: 2px;
+}
+.question-stanza-lines { display: block; }
+.question-stanza em {
+  font-style: italic;
+  color: var(--coral-deep);
+  font-weight: 500;
+  letter-spacing: 0.005em;
+}
+.question-stanza--close em {
+  color: var(--ink);
+  font-weight: 600;
+}
+.question-stanza--close .question-stanza-mark {
+  color: var(--coral-deep);
+  opacity: 0.95;
+}
+
 .marginalia-strip {
   display: flex; flex-wrap: wrap;
   gap: 11px;
@@ -2513,14 +2556,39 @@ button { font: inherit; }
   color: var(--ink);
 }
 .apparatus-leader {
-  display: inline-flex; align-items: center;
-  min-width: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 48px;
   color: var(--coral);
-  opacity: 0.5;
+  opacity: 0.85;
 }
-.apparatus-leader-dot {
-  font: 700 11px/1 var(--display);
-  letter-spacing: 0.04em;
+.apparatus-leader-line {
+  flex: 1 1 auto;
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    rgba(107, 74, 37, 0.42) 0 1.6px,
+    transparent 1.6px 4.4px
+  );
+  transform: translateY(-0.5px);
+}
+.apparatus-leader-glyph {
+  font: 400 10px/1 var(--display);
+  letter-spacing: 0;
+  color: var(--coral-deep);
+  opacity: 0.85;
+}
+.apparatus-row.is-active .apparatus-leader-line {
+  background: repeating-linear-gradient(
+    to right,
+    rgba(167, 60, 44, 0.55) 0 1.6px,
+    transparent 1.6px 4.4px
+  );
+}
+.apparatus-row.is-active .apparatus-leader-glyph {
+  color: var(--coral-deep);
+  opacity: 1;
 }
 .apparatus-gloss {
   font: italic 12.5px var(--display);
@@ -3103,7 +3171,7 @@ button { font: inherit; }
   gap: 22px;
   align-items: center;
   margin: 32px auto 0;
-  padding: 16px 22px 18px;
+  padding: 18px 24px 20px;
   max-width: 88%;
   color: var(--ink-soft);
   border-top: 1px solid rgba(107, 74, 37, 0.22);
@@ -3138,6 +3206,26 @@ button { font: inherit; }
   row-gap: 4px;
   font: 12.5px/1.4 var(--display);
   letter-spacing: 0.04em;
+}
+.colophon-head {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  padding-bottom: 4px;
+  color: var(--coral-deep);
+}
+.colophon-head-mark {
+  font: italic 17px/1 var(--display);
+  color: var(--coral);
+}
+.colophon-head-text {
+  font: italic 12.5px/1 var(--display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  font-weight: 500;
 }
 .colophon-line {
   display: contents;
@@ -3373,48 +3461,117 @@ button { font: inherit; }
 }
 .pressed-leaf.is-static .pressed-leaf-body { animation: none; }
 
-/* ────────── reading breath (between answer and reply) ────────── */
+/* ────────── marginal interlude (between answer and reply) ────────── */
 
-.reading-breath {
+.marginal-interlude {
+  position: relative;
   display: grid;
-  place-items: center;
-  gap: 8px;
-  margin: 26px 0 18px;
-  color: var(--coral-deep);
+  gap: 12px;
+  margin: 24px 0 14px;
+  padding: 14px 4px 8px;
   opacity: 0;
-  transform: translateY(4px);
+  transform: translateY(8px);
   transition: opacity 800ms var(--ease), transform 800ms var(--ease);
 }
-.reading-breath.is-visible {
+.marginal-interlude.is-visible {
   opacity: 1;
   transform: none;
 }
-.reading-breath svg {
-  width: min(220px, 56%);
-  height: 24px;
-  color: var(--coral);
+.marginal-interlude-rule {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(107, 74, 37, 0.32) 28%,
+    rgba(107, 74, 37, 0.32) 72%,
+    transparent
+  );
+  position: relative;
 }
-.reading-breath-mark {
-  transform-origin: center;
-  animation: breath-pulse 5.6s ease-in-out infinite;
+.marginal-interlude-rule::before,
+.marginal-interlude-rule::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 7px; height: 7px;
+  border: 1px solid rgba(107, 74, 37, 0.32);
+  border-radius: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  background: var(--paper);
 }
-@keyframes breath-pulse {
-  0%, 100% { opacity: 0.78; transform: scale(1); }
-  50%      { opacity: 1; transform: scale(1.04); }
+.marginal-interlude-rule::before { left: 24%; }
+.marginal-interlude-rule::after { right: 24%; }
+
+.marginal-interlude-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: clamp(14px, 2.2vw, 26px);
+  padding: 4px 6px 6px;
 }
-.reading-breath-script {
-  font: italic 11px var(--display);
-  letter-spacing: 0.06em;
+
+/* when pressed-leaf lives inside the interlude, it returns to flow */
+
+.marginal-interlude .pressed-leaf {
+  position: relative;
+  top: auto; right: auto; bottom: auto;
+  width: 64px;
+  transform: none;
+  opacity: 1;
+  filter: drop-shadow(0 4px 6px rgba(58, 80, 38, 0.16));
+  justify-self: center;
+}
+.marginal-interlude .pressed-leaf svg {
+  width: 64px;
+  height: 88px;
+}
+
+.marginal-interlude-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--ink);
+  min-width: 0;
+}
+.marginal-interlude-line {
+  margin: 0;
+  font: italic 15px/1.55 var(--display);
+  letter-spacing: 0.005em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.marginal-interlude-line em {
+  font-style: italic;
+  color: var(--coral-deep);
+  font-weight: 500;
+}
+.marginal-interlude-tag {
+  margin: 0;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
   color: var(--ink-soft);
+  font: 700 9px/1 var(--sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
-.reading-breath-script::before,
-.reading-breath-script::after {
-  content: "·";
+.marginal-interlude-tag-mark {
   color: var(--coral);
-  margin: 0 6px;
+  font: italic 14px/1 var(--display);
+  letter-spacing: 0;
 }
 
 /* ────────── mobile refinements ────────── */
+
+@media (max-width: 880px) {
+  .marginal-interlude-row {
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+  }
+  .marginal-interlude .pressed-leaf { width: 56px; }
+  .marginal-interlude .pressed-leaf svg { width: 56px; height: 76px; }
+  .marginal-interlude-line { font-size: 14px; }
+}
 
 @media (max-width: 560px) {
   .broadsheet-title {
@@ -3430,17 +3587,24 @@ button { font: inherit; }
     letter-spacing: -0.025em;
   }
   .title-subject-rule { bottom: -0.16em; height: 0.085em; }
-  .pressed-leaf {
-    top: auto;
-    right: -8px;
-    bottom: -20px;
-    width: 56px;
-    transform: translate(6px, 4px) rotate(10deg);
+  .marginal-interlude {
+    margin: 20px 0 10px;
+    padding: 10px 2px 4px;
+    gap: 10px;
   }
-  .pressed-leaf.is-visible { transform: translate(0, 0) rotate(4deg); }
-  .pressed-leaf svg { width: 56px; height: 78px; }
-  .reading-breath { margin: 22px 0 14px; }
-  .reading-breath-script { font-size: 10px; }
+  .marginal-interlude-row {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+  .marginal-interlude .pressed-leaf { width: 48px; }
+  .marginal-interlude .pressed-leaf svg { width: 48px; height: 66px; }
+  .marginal-interlude-line { font-size: 13.5px; line-height: 1.5; }
+  .marginal-interlude-rule::before { left: 18%; }
+  .marginal-interlude-rule::after { right: 18%; }
+  .question-stanzas { margin-top: 26px; }
+  .question-stanza { font-size: 16px; gap: 8px; }
 }
 
 @media (max-width: 380px) {

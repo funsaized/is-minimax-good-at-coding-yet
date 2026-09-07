@@ -1279,11 +1279,8 @@ function Apparatus({
                 <span className="apparatus-numeral">{entry.numeral}.</span>
                 <span className="apparatus-name">{entry.name}</span>
                 <span className="apparatus-leader" aria-hidden="true">
-                  <span className="apparatus-leader-dot">·</span>
-                  <span className="apparatus-leader-dot">·</span>
-                  <span className="apparatus-leader-dot">·</span>
-                  <span className="apparatus-leader-dot">·</span>
-                  <span className="apparatus-leader-dot">·</span>
+                  <span className="apparatus-leader-line" />
+                  <span className="apparatus-leader-glyph">✦</span>
                 </span>
                 <span className="apparatus-gloss">{entry.gloss}</span>
               </a>
@@ -2588,6 +2585,106 @@ function PressCorrectionSlip({ visible, intensity }: { visible: boolean; intensi
   )
 }
 
+function MarginalInterlude({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <aside
+      className={`marginal-interlude${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <div className="marginal-interlude-rule" />
+
+      <div className="marginal-interlude-row">
+        <div className={`pressed-leaf${reduced ? ' is-static' : ''}`}>
+          <svg viewBox="0 0 70 96" focusable="false">
+            <defs>
+              <linearGradient id="leaf-body" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="rgba(154, 168, 96, 0.58)" />
+                <stop offset="55%" stopColor="rgba(118, 138, 70, 0.62)" />
+                <stop offset="100%" stopColor="rgba(78, 96, 44, 0.5)" />
+              </linearGradient>
+              <linearGradient id="leaf-shadow" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="rgba(54, 70, 32, 0.18)" />
+                <stop offset="100%" stopColor="rgba(54, 70, 32, 0.45)" />
+              </linearGradient>
+            </defs>
+
+            <g className="pressed-leaf-shadow">
+              <path
+                d="M 6 88 Q 4 50 18 24 Q 38 4 56 16 Q 64 36 50 64 Q 32 86 12 90 Z"
+                fill="url(#leaf-shadow)"
+                opacity="0.6"
+              />
+            </g>
+
+            <g className="pressed-leaf-body">
+              <path
+                d="M 8 86 Q 6 50 20 26 Q 38 8 54 18 Q 60 36 48 62 Q 30 82 14 88 Z"
+                fill="url(#leaf-body)"
+                stroke="rgba(58, 80, 38, 0.5)"
+                strokeWidth="0.4"
+              />
+              <path
+                className="pressed-leaf-vein-mid"
+                d="M 16 86 Q 24 56 34 32 Q 42 22 50 22"
+                stroke="rgba(58, 80, 38, 0.55)"
+                strokeWidth="0.5"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <g className="pressed-leaf-veins" stroke="rgba(58, 80, 38, 0.4)" strokeWidth="0.3" fill="none" strokeLinecap="round">
+                <path d="M 22 76 Q 28 70 30 64" />
+                <path d="M 26 66 Q 32 60 34 56" />
+                <path d="M 30 56 Q 36 50 38 44" />
+                <path d="M 34 46 Q 40 40 42 34" />
+                <path d="M 18 78 Q 14 70 16 60" />
+                <path d="M 18 58 Q 14 50 18 42" />
+                <path d="M 22 40 Q 18 32 22 24" />
+              </g>
+              <g className="pressed-leaf-blotches" fill="rgba(58, 80, 38, 0.32)">
+                <ellipse cx="34" cy="42" rx="2.2" ry="1" transform="rotate(-22 34 42)" />
+                <ellipse cx="26" cy="60" rx="1.6" ry="0.8" transform="rotate(-30 26 60)" />
+                <ellipse cx="42" cy="34" rx="1.4" ry="0.8" transform="rotate(-12 42 34)" />
+              </g>
+              <path
+                className="pressed-leaf-stem"
+                d="M 12 90 Q 8 94 4 96"
+                stroke="rgba(78, 56, 28, 0.7)"
+                strokeWidth="0.55"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </g>
+
+            <text x="35" y="93" textAnchor="middle" className="pressed-leaf-script">
+              h · lo · xviii
+            </text>
+          </svg>
+        </div>
+
+        <div className="marginal-interlude-text">
+          <p className="marginal-interlude-line">
+            <em>what is set once</em> is read
+            <br />
+            at the pace of attention.
+          </p>
+          <p className="marginal-interlude-tag">
+            <span className="marginal-interlude-tag-mark">¶</span>
+            corrig. · manu pr.
+          </p>
+        </div>
+      </div>
+
+      <div className="marginal-interlude-rule marginal-interlude-rule--tail" />
+    </aside>
+  )
+}
+
 function MarginaliaOwl({
   active,
   reduced,
@@ -3269,6 +3366,10 @@ function Colophon({ cycle }: { cycle: number }) {
         <circle cx="40" cy="40" r="1.6" fill="currentColor" />
       </svg>
       <div className="colophon-lines">
+        <header className="colophon-head">
+          <span className="colophon-head-mark" aria-hidden="true">¶</span>
+          <em className="colophon-head-text">colophon · imprint</em>
+        </header>
         <span className="colophon-line">
           <em className="colophon-key">set in</em>
           <span className="colophon-value">italic · 30 pt</span>
@@ -3987,12 +4088,29 @@ export function App() {
               <MarginaliaStrip items={MARGINALIA} />
             </div>
 
-<p className="question-deck">
-              A small typeset test of whether a page can
-              <em> ask well </em>
-              before it answers — an <em>initial in gilt</em>, three marginalia,
-              and a <em>quiet reply</em> that turns the leaf.
-            </p>
+            <div className="question-stanzas" aria-label="argument of the folio">
+              <p className="question-stanza">
+                <span className="question-stanza-mark" aria-hidden="true">¶</span>
+                <span className="question-stanza-lines">
+                  A small typeset test of whether a page
+                  can <em>ask well</em> before it answers —
+                </span>
+              </p>
+              <p className="question-stanza">
+                <span className="question-stanza-mark" aria-hidden="true">†</span>
+                <span className="question-stanza-lines">
+                  an <em>initial in gilt</em>, three marginalia,
+                  and a <em>quiet reply</em> that turns the leaf.
+                </span>
+              </p>
+              <p className="question-stanza question-stanza--close">
+                <span className="question-stanza-mark" aria-hidden="true">‡</span>
+                <span className="question-stanza-lines">
+                  The answer is the page itself —
+                  read it once, then again, <em>slower this time</em>.
+                </span>
+              </p>
+            </div>
 
             <ReadingTrace cycle={cycle} reduced={reduced} />
 
@@ -4132,14 +4250,10 @@ export function App() {
               )}
             </div>
 
-            <ReadingBreath visible={phase === 'replying' || phase === 'complete'} />
-
-            <PressedLeaf
-              visible={phase === 'complete'}
+            <MarginalInterlude
+              visible={phase === 'replying' || phase === 'complete'}
               reduced={reduced}
             />
-
-            <PressCorrectionSlip visible={pressSlipShown} intensity={slipIntensity} />
 
             {phase === 'complete' && (
               <div className="completion-note">
