@@ -2456,16 +2456,20 @@ function NightSky({ reduced }: { reduced: boolean }) {
       const parent = canvas.parentElement
       if (!parent) return
       const rect = parent.getBoundingClientRect()
-      const count = Math.max(40, Math.floor((rect.width * rect.height) / 22000))
-      starsRef.current = Array.from({ length: count }, () => ({
-        x: Math.random() * rect.width,
-        y: Math.random() * rect.height,
-        r: 0.3 + Math.random() * 1.1,
-        a: 0.18 + Math.random() * 0.32,
-        phase: Math.random() * Math.PI * 2,
-        twinkle: 0.4 + Math.random() * 1.4,
-        vy: -(0.04 + Math.random() * 0.08),
-      }))
+      const count = Math.max(28, Math.floor((rect.width * rect.height) / 32000))
+      starsRef.current = Array.from({ length: count }, () => {
+        const warm = Math.random() < 0.32
+        return {
+          x: Math.random() * rect.width,
+          y: Math.random() * rect.height,
+          r: 0.3 + Math.random() * 1.15,
+          a: 0.14 + Math.random() * 0.30,
+          phase: Math.random() * Math.PI * 2,
+          twinkle: 0.4 + Math.random() * 1.4,
+          vy: -(0.04 + Math.random() * 0.08),
+          warm,
+        }
+      })
       planetRef.current = {
         x: rect.width * 0.18,
         y: rect.height * 0.22,
@@ -2521,9 +2525,10 @@ function NightSky({ reduced }: { reduced: boolean }) {
           }
         }
         const a = s.a * (0.55 + 0.45 * Math.sin(s.phase))
+        const baseTint = (s as { warm?: boolean }).warm ? '255, 214, 152' : '252, 232, 196'
         ctx.fillStyle = reduced
-          ? `rgba(245, 232, 200, ${s.a * 0.7})`
-          : `rgba(245, 232, 200, ${a})`
+          ? `rgba(${baseTint}, ${s.a * 0.55})`
+          : `rgba(${baseTint}, ${a})`
         ctx.beginPath()
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
         ctx.fill()
@@ -3282,7 +3287,7 @@ function TitleFlourish() {
   return (
     <svg
       className="title-flourish"
-      viewBox="0 0 320 20"
+      viewBox="0 0 320 22"
       focusable="false"
       aria-hidden="true"
       preserveAspectRatio="none"
@@ -3295,28 +3300,32 @@ function TitleFlourish() {
           <stop offset="78%" stopColor="#c8923e" />
           <stop offset="100%" stopColor="#9c6e26" />
         </linearGradient>
+        <linearGradient id="flourish-gold-soft" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#f5c65b" />
+          <stop offset="100%" stopColor="#9c6e26" />
+        </linearGradient>
         <radialGradient id="flourish-medallion-glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="rgba(245, 198, 91, 0.42)" />
-          <stop offset="60%" stopColor="rgba(245, 198, 91, 0.08)" />
+          <stop offset="0%" stopColor="rgba(245, 198, 91, 0.55)" />
+          <stop offset="60%" stopColor="rgba(245, 198, 91, 0.12)" />
           <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
         </radialGradient>
       </defs>
       <g className="title-flourish-stroke" fill="none" strokeLinecap="round">
         <path
           className="title-flourish-line"
-          d="M 6 10 Q 84 4 160 10"
+          d="M 8 11 Q 80 5 130 11"
           stroke="url(#flourish-gold)"
-          strokeWidth="0.75"
+          strokeWidth="0.85"
         />
         <path
           className="title-flourish-line"
-          d="M 160 10 Q 236 16 314 10"
+          d="M 190 11 Q 240 17 312 11"
           stroke="url(#flourish-gold)"
-          strokeWidth="0.75"
+          strokeWidth="0.85"
         />
         <path
           className="title-flourish-line-inner"
-          d="M 16 12 Q 88 7 156 12"
+          d="M 16 13 Q 80 8 130 13"
           stroke="url(#flourish-gold)"
           strokeWidth="0.32"
           opacity="0.55"
@@ -3324,7 +3333,7 @@ function TitleFlourish() {
         />
         <path
           className="title-flourish-line-inner"
-          d="M 164 12 Q 232 7 304 12"
+          d="M 190 13 Q 240 8 304 13"
           stroke="url(#flourish-gold)"
           strokeWidth="0.32"
           opacity="0.55"
@@ -3332,24 +3341,96 @@ function TitleFlourish() {
         />
         <path
           className="title-flourish-shadow"
-          d="M 6 12 Q 84 7 160 12 Q 236 17 314 12"
+          d="M 8 13 Q 80 8 130 13 Q 190 18 312 13"
           stroke="url(#flourish-gold)"
           strokeWidth="0.32"
-          opacity="0.42"
+          opacity="0.38"
         />
       </g>
-      <g className="title-flourish-medallion">
-        <circle cx="160" cy="10" r="10" fill="url(#flourish-medallion-glow)" />
-        <circle cx="160" cy="10" r="4.6" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.65" />
-        <circle cx="160" cy="10" r="2.6" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.4" strokeDasharray="0.6 1.6" />
-        <circle cx="160" cy="10" r="1.1" fill="url(#flourish-gold)" />
-        <circle cx="160" cy="10" r="0.4" fill="rgba(107, 74, 37, 0.85)" />
+      <g className="title-flourish-diamond title-flourish-diamond--left">
+        <path
+          d="M 132 11 L 138 6 L 144 11 L 138 16 Z"
+          fill="url(#flourish-gold-soft)"
+          stroke="rgba(107, 74, 37, 0.55)"
+          strokeWidth="0.32"
+        />
+        <path
+          d="M 138 8 L 141 11 L 138 14"
+          fill="none"
+          stroke="rgba(107, 74, 37, 0.55)"
+          strokeWidth="0.28"
+        />
+        <circle cx="138" cy="11" r="0.6" fill="rgba(255, 246, 218, 0.85)" />
       </g>
-      <g className="title-flourish-tails" fill="url(#flourish-gold)">
-        <circle cx="6" cy="10" r="0.95" />
-        <circle cx="314" cy="10" r="0.95" />
+      <g className="title-flourish-diamond title-flourish-diamond--right">
+        <path
+          d="M 188 11 L 182 6 L 176 11 L 182 16 Z"
+          fill="url(#flourish-gold-soft)"
+          stroke="rgba(107, 74, 37, 0.55)"
+          strokeWidth="0.32"
+        />
+        <path
+          d="M 182 8 L 179 11 L 182 14"
+          fill="none"
+          stroke="rgba(107, 74, 37, 0.55)"
+          strokeWidth="0.28"
+        />
+        <circle cx="182" cy="11" r="0.6" fill="rgba(255, 246, 218, 0.85)" />
+      </g>
+      <g className="title-flourish-medallion">
+        <circle cx="160" cy="11" r="11" fill="url(#flourish-medallion-glow)" />
+        <circle cx="160" cy="11" r="5.2" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.7" />
+        <circle cx="160" cy="11" r="3.4" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.32" strokeDasharray="0.4 1.2" opacity="0.85" />
+        <g transform="translate(160 11)" fill="url(#flourish-gold-soft)">
+          <path d="M 0 -3.2 L 0.9 -0.9 L 3.2 0 L 0.9 0.9 L 0 3.2 L -0.9 0.9 L -3.2 0 L -0.9 -0.9 Z" />
+        </g>
+        <circle cx="160" cy="11" r="0.55" fill="rgba(107, 74, 37, 0.85)" />
+      </g>
+      <g className="title-flourish-tails">
+        <circle cx="8" cy="11" r="1" fill="url(#flourish-gold)" />
+        <circle cx="312" cy="11" r="1" fill="url(#flourish-gold)" />
       </g>
     </svg>
+  )
+}
+
+function PlateInscription({ cycle }: { cycle: number }) {
+  return (
+    <div
+      className={`plate-inscription${cycle > 0 ? ' is-reread' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="plate-inscription-rule plate-inscription-rule--left" />
+      <span className="plate-inscription-cluster">
+        <svg
+          className="plate-inscription-mark plate-inscription-mark--left"
+          viewBox="0 0 12 12"
+          focusable="false"
+        >
+          <circle cx="6" cy="6" r="3.6" fill="none" stroke="currentColor" strokeWidth="0.32" strokeDasharray="0.4 1.2" />
+          <circle cx="6" cy="6" r="1.1" fill="currentColor" />
+        </svg>
+        <em className="plate-inscription-text">
+          <em className="plate-inscription-key">manus</em>
+          <span className="plate-inscription-subject">m. iii</span>
+          <em className="plate-inscription-tail">· caput</em>
+          <em className="plate-inscription-roman">xviii</em>
+          <em className="plate-inscription-tail">· in folio</em>
+          <em className="plate-inscription-roman">lxxvii</em>
+          <em className="plate-inscription-tail">·</em>
+          <em className="plate-inscription-motto">ad lucem</em>
+        </em>
+        <svg
+          className="plate-inscription-mark plate-inscription-mark--right"
+          viewBox="0 0 12 12"
+          focusable="false"
+        >
+          <circle cx="6" cy="6" r="3.6" fill="none" stroke="currentColor" strokeWidth="0.32" strokeDasharray="0.4 1.2" />
+          <circle cx="6" cy="6" r="1.1" fill="currentColor" />
+        </svg>
+      </span>
+      <span className="plate-inscription-rule plate-inscription-rule--right" />
+    </div>
   )
 }
 
@@ -4963,6 +5044,8 @@ export function App() {
           className={`sheet-ambient${phase !== 'idle' ? ' is-lit' : ''}`}
           aria-hidden="true"
         />
+        <span className="sheet-deckle sheet-deckle--top" aria-hidden="true" />
+        <span className="sheet-deckle sheet-deckle--bottom" aria-hidden="true" />
         <ReadingLamp intensity={inkProgress} />
         <DustMotes reduced={reduced} />
         <BookmarkRibbon />
@@ -5019,11 +5102,49 @@ export function App() {
                   Minimax M3
                   <span className="title-subject-rule" aria-hidden="true" />
                 </span>
-                <span className="title-text"> good at frontend yet?</span>
+                <span className="title-text">
+                  {' '}good at frontend yet<span className="title-questions">?</span>
+                </span>
+                <svg
+                  className="title-flourish-trail"
+                  viewBox="0 0 110 22"
+                  focusable="false"
+                  aria-hidden="true"
+                  preserveAspectRatio="none"
+                >
+                  <defs>
+                    <linearGradient id="title-trail-gold" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#9c6e26" />
+                      <stop offset="50%" stopColor="#c8923e" />
+                      <stop offset="100%" stopColor="#f5c65b" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M 2 14 Q 30 8 64 16 Q 90 22 104 12"
+                    stroke="url(#title-trail-gold)"
+                    strokeWidth="0.55"
+                    strokeLinecap="round"
+                    fill="none"
+                    strokeDasharray="0.6 1.6"
+                    opacity="0"
+                    className="title-flourish-trail-line"
+                  />
+                  <path
+                    d="M 100 10 L 108 13 L 102 18"
+                    stroke="url(#title-trail-gold)"
+                    strokeWidth="0.55"
+                    strokeLinecap="round"
+                    fill="none"
+                    opacity="0"
+                    className="title-flourish-trail-arrow"
+                  />
+                  <circle cx="2" cy="14" r="0.9" fill="#c8923e" opacity="0" className="title-flourish-trail-dot" />
+                </svg>
               </span>
             </h1>
             <TitleSpecimen visible={true} cycle={cycle} />
             <EditionLine cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
+            <PlateInscription cycle={cycle} />
             <TitleFlourish />
 
             <div
