@@ -1,11 +1,9 @@
-# Changelog
+# Iteration 119
 
-## Iteration 118 — the printer's mark
+Quieted the recto, freed the verso to breathe, and signed the page off in the printer's own hand.
 
-Anchored the recto with a circular publisher's device and made the slow-reading toggle tangible.
-
-- Added a `PrinterEmblem` SVG above the chapter mark: a gold-and-coral circular device with a vine wreath, italic `m·iii` monogram, top-arc motto "manu m · iii · mmxxvi", bottom-arc "ad lucem · perlege", and a printer's-mark caption beneath it. Arrives with a soft drop-in motion, then its vines sway gently.
-- Added a `ReadingPaceIndicator` inside the answer-copy-frame, shown once the answer has fully arrived. A 7-segment meter with a coral-to-gold fill animates between "slow reading" (narrow fill) and "page pace" (wide fill), so the speed toggle now reads as a visible printed scale rather than an invisible state.
-- Refined the `ChapterHead` so the caput mark sits a touch lower and more confidently, the chapter-opener-rule divider enters half a beat later (after the printer's mark), and the recto typography chain now reads: epigraph → printer's mark → caput xviii → headpiece → folio ref → witness → ¶ rule.
-- Tightened the chapter-opener to a flex column so the emblem, chapter mark, and rule stack cleanly.
-- New `.printer-emblem` and `.pace-indicator` styles respect `prefers-reduced-motion`, collapse gracefully at 720px (emblem 60px, caption wraps) and 420px (rules fold away), and harmonize with the existing coral / gold / sage palette.
+- Removed the busy press cartouche under the title; replaced with a quieter single-line specimen inscription.
+- Removed the redundant verso-side press seal and press register; the wax archive already records each impression.
+- Composed the answer and reply with more confident italic typography (looser line height, tighter letter-spacing).
+- Added a handwritten press signature at the foot of the verso: two strokes that draw themselves, a small ink pip, and the printer's "manu mea · impressum · perlege."
+- Tightened the verso's vertical rhythm and softened the ephemeris plate's footprint.

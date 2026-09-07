@@ -3780,159 +3780,87 @@ function Epigraph() {
   )
 }
 
-function PressCartouche({
+function SpecimenImprint({
   cycle,
   breathing,
 }: {
   cycle: number
   breathing: boolean
 }) {
+  const inscription =
+    cycle === 0
+      ? 'a specimen · printed for the first reader'
+      : cycle === 1
+        ? 'a specimen · pressed again · the reader slows'
+        : `a specimen · pressed ${ordinal(cycle + 1)} times · the page unchanged`
   return (
-    <figure
-      className={`press-cartouche${cycle > 0 ? ' is-reread' : ''}${
+    <p
+      className={`specimen-imprint${cycle > 0 ? ' is-reread' : ''}${
         breathing ? ' is-breathing' : ''
       }`}
       aria-hidden="true"
     >
-      <figcaption className="press-cartouche-cap">
-        <span className="press-cartouche-cap-rule press-cartouche-cap-rule--left" />
-        <span className="press-cartouche-cap-cluster">
-          <em className="press-cartouche-cap-key">catalog</em>
-          <span className="press-cartouche-cap-dot" aria-hidden="true">·</span>
-          <em className="press-cartouche-cap-key">specimen</em>
-          <span className="press-cartouche-cap-dot" aria-hidden="true">·</span>
-          <em className="press-cartouche-cap-numeral">no. xviii</em>
-        </span>
-        <span className="press-cartouche-cap-rule press-cartouche-cap-rule--right" />
-      </figcaption>
-
-      <span className="press-cartouche-quote">
-        <em className="press-cartouche-q">“</em>
-        <span className="press-cartouche-quote-text">
-          is{' '}
-          <em className="press-cartouche-quote-subject">Minimax M3</em>{' '}
-          good at frontend yet?
-        </span>
-        <em className="press-cartouche-q press-cartouche-q--close">”</em>
+      <span className="specimen-imprint-rule specimen-imprint-rule--left" />
+      <span className="specimen-imprint-text">
+        <em className="specimen-imprint-key">specimen</em>
+        <span className="specimen-imprint-dot" aria-hidden="true">·</span>
+        <em className="specimen-imprint-roman">no. xviii</em>
+        <span className="specimen-imprint-dot" aria-hidden="true">·</span>
+        <em className="specimen-imprint-tail">{inscription}</em>
       </span>
+      <span className="specimen-imprint-rule specimen-imprint-rule--right" />
+    </p>
+  )
+}
 
+function PressSignature({ cycle, slow }: { cycle: number; slow: boolean }) {
+  const paths = [
+    'M 4 22 Q 14 14 28 18 Q 38 22 46 12 Q 56 4 70 12 Q 80 20 92 14',
+    'M 4 30 Q 22 36 38 32 Q 54 28 72 34 Q 86 38 96 32',
+  ]
+  return (
+    <aside
+      className={`press-signature${cycle > 0 ? ' is-reread' : ''}${
+        slow ? ' is-slow' : ''
+      }`}
+      aria-hidden="true"
+    >
       <svg
-        className="press-cartouche-flourish"
-        viewBox="0 0 320 14"
+        className="press-signature-flourish"
+        viewBox="0 0 100 44"
         focusable="false"
-        aria-hidden="true"
-        preserveAspectRatio="none"
       >
         <defs>
-          <linearGradient id="press-cartouche-gold" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#9c6e26" />
-            <stop offset="22%" stopColor="#c8923e" />
-            <stop offset="50%" stopColor="#f5c65b" />
-            <stop offset="78%" stopColor="#c8923e" />
-            <stop offset="100%" stopColor="#9c6e26" />
+          <linearGradient id="press-signature-ink" x1="0" y1="0" x2="1" y2="0.4">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0.0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="86%" stopColor="rgba(120, 30, 12, 0.6)" />
+            <stop offset="100%" stopColor="rgba(120, 30, 12, 0.0)" />
           </linearGradient>
-          <linearGradient id="press-cartouche-gold-soft" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#f5c65b" />
-            <stop offset="100%" stopColor="#9c6e26" />
-          </linearGradient>
-          <radialGradient id="press-cartouche-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.55)" />
-            <stop offset="60%" stopColor="rgba(245, 198, 91, 0.12)" />
-            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
-          </radialGradient>
         </defs>
-        <g className="press-cartouche-stroke" fill="none" strokeLinecap="round">
-          <line
-            x1="0"
-            y1="7"
-            x2="146"
-            y2="7"
-            stroke="url(#press-cartouche-gold)"
-            strokeWidth="0.85"
-          />
-          <line
-            x1="174"
-            y1="7"
-            x2="320"
-            y2="7"
-            stroke="url(#press-cartouche-gold)"
-            strokeWidth="0.85"
-          />
-          <line
-            x1="0"
-            y1="9.5"
-            x2="130"
-            y2="9.5"
-            stroke="url(#press-cartouche-gold)"
-            strokeWidth="0.3"
-            opacity="0.55"
-            strokeDasharray="0.4 1.4"
-          />
-          <line
-            x1="190"
-            y1="9.5"
-            x2="320"
-            y2="9.5"
-            stroke="url(#press-cartouche-gold)"
-            strokeWidth="0.3"
-            opacity="0.55"
-            strokeDasharray="0.4 1.4"
-          />
+        <g
+          className="press-signature-strokes"
+          fill="none"
+          stroke="url(#press-signature-ink)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+        >
+          {paths.map((d, i) => (
+            <path key={i} d={d} className={`press-signature-stroke press-signature-stroke--${i}`} />
+          ))}
         </g>
-        <g className="press-cartouche-medallion">
-          <circle cx="160" cy="7" r="9" fill="url(#press-cartouche-glow)" />
-          <circle
-            cx="160"
-            cy="7"
-            r="4.4"
-            fill="none"
-            stroke="url(#press-cartouche-gold)"
-            strokeWidth="0.6"
-          />
-          <circle
-            cx="160"
-            cy="7"
-            r="2.6"
-            fill="none"
-            stroke="url(#press-cartouche-gold)"
-            strokeWidth="0.3"
-            strokeDasharray="0.4 1.2"
-            opacity="0.85"
-          />
-          <g transform="translate(160 7)" fill="url(#press-cartouche-gold-soft)">
-            <path d="M 0 -2.4 L 0.7 -0.7 L 2.4 0 L 0.7 0.7 L 0 2.4 L -0.7 0.7 L -2.4 0 L -0.7 -0.7 Z" />
-          </g>
-          <circle cx="160" cy="7" r="0.45" fill="rgba(107, 74, 37, 0.85)" />
-        </g>
-        <g className="press-cartouche-flourish-tails">
-          <circle cx="146" cy="7" r="0.9" fill="url(#press-cartouche-gold)" />
-          <circle cx="174" cy="7" r="0.9" fill="url(#press-cartouche-gold)" />
-        </g>
+        <circle cx="50" cy="38" r="0.9" fill="rgba(120, 30, 12, 0.7)" className="press-signature-dot" />
       </svg>
-
-      <span className="press-cartouche-meta">
-        <em className="press-cartouche-meta-key">set in italic</em>
-        <span className="press-cartouche-meta-dot" aria-hidden="true">·</span>
-        <em className="press-cartouche-meta-key">30 pt</em>
-        <span className="press-cartouche-meta-dot" aria-hidden="true">·</span>
-        <em className="press-cartouche-meta-key">leaded</em>
-        <span className="press-cartouche-meta-dot" aria-hidden="true">·</span>
-        <em className="press-cartouche-meta-key">with gilt</em>
+      <span className="press-signature-script">
+        <em className="press-signature-script-key">manu mea</em>
+        <span className="press-signature-script-sep" aria-hidden="true">·</span>
+        <em className="press-signature-script-tail">impressum · perlege</em>
       </span>
-
-      <span className="press-cartouche-imprint">
-        <em className="press-cartouche-imprint-key">manus</em>
-        <em className="press-cartouche-imprint-subject">m · iii</em>
-        <span className="press-cartouche-imprint-dot" aria-hidden="true">·</span>
-        <em className="press-cartouche-imprint-key">caput</em>
-        <em className="press-cartouche-imprint-roman">xviii</em>
-        <span className="press-cartouche-imprint-dot" aria-hidden="true">·</span>
-        <em className="press-cartouche-imprint-key">in folio</em>
-        <em className="press-cartouche-imprint-roman">lxxvii</em>
-        <span className="press-cartouche-imprint-dot" aria-hidden="true">·</span>
-        <em className="press-cartouche-imprint-motto">ad lucem</em>
+      <span className="press-signature-tag">
+        <span className="press-signature-tag-mark" aria-hidden="true">¶</span>
+        <em>the printer, signing off</em>
       </span>
-    </figure>
+    </aside>
   )
 }
 
@@ -4958,178 +4886,6 @@ function Colophon({ cycle }: { cycle: number }) {
   )
 }
 
-function PressSeal({ visible, cycle }: { visible: boolean; cycle: number }) {
-  const impression =
-    cycle === 0 ? 'first press' : cycle === 1 ? 'second press' : `${ordinal(cycle + 1)} press`
-  return (
-    <div
-      className={`press-seal${visible ? ' is-visible' : ''}`}
-      aria-hidden="true"
-    >
-      <svg className="press-seal-disc" viewBox="0 0 96 96" focusable="false">
-        <defs>
-          <radialGradient id="seal-ink" cx="50%" cy="50%" r="55%">
-            <stop offset="0%" stopColor="rgba(120, 30, 12, 0.88)" />
-            <stop offset="62%" stopColor="rgba(80, 18, 6, 0.92)" />
-            <stop offset="100%" stopColor="rgba(40, 8, 2, 0.92)" />
-          </radialGradient>
-          <pattern id="seal-grain" width="3" height="3" patternUnits="userSpaceOnUse">
-            <rect width="3" height="3" fill="rgba(0,0,0,0)" />
-            <circle cx="0.6" cy="0.4" r="0.45" fill="rgba(255, 240, 220, 0.08)" />
-            <circle cx="2.2" cy="1.6" r="0.35" fill="rgba(255, 240, 220, 0.06)" />
-            <circle cx="1.4" cy="2.6" r="0.4" fill="rgba(255, 240, 220, 0.05)" />
-          </pattern>
-          <path id="seal-arc-top" d="M 48 48 m -34 0 a 34 34 0 0 1 68 0" fill="none" />
-          <path id="seal-arc-bot" d="M 48 48 m -34 0 a 34 34 0 1 0 68 0" fill="none" />
-        </defs>
-
-        <g className="press-seal-base">
-          <circle cx="48" cy="48" r="44" fill="url(#seal-ink)" />
-          <circle cx="48" cy="48" r="44" fill="url(#seal-grain)" />
-          <circle cx="48" cy="48" r="40" fill="none" stroke="rgba(255, 232, 200, 0.32)" strokeWidth="0.6" />
-          <circle
-            cx="48"
-            cy="48"
-            r="36"
-            fill="none"
-            stroke="rgba(255, 232, 200, 0.16)"
-            strokeWidth="0.35"
-            strokeDasharray="0.4 1.4"
-          />
-        </g>
-
-        <g className="press-seal-arc">
-          <text className="press-seal-arc-text press-seal-arc-text--top">
-            <textPath href="#seal-arc-top" startOffset="50%" textAnchor="middle">
-              pressed · in this browser · lxxvii
-            </textPath>
-          </text>
-          <text className="press-seal-arc-text press-seal-arc-text--bot">
-            <textPath href="#seal-arc-bot" startOffset="50%" textAnchor="middle">
-              ad lucem · perlege ·
-            </textPath>
-          </text>
-        </g>
-
-        <g className="press-seal-monogram">
-          <line
-            x1="32"
-            y1="38"
-            x2="64"
-            y2="38"
-            stroke="rgba(255, 232, 200, 0.32)"
-            strokeWidth="0.5"
-            strokeLinecap="round"
-          />
-          <text x="48" y="58" textAnchor="middle" className="press-seal-letter">
-            m
-          </text>
-          <text x="56" y="58" textAnchor="middle" className="press-seal-letter press-seal-letter--roman">
-            ·iii
-          </text>
-          <line
-            x1="32"
-            y1="63"
-            x2="64"
-            y2="63"
-            stroke="rgba(255, 232, 200, 0.32)"
-            strokeWidth="0.5"
-            strokeLinecap="round"
-          />
-          <text x="48" y="72" textAnchor="middle" className="press-seal-impression">
-            {impression}
-          </text>
-        </g>
-
-        <g className="press-seal-flecks" fill="rgba(120, 30, 12, 0.7)">
-          <circle cx="6" cy="14" r="0.6" />
-          <circle cx="14" cy="6" r="0.4" />
-          <circle cx="86" cy="20" r="0.5" />
-          <circle cx="92" cy="34" r="0.4" />
-          <circle cx="90" cy="78" r="0.6" />
-          <circle cx="78" cy="90" r="0.5" />
-          <circle cx="10" cy="82" r="0.5" />
-          <circle cx="4" cy="68" r="0.4" />
-        </g>
-      </svg>
-    </div>
-  )
-}
-
-function ImpressionLedger({ cycle, now }: { cycle: number; now: Date }) {
-  if (cycle === 0) return null
-
-  const dayShort = WEEKDAYS[now.getDay()].slice(0, 3)
-  const dayNumber = now.getDate()
-  const monthShort = MONTHS[now.getMonth()].slice(0, 3)
-  const hour24 = now.getHours()
-  const minutes = now.getMinutes()
-  const h12 = ((hour24 + 11) % 12) + 1
-  const mm = String(minutes).padStart(2, '0')
-  const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
-
-  const impressions = Array.from({ length: cycle }, (_, i) => {
-    const n = i + 1
-    const isLatest = i === cycle - 1
-    const label =
-      n === 1
-        ? 'first press'
-        : n === 2
-          ? 'second press · the reader slows'
-          : `${ordinal(n + 1)} press · the page unchanged`
-    return { n, label, isLatest }
-  })
-
-  return (
-    <aside
-      className={`impression-ledger${cycle > 0 ? ' is-visible' : ''}`}
-      aria-label={`${cycle} impression${cycle === 1 ? '' : 's'} on record`}
-    >
-      <header className="impression-ledger-head">
-        <span className="impression-ledger-mark" aria-hidden="true">¶</span>
-        <span className="impression-ledger-rule" aria-hidden="true" />
-        <span className="impression-ledger-title">
-          <em>press register</em>
-        </span>
-        <span className="impression-ledger-count" aria-hidden="true">
-          {cycle} on record
-        </span>
-        <span className="impression-ledger-rule" aria-hidden="true" />
-      </header>
-      <ol className="impression-ledger-list">
-        {impressions.map((imp) => (
-          <li
-            key={imp.n}
-            className={`impression-ledger-row${imp.isLatest ? ' is-latest' : ''}`}
-            style={{ '--i': imp.n - 1 } as React.CSSProperties}
-          >
-            <span className="impression-ledger-numeral">{ROMAN[imp.n - 1]}.</span>
-            <span className="impression-ledger-stamp">
-              <em className="impression-ledger-day">{dayShort}</em>
-              <span className="impression-ledger-date">
-                {' '}
-                <em>{dayNumber}</em> <em>{monthShort}</em>
-              </span>
-              <span className="impression-ledger-time">
-                {' '}
-                <em>
-                  {h12}:{mm}
-                </em>{' '}
-                {period}
-              </span>
-            </span>
-            <span className="impression-ledger-leader" aria-hidden="true">
-              <span className="impression-ledger-leader-line" />
-              <span className="impression-ledger-leader-glyph">✦</span>
-            </span>
-            <span className="impression-ledger-label">{imp.label}</span>
-          </li>
-        ))}
-      </ol>
-    </aside>
-  )
-}
-
 function AlmanacDaybook({ now, moonPhase, cycle }: { now: Date; moonPhase: number; cycle: number }) {
   const dayName = WEEKDAYS[now.getDay()]
   const monthName = MONTHS[now.getMonth()]
@@ -6147,10 +5903,7 @@ export function App() {
                 </svg>
               </span>
             </h1>
-            <PressCartouche
-              cycle={cycle}
-              breathing={phase === 'answering' || phase === 'replying'}
-            />
+            <SpecimenImprint cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
 
             <div
               data-section="sec-marginalia"
@@ -6355,13 +6108,6 @@ export function App() {
               </div>
             )}
 
-            <PressSeal
-              visible={phase === 'complete'}
-              cycle={cycle}
-            />
-
-            <ImpressionLedger cycle={cycle} now={now} />
-
             {cycle > 0 && <WaxArchive key={`wax-archive-${cycle}`} cycle={cycle} />}
 
             <EphemerisPlate
@@ -6391,6 +6137,7 @@ export function App() {
             />
 
             {phase === 'complete' && <Colophon cycle={cycle} />}
+            {phase === 'complete' && <PressSignature cycle={cycle} slow={slow} />}
           </section>
           </div>
         </div>
