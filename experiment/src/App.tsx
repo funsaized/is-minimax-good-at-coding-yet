@@ -873,18 +873,27 @@ function MarginaliaStrip({ items }: { items: MarginaliaItem[] }) {
 function Apparatus({
   visible,
   cycle,
+  activeSection,
+  onSelect,
 }: {
   visible: boolean
   cycle: number
+  activeSection: string
+  onSelect: (id: string) => void
 }) {
-  const entries = [
-    { numeral: 'i', name: 'cap. xviii', gloss: 'the question, plainly set' },
-    { numeral: 'ii', name: 'marginalia', gloss: 'three marks, in ink' },
-    { numeral: 'iii', name: 'the answer', gloss: 'set in italic, with gilt' },
-    { numeral: 'iv', name: 'the reply', gloss: 'the second reading' },
-    { numeral: 'v', name: 'this hour', gloss: 'the dial of the leaf' },
-    { numeral: 'vi', name: 'this sky', gloss: 'polaris above ur. minor' },
-    { numeral: 'vii', name: 'the owl', gloss: 'watches the reader' },
+  const entries: {
+    numeral: string
+    name: string
+    gloss: string
+    hash: string
+  }[] = [
+    { numeral: 'i', name: 'cap. xviii', gloss: 'the question, plainly set', hash: 'sec-question' },
+    { numeral: 'ii', name: 'marginalia', gloss: 'three marks, in ink', hash: 'sec-marginalia' },
+    { numeral: 'iii', name: 'the answer', gloss: 'set in italic, with gilt', hash: 'sec-answer' },
+    { numeral: 'iv', name: 'the reply', gloss: 'the second reading', hash: 'sec-reply' },
+    { numeral: 'v', name: 'this hour', gloss: 'the dial of the leaf', hash: 'sec-hour' },
+    { numeral: 'vi', name: 'this sky', gloss: 'polaris above ur. minor', hash: 'sec-sky' },
+    { numeral: 'vii', name: 'the owl', gloss: 'watches the reader', hash: 'sec-owl' },
   ]
 
   return (
@@ -912,24 +921,37 @@ function Apparatus({
       </header>
 
       <ol className="apparatus-list">
-        {entries.map((entry, i) => (
+        {entries.map((entry, i) => {
+          const isActive = activeSection === entry.hash
+          return (
             <li
               key={entry.numeral}
-              className="apparatus-row"
+              className={`apparatus-row${isActive ? ' is-active' : ''}`}
               style={{ '--i': i } as React.CSSProperties}
             >
-              <span className="apparatus-numeral">{entry.numeral}.</span>
-              <span className="apparatus-name">{entry.name}</span>
-              <span className="apparatus-leader" aria-hidden="true">
-                <span className="apparatus-leader-dot">·</span>
-                <span className="apparatus-leader-dot">·</span>
-                <span className="apparatus-leader-dot">·</span>
-                <span className="apparatus-leader-dot">·</span>
-                <span className="apparatus-leader-dot">·</span>
-              </span>
-              <span className="apparatus-gloss">{entry.gloss}</span>
+              <a
+                href={`#${entry.hash}`}
+                className="apparatus-link"
+                onClick={(e) => {
+                  e.preventDefault()
+                  onSelect(entry.hash)
+                }}
+                aria-current={isActive ? 'true' : undefined}
+              >
+                <span className="apparatus-numeral">{entry.numeral}.</span>
+                <span className="apparatus-name">{entry.name}</span>
+                <span className="apparatus-leader" aria-hidden="true">
+                  <span className="apparatus-leader-dot">·</span>
+                  <span className="apparatus-leader-dot">·</span>
+                  <span className="apparatus-leader-dot">·</span>
+                  <span className="apparatus-leader-dot">·</span>
+                  <span className="apparatus-leader-dot">·</span>
+                </span>
+                <span className="apparatus-gloss">{entry.gloss}</span>
+              </a>
             </li>
-          ))}
+          )
+        })}
       </ol>
 
       <footer className="apparatus-foot">
@@ -951,11 +973,6 @@ function Apparatus({
           </span>
         )}
         <span className="apparatus-foot-rule" aria-hidden="true" />
-        <span className="apparatus-foot-sign">
-          <em>manu mea</em>
-          <span className="apparatus-foot-sign-sep" aria-hidden="true">·</span>
-          <em>impressum</em>
-        </span>
       </footer>
     </aside>
   )
@@ -2640,15 +2657,182 @@ function FoldCorner() {
   )
 }
 
-function PageTurnFold({ active }: { active: boolean }) {
+function Colophon() {
   return (
-    <span
-      className={`page-turn-fold${active ? ' is-active' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="page-turn-fold-sheet" />
-      <span className="page-turn-fold-shade" />
-    </span>
+    <div className="colophon" aria-hidden="true">
+      <svg className="colophon-mark" viewBox="0 0 80 80" focusable="false">
+        <defs>
+          <radialGradient id="colophon-gold" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="60%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </radialGradient>
+        </defs>
+        <circle cx="40" cy="40" r="36" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="0.8 2" opacity="0.5" />
+        <circle cx="40" cy="40" r="30" fill="none" stroke="currentColor" strokeWidth="0.45" opacity="0.6" />
+        <g className="colophon-aster">
+          <path d="M 40 14 L 44 26 L 56 26 L 46 33.5 L 50 45.5 L 40 38 L 30 45.5 L 34 33.5 L 24 26 L 36 26 Z" fill="url(#colophon-gold)" />
+        </g>
+        <g className="colophon-petals" fill="currentColor" opacity="0.7">
+          <circle cx="40" cy="6" r="0.9" />
+          <circle cx="74" cy="40" r="0.9" />
+          <circle cx="40" cy="74" r="0.9" />
+          <circle cx="6" cy="40" r="0.9" />
+        </g>
+        <circle cx="40" cy="40" r="1.6" fill="currentColor" />
+      </svg>
+      <div className="colophon-lines">
+        <span className="colophon-line">
+          <em className="colophon-key">set in</em>
+          <span className="colophon-value">italic · 30 pt</span>
+        </span>
+        <span className="colophon-rule" />
+        <span className="colophon-line">
+          <em className="colophon-key">bound at</em>
+          <span className="colophon-value">studio · folio lxxvii</span>
+        </span>
+        <span className="colophon-rule" />
+        <span className="colophon-line">
+          <em className="colophon-key">printed for</em>
+          <span className="colophon-value">the attentive reader</span>
+        </span>
+        <span className="colophon-rule colophon-rule--thick" />
+        <span className="colophon-line colophon-line--sign">
+          <em>manu mea</em>
+          <span className="colophon-sep" aria-hidden="true">·</span>
+          <em>impressum</em>
+        </span>
+      </div>
+    </div>
+  )
+}
+
+function ReaderCat({ visible }: { visible: boolean }) {
+  return (
+    <div className={`reader-cat${visible ? ' is-visible' : ''}`} aria-hidden="true">
+      <svg className="reader-cat-glyph" viewBox="0 0 140 80" focusable="false">
+        <defs>
+          <linearGradient id="cat-body" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(112, 80, 50, 0.92)" />
+            <stop offset="100%" stopColor="rgba(60, 38, 20, 0.95)" />
+          </linearGradient>
+          <radialGradient id="cat-pad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(217, 101, 74, 0.55)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="70" cy="68" rx="50" ry="3" fill="rgba(40, 18, 8, 0.18)" />
+
+        <g className="reader-cat-form">
+          <path
+            d="M 30 56 Q 22 56 22 48 Q 22 38 32 36 Q 36 28 48 28 L 80 28 Q 96 28 100 38 L 110 38 Q 116 40 116 46 Q 116 52 110 54 L 100 56 Q 96 64 86 66 L 36 66 Q 28 64 30 56 Z"
+            fill="url(#cat-body)"
+            stroke="rgba(40, 22, 8, 0.6)"
+            strokeWidth="0.6"
+          />
+
+          <path
+            d="M 92 38 L 96 30 L 100 38 Z"
+            fill="url(#cat-body)"
+            stroke="rgba(40, 22, 8, 0.5)"
+            strokeWidth="0.5"
+          />
+          <path
+            d="M 96 32 L 100 38"
+            stroke="rgba(245, 198, 91, 0.4)"
+            strokeWidth="0.4"
+            fill="none"
+          />
+          <path
+            d="M 100 38 L 102 32 L 106 38 Z"
+            fill="rgba(217, 101, 74, 0.85)"
+          />
+
+          <ellipse cx="40" cy="46" rx="2.4" ry="3.2" fill="rgba(20, 18, 12, 0.92)" />
+          <path
+            d="M 38 47 Q 40 49 42 47"
+            stroke="rgba(245, 220, 160, 0.4)"
+            strokeWidth="0.4"
+            fill="none"
+          />
+
+          <path
+            d="M 40 50 Q 38 54 42 56"
+            stroke="rgba(40, 22, 8, 0.4)"
+            strokeWidth="0.45"
+            fill="none"
+          />
+
+          <path
+            d="M 96 50 Q 110 48 116 52 Q 122 54 122 60 Q 122 64 118 64 Q 110 62 100 60 Q 94 58 96 50 Z"
+            fill="url(#cat-body)"
+            opacity="0.94"
+          />
+          <path
+            d="M 116 58 Q 122 60 120 64"
+            stroke="rgba(40, 22, 8, 0.4)"
+            strokeWidth="0.4"
+            fill="none"
+          />
+          <ellipse cx="116" cy="62" rx="1.4" ry="2.2" fill="rgba(217, 101, 74, 0.78)" />
+
+          <path
+            d="M 26 50 Q 18 56 18 62"
+            stroke="rgba(40, 22, 8, 0.5)"
+            strokeWidth="0.6"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 28 56 Q 22 64 22 70"
+            stroke="rgba(40, 22, 8, 0.5)"
+            strokeWidth="0.6"
+            fill="none"
+            strokeLinecap="round"
+          />
+
+          <path
+            d="M 96 64 Q 100 70 102 74"
+            stroke="rgba(40, 22, 8, 0.5)"
+            strokeWidth="0.6"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 100 64 Q 106 70 110 74"
+            stroke="rgba(40, 22, 8, 0.5)"
+            strokeWidth="0.6"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </g>
+
+        <g className="reader-cat-breath" opacity="0.5">
+          <circle cx="40" cy="46" r="6" fill="url(#cat-pad)" />
+        </g>
+
+        <path
+          d="M 30 36 Q 24 18 28 8"
+          stroke="rgba(245, 198, 91, 0.32)"
+          strokeWidth="0.6"
+          fill="none"
+          strokeDasharray="1.2 2.6"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 30 8 Q 32 4 36 4"
+          stroke="rgba(245, 198, 91, 0.32)"
+          strokeWidth="0.6"
+          fill="none"
+          strokeLinecap="round"
+        />
+      </svg>
+      <span className="reader-cat-caption">
+        <em>quiet reader</em>
+        <span className="reader-cat-caption-tail" aria-hidden="true">· settled at the foot of the page</span>
+      </span>
+    </div>
   )
 }
 
@@ -2664,6 +2848,10 @@ export function App() {
   const [sealPressing, setSealPressing] = useState(false)
   const [owlBlinking, setOwlBlinking] = useState(false)
   const [slipIntensity, setSlipIntensity] = useState(0)
+  const [activeSection, setActiveSection] = useState<string>('sec-question')
+
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({})
+  const jumpRef = useRef<number | null>(null)
 
   const readAnswerRef = useRef<() => void>(() => {})
 
@@ -2780,6 +2968,75 @@ export function App() {
     }
   }, [phase])
 
+  const handleSelectSection = (hash: string) => {
+    const node = sectionRefs.current[hash]
+    if (!node) return
+    node.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' })
+    setActiveSection(hash)
+    if (typeof history !== 'undefined' && history.replaceState) {
+      history.replaceState(null, '', `#${hash}`)
+    }
+  }
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return
+    const visible = new Map<string, number>()
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const id = (entry.target as HTMLElement).dataset.section
+          if (!id) continue
+          if (entry.isIntersecting) {
+            visible.set(id, entry.intersectionRatio)
+          } else {
+            visible.delete(id)
+          }
+        }
+        if (visible.size === 0) return
+        let best = ''
+        let bestRatio = -1
+        visible.forEach((ratio, id) => {
+          if (ratio > bestRatio) {
+            bestRatio = ratio
+            best = id
+          }
+        })
+        if (best) setActiveSection(best)
+      },
+      {
+        rootMargin: '-20% 0px -45% 0px',
+        threshold: [0, 0.2, 0.4, 0.6, 0.8, 1],
+      },
+    )
+    const observe = () => {
+      Object.values(sectionRefs.current).forEach((node) => {
+        if (node) observer.observe(node)
+      })
+    }
+    observe()
+    const t = window.setTimeout(observe, 80)
+    return () => {
+      window.clearTimeout(t)
+      observer.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const onHash = () => {
+      const id = window.location.hash.replace('#', '')
+      if (id && sectionRefs.current[id]) {
+        jumpRef.current = window.setTimeout(() => setActiveSection(id), 220)
+      }
+    }
+    window.addEventListener('hashchange', onHash)
+    if (window.location.hash) onHash()
+    return () => {
+      window.removeEventListener('hashchange', onHash)
+      if (jumpRef.current !== null) window.clearTimeout(jumpRef.current)
+    }
+  }, [])
+
   const answerVisible = phase !== 'idle'
   const answerDisplay = ANSWER.slice(0, answerChars)
   const replyDisplay = REPLY.slice(0, replyChars)
@@ -2870,7 +3127,13 @@ export function App() {
               <span className="annotation-mark" aria-hidden="true">¶</span>
               <span>the question</span>
             </div>
-            <h1 id="page-title" aria-label={TITLE}>
+            <h1
+              id="page-title"
+              aria-label={TITLE}
+              data-section="sec-question"
+              ref={(el) => { sectionRefs.current['sec-question'] = el }}
+              className="question-section"
+            >
               <TitleCartouche>
                 <span className={`wax-seal-wrap${sealPressing ? ' is-pressing' : ''}`}>
                   <WaxSealInitial />
@@ -2890,7 +3153,13 @@ export function App() {
               <LitLeafMark />
             </span>
 
-            <MarginaliaStrip items={MARGINALIA} />
+            <div
+              data-section="sec-marginalia"
+              ref={(el) => { sectionRefs.current['sec-marginalia'] = el }}
+              className="marginalia-section"
+            >
+              <MarginaliaStrip items={MARGINALIA} />
+            </div>
 
             <p className="question-deck">
               A small typeset test of whether a page can ask well before it answers —
@@ -2906,12 +3175,18 @@ export function App() {
               <span className="catchword-rule" aria-hidden="true" />
               <span className="catchword-text">verso · reply</span>
               {owlShown && (
-                <MarginaliaOwl
-                  active
-                  reduced={reduced}
-                  watchPoint={watchPoint}
-                  blinking={owlBlinking}
-                />
+                <span
+                  data-section="sec-owl"
+                  ref={(el) => { sectionRefs.current['sec-owl'] = el }}
+                  className="owl-anchor"
+                >
+                  <MarginaliaOwl
+                    active
+                    reduced={reduced}
+                    watchPoint={watchPoint}
+                    blinking={owlBlinking}
+                  />
+                </span>
               )}
               <span className="catchword-arrow" aria-hidden="true">↘</span>
             </p>
@@ -2925,7 +3200,6 @@ export function App() {
             <span className="verso-shine" aria-hidden="true" />
             <ReadingLines count={lineCount} visible={readingLinesVisible} />
             <FoldCorner />
-            <PageTurnFold active={phase === 'answering' && answerChars < 6} />
             <header className="sheet-header sheet-header--verso">
               <p className="running-head-title">
                 <span aria-hidden="true">§</span> the reply · set in italic
@@ -2944,7 +3218,11 @@ export function App() {
               <span className="response-arrow" aria-hidden="true">↘</span>
             </div>
 
-            <div className={`answer-surface answer-surface--${phase}`}>
+            <div
+              data-section="sec-answer"
+              ref={(el) => { sectionRefs.current['sec-answer'] = el }}
+              className={`answer-surface answer-surface--${phase}`}
+            >
               <span className="answer-corner answer-corner--tl" aria-hidden="true" />
               <span className="answer-corner answer-corner--tr" aria-hidden="true" />
               <span className="answer-corner answer-corner--bl" aria-hidden="true" />
@@ -2988,7 +3266,6 @@ export function App() {
                   <em>— cap. xviii · sig. m.iii</em>
                 </span>
               )}
-              <span className="answer-attribution" aria-hidden="true">— set in italic</span>
               <span
                 className="answer-sweep"
                 style={{
@@ -3005,6 +3282,8 @@ export function App() {
             <TypefaceSpecimen visible={specimenVisible} />
 
             <div
+              data-section="sec-reply"
+              ref={(el) => { sectionRefs.current['sec-reply'] = el }}
               className={`reply-copy ${replyShown ? 'is-visible' : ''}`}
               aria-live="polite"
             >
@@ -3055,13 +3334,25 @@ export function App() {
             <div className={`scholars-bench ${benchShown ? 'is-revealed' : ''}`}>
               <EngravedRule className="scholars-bench-rule" />
               <div className="scholars-bench-row">
-                <LeafHourDial
-                  hours={hours}
-                  minutes={minutes}
-                  seconds={seconds}
-                  visible={hourDialVisible}
-                />
-                <SiderealPocket visible={hourDialVisible} reduced={reduced} />
+                <div
+                  data-section="sec-hour"
+                  ref={(el) => { sectionRefs.current['sec-hour'] = el }}
+                  className="bench-item"
+                >
+                  <LeafHourDial
+                    hours={hours}
+                    minutes={minutes}
+                    seconds={seconds}
+                    visible={hourDialVisible}
+                  />
+                </div>
+                <div
+                  data-section="sec-sky"
+                  ref={(el) => { sectionRefs.current['sec-sky'] = el }}
+                  className="bench-item"
+                >
+                  <SiderealPocket visible={hourDialVisible} reduced={reduced} />
+                </div>
               </div>
             </div>
 
@@ -3074,7 +3365,13 @@ export function App() {
             <Apparatus
               visible={replyShown}
               cycle={cycle}
+              activeSection={activeSection}
+              onSelect={handleSelectSection}
             />
+
+            <ReaderCat visible={phase === 'complete'} />
+
+            {phase === 'complete' && <Colophon />}
           </section>
         </div>
 
