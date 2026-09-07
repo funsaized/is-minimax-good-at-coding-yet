@@ -325,6 +325,85 @@ function MarginaliaStrip({ items }: { items: MarginaliaItem[] }) {
   )
 }
 
+function Apparatus({
+  visible,
+  cycle,
+}: {
+  visible: boolean
+  cycle: number
+}) {
+  const entries = [
+    { numeral: 'i', name: 'cap. xviii', gloss: 'the question, plainly set' },
+    { numeral: 'ii', name: 'marginalia', gloss: 'three marks, in ink' },
+    { numeral: 'iii', name: 'the answer', gloss: 'set in italic, with gilt' },
+    { numeral: 'iv', name: 'the reply', gloss: 'the second reading' },
+    { numeral: 'v', name: 'this hour', gloss: 'the dial of the leaf' },
+    { numeral: 'vi', name: 'this sky', gloss: 'polaris above ur. minor' },
+    { numeral: 'vii', name: 'the owl', gloss: 'watches the reader' },
+  ]
+
+  return (
+    <aside
+      className={`apparatus${visible ? ' is-visible' : ''}`}
+      aria-label="apparatus"
+    >
+      <span className="apparatus-corner apparatus-corner--tl" aria-hidden="true" />
+      <span className="apparatus-corner apparatus-corner--br" aria-hidden="true" />
+
+      <header className="apparatus-head">
+        <span className="apparatus-aster" aria-hidden="true">
+          <AsterismGlyph className="apparatus-aster-glyph apparatus-aster-glyph--left" />
+        </span>
+        <span className="apparatus-title">
+          <span className="apparatus-title-mark" aria-hidden="true">§</span>
+          apparatus
+          <span className="apparatus-title-sep" aria-hidden="true">·</span>
+          <em>index</em>
+        </span>
+        <span className="apparatus-aster" aria-hidden="true">
+          <AsterismGlyph className="apparatus-aster-glyph apparatus-aster-glyph--right" />
+        </span>
+      </header>
+
+      <ol className="apparatus-list">
+        {entries.map((entry) => (
+          <li key={entry.numeral} className="apparatus-row">
+            <span className="apparatus-numeral">{entry.numeral}.</span>
+            <span className="apparatus-name">{entry.name}</span>
+            <span className="apparatus-leader" aria-hidden="true">
+              <span className="apparatus-leader-dot">·</span>
+              <span className="apparatus-leader-dot">·</span>
+              <span className="apparatus-leader-dot">·</span>
+              <span className="apparatus-leader-dot">·</span>
+              <span className="apparatus-leader-dot">·</span>
+            </span>
+            <span className="apparatus-gloss">{entry.gloss}</span>
+          </li>
+        ))}
+      </ol>
+
+      <footer className="apparatus-foot">
+        <span className="apparatus-foot-aster" aria-hidden="true">
+          <AsterismGlyph className="apparatus-aster-glyph apparatus-aster-glyph--foot" />
+        </span>
+        {cycle > 0 && (
+          <span className="apparatus-foot-note">
+            <span className="apparatus-foot-mark" aria-hidden="true">✎</span>
+            <em>second reading</em>
+            <span className="apparatus-foot-tail" aria-hidden="true">— the index unchanged, the reader changed.</span>
+          </span>
+        )}
+        <span className="apparatus-foot-rule" aria-hidden="true" />
+        <span className="apparatus-foot-sign">
+          <em>manu mea</em>
+          <span className="apparatus-foot-sign-sep" aria-hidden="true">·</span>
+          <em>impressum</em>
+        </span>
+      </footer>
+    </aside>
+  )
+}
+
 function BookmarkRibbon() {
   return (
     <svg
@@ -1608,6 +1687,11 @@ export function App() {
                 <SiderealPocket visible={hourDialVisible} reduced={reduced} />
               </div>
             </div>
+
+            <Apparatus
+              visible={replyShown}
+              cycle={cycle}
+            />
           </section>
         </div>
 

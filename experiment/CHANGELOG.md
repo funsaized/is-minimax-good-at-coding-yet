@@ -1,19 +1,17 @@
-# Iteration 83
+# Iteration 84
 
-Added the scholar's bench — paired sidereal pocket, inkwell rest, engraved rule, lit-leaf marginal.
+Added a folio apparatus — a typeset index slip at the foot of the verso, naming the page's parts.
 
-## What changed
+## Changes
 
-- **Sidereal pocket.** A small star chart appears beside the leaf-hour clock at the foot of the reply. It shows Ursa Minor with a brighter Polaris, a faint horizon arc, and a slow rotation that suggests the sky turning. Stars twinkle on staggered, irregular cycles so the field never settles. The pocket reveals with the answer.
-- **Scholar's bench.** The bottom-right area of the verso becomes a paired instrument: a thin engraved rule above, the leaf-hour dial and the sidereal pocket beside each other. The engraved rule is a printer's scale with major and minor tick marks.
-- **Inkwell rest.** A small dark inkwell now sits under the scribal quill inside the answer surface, giving the quill a believable place to belong. It dims slightly while the quill is writing.
-- **Lit-leaf marginal.** A small "lit. leaf" mark appears in the upper-right corner of the question panel once the page is read. It shifts from sepia to coral when the answer is shown, reading as a marginal illumination.
-- **CSS, responsive, reduced-motion.** New components are styled, sized down through the tablet/mobile/small-phone breakpoints, and respect `prefers-reduced-motion`: rotations, twinkles, and the inkwell transform all settle to a stilled state with `animation: none !important`.
+- New `Apparatus` component (`src/App.tsx`) rendered below the scholar's bench on the verso side. It lists seven pieces of the folio — the chapter, the marginalia, the answer, the reply, this hour, this sky, the owl — with italic names, leader dots, and short glosses, framed by asterism glyphs and a corner-bracketed paper slip.
+- The apparatus fades and un-tilts into view when the reply is revealed; rows stagger in via transition-delays. On a second reading (cycle > 0), a small italic "second reading — the index unchanged, the reader changed" note appears at the foot.
+- `src/style.css`: full apparatus style block — slip background, dashed inset, fold-corner brackets, typeset index rows, mobile / small-phone responsive rules, and reduced-motion overrides.
+- The apparatus replaces no existing elements; it sits as a quiet colophon below the scholar's bench and above the existing sheet footer.
 
-## What was preserved
+## Verification
 
-Title, recto/verso folio layout, wax-seal drop-cap, manuscript stamp, fleuron watermark, owl drollery, bookmark ribbon, gilded edge, manuscript paper texture, ambient warm glow, dust motes, scribal quill, manicule, catchword, asterism, headpiece, footer, signature mark, and printer-device colophon are unchanged.
-
-## Build
-
-`npm run build` succeeds: ~46.5 kB CSS, ~232.7 kB JS. No new dependencies, no remote fonts, scripts, images, or APIs.
+- `npm run build` completes successfully (`tsc --noEmit && vite build`).
+- Title preserved: `is Minimax M3 good at frontend yet?`.
+- No new dependencies, fonts, or network calls; all marks are local SVG/CSS.
+- Reduced-motion path keeps the apparatus visible without transition delays.
