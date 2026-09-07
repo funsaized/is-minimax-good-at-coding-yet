@@ -155,6 +155,129 @@ function useSheetPointer() {
   return point
 }
 
+function PrinterEmblem() {
+  return (
+    <figure className="printer-emblem" aria-hidden="true">
+      <svg className="printer-emblem-plate" viewBox="0 0 120 120" focusable="false">
+        <defs>
+          <radialGradient id="emblem-face" cx="50%" cy="36%" r="62%">
+            <stop offset="0%" stopColor="rgba(255, 250, 232, 0.96)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.86)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0.62)" />
+          </radialGradient>
+          <linearGradient id="emblem-gold" x1="0" y1="0" x2="0.1" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="48%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#8a5d1f" />
+          </linearGradient>
+          <linearGradient id="emblem-gold-soft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#a47026" />
+          </linearGradient>
+          <radialGradient id="emblem-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.32)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+          <path id="emblem-arc-top" d="M 60 60 m -40 0 a 40 40 0 0 1 80 0" fill="none" />
+          <path id="emblem-arc-bot" d="M 60 60 m -40 0 a 40 40 0 1 0 80 0" fill="none" />
+        </defs>
+
+        <circle cx="60" cy="60" r="58" fill="url(#emblem-halo)" />
+
+        <circle
+          cx="60"
+          cy="60"
+          r="56"
+          fill="url(#emblem-face)"
+          stroke="url(#emblem-gold)"
+          strokeWidth="1.2"
+        />
+        <circle
+          cx="60"
+          cy="60"
+          r="51.5"
+          fill="none"
+          stroke="url(#emblem-gold)"
+          strokeWidth="0.4"
+          strokeDasharray="0.5 1.6"
+          opacity="0.78"
+        />
+        <circle
+          cx="60"
+          cy="60"
+          r="49.5"
+          fill="none"
+          stroke="rgba(107, 74, 37, 0.16)"
+          strokeWidth="0.3"
+        />
+
+        <g className="emblem-vine emblem-vine--left" stroke="url(#emblem-gold-soft)" strokeWidth="0.65" fill="none" strokeLinecap="round">
+          <path d="M 26 38 Q 18 50 22 66 Q 28 80 40 86" />
+          <path d="M 22 50 Q 14 48 12 54 Q 16 58 20 56 Q 22 54 22 50 Z" fill="rgba(217, 101, 74, 0.42)" stroke="none" />
+          <path d="M 26 64 Q 18 64 16 70 Q 20 74 24 72 Q 26 68 26 64 Z" fill="rgba(217, 101, 74, 0.42)" stroke="none" />
+          <circle cx="14" cy="50" r="0.9" fill="#cf3b29" />
+          <circle cx="18" cy="68" r="0.8" fill="#cf3b29" />
+        </g>
+        <g className="emblem-vine emblem-vine--right" stroke="url(#emblem-gold-soft)" strokeWidth="0.65" fill="none" strokeLinecap="round">
+          <path d="M 94 38 Q 102 50 98 66 Q 92 80 80 86" />
+          <path d="M 98 50 Q 106 48 108 54 Q 104 58 100 56 Q 98 54 98 50 Z" fill="rgba(217, 101, 74, 0.42)" stroke="none" />
+          <path d="M 94 64 Q 102 64 104 70 Q 100 74 96 72 Q 94 68 94 64 Z" fill="rgba(217, 101, 74, 0.42)" stroke="none" />
+          <circle cx="106" cy="50" r="0.9" fill="#cf3b29" />
+          <circle cx="102" cy="68" r="0.8" fill="#cf3b29" />
+        </g>
+
+        <g className="emblem-pips" fill="url(#emblem-gold-soft)">
+          <circle cx="60" cy="6" r="0.9" />
+          <circle cx="60" cy="114" r="0.9" />
+          <circle cx="6" cy="60" r="0.9" />
+          <circle cx="114" cy="60" r="0.9" />
+        </g>
+
+        <g className="emblem-mono">
+          <line x1="38" y1="50" x2="82" y2="50" stroke="url(#emblem-gold)" strokeWidth="0.55" strokeLinecap="round" opacity="0.78" />
+          <text x="58" y="74" textAnchor="middle" className="emblem-letter">m</text>
+          <text x="72" y="74" textAnchor="middle" className="emblem-letter-roman">·iii</text>
+          <line x1="38" y1="80" x2="82" y2="80" stroke="url(#emblem-gold)" strokeWidth="0.55" strokeLinecap="round" opacity="0.78" />
+        </g>
+
+        <g className="emblem-corner emblem-corner--tl" fill="#cf3b29" fillOpacity="0.6">
+          <path d="M 12 12 L 22 12 Q 22 16 18 17 L 18 22 L 12 22 Z" />
+          <circle cx="15" cy="15" r="0.7" />
+        </g>
+        <g className="emblem-corner emblem-corner--br" fill="#a73c2c" fillOpacity="0.55">
+          <path d="M 108 108 L 98 108 Q 98 104 102 103 L 102 98 L 108 98 Z" />
+          <circle cx="105" cy="105" r="0.7" />
+        </g>
+
+        <text className="emblem-motto emblem-motto--top">
+          <textPath href="#emblem-arc-top" startOffset="50%" textAnchor="middle">
+            manu m · iii · mmxxvi
+          </textPath>
+        </text>
+        <text className="emblem-motto emblem-motto--bot">
+          <textPath href="#emblem-arc-bot" startOffset="50%" textAnchor="middle">
+            ad lucem · perlege ·
+          </textPath>
+        </text>
+
+        <g className="emblem-stamen" stroke="rgba(140, 82, 28, 0.42)" strokeWidth="0.35" fill="none" strokeLinecap="round">
+          <path d="M 58 38 Q 56 56 60 70" />
+          <path d="M 62 38 Q 64 56 60 70" />
+        </g>
+      </svg>
+      <figcaption className="printer-emblem-cap">
+        <span className="printer-emblem-cap-rule printer-emblem-cap-rule--left" />
+        <span className="printer-emblem-cap-text">
+          <em className="printer-emblem-cap-key">the printer's mark</em>
+          <span className="printer-emblem-cap-sep" aria-hidden="true">·</span>
+          <em className="printer-emblem-cap-tail">a press that bears a name</em>
+        </span>
+        <span className="printer-emblem-cap-rule printer-emblem-cap-rule--right" />
+      </figcaption>
+    </figure>
+  )
+}
+
 function AsterismGlyph({ className }: { className?: string }) {
   return (
     <svg
@@ -1784,6 +1907,75 @@ function InkFingerprint({ visible }: { visible: boolean }) {
           />
         </g>
       </svg>
+    </div>
+  )
+}
+
+function ReadingPaceIndicator({
+  visible,
+  slow,
+}: {
+  visible: boolean
+  slow: boolean
+}) {
+  const segments = 7
+  return (
+    <div
+      className={`pace-indicator${visible ? ' is-visible' : ''}${
+        slow ? ' is-slow' : ' is-quick'
+      }`}
+      aria-hidden="true"
+    >
+      <svg
+        className="pace-indicator-meter"
+        viewBox="0 0 96 14"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="pace-fill" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0.95)" />
+            <stop offset="50%" stopColor="rgba(217, 101, 74, 0.92)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0.95)" />
+          </linearGradient>
+        </defs>
+        <g className="pace-indicator-ticks" stroke="rgba(107, 74, 37, 0.32)" strokeWidth="0.5" fill="none" strokeLinecap="round">
+          <line x1="2" y1="2" x2="2" y2="12" />
+          <line x1="94" y1="2" x2="94" y2="12" />
+          <line x1="16" y1="4" x2="16" y2="10" />
+          <line x1="32" y1="4" x2="32" y2="10" />
+          <line x1="48" y1="2" x2="48" y2="12" />
+          <line x1="64" y1="4" x2="64" y2="10" />
+          <line x1="80" y1="4" x2="80" y2="10" />
+        </g>
+        <g className="pace-indicator-segments" fill="rgba(107, 74, 37, 0.18)">
+          {Array.from({ length: segments }, (_, i) => (
+            <rect
+              key={i}
+              x={4 + i * 12}
+              y="5"
+              width="9"
+              height="4"
+              rx="1"
+            />
+          ))}
+        </g>
+        <rect
+          className="pace-indicator-fill"
+          x="4"
+          y="5"
+          width="0"
+          height="4"
+          rx="1"
+          fill="url(#pace-fill)"
+        />
+      </svg>
+      <span className="pace-indicator-cluster">
+        <em className="pace-indicator-key">reading pace</em>
+        <span className="pace-indicator-sep" aria-hidden="true">·</span>
+        <em className="pace-indicator-tail">
+          {slow ? 'page pace' : 'slow reading'}
+        </em>
+      </span>
     </div>
   )
 }
@@ -5879,6 +6071,7 @@ export function App() {
         <Epigraph />
 
         <div className="chapter-opener">
+          <PrinterEmblem />
           <ChapterHead now={now} />
           <div className="chapter-opener-rule" aria-hidden="true">
             <span className="chapter-opener-rule-line" />
@@ -6082,6 +6275,9 @@ export function App() {
                     {phase === 'answering' && <span className="typing-caret" aria-hidden="true">|</span>}
                   </p>
                   <SelfAnnotations currentChars={answerChars} />
+                  {phase === 'complete' && (
+                    <ReadingPaceIndicator visible slow={slow} />
+                  )}
                 </div>
               )}
               <span className="answer-quote answer-quote--close" aria-hidden="true">"</span>

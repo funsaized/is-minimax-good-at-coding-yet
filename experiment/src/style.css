@@ -507,14 +507,16 @@ button { font: inherit; }
 
 .chapter-opener {
   position: relative; z-index: 3;
-  display: flex; justify-content: center;
-  padding: 32px 0 36px;
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: 24px 0 30px;
   animation: content-in 0.85s 0.18s both;
 }
 .chapter-head {
   display: flex; flex-direction: column; align-items: center;
   gap: 12px;
   text-align: center;
+  margin-top: 6px;
 }
 .chapter-mark {
   display: inline-flex; align-items: baseline; gap: 11px;
@@ -523,13 +525,14 @@ button { font: inherit; }
   text-transform: uppercase;
   color: var(--moss);
   position: relative;
+  padding: 2px 4px 0;
 }
 .chapter-numeral {
   color: var(--coral);
   font: italic 600 22px/1 var(--display);
   letter-spacing: 0.04em;
   position: relative;
-  padding: 0 1px 2px;
+  padding: 0 1px 4px;
 }
 .chapter-numeral::after {
   content: "";
@@ -1164,7 +1167,7 @@ button { font: inherit; }
   max-width: 360px;
   color: var(--coral-deep);
   opacity: 0.7;
-  animation: chapter-opener-rule-in 900ms var(--ease) 360ms both;
+  animation: chapter-opener-rule-in 900ms var(--ease) 540ms both;
 }
 @keyframes chapter-opener-rule-in {
   from { opacity: 0; transform: translateY(3px); }
@@ -7325,6 +7328,211 @@ button { font: inherit; }
   .answer-copy {
     font: italic 24px/1.3 var(--display);
   }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 118 · the printer's mark
+   A circular publisher's device anchors the recto with the press identity.
+   ────────────────────────────────────────────────────────────────────── */
+
+.printer-emblem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto 4px;
+  padding: 0;
+  max-width: 200px;
+  opacity: 0;
+  transform: translateY(-6px) scale(0.94);
+  animation: printer-emblem-in 1100ms cubic-bezier(.2,.7,.2,1) 80ms both;
+}
+.printer-emblem-plate {
+  display: block;
+  width: clamp(64px, 7vw, 92px);
+  height: clamp(64px, 7vw, 92px);
+  filter: drop-shadow(0 4px 10px rgba(80, 36, 14, 0.16));
+}
+.printer-emblem .emblem-vine--left {
+  transform-origin: 18px 60px;
+  animation: emblem-vine-sway 9s ease-in-out infinite;
+}
+.printer-emblem .emblem-vine--right {
+  transform-origin: 102px 60px;
+  animation: emblem-vine-sway 9s ease-in-out infinite reverse;
+}
+@keyframes emblem-vine-sway {
+  0%, 100% { transform: rotate(-0.8deg); }
+  50%      { transform: rotate(1.6deg); }
+}
+.printer-emblem-letter {
+  fill: url(#emblem-gold);
+  font: italic 700 38px/1 var(--display);
+  letter-spacing: -0.02em;
+  paint-order: stroke fill;
+}
+.printer-emblem-letter-roman {
+  fill: url(#emblem-gold-soft);
+  font: italic 600 11px/1 var(--display);
+  letter-spacing: 0.04em;
+}
+.printer-emblem-motto {
+  fill: url(#emblem-gold-soft);
+  font: 770 6.4px/1 var(--sans);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+.printer-emblem-motto--bot {
+  letter-spacing: 0.4em;
+}
+.printer-emblem-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+  color: var(--ink-soft);
+  font: italic 11px/1.2 var(--serif);
+  letter-spacing: 0.02em;
+  text-align: center;
+  white-space: nowrap;
+}
+.printer-emblem-cap-rule {
+  flex: 0 0 18px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.36)
+  );
+}
+.printer-emblem-cap-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(167, 60, 44, 0.36)
+  );
+}
+.printer-emblem-cap-key {
+  font: 800 8.5px/1 var(--sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  font-style: normal;
+}
+.printer-emblem-cap-sep {
+  color: var(--coral);
+  font: 700 11px/1 var(--display);
+}
+.printer-emblem-cap-tail {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+@keyframes printer-emblem-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .printer-emblem {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .printer-emblem .emblem-vine--left,
+  .printer-emblem .emblem-vine--right {
+    animation: none !important;
+  }
+}
+@media (max-width: 720px) {
+  .printer-emblem { gap: 4px; }
+  .printer-emblem-plate {
+    width: 60px;
+    height: 60px;
+  }
+  .printer-emblem-cap {
+    font-size: 10px;
+    gap: 6px;
+    white-space: normal;
+    max-width: 220px;
+  }
+  .printer-emblem-cap-rule { flex: 0 0 10px; }
+  .printer-emblem-letter { font-size: 32px; }
+}
+@media (max-width: 420px) {
+  .printer-emblem-cap-rule { display: none; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 118 · the reading pace indicator
+   A small meter that visualizes the slow-toggle as a printed scale.
+   ────────────────────────────────────────────────────────────────────── */
+
+.pace-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 0;
+  padding: 4px 0 0;
+  color: var(--ink-soft);
+  border-top: 1px dashed rgba(107, 74, 37, 0.28);
+  grid-column: 1 / -1;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+}
+.pace-indicator.is-visible {
+  opacity: 0.9;
+  transform: none;
+}
+.pace-indicator-meter {
+  display: block;
+  width: 96px;
+  height: 14px;
+  flex: 0 0 96px;
+}
+.pace-indicator-fill {
+  transition: width 760ms var(--ease);
+}
+.pace-indicator.is-quick .pace-indicator-fill {
+  width: 40px;
+}
+.pace-indicator.is-slow .pace-indicator-fill {
+  width: 84px;
+}
+.pace-indicator-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+}
+.pace-indicator-key {
+  font: 800 8.5px/1 var(--sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--moss);
+  font-style: normal;
+}
+.pace-indicator-sep {
+  color: var(--coral);
+  font: 700 11px/1 var(--display);
+}
+.pace-indicator-tail {
+  font-style: italic;
+  color: var(--coral-deep);
+}
+.pace-indicator.is-slow .pace-indicator-tail {
+  color: var(--moss);
+}
+@media (max-width: 560px) {
+  .pace-indicator { gap: 8px; flex-wrap: wrap; }
+  .pace-indicator-meter { width: 80px; flex-basis: 80px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pace-indicator {
+    opacity: 0.9;
+    transform: none;
+    transition: none;
+  }
+  .pace-indicator-fill { transition: none; }
 }
 
 

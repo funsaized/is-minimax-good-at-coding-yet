@@ -1,7 +1,11 @@
-# Changelog — folio lxxvii · caput xviii
+# Changelog
 
-## Iteration 117 — a row of wax stamps grows at the foot of the verso
-- The wax seal now leaves a visible archive: each press drops a small red wax disc beneath the impression ledger. Up to four discs sit in a ruled row, each tilted slightly and stamped with its press number in roman. The caption above reads "the reader's wax · i press" (or "ii presses", "iii presses", "iv presses" as the reader returns). The discs animate in one by one, like fresh wax dropped onto the paper.
-- The recto's reader note now deepens across re-readings. The first line cycles through three reflective sentences ("the second reading changes the pace, not the answer." / "a third reading — the page is unchanged; the eye, slower." / "still reading — the words, the same. ad lucem."), and a second italic line appears below it in coral ink ("press the seal again, and the page answers slower." / "the wax is older now; the reader, the same." / "the lamp is steady; the line, well worn.").
-- Both new pieces respect reduced-motion: the wax stamps simply appear, and the sub-note fades in without translate.
-- Mobile breakpoints tightened so the wax row collapses to 92% width with smaller captions on narrow screens, and the sub-note shrinks to 10px with a 14px rule on phones.
+## Iteration 118 — the printer's mark
+
+Anchored the recto with a circular publisher's device and made the slow-reading toggle tangible.
+
+- Added a `PrinterEmblem` SVG above the chapter mark: a gold-and-coral circular device with a vine wreath, italic `m·iii` monogram, top-arc motto "manu m · iii · mmxxvi", bottom-arc "ad lucem · perlege", and a printer's-mark caption beneath it. Arrives with a soft drop-in motion, then its vines sway gently.
+- Added a `ReadingPaceIndicator` inside the answer-copy-frame, shown once the answer has fully arrived. A 7-segment meter with a coral-to-gold fill animates between "slow reading" (narrow fill) and "page pace" (wide fill), so the speed toggle now reads as a visible printed scale rather than an invisible state.
+- Refined the `ChapterHead` so the caput mark sits a touch lower and more confidently, the chapter-opener-rule divider enters half a beat later (after the printer's mark), and the recto typography chain now reads: epigraph → printer's mark → caput xviii → headpiece → folio ref → witness → ¶ rule.
+- Tightened the chapter-opener to a flex column so the emblem, chapter mark, and rule stack cleanly.
+- New `.printer-emblem` and `.pace-indicator` styles respect `prefers-reduced-motion`, collapse gracefully at 720px (emblem 60px, caption wraps) and 420px (rules fold away), and harmonize with the existing coral / gold / sage palette.
