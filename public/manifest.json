@@ -1614,6 +1614,25 @@
         "outputTokens": 10765,
         "steps": 59
       }
+    },
+    {
+      "id": 85,
+      "parentId": 84,
+      "createdAt": "2026-09-07T03:10:35.075Z",
+      "summary": "Iteration 85 adds a press correction slip — a small paper corrigendum pasted at angle onto the verso, held by a half-ton",
+      "path": "/iterations/000085/index.html",
+      "screenshot": "/iterations/000085/desktop.png",
+      "mobileScreenshot": "/iterations/000085/mobile.png",
+      "sourceCommit": "ca9baa62b422c9251d6da20bba48b388f6ad75a3",
+      "model": "minimax-coding-plan/MiniMax-M3",
+      "durationSeconds": 271,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": {
+        "estimatedCostUsd": 0,
+        "inputTokens": 177279,
+        "outputTokens": 20105,
+        "steps": 36
+      }
     }
   ]
 }
