@@ -265,6 +265,215 @@ function ChapterHead() {
   )
 }
 
+const CUL_RAYS = Array.from({ length: 16 }, (_, i) => {
+  const theta = (i * 22.5 * Math.PI) / 180
+  const isLong = i % 2 === 0
+  const r2 = isLong ? 34 : 24
+  return {
+    x1: 100 + 21 * Math.cos(theta),
+    y1: 44 + 21 * Math.sin(theta),
+    x2: 100 + r2 * Math.cos(theta),
+    y2: 44 + r2 * Math.sin(theta),
+    key: i,
+  }
+})
+
+const CUL_HATCH = Array.from({ length: 26 }, (_, i) => {
+  const x = i * 8 + 1
+  return { x1: x, y1: 78, x2: x + 4, y2: 108, key: i }
+})
+
+function CulDeLampe({
+  inscriptionVisible,
+}: {
+  inscriptionVisible: boolean
+}) {
+  return (
+    <div className="cul-de-lampe" aria-hidden="true">
+      <svg
+        className="cul-de-lampe-plate"
+        viewBox="0 0 200 110"
+        focusable="false"
+      >
+        <defs>
+          <clipPath id="cul-hill-clip">
+            <rect x="0" y="76" width="200" height="34" />
+          </clipPath>
+          <radialGradient id="cul-sun-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.55)" />
+            <stop offset="55%" stopColor="rgba(245, 198, 91, 0.18)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+        </defs>
+
+        <g className="cul-sky" opacity="0.24">
+          <line x1="0" y1="20" x2="200" y2="20" stroke="currentColor" strokeWidth="0.3" />
+          <line x1="0" y1="32" x2="200" y2="32" stroke="currentColor" strokeWidth="0.3" />
+          <circle cx="38" cy="12" r="0.55" fill="currentColor" />
+          <circle cx="174" cy="16" r="0.55" fill="currentColor" />
+          <circle cx="118" cy="9" r="0.4" fill="currentColor" />
+          <circle cx="64" cy="8" r="0.4" fill="currentColor" />
+          <circle cx="156" cy="26" r="0.35" fill="currentColor" />
+        </g>
+
+        <circle
+          className="cul-glow"
+          cx="100"
+          cy="44"
+          r="34"
+          fill="url(#cul-sun-glow)"
+        />
+
+        <g
+          className="cul-rays"
+          stroke="currentColor"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+          fill="none"
+        >
+          {CUL_RAYS.map((r) => (
+            <line key={r.key} x1={r.x1} y1={r.y1} x2={r.x2} y2={r.y2} />
+          ))}
+        </g>
+
+        <g className="cul-disc">
+          <circle
+            cx="100"
+            cy="44"
+            r="14"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.65"
+          />
+          <circle
+            cx="100"
+            cy="44"
+            r="9"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.4"
+            strokeDasharray="0.5 1.6"
+            opacity="0.85"
+          />
+          <circle cx="100" cy="44" r="3.2" fill="currentColor" />
+          <line
+            x1="100"
+            y1="34"
+            x2="100"
+            y2="54"
+            stroke="currentColor"
+            strokeWidth="0.3"
+            opacity="0.55"
+          />
+          <line
+            x1="92"
+            y1="38"
+            x2="108"
+            y2="50"
+            stroke="currentColor"
+            strokeWidth="0.3"
+            opacity="0.55"
+          />
+          <line
+            x1="92"
+            y1="50"
+            x2="108"
+            y2="38"
+            stroke="currentColor"
+            strokeWidth="0.3"
+            opacity="0.55"
+          />
+        </g>
+
+        <path
+          className="cul-bird cul-bird--left"
+          d="M 50 24 q 4 -3 8 0 q 4 -2 8 0"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.65"
+          strokeLinecap="round"
+        />
+        <path
+          className="cul-bird cul-bird--right"
+          d="M 148 30 q 3 -2.5 6 0 q 3 -2 6 0"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.65"
+          strokeLinecap="round"
+        />
+
+        <line
+          x1="0"
+          y1="76"
+          x2="200"
+          y2="76"
+          stroke="currentColor"
+          strokeWidth="0.5"
+        />
+
+        <rect
+          x="0"
+          y="76"
+          width="200"
+          height="34"
+          fill="rgba(107, 74, 37, 0.06)"
+        />
+
+        <g clipPath="url(#cul-hill-clip)" opacity="0.5">
+          {CUL_HATCH.map((h) => (
+            <line
+              key={h.key}
+              x1={h.x1}
+              y1={h.y1}
+              x2={h.x2}
+              y2={h.y2}
+              stroke="currentColor"
+              strokeWidth="0.3"
+            />
+          ))}
+        </g>
+
+        <path
+          d="M 0 80 Q 26 74 52 78 T 100 76 T 148 80 T 200 78"
+          stroke="currentColor"
+          strokeWidth="0.7"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 0 88 Q 26 82 52 86 T 100 84 T 148 88 T 200 86"
+          stroke="currentColor"
+          strokeWidth="0.45"
+          fill="none"
+          strokeLinecap="round"
+          opacity="0.6"
+        />
+
+        <line
+          x1="0"
+          y1="106"
+          x2="200"
+          y2="106"
+          stroke="currentColor"
+          strokeWidth="0.55"
+        />
+      </svg>
+
+      <p
+        className={`cul-inscription${
+          inscriptionVisible ? ' is-visible' : ''
+        }`}
+      >
+        <span className="cul-inscription-rule" aria-hidden="true" />
+        <em>explicit</em>
+        <span className="cul-inscription-mark" aria-hidden="true">·</span>
+        <em>caput xviii</em>
+        <span className="cul-inscription-rule" aria-hidden="true" />
+      </p>
+    </div>
+  )
+}
+
 function LeafCluster({
   className,
   label,
@@ -1741,6 +1950,8 @@ export function App() {
                 <SiderealPocket visible={hourDialVisible} reduced={reduced} />
               </div>
             </div>
+
+            <CulDeLampe inscriptionVisible={phase === 'complete'} />
 
             <Apparatus
               visible={replyShown}
