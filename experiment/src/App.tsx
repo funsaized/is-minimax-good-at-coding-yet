@@ -4382,6 +4382,8 @@ export function App() {
   const [owlBlinking, setOwlBlinking] = useState(false)
   const [slipIntensity, setSlipIntensity] = useState(0)
   const [activeSection, setActiveSection] = useState<string>('sec-question')
+  const [versoOpened, setVersoOpened] = useState(false)
+  const [leafTurning, setLeafTurning] = useState(false)
 
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({})
   const jumpRef = useRef<number | null>(null)
@@ -4441,6 +4443,11 @@ export function App() {
   }, [phase, reduced, replyChars, slow])
 
   const readAnswer = () => {
+    if (phase === 'idle') {
+      setVersoOpened(true)
+      setLeafTurning(true)
+      window.setTimeout(() => setLeafTurning(false), reduced ? 220 : 1180)
+    }
     if (phase === 'complete') setSlow((current) => !current)
     setAnswerChars(0)
     setReplyChars(0)
@@ -4702,23 +4709,51 @@ export function App() {
             </div>
 
             <RectoSeal cycle={cycle} />
+
+            <div className="recto-turn">
+              <LeafCluster
+                className={`leaf-cluster--turn ${
+                  phase !== 'idle' ? 'is-sealed' : ''
+                }`}
+                label="turn the leaf"
+              />
+              <button
+                className={`read-button${slow ? ' is-slow' : ''}`}
+                type="button"
+                onClick={readAnswer}
+                aria-describedby="reader-note"
+                aria-keyshortcuts="Space R"
+              >
+                <span className="button-mark" aria-hidden="true">↪</span>
+                <span className="button-label">{buttonLabel}</span>
+                <span className="button-pace" aria-hidden="true">
+                  {slow ? '· slow' : '· fast'}
+                </span>
+                <span className="button-keys" aria-hidden="true">
+                  <kbd>space</kbd>
+                </span>
+              </button>
+              <p className="reader-note" id="reader-note">{readerNote}</p>
+            </div>
           </section>
 
           <FolioSpine stage={tideStage} cycle={cycle} reduced={reduced} />
 
+          <div
+            className={`verso-leaf${versoOpened ? ' is-opened' : ' is-closed'}${
+              leafTurning ? ' is-turning' : ''
+            }`}
+          >
           <section
-            className={`response-panel response-panel--verso ${replyShown ? 'is-revealed' : ''}`}
+            className={`response-panel response-panel--verso response-panel--verso-top ${replyShown ? 'is-revealed' : ''}`}
             aria-labelledby="response-title"
+            aria-hidden={!versoOpened}
           >
 
             <RectoVerses />
 
             <ReadingTrace cycle={cycle} reduced={reduced} />
 
-            <LeafCluster
-              className={`leaf-cluster--turn ${isTyping || phase === 'complete' ? 'is-sealed' : ''}`}
-              label="turn the leaf"
-            />
 
             <p className="catchword">
               <span className="catchword-rule" aria-hidden="true" />
@@ -4744,8 +4779,9 @@ export function App() {
           </section>
 
           <section
-            className={`response-panel response-panel--verso ${replyShown ? 'is-revealed' : ''}`}
+            className={`response-panel response-panel--verso response-panel--verso-main ${replyShown ? 'is-revealed' : ''}`}
             aria-labelledby="response-title"
+            aria-hidden={!versoOpened}
           >
             <span className="verso-shine" aria-hidden="true" />
             <ReadingLines count={lineCount} visible={readingLinesVisible} />
@@ -4880,24 +4916,6 @@ export function App() {
               </div>
             )}
 
-            <button
-              className={`read-button${slow ? ' is-slow' : ''}`}
-              type="button"
-              onClick={readAnswer}
-              aria-describedby="reader-note"
-              aria-keyshortcuts="Space R"
-            >
-              <span className="button-mark" aria-hidden="true">↗</span>
-              <span className="button-label">{buttonLabel}</span>
-              <span className="button-pace" aria-hidden="true">
-                {slow ? '· slow' : '· fast'}
-              </span>
-              <span className="button-keys" aria-hidden="true">
-                <kbd>space</kbd>
-              </span>
-            </button>
-            <p className="reader-note" id="reader-note">{readerNote}</p>
-
             <PressSeal
               visible={phase === 'complete'}
               cycle={cycle}
@@ -4937,6 +4955,7 @@ export function App() {
 
             {phase === 'complete' && <Colophon cycle={cycle} />}
           </section>
+          </div>
         </div>
 
         <footer className="sheet-footer">

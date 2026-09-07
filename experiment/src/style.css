@@ -5525,3 +5525,156 @@ button { font: inherit; }
     flex-wrap: wrap;
   }
 }
+
+/* ────────── iteration 109 · verso leaf-turn reveal ────────── */
+
+/* the recto carries the prompt; the verso arrives as a turning leaf */
+
+.experiment-shell {
+  perspective: 2400px;
+  perspective-origin: 50% 36%;
+}
+
+.sheet-content {
+  transform-style: preserve-3d;
+}
+
+.verso-leaf {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transform-style: preserve-3d;
+  transform-origin: 0% 50%;
+  transform: rotateY(0deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition:
+    transform 1180ms cubic-bezier(.22, .82, .22, 1),
+    box-shadow 1180ms cubic-bezier(.22, .82, .22, 1),
+    filter 1180ms cubic-bezier(.22, .82, .22, 1);
+  box-shadow:
+    0 22px 36px -18px rgba(50, 28, 16, 0.22),
+    0 8px 14px -10px rgba(50, 28, 16, 0.18);
+  filter: brightness(1) saturate(1);
+  will-change: transform;
+}
+
+.verso-leaf.is-closed {
+  transform: rotateY(-178deg);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  filter: brightness(0.92) saturate(0.94);
+}
+
+.verso-leaf.is-turning {
+  /* emphasize the live gesture */
+  box-shadow:
+    -2px 18px 26px -12px rgba(50, 28, 16, 0.32),
+    -8px 6px 14px -8px rgba(50, 28, 16, 0.22);
+}
+
+.verso-leaf::before {
+  content: "";
+  position: absolute;
+  top: -6px; bottom: -6px;
+  left: -2px;
+  width: 4px;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgba(245, 198, 91, 0.45) 24%,
+      rgba(217, 101, 74, 0.42) 56%,
+      rgba(245, 198, 91, 0.45) 84%,
+      transparent
+    );
+  border-radius: 2px;
+  opacity: 0.55;
+  filter: blur(0.5px);
+  pointer-events: none;
+  transition: opacity 1180ms var(--ease);
+}
+.verso-leaf.is-closed::before { opacity: 0; }
+
+.verso-leaf::after {
+  content: "";
+  position: absolute;
+  inset: -14px -22px -22px -2px;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 0% 50%,
+    rgba(50, 28, 16, 0.22) 0%,
+    rgba(50, 28, 16, 0.1) 30%,
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 1180ms var(--ease);
+}
+.verso-leaf.is-opened::after { opacity: 1; }
+
+.response-panel--verso-top,
+.response-panel--verso-main {
+  padding: 0 0 4px;
+}
+
+/* the leaf-turn prompt that now lives on the recto */
+
+.recto-turn {
+  margin: 22px 0 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  animation: content-in 0.85s 0.32s both;
+}
+.recto-turn .leaf-cluster--turn {
+  align-self: center;
+  margin: 2px 0 4px;
+  opacity: 0.78;
+  transform: none;
+  transition: opacity 720ms var(--ease) 220ms, transform 720ms var(--ease) 220ms, filter 720ms var(--ease);
+}
+.has-answer .recto-turn .leaf-cluster--turn {
+  opacity: 0.45;
+  filter: saturate(0.92) drop-shadow(0 1px 0 rgba(107, 74, 37, 0.1));
+  transform: translateY(-2px);
+}
+.has-answer .recto-turn .leaf-cluster--turn.is-sealed {
+  opacity: 0.62;
+}
+.recto-turn .read-button {
+  margin: 0;
+}
+.recto-turn .reader-note {
+  margin: -2px 0 0;
+}
+
+@media (max-width: 880px) {
+  .verso-leaf.is-closed,
+  .verso-leaf.is-turning {
+    transform: none;
+    box-shadow: 0 0 0 transparent;
+    filter: none;
+  }
+  .verso-leaf::before,
+  .verso-leaf::after { opacity: 0; }
+  .verso-leaf {
+    opacity: 0;
+    transition: opacity 600ms var(--ease);
+  }
+  .verso-leaf.is-opened { opacity: 1; }
+  .recto-turn { gap: 12px; margin-top: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .verso-leaf {
+    transition: opacity 280ms var(--ease);
+  }
+  .verso-leaf.is-closed,
+  .verso-leaf.is-turning {
+    transform: none;
+    box-shadow: 0 0 0 transparent;
+    filter: none;
+  }
+  .verso-leaf::after { display: none; }
+}
