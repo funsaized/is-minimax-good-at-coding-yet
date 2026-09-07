@@ -1,6 +1,7 @@
-Refined the illuminated manuscript into a quieter, more legible editorial reading experience.
+# Changelog
 
-- Reworked the visual system around deep teal, warm paper, coral accents, and clearer typographic hierarchy.
-- Preserved the existing typewriter answer/reply interaction, slower second reading, live clock behavior, and reduced-motion support.
-- Simplified dense ornamentation while retaining the ribbon, folio structure, marginal notes, illuminated initial, and closing woodcut.
-- Added responsive layouts for tablet and mobile, with a full-width reading action and improved keyboard focus treatment.
+## Iteration 88 — a reading tide
+
+Restored the editorial apparatus to a calmer folio and added a right-edge reading-tide ruler.
+
+The right-edge reading-tide sits opposite the gilded edge: four labelled stops (set, answer, reply, out) with a gold marker that lifts through them as the reader advances, plus a "re-reading" mark after the first cycle. The marginalia owl now appears at the catchword once reading begins; its pupils follow the cursor and it offers a single blink on completion. The scholar's bench at the foot of the reply carries a live leaf-hour dial and a sidereal pocket (polaris over ur. minor, slowly turning). A press-correction slip pastes in at angle during the reply and inks over a beat when the page settles. A typeset apparatus / index rises below with seven numbered entries that stagger into view, a manu mea · impressum colophon, and a second-reading footnote when the reader revisits. The wax-seal initial gains a halo and five gold bezants when lit; the running heads, the manuscript stamp, the cul-de-lampe, and its inscription reveal through the reading. Refit the palette (warmer paper, deeper ink, refined gold and coral) and the typography (display italic with ligature and swash alternates, focus-visible marginalia tooltips). An inkwell with vapor and a live scribal quill sit on the answer surface during the answer; the gilded edge pulses; the fleuron drifts in the watermark layer; the bookmark ribbon continues its sway. Reduced-motion, keyboard accessibility, and responsive breakpoints are preserved.

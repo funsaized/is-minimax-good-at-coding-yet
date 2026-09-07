@@ -575,20 +575,24 @@ function Apparatus({
       </header>
 
       <ol className="apparatus-list">
-        {entries.map((entry) => (
-          <li key={entry.numeral} className="apparatus-row">
-            <span className="apparatus-numeral">{entry.numeral}.</span>
-            <span className="apparatus-name">{entry.name}</span>
-            <span className="apparatus-leader" aria-hidden="true">
-              <span className="apparatus-leader-dot">·</span>
-              <span className="apparatus-leader-dot">·</span>
-              <span className="apparatus-leader-dot">·</span>
-              <span className="apparatus-leader-dot">·</span>
-              <span className="apparatus-leader-dot">·</span>
-            </span>
-            <span className="apparatus-gloss">{entry.gloss}</span>
-          </li>
-        ))}
+        {entries.map((entry, i) => (
+            <li
+              key={entry.numeral}
+              className="apparatus-row"
+              style={{ '--i': i } as React.CSSProperties}
+            >
+              <span className="apparatus-numeral">{entry.numeral}.</span>
+              <span className="apparatus-name">{entry.name}</span>
+              <span className="apparatus-leader" aria-hidden="true">
+                <span className="apparatus-leader-dot">·</span>
+                <span className="apparatus-leader-dot">·</span>
+                <span className="apparatus-leader-dot">·</span>
+                <span className="apparatus-leader-dot">·</span>
+                <span className="apparatus-leader-dot">·</span>
+              </span>
+              <span className="apparatus-gloss">{entry.gloss}</span>
+            </li>
+          ))}
       </ol>
 
       <footer className="apparatus-foot">
@@ -1006,9 +1010,9 @@ function SiderealPocket({
   )
 }
 
-function Inkwell() {
+function Inkwell({ active }: { active: boolean }) {
   return (
-    <div className="inkwell" aria-hidden="true">
+    <div className={`inkwell${active ? ' is-active' : ''}`} aria-hidden="true">
       <svg viewBox="0 0 80 36" focusable="false">
         <defs>
           <linearGradient id="ink-pot" x1="0" y1="0" x2="0" y2="1">
@@ -1059,6 +1063,7 @@ function Inkwell() {
           strokeLinecap="round"
         />
       </svg>
+      <span className="inkwell-vapor" aria-hidden="true" />
     </div>
   )
 }
@@ -1323,7 +1328,7 @@ function DustMotes({ reduced }: { reduced: boolean }) {
       const parent = canvas.parentElement
       if (!parent) return
       const rect = parent.getBoundingClientRect()
-      motesRef.current = Array.from({ length: 12 }, () => ({
+      motesRef.current = Array.from({ length: 14 }, () => ({
         x: Math.random() * rect.width,
         y: Math.random() * rect.height,
         vx: (Math.random() - 0.5) * 5,
@@ -1420,7 +1425,7 @@ function SignatureMark({ sig, side }: { sig: string; side: 'r' | 'v' }) {
   )
 }
 
-function PressCorrectionSlip({ visible }: { visible: boolean }) {
+function PressCorrectionSlip({ visible, intensity }: { visible: boolean; intensity: number }) {
   return (
     <div
       className={`press-correction-slip${visible ? ' is-visible' : ''}`}
@@ -1466,6 +1471,13 @@ function PressCorrectionSlip({ visible }: { visible: boolean }) {
         <span className="press-correction-foot-sep" aria-hidden="true">·</span>
         <span className="press-correction-foot-hand">manu pr.</span>
       </footer>
+      {intensity > 0 && (
+        <span
+          className="press-correction-ink"
+          style={{ opacity: Math.min(1, intensity) }}
+          aria-hidden="true"
+        />
+      )}
     </div>
   )
 }
@@ -1474,10 +1486,12 @@ function MarginaliaOwl({
   active,
   reduced,
   watchPoint,
+  blinking,
 }: {
   active: boolean
   reduced: boolean
   watchPoint: { x: number; y: number; inside: boolean }
+  blinking: boolean
 }) {
   const clamp = (v: number, lo: number, hi: number) =>
     Math.max(lo, Math.min(hi, v))
@@ -1486,7 +1500,7 @@ function MarginaliaOwl({
 
   return (
     <div
-      className={`marginalia-owl${active ? ' is-active' : ''}`}
+      className={`marginalia-owl${active ? ' is-active' : ''}${blinking ? ' is-blinking' : ''}`}
       aria-hidden="true"
     >
       <svg viewBox="0 0 90 100" focusable="false">
@@ -1654,6 +1668,55 @@ function MarginaliaOwl({
   )
 }
 
+function ReadingTide({ stage, cycle }: { stage: number; cycle: number }) {
+  const stops = [
+    { label: 'set', glyph: '§' },
+    { label: 'answer', glyph: '¶' },
+    { label: 'reply', glyph: '†' },
+    { label: 'out', glyph: '‡' },
+  ]
+  const yPercent = Math.max(0, Math.min(1, stage / (stops.length - 1)))
+  return (
+    <div className="reading-tide" aria-hidden="true">
+      <span className="reading-tide-rule" />
+      {stops.map((stop, i) => (
+        <span
+          key={stop.label}
+          className={`reading-tide-stop ${stage >= i ? 'is-passed' : ''}${
+            stage === i ? ' is-current' : ''
+          }`}
+          style={{ top: `${(i / (stops.length - 1)) * 100}%` }}
+        >
+          <span className="reading-tide-glyph">{stop.glyph}</span>
+          <span className="reading-tide-label">{stop.label}</span>
+        </span>
+      ))}
+      <span
+        className="reading-tide-marker"
+        style={{ top: `${yPercent * 100}%` }}
+      >
+        <svg viewBox="0 0 14 14" focusable="false">
+          <circle cx="7" cy="7" r="5" fill="var(--gold)" />
+          <circle
+            cx="7"
+            cy="7"
+            r="5"
+            fill="none"
+            stroke="var(--ink)"
+            strokeWidth="0.8"
+          />
+        </svg>
+      </span>
+      {cycle > 0 && (
+        <span className="reading-tide-reread" aria-hidden="true">
+          <span className="reading-tide-reread-mark">⟲</span>
+          <span className="reading-tide-reread-text">re-reading</span>
+        </span>
+      )}
+    </div>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
@@ -1664,6 +1727,8 @@ export function App() {
   const [replyChars, setReplyChars] = useState(0)
   const [cycle, setCycle] = useState(0)
   const [sealPressing, setSealPressing] = useState(false)
+  const [owlBlinking, setOwlBlinking] = useState(false)
+  const [slipIntensity, setSlipIntensity] = useState(0)
 
   useEffect(() => {
     if (phase !== 'answering') return
@@ -1721,13 +1786,57 @@ export function App() {
     }
   }, [cycle])
 
+  const blinkTimerRef = useRef<number | null>(null)
+  useEffect(() => {
+    if (phase === 'replying' || phase === 'complete') {
+      setOwlBlinking(true)
+      if (blinkTimerRef.current !== null) window.clearTimeout(blinkTimerRef.current)
+      blinkTimerRef.current = window.setTimeout(() => setOwlBlinking(false), 360)
+      return () => {
+        if (blinkTimerRef.current !== null)
+          window.clearTimeout(blinkTimerRef.current)
+      }
+    }
+  }, [phase])
+
+  const slipTimerRef = useRef<number | null>(null)
+  useEffect(() => {
+    if (phase === 'complete') {
+      setSlipIntensity(0)
+      let frame = 0
+      const start = performance.now()
+      const duration = 1100
+      const animate = (now: number) => {
+        const t = Math.min(1, (now - start) / duration)
+        setSlipIntensity(t)
+        if (t < 1) frame = requestAnimationFrame(animate)
+      }
+      frame = requestAnimationFrame(animate)
+      return () => cancelAnimationFrame(frame)
+    }
+    if (slipTimerRef.current !== null) window.clearTimeout(slipTimerRef.current)
+    if (phase === 'replying') {
+      slipTimerRef.current = window.setTimeout(() => setSlipIntensity(0.4), 80)
+    }
+    return () => {
+      if (slipTimerRef.current !== null)
+        window.clearTimeout(slipTimerRef.current)
+    }
+  }, [phase])
+
   const answerVisible = phase !== 'idle'
   const answerDisplay = ANSWER.slice(0, answerChars)
   const replyDisplay = REPLY.slice(0, replyChars)
   const isTyping = phase === 'answering' || phase === 'replying'
   const replyShown = phase === 'replying' || phase === 'complete'
+  const benchShown = replyShown
+  const pressSlipShown = phase === 'replying' || phase === 'complete'
+  const owlShown = isTyping || phase === 'complete'
   const quillActive = phase === 'answering'
   const quillProgress = answerChars + replyChars
+
+  const tideStage =
+    phase === 'idle' ? 0 : phase === 'answering' ? 1 : phase === 'replying' ? 2 : 3
 
   const inkProgress =
     phase === 'idle'
@@ -1771,6 +1880,7 @@ export function App() {
         <DustMotes reduced={reduced} />
         <BookmarkRibbon />
         <span className="gilded-edge" aria-hidden="true" />
+        <ReadingTide stage={tideStage} cycle={cycle} />
 
         <span className="sheet-watermark" aria-hidden="true">
           <Fleuron />
@@ -1826,11 +1936,14 @@ export function App() {
             <p className="catchword">
               <span className="catchword-rule" aria-hidden="true" />
               <span className="catchword-text">verso · reply</span>
-              <MarginaliaOwl
-                active={phase !== 'idle'}
-                reduced={reduced}
-                watchPoint={watchPoint}
-              />
+              {owlShown && (
+                <MarginaliaOwl
+                  active
+                  reduced={reduced}
+                  watchPoint={watchPoint}
+                  blinking={owlBlinking}
+                />
+              )}
               <span className="catchword-arrow" aria-hidden="true">↘</span>
             </p>
           </section>
@@ -1888,7 +2001,7 @@ export function App() {
                 }}
                 aria-hidden="true"
               />
-              <Inkwell />
+              <Inkwell active={quillActive} />
               <ScribalQuill active={quillActive} progress={quillProgress} />
             </div>
 
@@ -1912,9 +2025,7 @@ export function App() {
               )}
             </div>
 
-            <PressCorrectionSlip
-              visible={phase === 'replying' || phase === 'complete'}
-            />
+            <PressCorrectionSlip visible={pressSlipShown} intensity={slipIntensity} />
 
             {phase === 'complete' && (
               <div className="completion-note">
@@ -1938,7 +2049,7 @@ export function App() {
             </button>
             <p className="reader-note" id="reader-note">{readerNote}</p>
 
-            <div className="scholars-bench">
+            <div className={`scholars-bench ${benchShown ? 'is-revealed' : ''}`}>
               <EngravedRule className="scholars-bench-rule" />
               <div className="scholars-bench-row">
                 <LeafHourDial
