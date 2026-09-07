@@ -274,6 +274,10 @@ function ChapterHead() {
       <span className="chapter-mark">
         <span className="chapter-prefix">Caput</span>
         <span className="chapter-numeral">XVIII</span>
+        <svg className="chapter-mark-orb" viewBox="0 0 12 12" focusable="false">
+          <circle cx="6" cy="6" r="3.2" fill="none" stroke="currentColor" strokeWidth="0.5" />
+          <circle cx="6" cy="6" r="1" fill="currentColor" />
+        </svg>
       </span>
       <Headpiece />
       <span className="chapter-subtitle">of folio lxxvii, set in question</span>
@@ -2516,6 +2520,12 @@ function ReadingTide({ stage, cycle }: { stage: number; cycle: number }) {
   )
 }
 
+function ordinal(n: number) {
+  const s = ['th', 'st', 'nd', 'rd']
+  const v = n % 100
+  return n + (s[(v - 20) % 10] ?? s[v] ?? s[0])
+}
+
 const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x']
 
 function ReadingLines({
@@ -2545,6 +2555,124 @@ function ReadingLines({
         </li>
       ))}
     </ol>
+  )
+}
+
+function HalfTitle() {
+  return (
+    <div className="half-title" aria-hidden="true">
+      <span className="half-title-mark">¶</span>
+      <span className="half-title-text">an experiment in questioning</span>
+      <span className="half-title-sep">·</span>
+      <span className="half-title-sub">set in this browser</span>
+    </div>
+  )
+}
+
+function EditionLine({ cycle }: { cycle: number }) {
+  const impression =
+    cycle === 0 ? 'first impression' : `${ordinal(cycle + 1)} impression`
+  const pressNote =
+    cycle === 0
+      ? 'composed in silence'
+      : cycle === 1
+        ? 'the page unchanged · the reader, changed'
+        : 'pressed again · the answer deepens'
+  return (
+    <div
+      className={`edition-line${cycle > 0 ? ' is-reread' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="edition-line-rule edition-line-rule--left" />
+      <span className="edition-line-cluster">
+        <svg
+          className="edition-line-aster"
+          viewBox="0 0 36 12"
+          focusable="false"
+        >
+          <g fill="currentColor">
+            <path d="M 6 6 L 18 1 L 18 11 Z" />
+            <path d="M 30 6 L 18 1 L 18 11 Z" />
+            <circle cx="18" cy="6" r="1.1" fill="var(--paper)" />
+          </g>
+        </svg>
+        <span className="edition-line-text">
+          <em className="edition-line-key">{impression}</em>
+          <span className="edition-line-sep">·</span>
+          <em className="edition-line-tail">{pressNote}</em>
+        </span>
+        <svg
+          className="edition-line-aster edition-line-aster--right"
+          viewBox="0 0 36 12"
+          focusable="false"
+        >
+          <g fill="currentColor">
+            <path d="M 6 6 L 18 1 L 18 11 Z" />
+            <path d="M 30 6 L 18 1 L 18 11 Z" />
+            <circle cx="18" cy="6" r="1.1" fill="var(--paper)" />
+          </g>
+        </svg>
+      </span>
+      <span className="edition-line-rule edition-line-rule--right" />
+    </div>
+  )
+}
+
+function ReadingTrace({ cycle, reduced }: { cycle: number; reduced: boolean }) {
+  const count = Math.min(4, cycle)
+  if (count === 0) return null
+  return (
+    <div
+      className="reading-trace"
+      role="status"
+      aria-live="polite"
+      aria-label={`${count} re-reading${count === 1 ? '' : 's'} recorded`}
+    >
+      <span className="reading-trace-label" aria-hidden="true">trace</span>
+      <span className="reading-trace-row">
+        {Array.from({ length: count }, (_, i) => (
+          <span
+            key={i}
+            className="reading-trace-dot"
+            style={{ '--i': i } as React.CSSProperties}
+          >
+            <svg viewBox="0 0 12 14" focusable="false">
+              <ellipse
+                cx="6"
+                cy="7"
+                rx="3.4"
+                ry="4.6"
+                fill="rgba(17, 32, 42, 0.18)"
+              />
+              <ellipse
+                cx="6"
+                cy="7"
+                rx="2.4"
+                ry="3.4"
+                fill="rgba(17, 32, 42, 0.32)"
+              />
+              <path
+                d="M 5 4 Q 3 7 4 11"
+                stroke="rgba(17, 32, 42, 0.42)"
+                strokeWidth="0.45"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <path
+                d="M 7 4 Q 9 7 8 11"
+                stroke="rgba(17, 32, 42, 0.42)"
+                strokeWidth="0.45"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+        ))}
+      </span>
+      <span className="reading-trace-count" aria-hidden="true">
+        {count} re-read{count === 1 ? '' : 's'}
+      </span>
+    </div>
   )
 }
 
@@ -2657,7 +2785,7 @@ function FoldCorner() {
   )
 }
 
-function Colophon() {
+function Colophon({ cycle }: { cycle: number }) {
   return (
     <div className="colophon" aria-hidden="true">
       <svg className="colophon-mark" viewBox="0 0 80 80" focusable="false">
@@ -2702,6 +2830,19 @@ function Colophon() {
           <span className="colophon-sep" aria-hidden="true">·</span>
           <em>impressum</em>
         </span>
+        {cycle > 0 && (
+          <>
+            <span className="colophon-rule colophon-rule--thin" />
+            <span className="colophon-line colophon-line--press">
+              <em className="colophon-key">pressed</em>
+              <span className="colophon-value">
+                {cycle === 1
+                  ? 'a second time · in this browser'
+                  : `${ordinal(cycle + 1)} time · the page unchanged`}
+              </span>
+            </span>
+          </>
+        )}
       </div>
     </div>
   )
@@ -3123,6 +3264,7 @@ export function App() {
 
         <div className="sheet-content">
           <section className="question-panel" aria-labelledby="page-title">
+            <HalfTitle />
             <div className="annotation annotation--top">
               <span className="annotation-mark" aria-hidden="true">¶</span>
               <span>the question</span>
@@ -3146,6 +3288,7 @@ export function App() {
               </span>
               <span className="title-text" aria-hidden="true"> good at frontend yet?</span>
             </h1>
+            <EditionLine cycle={cycle} />
             <span
               className={`lit-leaf-wrap${phase !== 'idle' ? ' is-lit' : ''}`}
               aria-hidden="true"
@@ -3165,6 +3308,8 @@ export function App() {
               A small typeset test of whether a page can ask well before it answers —
               an initial in wax, three marginalia, and a quiet reply that turns the leaf.
             </p>
+
+            <ReadingTrace cycle={cycle} reduced={reduced} />
 
             <LeafCluster
               className={`leaf-cluster--turn ${isTyping || phase === 'complete' ? 'is-sealed' : ''}`}
@@ -3371,7 +3516,7 @@ export function App() {
 
             <ReaderCat visible={phase === 'complete'} />
 
-            {phase === 'complete' && <Colophon />}
+            {phase === 'complete' && <Colophon cycle={cycle} />}
           </section>
         </div>
 
