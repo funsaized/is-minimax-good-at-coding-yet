@@ -2138,10 +2138,10 @@ button { font: inherit; }
 .ink-fingerprint svg { display: block; width: 100%; height: 100%; }
 
 .answer-surface {
-  min-height: 220px;
+  min-height: 240px;
   position: relative;
   display: flex; align-items: center;
-  padding: 46px 36px 42px;
+  padding: 56px 56px 56px;
   background:
     radial-gradient(ellipse at 22% 22%, rgba(245, 198, 91, 0.07), transparent 72%),
     linear-gradient(180deg, rgba(255, 250, 240, 0.5), rgba(245, 232, 200, 0.32));
@@ -2149,7 +2149,6 @@ button { font: inherit; }
     0 1px 0 rgba(107, 74, 37, 0.12) inset,
     0 -1px 0 rgba(107, 74, 37, 0.08) inset,
     0 0 0 1px rgba(107, 74, 37, 0.04);
-  transform: rotate(-0.3deg);
   transition:
     background 700ms var(--ease),
     transform 700ms var(--ease);
@@ -2161,7 +2160,7 @@ button { font: inherit; }
     radial-gradient(ellipse at 28% 22%, rgba(245, 198, 91, 0.13), transparent 72%),
     linear-gradient(180deg, rgba(255, 250, 240, 0.84), rgba(245, 232, 200, 0.5));
 }
-.answer-surface--complete { transform: rotate(-0.18deg); }
+.answer-surface--complete { transform: none; }
 .answer-surface--answering {
   animation: answer-breath 4.6s ease-in-out infinite;
 }
@@ -2248,19 +2247,23 @@ button { font: inherit; }
   position: relative; z-index: 1;
   margin: 0;
   color: var(--ink);
-  font: italic 540 clamp(24px, 3.2vw, 36px)/1.34 var(--display);
-  letter-spacing: -0.012em;
+  font: italic 560 clamp(28px, 4vw, 44px)/1.3 var(--display);
+  letter-spacing: -0.018em;
   text-indent: 0;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1, "liga" 1;
-  padding-right: 12px;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1, "liga" 1, "dlig" 1;
+  padding-right: 4px;
   hanging-punctuation: first last;
   text-wrap: pretty;
   text-wrap: balance;
   grid-column: 1;
-  transition: color 1100ms var(--ease);
+  transition: color 1100ms var(--ease), letter-spacing 1100ms var(--ease);
+  text-shadow: 0 0 0.5px rgba(17, 32, 42, 0.05);
 }
 .answer-surface--answering .answer-copy { color: #1a2330; }
 .answer-surface--replying .answer-copy { color: #14202a; }
+.answer-surface--complete .answer-copy {
+  letter-spacing: -0.022em;
+}
 
 .self-annotations {
   position: relative;
@@ -2504,18 +2507,19 @@ button { font: inherit; }
 
 .inkwell {
   position: absolute;
-  bottom: -18px; right: 24px;
-  width: 80px;
+  bottom: 12px; left: 12px;
+  width: 56px;
   pointer-events: none;
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+  filter: drop-shadow(0 6px 10px rgba(20, 14, 6, 0.16));
 }
 .answer-surface--answering .inkwell,
 .answer-surface--replying .inkwell,
-.answer-surface--complete .inkwell { opacity: 0.85; transform: none; }
+.answer-surface--complete .inkwell { opacity: 0.55; transform: none; }
 .inkwell svg { width: 100%; height: auto; }
-.inkwell.is-active { animation: inkwell-pulse 2.8s ease-in-out infinite; }
+.inkwell.is-active { animation: inkwell-pulse 3.6s ease-in-out infinite; }
 @keyframes inkwell-pulse {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-1.5px); }
@@ -2541,15 +2545,16 @@ button { font: inherit; }
 
 .scribal-quill {
   position: absolute;
-  top: -10px; right: 50px;
-  width: 96px; height: 32px;
+  top: 8px; right: 12px;
+  width: 78px; height: 26px;
   pointer-events: none;
   opacity: 0;
-  transform: rotate(-10deg);
+  transform: rotate(-9deg);
   transform-origin: top left;
   transition: opacity 600ms var(--ease);
+  filter: drop-shadow(0 4px 6px rgba(20, 14, 6, 0.12));
 }
-.answer-surface--answering .scribal-quill { opacity: 1; }
+.answer-surface--answering .scribal-quill { opacity: 0.78; }
 .scribal-quill svg { width: 100%; height: 100%; }
 
 /* ────────── reply ────────── */
@@ -3573,12 +3578,27 @@ button { font: inherit; }
 /* ────────── cul-de-lampe ────────── */
 
 .cul-de-lampe {
-  margin: 28px auto 0;
-  width: 180px;
+  margin: 36px auto 14px;
+  width: 200px;
   color: var(--sepia);
   display: grid;
   place-items: center;
   gap: 8px;
+  position: relative;
+}
+.cul-de-lampe::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(
+    to bottom,
+    rgba(107, 74, 37, 0.4),
+    transparent
+  );
+  transform: translateX(-50%);
 }
 .cul-de-lampe-plate {
   display: block;
@@ -4252,8 +4272,8 @@ button { font: inherit; }
   grid-template-columns: 80px 1fr;
   gap: 22px;
   align-items: center;
-  margin: 32px auto 0;
-  padding: 18px 24px 20px;
+  margin: 22px auto 0;
+  padding: 16px 24px 18px;
   max-width: 88%;
   color: var(--ink-soft);
   border-top: 1px solid rgba(107, 74, 37, 0.22);
@@ -4909,8 +4929,8 @@ button { font: inherit; }
   grid-template-columns: 1fr;
   justify-items: end;
   gap: 4px;
-  margin: 8px 4px 6px;
-  padding: 14px 6px 10px;
+  margin: 10px 4px 6px;
+  padding: 12px 6px 10px;
   max-width: 92%;
   margin-left: auto;
   color: var(--coral-deep);
@@ -6535,19 +6555,24 @@ button { font: inherit; }
 
 .press-plate-marks {
   list-style: none;
-  margin: 0 0 14px;
+  margin: 0 0 16px;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  gap: 10px 14px;
+  align-items: baseline;
+  column-gap: clamp(10px, 1.4vw, 18px);
+  row-gap: 4px;
   color: var(--ink-soft);
+  font: italic 13px/1.45 var(--display);
+  letter-spacing: 0.014em;
+  text-align: center;
+  text-wrap: balance;
 }
 .press-plate-mark {
   display: inline-flex;
-  align-items: center;
-  gap: 7px;
+  align-items: baseline;
+  gap: 5px;
   margin: 0;
   opacity: 0;
   animation: press-mark-in 700ms var(--ease) calc(var(--i, 0) * 110ms + 280ms) both;
@@ -6560,34 +6585,32 @@ button { font: inherit; }
   position: relative;
   display: inline-flex;
   align-items: baseline;
-  gap: 6px;
-  padding: 3px 6px 4px;
+  gap: 5px;
+  padding: 1px 0 2px;
   outline: none;
   border-bottom: 1px dotted transparent;
   cursor: help;
-  border-radius: 2px;
+  border-radius: 1px;
   transition:
     color 0.22s var(--ease),
-    border-color 0.22s var(--ease),
-    background 0.22s var(--ease);
+    border-color 0.22s var(--ease);
 }
 .press-plate-mark-note:hover,
 .press-plate-mark-note:focus-visible {
   color: var(--coral-deep);
   border-bottom-color: currentColor;
-  background: rgba(217, 101, 74, 0.06);
 }
 .press-plate-mark-note::after {
   content: attr(data-gloss);
   position: absolute;
-  left: -6px;
-  bottom: calc(100% + 12px);
+  left: -8px;
+  bottom: calc(100% + 10px);
   z-index: 14;
   width: min(280px, 78vw);
-  padding: 10px 14px 11px;
+  padding: 9px 13px 10px;
   color: var(--paper);
   background: var(--night);
-  font: italic 12.5px/1.45 var(--serif);
+  font: italic 12px/1.45 var(--serif);
   letter-spacing: 0.005em;
   opacity: 0;
   pointer-events: none;
@@ -6617,21 +6640,24 @@ button { font: inherit; }
 .press-plate-mark-note:focus-visible::before { opacity: 1; }
 .press-plate-mark-glyph {
   color: var(--coral);
-  font: italic 17px/1 var(--display);
+  font: italic 14px/1 var(--display);
   letter-spacing: -0.005em;
+  transform: translateY(-0.04em);
 }
 .press-plate-mark-text {
-  font: italic 12.5px/1 var(--display);
+  font: italic 13px/1 var(--display);
   color: var(--ink-soft);
-  letter-spacing: 0.005em;
+  letter-spacing: 0.014em;
 }
 .press-plate-mark-dot {
   color: var(--coral);
-  opacity: 0.55;
-  font: 700 14px/1 var(--display);
+  opacity: 0.45;
+  font: 700 12px/1 var(--display);
   display: inline-flex;
   align-items: center;
-  height: 100%;
+  align-self: center;
+  margin: 0 2px;
+  transform: translateY(-0.06em);
 }
 
 .press-plate-divider {
@@ -7575,6 +7601,140 @@ button { font: inherit; }
     transition: none;
   }
   .pace-indicator-fill { transition: none; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 123 · the press seam
+   A slim gilded rule that runs through the spine and binds the
+   recto to the verso — the reader's eye can follow the seam from
+   the question, down through the wax seal's impression, and into
+   the answer's italic. Three beats mark the stages of the reading.
+   ────────────────────────────────────────────────────────────────────── */
+
+.press-seam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 1100ms var(--ease);
+  filter: drop-shadow(0 0 6px rgba(245, 198, 91, 0.18));
+}
+.press-seam.is-lit { opacity: 1; }
+.press-seam svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.press-seam-rule {
+  opacity: 0;
+  animation: seam-rule-in 1400ms var(--ease) 320ms forwards;
+}
+.press-seam-dash {
+  opacity: 0;
+  animation: seam-rule-in 1400ms var(--ease) 480ms forwards;
+}
+@keyframes seam-rule-in {
+  from { opacity: 0; stroke-dashoffset: 22; }
+  to   { opacity: 1; stroke-dashoffset: 0; }
+}
+
+.press-seam-beats {
+  opacity: 0;
+  animation: seam-beats-in 800ms var(--ease) 720ms forwards;
+}
+@keyframes seam-beats-in {
+  to { opacity: 1; }
+}
+
+.press-seam-bead {
+  fill: rgba(245, 198, 91, 0.85);
+  stroke: rgba(167, 60, 44, 0.5);
+  stroke-width: 0.3;
+  opacity: 0;
+  transform-origin: center;
+}
+.press-seam-bead--a { animation: seam-bead-in 700ms var(--ease) 920ms forwards, seam-bead-pulse 5.6s ease-in-out 2.2s infinite; }
+.press-seam-bead--b { animation: seam-bead-in 700ms var(--ease) 1080ms forwards, seam-bead-pulse 5.6s ease-in-out 2.8s infinite; }
+.press-seam-bead--c { animation: seam-bead-in 700ms var(--ease) 1240ms forwards, seam-bead-pulse 5.6s ease-in-out 3.4s infinite; }
+@keyframes seam-bead-in {
+  from { opacity: 0; transform: scale(0.4); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes seam-bead-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+.press-seam-pulse {
+  fill: rgba(245, 198, 91, 0.92);
+  filter: drop-shadow(0 0 4px rgba(245, 198, 91, 0.65));
+  opacity: 0;
+  transition: transform 720ms var(--ease), opacity 480ms var(--ease);
+  transform: translateY(0) scale(1);
+}
+.press-seam.is-lit .press-seam-pulse {
+  opacity: calc(0.35 + 0.55 * var(--seam-ink, 0));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-seam-rule,
+  .press-seam-dash {
+    opacity: 1;
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .press-seam-beats { opacity: 1; animation: none; }
+  .press-seam-bead { opacity: 1; animation: none; transform: none; }
+  .press-seam.is-lit .press-seam-pulse { opacity: 0.85; transition: opacity 200ms var(--ease); }
+}
+
+@media (max-width: 720px) {
+  .press-seam {
+    width: 12px;
+  }
+  .press-seam-bead { r: 1.2; }
+  .answer-surface { padding: 44px 32px 40px; min-height: 200px; }
+  .answer-copy {
+    font: italic 540 clamp(22px, 7vw, 32px)/1.32 var(--display);
+    letter-spacing: -0.014em;
+  }
+  .scribal-quill { width: 60px; height: 20px; top: 6px; right: 8px; }
+  .inkwell { width: 46px; left: 8px; bottom: 8px; }
+  .press-plate-marks {
+    font-size: 12px;
+    column-gap: 8px 14px;
+  }
+  .press-plate-mark-text { font-size: 12px; }
+}
+
+@media (max-width: 560px) {
+  .press-seam {
+    width: 10px;
+  }
+  .answer-surface { padding: 36px 22px 32px; min-height: 180px; }
+  .answer-copy {
+    font: italic 520 clamp(20px, 8vw, 26px)/1.3 var(--display);
+    letter-spacing: -0.012em;
+  }
+  .scribal-quill { width: 52px; height: 18px; top: 4px; right: 6px; }
+  .inkwell { width: 40px; left: 6px; bottom: 6px; }
+  .cul-de-lampe { width: 160px; margin-top: 30px; }
+  .colophon {
+    grid-template-columns: 60px 1fr;
+    gap: 14px;
+    padding: 12px 16px 14px;
+    max-width: 96%;
+  }
+  .press-signature { padding: 8px 4px 6px; }
+  .press-plate-marks { font-size: 11px; }
+  .press-plate-mark-text { font-size: 11px; }
+  .press-plate-mark-glyph { font-size: 12px; }
 }
 
 

@@ -5524,6 +5524,72 @@ function FoldShade({ active }: { active: boolean }) {
 const WAX_STAMP_ROT = [-4, 3, -2, 5]
 const WAX_STAMP_DX = [-2, 1, -1, 2]
 
+function PressSeam({
+  phase,
+  inkProgress,
+}: {
+  phase: Phase
+  inkProgress: number
+}) {
+  const lit = phase !== 'idle'
+  return (
+    <span
+      className={`press-seam${lit ? ' is-lit' : ''}`}
+      aria-hidden="true"
+      style={{ '--seam-ink': inkProgress } as React.CSSProperties}
+    >
+      <svg viewBox="0 0 24 600" preserveAspectRatio="none" focusable="false">
+        <defs>
+          <linearGradient id="seam-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0)" />
+            <stop offset="6%" stopColor="rgba(245, 198, 91, 0.7)" />
+            <stop offset="36%" stopColor="rgba(200, 146, 62, 0.92)" />
+            <stop offset="64%" stopColor="rgba(167, 60, 44, 0.78)" />
+            <stop offset="92%" stopColor="rgba(245, 198, 91, 0.65)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </linearGradient>
+          <linearGradient id="seam-coral" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="40%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="60%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+        </defs>
+        <line
+          x1="12"
+          y1="0"
+          x2="12"
+          y2="600"
+          stroke="url(#seam-gold)"
+          strokeWidth="0.55"
+          className="press-seam-rule"
+        />
+        <line
+          x1="12"
+          y1="0"
+          x2="12"
+          y2="600"
+          stroke="url(#seam-coral)"
+          strokeWidth="0.35"
+          strokeDasharray="0.6 1.6"
+          className="press-seam-dash"
+        />
+        <g className="press-seam-beats">
+          <circle cx="12" cy="120" r="1.6" className="press-seam-bead press-seam-bead--a" />
+          <circle cx="12" cy="300" r="1.8" className="press-seam-bead press-seam-bead--b" />
+          <circle cx="12" cy="480" r="1.6" className="press-seam-bead press-seam-bead--c" />
+        </g>
+        <circle
+          cx="12"
+          cy={120 + 360 * Math.max(0, Math.min(1, inkProgress))}
+          r="3"
+          className="press-seam-pulse"
+        />
+      </svg>
+    </span>
+  )
+}
+
 function WaxArchive({ cycle }: { cycle: number }) {
   const count = Math.min(Math.max(cycle, 0), 4)
   const stamps = Array.from({ length: count }, (_, i) => i)
@@ -6172,6 +6238,7 @@ export function App() {
 
           <FolioSpine stage={tideStage} cycle={cycle} reduced={reduced}>
             <SpineThread stage={tideStage} reduced={reduced} />
+            <PressSeam phase={phase} inkProgress={inkProgress} />
           </FolioSpine>
 
           <div
