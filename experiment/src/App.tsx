@@ -3744,6 +3744,350 @@ function PressCartouche({
   )
 }
 
+function WaxPressSeal({
+  label,
+  cycle,
+  breaking,
+  disabled,
+  slow,
+  onPress,
+}: {
+  label: string
+  cycle: number
+  breaking: boolean
+  disabled: boolean
+  slow: boolean
+  onPress: () => void
+}) {
+  const impression =
+    cycle === 0 ? 'first press' : cycle === 1 ? 'second press' : `${ordinal(cycle + 1)} press`
+  return (
+    <button
+      type="button"
+      className={`wax-seal${breaking ? ' is-breaking' : ''}${
+        disabled ? ' is-sealed' : ''
+      }${cycle > 0 ? ' is-reread' : ''}${slow ? ' is-slow' : ''}`}
+      onClick={onPress}
+      disabled={disabled || breaking}
+      aria-label={label}
+      aria-keyshortcuts="Space R"
+      aria-describedby="reader-note"
+    >
+      <span className="wax-seal-stage" aria-hidden="true">
+        <svg className="wax-seal-disc" viewBox="0 0 120 120" focusable="false">
+          <defs>
+            <radialGradient id="wps-rim" cx="50%" cy="35%" r="68%">
+              <stop offset="0%" stopColor="rgba(176, 46, 28, 0.96)" />
+              <stop offset="60%" stopColor="rgba(124, 30, 18, 0.96)" />
+              <stop offset="100%" stopColor="rgba(58, 12, 6, 0.96)" />
+            </radialGradient>
+            <radialGradient id="wps-face" cx="42%" cy="32%" r="72%">
+              <stop offset="0%" stopColor="rgba(220, 78, 48, 0.94)" />
+              <stop offset="55%" stopColor="rgba(150, 36, 22, 0.96)" />
+              <stop offset="100%" stopColor="rgba(76, 16, 8, 0.98)" />
+            </radialGradient>
+            <linearGradient id="wps-sheen" x1="0.4" y1="0" x2="0.6" y2="1">
+              <stop offset="0%" stopColor="rgba(255, 220, 180, 0.32)" />
+              <stop offset="100%" stopColor="rgba(255, 220, 180, 0)" />
+            </linearGradient>
+            <radialGradient id="wps-pip" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#f6d076" />
+              <stop offset="55%" stopColor="#c8923e" />
+              <stop offset="100%" stopColor="#9c6e26" />
+            </radialGradient>
+            <pattern id="wps-grain" width="3" height="3" patternUnits="userSpaceOnUse">
+              <circle cx="0.6" cy="0.4" r="0.45" fill="rgba(255, 220, 180, 0.06)" />
+              <circle cx="2.2" cy="1.6" r="0.35" fill="rgba(255, 220, 180, 0.05)" />
+              <circle cx="1.4" cy="2.6" r="0.4" fill="rgba(255, 220, 180, 0.04)" />
+            </pattern>
+            <path id="wps-arc-top" d="M 60 60 m -42 0 a 42 42 0 0 1 84 0" fill="none" />
+            <path id="wps-arc-bot" d="M 60 60 m -42 0 a 42 42 0 1 0 84 0" fill="none" />
+            <clipPath id="wps-disc-clip">
+              <circle cx="60" cy="60" r="56" />
+            </clipPath>
+            <clipPath id="wps-half-l">
+              <path d="M 60 4 A 56 56 0 0 0 60 116 L 60 4 Z" />
+            </clipPath>
+            <clipPath id="wps-half-r">
+              <path d="M 60 4 A 56 56 0 0 1 60 116 L 60 4 Z" />
+            </clipPath>
+          </defs>
+
+          <g className="wps-disc-intact" clipPath="url(#wps-disc-clip)">
+            <circle cx="60" cy="60" r="56" fill="url(#wps-rim)" />
+            <circle cx="60" cy="60" r="56" fill="url(#wps-grain)" />
+            <circle cx="60" cy="60" r="50" fill="url(#wps-face)" />
+            <ellipse cx="55" cy="36" rx="34" ry="14" fill="url(#wps-sheen)" />
+
+            <g className="wps-rim">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255, 232, 178, 0.45)" strokeWidth="0.55" />
+              <circle
+                cx="60"
+                cy="60"
+                r="46"
+                fill="none"
+                stroke="rgba(255, 232, 178, 0.3)"
+                strokeWidth="0.32"
+                strokeDasharray="0.4 1.4"
+              />
+              <text className="wps-rim-text wps-rim-text--top">
+                <textPath href="#wps-arc-top" startOffset="50%" textAnchor="middle">
+                  press · ad lucem · press · ad lucem
+                </textPath>
+              </text>
+              <text className="wps-rim-text wps-rim-text--bot">
+                <textPath href="#wps-arc-bot" startOffset="50%" textAnchor="middle">
+                  cap · xviii · lxxvii ·
+                </textPath>
+              </text>
+            </g>
+
+            <g className="wps-monogram">
+              <line
+                x1="46"
+                y1="46"
+                x2="74"
+                y2="46"
+                stroke="rgba(255, 232, 178, 0.32)"
+                strokeWidth="0.55"
+                strokeLinecap="round"
+              />
+              <text x="60" y="68" textAnchor="middle" className="wps-letter">
+                m
+              </text>
+              <text
+                x="68"
+                y="68"
+                textAnchor="middle"
+                className="wps-letter wps-letter--roman"
+              >
+                ·iii
+              </text>
+              <line
+                x1="46"
+                y1="74"
+                x2="74"
+                y2="74"
+                stroke="rgba(255, 232, 178, 0.32)"
+                strokeWidth="0.55"
+                strokeLinecap="round"
+              />
+              <text x="60" y="84" textAnchor="middle" className="wps-impression">
+                {impression}
+              </text>
+            </g>
+
+            <g className="wps-cracks">
+              <path
+                className="wps-crack wps-crack--1"
+                d="M 60 8 L 58 30 L 64 48 L 54 66 L 60 86 L 56 110"
+                stroke="rgba(40, 8, 4, 0.5)"
+                strokeWidth="0.55"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <path
+                className="wps-crack wps-crack--2"
+                d="M 60 8 L 56 28 L 60 42"
+                stroke="rgba(40, 8, 4, 0.4)"
+                strokeWidth="0.4"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <path
+                className="wps-crack wps-crack--3"
+                d="M 8 60 L 30 58 L 46 62 L 64 56 L 84 60 L 110 60"
+                stroke="rgba(40, 8, 4, 0.5)"
+                strokeWidth="0.55"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <path
+                className="wps-crack wps-crack--4"
+                d="M 28 30 L 40 40 L 50 36 L 60 44"
+                stroke="rgba(40, 8, 4, 0.36)"
+                strokeWidth="0.4"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <path
+                className="wps-crack wps-crack--5"
+                d="M 92 30 L 80 40 L 76 50"
+                stroke="rgba(40, 8, 4, 0.36)"
+                strokeWidth="0.4"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <path
+                className="wps-crack wps-crack--6"
+                d="M 36 92 L 50 84 L 60 90"
+                stroke="rgba(40, 8, 4, 0.32)"
+                strokeWidth="0.38"
+                fill="none"
+                strokeLinecap="round"
+              />
+              <path
+                className="wps-crack wps-crack--7"
+                d="M 84 92 L 70 84 L 60 90"
+                stroke="rgba(40, 8, 4, 0.32)"
+                strokeWidth="0.38"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </g>
+
+            <g className="wps-flecks" fill="rgba(40, 8, 4, 0.55)">
+              <circle cx="14" cy="20" r="0.6" />
+              <circle cx="100" cy="22" r="0.5" />
+              <circle cx="106" cy="78" r="0.45" />
+              <circle cx="18" cy="90" r="0.5" />
+              <circle cx="92" cy="100" r="0.4" />
+            </g>
+          </g>
+
+          <g className="wps-disc-broken" aria-hidden="true">
+            <g className="wps-half wps-half--left">
+              <g clipPath="url(#wps-half-l)">
+                <circle cx="60" cy="60" r="56" fill="url(#wps-rim)" />
+                <circle cx="60" cy="60" r="56" fill="url(#wps-grain)" />
+                <circle cx="60" cy="60" r="50" fill="url(#wps-face)" />
+                <ellipse cx="55" cy="36" rx="34" ry="14" fill="url(#wps-sheen)" />
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  fill="none"
+                  stroke="rgba(255, 232, 178, 0.45)"
+                  strokeWidth="0.55"
+                />
+                <path
+                  d="M 60 8 L 58 30 L 64 48 L 54 66 L 60 86"
+                  stroke="rgba(40, 8, 4, 0.6)"
+                  strokeWidth="0.55"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M 8 60 L 30 58 L 46 62"
+                  stroke="rgba(40, 8, 4, 0.6)"
+                  strokeWidth="0.55"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M 28 30 L 40 40 L 50 36 L 60 44"
+                  stroke="rgba(40, 8, 4, 0.45)"
+                  strokeWidth="0.4"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M 36 92 L 50 84 L 60 90"
+                  stroke="rgba(40, 8, 4, 0.45)"
+                  strokeWidth="0.4"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M 60 4 L 60 116"
+                  stroke="rgba(255, 232, 178, 0.18)"
+                  strokeWidth="0.45"
+                  fill="none"
+                />
+              </g>
+            </g>
+            <g className="wps-half wps-half--right">
+              <g clipPath="url(#wps-half-r)">
+                <circle cx="60" cy="60" r="56" fill="url(#wps-rim)" />
+                <circle cx="60" cy="60" r="56" fill="url(#wps-grain)" />
+                <circle cx="60" cy="60" r="50" fill="url(#wps-face)" />
+                <ellipse cx="55" cy="36" rx="34" ry="14" fill="url(#wps-sheen)" />
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  fill="none"
+                  stroke="rgba(255, 232, 178, 0.45)"
+                  strokeWidth="0.55"
+                />
+                <path
+                  d="M 60 8 L 58 30 L 64 48 L 54 66"
+                  stroke="rgba(40, 8, 4, 0.6)"
+                  strokeWidth="0.55"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M 46 62 L 64 56 L 84 60 L 110 60"
+                  stroke="rgba(40, 8, 4, 0.6)"
+                  strokeWidth="0.55"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M 92 30 L 80 40 L 76 50"
+                  stroke="rgba(40, 8, 4, 0.45)"
+                  strokeWidth="0.4"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M 84 92 L 70 84 L 60 90"
+                  stroke="rgba(40, 8, 4, 0.45)"
+                  strokeWidth="0.4"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M 60 4 L 60 116"
+                  stroke="rgba(255, 232, 178, 0.18)"
+                  strokeWidth="0.45"
+                  fill="none"
+                />
+              </g>
+            </g>
+            <circle cx="60" cy="60" r="6" fill="rgba(255, 232, 178, 0.4)" className="wps-break-flash" />
+          </g>
+
+          <path
+            className="wps-drip"
+            d="M 56 112 Q 54 120 58 122 Q 62 120 60 112 Z"
+            fill="url(#wps-rim)"
+          />
+        </svg>
+
+        <span className="wps-chips" aria-hidden="true">
+          <span className="wps-chip wps-chip--1" />
+          <span className="wps-chip wps-chip--2" />
+          <span className="wps-chip wps-chip--3" />
+          <span className="wps-chip wps-chip--4" />
+          <span className="wps-chip wps-chip--5" />
+          <span className="wps-chip wps-chip--6" />
+          <span className="wps-chip wps-chip--7" />
+        </span>
+
+        <span className="wps-dust" aria-hidden="true">
+          <span className="wps-dust-mote wps-dust-mote--1" />
+          <span className="wps-dust-mote wps-dust-mote--2" />
+          <span className="wps-dust-mote wps-dust-mote--3" />
+          <span className="wps-dust-mote wps-dust-mote--4" />
+          <span className="wps-dust-mote wps-dust-mote--5" />
+          <span className="wps-dust-mote wps-dust-mote--6" />
+          <span className="wps-dust-mote wps-dust-mote--7" />
+          <span className="wps-dust-mote wps-dust-mote--8" />
+        </span>
+      </span>
+
+      <span className="wax-seal-caption">
+        <span className="wax-seal-label">{label}</span>
+        <span className="wax-seal-keys" aria-hidden="true">
+          <kbd>space</kbd>
+        </span>
+      </span>
+    </button>
+  )
+}
+
 function PressInstructionPlate({
   cycle,
   phase,
@@ -3752,6 +4096,7 @@ function PressInstructionPlate({
   buttonLabel,
   readerNote,
   onRead,
+  sealBreaking,
 }: {
   cycle: number
   phase: Phase
@@ -3760,13 +4105,14 @@ function PressInstructionPlate({
   buttonLabel: string
   readerNote: string
   onRead: () => void
+  sealBreaking: boolean
 }) {
   const sealed = phase !== 'idle'
   return (
     <div
       className={`press-plate${sealed ? ' is-sealed' : ''}${
         cycle > 0 ? ' is-reread' : ''
-      }`}
+      }${sealBreaking ? ' is-breaking' : ''}`}
     >
       <span className="press-plate-corner press-plate-corner--tl" aria-hidden="true">
         <svg viewBox="0 0 24 24" focusable="false">
@@ -3902,24 +4248,16 @@ function PressInstructionPlate({
       </div>
 
       <div className="press-plate-action">
-        <button
-          className={`read-button${slow ? ' is-slow' : ''}${
-            sealed ? ' is-sealed' : ''
-          }`}
-          type="button"
-          onClick={onRead}
-          aria-describedby="reader-note"
-          aria-keyshortcuts="Space R"
-        >
-          <span className="button-mark" aria-hidden="true">↪</span>
-          <span className="button-label">{buttonLabel}</span>
-          <span className="button-pace" aria-hidden="true">
-            {slow ? '· slow' : '· fast'}
-          </span>
-          <span className="button-keys" aria-hidden="true">
-            <kbd>space</kbd>
-          </span>
-        </button>
+        <div className="press-plate-seal-wrap">
+          <WaxPressSeal
+            label={buttonLabel}
+            cycle={cycle}
+            breaking={sealBreaking}
+            disabled={sealed && !sealBreaking && phase !== 'complete'}
+            slow={slow}
+            onPress={onRead}
+          />
+        </div>
         <p className="reader-note" id="reader-note">{readerNote}</p>
       </div>
 
@@ -5004,6 +5342,7 @@ export function App() {
   const jumpRef = useRef<number | null>(null)
 
   const readAnswerRef = useRef<() => void>(() => {})
+  const handleSealPressRef = useRef<() => void>(() => {})
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -5013,7 +5352,7 @@ export function App() {
       if (tag === 'input' || tag === 'textarea' || target?.isContentEditable) return
       if (e.key === ' ' || e.key.toLowerCase() === 'r') {
         e.preventDefault()
-        readAnswerRef.current()
+        handleSealPressRef.current()
       }
     }
     window.addEventListener('keydown', onKey)
@@ -5070,8 +5409,31 @@ export function App() {
     if (phase === 'complete') setCycle((c) => c + 1)
   }
 
+  const [sealBreaking, setSealBreaking] = useState(false)
+  const sealBreakTimerRef = useRef<number | null>(null)
+  const handleSealPress = () => {
+    if (sealBreaking) return
+    if (phase === 'answering' || phase === 'replying') return
+    setSealBreaking(true)
+    if (sealBreakTimerRef.current !== null) window.clearTimeout(sealBreakTimerRef.current)
+    sealBreakTimerRef.current = window.setTimeout(() => {
+      setSealBreaking(false)
+      readAnswer()
+    }, reduced ? 80 : 720)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (sealBreakTimerRef.current !== null) window.clearTimeout(sealBreakTimerRef.current)
+    }
+  }, [])
+
   useEffect(() => {
     readAnswerRef.current = readAnswer
+  })
+
+  useEffect(() => {
+    handleSealPressRef.current = handleSealPress
   })
 
   const sealTimerRef = useRef<number | null>(null)
@@ -5370,7 +5732,8 @@ export function App() {
                 items={MARGINALIA}
                 buttonLabel={buttonLabel}
                 readerNote={readerNote}
-                onRead={readAnswer}
+                onRead={handleSealPress}
+                sealBreaking={sealBreaking}
               />
             </div>
           </section>
