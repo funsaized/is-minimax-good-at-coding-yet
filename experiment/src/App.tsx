@@ -1465,6 +1465,55 @@ function MarginaliaStrip({ items }: { items: MarginaliaItem[] }) {
   )
 }
 
+function RectoVerses() {
+  return (
+    <div className="recto-verses" aria-label="the question, in three voices">
+      <ol className="recto-verses-list">
+        <li className="recto-verse recto-verse--first" style={{ '--i': 0 } as React.CSSProperties}>
+          <span className="recto-verse-numeral" aria-hidden="true">i.</span>
+          <span className="recto-verse-mark" aria-hidden="true">¶</span>
+          <p className="recto-verse-text">
+            A small typeset test of whether a page
+            can <em>ask well</em> before it answers —
+          </p>
+        </li>
+        <li className="recto-verse" style={{ '--i': 1 } as React.CSSProperties}>
+          <span className="recto-verse-numeral" aria-hidden="true">ii.</span>
+          <span className="recto-verse-mark" aria-hidden="true">†</span>
+          <p className="recto-verse-text">
+            an <em>initial in gilt</em>, three marginalia,
+            and a <em>quiet reply</em> that turns the leaf.
+          </p>
+        </li>
+        <li className="recto-verse recto-verse--close" style={{ '--i': 2 } as React.CSSProperties}>
+          <span className="recto-verse-numeral" aria-hidden="true">iii.</span>
+          <span className="recto-verse-mark" aria-hidden="true">‡</span>
+          <p className="recto-verse-text">
+            The answer is the page itself —
+            read it once, then again,
+            <span className="scribal-correction" aria-hidden="true">
+              <em className="scribal-correction-word">slower</em>
+              <svg className="scribal-correction-mark" viewBox="0 0 60 14" focusable="false" preserveAspectRatio="none">
+                <path d="M 2 11 Q 14 4 30 8 Q 46 12 58 4" stroke="currentColor" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+                <path d="M 56 2 L 60 6 L 54 6 Z" fill="currentColor" />
+              </svg>
+              <span className="scribal-correction-gloss">at your pace</span>
+            </span>
+            <em>this time</em>.
+          </p>
+        </li>
+      </ol>
+      <div className="recto-verses-close" aria-hidden="true">
+        <span className="recto-verses-close-line" />
+        <span className="recto-verses-close-mark">¶</span>
+        <span className="recto-verses-close-tail">end of the question</span>
+        <span className="recto-verses-close-mark recto-verses-close-mark--close">¶</span>
+        <span className="recto-verses-close-line" />
+      </div>
+    </div>
+  )
+}
+
 function SelfAnnotation({
   note,
   revealed,
@@ -3233,7 +3282,7 @@ function TitleFlourish() {
   return (
     <svg
       className="title-flourish"
-      viewBox="0 0 320 16"
+      viewBox="0 0 320 20"
       focusable="false"
       aria-hidden="true"
       preserveAspectRatio="none"
@@ -3246,36 +3295,59 @@ function TitleFlourish() {
           <stop offset="78%" stopColor="#c8923e" />
           <stop offset="100%" stopColor="#9c6e26" />
         </linearGradient>
+        <radialGradient id="flourish-medallion-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="rgba(245, 198, 91, 0.42)" />
+          <stop offset="60%" stopColor="rgba(245, 198, 91, 0.08)" />
+          <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+        </radialGradient>
       </defs>
       <g className="title-flourish-stroke" fill="none" strokeLinecap="round">
         <path
           className="title-flourish-line"
-          d="M 8 8 Q 84 4 160 8"
+          d="M 6 10 Q 84 4 160 10"
           stroke="url(#flourish-gold)"
-          strokeWidth="0.55"
+          strokeWidth="0.75"
         />
         <path
           className="title-flourish-line"
-          d="M 160 8 Q 236 12 312 8"
+          d="M 160 10 Q 236 16 314 10"
           stroke="url(#flourish-gold)"
-          strokeWidth="0.55"
+          strokeWidth="0.75"
+        />
+        <path
+          className="title-flourish-line-inner"
+          d="M 16 12 Q 88 7 156 12"
+          stroke="url(#flourish-gold)"
+          strokeWidth="0.32"
+          opacity="0.55"
+          strokeDasharray="0.4 1.4"
+        />
+        <path
+          className="title-flourish-line-inner"
+          d="M 164 12 Q 232 7 304 12"
+          stroke="url(#flourish-gold)"
+          strokeWidth="0.32"
+          opacity="0.55"
+          strokeDasharray="0.4 1.4"
         />
         <path
           className="title-flourish-shadow"
-          d="M 8 10 Q 84 6 160 10 Q 236 14 312 10"
+          d="M 6 12 Q 84 7 160 12 Q 236 17 314 12"
           stroke="url(#flourish-gold)"
-          strokeWidth="0.3"
-          opacity="0.45"
+          strokeWidth="0.32"
+          opacity="0.42"
         />
       </g>
       <g className="title-flourish-medallion">
-        <circle cx="160" cy="8" r="3.2" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.5" />
-        <circle cx="160" cy="8" r="1.6" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.3" strokeDasharray="0.4 1.2" />
-        <circle cx="160" cy="8" r="0.7" fill="url(#flourish-gold)" />
+        <circle cx="160" cy="10" r="10" fill="url(#flourish-medallion-glow)" />
+        <circle cx="160" cy="10" r="4.6" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.65" />
+        <circle cx="160" cy="10" r="2.6" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.4" strokeDasharray="0.6 1.6" />
+        <circle cx="160" cy="10" r="1.1" fill="url(#flourish-gold)" />
+        <circle cx="160" cy="10" r="0.4" fill="rgba(107, 74, 37, 0.85)" />
       </g>
       <g className="title-flourish-tails" fill="url(#flourish-gold)">
-        <circle cx="8" cy="8" r="0.7" />
-        <circle cx="312" cy="8" r="0.7" />
+        <circle cx="6" cy="10" r="0.95" />
+        <circle cx="314" cy="10" r="0.95" />
       </g>
     </svg>
   )
@@ -4478,6 +4550,11 @@ export function App() {
 
         <div className="chapter-opener">
           <ChapterHead now={now} />
+          <div className="chapter-opener-rule" aria-hidden="true">
+            <span className="chapter-opener-rule-line" />
+            <span className="chapter-opener-rule-mark">¶</span>
+            <span className="chapter-opener-rule-line" />
+          </div>
         </div>
 
         <div className="sheet-content">
@@ -4527,38 +4604,7 @@ export function App() {
             aria-labelledby="response-title"
           >
 
-            <div className="question-stanzas" aria-label="argument of the folio">
-              <p className="question-stanza">
-                <span className="question-stanza-mark" aria-hidden="true">¶</span>
-                <span className="question-stanza-lines">
-                  A small typeset test of whether a page
-                  can <em>ask well</em> before it answers —
-                </span>
-              </p>
-              <p className="question-stanza">
-                <span className="question-stanza-mark" aria-hidden="true">†</span>
-                <span className="question-stanza-lines">
-                  an <em>initial in gilt</em>, three marginalia,
-                  and a <em>quiet reply</em> that turns the leaf.
-                </span>
-              </p>
-              <p className="question-stanza question-stanza--close">
-                <span className="question-stanza-mark" aria-hidden="true">‡</span>
-                <span className="question-stanza-lines">
-                  The answer is the page itself —
-                  read it once, then again,
-                  <span className="scribal-correction" aria-hidden="true">
-                    <em className="scribal-correction-word">slower</em>
-                    <svg className="scribal-correction-mark" viewBox="0 0 60 14" focusable="false" preserveAspectRatio="none">
-                      <path d="M 2 11 Q 14 4 30 8 Q 46 12 58 4" stroke="currentColor" strokeWidth="0.7" fill="none" strokeLinecap="round" />
-                      <path d="M 56 2 L 60 6 L 54 6 Z" fill="currentColor" />
-                    </svg>
-                    <span className="scribal-correction-gloss">at your pace</span>
-                  </span>
-                  <em>this time</em>.
-                </span>
-              </p>
-            </div>
+            <RectoVerses />
 
             <ReadingTrace cycle={cycle} reduced={reduced} />
 
