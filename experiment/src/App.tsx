@@ -894,50 +894,64 @@ function BroadsheetDropCap({
 }
 
 function AnswerPlateCorner({ corner }: { corner: 'tl' | 'tr' | 'bl' | 'br' }) {
+  const g = `apc-${corner}-gold`
   return (
-    <svg viewBox="0 0 32 32" focusable="false" aria-hidden="true">
+    <svg viewBox="0 0 44 44" focusable="false" aria-hidden="true">
       <defs>
-        <linearGradient id={`apc-${corner}-gold`} x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={`${g}-stroke`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#9c6e26" />
           <stop offset="50%" stopColor="#f5c65b" />
           <stop offset="100%" stopColor="#9c6e26" />
         </linearGradient>
+        <radialGradient id={`${g}-pip`} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="rgba(255, 232, 178, 0.95)" />
+          <stop offset="55%" stopColor="#f5c65b" />
+          <stop offset="100%" stopColor="#9c6e26" />
+        </radialGradient>
       </defs>
       {corner === 'tl' && (
-        <>
-          <path d="M 2 14 L 2 2 L 14 2" fill="none" stroke="url(#apc-tl-gold)" strokeWidth="0.85" />
-          <path d="M 6 14 L 6 6 L 14 6" fill="none" stroke="url(#apc-tl-gold)" strokeWidth="0.42" opacity="0.7" />
-          <path d="M 10 6 L 14 10" fill="none" stroke="url(#apc-tl-gold)" strokeWidth="0.32" opacity="0.55" />
-          <circle cx="4" cy="4" r="1.1" fill="url(#apc-tl-gold)" />
-          <circle cx="4" cy="4" r="2.4" fill="none" stroke="url(#apc-tl-gold)" strokeWidth="0.25" opacity="0.55" />
-        </>
+        <g>
+          <path d="M 3 18 L 3 3 L 18 3" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.95" strokeLinecap="round" />
+          <path d="M 8 18 L 8 8 L 18 8" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.46" opacity="0.7" />
+          <path d="M 13 8 L 18 13" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.32" opacity="0.55" />
+          <circle cx="6" cy="6" r="2.6" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.32" opacity="0.55" />
+          <circle cx="6" cy="6" r="1.4" fill={`url(#${g}-pip)`} />
+          <circle cx="6" cy="6" r="0.55" fill="rgba(255, 246, 218, 0.95)" />
+          <path d="M 14 14 L 18 14 L 18 18" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.3" opacity="0.42" />
+        </g>
       )}
       {corner === 'tr' && (
-        <>
-          <path d="M 18 2 L 30 2 L 30 14" fill="none" stroke="url(#apc-tr-gold)" strokeWidth="0.85" />
-          <path d="M 18 6 L 26 6 L 26 14" fill="none" stroke="url(#apc-tr-gold)" strokeWidth="0.42" opacity="0.7" />
-          <path d="M 22 6 L 18 10" fill="none" stroke="url(#apc-tr-gold)" strokeWidth="0.32" opacity="0.55" />
-          <circle cx="28" cy="4" r="1.1" fill="url(#apc-tr-gold)" />
-          <circle cx="28" cy="4" r="2.4" fill="none" stroke="url(#apc-tr-gold)" strokeWidth="0.25" opacity="0.55" />
-        </>
+        <g>
+          <path d="M 26 3 L 41 3 L 41 18" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.95" strokeLinecap="round" />
+          <path d="M 26 8 L 36 8 L 36 18" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.46" opacity="0.7" />
+          <path d="M 31 8 L 26 13" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.32" opacity="0.55" />
+          <circle cx="38" cy="6" r="2.6" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.32" opacity="0.55" />
+          <circle cx="38" cy="6" r="1.4" fill={`url(#${g}-pip)`} />
+          <circle cx="38" cy="6" r="0.55" fill="rgba(255, 246, 218, 0.95)" />
+          <path d="M 26 14 L 26 18 L 30 18" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.3" opacity="0.42" />
+        </g>
       )}
       {corner === 'bl' && (
-        <>
-          <path d="M 2 18 L 2 30 L 14 30" fill="none" stroke="url(#apc-bl-gold)" strokeWidth="0.85" />
-          <path d="M 6 18 L 6 26 L 14 26" fill="none" stroke="url(#apc-bl-gold)" strokeWidth="0.42" opacity="0.7" />
-          <path d="M 10 26 L 14 22" fill="none" stroke="url(#apc-bl-gold)" strokeWidth="0.32" opacity="0.55" />
-          <circle cx="4" cy="28" r="1.1" fill="url(#apc-bl-gold)" />
-          <circle cx="4" cy="28" r="2.4" fill="none" stroke="url(#apc-bl-gold)" strokeWidth="0.25" opacity="0.55" />
-        </>
+        <g>
+          <path d="M 3 26 L 3 41 L 18 41" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.95" strokeLinecap="round" />
+          <path d="M 8 26 L 8 36 L 18 36" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.46" opacity="0.7" />
+          <path d="M 13 36 L 18 31" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.32" opacity="0.55" />
+          <circle cx="6" cy="38" r="2.6" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.32" opacity="0.55" />
+          <circle cx="6" cy="38" r="1.4" fill={`url(#${g}-pip)`} />
+          <circle cx="6" cy="38" r="0.55" fill="rgba(255, 246, 218, 0.95)" />
+          <path d="M 14 26 L 18 26 L 18 30" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.3" opacity="0.42" />
+        </g>
       )}
       {corner === 'br' && (
-        <>
-          <path d="M 18 30 L 30 30 L 30 18" fill="none" stroke="url(#apc-br-gold)" strokeWidth="0.85" />
-          <path d="M 18 26 L 26 26 L 26 18" fill="none" stroke="url(#apc-br-gold)" strokeWidth="0.42" opacity="0.7" />
-          <path d="M 22 26 L 18 22" fill="none" stroke="url(#apc-br-gold)" strokeWidth="0.32" opacity="0.55" />
-          <circle cx="28" cy="28" r="1.1" fill="url(#apc-br-gold)" />
-          <circle cx="28" cy="28" r="2.4" fill="none" stroke="url(#apc-br-gold)" strokeWidth="0.25" opacity="0.55" />
-        </>
+        <g>
+          <path d="M 26 41 L 41 41 L 41 26" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.95" strokeLinecap="round" />
+          <path d="M 26 36 L 36 36 L 36 26" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.46" opacity="0.7" />
+          <path d="M 31 36 L 26 31" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.32" opacity="0.55" />
+          <circle cx="38" cy="38" r="2.6" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.32" opacity="0.55" />
+          <circle cx="38" cy="38" r="1.4" fill={`url(#${g}-pip)`} />
+          <circle cx="38" cy="38" r="0.55" fill="rgba(255, 246, 218, 0.95)" />
+          <path d="M 26 30 L 26 26 L 30 26" fill="none" stroke={`url(#${g}-stroke)`} strokeWidth="0.3" opacity="0.42" />
+        </g>
       )}
     </svg>
   )
@@ -5189,6 +5203,52 @@ function ReadingBreath({ active }: { active: boolean }) {
   )
 }
 
+function ReadingLens({ intensity, reduced }: { intensity: number; reduced: boolean }) {
+  const phase = Math.max(0, Math.min(1, intensity))
+  return (
+    <div
+      className={`reading-lens${phase > 0 ? ' is-lit' : ''}`}
+      aria-hidden="true"
+      style={{ '--lens-phase': phase } as React.CSSProperties}
+    >
+      <span className="reading-lens-pool" />
+      <span className={`reading-lens-beam${reduced ? ' is-static' : ''}`} />
+      <svg className="reading-lens-motes" viewBox="0 0 220 220" focusable="false">
+        <defs>
+          <radialGradient id="reading-lens-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.42)" />
+            <stop offset="55%" stopColor="rgba(245, 198, 91, 0.16)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+        </defs>
+        <circle cx="110" cy="110" r="100" fill="url(#reading-lens-glow)" />
+        <g className="reading-lens-dust" fill="rgba(255, 220, 168, 0.42)">
+          <circle cx="74" cy="60" r="0.6" />
+          <circle cx="148" cy="78" r="0.55" />
+          <circle cx="84" cy="146" r="0.5" />
+          <circle cx="160" cy="132" r="0.65" />
+          <circle cx="120" cy="44" r="0.45" />
+          <circle cx="56" cy="118" r="0.55" />
+          <circle cx="184" cy="100" r="0.5" />
+          <circle cx="100" cy="184" r="0.45" />
+        </g>
+      </svg>
+    </div>
+  )
+}
+
+function FoldShade({ active }: { active: boolean }) {
+  return (
+    <span
+      className={`fold-shade${active ? ' is-active' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="fold-shade-rule" />
+      <span className="fold-shade-glint" />
+    </span>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
@@ -5461,8 +5521,10 @@ export function App() {
         <span className="sheet-deckle sheet-deckle--top" aria-hidden="true" />
         <span className="sheet-deckle sheet-deckle--bottom" aria-hidden="true" />
         <ReadingLamp intensity={inkProgress} />
+        <ReadingLens intensity={phase !== 'idle' ? Math.min(1, inkProgress + 0.18) : 0} reduced={reduced} />
         <DustMotes reduced={reduced} />
         <BookmarkRibbon />
+        <FoldShade active={leafTurning} />
         <span className="gilded-edge" aria-hidden="true" />
 
         <span className="sheet-watermark" aria-hidden="true">
@@ -5587,6 +5649,7 @@ export function App() {
               leafTurning ? ' is-turning' : ''
             }`}
           >
+          <span className="verso-edge-glint" aria-hidden="true" />
           <section
             className={`response-panel response-panel--verso response-panel--verso-top ${replyShown ? 'is-revealed' : ''}`}
             aria-labelledby="response-title"
