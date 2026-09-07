@@ -1,0 +1,19 @@
+{
+  "id": 84,
+  "parentId": 83,
+  "createdAt": "2026-09-07T02:02:37.420Z",
+  "summary": "Added a folio apparatus — a typeset index slip at the foot of the verso, naming the page's parts.",
+  "path": "/iterations/000084/index.html",
+  "screenshot": "/iterations/000084/desktop.png",
+  "mobileScreenshot": "/iterations/000084/mobile.png",
+  "sourceCommit": "dc171affa3f2fd3edde0cbc2a0e91bc16c97e8bb",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 669,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 98001,
+    "outputTokens": 10765,
+    "steps": 59
+  }
+}
