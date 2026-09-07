@@ -148,9 +148,15 @@ function WaxSealInitial() {
             <stop offset="60%" stopColor="rgba(48, 10, 4, 0)" />
             <stop offset="100%" stopColor="rgba(48, 10, 4, 0.42)" />
           </radialGradient>
+          <radialGradient id="wax-rim" cx="50%" cy="50%" r="50%">
+            <stop offset="86%" stopColor="rgba(255, 220, 160, 0)" />
+            <stop offset="96%" stopColor="rgba(255, 220, 160, 0.55)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 160, 0)" />
+          </radialGradient>
         </defs>
         <circle cx="50" cy="52" r="46" fill="url(#wax-shadow)" />
         <circle cx="50" cy="51" r="42" fill="url(#wax-radial)" />
+        <circle cx="50" cy="51" r="42" fill="url(#wax-rim)" />
         <circle
           cx="50"
           cy="51"
@@ -160,6 +166,14 @@ function WaxSealInitial() {
           strokeWidth="0.45"
           strokeDasharray="0.9 2.4"
         />
+        <circle
+          cx="50"
+          cy="51"
+          r="30"
+          fill="none"
+          stroke="rgba(255, 245, 233, 0.18)"
+          strokeWidth="0.3"
+        />
         <ellipse
           cx="38"
           cy="34"
@@ -168,9 +182,11 @@ function WaxSealInitial() {
           fill="rgba(255, 245, 233, 0.22)"
           transform="rotate(-32 38 34)"
         />
-        <text x="50" y="73" textAnchor="middle" className="wax-letter">
-          i
-        </text>
+        <g className="wax-monogram" aria-hidden="true">
+          <text x="50" y="73" textAnchor="middle" className="wax-letter">
+            i
+          </text>
+        </g>
       </svg>
     </span>
   )
@@ -947,8 +963,9 @@ function SiderealPocket({
           style={reduced ? undefined : { transformOrigin: '45px 45px' }}
         >
           <g
-            stroke="rgba(245, 198, 91, 0.32)"
-            strokeWidth="0.35"
+            className="sky-constellation"
+            stroke="rgba(245, 198, 91, 0.42)"
+            strokeWidth="0.4"
             fill="none"
             strokeLinecap="round"
           >
@@ -984,8 +1001,9 @@ function SiderealPocket({
             <circle cx="40" cy="76" r="0.3" fill="#fff8e0" />
           </g>
           <g className="polaris-halo">
-            <circle cx="63" cy="38" r="3" fill="rgba(245, 198, 91, 0.22)" />
-            <circle cx="63" cy="38" r="1.6" fill="rgba(255, 248, 224, 0.85)" />
+            <circle cx="63" cy="38" r="4.2" fill="rgba(245, 198, 91, 0.18)" />
+            <circle cx="63" cy="38" r="3" fill="rgba(245, 198, 91, 0.32)" />
+            <circle cx="63" cy="38" r="1.6" fill="rgba(255, 248, 224, 0.92)" />
           </g>
         </g>
         <g className="sky-horizon">
@@ -1293,6 +1311,309 @@ function ScribalQuill({ active, progress }: { active: boolean; progress: number 
         </g>
       </svg>
     </div>
+  )
+}
+
+function NightSky({ reduced }: { reduced: boolean }) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const starsRef = useRef<
+    {
+      x: number
+      y: number
+      r: number
+      a: number
+      phase: number
+      twinkle: number
+      vy: number
+    }[]
+  >([])
+  const planetRef = useRef<{
+    x: number
+    y: number
+    r: number
+    angle: number
+  } | null>(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    let raf = 0
+    let last = performance.now()
+
+    const sizeCanvas = () => {
+      const parent = canvas.parentElement
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      canvas.width = Math.max(1, Math.floor(rect.width * dpr))
+      canvas.height = Math.max(1, Math.floor(rect.height * dpr))
+      canvas.style.width = `${rect.width}px`
+      canvas.style.height = `${rect.height}px`
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      seed()
+    }
+
+    const seed = () => {
+      const parent = canvas.parentElement
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
+      const count = Math.max(40, Math.floor((rect.width * rect.height) / 22000))
+      starsRef.current = Array.from({ length: count }, () => ({
+        x: Math.random() * rect.width,
+        y: Math.random() * rect.height,
+        r: 0.3 + Math.random() * 1.1,
+        a: 0.18 + Math.random() * 0.32,
+        phase: Math.random() * Math.PI * 2,
+        twinkle: 0.4 + Math.random() * 1.4,
+        vy: -(0.04 + Math.random() * 0.08),
+      }))
+      planetRef.current = {
+        x: rect.width * 0.18,
+        y: rect.height * 0.22,
+        r: Math.min(rect.width, rect.height) * 0.08,
+        angle: 0,
+      }
+    }
+
+    const draw = (now: number) => {
+      const dt = Math.min(50, now - last) / 1000
+      last = now
+
+      const parent = canvas.parentElement
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
+      ctx.clearRect(0, 0, rect.width, rect.height)
+
+      const planet = planetRef.current
+      if (planet && !reduced) {
+        planet.angle += dt * 0.04
+        const grd = ctx.createRadialGradient(
+          planet.x,
+          planet.y,
+          0,
+          planet.x,
+          planet.y,
+          planet.r * 3.6,
+        )
+        grd.addColorStop(0, 'rgba(245, 198, 91, 0.18)')
+        grd.addColorStop(0.4, 'rgba(245, 198, 91, 0.06)')
+        grd.addColorStop(1, 'rgba(245, 198, 91, 0)')
+        ctx.fillStyle = grd
+        ctx.beginPath()
+        ctx.arc(planet.x, planet.y, planet.r * 3.6, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.fillStyle = 'rgba(255, 246, 218, 0.72)'
+        ctx.beginPath()
+        ctx.arc(planet.x, planet.y, planet.r * 0.55, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.fillStyle = 'rgba(255, 246, 218, 0.32)'
+        ctx.beginPath()
+        ctx.arc(planet.x, planet.y, planet.r * 0.95, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      for (const s of starsRef.current) {
+        if (!reduced) {
+          s.phase += dt * s.twinkle
+          s.y += s.vy
+          if (s.y < -2) {
+            s.y = rect.height + 2
+            s.x = Math.random() * rect.width
+          }
+        }
+        const a = s.a * (0.55 + 0.45 * Math.sin(s.phase))
+        ctx.fillStyle = reduced
+          ? `rgba(245, 232, 200, ${s.a * 0.7})`
+          : `rgba(245, 232, 200, ${a})`
+        ctx.beginPath()
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      if (!reduced) raf = requestAnimationFrame(draw)
+    }
+
+    sizeCanvas()
+    if (reduced) {
+      draw(performance.now())
+    } else {
+      raf = requestAnimationFrame(draw)
+    }
+
+    const ro = new ResizeObserver(() => sizeCanvas())
+    if (canvas.parentElement) ro.observe(canvas.parentElement)
+
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+      ro.disconnect()
+    }
+  }, [reduced])
+
+  return <canvas ref={canvasRef} className="night-sky-canvas" aria-hidden="true" />
+}
+
+function ReadingLamp({ intensity }: { intensity: number }) {
+  const phase = Math.max(0, Math.min(1, intensity))
+  return (
+    <div
+      className="reading-lamp"
+      aria-hidden="true"
+      style={{ '--lamp-phase': phase } as React.CSSProperties}
+    >
+      <svg
+        className="reading-lamp-shade"
+        viewBox="0 0 80 36"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="lamp-shade-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(217, 154, 84, 0.92)" />
+            <stop offset="100%" stopColor="rgba(150, 86, 38, 0.92)" />
+          </linearGradient>
+          <radialGradient id="lamp-flare" cx="50%" cy="100%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.85)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="40" cy="2" rx="30" ry="2.4" fill="rgba(245, 220, 170, 0.65)" />
+        <path
+          d="M 8 36 Q 40 10 72 36 Z"
+          fill="url(#lamp-shade-fill)"
+          stroke="rgba(80, 36, 14, 0.45)"
+          strokeWidth="0.6"
+        />
+        <ellipse cx="40" cy="30" rx="22" ry="3.4" fill="url(#lamp-flare)" />
+        <line x1="40" y1="2" x2="40" y2="14" stroke="rgba(80, 36, 14, 0.7)" strokeWidth="0.8" />
+      </svg>
+      <span className="reading-lamp-cone" />
+      <span className="reading-lamp-glow" />
+    </div>
+  )
+}
+
+function FolioAnatomy({ visible }: { visible: boolean }) {
+  return (
+    <figure
+      className={`folio-anatomy${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <figcaption className="folio-anatomy-cap">
+        <span className="folio-anatomy-mark">¶</span>
+        <span>anatomy of the folio</span>
+      </figcaption>
+      <svg className="folio-anatomy-plate" viewBox="0 0 240 110" focusable="false">
+        <defs>
+          <linearGradient id="anat-paper" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(255, 248, 230, 0.95)" />
+            <stop offset="100%" stopColor="rgba(232, 216, 178, 0.92)" />
+          </linearGradient>
+        </defs>
+
+        <path
+          d="M 18 22 Q 14 24 14 30 L 14 80 Q 14 86 18 88 L 18 22 Z"
+          fill="rgba(196, 156, 112, 0.32)"
+          stroke="rgba(107, 74, 37, 0.5)"
+          strokeWidth="0.4"
+        />
+        <path
+          d="M 226 22 Q 230 24 230 30 L 230 80 Q 230 86 226 88 L 226 22 Z"
+          fill="rgba(196, 156, 112, 0.32)"
+          stroke="rgba(107, 74, 37, 0.5)"
+          strokeWidth="0.4"
+        />
+
+        <rect
+          x="18"
+          y="22"
+          width="100"
+          height="66"
+          fill="url(#anat-paper)"
+          stroke="rgba(107, 74, 37, 0.5)"
+          strokeWidth="0.45"
+        />
+        <rect
+          x="120"
+          y="22"
+          width="106"
+          height="66"
+          fill="url(#anat-paper)"
+          stroke="rgba(107, 74, 37, 0.5)"
+          strokeWidth="0.45"
+        />
+
+        <line
+          x1="119"
+          y1="22"
+          x2="119"
+          y2="88"
+          stroke="rgba(107, 74, 37, 0.45)"
+          strokeWidth="0.45"
+          strokeDasharray="1.6 1.8"
+        />
+
+        <g className="folio-anatomy-lines recto">
+          <line x1="26" y1="34" x2="112" y2="34" stroke="rgba(17, 32, 42, 0.34)" strokeWidth="0.32" />
+          <line x1="26" y1="42" x2="112" y2="42" stroke="rgba(17, 32, 42, 0.34)" strokeWidth="0.32" />
+          <line x1="26" y1="50" x2="112" y2="50" stroke="rgba(17, 32, 42, 0.34)" strokeWidth="0.32" />
+          <line x1="26" y1="58" x2="100" y2="58" stroke="rgba(17, 32, 42, 0.34)" strokeWidth="0.32" />
+          <line x1="26" y1="66" x2="112" y2="66" stroke="rgba(17, 32, 42, 0.34)" strokeWidth="0.32" />
+        </g>
+        <g className="folio-anatomy-lines verso">
+          <line x1="126" y1="34" x2="220" y2="34" stroke="rgba(17, 32, 42, 0.34)" strokeWidth="0.32" />
+          <line x1="126" y1="42" x2="220" y2="42" stroke="rgba(17, 32, 42, 0.34)" strokeWidth="0.32" />
+          <line x1="126" y1="50" x2="220" y2="50" stroke="rgba(17, 32, 42, 0.34)" strokeWidth="0.32" />
+          <line x1="126" y1="58" x2="220" y2="58" stroke="rgba(17, 32, 42, 0.34)" strokeWidth="0.32" />
+          <line x1="126" y1="66" x2="200" y2="66" stroke="rgba(17, 32, 42, 0.34)" strokeWidth="0.32" />
+        </g>
+
+        <g className="folio-anatomy-ledger">
+          <line x1="46" y1="50" x2="78" y2="50" stroke="rgba(217, 101, 74, 0.55)" strokeWidth="0.6" />
+          <circle cx="46" cy="50" r="0.9" fill="rgba(217, 101, 74, 0.8)" />
+          <circle cx="78" cy="50" r="0.9" fill="rgba(217, 101, 74, 0.8)" />
+        </g>
+        <g className="folio-anatomy-italic">
+          <line x1="146" y1="50" x2="170" y2="50" stroke="rgba(217, 101, 74, 0.55)" strokeWidth="0.6" />
+          <circle cx="146" cy="50" r="0.9" fill="rgba(217, 101, 74, 0.8)" />
+          <circle cx="170" cy="50" r="0.9" fill="rgba(217, 101, 74, 0.8)" />
+        </g>
+
+        <g className="folio-anatomy-callouts">
+          <g className="folio-anatomy-callout recto-callout">
+            <path d="M 66 30 Q 66 22 62 18" fill="none" stroke="rgba(217, 101, 74, 0.6)" strokeWidth="0.4" />
+            <circle cx="66" cy="30" r="0.7" fill="rgba(217, 101, 74, 0.7)" />
+          </g>
+          <g className="folio-anatomy-callout spine-callout">
+            <path d="M 119 14 Q 110 8 104 8" fill="none" stroke="rgba(217, 101, 74, 0.6)" strokeWidth="0.4" />
+            <circle cx="119" cy="14" r="0.7" fill="rgba(217, 101, 74, 0.7)" />
+          </g>
+          <g className="folio-anatomy-callout verso-callout">
+            <path d="M 174 30 Q 174 22 178 18" fill="none" stroke="rgba(217, 101, 74, 0.6)" strokeWidth="0.4" />
+            <circle cx="174" cy="30" r="0.7" fill="rgba(217, 101, 74, 0.7)" />
+          </g>
+          <g className="folio-anatomy-callout gutter-callout">
+            <path d="M 119 80 Q 110 100 104 102" fill="none" stroke="rgba(217, 101, 74, 0.6)" strokeWidth="0.4" />
+            <circle cx="119" cy="80" r="0.7" fill="rgba(217, 101, 74, 0.7)" />
+          </g>
+        </g>
+
+        <g className="folio-anatomy-labels">
+          <text x="62" y="16" textAnchor="middle">recto</text>
+          <text x="178" y="16" textAnchor="middle">verso</text>
+          <text x="104" y="6" textAnchor="middle">spine</text>
+          <text x="100" y="106" textAnchor="middle">gutter</text>
+        </g>
+      </svg>
+      <span className="folio-anatomy-foot">
+        <em>cap. xviii</em>
+        <span aria-hidden="true">·</span>
+        <em>sig. A2 / A3</em>
+        <span aria-hidden="true">·</span>
+        <em>folio lxxvii</em>
+      </span>
+    </figure>
   )
 }
 
@@ -2030,6 +2351,7 @@ export function App() {
   return (
     <main className="experiment-shell">
       <div className="ambient-grid" aria-hidden="true" />
+      <NightSky reduced={reduced} />
       <div className="ambient-glow ambient-glow--one" aria-hidden="true" />
       <div className="ambient-glow ambient-glow--two" aria-hidden="true" />
 
@@ -2038,6 +2360,7 @@ export function App() {
           className={`sheet-ambient${phase !== 'idle' ? ' is-lit' : ''}`}
           aria-hidden="true"
         />
+        <ReadingLamp intensity={inkProgress} />
         <DustMotes reduced={reduced} />
         <BookmarkRibbon />
         <span className="gilded-edge" aria-hidden="true" />
@@ -2074,7 +2397,10 @@ export function App() {
                 </span>
               </TitleCartouche>
               <span className="title-text" aria-hidden="true">s </span>
-              <span className="title-subject" aria-hidden="true">Minimax M3</span>
+              <span className="title-subject" aria-hidden="true">
+                Minimax M3
+                <span className="title-subject-rule" aria-hidden="true" />
+              </span>
               <span className="title-text" aria-hidden="true"> good at frontend yet?</span>
             </h1>
             <span
@@ -2245,6 +2571,8 @@ export function App() {
           <SignatureMark sig="A3" side="v" />
           <PrinterDevice />
         </footer>
+
+        <FolioAnatomy visible={replyShown} />
 
         <span className="paper-corner paper-corner--one" aria-hidden="true" />
         <span className="paper-corner paper-corner--two" aria-hidden="true" />

@@ -1,14 +1,15 @@
-# Iteration 89
+# Changelog
 
-Editorial reading guide: title cartouche, marginal line numbers, typeface specimen, folded corner, and page-turn fold.
+## iteration 90 · the illuminated hour
 
-## Changes
+A folio warmed by a brass reading lamp, with a quiet night-sky behind the sheet.
 
-- Added `TitleCartouche`, a hand-drawn rectangular frame with corner brackets and corner marks that surrounds the wax-seal initial. The frame fades in once the answer is set, giving the initial the weight of a printed dropcap.
-- Added `ReadingLines`, a column of numbered pilcrow marks (`¶·i`, `¶·ii`, …) in the left margin of the verso. Lines appear in cadence with the typing (one every ~14 characters) and the current line is highlighted with a coral rule.
-- Added `TypefaceSpecimen`, a small italic note beneath the answer surface that names the typography: `set in · italic · 30pt · leaded · with gilt`. A faint gold underline on the third term reinforces the gilded-leaf conceit.
-- Added `FoldCorner`, a folded-corner SVG on the top-right of the verso panel. It animates in with a small rotation when the verso reveals, signalling that this is the back of the leaf.
-- Added `PageTurnFold`, a brief fold overlay that sweeps across the top of the verso when answering begins, evoking the gesture of turning the leaf.
-- Adjusted the wax-seal scale to sit comfortably inside the new cartouche and extended the verso's left padding so the reading lines have room to breathe.
-- Added matching responsive rules for narrow viewports (reading lines and page-turn fold hide below 560px).
-- Extended the reduced-motion media query so the page-turn overlay and fold-corner flip are disabled when motion is reduced.
+- Added a canvas night-sky behind the folio: a single warm "evening star" with a soft halo at the upper left, and a slow drift of small twinkling stars across the surrounding dark space. Respects prefers-reduced-motion.
+- Added a reading-lamp overlay above the answer surface: a small brass shade with a softly flickering cone of warm light whose intensity follows the inkProgress of the answer being set. Hidden on mobile and when prefers-reduced-motion is set.
+- Added a small "anatomy of the folio" plate at the foot of the sheet: a labeled recto/verso/spine/gutter cross-section with coral callouts, revealed after the reply is set.
+- Refined the title subject "Minimax M3" with a hand-ruled coral underline that draws in left-to-right as the answer is set, replacing the previous static underline.
+- Added an inner gold rim ring to the wax seal initial and a gentle glow that breathes while the answer is set.
+- Strengthened the Ursa Minor constellation in the sidereal pocket: brighter connecting lines (faded-in dashed strokes), an additional triple-halo around Polaris, and a slow twinkle.
+- Tuned responsive behavior: reading lamp hidden below 880px, folio anatomy and labels rebalanced below 560px, night sky hidden under prefers-reduced-motion.
+
+Built clean with `npm run build`. The required title remains exactly `is Minimax M3 good at frontend yet?`.
