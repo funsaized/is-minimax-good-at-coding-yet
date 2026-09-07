@@ -1211,6 +1211,56 @@ function SignatureMark({ sig, side }: { sig: string; side: 'r' | 'v' }) {
   )
 }
 
+function PressCorrectionSlip({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`press-correction-slip${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="press-correction-tape" viewBox="0 0 64 16" focusable="false">
+        <path
+          d="M 3 1.6 L 61 2.8 L 59.4 13 L 2 12 Z"
+          fill="rgba(245, 222, 162, 0.7)"
+          stroke="rgba(196, 138, 50, 0.32)"
+          strokeWidth="0.32"
+        />
+        <line
+          x1="7"
+          y1="5.5"
+          x2="57"
+          y2="6.8"
+          stroke="rgba(196, 138, 50, 0.42)"
+          strokeWidth="0.4"
+          strokeDasharray="1.6 2.2"
+        />
+        <line
+          x1="12"
+          y1="9"
+          x2="51"
+          y2="10.4"
+          stroke="rgba(255, 248, 224, 0.32)"
+          strokeWidth="0.32"
+        />
+      </svg>
+      <header className="press-correction-head">
+        <span className="press-correction-title">press correction</span>
+        <span className="press-correction-mark" aria-hidden="true">¶</span>
+      </header>
+      <span className="press-correction-rule" aria-hidden="true" />
+      <p className="press-correction-body">
+        <em>what is set once is read</em>
+        <br />
+        <em>at the pace of attention.</em>
+      </p>
+      <footer className="press-correction-foot">
+        <span className="press-correction-foot-mark">corrig.</span>
+        <span className="press-correction-foot-sep" aria-hidden="true">·</span>
+        <span className="press-correction-foot-hand">manu pr.</span>
+      </footer>
+    </div>
+  )
+}
+
 function MarginaliaOwl({
   active,
   reduced,
@@ -1652,6 +1702,10 @@ export function App() {
                 </span>
               )}
             </div>
+
+            <PressCorrectionSlip
+              visible={phase === 'replying' || phase === 'complete'}
+            />
 
             {phase === 'complete' && (
               <div className="completion-note">
