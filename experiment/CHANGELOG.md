@@ -1,12 +1,12 @@
-# Changelog
+## Iteration 98
 
-## iteration 97 — an almanac daybook, signed and woven into the apparatus
+Refined typography, composition, and added a press seal and richer chapter headpiece.
 
-A single new piece consolidates the folio's temporal identity: an *almanac daybook* — a horizontally-typeset ephemeris — sits between the scholar's bench and the cul-de-lampe, naming today (day, hour, sidereal hour, moon phase, polaris) and, after a re-read, gaining a tilted "press" mark. The piece is added to the apparatus as a seventh entry ("vii. this almanac") so the index now reads in a complete arc from question → almanac.
-
-- Added a four-cell almanac strip (today · hour · moon · stella) with diamond-orb rules, tapered dividers, and a diagonal hatching fill; cells enter with a staggered delay.
-- Wove a small rotated press mark ("second press" / "press Nth") into the almanac head after any re-read; absent on the first reading.
-- Added the almanac as `sec-almanac` so the apparatus index scrolls there and the active row updates with the intersection observer.
-- Date helpers added locally: `WEEKDAYS`, `MONTHS`, `ORDINALS`, `toRomanYear`.
-- Responsive: almanac collapses to a 2 × 2 grid below 880 px; type and padding tighten further under 560 px; dividers and per-cell top rules drop on small viewports.
-- Reduced-motion: almanac fades in instantly, no per-cell stagger or transitions.
+- Replaced the small horizontal headpiece with a composed chapter ornament (sun, leaves, twin rules) that slowly rotates and sways.
+- Tightened title typography: lighter weight, balanced line-height, fuller drop-cap, and a centered subject rule that fills when the answer arrives.
+- Added a circular ink-stamp `PressSeal` below the read button — arc text around the rim, central m·iii monogram, and a `first/second/third press` impression that lands with a stamp animation when reading completes.
+- Italicized the key phrases in the question deck (`ask well`, `initial in gilt`, `quiet reply`) in coral for stronger rhythm.
+- Added a small leading rule before the catchword text and a centered `the scholar's bench` label above the three timekeeper dials.
+- Tightened chapter subtitle to two italic phrases joined by a coral dot.
+- Tuned responsive breakpoints (880 / 560 / 380 px) so the title flow, drop-cap, and headpiece scale gracefully on small widths.
+- All animations respect `prefers-reduced-motion`.

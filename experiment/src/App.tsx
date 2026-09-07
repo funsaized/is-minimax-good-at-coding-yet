@@ -292,21 +292,58 @@ function Headpiece() {
   return (
     <svg
       className="headpiece"
-      viewBox="0 0 260 24"
+      viewBox="0 0 320 48"
       focusable="false"
       aria-hidden="true"
     >
-      <g className="headpiece-rules">
-        <line x1="0" y1="12" x2="78" y2="12" />
-        <path d="M 78 12 C 88 5, 98 19, 108 12" fill="none" />
-        <path d="M 182 12 C 172 5, 162 19, 152 12" fill="none" />
-        <line x1="182" y1="12" x2="260" y2="12" />
+      <defs>
+        <radialGradient id="headpiece-sun" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#f5c65b" />
+          <stop offset="62%" stopColor="#c8923e" />
+          <stop offset="100%" stopColor="#9c6e26" />
+        </radialGradient>
+      </defs>
+
+      <g className="headpiece-rules" stroke="currentColor" strokeLinecap="round" fill="none">
+        <line x1="0" y1="24" x2="92" y2="24" strokeWidth="0.55" />
+        <line x1="0" y1="28" x2="74" y2="28" strokeWidth="0.3" strokeDasharray="0.4 1.4" opacity="0.6" />
+        <path d="M 92 24 C 100 18, 108 30, 116 24" strokeWidth="0.55" />
+        <path d="M 204 24 C 212 18, 220 30, 228 24" strokeWidth="0.55" />
+        <line x1="228" y1="24" x2="320" y2="24" strokeWidth="0.55" />
+        <line x1="246" y1="28" x2="320" y2="28" strokeWidth="0.3" strokeDasharray="0.4 1.4" opacity="0.6" />
       </g>
+
       <g className="headpiece-cluster">
-        <circle cx="118" cy="12" r="1.1" />
-        <path d="M 130 12 L 135 6 L 140 12 L 135 18 Z" />
-        <circle cx="130" cy="12" r="1.2" fill="var(--paper)" />
-        <circle cx="150" cy="12" r="1.1" />
+        <circle cx="124" cy="24" r="1" />
+        <path d="M 138 24 L 144 18 L 150 24 L 144 30 Z" />
+
+        <g className="headpiece-sun-group" transform="translate(160 24)">
+          <g className="headpiece-sun-rays" stroke="url(#headpiece-sun)" strokeWidth="0.7" strokeLinecap="round">
+            <line x1="0" y1="-9" x2="0" y2="-12" />
+            <line x1="0" y1="9" x2="0" y2="12" />
+            <line x1="-9" y1="0" x2="-12" y2="0" />
+            <line x1="9" y1="0" x2="12" y2="0" />
+            <line x1="-6.4" y1="-6.4" x2="-8.5" y2="-8.5" />
+            <line x1="6.4" y1="-6.4" x2="8.5" y2="-8.5" />
+            <line x1="-6.4" y1="6.4" x2="-8.5" y2="8.5" />
+            <line x1="6.4" y1="6.4" x2="8.5" y2="8.5" />
+          </g>
+          <circle r="5.5" fill="url(#headpiece-sun)" stroke="rgba(107, 74, 37, 0.42)" strokeWidth="0.4" />
+          <circle r="2.2" fill="none" stroke="rgba(107, 74, 37, 0.42)" strokeWidth="0.3" strokeDasharray="0.4 1.2" />
+          <circle r="1.4" fill="rgba(255, 246, 218, 0.92)" />
+        </g>
+
+        <g className="headpiece-leaf headpiece-leaf--left" transform="translate(124 38)">
+          <path d="M -5 0 Q 0 -3 6 -1 Q 4 3 -5 0 Z" fill="currentColor" opacity="0.7" />
+          <line x1="-4" y1="0" x2="3" y2="-1" stroke="var(--paper)" strokeWidth="0.3" />
+        </g>
+        <g className="headpiece-leaf headpiece-leaf--right" transform="translate(196 38)">
+          <path d="M 5 0 Q 0 -3 -6 -1 Q -4 3 5 0 Z" fill="currentColor" opacity="0.7" />
+          <line x1="4" y1="0" x2="-3" y2="-1" stroke="var(--paper)" strokeWidth="0.3" />
+        </g>
+
+        <circle cx="178" cy="24" r="0.9" />
+        <circle cx="190" cy="24" r="0.7" />
       </g>
     </svg>
   )
@@ -324,7 +361,11 @@ function ChapterHead() {
         </svg>
       </span>
       <Headpiece />
-      <span className="chapter-subtitle">of folio lxxvii, set in question</span>
+      <span className="chapter-subtitle">
+        <em>of folio lxxvii</em>
+        <span className="chapter-subtitle-sep" aria-hidden="true">·</span>
+        <em>set in question</em>
+      </span>
     </div>
   )
 }
@@ -3395,6 +3436,104 @@ function ReaderCat({ visible }: { visible: boolean }) {
   )
 }
 
+function PressSeal({ visible, cycle }: { visible: boolean; cycle: number }) {
+  const impression =
+    cycle === 0 ? 'first press' : cycle === 1 ? 'second press' : `${ordinal(cycle + 1)} press`
+  return (
+    <div
+      className={`press-seal${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="press-seal-disc" viewBox="0 0 96 96" focusable="false">
+        <defs>
+          <radialGradient id="seal-ink" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(120, 30, 12, 0.88)" />
+            <stop offset="62%" stopColor="rgba(80, 18, 6, 0.92)" />
+            <stop offset="100%" stopColor="rgba(40, 8, 2, 0.92)" />
+          </radialGradient>
+          <pattern id="seal-grain" width="3" height="3" patternUnits="userSpaceOnUse">
+            <rect width="3" height="3" fill="rgba(0,0,0,0)" />
+            <circle cx="0.6" cy="0.4" r="0.45" fill="rgba(255, 240, 220, 0.08)" />
+            <circle cx="2.2" cy="1.6" r="0.35" fill="rgba(255, 240, 220, 0.06)" />
+            <circle cx="1.4" cy="2.6" r="0.4" fill="rgba(255, 240, 220, 0.05)" />
+          </pattern>
+          <path id="seal-arc-top" d="M 48 48 m -34 0 a 34 34 0 0 1 68 0" fill="none" />
+          <path id="seal-arc-bot" d="M 48 48 m -34 0 a 34 34 0 1 0 68 0" fill="none" />
+        </defs>
+
+        <g className="press-seal-base">
+          <circle cx="48" cy="48" r="44" fill="url(#seal-ink)" />
+          <circle cx="48" cy="48" r="44" fill="url(#seal-grain)" />
+          <circle cx="48" cy="48" r="40" fill="none" stroke="rgba(255, 232, 200, 0.32)" strokeWidth="0.6" />
+          <circle
+            cx="48"
+            cy="48"
+            r="36"
+            fill="none"
+            stroke="rgba(255, 232, 200, 0.16)"
+            strokeWidth="0.35"
+            strokeDasharray="0.4 1.4"
+          />
+        </g>
+
+        <g className="press-seal-arc">
+          <text className="press-seal-arc-text press-seal-arc-text--top">
+            <textPath href="#seal-arc-top" startOffset="50%" textAnchor="middle">
+              pressed · in this browser · lxxvii
+            </textPath>
+          </text>
+          <text className="press-seal-arc-text press-seal-arc-text--bot">
+            <textPath href="#seal-arc-bot" startOffset="50%" textAnchor="middle">
+              ad lucem · perlege ·
+            </textPath>
+          </text>
+        </g>
+
+        <g className="press-seal-monogram">
+          <line
+            x1="32"
+            y1="38"
+            x2="64"
+            y2="38"
+            stroke="rgba(255, 232, 200, 0.32)"
+            strokeWidth="0.5"
+            strokeLinecap="round"
+          />
+          <text x="48" y="58" textAnchor="middle" className="press-seal-letter">
+            m
+          </text>
+          <text x="56" y="58" textAnchor="middle" className="press-seal-letter press-seal-letter--roman">
+            ·iii
+          </text>
+          <line
+            x1="32"
+            y1="63"
+            x2="64"
+            y2="63"
+            stroke="rgba(255, 232, 200, 0.32)"
+            strokeWidth="0.5"
+            strokeLinecap="round"
+          />
+          <text x="48" y="72" textAnchor="middle" className="press-seal-impression">
+            {impression}
+          </text>
+        </g>
+
+        <g className="press-seal-flecks" fill="rgba(120, 30, 12, 0.7)">
+          <circle cx="6" cy="14" r="0.6" />
+          <circle cx="14" cy="6" r="0.4" />
+          <circle cx="86" cy="20" r="0.5" />
+          <circle cx="92" cy="34" r="0.4" />
+          <circle cx="90" cy="78" r="0.6" />
+          <circle cx="78" cy="90" r="0.5" />
+          <circle cx="10" cy="82" r="0.5" />
+          <circle cx="4" cy="68" r="0.4" />
+        </g>
+      </svg>
+    </div>
+  )
+}
+
 function AlmanacDaybook({ now, moonPhase, cycle }: { now: Date; moonPhase: number; cycle: number }) {
   const dayName = WEEKDAYS[now.getDay()]
   const monthName = MONTHS[now.getMonth()]
@@ -3848,9 +3987,11 @@ export function App() {
               <MarginaliaStrip items={MARGINALIA} />
             </div>
 
-            <p className="question-deck">
-              A small typeset test of whether a page can ask well before it answers —
-              an initial in gilt, three marginalia, and a quiet reply that turns the leaf.
+<p className="question-deck">
+              A small typeset test of whether a page can
+              <em> ask well </em>
+              before it answers — an <em>initial in gilt</em>, three marginalia,
+              and a <em>quiet reply</em> that turns the leaf.
             </p>
 
             <ReadingTrace cycle={cycle} reduced={reduced} />
@@ -4026,7 +4167,17 @@ export function App() {
             </button>
             <p className="reader-note" id="reader-note">{readerNote}</p>
 
+            <PressSeal
+              visible={phase === 'complete'}
+              cycle={cycle}
+            />
+
             <div className={`scholars-bench ${benchShown ? 'is-revealed' : ''}`}>
+              <span className="scholars-bench-label" aria-hidden="true">
+                <span className="scholars-bench-label-mark">§</span>
+                <em>the scholar's bench</em>
+                <span className="scholars-bench-label-mark">§</span>
+              </span>
               <EngravedRule className="scholars-bench-rule" />
               <div className="scholars-bench-row">
                 <div
