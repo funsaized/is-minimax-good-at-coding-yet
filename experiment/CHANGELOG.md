@@ -1,16 +1,29 @@
-# Iteration 91
+# Changelog
 
-Illuminated drop cap, penciled annotation, tucked working-draft, and ink fingerprint — a more authored reading.
+## Iteration 92
+*Quieter, more deliberate composition: one warm light, a moth companion, a reading breath, and keyboard re-read.*
 
-## What changed
+A single warm vignette replaces the competing dual glows and grid. The dense dust becomes nine golden ink-motes that drift upward. A new MarginalMoth joins the owl at the foot of the verso — the owl watches the reader, the moth is drawn to the lamp. The answer surface gains a small letter head and a closing flourish, and breathes slowly with a warm halo while being set. The apparatus foot now always carries a reading note that changes between first and subsequent readings. Pressing Space or R re-reads the answer.
 
-- **Illuminated drop cap.** The answer text now opens with a medieval-style illuminated initial for the "A" of "and" — a gilt-bordered cartouche with coral vine-work in the upper-right and lower-left, animated to arrive when the first letter is set.
-- **Scholar's pencil annotation.** A small cursive penciled mark reading "type-set." with a wavy underline appears in the lower-right margin of the question panel once the reading completes, signed *manu · pr.*
-- **Tucked working-draft.** A small folded paper with "draft · ii · kept" peeks from behind the upper-left corner of the apparatus, with a struck-through earlier phrasing of the question and a paper tape across the top.
-- **Ink fingerprint.** A subtle fingerprint smudge appears in the upper-right of the answer surface after the press, marking the printer's hand.
-- **Refined typography.** Tightened line-height on the answer-copy so the drop cap sits cleanly; the em-dash now sits as its own decorative mark before the initial.
-- **Mobile responsive.** Repositioned all four additions for the narrow viewport: the tucked note shrinks, the annotation flows in-document at the foot of the question panel, the drop cap drops to 52×64, the fingerprint condenses to the corner.
+### Ambient & atmosphere
+- Replaced the dual ambient glows and the grid pattern with one warm vignette that breathes slowly behind the sheet.
+- Converted dense dust motes into nine sparse golden ink-motes drifting upward; pointer-aware.
+- Added a slow `answer-breath` halo on the answer surface during the answering phase.
 
-## Why this direction
+### New marginal creature
+- New `MarginalMoth` near the cul-de-lampe — small SVG companion to the owl. The owl watches the reader; the moth is drawn to the lamp. Caption: `ad lucem · drawn to the lamp`. Re-read gives it a soft warm glow.
 
-The folio had been built up across ninety iterations into a richly ornamented editorial reading. What it lacked was a *hand* — evidence that a person, not a process, had set the type. The drop cap restores the medieval convention the manuscript already gestures toward; the tucked note shows the question's earlier selves; the pencil annotation is the reader answering the reader; the fingerprint is the maker's mark.
+### Typography & letter framing
+- Added a small letter head (`¶ set in italic · 30 pt · leaded`) and a closing flourish (`— cap. xviii · sig. m.iii`) on the answer surface.
+- Tightened the title-cartouche sizing (1.35em → 1.25em) and vertical alignment so the wax-seal initial sits more gracefully inline with the rest of the title.
+
+### Apparatus refinement
+- Apparatus foot always carries a reading note: quiet `first reading — re-read at any pace` on the first pass; gold-tinted `re-read — the page unchanged; the reader, changed.` on subsequent passes.
+
+### Accessibility & motion
+- Keyboard shortcut: `Space` or `R` (outside inputs) re-reads the answer.
+- Added a visible `<kbd>space</kbd>` hint in the read button (hidden on small screens).
+- Reduced-motion handling extended for the moth, the answer-breath, and the vignette pulse.
+
+### Files
+- `src/App.tsx`, `src/style.css`

@@ -938,9 +938,16 @@ function Apparatus({
         </span>
         {cycle > 0 && (
           <span className="apparatus-foot-note">
+            <span className="apparatus-foot-mark" aria-hidden="true">⟲</span>
+            <em>re-read</em>
+            <span className="apparatus-foot-tail" aria-hidden="true">— the page unchanged; the reader, changed.</span>
+          </span>
+        )}
+        {cycle === 0 && (
+          <span className="apparatus-foot-note apparatus-foot-note--pending">
             <span className="apparatus-foot-mark" aria-hidden="true">✎</span>
-            <em>second reading</em>
-            <span className="apparatus-foot-tail" aria-hidden="true">— the index unchanged, the reader changed.</span>
+            <em>first reading</em>
+            <span className="apparatus-foot-tail" aria-hidden="true">— re-read at any pace.</span>
           </span>
         )}
         <span className="apparatus-foot-rule" aria-hidden="true" />
@@ -1941,7 +1948,7 @@ function FolioAnatomy({ visible }: { visible: boolean }) {
 function DustMotes({ reduced }: { reduced: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const motesRef = useRef<
-    { x: number; y: number; vx: number; vy: number; r: number; alpha: number; wob: number }[]
+    { x: number; y: number; vx: number; vy: number; r: number; alpha: number; wob: number; warmth: number }[]
   >([])
 
   useEffect(() => {
@@ -1970,14 +1977,16 @@ function DustMotes({ reduced }: { reduced: boolean }) {
       const parent = canvas.parentElement
       if (!parent) return
       const rect = parent.getBoundingClientRect()
-      motesRef.current = Array.from({ length: 14 }, () => ({
+      const count = 9
+      motesRef.current = Array.from({ length: count }, () => ({
         x: Math.random() * rect.width,
-        y: Math.random() * rect.height,
-        vx: (Math.random() - 0.5) * 5,
-        vy: -(0.4 + Math.random() * 0.7),
-        r: 0.7 + Math.random() * 1.4,
-        alpha: 0.16 + Math.random() * 0.18,
+        y: rect.height * (0.55 + Math.random() * 0.55),
+        vx: (Math.random() - 0.5) * 1.4,
+        vy: -(0.55 + Math.random() * 0.95),
+        r: 0.7 + Math.random() * 1.6,
+        alpha: 0.22 + Math.random() * 0.28,
         wob: Math.random() * Math.PI * 2,
+        warmth: 0.6 + Math.random() * 0.4,
       }))
     }
 
@@ -1991,10 +2000,10 @@ function DustMotes({ reduced }: { reduced: boolean }) {
         const dx = m.x - mx
         const dy = m.y - my
         const dist = Math.hypot(dx, dy)
-        if (dist > 0 && dist < 130) {
-          const force = (1 - dist / 130) * 22
-          m.vx += (dx / dist) * force * 0.05
-          m.vy += (dy / dist) * force * 0.05
+        if (dist > 0 && dist < 110) {
+          const force = (1 - dist / 110) * 14
+          m.vx += (dx / dist) * force * 0.04
+          m.vy += (dy / dist) * force * 0.04
         }
       }
     }
@@ -2010,25 +2019,34 @@ function DustMotes({ reduced }: { reduced: boolean }) {
 
       for (const m of motesRef.current) {
         if (!reduced) {
-          m.wob += dt * 0.6
-          m.vx += Math.sin(m.wob) * 0.07
-          m.vy -= dt * 1.6
-          m.vx *= 0.992
-          m.vy *= 0.992
-          m.x += m.vx * dt * 24
-          m.y += m.vy * dt * 24
+          m.wob += dt * 0.45
+          m.vx += Math.sin(m.wob) * 0.05
+          m.vy -= dt * 0.9
+          m.vx *= 0.994
+          m.vy *= 0.994
+          m.x += m.vx * dt * 22
+          m.y += m.vy * dt * 22
           if (m.y < -10) {
             m.y = rect.height + 10
             m.x = Math.random() * rect.width
+            m.vy = -(0.55 + Math.random() * 0.9)
           }
           if (m.x < -10) m.x = rect.width + 10
           if (m.x > rect.width + 10) m.x = -10
         }
         ctx.beginPath()
-        ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2)
-        ctx.fillStyle = reduced
-          ? `rgba(28, 39, 64, 0.16)`
-          : `rgba(28, 39, 64, ${m.alpha})`
+        const grd = ctx.createRadialGradient(m.x, m.y, 0, m.x, m.y, m.r * 2.4)
+        if (reduced) {
+          grd.addColorStop(0, `rgba(245, 198, 91, ${m.alpha * 0.42})`)
+          grd.addColorStop(1, 'rgba(245, 198, 91, 0)')
+        } else {
+          grd.addColorStop(0, `rgba(255, 220, 160, ${m.alpha * m.warmth})`)
+          grd.addColorStop(0.6, `rgba(245, 198, 91, ${m.alpha * 0.35})`)
+          grd.addColorStop(1, 'rgba(217, 101, 74, 0)')
+        }
+        ctx.fillStyle = grd
+        ctx.beginPath()
+        ctx.arc(m.x, m.y, m.r * 2.4, 0, Math.PI * 2)
         ctx.fill()
       }
 
@@ -2310,6 +2328,128 @@ function MarginaliaOwl({
   )
 }
 
+function MarginalMoth({
+  active,
+  cycle,
+  reduced,
+}: {
+  active: boolean
+  cycle: number
+  reduced: boolean
+}) {
+  const flap = active && !reduced
+  return (
+    <div
+      className={`marginalia-moth${active ? ' is-active' : ''}${
+        cycle > 0 ? ' is-reread' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 64 56" focusable="false">
+        <defs>
+          <radialGradient id="moth-body" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(107, 74, 37, 0.92)" />
+            <stop offset="100%" stopColor="rgba(40, 22, 8, 0.96)" />
+          </radialGradient>
+          <radialGradient id="moth-wing" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(245, 220, 168, 0.86)" />
+            <stop offset="55%" stopColor="rgba(217, 154, 84, 0.78)" />
+            <stop offset="100%" stopColor="rgba(150, 86, 38, 0.62)" />
+          </radialGradient>
+          <radialGradient id="moth-wing-deep" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(217, 154, 84, 0.7)" />
+            <stop offset="100%" stopColor="rgba(120, 60, 26, 0.5)" />
+          </radialGradient>
+        </defs>
+
+        <g
+          className={flap ? 'moth-flight' : ''}
+          style={{ transformOrigin: '32px 28px' }}
+        >
+          <g
+            className={`moth-wings moth-wings--upper${flap ? ' is-flapping' : ''}`}
+            style={{ transformOrigin: '32px 26px' }}
+          >
+            <path
+              d="M 32 26 Q 14 8 6 14 Q 4 22 12 28 Q 22 30 32 26 Z"
+              fill="url(#moth-wing)"
+              stroke="rgba(80, 36, 14, 0.55)"
+              strokeWidth="0.35"
+            />
+            <path
+              d="M 32 26 Q 50 8 58 14 Q 60 22 52 28 Q 42 30 32 26 Z"
+              fill="url(#moth-wing)"
+              stroke="rgba(80, 36, 14, 0.55)"
+              strokeWidth="0.35"
+            />
+            <circle cx="14" cy="18" r="0.6" fill="rgba(80, 36, 14, 0.55)" />
+            <circle cx="50" cy="18" r="0.6" fill="rgba(80, 36, 14, 0.55)" />
+          </g>
+
+          <g
+            className={`moth-wings moth-wings--lower${flap ? ' is-flapping' : ''}`}
+            style={{ transformOrigin: '32px 28px' }}
+          >
+            <path
+              d="M 32 28 Q 16 32 12 44 Q 22 48 30 38 Q 32 32 32 28 Z"
+              fill="url(#moth-wing-deep)"
+              stroke="rgba(80, 36, 14, 0.45)"
+              strokeWidth="0.3"
+              opacity="0.92"
+            />
+            <path
+              d="M 32 28 Q 48 32 52 44 Q 42 48 34 38 Q 32 32 32 28 Z"
+              fill="url(#moth-wing-deep)"
+              stroke="rgba(80, 36, 14, 0.45)"
+              strokeWidth="0.3"
+              opacity="0.92"
+            />
+          </g>
+
+          <ellipse cx="32" cy="28" rx="2.4" ry="6" fill="url(#moth-body)" />
+
+          <g
+            className="moth-antennae"
+            stroke="rgba(80, 36, 14, 0.7)"
+            strokeWidth="0.4"
+            strokeLinecap="round"
+            fill="none"
+          >
+            <path d="M 31 23 Q 28 18 26 16" />
+            <path d="M 33 23 Q 36 18 38 16" />
+            <circle cx="26" cy="16" r="0.5" fill="rgba(80, 36, 14, 0.7)" />
+            <circle cx="38" cy="16" r="0.5" fill="rgba(80, 36, 14, 0.7)" />
+          </g>
+
+          <g
+            className="moth-eye-spots"
+            fill="rgba(80, 36, 14, 0.55)"
+          >
+            <circle cx="20" cy="22" r="0.7" />
+            <circle cx="44" cy="22" r="0.7" />
+          </g>
+        </g>
+
+        <path
+          className="moth-flight-line"
+          d="M 6 50 Q 20 46 32 48 Q 44 50 58 46"
+          stroke="rgba(214, 168, 73, 0.45)"
+          strokeWidth="0.4"
+          strokeLinecap="round"
+          strokeDasharray="1.4 2.4"
+          fill="none"
+        />
+      </svg>
+      <span className="marginalia-moth-caption">
+        <em>ad lucem</em>
+        <span className="marginalia-moth-caption-tail" aria-hidden="true">
+          · drawn to the lamp
+        </span>
+      </span>
+    </div>
+  )
+}
+
 function ReadingTide({ stage, cycle }: { stage: number; cycle: number }) {
   const stops = [
     { label: 'set', glyph: '§' },
@@ -2525,6 +2665,23 @@ export function App() {
   const [owlBlinking, setOwlBlinking] = useState(false)
   const [slipIntensity, setSlipIntensity] = useState(0)
 
+  const readAnswerRef = useRef<() => void>(() => {})
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.defaultPrevented) return
+      const target = e.target as HTMLElement | null
+      const tag = target?.tagName?.toLowerCase()
+      if (tag === 'input' || tag === 'textarea' || target?.isContentEditable) return
+      if (e.key === ' ' || e.key.toLowerCase() === 'r') {
+        e.preventDefault()
+        readAnswerRef.current()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
   useEffect(() => {
     if (phase !== 'answering') return
     if (answerChars >= ANSWER.length) {
@@ -2569,6 +2726,10 @@ export function App() {
     setPhase('answering')
     if (phase === 'complete') setCycle((c) => c + 1)
   }
+
+  useEffect(() => {
+    readAnswerRef.current = readAnswer
+  })
 
   const sealTimerRef = useRef<number | null>(null)
   useEffect(() => {
@@ -2671,10 +2832,8 @@ export function App() {
 
   return (
     <main className="experiment-shell">
-      <div className="ambient-grid" aria-hidden="true" />
+      <div className="ambient-vignette" aria-hidden="true" />
       <NightSky reduced={reduced} />
-      <div className="ambient-glow ambient-glow--one" aria-hidden="true" />
-      <div className="ambient-glow ambient-glow--two" aria-hidden="true" />
 
       <article className={`sheet ${phase !== 'idle' ? 'has-answer' : ''}`}>
         <span
@@ -2791,6 +2950,13 @@ export function App() {
               <span className="answer-corner answer-corner--bl" aria-hidden="true" />
               <span className="answer-corner answer-corner--br" aria-hidden="true" />
               <InkFingerprint visible={phase !== 'idle'} />
+              {answerVisible && (
+                <span className="answer-letter-head" aria-hidden="true">
+                  <span className="answer-letter-head-mark">¶</span>
+                  <span className="answer-letter-head-text">set in italic · 30 pt · leaded</span>
+                  <span className="answer-letter-head-rule" />
+                </span>
+              )}
               <span className="answer-quote answer-quote--open" aria-hidden="true">"</span>
               {!answerVisible && (
                 <p className="answer-placeholder">
@@ -2816,6 +2982,12 @@ export function App() {
                 </p>
               )}
               <span className="answer-quote answer-quote--close" aria-hidden="true">"</span>
+              {phase === 'complete' && (
+                <span className="answer-letter-close" aria-hidden="true">
+                  <span className="answer-letter-close-rule" />
+                  <em>— cap. xviii · sig. m.iii</em>
+                </span>
+              )}
               <span className="answer-attribution" aria-hidden="true">— set in italic</span>
               <span
                 className="answer-sweep"
@@ -2867,11 +3039,15 @@ export function App() {
               type="button"
               onClick={readAnswer}
               aria-describedby="reader-note"
+              aria-keyshortcuts="Space R"
             >
               <span className="button-mark" aria-hidden="true">↗</span>
               <span className="button-label">{buttonLabel}</span>
               <span className="button-pace" aria-hidden="true">
                 {slow ? '· slow' : '· fast'}
+              </span>
+              <span className="button-keys" aria-hidden="true">
+                <kbd>space</kbd>
               </span>
             </button>
             <p className="reader-note" id="reader-note">{readerNote}</p>
@@ -2890,6 +3066,10 @@ export function App() {
             </div>
 
             <CulDeLampe inscriptionVisible={phase === 'complete'} />
+
+            {replyShown && (
+              <MarginalMoth active={replyShown} cycle={cycle} reduced={reduced} />
+            )}
 
             <Apparatus
               visible={replyShown}
