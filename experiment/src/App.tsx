@@ -1889,6 +1889,48 @@ function InkFingerprint({ visible }: { visible: boolean }) {
   )
 }
 
+function AnswerFinishing({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`answer-finishing${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="answer-finishing-stroke"
+        viewBox="0 0 240 36"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="finishing-gold" x1="0" y1="0" x2="1" y2="0.2">
+            <stop offset="0%" stopColor="rgba(156, 110, 38, 0)" />
+            <stop offset="10%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="42%" stopColor="rgba(200, 146, 62, 0.78)" />
+            <stop offset="74%" stopColor="rgba(245, 198, 91, 0.65)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M 2 22 Q 26 14 52 18 Q 78 24 102 14 Q 126 6 154 16 Q 184 26 210 12 Q 226 6 238 14"
+          stroke="url(#finishing-gold)"
+          strokeWidth="0.7"
+          strokeLinecap="round"
+          fill="none"
+          className="answer-finishing-path"
+        />
+        <circle cx="238" cy="14" r="1.1" fill="rgba(245, 198, 91, 0.85)" className="answer-finishing-dot" />
+        <circle cx="238" cy="14" r="2.6" fill="rgba(245, 198, 91, 0.18)" className="answer-finishing-halo" />
+      </svg>
+      <span className="answer-finishing-glyph" aria-hidden="true">
+        <svg viewBox="0 0 12 12" focusable="false">
+          <circle cx="6" cy="6" r="4.4" fill="none" stroke="currentColor" strokeWidth="0.35" strokeDasharray="0.5 1.4" />
+          <circle cx="6" cy="6" r="0.9" fill="currentColor" />
+        </svg>
+      </span>
+    </div>
+  )
+}
+
 function ReadingPaceIndicator({
   visible,
   slow,
@@ -6984,6 +7026,9 @@ export function App() {
                     <ReadingPaceIndicator visible slow={slow} />
                   )}
                 </div>
+              )}
+              {phase === 'complete' && (
+                <AnswerFinishing visible />
               )}
               <span className="answer-quote answer-quote--close" aria-hidden="true">"</span>
               <span

@@ -1080,9 +1080,9 @@ button { font: inherit; }
 .title-initial-wrap {
   display: inline-block;
   position: relative;
-  width: clamp(128px, 15vw, 196px);
+  width: clamp(112px, 13vw, 168px);
   align-self: start;
-  margin-top: -0.02em;
+  margin-top: -0.04em;
   transition: transform 520ms var(--ease), filter 520ms var(--ease);
   filter: drop-shadow(0 8px 14px rgba(80, 36, 14, 0.22));
 }
@@ -1110,7 +1110,7 @@ button { font: inherit; }
 .broadsheet-initial svg { display: block; width: 100%; height: auto; }
 .bs-letter-glyph {
   fill: url(#bs-gold);
-  font: italic 700 168px/1 var(--display);
+  font: italic 700 156px/1 var(--display);
   letter-spacing: -0.02em;
   paint-order: stroke fill;
 }
@@ -1126,8 +1126,8 @@ button { font: inherit; }
   align-self: center;
   margin: 0;
   color: var(--ink);
-  font: italic 540 clamp(38px, 5.8vw, 82px)/1.04 var(--display);
-  letter-spacing: -0.026em;
+  font: italic 620 clamp(38px, 5.8vw, 84px)/1.02 var(--display);
+  letter-spacing: -0.022em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1;
   padding-top: 0.02em;
   opacity: 0;
@@ -2247,8 +2247,8 @@ button { font: inherit; }
   position: relative; z-index: 1;
   margin: 0;
   color: var(--ink);
-  font: italic 560 clamp(28px, 4vw, 44px)/1.3 var(--display);
-  letter-spacing: -0.018em;
+  font: italic 620 clamp(28px, 4vw, 46px)/1.26 var(--display);
+  letter-spacing: -0.014em;
   text-indent: 0;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1, "liga" 1, "dlig" 1;
   padding-right: 4px;
@@ -2501,6 +2501,115 @@ button { font: inherit; }
   z-index: 2;
   mix-blend-mode: multiply;
   transition: transform 280ms var(--ease);
+}
+
+/* ────────── answer finishing — a hand-drawn gold ink mark
+   that emerges under the answer italic at the moment the
+   reading completes, like a printer's last, confident stroke. */
+
+.answer-finishing {
+  position: absolute;
+  left: 56px;
+  right: 56px;
+  bottom: 22px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 1200ms var(--ease) 280ms, transform 1200ms var(--ease) 280ms;
+  z-index: 3;
+  color: var(--gold-deep);
+}
+.answer-finishing.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.answer-finishing-stroke {
+  display: block;
+  width: 100%;
+  height: 26px;
+  filter: drop-shadow(0 1px 0 rgba(167, 60, 44, 0.12));
+}
+.answer-finishing-path {
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  animation: answer-finishing-draw 1600ms cubic-bezier(.22, .86, .22, 1) 480ms forwards;
+}
+@keyframes answer-finishing-draw {
+  to { stroke-dashoffset: 0; }
+}
+.answer-finishing-dot {
+  opacity: 0;
+  transform-origin: center;
+  animation: answer-finishing-pip 600ms var(--ease) 2080ms forwards;
+}
+@keyframes answer-finishing-pip {
+  from { opacity: 0; transform: scale(0.3); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.answer-finishing-halo {
+  opacity: 0;
+  transform-origin: 238px 14px;
+  animation: answer-finishing-halo-in 1100ms var(--ease) 2200ms forwards;
+}
+@keyframes answer-finishing-halo-in {
+  0%   { opacity: 0; transform: scale(0.4); }
+  60%  { opacity: 0.65; transform: scale(1); }
+  100% { opacity: 0.28; transform: scale(1.32); }
+}
+.answer-finishing-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  color: var(--coral-deep);
+  opacity: 0;
+  animation: answer-finishing-glyph-in 800ms var(--ease) 2520ms forwards;
+}
+@keyframes answer-finishing-glyph-in {
+  from { opacity: 0; transform: rotate(-12deg) scale(0.7); }
+  to   { opacity: 0.85; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .answer-finishing {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .answer-finishing-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .answer-finishing-dot,
+  .answer-finishing-halo,
+  .answer-finishing-glyph {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .answer-finishing-halo { opacity: 0.32; }
+  .answer-finishing-glyph { opacity: 0.85; }
+}
+@media (max-width: 720px) {
+  .answer-finishing {
+    left: 36px;
+    right: 36px;
+    bottom: 16px;
+  }
+  .answer-finishing-stroke { height: 20px; }
+}
+@media (max-width: 560px) {
+  .answer-finishing {
+    left: 28px;
+    right: 28px;
+    bottom: 14px;
+  }
+  .answer-finishing-stroke { height: 16px; }
+  .answer-finishing-glyph { width: 12px; height: 12px; }
 }
 
 /* ────────── inkwell + quill ────────── */
@@ -3017,8 +3126,8 @@ button { font: inherit; }
 .reply-paragraph {
   display: block;
   position: relative;
-  font: italic 480 clamp(20px, 2.6vw, 26px)/1.56 var(--display);
-  letter-spacing: 0.008em;
+  font: italic 540 clamp(21px, 2.8vw, 30px)/1.5 var(--display);
+  letter-spacing: 0.005em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "salt" 1;
   color: var(--ink);
   text-wrap: pretty;
@@ -5562,10 +5671,10 @@ button { font: inherit; }
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   column-gap: 12px;
-  margin: 14px auto 22px;
-  max-width: min(560px, 92%);
+  margin: 12px auto 24px;
+  max-width: min(520px, 92%);
   padding: 0 4px;
-  color: var(--ink-soft);
+  color: var(--ink-mute);
   opacity: 0;
   transform: translateY(4px);
   animation: specimen-imprint-in 900ms var(--ease) 280ms both;
@@ -8214,7 +8323,7 @@ button { font: inherit; }
 @media (min-width: 721px) {
   /* The italic answer now reads as a slightly more confident column. */
   .answer-copy {
-    font: italic 32px/1.34 var(--display);
+    font: italic 36px/1.28 var(--display);
     letter-spacing: -0.006em;
     padding-right: 14px;
   }
@@ -8222,7 +8331,7 @@ button { font: inherit; }
 
 @media (max-width: 720px) {
   .answer-copy {
-    font: italic 24px/1.3 var(--display);
+    font: italic 26px/1.3 var(--display);
   }
 }
 
