@@ -171,71 +171,6 @@ function AsterismGlyph({ className }: { className?: string }) {
   )
 }
 
-function WaxSealInitial() {
-  return (
-    <span className="wax-seal" aria-hidden="true">
-      <span className="wax-halo" />
-      <span className="wax-bezant wax-bezant--one" />
-      <span className="wax-bezant wax-bezant--two" />
-      <span className="wax-bezant wax-bezant--three" />
-      <span className="wax-bezant wax-bezant--four" />
-      <span className="wax-bezant wax-bezant--five" />
-      <svg viewBox="0 0 100 100" focusable="false">
-        <defs>
-          <radialGradient id="wax-radial" cx="36%" cy="30%" r="72%">
-            <stop offset="0%" stopColor="#ffb097" />
-            <stop offset="22%" stopColor="#f37557" />
-            <stop offset="58%" stopColor="#cf3b29" />
-            <stop offset="100%" stopColor="#7d1c12" />
-          </radialGradient>
-          <radialGradient id="wax-shadow" cx="50%" cy="50%" r="50%">
-            <stop offset="60%" stopColor="rgba(48, 10, 4, 0)" />
-            <stop offset="100%" stopColor="rgba(48, 10, 4, 0.42)" />
-          </radialGradient>
-          <radialGradient id="wax-rim" cx="50%" cy="50%" r="50%">
-            <stop offset="86%" stopColor="rgba(255, 220, 160, 0)" />
-            <stop offset="96%" stopColor="rgba(255, 220, 160, 0.55)" />
-            <stop offset="100%" stopColor="rgba(255, 220, 160, 0)" />
-          </radialGradient>
-        </defs>
-        <circle cx="50" cy="52" r="46" fill="url(#wax-shadow)" />
-        <circle cx="50" cy="51" r="42" fill="url(#wax-radial)" />
-        <circle cx="50" cy="51" r="42" fill="url(#wax-rim)" />
-        <circle
-          cx="50"
-          cy="51"
-          r="36"
-          fill="none"
-          stroke="rgba(255, 245, 233, 0.55)"
-          strokeWidth="0.45"
-          strokeDasharray="0.9 2.4"
-        />
-        <circle
-          cx="50"
-          cy="51"
-          r="30"
-          fill="none"
-          stroke="rgba(255, 245, 233, 0.18)"
-          strokeWidth="0.3"
-        />
-        <ellipse
-          cx="38"
-          cy="34"
-          rx="9"
-          ry="5"
-          fill="rgba(255, 245, 233, 0.22)"
-          transform="rotate(-32 38 34)"
-        />
-        <g className="wax-monogram" aria-hidden="true">
-          <text x="50" y="73" textAnchor="middle" className="wax-letter">
-            i
-          </text>
-        </g>
-      </svg>
-    </span>
-  )
-}
-
 function PrintedInitial({ letter }: { letter: string }) {
   return (
     <span className="printed-initial" aria-hidden="true">
@@ -907,81 +842,6 @@ function PressedLeaf({ visible, reduced }: { visible: boolean; reduced: boolean 
           h · lo · xviii
         </text>
       </svg>
-    </div>
-  )
-}
-
-function ReadingBreath({ visible }: { visible: boolean }) {
-  return (
-    <div
-      className={`reading-breath${visible ? ' is-visible' : ''}`}
-      aria-hidden="true"
-    >
-      <svg viewBox="0 0 220 24" focusable="false">
-        <g className="reading-breath-mark">
-          <line x1="0" y1="12" x2="80" y2="12" stroke="currentColor" strokeWidth="0.5" />
-          <path
-            d="M 80 12 C 92 4, 100 20, 110 12"
-            stroke="currentColor"
-            strokeWidth="0.5"
-            fill="none"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 110 12 C 120 4, 128 20, 140 12"
-            stroke="currentColor"
-            strokeWidth="0.5"
-            fill="none"
-            strokeLinecap="round"
-          />
-          <line x1="140" y1="12" x2="220" y2="12" stroke="currentColor" strokeWidth="0.5" />
-          <g transform="translate(110 12)">
-            <circle cx="0" cy="0" r="3.2" fill="var(--paper)" stroke="currentColor" strokeWidth="0.55" />
-            <circle cx="0" cy="0" r="0.9" fill="currentColor" />
-          </g>
-        </g>
-      </svg>
-      <span className="reading-breath-script">a breath between stanzas</span>
-    </div>
-  )
-}
-
-function ScholarAnnotation({ visible }: { visible: boolean }) {
-  return (
-    <div
-      className={`scholar-annotation${visible ? ' is-visible' : ''}`}
-      aria-hidden="true"
-    >
-      <svg viewBox="0 0 132 38" focusable="false">
-        <g className="pencil-mark">
-          <text
-            x="6"
-            y="22"
-            className="pencil-text"
-            fill="currentColor"
-          >
-            type-set.
-          </text>
-          <path
-            d="M 4 28 Q 16 26 28 28 T 52 28 T 76 28 T 96 28"
-            stroke="currentColor"
-            strokeWidth="0.55"
-            fill="none"
-            strokeLinecap="round"
-            opacity="0.7"
-          />
-          <path
-            d="M 102 14 L 108 18 M 102 18 L 108 14"
-            stroke="currentColor"
-            strokeWidth="0.5"
-            strokeLinecap="round"
-            opacity="0.7"
-          />
-          <circle cx="118" cy="6" r="0.7" fill="currentColor" opacity="0.6" />
-          <circle cx="122" cy="32" r="0.5" fill="currentColor" opacity="0.45" />
-        </g>
-      </svg>
-      <span className="scholar-annotation-mark">manu · pr.</span>
     </div>
   )
 }
@@ -1926,27 +1786,6 @@ function EngravedRule({ className }: { className?: string }) {
   )
 }
 
-function LitLeafMark() {
-  return (
-    <span className="lit-leaf" aria-hidden="true">
-      <svg viewBox="0 0 22 16" focusable="false">
-        <path
-          d="M 11 2 Q 18 4 17 11 Q 14 14 11 14 Q 8 14 5 11 Q 4 4 11 2 Z"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="0.7"
-        />
-        <line x1="11" y1="3" x2="11" y2="13" stroke="currentColor" strokeWidth="0.4" />
-        <line x1="11" y1="6" x2="8" y2="8" stroke="currentColor" strokeWidth="0.3" />
-        <line x1="11" y1="6" x2="14" y2="8" stroke="currentColor" strokeWidth="0.3" />
-        <line x1="11" y1="9" x2="8.5" y2="11" stroke="currentColor" strokeWidth="0.3" />
-        <line x1="11" y1="9" x2="13.5" y2="11" stroke="currentColor" strokeWidth="0.3" />
-      </svg>
-      <span className="lit-leaf-text">lit. leaf</span>
-    </span>
-  )
-}
-
 function LeafHourDial({
   hours,
   minutes,
@@ -2550,63 +2389,6 @@ function SignatureMark({ sig, side }: { sig: string; side: 'r' | 'v' }) {
       <span className="sig-letter">{sig}</span>
       <sup className="sig-side">{side}</sup>
     </span>
-  )
-}
-
-function PressCorrectionSlip({ visible, intensity }: { visible: boolean; intensity: number }) {
-  return (
-    <div
-      className={`press-correction-slip${visible ? ' is-visible' : ''}`}
-      aria-hidden="true"
-    >
-      <svg className="press-correction-tape" viewBox="0 0 64 16" focusable="false">
-        <path
-          d="M 3 1.6 L 61 2.8 L 59.4 13 L 2 12 Z"
-          fill="rgba(245, 222, 162, 0.7)"
-          stroke="rgba(196, 138, 50, 0.32)"
-          strokeWidth="0.32"
-        />
-        <line
-          x1="7"
-          y1="5.5"
-          x2="57"
-          y2="6.8"
-          stroke="rgba(196, 138, 50, 0.42)"
-          strokeWidth="0.4"
-          strokeDasharray="1.6 2.2"
-        />
-        <line
-          x1="12"
-          y1="9"
-          x2="51"
-          y2="10.4"
-          stroke="rgba(255, 248, 224, 0.32)"
-          strokeWidth="0.32"
-        />
-      </svg>
-      <header className="press-correction-head">
-        <span className="press-correction-title">press correction</span>
-        <span className="press-correction-mark" aria-hidden="true">¶</span>
-      </header>
-      <span className="press-correction-rule" aria-hidden="true" />
-      <p className="press-correction-body">
-        <em>what is set once is read</em>
-        <br />
-        <em>at the pace of attention.</em>
-      </p>
-      <footer className="press-correction-foot">
-        <span className="press-correction-foot-mark">corrig.</span>
-        <span className="press-correction-foot-sep" aria-hidden="true">·</span>
-        <span className="press-correction-foot-hand">manu pr.</span>
-      </footer>
-      {intensity > 0 && (
-        <span
-          className="press-correction-ink"
-          style={{ opacity: Math.min(1, intensity) }}
-          aria-hidden="true"
-        />
-      )}
-    </div>
   )
 }
 
@@ -3257,50 +3039,6 @@ function ReadingTrace({ cycle, reduced }: { cycle: number; reduced: boolean }) {
   )
 }
 
-function TitleCartouche({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="title-cartouche" aria-hidden="true">
-      <svg className="title-cartouche-frame" viewBox="0 0 110 110" focusable="false">
-        <g className="cartouche-outer">
-          <rect x="6" y="6" width="98" height="98" rx="2" />
-          <rect
-            x="10"
-            y="10"
-            width="90"
-            height="90"
-            rx="1"
-            fill="none"
-            strokeDasharray="1.4 2.2"
-          />
-        </g>
-        <g className="cartouche-corner cartouche-corner--tl">
-          <path d="M 6 18 Q 6 6 18 6" fill="none" />
-          <path d="M 12 18 Q 12 12 18 12" fill="none" />
-        </g>
-        <g className="cartouche-corner cartouche-corner--tr">
-          <path d="M 92 6 Q 104 6 104 18" fill="none" />
-          <path d="M 92 12 Q 98 12 98 18" fill="none" />
-        </g>
-        <g className="cartouche-corner cartouche-corner--bl">
-          <path d="M 6 92 Q 6 104 18 104" fill="none" />
-          <path d="M 12 92 Q 12 98 18 98" fill="none" />
-        </g>
-        <g className="cartouche-corner cartouche-corner--br">
-          <path d="M 92 104 Q 104 104 104 92" fill="none" />
-          <path d="M 92 98 Q 98 98 98 92" fill="none" />
-        </g>
-        <g className="cartouche-marks">
-          <circle cx="55" cy="9" r="0.9" />
-          <circle cx="55" cy="101" r="0.9" />
-          <circle cx="9" cy="55" r="0.9" />
-          <circle cx="101" cy="55" r="0.9" />
-        </g>
-      </svg>
-      <span className="title-cartouche-inner">{children}</span>
-    </span>
-  )
-}
-
 function TypefaceSpecimen({ visible }: { visible: boolean }) {
   return (
     <div
@@ -3657,6 +3395,80 @@ function PressSeal({ visible, cycle }: { visible: boolean; cycle: number }) {
         </g>
       </svg>
     </div>
+  )
+}
+
+function ImpressionLedger({ cycle, now }: { cycle: number; now: Date }) {
+  if (cycle === 0) return null
+
+  const dayShort = WEEKDAYS[now.getDay()].slice(0, 3)
+  const dayNumber = now.getDate()
+  const monthShort = MONTHS[now.getMonth()].slice(0, 3)
+  const hour24 = now.getHours()
+  const minutes = now.getMinutes()
+  const h12 = ((hour24 + 11) % 12) + 1
+  const mm = String(minutes).padStart(2, '0')
+  const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
+
+  const impressions = Array.from({ length: cycle }, (_, i) => {
+    const n = i + 1
+    const isLatest = i === cycle - 1
+    const label =
+      n === 1
+        ? 'first press'
+        : n === 2
+          ? 'second press · the reader slows'
+          : `${ordinal(n + 1)} press · the page unchanged`
+    return { n, label, isLatest }
+  })
+
+  return (
+    <aside
+      className={`impression-ledger${cycle > 0 ? ' is-visible' : ''}`}
+      aria-label={`${cycle} impression${cycle === 1 ? '' : 's'} on record`}
+    >
+      <header className="impression-ledger-head">
+        <span className="impression-ledger-mark" aria-hidden="true">¶</span>
+        <span className="impression-ledger-rule" aria-hidden="true" />
+        <span className="impression-ledger-title">
+          <em>press register</em>
+        </span>
+        <span className="impression-ledger-count" aria-hidden="true">
+          {cycle} on record
+        </span>
+        <span className="impression-ledger-rule" aria-hidden="true" />
+      </header>
+      <ol className="impression-ledger-list">
+        {impressions.map((imp) => (
+          <li
+            key={imp.n}
+            className={`impression-ledger-row${imp.isLatest ? ' is-latest' : ''}`}
+            style={{ '--i': imp.n - 1 } as React.CSSProperties}
+          >
+            <span className="impression-ledger-numeral">{ROMAN[imp.n - 1]}.</span>
+            <span className="impression-ledger-stamp">
+              <em className="impression-ledger-day">{dayShort}</em>
+              <span className="impression-ledger-date">
+                {' '}
+                <em>{dayNumber}</em> <em>{monthShort}</em>
+              </span>
+              <span className="impression-ledger-time">
+                {' '}
+                <em>
+                  {h12}:{mm}
+                </em>{' '}
+                {period}
+              </span>
+            </span>
+            <span className="impression-ledger-leader" aria-hidden="true">
+              <span className="impression-ledger-leader-line" />
+              <span className="impression-ledger-leader-glyph">✦</span>
+            </span>
+            <span className="impression-ledger-label">{imp.label}</span>
+          </li>
+        ))}
+      </ol>
+    </aside>
   )
 }
 
@@ -4105,6 +3917,14 @@ export function App() {
             </h1>
             <EditionLine cycle={cycle} />
 
+            {cycle >= 2 && (
+              <span className="second-reading-mark" aria-hidden="true">
+                <span className="second-reading-mark-rule" />
+                <em>second reading</em>
+                <span className="second-reading-mark-rule" />
+              </span>
+            )}
+
             <div
               data-section="sec-marginalia"
               ref={(el) => { sectionRefs.current['sec-marginalia'] = el }}
@@ -4310,6 +4130,8 @@ export function App() {
               visible={phase === 'complete'}
               cycle={cycle}
             />
+
+            <ImpressionLedger cycle={cycle} now={now} />
 
             <div className={`scholars-bench ${benchShown ? 'is-revealed' : ''}`}>
               <span className="scholars-bench-label" aria-hidden="true">

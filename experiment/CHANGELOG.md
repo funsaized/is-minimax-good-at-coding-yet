@@ -1,13 +1,22 @@
-# Changelog
+A folio, set for the second reading — typography refined and a press register added.
 
-## Iteration 100
+## Composition
 
-A still folio, read again tonight.
+- Tightened the broadsheet title: smaller drop-cap column, slightly lighter weight, more breathing line-height (1.04 → 1.08); the subject rule now sits a touch lower and thinner, sitting more deliberately beneath *Minimax M3*.
+- Re-rhythm of the question stanzas: gap between stanzas widened from 4px to 14px, line-height lifted from 1.55 to 1.6, marks (¶ † ‡) slightly larger and more deliberate; stanza marks now shift one pixel on hover as a quiet reading cue.
+- Rebalanced the almanac grid: replaced `overflow-wrap: anywhere` with `break-word` and gave every column an explicit `minmax(0, …)` so words no longer break mid-letter at narrower viewports.
 
-- **Reading witness inscribed.** A small line now opens the chapter head, recording the day, hour, and minute this folio was opened: *"opened · Mon · the sixteenth of September · 11:07 p.m."* It updates every minute and tucks politely below the existing subtitle; on smaller viewports it gracefully drops the calendar tail.
-- **Title speaks a little louder.** The broadsheet title's italic weight lifts from 460 to 540; line-height opens to 1.04; the subject *Minimax M3* moves from 540 to 600. Result: a more confident opening sentence, less diffuse swash.
-- **Reading surface breathes.** `answer-copy` line-height widens from 1.22 to 1.32; `reply-paragraph` from 1.6 to 1.62; answer-surface padding grows to 46 / 36 from 40 / 34. The corners sharpen to 1.5px and brighten on reveal.
-- **Scholar's bench, unified.** A single dashed horizon line ties the three timepieces — leaf hour, sidereal pocket, moon phase — beneath a small diamond ornament at center. They now read as one still-life rather than three objects.
-- **Typography tightened everywhere.** The Witness uses its own light italic (serif), small-caps day abbreviation, and a sans-uppercase "opened" key. Witness honors `prefers-reduced-motion` (opacity 0.92, no entrance).
-- **Responsive polish.** Mobile witness stacks on small screens; rule lengths contract; calendar tail hides below 880px. Bench stays three-up at all sizes for proportion.
-- **No remote assets, no new deps.** The Witness reads from the existing `useNow()` hook. Build clean, tsc passes.
+## A new editorial piece — the press register
+
+- Added `<ImpressionLedger />`: a printed record that appears only once the reader has pressed once. Each impression is set as a typeset row — *mon · 7 sep · 19:32 ✦ first press*, etc. — with a dotted leader, italic stamp, and a coral wash that highlights the latest impression. The list grows as the reader re-reads, and re-renders when the slow pace is chosen.
+- A small "second reading" mark sits just under the EditionLine once cycle ≥ 2 — two coral rules flanking the words — so the recto acknowledges that the reader has come back to it.
+
+## Cleanup
+
+- Removed six never-rendered components (`PressCorrectionSlip`, `ScholarAnnotation`, `TitleCartouche`, `WaxSealInitial`, `LitLeafMark`, `ReadingBreath`) and their styles. Net change: −178 lines of dead code in `App.tsx`, smaller CSS bundle.
+- Added reduced-motion overrides for the new ImpressionLedger and second-reading mark.
+
+## Touched
+
+- `src/App.tsx` — added `ImpressionLedger`, mounted between the press seal and the scholar's bench, mounted the `second-reading-mark` after the EditionLine; removed unused components.
+- `src/style.css` — refined `.broadsheet-title` / `.title-flow` / `.title-subject` typography, re-rhythmed `.question-stanzas`, rebalanced `.almanac-grid`, added `.impression-ledger` and `.second-reading-mark` blocks plus responsive overrides at 880px and 560px.
