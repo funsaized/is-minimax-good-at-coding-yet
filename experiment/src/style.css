@@ -816,6 +816,107 @@ button { font: inherit; }
   font: italic 17px/1 var(--display);
 }
 
+/* ────────── printer's specimen plate (recto ornament) ────────── */
+
+.specimen-plate {
+  position: absolute;
+  top: -18px;
+  right: clamp(-32px, -3vw, -16px);
+  width: clamp(82px, 11.5vw, 126px);
+  pointer-events: none;
+  z-index: 3;
+  filter: drop-shadow(0 10px 18px rgba(40, 22, 8, 0.22));
+  opacity: 0;
+  transition: opacity 700ms var(--ease);
+}
+.specimen-plate.is-visible {
+  opacity: 1;
+}
+.specimen-plate-card {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: rotate(2deg);
+  transform-origin: 62% 30%;
+}
+.specimen-plate:not(.is-static) .specimen-plate-card {
+  animation: spec-plate-arrive 1200ms var(--ease) 900ms both;
+}
+@keyframes spec-plate-arrive {
+  from { opacity: 0; transform: translate(-6px, -10px) rotate(-2deg); }
+  to   { opacity: 1; transform: translate(0, 0) rotate(2deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .specimen-plate {
+    opacity: 1;
+    transition: none;
+  }
+  .specimen-plate-card {
+    animation: none;
+    transform: rotate(2deg);
+  }
+}
+
+.spec-plate-display-glyph {
+  font: italic 700 46px/1 var(--display);
+  fill: url(#spec-plate-gold);
+  letter-spacing: -0.025em;
+}
+.spec-plate-display-roman {
+  font: italic 500 11px/1 var(--serif);
+  fill: rgba(107, 74, 37, 0.62);
+  letter-spacing: 0.04em;
+}
+.spec-plate-label {
+  font: italic 500 9px/1 var(--serif);
+  fill: rgba(107, 74, 37, 0.78);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.spec-plate-label-sub {
+  font: italic 400 8.5px/1 var(--serif);
+  fill: rgba(17, 32, 42, 0.5);
+  letter-spacing: 0.02em;
+}
+.spec-plate-key {
+  font: italic 400 9px/1 var(--serif);
+  fill: rgba(17, 32, 42, 0.55);
+  letter-spacing: 0.02em;
+}
+.spec-plate-val {
+  font: italic 500 10px/1 var(--serif);
+  fill: rgba(17, 32, 42, 0.82);
+  letter-spacing: 0.005em;
+}
+.spec-plate-foot {
+  font: italic 400 8px/1 var(--serif);
+  fill: rgba(17, 32, 42, 0.5);
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 720px) {
+  .specimen-plate {
+    width: 72px;
+    top: -10px;
+    right: -12px;
+  }
+}
+@media (max-width: 520px) {
+  .specimen-plate {
+    width: 58px;
+    top: -4px;
+    right: -6px;
+  }
+}
+@media (max-width: 420px) {
+  .specimen-plate {
+    width: 50px;
+    top: -2px;
+    right: -2px;
+    opacity: 0.7;
+  }
+}
+
 /* ────────── broadsheet title (dominant drop-cap) ────────── */
 
 .broadsheet-title {
@@ -880,6 +981,9 @@ button { font: inherit; }
   letter-spacing: -0.022em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1;
   padding-top: 0.02em;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: title-flow-in 900ms var(--ease) 360ms forwards;
   text-wrap: balance;
   text-indent: -0.02em;
   position: relative;
@@ -916,6 +1020,13 @@ button { font: inherit; }
 @keyframes title-trail-rise {
   from { opacity: 0; transform: translateX(-6px); }
   to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes title-flow-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-flow { animation: none; opacity: 1; transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .has-answer .title-flourish-trail-line,
@@ -2350,8 +2461,8 @@ button { font: inherit; }
 .reply-paragraph {
   display: block;
   position: relative;
-  font: italic clamp(19px, 2.4vw, 23px)/1.62 var(--display);
-  letter-spacing: 0.008em;
+  font: italic clamp(19px, 2.4vw, 23px)/1.66 var(--display);
+  letter-spacing: 0.012em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
   color: var(--ink);
   text-wrap: pretty;
@@ -2360,6 +2471,7 @@ button { font: inherit; }
   text-indent: 0.02em;
   max-width: 58ch;
   margin-inline: auto;
+  text-shadow: 0 0 0.4px rgba(17, 32, 42, 0.08);
 }
 .reply-paragraph::first-letter {
   /* baseline tweak so italic letters don't snag against the body */
@@ -6559,6 +6671,35 @@ button { font: inherit; }
 }
 .wax-seal:disabled {
   cursor: default;
+}
+
+.press-plate:not(.is-sealed):not(.is-breaking):not(.is-reread) .wax-seal-stage {
+  animation: seal-invite 4.6s ease-in-out 1800ms infinite;
+}
+.press-plate:not(.is-sealed):not(.is-breaking):not(.is-reread) .wax-seal:hover:not(:disabled):not(.is-breaking) .wax-seal-stage {
+  animation-play-state: paused;
+}
+@keyframes seal-invite {
+  0%, 100% {
+    filter:
+      drop-shadow(0 4px 6px rgba(40, 8, 4, 0.22))
+      drop-shadow(0 0 6px rgba(245, 198, 91, 0.14));
+  }
+  50% {
+    filter:
+      drop-shadow(0 4px 6px rgba(40, 8, 4, 0.22))
+      drop-shadow(0 0 14px rgba(245, 198, 91, 0.36));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .press-plate:not(.is-sealed):not(.is-breaking):not(.is-reread) .wax-seal-stage {
+    animation: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .press-plate:not(.is-sealed):not(.is-breaking):not(.is-reread) .wax-seal-stage {
+    animation: none;
+  }
 }
 
 .wax-seal-stage {

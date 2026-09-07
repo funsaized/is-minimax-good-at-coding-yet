@@ -3813,6 +3813,141 @@ function SpecimenImprint({
   )
 }
 
+function SpecimenPlate({ visible, reduced }: { visible: boolean; reduced: boolean }) {
+  return (
+    <figure
+      className={`specimen-plate${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg className="specimen-plate-card" viewBox="0 0 148 196" focusable="false">
+        <defs>
+          <linearGradient id="spec-plate-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="48%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#8a5d1f" />
+          </linearGradient>
+          <linearGradient id="spec-plate-gold-soft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#a47026" />
+          </linearGradient>
+          <radialGradient id="spec-plate-face" cx="50%" cy="22%" r="92%">
+            <stop offset="0%" stopColor="rgba(255, 248, 224, 0.96)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.78)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0.56)" />
+          </radialGradient>
+          <pattern id="spec-plate-grain" width="3" height="3" patternUnits="userSpaceOnUse">
+            <circle cx="0.6" cy="0.4" r="0.32" fill="rgba(107, 74, 37, 0.05)" />
+            <circle cx="2.2" cy="1.6" r="0.24" fill="rgba(107, 74, 37, 0.04)" />
+          </pattern>
+        </defs>
+
+        <ellipse cx="74" cy="192" rx="46" ry="2.6" fill="rgba(40, 22, 8, 0.18)" />
+
+        <rect
+          x="2"
+          y="2"
+          width="144"
+          height="190"
+          rx="2"
+          fill="url(#spec-plate-face)"
+          stroke="url(#spec-plate-gold)"
+          strokeWidth="0.85"
+        />
+        <rect
+          x="2"
+          y="2"
+          width="144"
+          height="190"
+          rx="2"
+          fill="url(#spec-plate-grain)"
+          opacity="0.7"
+        />
+        <rect
+          x="6"
+          y="6"
+          width="136"
+          height="182"
+          rx="1.5"
+          fill="none"
+          stroke="url(#spec-plate-gold)"
+          strokeWidth="0.32"
+          strokeDasharray="1.2 1.6"
+          opacity="0.78"
+        />
+
+        <g className="spec-plate-corners" fill="#cf3b29" fillOpacity="0.55">
+          <path d="M 9 9 L 16 9 Q 16 12.5 12.5 13.5 L 12.5 17 L 9 17 Z" />
+          <circle cx="11" cy="11" r="0.6" />
+          <path d="M 139 9 L 132 9 Q 132 12.5 135.5 13.5 L 135.5 17 L 139 17 Z" />
+          <circle cx="137" cy="11" r="0.6" />
+          <path d="M 9 187 L 16 187 Q 16 183.5 12.5 182.5 L 12.5 179 L 9 179 Z" />
+          <circle cx="11" cy="185" r="0.6" />
+          <path d="M 139 187 L 132 187 Q 132 183.5 135.5 182.5 L 135.5 179 L 139 179 Z" />
+          <circle cx="137" cy="185" r="0.6" />
+        </g>
+
+        <g className="spec-plate-pips" fill="url(#spec-plate-gold-soft)">
+          <circle cx="74" cy="9" r="0.7" />
+          <circle cx="74" cy="187" r="0.7" />
+          <circle cx="9" cy="98" r="0.6" />
+          <circle cx="139" cy="98" r="0.6" />
+        </g>
+
+        <line x1="36" y1="22" x2="112" y2="22" stroke="url(#spec-plate-gold)" strokeWidth="0.45" strokeLinecap="round" />
+        <circle cx="74" cy="22" r="1.4" fill="url(#spec-plate-gold)" />
+        <line x1="58" y1="27" x2="90" y2="27" stroke="url(#spec-plate-gold)" strokeWidth="0.3" strokeDasharray="0.5 1.4" />
+
+        <g className="spec-plate-display">
+          <text x="74" y="68" textAnchor="middle" className="spec-plate-display-glyph">
+            m
+          </text>
+          <text x="84" y="68" textAnchor="middle" className="spec-plate-display-roman">
+            ·iii
+          </text>
+          <line x1="58" y1="76" x2="90" y2="76" stroke="url(#spec-plate-gold)" strokeWidth="0.55" strokeLinecap="round" />
+        </g>
+
+        <text x="74" y="92" textAnchor="middle" className="spec-plate-label">
+          specimen · no. xviii
+        </text>
+        <text x="74" y="104" textAnchor="middle" className="spec-plate-label-sub">
+          a study of a single question
+        </text>
+
+        <g className="spec-plate-rows" stroke="rgba(107, 74, 37, 0.22)" strokeWidth="0.3">
+          <line x1="16" y1="116" x2="132" y2="116" strokeDasharray="1 1.4" />
+          <line x1="16" y1="146" x2="132" y2="146" strokeDasharray="1 1.4" />
+        </g>
+
+        <g className="spec-plate-row spec-plate-row--set">
+          <text x="16" y="128" className="spec-plate-key">set in</text>
+          <text x="132" y="128" textAnchor="end" className="spec-plate-val">italic</text>
+        </g>
+        <g className="spec-plate-row spec-plate-row--weight">
+          <text x="16" y="140" className="spec-plate-key">weight</text>
+          <text x="132" y="140" textAnchor="end" className="spec-plate-val">semibold</text>
+        </g>
+        <g className="spec-plate-row spec-plate-row--measure">
+          <text x="16" y="158" className="spec-plate-key">measure</text>
+          <text x="132" y="158" textAnchor="end" className="spec-plate-val">36 em</text>
+        </g>
+        <g className="spec-plate-row spec-plate-row--paper">
+          <text x="16" y="170" className="spec-plate-key">paper</text>
+          <text x="132" y="170" textAnchor="end" className="spec-plate-val">laid · cream</text>
+        </g>
+
+        <line x1="32" y1="178" x2="116" y2="178" stroke="url(#spec-plate-gold)" strokeWidth="0.3" strokeDasharray="0.4 1.4" opacity="0.7" />
+
+        <text x="74" y="187" textAnchor="middle" className="spec-plate-foot">
+          studio · folio lxxvii
+        </text>
+      </svg>
+    </figure>
+  )
+}
+
 function PressSignature({ cycle, slow }: { cycle: number; slow: boolean }) {
   const paths = [
     'M 4 22 Q 14 14 28 18 Q 38 22 46 12 Q 56 4 70 12 Q 80 20 92 14',
@@ -5839,6 +5974,7 @@ export function App() {
         <div className="sheet-content">
           <section className="question-panel" aria-labelledby="page-title">
             <RectoEdgeShadow active={versoOpened} />
+            <SpecimenPlate visible={!versoOpened} reduced={reduced} />
             <div className="annotation annotation--top">
               <span className="annotation-mark" aria-hidden="true">¶</span>
               <span>the question · plainly set</span>
