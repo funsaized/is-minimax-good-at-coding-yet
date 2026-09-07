@@ -3353,6 +3353,328 @@ function TitleFlourish() {
   )
 }
 
+function TitleSpecimen({
+  visible,
+  cycle,
+}: {
+  visible: boolean
+  cycle: number
+}) {
+  return (
+    <div
+      className={`title-specimen${visible ? ' is-visible' : ''}${
+        cycle > 0 ? ' is-reread' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <span className="title-specimen-rule title-specimen-rule--left" />
+      <span className="title-specimen-cluster">
+        <span className="title-specimen-key">
+          <em>catalog</em>
+          <span className="title-specimen-sep">·</span>
+          <em>specimen</em>
+          <span className="title-specimen-sep">·</span>
+          <em>no. xviii</em>
+        </span>
+        <span className="title-specimen-quote">
+          <em className="title-specimen-q">“</em>
+          is{' '}
+          <em className="title-specimen-subject">Minimax M3</em>{' '}
+          good at frontend yet?
+          <em className="title-specimen-q title-specimen-q--close">”</em>
+        </span>
+        <span className="title-specimen-meta">
+          <em>set in italic</em>
+          <span className="title-specimen-meta-dot" aria-hidden="true">·</span>
+          <em>30 pt</em>
+          <span className="title-specimen-meta-dot" aria-hidden="true">·</span>
+          <em>leaded</em>
+          <span className="title-specimen-meta-dot" aria-hidden="true">·</span>
+          <em>with gilt</em>
+        </span>
+      </span>
+      <span className="title-specimen-rule title-specimen-rule--right" />
+    </div>
+  )
+}
+
+function PressInstructionPlate({
+  cycle,
+  phase,
+  slow,
+  items,
+  buttonLabel,
+  readerNote,
+  onRead,
+}: {
+  cycle: number
+  phase: Phase
+  slow: boolean
+  items: MarginaliaItem[]
+  buttonLabel: string
+  readerNote: string
+  onRead: () => void
+}) {
+  const sealed = phase !== 'idle'
+  return (
+    <div
+      className={`press-plate${sealed ? ' is-sealed' : ''}${
+        cycle > 0 ? ' is-reread' : ''
+      }`}
+    >
+      <span className="press-plate-corner press-plate-corner--tl" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path
+            d="M 2 12 L 2 2 L 12 2"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 5 12 L 5 5 L 12 5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.32"
+            opacity="0.55"
+          />
+          <circle cx="3.6" cy="3.6" r="0.7" fill="currentColor" />
+        </svg>
+      </span>
+      <span className="press-plate-corner press-plate-corner--tr" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path
+            d="M 12 2 L 22 2 L 22 12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 12 5 L 19 5 L 19 12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.32"
+            opacity="0.55"
+          />
+          <circle cx="20.4" cy="3.6" r="0.7" fill="currentColor" />
+        </svg>
+      </span>
+      <span className="press-plate-corner press-plate-corner--bl" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path
+            d="M 2 12 L 2 22 L 12 22"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 5 12 L 5 19 L 12 19"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.32"
+            opacity="0.55"
+          />
+          <circle cx="3.6" cy="20.4" r="0.7" fill="currentColor" />
+        </svg>
+      </span>
+      <span className="press-plate-corner press-plate-corner--br" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path
+            d="M 12 22 L 22 22 L 22 12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 12 19 L 19 19 L 19 12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.32"
+            opacity="0.55"
+          />
+          <circle cx="20.4" cy="20.4" r="0.7" fill="currentColor" />
+        </svg>
+      </span>
+
+      <header className="press-plate-head">
+        <span className="press-plate-head-rule press-plate-head-rule--left" />
+        <span className="press-plate-head-cluster">
+          <svg className="press-plate-head-glyph" viewBox="0 0 24 12" focusable="false" aria-hidden="true">
+            <g fill="currentColor">
+              <path d="M 5 6 L 12 1 L 12 11 Z" opacity="0.85" />
+              <path d="M 19 6 L 12 1 L 12 11 Z" opacity="0.85" />
+              <circle cx="12" cy="6" r="0.9" fill="var(--paper)" />
+            </g>
+          </svg>
+          <em className="press-plate-head-key">the press instruction</em>
+          <span className="press-plate-head-sep" aria-hidden="true">·</span>
+          <em className="press-plate-head-tail">
+            {sealed ? 'the leaf is turning' : 'turn the leaf below'}
+          </em>
+        </span>
+        <span className="press-plate-head-rule press-plate-head-rule--right" />
+      </header>
+
+      <ol className="press-plate-marks" aria-label="marginalia">
+        {items.map((item, i) => (
+          <li
+            key={item.mark}
+            className={`press-plate-mark press-plate-mark--${i}`}
+            style={{ '--i': i } as React.CSSProperties}
+          >
+            <span
+              className="press-plate-mark-note"
+              data-gloss={item.gloss}
+              tabIndex={0}
+            >
+              <span className="press-plate-mark-glyph" aria-hidden="true">
+                {item.mark}
+              </span>
+              <span className="press-plate-mark-text">{item.note}</span>
+            </span>
+            {i < items.length - 1 && (
+              <span className="press-plate-mark-dot" aria-hidden="true">
+                ·
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+
+      <div className="press-plate-divider" aria-hidden="true">
+        <span className="press-plate-divider-line press-plate-divider-line--left" />
+        <span className="press-plate-divider-orb" aria-hidden="true">
+          <svg viewBox="0 0 12 12" focusable="false">
+            <circle cx="6" cy="6" r="4.4" fill="none" stroke="currentColor" strokeWidth="0.4" strokeDasharray="0.5 1.2" />
+            <circle cx="6" cy="6" r="1" fill="currentColor" />
+          </svg>
+        </span>
+        <span className="press-plate-divider-line press-plate-divider-line--right" />
+      </div>
+
+      <div className="press-plate-action">
+        <button
+          className={`read-button${slow ? ' is-slow' : ''}${
+            sealed ? ' is-sealed' : ''
+          }`}
+          type="button"
+          onClick={onRead}
+          aria-describedby="reader-note"
+          aria-keyshortcuts="Space R"
+        >
+          <span className="button-mark" aria-hidden="true">↪</span>
+          <span className="button-label">{buttonLabel}</span>
+          <span className="button-pace" aria-hidden="true">
+            {slow ? '· slow' : '· fast'}
+          </span>
+          <span className="button-keys" aria-hidden="true">
+            <kbd>space</kbd>
+          </span>
+        </button>
+        <p className="reader-note" id="reader-note">{readerNote}</p>
+      </div>
+
+      <footer className="press-plate-foot">
+        <span className="press-plate-foot-rule press-plate-foot-rule--left" />
+        <span className="press-plate-foot-cluster">
+          <span className="press-plate-foot-mark" aria-hidden="true">¶</span>
+          <em className="press-plate-foot-key">explicit</em>
+          <span className="press-plate-foot-sep" aria-hidden="true">·</span>
+          <em className="press-plate-foot-tail">
+            {cycle === 0
+              ? 'the question, set'
+              : cycle === 1
+                ? 'the question, set again'
+                : `the question, set ${ordinal(cycle + 1)} times`}
+          </em>
+          <svg
+            className="press-plate-foot-fleuron"
+            viewBox="0 0 24 12"
+            focusable="false"
+            aria-hidden="true"
+          >
+            <path
+              d="M 4 6 Q 8 2 12 6 Q 16 10 20 6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="0.5"
+              strokeLinecap="round"
+            />
+            <circle cx="12" cy="6" r="0.8" fill="currentColor" />
+          </svg>
+        </span>
+        <span className="press-plate-foot-rule press-plate-foot-rule--right" />
+      </footer>
+    </div>
+  )
+}
+
+function SpineThread({ stage, reduced }: { stage: number; reduced: boolean }) {
+  const stageCount = 3
+  const yPercent = Math.max(0, Math.min(1, stage / stageCount))
+  const stitchCount = 9
+  const stitches = Array.from({ length: stitchCount }, (_, i) => i)
+  return (
+    <span
+      className={`spine-thread${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 36 600" preserveAspectRatio="none" focusable="false">
+        <defs>
+          <linearGradient id="thread-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.55)" />
+            <stop offset="40%" stopColor="rgba(200, 146, 62, 0.85)" />
+            <stop offset="60%" stopColor="rgba(167, 60, 44, 0.7)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0.55)" />
+          </linearGradient>
+          <radialGradient id="thread-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.42)" />
+            <stop offset="60%" stopColor="rgba(245, 198, 91, 0.12)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+        </defs>
+        <line
+          x1="18"
+          y1="0"
+          x2="18"
+          y2="600"
+          stroke="url(#thread-gold)"
+          strokeWidth="0.4"
+          strokeDasharray="1.4 2.2"
+          opacity="0.55"
+        />
+        {stitches.map((i) => {
+          const y = (i + 0.5) * (600 / stitchCount)
+          const len = 18
+          return (
+            <line
+              key={i}
+              x1={18 - len / 2}
+              y1={y}
+              x2={18 + len / 2}
+              y2={y}
+              stroke="url(#thread-gold)"
+              strokeWidth="0.55"
+              strokeLinecap="round"
+              opacity={i % 2 === 0 ? 0.78 : 0.55}
+            />
+          )
+        })}
+        <circle
+          cx="18"
+          cy={yPercent * 600}
+          r="9"
+          fill="url(#thread-glow)"
+          className="spine-thread-pulse"
+        />
+      </svg>
+    </span>
+  )
+}
+
 function FingerSmudges({ visible }: { visible: boolean }) {
   if (!visible) return null
   return (
@@ -4095,10 +4417,12 @@ function FolioSpine({
   stage,
   cycle,
   reduced,
+  children,
 }: {
   stage: number
   cycle: number
   reduced: boolean
+  children?: React.ReactNode
 }) {
   const stages = [
     { roman: 'i', label: 'set' },
@@ -4197,6 +4521,7 @@ function FolioSpine({
           <line x1="8" y1="7" x2="12" y2="7" stroke="rgba(167, 60, 44, 0.6)" strokeWidth="0.4" />
         </svg>
       </span>
+      {children}
       <span className="folio-spine-cord folio-spine-cord--bottom" />
     </div>
   )
@@ -4697,6 +5022,7 @@ export function App() {
                 <span className="title-text"> good at frontend yet?</span>
               </span>
             </h1>
+            <TitleSpecimen visible={true} cycle={cycle} />
             <EditionLine cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
             <TitleFlourish />
 
@@ -4705,39 +5031,21 @@ export function App() {
               ref={(el) => { sectionRefs.current['sec-marginalia'] = el }}
               className="marginalia-section"
             >
-              <MarginaliaStrip items={MARGINALIA} />
-            </div>
-
-            <RectoSeal cycle={cycle} />
-
-            <div className="recto-turn">
-              <LeafCluster
-                className={`leaf-cluster--turn ${
-                  phase !== 'idle' ? 'is-sealed' : ''
-                }`}
-                label="turn the leaf"
+              <PressInstructionPlate
+                cycle={cycle}
+                phase={phase}
+                slow={slow}
+                items={MARGINALIA}
+                buttonLabel={buttonLabel}
+                readerNote={readerNote}
+                onRead={readAnswer}
               />
-              <button
-                className={`read-button${slow ? ' is-slow' : ''}`}
-                type="button"
-                onClick={readAnswer}
-                aria-describedby="reader-note"
-                aria-keyshortcuts="Space R"
-              >
-                <span className="button-mark" aria-hidden="true">↪</span>
-                <span className="button-label">{buttonLabel}</span>
-                <span className="button-pace" aria-hidden="true">
-                  {slow ? '· slow' : '· fast'}
-                </span>
-                <span className="button-keys" aria-hidden="true">
-                  <kbd>space</kbd>
-                </span>
-              </button>
-              <p className="reader-note" id="reader-note">{readerNote}</p>
             </div>
           </section>
 
-          <FolioSpine stage={tideStage} cycle={cycle} reduced={reduced} />
+          <FolioSpine stage={tideStage} cycle={cycle} reduced={reduced}>
+            <SpineThread stage={tideStage} reduced={reduced} />
+          </FolioSpine>
 
           <div
             className={`verso-leaf${versoOpened ? ' is-opened' : ' is-closed'}${
