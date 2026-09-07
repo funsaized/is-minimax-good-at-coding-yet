@@ -490,6 +490,326 @@ function CulDeLampe({
   )
 }
 
+function IlluminatedInitial({ letter }: { letter: string }) {
+  const upper = letter.toUpperCase()
+  return (
+    <span className="illuminated-initial" aria-hidden="true">
+      <svg viewBox="0 0 86 108" focusable="false">
+        <defs>
+          <linearGradient id="illum-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <linearGradient id="illum-face" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(245, 220, 168, 0.5)" />
+            <stop offset="100%" stopColor="rgba(217, 154, 84, 0.18)" />
+          </linearGradient>
+        </defs>
+
+        <rect
+          x="2"
+          y="2"
+          width="82"
+          height="104"
+          fill="url(#illum-face)"
+          stroke="url(#illum-gold)"
+          strokeWidth="0.9"
+        />
+        <rect
+          x="6"
+          y="6"
+          width="74"
+          height="96"
+          fill="none"
+          stroke="url(#illum-gold)"
+          strokeWidth="0.4"
+          strokeDasharray="1.4 2"
+          opacity="0.85"
+        />
+
+        <g className="illum-vine illum-vine--tr" stroke="var(--coral-deep)" strokeWidth="0.55" fill="none" strokeLinecap="round">
+          <path d="M 74 10 Q 64 14 60 24 Q 56 32 64 40 Q 70 46 66 54" />
+          <path d="M 60 24 Q 56 18 50 20 Q 47 24 50 28 Q 56 30 60 24 Z" fill="var(--coral)" fillOpacity="0.4" />
+          <path d="M 64 40 Q 70 36 74 40 Q 70 44 64 40 Z" fill="var(--coral)" fillOpacity="0.4" />
+          <circle cx="56" cy="14" r="0.9" fill="var(--coral)" />
+        </g>
+        <g className="illum-vine illum-vine--bl" stroke="var(--coral-deep)" strokeWidth="0.55" fill="none" strokeLinecap="round">
+          <path d="M 12 96 Q 22 92 26 82 Q 30 74 22 66 Q 16 60 20 52" />
+          <path d="M 26 82 Q 30 88 36 86 Q 39 82 36 78 Q 30 76 26 82 Z" fill="var(--coral)" fillOpacity="0.4" />
+          <path d="M 22 66 Q 16 70 12 66 Q 16 62 22 66 Z" fill="var(--coral)" fillOpacity="0.4" />
+          <circle cx="30" cy="92" r="0.9" fill="var(--coral)" />
+        </g>
+
+        <g className="illum-corner illum-corner--tl" fill="var(--coral)" fillOpacity="0.55">
+          <path d="M 9 9 L 16 9 Q 16 12 13 13 L 13 16 L 9 16 Z" />
+          <circle cx="11" cy="11" r="0.7" />
+        </g>
+        <g className="illum-corner illum-corner--br" fill="var(--coral-deep)" fillOpacity="0.55">
+          <path d="M 77 99 L 70 99 Q 70 96 73 95 L 73 92 L 77 92 Z" />
+          <circle cx="75" cy="97" r="0.7" />
+        </g>
+
+        <g className="illum-dots" fill="var(--coral-deep)">
+          <circle cx="43" cy="9" r="0.7" />
+          <circle cx="43" cy="99" r="0.7" />
+          <circle cx="9" cy="54" r="0.7" />
+          <circle cx="77" cy="54" r="0.7" />
+        </g>
+
+        <g className="illum-letter" aria-hidden="true">
+          <text
+            x="43"
+            y="82"
+            textAnchor="middle"
+            className="illum-letter-glyph"
+          >
+            {upper}
+          </text>
+          <line
+            x1="34"
+            y1="86"
+            x2="52"
+            y2="86"
+            stroke="url(#illum-gold)"
+            strokeWidth="0.6"
+            strokeLinecap="round"
+          />
+        </g>
+      </svg>
+    </span>
+  )
+}
+
+function ScholarAnnotation({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`scholar-annotation${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 132 38" focusable="false">
+        <g className="pencil-mark">
+          <text
+            x="6"
+            y="22"
+            className="pencil-text"
+            fill="currentColor"
+          >
+            type-set.
+          </text>
+          <path
+            d="M 4 28 Q 16 26 28 28 T 52 28 T 76 28 T 96 28"
+            stroke="currentColor"
+            strokeWidth="0.55"
+            fill="none"
+            strokeLinecap="round"
+            opacity="0.7"
+          />
+          <path
+            d="M 102 14 L 108 18 M 102 18 L 108 14"
+            stroke="currentColor"
+            strokeWidth="0.5"
+            strokeLinecap="round"
+            opacity="0.7"
+          />
+          <circle cx="118" cy="6" r="0.7" fill="currentColor" opacity="0.6" />
+          <circle cx="122" cy="32" r="0.5" fill="currentColor" opacity="0.45" />
+        </g>
+      </svg>
+      <span className="scholar-annotation-mark">manu · pr.</span>
+    </div>
+  )
+}
+
+function TuckedNote({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`tucked-note${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="tucked-note-paper" viewBox="0 0 96 140" focusable="false">
+        <defs>
+          <linearGradient id="note-paper" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(245, 230, 188, 0.96)" />
+            <stop offset="100%" stopColor="rgba(228, 210, 168, 0.92)" />
+          </linearGradient>
+          <linearGradient id="note-fold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="rgba(217, 184, 122, 0.94)" />
+            <stop offset="100%" stopColor="rgba(180, 140, 86, 0.94)" />
+          </linearGradient>
+        </defs>
+
+        <path
+          d="M 6 4 L 88 4 L 90 8 L 90 134 L 6 134 Z"
+          fill="url(#note-paper)"
+          stroke="rgba(107, 74, 37, 0.42)"
+          strokeWidth="0.5"
+        />
+
+        <path
+          d="M 78 4 L 90 4 L 90 16 Z"
+          fill="url(#note-fold)"
+          stroke="rgba(107, 74, 37, 0.32)"
+          strokeWidth="0.4"
+        />
+        <line
+          x1="78"
+          y1="4"
+          x2="90"
+          y2="16"
+          stroke="rgba(107, 74, 37, 0.3)"
+          strokeWidth="0.3"
+          strokeDasharray="1 1.4"
+        />
+
+        <g className="tucked-note-rules" stroke="rgba(107, 74, 37, 0.18)" strokeWidth="0.35">
+          <line x1="10" y1="22" x2="80" y2="22" />
+          <line x1="10" y1="32" x2="74" y2="32" />
+          <line x1="10" y1="42" x2="60" y2="42" strokeDasharray="2 2" />
+          <line x1="10" y1="50" x2="78" y2="50" />
+        </g>
+
+        <g className="tucked-note-glyphs">
+          <text x="48" y="64" textAnchor="middle" className="tucked-note-numeral">
+            ii.
+          </text>
+          <line
+            x1="30"
+            y1="70"
+            x2="66"
+            y2="70"
+            stroke="rgba(107, 74, 37, 0.36)"
+            strokeWidth="0.45"
+          />
+
+          <text x="10" y="82" className="tucked-note-word">
+            question —
+          </text>
+          <text x="10" y="92" className="tucked-note-word">
+            is m · iii
+          </text>
+          <text x="10" y="102" className="tucked-note-word">
+            good at
+          </text>
+          <text x="10" y="112" className="tucked-note-word tucked-note-word--struck">
+            frontend yet?
+          </text>
+          <line
+            x1="10"
+            y1="111"
+            x2="50"
+            y2="111"
+            stroke="rgba(17, 32, 42, 0.6)"
+            strokeWidth="0.4"
+          />
+
+          <text x="10" y="124" className="tucked-note-foot">
+            draft · ii · kept
+          </text>
+        </g>
+
+        <g className="tucked-note-tape" opacity="0.72">
+          <rect
+            x="22"
+            y="-4"
+            width="34"
+            height="10"
+            fill="rgba(245, 220, 168, 0.75)"
+            stroke="rgba(154, 110, 38, 0.32)"
+            strokeWidth="0.32"
+            transform="rotate(-4 22 -4)"
+          />
+          <line
+            x1="26"
+            y1="2"
+            x2="52"
+            y2="3"
+            stroke="rgba(154, 110, 38, 0.42)"
+            strokeWidth="0.35"
+            strokeDasharray="1.4 2"
+            transform="rotate(-4 22 -4)"
+          />
+        </g>
+
+        <g className="tucked-note-scribble" stroke="rgba(107, 74, 37, 0.35)" strokeWidth="0.4" fill="none" strokeLinecap="round">
+          <path d="M 60 36 q 3 -2 6 0 q 3 -2 6 0" />
+        </g>
+      </svg>
+    </div>
+  )
+}
+
+function InkFingerprint({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`ink-fingerprint${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 28 36" focusable="false">
+        <g className="ink-print">
+          <ellipse cx="14" cy="18" rx="9" ry="13" fill="rgba(17, 32, 42, 0.10)" />
+          <path
+            d="M 14 5 Q 6 8 6 18 Q 6 28 14 31"
+            stroke="rgba(17, 32, 42, 0.42)"
+            strokeWidth="0.55"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 14 5 Q 22 8 22 18 Q 22 28 14 31"
+            stroke="rgba(17, 32, 42, 0.42)"
+            strokeWidth="0.55"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 14 7 Q 9 10 9 18 Q 9 26 14 30"
+            stroke="rgba(17, 32, 42, 0.34)"
+            strokeWidth="0.45"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 14 7 Q 19 10 19 18 Q 19 26 14 30"
+            stroke="rgba(17, 32, 42, 0.34)"
+            strokeWidth="0.45"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 14 9 Q 11 12 11 18 Q 11 24 14 28"
+            stroke="rgba(17, 32, 42, 0.28)"
+            strokeWidth="0.35"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 14 9 Q 17 12 17 18 Q 17 24 14 28"
+            stroke="rgba(17, 32, 42, 0.28)"
+            strokeWidth="0.35"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 13 11 Q 13 14 13 18 Q 13 22 13 26"
+            stroke="rgba(17, 32, 42, 0.22)"
+            strokeWidth="0.3"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 15 11 Q 15 14 15 18 Q 15 22 15 26"
+            stroke="rgba(17, 32, 42, 0.22)"
+            strokeWidth="0.3"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </g>
+      </svg>
+    </div>
+  )
+}
+
 function LeafCluster({
   className,
   label,
@@ -572,6 +892,7 @@ function Apparatus({
       className={`apparatus${visible ? ' is-visible' : ''}`}
       aria-label="apparatus"
     >
+      <TuckedNote visible={visible} />
       <span className="apparatus-corner apparatus-corner--tl" aria-hidden="true" />
       <span className="apparatus-corner apparatus-corner--br" aria-hidden="true" />
 
@@ -2435,6 +2756,7 @@ export function App() {
               )}
               <span className="catchword-arrow" aria-hidden="true">↘</span>
             </p>
+            <ScholarAnnotation visible={phase === 'complete'} />
           </section>
 
           <section
@@ -2468,6 +2790,7 @@ export function App() {
               <span className="answer-corner answer-corner--tr" aria-hidden="true" />
               <span className="answer-corner answer-corner--bl" aria-hidden="true" />
               <span className="answer-corner answer-corner--br" aria-hidden="true" />
+              <InkFingerprint visible={phase !== 'idle'} />
               <span className="answer-quote answer-quote--open" aria-hidden="true">"</span>
               {!answerVisible && (
                 <p className="answer-placeholder">
@@ -2478,7 +2801,17 @@ export function App() {
               )}
               {answerVisible && (
                 <p className="answer-copy" aria-live="polite">
-                  {answerDisplay}
+                  {answerDisplay.startsWith('— a') ? (
+                    <>
+                      <span className="answer-copy-dash" aria-hidden="true">— </span>
+                      <span className="answer-copy-initial" aria-hidden="true">
+                        <IlluminatedInitial letter="a" />
+                      </span>
+                      {answerDisplay.slice(3)}
+                    </>
+                  ) : (
+                    answerDisplay
+                  )}
                   {phase === 'answering' && <span className="typing-caret" aria-hidden="true">|</span>}
                 </p>
               )}

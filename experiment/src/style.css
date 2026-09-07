@@ -1,6 +1,6 @@
 /* ──────────────────────────────────────────────────────────────────────
    Folio lxxvii · Caput xviii
-   An editorial reading tide · iteration 88
+   An editorial reading tide · iteration 91
    ────────────────────────────────────────────────────────────────────── */
 
 * { box-sizing: border-box; }
@@ -702,6 +702,135 @@ h1 {
   transform: scaleY(1);
 }
 
+/* ────────── scholar's pencil annotation ────────── */
+
+.scholar-annotation {
+  position: absolute;
+  right: -8px;
+  bottom: -54px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  color: #4a3f30;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px) rotate(-3deg);
+  transition: opacity 900ms var(--ease), transform 900ms var(--ease);
+  z-index: 4;
+}
+.scholar-annotation.is-visible {
+  opacity: 0.86;
+  transform: translateY(0) rotate(-2.5deg);
+}
+.scholar-annotation svg {
+  width: 132px; height: 38px;
+  filter: drop-shadow(0 1px 0 rgba(40, 28, 18, 0.18));
+}
+.pencil-text {
+  font: italic 600 22px/1 var(--display);
+  letter-spacing: -0.01em;
+}
+.scholar-annotation-mark {
+  font: 700 7px/1 var(--sans);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #6a5a48;
+  opacity: 0.7;
+}
+
+/* ────────── tucked working note ────────── */
+
+.tucked-note {
+  position: absolute;
+  top: -16px;
+  left: -22px;
+  width: 82px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-10px, -8px) rotate(-3.4deg);
+  transform-origin: top left;
+  transition:
+    opacity 900ms var(--ease) 80ms,
+    transform 1100ms var(--ease) 80ms;
+  filter: drop-shadow(0 6px 12px rgba(40, 18, 8, 0.28));
+}
+.tucked-note.is-visible {
+  opacity: 1;
+  transform: translate(0, 0) rotate(-2.4deg);
+}
+.tucked-note-paper {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.tucked-note-rules { opacity: 0.85; }
+.tucked-note-numeral {
+  fill: var(--coral-deep);
+  font: italic 700 11px var(--display);
+  letter-spacing: 0.04em;
+}
+.tucked-note-word {
+  fill: rgba(17, 32, 42, 0.72);
+  font: italic 400 7.2px var(--display);
+  letter-spacing: 0.02em;
+}
+.tucked-note-word--struck {
+  fill: rgba(17, 32, 42, 0.42);
+}
+.tucked-note-foot {
+  fill: var(--coral-deep);
+  font: 800 6px var(--sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ────────── illuminated drop cap ────────── */
+
+.answer-copy-initial {
+  display: block;
+  float: left;
+  line-height: 0;
+  margin: 6px 14px 6px 0;
+}
+.illuminated-initial {
+  display: block;
+  width: 68px;
+  height: 84px;
+  opacity: 0;
+  transform: translateY(8px) scale(0.94);
+  transform-origin: bottom left;
+  transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+  filter: drop-shadow(0 2px 3px rgba(107, 74, 37, 0.18));
+}
+.answer-copy-initial .illuminated-initial {
+  opacity: 1;
+  transform: none;
+  animation: illum-arrive 900ms var(--ease) both;
+}
+.answer-copy-dash {
+  display: inline-block;
+  margin-right: 2px;
+}
+.illuminated-initial svg { display: block; width: 100%; height: 100%; }
+.illum-letter-glyph {
+  fill: var(--coral-deep);
+  font: italic 700 64px/1 var(--display);
+  letter-spacing: -0.02em;
+  paint-order: stroke fill;
+}
+.illum-vine--tr { transform-origin: 60px 24px; animation: illum-vine-sway 7s ease-in-out infinite; }
+.illum-vine--bl { transform-origin: 26px 82px; animation: illum-vine-sway 7s ease-in-out infinite reverse; }
+@keyframes illum-vine-sway {
+  0%, 100% { transform: rotate(-1deg); }
+  50% { transform: rotate(1.4deg); }
+}
+@keyframes illum-arrive {
+  from { opacity: 0; transform: translateY(8px) scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+
 /* ────────── verso / response panel ────────── */
 
 .response-panel {
@@ -1061,6 +1190,27 @@ h1 {
 
 /* ────────── answer surface ────────── */
 
+.ink-fingerprint {
+  position: absolute;
+  top: 18px;
+  right: 30px;
+  width: 22px;
+  height: 30px;
+  pointer-events: none;
+  opacity: 0;
+  transform: rotate(-18deg) scale(0.92);
+  transform-origin: center;
+  transition: opacity 900ms var(--ease) 280ms, transform 1100ms var(--ease) 280ms;
+  mix-blend-mode: multiply;
+  filter: blur(0.3px);
+}
+.answer-surface:not(.answer-surface--idle) .ink-fingerprint,
+.ink-fingerprint.is-visible {
+  opacity: 0.55;
+  transform: rotate(-18deg) scale(1);
+}
+.ink-fingerprint svg { display: block; width: 100%; height: 100%; }
+
 .answer-surface {
   min-height: 220px;
   position: relative;
@@ -1123,10 +1273,11 @@ h1 {
   position: relative; z-index: 1;
   margin: 0;
   color: var(--ink);
-  font: italic 30px/1.22 var(--display);
+  font: italic 30px/1.2 var(--display);
   letter-spacing: -0.005em;
   text-indent: 0;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1;
+  padding-right: 4px;
 }
 
 .typing-caret {
@@ -1884,6 +2035,23 @@ h1 {
   .page-turn-fold { width: 50px; height: 64px; top: 42px; }
   .typeface-specimen { flex-wrap: wrap; }
   .reading-lamp { display: none; }
+  .tucked-note {
+    top: -12px;
+    left: -16px;
+    width: 68px;
+  }
+  .scholar-annotation {
+    right: 0;
+    bottom: -48px;
+  }
+  .scholar-annotation svg { width: 112px; height: 32px; }
+  .illuminated-initial {
+    width: 60px;
+    height: 74px;
+  }
+  .answer-copy-initial {
+    margin: 4px 10px 4px 0;
+  }
 }
 
 @media (max-width: 560px) {
@@ -1919,6 +2087,7 @@ h1 {
   .answer-quote { font-size: 48px; }
   .answer-quote--open { top: 14px; left: 14px; }
   .answer-quote--close { right: 18px; bottom: 14px; }
+  .ink-fingerprint { top: 12px; right: 20px; width: 18px; height: 24px; }
   .inkwell { width: 62px; bottom: -14px; right: 16px; }
   .scribal-quill { width: 76px; right: 38px; top: -8px; }
   .reply-paragraph { font-size: 18.5px; line-height: 1.45; }
@@ -1960,6 +2129,31 @@ h1 {
   .folio-anatomy { padding: 14px 16px 12px; }
   .folio-anatomy-plate { max-width: 280px; }
   .folio-anatomy-labels text { font-size: 6px; }
+  .tucked-note {
+    top: -10px;
+    left: -12px;
+    width: 60px;
+    transform: translate(-6px, -4px) rotate(-3deg);
+  }
+  .tucked-note.is-visible {
+    transform: translate(0, 0) rotate(-2.4deg);
+  }
+  .scholar-annotation {
+    position: static;
+    align-self: flex-end;
+    margin: 10px 6px 0;
+    transform: rotate(-2deg);
+  }
+  .scholar-annotation.is-visible {
+    transform: rotate(-2deg);
+  }
+  .illuminated-initial {
+    width: 52px;
+    height: 64px;
+  }
+  .answer-copy-initial {
+    margin: 3px 8px 3px 0;
+  }
 }
 
 /* ────────── reduced motion ────────── */
