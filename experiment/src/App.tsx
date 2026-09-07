@@ -4432,6 +4432,102 @@ function EditionLine({ cycle, breathing }: { cycle: number; breathing: boolean }
   )
 }
 
+function PressImprint({
+  cycle,
+  breathing,
+}: {
+  cycle: number
+  breathing: boolean
+}) {
+  const readKey =
+    cycle === 0
+      ? 'first impression'
+      : cycle === 1
+        ? 'second impression'
+        : `${ordinal(cycle + 1)} impression`
+  return (
+    <div
+      className={`press-imprint${cycle > 0 ? ' is-reread' : ''}${
+        breathing ? ' is-breathing' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <span className="press-imprint-rule press-imprint-rule--left" />
+      <span className="press-imprint-cluster">
+        <svg
+          className="press-imprint-aster press-imprint-aster--left"
+          viewBox="0 0 32 12"
+          focusable="false"
+        >
+          <g fill="currentColor">
+            <path d="M 4 6 L 16 1 L 16 11 Z" />
+            <path d="M 28 6 L 16 1 L 16 11 Z" />
+            <circle cx="16" cy="6" r="1" fill="var(--paper)" />
+          </g>
+        </svg>
+        <span className="press-imprint-text">
+          <em className="press-imprint-key">{readKey}</em>
+          <span className="press-imprint-sep" aria-hidden="true">·</span>
+          <em className="press-imprint-meta">manus</em>
+          <em className="press-imprint-subject">m · iii</em>
+          <span className="press-imprint-sep" aria-hidden="true">·</span>
+          <em className="press-imprint-meta">caput</em>
+          <em className="press-imprint-roman">xviii</em>
+          <span className="press-imprint-sep" aria-hidden="true">·</span>
+          <em className="press-imprint-motto">ad lucem</em>
+          <span className="press-imprint-sep" aria-hidden="true">·</span>
+          <em className="press-imprint-meta">in folio</em>
+          <em className="press-imprint-roman">lxxvii</em>
+        </span>
+        <svg
+          className="press-imprint-aster press-imprint-aster--right"
+          viewBox="0 0 32 12"
+          focusable="false"
+        >
+          <g fill="currentColor">
+            <path d="M 4 6 L 16 1 L 16 11 Z" />
+            <path d="M 28 6 L 16 1 L 16 11 Z" />
+            <circle cx="16" cy="6" r="1" fill="var(--paper)" />
+          </g>
+        </svg>
+      </span>
+      <span className="press-imprint-rule press-imprint-rule--right" />
+    </div>
+  )
+}
+
+function VersoMarginRule({ visible }: { visible: boolean }) {
+  return (
+    <span
+      className={`verso-margin-rule${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="verso-margin-rule-line" />
+      <span className="verso-margin-rule-tick verso-margin-rule-tick--a">
+        <span className="verso-margin-rule-tick-mark" />
+        <em className="verso-margin-rule-tick-key">the answer</em>
+      </span>
+      <span className="verso-margin-rule-tick verso-margin-rule-tick--b">
+        <span className="verso-margin-rule-tick-mark" />
+        <em className="verso-margin-rule-tick-key">the reply</em>
+      </span>
+      <span className="verso-margin-rule-tick verso-margin-rule-tick--c">
+        <span className="verso-margin-rule-tick-mark" />
+        <em className="verso-margin-rule-tick-key">cap · xviii</em>
+      </span>
+    </span>
+  )
+}
+
+function RectoEdgeShadow({ active }: { active: boolean }) {
+  return (
+    <span
+      className={`recto-edge-shadow${active ? ' is-active' : ''}`}
+      aria-hidden="true"
+    />
+  )
+}
+
 function ReadingTrace({ cycle, reduced }: { cycle: number; reduced: boolean }) {
   const count = Math.min(4, cycle)
   if (count === 0) return null
@@ -5554,6 +5650,7 @@ export function App() {
 
         <div className="sheet-content">
           <section className="question-panel" aria-labelledby="page-title">
+            <RectoEdgeShadow active={versoOpened} />
             <div className="annotation annotation--top">
               <span className="annotation-mark" aria-hidden="true">¶</span>
               <span>the question · plainly set</span>
@@ -5619,8 +5716,7 @@ export function App() {
               </span>
             </h1>
             <TitleSpecimen visible={true} cycle={cycle} />
-            <EditionLine cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
-            <PlateInscription cycle={cycle} />
+            <PressImprint cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
             <TitleFlourish />
 
             <div
@@ -5691,6 +5787,7 @@ export function App() {
           >
             <span className="verso-shine" aria-hidden="true" />
             <ReadingLines count={lineCount} visible={readingLinesVisible} />
+            <VersoMarginRule visible={replyShown} />
             <FoldCorner />
             <header className="sheet-header sheet-header--verso">
               <p className="running-head-title">
