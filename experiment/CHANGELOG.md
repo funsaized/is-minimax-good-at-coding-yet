@@ -1,10 +1,7 @@
-# Iteration 116
+# Changelog — folio lxxvii · caput xviii
 
-The read-button becomes a wax seal that cracks — halves scatter chips and gold dust, then the leaf turns.
-
-## What changed
-- **New `WaxPressSeal`** — a crimson wax disc with a gold rim inscription (`press · ad lucem · press · ad lucem`), a `m · iii` monogram, a `first press` / `second press` / `n press` impression, visible crack lines, and a wax drip at the lower edge. Hover lifts and glows; the disc breathes between readings.
-- **Break interaction** — pressing the seal (mouse, touch, `Space`, or `R`) cracks it in two: the disc fades, the two clipped halves translate and rotate outward, a flash ignites at the center, seven wax chips fly on weighted vectors, and eight gold dust motes rise on staggered delays. After 720 ms (`80 ms` under reduced motion) the verso leaf opens as before.
-- **Press instruction plate reframes around the seal** — the seal is the centerpiece of `.press-plate-action` with the reader note below it; the head, marginalia, divider, and footer still compose the plate.
-- **Reduced motion respected** — chips, dust, and flash are hidden under `prefers-reduced-motion: reduce`; the halves still separate, with shorter, static translation. Keyboard activation remains intact.
-- **Impression tracks the cycle** — the gold text below the monogram changes from `first press` to `second press` to `n press` so the seal visibly re-arms itself on each re-reading.
+## Iteration 117 — a row of wax stamps grows at the foot of the verso
+- The wax seal now leaves a visible archive: each press drops a small red wax disc beneath the impression ledger. Up to four discs sit in a ruled row, each tilted slightly and stamped with its press number in roman. The caption above reads "the reader's wax · i press" (or "ii presses", "iii presses", "iv presses" as the reader returns). The discs animate in one by one, like fresh wax dropped onto the paper.
+- The recto's reader note now deepens across re-readings. The first line cycles through three reflective sentences ("the second reading changes the pace, not the answer." / "a third reading — the page is unchanged; the eye, slower." / "still reading — the words, the same. ad lucem."), and a second italic line appears below it in coral ink ("press the seal again, and the page answers slower." / "the wax is older now; the reader, the same." / "the lamp is steady; the line, well worn.").
+- Both new pieces respect reduced-motion: the wax stamps simply appear, and the sub-note fades in without translate.
+- Mobile breakpoints tightened so the wax row collapses to 92% width with smaller captions on narrow screens, and the sub-note shrinks to 10px with a 14px rule on phones.

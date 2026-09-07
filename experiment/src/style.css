@@ -2850,6 +2850,188 @@ button { font: inherit; }
   font-weight: 500;
 }
 
+/* ────────── wax archive (row of accumulating wax impressions) ────────── */
+
+.wax-archive {
+  position: relative;
+  margin: 16px auto 4px;
+  padding: 8px 6px 10px;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  width: min(320px, 88%);
+  opacity: 0;
+  transform: translateY(6px);
+  animation: wax-archive-in 900ms cubic-bezier(.2,.7,.2,1) both;
+}
+.wax-archive.is-visible { opacity: 1; }
+
+.wax-archive-rule {
+  display: block;
+  width: 64%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(126, 30, 18, 0.32) 18%,
+    rgba(126, 30, 18, 0.46) 50%,
+    rgba(126, 30, 18, 0.32) 82%,
+    transparent
+  );
+}
+.wax-archive-rule--bottom {
+  opacity: 0.7;
+}
+
+.wax-archive-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2.4vw, 18px);
+  padding: 6px 6px 4px;
+  position: relative;
+}
+.wax-archive-stage::before,
+.wax-archive-stage::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 1px;
+  background: rgba(126, 30, 18, 0.32);
+  transform: translateY(-50%);
+}
+.wax-archive-stage::before { left: -2px; }
+.wax-archive-stage::after { right: -2px; }
+
+.wax-archive-stamp {
+  position: relative;
+  display: inline-block;
+  width: clamp(28px, 4.2vw, 38px);
+  aspect-ratio: 1 / 1;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.5) rotate(-26deg);
+  animation: wax-archive-stamp-in 720ms cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: calc(140ms + var(--i) * 110ms);
+}
+.wax-archive-stamp.is-latest {
+  filter: drop-shadow(0 1px 2.5px rgba(50, 10, 4, 0.42));
+}
+.wax-archive-stamp-shadow {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: -6%;
+  height: 16%;
+  background: radial-gradient(
+    ellipse,
+    rgba(50, 10, 4, 0.32) 0%,
+    rgba(50, 10, 4, 0) 70%
+  );
+  filter: blur(2px);
+  z-index: -1;
+}
+.wax-archive-disc {
+  display: block;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: multiply;
+  transform: translateX(var(--wax-dx, 0)) rotate(var(--wax-rot, 0));
+}
+.wax-archive-letter {
+  fill: rgba(255, 232, 200, 0.85);
+  font: italic 700 9.5px/1 var(--display);
+}
+.wax-archive-arc {
+  fill: rgba(255, 232, 200, 0.72);
+  font: 700 2.4px/1 var(--sans);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.wax-archive-arc--bot { transform: rotate(180deg); transform-origin: center; }
+
+.wax-archive-flecks {
+  animation: wax-archive-flecks-pulse 5s ease-in-out infinite;
+}
+@keyframes wax-archive-flecks-pulse {
+  0%, 100% { opacity: 0.9; }
+  50%      { opacity: 0.7; }
+}
+
+.wax-archive-caption {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font: italic 11.5px/1.1 var(--display);
+  color: var(--coral-deep);
+  letter-spacing: 0.005em;
+  text-align: center;
+}
+.wax-archive-key { font-style: italic; }
+.wax-archive-tail { font-style: italic; }
+.wax-archive-sep { opacity: 0.45; }
+.wax-archive-foliate {
+  display: inline-flex;
+  width: 16px;
+  height: 8px;
+  margin-left: 2px;
+  color: var(--coral-deep);
+  opacity: 0.7;
+}
+.wax-archive-foliate svg { width: 100%; height: 100%; }
+
+@keyframes wax-archive-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes wax-archive-stamp-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.4) rotate(-36deg);
+    filter: blur(2px);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(2px) scale(1.08) rotate(6deg);
+    filter: blur(0);
+  }
+  78% {
+    transform: translateY(-1px) scale(0.96) rotate(-2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wax-archive,
+  .wax-archive.is-visible {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .wax-archive-stamp {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .wax-archive { width: 92%; margin-top: 12px; padding: 6px 4px 8px; }
+  .wax-archive-caption { font-size: 10.5px; gap: 4px; }
+  .wax-archive-rule { width: 56%; }
+}
+
+@media (max-width: 420px) {
+  .wax-archive { gap: 6px; }
+  .wax-archive-stage { gap: 10px; }
+  .wax-archive-caption { flex-wrap: wrap; justify-content: center; }
+}
+
 /* ────────── almanac daybook (ephemeris of this reading) ────────── */
 
 .almanac-daybook {
@@ -6483,6 +6665,50 @@ button { font: inherit; }
   margin: 0;
   text-align: center;
   color: var(--ink-soft);
+}
+.press-plate .reader-sub-note {
+  display: inline-grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 0;
+  padding: 0;
+  text-align: center;
+  color: var(--coral-deep);
+  font: italic 10.5px/1.35 var(--display);
+  letter-spacing: 0.02em;
+  opacity: 0;
+  animation: reader-sub-note-in 700ms var(--ease) 220ms both;
+}
+.press-plate .reader-sub-note-rule {
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(126, 30, 18, 0.4) 50%,
+    transparent
+  );
+}
+.press-plate .reader-sub-note-text {
+  font-style: italic;
+  white-space: nowrap;
+}
+@keyframes reader-sub-note-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .press-plate .reader-sub-note {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+@media (max-width: 560px) {
+  .press-plate .reader-sub-note { font-size: 10px; gap: 5px; }
+  .press-plate .reader-sub-note-rule { width: 14px; }
 }
 
 .press-plate-foot {

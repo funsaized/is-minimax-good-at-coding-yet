@@ -4095,6 +4095,7 @@ function PressInstructionPlate({
   items,
   buttonLabel,
   readerNote,
+  readerSubNote,
   onRead,
   sealBreaking,
 }: {
@@ -4104,6 +4105,7 @@ function PressInstructionPlate({
   items: MarginaliaItem[]
   buttonLabel: string
   readerNote: string
+  readerSubNote: string | null
   onRead: () => void
   sealBreaking: boolean
 }) {
@@ -4259,6 +4261,12 @@ function PressInstructionPlate({
           />
         </div>
         <p className="reader-note" id="reader-note">{readerNote}</p>
+        {readerSubNote && (
+          <p className="reader-sub-note">
+            <span className="reader-sub-note-rule" />
+            <em className="reader-sub-note-text">{readerSubNote}</em>
+          </p>
+        )}
       </div>
 
       <footer className="press-plate-foot">
@@ -5322,6 +5330,224 @@ function FoldShade({ active }: { active: boolean }) {
   )
 }
 
+const WAX_STAMP_ROT = [-4, 3, -2, 5]
+const WAX_STAMP_DX = [-2, 1, -1, 2]
+
+function WaxArchive({ cycle }: { cycle: number }) {
+  const count = Math.min(Math.max(cycle, 0), 4)
+  const stamps = Array.from({ length: count }, (_, i) => i)
+  const roman = ROMAN[Math.min(Math.max(count - 1, 0), ROMAN.length - 1)]
+  const noun = count === 1 ? 'press' : 'presses'
+
+  return (
+    <div className={`wax-archive is-visible`} aria-hidden="true">
+      <span className="wax-archive-rule wax-archive-rule--top" />
+      <div className="wax-archive-stage">
+        {stamps.map((i) => {
+          const rot = WAX_STAMP_ROT[i] ?? 0
+          const dx = WAX_STAMP_DX[i] ?? 0
+          const isLatest = i === count - 1
+          return (
+            <span
+              key={i}
+              className={`wax-archive-stamp${isLatest ? ' is-latest' : ''}`}
+              style={
+                {
+                  '--i': i,
+                  '--wax-rot': `${rot}deg`,
+                  '--wax-dx': `${dx}px`,
+                } as React.CSSProperties
+              }
+            >
+              <span className="wax-archive-stamp-shadow" />
+              <svg
+                className="wax-archive-disc"
+                viewBox="0 0 44 44"
+                focusable="false"
+              >
+                <defs>
+                  <radialGradient
+                    id={`wax-arc-${i}`}
+                    cx="50%"
+                    cy="34%"
+                    r="66%"
+                  >
+                    <stop offset="0%" stopColor="rgba(186, 50, 30, 0.95)" />
+                    <stop offset="58%" stopColor="rgba(126, 30, 18, 0.96)" />
+                    <stop offset="100%" stopColor="rgba(58, 12, 6, 0.96)" />
+                  </radialGradient>
+                  <radialGradient
+                    id={`wax-sheen-${i}`}
+                    cx="50%"
+                    cy="20%"
+                    r="58%"
+                  >
+                    <stop offset="0%" stopColor="rgba(255, 232, 200, 0.32)" />
+                    <stop offset="100%" stopColor="rgba(255, 232, 200, 0)" />
+                  </radialGradient>
+                  <pattern
+                    id={`wax-grain-${i}`}
+                    width="3"
+                    height="3"
+                    patternUnits="userSpaceOnUse"
+                  >
+                    <circle
+                      cx="0.6"
+                      cy="0.4"
+                      r="0.4"
+                      fill="rgba(255, 220, 180, 0.06)"
+                    />
+                    <circle
+                      cx="2.2"
+                      cy="1.6"
+                      r="0.3"
+                      fill="rgba(255, 220, 180, 0.05)"
+                    />
+                    <circle
+                      cx="1.4"
+                      cy="2.6"
+                      r="0.35"
+                      fill="rgba(255, 220, 180, 0.04)"
+                    />
+                  </pattern>
+                  <path
+                    id={`wax-arc-top-${i}`}
+                    d="M 22 22 m -14 0 a 14 14 0 0 1 28 0"
+                    fill="none"
+                  />
+                  <path
+                    id={`wax-arc-bot-${i}`}
+                    d="M 22 22 m -14 0 a 14 14 0 1 0 28 0"
+                    fill="none"
+                  />
+                </defs>
+
+                <circle
+                  cx="22"
+                  cy="22"
+                  r="20.5"
+                  fill={`url(#wax-arc-${i})`}
+                  stroke="rgba(40, 8, 4, 0.55)"
+                  strokeWidth="0.5"
+                />
+                <circle
+                  cx="22"
+                  cy="22"
+                  r="20.5"
+                  fill={`url(#wax-grain-${i})`}
+                  opacity="0.85"
+                />
+                <ellipse
+                  cx="20"
+                  cy="13"
+                  rx="11"
+                  ry="4.4"
+                  fill={`url(#wax-sheen-${i})`}
+                />
+
+                <circle
+                  cx="22"
+                  cy="22"
+                  r="17"
+                  fill="none"
+                  stroke="rgba(255, 232, 200, 0.32)"
+                  strokeWidth="0.4"
+                />
+                <circle
+                  cx="22"
+                  cy="22"
+                  r="14"
+                  fill="none"
+                  stroke="rgba(255, 232, 200, 0.18)"
+                  strokeWidth="0.32"
+                  strokeDasharray="0.4 1.4"
+                />
+
+                <text className="wax-archive-arc wax-archive-arc--top">
+                  <textPath
+                    href={`#wax-arc-top-${i}`}
+                    startOffset="50%"
+                    textAnchor="middle"
+                  >
+                    m · iii · press
+                  </textPath>
+                </text>
+                <text className="wax-archive-arc wax-archive-arc--bot">
+                  <textPath
+                    href={`#wax-arc-bot-${i}`}
+                    startOffset="50%"
+                    textAnchor="middle"
+                  >
+                    cap · xviii ·
+                  </textPath>
+                </text>
+
+                <line
+                  x1="13"
+                  y1="20"
+                  x2="31"
+                  y2="20"
+                  stroke="rgba(255, 232, 200, 0.28)"
+                  strokeWidth="0.32"
+                  strokeLinecap="round"
+                />
+                <text
+                  x="22"
+                  y="29"
+                  textAnchor="middle"
+                  className="wax-archive-letter"
+                >
+                  {ROMAN[i] ?? String(i + 1)}
+                </text>
+                <line
+                  x1="13"
+                  y1="31.5"
+                  x2="31"
+                  y2="31.5"
+                  stroke="rgba(255, 232, 200, 0.28)"
+                  strokeWidth="0.32"
+                  strokeLinecap="round"
+                />
+
+                <g
+                  className="wax-archive-flecks"
+                  fill="rgba(40, 8, 4, 0.55)"
+                >
+                  <circle cx="6" cy="8" r="0.4" />
+                  <circle cx="38" cy="10" r="0.35" />
+                  <circle cx="36" cy="34" r="0.35" />
+                  <circle cx="8" cy="34" r="0.4" />
+                  <circle cx="40" cy="22" r="0.3" />
+                </g>
+              </svg>
+            </span>
+          )
+        })}
+      </div>
+      <span className="wax-archive-caption">
+        <em className="wax-archive-key">the reader's wax</em>
+        <span className="wax-archive-sep" aria-hidden="true">·</span>
+        <em className="wax-archive-tail">
+          {roman} {noun}
+        </em>
+        <span className="wax-archive-foliate" aria-hidden="true">
+          <svg viewBox="0 0 16 8" focusable="false">
+            <path
+              d="M 1 4 Q 4 0.6 7 4 Q 10 7.4 13 4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="0.45"
+              strokeLinecap="round"
+            />
+            <circle cx="8" cy="4" r="0.6" fill="currentColor" />
+          </svg>
+        </span>
+      </span>
+      <span className="wax-archive-rule wax-archive-rule--bottom" />
+    </div>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
@@ -5588,8 +5814,21 @@ export function App() {
 
   const readerNote =
     phase === 'complete'
-      ? 'The second reading changes the pace, not the answer.'
+      ? cycle === 1
+        ? 'The second reading changes the pace, not the answer.'
+        : cycle === 2
+          ? 'A third reading — the page is unchanged; the eye, slower.'
+          : 'Still reading — the words, the same. Ad lucem.'
       : 'One press opens it. The next asks you to slow down.'
+
+  const readerSubNote =
+    phase === 'complete'
+      ? cycle === 1
+        ? 'press the seal again, and the page answers slower.'
+        : cycle === 2
+          ? 'the wax is older now; the reader, the same.'
+          : 'the lamp is steady; the line, well worn.'
+      : null
 
   const hourDialVisible = phase !== 'idle'
   const hours = now.getHours()
@@ -5732,6 +5971,7 @@ export function App() {
                 items={MARGINALIA}
                 buttonLabel={buttonLabel}
                 readerNote={readerNote}
+                readerSubNote={readerSubNote}
                 onRead={handleSealPress}
                 sealBreaking={sealBreaking}
               />
@@ -5925,6 +6165,8 @@ export function App() {
             />
 
             <ImpressionLedger cycle={cycle} now={now} />
+
+            {cycle > 0 && <WaxArchive key={`wax-archive-${cycle}`} cycle={cycle} />}
 
             <EphemerisPlate
               visible={benchShown}
