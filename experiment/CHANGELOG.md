@@ -1,19 +1,19 @@
-# Iteration 82
+# Iteration 83
 
-Added an owl drollery at the catchword, gold-leaf illumination on seal and answer, and ambient warmth on the sheet.
+Added the scholar's bench — paired sidereal pocket, inkwell rest, engraved rule, lit-leaf marginal.
 
 ## What changed
 
-- New `MarginaliaOwl` SVG component perches on the catchword rule between the verso marker and the page-turn arrow. Its pupils track the cursor's normalized position on the sheet (smoothed via `requestAnimationFrame`), eyelids blink every ~5s (faster when the page is being read), and its body breathes continuously. When the answer is being revealed the head tilts toward the verso, the beak hoots, and the blink/breath cadence quickens.
-- New `useSheetPointer` hook computes a normalized `(-1, 1)` cursor position relative to the sheet bounding rect, throttled to one update per animation frame.
-- The wax seal now wraps in a `.wax-seal` span containing a radial gold halo and five gold bezants. On re-read press, the halo bursts outward and the bezants scatter in five directions with staggered delays.
-- The answer-surface gains an `.answer-sweep` overlay: a soft gold light-band driven by `inkProgress` that translates across the pull-quote from left to right during the answer and reply phases, then settles past the right edge when the reading completes.
-- A new `.sheet-ambient` warm radial gradient fades in across the sheet when the answer is revealed and gently breathes in brightness, suggesting candlelight on the page.
-- The bookmark ribbon gains a subtle `<pattern>` silk-weave overlay using alternating warm/dark hairlines for tactile depth.
-- Reduced-motion overrides disable all new animations and lock owl pupils in place.
+- **Sidereal pocket.** A small star chart appears beside the leaf-hour clock at the foot of the reply. It shows Ursa Minor with a brighter Polaris, a faint horizon arc, and a slow rotation that suggests the sky turning. Stars twinkle on staggered, irregular cycles so the field never settles. The pocket reveals with the answer.
+- **Scholar's bench.** The bottom-right area of the verso becomes a paired instrument: a thin engraved rule above, the leaf-hour dial and the sidereal pocket beside each other. The engraved rule is a printer's scale with major and minor tick marks.
+- **Inkwell rest.** A small dark inkwell now sits under the scribal quill inside the answer surface, giving the quill a believable place to belong. It dims slightly while the quill is writing.
+- **Lit-leaf marginal.** A small "lit. leaf" mark appears in the upper-right corner of the question panel once the page is read. It shifts from sepia to coral when the answer is shown, reading as a marginal illumination.
+- **CSS, responsive, reduced-motion.** New components are styled, sized down through the tablet/mobile/small-phone breakpoints, and respect `prefers-reduced-motion`: rotations, twinkles, and the inkwell transform all settle to a stilled state with `animation: none !important`.
 
-## Files touched
+## What was preserved
 
-- `src/App.tsx` — added `useSheetPointer`, `MarginaliaOwl`, updated `WaxSealInitial` with halo/bezants, updated `BookmarkRibbon` with weave pattern, wired sheet-ambient and answer-sweep into the App render.
-- `src/style.css` — added styles and keyframes for `sheet-ambient`, `wax-halo`, `wax-bezant` (with CSS-variable scatter directions), `marginalia-owl` (body breathe, blink, hoot), `answer-sweep`, and reduced-motion overrides.
-- `CHANGELOG.md` — this entry.
+Title, recto/verso folio layout, wax-seal drop-cap, manuscript stamp, fleuron watermark, owl drollery, bookmark ribbon, gilded edge, manuscript paper texture, ambient warm glow, dust motes, scribal quill, manicule, catchword, asterism, headpiece, footer, signature mark, and printer-device colophon are unchanged.
+
+## Build
+
+`npm run build` succeeds: ~46.5 kB CSS, ~232.7 kB JS. No new dependencies, no remote fonts, scripts, images, or APIs.

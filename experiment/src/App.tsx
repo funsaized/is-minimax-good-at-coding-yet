@@ -605,6 +605,241 @@ function Fleuron() {
   )
 }
 
+function SiderealPocket({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <div
+      className={`sidereal-pocket${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="sidereal-pocket-dial" viewBox="0 0 90 90" focusable="false">
+        <defs>
+          <radialGradient id="sky-face" cx="50%" cy="42%" r="68%">
+            <stop offset="0%" stopColor="rgba(46, 62, 102, 0.55)" />
+            <stop offset="62%" stopColor="rgba(22, 30, 52, 0.45)" />
+            <stop offset="100%" stopColor="rgba(12, 16, 30, 0.18)" />
+          </radialGradient>
+        </defs>
+        <circle
+          cx="45"
+          cy="45"
+          r="42"
+          fill="url(#sky-face)"
+          stroke="rgba(214, 168, 73, 0.5)"
+          strokeWidth="0.5"
+        />
+        <circle
+          cx="45"
+          cy="45"
+          r="36"
+          fill="none"
+          stroke="rgba(214, 168, 73, 0.22)"
+          strokeWidth="0.3"
+          strokeDasharray="0.4 1.6"
+        />
+        <circle
+          cx="45"
+          cy="45"
+          r="30"
+          fill="none"
+          stroke="rgba(214, 168, 73, 0.16)"
+          strokeWidth="0.25"
+        />
+        <g
+          className="sky-rotation"
+          style={reduced ? undefined : { transformOrigin: '45px 45px' }}
+        >
+          <g
+            stroke="rgba(245, 198, 91, 0.32)"
+            strokeWidth="0.35"
+            fill="none"
+            strokeLinecap="round"
+          >
+            <line x1="63" y1="38" x2="51" y2="32" />
+            <line x1="51" y1="32" x2="43" y2="38" />
+            <line x1="43" y1="38" x2="33" y2="51" />
+            <line x1="33" y1="51" x2="25" y2="59" />
+            <line x1="25" y1="59" x2="37" y2="61" />
+            <line x1="37" y1="61" x2="33" y2="51" />
+          </g>
+          <g className="stars-major">
+            <circle cx="63" cy="38" r="1.4" fill="#fff8e0" />
+            <circle cx="25" cy="59" r="1.2" fill="#fff8e0" />
+            <circle cx="33" cy="51" r="1.05" fill="#fff8e0" />
+          </g>
+          <g className="stars-mid">
+            <circle cx="51" cy="32" r="0.85" fill="#fff8e0" />
+            <circle cx="43" cy="38" r="0.8" fill="#fff8e0" />
+            <circle cx="37" cy="61" r="0.8" fill="#fff8e0" />
+          </g>
+          <g className="stars-faint">
+            <circle cx="18" cy="22" r="0.4" fill="#fff8e0" />
+            <circle cx="22" cy="42" r="0.4" fill="#fff8e0" />
+            <circle cx="58" cy="68" r="0.4" fill="#fff8e0" />
+            <circle cx="71" cy="24" r="0.45" fill="#fff8e0" />
+            <circle cx="74" cy="48" r="0.4" fill="#fff8e0" />
+            <circle cx="14" cy="68" r="0.4" fill="#fff8e0" />
+            <circle cx="29" cy="14" r="0.35" fill="#fff8e0" />
+            <circle cx="66" cy="62" r="0.35" fill="#fff8e0" />
+            <circle cx="50" cy="71" r="0.35" fill="#fff8e0" />
+            <circle cx="20" cy="50" r="0.32" fill="#fff8e0" />
+            <circle cx="76" cy="60" r="0.32" fill="#fff8e0" />
+            <circle cx="40" cy="76" r="0.3" fill="#fff8e0" />
+          </g>
+          <g className="polaris-halo">
+            <circle cx="63" cy="38" r="3" fill="rgba(245, 198, 91, 0.22)" />
+            <circle cx="63" cy="38" r="1.6" fill="rgba(255, 248, 224, 0.85)" />
+          </g>
+        </g>
+        <g className="sky-horizon">
+          <path
+            d="M 8 70 Q 45 76 82 70"
+            fill="none"
+            stroke="rgba(214, 168, 73, 0.5)"
+            strokeWidth="0.4"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 14 73 Q 45 78 76 73"
+            fill="none"
+            stroke="rgba(214, 168, 73, 0.3)"
+            strokeWidth="0.25"
+          />
+        </g>
+      </svg>
+      <span className="sidereal-pocket-label">this sky</span>
+      <span className="sidereal-pocket-sub">polaris · ur · minor</span>
+    </div>
+  )
+}
+
+function Inkwell() {
+  return (
+    <div className="inkwell" aria-hidden="true">
+      <svg viewBox="0 0 80 36" focusable="false">
+        <defs>
+          <linearGradient id="ink-pot" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(36, 32, 22, 0.92)" />
+            <stop offset="55%" stopColor="rgba(24, 18, 12, 0.95)" />
+            <stop offset="100%" stopColor="rgba(8, 6, 4, 0.96)" />
+          </linearGradient>
+          <radialGradient id="ink-pool" cx="50%" cy="42%" r="60%">
+            <stop offset="0%" stopColor="rgba(20, 14, 8, 0.85)" />
+            <stop offset="70%" stopColor="rgba(12, 8, 4, 0.95)" />
+            <stop offset="100%" stopColor="rgba(4, 2, 1, 1)" />
+          </radialGradient>
+          <radialGradient id="ink-sheen" cx="50%" cy="35%" r="35%">
+            <stop offset="0%" stopColor="rgba(255, 220, 180, 0.42)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 180, 0)" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="40" cy="33" rx="32" ry="2.4" fill="rgba(40, 12, 6, 0.18)" />
+        <path
+          d="M 14 16 L 12 26 Q 12 32 20 33 L 60 33 Q 68 32 68 26 L 66 16 Z"
+          fill="url(#ink-pot)"
+          stroke="rgba(20, 14, 8, 0.7)"
+          strokeWidth="0.5"
+        />
+        <ellipse cx="40" cy="16" rx="26" ry="3.4" fill="url(#ink-pool)" />
+        <ellipse cx="40" cy="15.4" rx="20" ry="2.2" fill="url(#ink-sheen)" />
+        <path
+          d="M 10 18 L 14 16 L 16 18"
+          fill="none"
+          stroke="rgba(20, 14, 8, 0.55)"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 70 18 L 66 16 L 64 18"
+          fill="none"
+          stroke="rgba(20, 14, 8, 0.55)"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+        />
+        <line
+          x1="22"
+          y1="28"
+          x2="58"
+          y2="28"
+          stroke="rgba(245, 198, 91, 0.16)"
+          strokeWidth="0.4"
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
+  )
+}
+
+function EngravedRule({ className }: { className?: string }) {
+  return (
+    <div
+      className={`engraved-rule ${className ?? ''}`}
+      role="separator"
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 220 12" focusable="false">
+        <line x1="0" y1="6" x2="220" y2="6" stroke="currentColor" strokeWidth="0.5" />
+        <line
+          x1="0"
+          y1="4"
+          x2="220"
+          y2="4"
+          stroke="currentColor"
+          strokeWidth="0.2"
+          strokeDasharray="0.6 1.4"
+          opacity="0.6"
+        />
+        <g stroke="currentColor" strokeWidth="0.55" strokeLinecap="round">
+          <line x1="0" y1="3" x2="0" y2="9" />
+          <line x1="20" y1="4.5" x2="20" y2="7.5" />
+          <line x1="40" y1="3.5" x2="40" y2="8.5" />
+          <line x1="60" y1="4.5" x2="60" y2="7.5" />
+          <line x1="80" y1="3.5" x2="80" y2="8.5" />
+          <line x1="100" y1="4.5" x2="100" y2="7.5" />
+          <line x1="110" y1="2" x2="110" y2="10" />
+          <line x1="120" y1="4.5" x2="120" y2="7.5" />
+          <line x1="140" y1="3.5" x2="140" y2="8.5" />
+          <line x1="160" y1="4.5" x2="160" y2="7.5" />
+          <line x1="180" y1="3.5" x2="180" y2="8.5" />
+          <line x1="200" y1="4.5" x2="200" y2="7.5" />
+          <line x1="220" y1="3" x2="220" y2="9" />
+        </g>
+        <g fill="currentColor">
+          <circle cx="50" cy="6" r="0.6" />
+          <circle cx="110" cy="6" r="0.85" />
+          <circle cx="170" cy="6" r="0.6" />
+        </g>
+      </svg>
+    </div>
+  )
+}
+
+function LitLeafMark() {
+  return (
+    <span className="lit-leaf" aria-hidden="true">
+      <svg viewBox="0 0 22 16" focusable="false">
+        <path
+          d="M 11 2 Q 18 4 17 11 Q 14 14 11 14 Q 8 14 5 11 Q 4 4 11 2 Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.7"
+        />
+        <line x1="11" y1="3" x2="11" y2="13" stroke="currentColor" strokeWidth="0.4" />
+        <line x1="11" y1="6" x2="8" y2="8" stroke="currentColor" strokeWidth="0.3" />
+        <line x1="11" y1="6" x2="14" y2="8" stroke="currentColor" strokeWidth="0.3" />
+        <line x1="11" y1="9" x2="8.5" y2="11" stroke="currentColor" strokeWidth="0.3" />
+        <line x1="11" y1="9" x2="13.5" y2="11" stroke="currentColor" strokeWidth="0.3" />
+      </svg>
+      <span className="lit-leaf-text">lit. leaf</span>
+    </span>
+  )
+}
+
 function LeafHourDial({
   hours,
   minutes,
@@ -1231,6 +1466,12 @@ export function App() {
               <span className="title-subject" aria-hidden="true">Minimax M3</span>
               <span className="title-text" aria-hidden="true"> good at frontend yet?</span>
             </h1>
+            <span
+              className={`lit-leaf-wrap${phase !== 'idle' ? ' is-lit' : ''}`}
+              aria-hidden="true"
+            >
+              <LitLeafMark />
+            </span>
 
             <MarginaliaStrip items={MARGINALIA} />
 
@@ -1309,6 +1550,7 @@ export function App() {
                 }}
                 aria-hidden="true"
               />
+              <Inkwell />
               <ScribalQuill active={quillActive} progress={quillProgress} />
             </div>
 
@@ -1354,13 +1596,17 @@ export function App() {
             </button>
             <p className="reader-note" id="reader-note">{readerNote}</p>
 
-            <div className="leaf-hour-row">
-              <LeafHourDial
-                hours={hours}
-                minutes={minutes}
-                seconds={seconds}
-                visible={hourDialVisible}
-              />
+            <div className="scholars-bench">
+              <EngravedRule className="scholars-bench-rule" />
+              <div className="scholars-bench-row">
+                <LeafHourDial
+                  hours={hours}
+                  minutes={minutes}
+                  seconds={seconds}
+                  visible={hourDialVisible}
+                />
+                <SiderealPocket visible={hourDialVisible} reduced={reduced} />
+              </div>
             </div>
           </section>
         </div>
