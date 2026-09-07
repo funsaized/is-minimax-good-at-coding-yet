@@ -4,6 +4,7 @@ const TITLE = 'is Minimax M3 good at frontend yet?'
 const ANSWER = '— and the page itself, which you are reading now.'
 const REPLY = 'so read it once, then again — slower this time.'
 const FOOTNOTE = 'relege · without a reader, silence'
+const EPIGRAPH = 'to ask a page — and let it answer in its own hand.'
 
 const SYNODIC = 29.530588853
 const NEW_MOON_REF = Date.UTC(2000, 0, 6, 18, 14, 0)
@@ -2849,6 +2850,202 @@ function ReadingTide({ stage, cycle }: { stage: number; cycle: number }) {
   )
 }
 
+function Epigraph() {
+  return (
+    <aside className="epigraph" aria-hidden="true">
+      <span className="epigraph-rule epigraph-rule--top" />
+      <p className="epigraph-line">
+        <em className="epigraph-mark epigraph-mark--left">¶</em>
+        <em className="epigraph-quote">{EPIGRAPH}</em>
+        <em className="epigraph-mark epigraph-mark--right">¶</em>
+      </p>
+      <p className="epigraph-attribution">
+        <em>set above the chapter, like a hand-set inscription</em>
+      </p>
+      <span className="epigraph-rule epigraph-rule--bottom" />
+    </aside>
+  )
+}
+
+function TitleFlourish() {
+  return (
+    <svg
+      className="title-flourish"
+      viewBox="0 0 320 16"
+      focusable="false"
+      aria-hidden="true"
+      preserveAspectRatio="none"
+    >
+      <defs>
+        <linearGradient id="flourish-gold" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="#9c6e26" />
+          <stop offset="22%" stopColor="#c8923e" />
+          <stop offset="50%" stopColor="#f5c65b" />
+          <stop offset="78%" stopColor="#c8923e" />
+          <stop offset="100%" stopColor="#9c6e26" />
+        </linearGradient>
+      </defs>
+      <g className="title-flourish-stroke" fill="none" strokeLinecap="round">
+        <path
+          className="title-flourish-line"
+          d="M 8 8 Q 84 4 160 8"
+          stroke="url(#flourish-gold)"
+          strokeWidth="0.55"
+        />
+        <path
+          className="title-flourish-line"
+          d="M 160 8 Q 236 12 312 8"
+          stroke="url(#flourish-gold)"
+          strokeWidth="0.55"
+        />
+        <path
+          className="title-flourish-shadow"
+          d="M 8 10 Q 84 6 160 10 Q 236 14 312 10"
+          stroke="url(#flourish-gold)"
+          strokeWidth="0.3"
+          opacity="0.45"
+        />
+      </g>
+      <g className="title-flourish-medallion">
+        <circle cx="160" cy="8" r="3.2" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.5" />
+        <circle cx="160" cy="8" r="1.6" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.3" strokeDasharray="0.4 1.2" />
+        <circle cx="160" cy="8" r="0.7" fill="url(#flourish-gold)" />
+      </g>
+      <g className="title-flourish-tails" fill="url(#flourish-gold)">
+        <circle cx="8" cy="8" r="0.7" />
+        <circle cx="312" cy="8" r="0.7" />
+      </g>
+    </svg>
+  )
+}
+
+function FingerSmudges({ visible }: { visible: boolean }) {
+  if (!visible) return null
+  return (
+    <div className="finger-smudges" aria-hidden="true">
+      <svg
+        viewBox="0 0 96 36"
+        className="finger-smudge finger-smudge--bl"
+        focusable="false"
+      >
+        <defs>
+          <radialGradient id="smudge-bl" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(40, 22, 8, 0.22)" />
+            <stop offset="65%" stopColor="rgba(40, 22, 8, 0.08)" />
+            <stop offset="100%" stopColor="rgba(40, 22, 8, 0)" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="22" cy="20" rx="14" ry="4.4" fill="url(#smudge-bl)" transform="rotate(-12 22 20)" />
+        <ellipse cx="56" cy="22" rx="16" ry="3.8" fill="url(#smudge-bl)" transform="rotate(-4 56 22)" />
+        <ellipse cx="86" cy="18" rx="6" ry="2.4" fill="url(#smudge-bl)" transform="rotate(8 86 18)" opacity="0.7" />
+      </svg>
+      <svg
+        viewBox="0 0 96 36"
+        className="finger-smudge finger-smudge--tr"
+        focusable="false"
+      >
+        <defs>
+          <radialGradient id="smudge-tr" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(40, 22, 8, 0.18)" />
+            <stop offset="65%" stopColor="rgba(40, 22, 8, 0.06)" />
+            <stop offset="100%" stopColor="rgba(40, 22, 8, 0)" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="10" cy="14" rx="5" ry="2.4" fill="url(#smudge-tr)" transform="rotate(-8 10 14)" opacity="0.7" />
+        <ellipse cx="40" cy="16" rx="14" ry="3.6" fill="url(#smudge-tr)" transform="rotate(6 40 16)" />
+        <ellipse cx="74" cy="14" rx="12" ry="3.4" fill="url(#smudge-tr)" transform="rotate(10 74 14)" />
+      </svg>
+    </div>
+  )
+}
+
+function AlmanacPlateFrame({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="almanac-plate" aria-hidden="false">
+      <svg className="almanac-plate-corner almanac-plate-corner--tl" viewBox="0 0 32 32" focusable="false">
+        <path d="M 2 14 L 2 2 L 14 2" fill="none" stroke="currentColor" strokeWidth="0.7" />
+        <path d="M 6 14 L 6 6 L 14 6" fill="none" stroke="currentColor" strokeWidth="0.35" opacity="0.6" />
+        <circle cx="4" cy="4" r="0.9" fill="currentColor" />
+      </svg>
+      <svg className="almanac-plate-corner almanac-plate-corner--tr" viewBox="0 0 32 32" focusable="false">
+        <path d="M 18 2 L 30 2 L 30 14" fill="none" stroke="currentColor" strokeWidth="0.7" />
+        <path d="M 18 6 L 26 6 L 26 14" fill="none" stroke="currentColor" strokeWidth="0.35" opacity="0.6" />
+        <circle cx="28" cy="4" r="0.9" fill="currentColor" />
+      </svg>
+      <svg className="almanac-plate-corner almanac-plate-corner--bl" viewBox="0 0 32 32" focusable="false">
+        <path d="M 2 18 L 2 30 L 14 30" fill="none" stroke="currentColor" strokeWidth="0.7" />
+        <path d="M 6 18 L 6 26 L 14 26" fill="none" stroke="currentColor" strokeWidth="0.35" opacity="0.6" />
+        <circle cx="4" cy="28" r="0.9" fill="currentColor" />
+      </svg>
+      <svg className="almanac-plate-corner almanac-plate-corner--br" viewBox="0 0 32 32" focusable="false">
+        <path d="M 18 30 L 30 30 L 30 18" fill="none" stroke="currentColor" strokeWidth="0.7" />
+        <path d="M 18 26 L 26 26 L 26 18" fill="none" stroke="currentColor" strokeWidth="0.35" opacity="0.6" />
+        <circle cx="28" cy="28" r="0.9" fill="currentColor" />
+      </svg>
+      {children}
+    </div>
+  )
+}
+
+function Bookplate({ cycle }: { cycle: number }) {
+  return (
+    <div className="bookplate" aria-hidden="true">
+      <svg className="bookplate-plate" viewBox="0 0 110 70" focusable="false">
+        <defs>
+          <linearGradient id="bookplate-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+        </defs>
+        <rect
+          x="2"
+          y="2"
+          width="106"
+          height="66"
+          fill="none"
+          stroke="url(#bookplate-gold)"
+          strokeWidth="0.7"
+        />
+        <rect
+          x="6"
+          y="6"
+          width="98"
+          height="58"
+          fill="none"
+          stroke="url(#bookplate-gold)"
+          strokeWidth="0.3"
+          strokeDasharray="0.6 1.4"
+          opacity="0.7"
+        />
+        <g fill="url(#bookplate-gold)">
+          <circle cx="9" cy="9" r="0.8" />
+          <circle cx="101" cy="9" r="0.8" />
+          <circle cx="9" cy="61" r="0.8" />
+          <circle cx="101" cy="61" r="0.8" />
+        </g>
+        <g className="bookplate-laurel" stroke="url(#bookplate-gold)" strokeWidth="0.55" fill="none" strokeLinecap="round">
+          <path d="M 28 36 Q 22 30 28 22" />
+          <path d="M 82 36 Q 88 30 82 22" />
+          <ellipse cx="24" cy="30" rx="2" ry="0.8" transform="rotate(-50 24 30)" fill="url(#bookplate-gold)" stroke="none" />
+          <ellipse cx="26" cy="34" rx="1.8" ry="0.7" transform="rotate(-30 26 34)" fill="url(#bookplate-gold)" stroke="none" />
+          <ellipse cx="86" cy="30" rx="2" ry="0.8" transform="rotate(50 86 30)" fill="url(#bookplate-gold)" stroke="none" />
+          <ellipse cx="84" cy="34" rx="1.8" ry="0.7" transform="rotate(30 84 34)" fill="url(#bookplate-gold)" stroke="none" />
+        </g>
+        <g className="bookplate-monogram" fill="url(#bookplate-gold)">
+          <text x="55" y="42" textAnchor="middle" className="bookplate-letter">m</text>
+          <text x="64" y="42" textAnchor="middle" className="bookplate-letter bookplate-letter--roman">·iii</text>
+        </g>
+        <line x1="32" y1="48" x2="78" y2="48" stroke="url(#bookplate-gold)" strokeWidth="0.4" strokeLinecap="round" opacity="0.8" />
+        <text x="55" y="58" textAnchor="middle" className="bookplate-tag">
+          {cycle > 0 ? 'pressed again' : 'pressed once'}
+        </text>
+      </svg>
+      <span className="bookplate-shadow" aria-hidden="true" />
+    </div>
+  )
+}
+
 function ordinal(n: number) {
   const s = ['th', 'st', 'nd', 'rd']
   const v = n % 100
@@ -3882,6 +4079,8 @@ export function App() {
           </p>
         </header>
 
+        <Epigraph />
+
         <div className="chapter-opener">
           <ChapterHead now={now} />
         </div>
@@ -3916,6 +4115,7 @@ export function App() {
               </span>
             </h1>
             <EditionLine cycle={cycle} />
+            <TitleFlourish />
 
             {cycle >= 2 && (
               <span className="second-reading-mark" aria-hidden="true">
@@ -4020,6 +4220,7 @@ export function App() {
               <span className="answer-corner answer-corner--bl" aria-hidden="true" />
               <span className="answer-corner answer-corner--br" aria-hidden="true" />
               <InkFingerprint visible={phase !== 'idle'} />
+              <FingerSmudges visible={phase === 'complete' || phase === 'replying'} />
               {answerVisible && (
                 <span className="answer-letter-head" aria-hidden="true">
                   <span className="answer-letter-head-mark">¶</span>
@@ -4140,34 +4341,36 @@ export function App() {
                 <span className="scholars-bench-label-mark">§</span>
               </span>
               <EngravedRule className="scholars-bench-rule" />
-              <div className="scholars-bench-row">
-                <div
-                  data-section="sec-hour"
-                  ref={(el) => { sectionRefs.current['sec-hour'] = el }}
-                  className="bench-item"
-                >
-                  <LeafHourDial
-                    hours={hours}
-                    minutes={minutes}
-                    seconds={seconds}
-                    visible={hourDialVisible}
-                  />
+              <AlmanacPlateFrame>
+                <div className="scholars-bench-row">
+                  <div
+                    data-section="sec-hour"
+                    ref={(el) => { sectionRefs.current['sec-hour'] = el }}
+                    className="bench-item"
+                  >
+                    <LeafHourDial
+                      hours={hours}
+                      minutes={minutes}
+                      seconds={seconds}
+                      visible={hourDialVisible}
+                    />
+                  </div>
+                  <div
+                    data-section="sec-sky"
+                    ref={(el) => { sectionRefs.current['sec-sky'] = el }}
+                    className="bench-item"
+                  >
+                    <SiderealPocket visible={hourDialVisible} reduced={reduced} />
+                  </div>
+                  <div
+                    data-section="sec-moon"
+                    ref={(el) => { sectionRefs.current['sec-moon'] = el }}
+                    className="bench-item"
+                  >
+                    <MoonPhase phase={moonPhase} visible={hourDialVisible} />
+                  </div>
                 </div>
-                <div
-                  data-section="sec-sky"
-                  ref={(el) => { sectionRefs.current['sec-sky'] = el }}
-                  className="bench-item"
-                >
-                  <SiderealPocket visible={hourDialVisible} reduced={reduced} />
-                </div>
-                <div
-                  data-section="sec-moon"
-                  ref={(el) => { sectionRefs.current['sec-moon'] = el }}
-                  className="bench-item"
-                >
-                  <MoonPhase phase={moonPhase} visible={hourDialVisible} />
-                </div>
-              </div>
+              </AlmanacPlateFrame>
             </div>
 
             <div
@@ -4201,6 +4404,7 @@ export function App() {
           <span className="footer-rule" aria-hidden="true" />
           <p className="footer-line">the interface is part of the answer</p>
           <SignatureMark sig="A3" side="v" />
+          <Bookplate cycle={cycle} />
           <PrinterDevice />
         </footer>
 
