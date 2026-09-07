@@ -1,22 +1,32 @@
-# Changelog
+# Iteration 106 — A Bound Folio, with a Spine
 
-## Iteration 105 — the verso composed as two printed plates
+The recto and verso are now bound by a central spine that carries the reading tide; the answer plate draws itself; the ephemeris dials are tied into a constellation.
 
-Composed the verso as an engraved AnswerPlate around the answer and an EphemerisPlate around the daybook and dials.
+## Composition
 
-### What changed
-- **AnswerPlate** — a single engraved frame (rim, inner dashed rule, top "THE ANSWER" tag-block, bottom "cap · xviii" inscription, four gold corner fleurons) now wraps the answer. It replaces the previous four scattered corner brackets, the floating letterhead row, and the letter-close strip as one cohesive plate. The fingerprint, smudges, inkwell, quill, sweep, and self-annotations remain as life on the press around the plate.
-- **EphemerisPlate** — the almanac daybook and the scholar's bench (hour dial, polaris pocket, moon phase) now live inside a single printed plate with shared gold corner marks, a header reading "ephemeris · a printed table of this reading", and a footer reading "pressed in this browser · m. iii · mmxxvi". A divider line with `§` separates the daybook row from the dials row.
-- **Incipit inscription** — a new recto opening: "incipit · the question, set in this folio" between the epigraph and the chapter head, flanked by mirrored gold rules.
-- **RepressMark** — when the page is re-read (cycle > 0), a small italic "re-pressed · once / N times" inscription fades in just below the chapter witness, recording the press cycle.
-- **InkTrail** — three tiny ink drops fall and evaporate below the typing caret while the answer is being set, a small choreographic detail during the reveal.
-- The sectionRefs callbacks for `sec-hour`, `sec-sky`, `sec-moon`, `sec-almanac` now point into the new EphemerisPlate so the apparatus index still scrolls correctly.
-- The apparatus index scrolls to its targets; reduced-motion users see static states.
+- Added a **folio spine** in the central column between recto and verso. A three-line cord, a gold/coral vertical rule, top and bottom joints, four roman-numeral stops (i / ii / iii / iv), and a moving marker that descends with reading progress. The marker pulses gold; a small "re-reading" tag appears at the bottom on the second press.
+- Replaced the recto's `Incipit` inscription, `HalfTitle` strap, and `SecondReadingMark` with a single opening: epigraph → chapter-head → title → edition line → title flourish → marginalia. The recto now breathes where it used to crowd.
+- Replaced the verso's `ReaderCat` (out of genre) with a **SignaturePression** at the close of the apparatus — a small gilt medallion with the `m · iii` monogram and a "explicit · first reading / re-read once / re-read n times" tail. It does the work the cat used to do, but in the folio's own voice.
+- **AnswerPlate** now draws itself: the outer rim strokes in (left → bottom → right → top via pathLength: 100 and stroke-dashoffset), the inner hairline fades, the title block "THE ANSWER" appears, the four gilt corners drop in one after the other (TL → TR → BL → BR with a 200 ms stagger). Driven by the existing `inkProgress` so it tracks typing in real time.
+- **Ephemeris** dials (hour, sky, moon) are now linked by a constellation. A thin SVG sits over the bench-row with dashed gold lines connecting the three dial centers and a small ringed node at the middle. On the first reading the nodes fade in with the dials; on subsequent readings the lines breathe.
+- Tightened the **Apparatus** index from seven entries to four (question, answer, reply, almanac) — the hour, sky, and moon dials are reached through the ephemeris, not duplicated here.
 
-### Files touched
-- `src/App.tsx` — new components `Incipit`, `IncipitMark`, `AnswerPlateFrame`, `AnswerPlateCorner`, `InkTrail`, `EphemerisPlate`, `RepressMark`; refactored the answer surface, scholar's bench, and recto opening to use them; cleaned up redundant wrapper fragments.
-- `src/style.css` — added styles for the above; tuned the ephemeris plate's responsive dial grid (3 columns down to 1 column at <640px); preserved the reduced-motion fallbacks.
+## Motion
 
-### Notes
-- The page is a folio, not a press. The plate marks and corner fleurons are visual conceits to give the answer and the ephemeris a single, deliberate printed identity on each side of the leaf.
-- All assets remain CSS, local SVG, and canvas. No remote fonts, scripts, images, or APIs were added. The piece is still keyboard-accessible (Space / R presses "read again"; the apparatus list remains tab-navigable) and uses `prefers-reduced-motion` fallbacks for every new motion.
+- Spine marker transitions between stages with a 700 ms ease; the active stage's roman numeral turns coral-deep and the label box picks up a shadow.
+- AnswerPlate corner drop is staged (~1.3 → 2.1 s after the answer starts typing) so the eye sees the rim first, the corners second, the title last.
+- Constellation nodes fade in sequentially after the dials appear; on second reads the lines pulse in a 4.6 s loop.
+- All new animations respect `prefers-reduced-motion`.
+
+## Removed
+
+- `Incipit`, `IncipitMark`, `HalfTitle`, `RepressMark`, `ReadingTide`, `ReaderCat` and their CSS. The edition line and the press seal already carried their information.
+
+## Layout
+
+- `.sheet-content` is now a three-column grid (`minmax(0, 1.12fr) 36px minmax(320px, 0.85fr)`) with the spine as the middle column. The spine is hidden below 881 px; recto and verso stack vertically on mobile, and the apparatus becomes the navigation surface.
+
+## Files touched
+
+- `src/App.tsx` — new `FolioSpine`, `SignaturePression`, `EphemerisConstellation`; `AnswerPlateFrame` now takes a `progress` prop; removed six unused components.
+- `src/style.css` — new spine, signature-pression, constellation, and stroke-draw styles; removed stale CSS for the deleted components; reduced total CSS from 109.7 kB to 103.0 kB.

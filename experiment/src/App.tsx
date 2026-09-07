@@ -786,51 +786,6 @@ function BroadsheetDropCap({
   )
 }
 
-function IncipitMark({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className ?? 'incipit-mark'}
-      viewBox="0 0 120 16"
-      focusable="false"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="incipit-gold" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#9c6e26" />
-          <stop offset="50%" stopColor="#c8923e" />
-          <stop offset="100%" stopColor="#9c6e26" />
-        </linearGradient>
-      </defs>
-      <line x1="0" y1="8" x2="44" y2="8" stroke="url(#incipit-gold)" strokeWidth="0.5" />
-      <line x1="76" y1="8" x2="120" y2="8" stroke="url(#incipit-gold)" strokeWidth="0.5" />
-      <line x1="0" y1="11" x2="38" y2="11" stroke="url(#incipit-gold)" strokeWidth="0.3" strokeDasharray="0.6 1.4" opacity="0.6" />
-      <line x1="82" y1="11" x2="120" y2="11" stroke="url(#incipit-gold)" strokeWidth="0.3" strokeDasharray="0.6 1.4" opacity="0.6" />
-      <g transform="translate(60 8)" fill="currentColor">
-        <path d="M -8 0 L -6 -2 L -4 0 L -6 2 Z" />
-        <circle r="1.4" fill="none" stroke="currentColor" strokeWidth="0.4" />
-        <circle r="0.6" fill="currentColor" />
-        <path d="M 6 0 L 4 -2 L 2 0 L 4 2 Z" />
-      </g>
-    </svg>
-  )
-}
-
-function Incipit() {
-  return (
-    <div className="incipit" aria-hidden="true">
-      <span className="incipit-rule incipit-rule--left" />
-      <IncipitMark />
-      <span className="incipit-text">
-        <em className="incipit-key">incipit</em>
-        <span className="incipit-sep" aria-hidden="true">·</span>
-        <em className="incipit-tail">the question, set in this folio</em>
-      </span>
-      <IncipitMark className="incipit-mark incipit-mark--right" />
-      <span className="incipit-rule incipit-rule--right" />
-    </div>
-  )
-}
-
 function AnswerPlateCorner({ corner }: { corner: 'tl' | 'tr' | 'bl' | 'br' }) {
   return (
     <svg viewBox="0 0 32 32" focusable="false" aria-hidden="true">
@@ -881,11 +836,23 @@ function AnswerPlateCorner({ corner }: { corner: 'tl' | 'tr' | 'bl' | 'br' }) {
   )
 }
 
-function AnswerPlateFrame({ visible }: { visible: boolean }) {
+function AnswerPlateFrame({
+  visible,
+  progress,
+}: {
+  visible: boolean
+  progress: number
+}) {
+  const rim = Math.max(0, Math.min(1, progress))
+  const corners = visible ? 1 : 0
   return (
     <div
       className={`answer-plate-frame${visible ? ' is-visible' : ''}`}
       aria-hidden="true"
+      style={{
+        '--plate-rim': rim,
+        '--plate-corners': corners,
+      } as React.CSSProperties}
     >
       <svg
         className="answer-plate-rim"
@@ -905,6 +872,7 @@ function AnswerPlateFrame({ visible }: { visible: boolean }) {
           </linearGradient>
         </defs>
         <rect
+          className="apf-rim-outer"
           x="0.6"
           y="0.6"
           width="98.8"
@@ -913,8 +881,10 @@ function AnswerPlateFrame({ visible }: { visible: boolean }) {
           fill="none"
           stroke="url(#apf-ink-rule)"
           strokeWidth="0.45"
+          pathLength="100"
         />
         <rect
+          className="apf-rim-inner"
           x="3"
           y="3"
           width="94"
@@ -987,6 +957,40 @@ function InkTrail({ active }: { active: boolean }) {
   )
 }
 
+function EphemerisConstellation({ cycle }: { cycle: number }) {
+  return (
+    <svg
+      className={`ephemeris-constellation${cycle > 0 ? ' is-reread' : ''}`}
+      viewBox="0 0 300 80"
+      preserveAspectRatio="none"
+      focusable="false"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="eph-constellation" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="rgba(167, 60, 44, 0.18)" />
+          <stop offset="50%" stopColor="rgba(156, 110, 38, 0.55)" />
+          <stop offset="100%" stopColor="rgba(167, 60, 44, 0.18)" />
+        </linearGradient>
+      </defs>
+      <g className="eph-constellation-lines" stroke="url(#eph-constellation)" fill="none">
+        <line x1="50" y1="40" x2="150" y2="40" strokeWidth="0.4" strokeDasharray="1.6 2.4" />
+        <line x1="150" y1="40" x2="250" y2="40" strokeWidth="0.4" strokeDasharray="1.6 2.4" />
+        <line x1="50" y1="40" x2="250" y2="40" strokeWidth="0.3" strokeDasharray="0.8 3.2" opacity="0.45" />
+      </g>
+      <g className="eph-constellation-nodes" fill="rgba(167, 60, 44, 0.55)">
+        <circle cx="50" cy="40" r="1.4" />
+        <circle cx="150" cy="40" r="1.6" />
+        <circle cx="250" cy="40" r="1.4" />
+      </g>
+      <g className="eph-constellation-rings" fill="none" stroke="rgba(167, 60, 44, 0.42)">
+        <circle cx="150" cy="40" r="3.2" strokeWidth="0.35" />
+        <circle cx="150" cy="40" r="6.4" strokeWidth="0.25" strokeDasharray="0.4 1.2" opacity="0.6" />
+      </g>
+    </svg>
+  )
+}
+
 function EphemerisPlate({
   visible,
   now,
@@ -1056,20 +1060,23 @@ function EphemerisPlate({
         <span className="ephemeris-divider-line ephemeris-divider-line--right" />
       </div>
 
-      <div className="ephemeris-bench-row">
-        <div ref={registerHour} data-section="sec-hour" className="bench-item">
-          <LeafHourDial
-            hours={hours}
-            minutes={minutes}
-            seconds={seconds}
-            visible={visible}
-          />
-        </div>
-        <div ref={registerSky} data-section="sec-sky" className="bench-item">
-          <SiderealPocket visible={visible} reduced={reduced} />
-        </div>
-        <div ref={registerMoon} data-section="sec-moon" className="bench-item">
-          <MoonPhase phase={moonPhase} visible={visible} />
+      <div className="ephemeris-bench-wrap">
+        <EphemerisConstellation cycle={cycle} />
+        <div className="ephemeris-bench-row">
+          <div ref={registerHour} data-section="sec-hour" className="bench-item">
+            <LeafHourDial
+              hours={hours}
+              minutes={minutes}
+              seconds={seconds}
+              visible={visible}
+            />
+          </div>
+          <div ref={registerSky} data-section="sec-sky" className="bench-item">
+            <SiderealPocket visible={visible} reduced={reduced} />
+          </div>
+          <div ref={registerMoon} data-section="sec-moon" className="bench-item">
+            <MoonPhase phase={moonPhase} visible={visible} />
+          </div>
         </div>
       </div>
 
@@ -1086,20 +1093,7 @@ function EphemerisPlate({
   )
 }
 
-function RepressMark({ cycle }: { cycle: number }) {
-  if (cycle === 0) return null
-  const label =
-    cycle === 1
-      ? 're-pressed · once'
-      : `re-pressed · ${cycle} times`
-  return (
-    <span className="repress-mark" aria-hidden="true">
-      <span className="repress-mark-rule" />
-      <em className="repress-mark-text">{label}</em>
-      <span className="repress-mark-rule" />
-    </span>
-  )
-}
+
 
 function PressedLeaf({ visible, reduced }: { visible: boolean; reduced: boolean }) {
   return (
@@ -1536,10 +1530,7 @@ function Apparatus({
     { numeral: 'i', name: 'the question', gloss: 'plainly set, in a single breath', hash: 'sec-question' },
     { numeral: 'ii', name: 'the answer', gloss: 'set in italic, with gilt', hash: 'sec-answer' },
     { numeral: 'iii', name: 'the reply', gloss: 'the second reading', hash: 'sec-reply' },
-    { numeral: 'iv', name: 'this hour', gloss: 'the dial of the leaf', hash: 'sec-hour' },
-    { numeral: 'v', name: 'this sky', gloss: 'polaris above ur. minor', hash: 'sec-sky' },
-    { numeral: 'vi', name: 'this moon', gloss: 'tide & illumination', hash: 'sec-moon' },
-    { numeral: 'vii', name: 'this almanac', gloss: 'today, set in this folio', hash: 'sec-almanac' },
+    { numeral: 'iv', name: 'this almanac', gloss: 'today, set in this folio', hash: 'sec-almanac' },
   ]
 
   return (
@@ -3221,55 +3212,6 @@ function MarginalMoth({
   )
 }
 
-function ReadingTide({ stage, cycle }: { stage: number; cycle: number }) {
-  const stops = [
-    { label: 'set', glyph: '§' },
-    { label: 'answer', glyph: '¶' },
-    { label: 'reply', glyph: '†' },
-    { label: 'out', glyph: '‡' },
-  ]
-  const yPercent = Math.max(0, Math.min(1, stage / (stops.length - 1)))
-  return (
-    <div className="reading-tide" aria-hidden="true">
-      <span className="reading-tide-rule" />
-      {stops.map((stop, i) => (
-        <span
-          key={stop.label}
-          className={`reading-tide-stop ${stage >= i ? 'is-passed' : ''}${
-            stage === i ? ' is-current' : ''
-          }`}
-          style={{ top: `${(i / (stops.length - 1)) * 100}%` }}
-        >
-          <span className="reading-tide-glyph">{stop.glyph}</span>
-          <span className="reading-tide-label">{stop.label}</span>
-        </span>
-      ))}
-      <span
-        className="reading-tide-marker"
-        style={{ top: `${yPercent * 100}%` }}
-      >
-        <svg viewBox="0 0 14 14" focusable="false">
-          <circle cx="7" cy="7" r="5" fill="var(--gold)" />
-          <circle
-            cx="7"
-            cy="7"
-            r="5"
-            fill="none"
-            stroke="var(--ink)"
-            strokeWidth="0.8"
-          />
-        </svg>
-      </span>
-      {cycle > 0 && (
-        <span className="reading-tide-reread" aria-hidden="true">
-          <span className="reading-tide-reread-mark">⟲</span>
-          <span className="reading-tide-reread-text">re-reading</span>
-        </span>
-      )}
-    </div>
-  )
-}
-
 function Epigraph() {
   return (
     <aside className="epigraph" aria-hidden="true">
@@ -3538,17 +3480,6 @@ function ReadingLines({
   )
 }
 
-function HalfTitle() {
-  return (
-    <div className="half-title" aria-hidden="true">
-      <span className="half-title-mark">¶</span>
-      <span className="half-title-text">an experiment in questioning</span>
-      <span className="half-title-sep">·</span>
-      <span className="half-title-sub">set in this browser</span>
-    </div>
-  )
-}
-
 function EditionLine({ cycle }: { cycle: number }) {
   const impression =
     cycle === 0 ? 'first impression' : `${ordinal(cycle + 1)} impression`
@@ -3784,135 +3715,6 @@ function Colophon({ cycle }: { cycle: number }) {
           </>
         )}
       </div>
-    </div>
-  )
-}
-
-function ReaderCat({ visible }: { visible: boolean }) {
-  return (
-    <div className={`reader-cat${visible ? ' is-visible' : ''}`} aria-hidden="true">
-      <svg className="reader-cat-glyph" viewBox="0 0 140 80" focusable="false">
-        <defs>
-          <linearGradient id="cat-body" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(112, 80, 50, 0.92)" />
-            <stop offset="100%" stopColor="rgba(60, 38, 20, 0.95)" />
-          </linearGradient>
-          <radialGradient id="cat-pad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(217, 101, 74, 0.55)" />
-            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
-          </radialGradient>
-        </defs>
-
-        <ellipse cx="70" cy="68" rx="50" ry="3" fill="rgba(40, 18, 8, 0.18)" />
-
-        <g className="reader-cat-form">
-          <path
-            d="M 30 56 Q 22 56 22 48 Q 22 38 32 36 Q 36 28 48 28 L 80 28 Q 96 28 100 38 L 110 38 Q 116 40 116 46 Q 116 52 110 54 L 100 56 Q 96 64 86 66 L 36 66 Q 28 64 30 56 Z"
-            fill="url(#cat-body)"
-            stroke="rgba(40, 22, 8, 0.6)"
-            strokeWidth="0.6"
-          />
-
-          <path
-            d="M 92 38 L 96 30 L 100 38 Z"
-            fill="url(#cat-body)"
-            stroke="rgba(40, 22, 8, 0.5)"
-            strokeWidth="0.5"
-          />
-          <path
-            d="M 96 32 L 100 38"
-            stroke="rgba(245, 198, 91, 0.4)"
-            strokeWidth="0.4"
-            fill="none"
-          />
-          <path
-            d="M 100 38 L 102 32 L 106 38 Z"
-            fill="rgba(217, 101, 74, 0.85)"
-          />
-
-          <ellipse cx="40" cy="46" rx="2.4" ry="3.2" fill="rgba(20, 18, 12, 0.92)" />
-          <path
-            d="M 38 47 Q 40 49 42 47"
-            stroke="rgba(245, 220, 160, 0.4)"
-            strokeWidth="0.4"
-            fill="none"
-          />
-
-          <path
-            d="M 40 50 Q 38 54 42 56"
-            stroke="rgba(40, 22, 8, 0.4)"
-            strokeWidth="0.45"
-            fill="none"
-          />
-
-          <path
-            d="M 96 50 Q 110 48 116 52 Q 122 54 122 60 Q 122 64 118 64 Q 110 62 100 60 Q 94 58 96 50 Z"
-            fill="url(#cat-body)"
-            opacity="0.94"
-          />
-          <path
-            d="M 116 58 Q 122 60 120 64"
-            stroke="rgba(40, 22, 8, 0.4)"
-            strokeWidth="0.4"
-            fill="none"
-          />
-          <ellipse cx="116" cy="62" rx="1.4" ry="2.2" fill="rgba(217, 101, 74, 0.78)" />
-
-          <path
-            d="M 26 50 Q 18 56 18 62"
-            stroke="rgba(40, 22, 8, 0.5)"
-            strokeWidth="0.6"
-            fill="none"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 28 56 Q 22 64 22 70"
-            stroke="rgba(40, 22, 8, 0.5)"
-            strokeWidth="0.6"
-            fill="none"
-            strokeLinecap="round"
-          />
-
-          <path
-            d="M 96 64 Q 100 70 102 74"
-            stroke="rgba(40, 22, 8, 0.5)"
-            strokeWidth="0.6"
-            fill="none"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 100 64 Q 106 70 110 74"
-            stroke="rgba(40, 22, 8, 0.5)"
-            strokeWidth="0.6"
-            fill="none"
-            strokeLinecap="round"
-          />
-        </g>
-
-        <g className="reader-cat-breath" opacity="0.5">
-          <circle cx="40" cy="46" r="6" fill="url(#cat-pad)" />
-        </g>
-
-        <path
-          d="M 30 36 Q 24 18 28 8"
-          stroke="rgba(245, 198, 91, 0.32)"
-          strokeWidth="0.6"
-          fill="none"
-          strokeDasharray="1.2 2.6"
-          strokeLinecap="round"
-        />
-        <path
-          d="M 30 8 Q 32 4 36 4"
-          stroke="rgba(245, 198, 91, 0.32)"
-          strokeWidth="0.6"
-          fill="none"
-          strokeLinecap="round"
-        />
-      </svg>
-      <span className="reader-cat-caption">
-        <em>quiet reader</em>
-        <span className="reader-cat-caption-tail" aria-hidden="true">· settled at the foot of the page</span>
-      </span>
     </div>
   )
 }
@@ -4217,6 +4019,180 @@ function AlmanacDaybook({ now, moonPhase, cycle }: { now: Date; moonPhase: numbe
   )
 }
 
+function FolioSpine({
+  stage,
+  cycle,
+  reduced,
+}: {
+  stage: number
+  cycle: number
+  reduced: boolean
+}) {
+  const stages = [
+    { roman: 'i', label: 'set' },
+    { roman: 'ii', label: 'answer' },
+    { roman: 'iii', label: 'reply' },
+    { roman: 'iv', label: 'out' },
+  ]
+  const stageCount = stages.length - 1
+  const yPercent = Math.max(0, Math.min(1, stage / stageCount))
+  return (
+    <div className="folio-spine" aria-hidden="true">
+      <span className="folio-spine-cord folio-spine-cord--top" />
+      <svg
+        className="folio-spine-rule"
+        viewBox="0 0 8 100"
+        preserveAspectRatio="none"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="spine-ink" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(156, 110, 38, 0.85)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.6)" />
+            <stop offset="100%" stopColor="rgba(156, 110, 38, 0.85)" />
+          </linearGradient>
+        </defs>
+        <line x1="4" y1="0" x2="4" y2="100" stroke="url(#spine-ink)" strokeWidth="0.5" />
+        <line x1="3" y1="0" x2="3" y2="100" stroke="rgba(156, 110, 38, 0.22)" strokeWidth="0.25" strokeDasharray="0.6 2" />
+        <line x1="5" y1="0" x2="5" y2="100" stroke="rgba(167, 60, 44, 0.22)" strokeWidth="0.25" strokeDasharray="0.6 2" />
+      </svg>
+
+      <span className="folio-spine-joint folio-spine-joint--top">
+        <svg viewBox="0 0 18 14" focusable="false">
+          <path
+            d="M 1 7 L 7 1 L 13 7 L 7 13 Z"
+            fill="none"
+            stroke="rgba(156, 110, 38, 0.7)"
+            strokeWidth="0.5"
+          />
+          <circle cx="7" cy="7" r="1.4" fill="rgba(156, 110, 38, 0.85)" />
+          <line x1="2" y1="7" x2="6" y2="7" stroke="rgba(156, 110, 38, 0.6)" strokeWidth="0.4" />
+          <line x1="8" y1="7" x2="12" y2="7" stroke="rgba(156, 110, 38, 0.6)" strokeWidth="0.4" />
+        </svg>
+      </span>
+
+      {stages.map((s, i) => {
+        const passed = stage >= i
+        const current = stage === i
+        const top = (i / stageCount) * 100
+        return (
+          <span
+            key={s.roman}
+            className={`folio-spine-stop ${passed ? 'is-passed' : ''}${
+              current ? ' is-current' : ''
+            }`}
+            style={{ top: `${top}%` }}
+          >
+            <span className="folio-spine-stop-tick" />
+            <span className="folio-spine-stop-label">
+              <em className="folio-spine-stop-roman">{s.roman}</em>
+              <span className="folio-spine-stop-name">{s.label}</span>
+            </span>
+          </span>
+        )
+      })}
+
+      <span
+        className={`folio-spine-marker${reduced ? ' is-static' : ''}`}
+        style={{ top: `${yPercent * 100}%` }}
+      >
+        <span className="folio-spine-marker-stem" />
+        <svg className="folio-spine-marker-glyph" viewBox="0 0 14 14" focusable="false">
+          <circle cx="7" cy="7" r="6" fill="rgba(245, 198, 91, 0.92)" />
+          <circle cx="7" cy="7" r="6" fill="none" stroke="rgba(80, 36, 14, 0.55)" strokeWidth="0.5" />
+          <circle cx="7" cy="7" r="2.2" fill="none" stroke="rgba(80, 36, 14, 0.55)" strokeWidth="0.3" strokeDasharray="0.4 1.1" />
+          <circle cx="7" cy="7" r="0.9" fill="rgba(80, 36, 14, 0.85)" />
+        </svg>
+      </span>
+
+      {cycle > 0 && (
+        <span className="folio-spine-reread" aria-hidden="true">
+          <span className="folio-spine-reread-mark">⟲</span>
+          <span className="folio-spine-reread-text">re-reading</span>
+        </span>
+      )}
+
+      <span className="folio-spine-joint folio-spine-joint--bottom">
+        <svg viewBox="0 0 18 14" focusable="false">
+          <path
+            d="M 1 7 L 7 1 L 13 7 L 7 13 Z"
+            fill="none"
+            stroke="rgba(167, 60, 44, 0.7)"
+            strokeWidth="0.5"
+          />
+          <circle cx="7" cy="7" r="1.4" fill="rgba(167, 60, 44, 0.85)" />
+          <line x1="2" y1="7" x2="6" y2="7" stroke="rgba(167, 60, 44, 0.6)" strokeWidth="0.4" />
+          <line x1="8" y1="7" x2="12" y2="7" stroke="rgba(167, 60, 44, 0.6)" strokeWidth="0.4" />
+        </svg>
+      </span>
+      <span className="folio-spine-cord folio-spine-cord--bottom" />
+    </div>
+  )
+}
+
+function SignaturePression({ cycle }: { cycle: number }) {
+  const seal =
+    cycle === 0
+      ? 'first reading'
+      : cycle === 1
+        ? 're-read once'
+        : `re-read ${ordinal(cycle + 1)} times`
+  return (
+    <div className="signature-pression" aria-hidden="true">
+      <span className="signature-pression-rule signature-pression-rule--left" />
+      <span className="signature-pression-mark">
+        <svg viewBox="0 0 48 48" focusable="false">
+          <defs>
+            <radialGradient id="sig-press-gold" cx="50%" cy="42%" r="58%">
+              <stop offset="0%" stopColor="#f5c65b" />
+              <stop offset="60%" stopColor="#c8923e" />
+              <stop offset="100%" stopColor="#9c6e26" />
+            </radialGradient>
+          </defs>
+          <circle
+            cx="24"
+            cy="24"
+            r="22"
+            fill="none"
+            stroke="url(#sig-press-gold)"
+            strokeWidth="0.55"
+          />
+          <circle
+            cx="24"
+            cy="24"
+            r="18.5"
+            fill="none"
+            stroke="url(#sig-press-gold)"
+            strokeWidth="0.3"
+            strokeDasharray="0.4 1.2"
+            opacity="0.7"
+          />
+          <g className="signature-pression-rays" stroke="url(#sig-press-gold)" strokeWidth="0.4" strokeLinecap="round">
+            <line x1="24" y1="3.6" x2="24" y2="6.6" />
+            <line x1="24" y1="41.4" x2="24" y2="44.4" />
+            <line x1="3.6" y1="24" x2="6.6" y2="24" />
+            <line x1="41.4" y1="24" x2="44.4" y2="24" />
+          </g>
+          <g className="signature-pression-letter" fill="url(#sig-press-gold)">
+            <text x="24" y="29" textAnchor="middle" className="signature-pression-letter-glyph">
+              m
+            </text>
+          </g>
+          <text x="24" y="36.6" textAnchor="middle" className="signature-pression-roman">
+            iii
+          </text>
+        </svg>
+      </span>
+      <span className="signature-pression-text">
+        <em className="signature-pression-key">explicit</em>
+        <span className="signature-pression-sep" aria-hidden="true">·</span>
+        <em className="signature-pression-tail">{seal}</em>
+      </span>
+      <span className="signature-pression-rule signature-pression-rule--right" />
+    </div>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
@@ -4483,7 +4459,6 @@ export function App() {
         <DustMotes reduced={reduced} />
         <BookmarkRibbon />
         <span className="gilded-edge" aria-hidden="true" />
-        <ReadingTide stage={tideStage} cycle={cycle} />
 
         <span className="sheet-watermark" aria-hidden="true">
           <Fleuron />
@@ -4501,16 +4476,12 @@ export function App() {
 
         <Epigraph />
 
-        <Incipit />
-
         <div className="chapter-opener">
           <ChapterHead now={now} />
-          <RepressMark cycle={cycle} />
         </div>
 
         <div className="sheet-content">
           <section className="question-panel" aria-labelledby="page-title">
-            <HalfTitle />
             <div className="annotation annotation--top">
               <span className="annotation-mark" aria-hidden="true">¶</span>
               <span>the question · plainly set</span>
@@ -4540,14 +4511,6 @@ export function App() {
             <EditionLine cycle={cycle} />
             <TitleFlourish />
 
-            {cycle >= 2 && (
-              <span className="second-reading-mark" aria-hidden="true">
-                <span className="second-reading-mark-rule" />
-                <em>second reading</em>
-                <span className="second-reading-mark-rule" />
-              </span>
-            )}
-
             <div
               data-section="sec-marginalia"
               ref={(el) => { sectionRefs.current['sec-marginalia'] = el }}
@@ -4555,6 +4518,14 @@ export function App() {
             >
               <MarginaliaStrip items={MARGINALIA} />
             </div>
+          </section>
+
+          <FolioSpine stage={tideStage} cycle={cycle} reduced={reduced} />
+
+          <section
+            className={`response-panel response-panel--verso ${replyShown ? 'is-revealed' : ''}`}
+            aria-labelledby="response-title"
+          >
 
             <div className="question-stanzas" aria-label="argument of the folio">
               <p className="question-stanza">
@@ -4649,7 +4620,7 @@ export function App() {
               ref={(el) => { sectionRefs.current['sec-answer'] = el }}
               className={`answer-surface answer-surface--${phase}`}
             >
-              <AnswerPlateFrame visible={phase !== 'idle'} />
+              <AnswerPlateFrame visible={phase !== 'idle'} progress={inkProgress} />
               <InkFingerprint visible={phase !== 'idle'} />
               <FingerSmudges visible={phase === 'complete' || phase === 'replying'} />
               <span className="answer-quote answer-quote--open" aria-hidden="true">"</span>
@@ -4809,7 +4780,7 @@ export function App() {
               onSelect={handleSelectSection}
             />
 
-            <ReaderCat visible={phase === 'complete'} />
+            <SignaturePression cycle={cycle} />
 
             {phase === 'complete' && <Colophon cycle={cycle} />}
           </section>
