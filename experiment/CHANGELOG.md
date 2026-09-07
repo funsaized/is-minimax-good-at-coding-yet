@@ -1,5 +1,6 @@
-# Changelog
+Refined the illuminated manuscript into a quieter, more legible editorial reading experience.
 
-## Iteration 86
-
-Added a closing woodcut tail-piece (cul-de-lampe) on the verso — a setting sun over rolling hills with two birds in flight, anchoring an italic "explicit · caput xviii" inscription. The plate bookends the existing headpiece at the chapter opening: the rays slowly rotate, the birds gently bob, and a soft sepia glow around the sun fades in once the chapter is complete. The closing inscription reveals on completion, marking the chapter's end. Honors reduced-motion preferences (animations and transitions are suppressed, glow and inscription remain visible) and scales across tablet, mobile, and small-phone breakpoints.
+- Reworked the visual system around deep teal, warm paper, coral accents, and clearer typographic hierarchy.
+- Preserved the existing typewriter answer/reply interaction, slower second reading, live clock behavior, and reduced-motion support.
+- Simplified dense ornamentation while retaining the ribbon, folio structure, marginal notes, illuminated initial, and closing woodcut.
+- Added responsive layouts for tablet and mobile, with a full-width reading action and improved keyboard focus treatment.
