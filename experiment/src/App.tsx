@@ -349,7 +349,16 @@ function Headpiece() {
   )
 }
 
-function ChapterHead() {
+function ChapterHead({ now }: { now: Date }) {
+  const dayName = WEEKDAYS[now.getDay()]
+  const dayOrdinal = ORDINALS[Math.min(ORDINALS.length - 1, now.getDate() - 1)]
+  const monthName = MONTHS[now.getMonth()]
+  const hour24 = now.getHours()
+  const minutes = now.getMinutes()
+  const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
+  const h12 = ((hour24 + 11) % 12) + 1
+  const mm = String(minutes).padStart(2, '0')
+
   return (
     <div className="chapter-head" aria-hidden="true">
       <span className="chapter-mark">
@@ -365,6 +374,22 @@ function ChapterHead() {
         <em>of folio lxxvii</em>
         <span className="chapter-subtitle-sep" aria-hidden="true">·</span>
         <em>set in question</em>
+      </span>
+      <span className="chapter-witness">
+        <span className="chapter-witness-rule chapter-witness-rule--left" aria-hidden="true" />
+        <span className="chapter-witness-text">
+          <em className="chapter-witness-key">opened</em>
+          <span className="chapter-witness-sep" aria-hidden="true">·</span>
+          <em className="chapter-witness-day">{dayName.slice(0, 3)}</em>
+          <span className="chapter-witness-tail">
+            ,&nbsp;the <em>{dayOrdinal}</em> of <em>{monthName}</em>
+          </span>
+          <span className="chapter-witness-sep" aria-hidden="true">·</span>
+          <em className="chapter-witness-hour">{h12}</em>
+          <span className="chapter-witness-min">:{mm}</span>
+          <em className="chapter-witness-period">{period}</em>
+        </span>
+        <span className="chapter-witness-rule chapter-witness-rule--right" aria-hidden="true" />
       </span>
     </div>
   )
@@ -4046,7 +4071,7 @@ export function App() {
         </header>
 
         <div className="chapter-opener">
-          <ChapterHead />
+          <ChapterHead now={now} />
         </div>
 
         <div className="sheet-content">

@@ -476,6 +476,104 @@ button { font: inherit; }
   opacity: 0.78;
 }
 
+/* ────────── chapter witness: a small inscription that records when the folio was opened today ────────── */
+
+.chapter-witness {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 12px;
+  margin: 6px 0 -2px;
+  max-width: 100%;
+  padding: 0 16px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-2px);
+  animation: witness-in 900ms var(--ease) 380ms both;
+}
+.chapter-witness-rule {
+  flex: 0 0 22px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.32)
+  );
+}
+.chapter-witness-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(167, 60, 44, 0.32)
+  );
+}
+.chapter-witness-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.chapter-witness-text em {
+  font-style: italic;
+  color: var(--ink);
+  font-weight: 500;
+}
+.chapter-witness-key {
+  font: italic 600 10px/1 var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  color: var(--coral-deep) !important;
+  text-transform: uppercase;
+  background: transparent !important;
+}
+.chapter-witness-day {
+  font: 770 9.5px/1 var(--sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--moss) !important;
+}
+.chapter-witness-tail {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+.chapter-witness-tail em {
+  color: var(--coral-deep);
+  font-weight: 500;
+}
+.chapter-witness-sep {
+  color: var(--coral);
+  font: 700 11px/1 var(--display);
+  opacity: 0.7;
+}
+.chapter-witness-hour {
+  color: var(--ink) !important;
+  font: italic 600 12.5px/1 var(--display);
+  letter-spacing: -0.01em;
+}
+.chapter-witness-min {
+  color: var(--ink-soft);
+  font: italic 600 11px/1 var(--display);
+  letter-spacing: -0.005em;
+}
+.chapter-witness-period {
+  font: italic 600 9.5px/1 var(--display);
+  color: var(--coral-deep) !important;
+  margin-left: 1px;
+  letter-spacing: 0.06em;
+}
+@keyframes witness-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to   { opacity: 0.92; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter-witness { opacity: 0.92; transform: none; animation: none; }
+}
+
 /* ────────── half-title (above the question) ────────── */
 
 .half-title {
@@ -742,11 +840,12 @@ button { font: inherit; }
   align-self: center;
   margin: 0;
   color: var(--ink);
-  font: italic 460 clamp(34px, 5.4vw, 76px)/1.02 var(--display);
-  letter-spacing: -0.028em;
+  font: italic 540 clamp(34px, 5.4vw, 76px)/1.04 var(--display);
+  letter-spacing: -0.024em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1;
-  padding-top: 0.02em;
+  padding-top: 0.04em;
   text-wrap: balance;
+  text-indent: -0.04em;
 }
 .title-text { font-style: italic; }
 .title-text:first-of-type {
@@ -757,16 +856,17 @@ button { font: inherit; }
   color: #1d4a59;
   position: relative;
   font-style: italic;
-  font-weight: 540;
+  font-weight: 600;
   display: inline-block;
   padding: 0 0.06em;
   letter-spacing: -0.022em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1;
 }
 .title-subject-rule {
   position: absolute;
   left: -0.06em;
   right: -0.06em;
-  bottom: -0.13em;
+  bottom: -0.14em;
   height: 0.08em;
   pointer-events: none;
 }
@@ -1524,9 +1624,9 @@ button { font: inherit; }
   min-height: 220px;
   position: relative;
   display: flex; align-items: center;
-  padding: 40px 34px 36px;
+  padding: 46px 36px 42px;
   background:
-    radial-gradient(ellipse at 22% 24%, rgba(245, 198, 91, 0.07), transparent 72%),
+    radial-gradient(ellipse at 22% 22%, rgba(245, 198, 91, 0.07), transparent 72%),
     linear-gradient(180deg, rgba(255, 250, 240, 0.5), rgba(245, 232, 200, 0.32));
   box-shadow:
     0 1px 0 rgba(107, 74, 37, 0.12) inset,
@@ -1567,14 +1667,18 @@ button { font: inherit; }
 }
 
 .answer-corner {
-  position: absolute; width: 10px; height: 10px;
+  position: absolute; width: 12px; height: 12px;
   border-color: var(--coral-deep);
-  opacity: 0.42;
+  opacity: 0.55;
+  transition: opacity 700ms var(--ease);
 }
-.answer-corner--tl { top: 8px; left: 8px; border-top: 1px solid; border-left: 1px solid; }
-.answer-corner--tr { top: 8px; right: 8px; border-top: 1px solid; border-right: 1px solid; }
-.answer-corner--bl { bottom: 8px; left: 8px; border-bottom: 1px solid; border-left: 1px solid; }
-.answer-corner--br { right: 8px; bottom: 8px; border-bottom: 1px solid; border-right: 1px solid; }
+.answer-surface--answering .answer-corner,
+.answer-surface--replying .answer-corner,
+.answer-surface--complete .answer-corner { opacity: 0.7; }
+.answer-corner--tl { top: 8px; left: 8px; border-top: 1.5px solid; border-left: 1.5px solid; }
+.answer-corner--tr { top: 8px; right: 8px; border-top: 1.5px solid; border-right: 1.5px solid; }
+.answer-corner--bl { bottom: 8px; left: 8px; border-bottom: 1.5px solid; border-left: 1.5px solid; }
+.answer-corner--br { right: 8px; bottom: 8px; border-bottom: 1.5px solid; border-right: 1.5px solid; }
 
 .answer-quote {
   position: absolute;
@@ -1598,11 +1702,11 @@ button { font: inherit; }
   position: relative; z-index: 1;
   margin: 0;
   color: var(--ink);
-  font: italic 30px/1.22 var(--display);
+  font: italic 30px/1.32 var(--display);
   letter-spacing: -0.005em;
   text-indent: 0;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1;
-  padding-right: 8px;
+  padding-right: 12px;
   hanging-punctuation: first last;
   text-wrap: pretty;
 }
@@ -1761,9 +1865,10 @@ button { font: inherit; }
 
 .reply-paragraph {
   display: block;
-  font: italic 19.5px/1.6 var(--display);
-  letter-spacing: 0.005em;
+  font: italic 19.5px/1.62 var(--display);
+  letter-spacing: 0.008em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  color: var(--ink);
 }
 
 .reply-initial {
@@ -2304,6 +2409,31 @@ button { font: inherit; }
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(12px, 2vw, 22px);
   align-items: end;
+  position: relative;
+  padding-bottom: 14px;
+}
+.scholars-bench-row::before {
+  content: "";
+  position: absolute;
+  left: 6%; right: 6%; bottom: 6px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(107, 74, 37, 0.32) 18%,
+    rgba(107, 74, 37, 0.32) 82%,
+    transparent
+  );
+}
+.scholars-bench-row::after {
+  content: "";
+  position: absolute;
+  left: 50%; bottom: 2px;
+  width: 6px; height: 6px;
+  border: 1px solid rgba(107, 74, 37, 0.5);
+  background: var(--paper);
+  border-radius: 50%;
+  transform: translateX(-50%) rotate(45deg);
 }
 
 /* leaf hour */
@@ -2889,6 +3019,9 @@ button { font: inherit; }
   }
   .chapter-opener { padding: 26px 0 32px; }
   .headpiece { width: min(260px, 84%); height: 40px; }
+  .chapter-witness { font-size: 10.5px; gap: 8px; }
+  .chapter-witness-rule { flex-basis: 14px; }
+  .chapter-witness-tail { display: none; }
   h1 { font-size: clamp(48px, 11vw, 76px); }
   .question-deck { max-width: 560px; }
   .sheet-footer {
@@ -2955,6 +3088,19 @@ button { font: inherit; }
   .headpiece { width: min(220px, 82%); height: 34px; }
   .chapter-subtitle { font-size: 12.5px; gap: 5px; }
   .chapter-subtitle-sep { font-size: 11px; }
+  .chapter-witness {
+    font-size: 9.5px;
+    gap: 6px;
+    white-space: normal;
+    text-align: center;
+  }
+  .chapter-witness-rule { flex-basis: 10px; }
+  .chapter-witness-period { font-size: 8.5px; }
+  .chapter-witness-min { font-size: 9.5px; }
+  .chapter-witness-hour { font-size: 11px; }
+  .chapter-witness-key { font-size: 9px; letter-spacing: 0.28em; }
+  .chapter-witness-day { font-size: 8.5px; }
+  .chapter-witness-text { gap: 4px; flex-wrap: wrap; justify-content: center; }
   h1 { font-size: clamp(44px, 13vw, 64px); letter-spacing: -0.03em; }
   .question-deck { font-size: 17px; }
   .marginalia-strip { gap: 9px; margin-top: 22px; }
