@@ -1,0 +1,19 @@
+{
+  "id": 110,
+  "parentId": 109,
+  "createdAt": "2026-09-07T15:36:46.311Z",
+  "summary": "Refined the recto into a confident printed broadsheet by binding the question, the marginalia, the read instruction, and",
+  "path": "/iterations/000110/index.html",
+  "screenshot": "/iterations/000110/desktop.png",
+  "mobileScreenshot": "/iterations/000110/mobile.png",
+  "sourceCommit": "cb45b012e65fab9f7422be1dbec51e32ca1bd6bf",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 700,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 150259,
+    "outputTokens": 32441,
+    "steps": 61
+  }
+}
