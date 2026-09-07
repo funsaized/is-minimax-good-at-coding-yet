@@ -1087,6 +1087,51 @@ function LeafCluster({
   )
 }
 
+function RectoSignOff({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`recto-sign-off${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="recto-sign-off-rule recto-sign-off-rule--left" />
+      <span className="recto-sign-off-cluster">
+        <span className="recto-sign-off-mark">¶</span>
+        <em className="recto-sign-off-key">end of the recto</em>
+        <span className="recto-sign-off-sep">·</span>
+        <em className="recto-sign-off-tail">the verso replies</em>
+        <svg
+          className="recto-sign-off-glyph"
+          viewBox="0 0 24 12"
+          focusable="false"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient id="recto-sign-off-gold" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#9c6e26" />
+              <stop offset="50%" stopColor="#f5c65b" />
+              <stop offset="100%" stopColor="#9c6e26" />
+            </linearGradient>
+          </defs>
+          <line
+            x1="0"
+            y1="6"
+            x2="20"
+            y2="6"
+            stroke="url(#recto-sign-off-gold)"
+            strokeWidth="0.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 20 3 L 24 6 L 20 9 Z"
+            fill="url(#recto-sign-off-gold)"
+          />
+        </svg>
+      </span>
+      <span className="recto-sign-off-rule recto-sign-off-rule--right" />
+    </div>
+  )
+}
+
 function MarginaliaStrip({ items }: { items: MarginaliaItem[] }) {
   return (
     <aside className="marginalia-strip" aria-label="marginalia">
@@ -4252,6 +4297,8 @@ export function App() {
               )}
               <span className="catchword-arrow" aria-hidden="true">↘</span>
             </p>
+
+            <RectoSignOff visible={isTyping || phase === 'complete'} />
           </section>
 
           <section
@@ -4295,6 +4342,22 @@ export function App() {
                   <span className="answer-letter-head-mark">¶</span>
                   <span className="answer-letter-head-text">set in italic · 30 pt · leaded</span>
                   <span className="answer-letter-head-rule" />
+                  <svg className="answer-letter-head-aster" viewBox="0 0 14 14" focusable="false">
+                    <defs>
+                      <linearGradient id="answer-press-gold" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="#9c6e26" />
+                        <stop offset="50%" stopColor="#f5c65b" />
+                        <stop offset="100%" stopColor="#c8923e" />
+                      </linearGradient>
+                    </defs>
+                    <g stroke="url(#answer-press-gold)" strokeWidth="0.7" strokeLinecap="round">
+                      <line x1="7" y1="1.5" x2="7" y2="12.5" />
+                      <line x1="1.5" y1="7" x2="12.5" y2="7" />
+                      <line x1="3" y1="3" x2="11" y2="11" />
+                      <line x1="11" y1="3" x2="3" y2="11" />
+                    </g>
+                    <circle cx="7" cy="7" r="1.2" fill="url(#answer-press-gold)" />
+                  </svg>
                 </span>
               )}
               <span className="answer-quote answer-quote--open" aria-hidden="true">"</span>
@@ -4352,6 +4415,18 @@ export function App() {
               className={`reply-copy ${replyShown ? 'is-visible' : ''}`}
               aria-live="polite"
             >
+              {replyShown && (
+                <header className="reply-head" aria-hidden="true">
+                  <span className="reply-head-rule reply-head-rule--left" />
+                  <span className="reply-head-cluster">
+                    <span className="reply-head-mark">¶</span>
+                    <em className="reply-head-key">the reply</em>
+                    <span className="reply-head-sep">·</span>
+                    <em className="reply-head-tail">set slowly · in this folio</em>
+                  </span>
+                  <span className="reply-head-rule reply-head-rule--right" />
+                </header>
+              )}
               <span className="reply-paragraph">
                 {replyChars > 0 && (
                   <span className="reply-initial" aria-hidden="true">
@@ -4361,6 +4436,17 @@ export function App() {
                 <span className="reply-text">{replyDisplay}</span>
                 {phase === 'replying' && <span className="typing-caret" aria-hidden="true">|</span>}
               </span>
+              {phase === 'complete' && (
+                <span className="reply-close">
+                  <span className="reply-close-rule reply-close-rule--left" />
+                  <span className="reply-close-text">
+                    <em className="reply-close-key">end of the reply</em>
+                    <span className="reply-close-sep">·</span>
+                    <em className="reply-close-tail">the page, unchanged</em>
+                  </span>
+                  <span className="reply-close-rule reply-close-rule--right" />
+                </span>
+              )}
               {phase === 'complete' && (
                 <span className="reply-manicule">
                   <Manicule />
