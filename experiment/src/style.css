@@ -954,6 +954,76 @@ button { font: inherit; }
   opacity: 0.95;
 }
 
+/* ────────── scribal correction (the page edits itself) ────────── */
+
+.scribal-correction {
+  position: relative;
+  display: inline-block;
+  color: var(--coral-dark);
+  margin: 0 0.12em 0 0.06em;
+  vertical-align: baseline;
+}
+.scribal-correction-word {
+  position: relative;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ink-soft);
+  opacity: 0.78;
+  letter-spacing: 0.005em;
+  text-decoration: line-through;
+  text-decoration-color: rgba(167, 60, 44, 0.78);
+  text-decoration-thickness: 1px;
+  text-decoration-skip-ink: none;
+}
+.scribal-correction-mark {
+  position: absolute;
+  left: -2px;
+  right: -16px;
+  top: -6px;
+  width: calc(100% + 18px);
+  height: 14px;
+  color: var(--coral-deep);
+  pointer-events: none;
+  transform: rotate(-1.2deg);
+  transform-origin: left center;
+}
+.scribal-correction-gloss {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: -14px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 3px 6px 4px;
+  background: linear-gradient(180deg, rgba(245, 232, 200, 0.96), rgba(245, 232, 200, 0.84));
+  border: 1px solid rgba(167, 60, 44, 0.32);
+  border-radius: 1px;
+  color: var(--coral-deep);
+  font: italic 10.5px/1.3 var(--display);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(40, 18, 8, 0.1);
+  transform: rotate(-1.4deg);
+  transform-origin: bottom right;
+  animation: correction-gloss-in 900ms var(--ease) 480ms both;
+}
+.scribal-correction-gloss::before {
+  content: "¶";
+  font: italic 700 12px/1 var(--display);
+  color: var(--coral);
+  letter-spacing: 0;
+}
+@keyframes correction-gloss-in {
+  from { opacity: 0; transform: rotate(-1.4deg) translateY(4px); }
+  to   { opacity: 1; transform: rotate(-1.4deg) translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scribal-correction-gloss { animation: none; opacity: 1; }
+}
+@media (max-width: 560px) {
+  .scribal-correction-gloss { font-size: 9.5px; padding: 2px 5px 3px; right: -10px; }
+}
+
 /* ────────── second reading mark (after the title) ────────── */
 
 .second-reading-mark {
@@ -1571,17 +1641,120 @@ button { font: inherit; }
   animation: content-in 700ms var(--ease) both;
 }
 
+/* ────────── self-annotations (the page annotates its own answer) ────────── */
+
+.answer-copy-frame {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(124px, 18%, 168px);
+  column-gap: clamp(18px, 2.6vw, 32px);
+  align-items: stretch;
+  width: 100%;
+}
+
 .answer-copy {
   position: relative; z-index: 1;
   margin: 0;
   color: var(--ink);
-  font: italic 30px/1.32 var(--display);
+  font: italic 30px/1.34 var(--display);
   letter-spacing: -0.005em;
   text-indent: 0;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1;
   padding-right: 12px;
   hanging-punctuation: first last;
   text-wrap: pretty;
+  grid-column: 1;
+}
+
+.self-annotations {
+  position: relative;
+  grid-column: 2;
+  align-self: stretch;
+  min-height: 100%;
+  color: var(--sepia);
+}
+
+.self-annotations-rule {
+  position: absolute;
+  left: -8px;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(107, 74, 37, 0.32) 14%,
+    rgba(167, 60, 44, 0.42) 50%,
+    rgba(107, 74, 37, 0.32) 86%,
+    transparent
+  );
+}
+
+.self-annotation {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 4px;
+  color: var(--sepia);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 800ms var(--ease), transform 800ms var(--ease);
+  pointer-events: none;
+}
+.self-annotation.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+.self-annotation-leader {
+  display: block;
+  width: 24px;
+  height: 8px;
+  color: var(--coral-deep);
+  transform: translateX(-2px);
+  transition: transform 800ms var(--ease), color 800ms var(--ease);
+}
+.self-annotation.is-revealed .self-annotation-leader {
+  transform: translateX(0);
+  color: var(--coral);
+}
+
+.self-annotation-card {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 7px 5px;
+  border-left: 1.5px solid var(--coral);
+  background: linear-gradient(180deg, rgba(245, 232, 200, 0.6), rgba(245, 232, 200, 0.32));
+  color: var(--ink-soft);
+  font: italic 11.5px/1.35 var(--display);
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+
+.self-annotation-glyph {
+  font-style: italic;
+  font-weight: 700;
+  color: var(--coral-deep);
+  font-size: 13px;
+  letter-spacing: 0;
+  margin-right: 1px;
+}
+
+.self-annotation-text {
+  font-style: italic;
+  color: var(--ink);
+  font-weight: 500;
+  letter-spacing: 0.005em;
+}
+
+.answer-surface--complete .self-annotation-card {
+  background: linear-gradient(180deg, rgba(245, 232, 200, 0.84), rgba(245, 232, 200, 0.5));
 }
 
 .typing-caret {
@@ -1592,6 +1765,48 @@ button { font: inherit; }
   animation: caret 0.9s steps(1) infinite;
 }
 @keyframes caret { 50% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .self-annotation { opacity: 1; transform: none; transition: none; }
+  .self-annotation-leader { transform: none; transition: none; }
+}
+
+@media (max-width: 720px) {
+  .answer-copy-frame {
+    grid-template-columns: minmax(0, 1fr) clamp(108px, 28%, 138px);
+    column-gap: 16px;
+  }
+  .self-annotation-card { font-size: 10.5px; padding: 3px 6px 4px; }
+  .self-annotation-glyph { font-size: 11.5px; }
+}
+
+@media (max-width: 560px) {
+  .answer-copy-frame {
+    grid-template-columns: minmax(0, 1fr) 96px;
+    column-gap: 12px;
+  }
+  .self-annotations-rule { left: -4px; }
+  .self-annotation { grid-template-columns: 16px minmax(0, 1fr); column-gap: 2px; }
+  .self-annotation-leader { width: 16px; }
+  .self-annotation-card { font-size: 9.5px; padding: 2px 5px 3px; line-height: 1.3; }
+  .self-annotation-glyph { font-size: 10.5px; }
+}
+
+@media (max-width: 420px) {
+  .answer-copy-frame {
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+  }
+  .self-annotations {
+    grid-column: 1;
+    border-top: 1px solid rgba(107, 74, 37, 0.22);
+    padding-top: 8px;
+    margin-top: 6px;
+    position: relative;
+  }
+  .self-annotations-rule { display: none; }
+  .self-annotation { position: static; margin-bottom: 6px; }
+}
 
 
 

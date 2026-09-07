@@ -64,6 +64,21 @@ const MARGINALIA: MarginaliaItem[] = [
   { mark: '‡', note: 'a self-answering page', gloss: 'a page that names itself in the act' },
 ]
 
+interface SelfNote {
+  id: string
+  targetIndex: number
+  wordLength: number
+  glyph: string
+  text: string
+  top: number
+}
+
+const ANSWER_NOTES: SelfNote[] = [
+  { id: 'page', targetIndex: 11, wordLength: 4, glyph: '¶', text: 'a self-answering page', top: 22 },
+  { id: 'you', targetIndex: 30, wordLength: 3, glyph: '†', text: 'the attentive reader', top: 60 },
+  { id: 'reading', targetIndex: 38, wordLength: 7, glyph: '‡', text: 'at the pace of attention', top: 86 },
+]
+
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
 
@@ -1093,6 +1108,51 @@ function MarginaliaStrip({ items }: { items: MarginaliaItem[] }) {
         </span>
       ))}
     </aside>
+  )
+}
+
+function SelfAnnotation({
+  note,
+  revealed,
+}: {
+  note: SelfNote
+  revealed: boolean
+}) {
+  return (
+    <span
+      className={`self-annotation self-annotation--${note.id}${revealed ? ' is-revealed' : ''}`}
+      style={{ top: `${note.top}%` }}
+      aria-hidden="true"
+    >
+      <svg
+        className="self-annotation-leader"
+        viewBox="0 0 38 8"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <line x1="6" y1="4" x2="36" y2="4" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1.4 2.2" />
+        <path d="M 8 1 L 2 4 L 8 7 Z" fill="currentColor" />
+      </svg>
+      <span className="self-annotation-card">
+        <em className="self-annotation-glyph">{note.glyph}</em>
+        <em className="self-annotation-text">{note.text}</em>
+      </span>
+    </span>
+  )
+}
+
+function SelfAnnotations({ currentChars }: { currentChars: number }) {
+  return (
+    <div className="self-annotations" aria-hidden="true">
+      <span className="self-annotations-rule" />
+      {ANSWER_NOTES.map((note) => (
+        <SelfAnnotation
+          key={note.id}
+          note={note}
+          revealed={currentChars >= note.targetIndex}
+        />
+      ))}
+    </div>
   )
 }
 
@@ -4152,7 +4212,16 @@ export function App() {
                 <span className="question-stanza-mark" aria-hidden="true">‡</span>
                 <span className="question-stanza-lines">
                   The answer is the page itself —
-                  read it once, then again, <em>slower this time</em>.
+                  read it once, then again,
+                  <span className="scribal-correction" aria-hidden="true">
+                    <em className="scribal-correction-word">slower</em>
+                    <svg className="scribal-correction-mark" viewBox="0 0 60 14" focusable="false" preserveAspectRatio="none">
+                      <path d="M 2 11 Q 14 4 30 8 Q 46 12 58 4" stroke="currentColor" strokeWidth="0.7" fill="none" strokeLinecap="round" />
+                      <path d="M 56 2 L 60 6 L 54 6 Z" fill="currentColor" />
+                    </svg>
+                    <span className="scribal-correction-gloss">at your pace</span>
+                  </span>
+                  <em>this time</em>.
                 </span>
               </p>
             </div>
@@ -4237,20 +4306,23 @@ export function App() {
                 </p>
               )}
               {answerVisible && (
-                <p className="answer-copy" aria-live="polite">
-                  {answerDisplay.startsWith('— a') ? (
-                    <>
-                      <span className="answer-copy-dash" aria-hidden="true">— </span>
-                      <span className="answer-copy-initial" aria-hidden="true">
-                        <IlluminatedInitial letter="a" />
-                      </span>
-                      {answerDisplay.slice(3)}
-                    </>
-                  ) : (
-                    answerDisplay
-                  )}
-                  {phase === 'answering' && <span className="typing-caret" aria-hidden="true">|</span>}
-                </p>
+                <div className="answer-copy-frame">
+                  <p className="answer-copy" aria-live="polite">
+                    {answerDisplay.startsWith('— a') ? (
+                      <>
+                        <span className="answer-copy-dash" aria-hidden="true">— </span>
+                        <span className="answer-copy-initial" aria-hidden="true">
+                          <IlluminatedInitial letter="a" />
+                        </span>
+                        {answerDisplay.slice(3)}
+                      </>
+                    ) : (
+                      answerDisplay
+                    )}
+                    {phase === 'answering' && <span className="typing-caret" aria-hidden="true">|</span>}
+                  </p>
+                  <SelfAnnotations currentChars={answerChars} />
+                </div>
               )}
               <span className="answer-quote answer-quote--close" aria-hidden="true">"</span>
               {phase === 'complete' && (
