@@ -585,6 +585,257 @@ function IlluminatedInitial({ letter }: { letter: string }) {
   )
 }
 
+function BroadsheetDropCap({
+  letter,
+  pressed,
+}: {
+  letter: string
+  pressed: boolean
+}) {
+  return (
+    <span
+      className={`broadsheet-initial${pressed ? ' is-pressed' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 160 200" focusable="false">
+        <defs>
+          <linearGradient id="bs-gold" x1="0" y1="0" x2="0.1" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="48%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#8a5d1f" />
+          </linearGradient>
+          <linearGradient id="bs-gold-soft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#a47026" />
+          </linearGradient>
+          <radialGradient id="bs-face" cx="35%" cy="28%" r="92%">
+            <stop offset="0%" stopColor="rgba(255, 236, 188, 0.7)" />
+            <stop offset="60%" stopColor="rgba(232, 188, 110, 0.22)" />
+            <stop offset="100%" stopColor="rgba(150, 86, 38, 0.06)" />
+          </radialGradient>
+          <radialGradient id="bs-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.55)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+          <pattern id="bs-hatch" width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(28)">
+            <line x1="0" y1="0" x2="0" y2="2.6" stroke="rgba(140, 82, 28, 0.18)" strokeWidth="0.4" />
+          </pattern>
+        </defs>
+
+        <ellipse cx="80" cy="100" rx="78" ry="98" fill="url(#bs-halo)" />
+
+        <rect
+          x="6"
+          y="6"
+          width="148"
+          height="188"
+          rx="2"
+          fill="url(#bs-face)"
+          stroke="url(#bs-gold)"
+          strokeWidth="1.1"
+        />
+        <rect
+          x="11"
+          y="11"
+          width="138"
+          height="178"
+          rx="1"
+          fill="none"
+          stroke="url(#bs-gold)"
+          strokeWidth="0.45"
+          strokeDasharray="2 2.4"
+          opacity="0.85"
+        />
+        <rect
+          x="14"
+          y="14"
+          width="132"
+          height="172"
+          rx="1"
+          fill="url(#bs-hatch)"
+          opacity="0.55"
+        />
+
+        <g className="bs-vine bs-vine--tr" stroke="url(#bs-gold-soft)" strokeWidth="0.85" fill="none" strokeLinecap="round">
+          <path d="M 138 18 Q 122 22 116 36 Q 110 50 120 60 Q 130 68 124 80" />
+          <path d="M 116 36 Q 108 26 100 30 Q 96 36 100 42 Q 110 46 116 36 Z" fill="rgba(217, 101, 74, 0.32)" stroke="none" />
+          <path d="M 120 60 Q 130 56 136 60 Q 130 66 120 60 Z" fill="rgba(217, 101, 74, 0.32)" stroke="none" />
+          <circle cx="106" cy="24" r="1.4" fill="#cf3b29" />
+          <circle cx="134" cy="64" r="1.1" fill="#cf3b29" />
+        </g>
+        <g className="bs-vine bs-vine--bl" stroke="url(#bs-gold-soft)" strokeWidth="0.85" fill="none" strokeLinecap="round">
+          <path d="M 22 182 Q 38 178 44 164 Q 50 150 40 140 Q 30 132 36 120" />
+          <path d="M 44 164 Q 52 174 60 170 Q 64 164 60 158 Q 52 154 44 164 Z" fill="rgba(217, 101, 74, 0.32)" stroke="none" />
+          <path d="M 40 140 Q 30 144 24 140 Q 30 134 40 140 Z" fill="rgba(217, 101, 74, 0.32)" stroke="none" />
+          <circle cx="54" cy="176" r="1.4" fill="#cf3b29" />
+          <circle cx="26" cy="136" r="1.1" fill="#cf3b29" />
+        </g>
+
+        <g className="bs-corner bs-corner--tl" fill="#cf3b29" fillOpacity="0.65">
+          <path d="M 14 14 L 28 14 Q 28 19 22 21 L 22 28 L 14 28 Z" />
+          <circle cx="18" cy="18" r="0.9" />
+        </g>
+        <g className="bs-corner bs-corner--tr" fill="#cf3b29" fillOpacity="0.55">
+          <path d="M 146 14 L 132 14 Q 132 19 138 21 L 138 28 L 146 28 Z" />
+          <circle cx="142" cy="18" r="0.9" />
+        </g>
+        <g className="bs-corner bs-corner--bl" fill="#a73c2c" fillOpacity="0.6">
+          <path d="M 14 186 L 28 186 Q 28 181 22 179 L 22 172 L 14 172 Z" />
+          <circle cx="18" cy="182" r="0.9" />
+        </g>
+        <g className="bs-corner bs-corner--br" fill="#a73c2c" fillOpacity="0.6">
+          <path d="M 146 186 L 132 186 Q 132 181 138 179 L 138 172 L 146 172 Z" />
+          <circle cx="142" cy="182" r="0.9" />
+        </g>
+
+        <g className="bs-pips" fill="url(#bs-gold-soft)">
+          <circle cx="80" cy="14" r="0.9" />
+          <circle cx="80" cy="186" r="0.9" />
+          <circle cx="14" cy="100" r="0.9" />
+          <circle cx="146" cy="100" r="0.9" />
+        </g>
+
+        <g className="bs-stamen" stroke="rgba(140, 82, 28, 0.45)" strokeWidth="0.4" fill="none" strokeLinecap="round">
+          <path d="M 78 36 Q 76 60 80 84" />
+          <path d="M 80 36 Q 82 60 80 84" />
+        </g>
+
+        <g className="bs-letter">
+          <text
+            x="80"
+            y="160"
+            textAnchor="middle"
+            className="bs-letter-glyph"
+          >
+            {letter}
+          </text>
+          <line
+            x1="58"
+            y1="170"
+            x2="102"
+            y2="170"
+            stroke="url(#bs-gold)"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+            opacity="0.85"
+          />
+        </g>
+      </svg>
+    </span>
+  )
+}
+
+function PressedLeaf({ visible, reduced }: { visible: boolean; reduced: boolean }) {
+  return (
+    <div
+      className={`pressed-leaf${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 70 96" focusable="false">
+        <defs>
+          <linearGradient id="leaf-body" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(154, 168, 96, 0.58)" />
+            <stop offset="55%" stopColor="rgba(118, 138, 70, 0.62)" />
+            <stop offset="100%" stopColor="rgba(78, 96, 44, 0.5)" />
+          </linearGradient>
+          <linearGradient id="leaf-shadow" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(54, 70, 32, 0.18)" />
+            <stop offset="100%" stopColor="rgba(54, 70, 32, 0.45)" />
+          </linearGradient>
+        </defs>
+
+        <g className="pressed-leaf-shadow">
+          <path
+            d="M 6 88 Q 4 50 18 24 Q 38 4 56 16 Q 64 36 50 64 Q 32 86 12 90 Z"
+            fill="url(#leaf-shadow)"
+            opacity="0.6"
+          />
+        </g>
+
+        <g className="pressed-leaf-body">
+          <path
+            d="M 8 86 Q 6 50 20 26 Q 38 8 54 18 Q 60 36 48 62 Q 30 82 14 88 Z"
+            fill="url(#leaf-body)"
+            stroke="rgba(58, 80, 38, 0.5)"
+            strokeWidth="0.4"
+          />
+          <path
+            className="pressed-leaf-vein-mid"
+            d="M 16 86 Q 24 56 34 32 Q 42 22 50 22"
+            stroke="rgba(58, 80, 38, 0.55)"
+            strokeWidth="0.5"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <g className="pressed-leaf-veins" stroke="rgba(58, 80, 38, 0.4)" strokeWidth="0.3" fill="none" strokeLinecap="round">
+            <path d="M 22 76 Q 28 70 30 64" />
+            <path d="M 26 66 Q 32 60 34 56" />
+            <path d="M 30 56 Q 36 50 38 44" />
+            <path d="M 34 46 Q 40 40 42 34" />
+            <path d="M 18 78 Q 14 70 16 60" />
+            <path d="M 18 58 Q 14 50 18 42" />
+            <path d="M 22 40 Q 18 32 22 24" />
+          </g>
+          <g className="pressed-leaf-blotches" fill="rgba(58, 80, 38, 0.32)">
+            <ellipse cx="34" cy="42" rx="2.2" ry="1" transform="rotate(-22 34 42)" />
+            <ellipse cx="26" cy="60" rx="1.6" ry="0.8" transform="rotate(-30 26 60)" />
+            <ellipse cx="42" cy="34" rx="1.4" ry="0.8" transform="rotate(-12 42 34)" />
+          </g>
+          <path
+            className="pressed-leaf-stem"
+            d="M 12 90 Q 8 94 4 96"
+            stroke="rgba(78, 56, 28, 0.7)"
+            strokeWidth="0.55"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </g>
+
+        <text x="35" y="93" textAnchor="middle" className="pressed-leaf-script">
+          h · lo · xviii
+        </text>
+      </svg>
+    </div>
+  )
+}
+
+function ReadingBreath({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`reading-breath${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 220 24" focusable="false">
+        <g className="reading-breath-mark">
+          <line x1="0" y1="12" x2="80" y2="12" stroke="currentColor" strokeWidth="0.5" />
+          <path
+            d="M 80 12 C 92 4, 100 20, 110 12"
+            stroke="currentColor"
+            strokeWidth="0.5"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 110 12 C 120 4, 128 20, 140 12"
+            stroke="currentColor"
+            strokeWidth="0.5"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <line x1="140" y1="12" x2="220" y2="12" stroke="currentColor" strokeWidth="0.5" />
+          <g transform="translate(110 12)">
+            <circle cx="0" cy="0" r="3.2" fill="var(--paper)" stroke="currentColor" strokeWidth="0.55" />
+            <circle cx="0" cy="0" r="0.9" fill="currentColor" />
+          </g>
+        </g>
+      </svg>
+      <span className="reading-breath-script">a breath between stanzas</span>
+    </div>
+  )
+}
+
 function ScholarAnnotation({ visible }: { visible: boolean }) {
   return (
     <div
@@ -891,13 +1142,11 @@ function Apparatus({
     gloss: string
     hash: string
   }[] = [
-    { numeral: 'i', name: 'cap. xviii', gloss: 'the question, plainly set', hash: 'sec-question' },
-    { numeral: 'ii', name: 'marginalia', gloss: 'three marks, in ink', hash: 'sec-marginalia' },
-    { numeral: 'iii', name: 'the answer', gloss: 'set in italic, with gilt', hash: 'sec-answer' },
-    { numeral: 'iv', name: 'the reply', gloss: 'the second reading', hash: 'sec-reply' },
-    { numeral: 'v', name: 'this hour', gloss: 'the dial of the leaf', hash: 'sec-hour' },
-    { numeral: 'vi', name: 'this sky', gloss: 'polaris above ur. minor', hash: 'sec-sky' },
-    { numeral: 'vii', name: 'the owl', gloss: 'watches the reader', hash: 'sec-owl' },
+    { numeral: 'i', name: 'the question', gloss: 'plainly set, in a single breath', hash: 'sec-question' },
+    { numeral: 'ii', name: 'the answer', gloss: 'set in italic, with gilt', hash: 'sec-answer' },
+    { numeral: 'iii', name: 'the reply', gloss: 'the second reading', hash: 'sec-reply' },
+    { numeral: 'iv', name: 'this hour', gloss: 'the dial of the leaf', hash: 'sec-hour' },
+    { numeral: 'v', name: 'this sky', gloss: 'polaris above ur. minor', hash: 'sec-sky' },
   ]
 
   return (
@@ -906,8 +1155,6 @@ function Apparatus({
       aria-label="apparatus"
     >
       <TuckedNote visible={visible} />
-      <span className="apparatus-corner apparatus-corner--tl" aria-hidden="true" />
-      <span className="apparatus-corner apparatus-corner--br" aria-hidden="true" />
 
       <header className="apparatus-head">
         <span className="apparatus-aster" aria-hidden="true">
@@ -3267,34 +3514,31 @@ export function App() {
             <HalfTitle />
             <div className="annotation annotation--top">
               <span className="annotation-mark" aria-hidden="true">¶</span>
-              <span>the question</span>
+              <span>the question · plainly set</span>
             </div>
             <h1
               id="page-title"
               aria-label={TITLE}
               data-section="sec-question"
               ref={(el) => { sectionRefs.current['sec-question'] = el }}
-              className="question-section"
+              className="question-section broadsheet-title"
             >
-              <TitleCartouche>
-                <span className={`wax-seal-wrap${sealPressing ? ' is-pressing' : ''}`}>
-                  <WaxSealInitial />
-                </span>
-              </TitleCartouche>
-              <span className="title-text" aria-hidden="true">s </span>
-              <span className="title-subject" aria-hidden="true">
-                Minimax M3
-                <span className="title-subject-rule" aria-hidden="true" />
+              <span
+                className={`title-initial-wrap${sealPressing ? ' is-pressing' : ''}`}
+                aria-hidden="true"
+              >
+                <BroadsheetDropCap letter="i" pressed={phase !== 'idle'} />
               </span>
-              <span className="title-text" aria-hidden="true"> good at frontend yet?</span>
+              <span className="title-flow">
+                <span className="title-text">s </span>
+                <span className="title-subject">
+                  Minimax M3
+                  <span className="title-subject-rule" aria-hidden="true" />
+                </span>
+                <span className="title-text"> good at frontend yet?</span>
+              </span>
             </h1>
             <EditionLine cycle={cycle} />
-            <span
-              className={`lit-leaf-wrap${phase !== 'idle' ? ' is-lit' : ''}`}
-              aria-hidden="true"
-            >
-              <LitLeafMark />
-            </span>
 
             <div
               data-section="sec-marginalia"
@@ -3306,7 +3550,7 @@ export function App() {
 
             <p className="question-deck">
               A small typeset test of whether a page can ask well before it answers —
-              an initial in wax, three marginalia, and a quiet reply that turns the leaf.
+              an initial in gilt, three marginalia, and a quiet reply that turns the leaf.
             </p>
 
             <ReadingTrace cycle={cycle} reduced={reduced} />
@@ -3335,7 +3579,6 @@ export function App() {
               )}
               <span className="catchword-arrow" aria-hidden="true">↘</span>
             </p>
-            <ScholarAnnotation visible={phase === 'complete'} />
           </section>
 
           <section
@@ -3447,6 +3690,13 @@ export function App() {
                 </span>
               )}
             </div>
+
+            <ReadingBreath visible={phase === 'replying' || phase === 'complete'} />
+
+            <PressedLeaf
+              visible={phase === 'complete'}
+              reduced={reduced}
+            />
 
             <PressCorrectionSlip visible={pressSlipShown} intensity={slipIntensity} />
 
