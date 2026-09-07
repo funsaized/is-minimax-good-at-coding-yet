@@ -1,6 +1,6 @@
 /* ──────────────────────────────────────────────────────────────────────
    Folio lxxvii · Caput xviii
-   An editorial reading tide · iteration 115
+   An editorial reading tide · iteration 122
    ────────────────────────────────────────────────────────────────────── */
 
 * { box-sizing: border-box; }
@@ -56,8 +56,9 @@ button { font: inherit; }
   isolation: isolate;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 50% 38%, rgba(38, 30, 22, 0.55), transparent 70%),
-    linear-gradient(160deg, #07111a 0%, #11202a 48%, #0a1419 100%);
+    radial-gradient(ellipse at 50% 32%, rgba(58, 44, 30, 0.42), transparent 62%),
+    radial-gradient(ellipse at 80% 88%, rgba(28, 22, 14, 0.55), transparent 70%),
+    linear-gradient(168deg, #0a1620 0%, #11202a 46%, #08111a 100%);
 }
 
 .night-sky-canvas {
@@ -66,21 +67,55 @@ button { font: inherit; }
   pointer-events: none;
   z-index: 0;
   opacity: 0.55;
+  display: none;
+}
+
+.ambient-stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.7;
+  background-image:
+    radial-gradient(1.2px 1.2px at 12% 18%, rgba(255, 244, 218, 0.62), transparent 60%),
+    radial-gradient(1px 1px at 28% 8%, rgba(255, 244, 218, 0.48), transparent 60%),
+    radial-gradient(0.9px 0.9px at 64% 14%, rgba(255, 244, 218, 0.55), transparent 60%),
+    radial-gradient(1.4px 1.4px at 78% 26%, rgba(255, 244, 218, 0.42), transparent 60%),
+    radial-gradient(0.9px 0.9px at 88% 8%, rgba(255, 244, 218, 0.5), transparent 60%),
+    radial-gradient(1.1px 1.1px at 16% 64%, rgba(255, 244, 218, 0.45), transparent 60%),
+    radial-gradient(0.9px 0.9px at 92% 58%, rgba(255, 244, 218, 0.5), transparent 60%),
+    radial-gradient(0.9px 0.9px at 6% 88%, rgba(255, 244, 218, 0.42), transparent 60%),
+    radial-gradient(1.2px 1.2px at 48% 6%, rgba(255, 244, 218, 0.4), transparent 60%),
+    radial-gradient(0.8px 0.8px at 36% 92%, rgba(255, 244, 218, 0.5), transparent 60%);
+  background-repeat: no-repeat;
+}
+.ambient-stars--twos {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0; opacity: 0.5;
+  background-image:
+    radial-gradient(0.8px 0.8px at 8% 38%, rgba(255, 244, 218, 0.42), transparent 60%),
+    radial-gradient(1px 1px at 22% 78%, rgba(255, 244, 218, 0.4), transparent 60%),
+    radial-gradient(0.9px 0.9px at 58% 88%, rgba(255, 244, 218, 0.48), transparent 60%),
+    radial-gradient(0.7px 0.7px at 72% 72%, rgba(255, 244, 218, 0.42), transparent 60%),
+    radial-gradient(0.8px 0.8px at 88% 86%, rgba(255, 244, 218, 0.36), transparent 60%),
+    radial-gradient(0.7px 0.7px at 42% 38%, rgba(255, 244, 218, 0.4), transparent 60%),
+    radial-gradient(0.9px 0.9px at 4% 56%, rgba(255, 244, 218, 0.4), transparent 60%);
+  background-repeat: no-repeat;
 }
 
 .ambient-vignette {
   position: fixed; inset: 0; pointer-events: none; z-index: 1;
   background:
     radial-gradient(
-      ellipse 70% 56% at 50% 42%,
-      rgba(245, 198, 91, 0.16) 0%,
-      rgba(217, 101, 74, 0.08) 28%,
-      rgba(17, 32, 42, 0.35) 58%,
-      rgba(7, 17, 26, 0.78) 88%,
-      rgba(4, 10, 16, 0.95) 100%
+      ellipse 78% 62% at 50% 40%,
+      rgba(245, 198, 91, 0.10) 0%,
+      rgba(217, 101, 74, 0.06) 22%,
+      rgba(17, 32, 42, 0.30) 56%,
+      rgba(7, 17, 26, 0.84) 90%,
+      rgba(4, 10, 16, 0.96) 100%
     );
-  opacity: 0.95;
-  transition: opacity 900ms var(--ease);
+  opacity: 1;
+  transition: opacity 1200ms var(--ease);
 }
 .has-answer .ambient-vignette { opacity: 1; }
 
@@ -88,17 +123,12 @@ button { font: inherit; }
   content: "";
   position: absolute; inset: 0;
   background: radial-gradient(
-    circle at 50% 38%,
-    rgba(255, 220, 160, 0.10) 0%,
-    transparent 36%
+    ellipse 60% 42% at 50% 36%,
+    rgba(255, 220, 160, 0.06) 0%,
+    transparent 48%
   );
   mix-blend-mode: screen;
-  animation: lamp-breathe 9s ease-in-out infinite;
-  opacity: 0.85;
-}
-@keyframes lamp-breathe {
-  0%, 100% { transform: scale(1); opacity: 0.78; }
-  50%      { transform: scale(1.06); opacity: 0.96; }
+  opacity: 0.7;
 }
 
 /* ────────── sheet ────────── */
@@ -126,13 +156,13 @@ button { font: inherit; }
 .sheet::before {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background-image:
-    radial-gradient(rgba(17, 32, 42, 0.34) 0.45px, transparent 0.7px),
-    radial-gradient(rgba(156, 110, 38, 0.10) 0.4px, transparent 0.6px),
-    repeating-linear-gradient(90deg, rgba(107, 74, 37, 0.04) 0 1px, transparent 1px 4px),
-    repeating-linear-gradient(0deg, rgba(107, 74, 37, 0.025) 0 1px, transparent 1px 7px);
+    radial-gradient(rgba(17, 32, 42, 0.30) 0.45px, transparent 0.7px),
+    radial-gradient(rgba(156, 110, 38, 0.08) 0.4px, transparent 0.6px),
+    repeating-linear-gradient(90deg, rgba(107, 74, 37, 0.035) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(0deg, rgba(107, 74, 37, 0.02) 0 1px, transparent 1px 7px);
   background-size: 6px 6px, 11px 11px, 100% auto, 100% auto;
   background-position: 0 0, 3px 4px, 0 0, 0 0;
-  opacity: 0.5;
+  opacity: 0.4;
   mix-blend-mode: multiply;
 }
 .sheet::after {
@@ -422,14 +452,14 @@ button { font: inherit; }
   transition: opacity 600ms var(--ease);
 }
 .reading-lamp { opacity: 0; transition: opacity 800ms var(--ease); }
-.has-answer .reading-lamp { opacity: 1; }
-.has-answer .reading-lamp-glow { opacity: 1; }
-.has-answer .reading-lamp-cone { opacity: 1; }
+.has-answer .reading-lamp { opacity: 0.88; }
+.has-answer .reading-lamp-glow { opacity: 0.92; }
+.has-answer .reading-lamp-cone { opacity: 0.85; }
 @keyframes lamp-flicker {
-  0%, 100% { opacity: 1; }
-  47% { opacity: 0.92; }
-  52% { opacity: 1; }
-  78% { opacity: 0.95; }
+  0%, 100% { opacity: 0.92; }
+  47% { opacity: 0.86; }
+  52% { opacity: 0.92; }
+  78% { opacity: 0.88; }
 }
 
 .dust-canvas {
@@ -509,7 +539,7 @@ button { font: inherit; }
   position: relative; z-index: 3;
   display: flex; flex-direction: column;
   align-items: center;
-  padding: 24px 0 30px;
+  padding: 22px 0 26px;
   animation: content-in 0.85s 0.18s both;
 }
 .chapter-head {
@@ -618,10 +648,10 @@ button { font: inherit; }
   .headpiece-leaf--right { animation: none !important; }
 }
 .chapter-subtitle {
-  display: inline-flex; align-items: baseline; gap: 7px;
+  display: inline-flex; align-items: baseline; gap: 8px;
   color: var(--ink-soft);
-  font: italic 13.5px/1.4 var(--serif);
-  letter-spacing: 0.02em;
+  font: italic 14px/1.4 var(--display);
+  letter-spacing: 0.018em;
 }
 .chapter-subtitle em {
   font-style: italic;
@@ -630,8 +660,8 @@ button { font: inherit; }
 .chapter-subtitle em:first-child { color: var(--coral-deep); }
 .chapter-subtitle-sep {
   color: var(--coral);
-  font: 700 12px/1 var(--display);
-  opacity: 0.78;
+  font: 700 13px/1 var(--display);
+  opacity: 0.82;
 }
 
 /* ────────── chapter witness: a small inscription that records when the folio was opened today ────────── */
@@ -823,10 +853,10 @@ button { font: inherit; }
 }
 .annotation {
   display: inline-flex; gap: 9px;
-  margin: 0 0 22px 3px;
+  margin: 0 0 20px 3px;
   color: var(--coral-deep);
-  font: 770 10px/1.3 var(--sans);
-  letter-spacing: 0.22em;
+  font: 770 10.5px/1.3 var(--sans);
+  letter-spacing: 0.24em;
   text-transform: uppercase;
 }
 .annotation-mark {
@@ -1042,19 +1072,19 @@ button { font: inherit; }
   display: grid;
   grid-template-columns: minmax(0, auto) minmax(0, 1fr);
   align-items: stretch;
-  column-gap: clamp(18px, 2.6vw, 32px);
+  column-gap: clamp(22px, 3vw, 38px);
   margin: 0;
-  max-width: 720px;
+  max-width: 760px;
   position: relative;
 }
 .title-initial-wrap {
   display: inline-block;
   position: relative;
-  width: clamp(112px, 13.6vw, 176px);
+  width: clamp(128px, 15vw, 196px);
   align-self: start;
   margin-top: -0.02em;
   transition: transform 520ms var(--ease), filter 520ms var(--ease);
-  filter: drop-shadow(0 6px 12px rgba(80, 36, 14, 0.18));
+  filter: drop-shadow(0 8px 14px rgba(80, 36, 14, 0.22));
 }
 .title-initial-wrap.is-pressing {
   transform: scale(0.92);
@@ -1071,11 +1101,11 @@ button { font: inherit; }
 .has-answer .broadsheet-initial {
   opacity: 1;
   transform: none;
-  animation: broadsheet-breathe 6s ease-in-out infinite;
+  animation: broadsheet-breathe 6.4s ease-in-out infinite;
 }
 @keyframes broadsheet-breathe {
   0%, 100% { filter: drop-shadow(0 0 0 rgba(245, 198, 91, 0)); }
-  50%      { filter: drop-shadow(0 0 10px rgba(245, 198, 91, 0.36)); }
+  50%      { filter: drop-shadow(0 0 12px rgba(245, 198, 91, 0.36)); }
 }
 .broadsheet-initial svg { display: block; width: 100%; height: auto; }
 .bs-letter-glyph {
@@ -1084,8 +1114,8 @@ button { font: inherit; }
   letter-spacing: -0.02em;
   paint-order: stroke fill;
 }
-.bs-vine--tr { transform-origin: 124px 22px; animation: bs-vine-sway 7s ease-in-out infinite; }
-.bs-vine--bl { transform-origin: 36px 178px; animation: bs-vine-sway 7s ease-in-out infinite reverse; }
+.bs-vine--tr { transform-origin: 124px 22px; animation: bs-vine-sway 7.4s ease-in-out infinite; }
+.bs-vine--bl { transform-origin: 36px 178px; animation: bs-vine-sway 7.4s ease-in-out infinite reverse; }
 @keyframes bs-vine-sway {
   0%, 100% { transform: rotate(-0.8deg); }
   50%      { transform: rotate(1.4deg); }
@@ -1096,8 +1126,8 @@ button { font: inherit; }
   align-self: center;
   margin: 0;
   color: var(--ink);
-  font: italic 520 clamp(32px, 5.0vw, 70px)/1.08 var(--display);
-  letter-spacing: -0.022em;
+  font: italic 540 clamp(38px, 5.8vw, 82px)/1.04 var(--display);
+  letter-spacing: -0.026em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1;
   padding-top: 0.02em;
   opacity: 0;
@@ -1115,16 +1145,16 @@ button { font: inherit; }
 .title-questions {
   font-style: italic;
   color: var(--coral-deep);
-  font-weight: 600;
-  margin-left: 0.02em;
+  font-weight: 620;
+  margin-left: 0.05em;
   display: inline-block;
-  font-size: 1.1em;
+  font-size: 1.18em;
   line-height: 0.86;
   transform: translateY(0.06em);
   text-shadow: 0 0.04em 0 rgba(167, 60, 44, 0.1);
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1;
   position: relative;
-  padding: 0 0.02em 0 0.04em;
+  padding: 0 0.02em 0 0.05em;
 }
 .title-questions::after {
   content: "";
@@ -2170,7 +2200,7 @@ button { font: inherit; }
 .answer-quote {
   position: absolute;
   color: var(--coral);
-  font: italic 56px/0.7 var(--display);
+  font: italic 64px/0.7 var(--display);
   opacity: 0;
   transition: opacity 1100ms var(--ease);
 }
@@ -2208,8 +2238,8 @@ button { font: inherit; }
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(124px, 18%, 168px);
-  column-gap: clamp(18px, 2.6vw, 32px);
+  grid-template-columns: minmax(0, 1fr) clamp(128px, 19%, 172px);
+  column-gap: clamp(20px, 2.8vw, 36px);
   align-items: stretch;
   width: 100%;
 }
@@ -2218,8 +2248,8 @@ button { font: inherit; }
   position: relative; z-index: 1;
   margin: 0;
   color: var(--ink);
-  font: italic clamp(22px, 2.9vw, 31px)/1.42 var(--display);
-  letter-spacing: -0.008em;
+  font: italic 540 clamp(24px, 3.2vw, 36px)/1.34 var(--display);
+  letter-spacing: -0.012em;
   text-indent: 0;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1, "liga" 1;
   padding-right: 12px;
@@ -2609,15 +2639,15 @@ button { font: inherit; }
 .reply-paragraph {
   display: block;
   position: relative;
-  font: italic clamp(19px, 2.4vw, 23.5px)/1.62 var(--display);
-  letter-spacing: 0.01em;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
+  font: italic 480 clamp(20px, 2.6vw, 26px)/1.56 var(--display);
+  letter-spacing: 0.008em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "salt" 1;
   color: var(--ink);
   text-wrap: pretty;
   text-wrap: balance;
   hanging-punctuation: first last;
   text-indent: 0.02em;
-  max-width: 32em;
+  max-width: 34em;
   margin-inline: auto;
   padding-inline: 0.4em;
   text-shadow: 0 0 0.4px rgba(17, 32, 42, 0.08);
@@ -4073,7 +4103,7 @@ button { font: inherit; }
   .catchword { gap: 10px; }
   .marginalia-owl { width: 32px; height: 36px; }
   .answer-surface { min-height: 200px; padding: 34px 22px 40px; }
-  .answer-copy { font-size: 25px; line-height: 1.2; }
+  .answer-copy { font-size: 27px; line-height: 1.22; letter-spacing: -0.014em; }
   .answer-quote { font-size: 48px; }
   .answer-quote--open { top: 14px; left: 14px; }
   .answer-quote--close { right: 18px; bottom: 14px; }
@@ -4668,9 +4698,9 @@ button { font: inherit; }
 }
 
 @media (max-width: 380px) {
-  .broadsheet-title { grid-template-columns: minmax(0, 76px) minmax(0, 1fr); column-gap: 10px; }
-  .title-initial-wrap { width: 76px; }
-  .title-flow { font-size: clamp(30px, 9.8vw, 44px); }
+  .broadsheet-title { grid-template-columns: minmax(0, 80px) minmax(0, 1fr); column-gap: 12px; }
+  .title-initial-wrap { width: 80px; }
+  .title-flow { font-size: clamp(34px, 10.5vw, 50px); letter-spacing: -0.03em; line-height: 1.02; }
 }
 
 /* ────────── iteration 102: hand-pressed refinements ────────── */

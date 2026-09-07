@@ -1,21 +1,19 @@
-# Iteration 121
+# Changelog
 
-The recto now speaks the question in two voices — the printer's monogram on the right, a hand-set "?" specimen on the left — framing the title between two marks. Type and rhythm are tightened, and the chapter mark, witness inscription, marginalia, and reply column are composed with more confidence.
+## Iteration 122
 
-## What changed
+Quieted the night-sky theatrics and made the question and answer monumental, confident italic display.
 
-- Added a new `QuestionerMark` typographic specimen (a small gold-edged card showing a hand-set italic "?" with "the question · a mark of inquiry") to the upper-LEFT of the question panel, mirroring the existing `SpecimenPlate` printer's specimen on the upper-RIGHT. The two specimens now bookend the title, the printer's monogram on one side and the question's mark on the other.
-- Refined the title's question mark: now larger (1.1em), bolder, with a hand-set press rule that draws itself in beneath the "?" once the leaf has been pressed. The mark now reads as a deliberate press element rather than a styled glyph.
-- Tightened the chapter mark "Caput XVIII" — the roman numeral is more confident in italic, with a wider letter-fit and a tighter, more deliberate press rule.
-- Polished the chapter-witness inscription: better letter-spacing on the day and year, the time reads at a slightly larger italic, and the rule gradients extend further to give the inscription more presence.
-- Polished the press-plate marginalia: the ¶ † ‡ pilcrows read larger, the note text is more carefully spaced, and the hover/focus state now lifts onto a faint coral wash.
-- Polished the verso reply: line-height tightened to 1.62, the max-width is now anchored to em units for better readability across viewports, and a small inline padding eases the column.
-- New CSS module for `QuestionerMark` with responsive breakpoints at 720/520/420 px.
-
-## What was preserved
-
-- The visible and document title remain exactly "is Minimax M3 good at frontend yet?".
-- Every prior iteration's contributions are intact: the printer's emblem, headpiece, scribal correction, marginalia strip, pressed leaf, moth, owl, volvelle, ephemeris, wax seal, wax archive, colophon, press signature, apparatus, foliate, bookmark ribbon, reading lens, reading lamp, dust motes, night sky, and the leaf-turn reveal.
-- Keyboard activation still triggers the wax seal on Space / R.
-- Reduced-motion preferences still silence every breathing, swaying, twinkling, pulsing, shining, and rotating animation.
-- No remote fonts, scripts, images, APIs, or storage; everything is self-contained in CSS, local SVG, and the existing canvas.
+- Backdrop: removed the twinkling starfield canvas and the breathing lamp glow; replaced with a static, two-layer starfield built from CSS radial gradients so the page is the protagonist of its own room.
+- Ambient: calmed the warm-to-dark vignette (less dramatic radial, removed the animated `lamp-breathe` keyframes) and softened the reading-lamp flicker so the leaf, not the lamp, reads first.
+- Question title: bumped the broadsheet title from `italic 520 / 5.0vw` to `italic 540 / 5.8vw` with tighter letter-spacing (-0.026em) and a slightly larger drop-cap; the question now reads at 38–82px instead of 32–70px.
+- Question mark: enlarged the trailing "?" to 1.18em and re-spaced it for a cleaner cadence at the end of the question.
+- Answer typography: the italic answer-copy moves from `2.9vw / 31px` to `3.2vw / 36px` at weight 540; the reply paragraph follows the same drift (2.4vw → 2.6vw, 460 → 480) so the two voices sit on the same typographic shelf.
+- Answer surface: widened the sidebar gutter that holds the self-annotations, and bumped the open/close quotation glyphs from 56px to 64px so they read with the new answer scale.
+- Paper: the sheet's grain texture (`::before` noise + ruled bands) is reduced from opacity 0.5 to 0.4 with softer dot colors so the type is clearer at the new weight.
+- Mobile: the title's small-screen clamp is retuned (10.5vw, 1.04 line-height, tighter tracking) and the answer-copy on phones moves from 25px → 27px to match the larger desktop face.
+- Chapter subtitle ("of folio lxxvii · set in question") promoted from serif 13.5px to display 14px for a small but consistent upgrade in voice.
+- Bumped the recto annotation ("the question · plainly set") from 10px/0.22em to 10.5px/0.24em letter-spacing for a touch more editorial breath.
+- Chapter opener padding tightened (24/30 → 22/26) so the question sits closer to the chapter head and the recto opens with a confident, single composition.
+- The `NightSky` canvas is still in the source but no longer mounted; the `DustMotes`, `ReadingLamp`, `ReadingLens`, `BookmarkRibbon`, and `FoldShade` are unchanged so the page still has its atmosphere — it just isn't competing with itself anymore.
+- Verified with `npm run build`; no type or build errors.

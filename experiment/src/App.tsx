@@ -6036,8 +6036,9 @@ export function App() {
 
   return (
     <main className="experiment-shell">
+      <div className="ambient-stars" aria-hidden="true" />
+      <div className="ambient-stars--twos" aria-hidden="true" />
       <div className="ambient-vignette" aria-hidden="true" />
-      <NightSky reduced={reduced} />
 
       <article className={`sheet ${phase !== 'idle' ? 'has-answer' : ''}`}>
         <span
