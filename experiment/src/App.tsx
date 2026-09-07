@@ -2203,119 +2203,6 @@ function Manicule() {
   )
 }
 
-function PrinterDevice() {
-  return (
-    <div className="printer-device" aria-hidden="true">
-      <svg viewBox="0 0 60 60" focusable="false">
-        <circle className="device-frame" cx="30" cy="30" r="27" fill="none" />
-        <circle
-          className="device-frame-inner"
-          cx="30"
-          cy="30"
-          r="22.5"
-          fill="none"
-        />
-        <g className="device-laurel">
-          <ellipse
-            cx="20"
-            cy="13"
-            rx="3.6"
-            ry="1.4"
-            transform="rotate(-32 20 13)"
-          />
-          <ellipse cx="30" cy="9" rx="4" ry="1.4" />
-          <ellipse
-            cx="40"
-            cy="13"
-            rx="3.6"
-            ry="1.4"
-            transform="rotate(32 40 13)"
-          />
-          <ellipse
-            cx="24"
-            cy="18"
-            rx="2.6"
-            ry="1.2"
-            transform="rotate(-18 24 18)"
-          />
-          <ellipse
-            cx="36"
-            cy="18"
-            rx="2.6"
-            ry="1.2"
-            transform="rotate(18 36 18)"
-          />
-          <ellipse
-            cx="9"
-            cy="30"
-            rx="1.4"
-            ry="3.6"
-            transform="rotate(58 9 30)"
-          />
-          <ellipse
-            cx="11"
-            cy="22"
-            rx="1.2"
-            ry="3"
-            transform="rotate(80 11 22)"
-          />
-          <ellipse
-            cx="11"
-            cy="38"
-            rx="1.2"
-            ry="3"
-            transform="rotate(38 11 38)"
-          />
-          <ellipse
-            cx="51"
-            cy="30"
-            rx="1.4"
-            ry="3.6"
-            transform="rotate(-58 51 30)"
-          />
-          <ellipse
-            cx="49"
-            cy="22"
-            rx="1.2"
-            ry="3"
-            transform="rotate(-80 49 22)"
-          />
-          <ellipse
-            cx="49"
-            cy="38"
-            rx="1.2"
-            ry="3"
-            transform="rotate(-38 49 38)"
-          />
-          <ellipse
-            cx="22"
-            cy="46"
-            rx="2.6"
-            ry="1.2"
-            transform="rotate(-50 22 46)"
-          />
-          <ellipse
-            cx="38"
-            cy="46"
-            rx="2.6"
-            ry="1.2"
-            transform="rotate(50 38 46)"
-          />
-        </g>
-        <g className="device-star">
-          <path d="M 30 20 L 32 26 L 38.5 26 L 33 30 L 35.2 36.5 L 30 32.7 L 24.8 36.5 L 27 30 L 21.5 26 L 28 26 Z" />
-        </g>
-        <g className="device-ribbon">
-          <path d="M 14 49 Q 30 53.5 46 49 L 43.5 52 Q 30 55.5 16.5 52 Z" />
-          <path d="M 11 47.5 L 14 49 L 14.5 52.5 L 11.2 51 Z" />
-          <path d="M 49 47.5 L 46 49 L 45.5 52.5 L 48.8 51 Z" />
-        </g>
-      </svg>
-      <span className="printer-device-text">m · iii</span>
-    </div>
-  )
-}
-
 function Fleuron() {
   return (
     <div className="fleuron" aria-hidden="true">
@@ -3276,16 +3163,6 @@ function DustMotes({ reduced }: { reduced: boolean }) {
   return <canvas ref={canvasRef} className="dust-canvas" aria-hidden="true" />
 }
 
-function SignatureMark({ sig, side }: { sig: string; side: 'r' | 'v' }) {
-  return (
-    <span className="signature-mark" aria-hidden="true">
-      <em className="sig-prefix">sig.</em>
-      <span className="sig-letter">{sig}</span>
-      <sup className="sig-side">{side}</sup>
-    </span>
-  )
-}
-
 function MarginalInterlude({
   visible,
   reduced,
@@ -3711,199 +3588,159 @@ function Epigraph() {
   )
 }
 
-function TitleFlourish() {
-  return (
-    <svg
-      className="title-flourish"
-      viewBox="0 0 320 22"
-      focusable="false"
-      aria-hidden="true"
-      preserveAspectRatio="none"
-    >
-      <defs>
-        <linearGradient id="flourish-gold" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#9c6e26" />
-          <stop offset="22%" stopColor="#c8923e" />
-          <stop offset="50%" stopColor="#f5c65b" />
-          <stop offset="78%" stopColor="#c8923e" />
-          <stop offset="100%" stopColor="#9c6e26" />
-        </linearGradient>
-        <linearGradient id="flourish-gold-soft" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#f5c65b" />
-          <stop offset="100%" stopColor="#9c6e26" />
-        </linearGradient>
-        <radialGradient id="flourish-medallion-glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="rgba(245, 198, 91, 0.55)" />
-          <stop offset="60%" stopColor="rgba(245, 198, 91, 0.12)" />
-          <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
-        </radialGradient>
-      </defs>
-      <g className="title-flourish-stroke" fill="none" strokeLinecap="round">
-        <path
-          className="title-flourish-line"
-          d="M 8 11 Q 80 5 130 11"
-          stroke="url(#flourish-gold)"
-          strokeWidth="0.85"
-        />
-        <path
-          className="title-flourish-line"
-          d="M 190 11 Q 240 17 312 11"
-          stroke="url(#flourish-gold)"
-          strokeWidth="0.85"
-        />
-        <path
-          className="title-flourish-line-inner"
-          d="M 16 13 Q 80 8 130 13"
-          stroke="url(#flourish-gold)"
-          strokeWidth="0.32"
-          opacity="0.55"
-          strokeDasharray="0.4 1.4"
-        />
-        <path
-          className="title-flourish-line-inner"
-          d="M 190 13 Q 240 8 304 13"
-          stroke="url(#flourish-gold)"
-          strokeWidth="0.32"
-          opacity="0.55"
-          strokeDasharray="0.4 1.4"
-        />
-        <path
-          className="title-flourish-shadow"
-          d="M 8 13 Q 80 8 130 13 Q 190 18 312 13"
-          stroke="url(#flourish-gold)"
-          strokeWidth="0.32"
-          opacity="0.38"
-        />
-      </g>
-      <g className="title-flourish-diamond title-flourish-diamond--left">
-        <path
-          d="M 132 11 L 138 6 L 144 11 L 138 16 Z"
-          fill="url(#flourish-gold-soft)"
-          stroke="rgba(107, 74, 37, 0.55)"
-          strokeWidth="0.32"
-        />
-        <path
-          d="M 138 8 L 141 11 L 138 14"
-          fill="none"
-          stroke="rgba(107, 74, 37, 0.55)"
-          strokeWidth="0.28"
-        />
-        <circle cx="138" cy="11" r="0.6" fill="rgba(255, 246, 218, 0.85)" />
-      </g>
-      <g className="title-flourish-diamond title-flourish-diamond--right">
-        <path
-          d="M 188 11 L 182 6 L 176 11 L 182 16 Z"
-          fill="url(#flourish-gold-soft)"
-          stroke="rgba(107, 74, 37, 0.55)"
-          strokeWidth="0.32"
-        />
-        <path
-          d="M 182 8 L 179 11 L 182 14"
-          fill="none"
-          stroke="rgba(107, 74, 37, 0.55)"
-          strokeWidth="0.28"
-        />
-        <circle cx="182" cy="11" r="0.6" fill="rgba(255, 246, 218, 0.85)" />
-      </g>
-      <g className="title-flourish-medallion">
-        <circle cx="160" cy="11" r="11" fill="url(#flourish-medallion-glow)" />
-        <circle cx="160" cy="11" r="5.2" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.7" />
-        <circle cx="160" cy="11" r="3.4" fill="none" stroke="url(#flourish-gold)" strokeWidth="0.32" strokeDasharray="0.4 1.2" opacity="0.85" />
-        <g transform="translate(160 11)" fill="url(#flourish-gold-soft)">
-          <path d="M 0 -3.2 L 0.9 -0.9 L 3.2 0 L 0.9 0.9 L 0 3.2 L -0.9 0.9 L -3.2 0 L -0.9 -0.9 Z" />
-        </g>
-        <circle cx="160" cy="11" r="0.55" fill="rgba(107, 74, 37, 0.85)" />
-      </g>
-      <g className="title-flourish-tails">
-        <circle cx="8" cy="11" r="1" fill="url(#flourish-gold)" />
-        <circle cx="312" cy="11" r="1" fill="url(#flourish-gold)" />
-      </g>
-    </svg>
-  )
-}
-
-function PlateInscription({ cycle }: { cycle: number }) {
-  return (
-    <div
-      className={`plate-inscription${cycle > 0 ? ' is-reread' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="plate-inscription-rule plate-inscription-rule--left" />
-      <span className="plate-inscription-cluster">
-        <svg
-          className="plate-inscription-mark plate-inscription-mark--left"
-          viewBox="0 0 12 12"
-          focusable="false"
-        >
-          <circle cx="6" cy="6" r="3.6" fill="none" stroke="currentColor" strokeWidth="0.32" strokeDasharray="0.4 1.2" />
-          <circle cx="6" cy="6" r="1.1" fill="currentColor" />
-        </svg>
-        <em className="plate-inscription-text">
-          <em className="plate-inscription-key">manus</em>
-          <span className="plate-inscription-subject">m. iii</span>
-          <em className="plate-inscription-tail">· caput</em>
-          <em className="plate-inscription-roman">xviii</em>
-          <em className="plate-inscription-tail">· in folio</em>
-          <em className="plate-inscription-roman">lxxvii</em>
-          <em className="plate-inscription-tail">·</em>
-          <em className="plate-inscription-motto">ad lucem</em>
-        </em>
-        <svg
-          className="plate-inscription-mark plate-inscription-mark--right"
-          viewBox="0 0 12 12"
-          focusable="false"
-        >
-          <circle cx="6" cy="6" r="3.6" fill="none" stroke="currentColor" strokeWidth="0.32" strokeDasharray="0.4 1.2" />
-          <circle cx="6" cy="6" r="1.1" fill="currentColor" />
-        </svg>
-      </span>
-      <span className="plate-inscription-rule plate-inscription-rule--right" />
-    </div>
-  )
-}
-
-function TitleSpecimen({
-  visible,
+function PressCartouche({
   cycle,
+  breathing,
 }: {
-  visible: boolean
   cycle: number
+  breathing: boolean
 }) {
   return (
-    <div
-      className={`title-specimen${visible ? ' is-visible' : ''}${
-        cycle > 0 ? ' is-reread' : ''
+    <figure
+      className={`press-cartouche${cycle > 0 ? ' is-reread' : ''}${
+        breathing ? ' is-breathing' : ''
       }`}
       aria-hidden="true"
     >
-      <span className="title-specimen-rule title-specimen-rule--left" />
-      <span className="title-specimen-cluster">
-        <span className="title-specimen-key">
-          <em>catalog</em>
-          <span className="title-specimen-sep">·</span>
-          <em>specimen</em>
-          <span className="title-specimen-sep">·</span>
-          <em>no. xviii</em>
+      <figcaption className="press-cartouche-cap">
+        <span className="press-cartouche-cap-rule press-cartouche-cap-rule--left" />
+        <span className="press-cartouche-cap-cluster">
+          <em className="press-cartouche-cap-key">catalog</em>
+          <span className="press-cartouche-cap-dot" aria-hidden="true">·</span>
+          <em className="press-cartouche-cap-key">specimen</em>
+          <span className="press-cartouche-cap-dot" aria-hidden="true">·</span>
+          <em className="press-cartouche-cap-numeral">no. xviii</em>
         </span>
-        <span className="title-specimen-quote">
-          <em className="title-specimen-q">“</em>
+        <span className="press-cartouche-cap-rule press-cartouche-cap-rule--right" />
+      </figcaption>
+
+      <span className="press-cartouche-quote">
+        <em className="press-cartouche-q">“</em>
+        <span className="press-cartouche-quote-text">
           is{' '}
-          <em className="title-specimen-subject">Minimax M3</em>{' '}
+          <em className="press-cartouche-quote-subject">Minimax M3</em>{' '}
           good at frontend yet?
-          <em className="title-specimen-q title-specimen-q--close">”</em>
         </span>
-        <span className="title-specimen-meta">
-          <em>set in italic</em>
-          <span className="title-specimen-meta-dot" aria-hidden="true">·</span>
-          <em>30 pt</em>
-          <span className="title-specimen-meta-dot" aria-hidden="true">·</span>
-          <em>leaded</em>
-          <span className="title-specimen-meta-dot" aria-hidden="true">·</span>
-          <em>with gilt</em>
-        </span>
+        <em className="press-cartouche-q press-cartouche-q--close">”</em>
       </span>
-      <span className="title-specimen-rule title-specimen-rule--right" />
-    </div>
+
+      <svg
+        className="press-cartouche-flourish"
+        viewBox="0 0 320 14"
+        focusable="false"
+        aria-hidden="true"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="press-cartouche-gold" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#9c6e26" />
+            <stop offset="22%" stopColor="#c8923e" />
+            <stop offset="50%" stopColor="#f5c65b" />
+            <stop offset="78%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <linearGradient id="press-cartouche-gold-soft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <radialGradient id="press-cartouche-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.55)" />
+            <stop offset="60%" stopColor="rgba(245, 198, 91, 0.12)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+        </defs>
+        <g className="press-cartouche-stroke" fill="none" strokeLinecap="round">
+          <line
+            x1="0"
+            y1="7"
+            x2="146"
+            y2="7"
+            stroke="url(#press-cartouche-gold)"
+            strokeWidth="0.85"
+          />
+          <line
+            x1="174"
+            y1="7"
+            x2="320"
+            y2="7"
+            stroke="url(#press-cartouche-gold)"
+            strokeWidth="0.85"
+          />
+          <line
+            x1="0"
+            y1="9.5"
+            x2="130"
+            y2="9.5"
+            stroke="url(#press-cartouche-gold)"
+            strokeWidth="0.3"
+            opacity="0.55"
+            strokeDasharray="0.4 1.4"
+          />
+          <line
+            x1="190"
+            y1="9.5"
+            x2="320"
+            y2="9.5"
+            stroke="url(#press-cartouche-gold)"
+            strokeWidth="0.3"
+            opacity="0.55"
+            strokeDasharray="0.4 1.4"
+          />
+        </g>
+        <g className="press-cartouche-medallion">
+          <circle cx="160" cy="7" r="9" fill="url(#press-cartouche-glow)" />
+          <circle
+            cx="160"
+            cy="7"
+            r="4.4"
+            fill="none"
+            stroke="url(#press-cartouche-gold)"
+            strokeWidth="0.6"
+          />
+          <circle
+            cx="160"
+            cy="7"
+            r="2.6"
+            fill="none"
+            stroke="url(#press-cartouche-gold)"
+            strokeWidth="0.3"
+            strokeDasharray="0.4 1.2"
+            opacity="0.85"
+          />
+          <g transform="translate(160 7)" fill="url(#press-cartouche-gold-soft)">
+            <path d="M 0 -2.4 L 0.7 -0.7 L 2.4 0 L 0.7 0.7 L 0 2.4 L -0.7 0.7 L -2.4 0 L -0.7 -0.7 Z" />
+          </g>
+          <circle cx="160" cy="7" r="0.45" fill="rgba(107, 74, 37, 0.85)" />
+        </g>
+        <g className="press-cartouche-flourish-tails">
+          <circle cx="146" cy="7" r="0.9" fill="url(#press-cartouche-gold)" />
+          <circle cx="174" cy="7" r="0.9" fill="url(#press-cartouche-gold)" />
+        </g>
+      </svg>
+
+      <span className="press-cartouche-meta">
+        <em className="press-cartouche-meta-key">set in italic</em>
+        <span className="press-cartouche-meta-dot" aria-hidden="true">·</span>
+        <em className="press-cartouche-meta-key">30 pt</em>
+        <span className="press-cartouche-meta-dot" aria-hidden="true">·</span>
+        <em className="press-cartouche-meta-key">leaded</em>
+        <span className="press-cartouche-meta-dot" aria-hidden="true">·</span>
+        <em className="press-cartouche-meta-key">with gilt</em>
+      </span>
+
+      <span className="press-cartouche-imprint">
+        <em className="press-cartouche-imprint-key">manus</em>
+        <em className="press-cartouche-imprint-subject">m · iii</em>
+        <span className="press-cartouche-imprint-dot" aria-hidden="true">·</span>
+        <em className="press-cartouche-imprint-key">caput</em>
+        <em className="press-cartouche-imprint-roman">xviii</em>
+        <span className="press-cartouche-imprint-dot" aria-hidden="true">·</span>
+        <em className="press-cartouche-imprint-key">in folio</em>
+        <em className="press-cartouche-imprint-roman">lxxvii</em>
+        <span className="press-cartouche-imprint-dot" aria-hidden="true">·</span>
+        <em className="press-cartouche-imprint-motto">ad lucem</em>
+      </span>
+    </figure>
   )
 }
 
@@ -4383,119 +4220,6 @@ function ReadingLines({
   )
 }
 
-function EditionLine({ cycle, breathing }: { cycle: number; breathing: boolean }) {
-  const impression =
-    cycle === 0 ? 'first impression' : `${ordinal(cycle + 1)} impression`
-  const pressNote =
-    cycle === 0
-      ? 'composed in silence'
-      : cycle === 1
-        ? 'the page unchanged · the reader, changed'
-        : 'pressed again · the answer deepens'
-  return (
-    <div
-      className={`edition-line${cycle > 0 ? ' is-reread' : ''}${breathing ? ' is-breathing' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="edition-line-rule edition-line-rule--left" />
-      <span className="edition-line-cluster">
-        <svg
-          className="edition-line-aster"
-          viewBox="0 0 36 12"
-          focusable="false"
-        >
-          <g fill="currentColor">
-            <path d="M 6 6 L 18 1 L 18 11 Z" />
-            <path d="M 30 6 L 18 1 L 18 11 Z" />
-            <circle cx="18" cy="6" r="1.1" fill="var(--paper)" />
-          </g>
-        </svg>
-        <span className="edition-line-text">
-          <em className="edition-line-key">{impression}</em>
-          <span className="edition-line-sep">·</span>
-          <em className="edition-line-tail">{pressNote}</em>
-        </span>
-        <svg
-          className="edition-line-aster edition-line-aster--right"
-          viewBox="0 0 36 12"
-          focusable="false"
-        >
-          <g fill="currentColor">
-            <path d="M 6 6 L 18 1 L 18 11 Z" />
-            <path d="M 30 6 L 18 1 L 18 11 Z" />
-            <circle cx="18" cy="6" r="1.1" fill="var(--paper)" />
-          </g>
-        </svg>
-      </span>
-      <span className="edition-line-rule edition-line-rule--right" />
-    </div>
-  )
-}
-
-function PressImprint({
-  cycle,
-  breathing,
-}: {
-  cycle: number
-  breathing: boolean
-}) {
-  const readKey =
-    cycle === 0
-      ? 'first impression'
-      : cycle === 1
-        ? 'second impression'
-        : `${ordinal(cycle + 1)} impression`
-  return (
-    <div
-      className={`press-imprint${cycle > 0 ? ' is-reread' : ''}${
-        breathing ? ' is-breathing' : ''
-      }`}
-      aria-hidden="true"
-    >
-      <span className="press-imprint-rule press-imprint-rule--left" />
-      <span className="press-imprint-cluster">
-        <svg
-          className="press-imprint-aster press-imprint-aster--left"
-          viewBox="0 0 32 12"
-          focusable="false"
-        >
-          <g fill="currentColor">
-            <path d="M 4 6 L 16 1 L 16 11 Z" />
-            <path d="M 28 6 L 16 1 L 16 11 Z" />
-            <circle cx="16" cy="6" r="1" fill="var(--paper)" />
-          </g>
-        </svg>
-        <span className="press-imprint-text">
-          <em className="press-imprint-key">{readKey}</em>
-          <span className="press-imprint-sep" aria-hidden="true">·</span>
-          <em className="press-imprint-meta">manus</em>
-          <em className="press-imprint-subject">m · iii</em>
-          <span className="press-imprint-sep" aria-hidden="true">·</span>
-          <em className="press-imprint-meta">caput</em>
-          <em className="press-imprint-roman">xviii</em>
-          <span className="press-imprint-sep" aria-hidden="true">·</span>
-          <em className="press-imprint-motto">ad lucem</em>
-          <span className="press-imprint-sep" aria-hidden="true">·</span>
-          <em className="press-imprint-meta">in folio</em>
-          <em className="press-imprint-roman">lxxvii</em>
-        </span>
-        <svg
-          className="press-imprint-aster press-imprint-aster--right"
-          viewBox="0 0 32 12"
-          focusable="false"
-        >
-          <g fill="currentColor">
-            <path d="M 4 6 L 16 1 L 16 11 Z" />
-            <path d="M 28 6 L 16 1 L 16 11 Z" />
-            <circle cx="16" cy="6" r="1" fill="var(--paper)" />
-          </g>
-        </svg>
-      </span>
-      <span className="press-imprint-rule press-imprint-rule--right" />
-    </div>
-  )
-}
-
 function VersoMarginRule({ visible }: { visible: boolean }) {
   return (
     <span
@@ -4582,28 +4306,6 @@ function ReadingTrace({ cycle, reduced }: { cycle: number; reduced: boolean }) {
       <span className="reading-trace-count" aria-hidden="true">
         {count} re-read{count === 1 ? '' : 's'}
       </span>
-    </div>
-  )
-}
-
-function TypefaceSpecimen({ visible }: { visible: boolean }) {
-  return (
-    <div
-      className={`typeface-specimen${visible ? ' is-visible' : ''}`}
-      aria-hidden="true"
-    >
-      <span className="typeface-specimen-rule" />
-      <span className="typeface-specimen-row">
-        <span className="typeface-specimen-label">set in</span>
-        <em className="typeface-specimen-sample">italic</em>
-        <span className="typeface-specimen-dot">·</span>
-        <em className="typeface-specimen-sample">30pt</em>
-        <span className="typeface-specimen-dot">·</span>
-        <em className="typeface-specimen-sample">leaded</em>
-        <span className="typeface-specimen-dot">·</span>
-        <em className="typeface-specimen-sample">with gilt</em>
-      </span>
-      <span className="typeface-specimen-rule" />
     </div>
   )
 }
@@ -5132,69 +4834,6 @@ function FolioSpine({
   )
 }
 
-function SignaturePression({ cycle }: { cycle: number }) {
-  const seal =
-    cycle === 0
-      ? 'first reading'
-      : cycle === 1
-        ? 're-read once'
-        : `re-read ${ordinal(cycle + 1)} times`
-  return (
-    <div className="signature-pression" aria-hidden="true">
-      <span className="signature-pression-rule signature-pression-rule--left" />
-      <span className="signature-pression-mark">
-        <svg viewBox="0 0 48 48" focusable="false">
-          <defs>
-            <radialGradient id="sig-press-gold" cx="50%" cy="42%" r="58%">
-              <stop offset="0%" stopColor="#f5c65b" />
-              <stop offset="60%" stopColor="#c8923e" />
-              <stop offset="100%" stopColor="#9c6e26" />
-            </radialGradient>
-          </defs>
-          <circle
-            cx="24"
-            cy="24"
-            r="22"
-            fill="none"
-            stroke="url(#sig-press-gold)"
-            strokeWidth="0.55"
-          />
-          <circle
-            cx="24"
-            cy="24"
-            r="18.5"
-            fill="none"
-            stroke="url(#sig-press-gold)"
-            strokeWidth="0.3"
-            strokeDasharray="0.4 1.2"
-            opacity="0.7"
-          />
-          <g className="signature-pression-rays" stroke="url(#sig-press-gold)" strokeWidth="0.4" strokeLinecap="round">
-            <line x1="24" y1="3.6" x2="24" y2="6.6" />
-            <line x1="24" y1="41.4" x2="24" y2="44.4" />
-            <line x1="3.6" y1="24" x2="6.6" y2="24" />
-            <line x1="41.4" y1="24" x2="44.4" y2="24" />
-          </g>
-          <g className="signature-pression-letter" fill="url(#sig-press-gold)">
-            <text x="24" y="29" textAnchor="middle" className="signature-pression-letter-glyph">
-              m
-            </text>
-          </g>
-          <text x="24" y="36.6" textAnchor="middle" className="signature-pression-roman">
-            iii
-          </text>
-        </svg>
-      </span>
-      <span className="signature-pression-text">
-        <em className="signature-pression-key">explicit</em>
-        <span className="signature-pression-sep" aria-hidden="true">·</span>
-        <em className="signature-pression-tail">{seal}</em>
-      </span>
-      <span className="signature-pression-rule signature-pression-rule--right" />
-    </div>
-  )
-}
-
 function RectoSeal({ cycle }: { cycle: number }) {
   const impression =
     cycle === 0
@@ -5602,7 +5241,6 @@ export function App() {
       ? Math.min(ROMAN.length, Math.ceil(totalChars / 14))
       : 0
   const readingLinesVisible = answerVisible
-  const specimenVisible = phase === 'answering' || phase === 'replying' || phase === 'complete'
 
   return (
     <main className="experiment-shell">
@@ -5715,9 +5353,10 @@ export function App() {
                 </svg>
               </span>
             </h1>
-            <TitleSpecimen visible={true} cycle={cycle} />
-            <PressImprint cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
-            <TitleFlourish />
+            <PressCartouche
+              cycle={cycle}
+              breathing={phase === 'answering' || phase === 'replying'}
+            />
 
             <div
               data-section="sec-marginalia"
@@ -5859,8 +5498,6 @@ export function App() {
               )}
             </div>
 
-            <TypefaceSpecimen visible={specimenVisible} />
-
             <div
               data-section="sec-reply"
               ref={(el) => { sectionRefs.current['sec-reply'] = el }}
@@ -5952,8 +5589,6 @@ export function App() {
               onSelect={handleSelectSection}
             />
 
-            <SignaturePression cycle={cycle} />
-
             {phase === 'complete' && <Colophon cycle={cycle} />}
           </section>
           </div>
@@ -5962,9 +5597,7 @@ export function App() {
         <footer className="sheet-footer">
           <span className="footer-rule" aria-hidden="true" />
           <p className="footer-line">the interface is part of the answer</p>
-          <SignatureMark sig="A3" side="v" />
           <Bookplate cycle={cycle} />
-          <PrinterDevice />
         </footer>
 
         <FolioAnatomy visible={replyShown} />
