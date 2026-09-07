@@ -227,6 +227,109 @@ function PrintedInitial({ letter }: { letter: string }) {
   )
 }
 
+function VersoDropCap({ letter }: { letter: string }) {
+  const upper = letter.toLowerCase()
+  return (
+    <span className="verso-drop-cap" aria-hidden="true">
+      <svg viewBox="0 0 86 96" focusable="false">
+        <defs>
+          <linearGradient id="vd-gold" x1="0" y1="0" x2="0.05" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="48%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#8a5d1f" />
+          </linearGradient>
+          <linearGradient id="vd-gold-soft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#a47026" />
+          </linearGradient>
+          <radialGradient id="vd-face" cx="38%" cy="28%" r="92%">
+            <stop offset="0%" stopColor="rgba(255, 236, 188, 0.62)" />
+            <stop offset="60%" stopColor="rgba(232, 188, 110, 0.16)" />
+            <stop offset="100%" stopColor="rgba(150, 86, 38, 0.04)" />
+          </radialGradient>
+          <radialGradient id="vd-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.42)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="43" cy="48" rx="42" ry="50" fill="url(#vd-halo)" />
+
+        <rect
+          x="4"
+          y="4"
+          width="78"
+          height="88"
+          rx="1.5"
+          fill="url(#vd-face)"
+          stroke="url(#vd-gold)"
+          strokeWidth="0.85"
+        />
+        <rect
+          x="7.5"
+          y="7.5"
+          width="71"
+          height="81"
+          rx="1"
+          fill="none"
+          stroke="url(#vd-gold)"
+          strokeWidth="0.35"
+          strokeDasharray="1.4 1.8"
+          opacity="0.78"
+        />
+
+        <g className="vd-vine vd-vine--tr" stroke="url(#vd-gold-soft)" strokeWidth="0.7" fill="none" strokeLinecap="round">
+          <path d="M 76 14 Q 64 18 58 28 Q 54 38 60 46 Q 66 52 62 60" />
+          <path d="M 58 28 Q 52 22 46 24 Q 44 28 48 32 Q 56 34 58 28 Z" fill="rgba(217, 101, 74, 0.28)" stroke="none" />
+          <circle cx="50" cy="20" r="1.2" fill="#cf3b29" />
+        </g>
+        <g className="vd-vine vd-vine--bl" stroke="url(#vd-gold-soft)" strokeWidth="0.7" fill="none" strokeLinecap="round">
+          <path d="M 10 82 Q 22 78 28 68 Q 32 58 26 50 Q 20 44 24 36" />
+          <path d="M 28 68 Q 34 74 40 70 Q 42 66 38 62 Q 32 60 28 68 Z" fill="rgba(217, 101, 74, 0.28)" stroke="none" />
+          <circle cx="36" cy="76" r="1.2" fill="#cf3b29" />
+        </g>
+
+        <g className="vd-corner vd-corner--tl" fill="#cf3b29" fillOpacity="0.62">
+          <path d="M 9 9 L 18 9 Q 18 12.5 14 13.5 L 14 18 L 9 18 Z" />
+          <circle cx="11.5" cy="11.5" r="0.7" />
+        </g>
+        <g className="vd-corner vd-corner--br" fill="#a73c2c" fillOpacity="0.55">
+          <path d="M 77 87 L 68 87 Q 68 83.5 72 82.5 L 72 78 L 77 78 Z" />
+          <circle cx="74.5" cy="84.5" r="0.7" />
+        </g>
+
+        <g className="vd-pips" fill="url(#vd-gold-soft)">
+          <circle cx="43" cy="9" r="0.6" />
+          <circle cx="43" cy="87" r="0.6" />
+          <circle cx="9" cy="48" r="0.6" />
+          <circle cx="77" cy="48" r="0.6" />
+        </g>
+
+        <g className="vd-letter">
+          <text
+            x="43"
+            y="68"
+            textAnchor="middle"
+            className="vd-letter-glyph"
+          >
+            {upper}
+          </text>
+          <line
+            x1="28"
+            y1="74"
+            x2="58"
+            y2="74"
+            stroke="url(#vd-gold)"
+            strokeWidth="0.5"
+            strokeLinecap="round"
+            opacity="0.78"
+          />
+        </g>
+      </svg>
+    </span>
+  )
+}
+
 function ManuscriptStamp() {
   return (
     <div className="ms-stamp" aria-hidden="true">
@@ -304,6 +407,8 @@ function ChapterHead({ now }: { now: Date }) {
   const dayName = WEEKDAYS[now.getDay()]
   const dayOrdinal = ORDINALS[Math.min(ORDINALS.length - 1, now.getDate() - 1)]
   const monthName = MONTHS[now.getMonth()]
+  const year = now.getFullYear()
+  const yearRoman = toRomanYear(year)
   const hour24 = now.getHours()
   const minutes = now.getMinutes()
   const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
@@ -335,6 +440,8 @@ function ChapterHead({ now }: { now: Date }) {
           <span className="chapter-witness-tail">
             ,&nbsp;the <em>{dayOrdinal}</em> of <em>{monthName}</em>
           </span>
+          <span className="chapter-witness-sep" aria-hidden="true">·</span>
+          <em className="chapter-witness-year">{yearRoman}</em>
           <span className="chapter-witness-sep" aria-hidden="true">·</span>
           <em className="chapter-witness-hour">{h12}</em>
           <span className="chapter-witness-min">:{mm}</span>
@@ -1001,8 +1108,6 @@ function EphemerisPlate({
   seconds,
   reduced,
   registerHour,
-  registerSky,
-  registerMoon,
   registerDaybook,
 }: {
   visible: boolean
@@ -1014,8 +1119,6 @@ function EphemerisPlate({
   seconds: number
   reduced: boolean
   registerHour: (el: HTMLElement | null) => void
-  registerSky: (el: HTMLElement | null) => void
-  registerMoon: (el: HTMLElement | null) => void
   registerDaybook: (el: HTMLElement | null) => void
 }) {
   return (
@@ -1062,20 +1165,16 @@ function EphemerisPlate({
 
       <div className="ephemeris-bench-wrap">
         <EphemerisConstellation cycle={cycle} />
-        <div className="ephemeris-bench-row">
-          <div ref={registerHour} data-section="sec-hour" className="bench-item">
-            <LeafHourDial
+        <div className="ephemeris-volvelle-stage">
+          <div ref={registerHour} data-section="sec-hour" className="bench-item bench-item--volvelle">
+            <CelestialVolvelle
               hours={hours}
               minutes={minutes}
               seconds={seconds}
+              moonPhase={moonPhase}
+              reduced={reduced}
               visible={visible}
             />
-          </div>
-          <div ref={registerSky} data-section="sec-sky" className="bench-item">
-            <SiderealPocket visible={visible} reduced={reduced} />
-          </div>
-          <div ref={registerMoon} data-section="sec-moon" className="bench-item">
-            <MoonPhase phase={moonPhase} visible={visible} />
           </div>
         </div>
       </div>
@@ -1094,6 +1193,321 @@ function EphemerisPlate({
 }
 
 
+
+function CelestialVolvelle({
+  hours,
+  minutes,
+  seconds,
+  moonPhase,
+  reduced,
+  visible,
+}: {
+  hours: number
+  minutes: number
+  seconds: number
+  moonPhase: number
+  reduced: boolean
+  visible: boolean
+}) {
+  const cx = 80
+  const cy = 80
+  const rOuter = 76
+  const rSky = 62
+  const rHourOuter = 52
+  const rHourInner = 36
+  const rMoon = 32
+  const rInnerDisk = 22
+  const cxMoon = cx + 0
+  const cyMoon = cy + 0
+
+  const minuteAngle = minutes * 6 + seconds * 0.1
+  const hourAngle = (hours % 12) * 30 + minutes * 0.5
+
+  const siderealHours = (((hours + minutes / 60 + seconds / 3600) * 1.00273790935) + 12) % 24
+  const skyRotation = (siderealHours / 24) * 360
+
+  const moonName = moonPhaseName(moonPhase)
+  const illumination = Math.round((1 - Math.cos(moonPhase * 2 * Math.PI)) * 50)
+
+  const hourTicks = Array.from({ length: 12 }, (_, i) => {
+    const angle = (i * 30 - 90) * (Math.PI / 180)
+    const inner = rHourInner
+    const outer = rHourOuter
+    return {
+      x1: cx + inner * Math.cos(angle),
+      y1: cy + inner * Math.sin(angle),
+      x2: cx + outer * Math.cos(angle),
+      y2: cy + outer * Math.sin(angle),
+      angle: i * 30,
+      isCardinal: i % 3 === 0,
+    }
+  })
+
+  const numerals = Array.from({ length: 12 }, (_, i) => {
+    const n = i === 0 ? 12 : i
+    const angle = (i * 30 - 90) * (Math.PI / 180)
+    const r = (rHourInner + rHourOuter) / 2
+    return {
+      x: cx + r * Math.cos(angle),
+      y: cy + r * Math.sin(angle),
+      n,
+    }
+  })
+
+  const stars = [
+    { x: 92, y: 38, r: 1.4, major: true },
+    { x: 76, y: 30, r: 1.05 },
+    { x: 56, y: 32, r: 0.85 },
+    { x: 50, y: 46, r: 0.9 },
+    { x: 46, y: 62, r: 1.05, major: true },
+    { x: 60, y: 76, r: 0.85 },
+    { x: 86, y: 76, r: 0.95 },
+    { x: 102, y: 60, r: 1.1, major: true },
+    { x: 110, y: 40, r: 0.7 },
+    { x: 100, y: 22, r: 0.55 },
+    { x: 68, y: 18, r: 0.55 },
+    { x: 38, y: 24, r: 0.55 },
+    { x: 30, y: 44, r: 0.5 },
+    { x: 28, y: 64, r: 0.5 },
+    { x: 44, y: 86, r: 0.45 },
+    { x: 78, y: 92, r: 0.45 },
+    { x: 108, y: 86, r: 0.45 },
+    { x: 120, y: 68, r: 0.5 },
+    { x: 122, y: 50, r: 0.5 },
+  ]
+
+  return (
+    <div
+      className={`volvelle${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="volvelle-dial" viewBox="0 0 160 160" focusable="false">
+        <defs>
+          <radialGradient id="volvelle-paper" cx="50%" cy="42%" r="62%">
+            <stop offset="0%" stopColor="rgba(255, 248, 224, 0.96)" />
+            <stop offset="64%" stopColor="rgba(245, 220, 168, 0.82)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0.62)" />
+          </radialGradient>
+          <radialGradient id="volvelle-sky" cx="50%" cy="38%" r="62%">
+            <stop offset="0%" stopColor="rgba(46, 62, 102, 0.62)" />
+            <stop offset="62%" stopColor="rgba(22, 30, 52, 0.52)" />
+            <stop offset="100%" stopColor="rgba(10, 14, 24, 0.18)" />
+          </radialGradient>
+          <radialGradient id="volvelle-moon" cx="38%" cy="34%" r="80%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.96)" />
+            <stop offset="62%" stopColor="rgba(238, 220, 178, 0.86)" />
+            <stop offset="100%" stopColor="rgba(196, 162, 110, 0.62)" />
+          </radialGradient>
+          <radialGradient id="volvelle-moon-shadow" cx="60%" cy="60%" r="80%">
+            <stop offset="0%" stopColor="rgba(28, 36, 48, 0.78)" />
+            <stop offset="68%" stopColor="rgba(14, 22, 32, 0.92)" />
+            <stop offset="100%" stopColor="rgba(6, 12, 22, 0.96)" />
+          </radialGradient>
+          <linearGradient id="volvelle-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <pattern id="volvelle-grain" width="3" height="3" patternUnits="userSpaceOnUse">
+            <circle cx="0.6" cy="0.4" r="0.4" fill="rgba(107, 74, 37, 0.06)" />
+            <circle cx="2.2" cy="1.6" r="0.3" fill="rgba(107, 74, 37, 0.05)" />
+          </pattern>
+        </defs>
+
+        <circle cx={cx} cy={cy} r={rOuter} fill="url(#volvelle-paper)" stroke="url(#volvelle-gold)" strokeWidth="1.1" />
+        <circle cx={cx} cy={cy} r={rOuter} fill="url(#volvelle-grain)" opacity="0.6" />
+        <circle cx={cx} cy={cy} r={rOuter - 4} fill="none" stroke="rgba(156, 110, 38, 0.5)" strokeWidth="0.45" strokeDasharray="0.5 1.4" />
+        <circle cx={cx} cy={cy} r={rSky + 3} fill="none" stroke="rgba(156, 110, 38, 0.6)" strokeWidth="0.5" />
+
+        <g
+          className="volvelle-sky-ring"
+          style={{ transformOrigin: `${cx}px ${cy}px` }}
+        >
+          <circle cx={cx} cy={cy} r={rSky} fill="url(#volvelle-sky)" stroke="rgba(214, 168, 73, 0.55)" strokeWidth="0.55" />
+          <circle cx={cx} cy={cy} r={rSky - 4} fill="none" stroke="rgba(214, 168, 73, 0.22)" strokeWidth="0.3" strokeDasharray="0.4 1.4" />
+
+          <g
+            className="volvelle-sky-stars"
+            style={reduced ? undefined : { transformOrigin: `${cx}px ${cy}px`, transform: `rotate(${skyRotation}deg)` }}
+          >
+            {stars.map((s, i) => (
+              <circle
+                key={i}
+                cx={s.x}
+                cy={s.y}
+                r={s.r}
+                fill="#fff8e0"
+                opacity={s.major ? 1 : 0.78}
+              />
+            ))}
+            <g
+              className="volvelle-sky-constellation"
+              stroke="rgba(245, 198, 91, 0.42)"
+              strokeWidth="0.4"
+              fill="none"
+              strokeLinecap="round"
+            >
+              <line x1="92" y1="38" x2="76" y2="30" />
+              <line x1="76" y1="30" x2="56" y2="32" />
+              <line x1="56" y1="32" x2="46" y2="62" />
+              <line x1="46" y1="62" x2="60" y2="76" />
+              <line x1="60" y1="76" x2="86" y2="76" />
+              <line x1="86" y1="76" x2="102" y2="60" />
+              <line x1="102" y1="60" x2="92" y2="38" />
+            </g>
+            <circle cx="92" cy="38" r="4.4" fill="rgba(245, 198, 91, 0.22)" className="volvelle-polaris-halo" />
+            <circle cx="92" cy="38" r="2.2" fill="rgba(245, 198, 91, 0.6)" className="volvelle-polaris-glow" />
+            <circle cx="92" cy="38" r="1.1" fill="#fff8e0" />
+          </g>
+
+          <g className="volvelle-cardinals" fill="rgba(245, 198, 91, 0.7)">
+            <text x={cx} y={cy - rSky + 8} textAnchor="middle" className="volvelle-cardinal-letter">N</text>
+            <text x={cx + rSky - 4} y={cy + 4} textAnchor="middle" className="volvelle-cardinal-letter">E</text>
+            <text x={cx} y={cy + rSky - 2} textAnchor="middle" className="volvelle-cardinal-letter">S</text>
+            <text x={cx - rSky + 4} y={cy + 4} textAnchor="middle" className="volvelle-cardinal-letter">W</text>
+          </g>
+          <g
+            className="volvelle-horizon"
+            stroke="rgba(214, 168, 73, 0.55)"
+            strokeWidth="0.45"
+            strokeLinecap="round"
+            fill="none"
+          >
+            <path d={`M ${cx - rSky + 6} ${cy + 4} Q ${cx} ${cy + 8} ${cx + rSky - 6} ${cy + 4}`} />
+          </g>
+        </g>
+
+        <g
+          className="volvelle-hour-ring"
+          style={{ transformOrigin: `${cx}px ${cy}px` }}
+        >
+          <circle cx={cx} cy={cy} r={rHourOuter} fill="rgba(255, 248, 224, 0.92)" stroke="rgba(107, 74, 37, 0.55)" strokeWidth="0.55" />
+          <circle cx={cx} cy={cy} r={rHourInner} fill="none" stroke="rgba(107, 74, 37, 0.3)" strokeWidth="0.35" strokeDasharray="0.4 1.2" />
+
+          {hourTicks.map((t, i) => (
+            <line
+              key={i}
+              x1={t.x1}
+              y1={t.y1}
+              x2={t.x2}
+              y2={t.y2}
+              stroke="rgba(28, 39, 64, 0.78)"
+              strokeWidth={t.isCardinal ? 1.1 : 0.5}
+              strokeLinecap="round"
+            />
+          ))}
+
+          {numerals.map((num) => (
+            <text
+              key={num.n}
+              x={num.x}
+              y={num.y + 3}
+              textAnchor="middle"
+              className="volvelle-numeral"
+            >
+              {num.n}
+            </text>
+          ))}
+
+          <g transform={`rotate(${hourAngle} ${cx} ${cy})`}>
+            <line
+              x1={cx}
+              y1={cy}
+              x2={cx}
+              y2={cy - rHourInner + 4}
+              stroke="rgba(28, 39, 64, 0.92)"
+              strokeWidth="2.0"
+              strokeLinecap="round"
+            />
+            <polygon
+              points={`${cx},${cy - rHourInner + 2} ${cx - 3},${cy - rHourInner + 8} ${cx + 3},${cy - rHourInner + 8}`}
+              fill="rgba(28, 39, 64, 0.92)"
+            />
+          </g>
+
+          <g transform={`rotate(${minuteAngle} ${cx} ${cy})`}>
+            <line
+              x1={cx}
+              y1={cy + 4}
+              x2={cx}
+              y2={cy - rHourInner + 2}
+              stroke="rgba(28, 39, 64, 0.98)"
+              strokeWidth="1.1"
+              strokeLinecap="round"
+            />
+          </g>
+
+          <g className="volvelle-second-hand">
+            <line
+              x1={cx}
+              y1={cy + 5}
+              x2={cx}
+              y2={cy - rHourInner + 1}
+              stroke="rgba(217, 101, 74, 0.92)"
+              strokeWidth="0.7"
+              strokeLinecap="round"
+              transform={`rotate(${seconds * 6} ${cx} ${cy})`}
+            />
+            <circle
+              cx={cx}
+              cy={cy - rHourInner + 1}
+              r="1"
+              fill="rgba(217, 101, 74, 0.96)"
+              transform={`rotate(${seconds * 6} ${cx} ${cy})`}
+            />
+          </g>
+
+          <circle cx={cx} cy={cy} r="2.2" fill="rgba(28, 39, 64, 0.96)" />
+          <circle cx={cx} cy={cy} r="0.8" fill="rgba(217, 101, 74, 0.96)" />
+        </g>
+
+        <g
+          className="volvelle-moon-pip"
+          style={{ transformOrigin: `${cxMoon}px ${cyMoon}px` }}
+        >
+          <circle cx={cxMoon} cy={cyMoon} r={rMoon + 6} fill="none" stroke="rgba(156, 110, 38, 0.2)" strokeWidth="0.4" strokeDasharray="0.4 1.2" />
+        </g>
+
+        <circle cx={cx} cy={cy} r={rOuter - 0.4} fill="none" stroke="rgba(107, 74, 37, 0.18)" strokeWidth="0.6" />
+      </svg>
+
+      <div className="volvelle-inscription">
+        <span className="volvelle-inscription-rule volvelle-inscription-rule--left" />
+        <span className="volvelle-inscription-cluster">
+          <em className="volvelle-inscription-key">volvelle</em>
+          <span className="volvelle-inscription-sep" aria-hidden="true">·</span>
+          <em className="volvelle-inscription-title">a printed dial of this hour</em>
+        </span>
+        <span className="volvelle-inscription-rule volvelle-inscription-rule--right" />
+      </div>
+
+      <div className="volvelle-readouts">
+        <div className="volvelle-readout">
+          <span className="volvelle-readout-key">hour</span>
+          <span className="volvelle-readout-val">
+            {String(hours).padStart(2, '0')}:{String(minutes).padStart(2, '0')}
+          </span>
+        </div>
+        <span className="volvelle-readout-divider" aria-hidden="true">¶</span>
+        <div className="volvelle-readout">
+          <span className="volvelle-readout-key">moon</span>
+          <span className="volvelle-readout-val">
+            <em>{moonName}</em>
+            <span className="volvelle-readout-pct">{illumination}%</span>
+          </span>
+        </div>
+        <span className="volvelle-readout-divider" aria-hidden="true">¶</span>
+        <div className="volvelle-readout">
+          <span className="volvelle-readout-key">sky</span>
+          <span className="volvelle-readout-val">
+            <em>Polaris</em>
+            <span className="volvelle-readout-pct">· still</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function PressedLeaf({ visible, reduced }: { visible: boolean; reduced: boolean }) {
   return (
@@ -5308,7 +5722,7 @@ export function App() {
               <span className="reply-paragraph">
                 {replyChars > 0 && (
                   <span className="reply-initial" aria-hidden="true">
-                    <PrintedInitial letter={REPLY.charAt(0)} />
+                    <VersoDropCap letter={REPLY.charAt(0)} />
                   </span>
                 )}
                 <span className="reply-text">{replyDisplay}</span>
@@ -5362,8 +5776,6 @@ export function App() {
               seconds={seconds}
               reduced={reduced}
               registerHour={(el) => { sectionRefs.current['sec-hour'] = el }}
-              registerSky={(el) => { sectionRefs.current['sec-sky'] = el }}
-              registerMoon={(el) => { sectionRefs.current['sec-moon'] = el }}
               registerDaybook={(el) => { sectionRefs.current['sec-almanac'] = el }}
             />
 

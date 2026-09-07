@@ -327,30 +327,59 @@ button { font: inherit; }
   text-align: center;
 }
 .chapter-mark {
-  display: inline-flex; align-items: baseline; gap: 10px;
-  font: 800 10px/1.2 var(--sans);
-  letter-spacing: 0.32em;
+  display: inline-flex; align-items: baseline; gap: 11px;
+  font: 800 9.5px/1.2 var(--sans);
+  letter-spacing: 0.36em;
   text-transform: uppercase;
   color: var(--moss);
+  position: relative;
 }
 .chapter-numeral {
   color: var(--coral);
-  font: italic 500 18px/1 var(--display);
-  letter-spacing: 0.05em;
+  font: italic 600 22px/1 var(--display);
+  letter-spacing: 0.04em;
+  position: relative;
+  padding: 0 1px 2px;
+}
+.chapter-numeral::after {
+  content: "";
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  bottom: -2px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(245, 198, 91, 0.7) 22%,
+    rgba(167, 60, 44, 0.55) 50%,
+    rgba(245, 198, 91, 0.7) 78%,
+    transparent
+  );
+  opacity: 0.85;
+  transition: opacity 700ms var(--ease);
 }
 .chapter-mark-orb {
-  width: 10px; height: 10px;
+  width: 11px; height: 11px;
   color: var(--coral-deep);
   margin-left: 4px;
-  opacity: 0.7;
+  opacity: 0.75;
   transition: transform 600ms var(--ease);
 }
 .has-answer .chapter-mark-orb {
   animation: orb-pulse 5s ease-in-out infinite;
 }
+.has-answer .chapter-numeral::after {
+  opacity: 1;
+}
 @keyframes orb-pulse {
-  0%, 100% { opacity: 0.7; transform: rotate(0deg) scale(1); }
-  50%      { opacity: 0.95; transform: rotate(60deg) scale(1.06); }
+  0%, 100% { opacity: 0.75; transform: rotate(0deg) scale(1); }
+  50%      { opacity: 1; transform: rotate(60deg) scale(1.06); }
+}
+@media (max-width: 560px) {
+  .chapter-mark { gap: 8px; font-size: 8.5px; letter-spacing: 0.3em; }
+  .chapter-numeral { font-size: 18px; }
+  .chapter-mark-orb { width: 9px; height: 9px; }
 }
 .headpiece {
   display: block; width: min(320px, 86%); height: 48px;
@@ -487,6 +516,12 @@ button { font: inherit; }
   color: var(--coral-deep) !important;
   margin-left: 1px;
   letter-spacing: 0.06em;
+}
+.chapter-witness-year {
+  color: var(--moss) !important;
+  font: 770 9px/1 var(--sans);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 @keyframes witness-in {
   from { opacity: 0; transform: translateY(-2px); }
@@ -2207,15 +2242,54 @@ button { font: inherit; }
 
 .reply-initial {
   float: left;
-  margin: 0.05em 11px -4px -2px;
+  margin: 0.04em 14px -8px -3px;
   color: var(--coral);
-  font: 700 44px/0.78 var(--display);
+  font: 700 60px/0.78 var(--display);
+  filter: drop-shadow(0 4px 6px rgba(80, 36, 14, 0.18));
+  opacity: 0;
+  transform: translateY(4px) scale(0.94);
+  animation: reply-dropcap-in 900ms var(--ease) 80ms both;
+}
+@keyframes reply-dropcap-in {
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reply-initial { animation: none; opacity: 1; transform: none; }
 }
 .printed-initial {
   display: inline-block; width: 44px; height: 44px;
 }
 .printed-initial svg { width: 100%; height: 100%; }
 .printed-initial-letter { fill: currentColor; font: 700 41px var(--display); }
+
+.verso-drop-cap {
+  display: inline-block;
+  width: clamp(56px, 7vw, 76px);
+  height: auto;
+  vertical-align: top;
+}
+.verso-drop-cap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.vd-letter-glyph {
+  fill: url(#vd-gold);
+  font: italic 800 64px/1 var(--display);
+  letter-spacing: -0.03em;
+  paint-order: stroke fill;
+}
+.vd-vine--tr { transform-origin: 76px 14px; animation: vd-vine-sway 8s ease-in-out infinite; }
+.vd-vine--bl { transform-origin: 10px 82px; animation: vd-vine-sway 8s ease-in-out infinite reverse; }
+@keyframes vd-vine-sway {
+  0%, 100% { transform: rotate(-0.6deg); }
+  50%      { transform: rotate(1.2deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vd-vine--tr,
+  .vd-vine--bl { animation: none !important; transform: none; }
+}
 
 .reply-close {
   display: grid;
@@ -3701,8 +3775,9 @@ button { font: inherit; }
   .inkwell { width: 62px; bottom: -14px; right: 16px; }
   .scribal-quill { width: 76px; right: 38px; top: -8px; }
   .reply-paragraph { font-size: 18.5px; line-height: 1.45; }
-  .reply-initial { font-size: 36px; }
+  .reply-initial { font-size: 50px; }
   .printed-initial { width: 36px; height: 36px; }
+  .verso-drop-cap { width: 60px; }
   .apparatus { padding: 18px 16px 14px; }
   .apparatus-row {
     grid-template-columns: 22px 1fr auto 1fr;
@@ -3823,8 +3898,9 @@ button { font: inherit; }
   .reply-head-key { font-size: 13px; }
   .reply-head-tail { font-size: 11.5px; }
   .reply-paragraph { font-size: 18.5px; line-height: 1.5; }
-  .reply-initial { font-size: 38px; }
+  .reply-initial { font-size: 52px; }
   .printed-initial { width: 38px; height: 38px; }
+  .verso-drop-cap { width: 64px; }
   .reply-close {
     grid-template-columns: 1fr;
     gap: 6px;
@@ -5047,6 +5123,178 @@ button { font: inherit; }
   font: 700 12px/1 var(--display);
   opacity: 0.7;
 }
+
+/* ────────── iteration 112 · celestial volvelle (hour + sky + moon on one dial) ────────── */
+
+.ephemeris-volvelle-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  padding: clamp(8px, 1.4vw, 14px) clamp(6px, 1vw, 12px) clamp(2px, 0.6vw, 6px);
+}
+.bench-item--volvelle {
+  border: 0 !important;
+  padding: 0 !important;
+  place-items: center !important;
+  width: 100%;
+}
+.volvelle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+  margin: 2px auto 4px;
+  opacity: 0;
+  transform: translateY(6px) scale(0.985);
+  transition:
+    opacity 900ms var(--ease) 80ms,
+    transform 900ms var(--ease) 80ms;
+}
+.volvelle.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.volvelle-dial {
+  display: block;
+  width: clamp(168px, 42vw, 240px);
+  height: auto;
+  filter:
+    drop-shadow(0 1px 0 rgba(107, 74, 37, 0.08))
+    drop-shadow(0 6px 14px rgba(40, 22, 8, 0.18));
+  transform-origin: center;
+  animation: volvelle-arrive 1200ms var(--ease) 200ms both;
+}
+@keyframes volvelle-arrive {
+  0%   { opacity: 0; transform: scale(0.94) rotate(-2deg); }
+  60%  { opacity: 1; transform: scale(1.02) rotate(0.6deg); }
+  100% { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .volvelle { transition: none; transform: none; opacity: 1; }
+  .volvelle-dial { animation: none; transform: none; }
+  .volvelle-sky-stars { transform: none !important; }
+}
+.volvelle-numeral {
+  font: italic 700 9px/1 var(--display);
+  fill: rgba(28, 39, 64, 0.85);
+  letter-spacing: 0.01em;
+}
+.volvelle-cardinal-letter {
+  font: 800 7px/1 var(--sans);
+  letter-spacing: 0.16em;
+  fill: rgba(245, 198, 91, 0.78);
+}
+.volvelle-second-hand {
+  transition: transform 220ms cubic-bezier(.4,.0,.4,1);
+  transform-origin: 80px 80px;
+}
+.volvelle-polaris-halo {
+  animation: polaris-pulse 6s ease-in-out infinite;
+  transform-origin: 92px 38px;
+}
+@keyframes polaris-pulse {
+  0%, 100% { opacity: 0.18; transform: scale(1); }
+  50%      { opacity: 0.32; transform: scale(1.18); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .volvelle-polaris-halo { animation: none; opacity: 0.28; }
+}
+.volvelle-inscription {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto;
+  color: var(--coral-deep);
+}
+.volvelle-inscription-rule {
+  flex: 0 0 22px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(167, 60, 44, 0.42));
+}
+.volvelle-inscription-rule--right {
+  background: linear-gradient(to left, transparent, rgba(167, 60, 44, 0.42));
+}
+.volvelle-inscription-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font: italic 11px/1 var(--display);
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+  text-align: center;
+  white-space: nowrap;
+}
+.volvelle-inscription-key {
+  color: var(--coral-deep);
+  font-style: normal;
+  font: 800 8.5px var(--sans);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+.volvelle-inscription-sep {
+  color: var(--coral);
+  font: 700 12px/1 var(--display);
+  opacity: 0.7;
+}
+.volvelle-inscription-title {
+  color: var(--ink-soft);
+}
+.volvelle-readouts {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  padding: 4px 6px 0;
+  color: var(--ink);
+  font: italic 11px/1.2 var(--display);
+  letter-spacing: 0.01em;
+}
+.volvelle-readout {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  min-width: 0;
+}
+.volvelle-readout-key {
+  color: var(--moss);
+  font: 800 7.5px var(--sans);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-style: normal;
+}
+.volvelle-readout-val {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  color: var(--ink);
+  font-style: italic;
+}
+.volvelle-readout-val em {
+  color: var(--coral-deep);
+  font-style: italic;
+  font-weight: 500;
+}
+.volvelle-readout-pct {
+  color: var(--moss);
+  font: 700 9px var(--mono);
+  letter-spacing: 0.04em;
+  font-style: normal;
+}
+.volvelle-readout-divider {
+  color: var(--coral);
+  font: italic 12px/1 var(--display);
+  opacity: 0.6;
+}
+
 @media (max-width: 880px) {
   .ephemeris-plate { padding: 22px 18px 12px; }
   .ephemeris-bench-row { gap: 14px; }
