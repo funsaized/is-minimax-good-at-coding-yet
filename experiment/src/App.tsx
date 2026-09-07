@@ -1088,14 +1088,12 @@ function AnswerPlateFrame({
   progress: number
 }) {
   const rim = Math.max(0, Math.min(1, progress))
-  const corners = visible ? 1 : 0
   return (
     <div
       className={`answer-plate-frame${visible ? ' is-visible' : ''}`}
       aria-hidden="true"
       style={{
         '--plate-rim': rim,
-        '--plate-corners': corners,
       } as React.CSSProperties}
     >
       <svg
@@ -1158,20 +1156,14 @@ function AnswerPlateFrame({
           <line x1="50" y1="3" x2="50" y2="5" stroke="url(#apf-ink-rule)" strokeWidth="0.3" opacity="0.55" />
           <line x1="50" y1="95" x2="50" y2="97" stroke="url(#apf-ink-rule)" strokeWidth="0.3" opacity="0.55" />
         </g>
-      </svg>
 
-      <span className="answer-plate-corner answer-plate-corner--tl">
-        <AnswerPlateCorner corner="tl" />
-      </span>
-      <span className="answer-plate-corner answer-plate-corner--tr">
-        <AnswerPlateCorner corner="tr" />
-      </span>
-      <span className="answer-plate-corner answer-plate-corner--bl">
-        <AnswerPlateCorner corner="bl" />
-      </span>
-      <span className="answer-plate-corner answer-plate-corner--br">
-        <AnswerPlateCorner corner="br" />
-      </span>
+        <g className="apf-corner-dots" fill="url(#apf-gold-rule)" opacity="0.7">
+          <circle cx="3.6" cy="3.6" r="0.7" />
+          <circle cx="96.4" cy="3.6" r="0.7" />
+          <circle cx="3.6" cy="96.4" r="0.7" />
+          <circle cx="96.4" cy="96.4" r="0.7" />
+        </g>
+      </svg>
     </div>
   )
 }
@@ -1263,19 +1255,6 @@ function EphemerisPlate({
       className={`ephemeris-plate${visible ? ' is-visible' : ''}`}
       aria-label="ephemeris of this folio"
     >
-      <span className="ephemeris-corner ephemeris-corner--tl" aria-hidden="true">
-        <AnswerPlateCorner corner="tl" />
-      </span>
-      <span className="ephemeris-corner ephemeris-corner--tr" aria-hidden="true">
-        <AnswerPlateCorner corner="tr" />
-      </span>
-      <span className="ephemeris-corner ephemeris-corner--bl" aria-hidden="true">
-        <AnswerPlateCorner corner="bl" />
-      </span>
-      <span className="ephemeris-corner ephemeris-corner--br" aria-hidden="true">
-        <AnswerPlateCorner corner="br" />
-      </span>
-
       <header className="ephemeris-head">
         <span className="ephemeris-head-rule ephemeris-head-rule--left" />
         <span className="ephemeris-head-text">
@@ -1301,7 +1280,6 @@ function EphemerisPlate({
       </div>
 
       <div className="ephemeris-bench-wrap">
-        <EphemerisConstellation cycle={cycle} />
         <div className="ephemeris-volvelle-stage">
           <div ref={registerHour} data-section="sec-hour" className="bench-item bench-item--volvelle">
             <CelestialVolvelle
@@ -2840,6 +2818,130 @@ function MoonPhase({
         </span>
       </span>
     </div>
+  )
+}
+
+function MoonPip({ phase, visible }: { phase: number; visible: boolean }) {
+  const cx = 24
+  const cy = 24
+  const r = 18
+  const litPath = moonTerminatorPath(phase, cx, cy, r)
+  const name = moonPhaseName(phase)
+  const illumination = Math.round((1 - Math.cos(phase * 2 * Math.PI)) * 50)
+
+  return (
+    <figure
+      className={`moon-pip${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="moon-pip-disc" viewBox="0 0 48 48" focusable="false" overflow="visible">
+        <defs>
+          <radialGradient id="moon-pip-face" cx="50%" cy="34%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 248, 230, 0.96)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.84)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0.6)" />
+          </radialGradient>
+          <radialGradient id="moon-pip-shadow" cx="60%" cy="60%" r="80%">
+            <stop offset="0%" stopColor="rgba(28, 36, 48, 0.78)" />
+            <stop offset="68%" stopColor="rgba(14, 22, 32, 0.92)" />
+            <stop offset="100%" stopColor="rgba(6, 12, 22, 0.96)" />
+          </radialGradient>
+          <linearGradient id="moon-pip-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="48%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <pattern id="moon-pip-grain" width="3" height="3" patternUnits="userSpaceOnUse">
+            <circle cx="0.6" cy="0.4" r="0.3" fill="rgba(107, 74, 37, 0.05)" />
+            <circle cx="2.2" cy="1.6" r="0.22" fill="rgba(107, 74, 37, 0.04)" />
+          </pattern>
+        </defs>
+
+        <ellipse
+          cx="24"
+          cy="24"
+          rx="22"
+          ry="22"
+          fill="rgba(245, 198, 91, 0.08)"
+          className="moon-pip-halo"
+        />
+
+        <circle cx="24" cy="24" r="22" fill="url(#moon-pip-face)" />
+        <circle cx="24" cy="24" r="22" fill="url(#moon-pip-grain)" opacity="0.6" />
+        <circle
+          cx="24"
+          cy="24"
+          r="22"
+          fill="none"
+          stroke="url(#moon-pip-gold)"
+          strokeWidth="0.6"
+        />
+        <circle
+          cx="24"
+          cy="24"
+          r="20"
+          fill="none"
+          stroke="url(#moon-pip-gold)"
+          strokeWidth="0.25"
+          strokeDasharray="0.4 1.4"
+          opacity="0.78"
+        />
+
+        <circle cx="24" cy="24" r="18" fill="url(#moon-pip-shadow)" />
+        <path d={litPath} fill="rgba(255, 246, 218, 0.94)" />
+        <path
+          d={litPath}
+          fill="rgba(154, 122, 70, 0.18)"
+          opacity="0.55"
+        />
+        <circle
+          cx="24"
+          cy="24"
+          r="18"
+          fill="none"
+          stroke="rgba(214, 168, 73, 0.42)"
+          strokeWidth="0.3"
+          strokeDasharray="0.4 1.4"
+        />
+
+        <g fill="url(#moon-pip-gold)">
+          <circle cx="24" cy="2.4" r="0.5" />
+          <circle cx="24" cy="45.6" r="0.5" />
+          <circle cx="2.4" cy="24" r="0.4" />
+          <circle cx="45.6" cy="24" r="0.4" />
+        </g>
+
+        <g
+          className="moon-pip-stamen"
+          stroke="rgba(140, 82, 28, 0.4)"
+          strokeWidth="0.25"
+          fill="none"
+          strokeLinecap="round"
+        >
+          <path d="M 22 10 Q 22 16 24 20" />
+          <path d="M 26 10 Q 26 16 24 20" />
+        </g>
+
+        <path
+          className="moon-pip-thread"
+          d="M 24 0 Q 24 -6 22 -8"
+          stroke="rgba(167, 60, 44, 0.5)"
+          strokeWidth="0.45"
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray="0.6 1.2"
+        />
+      </svg>
+      <figcaption className="moon-pip-cap">
+        <span className="moon-pip-cap-mark" aria-hidden="true">¶</span>
+        <em className="moon-pip-cap-key">this moon</em>
+        <span className="moon-pip-cap-sep" aria-hidden="true">·</span>
+        <em className="moon-pip-cap-name">{name}</em>
+        <span className="moon-pip-cap-pct" aria-hidden="true">
+          {illumination}%
+        </span>
+      </figcaption>
+    </figure>
   )
 }
 
@@ -6681,8 +6783,6 @@ export function App() {
         <div className="sheet-content">
           <section className="question-panel" aria-labelledby="page-title">
             <RectoEdgeShadow active={versoOpened} />
-            <QuestionerMark visible={!versoOpened} reduced={reduced} />
-            <SpecimenPlate visible={!versoOpened} reduced={reduced} />
             <div className="annotation annotation--top">
               <span className="annotation-mark" aria-hidden="true">¶</span>
               <span>the question · plainly set</span>
@@ -6753,6 +6853,8 @@ export function App() {
               </span>
             </h1>
             <SpecimenImprint cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
+
+            <MoonPip phase={moonPhase} visible={!versoOpened} />
 
             <div
               data-section="sec-marginalia"

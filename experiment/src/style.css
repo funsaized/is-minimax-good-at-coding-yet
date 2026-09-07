@@ -6067,25 +6067,6 @@ button { font: inherit; }
 }
 .ephemeris-plate::before { top: 0; }
 .ephemeris-plate::after { bottom: 0; }
-.ephemeris-corner {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  color: var(--coral-deep);
-  opacity: 0.92;
-  pointer-events: none;
-  z-index: 2;
-}
-.ephemeris-corner svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.08));
-}
-.ephemeris-corner--tl { top: 6px; left: 6px; }
-.ephemeris-corner--tr { top: 6px; right: 6px; }
-.ephemeris-corner--bl { bottom: 6px; left: 6px; }
-.ephemeris-corner--br { bottom: 6px; right: 6px; }
 
 .ephemeris-head {
   display: flex;
@@ -6427,11 +6408,6 @@ button { font: inherit; }
 }
 @media (max-width: 560px) {
   .ephemeris-plate { padding: 18px 14px 10px; }
-  .ephemeris-corner { width: 24px; height: 24px; }
-  .ephemeris-corner--tl,
-  .ephemeris-corner--tr { top: 4px; }
-  .ephemeris-corner--bl,
-  .ephemeris-corner--br { bottom: 4px; }
   .ephemeris-head-text { font-size: 10.5px; }
 }
 
@@ -6637,7 +6613,6 @@ button { font: inherit; }
 
 .answer-plate-frame {
   --plate-rim: 0;
-  --plate-corners: 0;
 }
 .answer-plate-frame .apf-rim-outer {
   stroke-dasharray: 100;
@@ -6655,42 +6630,31 @@ button { font: inherit; }
   transition: opacity 700ms var(--ease) 900ms;
 }
 .answer-plate-frame .apf-side-ticks {
-  opacity: calc(0.55 * var(--plate-corners));
-  transition: opacity 600ms var(--ease) 1200ms;
+  opacity: 0.55;
+}
+.answer-plate-frame .apf-corner-dots {
+  opacity: calc(0.7 * var(--plate-rim));
+  transition: opacity 700ms var(--ease) 1080ms;
 }
 .answer-plate-corner {
-  opacity: var(--plate-corners);
-  transform: scale(calc(0.6 + 0.4 * var(--plate-corners)));
+  opacity: var(--plate-corners, 1);
+  transform: scale(calc(0.6 + 0.4 * var(--plate-corners, 1)));
   transform-origin: center;
   transition:
     opacity 600ms var(--ease),
     transform 700ms var(--ease);
-  transition-delay: calc(380ms * var(--plate-corners-delay, 0));
 }
 .answer-plate-corner--tl {
   --plate-corners-delay: 0;
 }
 .answer-plate-corner--tr {
   --plate-corners-delay: 1;
-  transition-delay: calc(380ms * var(--plate-corners-delay, 0));
 }
 .answer-plate-corner--bl {
   --plate-corners-delay: 2;
 }
 .answer-plate-corner--br {
   --plate-corners-delay: 3;
-}
-.answer-plate-frame.is-visible .answer-plate-corner--tl {
-  animation: plate-corner-in 700ms var(--ease) 1300ms both;
-}
-.answer-plate-frame.is-visible .answer-plate-corner--tr {
-  animation: plate-corner-in 700ms var(--ease) 1500ms both;
-}
-.answer-plate-frame.is-visible .answer-plate-corner--bl {
-  animation: plate-corner-in 700ms var(--ease) 1700ms both;
-}
-.answer-plate-frame.is-visible .answer-plate-corner--br {
-  animation: plate-corner-in 700ms var(--ease) 1900ms both;
 }
 @keyframes plate-corner-in {
   0%   { opacity: 0; transform: scale(0.55) rotate(-2deg); }
@@ -6702,19 +6666,20 @@ button { font: inherit; }
   .answer-plate-frame .apf-rim-inner,
   .answer-plate-frame .apf-title-block,
   .answer-plate-frame .apf-foot-block,
-  .answer-plate-frame .apf-side-ticks {
+  .answer-plate-frame .apf-side-ticks,
+  .answer-plate-frame .apf-corner-dots {
     transition: none !important;
     animation: none !important;
   }
   .answer-plate-frame .apf-rim-outer { stroke-dashoffset: 0; }
-  .answer-plate-frame.is-visible .answer-plate-corner { animation: none !important; opacity: 1; transform: scale(1); }
+  .answer-plate-frame .apf-corner-dots { opacity: 0.7; }
 }
 
-/* ────────── iteration 106 · ephemeris bench wrap + constellation ────────── */
+/* ────────── iteration 126 · ephemeris bench wrap ────────── */
 
 .ephemeris-bench-wrap {
   position: relative;
-  padding: 12px 0 6px;
+  padding: 6px 0 2px;
 }
 
 .ephemeris-constellation {
@@ -6942,6 +6907,140 @@ button { font: inherit; }
 }
 @media (max-width: 560px) {
   .reading-breath { width: 16px; height: 16px; margin-left: 6px; }
+}
+
+/* ────────── iteration 126 · moon pip — a hand-inked moon medallion
+   pinned to the recto that records the moon phase at this reading. */
+
+.moon-pip {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin: 14px 0 22px;
+  padding: 4px 4px 4px 2px;
+  color: var(--coral-deep);
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 1100ms var(--ease) 320ms,
+    transform 1200ms var(--ease) 320ms;
+  filter: drop-shadow(0 6px 12px rgba(40, 22, 8, 0.16));
+  position: relative;
+}
+.moon-pip.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.moon-pip-disc {
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  transform-origin: 24px 24px;
+  transition: transform 700ms var(--ease);
+  overflow: visible;
+}
+.moon-pip:hover .moon-pip-disc {
+  transform: rotate(-2deg) scale(1.04);
+}
+
+.moon-pip-halo {
+  transform-origin: 24px 24px;
+  animation: moon-pip-breathe 5.8s ease-in-out infinite;
+}
+@keyframes moon-pip-breathe {
+  0%, 100% { opacity: 0.45; transform: scale(0.94); }
+  50%      { opacity: 0.9; transform: scale(1.06); }
+}
+
+.has-answer .moon-pip-halo {
+  animation-duration: 4.6s;
+}
+
+.moon-pip-stamen {
+  transform-origin: 24px 16px;
+  animation: moon-pip-stamen-drift 7.4s ease-in-out infinite;
+}
+@keyframes moon-pip-stamen-drift {
+  0%, 100% { transform: rotate(-2deg); opacity: 0.55; }
+  50%      { transform: rotate(2deg); opacity: 0.85; }
+}
+
+.moon-pip-thread {
+  opacity: 0.78;
+  transform-origin: 24px 0;
+  animation: moon-pip-thread-sway 6.2s ease-in-out infinite;
+}
+@keyframes moon-pip-thread-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+
+.moon-pip-cap {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  flex-wrap: wrap;
+  font: italic 11.5px/1 var(--display);
+  letter-spacing: 0.005em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.moon-pip-cap-mark {
+  color: var(--coral);
+  font: italic 700 12px/1 var(--display);
+  margin-right: 2px;
+}
+.moon-pip-cap-key {
+  font: 800 9px/1 var(--sans);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  font-style: normal;
+}
+.moon-pip-cap-sep {
+  color: var(--coral);
+  font: 700 11px/1 var(--display);
+  opacity: 0.78;
+}
+.moon-pip-cap-name {
+  font-style: italic;
+  color: var(--ink);
+  font-weight: 500;
+}
+.moon-pip-cap-pct {
+  font: 600 9.5px/1 var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--moss);
+}
+
+@media (max-width: 720px) {
+  .moon-pip { gap: 10px; margin: 12px 0 18px; }
+  .moon-pip-disc { width: 40px; height: 40px; flex-basis: 40px; }
+  .moon-pip-cap { font-size: 10.5px; }
+  .moon-pip-cap-key { font-size: 8px; letter-spacing: 0.2em; }
+}
+@media (max-width: 560px) {
+  .moon-pip { gap: 8px; margin: 10px 0 16px; }
+  .moon-pip-disc { width: 36px; height: 36px; flex-basis: 36px; }
+  .moon-pip-cap {
+    font-size: 10px;
+    gap: 4px;
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+  .moon-pip-cap-key { font-size: 7.5px; letter-spacing: 0.18em; }
+  .moon-pip-cap-name { font-size: 10px; }
+  .moon-pip-cap-pct { font-size: 8.5px; }
+  .moon-pip-cap-mark { font-size: 10.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .moon-pip { opacity: 1; transform: none; transition: none; }
+  .moon-pip-halo,
+  .moon-pip-stamen,
+  .moon-pip-thread,
+  .has-answer .moon-pip-halo { animation: none !important; }
 }
 
 /* ────────── iteration 108 · folio spine breathes while the page is being read ────────── */
