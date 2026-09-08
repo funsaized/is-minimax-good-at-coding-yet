@@ -315,16 +315,25 @@ function Seal() {
   return (
     <svg className="seal" viewBox="0 0 64 64" aria-hidden="true">
       <defs>
-        <radialGradient id="seal-glow" cx="50%" cy="38%" r="65%">
-          <stop offset="0%" stopColor="#e7a48c" />
-          <stop offset="55%" stopColor="#dd684b" />
-          <stop offset="100%" stopColor="#a83a23" />
+        <radialGradient id="seal-glow" cx="50%" cy="42%" r="62%">
+          <stop offset="0%" stopColor="#d77b5e" />
+          <stop offset="55%" stopColor="#a83a23" />
+          <stop offset="100%" stopColor="#6c1d10" />
         </radialGradient>
       </defs>
-      <circle cx="32" cy="32" r="29" fill="url(#seal-glow)" />
-      <circle cx="32" cy="32" r="29" fill="none" stroke="rgba(50,16,8,.25)" strokeWidth="0.6" />
-      <circle cx="32" cy="32" r="23" fill="none" stroke="rgba(255,235,225,.55)" strokeWidth="0.8" strokeDasharray="1.6 2.4" />
+      <path
+        d="M32 3 C 50 4, 61 17, 60.5 33 C 60 50, 47.5 61, 32 60.5 C 17 60, 3.5 49.5, 4 32 C 4.5 16, 17.5 3.5, 32 3 Z"
+        fill="url(#seal-glow)"
+      />
+      <path
+        d="M32 4 C 49 5, 59 18, 58.5 33 C 58 49, 46 58.5, 32 58 C 18 57.5, 5 47, 5.5 32 C 6 17, 18 4.5, 32 4 Z"
+        fill="none"
+        stroke="rgba(60,18,8,.32)"
+        strokeWidth="0.5"
+      />
+      <circle cx="32" cy="32" r="23" fill="none" stroke="rgba(255,235,225,.45)" strokeWidth="0.8" strokeDasharray="1.6 2.4" />
       <text x="32" y="38.5" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="22" fill="#fff3ea">m³</text>
+      <path d="M22 22 C 18 26, 17 32, 20 36" fill="none" stroke="rgba(255,235,225,.18)" strokeWidth="0.7" strokeLinecap="round" />
     </svg>
   )
 }
@@ -387,15 +396,18 @@ function Signature({ drawn = true, progress = 1 }: SignatureProps) {
     return (1 - t).toFixed(3)
   }
   return (
-    <svg className={`signature ${drawn ? 'is-drawn' : ''}`} viewBox="0 0 110 30" aria-hidden="true">
-      <g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path className="sig-path" pathLength={1} d="M6 22 C 9 12, 13 18, 16 22" style={{ strokeDasharray: 1, strokeDashoffset: offset(0, 0.62) }} />
-        <path className="sig-path" pathLength={1} d="M20 24 C 22 16, 26 10, 27 18 C 28 24, 30 22, 32 16" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.08, 0.7) }} />
-        <path className="sig-path" pathLength={1} d="M44 12 C 40 16, 39 24, 46 24 C 52 24, 52 16, 48 12 C 44 9, 42 16, 47 19" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.16, 0.78) }} />
-        <path className="sig-path" pathLength={1} d="M60 12 C 64 16, 64 24, 60 24 M 60 18 L 67 18" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.24, 0.84) }} />
-        <path className="sig-path" pathLength={1} d="M74 24 L 74 12 L 86 24 L 86 12" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.32, 0.9) }} />
+    <svg className={`signature ${drawn ? 'is-drawn' : ''}`} viewBox="0 0 130 30" aria-hidden="true">
+      <g fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path className="sig-path" pathLength={1} d="M6 22 C 10 10, 14 14, 17 22 C 19 27, 22 24, 24 18 C 26 12, 30 14, 32 22" style={{ strokeDasharray: 1, strokeDashoffset: offset(0, 0.32) }} />
+        <path className="sig-path" pathLength={1} d="M36 21 C 39 12, 43 13, 46 20 C 48 25, 52 22, 54 16" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.1, 0.46) }} />
+        <path className="sig-path" pathLength={1} d="M58 14 C 62 19, 64 25, 60 27 M 60 18 L 67 18 M 60 14 L 60 27" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.22, 0.6) }} />
       </g>
-      <path className="sig-path" pathLength={1} d="M93 26 C 96 18, 100 22, 102 18" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.42, 0.96) }} />
+      <g fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <path className="sig-path" pathLength={1} d="M82 22 C 86 11, 92 16, 94 23 C 95 27, 99 25, 100 19" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.38, 0.68) }} />
+        <path className="sig-path" pathLength={1} d="M104 19 C 107 13, 111 14, 113 21 C 114 26, 117 23, 118 17" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.5, 0.78) }} />
+      </g>
+      <path className="sig-path" pathLength={1} d="M120 14 C 121 12, 124 13, 124 16 C 124 19, 120 19, 119 17 C 118 14, 122 13, 124 16" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.62, 0.92) }} />
+      <path className="sig-path" pathLength={1} d="M74 27 C 84 22, 100 25, 116 24" fill="none" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" opacity="0.55" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.78, 0.98) }} />
     </svg>
   )
 }
@@ -415,23 +427,6 @@ function PressTally({ count }: { count: number }) {
         ))}
         {over > 0 && <span className="press-tally__more">+{over}</span>}
       </span>
-    </div>
-  )
-}
-
-function BinderThread() {
-  return (
-    <div className="binder-thread" aria-hidden="true">
-      <svg viewBox="0 0 18 600" preserveAspectRatio="none">
-        <line
-          className="binder-thread__line"
-          x1="9"
-          y1="14"
-          x2="9"
-          y2="596"
-        />
-        <circle cx="9" cy="6" r="3.5" className="binder-thread__knot" />
-      </svg>
     </div>
   )
 }
@@ -513,7 +508,7 @@ function PencilGlyph({ active }: { active: boolean }) {
       <path
         d="M18 0 L21 3"
         stroke="currentColor"
-        strokeWidth="0.9"
+        strokeWidth=".9"
         strokeLinecap="round"
         fill="none"
         opacity="0.5"
@@ -541,15 +536,44 @@ type WordProps = {
   onLeave?: () => void
   scribble?: string
   delay?: number
+  superscript?: boolean
 }
 
-function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay }: WordProps) {
+function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay, superscript }: WordProps) {
   const cls = `tline${id ? ` word ${active ? 'word--active' : ''}` : ''}`
   const style = delay !== undefined ? { animationDelay: `${delay}s` } : undefined
   if (!id) {
     return (
       <span className={cls} style={style}>
         {text}
+      </span>
+    )
+  }
+  if (superscript) {
+    const base = text.slice(0, -1)
+    const sup = text.slice(-1)
+    return (
+      <span
+        className={cls}
+        style={style}
+        data-id={id}
+        tabIndex={0}
+        onMouseEnter={onEnter}
+        onMouseLeave={onLeave}
+        onFocus={onEnter}
+        onBlur={onLeave}
+        aria-describedby={`gloss-${id}`}
+      >
+        <span className="word__brackets" aria-hidden="true">
+          <span className="bracket bracket--tl" />
+          <span className="bracket bracket--tr" />
+        </span>
+        <span className="word__base">{base}</span>
+        <span className="word__sup" aria-hidden="true">{sup}</span>
+        {scribble && <Scribble path={scribble} />}
+        <svg className="word__wire" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M2 14 Q 40 6 98 14" />
+        </svg>
       </span>
     )
   }
@@ -682,7 +706,7 @@ function MarkLayer({ active, marks, currentPath, svgRef, onPathStart, onPathMove
 }
 
 function SpecimenSetting({ s }: { s: Specimen }) {
-  const lineA = s.id === 'cut' ? 'is Minimax' : s.id === 'hand' ? 'is M^3' : 'IS'
+  const lineA = s.id === 'cut' ? 'is Minimax' : s.id === 'hand' ? 'is M³' : 'IS'
   const lineB = s.id === 'cut' ? 'good at frontend' : s.id === 'hand' ? 'good at frontend' : 'GOOD AT'
   const lineC = s.id === 'cut' ? 'yet ?' : s.id === 'hand' ? 'yet?' : 'FRONTEND YET'
   return (
@@ -694,73 +718,92 @@ function SpecimenSetting({ s }: { s: Specimen }) {
   )
 }
 
-function SpecimenCase({
+function SpecimenCard({
   s,
   isOpen,
   onToggle,
-  caseId,
+  cardId,
 }: {
   s: Specimen
   isOpen: boolean
   onToggle: () => void
-  caseId: string
+  cardId: string
 }) {
   return (
     <article
-      className={`case case--${s.casing} ${isOpen ? 'is-open' : ''}`}
+      className={`slip slip--${s.casing} ${isOpen ? 'is-open' : ''}`}
       data-n={s.n}
     >
-      <div className="case__shell">
-        <button
-          type="button"
-          className="case__lid"
-          onClick={onToggle}
-          aria-expanded={isOpen}
-          aria-controls={caseId}
-          aria-label={`${isOpen ? 'Close' : 'Open'} ${s.name}`}
-          title={isOpen ? 'Close this voice' : `Open the ${s.name}`}
-        >
-          <span className="case__lid-face case__lid-face--top" aria-hidden="true">
-            <span className="case__lid-grain" />
-            <span className="case__knob" />
-            <span className="case__lid-label">
-              <span className="case__lid-n">{s.n}</span>
-              <span className="case__lid-name">{s.name}</span>
-            </span>
-            <span className="case__lid-ornament" aria-hidden="true">
-              <svg viewBox="0 0 20 16">
-                <path d={s.ornament} fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-          </span>
-          <span className="case__lid-face case__lid-face--inside" aria-hidden="true">
-            <span className="case__lid-grain" />
-            <span className="case__lid-stamp">
-              <span>pressed</span>
-              <b>m³</b>
-            </span>
-            <span className="case__lid-rule" />
-            <span className="case__lid-n">{s.n}</span>
-          </span>
-        </button>
-        <div className="case__bed" id={caseId}>
-          <span className="case__rail case__rail--l" aria-hidden="true" />
-          <span className="case__rail case__rail--r" aria-hidden="true" />
-          <div className="case__paper">
-            <span className="case__paper-mark" aria-hidden="true">{s.n}</span>
-            <SpecimenSetting s={s} />
-            <span className="case__paper-press">{s.press}</span>
-          </div>
-        </div>
+      <button
+        type="button"
+        className="slip__flap"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={cardId}
+        aria-label={`${isOpen ? 'Close' : 'Open'} ${s.name}`}
+        title={isOpen ? 'Close this voice' : `Open the ${s.name}`}
+      >
+        <span className="slip__flap-fold" aria-hidden="true" />
+        <span className="slip__flap-row">
+          <span className="slip__flap-n">{s.n}</span>
+          <span className="slip__flap-name">{s.name}</span>
+        </span>
+        <span className="slip__flap-press">{s.press}</span>
+        <span className="slip__flap-ornament" aria-hidden="true">
+          <svg viewBox="0 0 20 16">
+            <path d={s.ornament} fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </button>
+      <div className="slip__leaf" id={cardId}>
+        <span className="slip__leaf-mark" aria-hidden="true">{s.n}</span>
+        <SpecimenSetting s={s} />
+        <span className="slip__leaf-press">{s.press}</span>
       </div>
-      <footer className="case__foot">
-        <h3 className="case__name">
-          <span className="case__name-rule" aria-hidden="true" />
-          {s.name}
-        </h3>
-        <p className="case__note">{s.note}</p>
+      <footer className="slip__foot">
+        <p className="slip__note">{s.note}</p>
       </footer>
     </article>
+  )
+}
+
+function ReadingRibbon({ progress }: { progress: number }) {
+  const pct = Math.min(100, Math.max(0, progress * 100))
+  return (
+    <div className="ribbon" aria-hidden="true">
+      <span className="ribbon__band" style={{ height: `${pct}%` }}>
+        <span className="ribbon__gloss" />
+      </span>
+      <span className="ribbon__tail" style={{ top: `${pct}%` }}>
+        <span className="ribbon__notch ribbon__notch--l" />
+        <span className="ribbon__notch ribbon__notch--r" />
+        <span className="ribbon__seal">m³</span>
+      </span>
+    </div>
+  )
+}
+
+function PageMark({ active }: { active: string | null }) {
+  const labels: Record<string, string> = {
+    question: 'the question',
+    answer: 'the answer',
+    marginalia: 'the margin',
+    specimens: 'the specimens',
+  }
+  const order = ['question', 'answer', 'marginalia', 'specimens']
+  const i = active ? Math.max(0, order.indexOf(active)) : 0
+  const label = labels[order[i]] || labels.question
+  return (
+    <span className="page-mark" aria-hidden="true">
+      <span className="page-mark__rule" />
+      <span className="page-mark__chip">
+        <span className="page-mark__chip-n">{String(i + 1).padStart(2, '0')}</span>
+        <span className="page-mark__chip-of">/</span>
+        <span className="page-mark__chip-total">{String(order.length).padStart(2, '0')}</span>
+      </span>
+      <span className="page-mark__label">{label}</span>
+      <span className="page-mark__rule" />
+    </span>
   )
 }
 
@@ -905,6 +948,7 @@ export function App() {
       }}
     >
       <Dust />
+      <ReadingRibbon progress={progress} />
       <div className="folio__lamp" aria-hidden="true" />
       <div className="folio__lamp folio__lamp--warm" aria-hidden="true" />
       <div className="folio__vignette" aria-hidden="true" />
@@ -919,6 +963,7 @@ export function App() {
             <strong>front-end press</strong>
           </span>
         </a>
+        <PageMark active={activeSection} />
         <nav aria-label="Sections" className="folio__nav">
           <a href="#question" className={activeSection === 'question' ? 'is-active' : ''}>question</a>
           <a href="#answer" onClick={() => setOpen(true)} className={activeSection === 'answer' ? 'is-active' : ''}>answer</a>
@@ -984,7 +1029,6 @@ export function App() {
         </div>
 
         <div className="proof__stage" ref={stageRef}>
-          <BinderThread />
           <MarkLayer
             active={pencil}
             marks={marks}
@@ -1015,6 +1059,7 @@ export function App() {
                     onLeave={() => setHovered(null)}
                     scribble={scribbles.m3}
                     delay={titleDelays[1]}
+                    superscript
                   />
                   <TitleWord text=" " delay={titleDelays[2]} />
                   <TitleWord
@@ -1223,16 +1268,16 @@ export function App() {
             <p className="specimens__cue" aria-live="polite">
               <span className="specimens__cue-rule" />
               <span>
-                <em>click a lid</em> — the title above takes the voice inside
+                <em>click a flap</em> — the title above takes the voice inside
               </span>
               <span className="specimens__cue-rule" />
             </p>
-            <div className={`cases__wall ${specimenRest ? 'is-rest' : ''} ${openCase ? 'has-open' : ''}`}>
+            <div className={`slips__wall ${specimenRest ? 'is-rest' : ''} ${openCase ? 'has-open' : ''}`}>
               {SPECIMENS.map(s => (
-                <SpecimenCase
+                <SpecimenCard
                   key={s.id}
                   s={s}
-                  caseId={`case-bed-${s.id}`}
+                  cardId={`slip-leaf-${s.id}`}
                   isOpen={openCase === s.id}
                   onToggle={() => setOpenCase(prev => (prev === s.id ? null : s.id))}
                 />
@@ -1240,7 +1285,7 @@ export function App() {
             </div>
             <p className="specimens__hint" aria-hidden="true">
               <span className="specimens__hint-rule" />
-              <em>{openSpecimen ? `now set in ${openSpecimen.name}` : 'hover to peek under the lid'}</em>
+              <em>{openSpecimen ? `now set in ${openSpecimen.name}` : 'hover to lift the flap'}</em>
               <span className="specimens__hint-rule" />
             </p>
           </section>
@@ -1279,6 +1324,9 @@ export function App() {
                 <span className="colophon__sep">·</span>
                 <span className="colophon__voice">in the voice of <em>{openSpecimen.name}</em></span>
               </>)}
+          </p>
+          <p className="colophon__tonight" aria-hidden="true">
+            <span>tonight's proof — pressed for one reader, returned with care</span>
           </p>
           <div className={`colophon__sign ${sigVisible ? 'is-drawn' : ''}`} aria-hidden="true">
             <Signature drawn={sigVisible} progress={progress} />

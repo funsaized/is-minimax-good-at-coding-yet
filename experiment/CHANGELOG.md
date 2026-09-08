@@ -1,14 +1,47 @@
 # Changelog
 
-## 184 — A typesetter's case opens
+## Iteration 185
+Sharper paper folio: ribbon-tracked reading, paper-slip specimens, cream answer reveal.
 
-Iteration 184 turns the three specimen cards into a single typesetter's case with hinged lids, so choosing a voice becomes a small act of pressing.
+Direction: pull the folio away from the baroque wooden-cabinet of type specimens
+toward a calmer reader's paper folio, while introducing a single memorable new
+detail — a wax-sealed reading ribbon that tracks scroll progress.
 
-- Replaces the flat specimen grid with three wooden compartments (`src/App.tsx:697-765`). Each compartment has a hinged lid with a brass pull knob, a wood-grain top, and a stamp on the inside (`src/style.css:2176-2293`). Click to lift the lid, hover to peek.
-- The recess inside each case holds a paper impression of the question set in that voice (`src/App.tsx:746-754`). The other cases dim while one is open, focusing the press on the chosen voice.
-- A compositor's note above the case reads "click a lid — the title above takes the voice inside" (`src/App.tsx:1223-1229`, `src/style.css:2098-2145`). The hint below the case updates live to echo the current voice (`src/App.tsx:1241-1245`).
-- The subtitle under the title now changes from "set by hand" to "set in the foundry cut" / "the scribe's hand" / "the wood type" when a case is open, with a brief ink-settle animation (`src/App.tsx:1042-1046`, `src/style.css:819-854`).
-- Replaces the `specimenFocus` hover state with an `openCase` click-state (`src/App.tsx:777`), so the title only adopts a voice after a deliberate open, not a stray hover.
-- Adds `--ease-lid` and a 3D `rotateX` transform pipeline with perspective on the shell, backface-visibility on both lid faces, and `prefers-reduced-motion` fallbacks (`src/style.css:3663-3681`).
-- Composes wood grain with stacked repeating-linear-gradients plus brass-look radial gradients for the knob and corner tacks; no remote assets (`src/style.css:2235-2293`).
-- Responsive: the case reflows from three columns to one column under 500px, with the lid and bed dimensions tightened to match (`src/style.css:3588-3610`).
+### What changed
+- **Reading ribbon.** A thin coral ribbon now hangs from the folio's right edge,
+  its length growing with scroll progress and tipped with a small wax "m³"
+  seal. The ribbon disappears below ~720px so the phone column stays clean.
+- **Paper-slip specimens.** The hinged wooden cases (wood grain, brass tacks,
+  knob, rails, inset paper) are gone. Each specimen is now a single folded
+  paper slip with a labelled flap; clicking the flap reveals the typeset
+  question inside as the leaf unfolds. The three voices (cut / hand / wood)
+  still retype the title above.
+- **Warmer answer reveal.** The dark teal answer plate has been removed; the
+  reveal is now a tipped-in cream leaf with a warm seal stamp, matching the
+  rest of the folio's paper palette.
+- **M³ superscript.** The "M3" word in the title now renders "M" in italic
+  copperplate with the "3" riding up as a coral wax-seal superscript.
+- **Page-mark indicator.** A new masthead element sits between the signature
+  and the nav: a small chip that reads `01/04 the question` (and updates as
+  the reader scrolls), so the four folios feel like a sequence.
+- **Tonight's proof line.** A single italic line was added to the colophon:
+  "tonight's proof — pressed for one reader, returned with care".
+- **Binder thread removed.** Its role is taken by the ribbon.
+- **Typography tightening.** Title letter-spacing deepened slightly, lede
+  promoted to italic, kicker letterspacing nudged, answer body now uses
+  ink-on-cream, signature redrawn with more hand-drawn flourishes.
+- **Edition plate + pencil tools unchanged in role**, repositioned and
+  tightened to live in the same top-right cluster without colliding.
+- **Crop marks quieted** (lower base opacity) so the page edges read as a
+  folio rather than a printer's template.
+- **Reduced-motion respected** for the ribbon, the slip animation, the
+  signature draw, and the wooden-case / paper-slip transitions.
+
+### Files touched
+- `src/App.tsx` — added `ReadingRibbon`, `PageMark`, `SpecimenCard`; removed
+  `BinderThread`; refined `Seal`, `Signature`; added `superscript` branch to
+  `TitleWord` for the M3 styling; added `colophon__tonight`.
+- `src/style.css` — replaced `.case__*` block with `.slip__*` block; added
+  `.ribbon*` and `.page-mark*` blocks; warmed `.answer__plate` to cream;
+  tightened title/lede/kicker/folio__head; added reduced-motion overrides.
+- `CHANGELOG.md` — this entry.
