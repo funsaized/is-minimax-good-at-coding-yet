@@ -14952,6 +14952,92 @@ button { font: inherit; }
     padding: 0 clamp(0px, 8vw, 28px);
   }
 }
+/* ── iteration 156: verso specimen wordmark — closes the reply with
+   a composed twin to the recto's specimen wordmark. The recto finishes
+   its title block (iteration 152); the verso now finishes its reply
+   body in the same idiom. A delicate crescent pip (echoing the
+   almanac, hour-of-reading, and moon-pip elsewhere) sits inside the
+   gold pin-prick; a slightly broader leaf flourish (mirrored) ties the
+   closing rule to the footer; and a roman foot labels the specimen
+   "relege · no. xviii · read once, then again". ─────────────── */
+
+.reply-specimen {
+  position: relative;
+  margin: clamp(16px, 2.4vw, 26px) 0 clamp(4px, 0.8vw, 10px);
+  padding: 0 clamp(64px, 12vw, 178px);
+  max-width: 100%;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 900ms var(--ease) 620ms,
+    transform 900ms var(--ease) 620ms;
+}
+.reply-specimen.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.reply-specimen.is-static { transition: none; }
+.reply-specimen-plate {
+  display: block;
+  width: min(100%, 380px);
+  height: clamp(48px, 5.4vw, 60px);
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.04));
+}
+.reply-specimen .rsp-text {
+  font: italic 660 clamp(15px, 1.86vw, 19px) / 1 var(--display);
+  fill: #163a48;
+  letter-spacing: -0.005em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1;
+}
+.has-answer .reply-specimen .rsp-text {
+  text-shadow: 0 0 6px rgba(31, 78, 96, 0.18);
+}
+.reply-specimen .rsp-roman {
+  font: italic 500 9px / 1 var(--display);
+  fill: rgba(107, 74, 37, 0.62);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.reply-specimen .rsp-pip {
+  transform-origin: 160px 6px;
+  opacity: 0;
+  transform: translateY(-1px) rotate(-6deg);
+  transition:
+    opacity 700ms var(--ease) 940ms,
+    transform 900ms var(--ease) 940ms;
+}
+.reply-specimen.is-visible .rsp-pip {
+  opacity: 1;
+  transform: none;
+  animation: rsp-pip-glint 8.4s ease-in-out 2200ms infinite;
+}
+.reply-specimen .rsp-leaf {
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 700ms var(--ease) 1020ms, transform 700ms var(--ease) 1020ms;
+}
+.reply-specimen.is-visible .rsp-leaf {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes rsp-pip-glint {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.18); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reply-specimen { opacity: 1; transform: none; transition: none; }
+  .reply-specimen .rsp-leaf { opacity: 1; transform: none; transition: none; }
+  .reply-specimen .rsp-pip { opacity: 1; transform: none; transition: none; animation: none; }
+}
+
+@media (max-width: 720px) {
+  .reply-specimen { padding: 0 clamp(0px, 8vw, 28px); }
+}
+
 /* ── refined H1 typography: tighter, more confident, calmer ── */
 
 

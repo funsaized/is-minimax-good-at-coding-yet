@@ -5550,6 +5550,113 @@ function SpecimenWordmark({
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 156 · the verso earns a twin specimen wordmark, completing
+   the recto-verso opening-closing symmetry. The recto already closes its
+   title block with a thin gold rule, a coral-marked specimen wordmark,
+   and a press catchword (iteration 152-153). The verso opens with its
+   own press head-note (iteration 155) and now closes its reply with a
+   composed twin — the same idiom, but speaking in the reply voice: a
+   delicate crescent glyph in the pin-prick (echoing the almanac and the
+   hour-of-reading elsewhere on the page), the italic "the reply", and
+   a roman foot set "relege · no. xviii · read once, then again". The
+   folio now opens and closes on both spreads with the same composed
+   hand.
+   ────────────────────────────────────────────────────────────────────── */
+
+function ReplySpecimen({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <figure
+      className={`reply-specimen${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg
+        className="reply-specimen-plate"
+        viewBox="0 0 320 56"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="rsp-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="50%" stopColor="rgba(156, 110, 38, 0.62)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="rsp-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+        </defs>
+
+        <line
+          x1="2"
+          y1="6"
+          x2="318"
+          y2="6"
+          stroke="url(#rsp-rule)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+        />
+        <g className="rsp-pip">
+          <circle cx="160" cy="6" r="1.4" fill="url(#rsp-gold)" />
+          <path
+            d="M 160.35 4.7 A 1.2 1.2 0 1 1 160.35 7.3 A 0.85 0.85 0 1 0 160.35 4.7 Z"
+            fill="rgba(255, 248, 224, 0.95)"
+          />
+        </g>
+
+        <text x="160" y="32" textAnchor="middle" className="rsp-text">
+          the reply
+        </text>
+
+        <line
+          x1="2"
+          y1="40"
+          x2="318"
+          y2="40"
+          stroke="url(#rsp-rule)"
+          strokeWidth="0.32"
+          strokeLinecap="round"
+          strokeDasharray="0.6 1.4"
+          opacity="0.7"
+        />
+
+        <g className="rsp-leaf">
+          <path
+            d="M 148 48 Q 154 44 160 47 Q 166 44 172 48"
+            fill="none"
+            stroke="rgba(167, 60, 44, 0.6)"
+            strokeWidth="0.45"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 148 48 Q 154 52 160 49 Q 166 52 172 48"
+            fill="none"
+            stroke="rgba(167, 60, 44, 0.36)"
+            strokeWidth="0.35"
+            strokeLinecap="round"
+          />
+        </g>
+
+        <text x="160" y="54" textAnchor="middle" className="rsp-roman">
+          relege · no. xviii · read once, then again
+        </text>
+      </svg>
+    </figure>
+  )
+}
+
 function PressKey({
   visible,
   reduced,
@@ -10592,6 +10699,8 @@ export function App() {
               registerHour={(el) => { sectionRefs.current['sec-hour'] = el }}
               registerDaybook={(el) => { sectionRefs.current['sec-almanac'] = el }}
             />
+
+            <ReplySpecimen visible={replyShown} reduced={reduced} />
 
             <CulDeLampe inscriptionVisible={phase === 'complete'} />
 
