@@ -1,0 +1,19 @@
+{
+  "id": 184,
+  "parentId": 183,
+  "createdAt": "2026-09-08T22:31:04.391Z",
+  "summary": "Iteration 184 turns the three specimen cards into a single typesetter's case with hinged lids, so choosing a voice becom",
+  "path": "/iterations/000184/index.html",
+  "screenshot": "/iterations/000184/desktop.png",
+  "mobileScreenshot": "/iterations/000184/mobile.png",
+  "sourceCommit": "9e283fca42594d99a17a7f2e8b0bb4981ac9b186",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 692,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 483130,
+    "outputTokens": 19314,
+    "steps": 75
+  }
+}
