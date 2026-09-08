@@ -10196,4 +10196,314 @@ button { font: inherit; }
   .title-inkbloom { inset: -8% -6% -16% 18%; }
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 135 · the page speaks for itself
+   The recto earns its quiet by replacing three stacked sub-widgets
+   (folio-ledger, reading-tally, specimen-imprint) with a single composed
+   almanac band. The title loses its verb-pivot and flourish-trail so
+   the italic reads as one continuous gesture. The answer and reply
+   lose their competing drop caps so the broadsheet drop cap on the
+   question remains the singular ornament of the folio.
+   ────────────────────────────────────────────────────────────────────── */
+
+/* hide the legacy folio-ledger output (AlmanacBand takes its place) */
+
+.folio-ledger { display: none; }
+
+/* ── almanac band: a single composed row that replaces three stacked widgets ── */
+
+.almanac-band {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 14px;
+  margin: 6px 0 28px;
+  max-width: min(640px, 100%);
+  padding: 8px 4px;
+  color: var(--ink-soft);
+  font-family: var(--display);
+  animation: content-in 0.85s 0.46s both;
+}
+.almanac-band-rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(107, 74, 37, 0.28) 50%,
+    transparent
+  );
+}
+.almanac-band-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(107, 74, 37, 0.28) 50%,
+    transparent
+  );
+}
+.almanac-band-cluster {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 14px;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+.almanac-band-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+}
+.almanac-band-key {
+  color: var(--coral-deep);
+  font: italic 500 10px/1 var(--display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+}
+.almanac-band-roman {
+  color: var(--coral);
+  font: italic 600 11px/1 var(--display);
+  letter-spacing: 0.06em;
+}
+.almanac-band-cell--folio { display: none; }
+.almanac-band-day {
+  color: var(--ink);
+  font: italic 500 11.5px/1 var(--display);
+  letter-spacing: 0.04em;
+}
+.almanac-band-day em { font-style: italic; font-weight: 500; }
+.almanac-band-day-tail {
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.almanac-band-day-year {
+  color: var(--coral);
+  font: italic 600 11px/1 var(--display);
+  letter-spacing: 0.08em;
+  margin-left: 2px;
+}
+.almanac-band-hour {
+  color: var(--ink);
+  font: italic 600 12px/1 var(--display);
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+}
+.almanac-band-hour em { font-style: italic; font-weight: 600; }
+.almanac-band-hour-m { color: var(--ink); }
+.almanac-band-hour-period {
+  color: var(--coral-deep);
+  font: italic 500 10px/1 var(--display);
+  margin-left: 2px;
+}
+.almanac-band-moon {
+  color: var(--ink);
+  font: italic 500 11.5px/1 var(--display);
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.almanac-band-moon em { font-style: italic; font-weight: 500; }
+.almanac-band-moon-tail {
+  color: var(--coral-deep);
+  font: italic 500 10px/1 var(--display);
+  letter-spacing: 0.04em;
+}
+.almanac-band-tally {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  color: var(--coral);
+  font: italic 700 12px/1 var(--display);
+  letter-spacing: 0.04em;
+}
+.almanac-band-sigil {
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+  color: var(--coral);
+  opacity: 0.28;
+  transition: opacity 700ms var(--ease);
+}
+.almanac-band-sigil.is-lit {
+  color: var(--coral-deep);
+  opacity: 1;
+}
+.almanac-band-sigil.is-latest {
+  animation: almanac-band-pulse 2400ms ease-in-out infinite;
+}
+@keyframes almanac-band-pulse {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50%      { transform: translateY(-1px); opacity: 0.78; }
+}
+.almanac-band-press {
+  color: var(--ink-soft);
+  font: italic 500 10.5px/1 var(--display);
+  letter-spacing: 0.04em;
+}
+.almanac-band-divider {
+  display: inline-block;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--coral);
+  opacity: 0.55;
+  align-self: center;
+  flex: 0 0 2px;
+}
+.almanac-band.is-reread .almanac-band-key { color: var(--coral-deep); }
+
+@media (max-width: 880px) {
+  .almanac-band-cluster {
+    justify-content: flex-start;
+    column-gap: 10px;
+  }
+}
+@media (max-width: 720px) {
+  .almanac-band { padding: 6px 0; margin: 4px 0 20px; }
+  .almanac-band-key { font-size: 8.5px; letter-spacing: 0.14em; }
+  .almanac-band-day, .almanac-band-moon, .almanac-band-press { font-size: 10.5px; }
+  .almanac-band-hour { font-size: 11px; }
+  .almanac-band-divider { display: none; }
+  .almanac-band-cluster { gap: 8px 12px; }
+}
+@media (max-width: 520px) {
+  .almanac-band-day-tail,
+  .almanac-band-day-year,
+  .almanac-band-cell--press .almanac-band-press {
+    display: none;
+  }
+  .almanac-band-cluster { gap: 6px 12px; }
+}
+@media (max-width: 420px) {
+  .almanac-band { padding: 4px 0; margin: 2px 0 16px; }
+  .almanac-band-key { font-size: 7.5px; letter-spacing: 0.12em; }
+  .almanac-band-day, .almanac-band-moon { font-size: 10px; }
+  .almanac-band-hour { font-size: 10.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .almanac-band { animation: none; opacity: 1; transform: none; }
+  .almanac-band-sigil.is-latest { animation: none; }
+}
+
+/* ── paper fold anchor: a quiet printed line that closes the title block ── */
+
+.title-paper-fold {
+  position: absolute;
+  left: -2px;
+  right: -6px;
+  bottom: -22px;
+  height: 7px;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 246, 218, 0) 0%,
+      rgba(255, 246, 218, 0.5) 30%,
+      rgba(107, 74, 37, 0.04) 60%,
+      rgba(107, 74, 37, 0.12) 100%
+    );
+  clip-path: polygon(0 0, 100% 0, 96% 100%, 4% 100%);
+  opacity: 0;
+  transition: opacity 1300ms var(--ease) 800ms;
+}
+.has-answer .title-paper-fold { opacity: 1; }
+@media (max-width: 560px) {
+  .title-paper-fold { bottom: -16px; height: 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-paper-fold { transition: none; opacity: 1; }
+}
+
+/* ── title without verb-pivot: the italic reads as one continuous gesture ── */
+
+.title-flow {
+  padding-bottom: 8px;
+}
+
+/* ── hide the dropped legacy flourish trail and verb pivot so old markup
+      never leaks even if some component imports them ── */
+
+.title-flourish-trail,
+.title-verb-pivot {
+  display: none !important;
+}
+
+/* ── answer typography: drop the answer-copy drop cap & dash, give the
+      italic room to breathe as a confident paragraph ── */
+
+.answer-copy-frame {
+  grid-template-columns: minmax(0, 1fr);
+}
+.answer-copy {
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1, "dlig" 1, "liga" 1;
+  max-width: 36em;
+  margin-inline: auto;
+  text-indent: 0;
+  padding: 6px 8px 4px;
+}
+@media (min-width: 721px) {
+  .answer-copy {
+    font: italic 660 40px/1.24 var(--display);
+    letter-spacing: -0.012em;
+  }
+}
+@media (min-width: 1024px) {
+  .answer-copy {
+    font: italic 680 44px/1.2 var(--display);
+  }
+}
+
+/* ── reply typography: a clean italic, no drop cap ── */
+
+.reply-paragraph {
+  font: italic 540 clamp(22px, 2.8vw, 30px)/1.5 var(--display);
+  letter-spacing: 0.005em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "salt" 1;
+  color: var(--ink);
+  text-wrap: pretty;
+  hanging-punctuation: first last;
+  max-width: 34em;
+  margin-inline: auto;
+  padding: 8px 4px 0;
+}
+.reply-initial,
+.verso-drop-cap,
+.answer-copy-initial,
+.answer-copy-dash {
+  display: none !important;
+}
+
+/* ── mobile guards: keep the title legible and the question panel uncrowded ── */
+
+@media (max-width: 720px) {
+  .broadsheet-title {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 12px;
+  }
+  .title-initial-wrap {
+    width: clamp(72px, 18vw, 110px);
+    margin-bottom: -4px;
+  }
+}
+@media (max-width: 520px) {
+  .sheet { padding: clamp(22px, 4vw, 36px) clamp(18px, 5vw, 28px) clamp(18px, 3vw, 28px); }
+  .question-panel { max-width: 100%; }
+  .moon-pip { display: none; }
+}
+@media (max-width: 420px) {
+  .title-flow {
+    font-size: clamp(30px, 9vw, 44px);
+  }
+  .answer-copy { font-size: clamp(22px, 7vw, 30px); line-height: 1.26; }
+  .reply-paragraph { font-size: clamp(18px, 5.5vw, 22px); }
+}
+
 

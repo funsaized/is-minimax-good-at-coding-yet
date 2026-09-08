@@ -580,72 +580,92 @@ function PrinterEmblem() {
   )
 }
 
-function FolioLedger() {
-  return (
-    <p className="folio-ledger" aria-hidden="true">
-      <span className="folio-ledger-rule folio-ledger-rule--left" />
-      <span className="folio-ledger-cluster">
-        <em className="folio-ledger-key">this folio</em>
-        <span className="folio-ledger-sep" aria-hidden="true">·</span>
-        <em className="folio-ledger-roman">cap. xviii</em>
-        <span className="folio-ledger-sep" aria-hidden="true">·</span>
-        <em className="folio-ledger-tail">recto · sig. a2</em>
-        <svg
-          className="folio-ledger-mark"
-          viewBox="0 0 26 26"
-          focusable="false"
-          aria-hidden="true"
-        >
-          <defs>
-            <radialGradient id="fl-wax" cx="50%" cy="38%" r="62%">
-              <stop offset="0%" stopColor="rgba(206, 96, 68, 0.96)" />
-              <stop offset="55%" stopColor="rgba(146, 50, 36, 0.96)" />
-              <stop offset="100%" stopColor="rgba(60, 14, 8, 0.98)" />
-            </radialGradient>
-          </defs>
-          <circle cx="13" cy="13" r="11" fill="url(#fl-wax)" />
-          <ellipse cx="10.6" cy="7.4" rx="5.4" ry="2" fill="rgba(255, 232, 178, 0.38)" />
-          <circle cx="13" cy="13" r="11" fill="none" stroke="rgba(40, 8, 4, 0.55)" strokeWidth="0.45" />
-          <circle cx="13" cy="13" r="8.6" fill="none" stroke="rgba(255, 232, 178, 0.32)" strokeWidth="0.3" strokeDasharray="0.4 1.2" />
-          <line x1="6.6" y1="13" x2="19.4" y2="13" stroke="rgba(255, 232, 178, 0.32)" strokeWidth="0.3" />
-          <text x="13" y="11" textAnchor="middle" className="folio-ledger-mark-glyph folio-ledger-mark-glyph--roman">lxxvii</text>
-          <text x="13" y="16.6" textAnchor="middle" className="folio-ledger-mark-glyph folio-ledger-mark-glyph--sig">folio</text>
-        </svg>
-      </span>
-      <span className="folio-ledger-rule folio-ledger-rule--right" />
-    </p>
-  )
-}
+function AlmanacBand({
+  now,
+  cycle,
+  moonPhase,
+}: {
+  now: Date
+  cycle: number
+  moonPhase: number
+}) {
+  const dayName = WEEKDAYS[now.getDay()].slice(0, 3).toLowerCase()
+  const dayOrdinal = ORDINALS[Math.min(ORDINALS.length - 1, now.getDate() - 1)]
+  const monthName = MONTHS[now.getMonth()].slice(0, 3).toLowerCase()
+  const yearRoman = toRomanYear(now.getFullYear())
+  const hour24 = now.getHours()
+  const minutes = now.getMinutes()
+  const h12 = ((hour24 + 11) % 12) + 1
+  const mm = String(minutes).padStart(2, '0')
+  const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
+  const moonName = moonPhaseName(moonPhase)
+  const sigils = ['¶', '†', '‡', '§']
+  const tallyLit = Math.min(cycle + 1, sigils.length)
+  const pressLabel =
+    cycle === 0 ? 'awaiting the press' : `${ROMAN[Math.min(cycle - 1, ROMAN.length - 1)]} press`
 
-function AsterismGlyph({ className }: { className?: string }) {
   return (
-    <svg
-      className={className ?? 'asterism-glyph'}
-      viewBox="0 0 36 36"
-      focusable="false"
+    <p
+      className={`almanac-band${cycle > 0 ? ' is-reread' : ''}`}
       aria-hidden="true"
     >
-      <g className="asterism-cluster">
-        <g transform="translate(11 11)">
-          <line x1="0" y1="-4.6" x2="0" y2="4.6" />
-          <line x1="-4.6" y1="0" x2="4.6" y2="0" />
-          <line x1="-3.3" y1="-3.3" x2="3.3" y2="3.3" />
-          <line x1="3.3" y1="-3.3" x2="-3.3" y2="3.3" />
-        </g>
-        <g transform="translate(25 11)">
-          <line x1="0" y1="-4.6" x2="0" y2="4.6" />
-          <line x1="-4.6" y1="0" x2="4.6" y2="0" />
-          <line x1="-3.3" y1="-3.3" x2="3.3" y2="3.3" />
-          <line x1="3.3" y1="-3.3" x2="-3.3" y2="3.3" />
-        </g>
-        <g transform="translate(18 25)">
-          <line x1="0" y1="-4.6" x2="0" y2="4.6" />
-          <line x1="-4.6" y1="0" x2="4.6" y2="0" />
-          <line x1="-3.3" y1="-3.3" x2="3.3" y2="3.3" />
-          <line x1="3.3" y1="-3.3" x2="-3.3" y2="3.3" />
-        </g>
-      </g>
-    </svg>
+      <span className="almanac-band-rule almanac-band-rule--left" />
+      <span className="almanac-band-cluster">
+        <span className="almanac-band-cell almanac-band-cell--day">
+          <em className="almanac-band-key">today</em>
+          <span className="almanac-band-day">
+            <em>{dayName}</em>
+            <span className="almanac-band-day-tail">
+              {' · the '}
+              <em>{dayOrdinal}</em>
+              {' of '}
+              <em>{monthName}</em>
+            </span>
+            <span className="almanac-band-day-year">{' · '}{yearRoman}</span>
+          </span>
+        </span>
+
+        <span className="almanac-band-divider" aria-hidden="true" />
+
+        <span className="almanac-band-cell almanac-band-cell--hour">
+          <em className="almanac-band-key">hour</em>
+          <span className="almanac-band-hour">
+            <em>{h12}</em>
+            <span className="almanac-band-hour-m">:{mm}</span>
+            <em className="almanac-band-hour-period">{period}</em>
+          </span>
+        </span>
+
+        <span className="almanac-band-divider" aria-hidden="true" />
+
+        <span className="almanac-band-cell almanac-band-cell--moon">
+          <em className="almanac-band-key">moon</em>
+          <span className="almanac-band-moon">
+            <em>{moonName}</em>
+            <span className="almanac-band-moon-tail">{Math.round((1 - Math.cos(moonPhase * 2 * Math.PI)) * 50)}%</span>
+          </span>
+        </span>
+
+        <span className="almanac-band-divider" aria-hidden="true" />
+
+        <span className="almanac-band-cell almanac-band-cell--press">
+          <em className="almanac-band-key">readings</em>
+          <span className="almanac-band-tally">
+            {sigils.map((s, i) => (
+              <span
+                key={i}
+                className={`almanac-band-sigil${i < tallyLit ? ' is-lit' : ''}${cycle > 0 && i === tallyLit - 1 ? ' is-latest' : ''}`}
+                style={{ '--mark-i': i } as React.CSSProperties}
+              >
+                {s}
+              </span>
+            ))}
+          </span>
+          <span className="almanac-band-press">{pressLabel}</span>
+        </span>
+      </span>
+      <span className="almanac-band-rule almanac-band-rule--right" />
+    </p>
   )
 }
 
@@ -2611,104 +2631,6 @@ function SelfAnnotations({ currentChars }: { currentChars: number }) {
         />
       ))}
     </div>
-  )
-}
-
-function Apparatus({
-  visible,
-  cycle,
-  activeSection,
-  onSelect,
-}: {
-  visible: boolean
-  cycle: number
-  activeSection: string
-  onSelect: (id: string) => void
-}) {
-  const entries: {
-    numeral: string
-    name: string
-    gloss: string
-    hash: string
-  }[] = [
-    { numeral: 'i', name: 'the question', gloss: 'plainly set, in a single breath', hash: 'sec-question' },
-    { numeral: 'ii', name: 'the answer', gloss: 'set in italic, with gilt', hash: 'sec-answer' },
-    { numeral: 'iii', name: 'the reply', gloss: 'the second reading', hash: 'sec-reply' },
-    { numeral: 'iv', name: 'this almanac', gloss: 'today, set in this folio', hash: 'sec-almanac' },
-  ]
-
-  return (
-    <aside
-      className={`apparatus${visible ? ' is-visible' : ''}`}
-      aria-label="apparatus"
-    >
-      <header className="apparatus-head">
-        <span className="apparatus-aster" aria-hidden="true">
-          <AsterismGlyph className="apparatus-aster-glyph apparatus-aster-glyph--left" />
-        </span>
-        <span className="apparatus-title">
-          <span className="apparatus-title-mark" aria-hidden="true">§</span>
-          apparatus
-          <span className="apparatus-title-sep" aria-hidden="true">·</span>
-          <em>index</em>
-        </span>
-        <span className="apparatus-aster" aria-hidden="true">
-          <AsterismGlyph className="apparatus-aster-glyph apparatus-aster-glyph--right" />
-        </span>
-      </header>
-
-      <ol className="apparatus-list">
-        {entries.map((entry, i) => {
-          const isActive = activeSection === entry.hash
-          return (
-            <li
-              key={entry.numeral}
-              className={`apparatus-row${isActive ? ' is-active' : ''}`}
-              style={{ '--i': i } as React.CSSProperties}
-            >
-              <a
-                href={`#${entry.hash}`}
-                className="apparatus-link"
-                onClick={(e) => {
-                  e.preventDefault()
-                  onSelect(entry.hash)
-                }}
-                aria-current={isActive ? 'true' : undefined}
-              >
-                <span className="apparatus-numeral">{entry.numeral}.</span>
-                <span className="apparatus-name">{entry.name}</span>
-                <span className="apparatus-leader" aria-hidden="true">
-                  <span className="apparatus-leader-line" />
-                  <span className="apparatus-leader-glyph">✦</span>
-                </span>
-                <span className="apparatus-gloss">{entry.gloss}</span>
-              </a>
-            </li>
-          )
-        })}
-      </ol>
-
-      <footer className="apparatus-foot">
-        <span className="apparatus-foot-aster" aria-hidden="true">
-          <AsterismGlyph className="apparatus-aster-glyph apparatus-aster-glyph--foot" />
-        </span>
-        {cycle > 0 && (
-          <span className="apparatus-foot-note">
-            <span className="apparatus-foot-mark" aria-hidden="true">⟲</span>
-            <em>re-read</em>
-            <span className="apparatus-foot-tail" aria-hidden="true">— the page unchanged; the reader, changed.</span>
-          </span>
-        )}
-        {cycle === 0 && (
-          <span className="apparatus-foot-note apparatus-foot-note--pending">
-            <span className="apparatus-foot-mark" aria-hidden="true">✎</span>
-            <em>first reading</em>
-            <span className="apparatus-foot-tail" aria-hidden="true">— re-read at any pace.</span>
-          </span>
-        )}
-        <span className="apparatus-foot-rule" aria-hidden="true" />
-      </footer>
-    </aside>
   )
 }
 
@@ -7527,51 +7449,9 @@ export function App() {
                   <span className="title-subject-rule" aria-hidden="true" />
                 </span>
                 <span className="title-text title-text--set" style={{ '--word-i': 2 } as React.CSSProperties}>
-                  {' '}
-                  <span className="title-verb-pivot" aria-hidden="true">
-                    <svg className="title-verb-pivot-svg" viewBox="0 0 28 14" focusable="false">
-                      <line x1="2" y1="7" x2="26" y2="7" stroke="currentColor" strokeWidth="0.4" strokeDasharray="0.5 1.4" opacity="0.5" />
-                      <circle cx="14" cy="7" r="2.4" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                      <circle cx="14" cy="7" r="0.7" fill="currentColor" />
-                    </svg>
-                  </span>
-                  good at frontend yet<span className="title-questions">?</span>
+                  {' '}good at frontend yet<span className="title-questions">?</span>
                 </span>
-                <svg
-                  className="title-flourish-trail"
-                  viewBox="0 0 110 22"
-                  focusable="false"
-                  aria-hidden="true"
-                  preserveAspectRatio="none"
-                >
-                  <defs>
-                    <linearGradient id="title-trail-gold" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#9c6e26" />
-                      <stop offset="50%" stopColor="#c8923e" />
-                      <stop offset="100%" stopColor="#f5c65b" />
-                    </linearGradient>
-                  </defs>
-                  <path
-                    d="M 2 14 Q 30 8 64 16 Q 90 22 104 12"
-                    stroke="url(#title-trail-gold)"
-                    strokeWidth="0.55"
-                    strokeLinecap="round"
-                    fill="none"
-                    strokeDasharray="0.6 1.6"
-                    opacity="0"
-                    className="title-flourish-trail-line"
-                  />
-                  <path
-                    d="M 100 10 L 108 13 L 102 18"
-                    stroke="url(#title-trail-gold)"
-                    strokeWidth="0.55"
-                    strokeLinecap="round"
-                    fill="none"
-                    opacity="0"
-                    className="title-flourish-trail-arrow"
-                  />
-                  <circle cx="2" cy="14" r="0.9" fill="#c8923e" opacity="0" className="title-flourish-trail-dot" />
-                </svg>
+                <span className="title-paper-fold" aria-hidden="true" />
               </span>
             </h1>
 
@@ -7579,11 +7459,7 @@ export function App() {
               <span className="recto-signing-rule-tail">the page remembers the question</span>
             </span>
 
-            <FolioLedger />
-
-            <ReadingTally cycle={cycle} />
-
-            <SpecimenImprint cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
+            <AlmanacBand now={now} cycle={cycle} moonPhase={moonPhase} />
 
             <MoonPip phase={moonPhase} visible={!versoOpened} />
 
@@ -7704,17 +7580,7 @@ export function App() {
               {answerVisible && (
                 <div className="answer-copy-frame">
                   <p className="answer-copy" aria-live="polite">
-                    {answerDisplay.startsWith('— a') ? (
-                      <>
-                        <span className="answer-copy-dash" aria-hidden="true">— </span>
-                        <span className="answer-copy-initial" aria-hidden="true">
-                          <IlluminatedInitial letter="a" />
-                        </span>
-                        {answerDisplay.slice(3)}
-                      </>
-                    ) : (
-                      answerDisplay
-                    )}
+                    {answerDisplay}
                     {phase === 'answering' && <span className="typing-caret" aria-hidden="true">|</span>}
                   </p>
                   <SelfAnnotations currentChars={answerChars} />
@@ -7773,11 +7639,6 @@ export function App() {
                 </header>
               )}
               <span className="reply-paragraph">
-                {replyChars > 0 && (
-                  <span className="reply-initial" aria-hidden="true">
-                    <VersoDropCap letter={REPLY.charAt(0)} />
-                  </span>
-                )}
                 <span className="reply-text">{replyDisplay}</span>
                 {phase === 'replying' && <span className="typing-caret" aria-hidden="true">|</span>}
               </span>
@@ -7828,14 +7689,6 @@ export function App() {
 
             <CulDeLampe inscriptionVisible={phase === 'complete'} />
 
-            <Apparatus
-              visible={replyShown}
-              cycle={cycle}
-              activeSection={activeSection}
-              onSelect={handleSelectSection}
-            />
-
-            {phase === 'complete' && <Colophon cycle={cycle} />}
             {phase === 'complete' && <PressSignature cycle={cycle} slow={slow} />}
           </section>
           </div>
