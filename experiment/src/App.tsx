@@ -8525,6 +8525,171 @@ function ManuscriptReader({
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 144 · the recto spread earns a small tide lamp, a hand-drawn
+   oil lamp set in the lower-left margin of the chapter spread. Its
+   wick glows at idle, flickers softly while answering and replying, and
+   settles to a steady warm flame when the reading is complete. A soft
+   halo radiates onto the reading tide, balancing the manuscript reader
+   in the upper-right and completing the recto composition.
+   ────────────────────────────────────────────────────────────────────── */
+
+function TideLamp({
+  active,
+  reduced,
+}: {
+  active: boolean
+  reduced: boolean
+}) {
+  return (
+    <figure
+      className={`recto-tide-lamp${active ? ' is-active' : ''}${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="recto-tide-lamp-plate"
+        viewBox="0 0 110 138"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="tl-frame" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#9c6e26" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#7a4f1a" />
+          </linearGradient>
+          <radialGradient id="tl-paper" cx="50%" cy="38%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 248, 224, 0.94)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.82)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0.6)" />
+          </radialGradient>
+          <radialGradient id="tl-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.42)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+          <radialGradient id="tl-halo-inner" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 232, 178, 0.68)" />
+            <stop offset="60%" stopColor="rgba(245, 198, 91, 0.18)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+          <linearGradient id="tl-flame" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(255, 248, 224, 0.95)" />
+            <stop offset="48%" stopColor="rgba(245, 198, 91, 0.92)" />
+            <stop offset="100%" stopColor="rgba(217, 101, 74, 0.55)" />
+          </linearGradient>
+          <radialGradient id="tl-flame-core" cx="50%" cy="58%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 248, 232, 0.96)" />
+            <stop offset="55%" stopColor="rgba(255, 220, 150, 0.7)" />
+            <stop offset="100%" stopColor="rgba(217, 101, 74, 0)" />
+          </radialGradient>
+          <radialGradient id="tl-reservoir" cx="40%" cy="32%" r="82%">
+            <stop offset="0%" stopColor="rgba(255, 232, 178, 0.94)" />
+            <stop offset="50%" stopColor="rgba(200, 152, 76, 0.85)" />
+            <stop offset="100%" stopColor="rgba(107, 74, 37, 0.78)" />
+          </radialGradient>
+          <linearGradient id="tl-glass" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(245, 220, 168, 0.65)" />
+            <stop offset="100%" stopColor="rgba(120, 80, 36, 0.55)" />
+          </linearGradient>
+          <pattern id="tl-hatch" width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+            <line x1="0" y1="0" x2="0" y2="2.4" stroke="rgba(107, 74, 37, 0.28)" strokeWidth="0.32" />
+          </pattern>
+        </defs>
+
+        <ellipse cx="76" cy="46" rx="50" ry="56" fill="url(#tl-halo)" className="tl-outer-halo" />
+        <ellipse cx="76" cy="46" rx="22" ry="26" fill="url(#tl-halo-inner)" className="tl-inner-halo" />
+
+        <rect
+          x="2"
+          y="2"
+          width="106"
+          height="134"
+          rx="1.4"
+          fill="url(#tl-paper)"
+          stroke="url(#tl-frame)"
+          strokeWidth="0.85"
+        />
+        <rect
+          x="6"
+          y="6"
+          width="98"
+          height="126"
+          rx="0.8"
+          fill="none"
+          stroke="url(#tl-frame)"
+          strokeWidth="0.32"
+          strokeDasharray="1.2 1.6"
+          opacity="0.78"
+        />
+
+        <g className="tl-corners" fill="#cf3b29" fillOpacity="0.55">
+          <path d="M 9 9 L 16 9 Q 16 12 13 13 L 13 16 L 9 16 Z" />
+          <circle cx="11" cy="11" r="0.6" />
+          <path d="M 101 9 L 94 9 Q 94 12 97 13 L 97 16 L 101 16 Z" />
+          <circle cx="99" cy="11" r="0.6" />
+          <path d="M 9 129 L 16 129 Q 16 126 13 125 L 13 122 L 9 122 Z" />
+          <circle cx="11" cy="127" r="0.6" />
+          <path d="M 101 129 L 94 129 Q 94 126 97 125 L 97 122 L 101 122 Z" />
+          <circle cx="99" cy="127" r="0.6" />
+        </g>
+
+        <g className="tl-pips" fill="url(#tl-frame)">
+          <circle cx="55" cy="9" r="0.6" />
+          <circle cx="55" cy="129" r="0.6" />
+          <circle cx="9" cy="69" r="0.55" />
+          <circle cx="101" cy="69" r="0.55" />
+        </g>
+
+        <g className="tl-baseline" stroke="rgba(107, 74, 37, 0.5)" fill="none" strokeLinecap="round">
+          <line x1="22" y1="118" x2="78" y2="118" strokeWidth="0.7" />
+          <line x1="30" y1="121" x2="70" y2="121" strokeWidth="0.35" strokeDasharray="0.5 1.2" opacity="0.7" />
+          <line x1="34" y1="118" x2="34" y2="124" strokeWidth="0.4" />
+          <line x1="50" y1="118" x2="50" y2="126" strokeWidth="0.4" />
+          <line x1="66" y1="118" x2="66" y2="124" strokeWidth="0.4" />
+        </g>
+
+        <g className="tl-stand">
+          <ellipse cx="50" cy="106" rx="13" ry="2.6" fill="rgba(107, 74, 37, 0.5)" />
+          <path d="M 44 106 L 56 106 L 53 96 L 47 96 Z" fill="rgba(107, 74, 37, 0.62)" />
+          <ellipse cx="50" cy="96" rx="10" ry="2" fill="rgba(150, 110, 56, 0.78)" stroke="rgba(107, 74, 37, 0.55)" strokeWidth="0.4" />
+        </g>
+
+        <g className="tl-reservoir-group">
+          <ellipse cx="50" cy="80" rx="22" ry="18" fill="url(#tl-reservoir)" stroke="rgba(107, 74, 37, 0.6)" strokeWidth="0.55" />
+          <ellipse cx="50" cy="80" rx="22" ry="18" fill="url(#tl-hatch)" opacity="0.45" />
+          <ellipse cx="50" cy="80" rx="22" ry="18" fill="none" stroke="url(#tl-frame)" strokeWidth="0.32" strokeDasharray="0.6 1.4" opacity="0.6" />
+          <ellipse cx="50" cy="80" rx="14" ry="11" fill="none" stroke="rgba(107, 74, 37, 0.4)" strokeWidth="0.32" opacity="0.7" />
+          <ellipse cx="44" cy="73" rx="9" ry="3" fill="rgba(255, 246, 218, 0.55)" />
+
+          <ellipse cx="50" cy="63" rx="11" ry="2.6" fill="rgba(107, 74, 37, 0.7)" />
+          <rect x="44" y="60" width="12" height="3.6" fill="url(#tl-glass)" stroke="rgba(107, 74, 37, 0.55)" strokeWidth="0.4" rx="0.4" />
+          <line x1="46" y1="62" x2="54" y2="62" stroke="rgba(107, 74, 37, 0.4)" strokeWidth="0.3" strokeDasharray="0.4 1" opacity="0.7" />
+          <ellipse cx="50" cy="60" rx="8" ry="1.6" fill="rgba(245, 220, 168, 0.85)" stroke="rgba(107, 74, 37, 0.55)" strokeWidth="0.4" />
+        </g>
+
+        <g className="tl-spout">
+          <path d="M 58 60 L 86 50 L 86 56 L 58 64 Z" fill="rgba(107, 74, 37, 0.72)" stroke="rgba(58, 36, 18, 0.55)" strokeWidth="0.4" />
+          <ellipse cx="86" cy="53" rx="2.4" ry="3" fill="rgba(245, 220, 168, 0.78)" stroke="rgba(107, 74, 37, 0.55)" strokeWidth="0.4" />
+          <path d="M 84 56 Q 88 58 88 60" fill="none" stroke="rgba(107, 74, 37, 0.5)" strokeWidth="0.3" />
+          <line x1="86" y1="50" x2="86" y2="46" stroke="rgba(58, 36, 18, 0.78)" strokeWidth="0.55" strokeLinecap="round" />
+        </g>
+
+        <g className="tl-flame" transform="translate(86 44)">
+          <ellipse cx="0" cy="-2" rx="8" ry="11" fill="url(#tl-flame)" className="tl-flame-body" />
+          <ellipse cx="0" cy="-1" rx="4" ry="7" fill="url(#tl-flame-core)" className="tl-flame-inner" />
+          <ellipse cx="0" cy="0" rx="1.2" ry="3.2" fill="rgba(255, 248, 224, 0.92)" className="tl-flame-tip" />
+          <circle cx="0" cy="4" r="0.6" fill="rgba(245, 198, 91, 0.4)" className="tl-flame-base" />
+        </g>
+
+        <circle cx="86" cy="46" r="0.6" fill="rgba(245, 198, 91, 0.42)" className="tl-ember" />
+
+        <text x="55" y="132" textAnchor="middle" className="tl-tag">
+          the lamp
+        </text>
+      </svg>
+    </figure>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
@@ -8951,6 +9116,13 @@ export function App() {
                 active={phase !== 'idle'}
                 reduced={reduced}
                 watchPoint={watchPoint}
+              />
+            </div>
+
+            <div className="recto-lamp-stage" aria-hidden="true">
+              <TideLamp
+                active={phase !== 'idle'}
+                reduced={reduced}
               />
             </div>
 

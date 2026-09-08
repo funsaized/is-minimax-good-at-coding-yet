@@ -12891,4 +12891,227 @@ button { font: inherit; }
 }
 
 
+/* ────────── iteration 144 · the recto spread earns a tide lamp ────────── */
+
+/* the tide lamp — a small hand-drawn oil lamp set in the lower-left
+   margin of the chapter spread, balancing the manuscript reader in the
+   upper-right. The lamp's halo grows from a quiet ember to a steady
+   warm glow as the reading progresses, with the flame flickering softly
+   while answering and replying, then settling to a calm steady state
+   when the reading is complete. */
+.recto-tide-lamp {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(40, 22, 8, 0.18));
+}
+.recto-tide-lamp-plate {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.recto-tide-lamp .tl-outer-halo {
+  opacity: 0.32;
+  transform-origin: 76px 46px;
+  transform-box: fill-box;
+  animation: tl-halo-breathe 6.4s ease-in-out infinite;
+}
+@keyframes tl-halo-breathe {
+  0%, 100% { opacity: 0.32; transform: scale(1); }
+  50%      { opacity: 0.46; transform: scale(1.06); }
+}
+.recto-tide-lamp .tl-inner-halo {
+  opacity: 0;
+  transform-origin: 76px 46px;
+  transform-box: fill-box;
+  transition: opacity 1100ms var(--ease), transform 1100ms var(--ease);
+}
+.recto-tide-lamp.is-active .tl-inner-halo {
+  opacity: 0.72;
+  animation: tl-inner-halo-pulse 4.2s ease-in-out infinite;
+}
+@keyframes tl-inner-halo-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50%      { transform: scale(1.12); opacity: 0.85; }
+}
+
+.recto-tide-lamp .tl-flame {
+  transform-origin: center;
+  transform-box: fill-box;
+  opacity: 0.18;
+  transition: opacity 700ms var(--ease);
+}
+.recto-tide-lamp.is-active .tl-flame {
+  opacity: 1;
+  animation: tl-flame-flicker 0.46s ease-in-out infinite alternate;
+}
+@keyframes tl-flame-flicker {
+  0%   { transform: scaleX(1)    scaleY(1)    rotate(-2deg); }
+  50%  { transform: scaleX(0.92) scaleY(1.06) rotate(2deg); }
+  100% { transform: scaleX(1.04) scaleY(0.96) rotate(-1deg); }
+}
+
+.recto-tide-lamp .tl-flame-inner {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: tl-flame-inner-flicker 0.32s ease-in-out infinite alternate;
+}
+@keyframes tl-flame-inner-flicker {
+  0%   { opacity: 0.85; transform: scaleX(1)   scaleY(1); }
+  100% { opacity: 1;    transform: scaleX(0.9) scaleY(1.08); }
+}
+
+.recto-tide-lamp .tl-flame-tip {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: tl-flame-tip-flicker 0.22s ease-in-out infinite alternate;
+}
+@keyframes tl-flame-tip-flicker {
+  0%   { transform: scaleY(1)   scaleX(1); opacity: 0.92; }
+  100% { transform: scaleY(1.2) scaleX(0.85); opacity: 0.75; }
+}
+
+.recto-tide-lamp .tl-flame-base {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: tl-flame-base-flicker 0.18s ease-in-out infinite alternate;
+}
+@keyframes tl-flame-base-flicker {
+  0%   { opacity: 0.32; transform: scale(1); }
+  100% { opacity: 0.6;  transform: scale(1.4); }
+}
+
+.recto-tide-lamp .tl-ember {
+  opacity: 0.55;
+  transition: opacity 500ms var(--ease);
+}
+.recto-tide-lamp.is-active .tl-ember { opacity: 0.1; }
+
+.recto-tide-lamp .tl-tag {
+  font: italic 500 7px/1 var(--serif);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  fill: rgba(107, 74, 37, 0.78);
+}
+
+.recto-tide-lamp .tl-spout line {
+  opacity: 0.92;
+}
+.recto-tide-lamp .tl-hatch {
+  opacity: 0.42;
+}
+
+/* the lamp's stage — absolute-positioned on the recto panel, lower-left,
+   mirroring the manuscript reader's upper-right placement */
+.recto-lamp-stage {
+  position: absolute;
+  top: clamp(380px, 52vh, 540px);
+  left: clamp(-28px, -2vw, -12px);
+  width: clamp(78px, 9.4vw, 116px);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transform: translate(6px, 4px) rotate(1.5deg);
+  transition:
+    opacity 1100ms var(--ease) 880ms,
+    transform 1100ms var(--ease) 880ms;
+}
+.recto-lamp-stage::before {
+  content: "";
+  position: absolute;
+  right: -28px;
+  top: 50%;
+  width: 22px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(107, 74, 37, 0.5) 40%,
+    rgba(167, 60, 44, 0.5),
+    transparent
+  );
+  opacity: 0;
+  transform: translateY(-0.5px) scaleX(0.4);
+  transform-origin: left center;
+  transition: opacity 700ms var(--ease) 1240ms, transform 700ms var(--ease) 1240ms;
+  pointer-events: none;
+}
+.recto-lamp-stage::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(245, 198, 91, 0.65);
+  box-shadow: 0 0 5px rgba(245, 198, 91, 0.7);
+  opacity: 0;
+  transform: translateY(-50%) scale(0.4);
+  transition: opacity 600ms var(--ease) 1420ms, transform 600ms var(--ease) 1420ms;
+  pointer-events: none;
+}
+.has-answer .recto-lamp-stage::before {
+  opacity: 0.7;
+  transform: translateY(-0.5px) scaleX(1);
+}
+.has-answer .recto-lamp-stage::after {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+.has-answer .recto-lamp-stage {
+  opacity: 1;
+  transform: none;
+  animation: recto-tide-lamp-sway 11s ease-in-out infinite 1700ms;
+}
+@keyframes recto-tide-lamp-sway {
+  0%, 100% { transform: translateY(0)   rotate(0.6deg); }
+  50%      { transform: translateY(-1px) rotate(-0.6deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recto-tide-lamp .tl-outer-halo,
+  .recto-tide-lamp .tl-inner-halo,
+  .recto-tide-lamp .tl-flame,
+  .recto-tide-lamp .tl-flame-inner,
+  .recto-tide-lamp .tl-flame-tip,
+  .recto-tide-lamp .tl-flame-base,
+  .recto-lamp-stage {
+    animation: none !important;
+    transition: none !important;
+  }
+  .recto-lamp-stage {
+    opacity: 1;
+    transform: none;
+  }
+  .has-answer .recto-lamp-stage::before,
+  .has-answer .recto-lamp-stage::after {
+    opacity: 1;
+    transform: translateY(-0.5px) scaleX(1);
+  }
+  .has-answer .recto-lamp-stage::after {
+    transform: translateY(-50%) scale(1);
+  }
+  .recto-tide-lamp.is-active .tl-flame { opacity: 1; }
+  .recto-tide-lamp.is-active .tl-inner-halo { opacity: 0.6; }
+}
+
+@media (max-width: 880px) {
+  .recto-lamp-stage {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 92px;
+    margin: 12px auto 18px;
+    transform: rotate(1.2deg);
+  }
+  .has-answer .recto-lamp-stage {
+    transform: rotate(1.2deg);
+  }
+}
+@media (max-width: 480px) {
+  .recto-lamp-stage { width: 72px; }
+}
+
+
 

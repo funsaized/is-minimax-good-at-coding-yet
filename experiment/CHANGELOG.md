@@ -1,20 +1,37 @@
-# Changelog
+## iteration 144
 
-## Iteration 143 — the chapter spread earns a single reading tide
+A tide lamp now sits in the recto spread's lower-left margin, flickering while answering and steady when complete.
 
-- The question (recto) now sits inside a composed **chapter spread**:
-  a larger drop cap, more confident italic/roman contrast, and a hand-drawn
-  rule that runs beneath the H1 and ties the recto to the verso.
-- New **ReadingTide** SVG component: a single curving rule with five tick
-  marks, six marginal sigils, a gold pendant at the question's centre, and
-  an arrow toward the verso. Draws on with the press; reduced-motion-safe.
-- New **ManuscriptReader** SVG component: a small marginal figure seated
-  with the page, watching the press. Set into the right gutter of the
-  question with a thin leader and a coral pip; blinks and animates a quill.
-- The small **recto-signing-rule** is replaced with a quieter
-  `recto-spread-foot` so the tide and reader carry the recto.
-- Typography pass on the H1: drop cap ~12% larger, title-flow 1.02 line
-  with stronger italic, `Minimax M3` set with a 680-weight italic and a
-  gold glow when the press opens.
-- Chapter-opener gets a touch more breathing room; the compass and printer
-  emblem now have proper space to read as one opening.
+The lamp's wick glows at idle, flickers softly while answering and replying, and settles to a steady warm flame when the reading is complete; a soft halo radiates from the flame onto the reading tide, balancing the manuscript reader in the upper-right and completing the recto composition.
+
+## iteration 143
+
+The question (recto) now sits inside a composed **chapter spread**: a folio compass, a chapter head, a printer's emblem, and a small opening ornament frame the question before it reaches the verso.
+
+## iteration 142
+
+The verso reply gains a small second-reader slip, set in coral ink beneath the reply.
+
+## iteration 141
+
+A folio that bears witness to its own opening. The recto gains a top-of-page inscription that names the hour; the verso catches a faint, in-passing mote.
+
+## iteration 140
+
+The verso earns a vade mecum — a small manuscript card that names the folio's own visual vocabulary in miniature.
+
+## iteration 139
+
+The recto gains a single hand-drawn frontispiece: a folio compass that reads the present reading.
+
+## iteration 138
+
+The answer earns a calligraphic flourish, a quiet marginal echo, and an illuminated reply initial.
+
+## iteration 137
+
+A small italic note now appears in the verso, between the answer and the reply.
+
+## iteration 136
+
+The recto grows a small, hand-set printer's note at its foot: a colophon.
