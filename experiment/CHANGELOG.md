@@ -1,24 +1,14 @@
-Opened a press drawer: three specimens of the question, each in a different voice; hover one to let the title try it on.
+# Changelog
 
-# Iteration 183
+## 184 — A typesetter's case opens
 
-## What changed
+Iteration 184 turns the three specimen cards into a single typesetter's case with hinged lids, so choosing a voice becomes a small act of pressing.
 
-- Added a new "specimens" section between the marginalia and the colophon with three specimen cards — *the foundry cut*, *the scribe's hand*, *the wood type* — each printing the same question in its own voice (small-caps, italic copperplate, reversed wood display).
-- Wired each specimen to the title above via a `--voice-tint` class on the folio (`folio--voice-cut | hand | wood`): hovering a specimen changes the title's letter-spacing, posture (italic vs upright), and weight; the colophon records *in the voice of X* while a card is held.
-- Added a fourth nav link to *specimens* and a fourth scroll-tracking section id so the rail and section-pulse follow the new region.
-- Refined the dropcap with a faint hand-drawn "Y" glyph watermark behind the letter.
-- Gave each marginalia note its own small ornament mark (a stamp, a tally, a slanted rule) so the three notes feel distinct rather than parallel.
-- Added a second warm lamp from the lower-left so the dark ink-and-copper reading room has both upper warmth and lower glow; ~22% of the dust motes now drift in coral.
-- Strengthened specimen card identity: corner crop marks, dashed inner rule, press-info strip ("roman, 12pt · leaded"), and a unique ornament per voice; non-focused cards dim while one is being considered.
-- Mobile: specimens collapse to 2 + 1 (tablet) then a single column (phone); warm lamp hides on small screens; transitions are disabled in `prefers-reduced-motion`.
-- Maintained all existing interactions (seal press, pencil mark, colophon signature, scroll-bound reading rail).
-
-## Untouched
-
-The document title, the question's exact wording, the proof sheet's crop and registration system, the tipped-in answer plate, the binder thread, the press tally, and the editorial pencil.
-
-## Files
-
-- `src/App.tsx` — added `SPECIMENS` data, `SpecimenCard`/`SpecimenSetting` components, `DropcapGlyph`, second lamp, marginalia marks, voice state and classes, scroll section id, and the colophon voice clause.
-- `src/style.css` — added styles for the specimen wall, voice-tinted title, marginalia marks, dropcap glyph, warm lamp, and matching responsive/reduced-motion rules.
+- Replaces the flat specimen grid with three wooden compartments (`src/App.tsx:697-765`). Each compartment has a hinged lid with a brass pull knob, a wood-grain top, and a stamp on the inside (`src/style.css:2176-2293`). Click to lift the lid, hover to peek.
+- The recess inside each case holds a paper impression of the question set in that voice (`src/App.tsx:746-754`). The other cases dim while one is open, focusing the press on the chosen voice.
+- A compositor's note above the case reads "click a lid — the title above takes the voice inside" (`src/App.tsx:1223-1229`, `src/style.css:2098-2145`). The hint below the case updates live to echo the current voice (`src/App.tsx:1241-1245`).
+- The subtitle under the title now changes from "set by hand" to "set in the foundry cut" / "the scribe's hand" / "the wood type" when a case is open, with a brief ink-settle animation (`src/App.tsx:1042-1046`, `src/style.css:819-854`).
+- Replaces the `specimenFocus` hover state with an `openCase` click-state (`src/App.tsx:777`), so the title only adopts a voice after a deliberate open, not a stray hover.
+- Adds `--ease-lid` and a 3D `rotateX` transform pipeline with perspective on the shell, backface-visibility on both lid faces, and `prefers-reduced-motion` fallbacks (`src/style.css:3663-3681`).
+- Composes wood grain with stacked repeating-linear-gradients plus brass-look radial gradients for the knob and corner tacks; no remote assets (`src/style.css:2235-2293`).
+- Responsive: the case reflows from three columns to one column under 500px, with the lid and bed dimensions tightened to match (`src/style.css:3588-3610`).

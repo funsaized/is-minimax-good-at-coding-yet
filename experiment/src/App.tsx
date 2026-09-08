@@ -694,44 +694,71 @@ function SpecimenSetting({ s }: { s: Specimen }) {
   )
 }
 
-function SpecimenCard({
+function SpecimenCase({
   s,
-  active,
-  onEnter,
-  onLeave,
+  isOpen,
+  onToggle,
+  caseId,
 }: {
   s: Specimen
-  active: boolean
-  onEnter: () => void
-  onLeave: () => void
+  isOpen: boolean
+  onToggle: () => void
+  caseId: string
 }) {
   return (
     <article
-      className={`specimen specimen--${s.casing} ${active ? 'is-active' : ''}`}
-      onMouseEnter={onEnter}
-      onMouseLeave={onLeave}
-      onFocus={onEnter}
-      onBlur={onLeave}
-      tabIndex={0}
+      className={`case case--${s.casing} ${isOpen ? 'is-open' : ''}`}
+      data-n={s.n}
     >
-      <span className="specimen__corner specimen__corner--tl" aria-hidden="true" />
-      <span className="specimen__corner specimen__corner--tr" aria-hidden="true" />
-      <span className="specimen__corner specimen__corner--bl" aria-hidden="true" />
-      <span className="specimen__corner specimen__corner--br" aria-hidden="true" />
-      <header className="specimen__head">
-        <span className="specimen__n">{s.n}</span>
-        <span className="specimen__rule" />
-        <span className="specimen__press">{s.press}</span>
-      </header>
-      <SpecimenSetting s={s} />
-      <footer className="specimen__foot">
-        <h3 className="specimen__name">{s.name}</h3>
-        <p className="specimen__note">{s.note}</p>
-        <span className="specimen__ornament" aria-hidden="true">
-          <svg viewBox="0 0 20 16">
-            <path d={s.ornament} fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </span>
+      <div className="case__shell">
+        <button
+          type="button"
+          className="case__lid"
+          onClick={onToggle}
+          aria-expanded={isOpen}
+          aria-controls={caseId}
+          aria-label={`${isOpen ? 'Close' : 'Open'} ${s.name}`}
+          title={isOpen ? 'Close this voice' : `Open the ${s.name}`}
+        >
+          <span className="case__lid-face case__lid-face--top" aria-hidden="true">
+            <span className="case__lid-grain" />
+            <span className="case__knob" />
+            <span className="case__lid-label">
+              <span className="case__lid-n">{s.n}</span>
+              <span className="case__lid-name">{s.name}</span>
+            </span>
+            <span className="case__lid-ornament" aria-hidden="true">
+              <svg viewBox="0 0 20 16">
+                <path d={s.ornament} fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </span>
+          <span className="case__lid-face case__lid-face--inside" aria-hidden="true">
+            <span className="case__lid-grain" />
+            <span className="case__lid-stamp">
+              <span>pressed</span>
+              <b>m³</b>
+            </span>
+            <span className="case__lid-rule" />
+            <span className="case__lid-n">{s.n}</span>
+          </span>
+        </button>
+        <div className="case__bed" id={caseId}>
+          <span className="case__rail case__rail--l" aria-hidden="true" />
+          <span className="case__rail case__rail--r" aria-hidden="true" />
+          <div className="case__paper">
+            <span className="case__paper-mark" aria-hidden="true">{s.n}</span>
+            <SpecimenSetting s={s} />
+            <span className="case__paper-press">{s.press}</span>
+          </div>
+        </div>
+      </div>
+      <footer className="case__foot">
+        <h3 className="case__name">
+          <span className="case__name-rule" aria-hidden="true" />
+          {s.name}
+        </h3>
+        <p className="case__note">{s.note}</p>
       </footer>
     </article>
   )
@@ -747,7 +774,7 @@ export function App() {
   const [announcement, setAnnouncement] = useState('')
   const [sealPasses, setSealPasses] = useState(0)
   const [sigVisible, setSigVisible] = useState(false)
-  const [specimenFocus, setSpecimenFocus] = useState<string | null>(null)
+  const [openCase, setOpenCase] = useState<string | null>(null)
   const [specimenRest, setSpecimenRest] = useState(true)
   const answerId = useId()
   const now = useNow(1000)
@@ -866,15 +893,15 @@ export function App() {
   const titleDelays = [0.0, 0.08, 0.16, 0.24, 0.32, 0.4, 0.48]
   const marked = marks.length > 0
 
-  const focusedSpecimen = SPECIMENS.find(s => s.id === specimenFocus) || null
+  const openSpecimen = SPECIMENS.find(s => s.id === openCase) || null
 
   return (
     <main
-      className={`folio ${open ? 'folio--open' : ''} ${pencil ? 'folio--pencil' : ''} ${focusedSpecimen ? `folio--voice-${focusedSpecimen.id}` : ''}`}
+      className={`folio ${open ? 'folio--open' : ''} ${pencil ? 'folio--pencil' : ''} ${openSpecimen ? `folio--voice-${openSpecimen.id}` : ''}`}
       style={{
         ['--progress' as string]: progress,
         ['--ink-set' as string]: String(Math.min(1, Math.max(0, progress * 5))),
-        ['--voice-tint' as string]: focusedSpecimen ? '1' : '0',
+        ['--voice-tint' as string]: openSpecimen ? '1' : '0',
       }}
     >
       <Dust />
@@ -1012,8 +1039,8 @@ export function App() {
                   <TitleWord text="?" delay={titleDelays[6]} />
                   <span aria-hidden="true" className="proof__title-rule" />
                 </h1>
-                <p className="proof__subtitle" aria-hidden="true">
-                  <span>set by hand</span>
+                <p className={`proof__subtitle ${openSpecimen ? 'proof__subtitle--voiced' : ''}`} aria-hidden="true">
+                  <span>{openSpecimen ? `set in ${openSpecimen.name}` : 'set by hand'}</span>
                   <i />
                   <em>this edition, for one reader</em>
                 </p>
@@ -1193,20 +1220,27 @@ export function App() {
                 The same question, pulled three times from the drawer. Read any one aloud and the answer changes a little.
               </p>
             </header>
-            <div className={`specimens__wall ${specimenRest ? 'is-rest' : ''}`}>
+            <p className="specimens__cue" aria-live="polite">
+              <span className="specimens__cue-rule" />
+              <span>
+                <em>click a lid</em> — the title above takes the voice inside
+              </span>
+              <span className="specimens__cue-rule" />
+            </p>
+            <div className={`cases__wall ${specimenRest ? 'is-rest' : ''} ${openCase ? 'has-open' : ''}`}>
               {SPECIMENS.map(s => (
-                <SpecimenCard
+                <SpecimenCase
                   key={s.id}
                   s={s}
-                  active={specimenFocus === s.id}
-                  onEnter={() => setSpecimenFocus(s.id)}
-                  onLeave={() => setSpecimenFocus(null)}
+                  caseId={`case-bed-${s.id}`}
+                  isOpen={openCase === s.id}
+                  onToggle={() => setOpenCase(prev => (prev === s.id ? null : s.id))}
                 />
               ))}
             </div>
             <p className="specimens__hint" aria-hidden="true">
               <span className="specimens__hint-rule" />
-              <em>hover a card</em> — the title above takes its voice
+              <em>{openSpecimen ? `now set in ${openSpecimen.name}` : 'hover to peek under the lid'}</em>
               <span className="specimens__hint-rule" />
             </p>
           </section>
@@ -1241,10 +1275,10 @@ export function App() {
                <span className="colophon__sep">·</span>
                <span className="colophon__passes">{sealPasses === 1 ? 'one stamp' : `${sealPasses} stamps`}</span>
              </>)}
-             {focusedSpecimen && (<>
-               <span className="colophon__sep">·</span>
-               <span className="colophon__voice">in the voice of <em>{focusedSpecimen.name}</em></span>
-             </>)}
+             {openSpecimen && (<>
+                <span className="colophon__sep">·</span>
+                <span className="colophon__voice">in the voice of <em>{openSpecimen.name}</em></span>
+              </>)}
           </p>
           <div className={`colophon__sign ${sigVisible ? 'is-drawn' : ''}`} aria-hidden="true">
             <Signature drawn={sigVisible} progress={progress} />
