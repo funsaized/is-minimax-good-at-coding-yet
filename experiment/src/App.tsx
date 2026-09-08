@@ -961,6 +961,101 @@ function ChapterSignature({ now }: { now: Date }) {
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 152 · the recto earns a composed title-tail
+
+   A single horizontal inscription sits between the recto's ReadingTide
+   and the AlmanacBand. It is the title-block's quiet closure: a thin
+   gold rule that fades in from either side, a centered coral-and-gold
+   fleuron, and a small italic line that names the press in its own
+   hand — manu m · iii · ad lucem. The tail sits centered, never
+   competing with the title above or the almanac below, and earns its
+   space as the moment the title's setting becomes the press's action.
+   ────────────────────────────────────────────────────────────────────── */
+
+function ReadingTideTail({ visible, reduced }: { visible: boolean; reduced: boolean }) {
+  return (
+    <figure
+      className={`recto-tide-tail${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg
+        className="recto-tide-tail-svg"
+        viewBox="0 0 320 16"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="rtt-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.45)" />
+            <stop offset="46%" stopColor="rgba(200, 146, 62, 0.65)" />
+            <stop offset="54%" stopColor="rgba(200, 146, 62, 0.65)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.45)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="rtt-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.18)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.22)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.18)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <radialGradient id="rtt-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.45)" />
+            <stop offset="62%" stopColor="rgba(245, 198, 91, 0.12)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+        </defs>
+        <line
+          x1="6"
+          y1="8"
+          x2="314"
+          y2="8"
+          stroke="url(#rtt-rule-ghost)"
+          strokeWidth="0.22"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="8"
+          x2="314"
+          y2="8"
+          stroke="url(#rtt-rule)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+          className="recto-tide-tail-line"
+        />
+        <g className="recto-tide-tail-bloom" transform="translate(160 8)">
+          <circle r="6" fill="url(#rtt-glow)" />
+          <circle r="2.6" fill="rgba(245, 198, 91, 0.42)" />
+          <circle r="1.2" fill="rgba(167, 60, 44, 0.85)" />
+          <circle r="0.42" fill="rgba(255, 248, 224, 0.95)" />
+        </g>
+        <g className="recto-tide-tail-pip-l" transform="translate(56 8)">
+          <circle r="0.5" fill="rgba(167, 60, 44, 0.6)" />
+        </g>
+        <g className="recto-tide-tail-pip-r" transform="translate(264 8)">
+          <circle r="0.5" fill="rgba(167, 60, 44, 0.6)" />
+        </g>
+      </svg>
+      <figcaption className="recto-tide-tail-cap">
+        <span className="recto-tide-tail-cap-rule recto-tide-tail-cap-rule--left" aria-hidden="true" />
+        <span className="recto-tide-tail-cap-cluster">
+          <em className="recto-tide-tail-cap-key">manu m · iii</em>
+          <span className="recto-tide-tail-cap-sep" aria-hidden="true">·</span>
+          <em className="recto-tide-tail-cap-tail">ad lucem</em>
+          <span className="recto-tide-tail-cap-mark" aria-hidden="true">¶</span>
+        </span>
+        <span className="recto-tide-tail-cap-rule recto-tide-tail-cap-rule--right" aria-hidden="true" />
+      </figcaption>
+    </figure>
+  )
+}
+
 const CUL_RAYS = Array.from({ length: 16 }, (_, i) => {
   const theta = (i * 22.5 * Math.PI) / 180
   const isLong = i % 2 === 0
@@ -9864,6 +9959,8 @@ export function App() {
             <SpecimenWordmark visible={phase !== 'idle'} reduced={reduced} />
 
             <ReadingTide progress={Math.min(1, inkProgress + 0.15)} reduced={reduced} />
+
+            <ReadingTideTail visible={phase !== 'idle'} reduced={reduced} />
 
             <div className="recto-reader-stage" aria-hidden="true">
               <ManuscriptReader

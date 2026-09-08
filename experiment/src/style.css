@@ -14802,3 +14802,177 @@ a:focus-visible {
   padding: 6px 4px;
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 152 · a composed title-tail for the recto
+
+   The recto's title block — broadsheet drop cap, press key, title rule,
+   specimen wordmark, reading tide — now earns a quiet horizontal
+   inscription between the ReadingTide and the AlmanacBand. A thin gold
+   rule fades in from either side and meets a centered coral-and-gold
+   bloom; beneath it sits a small italic line that names the press in
+   its own hand. The tail sits at 60% of the recto column, never
+   competing with the title above or the almanac below, and earns its
+   space as the moment the title's setting becomes the press's action.
+   ────────────────────────────────────────────────────────────────────── */
+
+.recto-tide-tail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2px, 0.4vw, 4px);
+  margin: clamp(10px, 1.6vw, 18px) auto clamp(14px, 2vw, 22px);
+  padding: 0 clamp(14px, 3vw, 28px);
+  width: 100%;
+  max-width: clamp(340px, 56%, 440px);
+  color: var(--coral-deep);
+  font-family: var(--display);
+  font-style: italic;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(2px);
+  animation: recto-tide-tail-in 1100ms var(--ease) 920ms both;
+  pointer-events: none;
+}
+@keyframes recto-tide-tail-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 0.95; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .recto-tide-tail { animation: none; opacity: 0.92; transform: none; }
+}
+.recto-tide-tail.is-static { animation: none; opacity: 0.92; transform: none; }
+
+.recto-tide-tail-svg {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: 16px;
+  margin: 0 auto;
+  filter: drop-shadow(0 1px 0 rgba(245, 198, 91, 0.06));
+}
+.recto-tide-tail:not(.is-static) .recto-tide-tail-line {
+  stroke-dasharray: 308;
+  stroke-dashoffset: 308;
+  animation: recto-tide-tail-line-draw 1300ms var(--ease) 980ms forwards;
+}
+@keyframes recto-tide-tail-line-draw {
+  to { stroke-dashoffset: 0; }
+}
+.recto-tide-tail-bloom {
+  transform-origin: 160px 8px;
+  opacity: 0;
+  animation: recto-tide-tail-bloom-in 900ms var(--ease) 1620ms forwards;
+}
+@keyframes recto-tide-tail-bloom-in {
+  from { opacity: 0; transform: translate(160px, 8px) scale(0.6); }
+  to   { opacity: 1; transform: translate(160px, 8px) scale(1); }
+}
+.recto-tide-tail-pip-l,
+.recto-tide-tail-pip-r {
+  opacity: 0;
+  animation: recto-tide-tail-pip-in 600ms var(--ease) 1820ms forwards;
+}
+@keyframes recto-tide-tail-pip-in {
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .recto-tide-tail:not(.is-static) .recto-tide-tail-line,
+  .recto-tide-tail-bloom,
+  .recto-tide-tail-pip-l,
+  .recto-tide-tail-pip-r { animation: none; opacity: 1; transform: none; }
+}
+
+.recto-tide-tail-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, 0.8vw, 8px);
+  margin: clamp(4px, 0.6vw, 6px) 0 0;
+  font-size: clamp(10px, 1.05vw, 11.5px);
+  letter-spacing: 0.18em;
+  font-feature-settings: "kern" 1, "onum" 1;
+  opacity: 0;
+  animation: recto-tide-tail-cap-in 700ms var(--ease) 1760ms forwards;
+}
+@keyframes recto-tide-tail-cap-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 0.92; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .recto-tide-tail-cap { animation: none; opacity: 0.88; transform: none; }
+}
+
+.recto-tide-tail-cap-rule {
+  flex: 0 0 clamp(10px, 1.6vw, 18px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.42)
+  );
+}
+.recto-tide-tail-cap-rule--right {
+  background: linear-gradient(to left, transparent, rgba(167, 60, 44, 0.42));
+}
+
+.recto-tide-tail-cap-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+.recto-tide-tail-cap-key {
+  color: var(--coral-deep);
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0.22em;
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1, "salt" 1;
+}
+
+.recto-tide-tail-cap-sep {
+  color: var(--coral);
+  font: 700 0.86em/1 var(--display);
+  opacity: 0.7;
+}
+
+.recto-tide-tail-cap-tail {
+  color: var(--coral-deep);
+  font-weight: 560;
+  font-style: italic;
+  letter-spacing: 0.18em;
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1, "salt" 1;
+}
+
+.recto-tide-tail-cap-mark {
+  color: var(--coral);
+  font: italic 700 14px/1 var(--display);
+  opacity: 0.85;
+  margin-left: 2px;
+  letter-spacing: 0;
+  font-feature-settings: "kern" 1, "salt" 1;
+}
+
+@media (max-width: 720px) {
+  .recto-tide-tail {
+    margin: 8px auto 16px;
+    max-width: 84%;
+  }
+  .recto-tide-tail-cap {
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+  }
+}
+
+@media (max-width: 480px) {
+  .recto-tide-tail {
+    margin: 6px auto 12px;
+    max-width: 92%;
+  }
+  .recto-tide-tail-cap {
+    font-size: 9.5px;
+    gap: 5px;
+  }
+  .recto-tide-tail-cap-mark { font-size: 12px; }
+}
+
