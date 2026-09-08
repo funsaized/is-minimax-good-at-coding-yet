@@ -512,6 +512,184 @@ function PressMark() {
   )
 }
 
+function PressSignature({ large = false }: { large?: boolean }) {
+  return (
+    <svg
+      className={`press-sig ${large ? 'press-sig--large' : ''}`}
+      viewBox="0 0 120 120"
+      aria-hidden="true"
+    >
+      <defs>
+        <radialGradient id="psGlow" cx="50%" cy="46%" r="58%">
+          <stop offset="0%" stopColor="rgba(199, 91, 59, .14)" />
+          <stop offset="70%" stopColor="rgba(199, 91, 59, .04)" />
+          <stop offset="100%" stopColor="rgba(199, 91, 59, 0)" />
+        </radialGradient>
+      </defs>
+      <circle cx="60" cy="60" r="56" fill="url(#psGlow)" />
+      <circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" strokeWidth="0.6" strokeDasharray="1.2 2.2" opacity=".35" />
+      <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" strokeWidth="0.9" />
+      <circle cx="60" cy="60" r="38" fill="none" stroke="currentColor" strokeWidth="0.4" opacity=".55" />
+      <g transform="translate(60 60)">
+        <text
+          x="0"
+          y="6"
+          textAnchor="middle"
+          fontFamily="Georgia, 'Iowan Old Style', serif"
+          fontStyle="italic"
+          fontWeight="400"
+          fontSize="34"
+          letterSpacing="-1.4"
+          fill="currentColor"
+        >
+          m
+        </text>
+        <text
+          x="0"
+          y="6"
+          textAnchor="middle"
+          fontFamily="Georgia, 'Iowan Old Style', serif"
+          fontStyle="italic"
+          fontWeight="400"
+          fontSize="22"
+          letterSpacing="-1"
+          fill="currentColor"
+          opacity=".92"
+        >
+          ³
+        </text>
+      </g>
+      <path
+        d="M30 86 Q 60 100 90 86"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.1"
+        strokeLinecap="round"
+        opacity=".85"
+      />
+      <circle cx="30" cy="86" r="1.1" fill="currentColor" />
+      <circle cx="90" cy="86" r="1.1" fill="currentColor" />
+      <g stroke="currentColor" strokeWidth="0.6" opacity=".5">
+        <path d="M22 60 L 28 60" strokeLinecap="round" />
+        <path d="M92 60 L 98 60" strokeLinecap="round" />
+        <path d="M60 22 L 60 28" strokeLinecap="round" />
+        <path d="M60 92 L 60 98" strokeLinecap="round" />
+      </g>
+      <g fill="none" stroke="currentColor" strokeWidth="0.5" opacity=".45">
+        <path d="M44 28 Q 60 22 76 28" strokeLinecap="round" />
+        <path d="M44 92 Q 60 98 76 92" strokeLinecap="round" />
+      </g>
+      <g fontFamily="Georgia, 'Iowan Old Style', serif" fontStyle="italic" fill="currentColor" opacity=".7">
+        <text x="60" y="14" textAnchor="middle" fontSize="6.5" letterSpacing="2.2">PRESS</text>
+        <text x="60" y="112" textAnchor="middle" fontSize="6.5" letterSpacing="2.2">EST. MMXXVI</text>
+      </g>
+    </svg>
+  )
+}
+
+const PRESS_INKS = [
+  { id: 'ink', name: 'lamp-black', hex: '#14201a', soft: 'rgba(20, 32, 27, .85)' },
+  { id: 'coral', name: 'carmine', hex: '#cf5240', soft: 'rgba(207, 82, 64, .9)' },
+  { id: 'gold', name: 'gilt', hex: '#95742a', soft: 'rgba(149, 116, 42, .85)' },
+  { id: 'leaf', name: 'paper-tip', hex: '#fcf5e4', soft: 'rgba(252, 245, 228, 1)' },
+] as const
+
+function InkSwatches() {
+  return (
+    <span className="press-folio__inks" aria-hidden="true">
+      {PRESS_INKS.map((ink, i) => (
+        <span
+          key={ink.id}
+          className={`press-folio__ink press-folio__ink--${ink.id}`}
+          style={{ animationDelay: `${0.35 + i * 0.07}s` }}
+          title={ink.name}
+        >
+          <span className="press-folio__ink-dot" style={{ background: ink.soft }} />
+          <span className="press-folio__ink-name">{ink.name}</span>
+        </span>
+      ))}
+    </span>
+  )
+}
+
+function PressFolio({ time }: { time: Date }) {
+  const hours = time.getHours()
+  const phase = hours < 5 ? 'small hours' : hours < 12 ? 'morning' : hours < 17 ? 'afternoon' : hours < 21 ? 'evening' : 'night'
+  return (
+    <aside className="press-folio" aria-label="Edition statement">
+      <span className="press-folio__watermark" aria-hidden="true">
+        <PressSignature />
+      </span>
+      <span className="press-folio__corner press-folio__corner--tl" aria-hidden="true">
+        <svg viewBox="0 0 20 20">
+          <path d="M2 2 L18 2 M2 2 L2 18" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" />
+          <path d="M6 2 L6 6 M2 6 L6 6" fill="none" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" opacity="0.55" />
+        </svg>
+      </span>
+      <span className="press-folio__corner press-folio__corner--br" aria-hidden="true">
+        <svg viewBox="0 0 20 20">
+          <path d="M2 18 L18 18 M18 2 L18 18" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" />
+          <path d="M14 18 L14 14 M18 14 L14 14" fill="none" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" opacity="0.55" />
+        </svg>
+      </span>
+
+      <div className="press-folio__mark" aria-hidden="true">
+        <PressSignature />
+      </div>
+
+      <div className="press-folio__copy">
+        <p className="press-folio__kicker">
+          <span className="press-folio__kicker-line" />
+          <em>front matter</em>
+          <span className="press-folio__kicker-line" />
+        </p>
+        <h2 className="press-folio__title">
+          a small <i>proof sheet</i>, set today, for one reader
+        </h2>
+        <p className="press-folio__lede">
+          Pulled from the case by hand. Not for issue. Each word chosen, each margin left for breath.
+        </p>
+
+        <dl className="press-folio__grid">
+          <div className="press-folio__cell">
+            <dt>paper</dt>
+            <dd>
+              <i>cream laid</i>
+              <span>120 gsm</span>
+            </dd>
+          </div>
+          <div className="press-folio__cell">
+            <dt>ink set</dt>
+            <dd>
+              <InkSwatches />
+            </dd>
+          </div>
+          <div className="press-folio__cell">
+            <dt>edition</dt>
+            <dd>
+              <i>first</i>
+              <span>of one</span>
+            </dd>
+          </div>
+          <div className="press-folio__cell">
+            <dt>pressed</dt>
+            <dd>
+              <i>{phase}</i>
+              <span className="press-folio__time">{formatTime(time)}</span>
+            </dd>
+          </div>
+        </dl>
+
+        <p className="press-folio__foot" aria-hidden="true">
+          <span className="press-folio__foot-rule" />
+          <em>set in three voices, returned with care</em>
+          <span className="press-folio__foot-rule" />
+        </p>
+      </div>
+    </aside>
+  )
+}
+
 function PencilGlyph({ active }: { active: boolean }) {
   return (
     <svg className="pencil-glyph" viewBox="0 0 24 24" aria-hidden="true">
@@ -1571,6 +1749,8 @@ export function App() {
             onStamp={onStamp}
           />
 
+          <PressFolio time={now} />
+
           <div className="proof__layout">
             <div className="proof__main">
               <header className="proof__head" id="question">
@@ -1674,6 +1854,16 @@ export function App() {
                   <span className="answer__crease" aria-hidden="true" />
                   <span className="answer__pin answer__pin--tl" aria-hidden="true" />
                   <span className="answer__pin answer__pin--tr" aria-hidden="true" />
+                  <span className="answer__watermark" aria-hidden="true">
+                    <span>is M³</span>
+                    <span>good at front-</span>
+                    <span>end yet?</span>
+                  </span>
+                  <span className="answer__deckle" aria-hidden="true">
+                    <svg viewBox="0 0 600 14" preserveAspectRatio="none">
+                      <path d="M0 14 L0 5 C 40 8, 78 2, 120 6 C 162 10, 198 3, 240 7 C 282 11, 320 4, 360 8 C 400 12, 438 5, 478 9 C 518 13, 558 6, 600 10 L600 14 Z" />
+                    </svg>
+                  </span>
                   <div className="answer__inner">
                     <div className="answer__stamp">
                       <Seal />
@@ -1720,6 +1910,19 @@ export function App() {
                         </span>
                       </div>
                     </div>
+                  </div>
+                  <div className="answer__fresh" aria-hidden="true">
+                    <svg viewBox="0 0 140 60">
+                      <rect x="2" y="2" width="136" height="56" rx="2" fill="none" stroke="currentColor" strokeWidth="0.8" strokeDasharray="2.4 1.6" opacity="0.6" />
+                      <text x="70" y="22" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" letterSpacing="3" fill="currentColor">FRESH</text>
+                      <text x="70" y="36" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="9" letterSpacing="2.2" fill="currentColor" opacity="0.85">FROM THE</text>
+                      <text x="70" y="48" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="9" letterSpacing="2.2" fill="currentColor" opacity="0.85">PRESS</text>
+                    </svg>
+                  </div>
+                  <div className="answer__setby" aria-hidden="true">
+                    <span className="answer__setby-rule" />
+                    <em>set in this hand, {formatDate(now)}</em>
+                    <span className="answer__setby-rule" />
                   </div>
                 </div>
               </section>
@@ -1829,7 +2032,9 @@ export function App() {
 
         <div className="proof__device" aria-hidden="true">
           <span className="proof__device-rule" />
-          <PressMark />
+          <span className="proof__device-mark">
+            <PressSignature />
+          </span>
           <span className="proof__device-text">
             <em>m³ press</em>
             <small>set & printed in-browser</small>
