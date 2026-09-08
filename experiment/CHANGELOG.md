@@ -1,4 +1,7 @@
-# Changelog
+Reframed the proof sheet as a warmer, more focused night-desk reading experience.
 
-## Iteration 170 — a careful set
-Refines the proof sheet into a quieter, more composed broadside. Replaces the auto-spinning press disc with a still, authored headmark; adds handwritten-feel marginalia in the hero and a proper colophon at the close; softens the dark transition with a rule band and a hairline inset; tightens the reveal button into a more tactile press with a rust shadow; refines mobile layouts at every breakpoint.
+- Reworked the composition around a restrained masthead, oversized question, and compass-like Q/A mark.
+- Kept the answer as a single purposeful interaction with an accessible expand/collapse control.
+- Simplified field notes into keyboard-friendly accordion rows with clearer contrast and spacing.
+- Added responsive layouts for smaller screens and reduced-motion handling.
+- Preserved the required visible and document title exactly.
