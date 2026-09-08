@@ -885,7 +885,13 @@ function Headpiece() {
   )
 }
 
-function ChapterHead({ now }: { now: Date }) {
+function ChapterHead({
+  now,
+  witness = true,
+}: {
+  now: Date
+  witness?: boolean
+}) {
   const dayName = WEEKDAYS[now.getDay()]
   const dayOrdinal = ORDINALS[Math.min(ORDINALS.length - 1, now.getDate() - 1)]
   const monthName = MONTHS[now.getMonth()]
@@ -906,23 +912,52 @@ function ChapterHead({ now }: { now: Date }) {
         </svg>
       </span>
       <Headpiece />
-      <span className="chapter-witness">
-        <span className="chapter-witness-rule chapter-witness-rule--left" aria-hidden="true" />
-        <span className="chapter-witness-text">
-          <em className="chapter-witness-key">opened</em>
-          <span className="chapter-witness-sep" aria-hidden="true">·</span>
-          <em className="chapter-witness-day">{dayName.slice(0, 3)}</em>
-          <span className="chapter-witness-tail">
-            ,&nbsp;the <em>{dayOrdinal}</em> of <em>{monthName}</em>
+      {witness && (
+        <span className="chapter-witness">
+          <span className="chapter-witness-rule chapter-witness-rule--left" aria-hidden="true" />
+          <span className="chapter-witness-text">
+            <em className="chapter-witness-key">opened</em>
+            <span className="chapter-witness-sep" aria-hidden="true">·</span>
+            <em className="chapter-witness-day">{dayName.slice(0, 3)}</em>
+            <span className="chapter-witness-tail">
+              ,&nbsp;the <em>{dayOrdinal}</em> of <em>{monthName}</em>
+            </span>
+            <span className="chapter-witness-sep" aria-hidden="true">·</span>
+            <em className="chapter-witness-hour">{h12}</em>
+            <span className="chapter-witness-min">:{mm}</span>
+            <em className="chapter-witness-period">{period}</em>
           </span>
-          <span className="chapter-witness-sep" aria-hidden="true">·</span>
-          <em className="chapter-witness-hour">{h12}</em>
-          <span className="chapter-witness-min">:{mm}</span>
-          <em className="chapter-witness-period">{period}</em>
+          <span className="chapter-witness-rule chapter-witness-rule--right" aria-hidden="true" />
         </span>
-        <span className="chapter-witness-rule chapter-witness-rule--right" aria-hidden="true" />
-      </span>
+      )}
     </div>
+  )
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 148 · a chapter signature sits beneath the chapter head.
+
+   A single italic line names the press, the timepiece, and a quiet
+   "set for the reader". It replaces the looseness of the chapter
+   witness — the day and hour are still shown, but as a single
+   italic inscription beside the press name, not as a separate row.
+   ────────────────────────────────────────────────────────────────────── */
+
+function ChapterSignature({ now }: { now: Date }) {
+  const yearRoman = toRomanYear(now.getFullYear())
+  return (
+    <p className="chapter-signature" aria-hidden="true">
+      <span className="chapter-signature-rule chapter-signature-rule--left" />
+      <span className="chapter-signature-cluster">
+        <em className="chapter-signature-key">manu m · iii</em>
+        <span className="chapter-signature-sep" aria-hidden="true">·</span>
+        <em className="chapter-signature-tail">caput xviii · mmxxvi</em>
+        <span className="chapter-signature-sep" aria-hidden="true">·</span>
+        <em className="chapter-signature-mark">set for the reader</em>
+      </span>
+      <span className="chapter-signature-year">{yearRoman}</span>
+      <span className="chapter-signature-rule chapter-signature-rule--right" />
+    </p>
   )
 }
 
@@ -5004,6 +5039,69 @@ function ReadingTally({ cycle }: { cycle: number }) {
       </span>
       <span className="reading-tally-rule reading-tally-rule--right" />
     </p>
+  )
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 148 · a reading glance sits beneath the press instruction.
+
+   A small horizontal whisper at the foot of the question panel. It
+   tracks the answer's slow reveal — the right end is a quiet amber
+   line that grows as more of the answer is set. The label shifts
+   state (idle · reading · read) without becoming noisy. It is the
+   recto's echo of the verso's reading tide, but smaller.
+   ────────────────────────────────────────────────────────────────────── */
+
+function ReadingGlance({
+  progress,
+  reduced,
+}: {
+  progress: number
+  reduced: boolean
+}) {
+  const clamped = Math.max(0, Math.min(1, progress))
+  const pct = Math.round(clamped * 100)
+  const state =
+    clamped <= 0.001 ? 'idle' : clamped >= 0.999 ? 'complete' : 'reading'
+  const stateLabel =
+    state === 'idle'
+      ? 'awaiting the press'
+      : state === 'complete'
+        ? 'the page, read once'
+        : 'the answer, setting'
+  return (
+    <aside
+      className={`reading-glance is-${state}${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="reading-glance-rule reading-glance-rule--left" />
+      <span className="reading-glance-cluster">
+        <em className="reading-glance-key">glance</em>
+        <span className="reading-glance-sep" aria-hidden="true">·</span>
+        <em className="reading-glance-state">{stateLabel}</em>
+      </span>
+      <span className="reading-glance-track" aria-hidden="true">
+        <span
+          className="reading-glance-fill"
+          style={{ '--glance': clamped } as React.CSSProperties}
+        >
+          <span className="reading-glance-fill-head" />
+        </span>
+        <span
+          className="reading-glance-fill-ticks"
+          aria-hidden="true"
+        >
+          <span style={{ left: '25%' }} />
+          <span style={{ left: '50%' }} />
+          <span style={{ left: '75%' }} />
+        </span>
+      </span>
+      <span className="reading-glance-pct" aria-hidden="true">
+        <em>{String(pct).padStart(2, '0')}</em>
+        <span className="reading-glance-pct-mark" aria-hidden="true">%</span>
+      </span>
+      <span className="reading-glance-rule reading-glance-rule--right" />
+    </aside>
   )
 }
 
@@ -9374,10 +9472,10 @@ export function App() {
           <Fleuron />
         </span>
 
-        <ConstellationTrail
-          active={phase === 'answering' || phase === 'replying' || phase === 'complete'}
-          visible={phase !== 'idle'}
-          reduced={reduced}
+        <span
+          className="sheet-reading-glint"
+          data-state={phase === 'idle' ? 'idle' : phase === 'complete' ? 'complete' : 'reading'}
+          aria-hidden="true"
         />
 
         <header className="sheet-header sheet-header--recto">
@@ -9396,8 +9494,8 @@ export function App() {
 
         <div className="chapter-opener">
           <PrinterEmblem />
-          <ChapterHead now={now} />
-          <FolioCompass phase={phase} reduced={reduced} />
+          <ChapterHead now={now} witness={false} />
+          <ChapterSignature now={now} />
           <div className="chapter-opener-rule" aria-hidden="true">
             <span className="chapter-opener-rule-line" />
             <span className="chapter-opener-rule-mark">¶</span>
@@ -9437,7 +9535,6 @@ export function App() {
                 </span>
                 <span className="title-subject title-text--set" style={{ '--word-i': 1 } as React.CSSProperties}>
                   Minimax M3
-                  <span className="title-subject-rule" aria-hidden="true" />
                 </span>
                 <span className="title-text title-text--set" style={{ '--word-i': 2 } as React.CSSProperties}>
                   {' '}good at frontend yet<span className="title-questions">?</span>
@@ -9494,6 +9591,7 @@ export function App() {
                 onRead={handleSealPress}
                 sealBreaking={sealBreaking}
               />
+              <ReadingGlance progress={inkProgress} reduced={reduced} />
             </div>
             <ReaderInkMark />
             <RectoColophon visible={versoOpened} reduced={reduced} />

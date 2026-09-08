@@ -1,30 +1,46 @@
 # Changelog
 
-## Iteration 147
+## iteration 148 — the folio earns its first reading
 
-The recto question earns a hand-drawn printer's signature beneath the title rule, giving the question its own quiet editorial closure that ties it to the chapter spread.
+The recto composition is reframed: the canvas star trail is removed, the
+folio compass rose is retired from the chapter opener, the redundant
+chapter-witness inscription gives way to a single italic chapter
+signature, and the curving arc under "Minimax M3" is retired in favour
+of a quieter typographic balance. A reading-glance progress whisper
+takes its place beneath the press instruction, and visible focus styles
+arrive across every interactive element.
 
-- Added a new `QuestionPressMark` component: a delicate italic inscription
-  that names the press and the leaf, anchored by a small gold `m · iii`
-  monogram sigil and flanked by coral gradient rules that draw in as the
-  answer begins.
-- The monogram sigil tilts into place on reveal and takes on a slow press
-  breath (a soft gold drop-shadow pulse) once the answer has completed.
-- Replaced the orphan `recto-spread-foot` cluster with the press mark, so
-  the question now reads as: *the question · set in this folio* → *manu
-  m · iii · the question, pressed in this folio* — a small editorial arc
-  that mirrors the printer's emblem at the chapter head.
-- Refined the title rule caption from "a question · set in italic" to
-  "the question · set in this folio" so the caption and press mark speak
-  in the same key.
-- Symmetrised the running heads: recto reads "the question · caput
-  xviii", verso reads "the reply · caput xviii" — both keyed to the
-  chapter numeral already set at the chapter head.
-- Added responsive behaviour for the new mark: rules shrink on mid-width
-  screens and hide entirely on phones under 480 px, with the inscription
-  wrapping onto two lines.
-- Removed the orphaned `.recto-spread-foot*` styles after the swap.
-- All motion respects `prefers-reduced-motion: reduce`; the breath
-  animation is disabled and the rules reveal instantly in that mode.
+### removed
+- `<ConstellationTrail />` — the canvas-based star trail that crossed
+  the recto is removed; it competed with the question for hierarchy.
+- `<FolioCompass />` from the chapter opener — the bottom ReaderTide
+  carries the same progress information in a quieter key.
+- `chapter-witness` row of the chapter head — the day and hour are
+  still shown in the new chapter signature line.
+- `title-subject-rule` curving arc beneath "Minimax M3" — it competed
+  with the title rule and the question-press-mark directly below.
 
-Files touched: `src/App.tsx`, `src/style.css`, `CHANGELOG.md`.
+### added
+- `<ChapterSignature />` — a single italic inscription under the
+  chapter head that names the press, the chapter, and the year in one
+  confident line ("manu m · iii · caput xviii · mmxxvi · set for the
+  reader"). The chapter head gains a `witness?: boolean` prop.
+- `<ReadingGlance />` — a thin progress whisper at the foot of the
+  question panel. It tracks the answer's slow reveal as a quiet amber
+  line and shifts its label between *awaiting the press*, *the answer,
+  setting*, and *the page, read once*. It is the recto's echo of the
+  verso's ReaderTide, set smaller and contained.
+- `.sheet-reading-glint` — a soft warm glow that wraps the sheet
+  edges while the page reads and fades as it settles.
+- `:focus-visible` outlines on every interactive element (wax seal,
+  marginalia notes, ReaderTide station buttons) so the keyboard
+  reader finds their way through the folio.
+
+### tightened
+- `press-plate-head` rules shrink in opacity so the wax seal reads as
+  the focal call-to-action.
+- The annotation above the title is a touch calmer in letter-spacing.
+- The chapter opener's vertical padding is trimmed to match the new
+  three-element stack.
+- Mobile breakpoints for the chapter signature and the reading
+  glance are introduced.

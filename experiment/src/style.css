@@ -842,6 +842,118 @@ button { font: inherit; }
   .chapter-witness { opacity: 0.94; transform: none; animation: none; }
 }
 
+/* ────────── chapter signature · a single italic inscription under the chapter head ────────── */
+
+.chapter-signature {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 clamp(10px, 1.4vw, 18px);
+  margin: 10px auto 0;
+  max-width: 100%;
+  padding: 0 clamp(16px, 4vw, 32px);
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-style: italic;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
+  opacity: 0;
+  transform: translateY(-2px);
+  animation: signature-in 1100ms var(--ease) 420ms both;
+}
+.chapter-signature-rule {
+  flex: 0 0 clamp(28px, 5vw, 56px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.34)
+  );
+}
+.chapter-signature-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(167, 60, 44, 0.34)
+  );
+}
+.chapter-signature-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0 7px;
+  flex-wrap: wrap;
+  justify-content: center;
+  letter-spacing: 0.018em;
+}
+.chapter-signature-key {
+  color: var(--ink);
+  font: italic 530 13px/1 var(--display);
+  font-feature-settings: "kern" 1, "onum" 1, "salt" 1;
+  letter-spacing: 0.012em;
+  position: relative;
+}
+.chapter-signature-key::before,
+.chapter-signature-key::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: clamp(8px, 0.9vw, 12px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(156, 110, 38, 0.42)
+  );
+}
+.chapter-signature-key::before {
+  right: calc(100% + 8px);
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(156, 110, 38, 0.42)
+  );
+}
+.chapter-signature-key::after {
+  left: calc(100% + 8px);
+}
+.chapter-signature-tail,
+.chapter-signature-mark {
+  font: italic 460 12.5px/1 var(--display);
+  color: var(--ink-soft);
+  letter-spacing: 0.01em;
+}
+.chapter-signature-sep {
+  color: var(--coral);
+  font: 700 12px/1 var(--display);
+  opacity: 0.55;
+}
+.chapter-signature-year {
+  font: 600 9.5px/1 var(--sans);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--moss);
+  padding: 0 6px;
+  position: relative;
+  top: -0.05em;
+}
+@keyframes signature-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to   { opacity: 0.94; transform: none; }
+}
+@media (max-width: 560px) {
+  .chapter-signature { font-size: 11px; padding: 0 12px; gap: 6px 10px; }
+  .chapter-signature-key { font-size: 12px; }
+  .chapter-signature-tail,
+  .chapter-signature-mark { font-size: 11.5px; }
+  .chapter-signature-rule { flex-basis: 18px; }
+  .chapter-signature-key::before,
+  .chapter-signature-key::after { display: none; }
+  .chapter-signature-year { font-size: 8px; letter-spacing: 0.22em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter-signature { animation: none; opacity: 0.94; transform: none; }
+}
+
 /* ────────── reading trace (small ink dots that accumulate) ────────── */
 
 .reading-trace {
@@ -13675,3 +13787,321 @@ button { font: inherit; }
   letter-spacing: 0.01em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1;
 }
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 148 · the folio earns its first reading
+
+   The recto composition becomes more typographically confident:
+   the canvas-based star trail is removed, the chapter opener
+   abandons the redundant witness inscription in favour of a
+   single italic chapter signature, and a reading-glance progress
+   whisper takes its quiet place beneath the press instruction. A
+   thin reading-glint glow wraps the sheet during the answer and
+   fades as the page settles. Visible focus styles are introduced
+   across every interactive element so the keyboard reader finds
+   their way.
+   ────────────────────────────────────────────────────────────────────── */
+
+/* a soft warm glint around the sheet's edges while the page reads */
+
+.sheet-reading-glint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  background:
+    radial-gradient(
+      ellipse 90% 110% at 50% 50%,
+      transparent 56%,
+      rgba(245, 198, 91, 0.10) 78%,
+      rgba(245, 198, 91, 0.18) 100%
+    );
+  transition: opacity 1200ms var(--ease);
+}
+.sheet-reading-glint[data-state="reading"] { opacity: 0.7; }
+.sheet-reading-glint[data-state="complete"] { opacity: 0.45; }
+
+/* ────────── reading glance · a thin progress whisper at the foot of the question ────────── */
+
+.reading-glance {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) auto minmax(140px, 0.92fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(8px, 1.4vw, 16px);
+  margin: 18px 0 4px;
+  padding: 8px clamp(12px, 2vw, 18px);
+  max-width: 100%;
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-style: italic;
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
+  opacity: 0;
+  animation: glance-in 1100ms var(--ease) 720ms both;
+}
+@keyframes glance-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: none; }
+}
+.reading-glance.is-static { animation: none; opacity: 1; }
+.reading-glance-rule {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(107, 74, 37, 0.32) 60%,
+    rgba(156, 110, 38, 0.42)
+  );
+}
+.reading-glance-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(107, 74, 37, 0.32) 60%,
+    rgba(156, 110, 38, 0.42)
+  );
+}
+.reading-glance-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0 7px;
+  white-space: nowrap;
+  color: var(--coral-deep);
+}
+.reading-glance-key {
+  font: 770 9px/1 var(--sans);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  position: relative;
+  top: -0.06em;
+}
+.reading-glance-sep {
+  color: var(--coral);
+  font: 700 12px/1 var(--display);
+  opacity: 0.6;
+}
+.reading-glance-state {
+  font: italic 500 12.5px/1 var(--display);
+  letter-spacing: 0.018em;
+  color: var(--ink-soft);
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.reading-glance-track {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 12px;
+  border-radius: 2px;
+  background:
+    linear-gradient(
+      to right,
+      rgba(107, 74, 37, 0.16) 0%,
+      rgba(107, 74, 37, 0.10) 50%,
+      rgba(107, 74, 37, 0.16) 100%
+    );
+  border: 1px solid rgba(107, 74, 37, 0.22);
+  overflow: hidden;
+  isolation: isolate;
+}
+.reading-glance-track::before,
+.reading-glance-track::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(107, 74, 37, 0.34);
+  pointer-events: none;
+}
+.reading-glance-track::before { left: 0; }
+.reading-glance-track::after { right: 0; }
+.reading-glance-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--glance, 0) * 100%);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(245, 198, 91, 0.10) 0%,
+      rgba(245, 198, 91, 0.55) 38%,
+      rgba(245, 198, 91, 0.78) 64%,
+      rgba(217, 101, 74, 0.42) 92%,
+      rgba(167, 60, 44, 0.55) 100%
+    );
+  transition: width 800ms cubic-bezier(.22,.86,.22,1);
+}
+.reading-glance.is-static .reading-glance-fill { transition: none; }
+.reading-glance-fill-head {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -1px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 246, 218, 0.85) 30%,
+    rgba(245, 198, 91, 0.95) 70%,
+    transparent
+  );
+  filter: drop-shadow(0 0 4px rgba(245, 198, 91, 0.65));
+}
+.reading-glance-fill-ticks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.reading-glance-fill-ticks span {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: 1px;
+  background: rgba(245, 198, 91, 0.78);
+  opacity: 0.6;
+}
+.reading-glance-pct {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+  color: var(--ink);
+  font-feature-settings: "kern" 1, "onum" 1;
+  letter-spacing: -0.005em;
+  justify-self: end;
+}
+.reading-glance-pct em {
+  font: italic 660 16px/1 var(--display);
+  color: var(--ink);
+}
+.reading-glance-pct-mark {
+  color: var(--coral-deep);
+  font: 700 11px/1 var(--display);
+  opacity: 0.78;
+}
+.reading-glance.is-complete .reading-glance-pct em {
+  color: var(--coral-deep);
+}
+.reading-glance.is-idle .reading-glance-fill { opacity: 0.55; }
+.reading-glance.is-idle .reading-glance-fill-head { opacity: 0.5; filter: none; }
+
+@media (max-width: 720px) {
+  .reading-glance {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "cluster pct"
+      "track   track";
+    row-gap: 4px;
+    padding: 6px 10px 8px;
+  }
+  .reading-glance-rule { display: none; }
+  .reading-glance-cluster { grid-area: cluster; }
+  .reading-glance-pct { grid-area: pct; }
+  .reading-glance-track { grid-area: track; height: 10px; }
+  .reading-glance-pct em { font-size: 14px; }
+}
+@media (max-width: 420px) {
+  .reading-glance-key { font-size: 8px; letter-spacing: 0.22em; }
+  .reading-glance-state { font-size: 11px; }
+  .reading-glance-pct em { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-glance { animation: none; opacity: 1; transform: none; }
+  .reading-glance-fill { transition: none; }
+}
+
+/* ────────── focus styles · keyboard-accessible outlines ────────── */
+
+:focus-visible {
+  outline-color: var(--coral-deep);
+  outline-style: solid;
+}
+.wax-seal:focus-visible {
+  outline: 2px solid var(--coral-deep);
+  outline-offset: 6px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 4px rgba(217, 101, 74, 0.18);
+}
+.wax-seal-label:focus-visible {
+  outline-color: var(--coral-deep);
+}
+.press-plate-mark-note:focus-visible {
+  outline: 1px dashed var(--coral-deep);
+  outline-offset: 3px;
+  border-bottom-color: currentColor;
+  color: var(--coral-deep);
+}
+.reader-tide-station-button:focus-visible {
+  outline: 2px solid var(--coral-deep);
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+.press-plate-mark-note[data-gloss]:focus-visible::after {
+  opacity: 1;
+  transform: translateY(-2px);
+  pointer-events: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .press-plate-mark-note[data-gloss]:focus-visible::after { transform: none; }
+}
+
+/* ────────── the title's overly ornate arc under M3 is collapsed to a thin underline ────────── */
+
+.title-subject-rule {
+  display: none;
+}
+.has-answer .title-subject-rule { display: none; }
+
+@media (max-width: 720px) {
+  .title-subject-rule { display: none !important; }
+}
+
+/* ────────── small refinements to the existing hierarchy ────────── */
+
+/* the press-plate's top decoration shrinks so the wax seal reads as the focal element */
+.press-plate-head-rule {
+  opacity: 0.55;
+}
+.press-plate-head {
+  margin-bottom: 10px;
+}
+
+/* the chapter-opener breathes better without the FolioCompass companion */
+.chapter-opener { padding: 22px 0 26px; }
+
+/* the annotation mark and text align more deliberately */
+.annotation {
+  align-items: baseline;
+  letter-spacing: 0.22em;
+  font-size: 10px;
+  color: var(--coral-deep);
+}
+.annotation-mark {
+  font-size: 16px;
+  line-height: 0.9;
+}
+
+/* the title's italic carries slightly more confident kerning and tighter tracks */
+.broadsheet-title .title-flow {
+  font-feature-settings:
+    "kern" 1, "liga" 1, "calt" 1,
+    "swsh" 1, "salt" 1, "onum" 1, "dlig" 1;
+}
+
+/* mobile refinements — the chapter signature stays calm at narrow widths */
+@media (max-width: 720px) {
+  .chapter-opener { padding: 18px 0 22px; }
+}
+@media (max-width: 480px) {
+  .chapter-opener { padding: 14px 0 18px; }
+  .chapter-witness { padding: 0 10px; gap: 6px 10px; }
+}
+
+/* keep the press-plate legible on very narrow screens */
+@media (max-width: 480px) {
+  .press-plate {
+    padding: 18px 16px 16px;
+  }
+  .press-plate-action { gap: 12px; }
+}
+
