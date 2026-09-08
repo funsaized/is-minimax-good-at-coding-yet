@@ -580,69 +580,40 @@ function PrinterEmblem() {
   )
 }
 
-function RectoSubEmblem() {
+function FolioLedger() {
   return (
-    <figure className="recto-sub-emblem" aria-hidden="true">
-      <svg className="recto-sub-emblem-plate" viewBox="0 0 220 36" focusable="false">
-        <defs>
-          <linearGradient id="rse-gold" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#9c6e26" />
-            <stop offset="50%" stopColor="#f5c65b" />
-            <stop offset="100%" stopColor="#9c6e26" />
-          </linearGradient>
-        </defs>
-        <line x1="0" y1="18" x2="76" y2="18" stroke="url(#rse-gold)" strokeWidth="0.5" strokeLinecap="round" opacity="0.7" />
-        <line x1="144" y1="18" x2="220" y2="18" stroke="url(#rse-gold)" strokeWidth="0.5" strokeLinecap="round" opacity="0.7" />
-        <g className="rse-orb" transform="translate(88 18)">
-          <circle r="9" fill="none" stroke="url(#rse-gold)" strokeWidth="0.55" />
-          <circle r="6.6" fill="none" stroke="url(#rse-gold)" strokeWidth="0.3" strokeDasharray="0.4 1.2" opacity="0.78" />
-          <circle r="1.2" fill="url(#rse-gold)" />
-          <g className="rse-orb-rays" stroke="url(#rse-gold)" strokeWidth="0.4" strokeLinecap="round">
-            <line x1="0" y1="-11" x2="0" y2="-13.4" />
-            <line x1="0" y1="11" x2="0" y2="13.4" />
-            <line x1="-11" y1="0" x2="-13.4" y2="0" />
-            <line x1="11" y1="0" x2="13.4" y2="0" />
-            <line x1="-7.8" y1="-7.8" x2="-9.4" y2="-9.4" />
-            <line x1="7.8" y1="-7.8" x2="9.4" y2="-9.4" />
-            <line x1="-7.8" y1="7.8" x2="-9.4" y2="9.4" />
-            <line x1="7.8" y1="7.8" x2="9.4" y2="9.4" />
-          </g>
-        </g>
-        <g transform="translate(110 18)">
-          <line x1="-8" y1="-5" x2="-8" y2="5" stroke="url(#rse-gold)" strokeWidth="0.4" />
-          <line x1="8" y1="-5" x2="8" y2="5" stroke="url(#rse-gold)" strokeWidth="0.4" />
-          <text
-            x="0"
-            y="3.4"
-            textAnchor="middle"
-            className="rse-monogram"
-          >
-            m
-          </text>
-          <text x="8" y="3.4" textAnchor="middle" className="rse-monogram-roman">·iii</text>
-        </g>
-        <g transform="translate(132 18)">
-          <circle r="9" fill="none" stroke="url(#rse-gold)" strokeWidth="0.55" />
-          <circle r="6.6" fill="none" stroke="url(#rse-gold)" strokeWidth="0.3" strokeDasharray="0.4 1.2" opacity="0.78" />
-          <circle r="1.2" fill="url(#rse-gold)" />
-          <g className="rse-orb-rays" stroke="url(#rse-gold)" strokeWidth="0.4" strokeLinecap="round">
-            <line x1="0" y1="-11" x2="0" y2="-13.4" />
-            <line x1="0" y1="11" x2="0" y2="13.4" />
-            <line x1="-11" y1="0" x2="-13.4" y2="0" />
-            <line x1="11" y1="0" x2="13.4" y2="0" />
-            <line x1="-7.8" y1="-7.8" x2="-9.4" y2="-9.4" />
-            <line x1="7.8" y1="-7.8" x2="9.4" y2="-9.4" />
-            <line x1="-7.8" y1="7.8" x2="-9.4" y2="9.4" />
-            <line x1="7.8" y1="7.8" x2="9.4" y2="9.4" />
-          </g>
-        </g>
-      </svg>
-      <span className="recto-sub-emblem-caption">
-        <em className="recto-sub-emblem-key">the printer's mark</em>
-        <span className="recto-sub-emblem-sep" aria-hidden="true">·</span>
-        <em className="recto-sub-emblem-tail">a press that bears a name</em>
+    <p className="folio-ledger" aria-hidden="true">
+      <span className="folio-ledger-rule folio-ledger-rule--left" />
+      <span className="folio-ledger-cluster">
+        <em className="folio-ledger-key">this folio</em>
+        <span className="folio-ledger-sep" aria-hidden="true">·</span>
+        <em className="folio-ledger-roman">cap. xviii</em>
+        <span className="folio-ledger-sep" aria-hidden="true">·</span>
+        <em className="folio-ledger-tail">recto · sig. a2</em>
+        <svg
+          className="folio-ledger-mark"
+          viewBox="0 0 26 26"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <defs>
+            <radialGradient id="fl-wax" cx="50%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="rgba(206, 96, 68, 0.96)" />
+              <stop offset="55%" stopColor="rgba(146, 50, 36, 0.96)" />
+              <stop offset="100%" stopColor="rgba(60, 14, 8, 0.98)" />
+            </radialGradient>
+          </defs>
+          <circle cx="13" cy="13" r="11" fill="url(#fl-wax)" />
+          <ellipse cx="10.6" cy="7.4" rx="5.4" ry="2" fill="rgba(255, 232, 178, 0.38)" />
+          <circle cx="13" cy="13" r="11" fill="none" stroke="rgba(40, 8, 4, 0.55)" strokeWidth="0.45" />
+          <circle cx="13" cy="13" r="8.6" fill="none" stroke="rgba(255, 232, 178, 0.32)" strokeWidth="0.3" strokeDasharray="0.4 1.2" />
+          <line x1="6.6" y1="13" x2="19.4" y2="13" stroke="rgba(255, 232, 178, 0.32)" strokeWidth="0.3" />
+          <text x="13" y="11" textAnchor="middle" className="folio-ledger-mark-glyph folio-ledger-mark-glyph--roman">lxxvii</text>
+          <text x="13" y="16.6" textAnchor="middle" className="folio-ledger-mark-glyph folio-ledger-mark-glyph--sig">folio</text>
+        </svg>
       </span>
-    </figure>
+      <span className="folio-ledger-rule folio-ledger-rule--right" />
+    </p>
   )
 }
 
@@ -4566,10 +4537,10 @@ function SpecimenImprint({
 }) {
   const inscription =
     cycle === 0
-      ? 'a specimen · printed for the first reader'
+      ? 'a specimen, printed for the first reader'
       : cycle === 1
-        ? 'a specimen · pressed again · the reader slows'
-        : `a specimen · pressed ${ordinal(cycle + 1)} times · the page unchanged`
+        ? 'a specimen, pressed again — the reader slows'
+        : `a specimen, pressed ${ordinal(cycle + 1)} times — the page unchanged`
   return (
     <p
       className={`specimen-imprint${cycle > 0 ? ' is-reread' : ''}${
@@ -4580,12 +4551,71 @@ function SpecimenImprint({
       <span className="specimen-imprint-rule specimen-imprint-rule--left" />
       <span className="specimen-imprint-text">
         <em className="specimen-imprint-key">specimen</em>
-        <span className="specimen-imprint-dot" aria-hidden="true">·</span>
-        <em className="specimen-imprint-roman">no. xviii</em>
-        <span className="specimen-imprint-dot" aria-hidden="true">·</span>
+        <span className="specimen-imprint-roman">no. xviii</span>
         <em className="specimen-imprint-tail">{inscription}</em>
       </span>
       <span className="specimen-imprint-rule specimen-imprint-rule--right" />
+    </p>
+  )
+}
+
+function ReadingMoment({
+  visible,
+  cycle,
+  now,
+  firstMoment,
+}: {
+  visible: boolean
+  cycle: number
+  now: Date
+  firstMoment: Date | null
+}) {
+  const hour24 = now.getHours()
+  const minutes = now.getMinutes()
+  const h12 = ((hour24 + 11) % 12) + 1
+  const mm = String(minutes).padStart(2, '0')
+  const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
+  const timeLabel = `${h12}:${mm} ${period}`
+  const dayName = WEEKDAYS[now.getDay()].slice(0, 3).toLowerCase()
+  const ordinalDay = ORDINALS[Math.min(ORDINALS.length - 1, now.getDate() - 1)]
+  const monthName = MONTHS[now.getMonth()].slice(0, 3).toLowerCase()
+
+  let label = ''
+  let sub = ''
+  if (firstMoment) {
+    const firstHour = firstMoment.getHours()
+    const firstMin = firstMoment.getMinutes()
+    const firstH12 = ((firstHour + 11) % 12) + 1
+    const firstMm = String(firstMin).padStart(2, '0')
+    const firstPeriod = firstHour >= 12 ? 'p.m.' : 'a.m.'
+    label = cycle === 0 ? 'first reading' : cycle === 1 ? 'second reading' : `${ordinal(cycle + 1)} reading`
+    sub = `${dayName}, ${ordinalDay} of ${monthName} · opened ${firstH12}:${firstMm} ${firstPeriod}`
+  } else {
+    label = 'first reading'
+    sub = `${dayName}, ${ordinalDay} of ${monthName} · awaiting the press`
+  }
+
+  return (
+    <p
+      className={`reading-moment${visible ? ' is-visible' : ''}${
+        cycle > 0 ? ' is-reread' : ''
+      }`}
+      role="status"
+      aria-live="polite"
+      aria-label={`${label}, ${sub}`}
+    >
+      <span className="reading-moment-rule reading-moment-rule--left" aria-hidden="true" />
+      <span className="reading-moment-cluster">
+        <em className="reading-moment-key">{label}</em>
+        <span className="reading-moment-sep" aria-hidden="true">·</span>
+        <em className="reading-moment-sub">{sub}</em>
+        <span className="reading-moment-now" aria-hidden="true">
+          <span className="reading-moment-now-mark" />
+          <em className="reading-moment-now-key">now</em>
+          <em className="reading-moment-now-val">{timeLabel}</em>
+        </span>
+      </span>
+      <span className="reading-moment-rule reading-moment-rule--right" aria-hidden="true" />
     </p>
   )
 }
@@ -6938,6 +6968,7 @@ export function App() {
   const [activeSection, setActiveSection] = useState<string>('sec-question')
   const [versoOpened, setVersoOpened] = useState(false)
   const [leafTurning, setLeafTurning] = useState(false)
+  const [firstMoment, setFirstMoment] = useState<Date | null>(null)
 
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({})
   const jumpRef = useRef<number | null>(null)
@@ -6999,6 +7030,7 @@ export function App() {
 
   const readAnswer = () => {
     if (phase === 'idle') {
+      setFirstMoment(new Date())
       setVersoOpened(true)
       setLeafTurning(true)
       window.setTimeout(() => setLeafTurning(false), reduced ? 220 : 1180)
@@ -7349,7 +7381,7 @@ export function App() {
               <span className="recto-signing-rule-tail">the page remembers the question</span>
             </span>
 
-            <RectoSubEmblem />
+            <FolioLedger />
 
             <SpecimenImprint cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
 
@@ -7361,6 +7393,12 @@ export function App() {
               className="marginalia-section"
             >
               <span className="recto-marginalia-glow" aria-hidden="true" />
+              <ReadingMoment
+                visible={phase !== 'idle'}
+                cycle={cycle}
+                now={now}
+                firstMoment={firstMoment}
+              />
               <PressInstructionPlate
                 cycle={cycle}
                 phase={phase}
