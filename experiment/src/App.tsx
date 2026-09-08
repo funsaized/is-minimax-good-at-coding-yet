@@ -360,6 +360,153 @@ function ConstellationTrail({
 }
 
 /* ──────────────────────────────────────────────────────────────────────
+   iteration 163 · a composed folio heartline
+
+   A single delicate impression that sits between the recto's
+   PressInstructionPlate and its closing RectoColophon — the recto's
+   own quiet heart, set once the page has been pressed. It mirrors the
+   FolioBreath at the top of the folio: a thin coral-and-gold rule,
+   a centered press pip with a slow breathing glow, and an italic
+   inscription that names the press's hand in the same lowercase voice
+   as the rest of the folio. It earns its space as the recto's second
+   breath — the first opens the folio, the heartline acknowledges that
+   the reader has answered back.
+   ────────────────────────────────────────────────────────────────────── */
+
+function FolioHeartline({
+  visible,
+  cycle,
+  reduced,
+}: {
+  visible: boolean
+  cycle: number
+  reduced: boolean
+}) {
+  const inscription =
+    cycle === 0
+      ? 'manu m · iii · ad lucem'
+      : cycle === 1
+        ? 'manu m · iii · iterum'
+        : cycle === 2
+          ? 'manu m · iii · perlege'
+        : 'manu m · iii · ad lucem'
+  const tag =
+    cycle === 0 ? 'first press' : cycle === 1 ? 'second press' : cycle === 2 ? 'third press' : 'press · ad lucem'
+  return (
+    <figure
+      className={`folio-heartline${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg
+        className="folio-heartline-plate"
+        viewBox="0 0 320 36"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="fhl-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="50%" stopColor="rgba(200, 146, 62, 0.74)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="fhl-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.22)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <radialGradient id="fhl-face" cx="50%" cy="36%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.74)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.32)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+          </radialGradient>
+          <radialGradient id="fhl-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.22)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="160" cy="8" rx="60" ry="12" fill="url(#fhl-halo)" />
+
+        <line
+          x1="6"
+          y1="14"
+          x2="314"
+          y2="14"
+          stroke="url(#fhl-rule-ghost)"
+          strokeWidth="0.3"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="11"
+          x2="314"
+          y2="11"
+          stroke="url(#fhl-rule)"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+          className="folio-heartline-rule"
+        />
+
+        <g className="folio-heartline-pips" fill="rgba(167, 60, 44, 0.55)">
+          <circle cx="44" cy="11" r="0.5" />
+          <circle cx="276" cy="11" r="0.5" />
+        </g>
+
+        <g className="folio-heartline-seal">
+          <circle cx="160" cy="11" r="3.8" fill="url(#fhl-face)" />
+          <circle cx="160" cy="11" r="3.8" fill="none" stroke="url(#fhl-rule)" strokeWidth="0.5" />
+          <circle
+            cx="160"
+            cy="11"
+            r="2.6"
+            fill="none"
+            stroke="url(#fhl-rule)"
+            strokeWidth="0.22"
+            strokeDasharray="0.4 1.2"
+            opacity="0.78"
+          />
+          <circle cx="160" cy="11" r="1" fill="rgba(167, 60, 44, 0.78)" />
+          <circle cx="160" cy="11" r="0.32" fill="rgba(255, 248, 224, 0.95)" />
+          <circle cx="160" cy="11" r="6.5" fill="url(#fhl-halo)" className="folio-heartline-seal-glow" />
+        </g>
+
+        <g
+          className="folio-heartline-thread"
+          stroke="rgba(167, 60, 44, 0.32)"
+          strokeWidth="0.4"
+          strokeDasharray="0.6 1.4"
+          strokeLinecap="round"
+          fill="none"
+        >
+          <path d="M 70 11 Q 100 14 130 11" />
+          <path d="M 190 11 Q 220 8 250 11" />
+        </g>
+
+        <g className="folio-heartline-cap">
+          <text x="160" y="26" textAnchor="middle" className="folio-heartline-cap-inscription">
+            {inscription}
+          </text>
+        </g>
+
+        <g className="folio-heartline-tag">
+          <text x="60" y="28" textAnchor="middle" className="folio-heartline-tag-text">
+            {tag}
+          </text>
+          <text x="260" y="28" textAnchor="middle" className="folio-heartline-tag-text folio-heartline-tag-mark">
+            ¶
+          </text>
+        </g>
+      </svg>
+    </figure>
+  )
+}
+
+/* ──────────────────────────────────────────────────────────────────────
    iteration 162 · a composed folio breath seal
 
    A single delicate impression that sits between the running head and
@@ -11477,6 +11624,7 @@ export function App() {
               />
               <ReadingGlance progress={inkProgress} reduced={reduced} />
             </div>
+            <FolioHeartline visible={phase !== 'idle'} cycle={cycle} reduced={reduced} />
             <ReaderInkMark />
             <RectoColophon visible={versoOpened} reduced={reduced} />
           </section>

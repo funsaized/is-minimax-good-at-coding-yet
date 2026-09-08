@@ -718,6 +718,7 @@ button { font: inherit; }
   letter-spacing: 0.14em;
   text-transform: lowercase;
   fill: var(--ink-soft);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
   opacity: 0;
   animation: folio-breath-cap-in 1100ms var(--ease) 1180ms both;
 }
@@ -745,6 +746,155 @@ button { font: inherit; }
   .folio-breath { width: min(260px, 92%); margin: 6px auto 4px; }
   .folio-breath-cap { font-size: 9.5px; letter-spacing: 0.1em; }
 }
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 163 · a composed folio heartline
+
+   The recto's quiet heart — sits between the PressInstructionPlate and
+   the closing RectoColophon. Mirrors the FolioBreath at the top of the
+   folio in idiom: a hairline gold rule, a centered coral pip with a
+   slow breathing glow, an italic inscription that names the press's
+   hand. Slow-reveals when the page has been pressed; the pip breathes
+   for as long as the reader is engaged.
+   ────────────────────────────────────────────────────────────────────── */
+
+.folio-heartline {
+  position: relative;
+  width: min(360px, 92%);
+  margin: clamp(18px, 2.4vw, 28px) auto clamp(6px, 1vw, 12px);
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-3px);
+  animation: folio-heartline-in 1400ms var(--ease) 380ms both;
+}
+.folio-heartline-plate {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.folio-heartline-rule {
+  transform-origin: 50% 50%;
+  transform: scaleX(0.7);
+  animation: folio-heartline-rule-grow 1300ms var(--ease) 540ms both;
+}
+.folio-heartline-seal {
+  transform-origin: 160px 6px;
+  transform: scale(0.5);
+  opacity: 0;
+  animation: folio-heartline-seal-arrive 1100ms var(--ease) 780ms both;
+}
+.folio-heartline-seal-glow {
+  transform-origin: 160px 6px;
+  opacity: 0;
+  animation: folio-heartline-glow 6s ease-in-out 1900ms infinite;
+}
+.folio-heartline-pips circle {
+  transform-origin: center;
+  opacity: 0;
+  animation: folio-heartline-pip-in 1100ms var(--ease) 920ms both;
+}
+.folio-heartline-pips circle:last-child {
+  animation-delay: 1020ms;
+}
+.folio-heartline-thread {
+  opacity: 0;
+  animation: folio-heartline-thread-in 900ms var(--ease) 1080ms both;
+}
+.folio-heartline-cap {
+  opacity: 0;
+  animation: folio-heartline-cap-in 900ms var(--ease) 1180ms both;
+}
+.folio-heartline-tag {
+  opacity: 0;
+  animation: folio-heartline-tag-in 800ms var(--ease) 1320ms both;
+}
+
+@keyframes folio-heartline-in {
+  0%   { opacity: 0; transform: translateY(-3px); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes folio-heartline-rule-grow {
+  0%   { transform: scaleX(0.7); opacity: 0.5; }
+  100% { transform: scaleX(1);   opacity: 1;   }
+}
+@keyframes folio-heartline-seal-arrive {
+  0%   { transform: scale(0.5); opacity: 0; }
+  60%  { transform: scale(1.16); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+@keyframes folio-heartline-glow {
+  0%, 100% { opacity: 0.55; transform: scale(0.92); }
+  50%      { opacity: 1;    transform: scale(1.18); }
+}
+@keyframes folio-heartline-pip-in {
+  0%   { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes folio-heartline-thread-in {
+  0%   { opacity: 0; stroke-dashoffset: 22; }
+  100% { opacity: 1; stroke-dashoffset: 0; }
+}
+@keyframes folio-heartline-cap-in {
+  0%   { opacity: 0; transform: translateY(2px); }
+  100% { opacity: 0.86; transform: none; }
+}
+@keyframes folio-heartline-tag-in {
+  0%   { opacity: 0; }
+  100% { opacity: 0.55; }
+}
+
+.folio-heartline-cap-inscription {
+  font: italic 600 9.5px/1 var(--display);
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  fill: var(--ink-soft);
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1, "salt" 1;
+}
+.folio-heartline-tag-text {
+  font: italic 500 8px/1 var(--display);
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+  fill: var(--ink-mute);
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.folio-heartline-tag-mark {
+  fill: var(--coral);
+  letter-spacing: 0;
+  font-size: 9px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-heartline,
+  .folio-heartline-rule,
+  .folio-heartline-seal,
+  .folio-heartline-seal-glow,
+  .folio-heartline-pips circle,
+  .folio-heartline-thread,
+  .folio-heartline-cap,
+  .folio-heartline-tag {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .folio-heartline-seal { transform: scale(1); }
+  .folio-heartline-seal-glow { opacity: 0.6; transform: scale(1); }
+  .folio-heartline-rule { transform: scaleX(1); }
+  .folio-heartline-cap { opacity: 0.86; }
+  .folio-heartline-tag { opacity: 0.55; }
+}
+@media (max-width: 720px) {
+  .folio-heartline { width: min(320px, 92%); margin: 16px auto 8px; }
+  .folio-heartline-cap-inscription { font-size: 9px; letter-spacing: 0.14em; }
+  .folio-heartline-tag-text { font-size: 7.5px; letter-spacing: 0.18em; }
+}
+@media (max-width: 560px) {
+  .folio-heartline { width: min(280px, 90%); margin: 12px auto 6px; }
+  .folio-heartline-cap-inscription { font-size: 8.5px; }
+  .folio-heartline-tag-text { font-size: 7px; letter-spacing: 0.14em; }
+}
+
 .chapter-head {
   display: flex; flex-direction: column; align-items: center;
   gap: 10px;
@@ -1639,8 +1789,8 @@ button { font: inherit; }
     box-shadow: 0 0 0 1px rgba(245, 198, 91, 0.55), 0 0 6px rgba(245, 198, 91, 0.5);
   }
   50% {
-    transform: scale(1.18);
-    box-shadow: 0 0 0 1.5px rgba(245, 198, 91, 0.78), 0 0 10px rgba(245, 198, 91, 0.85);
+    transform: scale(1.22);
+    box-shadow: 0 0 0 1.5px rgba(245, 198, 91, 0.78), 0 0 12px rgba(245, 198, 91, 0.9);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1749,12 +1899,13 @@ button { font: inherit; }
   display: inline-block;
   padding: 0 0.05em;
   letter-spacing: -0.02em;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "swsh" 1;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "swsh" 1, "onum" 1;
   text-shadow: 0 0 0 rgba(29, 74, 89, 0);
-  transition: text-shadow 800ms var(--ease);
+  transition: text-shadow 800ms var(--ease), letter-spacing 800ms var(--ease);
 }
 .has-answer .title-subject {
   text-shadow: 0 0 12px rgba(245, 198, 91, 0.18);
+  letter-spacing: -0.018em;
 }
 .title-subject-rule {
   position: absolute;
@@ -5540,8 +5691,13 @@ button { font: inherit; }
   margin: 9px 0 0;
   color: var(--ink-soft);
   text-align: center;
-  font: italic 12.5px var(--display);
-  letter-spacing: 0.005em;
+  font: italic 12.5px/1.4 var(--display);
+  letter-spacing: 0.008em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
+  text-wrap: balance;
+  max-width: 38ch;
+  margin-left: auto;
+  margin-right: auto;
   transition: color 280ms var(--ease);
 }
 .read-button:hover + .reader-note { color: var(--ink); }
