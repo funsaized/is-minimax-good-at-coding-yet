@@ -1366,6 +1366,90 @@ function BroadsheetDropCap({
   )
 }
 
+function TitleRule({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <figure
+      className={`title-rule${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 320 24" focusable="false" className="title-rule-svg">
+        <defs>
+          <linearGradient id="tr-gold" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="34%" stopColor="rgba(200, 146, 62, 0.7)" />
+            <stop offset="50%" stopColor="rgba(245, 198, 91, 0.85)" />
+            <stop offset="66%" stopColor="rgba(200, 146, 62, 0.7)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+        </defs>
+        <line
+          x1="2"
+          y1="12"
+          x2="318"
+          y2="12"
+          stroke="url(#tr-gold)"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+          className="title-rule-line"
+        />
+        <line
+          x1="2"
+          y1="14.4"
+          x2="318"
+          y2="14.4"
+          stroke="rgba(167, 60, 44, 0.18)"
+          strokeWidth="0.35"
+          strokeLinecap="round"
+          className="title-rule-ghost"
+        />
+        <g
+          className="title-rule-fleuron"
+          transform="translate(160 12)"
+          fill="none"
+          stroke="rgba(167, 60, 44, 0.78)"
+          strokeWidth="0.7"
+          strokeLinecap="round"
+        >
+          <circle r="2.4" fill="rgba(245, 198, 91, 0.55)" stroke="rgba(167, 60, 44, 0.6)" strokeWidth="0.55" />
+          <path d="M -10 0 Q -6 -3.4 -2 0" />
+          <path d="M -10 0 Q -6 3.4 -2 0" />
+          <path d="M 10 0 Q 6 -3.4 2 0" />
+          <path d="M 10 0 Q 6 3.4 2 0" />
+          <circle cx="-2" cy="0" r="0.55" fill="rgba(167, 60, 44, 0.78)" stroke="none" />
+          <circle cx="2" cy="0" r="0.55" fill="rgba(167, 60, 44, 0.78)" stroke="none" />
+          <circle cx="-13" cy="0" r="0.7" fill="rgba(167, 60, 44, 0.7)" stroke="none" />
+          <circle cx="13" cy="0" r="0.7" fill="rgba(167, 60, 44, 0.7)" stroke="none" />
+        </g>
+        <g
+          className="title-rule-diamond"
+          transform="translate(64 12)"
+          fill="rgba(167, 60, 44, 0.6)"
+        >
+          <path d="M 0 -2.2 L 2.2 0 L 0 2.2 L -2.2 0 Z" />
+        </g>
+        <g
+          className="title-rule-diamond title-rule-diamond--right"
+          transform="translate(256 12)"
+          fill="rgba(167, 60, 44, 0.6)"
+        >
+          <path d="M 0 -2.2 L 2.2 0 L 0 2.2 L -2.2 0 Z" />
+        </g>
+      </svg>
+      <figcaption className="title-rule-caption">a question · set in italic</figcaption>
+    </figure>
+  )
+}
+
 function AnswerPlateCorner({ corner }: { corner: 'tl' | 'tr' | 'bl' | 'br' }) {
   const g = `apc-${corner}-gold`
   return (
@@ -9265,6 +9349,8 @@ export function App() {
                 <span className="title-paper-fold" aria-hidden="true" />
               </span>
             </h1>
+
+            <TitleRule visible={phase !== 'idle'} reduced={reduced} />
 
             <ReadingTide progress={Math.min(1, inkProgress + 0.15)} reduced={reduced} />
 

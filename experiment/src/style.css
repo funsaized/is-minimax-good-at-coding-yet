@@ -1529,6 +1529,98 @@ button { font: inherit; }
   .has-answer .title-subject-rule { animation: none; }
 }
 
+/* ────────── title rule — a delicate hand-drawn rule beneath the question ────────── */
+
+.title-rule {
+  display: grid;
+  place-items: center;
+  grid-template-rows: auto auto;
+  row-gap: clamp(6px, 0.9vw, 10px);
+  margin: clamp(18px, 2.4vw, 28px) 0 clamp(2px, 0.6vw, 6px) clamp(122px, 13.6vw, 178px);
+  max-width: 560px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 900ms var(--ease) 760ms, transform 900ms var(--ease) 760ms;
+}
+.title-rule.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.title-rule-svg {
+  display: block;
+  width: min(100%, 360px);
+  height: auto;
+  filter: drop-shadow(0 1px 0 rgba(167, 60, 44, 0.06));
+}
+.title-rule-line {
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  transition: stroke-dashoffset 1500ms var(--ease) 600ms;
+}
+.title-rule-ghost {
+  opacity: 0;
+  transition: opacity 1100ms var(--ease) 1200ms;
+}
+.title-rule.is-visible .title-rule-line { stroke-dashoffset: 0; }
+.title-rule.is-visible .title-rule-ghost { opacity: 1; }
+.title-rule-fleuron {
+  transform-origin: 160px 12px;
+  opacity: 0;
+  transition: opacity 800ms var(--ease) 1500ms;
+}
+.title-rule-diamond {
+  opacity: 0;
+  transition: opacity 700ms var(--ease) 1700ms;
+}
+.title-rule-diamond--right {
+  transition-delay: 1900ms;
+}
+.title-rule.is-visible .title-rule-fleuron { opacity: 1; animation: tr-fleuron-breath 6.4s ease-in-out 2100ms infinite; }
+.title-rule.is-visible .title-rule-diamond { opacity: 0.9; }
+.title-rule.is-static { opacity: 1; transform: none; transition: none; }
+.title-rule.is-static .title-rule-line { stroke-dashoffset: 0; }
+.title-rule.is-static .title-rule-ghost { opacity: 1; }
+.title-rule.is-static .title-rule-fleuron { opacity: 1; animation: none; }
+.title-rule.is-static .title-rule-diamond { opacity: 0.9; }
+@keyframes tr-fleuron-breath {
+  0%, 100% { transform: translate(160px, 12px) scale(1); filter: drop-shadow(0 0 0 rgba(245, 198, 91, 0)); }
+  50%      { transform: translate(160px, 12px) scale(1.06); filter: drop-shadow(0 0 6px rgba(245, 198, 91, 0.42)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-rule { transition: none; transform: none; opacity: 1; }
+  .title-rule-line { transition: none; stroke-dashoffset: 0; }
+  .title-rule-ghost { transition: none; opacity: 1; }
+  .title-rule-fleuron { transition: none; opacity: 1; animation: none; }
+  .title-rule-diamond { transition: none; opacity: 0.9; }
+}
+.title-rule-caption {
+  margin: 0;
+  color: var(--coral-deep);
+  font: 770 9.5px/1 var(--sans);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 700ms var(--ease) 1700ms, transform 700ms var(--ease) 1700ms;
+}
+.title-rule.is-visible .title-rule-caption {
+  opacity: 0.9;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-rule-caption { transition: none; opacity: 0.9; transform: none; }
+}
+@media (max-width: 880px) {
+  .title-rule { margin-left: 0; max-width: 100%; }
+  .title-rule-svg { width: min(100%, 320px); }
+}
+@media (max-width: 560px) {
+  .title-rule { margin: 18px 0 4px; row-gap: 6px; }
+  .title-rule-svg { width: min(100%, 260px); }
+  .title-rule-caption { font-size: 8.5px; letter-spacing: 0.28em; }
+}
+
 .question-deck {
   max-width: 460px;
   margin: 30px 0 0;
@@ -13298,5 +13390,178 @@ button { font: inherit; }
   .recto-lamp-stage { width: 72px; }
 }
 
+/* ────────── iteration 146 · the title earns the page ────────── */
 
+/* tighter, more confident title scale + weight */
+.broadsheet-title .title-flow {
+  font-weight: 660;
+  letter-spacing: -0.025em;
+  line-height: 1.005;
+  text-rendering: optimizeLegibility;
+}
+.broadsheet-title .title-text:first-of-type {
+  font-feature-settings: "swsh" 1, "salt" 1, "kern" 1, "liga" 1, "calt" 1;
+  padding-right: 0.03em;
+}
+.broadsheet-title .title-subject {
+  font-weight: 660;
+  font-style: italic;
+  letter-spacing: -0.022em;
+  padding: 0 0.06em;
+}
+.broadsheet-title .title-subject-rule {
+  height: 0.075em;
+  bottom: -0.19em;
+}
+.broadsheet-title .title-questions {
+  font-weight: 660;
+  font-size: 1.22em;
+  letter-spacing: -0.01em;
+  margin-left: 0.04em;
+  padding: 0 0.02em 0 0.04em;
+}
 
+/* the drop cap sits a little more deliberately beside the text */
+.broadsheet-title .title-initial-wrap {
+  margin-top: -0.02em;
+}
+.broadsheet-title .bs-letter-glyph {
+  font-size: 138px;
+  letter-spacing: -0.024em;
+}
+
+/* answer copy: more confident, slightly heavier, with calmer spacing */
+.answer-copy {
+  font-weight: 640;
+  font-size: clamp(29px, 4.1vw, 48px);
+  line-height: 1.22;
+  letter-spacing: -0.018em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1, "dlig" 1, "ss01" 1;
+  text-shadow: 0 0 0.4px rgba(17, 32, 42, 0.06);
+}
+.answer-surface--complete .answer-copy {
+  font-weight: 660;
+  letter-spacing: -0.024em;
+}
+
+/* the em-dash leads with a quiet, deliberate stroke */
+.answer-copy-lead {
+  font-weight: 700;
+  color: var(--coral-deep);
+  margin-right: 0.04em;
+  font-feature-settings: "salt" 1, "onum" 1;
+}
+
+/* answer quotes: a touch more presence */
+.answer-quote {
+  font: italic 600 68px/0.7 var(--display);
+  color: var(--coral-deep);
+}
+.answer-quote--open { top: 12px; left: 14px; }
+.answer-quote--close { right: 14px; bottom: 8px; }
+.answer-surface--complete .answer-quote { opacity: 0.6; color: var(--coral-deep); }
+
+/* the typed answer is set with a calmer care */
+.typing-caret {
+  color: var(--coral-deep);
+  font-weight: 400;
+  margin-left: 0.02em;
+  animation: caret-blink 760ms steps(1) infinite;
+}
+@keyframes caret-blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .typing-caret { animation: none; opacity: 0.85; }
+}
+
+/* reply paragraph: a touch lighter, but more readable */
+.reply-paragraph {
+  font: italic 480 clamp(22px, 2.6vw, 28px)/1.42 var(--display);
+  letter-spacing: 0.001em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.reply-text-lead {
+  color: var(--coral-deep);
+  font-weight: 600;
+}
+
+/* colophon: tighter, more confident book closing */
+.colophon {
+  margin: 26px auto 4px;
+  padding: 18px 24px 20px;
+  border-top: 1px solid rgba(107, 74, 37, 0.24);
+  border-bottom: 1px solid rgba(107, 74, 37, 0.24);
+}
+.colophon-lines {
+  row-gap: 6px;
+  font: 13px/1.45 var(--display);
+  letter-spacing: 0.03em;
+}
+.colophon-head-text {
+  font: italic 13px/1 var(--display);
+  letter-spacing: 0.2em;
+}
+.colophon-key {
+  font: 770 9.5px var(--sans);
+  letter-spacing: 0.24em;
+}
+.colophon-value {
+  font-style: italic;
+  color: var(--ink);
+}
+
+/* recto verses gain a calmer leading */
+.recto-verse {
+  line-height: 1.58;
+}
+
+/* a small "press mark" signature under the answer card */
+.press-signature {
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "swsh" 1;
+}
+
+/* title-rule caption alignment under the rule */
+.title-rule-caption {
+  color: var(--coral-deep);
+  letter-spacing: 0.34em;
+  font-weight: 700;
+}
+
+/* mobile refinements for the title and answer */
+@media (max-width: 720px) {
+  .broadsheet-title .title-flow {
+    font-size: clamp(38px, 9.6vw, 56px);
+    letter-spacing: -0.028em;
+  }
+  .broadsheet-title .bs-letter-glyph { font-size: 108px; }
+  .broadsheet-title .title-questions { font-size: 1.18em; }
+  .answer-copy {
+    font-size: clamp(25px, 7.2vw, 34px);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  .reply-paragraph {
+    font-size: clamp(20px, 5.4vw, 24px);
+    line-height: 1.45;
+  }
+}
+@media (max-width: 480px) {
+  .broadsheet-title { padding-right: clamp(20px, 4vw, 48px); }
+  .broadsheet-title .bs-letter-glyph { font-size: 96px; }
+  .broadsheet-title .title-questions { font-size: 1.12em; }
+  .answer-quote { font-size: 56px; }
+  .answer-quote--open { top: 10px; left: 10px; }
+  .answer-quote--close { right: 10px; bottom: 6px; }
+  .colophon { padding: 14px 16px 16px; }
+  .colophon-lines { font-size: 12px; row-gap: 4px; }
+  .colophon-head-text { font-size: 11.5px; letter-spacing: 0.18em; }
+}
+
+/* the press signature rule ties the colophon to the page */
+.colophon-line--press {
+  letter-spacing: 0.01em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1;
+}
