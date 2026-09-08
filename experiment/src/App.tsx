@@ -7370,6 +7370,359 @@ function ReplyInitial({ visible, reduced }: { visible: boolean; reduced: boolean
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 139 · the folio earns a single frontispiece compass
+   A hand-drawn compass rose sits in the chapter opener, between the
+   headpiece and the rule. Its four cardinal points are the four moments
+   of the reading — question, press, answer, reply — and a small gold
+   needle turns to indicate where the reader currently stands. The
+   compass replaces the recto's quiet emptiness with one authored
+   ornament that earns the eye before the question arrives.
+   ────────────────────────────────────────────────────────────────────── */
+
+const COMPASS_STATIONS: { roman: string; name: string; phase: Phase; angle: number; glyph: React.ReactNode }[] = [
+  {
+    roman: 'i',
+    name: 'the question',
+    phase: 'idle',
+    angle: 270,
+    glyph: (
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+          d="M 9 8 Q 9 5 12 5 Q 15 5 15 8 Q 15 11 12 12 L 12 14"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+        />
+        <circle cx="12" cy="17.4" r="0.9" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
+    roman: 'ii',
+    name: 'the answer',
+    phase: 'answering',
+    angle: 0,
+    glyph: (
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+          d="M 4 11 L 9 17 L 20 6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path d="M 4 19 L 20 19" stroke="currentColor" strokeWidth="0.45" strokeDasharray="1 1.6" opacity="0.6" />
+      </svg>
+    ),
+  },
+  {
+    roman: 'iii',
+    name: 'the reply',
+    phase: 'replying',
+    angle: 90,
+    glyph: (
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+          d="M 3 6 Q 9 4 12 8 Q 15 12 21 10"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 21 7.5 L 21.5 11 L 18 10.4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    roman: 'iv',
+    name: 'the colophon',
+    phase: 'complete',
+    angle: 180,
+    glyph: (
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path
+          d="M 12 3 L 14.2 9.4 L 21 9.6 L 15.6 13.6 L 17.6 20 L 12 16.2 L 6.4 20 L 8.4 13.6 L 3 9.6 L 9.8 9.4 Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.85"
+          strokeLinejoin="round"
+        />
+        <circle cx="12" cy="12" r="1.2" fill="currentColor" />
+      </svg>
+    ),
+  },
+]
+
+function FolioCompass({
+  phase,
+  reduced,
+}: {
+  phase: Phase
+  reduced: boolean
+}) {
+  const activeIndex = Math.max(
+    0,
+    COMPASS_STATIONS.findIndex((s) => s.phase === phase),
+  )
+  const needleAngle = COMPASS_STATIONS[activeIndex].angle
+
+  return (
+    <figure
+      className={`folio-compass${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="folio-compass-plate"
+        viewBox="0 0 240 240"
+        focusable="false"
+      >
+        <defs>
+          <radialGradient id="fc-face" cx="50%" cy="38%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 248, 224, 0.96)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.82)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0.62)" />
+          </radialGradient>
+          <radialGradient id="fc-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.34)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+          <linearGradient id="fc-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#8a5d1f" />
+          </linearGradient>
+          <linearGradient id="fc-gold-soft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#a47026" />
+          </linearGradient>
+          <pattern id="fc-grain" width="3" height="3" patternUnits="userSpaceOnUse">
+            <circle cx="0.6" cy="0.4" r="0.32" fill="rgba(107, 74, 37, 0.05)" />
+            <circle cx="2.2" cy="1.6" r="0.24" fill="rgba(107, 74, 37, 0.04)" />
+          </pattern>
+        </defs>
+
+        <ellipse cx="120" cy="124" rx="106" ry="106" fill="url(#fc-halo)" />
+
+        <circle
+          cx="120"
+          cy="120"
+          r="100"
+          fill="url(#fc-face)"
+          stroke="url(#fc-gold)"
+          strokeWidth="0.9"
+        />
+        <circle
+          cx="120"
+          cy="120"
+          r="100"
+          fill="url(#fc-grain)"
+          opacity="0.65"
+        />
+        <circle
+          cx="120"
+          cy="120"
+          r="94"
+          fill="none"
+          stroke="url(#fc-gold)"
+          strokeWidth="0.32"
+          strokeDasharray="1.6 2"
+          opacity="0.78"
+        />
+        <circle
+          cx="120"
+          cy="120"
+          r="88"
+          fill="none"
+          stroke="rgba(107, 74, 37, 0.18)"
+          strokeWidth="0.3"
+        />
+
+        <g className="fc-tick-ring" stroke="rgba(107, 74, 37, 0.42)" fill="none" strokeLinecap="round">
+          {Array.from({ length: 24 }, (_, i) => {
+            const a = (i / 24) * Math.PI * 2 - Math.PI / 2
+            const r1 = i % 6 === 0 ? 82 : i % 3 === 0 ? 84 : 86
+            const r2 = i % 6 === 0 ? 90 : i % 3 === 0 ? 88 : 87
+            return (
+              <line
+                key={i}
+                x1={120 + r1 * Math.cos(a)}
+                y1={120 + r1 * Math.sin(a)}
+                x2={120 + r2 * Math.cos(a)}
+                y2={120 + r2 * Math.sin(a)}
+                strokeWidth={i % 6 === 0 ? 0.55 : 0.32}
+              />
+            )
+          })}
+        </g>
+
+        <g className="fc-rose" style={{ transformOrigin: '120px 120px' }}>
+          <g
+            fill="url(#fc-gold-soft)"
+            opacity="0.82"
+            transform="rotate(0 120 120)"
+          >
+            <path d="M 120 56 L 126 112 L 120 124 L 114 112 Z" />
+            <path d="M 120 184 L 114 128 L 120 116 L 126 128 Z" />
+            <path d="M 56 120 L 112 114 L 124 120 L 112 126 Z" />
+            <path d="M 184 120 L 128 126 L 116 120 L 128 114 Z" />
+          </g>
+          <g
+            fill="url(#fc-gold)"
+            opacity="0.62"
+            transform="rotate(45 120 120)"
+          >
+            <path d="M 120 64 L 122 112 L 120 120 L 118 112 Z" />
+            <path d="M 120 176 L 118 128 L 120 120 L 122 128 Z" />
+            <path d="M 64 120 L 112 118 L 120 120 L 112 122 Z" />
+            <path d="M 176 120 L 128 122 L 120 120 L 128 118 Z" />
+          </g>
+          <g
+            stroke="rgba(107, 74, 37, 0.4)"
+            strokeWidth="0.32"
+            fill="none"
+            opacity="0.55"
+          >
+            <circle cx="120" cy="120" r="58" />
+            <circle cx="120" cy="120" r="44" strokeDasharray="0.4 1.4" />
+          </g>
+        </g>
+
+        <g className="fc-station-labels">
+          {COMPASS_STATIONS.map((station, i) => {
+            const rad = ((station.angle - 90) * Math.PI) / 180
+            const lx = 120 + 70 * Math.cos(rad)
+            const ly = 120 + 70 * Math.sin(rad)
+            const reached = i <= activeIndex
+            return (
+              <g
+                key={station.roman}
+                className={`fc-station${reached ? ' is-reached' : ''}${i === activeIndex ? ' is-active' : ''}`}
+                transform={`translate(${lx} ${ly})`}
+              >
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="12"
+                  fill="rgba(255, 248, 224, 0.7)"
+                  stroke="url(#fc-gold)"
+                  strokeWidth="0.4"
+                  opacity={i === activeIndex ? 0.95 : 0.6}
+                />
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="12"
+                  fill="none"
+                  stroke="url(#fc-gold)"
+                  strokeWidth="0.4"
+                  strokeDasharray="0.4 1.2"
+                  opacity="0.7"
+                />
+                <g
+                  fill={i === activeIndex ? 'rgba(167, 60, 44, 0.95)' : 'rgba(107, 74, 37, 0.62)'}
+                  transform="translate(-7 -7)"
+                >
+                  {station.glyph}
+                </g>
+              </g>
+            )
+          })}
+        </g>
+
+        <g
+          className="fc-needle"
+          style={{
+            transformOrigin: '120px 120px',
+            transform: `rotate(${needleAngle - 90}deg)`,
+            transition: reduced ? 'none' : 'transform 1100ms cubic-bezier(.22, .86, .22, 1)',
+          }}
+        >
+          <path
+            d="M 120 28 L 124 116 L 120 124 L 116 116 Z"
+            fill="url(#fc-gold)"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.4"
+          />
+          <path
+            d="M 120 28 L 124 116 L 120 124 L 116 116 Z"
+            fill="none"
+            stroke="rgba(255, 246, 218, 0.42)"
+            strokeWidth="0.32"
+            opacity="0.7"
+          />
+          <path
+            d="M 120 212 L 116 124 L 120 116 L 124 124 Z"
+            fill="rgba(107, 74, 37, 0.42)"
+          />
+        </g>
+
+        <circle cx="120" cy="120" r="5" fill="url(#fc-gold)" />
+        <circle cx="120" cy="120" r="5" fill="none" stroke="rgba(80, 36, 14, 0.55)" strokeWidth="0.45" />
+        <circle cx="120" cy="120" r="1.6" fill="rgba(80, 36, 14, 0.92)" />
+        <circle cx="120" cy="120" r="0.55" fill="rgba(255, 248, 224, 0.95)" />
+
+        <g className="fc-rim-text fc-rim-text--top">
+          <path
+            id="fc-rim-arc-top"
+            d="M 120 120 m -78 0 a 78 78 0 0 1 156 0"
+            fill="none"
+          />
+          <text>
+            <textPath href="#fc-rim-arc-top" startOffset="50%" textAnchor="middle">
+              ad lucem · perlege
+            </textPath>
+          </text>
+        </g>
+        <g className="fc-rim-text fc-rim-text--bot">
+          <path
+            id="fc-rim-arc-bot"
+            d="M 120 120 m -78 0 a 78 78 0 1 0 156 0"
+            fill="none"
+          />
+          <text>
+            <textPath href="#fc-rim-arc-bot" startOffset="50%" textAnchor="middle">
+              cap · xviii · folio lxxvii
+            </textPath>
+          </text>
+        </g>
+
+        <g
+          className="fc-pips"
+          fill="url(#fc-gold-soft)"
+        >
+          <circle cx="120" cy="20" r="0.7" />
+          <circle cx="120" cy="220" r="0.7" />
+          <circle cx="20" cy="120" r="0.7" />
+          <circle cx="220" cy="120" r="0.7" />
+        </g>
+      </svg>
+      <figcaption className="folio-compass-cap">
+        <span className="folio-compass-cap-rule folio-compass-cap-rule--left" aria-hidden="true" />
+        <span className="folio-compass-cap-text">
+          <em className="folio-compass-cap-key">the folio compass</em>
+          <span className="folio-compass-cap-sep" aria-hidden="true">·</span>
+          <em className="folio-compass-cap-tail">
+            <span className="folio-compass-cap-station">
+              {COMPASS_STATIONS[activeIndex].name}
+            </span>
+          </em>
+        </span>
+        <span className="folio-compass-cap-rule folio-compass-cap-rule--right" aria-hidden="true" />
+      </figcaption>
+    </figure>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
@@ -7728,6 +8081,7 @@ export function App() {
         <div className="chapter-opener">
           <PrinterEmblem />
           <ChapterHead now={now} />
+          <FolioCompass phase={phase} reduced={reduced} />
           <div className="chapter-opener-rule" aria-hidden="true">
             <span className="chapter-opener-rule-line" />
             <span className="chapter-opener-rule-mark">¶</span>

@@ -2310,21 +2310,62 @@ button { font: inherit; }
 .ms-stamp-row--mid { font: italic 9px/1 var(--display); letter-spacing: 0.04em; text-transform: none; }
 
 .response-heading {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 18px;
   padding-right: 64px;
 }
 .response-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
   color: var(--coral-deep);
   font: 800 10px var(--sans);
-  letter-spacing: 0.22em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
+  position: relative;
+}
+.response-label::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.32) 18%,
+    rgba(167, 60, 44, 0.5) 50%,
+    rgba(167, 60, 44, 0.32) 82%,
+    transparent
+  );
+  opacity: 0;
+  transform: scaleX(0.6);
+  transform-origin: left;
+  transition: opacity 1100ms var(--ease) 200ms, transform 1300ms var(--ease) 200ms;
+}
+.response-panel.is-revealed .response-label::after {
+  opacity: 1;
+  transform: scaleX(1);
 }
 .response-rule {
   flex: 1; height: 1px;
   background: linear-gradient(to right, rgba(107, 74, 37, 0.25), transparent);
 }
-.response-arrow { color: var(--coral); }
+.response-arrow {
+  color: var(--coral);
+  font-size: 12px;
+  transform: translateX(-2px);
+  animation: response-arrow-beckon 3.6s ease-in-out infinite;
+}
+@keyframes response-arrow-beckon {
+  0%, 100% { transform: translateX(-2px); opacity: 0.7; }
+  50%      { transform: translateX(2px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .response-label::after { transition: none; opacity: 1; transform: none; }
+  .response-arrow { animation: none; }
+}
 
 /* ────────── answer surface ────────── */
 
@@ -11448,6 +11489,175 @@ button { font: inherit; }
   .reply-initial {
     width: clamp(46px, 14vw, 60px);
   }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 139 · the folio compass
+   A single hand-drawn compass rose sits inside the chapter-opener,
+   replacing the visual hush that sat between the headpiece and the
+   chapter rule. The four cardinal points carry the reading — question,
+   press, answer, reply — and a small gold needle turns to mark the
+   reader's place. The compass arrives with the page and stays still
+   enough to read; only the needle moves.
+   ────────────────────────────────────────────────────────────────────── */
+
+.folio-compass {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  margin: 10px 0 6px;
+  padding: 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: folio-compass-in 1100ms var(--ease) 280ms both;
+}
+
+.folio-compass.is-static {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes folio-compass-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.folio-compass-plate {
+  display: block;
+  width: clamp(132px, 16vw, 168px);
+  height: auto;
+  filter:
+    drop-shadow(0 8px 14px rgba(80, 36, 14, 0.18))
+    drop-shadow(0 1px 0.5px rgba(107, 74, 37, 0.36));
+}
+
+.fc-rose {
+  animation: fc-rose-spin 96s linear infinite;
+}
+.folio-compass.is-static .fc-rose {
+  animation: none;
+}
+@keyframes fc-rose-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.fc-station {
+  transition: opacity 700ms var(--ease);
+}
+.fc-station.is-reached { opacity: 1; }
+.fc-station:not(.is-reached) { opacity: 0.55; }
+.fc-station.is-active circle:first-of-type {
+  filter: drop-shadow(0 0 4px rgba(245, 198, 91, 0.55));
+}
+
+.fc-needle {
+  filter: drop-shadow(0 1px 1px rgba(80, 36, 14, 0.4));
+}
+
+.fc-rim-text {
+  fill: rgba(107, 74, 37, 0.62);
+  font: italic 500 6.4px/1 var(--display);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.folio-compass-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(360px, 100%);
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-style: italic;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+}
+
+.folio-compass-cap-rule {
+  flex: 0 0 clamp(28px, 5vw, 56px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.32) 50%,
+    transparent
+  );
+}
+.folio-compass-cap-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(167, 60, 44, 0.32) 50%,
+    transparent
+  );
+}
+
+.folio-compass-cap-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  letter-spacing: 0.04em;
+}
+
+.folio-compass-cap-key {
+  color: var(--coral-deep);
+  font: italic 580 9.5px/1 var(--sans);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.folio-compass-cap-sep {
+  color: var(--coral);
+  font: italic 600 13px/1 var(--display);
+  position: relative;
+  top: -0.04em;
+  opacity: 0.6;
+}
+
+.folio-compass-cap-tail {
+  color: var(--ink);
+  font: italic 540 12px/1.2 var(--display);
+  letter-spacing: 0.012em;
+}
+
+.folio-compass-cap-station {
+  display: inline-block;
+  transition: color 700ms var(--ease);
+}
+
+@media (max-width: 880px) {
+  .folio-compass { gap: 6px; margin: 2px 0 2px; }
+  .folio-compass-cap-rule { flex-basis: 20px; }
+}
+
+@media (max-width: 720px) {
+  .folio-compass-plate { width: clamp(108px, 22vw, 144px); }
+  .folio-compass-cap-key { font-size: 8.5px; letter-spacing: 0.18em; }
+  .folio-compass-cap-tail { font-size: 11px; }
+}
+
+@media (max-width: 520px) {
+  .folio-compass { margin: 0; }
+  .folio-compass-plate { width: clamp(94px, 30vw, 124px); }
+  .folio-compass-cap-rule { flex-basis: 12px; }
+  .folio-compass-cap-key { font-size: 7.5px; letter-spacing: 0.14em; }
+  .folio-compass-cap-tail { font-size: 10.5px; }
+}
+
+@media (max-width: 420px) {
+  .folio-compass-plate { width: clamp(80px, 32vw, 108px); }
+  .folio-compass-cap-text { gap: 4px; }
+  .fc-rim-text { font-size: 5.6px; letter-spacing: 0.2em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-compass { animation: none; opacity: 1; transform: none; }
+  .folio-compass-cap-station { transition: none; }
+  .fc-rose { animation: none !important; }
 }
 
 
