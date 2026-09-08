@@ -539,6 +539,65 @@ button {
 }
 
 /* ============================================================== */
+/* TITLE-TO-MARGIN WIRES                                           */
+/* ============================================================== */
+.word__wire {
+  position: absolute;
+  left: 100%;
+  top: 56%;
+  width: clamp(56px, 9vw, 110px);
+  height: 28px;
+  margin-top: -14px;
+  margin-left: 4px;
+  pointer-events: none;
+  opacity: 0;
+  fill: none;
+  stroke: var(--coral);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  transition: opacity .4s var(--ease);
+  z-index: 1;
+}
+
+.word__wire::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--coral);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity .35s var(--ease) .15s;
+}
+
+.word:hover .word__wire,
+.word:focus-visible .word__wire,
+.word--active .word__wire {
+  opacity: .55;
+  animation: wireDraw 1.1s var(--ease-out) forwards;
+}
+
+.word:hover .word__wire::before,
+.word:focus-visible .word__wire::before,
+.word--active .word__wire::before {
+  opacity: .85;
+}
+
+@keyframes wireDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.word[data-id="yet"] .word__wire {
+  top: 58%;
+  stroke-width: 1.2;
+}
+
+/* ============================================================== */
 /* LEDE                                                            */
 /* ============================================================== */
 .proof__lede {
@@ -787,6 +846,28 @@ button {
 
 .answer--open .answer__hatch {
   opacity: 0;
+}
+
+.answer__plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid var(--coral);
+  opacity: 0;
+  transition: opacity .5s var(--ease);
+}
+
+.answer--open .answer__plate::after {
+  opacity: 0;
+  animation: inkSettle 1.3s var(--ease-out) forwards;
+}
+
+@keyframes inkSettle {
+  0%   { opacity: 0; inset: 0; border-color: var(--coral); }
+  18%  { opacity: .55; inset: -2px; border-color: var(--coral-2); }
+  55%  { opacity: .25; inset: -5px; border-color: var(--coral); }
+  100% { opacity: 0; inset: -10px; border-color: transparent; }
 }
 
 .answer__pin {
@@ -1089,6 +1170,58 @@ button {
   top: 4px;
 }
 
+.margin__tether {
+  position: absolute;
+  top: 0;
+  left: clamp(-58px, -8vw, -100px);
+  width: clamp(50px, 8vw, 96px);
+  height: 100%;
+  min-height: 90px;
+  pointer-events: none;
+  opacity: 0;
+  fill: none;
+  stroke: var(--coral);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  transition: opacity .4s var(--ease);
+  z-index: 1;
+}
+
+.margin__tether svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.margin__tether::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--coral);
+  opacity: 0;
+  transition: opacity .4s var(--ease) 1s;
+}
+
+.margin__item:hover .margin__tether,
+.margin__item:focus-within .margin__tether,
+.margin__item--active .margin__tether {
+  opacity: .55;
+  animation: wireDraw 1.2s var(--ease-out) forwards;
+}
+
+.margin__item:hover .margin__tether::after,
+.margin__item:focus-within .margin__tether::after,
+.margin__item--active .margin__tether::after {
+  opacity: .8;
+}
+
 .margin__item:hover,
 .margin__item:focus-within,
 .margin__item--active {
@@ -1221,6 +1354,84 @@ button {
 }
 
 /* ============================================================== */
+/* PRESS DEVICE                                                    */
+/* ============================================================== */
+.proof__device {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 24px);
+  margin-top: clamp(40px, 6vw, 70px);
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  color: var(--coral-2);
+  animation: deviceIn 1.2s var(--ease-out) .35s backwards;
+}
+
+@keyframes deviceIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.proof__device-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line) 30%, var(--line) 70%, transparent);
+  max-width: 180px;
+}
+
+.proof__device-rule--end {
+  background: linear-gradient(to left, transparent, var(--line) 30%, var(--line) 70%, transparent);
+}
+
+.press-mark {
+  display: block;
+  width: clamp(48px, 5vw, 64px);
+  height: clamp(48px, 5vw, 64px);
+  color: var(--coral);
+  transition: transform 1.4s var(--ease);
+  animation: markStampIn 1.1s var(--ease-out) .5s backwards;
+}
+
+@keyframes markStampIn {
+  0%   { opacity: 0; transform: scale(.6) rotate(-25deg); }
+  60%  { opacity: 1; transform: scale(1.05) rotate(2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+.proof__device:hover .press-mark {
+  transform: rotate(-12deg);
+}
+
+.proof__device-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--faded);
+  line-height: 1.3;
+}
+
+.proof__device-text em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--coral-2);
+}
+
+.proof__device-text small {
+  font-size: 8px;
+  letter-spacing: .2em;
+  color: var(--faded);
+}
+
+/* ============================================================== */
 /* COLOPHON                                                        */
 /* ============================================================== */
 .colophon {
@@ -1333,6 +1544,11 @@ button {
 
   .proof__main {
     max-width: none;
+  }
+
+  .word__wire,
+  .margin__tether {
+    display: none;
   }
 
   .margin {
@@ -1573,6 +1789,25 @@ button {
     margin-top: 50px;
   }
 
+  .proof__device {
+    margin-top: 40px;
+    padding-top: 18px;
+    gap: 14px;
+  }
+
+  .proof__device-rule {
+    max-width: 60px;
+  }
+
+  .press-mark {
+    width: 44px;
+    height: 44px;
+  }
+
+  .proof__device-text em {
+    font-size: 14px;
+  }
+
   .word .scribble {
     height: 0.5em;
     bottom: -0.2em;
@@ -1613,4 +1848,11 @@ button {
     opacity: 1;
     transform: translateY(0);
   }
+  .word__wire,
+  .margin__tether {
+    opacity: .55;
+    stroke-dashoffset: 0;
+    animation: none !important;
+  }
+  .answer__plate::after { animation: none !important; }
 }

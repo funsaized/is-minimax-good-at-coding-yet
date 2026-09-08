@@ -10,6 +10,7 @@ type Gloss = {
   gloss: string
   scribble: string
   blot: string
+  tether: string
 }
 
 const MARGINALIA: Gloss[] = [
@@ -21,6 +22,7 @@ const MARGINALIA: Gloss[] = [
     text: 'The maker is a habit, not a name. When the model rotates, the page should still feel like someone — or something — was here.',
     scribble: 'M2 9 C 8 3, 16 15, 24 9 C 30 5, 38 13, 46 9',
     blot: 'M11 3 C 17 5, 21 11, 18 17 C 14 21, 5 20, 3 14 C 1 9, 6 3, 11 3 Z',
+    tether: 'M58 4 C 40 14, 18 28, 4 56',
   },
   {
     id: 'good',
@@ -30,6 +32,7 @@ const MARGINALIA: Gloss[] = [
     text: 'A page gets clearer when it makes one confident choice instead of presenting every possible direction at once.',
     scribble: 'M2 9 C 12 3, 22 15, 32 9 C 42 3, 52 15, 62 9',
     blot: 'M10 4 C 16 3, 21 8, 20 14 C 19 20, 11 21, 6 17 C 1 13, 4 6, 10 4 Z',
+    tether: 'M58 6 C 36 14, 14 32, 4 64',
   },
   {
     id: 'yet',
@@ -39,6 +42,7 @@ const MARGINALIA: Gloss[] = [
     text: '"Yet" carries the question. The pause before it is where the answer lives — and where the page earns its reading.',
     scribble: 'M2 9 C 8 3, 16 15, 24 9 C 30 5, 36 13, 42 9',
     blot: 'M9 3 C 14 2, 20 7, 19 13 C 18 19, 10 20, 5 16 C 1 11, 4 4, 9 3 Z',
+    tether: 'M58 8 C 40 18, 20 38, 4 70',
   },
 ]
 
@@ -257,6 +261,19 @@ function Signature() {
   )
 }
 
+function PressMark() {
+  return (
+    <svg className="press-mark" viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" strokeWidth="0.9" />
+      <circle cx="32" cy="32" r="23" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1.2 2.4" />
+      <text x="32" y="38" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="20" fill="currentColor">m³</text>
+      <path d="M16 48 Q 32 54 48 48" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" />
+      <circle cx="14" cy="32" r="0.8" fill="currentColor" />
+      <circle cx="50" cy="32" r="0.8" fill="currentColor" />
+    </svg>
+  )
+}
+
 type WordProps = {
   text: string
   id?: string
@@ -285,6 +302,9 @@ function TitleWord({ text, id, active, onEnter, onLeave, scribble }: WordProps) 
       </span>
       {text}
       {scribble && <Scribble path={scribble} />}
+      <svg className="word__wire" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2 14 Q 40 6 98 14" />
+      </svg>
     </span>
   )
 }
@@ -500,6 +520,11 @@ export function App() {
                 >
                   <span className="margin__n">{m.n}</span>
                   <div className="margin__copy">
+                    <span className="margin__tether" aria-hidden="true">
+                      <svg viewBox="0 0 60 80" preserveAspectRatio="none">
+                        <path d={m.tether} />
+                      </svg>
+                    </span>
                     <span className="margin__blot" aria-hidden="true">
                       <InkBlot path={blots[m.id]} />
                     </span>
@@ -516,6 +541,16 @@ export function App() {
               ))}
             </ol>
           </aside>
+        </div>
+
+        <div className="proof__device" aria-hidden="true">
+          <span className="proof__device-rule" />
+          <PressMark />
+          <span className="proof__device-text">
+            <em>m³ press</em>
+            <small>set & printed in-browser</small>
+          </span>
+          <span className="proof__device-rule proof__device-rule--end" />
         </div>
 
         <footer className="colophon" aria-label="Colophon">
