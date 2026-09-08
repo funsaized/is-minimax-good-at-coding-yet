@@ -1,0 +1,19 @@
+{
+  "id": 154,
+  "parentId": 153,
+  "createdAt": "2026-09-08T12:02:58.550Z",
+  "summary": "The verso earns its own composed press catchword — a delicate italic slip that mirrors the recto catchword in idiom but ",
+  "path": "/iterations/000154/index.html",
+  "screenshot": "/iterations/000154/desktop.png",
+  "mobileScreenshot": "/iterations/000154/mobile.png",
+  "sourceCommit": "ce769d6e2524bc2f0f884a52f0e88b947b834cd0",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 193,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 193760,
+    "outputTokens": 6462,
+    "steps": 46
+  }
+}
