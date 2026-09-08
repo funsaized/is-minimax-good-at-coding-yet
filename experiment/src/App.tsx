@@ -5934,6 +5934,149 @@ function SpecimenWordmark({
 }
 
 /* ──────────────────────────────────────────────────────────────────────
+   iteration 159 · the title's own composed press headline
+
+   Replaces the stacked TitleRule + RectoCatchword + SpecimenWordmark
+   with a single composed impression that does all three jobs in one
+   typographic block: a horizontal gold rule that frames the press
+   monogram, an italic catch that names the question, the specimen
+   wordmark itself set between hairline rules, and a closing italic
+   line naming the press's specimen number and reader. The composed
+   impression earns its place as the title block's own quiet
+   signature — a single piece of editorial typography, not three
+   stacked ornaments.
+   ────────────────────────────────────────────────────────────────────── */
+
+function TitlePressHeadline({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <figure
+      className={`title-press-headline${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg
+        className="title-press-headline-rule"
+        viewBox="0 0 320 22"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="tph-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="50%" stopColor="rgba(200, 146, 62, 0.74)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="tph-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.32)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="tph-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <radialGradient id="tph-face" cx="50%" cy="34%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.78)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.32)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+          </radialGradient>
+        </defs>
+        <line
+          x1="6"
+          y1="14"
+          x2="314"
+          y2="14"
+          stroke="url(#tph-rule-ghost)"
+          strokeWidth="0.32"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="11"
+          x2="106"
+          y2="11"
+          stroke="url(#tph-rule)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+          className="title-press-headline-rule-stroke"
+        />
+        <line
+          x1="214"
+          y1="11"
+          x2="314"
+          y2="11"
+          stroke="url(#tph-rule)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+          className="title-press-headline-rule-stroke"
+        />
+        <g className="title-press-headline-monogram" transform="translate(160 11)">
+          <circle r="13" fill="url(#tph-face)" />
+          <circle r="11.6" fill="none" stroke="url(#tph-gold)" strokeWidth="0.45" />
+          <circle
+            r="9.6"
+            fill="none"
+            stroke="url(#tph-gold)"
+            strokeWidth="0.22"
+            strokeDasharray="0.4 1.2"
+            opacity="0.78"
+          />
+          <text x="-1" y="1.4" textAnchor="middle" className="tph-letter">
+            m
+          </text>
+          <text x="4" y="1.4" textAnchor="middle" className="tph-letter-roman">
+            ·iii
+          </text>
+          <line
+            x1="-5"
+            y1="4.2"
+            x2="5"
+            y2="4.2"
+            stroke="url(#tph-gold)"
+            strokeWidth="0.32"
+            strokeLinecap="round"
+            opacity="0.7"
+          />
+          <circle cx="0" cy="-7.4" r="0.45" fill="rgba(167, 60, 44, 0.6)" />
+          <circle cx="7.4" cy="0" r="0.45" fill="rgba(167, 60, 44, 0.6)" />
+          <circle cx="-7.4" cy="0" r="0.45" fill="rgba(167, 60, 44, 0.6)" />
+          <circle cx="0" cy="7.4" r="0.45" fill="rgba(167, 60, 44, 0.6)" />
+        </g>
+      </svg>
+
+      <p className="title-press-headline-caption">
+        <em className="title-press-headline-key">the question</em>
+        <span className="title-press-headline-sep" aria-hidden="true">·</span>
+        <em className="title-press-headline-tail">set in this folio</em>
+      </p>
+
+      <div className="title-press-headline-specimen">
+        <span className="title-press-headline-specimen-rule" aria-hidden="true" />
+        <em className="title-press-headline-specimen-name">Minimax M3</em>
+        <span className="title-press-headline-specimen-rule title-press-headline-specimen-rule--right" aria-hidden="true" />
+      </div>
+
+      <p className="title-press-headline-foot">
+        <em className="title-press-headline-foot-key">specimen · no. xviii</em>
+        <span className="title-press-headline-foot-sep" aria-hidden="true">·</span>
+        <em className="title-press-headline-foot-tail">set for the reader</em>
+      </p>
+    </figure>
+  )
+}
+
+/* ──────────────────────────────────────────────────────────────────────
    iteration 156 · the verso earns a twin specimen wordmark, completing
    the recto-verso opening-closing symmetry. The recto already closes its
    title block with a thin gold rule, a coral-marked specimen wordmark,
@@ -10803,11 +10946,7 @@ export function App() {
               <PressKey visible={phase !== 'idle'} reduced={reduced} />
             </span>
 
-            <TitleRule visible={phase !== 'idle'} reduced={reduced} />
-
-            <RectoCatchword visible={phase !== 'idle'} reduced={reduced} />
-
-            <SpecimenWordmark visible={phase !== 'idle'} reduced={reduced} />
+            <TitlePressHeadline visible={phase !== 'idle'} reduced={reduced} />
 
             <ReadingTide progress={Math.min(1, inkProgress + 0.15)} reduced={reduced} />
 

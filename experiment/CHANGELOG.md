@@ -1,11 +1,26 @@
-# Frontend iteration 158
+# Changelog
 
-## Summary
-Replace the stacked press-head-note, hour-of-reading and epigraph above the question with a single composed silverpoint impression (FolioPressPlate), and close the sheet with a matching composed colophon (FolioPressColophon).
+## Iteration 159 — title block earns its own composed press headline
 
-## Changes
-- New `FolioPressPlate` at the head of the recto: one composed SVG impression that gathers the chapter sigil (Caput XVIII · LXXVII), the day's hour rosette, a centered "ad lucem · perlege" motto, and a press monogram to its left into a single engraved tableau.
-- Removed the small stacked `PressHeadNote`, `HourOfReading`, and `Epigraph` above the recto question; their content is now folded into the silverpoint plate.
-- Removed the duplicate `PrinterEmblem` from `chapter-frontispiece`; the frontispiece now opens more breathing — half-title above, chapter sigil + signature in the middle, closing italic line below — so the title below receives the page.
-- New `FolioPressColophon` at the foot of the sheet, mirroring the head impression at a slightly smaller scale: a thin gold rule with a centered press rosette, and one italic line that names "explicit caput xviii · manu m · iii · ad lucem · MMXXVI" in the press's own hand.
-- New pin-prick mark above the question-mark in the title — a small coral-and-gold dot that earns the question's weight and gently breathes once the page is pressed.
+A single composed typographic impression now closes the recto's title
+block. The three stacked ornaments that previously followed the
+question — the gold title-rule with its fleuron, the italic recto
+catchword with its monogram sigil, and the "Minimax M3" specimen
+wordmark — are unified into one breathing block: a horizontal gold
+rule that frames the press monogram, an italic catch that names the
+question, the specimen wordmark set between hairline rules, and a
+closing italic line naming the press's specimen number. The new
+composition earns more breathing room than the three separate
+elements and reads as one editorial object rather than a stack of
+small ornaments. Animations are choreographed — rule draws, monogram
+arrives with a soft breath, specimen wordmark and its hairline rule
+settle in sequence — and respect `prefers-reduced-motion`.
+
+- `src/App.tsx`: added `TitlePressHeadline`; replaced the stacked
+  `TitleRule` + `RectoCatchword` + `SpecimenWordmark` render with a
+  single `<TitlePressHeadline />` call. The three legacy components
+  remain defined but unused (kept for reference and bundle parity).
+- `src/style.css`: added `.title-press-headline` and its
+  monogram, rule, caption, specimen and foot children, plus a quiet
+  breath animation on the monogram and reduced-motion fallbacks.
+- `index.html`, document title, and framework: unchanged.
