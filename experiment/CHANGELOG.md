@@ -1,7 +1,11 @@
 # Changelog
 
-## Iteration 153
+## Iteration 154
 
-The recto earns its own composed press catchword, set between the title rule and the specimen wordmark.
+The verso earns its own composed press catchword — a delicate italic slip that mirrors the recto catchword in idiom but speaks in the reply's own slower voice, completing the recto/verso opening symmetry.
 
-A small, italic slip — thin gold rules on either side, an italic inscription ("the question · set in this folio"), and the press's monogram sigil in a delicate gold cartouche — sits in the space the title rule leaves behind. It is the question's own quiet signature: where the chapter-frontispiece names the chapter, and the chapter-signature names the press, the recto catchword names the question itself. The sigil breathes (a slow 6.8s rotate-and-scale cycle) so the catchword feels set, not stamped. It uses the same idiom as the existing chapter-half and chapter-signature slips, but it is the recto's own contribution to the title-block's composed tail — title rule, catchword, specimen wordmark, reading tide, tide tail — and earns its place without crowding the existing ornaments.
+- Added `ReplyCatchword` figure: thin gold rules, an italic cluster naming the reply ("the reply · set slowly, in this folio"), and a small leaf-and-fleuron sigil that stands in for the recto catchword's printer monogram.
+- Placed the new catchword between the verso frontispiece and the three-voice verses, so the verso opening now reads: half-title → pin → reply catchword → verses.
+- Revealed with the reply (uses the existing `replyShown` gate) and animated as the verso opens, with reduced-motion respect.
+- Added a slow, gentle breath cycle to the leaf sigil (mirroring the recto catchword's monogram breath in the opposite direction), giving the reply its own quiet pulse.
+- Added full responsive + reduced-motion CSS for `.reply-catchword*`, scaling rules and sigil at 720px and 480px breakpoints.

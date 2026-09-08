@@ -1594,6 +1594,107 @@ function RectoCatchword({
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 154 · the verso earns its own composed press catchword.
+
+   A delicate italic slip sits between the verso frontispiece and the
+   three-voice verses, mirroring the recto's RectoCatchword in idiom
+   but speaking in the reply's own slower voice. It uses the same
+   thin gold rule, the same italic cluster, and the same hidden-sigil
+   pattern — but bears a small leaf-and-fleuron sigil (not the
+   printer's monogram) and an inscription that names the reply, not
+   the question. Together with the recto catchword it completes the
+   recto/verso opening symmetry: each side of the spread now earns
+   its own quiet press signature, set by its own hand.
+   ────────────────────────────────────────────────────────────────────── */
+
+function ReplyCatchword({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <figure
+      className={`reply-catchword${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <span className="reply-catchword-rule reply-catchword-rule--left" />
+      <span className="reply-catchword-cluster">
+        <em className="reply-catchword-key">the reply</em>
+        <span className="reply-catchword-sep" aria-hidden="true">·</span>
+        <em className="reply-catchword-tail">set slowly, in this folio</em>
+      </span>
+      <span className="reply-catchword-sigil" aria-hidden="true">
+        <svg viewBox="0 0 18 18" focusable="false">
+          <defs>
+            <linearGradient id="rpcw-gold" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#f6d076" />
+              <stop offset="50%" stopColor="#c8923e" />
+              <stop offset="100%" stopColor="#9c6e26" />
+            </linearGradient>
+            <radialGradient id="rpcw-face" cx="50%" cy="34%" r="64%">
+              <stop offset="0%" stopColor="rgba(255, 246, 218, 0.55)" />
+              <stop offset="62%" stopColor="rgba(245, 220, 168, 0.18)" />
+              <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+            </radialGradient>
+            <linearGradient id="rpcw-leaf" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(154, 110, 38, 0.55)" />
+              <stop offset="100%" stopColor="rgba(78, 56, 28, 0.7)" />
+            </linearGradient>
+          </defs>
+          <circle cx="9" cy="9" r="8.2" fill="url(#rpcw-face)" />
+          <circle
+            cx="9"
+            cy="9"
+            r="7.6"
+            fill="none"
+            stroke="url(#rpcw-gold)"
+            strokeWidth="0.45"
+          />
+          <circle
+            cx="9"
+            cy="9"
+            r="6.4"
+            fill="none"
+            stroke="url(#rpcw-gold)"
+            strokeWidth="0.22"
+            strokeDasharray="0.4 1.2"
+            opacity="0.78"
+          />
+          <g className="rpcw-leaf-group" stroke="url(#rpcw-leaf)" strokeWidth="0.4" fill="none" strokeLinecap="round">
+            <path d="M 9 4.5 Q 6.4 7 7 9.6 Q 9 11 9 4.5 Z" fill="rgba(154, 110, 38, 0.42)" stroke="none" />
+            <path d="M 9 4.5 Q 11.6 7 11 9.6 Q 9 11 9 4.5 Z" fill="rgba(167, 60, 44, 0.32)" stroke="none" />
+            <line x1="9" y1="4.5" x2="9" y2="11" stroke="rgba(107, 74, 37, 0.55)" strokeWidth="0.3" />
+          </g>
+          <line
+            x1="6"
+            y1="11.4"
+            x2="12"
+            y2="11.4"
+            stroke="url(#rpcw-gold)"
+            strokeWidth="0.28"
+            strokeLinecap="round"
+            opacity="0.7"
+          />
+          <path
+            className="rpcw-fleuron"
+            d="M 9 13.4 Q 7.2 12.6 7.6 11.6 M 9 13.4 Q 10.8 12.6 10.4 11.6"
+            fill="none"
+            stroke="rgba(167, 60, 44, 0.78)"
+            strokeWidth="0.32"
+            strokeLinecap="round"
+          />
+        </svg>
+      </span>
+      <span className="reply-catchword-rule reply-catchword-rule--right" />
+    </figure>
+  )
+}
+
 function TitleRule({
   visible,
   reduced,
@@ -10149,6 +10250,8 @@ export function App() {
                 </svg>
               </div>
             </aside>
+
+            <ReplyCatchword visible={replyShown} reduced={reduced} />
 
             <RectoVerses />
 

@@ -15092,3 +15092,129 @@ a:focus-visible {
   .recto-tide-tail-cap-mark { font-size: 12px; }
 }
 
+/* ────────── reply catchword · the verso's composed press catchword ────────── */
+
+.reply-catchword {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 clamp(8px, 1.1vw, 14px);
+  margin: clamp(2px, 0.4vw, 6px) auto clamp(6px, 0.9vw, 14px);
+  max-width: min(460px, 100%);
+  padding: 0 clamp(8px, 2vw, 18px);
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-style: italic;
+  letter-spacing: 0.022em;
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 900ms var(--ease) 880ms,
+    transform 900ms var(--ease) 880ms;
+}
+.response-panel.is-revealed .reply-catchword {
+  opacity: 1;
+  transform: none;
+}
+.reply-catchword.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.reply-catchword.is-static { transition: none; transform: none; opacity: 1; }
+
+.reply-catchword-rule {
+  flex: 0 0 clamp(16px, 3.4vw, 32px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.36) 36%,
+    rgba(167, 60, 44, 0.52) 100%
+  );
+}
+.reply-catchword-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(167, 60, 44, 0.36) 36%,
+    rgba(167, 60, 44, 0.52) 100%
+  );
+}
+
+.reply-catchword-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.reply-catchword-key {
+  color: var(--coral-deep);
+  font: italic 600 12.5px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+
+.reply-catchword-sep {
+  color: var(--coral);
+  font: 700 10.5px/1 var(--display);
+  opacity: 0.7;
+}
+
+.reply-catchword-tail {
+  color: var(--ink-soft);
+  font: italic 500 11.5px/1.2 var(--display);
+  letter-spacing: 0.012em;
+}
+
+.reply-catchword-sigil {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--coral-deep);
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.08));
+  animation: rpcw-sigil-breath 7.4s ease-in-out 1700ms infinite;
+}
+.reply-catchword-sigil svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes rpcw-sigil-breath {
+  0%, 100% { transform: rotate(1deg) scale(1); opacity: 0.92; }
+  50%      { transform: rotate(-1.4deg) scale(1.04); opacity: 1; }
+}
+
+.reply-catchword.is-static .reply-catchword-sigil { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reply-catchword { transition: none; opacity: 1; transform: none; }
+  .reply-catchword-sigil { animation: none; }
+}
+
+@media (max-width: 720px) {
+  .reply-catchword {
+    padding: 0 14px;
+    gap: 0 9px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+  .reply-catchword-key { font-size: 11.5px; }
+  .reply-catchword-tail { font-size: 10.5px; }
+  .reply-catchword-sigil { width: 14px; height: 14px; }
+  .reply-catchword-rule { flex-basis: 14px; }
+}
+
+@media (max-width: 480px) {
+  .reply-catchword { padding: 0 10px; gap: 0 7px; margin-bottom: 6px; }
+  .reply-catchword-key { font-size: 11px; }
+  .reply-catchword-tail { font-size: 10px; letter-spacing: 0.01em; }
+}
+
