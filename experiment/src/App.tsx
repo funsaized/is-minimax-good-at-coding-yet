@@ -278,6 +278,72 @@ function PrinterEmblem() {
   )
 }
 
+function RectoSubEmblem() {
+  return (
+    <figure className="recto-sub-emblem" aria-hidden="true">
+      <svg className="recto-sub-emblem-plate" viewBox="0 0 220 36" focusable="false">
+        <defs>
+          <linearGradient id="rse-gold" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#9c6e26" />
+            <stop offset="50%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+        </defs>
+        <line x1="0" y1="18" x2="76" y2="18" stroke="url(#rse-gold)" strokeWidth="0.5" strokeLinecap="round" opacity="0.7" />
+        <line x1="144" y1="18" x2="220" y2="18" stroke="url(#rse-gold)" strokeWidth="0.5" strokeLinecap="round" opacity="0.7" />
+        <g className="rse-orb" transform="translate(88 18)">
+          <circle r="9" fill="none" stroke="url(#rse-gold)" strokeWidth="0.55" />
+          <circle r="6.6" fill="none" stroke="url(#rse-gold)" strokeWidth="0.3" strokeDasharray="0.4 1.2" opacity="0.78" />
+          <circle r="1.2" fill="url(#rse-gold)" />
+          <g className="rse-orb-rays" stroke="url(#rse-gold)" strokeWidth="0.4" strokeLinecap="round">
+            <line x1="0" y1="-11" x2="0" y2="-13.4" />
+            <line x1="0" y1="11" x2="0" y2="13.4" />
+            <line x1="-11" y1="0" x2="-13.4" y2="0" />
+            <line x1="11" y1="0" x2="13.4" y2="0" />
+            <line x1="-7.8" y1="-7.8" x2="-9.4" y2="-9.4" />
+            <line x1="7.8" y1="-7.8" x2="9.4" y2="-9.4" />
+            <line x1="-7.8" y1="7.8" x2="-9.4" y2="9.4" />
+            <line x1="7.8" y1="7.8" x2="9.4" y2="9.4" />
+          </g>
+        </g>
+        <g transform="translate(110 18)">
+          <line x1="-8" y1="-5" x2="-8" y2="5" stroke="url(#rse-gold)" strokeWidth="0.4" />
+          <line x1="8" y1="-5" x2="8" y2="5" stroke="url(#rse-gold)" strokeWidth="0.4" />
+          <text
+            x="0"
+            y="3.4"
+            textAnchor="middle"
+            className="rse-monogram"
+          >
+            m
+          </text>
+          <text x="8" y="3.4" textAnchor="middle" className="rse-monogram-roman">·iii</text>
+        </g>
+        <g transform="translate(132 18)">
+          <circle r="9" fill="none" stroke="url(#rse-gold)" strokeWidth="0.55" />
+          <circle r="6.6" fill="none" stroke="url(#rse-gold)" strokeWidth="0.3" strokeDasharray="0.4 1.2" opacity="0.78" />
+          <circle r="1.2" fill="url(#rse-gold)" />
+          <g className="rse-orb-rays" stroke="url(#rse-gold)" strokeWidth="0.4" strokeLinecap="round">
+            <line x1="0" y1="-11" x2="0" y2="-13.4" />
+            <line x1="0" y1="11" x2="0" y2="13.4" />
+            <line x1="-11" y1="0" x2="-13.4" y2="0" />
+            <line x1="11" y1="0" x2="13.4" y2="0" />
+            <line x1="-7.8" y1="-7.8" x2="-9.4" y2="-9.4" />
+            <line x1="7.8" y1="-7.8" x2="9.4" y2="-9.4" />
+            <line x1="-7.8" y1="7.8" x2="-9.4" y2="9.4" />
+            <line x1="7.8" y1="7.8" x2="9.4" y2="9.4" />
+          </g>
+        </g>
+      </svg>
+      <span className="recto-sub-emblem-caption">
+        <em className="recto-sub-emblem-key">the printer's mark</em>
+        <span className="recto-sub-emblem-sep" aria-hidden="true">·</span>
+        <em className="recto-sub-emblem-tail">a press that bears a name</em>
+      </span>
+    </figure>
+  )
+}
+
 function AsterismGlyph({ className }: { className?: string }) {
   return (
     <svg
@@ -530,8 +596,6 @@ function ChapterHead({ now }: { now: Date }) {
   const dayName = WEEKDAYS[now.getDay()]
   const dayOrdinal = ORDINALS[Math.min(ORDINALS.length - 1, now.getDate() - 1)]
   const monthName = MONTHS[now.getMonth()]
-  const year = now.getFullYear()
-  const yearRoman = toRomanYear(year)
   const hour24 = now.getHours()
   const minutes = now.getMinutes()
   const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
@@ -549,11 +613,6 @@ function ChapterHead({ now }: { now: Date }) {
         </svg>
       </span>
       <Headpiece />
-      <span className="chapter-subtitle">
-        <em>of folio lxxvii</em>
-        <span className="chapter-subtitle-sep" aria-hidden="true">·</span>
-        <em>set in question</em>
-      </span>
       <span className="chapter-witness">
         <span className="chapter-witness-rule chapter-witness-rule--left" aria-hidden="true" />
         <span className="chapter-witness-text">
@@ -563,8 +622,6 @@ function ChapterHead({ now }: { now: Date }) {
           <span className="chapter-witness-tail">
             ,&nbsp;the <em>{dayOrdinal}</em> of <em>{monthName}</em>
           </span>
-          <span className="chapter-witness-sep" aria-hidden="true">·</span>
-          <em className="chapter-witness-year">{yearRoman}</em>
           <span className="chapter-witness-sep" aria-hidden="true">·</span>
           <em className="chapter-witness-hour">{h12}</em>
           <span className="chapter-witness-min">:{mm}</span>
@@ -1926,6 +1983,11 @@ function AnswerFinishing({ visible }: { visible: boolean }) {
           <circle cx="6" cy="6" r="4.4" fill="none" stroke="currentColor" strokeWidth="0.35" strokeDasharray="0.5 1.4" />
           <circle cx="6" cy="6" r="0.9" fill="currentColor" />
         </svg>
+      </span>
+      <span className="answer-finishing-caption">
+        <em className="answer-finishing-key">the answer</em>
+        <span className="answer-finishing-sep" aria-hidden="true">·</span>
+        <em className="answer-finishing-tail">set in this folio</em>
       </span>
     </div>
   )
@@ -6849,12 +6911,14 @@ export function App() {
                 <BroadsheetDropCap letter="i" pressed={phase !== 'idle'} />
               </span>
               <span className="title-flow">
-                <span className="title-text">s </span>
-                <span className="title-subject">
+                <span className="title-text title-text--set" style={{ '--word-i': 0 } as React.CSSProperties}>
+                  s&nbsp;
+                </span>
+                <span className="title-subject title-text--set" style={{ '--word-i': 1 } as React.CSSProperties}>
                   Minimax M3
                   <span className="title-subject-rule" aria-hidden="true" />
                 </span>
-                <span className="title-text">
+                <span className="title-text title-text--set" style={{ '--word-i': 2 } as React.CSSProperties}>
                   {' '}good at frontend yet<span className="title-questions">?</span>
                 </span>
                 <svg
@@ -6894,6 +6958,9 @@ export function App() {
                 </svg>
               </span>
             </h1>
+
+            <RectoSubEmblem />
+
             <SpecimenImprint cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
 
             <MoonPip phase={moonPhase} visible={!versoOpened} />
@@ -6927,6 +6994,7 @@ export function App() {
               leafTurning ? ' is-turning' : ''
             }`}
           >
+          <span className="verso-spine-glint" aria-hidden="true" />
           <span className="verso-edge-glint" aria-hidden="true" />
           <section
             className={`response-panel response-panel--verso response-panel--verso-top ${replyShown ? 'is-revealed' : ''}`}

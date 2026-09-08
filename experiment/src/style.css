@@ -544,7 +544,7 @@ button { font: inherit; }
 }
 .chapter-head {
   display: flex; flex-direction: column; align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-align: center;
   margin-top: 6px;
 }
@@ -1066,6 +1066,77 @@ button { font: inherit; }
   .qmk-label { display: none; }
 }
 
+/* ────────── recto sub-emblem — a refined printer's signature that sits below the title ────────── */
+
+.recto-sub-emblem {
+  position: relative;
+  margin: 4px 0 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--sepia);
+  animation: content-in 0.85s 0.46s both;
+}
+.recto-sub-emblem-plate {
+  display: block;
+  width: clamp(180px, 22vw, 240px);
+  height: auto;
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.06));
+}
+.rse-monogram {
+  font: italic 700 11px/1 var(--display);
+  fill: url(#rse-gold);
+  letter-spacing: -0.02em;
+  paint-order: stroke fill;
+}
+.rse-monogram-roman {
+  font: italic 500 7.5px/1 var(--serif);
+  fill: rgba(107, 74, 37, 0.62);
+  letter-spacing: 0.04em;
+}
+.rse-orb .rse-orb-rays {
+  transform-origin: center;
+  animation: rse-rays-drift 14s linear infinite;
+}
+@keyframes rse-rays-drift {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.recto-sub-emblem-caption {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--ink-soft);
+  font: italic 10.5px/1 var(--display);
+  letter-spacing: 0.04em;
+}
+.recto-sub-emblem-key {
+  color: var(--coral-deep);
+  font: italic 600 9.5px/1 var(--sans);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-style: normal;
+}
+.recto-sub-emblem-sep {
+  color: var(--coral);
+  font: 700 12px/1 var(--display);
+  opacity: 0.78;
+}
+.recto-sub-emblem-tail {
+  font-style: italic;
+  color: var(--ink-soft);
+}
+@media (max-width: 560px) {
+  .recto-sub-emblem { gap: 6px; margin-bottom: 16px; }
+  .recto-sub-emblem-plate { width: 168px; }
+  .recto-sub-emblem-caption { font-size: 9.5px; gap: 6px; }
+  .recto-sub-emblem-key { font-size: 8.5px; letter-spacing: 0.24em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rse-orb .rse-orb-rays { animation: none !important; }
+}
+
 /* ────────── broadsheet title (dominant drop-cap) ────────── */
 
 .broadsheet-title {
@@ -1141,6 +1212,26 @@ button { font: inherit; }
 .title-text:first-of-type {
   font-feature-settings: "swsh" 1, "salt" 1;
   padding-right: 0.02em;
+}
+.title-text--set {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(8px);
+  filter: blur(2px);
+  animation: title-word-set 720ms var(--ease) calc(220ms + var(--word-i, 0) * 180ms) both;
+}
+@keyframes title-word-set {
+  0%   { opacity: 0; transform: translateY(8px); filter: blur(2px); }
+  60%  { opacity: 1; filter: blur(0.4px); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-text--set {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
 }
 .title-questions {
   font-style: italic;
@@ -2511,9 +2602,9 @@ button { font: inherit; }
   position: absolute;
   left: 56px;
   right: 56px;
-  bottom: 22px;
+  bottom: 18px;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: end;
   gap: 12px;
   pointer-events: none;
@@ -2573,6 +2664,47 @@ button { font: inherit; }
 @keyframes answer-finishing-glyph-in {
   from { opacity: 0; transform: rotate(-12deg) scale(0.7); }
   to   { opacity: 0.85; transform: none; }
+}
+.answer-finishing-caption {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--coral-deep);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-4px);
+  animation: answer-finishing-caption-in 900ms var(--ease) 2820ms forwards;
+}
+.answer-finishing-key {
+  font: italic 600 9.5px/1 var(--sans);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-style: normal;
+}
+.answer-finishing-sep {
+  color: var(--coral);
+  font: 700 12px/1 var(--display);
+  opacity: 0.78;
+}
+.answer-finishing-tail {
+  font: italic 11px/1 var(--display);
+  color: var(--ink-soft);
+}
+@keyframes answer-finishing-caption-in {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .answer-finishing-caption {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 560px) {
+  .answer-finishing { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; left: 24px; right: 24px; bottom: 14px; }
+  .answer-finishing-caption { display: none; }
+  .answer-finishing-glyph { width: 12px; height: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .answer-finishing {
@@ -7307,6 +7439,60 @@ button { font: inherit; }
 .verso-leaf.is-closed .verso-edge-glint { opacity: 0; }
 .verso-leaf.is-turning .verso-edge-glint { opacity: 0.92; }
 .verso-leaf.is-opened .verso-edge-glint { opacity: 0.45; }
+
+/* a brighter traveling glint that sweeps down the spine as the leaf turns */
+.verso-spine-glint {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+.verso-spine-glint::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 4px;
+  top: -40%;
+  height: 40%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(255, 248, 224, 0.92) 48%,
+    rgba(255, 240, 190, 0.42) 78%,
+    transparent 100%
+  );
+  filter: blur(1.4px);
+  border-radius: 4px;
+}
+.verso-leaf.is-turning .verso-spine-glint {
+  opacity: 1;
+  animation: spine-glint-travel 1320ms cubic-bezier(.22, .86, .22, 1) both;
+}
+@keyframes spine-glint-travel {
+  0%   { opacity: 0; }
+  10%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+.verso-leaf.is-turning .verso-spine-glint::before {
+  animation: spine-glint-stripe 1320ms cubic-bezier(.22, .86, .22, 1) both;
+}
+@keyframes spine-glint-stripe {
+  0%   { top: -40%; }
+  100% { top: 100%; }
+}
+@media (max-width: 880px) {
+  .verso-spine-glint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .verso-spine-glint,
+  .verso-spine-glint::before { animation: none !important; opacity: 0; }
+}
 
 .response-panel--verso-top,
 .response-panel--verso-main {

@@ -1,19 +1,13 @@
-# Iteration 127
+# Iteration 128
 
-A quiet refinement: the title now reads as a single, monumental italic gesture; the answer italic gains confidence; a hand-drawn gold ink mark settles under the answer at the moment the reading completes.
+A recto distilled: the question reads as a single, monumental statement, with each word lifting into place like a typesetter's proof.
 
-## Refinements
-
-- **Title composition.** Tightened the italic title (540 → 620 weight, slightly relaxed letter-spacing) so the question now reads as one confident gesture rather than three competing parts. The drop cap was quietly drawn in (156px, narrower column) so it supports rather than overwhelms the italic. The specimen imprint beneath the title is now slightly narrower and quieter, sitting in the negative space below the question rather than competing with it.
-
-- **Answer italic.** Bumped the answer's italic weight (560 → 620), tightened the leading, and at desktop the body now sits at 36px (from 32px). The reply italic was lifted to match (480 → 540), so the question and answer now feel like the same voice speaking in two registers.
-
-## New detail
-
-- **`AnswerFinishing` — a hand-drawn gold ink mark.** Under the answer italic, once the reading is complete, a single hand-pressed stroke draws itself across the panel — gold fading in from coral at the left, rising through the gilt to a warm halo on the right. A small dashed orb settles at the end. It is the page's last gesture: a quiet, confident line, like the printer has just signed off in gold.
-
-## Notes
-
-- No new dependencies, no new packages.
-- Reduced-motion users see the finishing mark appear instantly, without the stroke-draw.
-- The page's existing ornament, navigation, hash-linking, wax seal, ephemeris, marginalia, and reader tide are unchanged.
+- Removed the flanking `QuestionerMark` and `SpecimenPlate` cards from the title's negative space — they were decorative noise competing with the question.
+- Added a refined `RectoSubEmblem` below the title — a small horizontal printer's signature (two gilt orbs flanking an "m · iii" monogram) that replaces the lost decorative role.
+- Tightened the chapter opener: combined the witness inscription into the chapter head, removed the redundant subtitle line, reduced inter-element gap.
+- Added a word-by-word "setting the type" animation to the title — each word lifts into place with a soft blur, staggered 180ms apart. Respects `prefers-reduced-motion`.
+- Strengthened the leaf-turn moment with a brighter traveling spine glint that sweeps down the spine as the verso opens.
+- Added a confident italic caption ("the answer · set in this folio") at the end of the gold ink flourish that draws beneath the answer when complete.
+- Reorganized the answer-finishing grid to host the new caption beside the flourish glyph.
+- Tightened mobile layouts for the new recto sub-emblem and the answer-finishing caption.
+- Verified `npm run build` passes cleanly (tsc + vite).
