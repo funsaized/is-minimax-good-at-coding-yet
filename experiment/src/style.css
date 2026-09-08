@@ -1347,6 +1347,11 @@ button { font: inherit; }
   );
   transition: width 1100ms var(--ease);
   filter: drop-shadow(0 1px 0 rgba(245, 198, 91, 0.18));
+  clip-path: polygon(
+    0% 32%, 4% 60%, 8% 28%, 13% 56%, 18% 36%, 24% 60%, 30% 30%, 36% 58%,
+    42% 34%, 48% 60%, 54% 28%, 60% 56%, 66% 36%, 72% 60%, 78% 32%,
+    84% 56%, 90% 36%, 96% 58%, 100% 34%
+  );
 }
 .title-subject-rule::after {
   right: 0;
@@ -4861,6 +4866,11 @@ button { font: inherit; }
   font: italic 12.5px var(--display);
   letter-spacing: 0.04em;
 }
+.footer-line em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--coral-deep);
+}
 /* ────────── folio anatomy ────────── */
 
 .folio-anatomy {
@@ -8095,12 +8105,13 @@ button { font: inherit; }
   transform-origin: 60px 60px;
 }
 .wax-seal.is-breaking .wps-break-flash {
-  animation: wps-flash 520ms ease-out forwards;
+  animation: wps-flash 820ms cubic-bezier(.2,.7,.2,1) forwards;
 }
 @keyframes wps-flash {
-  0%   { opacity: 0.85; transform: scale(0.2); }
-  40%  { opacity: 0.45; transform: scale(1.4); }
-  100% { opacity: 0;    transform: scale(2.6); }
+  0%   { opacity: 0.95; transform: scale(0.16); filter: blur(0px); }
+  18%  { opacity: 0.85; transform: scale(0.6); filter: blur(1px); }
+  44%  { opacity: 0.5;  transform: scale(1.4); filter: blur(2px); }
+  100% { opacity: 0;    transform: scale(3);   filter: blur(3px); }
 }
 
 .wps-cracks path { transition: stroke 220ms var(--ease); }
@@ -8858,6 +8869,299 @@ button { font: inherit; }
   .press-plate-marks { font-size: 11px; }
   .press-plate-mark-text { font-size: 11px; }
   .press-plate-mark-glyph { font-size: 12px; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 129 · the constellation trail
+   A canvas overlay that draws small luminous stars travelling from the
+   headpiece sun down the spine and settling as punctuation above the
+   answer. The trail brightens as the reading deepens.
+   ────────────────────────────────────────────────────────────────────── */
+
+.constellation-trail {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1100ms var(--ease);
+  mix-blend-mode: screen;
+}
+.constellation-trail.is-visible { opacity: 1; }
+.constellation-trail.is-active { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .constellation-trail { mix-blend-mode: normal; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 129 · the reader's mark
+   A small wax stamp impression that appears on the answer plate once
+   the seal is broken, recording the reader's first press in this folio.
+   ────────────────────────────────────────────────────────────────────── */
+
+.press-stamp {
+  position: absolute;
+  right: clamp(18px, 2.4vw, 36px);
+  bottom: clamp(18px, 2.4vw, 32px);
+  width: clamp(72px, 7.4vw, 102px);
+  margin: 0;
+  z-index: 4;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 12px rgba(40, 8, 4, 0.32));
+  opacity: 0;
+  transform: translate(8px, -6px) rotate(2deg) scale(0.86);
+  transform-origin: center;
+  transition:
+    opacity 800ms var(--ease) 360ms,
+    transform 1100ms var(--ease) 360ms;
+}
+.press-stamp.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.press-stamp.is-static { transition: opacity 400ms var(--ease), none; }
+.press-stamp-disc {
+  display: block;
+  width: 100%;
+  height: auto;
+  animation: press-stamp-press 1200ms cubic-bezier(.2,.7,.2,1) 200ms both;
+}
+.press-stamp.is-static .press-stamp-disc { animation: none; }
+@keyframes press-stamp-press {
+  0%   { opacity: 0; transform: translate(6px, -4px) scale(1.16); filter: drop-shadow(0 0 8px rgba(245, 198, 91, 0.6)); }
+  36%  { opacity: 1; transform: translate(0, 0) scale(0.94); filter: drop-shadow(0 4px 6px rgba(40, 8, 4, 0.32)); }
+  100% { opacity: 1; transform: none; filter: drop-shadow(0 6px 12px rgba(40, 8, 4, 0.32)); }
+}
+.press-stamp-cap {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 5px;
+  margin-top: 4px;
+  color: var(--coral-deep);
+  font: italic 9px/1 var(--display);
+  letter-spacing: 0.04em;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  animation: press-stamp-cap-in 900ms var(--ease) 720ms both;
+}
+.press-stamp.is-static .press-stamp-cap { animation: none; opacity: 1; }
+.press-stamp-cap-key {
+  font: italic 600 8px/1 var(--sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--coral-deep);
+}
+.press-stamp-cap-sep { color: var(--coral); font: 700 10px/1 var(--display); opacity: 0.7; }
+.press-stamp-cap-tail { font-style: italic; color: var(--ink-soft); font-size: 9px; }
+@keyframes press-stamp-cap-in {
+  from { opacity: 0; transform: translateY(-2px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.ps-arc {
+  font: 770 5.6px/1 var(--mono);
+  letter-spacing: 0.34em;
+  fill: rgba(255, 232, 178, 0.78);
+  text-transform: uppercase;
+}
+.ps-arc--bot { letter-spacing: 0.38em; }
+.ps-letter {
+  font: italic 700 13px/1 var(--display);
+  fill: rgba(255, 232, 178, 0.92);
+  letter-spacing: -0.01em;
+}
+.ps-letter--roman {
+  font: 770 6.5px/1 var(--mono);
+  letter-spacing: 0.16em;
+  fill: rgba(255, 232, 178, 0.72);
+}
+.ps-impression {
+  font: italic 700 4.4px/1 var(--display);
+  letter-spacing: 0.16em;
+  fill: rgba(255, 232, 178, 0.78);
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-stamp {
+    transition: opacity 400ms var(--ease);
+    transform: none;
+  }
+  .press-stamp.is-visible { transform: none; }
+  .press-stamp-disc,
+  .press-stamp-cap { animation: none; opacity: 1; }
+}
+@media (max-width: 720px) {
+  .press-stamp { width: 70px; right: 14px; bottom: 14px; }
+  .press-stamp-cap { font-size: 8px; }
+}
+@media (max-width: 520px) {
+  .press-stamp { width: 58px; right: 10px; bottom: 10px; }
+  .press-stamp-cap { display: none; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 129 · a quieter breath pip
+   The breath halo (a slow pulse beside the question) is replaced with a
+   smaller, more restrained pip — a single concentric ring that opens and
+   closes on the reading's pace.
+   ────────────────────────────────────────────────────────────────────── */
+
+.breath-pip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  color: var(--coral-deep);
+  vertical-align: middle;
+  opacity: 0.55;
+  transition: opacity 600ms var(--ease);
+}
+.breath-pip.is-active { opacity: 1; }
+.breath-pip svg { width: 100%; height: 100%; display: block; }
+.breath-pip-ring,
+.breath-pip-core {
+  transform-origin: center;
+  animation: breath-pip-breathe var(--breath-cycle, 3.4s) ease-in-out infinite;
+}
+@keyframes breath-pip-breathe {
+  0%, 100% { transform: scale(0.92); opacity: 0.7; }
+  50%      { transform: scale(1.1);  opacity: 1; }
+}
+.breath-pip.is-static .breath-pip-ring,
+.breath-pip.is-static .breath-pip-core { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .breath-pip-ring,
+  .breath-pip-core { animation: none !important; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 129 · distillation refinements
+   The verso is tightened: the question inscription reads as a single
+   line, the answer gains a touch of weight, and the paper deepens a
+   half-shade warmer to match the wax seal.
+   ────────────────────────────────────────────────────────────────────── */
+
+.annotation--top {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 22px 2px;
+  color: var(--coral-deep);
+  font: 770 10px/1.2 var(--sans);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+.annotation-text {
+  font-style: italic;
+  font-family: var(--display);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-soft);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+/* The answer italic gains a small increase in confidence. */
+
+@media (min-width: 721px) {
+  .answer-copy {
+    font: italic 660 38px/1.26 var(--display);
+    letter-spacing: -0.008em;
+    padding-right: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .answer-copy {
+    font: italic 680 42px/1.22 var(--display);
+  }
+}
+
+/* Warmer paper undertone for the recto */
+
+.sheet::before {
+  background-image:
+    radial-gradient(rgba(17, 32, 42, 0.30) 0.45px, transparent 0.7px),
+    radial-gradient(rgba(156, 110, 38, 0.10) 0.4px, transparent 0.6px),
+    radial-gradient(rgba(217, 101, 74, 0.04) 0.4px, transparent 0.6px),
+    repeating-linear-gradient(90deg, rgba(107, 74, 37, 0.035) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(0deg, rgba(107, 74, 37, 0.02) 0 1px, transparent 1px 7px);
+  background-size: 6px 6px, 11px 11px, 17px 17px, 100% auto, 100% auto;
+  background-position: 0 0, 3px 4px, 6px 8px, 0 0, 0 0;
+}
+
+/* A refined press-plate on mobile: the seal keeps room to breathe. */
+
+@media (max-width: 560px) {
+  .press-plate-action { gap: 10px; }
+  .wax-seal-stage { width: 92px; height: 104px; }
+  .wax-seal-label { font-size: 10.5px; }
+  .wax-seal-caption { font-size: 11px; gap: 6px; }
+  .reader-note { font-size: 13px; }
+}
+@media (max-width: 420px) {
+  .wax-seal-stage { width: 84px; height: 96px; }
+}
+
+/* Constellation-trail z-index above the gilded edge but beneath content */
+
+.sheet .constellation-trail { z-index: 2; }
+
+/* The recto hand-drawn underline under "M3" gains a tiny second pass */
+.title-subject-rule::before {
+  filter: drop-shadow(0 1px 0 rgba(245, 198, 91, 0.28));
+}
+
+/* Reader tide on mobile: vessel smaller, labels below the line */
+
+@media (max-width: 420px) {
+  .reader-tide { padding: 12px 8px 16px; gap: 10px; }
+  .reader-tide-head { gap: 4px; font-size: 8px; }
+  .reader-tide-head-tail { font-size: 9px; max-width: 60vw; }
+  .reader-tide-head-count { padding: 2px 6px 3px; font-size: 9px; }
+  .reader-tide-stage { height: 60px; }
+  .reader-tide-station-button { width: 28px; height: 28px; }
+  .reader-tide-station-glyph svg { width: 11px; height: 11px; }
+  .reader-tide-station-tick { top: 26px; }
+  .reader-tide-station-label {
+    font-size: 8.5px;
+    top: 40px;
+    width: 64px;
+    line-height: 1.1;
+  }
+  .reader-tide-station-roman { font-size: 7.5px; }
+  .reader-tide-station-name { font-size: 8.5px; }
+  .reader-tide-vessel { width: 22px; height: 16px; top: 8px; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 129 · verso distillation: remove the manuscript stamp slot
+   The small red press-stamp that sat at the top of the verso was a
+   relic of an earlier recto-heavy layout. The press-stamp that now
+   appears on the answer plate takes its place.
+   ────────────────────────────────────────────────────────────────────── */
+
+/* Quiet the response panel's pre-reveal decoration */
+
+.response-panel--verso::before {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(255, 250, 240, 0.18), transparent 70%),
+    rgba(255, 250, 240, 0.08);
+  border-left-color: rgba(107, 74, 37, 0.12);
+}
+
+/* A small lift on the wax seal when the page is reading */
+
+.has-answer .wax-seal:not(.is-sealed):not(.is-breaking) .wax-seal-stage {
+  filter:
+    drop-shadow(0 4px 6px rgba(40, 8, 4, 0.22))
+    drop-shadow(0 0 10px rgba(245, 198, 91, 0.32));
 }
 
 

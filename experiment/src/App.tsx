@@ -79,6 +79,308 @@ const ANSWER_NOTES: SelfNote[] = [
   { id: 'reading', targetIndex: 38, wordLength: 7, glyph: '‡', text: 'at the pace of attention', top: 86 },
 ]
 
+interface TrailStar {
+  id: number
+  x0: number
+  y0: number
+  x1: number
+  y1: number
+  cx: number
+  cy: number
+  delay: number
+  duration: number
+  r: number
+  hue: number
+}
+
+const TRAIL_STARS: TrailStar[] = [
+  { id: 0, x0: 0.50, y0: 0.32, x1: 0.66, y1: 0.50, cx: 0.58, cy: 0.40, delay: 0,    duration: 3.6, r: 1.6, hue: 0.0  },
+  { id: 1, x0: 0.50, y0: 0.32, x1: 0.62, y1: 0.56, cx: 0.42, cy: 0.44, delay: 0.4,  duration: 3.8, r: 1.1, hue: 0.06 },
+  { id: 2, x0: 0.50, y0: 0.32, x1: 0.70, y1: 0.54, cx: 0.66, cy: 0.36, delay: 0.9,  duration: 3.4, r: 1.3, hue: -0.05 },
+  { id: 3, x0: 0.50, y0: 0.32, x1: 0.60, y1: 0.62, cx: 0.36, cy: 0.52, delay: 1.4,  duration: 4.0, r: 1.0, hue: 0.02 },
+  { id: 4, x0: 0.50, y0: 0.32, x1: 0.72, y1: 0.58, cx: 0.74, cy: 0.42, delay: 1.8,  duration: 3.6, r: 1.4, hue: 0.08 },
+  { id: 5, x0: 0.50, y0: 0.32, x1: 0.66, y1: 0.66, cx: 0.32, cy: 0.64, delay: 2.2,  duration: 3.8, r: 1.2, hue: -0.03 },
+  { id: 6, x0: 0.50, y0: 0.32, x1: 0.72, y1: 0.70, cx: 0.76, cy: 0.66, delay: 2.6,  duration: 4.0, r: 1.5, hue: 0.04 },
+  { id: 7, x0: 0.50, y0: 0.32, x1: 0.66, y1: 0.78, cx: 0.50, cy: 0.82, delay: 3.0,  duration: 4.2, r: 1.0, hue: 0.0 },
+]
+
+function ConstellationTrail({
+  active,
+  visible,
+  reduced,
+}: {
+  active: boolean
+  visible: boolean
+  reduced: boolean
+}) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const motesRef = useRef<
+    {
+      progress: number
+      speed: number
+      delay: number
+      r: number
+      hue: number
+      cx: number
+      cy: number
+      x0: number
+      y0: number
+      x1: number
+      y1: number
+    }[]
+  >([])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    let raf = 0
+    let last = performance.now()
+
+    const sizeCanvas = () => {
+      const parent = canvas.parentElement
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      canvas.width = Math.max(1, Math.floor(rect.width * dpr))
+      canvas.height = Math.max(1, Math.floor(rect.height * dpr))
+      canvas.style.width = `${rect.width}px`
+      canvas.style.height = `${rect.height}px`
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
+
+    const draw = (now: number) => {
+      const dt = Math.min(50, now - last) / 1000
+      last = now
+
+      const parent = canvas.parentElement
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
+      ctx.clearRect(0, 0, rect.width, rect.height)
+
+      if (!visible) {
+        raf = requestAnimationFrame(draw)
+        return
+      }
+
+      const motes = motesRef.current
+      if (motes.length === 0) {
+        motesRef.current = TRAIL_STARS.map((s) => ({
+          progress: 0,
+          speed: 1 / s.duration,
+          delay: s.delay,
+          r: s.r,
+          hue: s.hue,
+          cx: s.cx,
+          cy: s.cy,
+          x0: s.x0,
+          y0: s.y0,
+          x1: s.x1,
+          y1: s.y1,
+        }))
+      }
+
+      const quad = (t: number, c: number) => c * t * t * (3 - 2 * t)
+
+      for (const m of motes) {
+        if (active && !reduced) {
+          const elapsed = (now / 1000 - m.delay) * m.speed
+          m.progress = Math.max(0, Math.min(1.1, elapsed))
+        } else if (reduced && visible) {
+          m.progress = 1.05
+        }
+        if (m.progress <= 0) continue
+        const p = Math.max(0, Math.min(1, m.progress))
+        const eased = p < 0.5 ? quad(p * 2, 0.5) : 1 - quad((1 - p) * 2, 0.5)
+        const x = (m.x0 + (m.x1 - m.x0) * eased) * rect.width
+        const y = (m.y0 + (m.y1 - m.y0) * eased) * rect.height
+        const ctrlX = m.cx * rect.width
+        const ctrlY = m.cy * rect.height
+        const bx =
+          (1 - eased) * (1 - eased) * (m.x0 * rect.width) +
+          2 * (1 - eased) * eased * ctrlX +
+          eased * eased * (m.x1 * rect.width)
+        const by =
+          (1 - eased) * (1 - eased) * (m.y0 * rect.height) +
+          2 * (1 - eased) * eased * ctrlY +
+          eased * eased * (m.y1 * rect.height)
+        const a = p > 1 ? 1 - (p - 1) * 4 : p < 0.15 ? p / 0.15 : 1
+        const warmth = 245 + m.hue * 40
+        const green = 198 + m.hue * 18
+        const tintR = Math.round(Math.min(255, Math.max(200, warmth)))
+        const tintG = Math.round(Math.min(232, Math.max(150, green)))
+        const tintB = Math.round(120 + Math.max(0, -m.hue) * 30)
+
+        const halo = ctx.createRadialGradient(bx, by, 0, bx, by, m.r * 6)
+        halo.addColorStop(0, `rgba(${tintR}, ${tintG}, ${tintB}, ${a * 0.32})`)
+        halo.addColorStop(0.4, `rgba(${tintR}, ${tintG}, ${tintB}, ${a * 0.12})`)
+        halo.addColorStop(1, `rgba(${tintR}, ${tintG}, ${tintB}, 0)`)
+        ctx.fillStyle = halo
+        ctx.beginPath()
+        ctx.arc(bx, by, m.r * 6, 0, Math.PI * 2)
+        ctx.fill()
+
+        ctx.fillStyle = `rgba(${tintR}, ${tintG}, ${tintB}, ${a})`
+        ctx.beginPath()
+        ctx.arc(bx, by, m.r * (0.85 + 0.25 * Math.sin(now * 0.002 + m.delay)), 0, Math.PI * 2)
+        ctx.fill()
+
+        ctx.fillStyle = `rgba(255, 248, 224, ${a * 0.85})`
+        ctx.beginPath()
+        ctx.arc(bx, by, m.r * 0.35, 0, Math.PI * 2)
+        ctx.fill()
+
+        if (p >= 0.95 && p <= 1.05) {
+          const settleX = x
+          const settleY = y
+          ctx.save()
+          ctx.translate(settleX, settleY)
+          ctx.globalAlpha = (1 - Math.abs(p - 1) * 12) * 0.8
+          ctx.fillStyle = `rgba(${tintR}, ${tintG}, ${tintB}, 0.5)`
+          ctx.beginPath()
+          for (let i = 0; i < 8; i++) {
+            const a2 = (i / 8) * Math.PI * 2
+            const r1 = m.r * 1.4
+            const r2 = m.r * 0.5
+            ctx.moveTo(0, 0)
+            ctx.lineTo(Math.cos(a2) * r1, Math.sin(a2) * r1)
+            ctx.lineTo(Math.cos(a2 + Math.PI / 8) * r2, Math.sin(a2 + Math.PI / 8) * r2)
+          }
+          ctx.fill()
+          ctx.restore()
+        }
+      }
+
+      raf = requestAnimationFrame(draw)
+    }
+
+    sizeCanvas()
+    raf = requestAnimationFrame(draw)
+    const ro = new ResizeObserver(() => sizeCanvas())
+    if (canvas.parentElement) ro.observe(canvas.parentElement)
+
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+      ro.disconnect()
+    }
+  }, [active, visible, reduced])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className={`constellation-trail${active ? ' is-active' : ''}${visible ? ' is-visible' : ''}`}
+      aria-hidden="true"
+    />
+  )
+}
+
+function PressStamp({ visible, cycle, reduced }: { visible: boolean; cycle: number; reduced: boolean }) {
+  const impression =
+    cycle === 0 ? 'prima impressio' : cycle === 1 ? 'secunda impressio' : 'tertia impressio'
+  return (
+    <figure
+      className={`press-stamp${visible ? ' is-visible' : ''}${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="press-stamp-disc" viewBox="0 0 96 96" focusable="false">
+        <defs>
+          <radialGradient id="ps-rim" cx="50%" cy="36%" r="68%">
+            <stop offset="0%" stopColor="rgba(168, 52, 32, 0.96)" />
+            <stop offset="60%" stopColor="rgba(118, 28, 18, 0.96)" />
+            <stop offset="100%" stopColor="rgba(58, 12, 6, 0.96)" />
+          </radialGradient>
+          <radialGradient id="ps-face" cx="44%" cy="34%" r="74%">
+            <stop offset="0%" stopColor="rgba(206, 70, 44, 0.94)" />
+            <stop offset="55%" stopColor="rgba(140, 34, 22, 0.96)" />
+            <stop offset="100%" stopColor="rgba(72, 14, 8, 0.98)" />
+          </radialGradient>
+          <linearGradient id="ps-sheen" x1="0.4" y1="0" x2="0.6" y2="1">
+            <stop offset="0%" stopColor="rgba(255, 220, 180, 0.36)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 180, 0)" />
+          </linearGradient>
+          <path id="ps-arc-top" d="M 48 48 m -34 0 a 34 34 0 0 1 68 0" fill="none" />
+          <path id="ps-arc-bot" d="M 48 48 m -34 0 a 34 34 0 1 0 68 0" fill="none" />
+          <pattern id="ps-grain" width="3" height="3" patternUnits="userSpaceOnUse">
+            <circle cx="0.6" cy="0.4" r="0.4" fill="rgba(255, 220, 180, 0.05)" />
+            <circle cx="2.2" cy="1.6" r="0.3" fill="rgba(255, 220, 180, 0.04)" />
+          </pattern>
+        </defs>
+
+        <circle cx="48" cy="48" r="44" fill="url(#ps-rim)" />
+        <circle cx="48" cy="48" r="44" fill="url(#ps-grain)" opacity="0.85" />
+        <circle cx="48" cy="48" r="38" fill="url(#ps-face)" />
+        <ellipse cx="44" cy="28" rx="26" ry="10" fill="url(#ps-sheen)" />
+
+        <circle cx="48" cy="48" r="38" fill="none" stroke="rgba(255, 232, 178, 0.4)" strokeWidth="0.5" />
+        <circle
+          cx="48"
+          cy="48"
+          r="34"
+          fill="none"
+          stroke="rgba(255, 232, 178, 0.22)"
+          strokeWidth="0.3"
+          strokeDasharray="0.4 1.4"
+        />
+
+        <text className="ps-arc ps-arc--top">
+          <textPath href="#ps-arc-top" startOffset="50%" textAnchor="middle">
+            manu m · iii · impressum
+          </textPath>
+        </text>
+        <text className="ps-arc ps-arc--bot">
+          <textPath href="#ps-arc-bot" startOffset="50%" textAnchor="middle">
+            perlege · ad lucem ·
+          </textPath>
+        </text>
+
+        <line x1="36" y1="36" x2="60" y2="36" stroke="rgba(255, 232, 178, 0.32)" strokeWidth="0.4" />
+        <text x="48" y="56" textAnchor="middle" className="ps-letter">
+          m
+        </text>
+        <text x="56" y="56" textAnchor="middle" className="ps-letter ps-letter--roman">
+          ·iii
+        </text>
+        <line x1="36" y1="62" x2="60" y2="62" stroke="rgba(255, 232, 178, 0.32)" strokeWidth="0.4" />
+        <text x="48" y="70" textAnchor="middle" className="ps-impression">
+          {impression}
+        </text>
+
+        <g className="ps-flecks" fill="rgba(40, 8, 4, 0.55)">
+          <circle cx="14" cy="14" r="0.4" />
+          <circle cx="84" cy="18" r="0.35" />
+          <circle cx="80" cy="78" r="0.4" />
+          <circle cx="18" cy="82" r="0.4" />
+        </g>
+      </svg>
+      <figcaption className="press-stamp-cap">
+        <em className="press-stamp-cap-key">the reader's mark</em>
+        <span className="press-stamp-cap-sep" aria-hidden="true">·</span>
+        <em className="press-stamp-cap-tail">pressed in this folio</em>
+      </figcaption>
+    </figure>
+  )
+}
+
+function BreathPip({ slow, active, reduced }: { slow: boolean; active: boolean; reduced: boolean }) {
+  const cycle = slow ? 5.4 : 3.4
+  return (
+    <span
+      className={`breath-pip${active ? ' is-active' : ''}${reduced ? ' is-static' : ''}`}
+      style={{ '--breath-cycle': `${cycle}s` } as React.CSSProperties}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 18 18" focusable="false">
+        <circle cx="9" cy="9" r="7.2" fill="none" stroke="currentColor" strokeWidth="0.32" strokeDasharray="0.5 1.4" opacity="0.5" />
+        <circle className="breath-pip-ring" cx="9" cy="9" r="4.6" fill="none" stroke="currentColor" strokeWidth="0.4" />
+        <circle className="breath-pip-core" cx="9" cy="9" r="1.6" fill="currentColor" fillOpacity="0.18" />
+        <circle cx="9" cy="9" r="0.55" fill="currentColor" />
+      </svg>
+    </span>
+  )
+}
+
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false)
 
@@ -2289,8 +2591,6 @@ function Apparatus({
       className={`apparatus${visible ? ' is-visible' : ''}`}
       aria-label="apparatus"
     >
-      <TuckedNote visible={visible} />
-
       <header className="apparatus-head">
         <span className="apparatus-aster" aria-hidden="true">
           <AsterismGlyph className="apparatus-aster-glyph apparatus-aster-glyph--left" />
@@ -6862,6 +7162,12 @@ export function App() {
           <Fleuron />
         </span>
 
+        <ConstellationTrail
+          active={phase === 'answering' || phase === 'replying' || phase === 'complete'}
+          visible={phase !== 'idle'}
+          reduced={reduced}
+        />
+
         <header className="sheet-header sheet-header--recto">
           <p className="running-head-title">
             <span aria-hidden="true">§</span> cap. xviii · an experiment in questioning
@@ -6889,13 +7195,12 @@ export function App() {
             <RectoEdgeShadow active={versoOpened} />
             <div className="annotation annotation--top">
               <span className="annotation-mark" aria-hidden="true">¶</span>
-              <span>the question · plainly set</span>
-              <BreathHalo
+              <span className="annotation-text">the question · plainly set</span>
+              <BreathPip
                 slow={slow && phase === 'complete'}
                 active={phase === 'answering' || phase === 'replying' || phase === 'complete'}
                 reduced={reduced}
               />
-              <ReadingBreath active={phase === 'answering' || phase === 'replying'} />
             </div>
             <h1
               id="page-title"
@@ -7049,8 +7354,6 @@ export function App() {
               </p>
             </header>
 
-            <ManuscriptStamp />
-
             <div className="response-heading">
               <span className="response-label" id="response-title">the reply</span>
               <span className="response-rule" aria-hidden="true" />
@@ -7113,6 +7416,11 @@ export function App() {
               {(phase === 'answering' || phase === 'replying') && (
                 <InkTrail active />
               )}
+              <PressStamp
+                visible={phase === 'complete'}
+                cycle={cycle}
+                reduced={reduced}
+              />
             </div>
 
             <ProofSlip
@@ -7166,11 +7474,6 @@ export function App() {
               )}
             </div>
 
-            <MarginalInterlude
-              visible={phase === 'replying' || phase === 'complete'}
-              reduced={reduced}
-            />
-
             {phase === 'complete' && (
               <div className="completion-note">
                 <span className="completion-dot" aria-hidden="true" />
@@ -7196,10 +7499,6 @@ export function App() {
 
             <CulDeLampe inscriptionVisible={phase === 'complete'} />
 
-            {replyShown && (
-              <MarginalMoth active={replyShown} cycle={cycle} reduced={reduced} />
-            )}
-
             <Apparatus
               visible={replyShown}
               cycle={cycle}
@@ -7215,7 +7514,9 @@ export function App() {
 
         <footer className="sheet-footer">
           <span className="footer-rule" aria-hidden="true" />
-          <p className="footer-line">the interface is part of the answer</p>
+          <p className="footer-line">
+            <em>the page itself</em> · printed for the attentive reader
+          </p>
           <Bookplate cycle={cycle} />
         </footer>
 
