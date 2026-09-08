@@ -1,0 +1,19 @@
+{
+  "id": 182,
+  "parentId": 181,
+  "createdAt": "2026-09-08T21:51:09.884Z",
+  "summary": "Shifted the proof sheet into a darker ink-and-copper reading room.",
+  "path": "/iterations/000182/index.html",
+  "screenshot": "/iterations/000182/desktop.png",
+  "mobileScreenshot": "/iterations/000182/mobile.png",
+  "sourceCommit": "c855d07f69a84007a0f499e8286424c8c633ba04",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 116,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 40776,
+    "outputTokens": 3078,
+    "steps": 11
+  }
+}
