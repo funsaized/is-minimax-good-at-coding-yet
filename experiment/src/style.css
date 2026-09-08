@@ -3597,6 +3597,236 @@ button { font: inherit; }
   to { opacity: 1; transform: none; }
 }
 
+/* ────────── scholar's endnote · a later reader's margin (iter 142) ────────── */
+
+.scholar-endnote {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  align-items: stretch;
+  gap: clamp(10px, 1.6vw, 18px);
+  margin: clamp(28px, 3.4vw, 44px) auto 4px;
+  max-width: min(38em, 92%);
+  color: var(--coral-deep);
+  opacity: 0;
+  transform: translateY(10px) rotate(-0.4deg);
+  transform-origin: 30% 50%;
+  transition:
+    opacity 900ms var(--ease) 200ms,
+    transform 900ms var(--ease) 200ms;
+}
+.scholar-endnote.is-visible {
+  opacity: 1;
+  transform: translateY(0) rotate(-0.4deg);
+}
+
+.scholar-endnote-leader {
+  align-self: start;
+  margin-top: 18px;
+  width: clamp(28px, 3.2vw, 42px);
+  height: 14px;
+  color: var(--coral);
+  opacity: 0.72;
+  transition: opacity 1200ms var(--ease) 360ms, transform 1200ms var(--ease) 360ms;
+  transform: translateX(-4px);
+}
+.scholar-endnote.is-visible .scholar-endnote-leader {
+  opacity: 0.92;
+  transform: none;
+}
+.scholar-endnote-leader svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.scholar-endnote-slip {
+  position: relative;
+  padding: clamp(14px, 1.6vw, 20px) clamp(16px, 2vw, 22px) clamp(14px, 1.6vw, 18px);
+  background:
+    radial-gradient(ellipse at 22% 0%, rgba(255, 246, 218, 0.85), transparent 56%),
+    linear-gradient(178deg, rgba(255, 246, 218, 0.62), rgba(244, 218, 168, 0.18));
+  border-top: 1px solid rgba(167, 60, 44, 0.42);
+  border-right: 1px solid rgba(167, 60, 44, 0.10);
+  border-bottom: 1px solid rgba(167, 60, 44, 0.18);
+  border-left: 1px solid rgba(167, 60, 44, 0.42);
+  border-radius: 1px;
+  box-shadow:
+    0 1px 0 rgba(255, 246, 218, 0.62) inset,
+    0 -1px 0 rgba(167, 60, 44, 0.06) inset,
+    0 12px 22px -22px rgba(140, 30, 14, 0.30);
+  isolation: isolate;
+}
+.scholar-endnote-slip::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  pointer-events: none;
+  border: 1px dotted rgba(167, 60, 44, 0.22);
+  border-radius: 1px;
+}
+.scholar-endnote-slip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 78% 92%, rgba(167, 60, 44, 0.18), transparent 50%),
+    radial-gradient(ellipse at 18% 86%, rgba(167, 60, 44, 0.10), transparent 44%);
+  mix-blend-mode: multiply;
+  opacity: 0.85;
+}
+
+.scholar-endnote-mark {
+  position: absolute;
+  top: -13px;
+  left: -13px;
+  width: clamp(26px, 2.8vw, 30px);
+  height: clamp(26px, 2.8vw, 30px);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 30%, rgba(255, 246, 218, 0.96), rgba(232, 208, 162, 0.78));
+  color: var(--coral-deep);
+  box-shadow:
+    0 0 0 1px var(--coral),
+    0 0 0 4px var(--paper),
+    0 1px 0 rgba(255, 246, 218, 0.55) inset,
+    0 4px 10px -8px rgba(140, 30, 14, 0.30);
+  transition: transform 1100ms var(--ease) 420ms;
+}
+.scholar-endnote.is-visible .scholar-endnote-mark {
+  transform: rotate(-12deg);
+}
+.scholar-endnote-mark svg { width: 100%; height: 100%; display: block; }
+.scholar-endnote-mark-letter {
+  fill: currentColor;
+  font: italic 700 10.5px/1 var(--display);
+}
+.scholar-endnote-mark-roman {
+  fill: currentColor;
+  font: 700 4.6px/1 var(--display);
+  letter-spacing: 0.02em;
+}
+
+.scholar-endnote-body {
+  display: grid;
+  gap: clamp(6px, 0.8vw, 10px);
+}
+
+.scholar-endnote-text {
+  margin: 0;
+  font: italic 400 clamp(13.5px, 1.5vw, 15.5px)/1.55 var(--display);
+  color: var(--ink);
+  letter-spacing: 0.012em;
+  text-wrap: pretty;
+  hanging-punctuation: first last;
+}
+.scholar-endnote-text-key {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--coral-deep);
+  letter-spacing: 0.005em;
+}
+.scholar-endnote-text-emph {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--coral-deep);
+  letter-spacing: 0.005em;
+}
+.scholar-endnote-text-sep {
+  color: var(--coral);
+  font-weight: 600;
+  font-style: normal;
+  margin: 0 0.05em;
+}
+
+.scholar-endnote-signature {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin: 4px 0 0;
+  padding-top: 7px;
+  border-top: 1px dotted rgba(167, 60, 44, 0.32);
+  font: italic 11.5px/1 var(--display);
+  color: var(--coral-deep);
+  letter-spacing: 0.02em;
+}
+.scholar-endnote-sig-mark {
+  font-weight: 700;
+  font-style: normal;
+  color: var(--coral);
+  font-size: 13px;
+}
+.scholar-endnote-sig-key { font-style: italic; font-weight: 500; }
+.scholar-endnote-sig-tail {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--coral-deep);
+  opacity: 0.82;
+}
+.scholar-endnote-sig-sep {
+  color: var(--coral);
+  opacity: 0.6;
+  font-weight: 700;
+}
+.scholar-endnote-sig-tick {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  width: 16px;
+  height: 8px;
+  color: var(--coral);
+  opacity: 0.65;
+}
+.scholar-endnote-sig-tick svg { width: 100%; height: 100%; display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .scholar-endnote {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .scholar-endnote.is-visible { transform: none; }
+  .scholar-endnote-leader,
+  .scholar-endnote-mark {
+    transition: none;
+    transform: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .scholar-endnote {
+    margin-top: 24px;
+    transform: none;
+  }
+  .scholar-endnote.is-visible { transform: none; }
+}
+@media (max-width: 560px) {
+  .scholar-endnote {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 18px;
+  }
+  .scholar-endnote-leader {
+    display: none;
+  }
+  .scholar-endnote-slip {
+    padding: 12px 14px 12px;
+  }
+  .scholar-endnote-text {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .scholar-endnote-mark {
+    top: -10px;
+    left: -10px;
+  }
+}
+
 /* ────────── completion note ────────── */
 
 .completion-note {

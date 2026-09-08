@@ -2941,6 +2941,117 @@ function Manicule() {
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 142 · the verso earns a second reader's margin
+
+   A small manuscript slip sits beneath the reply, as if a later reader
+   had set their own italic note into the margin of the original press
+   run. It is set in coral ink — the page's accent colour — and bears a
+   "manu altera" mark, a short leader that points back to the reply, and
+   a signature that names the hand as a second reader. The slip arrives
+   with the reply and reads as a printerly coda: the page is its own
+   proof; the reader only returns.
+   ────────────────────────────────────────────────────────────────────── */
+
+function ScholarEndnote({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <aside
+      className={`scholar-endnote${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-label="a later reader's note, set in the margin"
+    >
+      <span className="scholar-endnote-leader" aria-hidden="true">
+        <svg viewBox="0 0 42 14" focusable="false" preserveAspectRatio="none">
+          <line
+            x1="1"
+            y1="7"
+            x2="36"
+            y2="7"
+            stroke="currentColor"
+            strokeWidth="0.45"
+            strokeDasharray="0.7 1.4"
+          />
+          <path d="M 34 3 L 40 7 L 34 11 Z" fill="currentColor" />
+        </svg>
+      </span>
+      <div className="scholar-endnote-slip">
+        <span className="scholar-endnote-mark" aria-hidden="true">
+          <svg viewBox="0 0 28 28" focusable="false">
+            <circle
+              cx="14"
+              cy="14"
+              r="12.4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="0.5"
+              strokeDasharray="0.5 1.2"
+              opacity="0.55"
+            />
+            <circle
+              cx="14"
+              cy="14"
+              r="7.6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="0.55"
+            />
+            <text
+              x="14"
+              y="17.4"
+              textAnchor="middle"
+              className="scholar-endnote-mark-letter"
+            >
+              m
+            </text>
+            <text
+              x="14"
+              y="22.6"
+              textAnchor="middle"
+              className="scholar-endnote-mark-roman"
+            >
+              ·ii
+            </text>
+          </svg>
+        </span>
+        <div className="scholar-endnote-body">
+          <p className="scholar-endnote-text">
+            <em className="scholar-endnote-text-key">the press is set</em>
+            <span className="scholar-endnote-text-sep" aria-hidden="true">;</span>
+            {' '}the page itself, by being,
+            <em className="scholar-endnote-text-emph">is the answer.</em>
+          </p>
+          <p className="scholar-endnote-signature">
+            <span className="scholar-endnote-sig-mark" aria-hidden="true">¶</span>
+            <em className="scholar-endnote-sig-key">manu altera</em>
+            <span className="scholar-endnote-sig-sep" aria-hidden="true">·</span>
+            <em className="scholar-endnote-sig-tail">
+              a later reading, in this folio
+            </em>
+            <span className="scholar-endnote-sig-tick" aria-hidden="true">
+              <svg viewBox="0 0 14 8" focusable="false">
+                <path
+                  d="M 1 4 Q 4 1 7 4 Q 10 7 13 3"
+                  stroke="currentColor"
+                  strokeWidth="0.5"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
+          </p>
+        </div>
+      </div>
+    </aside>
+  )
+}
+
 function Fleuron() {
   return (
     <div className="fleuron" aria-hidden="true">
@@ -8697,6 +8808,8 @@ export function App() {
                 </span>
               )}
             </div>
+
+            <ScholarEndnote visible={replyShown} reduced={reduced} />
 
             <VadeMecum visible={replyShown} reduced={reduced} />
 

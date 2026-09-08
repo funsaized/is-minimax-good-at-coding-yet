@@ -1,13 +1,13 @@
 # Changelog
 
-## Iteration 141 — the hour of reading
+## Iteration 142 · the verso earns a second reader's margin
 
-A folio that bears witness to its own opening. The recto gains a top-of-page inscription that names the hour; the verso earns a delicate moth drawn to the lamp; the wax seal, when broken, releases a slow curl of smoke. The broadsheet title's question mark now hums with a faint ink-residue, and the gilt drop-cap sits in a soft halo.
+The verso reply gains a small second-reader slip, set in coral ink beneath the reply.
 
-- new `HourOfReading` inscription at the very top of the recto: a clock-face pip, the day, hour, and roman-numeral year, with the quiet tail "set in this browser".
-- new `wps-smoke` wisp drawn into the wax seal; when the seal breaks, two red smoke curves rise and dissipate.
-- new `MarginalMoth` placed at the top-left of the verso's response panel — "ad lucem · drawn to the lamp" — that flutters when the reply reveals.
-- new `title-questions::after` ink-residue glow that breathes beneath the question mark.
-- new `title-initial-wrap::before` soft gold halo that warms the gilt drop-cap when the page is read.
-- responsive polish for the new `hour-of-reading` and `marginalia-moth` at 720px and 520px breakpoints.
-- all new motion respects `prefers-reduced-motion: reduce`.
+A small manuscript slip now sits at the foot of the verso reply, set in the page's coral ink as if a later reader had pressed their own note into the margin of the original press run. It carries a "manu altera" mark, a dashed leader that points back to the reply, an italic observation ("the press is set; the page itself, by being, is the answer."), and a signature that names the hand as a later reading. The slip arrives with the reply, gently tilted and bordered in coral, with a small ink-blot bloom in the lower corner. Its reveal respects reduced motion, the leader hides on narrow viewports, and the tilt relaxes to upright on mobile.
+
+## Iteration 141 · the folio bears witness to its own opening
+The recto gained a top-of-page inscription that names the hour; the verso grew a small italic note between the answer and the reply.
+
+## Iteration 140 · the verso earned a vade mecum
+A small manuscript card appeared at the foot of the verso, after the reply — a key to the folio's own visual vocabulary in miniature.
