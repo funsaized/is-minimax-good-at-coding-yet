@@ -1,25 +1,12 @@
 # Changelog
 
-## 179 — The reader's pencil joins the press
+## Iteration 180
 
-Turned the proof sheet into a working proof: a small editorial pencil
-in the top-right tool area lets the reader mark the page in-session
-with hand-drawn SVG strokes (roughened by an `feTurbulence` filter so
-they read as ink on paper, not vector lines). Marks accumulate over
-the proof area and are acknowledged in the colophon; a "shake off"
-button and the `Backspace` shortcut clear them, and `P` toggles the
-pencil at any time. The page now remembers attention for a reading
-and lets the next reader start clean.
+Presses the proof toward a signed-off edition: each seal press now leaves a tally, the colophon signature draws itself when scrolled into view, a binder's thread runs down the inside edge, and the answer's dropcap wears a small swash.
 
-Composition and typography were also tightened: the title sets in
-slightly tighter letter-spacing at large sizes; a small "set by hand,
-this edition" subtitle sits beneath the question; the answer block
-gains a centered "attention, not ornament" pull-quote between its
-columns and a more confident drop cap; each marginalia item now ends
-with a short italic editor's note in coral; the lamp glow has a slow
-breath that quickens when the answer is open; the signature in the
-colophon eases in after the proof settles.
-
-No remote assets, no storage, no service workers. Reduced-motion
-users keep all marks, the pencil toggle, and keyboard shortcuts;
-animations are silenced.
+- Counted each seal press as a tally of inkblots beside the CTA; mirrored the count in the colophon line.
+- Reworked the colophon signature to draw stroke-by-stroke via `pathLength="1"` and an IntersectionObserver triggered when the colophon enters view.
+- Added a vertical binder's thread (dashed line with a knot at the top) along the inside edge of the proof stage as a quiet tactile detail.
+- Added a sweeping swash under the answer's dropcap "Y" that settles in with the plate reveal.
+- All new motion respects `prefers-reduced-motion`; the tally, binder thread, dropcap swash, and signature render in their final state.
+- Press tally and binder thread degrade gracefully (smaller / hidden) at tablet and mobile breakpoints.

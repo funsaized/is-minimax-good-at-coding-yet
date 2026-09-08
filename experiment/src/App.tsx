@@ -284,17 +284,69 @@ function Flourish() {
   )
 }
 
-function Signature() {
+type SignatureProps = { drawn?: boolean }
+function Signature({ drawn = true }: SignatureProps) {
   return (
-    <svg className="signature" viewBox="0 0 110 30" aria-hidden="true">
+    <svg className={`signature ${drawn ? 'is-drawn' : ''}`} viewBox="0 0 110 30" aria-hidden="true">
       <g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M6 22 C 9 12, 13 18, 16 22" />
-        <path d="M20 24 C 22 16, 26 10, 27 18 C 28 24, 30 22, 32 16" />
-        <path d="M44 12 C 40 16, 39 24, 46 24 C 52 24, 52 16, 48 12 C 44 9, 42 16, 47 19" />
-        <path d="M60 12 C 64 16, 64 24, 60 24 M 60 18 L 67 18" />
-        <path d="M74 24 L 74 12 L 86 24 L 86 12" />
+        <path className="sig-path" pathLength={1} d="M6 22 C 9 12, 13 18, 16 22" />
+        <path className="sig-path" pathLength={1} d="M20 24 C 22 16, 26 10, 27 18 C 28 24, 30 22, 32 16" />
+        <path className="sig-path" pathLength={1} d="M44 12 C 40 16, 39 24, 46 24 C 52 24, 52 16, 48 12 C 44 9, 42 16, 47 19" />
+        <path className="sig-path" pathLength={1} d="M60 12 C 64 16, 64 24, 60 24 M 60 18 L 67 18" />
+        <path className="sig-path" pathLength={1} d="M74 24 L 74 12 L 86 24 L 86 12" />
       </g>
-      <path d="M93 26 C 96 18, 100 22, 102 18" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <path className="sig-path" pathLength={1} d="M93 26 C 96 18, 100 22, 102 18" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function PressTally({ count }: { count: number }) {
+  const visible = Math.min(count, 6)
+  const over = Math.max(0, count - 6)
+  return (
+    <div className={`press-tally ${count > 0 ? 'press-tally--has' : ''}`} aria-hidden="true">
+      <span className="press-tally__rule" />
+      <span className="press-tally__label">{count === 0 ? 'no pass yet' : `${count} pass${count === 1 ? '' : 'es'}`}</span>
+      <span className="press-tally__row">
+        {Array.from({ length: visible }).map((_, i) => (
+          <svg key={i} className="press-tally__blot" viewBox="0 0 12 12">
+            <path d="M6 1.5 C 9 1.5, 11 4.5, 10.4 7.2 C 9.8 9.8, 6.6 10.6, 4.2 9.4 C 1.6 8.2, 1.6 5, 3.4 3.2 C 4.6 2, 5.6 1.5, 6 1.5 Z" />
+          </svg>
+        ))}
+        {over > 0 && <span className="press-tally__more">+{over}</span>}
+      </span>
+    </div>
+  )
+}
+
+function BinderThread() {
+  return (
+    <div className="binder-thread" aria-hidden="true">
+      <svg viewBox="0 0 18 600" preserveAspectRatio="none">
+        <line
+          className="binder-thread__line"
+          x1="9"
+          y1="14"
+          x2="9"
+          y2="596"
+        />
+        <circle cx="9" cy="6" r="3.5" className="binder-thread__knot" />
+      </svg>
+    </div>
+  )
+}
+
+function DropcapSwash() {
+  return (
+    <svg className="answer__dropcap-swash" viewBox="0 0 60 24" preserveAspectRatio="none" aria-hidden="true">
+      <path
+        d="M2 6 C 8 2, 14 10, 22 8 C 30 6, 38 12, 46 9 C 52 7, 58 11, 58 14"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <circle cx="58" cy="14" r="1.4" fill="currentColor" />
     </svg>
   )
 }
@@ -513,6 +565,8 @@ export function App() {
   const [marks, setMarks] = useState<Mark[]>([])
   const [currentPath, setCurrentPath] = useState('')
   const [announcement, setAnnouncement] = useState('')
+  const [sealPasses, setSealPasses] = useState(0)
+  const [sigVisible, setSigVisible] = useState(false)
   const answerId = useId()
   const now = useNow(1000)
   const progress = useScrollProgress()
@@ -520,10 +574,12 @@ export function App() {
   const pencilRef = useRef<HTMLButtonElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
+  const colophonRef = useRef<HTMLElement>(null)
 
   const onToggle = () => {
     setOpen(v => !v)
     setPulse(p => p + 1)
+    setSealPasses(p => p + 1)
   }
 
   const onPencilToggle = useCallback(() => {
@@ -545,6 +601,25 @@ export function App() {
       setCurrentPath('')
     }
   }, [pencil])
+
+  useEffect(() => {
+    const el = colophonRef.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setSigVisible(true)
+            obs.disconnect()
+            break
+          }
+        }
+      },
+      { threshold: 0.35 }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -673,6 +748,7 @@ export function App() {
         </div>
 
         <div className="proof__stage" ref={stageRef}>
+          <BinderThread />
           <MarkLayer
             active={pencil}
             marks={marks}
@@ -769,6 +845,7 @@ export function App() {
                     is rarely tidy
                   </p>
                 </div>
+                <PressTally count={sealPasses} />
               </header>
 
               <section
@@ -799,6 +876,7 @@ export function App() {
                         <span className="answer__dropcap" aria-hidden="true">
                           <span className="answer__dropcap-letter">Y</span>
                           <span className="answer__dropcap-flourish"><Flourish /></span>
+                          <span className="answer__dropcap-swash"><DropcapSwash /></span>
                         </span>
                         <span className="sr-only">Y</span>es — when it stops trying to look impressive.
                       </p>
@@ -894,7 +972,7 @@ export function App() {
           <span className="proof__device-rule proof__device-rule--end" />
         </div>
 
-        <footer className="colophon" aria-label="Colophon">
+        <footer className="colophon" aria-label="Colophon" ref={colophonRef}>
           <div className="colophon__rule" aria-hidden="true">
             <span />
             <i>m³</i>
@@ -909,9 +987,13 @@ export function App() {
              {marked
                ? <>marked with care<small className="colophon__marks">· {marks.length} hand-drawn</small></>
                : 'made with intent, not certainty'}
+             {sealPasses > 0 && (<>
+               <span className="colophon__sep">·</span>
+               <span className="colophon__passes">{sealPasses === 1 ? 'one stamp' : `${sealPasses} stamps`}</span>
+             </>)}
           </p>
-          <div className="colophon__sign" aria-hidden="true">
-            <Signature />
+          <div className={`colophon__sign ${sigVisible ? 'is-drawn' : ''}`} aria-hidden="true">
+            <Signature drawn={sigVisible} />
             <span className="colophon__sign-cap">{marked ? 'signed & annotated' : 'signed at the press'}</span>
           </div>
           <a className="colophon__up" href="#top">return to the question <span aria-hidden="true">↑</span></a>
