@@ -5216,6 +5216,115 @@ function MarginalMoth({
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 155 · a folio press head-note sits at the opening of each
+   spread, mirroring the recto's RectoCatchword and the verso's
+   ReplyCatchword in idiom — but speaking as the chapter's *first*
+   voice: the moment the press announces itself to the reader. The
+   recto slip names the chapter and the folio, in the press's quiet
+   editorial hand; the verso slip answers in the same voice, naming
+   the reply before the body of the reply arrives. Together with the
+   recto's bottom colophon and the verso's cul-de-lampe, the folio
+   earns a complete opening-closing symmetry: every spread now begins
+   with a press signature and ends with one.
+   ────────────────────────────────────────────────────────────────────── */
+
+function PressHeadNote({
+  visible,
+  reduced,
+  variant,
+}: {
+  visible: boolean
+  reduced: boolean
+  variant: 'recto' | 'verso'
+}) {
+  const isRecto = variant === 'recto'
+  const cluster = isRecto
+    ? {
+        key: 'caput xviii · lxxvii',
+        tail: 'the folio opens here',
+        sigil: 'manu m · iii',
+        glyph: '✦',
+      }
+    : {
+        key: 'the reply',
+        tail: 'set slowly · in this folio',
+        sigil: 'manu m · iii',
+        glyph: '✧',
+      }
+
+  return (
+    <figure
+      className={`press-head-note press-head-note--${variant}${
+        visible ? ' is-visible' : ''
+      }${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="press-head-note-rule press-head-note-rule--left" />
+      <span className="press-head-note-cluster">
+        <em className="press-head-note-key">{cluster.key}</em>
+        <span className="press-head-note-sep" aria-hidden="true">·</span>
+        <em className="press-head-note-tail">{cluster.tail}</em>
+        <span className="press-head-note-sigil" aria-hidden="true">
+          <svg viewBox="0 0 16 16" focusable="false">
+            <defs>
+              <linearGradient id={`phn-${variant}-gold`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#f6d076" />
+                <stop offset="50%" stopColor="#c8923e" />
+                <stop offset="100%" stopColor="#9c6e26" />
+              </linearGradient>
+            </defs>
+            <circle
+              cx="8"
+              cy="8"
+              r="7.2"
+              fill="none"
+              stroke={`url(#phn-${variant}-gold)`}
+              strokeWidth="0.35"
+              opacity="0.6"
+            />
+            <circle
+              cx="8"
+              cy="8"
+              r="6.0"
+              fill="none"
+              stroke={`url(#phn-${variant}-gold)`}
+              strokeWidth="0.22"
+              strokeDasharray="0.4 1.1"
+              opacity="0.7"
+            />
+            <g
+              className="press-head-note-glyph"
+              fill={`url(#phn-${variant}-gold)`}
+            >
+              <text
+                x="8"
+                y="9.4"
+                textAnchor="middle"
+                className="press-head-note-letter"
+              >
+                {cluster.glyph}
+              </text>
+            </g>
+            <line
+              x1="5"
+              y1="11"
+              x2="11"
+              y2="11"
+              stroke={`url(#phn-${variant}-gold)`}
+              strokeWidth="0.22"
+              strokeLinecap="round"
+              opacity="0.65"
+            />
+          </svg>
+        </span>
+        <em className="press-head-note-mark">{cluster.sigil}</em>
+      </span>
+      <span className="press-head-note-rule press-head-note-rule--right" />
+    </figure>
+  )
+}
+
 function Epigraph() {
   return (
     <aside className="epigraph" aria-hidden="true">
@@ -10069,6 +10178,8 @@ export function App() {
           </p>
         </header>
 
+        <PressHeadNote visible reduced={reduced} variant="recto" />
+
         <HourOfReading now={now} />
 
         <Epigraph />
@@ -10120,6 +10231,11 @@ export function App() {
                 active={phase === 'answering' || phase === 'replying' || phase === 'complete'}
                 reduced={reduced}
               />
+            </div>
+            <div className="broadsheet-title-rule" aria-hidden="true">
+              <span className="broadsheet-title-rule-line" />
+              <span className="broadsheet-title-rule-pip" />
+              <span className="broadsheet-title-rule-line broadsheet-title-rule-line--right" />
             </div>
             <h1
               id="page-title"
@@ -10228,6 +10344,8 @@ export function App() {
             aria-labelledby="response-title"
             aria-hidden={!versoOpened}
           >
+
+            <PressHeadNote visible={replyShown} reduced={reduced} variant="verso" />
 
             <aside
               className={`verso-frontispiece${replyShown ? ' is-revealed' : ''}`}

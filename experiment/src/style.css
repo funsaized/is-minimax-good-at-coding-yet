@@ -233,6 +233,21 @@ button { font: inherit; }
   transition: opacity 900ms var(--ease);
 }
 .sheet-ambient.is-lit { opacity: 1; }
+/* iteration 155 · the ambient warmth earns a slow breath — a 14-second
+   pulse that hints at the page being alive, without ever drawing
+   attention to itself. The breath only runs once the page has been
+   pressed, and respects reduced-motion preferences. */
+.sheet-ambient.is-lit {
+  animation: sheet-ambient-breath 14s ease-in-out 1.2s infinite;
+  transform-origin: 50% 50%;
+}
+@keyframes sheet-ambient-breath {
+  0%, 100% { opacity: 0.88; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.045); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet-ambient.is-lit { animation: none; }
+}
 
 /* ────────── reading lamp ────────── */
 
@@ -13436,6 +13451,145 @@ button { font: inherit; }
   .hour-of-reading { padding: 2px 4px 4px; }
 }
 
+/* ────────── iteration 155 · folio press head-note ──────────
+   A delicate italic slip sits at the opening of each spread,
+   mirroring the recto's RectoCatchword and the verso's
+   ReplyCatchword in idiom — but speaking as the chapter's
+   *first* voice. The recto slip names the chapter and the folio,
+   the verso slip names the reply. Together they complete the
+   spread's opening-closing symmetry. ────────── */
+
+.press-head-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  margin: clamp(10px, 1.2vw, 16px) auto clamp(4px, 0.6vw, 10px);
+  padding: 0 clamp(8px, 2vw, 22px);
+  max-width: 720px;
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-style: italic;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 900ms var(--ease) 220ms,
+    transform 900ms var(--ease) 220ms;
+}
+.press-head-note--verso {
+  margin-top: clamp(6px, 0.8vw, 12px);
+  transition-delay: 360ms, 360ms;
+}
+.press-head-note.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.press-head-note.is-static {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+.press-head-note-rule {
+  flex: 0 0 clamp(22px, 5vw, 56px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(156, 110, 38, 0.42) 56%,
+    rgba(167, 60, 44, 0.5) 100%
+  );
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 900ms var(--ease) 380ms;
+}
+.press-head-note-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(156, 110, 38, 0.42) 56%,
+    rgba(167, 60, 44, 0.5) 100%
+  );
+  transform-origin: left center;
+}
+.press-head-note.is-visible .press-head-note-rule,
+.press-head-note.is-static .press-head-note-rule {
+  transform: scaleX(1);
+}
+.press-head-note-cluster {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, 0.7vw, 9px);
+  flex-wrap: wrap;
+  justify-content: center;
+  min-width: 0;
+}
+.press-head-note-key {
+  color: var(--coral-deep);
+  font: italic 600 11.5px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.press-head-note-sep {
+  color: var(--coral);
+  font: 700 10px/1 var(--display);
+  opacity: 0.7;
+}
+.press-head-note-tail {
+  color: var(--ink-soft);
+  font: italic 500 11px/1.2 var(--display);
+  letter-spacing: 0.012em;
+}
+.press-head-note-sigil {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--coral-deep);
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.08));
+  animation: phn-sigil-breath 6.6s ease-in-out 1500ms infinite;
+}
+.press-head-note-sigil svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.press-head-note-letter {
+  font: italic 700 8.5px/1 var(--display);
+  fill: currentColor;
+  font-feature-settings: "kern" 1;
+}
+.press-head-note-mark {
+  color: var(--ink-soft);
+  font: italic 500 9.5px/1 var(--display);
+  letter-spacing: 0.02em;
+  opacity: 0.78;
+}
+@keyframes phn-sigil-breath {
+  0%, 100% { transform: rotate(-1deg) scale(1); opacity: 0.92; }
+  50%      { transform: rotate(1.4deg) scale(1.05); opacity: 1; }
+}
+.press-head-note.is-static .press-head-note-sigil { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .press-head-note { transition: none; opacity: 1; transform: none; }
+  .press-head-note-rule { transition: none; transform: scaleX(1); }
+  .press-head-note-sigil { animation: none; }
+}
+@media (max-width: 720px) {
+  .press-head-note { padding: 0 14px; gap: 8px; }
+  .press-head-note-key { font-size: 10.5px; }
+  .press-head-note-tail { font-size: 10px; }
+  .press-head-note-sigil { width: 12px; height: 12px; }
+  .press-head-note-rule { flex-basis: 18px; }
+}
+@media (max-width: 540px) {
+  .press-head-note-mark { display: none; }
+  .press-head-note-rule { display: none; }
+}
+
 /* ────────── iteration 141 · wax-seal smoke wisp ────────── */
 
 .wps-smoke {
@@ -14798,8 +14952,8 @@ button { font: inherit; }
     padding: 0 clamp(0px, 8vw, 28px);
   }
 }
-
 /* ── refined H1 typography: tighter, more confident, calmer ── */
+
 
 .broadsheet-title .title-flow {
   font-weight: 660;
@@ -14815,6 +14969,44 @@ button { font: inherit; }
     drop-shadow(0 10px 16px rgba(80, 36, 14, 0.22))
     drop-shadow(0 0 0.5px rgba(107, 74, 37, 0.32));
 }
+/* iteration 155 · the drop cap earns a refined compositional halo —
+   a soft gold warmth that sits behind the initial, breathing slowly
+   and giving the title block a faint sense of light from the page. */
+.broadsheet-title .title-initial-wrap::after {
+  content: "";
+  position: absolute;
+  inset: -16% -14% -10% -22%;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 62% 70% at 50% 56%,
+      rgba(245, 198, 91, 0.16),
+      transparent 70%
+    );
+  z-index: -1;
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity 1400ms var(--ease) 600ms,
+    transform 1400ms var(--ease) 600ms;
+}
+.has-answer .broadsheet-title .title-initial-wrap::after {
+  opacity: 1;
+  transform: none;
+  animation: title-initial-warmth 7.4s ease-in-out 1200ms infinite;
+}
+@keyframes title-initial-warmth {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .broadsheet-title .title-initial-wrap::after {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .broadsheet-title .title-subject {
   color: #163a48;
   font-weight: 640;
@@ -14823,6 +15015,43 @@ button { font: inherit; }
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "swsh" 1, "onum" 1;
   transition: text-shadow 900ms var(--ease);
 }
+/* iteration 155 · the subject word ("Minimax M3") gains a hairline
+   mark beneath its baseline — a small composition detail that
+   reframes the subject as a specimen, not just a word. */
+.broadsheet-title .title-subject::after {
+  content: "";
+  position: absolute;
+  left: -0.04em;
+  right: -0.04em;
+  bottom: -0.04em;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(31, 78, 96, 0.32) 16%,
+    rgba(31, 78, 96, 0.42) 50%,
+    rgba(31, 78, 96, 0.32) 84%,
+    transparent
+  );
+  opacity: 0;
+  transform: scaleX(0.6);
+  transition:
+    opacity 1100ms var(--ease) 1500ms,
+    transform 1100ms var(--ease) 1500ms;
+  pointer-events: none;
+}
+.has-answer .broadsheet-title .title-subject::after {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .broadsheet-title .title-subject::after {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .has-answer .broadsheet-title .title-subject {
   text-shadow: 0 0 10px rgba(31, 78, 96, 0.18);
 }
@@ -14844,6 +15073,49 @@ button { font: inherit; }
     0 0 0 rgba(217, 101, 74, 0);
   transition: text-shadow 1200ms var(--ease) 600ms;
 }
+/* iteration 155 · a delicate coral pip floats above the question
+   mark's hook — a small "pin-prick" detail that draws the eye to
+   the question's own closure and gives the title block a quiet
+   final accent. */
+.broadsheet-title .title-questions::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -0.42em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 36% 36%,
+    rgba(245, 198, 91, 0.92),
+    rgba(217, 101, 74, 0.7) 60%,
+    rgba(167, 60, 44, 0.4) 100%
+  );
+  transform: translate(-50%, 0) scale(0);
+  opacity: 0;
+  transition:
+    opacity 700ms var(--ease) 1700ms,
+    transform 700ms var(--ease) 1700ms;
+  pointer-events: none;
+  box-shadow: 0 0 8px rgba(245, 198, 91, 0.55);
+}
+.has-answer .broadsheet-title .title-questions::before {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+  animation: title-qpip-breathe 4.8s ease-in-out 2200ms infinite;
+}
+@keyframes title-qpip-breathe {
+  0%, 100% { box-shadow: 0 0 6px rgba(245, 198, 91, 0.45); }
+  50%      { box-shadow: 0 0 12px rgba(245, 198, 91, 0.7); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .broadsheet-title .title-questions::before {
+    animation: none;
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
 .has-answer .broadsheet-title .title-questions {
   text-shadow:
     0 0.04em 0 rgba(167, 60, 44, 0.16),
@@ -14855,6 +15127,75 @@ button { font: inherit; }
   margin-top: clamp(0px, 0.4vw, 4px);
   padding-right: clamp(96px, 12vw, 152px);
   row-gap: 4px;
+}
+
+/* iteration 155 · a delicate hairline rule sits above the title
+   block — a "title-block rule" that reframes the question as a
+   composed printed object, not a free-floating line of text. The
+   rule fades in from either side, meeting a small coral pip at
+   the centre, and earns its place as the press's quiet
+   "title-block furniture." */
+.broadsheet-title-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  margin: 2px 0 clamp(12px, 1.4vw, 18px);
+  padding: 0 clamp(8px, 2vw, 18px);
+  max-width: 760px;
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 900ms var(--ease) 240ms,
+    transform 900ms var(--ease) 240ms;
+}
+.has-answer .broadsheet-title-rule {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .broadsheet-title-rule {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+.broadsheet-title-rule-line {
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.36) 32%,
+    rgba(167, 60, 44, 0.5) 92%,
+    transparent 100%
+  );
+  max-width: 280px;
+}
+.broadsheet-title-rule-line--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(167, 60, 44, 0.36) 32%,
+    rgba(167, 60, 44, 0.5) 92%,
+    transparent 100%
+  );
+}
+.broadsheet-title-rule-pip {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 36% 36%,
+    rgba(245, 198, 91, 0.92),
+    rgba(217, 101, 74, 0.78) 60%,
+    rgba(167, 60, 44, 0.4) 100%
+  );
+  box-shadow: 0 0 8px rgba(245, 198, 91, 0.55);
+  flex-shrink: 0;
+}
+@media (max-width: 540px) {
+  .broadsheet-title-rule-line { max-width: 120px; }
 }
 
 @media (max-width: 720px) {
