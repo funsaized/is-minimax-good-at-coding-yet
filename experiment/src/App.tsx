@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -6,11 +6,12 @@ type Gloss = {
   id: string
   n: string
   head: string
-  text: string
   gloss: string
+  text: string
   scribble: string
   blot: string
   tether: string
+  note: string
 }
 
 const MARGINALIA: Gloss[] = [
@@ -23,6 +24,7 @@ const MARGINALIA: Gloss[] = [
     scribble: 'M2 9 C 8 3, 16 15, 24 9 C 30 5, 38 13, 46 9',
     blot: 'M11 3 C 17 5, 21 11, 18 17 C 14 21, 5 20, 3 14 C 1 9, 6 3, 11 3 Z',
     tether: 'M58 4 C 40 14, 18 28, 4 56',
+    note: 'the press remembers the hand, not the pressman',
   },
   {
     id: 'good',
@@ -33,6 +35,7 @@ const MARGINALIA: Gloss[] = [
     scribble: 'M2 9 C 12 3, 22 15, 32 9 C 42 3, 52 15, 62 9',
     blot: 'M10 4 C 16 3, 21 8, 20 14 C 19 20, 11 21, 6 17 C 1 13, 4 6, 10 4 Z',
     tether: 'M58 6 C 36 14, 14 32, 4 64',
+    note: 'a clean claim is a kindness to the reader',
   },
   {
     id: 'yet',
@@ -43,8 +46,11 @@ const MARGINALIA: Gloss[] = [
     scribble: 'M2 9 C 8 3, 16 15, 24 9 C 30 5, 36 13, 42 9',
     blot: 'M9 3 C 14 2, 20 7, 19 13 C 18 19, 10 20, 5 16 C 1 11, 4 4, 9 3 Z',
     tether: 'M58 8 C 40 18, 20 38, 4 70',
+    note: 'leave room for the reader to arrive',
   },
 ]
+
+type Mark = { id: string; d: string }
 
 function useNow(intervalMs: number) {
   const [now, setNow] = useState(() => new Date())
@@ -95,6 +101,10 @@ const MONTHS = [
 ]
 function formatDate(d: Date) {
   return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`
+}
+
+function uid() {
+  return Math.random().toString(36).slice(2, 9)
 }
 
 function Dust() {
@@ -302,6 +312,51 @@ function PressMark() {
   )
 }
 
+function PencilGlyph({ active }: { active: boolean }) {
+  return (
+    <svg className="pencil-glyph" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M3 21 L7 17 L18 6 L21 3 L18 0 L15 3 L4 14 L3 21 Z"
+        fill="currentColor"
+        fillOpacity={active ? 0.85 : 0.18}
+      />
+      <path
+        d="M14 7 L18 11"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M3 21 L7 17"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M18 0 L21 3"
+        stroke="currentColor"
+        strokeWidth="0.9"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.5"
+      />
+    </svg>
+  )
+}
+
+function EraserGlyph() {
+  return (
+    <svg className="eraser-glyph" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3 16 L11 8 L19 16 L14 21 L7 21 Z" fill="currentColor" fillOpacity="0.2" />
+      <path d="M3 16 L11 8 L19 16" stroke="currentColor" strokeWidth="1.1" fill="none" strokeLinejoin="round" />
+      <path d="M3 16 L14 21" stroke="currentColor" strokeWidth="1.1" fill="none" strokeLinecap="round" />
+      <path d="M11 8 L14 21" stroke="currentColor" strokeWidth="0.8" fill="none" strokeDasharray="1.5 1.6" opacity="0.5" />
+    </svg>
+  )
+}
+
 type WordProps = {
   text: string
   id?: string
@@ -347,36 +402,210 @@ function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay }: Word
   )
 }
 
+type MarkLayerProps = {
+  active: boolean
+  marks: Mark[]
+  currentPath: string
+  svgRef: React.RefObject<SVGSVGElement | null>
+  onPathStart: (x: number, y: number) => void
+  onPathMove: (x: number, y: number) => void
+  onPathEnd: () => void
+  onPathCancel: () => void
+}
+
+function MarkLayer({ active, marks, currentPath, svgRef, onPathStart, onPathMove, onPathEnd, onPathCancel }: MarkLayerProps) {
+  const downRef = useRef(false)
+
+  const getPoint = (e: React.PointerEvent) => {
+    const svg = svgRef.current
+    if (!svg) return null
+    const rect = svg.getBoundingClientRect()
+    if (rect.width <= 0 || rect.height <= 0) return null
+    return {
+      x: Math.max(0, Math.min(rect.width, e.clientX - rect.left)),
+      y: Math.max(0, Math.min(rect.height, e.clientY - rect.top)),
+    }
+  }
+
+  const handleDown = (e: React.PointerEvent) => {
+    if (!active) return
+    if (e.button !== undefined && e.button !== 0) return
+    const p = getPoint(e)
+    if (!p) return
+    downRef.current = true
+    try {
+      ;(e.target as Element).setPointerCapture?.(e.pointerId)
+    } catch {
+      // ignore capture failures
+    }
+    onPathStart(p.x, p.y)
+    e.preventDefault()
+  }
+
+  const handleMove = (e: React.PointerEvent) => {
+    if (!active || !downRef.current) return
+    const p = getPoint(e)
+    if (!p) return
+    onPathMove(p.x, p.y)
+  }
+
+  const handleUp = (e: React.PointerEvent) => {
+    if (!active) return
+    if (!downRef.current) return
+    downRef.current = false
+    try {
+      ;(e.target as Element).releasePointerCapture?.(e.pointerId)
+    } catch {
+      // ignore release failures
+    }
+    onPathEnd()
+  }
+
+  const handleCancel = () => {
+    if (!active) return
+    if (!downRef.current) return
+    downRef.current = false
+    onPathCancel()
+  }
+
+  return (
+    <svg
+      ref={svgRef}
+      className={`marks ${active ? 'marks--active' : ''}`}
+      preserveAspectRatio="none"
+      onPointerDown={handleDown}
+      onPointerMove={handleMove}
+      onPointerUp={handleUp}
+      onPointerCancel={handleCancel}
+      onPointerLeave={handleUp}
+      aria-hidden="true"
+    >
+      <defs>
+        <filter id="markRough" x="-2%" y="-2%" width="104%" height="104%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="7" />
+          <feDisplacementMap in="SourceGraphic" scale="1.6" />
+        </filter>
+      </defs>
+      <g className="marks__g" filter="url(#markRough)">
+        {marks.map(m => (
+          <path
+            key={m.id}
+            className="marks__stroke"
+            d={m.d}
+          />
+        ))}
+        {currentPath && (
+          <path
+            className="marks__stroke"
+            d={currentPath}
+          />
+        )}
+      </g>
+    </svg>
+  )
+}
+
 export function App() {
   const [open, setOpen] = useState(false)
   const [hovered, setHovered] = useState<string | null>(null)
   const [pulse, setPulse] = useState(0)
+  const [pencil, setPencil] = useState(false)
+  const [marks, setMarks] = useState<Mark[]>([])
+  const [currentPath, setCurrentPath] = useState('')
+  const [announcement, setAnnouncement] = useState('')
   const answerId = useId()
   const now = useNow(1000)
   const progress = useScrollProgress()
   const sealRef = useRef<HTMLButtonElement>(null)
+  const pencilRef = useRef<HTMLButtonElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const svgRef = useRef<SVGSVGElement>(null)
 
   const onToggle = () => {
     setOpen(v => !v)
     setPulse(p => p + 1)
   }
 
+  const onPencilToggle = useCallback(() => {
+    setPencil(v => {
+      const next = !v
+      setAnnouncement(next ? 'Pencil on. Drag to mark the proof.' : 'Pencil off.')
+      return next
+    })
+  }, [])
+
+  const onClearMarks = useCallback(() => {
+    setMarks([])
+    setCurrentPath('')
+    setAnnouncement('Marks cleared.')
+  }, [])
+
+  useEffect(() => {
+    if (!pencil) {
+      setCurrentPath('')
+    }
+  }, [pencil])
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return
+      if (e.key === 'p' || e.key === 'P') {
+        if (e.metaKey || e.ctrlKey || e.altKey) return
+        e.preventDefault()
+        onPencilToggle()
+      } else if (e.key === 'Escape' && pencil) {
+        e.preventDefault()
+        setPencil(false)
+        setAnnouncement('Pencil off.')
+      } else if ((e.key === 'Backspace' || e.key === 'Delete') && pencil && marks.length > 0) {
+        if (e.metaKey || e.ctrlKey || e.altKey) return
+        e.preventDefault()
+        onClearMarks()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [pencil, marks.length, onPencilToggle, onClearMarks])
+
+  const onPathStart = useCallback((x: number, y: number) => {
+    setCurrentPath(`M${x.toFixed(1)} ${y.toFixed(1)}`)
+  }, [])
+
+  const onPathMove = useCallback((x: number, y: number) => {
+    setCurrentPath(prev => (prev ? `${prev} L${x.toFixed(1)} ${y.toFixed(1)}` : `M${x.toFixed(1)} ${y.toFixed(1)}`))
+  }, [])
+
+  const onPathEnd = useCallback(() => {
+    setCurrentPath(prev => {
+      if (prev && prev.length > 12) {
+        setMarks(m => [...m, { id: uid(), d: prev }])
+      }
+      return ''
+    })
+  }, [])
+
+  const onPathCancel = useCallback(() => {
+    setCurrentPath('')
+  }, [])
+
   const scribbles = Object.fromEntries(MARGINALIA.map(m => [m.id, m.scribble]))
   const blots = Object.fromEntries(MARGINALIA.map(m => [m.id, m.blot]))
 
   const beatOn = now.getSeconds() % 2 === 0
-
   const titleDelays = [0.0, 0.08, 0.16, 0.24, 0.32, 0.4, 0.48]
+  const marked = marks.length > 0
 
   return (
     <main
-      className={`folio ${open ? 'folio--open' : ''}`}
+      className={`folio ${open ? 'folio--open' : ''} ${pencil ? 'folio--pencil' : ''}`}
       style={{ ['--progress' as string]: progress }}
     >
       <Dust />
       <div className="folio__lamp" aria-hidden="true" />
       <div className="folio__vignette" aria-hidden="true" />
       <div className="folio__grain" aria-hidden="true" />
+      <span className="sr-only" aria-live="polite">{announcement}</span>
 
       <header className="folio__head">
         <a className="folio__sig" href="#top" aria-label="Return to the question">
@@ -407,189 +636,252 @@ export function App() {
 
         <EditionPlate />
 
-        <div className="proof__layout">
-          <div className="proof__main">
-            <header className="proof__head" id="question">
-              <p className="kicker">
-                <span>the question</span>
-                <b />
-                <em>pressed in good faith</em>
-              </p>
-              <h1 className="proof__title">
-                <span aria-hidden="true" className="proof__title-rule" />
-                <TitleWord text="is Minimax " delay={titleDelays[0]} />
-                <TitleWord
-                  text="M3"
-                  id="m3"
-                  active={hovered === 'm3'}
-                  onEnter={() => setHovered('m3')}
-                  onLeave={() => setHovered(null)}
-                  scribble={scribbles.m3}
-                  delay={titleDelays[1]}
-                />
-                <TitleWord text=" " delay={titleDelays[2]} />
-                <TitleWord
-                  text="good at"
-                  id="good"
-                  active={hovered === 'good'}
-                  onEnter={() => setHovered('good')}
-                  onLeave={() => setHovered(null)}
-                  scribble={scribbles.good}
-                  delay={titleDelays[3]}
-                />
-                <TitleWord text=" frontend " delay={titleDelays[4]} />
-                <TitleWord
-                  text="yet"
-                  id="yet"
-                  active={hovered === 'yet'}
-                  onEnter={() => setHovered('yet')}
-                  onLeave={() => setHovered(null)}
-                  scribble={scribbles.yet}
-                  delay={titleDelays[5]}
-                />
-                <TitleWord text="?" delay={titleDelays[6]} />
-                <span aria-hidden="true" className="proof__title-rule" />
-              </h1>
-              <p className="proof__lede">
-                A small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here</em>.
-              </p>
-
-              <div className="proof__cue">
-                <button
-                  ref={sealRef}
-                  type="button"
-                  className={`seal-cta ${open ? 'seal-cta--open' : ''}`}
-                  onClick={onToggle}
-                  aria-expanded={open}
-                  aria-controls={answerId}
-                  data-pulse={pulse}
-                >
-                  <span className="seal-cta__halo" aria-hidden="true" />
-                  <span className="seal-cta__disc" aria-hidden="true">
-                    <span className="seal-cta__icon"><Seal /></span>
-                  </span>
-                  <span className="seal-cta__text">
-                    <strong className="seal-cta__label">
-                      {open ? 'lift the seal' : 'press the seal'}
-                    </strong>
-                    <em className="seal-cta__sub">
-                      {open ? 'to fold the page back' : 'and the answer tips in'}
-                    </em>
-                  </span>
-                  <span className="seal-cta__splat" aria-hidden="true">
-                    <svg viewBox="0 0 40 40" preserveAspectRatio="none">
-                      <path d="M20 18 C 26 16, 32 22, 28 28 C 24 34, 14 32, 12 26 C 10 20, 16 14, 22 18 C 26 22, 20 26, 18 22 Z" />
-                    </svg>
-                  </span>
-                </button>
-                <p className="proof__aside">
-                  <i>a useful question</i><br />
-                  is rarely tidy
-                </p>
-              </div>
-            </header>
-
-            <section
-              className={`answer ${open ? 'answer--open' : ''}`}
-              id="answer"
-              aria-hidden={!open}
-              aria-labelledby="answer-title"
+        <div className="proof__cue-tools" aria-label="Editor's tools">
+          <button
+            ref={pencilRef}
+            type="button"
+            className={`pencil-toggle ${pencil ? 'pencil-toggle--on' : ''}`}
+            onClick={onPencilToggle}
+            aria-pressed={pencil}
+            aria-label={pencil ? 'Pencil on, drag to mark the proof' : 'Pencil off, click to mark the proof'}
+            title={pencil ? 'Pencil on (press P or Esc to turn off)' : 'Pencil off (press P to turn on)'}
+          >
+            <span className="pencil-toggle__rule" aria-hidden="true" />
+            <span className="pencil-toggle__face" aria-hidden="true">
+              <PencilGlyph active={pencil} />
+            </span>
+            <span className="pencil-toggle__text">
+              <strong>{pencil ? 'marking' : 'mark'}</strong>
+              <em>the proof</em>
+            </span>
+            <span className="pencil-toggle__count" aria-hidden="true">
+              {marked ? <>{marks.length}<i>{marks.length === 1 ? 'mark' : 'marks'}</i></> : <i>empty</i>}
+            </span>
+          </button>
+          {marked && (
+            <button
+              type="button"
+              className="pencil-clear"
+              onClick={onClearMarks}
+              aria-label={`Clear all ${marks.length} marks`}
+              title="Clear all marks (Backspace)"
             >
-              <div className="answer__plate">
-                <div className="answer__hatch" aria-hidden="true" />
-                <span className="answer__pin answer__pin--tl" aria-hidden="true" />
-                <span className="answer__pin answer__pin--tr" aria-hidden="true" />
-                <div className="answer__inner">
-                  <div className="answer__stamp">
-                    <Seal />
-                    <span className="answer__stamp-text">
-                      pressed<br />
-                      <b>by hand</b>
+              <EraserGlyph />
+              <span>shake off</span>
+            </button>
+          )}
+        </div>
+
+        <div className="proof__stage" ref={stageRef}>
+          <MarkLayer
+            active={pencil}
+            marks={marks}
+            currentPath={currentPath}
+            svgRef={svgRef}
+            onPathStart={onPathStart}
+            onPathMove={onPathMove}
+            onPathEnd={onPathEnd}
+            onPathCancel={onPathCancel}
+          />
+
+          <div className="proof__layout">
+            <div className="proof__main">
+              <header className="proof__head" id="question">
+                <p className="kicker">
+                  <span>the question</span>
+                  <b />
+                  <em>pressed in good faith</em>
+                </p>
+                <h1 className="proof__title">
+                  <span aria-hidden="true" className="proof__title-rule" />
+                  <TitleWord text="is Minimax " delay={titleDelays[0]} />
+                  <TitleWord
+                    text="M3"
+                    id="m3"
+                    active={hovered === 'm3'}
+                    onEnter={() => setHovered('m3')}
+                    onLeave={() => setHovered(null)}
+                    scribble={scribbles.m3}
+                    delay={titleDelays[1]}
+                  />
+                  <TitleWord text=" " delay={titleDelays[2]} />
+                  <TitleWord
+                    text="good at"
+                    id="good"
+                    active={hovered === 'good'}
+                    onEnter={() => setHovered('good')}
+                    onLeave={() => setHovered(null)}
+                    scribble={scribbles.good}
+                    delay={titleDelays[3]}
+                  />
+                  <TitleWord text=" frontend " delay={titleDelays[4]} />
+                  <TitleWord
+                    text="yet"
+                    id="yet"
+                    active={hovered === 'yet'}
+                    onEnter={() => setHovered('yet')}
+                    onLeave={() => setHovered(null)}
+                    scribble={scribbles.yet}
+                    delay={titleDelays[5]}
+                  />
+                  <TitleWord text="?" delay={titleDelays[6]} />
+                  <span aria-hidden="true" className="proof__title-rule" />
+                </h1>
+                <p className="proof__subtitle" aria-hidden="true">
+                  <span>set by hand</span>
+                  <i />
+                  <em>this edition, for one reader</em>
+                </p>
+                <p className="proof__lede">
+                  A small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here</em>.
+                </p>
+
+                <div className="proof__cue">
+                  <button
+                    ref={sealRef}
+                    type="button"
+                    className={`seal-cta ${open ? 'seal-cta--open' : ''}`}
+                    onClick={onToggle}
+                    aria-expanded={open}
+                    aria-controls={answerId}
+                    data-pulse={pulse}
+                  >
+                    <span className="seal-cta__halo" aria-hidden="true" />
+                    <span className="seal-cta__disc" aria-hidden="true">
+                      <span className="seal-cta__icon"><Seal /></span>
                     </span>
-                  </div>
-                  <div className="answer__body" id={answerId}>
-                    <p className="kicker kicker--ink" id="answer-title">
-                      <span>the answer</span>
-                      <b />
-                      <em>for now</em>
-                    </p>
-                    <p className="answer__lead">
-                      <span className="answer__dropcap" aria-hidden="true">
-                        <span className="answer__dropcap-letter">Y</span>
-                        <span className="answer__dropcap-flourish"><Flourish /></span>
+                    <span className="seal-cta__text">
+                      <strong className="seal-cta__label">
+                        {open ? 'lift the seal' : 'press the seal'}
+                      </strong>
+                      <em className="seal-cta__sub">
+                        {open ? 'to fold the page back' : 'and the answer tips in'}
+                      </em>
+                    </span>
+                    <span className="seal-cta__splat" aria-hidden="true">
+                      <svg viewBox="0 0 40 40" preserveAspectRatio="none">
+                        <path d="M20 18 C 26 16, 32 22, 28 28 C 24 34, 14 32, 12 26 C 10 20, 16 14, 22 18 C 26 22, 20 26, 18 22 Z" />
+                      </svg>
+                    </span>
+                  </button>
+                  <p className="proof__aside">
+                    <i>a useful question</i><br />
+                    is rarely tidy
+                  </p>
+                </div>
+              </header>
+
+              <section
+                className={`answer ${open ? 'answer--open' : ''}`}
+                id="answer"
+                aria-hidden={!open}
+                aria-labelledby="answer-title"
+              >
+                <div className="answer__plate">
+                  <div className="answer__hatch" aria-hidden="true" />
+                  <span className="answer__pin answer__pin--tl" aria-hidden="true" />
+                  <span className="answer__pin answer__pin--tr" aria-hidden="true" />
+                  <div className="answer__inner">
+                    <div className="answer__stamp">
+                      <Seal />
+                      <span className="answer__stamp-text">
+                        pressed<br />
+                        <b>by hand</b>
                       </span>
-                      <span className="sr-only">Y</span>es — when it stops trying to look impressive.
-                    </p>
-                    <div className="answer__columns">
-                      <p>
-                        The good part is not the gradient, the flourish, or the clever little mechanism. It is the moment the page gives you room to notice <em>one thing</em>. Then another.
-                      </p>
-                      <p>
-                        So this is a qualified yes: <em>good at front-end</em> means attentive to the person on the other side of the glass. The rest is decoration with a job to do.
-                      </p>
                     </div>
-                    <div className="answer__sign">
-                      <Spark />
-                      <span>— m³, still learning the pause</span>
-                      <span className="answer__sign-corner" aria-hidden="true">
-                        <Kite />
-                      </span>
+                    <div className="answer__body" id={answerId}>
+                      <p className="kicker kicker--ink" id="answer-title">
+                        <span>the answer</span>
+                        <b />
+                        <em>for now</em>
+                      </p>
+                      <p className="answer__lead">
+                        <span className="answer__dropcap" aria-hidden="true">
+                          <span className="answer__dropcap-letter">Y</span>
+                          <span className="answer__dropcap-flourish"><Flourish /></span>
+                        </span>
+                        <span className="sr-only">Y</span>es — when it stops trying to look impressive.
+                      </p>
+                      <div className="answer__columns">
+                        <p>
+                          The good part is not the gradient, the flourish, or the clever little mechanism. It is the moment the page gives you room to notice <em>one thing</em>. Then another.
+                        </p>
+                        <p>
+                          So this is a qualified yes: <em>good at front-end</em> means attentive to the person on the other side of the glass. The rest is decoration with a job to do.
+                        </p>
+                      </div>
+                      <p className="answer__pull" aria-hidden="true">
+                        <span className="answer__pull-rule" />
+                        <em>attention, not ornament</em>
+                        <span className="answer__pull-rule answer__pull-rule--end" />
+                      </p>
+                      <div className="answer__sign">
+                        <Spark />
+                        <span>— m³, still learning the pause</span>
+                        <span className="answer__sign-corner" aria-hidden="true">
+                          <Kite />
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </section>
-          </div>
+              </section>
+            </div>
 
-          <aside className="margin" id="marginalia" aria-labelledby="margin-title">
-            <header className="margin__head">
-              <p className="kicker">
-                <span>marginalia</span>
-                <b />
-                <em>hover a word to read</em>
-              </p>
-              <h2 id="margin-title" className="margin__title">
-                three notes from <i>the fold</i>
-              </h2>
-              <p className="margin__lede">
-                Not rules. The residue of pressing this page.
-              </p>
-            </header>
-            <ol className="margin__list">
-              {MARGINALIA.map(m => (
-                <li
-                  key={m.n}
-                  className={`margin__item ${hovered === m.id ? 'margin__item--active' : ''}`}
-                  onMouseEnter={() => setHovered(m.id)}
-                  onMouseLeave={() => setHovered(null)}
-                  onFocus={() => setHovered(m.id)}
-                  onBlur={() => setHovered(null)}
-                  tabIndex={0}
-                  aria-describedby={`gloss-${m.id}`}
-                >
-                  <span className="margin__n">{m.n}</span>
-                  <div className="margin__copy">
-                    <span className="margin__tether" aria-hidden="true">
-                      <svg viewBox="0 0 60 80" preserveAspectRatio="none">
-                        <path d={m.tether} />
-                      </svg>
-                    </span>
-                    <span className="margin__blot" aria-hidden="true">
-                      <InkBlot path={blots[m.id]} />
-                    </span>
-                    <h3 className="margin__h" id={`gloss-${m.id}`}>
-                      {m.head}
-                      <span className="margin__gloss">— {m.gloss}</span>
-                    </h3>
-                    <p className="margin__p">{m.text}</p>
-                    <span className="margin__caret" aria-hidden="true">
-                      <Caret />
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </aside>
+            <aside className="margin" id="marginalia" aria-labelledby="margin-title">
+              <header className="margin__head">
+                <p className="kicker">
+                  <span>marginalia</span>
+                  <b />
+                  <em>hover a word to read</em>
+                </p>
+                <h2 id="margin-title" className="margin__title">
+                  three notes from <i>the fold</i>
+                </h2>
+                <p className="margin__lede">
+                  Not rules. The residue of pressing this page.
+                </p>
+              </header>
+              <ol className="margin__list">
+                {MARGINALIA.map(m => (
+                  <li
+                    key={m.n}
+                    className={`margin__item ${hovered === m.id ? 'margin__item--active' : ''}`}
+                    onMouseEnter={() => setHovered(m.id)}
+                    onMouseLeave={() => setHovered(null)}
+                    onFocus={() => setHovered(m.id)}
+                    onBlur={() => setHovered(null)}
+                    tabIndex={0}
+                    aria-describedby={`gloss-${m.id}`}
+                  >
+                    <span className="margin__n">{m.n}</span>
+                    <div className="margin__copy">
+                      <span className="margin__tether" aria-hidden="true">
+                        <svg viewBox="0 0 60 80" preserveAspectRatio="none">
+                          <path d={m.tether} />
+                        </svg>
+                      </span>
+                      <span className="margin__blot" aria-hidden="true">
+                        <InkBlot path={blots[m.id]} />
+                      </span>
+                      <h3 className="margin__h" id={`gloss-${m.id}`}>
+                        {m.head}
+                        <span className="margin__gloss">— {m.gloss}</span>
+                      </h3>
+                      <p className="margin__p">{m.text}</p>
+                      <p className="margin__note" aria-hidden="true">
+                        <span className="margin__note-rule" />
+                        <em>ed.</em> {m.note}
+                      </p>
+                      <span className="margin__caret" aria-hidden="true">
+                        <Caret />
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </aside>
+          </div>
         </div>
 
         <div className="proof__device" aria-hidden="true">
@@ -614,11 +906,13 @@ export function App() {
             <span className="colophon__sep">·</span>
             {formatDate(now)}
              <span className="colophon__sep">·</span>
-             made with intent, not certainty
+             {marked
+               ? <>marked with care<small className="colophon__marks">· {marks.length} hand-drawn</small></>
+               : 'made with intent, not certainty'}
           </p>
           <div className="colophon__sign" aria-hidden="true">
             <Signature />
-            <span className="colophon__sign-cap">signed at the press</span>
+            <span className="colophon__sign-cap">{marked ? 'signed & annotated' : 'signed at the press'}</span>
           </div>
           <a className="colophon__up" href="#top">return to the question <span aria-hidden="true">↑</span></a>
         </footer>
