@@ -1233,7 +1233,9 @@ button { font: inherit; }
   align-self: start;
   margin-top: 0.02em;
   transition: transform 520ms var(--ease), filter 520ms var(--ease);
-  filter: drop-shadow(0 8px 14px rgba(80, 36, 14, 0.22));
+  filter:
+    drop-shadow(0 10px 16px rgba(80, 36, 14, 0.24))
+    drop-shadow(0 0 0.5px rgba(107, 74, 37, 0.32));
 }
 .title-initial-wrap.is-pressing {
   transform: scale(0.92);
@@ -1280,7 +1282,7 @@ button { font: inherit; }
   color: var(--ink);
   font: italic 620 clamp(38px, 5.8vw, 84px)/1.02 var(--display);
   letter-spacing: -0.022em;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1, "onum" 1;
   padding-top: 0.02em;
   opacity: 0;
   transform: translateY(6px);
@@ -1288,6 +1290,7 @@ button { font: inherit; }
   text-wrap: balance;
   text-indent: -0.02em;
   position: relative;
+  hyphens: none;
 }
 .title-text { font-style: italic; }
 .title-text:first-of-type {
@@ -10504,6 +10507,196 @@ button { font: inherit; }
   }
   .answer-copy { font-size: clamp(22px, 7vw, 30px); line-height: 1.26; }
   .reply-paragraph { font-size: clamp(18px, 5.5vw, 22px); }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 136 · the recto earns its colophon
+   A small, hand-set printer's note lives at the foot of the recto, set in
+   italic in gold-on-paper, with a hairline rule and a single pilcrow.
+   It arrives after the leaf has been turned at least once, so it is the
+   colophon that the page itself signs — quiet, single, earned.
+   ────────────────────────────────────────────────────────────────────── */
+
+.recto-colophon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: clamp(28px, 4vw, 48px) 0 clamp(4px, 1vw, 10px);
+  max-width: min(560px, 100%);
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 1300ms var(--ease) 80ms,
+    transform 1300ms var(--ease) 80ms;
+}
+
+.recto-colophon.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.recto-colophon.is-static {
+  transition: none;
+  opacity: 1;
+  transform: none;
+}
+
+.recto-colophon-rule {
+  flex: 0 0 clamp(38px, 6vw, 78px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(156, 110, 38, 0.42) 38%,
+    rgba(167, 60, 44, 0.65) 76%,
+    var(--coral-deep) 100%
+  );
+  position: relative;
+  top: -0.05em;
+}
+
+.recto-colophon-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 7px;
+  font-style: italic;
+  letter-spacing: 0.012em;
+  color: var(--ink-soft);
+  padding: 2px 0;
+}
+
+.recto-colophon-key {
+  color: var(--coral-deep);
+  font: italic 580 9.5px/1 var(--display);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  position: relative;
+  top: -0.04em;
+}
+
+.recto-colophon-sep {
+  color: var(--coral);
+  font: italic 600 13px/1 var(--display);
+  position: relative;
+  top: -0.04em;
+  opacity: 0.6;
+}
+
+.recto-colophon-sep--tail {
+  margin: 0 0 0 2px;
+}
+
+.recto-colophon-text {
+  color: var(--ink);
+  font: italic 540 13px/1.2 var(--display);
+  letter-spacing: 0.005em;
+}
+
+.recto-colophon-tail {
+  color: var(--ink-soft);
+  font: italic 460 13px/1.2 var(--display);
+  letter-spacing: 0.01em;
+  position: relative;
+}
+
+.recto-colophon-tail::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: 0.42em;
+  width: 3px;
+  height: 1px;
+  background: var(--coral);
+  opacity: 0;
+  transition: opacity 900ms var(--ease) 700ms;
+}
+
+.recto-colophon.is-visible .recto-colophon-tail::before {
+  opacity: 0.7;
+}
+
+.recto-colophon-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  margin-left: 4px;
+  color: var(--gold-deep);
+  font: italic 700 14px/1 var(--display);
+  position: relative;
+  top: -0.04em;
+  opacity: 0;
+  transform: scale(0.6);
+  transform-origin: center;
+  transition:
+    opacity 700ms var(--ease) 900ms,
+    transform 700ms var(--ease) 900ms;
+}
+
+.recto-colophon.is-visible .recto-colophon-mark {
+  opacity: 0.78;
+  transform: scale(1);
+}
+
+.recto-colophon.is-static .recto-colophon-tail::before,
+.recto-colophon.is-static .recto-colophon-mark {
+  transition: none;
+  opacity: 0.7;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recto-colophon {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+  .recto-colophon-tail::before {
+    transition: none;
+    opacity: 0.7;
+  }
+  .recto-colophon-mark {
+    transition: none;
+    opacity: 0.78;
+    transform: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .recto-colophon {
+    margin-top: 22px;
+    gap: 10px;
+  }
+  .recto-colophon-rule { flex-basis: clamp(24px, 8vw, 50px); }
+  .recto-colophon-key { font-size: 8.5px; letter-spacing: 0.18em; }
+  .recto-colophon-text,
+  .recto-colophon-tail { font-size: 12px; }
+  .recto-colophon-sep { font-size: 12px; }
+}
+
+@media (max-width: 520px) {
+  .recto-colophon-rule { display: none; }
+  .recto-colophon {
+    padding-left: 0;
+  }
+  .recto-colophon-text,
+  .recto-colophon-tail { font-size: 11.5px; line-height: 1.32; }
+  .recto-colophon-key { font-size: 7.5px; letter-spacing: 0.16em; }
+}
+
+@media (max-width: 420px) {
+  .recto-colophon-cluster {
+    gap: 4px 6px;
+  }
+  .recto-colophon-mark { display: none; }
+  .recto-colophon-text,
+  .recto-colophon-tail { font-size: 11px; }
 }
 
 

@@ -4589,6 +4589,31 @@ function ReadingMoment({
   )
 }
 
+function RectoColophon({ visible, reduced }: { visible: boolean; reduced: boolean }) {
+  return (
+    <div
+      className={`recto-colophon${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <span className="recto-colophon-rule" aria-hidden="true" />
+      <span className="recto-colophon-cluster">
+        <em className="recto-colophon-key">colophon</em>
+        <span className="recto-colophon-sep" aria-hidden="true">·</span>
+        <em className="recto-colophon-text">
+          set in italic, in this folio
+        </em>
+        <span className="recto-colophon-sep recto-colophon-sep--tail" aria-hidden="true">·</span>
+        <em className="recto-colophon-tail">
+          for the attentive reader
+        </em>
+        <span className="recto-colophon-mark" aria-hidden="true">¶</span>
+      </span>
+    </div>
+  )
+}
+
 function QuestionerMark({ visible, reduced }: { visible: boolean; reduced: boolean }) {
   return (
     <figure
@@ -7488,6 +7513,7 @@ export function App() {
               />
             </div>
             <ReaderInkMark />
+            <RectoColophon visible={versoOpened} reduced={reduced} />
           </section>
 
           <FolioSpine stage={tideStage} cycle={cycle} reduced={reduced}>
