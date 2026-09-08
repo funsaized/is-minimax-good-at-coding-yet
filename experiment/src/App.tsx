@@ -7135,6 +7135,241 @@ function WaxArchive({ cycle }: { cycle: number }) {
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 138 · the answer earns a calligraphic flourish and a quiet
+   marginal echo. A small hand-drawn scrollwork sits at the opening of
+   the answer, drawing on as the press delivers it; beside it, in the
+   right margin, a delicate italic note acknowledges the reader. The
+   reply, in turn, begins with an illuminated "S" — a manuscript capital
+   in gold leaf — that draws on as the reply sets itself, line by line.
+   ────────────────────────────────────────────────────────────────────── */
+
+function AnswerFlourish({ visible, reduced }: { visible: boolean; reduced: boolean }) {
+  return (
+    <span
+      className={`answer-flourish${visible ? ' is-visible' : ''}${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="answer-flourish-glyph" viewBox="0 0 96 36" focusable="false">
+        <defs>
+          <linearGradient id="af-ink" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="20%" stopColor="rgba(167, 60, 44, 0.62)" />
+            <stop offset="56%" stopColor="rgba(120, 30, 12, 0.78)" />
+            <stop offset="82%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="af-gold" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0)" />
+            <stop offset="50%" stopColor="rgba(245, 198, 91, 0.62)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </linearGradient>
+        </defs>
+        <path
+          className="answer-flourish-dash"
+          d="M 6 20 Q 14 16 22 19 Q 30 22 38 18 Q 44 14.5 50 17.5"
+          stroke="url(#af-ink)"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          fill="none"
+        />
+        <path
+          className="answer-flourish-trail"
+          d="M 50 17.5 Q 56 18.5 62 16 Q 70 13 78 17 Q 84 19.5 90 17"
+          stroke="url(#af-gold)"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+          fill="none"
+        />
+        <circle
+          className="answer-flourish-pip"
+          cx="50"
+          cy="17.5"
+          r="1.2"
+          fill="rgba(120, 30, 12, 0.78)"
+        />
+        <circle
+          className="answer-flourish-halo"
+          cx="50"
+          cy="17.5"
+          r="3.4"
+          fill="rgba(245, 198, 91, 0.18)"
+        />
+        <path
+          className="answer-flourish-tail"
+          d="M 86 14 q 3 -1 4 2 q -1 2 -3 1"
+          stroke="url(#af-gold)"
+          strokeWidth="0.45"
+          strokeLinecap="round"
+          fill="none"
+        />
+      </svg>
+    </span>
+  )
+}
+
+const MARGINAL_ECHO_LINES: Record<number, { line: string; gloss: string }> = {
+  0: {
+    line: 'and the page — having answered — rests.',
+    gloss: 'the printer, setting down the quill',
+  },
+  1: {
+    line: 'a second reading — the page is unchanged.',
+    gloss: 'the reader, returning',
+  },
+  2: {
+    line: 'a third reading — only the eye has moved.',
+    gloss: 'the page, patient',
+  },
+}
+
+function MarginalEcho({
+  visible,
+  cycle,
+  reduced,
+}: {
+  visible: boolean
+  cycle: number
+  reduced: boolean
+}) {
+  const key = Math.min(cycle, 2)
+  const entry = MARGINAL_ECHO_LINES[key]
+  if (!entry) return null
+  return (
+    <aside
+      className={`marginal-echo${visible ? ' is-visible' : ''}${cycle > 0 ? ' is-reread' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-label="a marginal echo from the printer"
+    >
+      <span className="marginal-echo-rule" aria-hidden="true" />
+      <span className="marginal-echo-cluster">
+        <span className="marginal-echo-mark" aria-hidden="true">
+          <svg viewBox="0 0 16 16" focusable="false">
+            <circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" strokeWidth="0.4" strokeDasharray="0.5 1.4" />
+            <circle cx="8" cy="8" r="2.4" fill="none" stroke="currentColor" strokeWidth="0.32" />
+            <circle cx="8" cy="8" r="0.8" fill="currentColor" />
+            <line x1="8" y1="1" x2="8" y2="2.6" stroke="currentColor" strokeWidth="0.35" strokeLinecap="round" />
+            <line x1="8" y1="13.4" x2="8" y2="15" stroke="currentColor" strokeWidth="0.35" strokeLinecap="round" />
+            <line x1="1" y1="8" x2="2.6" y2="8" stroke="currentColor" strokeWidth="0.35" strokeLinecap="round" />
+            <line x1="13.4" y1="8" x2="15" y2="8" stroke="currentColor" strokeWidth="0.35" strokeLinecap="round" />
+          </svg>
+        </span>
+        <span className="marginal-echo-body">
+          <em className="marginal-echo-line">{entry.line}</em>
+          <span className="marginal-echo-attribution">
+            <span className="marginal-echo-attribution-rule" aria-hidden="true" />
+            <em className="marginal-echo-attribution-text">{entry.gloss}</em>
+          </span>
+        </span>
+      </span>
+      <span className="marginal-echo-rule marginal-echo-rule--tail" aria-hidden="true" />
+    </aside>
+  )
+}
+
+function ReplyInitial({ visible, reduced }: { visible: boolean; reduced: boolean }) {
+  return (
+    <span
+      className={`reply-initial${visible ? ' is-visible' : ''}${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="reply-initial-card" viewBox="0 0 92 110" focusable="false">
+        <defs>
+          <linearGradient id="ri-gold" x1="0" y1="0" x2="0.04" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="48%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#8a5d1f" />
+          </linearGradient>
+          <linearGradient id="ri-gold-soft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#a47026" />
+          </linearGradient>
+          <radialGradient id="ri-face" cx="38%" cy="22%" r="92%">
+            <stop offset="0%" stopColor="rgba(255, 248, 224, 0.94)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.74)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0.46)" />
+          </radialGradient>
+          <radialGradient id="ri-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.42)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="46" cy="55" rx="44" ry="52" fill="url(#ri-halo)" />
+
+        <rect
+          x="3"
+          y="3"
+          width="86"
+          height="104"
+          rx="1.6"
+          fill="url(#ri-face)"
+          stroke="url(#ri-gold)"
+          strokeWidth="0.9"
+        />
+        <rect
+          x="7"
+          y="7"
+          width="78"
+          height="96"
+          rx="1"
+          fill="none"
+          stroke="url(#ri-gold)"
+          strokeWidth="0.35"
+          strokeDasharray="1.4 1.8"
+          opacity="0.78"
+        />
+
+        <g className="ri-vine ri-vine--tr" stroke="url(#ri-gold-soft)" strokeWidth="0.65" fill="none" strokeLinecap="round">
+          <path d="M 82 12 Q 70 16 64 26 Q 58 36 66 46 Q 72 54 66 64" />
+          <path d="M 64 26 Q 58 20 52 22 Q 50 26 54 30 Q 62 32 64 26 Z" fill="rgba(217, 101, 74, 0.3)" stroke="none" />
+          <circle cx="58" cy="16" r="0.9" fill="#cf3b29" />
+        </g>
+        <g className="ri-vine ri-vine--bl" stroke="url(#ri-gold-soft)" strokeWidth="0.65" fill="none" strokeLinecap="round">
+          <path d="M 10 96 Q 22 92 28 82 Q 34 72 26 62 Q 20 54 26 44" />
+          <path d="M 28 82 Q 34 88 40 86 Q 42 82 38 78 Q 32 76 28 82 Z" fill="rgba(217, 101, 74, 0.3)" stroke="none" />
+          <circle cx="36" cy="90" r="0.9" fill="#cf3b29" />
+        </g>
+
+        <g className="ri-corner ri-corner--tl" fill="#cf3b29" fillOpacity="0.6">
+          <path d="M 9 9 L 18 9 Q 18 12.5 14.5 13.5 L 14.5 18 L 9 18 Z" />
+          <circle cx="11.5" cy="11.5" r="0.7" />
+        </g>
+        <g className="ri-corner ri-corner--br" fill="#a73c2c" fillOpacity="0.55">
+          <path d="M 83 99 L 74 99 Q 74 95.5 77.5 94.5 L 77.5 90 L 83 90 Z" />
+          <circle cx="80.5" cy="96.5" r="0.7" />
+        </g>
+
+        <g className="ri-pips" fill="url(#ri-gold-soft)">
+          <circle cx="46" cy="9" r="0.7" />
+          <circle cx="46" cy="101" r="0.7" />
+          <circle cx="9" cy="55" r="0.6" />
+          <circle cx="83" cy="55" r="0.6" />
+        </g>
+
+        <g className="ri-glyph">
+          <text x="46" y="78" textAnchor="middle" className="ri-glyph-letter">
+            s
+          </text>
+          <line
+            x1="30"
+            y1="84"
+            x2="62"
+            y2="84"
+            stroke="url(#ri-gold)"
+            strokeWidth="0.55"
+            strokeLinecap="round"
+          />
+          <text x="46" y="93" textAnchor="middle" className="ri-glyph-caption">
+            lege
+          </text>
+        </g>
+      </svg>
+    </span>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
@@ -7667,13 +7902,24 @@ export function App() {
               {answerVisible && (
                 <div className="answer-copy-frame">
                   <p className="answer-copy" aria-live="polite">
-                    {answerDisplay}
+                    <AnswerFlourish visible={answerVisible} reduced={reduced} />
+                    {answerDisplay.length > 0 && (
+                      <span className="answer-copy-lead" aria-hidden="true">
+                        {answerDisplay.slice(0, 1)}
+                      </span>
+                    )}
+                    <span className="answer-copy-rest">{answerDisplay.slice(1)}</span>
                     {phase === 'answering' && <span className="typing-caret" aria-hidden="true">|</span>}
                   </p>
                   <SelfAnnotations currentChars={answerChars} />
                   {phase === 'complete' && (
                     <ReadingPaceIndicator visible slow={slow} />
                   )}
+                  <MarginalEcho
+                    visible={phase === 'complete'}
+                    cycle={cycle}
+                    reduced={reduced}
+                  />
                 </div>
               )}
               {phase === 'complete' && (
@@ -7732,7 +7978,13 @@ export function App() {
                 </header>
               )}
               <span className="reply-paragraph">
-                <span className="reply-text">{replyDisplay}</span>
+                {replyShown && (
+                  <ReplyInitial visible={replyShown} reduced={reduced} />
+                )}
+                <span className="reply-text">
+                  {replyChars > 0 && <span className="reply-text-lead" aria-hidden="true">{replyDisplay.slice(0, 1)}</span>}
+                  <span className="reply-text-rest">{replyDisplay.slice(1)}</span>
+                </span>
                 {phase === 'replying' && <span className="typing-caret" aria-hidden="true">|</span>}
               </span>
               {phase === 'complete' && (

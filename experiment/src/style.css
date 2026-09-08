@@ -10477,7 +10477,6 @@ button { font: inherit; }
   margin-inline: auto;
   padding: 8px 4px 0;
 }
-.reply-initial,
 .verso-drop-cap,
 .answer-copy-initial,
 .answer-copy-dash {
@@ -10977,6 +10976,478 @@ button { font: inherit; }
 @media (max-width: 720px) {
   .verso-margin-rule-tick--reader { top: 40%; }
   .verso-margin-rule-tick--reader .verso-margin-rule-tick-mark { width: 14px; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 138 · the answer earns a calligraphic flourish and a quiet
+   marginal echo. A small hand-drawn scrollwork sits at the opening of
+   the answer, drawing on as the press delivers it; beside it, in the
+   right margin, a delicate italic note acknowledges the reader. The
+   reply, in turn, begins with an illuminated "S" — a manuscript capital
+   in gold leaf — that draws on as the reply sets itself, line by line.
+   ────────────────────────────────────────────────────────────────────── */
+
+/* ── answer flourish: a calligraphic em-dash that draws on at the head ── */
+
+.answer-flourish {
+  display: inline-block;
+  position: relative;
+  width: clamp(58px, 7.2vw, 96px);
+  height: clamp(22px, 2.8vw, 36px);
+  vertical-align: -0.32em;
+  margin: 0 0.18em -0.1em -0.04em;
+  opacity: 0;
+  transform: translateX(-6px) scaleX(0.72);
+  transform-origin: left center;
+  transition:
+    opacity 720ms var(--ease) 240ms,
+    transform 820ms cubic-bezier(.22, .86, .22, 1) 240ms;
+  pointer-events: none;
+  color: var(--coral-deep);
+}
+
+.answer-flourish.is-visible {
+  opacity: 1;
+  transform: translateX(0) scaleX(1);
+}
+
+.answer-flourish.is-static {
+  transition:
+    opacity 220ms var(--ease) 80ms,
+    transform 220ms var(--ease) 80ms;
+}
+
+.answer-flourish-glyph {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 1px 0 rgba(245, 198, 91, 0.18));
+}
+
+.answer-flourish-dash {
+  stroke-dasharray: 56;
+  stroke-dashoffset: 56;
+  transition: stroke-dashoffset 920ms cubic-bezier(.22, .86, .22, 1) 320ms;
+}
+
+.answer-flourish-trail {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  transition:
+    stroke-dashoffset 720ms cubic-bezier(.22, .86, .22, 1) 900ms,
+    opacity 720ms var(--ease) 900ms;
+  opacity: 0.85;
+}
+
+.answer-flourish.is-visible .answer-flourish-dash {
+  stroke-dashoffset: 0;
+}
+
+.answer-flourish.is-visible .answer-flourish-trail {
+  stroke-dashoffset: 0;
+}
+
+.answer-flourish-pip {
+  opacity: 0;
+  transform-origin: center;
+  transform: scale(0.2);
+  transition:
+    opacity 360ms var(--ease) 1080ms,
+    transform 480ms cubic-bezier(.22, .86, .22, 1) 1080ms;
+}
+
+.answer-flourish.is-visible .answer-flourish-pip {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.answer-flourish-halo {
+  opacity: 0;
+  transform-origin: center;
+  transform: scale(0.4);
+  transition:
+    opacity 720ms var(--ease) 1100ms,
+    transform 920ms cubic-bezier(.22, .86, .22, 1) 1100ms;
+}
+
+.answer-flourish.is-visible .answer-flourish-halo {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.answer-flourish-tail {
+  opacity: 0;
+  transition: opacity 720ms var(--ease) 1320ms;
+}
+
+.answer-flourish.is-visible .answer-flourish-tail {
+  opacity: 1;
+}
+
+.answer-flourish.is-static .answer-flourish-dash,
+.answer-flourish.is-static .answer-flourish-trail {
+  stroke-dashoffset: 0;
+  transition: none;
+}
+
+.answer-flourish.is-static .answer-flourish-pip,
+.answer-flourish.is-static .answer-flourish-halo,
+.answer-flourish.is-static .answer-flourish-tail {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-flourish {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+  .answer-flourish-dash,
+  .answer-flourish-trail {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+  .answer-flourish-pip,
+  .answer-flourish-halo,
+  .answer-flourish-tail {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ── marginal echo: a delicate italic note below the answer ── */
+
+.marginal-echo {
+  position: relative;
+  grid-column: 1 / -1;
+  margin: clamp(14px, 2vw, 22px) clamp(8px, 1.6vw, 28px) clamp(2px, 0.6vw, 6px);
+  padding: clamp(8px, 1.2vw, 14px) clamp(10px, 1.4vw, 18px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  row-gap: 6px;
+  max-width: min(440px, 100%);
+  justify-self: end;
+  color: var(--sepia);
+  font-family: var(--display);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
+  opacity: 0;
+  transform: translateX(6px);
+  transition:
+    opacity 1100ms var(--ease) 220ms,
+    transform 1100ms var(--ease) 220ms;
+}
+
+.marginal-echo.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.marginal-echo.is-static {
+  transition: none;
+  opacity: 1;
+  transform: none;
+}
+
+.marginal-echo::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse at 8% 50%,
+      rgba(245, 220, 168, 0.42) 0%,
+      rgba(245, 220, 168, 0.18) 38%,
+      transparent 72%
+    );
+  z-index: -1;
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 900ms var(--ease) 480ms;
+}
+
+.marginal-echo.is-visible::before {
+  opacity: 1;
+}
+
+.marginal-echo-rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(154, 110, 38, 0.32) 28%,
+    rgba(167, 60, 44, 0.55) 64%,
+    rgba(167, 60, 44, 0) 100%
+  );
+  opacity: 0;
+  transition: opacity 900ms var(--ease);
+}
+
+.marginal-echo.is-visible .marginal-echo-rule {
+  opacity: 0.78;
+}
+
+.marginal-echo-rule--tail {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(154, 110, 38, 0.32) 28%,
+    rgba(167, 60, 44, 0.5) 64%,
+    rgba(167, 60, 44, 0) 100%
+  );
+}
+
+.marginal-echo-cluster {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: start;
+  column-gap: clamp(8px, 1vw, 12px);
+  row-gap: 6px;
+}
+
+.marginal-echo-mark {
+  grid-row: 1 / span 2;
+  width: 16px;
+  height: 16px;
+  margin-top: 4px;
+  color: var(--coral-deep);
+  opacity: 0;
+  transform: scale(0.5) rotate(-12deg);
+  transform-origin: center;
+  transition:
+    opacity 720ms var(--ease) 620ms,
+    transform 720ms cubic-bezier(.22, .86, .22, 1) 620ms;
+}
+
+.marginal-echo.is-visible .marginal-echo-mark {
+  opacity: 0.85;
+  transform: scale(1) rotate(0deg);
+}
+
+.marginal-echo-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.marginal-echo-line {
+  display: block;
+  font-style: italic;
+  color: var(--ink);
+  font-size: clamp(13px, 1.32vw, 15.5px);
+  line-height: 1.34;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+
+.marginal-echo.is-reread .marginal-echo-line {
+  color: var(--ink-soft);
+}
+
+.marginal-echo-attribution {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding-top: 5px;
+  border-top: 1px dashed rgba(107, 74, 37, 0.28);
+  font-style: italic;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 9px;
+  color: var(--coral-deep);
+  opacity: 0;
+  transition: opacity 900ms var(--ease) 1200ms;
+}
+
+.marginal-echo.is-visible .marginal-echo-attribution {
+  opacity: 0.82;
+}
+
+.marginal-echo-attribution-rule {
+  flex: 0 0 clamp(10px, 1.4vw, 18px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(156, 110, 38, 0.4),
+    rgba(167, 60, 44, 0.5)
+  );
+  position: relative;
+  top: -0.06em;
+}
+
+.marginal-echo-attribution-text {
+  font: italic 580 8.5px/1 var(--display);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marginal-echo,
+  .marginal-echo-mark,
+  .marginal-echo-attribution,
+  .marginal-echo::before,
+  .marginal-echo-rule {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .marginal-echo {
+    max-width: 100%;
+    justify-self: stretch;
+    margin-top: 14px;
+    padding: 10px 14px;
+    transform: none;
+  }
+  .marginal-echo-line { font-size: 13px; line-height: 1.34; }
+}
+
+@media (max-width: 520px) {
+  .marginal-echo {
+    padding: 8px 12px;
+  }
+  .marginal-echo-line { font-size: 12.5px; }
+  .marginal-echo-attribution-text { font-size: 8px; letter-spacing: 0.18em; }
+}
+
+/* ── reply initial: an illuminated "S" that begins the reply ── */
+
+.reply-initial {
+  display: inline-flex;
+  align-items: flex-start;
+  float: left;
+  width: clamp(64px, 8vw, 96px);
+  margin: 0.04em 0.18em -0.16em -0.04em;
+  shape-outside: margin-box;
+  opacity: 0;
+  transform: scale(0.88) rotate(-2deg);
+  transform-origin: left top;
+  transition:
+    opacity 720ms var(--ease) 200ms,
+    transform 920ms cubic-bezier(.22, .86, .22, 1) 200ms,
+    filter 920ms var(--ease) 200ms;
+  filter: drop-shadow(0 8px 12px rgba(80, 36, 14, 0.22));
+  pointer-events: none;
+}
+
+.reply-text-lead {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.reply-initial.is-visible {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+  filter: drop-shadow(0 8px 12px rgba(80, 36, 14, 0.22));
+}
+
+.reply-initial.is-static {
+  transition:
+    opacity 220ms var(--ease) 80ms,
+    transform 220ms var(--ease) 80ms,
+    filter 220ms var(--ease) 80ms;
+}
+
+.reply-initial-card {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ri-vine--tr { transform-origin: 64px 26px; animation: ri-vine-sway 7.6s ease-in-out infinite; }
+.ri-vine--bl { transform-origin: 28px 82px; animation: ri-vine-sway 7.6s ease-in-out infinite reverse; }
+@keyframes ri-vine-sway {
+  0%, 100% { transform: rotate(-0.6deg); }
+  50%      { transform: rotate(1.2deg); }
+}
+
+.ri-glyph {
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 720ms var(--ease) 380ms,
+    transform 720ms var(--ease) 380ms;
+}
+
+.reply-initial.is-visible .ri-glyph {
+  opacity: 1;
+  transform: none;
+}
+
+.ri-glyph-letter {
+  fill: url(#ri-gold);
+  font: italic 760 78px/1 var(--display);
+  letter-spacing: -0.02em;
+  paint-order: stroke fill;
+}
+
+.ri-glyph-caption {
+  fill: rgba(107, 74, 37, 0.62);
+  font: italic 600 10px/1 var(--display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reply-initial,
+  .reply-initial .ri-glyph {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+  .ri-vine--tr,
+  .ri-vine--bl {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .reply-initial {
+    width: 50px;
+    margin-right: 0.12em;
+  }
+  .ri-glyph-letter { font-size: 64px; }
+  .ri-glyph-caption { font-size: 8.5px; }
+}
+
+/* allow the answer-copy to host inline SVG (the flourish) without breaking
+   the existing italic flow */
+.answer-copy .answer-flourish {
+  margin-right: 0.14em;
+}
+
+.answer-copy-lead {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .answer-flourish {
+    width: 54px;
+    height: 20px;
+  }
+  .reply-initial {
+    width: clamp(46px, 14vw, 60px);
+  }
 }
 
 
