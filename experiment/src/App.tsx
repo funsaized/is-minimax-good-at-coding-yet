@@ -9779,16 +9779,41 @@ export function App() {
 
         <Epigraph />
 
-        <div className="chapter-opener">
-          <PrinterEmblem />
-          <ChapterHead now={now} witness={false} />
-          <ChapterSignature now={now} />
-          <div className="chapter-opener-rule" aria-hidden="true">
-            <span className="chapter-opener-rule-line" />
-            <span className="chapter-opener-rule-mark">¶</span>
-            <span className="chapter-opener-rule-line" />
+        <aside
+          className={`chapter-frontispiece${versoOpened ? ' is-opened' : ''}`}
+          aria-hidden="true"
+        >
+          <p className="chapter-frontispiece-half">
+            <span className="chapter-frontispiece-half-rule chapter-frontispiece-half-rule--left" />
+            <span className="chapter-frontispiece-half-cluster">
+              <em className="chapter-frontispiece-half-key">the question</em>
+              <span className="chapter-frontispiece-half-sep" aria-hidden="true">·</span>
+              <em className="chapter-frontispiece-half-tail">a half-title of folio lxxvii</em>
+            </span>
+            <span className="chapter-frontispiece-half-rule chapter-frontispiece-half-rule--right" />
+          </p>
+          <div className="chapter-opener">
+            <PrinterEmblem />
+            <ChapterHead now={now} witness={false} />
+            <ChapterSignature now={now} />
+            <div className="chapter-opener-rule" aria-hidden="true">
+              <span className="chapter-opener-rule-line" />
+              <span className="chapter-opener-rule-mark">¶</span>
+              <span className="chapter-opener-rule-line" />
+            </div>
+            <p className="chapter-frontispiece-foot">
+              <span className="chapter-frontispiece-foot-rule chapter-frontispiece-foot-rule--left" />
+              <span className="chapter-frontispiece-foot-cluster">
+                <em className="chapter-frontispiece-foot-key">hîc folium aperitur</em>
+                <span className="chapter-frontispiece-foot-sep" aria-hidden="true">·</span>
+                <em className="chapter-frontispiece-foot-tail">the folio opens here</em>
+                <span className="chapter-frontispiece-foot-sep" aria-hidden="true">·</span>
+                <em className="chapter-frontispiece-foot-mark">set for the reader</em>
+              </span>
+              <span className="chapter-frontispiece-foot-rule chapter-frontispiece-foot-rule--right" />
+            </p>
           </div>
-        </div>
+        </aside>
 
         <div className="sheet-content">
           <section className="question-panel" aria-labelledby="page-title">

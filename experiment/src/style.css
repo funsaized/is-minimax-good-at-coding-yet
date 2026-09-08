@@ -2087,6 +2087,178 @@ button { font: inherit; }
   opacity: 0.85;
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 150 · a composed recto front matter.
+
+   The chapter opener now sits inside an "aside" treated as a printed
+   half-title spread: a delicate italic half-title above the chapter
+   mark, and a refined press notice below the chapter-opener-rule.
+   These two italic insets give the recto a true bound-leaf opening
+   sequence — a half-title before, a press notice after — without
+   crowding the question that follows.
+   ────────────────────────────────────────────────────────────────────── */
+
+.chapter-frontispiece {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0 0;
+  margin: 0 auto;
+  max-width: 460px;
+  position: relative;
+}
+
+.chapter-frontispiece-half {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 clamp(8px, 1.2vw, 14px);
+  margin: 0 0 18px;
+  padding: 0 clamp(8px, 2vw, 18px);
+  width: 100%;
+  max-width: min(420px, 100%);
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-style: italic;
+  letter-spacing: 0.022em;
+  opacity: 0;
+  transform: translateY(-3px);
+  animation: chapter-half-in 1100ms var(--ease) 240ms both;
+}
+.chapter-frontispiece-half-rule {
+  flex: 0 0 clamp(18px, 4vw, 38px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(156, 110, 38, 0.42) 42%,
+    rgba(167, 60, 44, 0.5) 100%
+  );
+}
+.chapter-frontispiece-half-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(156, 110, 38, 0.42) 42%,
+    rgba(167, 60, 44, 0.5) 100%
+  );
+}
+.chapter-frontispiece-half-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.chapter-frontispiece-half-key {
+  color: var(--coral-deep);
+  font: italic 600 13.5px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.chapter-frontispiece-half-sep {
+  color: var(--coral);
+  font: 700 11px/1 var(--display);
+  opacity: 0.7;
+}
+.chapter-frontispiece-half-tail {
+  color: var(--ink-soft);
+  font: italic 500 11.5px/1.2 var(--display);
+  letter-spacing: 0.012em;
+}
+@keyframes chapter-half-in {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 0.92; transform: none; }
+}
+
+.chapter-frontispiece-foot {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 clamp(8px, 1.2vw, 12px);
+  margin: 14px auto 0;
+  padding: 0 clamp(10px, 2.4vw, 22px);
+  width: 100%;
+  max-width: min(420px, 100%);
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-style: italic;
+  letter-spacing: 0.022em;
+  opacity: 0;
+  transform: translateY(2px);
+  animation: chapter-foot-in 1100ms var(--ease) 720ms both;
+}
+.chapter-frontispiece-foot-rule {
+  flex: 0 0 clamp(14px, 3vw, 28px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.36)
+  );
+}
+.chapter-frontispiece-foot-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(167, 60, 44, 0.36)
+  );
+}
+.chapter-frontispiece-foot-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.chapter-frontispiece-foot-key {
+  color: var(--moss);
+  font: italic 600 11.5px/1 var(--display);
+  letter-spacing: 0.06em;
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.chapter-frontispiece-foot-sep {
+  color: var(--coral);
+  font: 700 10.5px/1 var(--display);
+  opacity: 0.65;
+}
+.chapter-frontispiece-foot-tail {
+  color: var(--ink-soft);
+  font: italic 500 11px/1.2 var(--display);
+  letter-spacing: 0.012em;
+}
+.chapter-frontispiece-foot-mark {
+  color: var(--coral-deep);
+  font: italic 560 11px/1 var(--display);
+  letter-spacing: 0.025em;
+  font-feature-settings: "kern" 1, "salt" 1;
+}
+@keyframes chapter-foot-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 0.94; transform: none; }
+}
+
+@media (max-width: 720px) {
+  .chapter-frontispiece-half { margin-bottom: 12px; gap: 0 10px; }
+  .chapter-frontispiece-half-key { font-size: 12.5px; }
+  .chapter-frontispiece-half-tail { font-size: 10.5px; }
+  .chapter-frontispiece-foot { margin-top: 10px; gap: 0 8px; }
+  .chapter-frontispiece-foot-key,
+  .chapter-frontispiece-foot-tail,
+  .chapter-frontispiece-foot-mark { font-size: 10.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter-frontispiece-half,
+  .chapter-frontispiece-foot {
+    animation: none !important;
+    opacity: 0.94;
+    transform: none;
+  }
+}
+
 /* ────────── scribal correction (the page edits itself) ────────── */
 
 .scribal-correction {
