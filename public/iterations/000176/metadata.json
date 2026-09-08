@@ -1,0 +1,19 @@
+{
+  "id": 176,
+  "parentId": 175,
+  "createdAt": "2026-09-08T20:09:28.638Z",
+  "summary": "Refined the two-column broadside into a quieter press proof: added corner crop marks and a \"proof sheet / not for issue\"",
+  "path": "/iterations/000176/index.html",
+  "screenshot": "/iterations/000176/desktop.png",
+  "mobileScreenshot": "/iterations/000176/mobile.png",
+  "sourceCommit": "932ff828da117cc5be1689d6aed8654237631842",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 569,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 26464,
+    "outputTokens": 35308,
+    "steps": 26
+  }
+}
