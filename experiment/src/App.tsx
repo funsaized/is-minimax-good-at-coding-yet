@@ -1496,6 +1496,104 @@ function BroadsheetDropCap({
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 153 · a recto catchword sits between the title rule and
+   the specimen wordmark.
+
+   A small, composed italic slip — the recto's "press catch" — names
+   the question in its own right: a thin gold rule, the press's
+   monogram, an italic inscription, and another thin rule. It uses
+   the same idiom as the chapter-frontispiece half-title and the
+   chapter-signature, but it is the question's own quiet signature,
+   set in the space between the title's end and the specimen below.
+   ────────────────────────────────────────────────────────────────────── */
+
+function RectoCatchword({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <figure
+      className={`recto-catchword${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <span className="recto-catchword-rule recto-catchword-rule--left" />
+      <span className="recto-catchword-cluster">
+        <em className="recto-catchword-key">the question</em>
+        <span className="recto-catchword-sep" aria-hidden="true">·</span>
+        <em className="recto-catchword-tail">set in this folio</em>
+      </span>
+      <span className="recto-catchword-sigil" aria-hidden="true">
+        <svg viewBox="0 0 18 18" focusable="false">
+          <defs>
+            <linearGradient id="rcw-gold" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#f6d076" />
+              <stop offset="50%" stopColor="#c8923e" />
+              <stop offset="100%" stopColor="#9c6e26" />
+            </linearGradient>
+            <radialGradient id="rcw-face" cx="50%" cy="34%" r="64%">
+              <stop offset="0%" stopColor="rgba(255, 246, 218, 0.55)" />
+              <stop offset="62%" stopColor="rgba(245, 220, 168, 0.18)" />
+              <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+            </radialGradient>
+          </defs>
+          <circle cx="9" cy="9" r="8.2" fill="url(#rcw-face)" />
+          <circle
+            cx="9"
+            cy="9"
+            r="7.6"
+            fill="none"
+            stroke="url(#rcw-gold)"
+            strokeWidth="0.45"
+          />
+          <circle
+            cx="9"
+            cy="9"
+            r="6.4"
+            fill="none"
+            stroke="url(#rcw-gold)"
+            strokeWidth="0.22"
+            strokeDasharray="0.4 1.2"
+            opacity="0.78"
+          />
+          <text
+            x="9"
+            y="10.6"
+            textAnchor="middle"
+            className="recto-catchword-letter"
+          >
+            m
+          </text>
+          <text
+            x="9"
+            y="13.2"
+            textAnchor="middle"
+            className="recto-catchword-roman"
+          >
+            ·iii
+          </text>
+          <line
+            x1="6"
+            y1="14"
+            x2="12"
+            y2="14"
+            stroke="url(#rcw-gold)"
+            strokeWidth="0.28"
+            strokeLinecap="round"
+            opacity="0.7"
+          />
+        </svg>
+      </span>
+      <span className="recto-catchword-rule recto-catchword-rule--right" />
+    </figure>
+  )
+}
+
 function TitleRule({
   visible,
   reduced,
@@ -9955,6 +10053,8 @@ export function App() {
             </span>
 
             <TitleRule visible={phase !== 'idle'} reduced={reduced} />
+
+            <RectoCatchword visible={phase !== 'idle'} reduced={reduced} />
 
             <SpecimenWordmark visible={phase !== 'idle'} reduced={reduced} />
 

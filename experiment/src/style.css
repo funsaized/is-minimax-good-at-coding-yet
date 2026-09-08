@@ -1706,6 +1706,122 @@ button { font: inherit; }
   .title-rule-fleuron { transition: none; opacity: 1; animation: none; }
   .title-rule-diamond { transition: none; opacity: 0.9; }
 }
+
+/* ────────── recto catchword · the question's own press catch ────────── */
+
+.recto-catchword {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 clamp(8px, 1.1vw, 14px);
+  margin: clamp(4px, 0.7vw, 10px) 0 clamp(2px, 0.4vw, 6px)
+    clamp(122px, 13.6vw, 178px);
+  max-width: 560px;
+  padding: 0 clamp(8px, 2vw, 18px);
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-style: italic;
+  letter-spacing: 0.022em;
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 900ms var(--ease) 1100ms,
+    transform 900ms var(--ease) 1100ms;
+}
+.recto-catchword.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.recto-catchword.is-static { transition: none; transform: none; opacity: 1; }
+.recto-catchword-rule {
+  flex: 0 0 clamp(18px, 4vw, 38px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(156, 110, 38, 0.42) 42%,
+    rgba(167, 60, 44, 0.5) 100%
+  );
+}
+.recto-catchword-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(156, 110, 38, 0.42) 42%,
+    rgba(167, 60, 44, 0.5) 100%
+  );
+}
+.recto-catchword-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.recto-catchword-key {
+  color: var(--coral-deep);
+  font: italic 600 12.5px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.recto-catchword-sep {
+  color: var(--coral);
+  font: 700 10.5px/1 var(--display);
+  opacity: 0.7;
+}
+.recto-catchword-tail {
+  color: var(--ink-soft);
+  font: italic 500 11.5px/1.2 var(--display);
+  letter-spacing: 0.012em;
+}
+.recto-catchword-sigil {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--coral-deep);
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.08));
+  animation: rcw-sigil-breath 6.8s ease-in-out 1500ms infinite;
+}
+.recto-catchword-sigil svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.recto-catchword-letter {
+  font: italic 600 7px/1 var(--display);
+  fill: currentColor;
+  font-feature-settings: "kern" 1;
+}
+.recto-catchword-roman {
+  font: italic 500 4.4px/1 var(--display);
+  fill: currentColor;
+  opacity: 0.82;
+}
+@keyframes rcw-sigil-breath {
+  0%, 100% { transform: rotate(-1deg) scale(1); opacity: 0.92; }
+  50%      { transform: rotate(1.2deg) scale(1.04); opacity: 1; }
+}
+.recto-catchword.is-static .recto-catchword-sigil { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .recto-catchword { transition: none; opacity: 1; transform: none; }
+  .recto-catchword-sigil { animation: none; }
+}
+@media (max-width: 720px) {
+  .recto-catchword {
+    margin-left: 0;
+    padding: 0 16px;
+    gap: 0 10px;
+  }
+  .recto-catchword-key { font-size: 11.5px; }
+  .recto-catchword-tail { font-size: 10.5px; }
+  .recto-catchword-sigil { width: 14px; height: 14px; }
+  .recto-catchword-rule { flex-basis: 16px; }
+}
 .title-rule-caption {
   margin: 0;
   color: var(--coral-deep);
