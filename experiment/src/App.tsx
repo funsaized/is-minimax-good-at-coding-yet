@@ -6210,6 +6210,59 @@ function FoldCorner() {
   )
 }
 
+function ReadingRecord({ cycle }: { cycle: number }) {
+  const slots = Math.max(0, Math.min(cycle, 4))
+  const marks = Array.from({ length: 4 }, (_, i) => i)
+  return (
+    <div className="reading-record" aria-hidden="true">
+      <span className="reading-record-rule reading-record-rule--left" />
+      <span className="reading-record-cluster">
+        <em className="reading-record-key">reading record</em>
+        <span className="reading-record-sep" aria-hidden="true">·</span>
+        <span className="reading-record-tally">
+          {marks.map((i) => {
+            const filled = i < slots
+            const isLatest = i === slots - 1
+            const roman = ROMAN[Math.min(i, ROMAN.length - 1)]
+            return (
+              <span
+                key={i}
+                className={`reading-record-mark${filled ? ' is-filled' : ''}${
+                  isLatest ? ' is-latest' : ''
+                }`}
+                style={{ '--i': i } as React.CSSProperties}
+              >
+                <svg viewBox="0 0 18 18" focusable="false">
+                  <defs>
+                    <radialGradient id={`rr-wax-${i}`} cx="50%" cy="34%" r="68%">
+                      <stop offset="0%" stopColor="rgba(186, 50, 30, 0.96)" />
+                      <stop offset="58%" stopColor="rgba(126, 30, 18, 0.96)" />
+                      <stop offset="100%" stopColor="rgba(58, 12, 6, 0.96)" />
+                    </radialGradient>
+                  </defs>
+                  <circle cx="9" cy="9" r="8" fill={filled ? `url(#rr-wax-${i})` : 'none'} stroke="currentColor" strokeWidth="0.4" />
+                  {filled && (
+                    <>
+                      <ellipse cx="7.4" cy="5" rx="3.4" ry="1.4" fill="rgba(255, 232, 200, 0.32)" />
+                      <text x="9" y="11.6" textAnchor="middle" className="reading-record-roman">
+                        {roman}
+                      </text>
+                    </>
+                  )}
+                </svg>
+              </span>
+            )
+          })}
+        </span>
+        <span className="reading-record-tail">
+          <em>{slots === 0 ? 'no press yet' : `${ROMAN[Math.min(slots - 1, ROMAN.length - 1)]} press${slots === 1 ? '' : 'es'}`}</em>
+        </span>
+      </span>
+      <span className="reading-record-rule reading-record-rule--right" />
+    </div>
+  )
+}
+
 function Colophon({ cycle }: { cycle: number }) {
   return (
     <div className="colophon" aria-hidden="true">
@@ -6254,24 +6307,12 @@ function Colophon({ cycle }: { cycle: number }) {
           <span className="colophon-value">the attentive reader</span>
         </span>
         <span className="colophon-rule colophon-rule--thick" />
+        <ReadingRecord cycle={cycle} />
         <span className="colophon-line colophon-line--sign">
           <em>manu mea</em>
           <span className="colophon-sep" aria-hidden="true">·</span>
           <em>impressum</em>
         </span>
-        {cycle > 0 && (
-          <>
-            <span className="colophon-rule colophon-rule--thin" />
-            <span className="colophon-line colophon-line--press">
-              <em className="colophon-key">pressed</em>
-              <span className="colophon-value">
-                {cycle === 1
-                  ? 'a second time · in this browser'
-                  : `${ordinal(cycle + 1)} time · the page unchanged`}
-              </span>
-            </span>
-          </>
-        )}
       </div>
     </div>
   )
