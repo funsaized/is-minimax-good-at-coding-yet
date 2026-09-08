@@ -4528,6 +4528,53 @@ function Epigraph() {
   )
 }
 
+function ReadingTally({ cycle }: { cycle: number }) {
+  const sigils = ['¶', '†', '‡', '§', '⸺', '✦']
+  const visible = Math.min(cycle + 1, sigils.length + 1)
+  return (
+    <p className={`reading-tally${cycle > 0 ? ' is-reread' : ''}`} aria-hidden="true">
+      <span className="reading-tally-rule reading-tally-rule--left" />
+      <span className="reading-tally-cluster">
+        <span className="reading-tally-key">read</span>
+        <span className="reading-tally-marks" aria-hidden="true">
+          {Array.from({ length: sigils.length }, (_, i) => {
+            const isLit = i < visible
+            const isLatest = cycle > 0 && i === visible - 1
+            return (
+              <span
+                key={i}
+                className={`reading-tally-mark${isLit ? ' is-lit' : ' is-pending'}${
+                  isLatest ? ' is-latest' : ''
+                }`}
+                style={{ '--mark-i': i } as React.CSSProperties}
+              >
+                <svg viewBox="0 0 14 14" focusable="false">
+                  <circle
+                    cx="7"
+                    cy="7"
+                    r="5.6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="0.45"
+                    strokeDasharray={isLit ? '0' : '0.5 1.4'}
+                  />
+                  <text x="7" y="9.4" textAnchor="middle" className="reading-tally-glyph">
+                    {sigils[i]}
+                  </text>
+                </svg>
+              </span>
+            )
+          })}
+        </span>
+        <span className="reading-tally-tail">
+          <em>{cycle === 0 ? 'awaiting the press' : `${visible} of ${sigils.length} impressions`}</em>
+        </span>
+      </span>
+      <span className="reading-tally-rule reading-tally-rule--right" />
+    </p>
+  )
+}
+
 function SpecimenImprint({
   cycle,
   breathing,
@@ -7378,7 +7425,15 @@ export function App() {
                   <span className="title-subject-rule" aria-hidden="true" />
                 </span>
                 <span className="title-text title-text--set" style={{ '--word-i': 2 } as React.CSSProperties}>
-                  {' '}good at frontend yet<span className="title-questions">?</span>
+                  {' '}
+                  <span className="title-verb-pivot" aria-hidden="true">
+                    <svg className="title-verb-pivot-svg" viewBox="0 0 28 14" focusable="false">
+                      <line x1="2" y1="7" x2="26" y2="7" stroke="currentColor" strokeWidth="0.4" strokeDasharray="0.5 1.4" opacity="0.5" />
+                      <circle cx="14" cy="7" r="2.4" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                      <circle cx="14" cy="7" r="0.7" fill="currentColor" />
+                    </svg>
+                  </span>
+                  good at frontend yet<span className="title-questions">?</span>
                 </span>
                 <svg
                   className="title-flourish-trail"
@@ -7423,6 +7478,8 @@ export function App() {
             </span>
 
             <FolioLedger />
+
+            <ReadingTally cycle={cycle} />
 
             <SpecimenImprint cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
 

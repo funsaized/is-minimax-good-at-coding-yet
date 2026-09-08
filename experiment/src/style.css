@@ -1176,7 +1176,7 @@ button { font: inherit; }
   display: grid;
   grid-template-columns: minmax(0, auto) minmax(0, 1fr);
   align-items: stretch;
-  column-gap: clamp(22px, 3vw, 38px);
+  column-gap: clamp(18px, 2.4vw, 30px);
   margin: 0;
   max-width: 760px;
   position: relative;
@@ -1184,9 +1184,9 @@ button { font: inherit; }
 .title-initial-wrap {
   display: inline-block;
   position: relative;
-  width: clamp(112px, 13vw, 168px);
+  width: clamp(98px, 11vw, 142px);
   align-self: start;
-  margin-top: -0.04em;
+  margin-top: 0.02em;
   transition: transform 520ms var(--ease), filter 520ms var(--ease);
   filter: drop-shadow(0 8px 14px rgba(80, 36, 14, 0.22));
 }
@@ -1214,7 +1214,7 @@ button { font: inherit; }
 .broadsheet-initial svg { display: block; width: 100%; height: auto; }
 .bs-letter-glyph {
   fill: url(#bs-gold);
-  font: italic 700 156px/1 var(--display);
+  font: italic 700 132px/1 var(--display);
   letter-spacing: -0.02em;
   paint-order: stroke fill;
 }
@@ -1279,6 +1279,38 @@ button { font: inherit; }
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1;
   position: relative;
   padding: 0 0.02em 0 0.05em;
+}
+
+/* a small printer's separator that breaks the title between subject and predicate */
+.title-verb-pivot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(20px, 2.2vw, 28px);
+  height: 0.92em;
+  margin: 0 0.18em 0 0.05em;
+  vertical-align: middle;
+  color: var(--coral);
+  opacity: 0;
+  transform: scaleX(0.4);
+  transform-origin: center;
+  transition: opacity 900ms var(--ease) 800ms, transform 900ms var(--ease) 800ms;
+}
+.has-answer .title-verb-pivot {
+  opacity: 0.85;
+  transform: scaleX(1);
+}
+.title-verb-pivot-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0.5px 0 rgba(167, 60, 44, 0.18));
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-verb-pivot { opacity: 0.85; transform: none; transition: none; }
+}
+@media (max-width: 560px) {
+  .title-verb-pivot { width: 18px; margin: 0 0.1em; }
 }
 .title-questions::after {
   content: "";
@@ -5807,11 +5839,11 @@ button { font: inherit; }
 
 @media (max-width: 560px) {
   .broadsheet-title {
-    grid-template-columns: minmax(0, 96px) minmax(0, 1fr);
-    column-gap: 14px;
+    grid-template-columns: minmax(0, 86px) minmax(0, 1fr);
+    column-gap: 12px;
   }
   .title-initial-wrap {
-    width: 96px;
+    width: 86px;
   }
   .title-flow {
     font-size: clamp(34px, 10.5vw, 52px);
@@ -6052,6 +6084,150 @@ button { font: inherit; }
   }
   .specimen-imprint-rule { display: none; }
   .specimen-imprint-text { justify-content: center; flex-wrap: wrap; }
+}
+
+/* ────────── reading tally — a printer's impression row that records each reading ────────── */
+
+.reading-tally {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 14px;
+  margin: 4px auto 14px;
+  max-width: min(540px, 96%);
+  padding: 0 4px;
+  color: var(--ink-soft);
+  font-style: italic;
+  opacity: 0;
+  transform: translateY(4px);
+  animation: reading-tally-in 900ms var(--ease) 320ms both;
+}
+.reading-tally.is-reread { color: var(--coral-deep); }
+
+.reading-tally-rule {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(107, 74, 37, 0.32) 60%,
+    transparent
+  );
+}
+.reading-tally-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(107, 74, 37, 0.32) 60%,
+    transparent
+  );
+}
+
+.reading-tally-cluster {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.005em;
+}
+
+.reading-tally-key {
+  font: italic 700 12px/1 var(--display);
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+  color: var(--coral-deep);
+}
+
+.reading-tally-marks {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 2px;
+}
+
+.reading-tally-mark {
+  position: relative;
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  color: var(--ink-mute);
+  opacity: 0;
+  transform: translateY(-3px) scale(0.7);
+  animation: reading-tally-mark-in 480ms var(--ease) calc(380ms + var(--mark-i, 0) * 120ms) both;
+}
+.reading-tally-mark.is-pending {
+  color: var(--ink-mute);
+  opacity: 0.42;
+}
+.reading-tally-mark.is-lit {
+  color: var(--coral-deep);
+  opacity: 0.92;
+}
+.reading-tally-mark.is-latest {
+  animation-name: reading-tally-mark-press;
+  animation-duration: 620ms;
+}
+.reading-tally-mark svg { display: block; width: 100%; height: 100%; }
+.reading-tally-glyph {
+  font: italic 700 7.5px/1 var(--display);
+  fill: currentColor;
+  letter-spacing: 0;
+  text-anchor: middle;
+}
+
+.reading-tally-tail {
+  font: italic 500 12px/1.3 var(--display);
+  color: var(--ink-soft);
+  letter-spacing: 0.012em;
+}
+.reading-tally-tail em {
+  font-style: italic;
+  color: inherit;
+  font-weight: 500;
+}
+.reading-tally.is-reread .reading-tally-tail em { color: var(--coral-deep); font-weight: 600; }
+
+@keyframes reading-tally-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes reading-tally-mark-in {
+  from { opacity: 0; transform: translateY(-3px) scale(0.7); }
+  to   { opacity: 0.92; transform: none; }
+}
+@keyframes reading-tally-mark-press {
+  0%   { opacity: 0; transform: translateY(-7px) scale(0.4); filter: blur(1px); }
+  55%  { opacity: 1; transform: translateY(1px) scale(1.12); filter: none; }
+  80%  { transform: translateY(-1px) scale(0.96); }
+  100% { opacity: 0.92; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-tally { opacity: 1; transform: none; animation: none; }
+  .reading-tally-mark,
+  .reading-tally-mark.is-pending,
+  .reading-tally-mark.is-lit,
+  .reading-tally-mark.is-latest {
+    opacity: 0.92;
+    transform: none;
+    animation: none;
+  }
+  .reading-tally-mark.is-pending { opacity: 0.42; }
+}
+
+@media (max-width: 720px) {
+  .reading-tally { column-gap: 10px; }
+  .reading-tally-key { font-size: 11.5px; }
+  .reading-tally-tail { font-size: 11px; }
+}
+@media (max-width: 560px) {
+  .reading-tally {
+    grid-template-columns: 1fr;
+    row-gap: 6px;
+    text-align: center;
+    margin: 4px auto 12px;
+  }
+  .reading-tally-rule { display: none; }
+  .reading-tally-cluster { justify-content: center; flex-wrap: wrap; }
 }
 
 /* ────────── reading moment — a small inscription that records the first reading ────────── */

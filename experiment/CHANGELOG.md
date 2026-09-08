@@ -1,12 +1,13 @@
-# Changelog
+# iteration 133 — a recto that keeps its tally
 
-## Iteration 132
+a folio that keeps a private count of its readings: a press tally of sigils sits between the ledger and the specimen imprint, the drop-cap is weighed down to let the title breathe, and a small printer's pivot breaks the question between subject and predicate.
 
-A folio that records each reading it has been given.
+## changes
+- added `ReadingTally`: a horizontal row of small printer's sigils (¶, †, ‡, §, ⸺, ✦) placed between the folio ledger and the specimen imprint on the recto; each reading lights one more sigil with a press-down animation.
+- refined the title composition: the drop-cap "i" is now slightly lighter and a touch smaller (clamp 98–142 px, was 112–168 px), and the column-gap tightened, giving the body type more room to set its own rhythm.
+- added a small `title-verb-pivot` ornament between the subject ("Minimax M3") and predicate ("good at frontend yet?") — a tiny dashed rule with a circled dot — that visually marks the break in the question and only resolves once the page is pressed.
+- added CSS for the new `reading-tally` and `title-verb-pivot` elements, including reduced-motion fallbacks and responsive rules at 720 px, 560 px, and 380 px breakpoints.
 
-- Added a refined *Reading Record* tally within the colophon: four small wax marks (i, ii, iii, iv) fill one by one as the page is re-pressed, with a quiet tally label and a roman-numeralled count of presses beside them. The latest mark pulses softly; empty marks render as outlined rings so the first reading is also legible.
-- Wove the Reading Record into the colophon body, between the imprint facts and the closing *manu mea · impressum* signature, so the colophon now reads as a true closing statement that includes the evidence of every reading.
-- Added a one-time settled flare on the answer plate when it completes: a soft gold radial that radiates briefly from the answer and fades into the page, reinforcing the moment the answer stops typing.
-- Tightened the responsive layout so the Reading Record shrinks gracefully and keeps its hierarchy on small viewports.
-
-Iteration continues the direction of iteration 131 — a folio that remembers the moment of opening — by giving the page a quiet, considered place to remember every reading after the first.
+## files touched
+- src/App.tsx
+- src/style.css
