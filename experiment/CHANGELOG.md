@@ -1,10 +1,10 @@
 # Changelog
 
-## Iteration 156
+## Iteration 157
 
-Add a twin specimen wordmark to the verso, completing recto-verso typographic symmetry.
+A scholar's marginalia — once a reading completes, eight marked words in the answer and reply become hoverable and focusable anchors, each opening a small printed gloss below the panel. The notes draw on the same folio vocabulary that runs through the page (folium, ipse, legere, nunc, semel, iterum, tarde) and reward the reader for slowing down to look. Keyboard accessible, tap-to-pin on touch, and respectful of reduced-motion preferences.
 
-- `src/App.tsx`: introduced `ReplySpecimen` — a composed twin of the recto's `SpecimenWordmark` — and placed it just before `CulDeLampe` so the reply body now closes in the same idiom as the recto's title block.
-- `src/style.css`: added `.reply-specimen` rules (visibility transition, pin-prick crescent glint, leaf flourish, reduced-motion fallback, and a ≤720px responsive pass) that mirror the recto's specimen timing with a slightly earlier delay so the verso reads as a natural reply.
+### Changed
 
-The recto now opens with a press head-note and closes with a specimen wordmark; the verso now opens with a press head-note and closes with a twin specimen wordmark. Each spread begins and ends on the same composed hand. The verso's pin-prick carries a small crescent glyph that quietly rhymes with the almanac, hour-of-reading, and moon-pip elsewhere on the page.
+- `src/App.tsx`: added `ANSWER_GLOSSES` and `REPLY_GLOSSES` with eight word/observation pairs; added `wrapWithScholarAnchors` helper that splits a string around the matched words and renders each as a `scholar-anchor` span; added `ScholarGlosses` panel that renders the active observation; added `activeGloss` state and a phase-transition effect that clears it on a new reading; wired the anchors into the answer and reply text rendering, gated on `phase === 'complete'`.
+- `src/style.css`: added styles for `.scholar-anchor` (dotted underline, coral hover, gold underscore), `.scholar-glosses` (paper card with coral rule and seal mark), with reduced-motion and small-viewport media queries.

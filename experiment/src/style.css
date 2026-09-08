@@ -15645,3 +15645,170 @@ a:focus-visible {
   .reply-catchword-tail { font-size: 10px; letter-spacing: 0.01em; }
 }
 
+/* ────────── iteration 157 · scholar's marginalia — a hoverable commentary layer
+   on the answer and reply. Once a reading completes, certain words become
+   "scholar anchors" with a delicate dotted underline. Hovering or focusing
+   reveals a marginal note below the panel, set in the press's own hand. */
+
+.scholar-anchor {
+  position: relative;
+  display: inline-block;
+  color: inherit;
+  font-style: inherit;
+  cursor: help;
+  padding: 0 0.02em;
+  border-bottom: 1px dotted rgba(167, 60, 44, 0.55);
+  border-radius: 1px;
+  outline: none;
+  transition:
+    color 280ms var(--ease),
+    border-bottom-color 280ms var(--ease),
+    border-bottom-style 0ms,
+    background 280ms var(--ease),
+    box-shadow 280ms var(--ease);
+}
+.scholar-anchor:hover,
+.scholar-anchor:focus-visible,
+.scholar-anchor.is-active {
+  color: var(--coral-deep);
+  border-bottom-color: currentColor;
+  border-bottom-style: solid;
+  background: linear-gradient(180deg, transparent 88%, rgba(245, 198, 91, 0.32) 88%);
+}
+.scholar-anchor:focus-visible {
+  outline: 2px solid rgba(217, 101, 74, 0.5);
+  outline-offset: 3px;
+}
+.scholar-anchor:active {
+  transform: translateY(0.5px);
+}
+.answer-copy .scholar-anchor {
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1;
+}
+.reply-text .scholar-anchor {
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
+  border-bottom-color: rgba(167, 60, 44, 0.5);
+}
+
+.scholar-glosses {
+  position: relative;
+  margin: 14px 0 6px;
+  padding: 11px 14px 12px 18px;
+  background: linear-gradient(
+    180deg,
+    rgba(245, 232, 200, 0.62) 0%,
+    rgba(245, 232, 200, 0.32) 100%
+  );
+  border: 1px solid rgba(107, 74, 37, 0.22);
+  border-left: 2px solid var(--coral);
+  border-radius: 1px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 246, 218, 0.42),
+    0 1px 0 rgba(107, 74, 37, 0.04);
+  opacity: 0;
+  transform: translateY(-4px);
+  animation: scholar-glosses-in 380ms var(--ease) forwards;
+}
+.scholar-glosses.is-visible { opacity: 1; }
+@keyframes scholar-glosses-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+.scholar-glosses::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 8px;
+  width: 36px;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    var(--coral),
+    rgba(217, 101, 74, 0.12) 70%,
+    transparent
+  );
+  pointer-events: none;
+}
+.scholar-glosses-rule {
+  position: absolute;
+  top: 4px;
+  right: 10px;
+  bottom: 4px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(107, 74, 37, 0.24) 18%,
+    rgba(107, 74, 37, 0.24) 82%,
+    transparent
+  );
+  pointer-events: none;
+  opacity: 0.55;
+}
+.scholar-glosses-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 9px;
+  margin: 0;
+  color: var(--ink-soft);
+  font: italic 13px/1.42 var(--display);
+  letter-spacing: 0.008em;
+  text-wrap: balance;
+}
+.scholar-glosses-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--coral-deep);
+  transform: translateY(0.06em);
+}
+.scholar-glosses-mark svg { display: block; width: 100%; height: 100%; }
+.scholar-glosses-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+.scholar-glosses-key {
+  color: var(--ink);
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0.012em;
+}
+.scholar-glosses-sep {
+  color: var(--coral);
+  font-weight: 700;
+  opacity: 0.7;
+  font-size: 12px;
+}
+.scholar-glosses-text {
+  font-style: italic;
+  color: var(--ink-soft);
+  letter-spacing: 0.006em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scholar-glosses {
+    animation: none;
+    transition: opacity 220ms var(--ease);
+  }
+  .scholar-anchor { transition: color 220ms var(--ease), border-bottom-color 220ms var(--ease); }
+}
+
+@media (max-width: 720px) {
+  .scholar-glosses { padding: 10px 12px 11px 14px; margin-top: 12px; }
+  .scholar-glosses-card { font-size: 12px; gap: 7px; }
+  .scholar-glosses-mark { width: 14px; height: 14px; }
+}
+
+@media (max-width: 480px) {
+  .scholar-glosses { padding: 9px 10px 10px 12px; }
+  .scholar-glosses-card { font-size: 11.5px; gap: 6px; }
+  .scholar-glosses-text { letter-spacing: 0.005em; }
+}
+

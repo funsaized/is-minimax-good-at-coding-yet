@@ -79,6 +79,89 @@ const ANSWER_NOTES: SelfNote[] = [
   { id: 'reading', targetIndex: 38, wordLength: 7, glyph: '‡', text: 'at the pace of attention', top: 86 },
 ]
 
+interface ScholarGloss {
+  word: string
+  gloss: string
+}
+
+const ANSWER_GLOSSES: ScholarGloss[] = [
+  { word: 'page', gloss: 'folium — the leaf that holds the question, recto and verso together' },
+  { word: 'itself', gloss: 'ipse — itself; the page answers in its own hand' },
+  { word: 'you', gloss: 'tu, lector — the attentive reader completes the verse' },
+  { word: 'reading', gloss: 'legere — to gather, to choose, to mark; the reader is co-author' },
+  { word: 'now', gloss: 'nunc — the only tense in which a page lives; the rest is type' },
+]
+
+const REPLY_GLOSSES: ScholarGloss[] = [
+  { word: 'once', gloss: 'semel — once, while the ink is still wet' },
+  { word: 'again', gloss: 'iterum — once more; the same leaf, the same press' },
+  { word: 'slower', gloss: 'tarde — slowly, by the press’s own cadence' },
+]
+
+function scholarWordsByKey(glosses: ScholarGloss[]): Record<string, string> {
+  const out: Record<string, string> = {}
+  for (const g of glosses) out[g.word] = g.gloss
+  return out
+}
+
+const SCHOLAR_GLOSS_MAP: Record<string, string> = {
+  ...scholarWordsByKey(ANSWER_GLOSSES),
+  ...scholarWordsByKey(REPLY_GLOSSES),
+}
+
+function wrapWithScholarAnchors(
+  text: string,
+  active: string | null,
+  setActive: (key: string | null) => void,
+): React.ReactNode {
+  if (!text) return null
+  const matches: { word: string; index: number; length: number }[] = []
+  for (const word of Object.keys(SCHOLAR_GLOSS_MAP)) {
+    const re = new RegExp(`\\b${word}\\b`, 'g')
+    let m: RegExpExecArray | null
+    while ((m = re.exec(text)) !== null) {
+      matches.push({ word: m[0], index: m.index, length: m[0].length })
+    }
+  }
+  matches.sort((a, b) => a.index - b.index)
+  const parts: React.ReactNode[] = []
+  let last = 0
+  for (let i = 0; i < matches.length; i++) {
+    const m = matches[i]
+    if (m.index > last) parts.push(text.slice(last, m.index))
+    parts.push(
+      <span
+        key={`scholar-${m.word}-${m.index}-${i}`}
+        className={`scholar-anchor${active === m.word ? ' is-active' : ''}`}
+        tabIndex={0}
+        role="button"
+        aria-label={`${m.word} — a scholar’s note: ${SCHOLAR_GLOSS_MAP[m.word]}`}
+        onMouseEnter={() => setActive(m.word)}
+        onMouseLeave={() => setActive(null)}
+        onFocus={() => setActive(m.word)}
+        onBlur={() => setActive(null)}
+        onClick={(e) => {
+          e.preventDefault()
+          setActive(active === m.word ? null : m.word)
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            setActive(active === m.word ? null : m.word)
+          } else if (e.key === 'Escape') {
+            setActive(null)
+          }
+        }}
+      >
+        {m.word}
+      </span>,
+    )
+    last = m.index + m.length
+  }
+  if (last < text.length) parts.push(text.slice(last))
+  return parts
+}
+
 interface TrailStar {
   id: number
   x0: number
@@ -8921,6 +9004,51 @@ function MarginalEcho({
   )
 }
 
+function ScholarGlosses({
+  active,
+  visible,
+}: {
+  active: string | null
+  visible: boolean
+}) {
+  if (!active || !visible) return null
+  const gloss = SCHOLAR_GLOSS_MAP[active]
+  if (!gloss) return null
+  return (
+    <aside
+      key={active}
+      className="scholar-glosses is-visible"
+      aria-live="polite"
+      aria-label={`scholar’s note on ${active}`}
+    >
+      <span className="scholar-glosses-rule" aria-hidden="true" />
+      <p className="scholar-glosses-card">
+        <svg
+          className="scholar-glosses-mark"
+          viewBox="0 0 16 16"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <path
+            d="M 3 2 L 8 1 L 13 2 L 14 7 L 13 12 L 8 14 L 3 12 L 2 7 Z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.5"
+            strokeLinejoin="round"
+          />
+          <circle cx="8" cy="7" r="2" fill="currentColor" opacity="0.85" />
+          <circle cx="8" cy="7" r="0.6" fill="var(--paper)" />
+        </svg>
+        <span className="scholar-glosses-cluster">
+          <em className="scholar-glosses-key">{active}</em>
+          <span className="scholar-glosses-sep" aria-hidden="true">·</span>
+          <em className="scholar-glosses-text">{gloss}</em>
+        </span>
+      </p>
+    </aside>
+  )
+}
+
 function ReplyInitial({ visible, reduced }: { visible: boolean; reduced: boolean }) {
   return (
     <span
@@ -9946,6 +10074,7 @@ export function App() {
   const [leafTurning, setLeafTurning] = useState(false)
   const [firstMoment, setFirstMoment] = useState<Date | null>(null)
   const [readings, setReadings] = useState<Date[]>([])
+  const [activeGloss, setActiveGloss] = useState<string | null>(null)
   const prevPhaseRef = useRef<Phase>('idle')
 
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({})
@@ -10009,6 +10138,9 @@ export function App() {
   useEffect(() => {
     if (prevPhaseRef.current === 'replying' && phase === 'complete') {
       setReadings((prev) => [...prev, new Date()])
+    }
+    if (prevPhaseRef.current === 'complete' && phase !== 'complete') {
+      setActiveGloss(null)
     }
     prevPhaseRef.current = phase
   }, [phase])
@@ -10572,7 +10704,11 @@ export function App() {
                         {answerDisplay.slice(0, 1)}
                       </span>
                     )}
-                    <span className="answer-copy-rest">{answerDisplay.slice(1)}</span>
+                    <span className="answer-copy-rest">
+                      {phase === 'complete'
+                        ? wrapWithScholarAnchors(answerDisplay.slice(1), activeGloss, setActiveGloss)
+                        : answerDisplay.slice(1)}
+                    </span>
                     {phase === 'answering' && <span className="typing-caret" aria-hidden="true">|</span>}
                   </p>
                   <SelfAnnotations currentChars={answerChars} />
@@ -10585,6 +10721,9 @@ export function App() {
                     reduced={reduced}
                   />
                 </div>
+              )}
+              {phase === 'complete' && (
+                <ScholarGlosses active={activeGloss} visible={answerVisible} />
               )}
               {phase === 'complete' && (
                 <AnswerFinishing visible />
@@ -10647,7 +10786,11 @@ export function App() {
                 )}
                 <span className="reply-text">
                   {replyChars > 0 && <span className="reply-text-lead" aria-hidden="true">{replyDisplay.slice(0, 1)}</span>}
-                  <span className="reply-text-rest">{replyDisplay.slice(1)}</span>
+                  <span className="reply-text-rest">
+                    {phase === 'complete'
+                      ? wrapWithScholarAnchors(replyDisplay.slice(1), activeGloss, setActiveGloss)
+                      : replyDisplay.slice(1)}
+                  </span>
                 </span>
                 {phase === 'replying' && <span className="typing-caret" aria-hidden="true">|</span>}
               </span>
