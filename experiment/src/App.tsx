@@ -8,6 +8,8 @@ type Gloss = {
   head: string
   text: string
   gloss: string
+  scribble: string
+  blot: string
 }
 
 const MARGINALIA: Gloss[] = [
@@ -17,6 +19,8 @@ const MARGINALIA: Gloss[] = [
     head: 'Keep the fingerprint',
     gloss: 'a habit, not a name',
     text: 'The maker is a habit, not a name. When the model rotates, the page should still feel like someone — or something — was here.',
+    scribble: 'M2 9 C 8 3, 16 15, 24 9 C 30 5, 38 13, 46 9',
+    blot: 'M11 3 C 17 5, 21 11, 18 17 C 14 21, 5 20, 3 14 C 1 9, 6 3, 11 3 Z',
   },
   {
     id: 'good',
@@ -24,6 +28,8 @@ const MARGINALIA: Gloss[] = [
     head: 'Choose a side',
     gloss: 'one confident claim',
     text: 'A page gets clearer when it makes one confident choice instead of presenting every possible direction at once.',
+    scribble: 'M2 9 C 12 3, 22 15, 32 9 C 42 3, 52 15, 62 9',
+    blot: 'M10 4 C 16 3, 21 8, 20 14 C 19 20, 11 21, 6 17 C 1 13, 4 6, 10 4 Z',
   },
   {
     id: 'yet',
@@ -31,6 +37,8 @@ const MARGINALIA: Gloss[] = [
     head: 'Protect the quiet',
     gloss: 'the pause that matters',
     text: '"Yet" carries the question. The pause before it is where the answer lives — and where the page earns its reading.',
+    scribble: 'M2 9 C 8 3, 16 15, 24 9 C 30 5, 36 13, 42 9',
+    blot: 'M9 3 C 14 2, 20 7, 19 13 C 18 19, 10 20, 5 16 C 1 11, 4 4, 9 3 Z',
   },
 ]
 
@@ -157,14 +165,6 @@ function Seal() {
   )
 }
 
-function Arrow() {
-  return (
-    <svg className="arrow" viewBox="0 0 28 12" aria-hidden="true">
-      <path d="M0 6h22M16 1l6 5-6 5" />
-    </svg>
-  )
-}
-
 function Spark() {
   return (
     <svg className="spark" viewBox="0 0 80 12" aria-hidden="true">
@@ -191,15 +191,32 @@ function Caret() {
   )
 }
 
+function Scribble({ path }: { path: string }) {
+  return (
+    <svg className="scribble" viewBox="0 0 100 18" preserveAspectRatio="none" aria-hidden="true">
+      <path d={path} />
+    </svg>
+  )
+}
+
+function InkBlot({ path }: { path: string }) {
+  return (
+    <svg className="inkblot" viewBox="0 0 24 24" aria-hidden="true">
+      <path d={path} />
+    </svg>
+  )
+}
+
 type WordProps = {
   text: string
   id?: string
   active?: boolean
   onEnter?: () => void
   onLeave?: () => void
+  scribble?: string
 }
 
-function TitleWord({ text, id, active, onEnter, onLeave }: WordProps) {
+function TitleWord({ text, id, active, onEnter, onLeave, scribble }: WordProps) {
   if (!id) return <>{text}</>
   return (
     <span
@@ -213,6 +230,7 @@ function TitleWord({ text, id, active, onEnter, onLeave }: WordProps) {
       aria-describedby={`gloss-${id}`}
     >
       {text}
+      {scribble && <Scribble path={scribble} />}
     </span>
   )
 }
@@ -230,8 +248,11 @@ export function App() {
     setPulse(p => p + 1)
   }
 
+  const scribbles = Object.fromEntries(MARGINALIA.map(m => [m.id, m.scribble]))
+  const blots = Object.fromEntries(MARGINALIA.map(m => [m.id, m.blot]))
+
   return (
-    <main className="folio">
+    <main className={`folio ${open ? 'folio--open' : ''}`}>
       <Dust />
       <div className="folio__lamp" aria-hidden="true" />
       <div className="folio__vignette" aria-hidden="true" />
@@ -247,12 +268,7 @@ export function App() {
         </a>
         <nav aria-label="Sections" className="folio__nav">
           <a href="#question">question</a>
-          <a
-            href="#answer"
-            onClick={() => setOpen(true)}
-          >
-            answer
-          </a>
+          <a href="#answer" onClick={() => setOpen(true)}>answer</a>
           <a href="#marginalia">margin</a>
         </nav>
         <span className="folio__edition" aria-label="Publication note">
@@ -267,161 +283,172 @@ export function App() {
           <small className="proof__hint">read<br />slowly</small>
         </aside>
 
-        <header className="proof__head" id="question">
-          <p className="kicker">
-            <span>the question</span>
-            <b />
-            <em>pressed in good faith</em>
-          </p>
-          <h1 className="proof__title">
-            <span aria-hidden="true" className="proof__title-rule" />
-            <TitleWord text="is Minimax " />
-            <TitleWord
-              text="M3"
-              id="m3"
-              active={hovered === 'm3'}
-              onEnter={() => setHovered('m3')}
-              onLeave={() => setHovered(null)}
-            />
-            <TitleWord text=" " />
-            <TitleWord
-              text="good at"
-              id="good"
-              active={hovered === 'good'}
-              onEnter={() => setHovered('good')}
-              onLeave={() => setHovered(null)}
-            />
-            <TitleWord text=" frontend " />
-            <TitleWord
-              text="yet"
-              id="yet"
-              active={hovered === 'yet'}
-              onEnter={() => setHovered('yet')}
-              onLeave={() => setHovered(null)}
-            />
-            <TitleWord text="?" />
-            <span aria-hidden="true" className="proof__title-rule" />
-          </h1>
-          <p className="proof__lede">
-            A small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here</em>.
-          </p>
+        <div className="proof__layout">
+          <div className="proof__main">
+            <header className="proof__head" id="question">
+              <p className="kicker">
+                <span>the question</span>
+                <b />
+                <em>pressed in good faith</em>
+              </p>
+              <h1 className="proof__title">
+                <span aria-hidden="true" className="proof__title-rule" />
+                <TitleWord text="is Minimax " />
+                <TitleWord
+                  text="M3"
+                  id="m3"
+                  active={hovered === 'm3'}
+                  onEnter={() => setHovered('m3')}
+                  onLeave={() => setHovered(null)}
+                  scribble={scribbles.m3}
+                />
+                <TitleWord text=" " />
+                <TitleWord
+                  text="good at"
+                  id="good"
+                  active={hovered === 'good'}
+                  onEnter={() => setHovered('good')}
+                  onLeave={() => setHovered(null)}
+                  scribble={scribbles.good}
+                />
+                <TitleWord text=" frontend " />
+                <TitleWord
+                  text="yet"
+                  id="yet"
+                  active={hovered === 'yet'}
+                  onEnter={() => setHovered('yet')}
+                  onLeave={() => setHovered(null)}
+                  scribble={scribbles.yet}
+                />
+                <TitleWord text="?" />
+                <span aria-hidden="true" className="proof__title-rule" />
+              </h1>
+              <p className="proof__lede">
+                A small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here</em>.
+              </p>
 
-          <div className="proof__cue">
-            <button
-              ref={sealRef}
-              type="button"
-              className={`seal-cta ${open ? 'seal-cta--open' : ''}`}
-              onClick={onToggle}
-              aria-expanded={open}
-              aria-controls={answerId}
-              data-pulse={pulse}
+              <div className="proof__cue">
+                <button
+                  ref={sealRef}
+                  type="button"
+                  className={`seal-cta ${open ? 'seal-cta--open' : ''}`}
+                  onClick={onToggle}
+                  aria-expanded={open}
+                  aria-controls={answerId}
+                  data-pulse={pulse}
+                >
+                  <span className="seal-cta__disc" aria-hidden="true">
+                    <span className="seal-cta__ring" />
+                    <span className="seal-cta__icon"><Seal /></span>
+                  </span>
+                  <span className="seal-cta__text">
+                    <strong className="seal-cta__label">
+                      {open ? 'lift the seal' : 'press the seal'}
+                    </strong>
+                    <em className="seal-cta__sub">
+                      {open ? 'to fold the page back' : 'and the answer unfolds'}
+                    </em>
+                  </span>
+                </button>
+                <p className="proof__aside">
+                  <i>a useful question</i><br />
+                  is rarely tidy
+                </p>
+              </div>
+            </header>
+
+            <section
+              className={`answer ${open ? 'answer--open' : ''}`}
+              id="answer"
+              aria-hidden={!open}
+              aria-labelledby="answer-title"
             >
-              <span className="seal-cta__disc" aria-hidden="true">
-                <span className="seal-cta__ring" />
-                <span className="seal-cta__icon"><Seal /></span>
-              </span>
-              <span className="seal-cta__text">
-                <strong className="seal-cta__label">
-                  {open ? 'lift the seal' : 'press the seal'}
-                </strong>
-                <em className="seal-cta__sub">
-                  {open ? 'to fold the page back' : 'and the answer unfolds'}
-                </em>
-              </span>
-            </button>
-            <p className="proof__aside">
-              <i>a useful question</i><br />
-              is rarely tidy
-            </p>
-          </div>
-        </header>
-
-        <section
-          className={`answer ${open ? 'answer--open' : ''}`}
-          id="answer"
-          aria-hidden={!open}
-          aria-labelledby="answer-title"
-        >
-          <div className="answer__fold">
-            <div className="answer__hatch" aria-hidden="true" />
-            <div className="answer__inner">
-              <div className="answer__stamp">
-                <Seal />
-                <span className="answer__stamp-text">
-                  pressed<br />
-                  <b>by hand</b>
-                </span>
-              </div>
-              <div className="answer__body" id={answerId}>
-                <p className="kicker kicker--ink" id="answer-title">
-                  <span>the answer</span>
-                  <b />
-                  <em>for now</em>
-                </p>
-                <p className="answer__lead">
-                  <span className="answer__y">Y</span>es — when it stops trying to look impressive.
-                </p>
-                <div className="answer__columns">
-                  <p>
-                    The good part is not the gradient, the flourish, or the clever little mechanism. It is the moment the page gives you room to notice <em>one thing</em>. Then another.
-                  </p>
-                  <p>
-                    So this is a qualified yes: <em>good at front-end</em> means attentive to the person on the other side of the glass. The rest is decoration with a job to do.
-                  </p>
-                </div>
-                <div className="answer__sign">
-                  <Spark />
-                  <span>— m³, still learning the pause</span>
-                  <span className="answer__sign-corner" aria-hidden="true">
-                    <Kite />
-                  </span>
+              <div className="answer__fold">
+                <div className="answer__hatch" aria-hidden="true" />
+                <div className="answer__inner">
+                  <div className="answer__stamp">
+                    <Seal />
+                    <span className="answer__stamp-text">
+                      pressed<br />
+                      <b>by hand</b>
+                    </span>
+                  </div>
+                  <div className="answer__body" id={answerId}>
+                    <p className="kicker kicker--ink" id="answer-title">
+                      <span>the answer</span>
+                      <b />
+                      <em>for now</em>
+                    </p>
+                    <p className="answer__lead">
+                      <span className="answer__dropcap" aria-hidden="true">Y</span>
+                      <span className="sr-only">Y</span>es — when it stops trying to look impressive.
+                    </p>
+                    <div className="answer__columns">
+                      <p>
+                        The good part is not the gradient, the flourish, or the clever little mechanism. It is the moment the page gives you room to notice <em>one thing</em>. Then another.
+                      </p>
+                      <p>
+                        So this is a qualified yes: <em>good at front-end</em> means attentive to the person on the other side of the glass. The rest is decoration with a job to do.
+                      </p>
+                    </div>
+                    <div className="answer__sign">
+                      <Spark />
+                      <span>— m³, still learning the pause</span>
+                      <span className="answer__sign-corner" aria-hidden="true">
+                        <Kite />
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </section>
           </div>
-        </section>
 
-        <section className="margin" id="marginalia" aria-labelledby="margin-title">
-          <header className="margin__head">
-            <p className="kicker">
-              <span>marginalia</span>
-              <b />
-              <em>hover a word above to read its note</em>
-            </p>
-            <h2 id="margin-title" className="margin__title">
-              three notes from <i>the fold</i>
-            </h2>
-            <p className="margin__lede">
-              Not rules. The residue of pressing this page.
-            </p>
-          </header>
-          <ol className="margin__list">
-            {MARGINALIA.map(m => (
-              <li
-                key={m.n}
-                className={`margin__item ${hovered === m.id ? 'margin__item--active' : ''}`}
-                onMouseEnter={() => setHovered(m.id)}
-                onMouseLeave={() => setHovered(null)}
-                onFocus={() => setHovered(m.id)}
-                onBlur={() => setHovered(null)}
-                tabIndex={0}
-                aria-describedby={`gloss-${m.id}`}
-              >
-                <span className="margin__n">{m.n}</span>
-                <div className="margin__copy">
-                  <h3 className="margin__h" id={`gloss-${m.id}`}>
-                    {m.head}
-                    <span className="margin__gloss">— {m.gloss}</span>
-                  </h3>
-                  <p className="margin__p">{m.text}</p>
-                  <span className="margin__caret" aria-hidden="true">
-                    <Caret />
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
+          <aside className="margin" id="marginalia" aria-labelledby="margin-title">
+            <header className="margin__head">
+              <p className="kicker">
+                <span>marginalia</span>
+                <b />
+                <em>hover a word to read</em>
+              </p>
+              <h2 id="margin-title" className="margin__title">
+                three notes from <i>the fold</i>
+              </h2>
+              <p className="margin__lede">
+                Not rules. The residue of pressing this page.
+              </p>
+            </header>
+            <ol className="margin__list">
+              {MARGINALIA.map(m => (
+                <li
+                  key={m.n}
+                  className={`margin__item ${hovered === m.id ? 'margin__item--active' : ''}`}
+                  onMouseEnter={() => setHovered(m.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  onFocus={() => setHovered(m.id)}
+                  onBlur={() => setHovered(null)}
+                  tabIndex={0}
+                  aria-describedby={`gloss-${m.id}`}
+                >
+                  <span className="margin__n">{m.n}</span>
+                  <div className="margin__copy">
+                    <span className="margin__blot" aria-hidden="true">
+                      <InkBlot path={blots[m.id]} />
+                    </span>
+                    <h3 className="margin__h" id={`gloss-${m.id}`}>
+                      {m.head}
+                      <span className="margin__gloss">— {m.gloss}</span>
+                    </h3>
+                    <p className="margin__p">{m.text}</p>
+                    <span className="margin__caret" aria-hidden="true">
+                      <Caret />
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </aside>
+        </div>
 
         <footer className="colophon" aria-label="Colophon">
           <div className="colophon__rule" aria-hidden="true">

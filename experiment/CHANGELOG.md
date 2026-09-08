@@ -1,11 +1,11 @@
-# Changelog
+# Iteration 175
 
-## Iteration 174
-Wired marginalia to the title as scholar's glosses and turned the seal into the page's CTA.
+Turned the folio into a true two-column broadside: marginalia now sits in a real side margin, title words wear hand-drawn wavy underlines, and the answer opens with a proper drop cap.
 
-- Annotated three title words ("M3", "good at", "yet") with hover/focus glosses that link to marginalia items via shared state; hovering either end highlights the other.
-- Replaced the generic "turn the page" button with a wax seal CTA: the seal itself becomes the press affordance, gains a slowly rotating dashed ring, and pulses on click.
-- Added small "gloss" tags (e.g. "a habit, not a name") next to each marginalia heading and a coral caret that marks the active note.
-- Cleaned up the stylesheet: removed the duplicate override block at the bottom of style.css and consolidated responsive rules for clarity.
-- Marginalia items are now keyboard-focusable; the "answer" nav link auto-opens the seal so navigating never lands on an empty fold.
-- Kept the existing paper-fold reveal, drifting dust, warm lamp, vignette, grain, and real-time colophon; reduced-motion preferences still honored.
+- Restructured the proof into a grid: main column + side margin column (≥1024px); collapses to single column below that, with marginalia stacking beneath the proof.
+- Replaced the static coral underline bar on interactive title words with a hand-drawn wavy scribble that draws in on hover and focus (SVG path per word).
+- Added a real drop cap on the answer lead — a large italic "Y" floats into the first line, screen-reader friendly via a sr-only fallback.
+- Added a small ink-blot SVG accent above each marginalia item; it rotates and deepens in opacity on hover.
+- Refined the seal CTA: deeper ink border with a hairline inner rule, and a soft glow shifts the warm lamp brighter when the answer opens.
+- Tightened the marginalia column: ink-blot, roman numeral, italic head, sans gloss, and a hover treatment (background wash + left tick + rotating blot) that ties it to the active title word.
+- Adjusted responsive rules so the side margin collapses cleanly at 1023px and below, with the proof column going full-width on tablet and stacking on mobile.
