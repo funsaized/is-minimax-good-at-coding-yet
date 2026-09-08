@@ -1,37 +1,9 @@
-## iteration 144
+# Folio lxxvii · Caput xviii — changelog
 
-A tide lamp now sits in the recto spread's lower-left margin, flickering while answering and steady when complete.
+## iteration 145 — a reader's wick lights in the verso's lower margin
 
-The lamp's wick glows at idle, flickers softly while answering and replying, and settles to a steady warm flame when the reading is complete; a soft halo radiates from the flame onto the reading tide, balancing the manuscript reader in the upper-right and completing the recto composition.
+A small hand-drawn candle now sits in the verso's lower margin, between the cul-de-lampe and the press signature. Before reading, the wick is set but unlit — a quiet detail awaiting a reader. When the answer completes, the wick ignites: a small flame with a slow warm halo, a flickering outer body, and a brighter core. It is the page's only persistent confirmation that a reader has visited it — the answer is read, the reply is read, and the wick remains lit.
 
-## iteration 143
+The sheet now settles once the page is complete: a slow warm exhale that adds a faint glow to the page's outer shadow and a hair of saturation, as if the paper has relaxed after being read. The title gains a hair of breathing room above and a subtle gold-tinted text-shadow when set. Mobile breakpoints ensure the wick and surrounding margins stay legible at small widths.
 
-The question (recto) now sits inside a composed **chapter spread**: a folio compass, a chapter head, a printer's emblem, and a small opening ornament frame the question before it reaches the verso.
-
-## iteration 142
-
-The verso reply gains a small second-reader slip, set in coral ink beneath the reply.
-
-## iteration 141
-
-A folio that bears witness to its own opening. The recto gains a top-of-page inscription that names the hour; the verso catches a faint, in-passing mote.
-
-## iteration 140
-
-The verso earns a vade mecum — a small manuscript card that names the folio's own visual vocabulary in miniature.
-
-## iteration 139
-
-The recto gains a single hand-drawn frontispiece: a folio compass that reads the present reading.
-
-## iteration 138
-
-The answer earns a calligraphic flourish, a quiet marginal echo, and an illuminated reply initial.
-
-## iteration 137
-
-A small italic note now appears in the verso, between the answer and the reply.
-
-## iteration 136
-
-The recto grows a small, hand-set printer's note at its foot: a colophon.
+No remote assets, no fabricated metrics, no invented controls. The press action, reading cycle, and ephemeris remain unchanged.

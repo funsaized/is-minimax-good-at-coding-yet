@@ -200,6 +200,32 @@ button { font: inherit; }
   to   { opacity: 1; transform: none; }
 }
 
+/* ── iteration 145 · the sheet settles after the page is read ── */
+@keyframes sheet-settle {
+  0%   { filter: saturate(1) brightness(1); }
+  32%  { filter: saturate(1.04) brightness(1.02); }
+  100% { filter: saturate(1.02) brightness(1.012); }
+}
+@keyframes sheet-settle-glow {
+  0%   { box-shadow:
+          0 30px 100px rgba(0, 0, 0, 0.42),
+          0 0 0 1px rgba(255, 245, 230, 0.18) inset,
+          0 0 0 8px rgba(255, 245, 230, 0.12) inset; }
+  100% { box-shadow:
+          0 30px 100px rgba(0, 0, 0, 0.42),
+          0 0 0 1px rgba(255, 245, 230, 0.18) inset,
+          0 0 0 8px rgba(255, 245, 230, 0.12) inset,
+          0 0 60px 4px rgba(245, 198, 91, 0.10); }
+}
+.sheet.is-complete {
+  animation:
+    sheet-settle 1800ms var(--ease) both,
+    sheet-settle-glow 1800ms var(--ease) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet.is-complete { animation: none; }
+}
+
 .sheet-ambient {
   position: absolute; inset: 18% 10% 16%; z-index: -1; pointer-events: none;
   opacity: 0;
@@ -1222,7 +1248,7 @@ button { font: inherit; }
   grid-template-columns: minmax(0, auto) minmax(0, 1fr);
   align-items: stretch;
   column-gap: clamp(20px, 2.6vw, 34px);
-  margin: 0;
+  margin: clamp(2px, 0.4vw, 6px) 0 0;
   max-width: 760px;
   position: relative;
   padding-right: clamp(86px, 10vw, 130px);
@@ -1281,7 +1307,7 @@ button { font: inherit; }
   align-self: center;
   margin: 0;
   color: var(--ink);
-  font: italic 640 clamp(40px, 6vw, 92px)/1.02 var(--display);
+  font: italic 640 clamp(40px, 6vw, 92px)/1.04 var(--display);
   letter-spacing: -0.022em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1, "onum" 1;
   padding-top: 0.02em;
@@ -1292,6 +1318,12 @@ button { font: inherit; }
   text-indent: -0.02em;
   position: relative;
   hyphens: none;
+  transition: text-shadow 1600ms var(--ease) 200ms;
+}
+.has-answer .title-flow {
+  text-shadow:
+    0 0 0.5px rgba(245, 198, 91, 0.05),
+    0 0 14px rgba(245, 198, 91, 0.06);
 }
 .title-text { font-style: italic; }
 .title-text:first-of-type {
@@ -4824,6 +4856,159 @@ button { font: inherit; }
 @keyframes moon-rise {
   from { opacity: 0; transform: translateY(4px) scale(0.94); }
   to   { opacity: 1; transform: none; }
+}
+
+/* ────────── reading-wick ────────── */
+
+.reading-wick {
+  margin: clamp(20px, 2.6vw, 32px) auto 6px;
+  width: 100%;
+  max-width: 220px;
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  position: relative;
+  color: var(--sepia);
+  opacity: 0.86;
+  transition: opacity 1400ms var(--ease);
+}
+.reading-wick.is-lit { opacity: 1; }
+.reading-wick-stage {
+  position: relative;
+  width: clamp(34px, 3.4vw, 48px);
+  display: grid;
+  place-items: center;
+}
+.reading-wick-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 4px 10px rgba(80, 36, 14, 0.18));
+  transition: filter 1400ms var(--ease);
+}
+.reading-wick.is-lit .reading-wick-svg {
+  filter:
+    drop-shadow(0 4px 10px rgba(80, 36, 14, 0.2))
+    drop-shadow(0 0 14px rgba(245, 198, 91, 0.32));
+}
+.wick-halo {
+  opacity: 0;
+  transform-origin: 24px 34px;
+  transition: opacity 2200ms var(--ease) 240ms;
+}
+.reading-wick.is-lit .wick-halo {
+  opacity: 1;
+  animation: wick-halo-pulse 3.6s ease-in-out infinite;
+}
+@keyframes wick-halo-pulse {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.06); }
+}
+.wick-flame-group {
+  transform-origin: 24px 56px;
+  opacity: 0;
+  transform: scaleY(0.4) scaleX(0.85);
+  transition: opacity 1600ms var(--ease) 200ms, transform 1600ms var(--ease) 200ms;
+}
+.reading-wick.is-lit .wick-flame-group {
+  opacity: 1;
+  transform: scaleY(1) scaleX(1);
+  animation: wick-flicker 2.2s ease-in-out infinite;
+}
+@keyframes wick-flicker {
+  0%, 100% { transform: scaleY(1)    scaleX(1)    rotate(0deg); }
+  18%      { transform: scaleY(1.05) scaleX(0.96) rotate(-1deg); }
+  36%      { transform: scaleY(0.96) scaleX(1.03) rotate(1deg); }
+  54%      { transform: scaleY(1.04) scaleX(0.98) rotate(-0.6deg); }
+  72%      { transform: scaleY(0.98) scaleX(1.02) rotate(0.4deg); }
+}
+.wick-flame-core {
+  transform-origin: 24px 50px;
+  animation: wick-core-flicker 1.4s ease-in-out infinite;
+}
+@keyframes wick-core-flicker {
+  0%, 100% { transform: scaleY(1)   scaleX(1); }
+  35%      { transform: scaleY(1.1) scaleX(0.94); }
+  68%      { transform: scaleY(0.94) scaleX(1.06); }
+}
+.wick-flame-base {
+  transform-origin: 24px 52px;
+  animation: wick-base-flicker 0.9s ease-in-out infinite;
+}
+@keyframes wick-base-flicker {
+  0%, 100% { transform: scaleY(1)    scaleX(1);    opacity: 0.92; }
+  50%      { transform: scaleY(0.85) scaleX(1.12); opacity: 1; }
+}
+.wick-thread-glow {
+  opacity: 0;
+  transition: opacity 1400ms var(--ease) 280ms;
+}
+.reading-wick.is-lit .wick-thread-glow {
+  opacity: 1;
+  animation: wick-glow 1.2s ease-in-out infinite;
+}
+@keyframes wick-glow {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+.wick-drip, .wick-drip-soft {
+  transition: stroke 1400ms var(--ease);
+}
+.reading-wick.is-lit .wick-drip {
+  stroke: rgba(245, 198, 91, 0.78);
+}
+.reading-wick-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 4px 0 0;
+  font: italic 11px/1.2 var(--display);
+  letter-spacing: 0.06em;
+  color: var(--sepia);
+  opacity: 0.78;
+  transition: color 1400ms var(--ease), opacity 1400ms var(--ease);
+}
+.reading-wick.is-lit .reading-wick-cap {
+  color: var(--coral-deep);
+  opacity: 1;
+}
+.reading-wick-cap-mark {
+  color: var(--coral);
+  font-weight: 700;
+  font-size: 12px;
+  opacity: 0.9;
+}
+.reading-wick-cap-sep {
+  opacity: 0.6;
+  margin: 0 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-wick.is-lit .wick-halo,
+  .reading-wick.is-lit .wick-flame-group,
+  .reading-wick.is-lit .wick-flame-core,
+  .reading-wick.is-lit .wick-flame-base,
+  .reading-wick.is-lit .wick-thread-glow {
+    animation: none;
+  }
+  .reading-wick.is-lit .wick-flame-group,
+  .reading-wick.is-lit .wick-halo,
+  .reading-wick.is-lit .wick-thread-glow {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 720px) {
+  .reading-wick { margin-top: 22px; max-width: 200px; }
+  .reading-wick-stage { width: 38px; }
+}
+@media (max-width: 520px) {
+  .reading-wick { margin-top: 18px; }
+  .reading-wick-stage { width: 34px; }
+  .reading-wick-cap { font-size: 10px; }
+}
+@media (max-width: 420px) {
+  .reading-wick-stage { width: 32px; }
+  .reading-wick-cap { font-size: 9.5px; gap: 4px; }
 }
 
 /* ────────── cul-de-lampe ────────── */

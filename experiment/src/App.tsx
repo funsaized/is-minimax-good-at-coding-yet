@@ -3844,6 +3844,169 @@ function NightSky({ reduced }: { reduced: boolean }) {
   return <canvas ref={canvasRef} className="night-sky-canvas" aria-hidden="true" />
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 145 · the verso earns a reader's wick
+
+   A small hand-drawn candle sits in the verso's lower margin, just before
+   the cul-de-lampe. Before reading, the wick is set but unlit. When the
+   answer completes, the wick ignites — a quiet flame with a slow warm
+   halo. It is the page's only persistent confirmation that a reader has
+   visited it: the answer is read, the reply is read, and the wick
+   remains lit. It reads as a single, intimate detail that earns the
+   lower margin it occupies.
+   ────────────────────────────────────────────────────────────────────── */
+
+function ReadingWick({ lit, reduced }: { lit: boolean; reduced: boolean }) {
+  return (
+    <figure
+      className={`reading-wick${lit ? ' is-lit' : ''}${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <div className="reading-wick-stage">
+        <svg className="reading-wick-svg" viewBox="0 0 48 88" focusable="false">
+          <defs>
+            <radialGradient id="wick-halo" cx="50%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="rgba(255, 220, 150, 0.7)" />
+              <stop offset="38%" stopColor="rgba(245, 198, 91, 0.32)" />
+              <stop offset="78%" stopColor="rgba(217, 101, 74, 0.08)" />
+              <stop offset="100%" stopColor="rgba(217, 101, 74, 0)" />
+            </radialGradient>
+            <linearGradient id="wick-flame-outer" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stopColor="rgba(167, 60, 44, 0.88)" />
+              <stop offset="40%" stopColor="rgba(217, 101, 74, 0.92)" />
+              <stop offset="74%" stopColor="rgba(245, 198, 91, 0.96)" />
+              <stop offset="100%" stopColor="rgba(255, 246, 218, 0.92)" />
+            </linearGradient>
+            <linearGradient id="wick-flame-core" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stopColor="rgba(245, 198, 91, 0.78)" />
+              <stop offset="100%" stopColor="rgba(255, 246, 218, 0.96)" />
+            </linearGradient>
+            <linearGradient id="wick-wax" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(245, 220, 168, 0.96)" />
+              <stop offset="62%" stopColor="rgba(232, 188, 110, 0.92)" />
+              <stop offset="100%" stopColor="rgba(196, 142, 78, 0.9)" />
+            </linearGradient>
+            <linearGradient id="wick-wax-edge" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="rgba(107, 74, 37, 0.5)" />
+              <stop offset="50%" stopColor="rgba(107, 74, 37, 0.3)" />
+              <stop offset="100%" stopColor="rgba(107, 74, 37, 0.5)" />
+            </linearGradient>
+            <radialGradient id="wick-wax-sheen" cx="34%" cy="14%" r="42%">
+              <stop offset="0%" stopColor="rgba(255, 246, 218, 0.78)" />
+              <stop offset="100%" stopColor="rgba(255, 246, 218, 0)" />
+            </radialGradient>
+          </defs>
+
+          <ellipse className="wick-halo" cx="24" cy="34" rx="26" ry="32" fill="url(#wick-halo)" />
+
+          <g className="wick-flame-group">
+            <path
+              className="wick-flame-outer"
+              d="M 24 56 Q 16 50 16 40 Q 16 32 19 26 Q 21 22 22 18 Q 23 14 24 10 Q 25 14 26 18 Q 27 22 29 26 Q 32 32 32 40 Q 32 50 24 56 Z"
+              fill="url(#wick-flame-outer)"
+            />
+            <path
+              className="wick-flame-core"
+              d="M 24 50 Q 19 44 19 38 Q 19 32 21 28 Q 23 24 24 20 Q 25 24 27 28 Q 29 32 29 38 Q 29 44 24 50 Z"
+              fill="url(#wick-flame-core)"
+            />
+            <path
+              className="wick-flame-base"
+              d="M 24 52 Q 22 48 22 44 Q 22 40 24 38 Q 26 40 26 44 Q 26 48 24 52 Z"
+              fill="rgba(255, 246, 218, 0.92)"
+            />
+          </g>
+
+          <line
+            className="wick-thread"
+            x1="24"
+            y1="54"
+            x2="24"
+            y2="62"
+            stroke="rgba(28, 18, 8, 0.92)"
+            strokeWidth="0.85"
+            strokeLinecap="round"
+          />
+          <line
+            className="wick-thread-glow"
+            x1="24"
+            y1="54"
+            x2="24"
+            y2="60"
+            stroke="rgba(245, 198, 91, 0.5)"
+            strokeWidth="0.35"
+            strokeLinecap="round"
+          />
+
+          <ellipse cx="24" cy="80" rx="11" ry="2.4" fill="rgba(107, 74, 37, 0.18)" />
+          <rect
+            className="wick-body"
+            x="15"
+            y="60"
+            width="18"
+            height="18"
+            rx="1.4"
+            fill="url(#wick-wax)"
+            stroke="url(#wick-wax-edge)"
+            strokeWidth="0.45"
+          />
+          <rect
+            className="wick-body-sheen"
+            x="15"
+            y="60"
+            width="18"
+            height="18"
+            rx="1.4"
+            fill="url(#wick-wax-sheen)"
+          />
+          <ellipse
+            className="wick-body-rim"
+            cx="24"
+            cy="60"
+            rx="8.6"
+            ry="1.6"
+            fill="rgba(245, 220, 168, 0.92)"
+            stroke="rgba(107, 74, 37, 0.32)"
+            strokeWidth="0.32"
+          />
+          <ellipse
+            cx="24"
+            cy="59.4"
+            rx="6.6"
+            ry="1"
+            fill="rgba(255, 246, 218, 0.7)"
+          />
+
+          <path
+            className="wick-drip"
+            d="M 15.5 64 Q 14.4 68 14.8 72 Q 15.4 76 16.2 78"
+            stroke="rgba(245, 198, 91, 0.62)"
+            strokeWidth="0.55"
+            fill="none"
+            strokeLinecap="round"
+          />
+          <path
+            className="wick-drip-soft"
+            d="M 32.6 70 Q 33.6 73 33.2 76"
+            stroke="rgba(245, 198, 91, 0.42)"
+            strokeWidth="0.42"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+      <figcaption className="reading-wick-cap">
+        <span className="reading-wick-cap-mark" aria-hidden="true">¶</span>
+        <em className="reading-wick-cap-key">the wick</em>
+        <span className="reading-wick-cap-sep" aria-hidden="true">·</span>
+        <em className="reading-wick-cap-tail">
+          {lit ? 'lit by your reading' : 'set, awaiting a reader'}
+        </em>
+      </figcaption>
+    </figure>
+  )
+}
+
 function ReadingLamp({ intensity }: { intensity: number }) {
   const phase = Math.max(0, Math.min(1, intensity))
   return (
@@ -9005,7 +9168,11 @@ export function App() {
       <div className="ambient-stars--twos" aria-hidden="true" />
       <div className="ambient-vignette" aria-hidden="true" />
 
-      <article className={`sheet ${phase !== 'idle' ? 'has-answer' : ''}`}>
+      <article
+        className={`sheet ${phase !== 'idle' ? 'has-answer' : ''}${
+          phase === 'complete' ? ' is-complete' : ''
+        }`}
+      >
         <span
           className={`sheet-ambient${phase !== 'idle' ? ' is-lit' : ''}`}
           aria-hidden="true"
@@ -9384,6 +9551,8 @@ export function App() {
             />
 
             <CulDeLampe inscriptionVisible={phase === 'complete'} />
+
+            <ReadingWick lit={phase === 'complete'} reduced={reduced} />
 
             {phase === 'complete' && <PressSignature cycle={cycle} slow={slow} />}
           </section>
