@@ -303,6 +303,17 @@ function Dust() {
   return <canvas ref={ref} className="dust" aria-hidden="true" />
 }
 
+function PaperDeckle() {
+  return (
+    <svg className="deckle" viewBox="0 0 1200 22" preserveAspectRatio="none" aria-hidden="true">
+      <path
+        d="M0 22 L0 4 C 32 7, 56 2, 88 5 C 116 7, 142 1, 178 5 C 220 9, 256 3, 296 6 C 334 9, 372 4, 408 7 C 446 10, 482 3, 522 6 C 558 9, 598 3, 636 7 C 676 11, 712 4, 750 8 C 788 12, 824 5, 862 9 C 900 12, 936 5, 974 9 C 1010 12, 1048 6, 1088 10 C 1118 13, 1152 7, 1200 11 L1200 22 Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
 function CropMarks() {
   return (
     <div className="crops" aria-hidden="true">
@@ -656,10 +667,11 @@ type WordProps = {
   scribble?: string
   delay?: number
   superscript?: boolean
+  read?: boolean
 }
 
-function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay, superscript }: WordProps) {
-  const cls = `tline${id ? ` word ${active ? 'word--active' : ''}` : ''}`
+function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay, superscript, read }: WordProps) {
+  const cls = `tline${id ? ` word ${active ? 'word--active' : ''} ${read ? 'word--read' : ''}` : ''}`
   const style = delay !== undefined ? { animationDelay: `${delay}s` } : undefined
   if (!id) {
     return (
@@ -690,6 +702,7 @@ function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay, supers
           <span className="bracket bracket--tl" />
           <span className="bracket bracket--tr" />
         </span>
+        <RegistrationMark pos="tr" />
         <span className="word__base">{base}</span>
         <span className="word__sup" aria-hidden="true">{sup}</span>
         {scribble && <Scribble path={scribble} />}
@@ -718,6 +731,7 @@ function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay, supers
         <span className="bracket bracket--tl" />
         <span className="bracket bracket--tr" />
       </span>
+      <RegistrationMark pos="tl" />
       {text}
       {scribble && <Scribble path={scribble} />}
       <svg className="word__wire" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true">
@@ -1001,6 +1015,298 @@ function RibbonKnot() {
   )
 }
 
+function RegistrationMark({ pos = 'tr' }: { pos?: 'tl' | 'tr' | 'bl' | 'br' }) {
+  return (
+    <span className={`reg reg--${pos}`} aria-hidden="true">
+      <svg viewBox="0 0 14 14">
+        <circle cx="7" cy="7" r="3.2" fill="none" stroke="currentColor" strokeWidth="0.7" />
+        <path d="M7 0 L7 14 M0 7 L14 7" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" />
+        <circle cx="7" cy="7" r="0.7" fill="currentColor" />
+      </svg>
+    </span>
+  )
+}
+
+type ReadingMapProps = {
+  readWords: Record<string, boolean>
+  readMargins: Record<string, boolean>
+  openedSpecimens: Record<string, boolean>
+  sealPasses: number
+  marks: Mark[]
+  scrollProgress: number
+}
+
+function ReadingPath({
+  readWords,
+  readMargins,
+  openedSpecimens,
+  sealPasses,
+  marks,
+  scrollProgress,
+}: ReadingMapProps) {
+  const w = 720
+  const h = 360
+
+  const titleY = 60
+  const marginY = 150
+  const specimenY = 240
+  const stampY = 320
+  const sealX = w - 70
+
+  const wordSlots = [
+    { id: 'm3', label: 'm³', x: w * 0.22, visited: !!readWords.m3 },
+    { id: 'good', label: 'good', x: w * 0.5, visited: !!readWords.good },
+    { id: 'yet', label: 'yet', x: w * 0.78, visited: !!readWords.yet },
+  ]
+
+  const marginSlots = [
+    { id: 'm3', n: 'i.', x: w * 0.22, label: 'habit', visited: !!readMargins.m3 },
+    { id: 'good', n: 'ii.', x: w * 0.5, label: 'choice', visited: !!readMargins.good },
+    { id: 'yet', n: 'iii.', x: w * 0.78, label: 'pause', visited: !!readMargins.yet },
+  ]
+
+  const specimenSlots = [
+    { id: 'cut', x: w * 0.22, label: 'cut', visited: !!openedSpecimens.cut },
+    { id: 'hand', x: w * 0.5, label: 'hand', visited: !!openedSpecimens.hand },
+    { id: 'wood', x: w * 0.78, label: 'wood', visited: !!openedSpecimens.wood },
+  ]
+
+  const trail: string[] = []
+  const visitedWords = [wordSlots[0].visited, wordSlots[1].visited, wordSlots[2].visited]
+  const visitedMargins = [marginSlots[0].visited, marginSlots[1].visited, marginSlots[2].visited]
+  const visitedSpecimens = [specimenSlots[0].visited, specimenSlots[1].visited, specimenSlots[2].visited]
+
+  let firstM = false
+  for (let i = 0; i < 3; i++) {
+    const wx = w * (0.22 + i * 0.28)
+    const my = marginY
+    if (visitedWords[i] && !firstM) { trail.push(`M ${wx} ${titleY}`); firstM = true }
+    if (visitedMargins[i] && !firstM) { trail.push(`M ${wx} ${my}`); firstM = true }
+  }
+  if (!firstM) trail.push(`M ${w * 0.22} ${titleY}`)
+
+  for (let i = 0; i < 3; i++) {
+    const wx = w * (0.22 + i * 0.28)
+    if (visitedWords[i] && visitedMargins[i]) {
+      trail.push(`L ${wx} ${marginY}`)
+    } else if (visitedWords[i] && visitedSpecimens[i]) {
+      trail.push(`L ${wx} ${specimenY}`)
+    }
+  }
+
+  for (let i = 0; i < 3; i++) {
+    if (visitedMargins[i] && visitedSpecimens[i]) {
+      const mx = w * (0.22 + i * 0.28)
+      trail.push(`L ${mx} ${specimenY}`)
+    }
+  }
+
+  const traveledSteps = trail.length
+
+  const stampSlots = marks.slice(-8).map((m, i) => {
+    const startIdx = Math.max(0, marks.length - 8)
+    const localIdx = i - startIdx
+    const total = Math.min(8, marks.length)
+    const range = w - 200
+    const slotIdx = total > 1 ? localIdx : 0
+    const x = 100 + slotIdx * (range / Math.max(1, total - 1))
+    return { x, y: stampY + ((i % 2) - 0.5) * 6, kind: m.kind, key: m.id }
+  })
+
+  const sealBlots = Math.min(sealPasses, 5)
+
+  return (
+    <figure className="reading-path" aria-labelledby="reading-path-title">
+      <header className="reading-path__head">
+        <p className="kicker">
+          <span>the reading path</span>
+          <b />
+          <em>a small proof that you were here</em>
+        </p>
+        <h3 className="reading-path__title" id="reading-path-title">
+          three <i>presses</i>, drawn from your visit
+        </h3>
+      </header>
+      <svg
+        className="reading-path__svg"
+        viewBox={`0 0 ${w} ${h}`}
+        role="img"
+        aria-label="A schematic of which parts of the page you have attended to."
+      >
+        <defs>
+          <filter id="rpInk" x="-4%" y="-4%" width="108%" height="108%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="3" />
+            <feDisplacementMap in="SourceGraphic" scale="0.7" />
+          </filter>
+          <pattern id="rpDots" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="0.6" fill="rgba(207,82,64,.14)" />
+          </pattern>
+        </defs>
+
+        <rect x="6" y="6" width={w - 12} height={h - 12} fill="url(#rpDots)" opacity="0.6" />
+
+        <g className="rp-ruler" stroke="rgba(20,32,27,.18)" strokeDasharray="2 4">
+          <line x1="40" y1="20" x2="40" y2={h - 20} />
+          <line x1="6" y1={h - 40} x2={w - 6} y2={h - 40} />
+          <line x1="44" y1={titleY} x2={w - 44} y2={titleY} strokeDasharray="1 6" />
+          <line x1="44" y1={marginY} x2={w - 44} y2={marginY} strokeDasharray="1 6" />
+          <line x1="44" y1={specimenY} x2={w - 44} y2={specimenY} strokeDasharray="1 6" />
+        </g>
+
+        <g className="rp-labels" fontFamily="ui-sans-serif, system-ui, sans-serif" fontSize="9" letterSpacing="2.4" fill="rgba(20,32,27,.5)">
+          <text x="14" y={titleY + 3}>title</text>
+          <text x="14" y={marginY + 3}>margin</text>
+          <text x="14" y={specimenY + 3}>voices</text>
+          <text x="14" y={stampY + 4}>stamps</text>
+          <text x={w - 70} y={h - 16} textAnchor="start" fill="rgba(207,82,64,.7)">scribble-key ↓</text>
+        </g>
+
+        <g className="rp-path" stroke="rgba(207,82,64,.85)" strokeWidth="1.1" fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <path
+            d={trail.join(' ')}
+            filter="url(#rpInk)"
+          />
+        </g>
+
+        {wordSlots.map(s => (
+          <g key={s.id} className={`rp-word rp-word--${s.id} ${s.visited ? 'is-on' : ''}`} transform={`translate(${s.x} ${titleY})`}>
+            <circle r="14" fill="none" stroke="currentColor" strokeWidth="1.1" strokeDasharray="3 3" />
+            <circle r="3" fill="currentColor" />
+            <text
+              y="-22"
+              textAnchor="middle"
+              fontFamily="Iowan Old Style, Palatino Linotype, Palatino, Georgia, serif"
+              fontStyle="italic"
+              fontSize="14"
+              fill="currentColor"
+            >
+              {s.label}
+            </text>
+            <line x1="0" y1="14" x2="0" y2={marginY - titleY - 12} stroke="currentColor" strokeWidth="0.6" strokeDasharray="2 4" opacity="0.35" />
+          </g>
+        ))}
+
+        {marginSlots.map(s => (
+          <g key={s.id} className={`rp-note ${s.visited ? 'is-on' : ''}`} transform={`translate(${s.x} ${marginY})`}>
+            <rect x="-22" y="-14" width="44" height="28" rx="2" fill="none" stroke="currentColor" strokeWidth="0.8" />
+            <text x="-17" y="-3" fontFamily="ui-sans-serif, system-ui, sans-serif" fontSize="9" letterSpacing="1.5" fill="currentColor">{s.n}</text>
+            <text x="6" y="3" fontFamily="Iowan Old Style, Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">{s.label}</text>
+            <text x="0" y="20" textAnchor="middle" fontFamily="ui-sans-serif, system-ui, sans-serif" fontSize="7" letterSpacing="1.4" fill="currentColor">note</text>
+          </g>
+        ))}
+
+        {specimenSlots.map(s => (
+          <g key={s.id} className={`rp-spec ${s.visited ? 'is-on' : ''}`} transform={`translate(${s.x} ${specimenY})`}>
+            <path
+              d="M -22 -10 L 22 -10 L 26 -2 L 22 14 L -22 14 L -18 6 Z"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="0.9"
+              strokeLinejoin="round"
+            />
+            <text x="0" y="6" textAnchor="middle" fontFamily="Iowan Old Style, Georgia, serif" fontStyle="italic" fontSize="13" fill="currentColor">{s.label}</text>
+            <text x="0" y="-14" textAnchor="middle" fontFamily="ui-sans-serif, system-ui, sans-serif" fontSize="7" letterSpacing="1.4" fill="currentColor">voice</text>
+          </g>
+        ))}
+
+        {stampSlots.map((s, i) => (
+          <g key={s.key} className="rp-stamp" transform={`translate(${s.x} ${s.y}) rotate(${(i % 5) * 6 - 12})`}>
+            <MarkPathGlyph kind={s.kind} small />
+          </g>
+        ))}
+        {marks.length === 0 && (
+          <text
+            x={w / 2}
+            y={stampY + 5}
+            textAnchor="middle"
+            fontFamily="Iowan Old Style, Georgia, serif"
+            fontStyle="italic"
+            fontSize="11"
+            fill="rgba(20,32,27,.4)"
+          >
+            — no marks stamped yet —
+          </text>
+        )}
+
+        <g className="rp-seal" transform={`translate(${sealX} ${218})`}>
+          {sealBlots === 0 ? (
+            <text
+              y="6"
+              textAnchor="middle"
+              fontFamily="Iowan Old Style, Georgia, serif"
+              fontStyle="italic"
+              fontSize="10"
+              fill="rgba(20,32,27,.45)"
+            >
+              seal untested
+            </text>
+          ) : (
+            <>
+              <circle r="24" fill="none" stroke="rgba(207,82,64,.6)" strokeWidth="0.9" />
+              <circle r="14" fill="rgba(207,82,64,.18)" stroke="rgba(207,82,64,.7)" strokeWidth="0.7" />
+              {Array.from({ length: sealBlots }).map((_, i) => (
+                <circle
+                  key={i}
+                  cx={(i % 3 - 1) * 4}
+                  cy={Math.floor(i / 3) * 4 - 1}
+                  r="1.6"
+                  fill="rgba(207,82,64,.85)"
+                />
+              ))}
+              <text
+                y="-34"
+                textAnchor="middle"
+                fontFamily="ui-sans-serif, system-ui, sans-serif"
+                fontSize="8"
+                letterSpacing="1.5"
+                fill="rgba(207,82,64,.85)"
+              >
+                {sealPasses === 1 ? 'seal pressed' : `${sealPasses} presses`}
+              </text>
+            </>
+          )}
+        </g>
+
+        <g className="rp-progress" fontFamily="Iowan Old Style, Georgia, serif" fontStyle="italic" fill="rgba(20,32,27,.55)">
+          <text x={w - 90} y="32" fontSize="10" letterSpacing="0.5">
+            read {Math.round(scrollProgress * 100)}%
+          </text>
+        </g>
+      </svg>
+      <figcaption className="reading-path__key">
+        <span className="reading-path__key-item">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" /><circle cx="8" cy="8" r="1.5" fill="currentColor" /></svg>
+          <em>a title word attended</em>
+        </span>
+        <span className="reading-path__key-item">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="4" width="12" height="8" fill="none" stroke="currentColor" strokeWidth="0.9" rx="1" /></svg>
+          <em>a margin note opened</em>
+        </span>
+        <span className="reading-path__key-item">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6 L14 6 L16 10 L14 12 L2 12 L4 9 Z" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinejoin="round" /></svg>
+          <em>a specimen voice opened</em>
+        </span>
+        <span className="reading-path__key-item">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" strokeWidth="1" /><circle cx="8" cy="8" r="2" fill="currentColor" /></svg>
+          <em>a seal press</em>
+        </span>
+        <span className="reading-path__key-item">
+          <em>— the line connects them in order —</em>
+        </span>
+      </figcaption>
+    </figure>
+  )
+}
+
+function MarkPathGlyph({ kind, small = false }: { kind: MarkKind; small?: boolean }) {
+  const v = small ? '0 0 40 18' : '0 0 80 32'
+  return (
+    <svg width={small ? 30 : 60} height={small ? 12 : 22} viewBox={v} aria-hidden="true">
+      <MarkPath kind={kind} />
+    </svg>
+  )
+}
+
 export function App() {
   const [open, setOpen] = useState(false)
   const [hovered, setHovered] = useState<string | null>(null)
@@ -1013,6 +1319,10 @@ export function App() {
   const [sigVisible, setSigVisible] = useState(false)
   const [openCase, setOpenCase] = useState<string | null>(null)
   const [specimenRest, setSpecimenRest] = useState(true)
+  const [readWords, setReadWords] = useState<Record<string, boolean>>({})
+  const [readMargins, setReadMargins] = useState<Record<string, boolean>>({})
+  const [openedSpecimens, setOpenedSpecimens] = useState<Record<string, boolean>>({})
+  const [pathRevealed, setPathRevealed] = useState(false)
   const answerId = useId()
   const now = useNow(1000)
   const { progress, activeWord, activeSection } = useScrollState()
@@ -1021,6 +1331,7 @@ export function App() {
   const stageRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const colophonRef = useRef<HTMLElement>(null)
+  const pathRef = useRef<HTMLElement>(null)
 
   const effectiveActive = hovered || activeWord
 
@@ -1029,6 +1340,19 @@ export function App() {
     setPulse(p => p + 1)
     setSealPasses(p => p + 1)
   }
+
+  const visitWord = useCallback((id: string | null) => {
+    if (!id) return
+    setReadWords(prev => (prev[id] ? prev : { ...prev, [id]: true }))
+  }, [])
+
+  const visitMargin = useCallback((id: string) => {
+    setReadMargins(prev => (prev[id] ? prev : { ...prev, [id]: true }))
+  }, [])
+
+  const recordSpecimen = useCallback((id: string) => {
+    setOpenedSpecimens(prev => (prev[id] ? prev : { ...prev, [id]: true }))
+  }, [])
 
   const onPencilToggle = useCallback(() => {
     setPencil(v => {
@@ -1070,6 +1394,30 @@ export function App() {
         }
       },
       { threshold: 0.35 }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (!openCase) return
+    recordSpecimen(openCase)
+  }, [openCase, recordSpecimen])
+
+  useEffect(() => {
+    const el = pathRef.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setPathRevealed(true)
+            obs.disconnect()
+            break
+          }
+        }
+      },
+      { threshold: 0.18 }
     )
     obs.observe(el)
     return () => obs.disconnect()
@@ -1130,6 +1478,7 @@ export function App() {
       }}
     >
       <Dust />
+      <PaperDeckle />
       <ReadingRibbon progress={progress} />
       <div className="folio__lamp" aria-hidden="true" />
       <div className="folio__lamp folio__lamp--warm" aria-hidden="true" />
@@ -1237,31 +1586,34 @@ export function App() {
                     text="M3"
                     id="m3"
                     active={effectiveActive === 'm3'}
-                    onEnter={() => setHovered('m3')}
+                    onEnter={() => { setHovered('m3'); visitWord('m3') }}
                     onLeave={() => setHovered(null)}
                     scribble={scribbles.m3}
                     delay={titleDelays[1]}
                     superscript
+                    read={!!readWords.m3}
                   />
                   <TitleWord text=" " delay={titleDelays[2]} />
                   <TitleWord
                     text="good at"
                     id="good"
                     active={effectiveActive === 'good'}
-                    onEnter={() => setHovered('good')}
+                    onEnter={() => { setHovered('good'); visitWord('good') }}
                     onLeave={() => setHovered(null)}
                     scribble={scribbles.good}
                     delay={titleDelays[3]}
+                    read={!!readWords.good}
                   />
                   <TitleWord text=" frontend " delay={titleDelays[4]} />
                   <TitleWord
                     text="yet"
                     id="yet"
                     active={effectiveActive === 'yet'}
-                    onEnter={() => setHovered('yet')}
+                    onEnter={() => { setHovered('yet'); visitWord('yet') }}
                     onLeave={() => setHovered(null)}
                     scribble={scribbles.yet}
                     delay={titleDelays[5]}
+                    read={!!readWords.yet}
                   />
                   <TitleWord text="?" delay={titleDelays[6]} />
                   <span aria-hidden="true" className="proof__title-rule" />
@@ -1392,9 +1744,9 @@ export function App() {
                   <li
                     key={m.n}
                     className={`margin__item ${effectiveActive === m.id ? 'margin__item--active' : ''}`}
-                    onMouseEnter={() => setHovered(m.id)}
+                    onMouseEnter={() => { setHovered(m.id); visitMargin(m.id) }}
                     onMouseLeave={() => setHovered(null)}
-                    onFocus={() => setHovered(m.id)}
+                    onFocus={() => { setHovered(m.id); visitMargin(m.id) }}
                     onBlur={() => setHovered(null)}
                     tabIndex={0}
                     aria-describedby={`gloss-${m.id}`}
@@ -1542,6 +1894,17 @@ export function App() {
           )}
           <a className="colophon__up" href="#top">return to the question <span aria-hidden="true">↑</span></a>
         </footer>
+
+        <section className={`reading-path-wrap ${pathRevealed ? 'is-revealed' : ''}`} ref={pathRef} aria-label="Your reading path through this proof">
+          <ReadingPath
+            readWords={readWords}
+            readMargins={readMargins}
+            openedSpecimens={openedSpecimens}
+            sealPasses={sealPasses}
+            marks={marks}
+            scrollProgress={progress}
+          />
+        </section>
       </article>
     </main>
   )

@@ -4250,6 +4250,234 @@ button {
 }
 
 /* ============================================================== */
+/* PAPER-TIP DECKLE EDGE — a hand-torn strip across the top          */
+/* ============================================================== */
+.deckle {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 18px;
+  margin-bottom: -2px;
+  z-index: 2;
+  color: var(--paper-tip);
+  filter: drop-shadow(0 2px 0 rgba(40, 24, 8, .08));
+  pointer-events: none;
+  opacity: .85;
+}
+
+.deckle path {
+  fill: currentColor;
+}
+
+@media (max-width: 720px) {
+  .deckle { height: 12px; }
+}
+
+/* ============================================================== */
+/* REGISTRATION MARKS — printer's cross on attended title words    */
+/* ============================================================== */
+.reg {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  color: var(--coral);
+  opacity: 0;
+  transform: scale(.4) rotate(-12deg);
+  transform-origin: center;
+  pointer-events: none;
+  transition:
+    opacity .55s var(--ease) .1s,
+    transform .65s var(--ease-out) .15s,
+    color .35s var(--ease);
+  z-index: 3;
+}
+
+.reg svg { display: block; width: 100%; height: 100%; }
+
+.reg--tl { top: -.42em; left: -.42em; }
+.reg--tr { top: -.42em; right: -.42em; }
+.reg--bl { bottom: -.42em; left: -.42em; }
+.reg--br { bottom: -.42em; right: -.42em; }
+
+.word--read .reg {
+  opacity: .82;
+  transform: scale(1) rotate(0deg);
+}
+
+.word--read.word--active .reg {
+  color: var(--coral-2);
+  transform: scale(1.1) rotate(12deg);
+}
+
+/* ============================================================== */
+/* READING PATH — a session map at the foot of the proof           */
+/* ============================================================== */
+.reading-path-wrap {
+  position: relative;
+  margin: clamp(40px, 6vw, 70px) auto 0;
+  padding: clamp(22px, 3vw, 30px) clamp(18px, 3vw, 28px) clamp(26px, 3vw, 36px);
+  max-width: 880px;
+  border: 1px solid var(--line);
+  border-top-width: 1px;
+  background:
+    linear-gradient(180deg, rgba(252, 245, 228, .82) 0%, rgba(244, 233, 207, .56) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 250, 235, .8),
+    0 2px 4px rgba(40, 24, 8, .05),
+    0 18px 32px rgba(40, 24, 8, .08);
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 1.1s var(--ease-out),
+    transform 1.1s var(--ease-out);
+}
+
+.reading-path-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed rgba(207, 82, 64, .22);
+  pointer-events: none;
+}
+
+.reading-path-wrap.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reading-path {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.reading-path__head { margin-bottom: 4px; }
+
+.reading-path__title {
+  margin: 8px 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.18;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.reading-path__title i {
+  color: var(--coral);
+  font-style: italic;
+}
+
+.reading-path__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--coral-2);
+  font-family: var(--serif);
+}
+
+.reading-path__key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px 22px;
+  padding-top: 10px;
+  border-top: 1px dotted var(--line);
+  font-family: var(--serif);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-2);
+  letter-spacing: .005em;
+}
+
+.reading-path__key-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reading-path__key-item em {
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+.reading-path__key-item svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--coral);
+}
+
+.reading-path__key-item:last-child em {
+  color: var(--faded);
+  font-size: 11px;
+}
+
+/* Each component on the map fades in as the path is revealed */
+.rp-word,
+.rp-note,
+.rp-spec,
+.rp-seal,
+.rp-stamp,
+.rp-progress,
+.rp-labels {
+  opacity: 0;
+  transition: opacity .9s var(--ease) .15s;
+}
+
+.reading-path-wrap.is-revealed .rp-word,
+.reading-path-wrap.is-revealed .rp-note,
+.reading-path-wrap.is-revealed .rp-spec,
+.reading-path-wrap.is-revealed .rp-seal,
+.reading-path-wrap.is-revealed .rp-stamp,
+.reading-path-wrap.is-revealed .rp-progress,
+.reading-path-wrap.is-revealed .rp-labels {
+  opacity: 1;
+}
+
+.reading-path-wrap.is-revealed .rp-word.is-on,
+.reading-path-wrap.is-revealed .rp-note.is-on,
+.reading-path-wrap.is-revealed .rp-spec.is-on {
+  color: var(--coral);
+  transition-delay: 0s;
+}
+
+.rp-word,
+.rp-note,
+.rp-spec {
+  color: rgba(20, 32, 27, .25);
+  transition: color .55s var(--ease);
+}
+
+.rp-path path {
+  opacity: 0;
+  transition: opacity .9s var(--ease) .35s;
+}
+
+.reading-path-wrap.is-revealed .rp-path path {
+  opacity: 1;
+}
+
+@media (max-width: 720px) {
+  .reading-path-wrap {
+    padding: 18px 14px 22px;
+  }
+  .reading-path__key {
+    gap: 10px 14px;
+    font-size: 11px;
+  }
+  .reading-path__key-item {
+    gap: 6px;
+  }
+}
+
+/* ============================================================== */
 /* REDUCED MOTION                                                  */
 /* ============================================================== */
 
@@ -4275,4 +4503,9 @@ button {
   .word__circle,
   .word__circle ellipse { transition: none !important; animation: none !important; opacity: .9 !important; stroke-dashoffset: 0 !important; }
   .marks--active::after { animation: none !important; opacity: 1 !important; }
+  .reading-path-wrap { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .rp-word, .rp-note, .rp-spec, .rp-seal, .rp-stamp, .rp-progress, .rp-labels { opacity: 1 !important; transition: none !important; }
+  .rp-path path { opacity: 1 !important; transition: none !important; }
+  .reg { transition: none !important; }
+  .word--read .reg { opacity: .82 !important; transform: scale(1) rotate(0) !important; }
 }
