@@ -4450,6 +4450,62 @@ function Epigraph() {
   )
 }
 
+function HourOfReading({ now }: { now: Date }) {
+  const dayName = WEEKDAYS[now.getDay()].slice(0, 3).toLowerCase()
+  const dayOrdinal = ORDINALS[Math.min(ORDINALS.length - 1, now.getDate() - 1)]
+  const monthName = MONTHS[now.getMonth()].slice(0, 3).toLowerCase()
+  const yearRoman = toRomanYear(now.getFullYear())
+  const hour24 = now.getHours()
+  const minutes = now.getMinutes()
+  const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
+  const h12 = ((hour24 + 11) % 12) + 1
+  const mm = String(minutes).padStart(2, '0')
+
+  return (
+    <aside className="hour-of-reading" aria-hidden="true">
+      <span className="hour-of-reading-rule hour-of-reading-rule--left" />
+      <span className="hour-of-reading-cluster">
+        <span className="hour-of-reading-glyph" aria-hidden="true">
+          <svg viewBox="0 0 22 16" focusable="false">
+            <defs>
+              <linearGradient id="hor-gold" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#f6d076" />
+                <stop offset="50%" stopColor="#c8923e" />
+                <stop offset="100%" stopColor="#9c6e26" />
+              </linearGradient>
+            </defs>
+            <circle cx="11" cy="8" r="6.2" fill="none" stroke="url(#hor-gold)" strokeWidth="0.55" />
+            <circle cx="11" cy="8" r="6.2" fill="none" stroke="rgba(107, 74, 37, 0.18)" strokeWidth="0.3" strokeDasharray="0.4 1.2" />
+            <line x1="11" y1="2.4" x2="11" y2="4.4" stroke="url(#hor-gold)" strokeWidth="0.55" strokeLinecap="round" />
+            <line x1="11" y1="11.6" x2="11" y2="13.6" stroke="url(#hor-gold)" strokeWidth="0.55" strokeLinecap="round" />
+            <line x1="2.4" y1="8" x2="4.4" y2="8" stroke="url(#hor-gold)" strokeWidth="0.55" strokeLinecap="round" />
+            <line x1="17.6" y1="8" x2="19.6" y2="8" stroke="url(#hor-gold)" strokeWidth="0.55" strokeLinecap="round" />
+            <line x1="11" y1="8" x2="11" y2="4.4" stroke="rgba(28, 30, 26, 0.92)" strokeWidth="0.55" strokeLinecap="round" />
+            <line x1="11" y1="8" x2="13.6" y2="9.6" stroke="rgba(167, 60, 44, 0.92)" strokeWidth="0.45" strokeLinecap="round" />
+            <circle cx="11" cy="8" r="0.6" fill="rgba(107, 74, 37, 0.92)" />
+          </svg>
+        </span>
+        <em className="hour-of-reading-key">the hour of reading</em>
+        <span className="hour-of-reading-sep" aria-hidden="true">·</span>
+        <em className="hour-of-reading-day">{dayName}</em>
+        <span className="hour-of-reading-tail">
+          , the <em>{dayOrdinal}</em> of <em>{monthName}</em>
+        </span>
+        <span className="hour-of-reading-sep" aria-hidden="true">·</span>
+        <em className="hour-of-reading-hour">{h12}</em>
+        <span className="hour-of-reading-min">:{mm}</span>
+        <em className="hour-of-reading-period">{period}</em>
+        <span className="hour-of-reading-sep" aria-hidden="true">·</span>
+        <em className="hour-of-reading-year">{yearRoman}</em>
+        <span className="hour-of-reading-tail hour-of-reading-tail--quiet">
+          · set in this browser
+        </span>
+      </span>
+      <span className="hour-of-reading-rule hour-of-reading-rule--right" />
+    </aside>
+  )
+}
+
 function ReadingTally({ cycle }: { cycle: number }) {
   const sigils = ['¶', '†', '‡', '§', '⸺', '✦']
   const visible = Math.min(cycle + 1, sigils.length + 1)
@@ -5458,6 +5514,35 @@ function WaxPressSeal({
           <span className="wps-dust-mote wps-dust-mote--6" />
           <span className="wps-dust-mote wps-dust-mote--7" />
           <span className="wps-dust-mote wps-dust-mote--8" />
+        </span>
+
+        <span className="wps-smoke" aria-hidden="true">
+          <svg className="wps-smoke-svg" viewBox="0 0 80 96" focusable="false" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="wps-smoke-grad" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stopColor="rgba(167, 60, 44, 0.55)" />
+                <stop offset="32%" stopColor="rgba(167, 60, 44, 0.28)" />
+                <stop offset="72%" stopColor="rgba(217, 154, 84, 0.14)" />
+                <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+              </linearGradient>
+            </defs>
+            <path
+              className="wps-smoke-wisp wps-smoke-wisp--a"
+              d="M 40 90 C 36 76, 46 70, 42 56 C 38 44, 46 38, 44 26"
+              fill="none"
+              stroke="url(#wps-smoke-grad)"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+            />
+            <path
+              className="wps-smoke-wisp wps-smoke-wisp--b"
+              d="M 42 92 C 46 80, 38 74, 44 60 C 50 48, 42 40, 46 28"
+              fill="none"
+              stroke="url(#wps-smoke-grad)"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+            />
+          </svg>
         </span>
       </span>
 
@@ -8327,6 +8412,8 @@ export function App() {
           </p>
         </header>
 
+        <HourOfReading now={now} />
+
         <Epigraph />
 
         <div className="chapter-opener">
@@ -8472,6 +8559,7 @@ export function App() {
             <ReadingLines count={lineCount} visible={readingLinesVisible} />
             <VersoMarginRule visible={replyShown} cycle={cycle} />
             <FoldCorner />
+            <MarginalMoth active={replyShown && !reduced} cycle={cycle} reduced={reduced} />
             <header className="sheet-header sheet-header--verso">
               <p className="running-head-title">
                 <span aria-hidden="true">§</span> the reply · set in italic

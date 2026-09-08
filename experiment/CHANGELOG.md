@@ -1,15 +1,13 @@
-# Iteration 140
+# Changelog
 
-The verso earns a vade mecum — a small manuscript card that names the folio's own visual vocabulary in miniature.
+## Iteration 141 — the hour of reading
 
-The answer and reply typography now breathe with a slower line-height and fluid type sizing across widths, and the folio compass gains a gold halo that flashes outward each time the needle turns to a new station, so the four cardinal moments of the reading announce themselves more clearly on the recto.
+A folio that bears witness to its own opening. The recto gains a top-of-page inscription that names the hour; the verso earns a delicate moth drawn to the lamp; the wax seal, when broken, releases a slow curl of smoke. The broadsheet title's question mark now hums with a faint ink-residue, and the gilt drop-cap sits in a soft halo.
 
-## Changes
-
-- Added a new `VadeMecum` component and its CSS: a centered manuscript card on the verso (after the reply, before the colophon note) that demonstrates six typographic elements in miniature with a three-column row layout. Each row staggers in. Mobile collapses the row to two lines. Honors `prefers-reduced-motion`.
-- Added a `VadeRowMark` group that renders each miniature element (initial, sigils, italic note, rule, fleuron, wax stamp) using the same gradients and gold palette as the rest of the folio.
-- Refined the answer typography: fluid `clamp()` size, a slightly slower line-height (1.28–1.32), tighter measure (34em), and `hyphens: none` to keep the typeset line crisp.
-- Refined the reply typography: line-height raised to 1.52, measure reduced to 33em, padding adjusted for rhythm, `hyphens: none`.
-- Added a gold halo pulse to the folio compass needle: a separate radial-gradient halo that fades in and out across the dial each time the needle turns to a new station. The needle's rotation animation is unchanged; the halo is layered above and given a one-shot animation re-triggered by a per-phase key.
-- Added a slow-station pulse to the active compass station's disc.
-- All new motion respects `prefers-reduced-motion: reduce`.
+- new `HourOfReading` inscription at the very top of the recto: a clock-face pip, the day, hour, and roman-numeral year, with the quiet tail "set in this browser".
+- new `wps-smoke` wisp drawn into the wax seal; when the seal breaks, two red smoke curves rise and dissipate.
+- new `MarginalMoth` placed at the top-left of the verso's response panel — "ad lucem · drawn to the lamp" — that flutters when the reply reveals.
+- new `title-questions::after` ink-residue glow that breathes beneath the question mark.
+- new `title-initial-wrap::before` soft gold halo that warms the gilt drop-cap when the page is read.
+- responsive polish for the new `hour-of-reading` and `marginalia-moth` at 720px and 520px breakpoints.
+- all new motion respects `prefers-reduced-motion: reduce`.
