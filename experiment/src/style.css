@@ -899,6 +899,188 @@ button { font: inherit; }
 }
 
 /* ──────────────────────────────────────────────────────────────────────
+   iteration 166 · a composed folio recto headmark
+
+   The recto now earns the same composed opening-breath idiom as the
+   verso: a thin coral-and-gold rule that fades from both sides, a
+   centered press monogram with a soft halo, an italic inscription
+   naming the question, and a tail that names the folio. It mirrors
+   FolioVersoHeadmark in structure so the recto/verso pair reads as a
+   single authored opening. A small coral Q-pip sits to the right of
+   the seal so the recto headmark can be told from its verso twin at
+   a glance.
+   ────────────────────────────────────────────────────────────────────── */
+
+.folio-recto-headmark {
+  position: relative;
+  width: min(360px, 92%);
+  margin: clamp(6px, 1vw, 12px) auto clamp(10px, 1.4vw, 18px);
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-2px);
+  animation: folio-recto-headmark-in 1400ms var(--ease) 200ms both;
+}
+.folio-recto-headmark.is-static {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+@keyframes folio-recto-headmark-in {
+  0%   { opacity: 0; transform: translateY(-2px); }
+  100% { opacity: 1; transform: none; }
+}
+.folio-recto-headmark-plate {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.folio-recto-headmark-rule {
+  transform-origin: 50% 50%;
+  transform: scaleX(0.78);
+  opacity: 0;
+  animation: folio-recto-headmark-rule-grow 1300ms var(--ease) 360ms both;
+}
+.folio-recto-headmark.is-static .folio-recto-headmark-rule {
+  transform: scaleX(1);
+  opacity: 1;
+}
+@keyframes folio-recto-headmark-rule-grow {
+  0%   { transform: scaleX(0.78); opacity: 0; }
+  100% { transform: scaleX(1);    opacity: 1; }
+}
+.folio-recto-headmark-pips circle {
+  transform-origin: center;
+  transform: scale(0.4);
+  opacity: 0;
+  animation: folio-recto-headmark-pips-in 900ms var(--ease) 700ms both;
+}
+.folio-recto-headmark.is-static .folio-recto-headmark-pips circle {
+  transform: scale(1);
+  opacity: 1;
+}
+@keyframes folio-recto-headmark-pips-in {
+  0%   { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+.folio-recto-headmark-seal {
+  transform-origin: 160px 9px;
+  transform: scale(0.5);
+  opacity: 0;
+  animation: folio-recto-headmark-seal-in 1100ms var(--ease) 540ms both;
+}
+.folio-recto-headmark.is-static .folio-recto-headmark-seal {
+  transform: scale(1);
+  opacity: 1;
+}
+@keyframes folio-recto-headmark-seal-in {
+  0%   { transform: scale(0.5); opacity: 0; }
+  60%  { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.folio-recto-headmark-qpip {
+  transform-origin: 166.4px 9px;
+  transform: scale(0);
+  opacity: 0;
+  animation: folio-recto-headmark-qpip-in 800ms var(--ease) 980ms both;
+}
+.folio-recto-headmark.is-static .folio-recto-headmark-qpip {
+  transform: scale(1);
+  opacity: 1;
+}
+@keyframes folio-recto-headmark-qpip-in {
+  0%   { transform: scale(0);   opacity: 0; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+.folio-recto-headmark-qletter {
+  font: italic 700 3.6px/1 var(--display);
+  letter-spacing: 0.02em;
+  fill: rgba(167, 60, 44, 0.88);
+  opacity: 0;
+  animation: folio-recto-headmark-qletter-in 600ms var(--ease) 1180ms both;
+}
+.folio-recto-headmark.is-static .folio-recto-headmark-qletter {
+  opacity: 1;
+}
+@keyframes folio-recto-headmark-qletter-in {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+.folio-recto-headmark-tick {
+  opacity: 0;
+  transform: translateY(-2px);
+  animation: folio-recto-headmark-tick-in 900ms var(--ease) 860ms both;
+}
+.folio-recto-headmark.is-static .folio-recto-headmark-tick {
+  opacity: 0.7;
+  transform: none;
+}
+@keyframes folio-recto-headmark-tick-in {
+  0%   { opacity: 0; transform: translateY(-2px); }
+  100% { opacity: 0.7; transform: none; }
+}
+.folio-recto-headmark-cap,
+.folio-recto-headmark-tail {
+  opacity: 0;
+  animation: folio-recto-headmark-text-in 900ms var(--ease) 920ms both;
+}
+.folio-recto-headmark.is-static .folio-recto-headmark-cap,
+.folio-recto-headmark.is-static .folio-recto-headmark-tail {
+  opacity: 1;
+}
+@keyframes folio-recto-headmark-text-in {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+.folio-recto-headmark-tail {
+  animation-delay: 1060ms;
+}
+.folio-recto-headmark.is-static .folio-recto-headmark-tail {
+  opacity: 0.6;
+}
+.folio-recto-headmark-cap {
+  font: italic 600 10px/1 var(--display);
+  letter-spacing: 0.16em;
+  text-transform: lowercase;
+  fill: var(--ink-soft);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "salt" 1;
+}
+.folio-recto-headmark-tail {
+  font: italic 500 8.5px/1 var(--display);
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+  fill: var(--ink-mute);
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .folio-recto-headmark,
+  .folio-recto-headmark-rule,
+  .folio-recto-headmark-pips circle,
+  .folio-recto-headmark-seal,
+  .folio-recto-headmark-qpip,
+  .folio-recto-headmark-qletter,
+  .folio-recto-headmark-tick,
+  .folio-recto-headmark-cap,
+  .folio-recto-headmark-tail {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .folio-recto-headmark-tail { opacity: 0.6; }
+}
+@media (max-width: 720px) {
+  .folio-recto-headmark { width: min(320px, 92%); margin: 4px auto 8px; }
+  .folio-recto-headmark-cap { font-size: 9px; letter-spacing: 0.12em; }
+  .folio-recto-headmark-tail { font-size: 8px; letter-spacing: 0.18em; }
+}
+@media (max-width: 560px) {
+  .folio-recto-headmark { width: min(280px, 90%); margin: 2px auto 6px; }
+  .folio-recto-headmark-cap { font-size: 8.5px; }
+  .folio-recto-headmark-tail { font-size: 7.5px; letter-spacing: 0.14em; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
    iteration 163 · a composed folio heartline
 
    The recto's quiet heart — sits between the PressInstructionPlate and
@@ -1852,7 +2034,7 @@ button { font: inherit; }
   align-self: center;
   margin: 0;
   color: var(--ink);
-  font: italic 640 clamp(40px, 6vw, 92px)/1.08 var(--display);
+  font: italic 640 clamp(40px, 6vw, 92px)/1.1 var(--display);
   letter-spacing: -0.024em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1, "onum" 1, "dlig" 1;
   padding-top: 0.02em;
@@ -1864,6 +2046,7 @@ button { font: inherit; }
   position: relative;
   hyphens: none;
   transition: text-shadow 1600ms var(--ease) 200ms;
+  text-rendering: optimizeLegibility;
 }
 .has-answer .title-flow {
   text-shadow:
@@ -12016,21 +12199,21 @@ button { font: inherit; }
 
 .title-inkbloom {
   position: absolute;
-  inset: -8% -8% -28% -4%;
+  inset: -10% -10% -32% -6%;
   pointer-events: none;
   z-index: 0;
   opacity: 0;
   background:
     radial-gradient(
-      ellipse 38% 56% at 78% 36%,
-      rgba(217, 101, 74, 0.18),
-      rgba(217, 101, 74, 0.05) 50%,
-      transparent 72%
+      ellipse 40% 60% at 78% 34%,
+      rgba(217, 101, 74, 0.22),
+      rgba(217, 101, 74, 0.06) 52%,
+      transparent 74%
     ),
     radial-gradient(
-      ellipse 22% 32% at 72% 64%,
-      rgba(245, 198, 91, 0.12),
-      transparent 68%
+      ellipse 24% 34% at 72% 66%,
+      rgba(245, 198, 91, 0.16),
+      transparent 70%
     );
   mix-blend-mode: multiply;
   transition: opacity 1100ms var(--ease) 220ms;

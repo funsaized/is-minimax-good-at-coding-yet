@@ -755,6 +755,127 @@ function FolioVersoHeadmark({
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 166 · a composed folio recto headmark
+
+   The recto's opening breath earns the same composed idiom as the
+   verso's FolioVersoHeadmark — a thin coral-and-gold rule that fades
+   in from either side, a centered press monogram with a soft halo, an
+   italic inscription naming the press and the question, and a closing
+   tail that names the folio. Where the verso's headmark speaks for the
+   reply (manu m · iii · the reply · set slowly · primum responsum),
+   this one speaks for the question (manu m · iii · the question ·
+   plainly set · primum quaestionem). Together they complete the
+   recto/verso opening-breath symmetry that the verso's headmark
+   claimed in iteration 165.
+
+   A small coral pip — a Q-mark — sits to the right of the seal so the
+   recto headmark can be told from its verso twin at a glance, even
+   when both openings hang on the same page. The whole impression
+   resolves over the first ~1.4 s and never moves again.
+   ────────────────────────────────────────────────────────────────────── */
+
+function FolioRectoHeadmark({ reduced }: { reduced: boolean }) {
+  return (
+    <figure
+      className={`folio-recto-headmark${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="folio-recto-headmark-plate"
+        viewBox="0 0 320 40"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="frh-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="50%" stopColor="rgba(200, 146, 62, 0.74)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="frh-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.22)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <radialGradient id="frh-face" cx="50%" cy="36%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.74)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.32)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+          </radialGradient>
+          <radialGradient id="frh-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.18)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="160" cy="20" rx="80" ry="14" fill="url(#frh-halo)" />
+
+        <line
+          x1="6"
+          y1="11"
+          x2="314"
+          y2="11"
+          stroke="url(#frh-rule-ghost)"
+          strokeWidth="0.32"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="9"
+          x2="314"
+          y2="9"
+          stroke="url(#frh-rule)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+          className="folio-recto-headmark-rule"
+        />
+
+        <g className="folio-recto-headmark-pips" fill="rgba(167, 60, 44, 0.55)">
+          <circle cx="50" cy="9" r="0.5" />
+          <circle cx="270" cy="9" r="0.5" />
+        </g>
+
+        <g className="folio-recto-headmark-seal">
+          <circle cx="160" cy="9" r="3.6" fill="url(#frh-face)" />
+          <circle cx="160" cy="9" r="3.6" fill="none" stroke="url(#frh-rule)" strokeWidth="0.5" />
+          <circle
+            cx="160"
+            cy="9"
+            r="2.6"
+            fill="none"
+            stroke="url(#frh-rule)"
+            strokeWidth="0.22"
+            strokeDasharray="0.4 1.2"
+            opacity="0.78"
+          />
+          <circle cx="160" cy="9" r="0.9" fill="rgba(167, 60, 44, 0.78)" />
+          <circle cx="160" cy="9" r="0.32" fill="rgba(255, 248, 224, 0.95)" />
+          <circle cx="166.4" cy="9" r="1.9" fill="rgba(255, 246, 218, 0.7)" className="folio-recto-headmark-qpip" />
+          <text x="166.4" y="10.4" textAnchor="middle" className="folio-recto-headmark-qletter">Q</text>
+        </g>
+
+        <text x="160" y="22" textAnchor="middle" className="folio-recto-headmark-cap">
+          manu m · iii · the question · plainly set
+        </text>
+        <text x="160" y="33" textAnchor="middle" className="folio-recto-headmark-tail">
+          folio lxxvii · primum quaestionem
+        </text>
+
+        <g className="folio-recto-headmark-tick folio-recto-headmark-tick--right" fill="rgba(167, 60, 44, 0.7)" aria-hidden="true">
+          <path d="M 304 9 L 308 6 L 308 12 Z" />
+        </g>
+        <g className="folio-recto-headmark-tick folio-recto-headmark-tick--left" fill="rgba(167, 60, 44, 0.7)" aria-hidden="true">
+          <path d="M 16 9 L 12 6 L 12 12 Z" />
+        </g>
+      </svg>
+    </figure>
+  )
+}
+
 function PressStamp({ visible, cycle, reduced }: { visible: boolean; cycle: number; reduced: boolean }) {
   const impression =
     cycle === 0 ? 'prima impressio' : cycle === 1 ? 'secunda impressio' : 'tertia impressio'
@@ -11766,20 +11887,7 @@ export function App() {
 
         <FolioMasthead now={now} reduced={reduced} />
 
-        <aside
-          className={`chapter-frontispiece${versoOpened ? ' is-opened' : ''}`}
-          aria-hidden="true"
-        >
-          <p className="chapter-frontispiece-half">
-            <span className="chapter-frontispiece-half-rule chapter-frontispiece-half-rule--left" />
-            <span className="chapter-frontispiece-half-cluster">
-              <em className="chapter-frontispiece-half-key">the question</em>
-              <span className="chapter-frontispiece-half-sep" aria-hidden="true">·</span>
-              <em className="chapter-frontispiece-half-tail">a half-title of folio lxxvii</em>
-            </span>
-            <span className="chapter-frontispiece-half-rule chapter-frontispiece-half-rule--right" />
-          </p>
-        </aside>
+        <FolioRectoHeadmark reduced={reduced} />
 
         <div className="sheet-content">
           <section className="question-panel" aria-labelledby="page-title">
