@@ -38,9 +38,9 @@ function Mark() {
   return (
     <svg className="mark" viewBox="0 0 64 64" aria-hidden="true">
       <circle cx="32" cy="32" r="28" />
-      <path d="M32 8v48M8 32h48" />
-      <circle cx="32" cy="32" r="14" />
-      <circle cx="32" cy="32" r="3" fill="currentColor" />
+      <path d="M32 10v44M10 32h44" />
+      <circle cx="32" cy="32" r="13" />
+      <circle cx="32" cy="32" r="2.6" fill="currentColor" />
     </svg>
   )
 }
@@ -83,40 +83,51 @@ function Glyph({ name }: { name: Note['glyph'] }) {
   return <GlyphStroke />
 }
 
-function PressDisc() {
+/* Broadside headmark — a composed type impression, set in concentric rules.
+   Replaces the auto-spinning press disc with a still, authored mark that
+   responds only to attention. */
+function Headmark() {
   return (
-    <svg className="press-disc" viewBox="0 0 200 200" aria-hidden="true">
+    <svg className="headmark" viewBox="0 0 220 220" aria-hidden="true">
       <defs>
-        <path id="press-ring-a" d="M 100 100 m -86 0 a 86 86 0 1 1 172 0 a 86 86 0 1 1 -172 0" />
-        <path id="press-ring-b" d="M 100 100 m -68 0 a 68 68 0 1 1 136 0 a 68 68 0 1 1 -136 0" />
+        <path
+          id="headmark-arc-outer"
+          d="M 110 110 m -100 0 a 100 100 0 1 1 200 0 a 100 100 0 1 1 -200 0"
+        />
+        <path
+          id="headmark-arc-inner"
+          d="M 110 110 m -78 0 a 78 78 0 1 1 156 0 a 78 78 0 1 1 -156 0"
+        />
       </defs>
-      <circle cx="100" cy="100" r="94" />
-      <circle cx="100" cy="100" r="76" />
-      <circle cx="100" cy="100" r="58" />
-      <text className="press-disc__ring">
-        <textPath href="#press-ring-a" startOffset="0">
-          a proof · a press · a proof · a press · a proof · a press ·
+      <circle cx="110" cy="110" r="106" />
+      <circle cx="110" cy="110" r="102" />
+      <circle cx="110" cy="110" r="68" />
+      <circle cx="110" cy="110" r="64" />
+      <text className="headmark__arc">
+        <textPath href="#headmark-arc-outer" startOffset="0">
+          a proof · a press · a proof · a press ·
         </textPath>
       </text>
-      <text className="press-disc__ring press-disc__ring--inner">
-        <textPath href="#press-ring-b" startOffset="0">
-          signed in the margin · signed in the margin ·
+      <text className="headmark__arc headmark__arc--inner">
+        <textPath href="#headmark-arc-inner" startOffset="0">
+          composed for the slow reader · composed for the slow reader ·
         </textPath>
       </text>
-      <g className="press-disc__ticks">
-        <line x1="100" y1="6" x2="100" y2="16" />
-        <line x1="100" y1="184" x2="100" y2="194" />
-        <line x1="6" y1="100" x2="16" y2="100" />
-        <line x1="184" y1="100" x2="194" y2="100" />
-        <line x1="33" y1="33" x2="40" y2="40" />
-        <line x1="167" y1="33" x2="160" y2="40" />
-        <line x1="33" y1="167" x2="40" y2="160" />
-        <line x1="167" y1="167" x2="160" y2="160" />
+      <g className="headmark__ticks">
+        <line x1="110" y1="10" x2="110" y2="20" />
+        <line x1="110" y1="200" x2="110" y2="210" />
+        <line x1="10" y1="110" x2="20" y2="110" />
+        <line x1="200" y1="110" x2="210" y2="110" />
+        <line x1="43" y1="43" x2="50" y2="50" />
+        <line x1="177" y1="43" x2="170" y2="50" />
+        <line x1="43" y1="177" x2="50" y2="170" />
+        <line x1="177" y1="177" x2="170" y2="170" />
       </g>
-      <g className="press-disc__center">
-        <text x="100" y="98" textAnchor="middle" className="press-disc__q">Q</text>
-        <text x="100" y="116" textAnchor="middle" className="press-disc__a">A</text>
-        <line x1="86" y1="100" x2="114" y2="100" />
+      <g className="headmark__core">
+        <text x="110" y="100" textAnchor="middle" className="headmark__q">Q</text>
+        <line x1="92" y1="110" x2="128" y2="110" />
+        <text x="110" y="135" textAnchor="middle" className="headmark__a">A</text>
+        <text x="110" y="156" textAnchor="middle" className="headmark__note">in good faith</text>
       </g>
     </svg>
   )
@@ -153,6 +164,48 @@ function Ornament() {
       <circle cx="40" cy="6" r="2.2" />
       <line x1="50" y1="6" x2="80" y2="6" />
     </svg>
+  )
+}
+
+/* Marginalia — handwritten-feel margin notes, set in italic display type. */
+function Marginalia({
+  children,
+  side,
+}: {
+  children: React.ReactNode
+  side: 'left' | 'right'
+}) {
+  return (
+    <span className={`marginalia marginalia--${side}`} aria-hidden="true">
+      {children}
+    </span>
+  )
+}
+
+/* Colophon — the publication imprint, set as a closing composition. */
+function Colophon() {
+  return (
+    <aside className="colophon" aria-label="Colophon">
+      <div className="colophon__head">
+        <span className="colophon__kicker">colophon</span>
+        <Ornament />
+      </div>
+      <dl className="colophon__list">
+        <div className="colophon__row">
+          <dt>set in</dt>
+          <dd>Georgia, italic where the hand wants it.</dd>
+        </div>
+        <div className="colophon__row">
+          <dt>printed on</dt>
+          <dd>paper the color of a quiet afternoon.</dd>
+        </div>
+        <div className="colophon__row">
+          <dt>made for</dt>
+          <dd>a reader who is still here.</dd>
+        </div>
+      </dl>
+      <span className="colophon__signoff">— m3, signed in the margin</span>
+    </aside>
   )
 }
 
@@ -202,7 +255,9 @@ export function App() {
         <div className="hero__eyebrow">
           <span>folio · open</span>
           <span className="eyebrow-line" />
-          <span>read slowly</span>
+          <span className="hero__eyebrow-aside">read slowly</span>
+          <span className="eyebrow-line eyebrow-line--short" />
+          <span className="hero__eyebrow-folio">no. 170</span>
         </div>
 
         <div className="hero__layout">
@@ -230,16 +285,16 @@ export function App() {
               <span className="reveal__arrow" aria-hidden="true">↗</span>
             </button>
 
-            <div className="hero__meta">
-              <span className="hero__meta-item"><i>↳</i> no metrics, no claims, just the page</span>
-            </div>
+            <Marginalia side="right">← the question, set in italic for a reason</Marginalia>
           </div>
 
           <div className="hero__seal-slot" aria-hidden="true">
-            <PressDisc />
-            <span className="hero__seal-caption">the studio seal</span>
+            <Headmark />
+            <span className="hero__seal-caption">a careful set</span>
           </div>
         </div>
+
+        <Marginalia side="left">read me — i am slow on purpose</Marginalia>
       </section>
 
       <section
@@ -288,6 +343,12 @@ export function App() {
         </div>
       </section>
 
+      <div className="rule-band" aria-hidden="true">
+        <span className="rule-band__line" />
+        <span className="rule-band__mark">※</span>
+        <span className="rule-band__line" />
+      </div>
+
       <section className="notes" id="notes" aria-labelledby="notes-title">
         <div className="notes__intro">
           <span className="section-index">field notes / 03</span>
@@ -331,6 +392,8 @@ export function App() {
           })}
         </div>
       </section>
+
+      <Colophon />
 
       <footer className="footer">
         <span className="footer__col">made with intent, not certainty</span>

@@ -1,11 +1,4 @@
 # Changelog
 
-## Iteration 169 — proof-room studio
-
-Deepens the editorial studio into a single tactile proof sheet. Replaces weak
-elements with earned details: the orbit becomes a typeset press disc with a
-Q/A center; the static notes become a real accordion with hand-drawn marginalia
-glyphs; the answer reveal is now a press-bar wipe that triggers a proofed seal
-landing on the page. A trim hairline, small-caps signoff, and a refined type
-hierarchy tighten the composition while staying self-contained and respectful
-of reduced-motion preferences.
+## Iteration 170 — a careful set
+Refines the proof sheet into a quieter, more composed broadside. Replaces the auto-spinning press disc with a still, authored headmark; adds handwritten-feel marginalia in the hero and a proper colophon at the close; softens the dark transition with a rule band and a hairline inset; tightens the reveal button into a more tactile press with a rust shadow; refines mobile layouts at every breakpoint.
