@@ -10488,35 +10488,38 @@ button { font: inherit; }
 }
 .answer-copy {
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1, "dlig" 1, "liga" 1;
-  max-width: 36em;
+  max-width: 34em;
   margin-inline: auto;
   text-indent: 0;
-  padding: 6px 8px 4px;
+  padding: clamp(8px, 1.2vw, 14px) clamp(8px, 1.2vw, 14px) clamp(6px, 1vw, 10px);
 }
 @media (min-width: 721px) {
   .answer-copy {
-    font: italic 660 40px/1.24 var(--display);
+    font: italic 660 clamp(32px, 4.4vw, 42px)/1.32 var(--display);
     letter-spacing: -0.012em;
+    hyphens: none;
   }
 }
 @media (min-width: 1024px) {
   .answer-copy {
-    font: italic 680 44px/1.2 var(--display);
+    font: italic 680 clamp(36px, 4vw, 46px)/1.28 var(--display);
+    letter-spacing: -0.014em;
   }
 }
 
 /* ── reply typography: a clean italic, no drop cap ── */
 
 .reply-paragraph {
-  font: italic 540 clamp(22px, 2.8vw, 30px)/1.5 var(--display);
+  font: italic 540 clamp(22px, 2.8vw, 30px)/1.52 var(--display);
   letter-spacing: 0.005em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "salt" 1;
   color: var(--ink);
   text-wrap: pretty;
   hanging-punctuation: first last;
-  max-width: 34em;
+  max-width: 33em;
   margin-inline: auto;
-  padding: 8px 4px 0;
+  padding: clamp(10px, 1.4vw, 14px) clamp(4px, 0.8vw, 8px) 0;
+  hyphens: none;
 }
 .verso-drop-cap,
 .answer-copy-initial,
@@ -11557,6 +11560,28 @@ button { font: inherit; }
 
 .fc-needle {
   filter: drop-shadow(0 1px 1px rgba(80, 36, 14, 0.4));
+  transition: filter 700ms var(--ease);
+}
+.fc-needle-halo {
+  animation: fc-needle-halo-pulse 1280ms var(--ease) 1 both;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+@keyframes fc-needle-halo-pulse {
+  0%   { opacity: 0; transform-origin: 120px 120px; }
+  14%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+.fc-station.is-active circle:first-of-type {
+  animation: fc-station-pulse 1600ms var(--ease) infinite;
+}
+@keyframes fc-station-pulse {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(245, 198, 91, 0)); }
+  50%      { filter: drop-shadow(0 0 6px rgba(245, 198, 91, 0.7)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fc-needle-halo { animation: none; opacity: 0; }
+  .fc-station.is-active circle:first-of-type { animation: none; }
 }
 
 .fc-rim-text {
@@ -11658,6 +11683,337 @@ button { font: inherit; }
   .folio-compass { animation: none; opacity: 1; transform: none; }
   .folio-compass-cap-station { transition: none; }
   .fc-rose { animation: none !important; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 140 · the verso earns a vade mecum
+   A small manuscript card sits at the foot of the verso, after the
+   reply. It is a key to the folio's own visual language: the drop
+   cap, the marginal sigils, the italic note, the ruled hairline, the
+   fleuron, and the wax stamp — each shown in miniature, with a short
+   caption. The card arrives with the reply, in the same gold-and-
+   cream palette as the rest of the folio, and reads as a printed
+   specimen sheet, set by the printer for the reader's reference.
+   ────────────────────────────────────────────────────────────────────── */
+
+.vade-mecum {
+  position: relative;
+  display: block;
+  margin: clamp(22px, 3vw, 38px) auto clamp(20px, 2.6vw, 34px);
+  padding: clamp(8px, 1.2vw, 14px) clamp(18px, 2.6vw, 32px) clamp(12px, 1.6vw, 18px);
+  max-width: min(440px, 100%);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 248, 224, 0.62) 0%,
+      rgba(245, 232, 200, 0.42) 100%
+    );
+  border-top: 1px solid rgba(107, 74, 37, 0.34);
+  border-bottom: 1px solid rgba(107, 74, 37, 0.34);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 1100ms var(--ease) 80ms,
+    transform 1100ms var(--ease) 80ms;
+}
+.vade-mecum.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.vade-mecum.is-static {
+  transition: none;
+  opacity: 1;
+  transform: none;
+}
+.vade-mecum::before,
+.vade-mecum::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(107, 74, 37, 0.36) 50%,
+    transparent
+  );
+  pointer-events: none;
+}
+.vade-mecum::before { top: 5px; }
+.vade-mecum::after { bottom: 5px; }
+
+.vade-mecum-rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(156, 110, 38, 0.55) 50%,
+    transparent
+  );
+  margin: 0;
+}
+.vade-mecum-rule--top { margin-bottom: clamp(8px, 1.2vw, 14px); }
+.vade-mecum-rule--bottom { margin-top: clamp(10px, 1.4vw, 16px); }
+
+.vade-mecum-head {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 12px);
+  font-family: var(--display);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
+  color: var(--ink);
+  margin-bottom: clamp(8px, 1.2vw, 12px);
+}
+.vade-mecum-head-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  color: var(--gold-deep);
+  flex: 0 0 auto;
+}
+.vade-mecum-head-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.vade-mecum-head-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0 6px;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.vade-mecum-head-key {
+  font: italic 600 10px/1 var(--display);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+}
+.vade-mecum-head-sep {
+  color: var(--coral);
+  font: italic 600 12px/1 var(--display);
+  opacity: 0.55;
+  position: relative;
+  top: -0.04em;
+}
+.vade-mecum-head-tail {
+  font: italic 460 12px/1.2 var(--display);
+  letter-spacing: 0.01em;
+  color: var(--ink-soft);
+}
+.vade-mecum-head-rule {
+  display: inline-block;
+  flex: 1 1 24px;
+  height: 1px;
+  margin-left: 6px;
+  background: linear-gradient(
+    to right,
+    rgba(107, 74, 37, 0.4),
+    transparent
+  );
+  align-self: center;
+  min-width: 12px;
+}
+
+.vade-mecum-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.vade-mecum-row {
+  display: grid;
+  grid-template-columns: minmax(0, 78px) minmax(0, 1fr) minmax(0, auto);
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 16px);
+  padding: clamp(7px, 1.1vw, 11px) 2px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 720ms var(--ease) calc(220ms + var(--i, 0) * 90ms),
+    transform 720ms var(--ease) calc(220ms + var(--i, 0) * 90ms);
+}
+.vade-mecum.is-visible .vade-mecum-row {
+  opacity: 1;
+  transform: none;
+}
+.vade-mecum.is-static .vade-mecum-row {
+  transition: none;
+  opacity: 1;
+  transform: none;
+}
+.vade-mecum-row + .vade-mecum-row {
+  border-top: 1px dashed rgba(107, 74, 37, 0.18);
+}
+
+.vade-mecum-row-key {
+  font: italic 500 9.5px/1 var(--display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.vade-mecum-row-mark {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  font-family: var(--display);
+}
+.vade-mecum-row-mark svg { display: block; }
+.vade-mecum-row-mark--initial { width: 30px; }
+.vade-mecum-row-mark--initial svg { width: 100%; height: auto; }
+.vade-mecum-row-mark--sigils {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(8px, 1.2vw, 12px);
+  font: italic 600 18px/1 var(--display);
+  color: var(--ink);
+}
+.vade-mecum-sigil {
+  display: inline-block;
+  font-style: italic;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+.vade-mecum-sigil--dagger {
+  font-size: 0.92em;
+  position: relative;
+  top: -0.04em;
+}
+.vade-mecum-sigil--dbl {
+  font-size: 0.98em;
+  position: relative;
+  top: -0.02em;
+}
+.vade-mecum-row-mark--italic {
+  font: italic 540 14px/1.2 var(--display);
+  color: var(--sepia);
+  letter-spacing: 0.005em;
+}
+.vade-mecum-italic-sample {
+  font-style: italic;
+  font-feature-settings: "kern" 1, "liga" 1, "salt" 1, "onum" 1;
+}
+.vade-mecum-row-mark--rule {
+  width: 72px;
+  color: var(--gold-deep);
+}
+.vade-mecum-row-mark--rule svg { width: 100%; height: 8px; }
+.vade-mecum-row-mark--fleuron {
+  width: 60px;
+  color: var(--gold-deep);
+}
+.vade-mecum-row-mark--fleuron svg { width: 100%; height: 12px; }
+.vade-mecum-row-mark--wax {
+  width: 24px;
+  height: 24px;
+}
+.vade-mecum-row-mark--wax svg { width: 100%; height: 100%; }
+
+.vade-mecum-row-note {
+  font: italic 460 11px/1.2 var(--display);
+  color: var(--ink-soft);
+  letter-spacing: 0.01em;
+  text-align: right;
+  font-feature-settings: "kern" 1, "liga" 1, "salt" 1;
+}
+
+.vade-mecum-foot {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 12px);
+  margin-top: clamp(6px, 1vw, 12px);
+  font-family: var(--display);
+  color: var(--ink-soft);
+}
+.vade-mecum-foot-rule {
+  display: inline-block;
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(156, 110, 38, 0.55),
+    transparent
+  );
+}
+.vade-mecum-foot-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0 6px;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.vade-mecum-foot-key {
+  font: italic 580 9px/1 var(--display);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  position: relative;
+  top: -0.04em;
+}
+.vade-mecum-foot-sep {
+  color: var(--coral);
+  font: italic 600 12px/1 var(--display);
+  opacity: 0.55;
+}
+.vade-mecum-foot-tail {
+  font: italic 460 11.5px/1.2 var(--display);
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 720px) {
+  .vade-mecum {
+    padding: 6px 16px 10px;
+    margin: 18px auto 18px;
+  }
+  .vade-mecum-row {
+    grid-template-columns: minmax(0, 70px) minmax(0, 1fr);
+    grid-template-areas: "key mark" "note note";
+    column-gap: 10px;
+    row-gap: 4px;
+    padding: 8px 0;
+  }
+  .vade-mecum-row-key { grid-area: key; font-size: 9px; letter-spacing: 0.16em; }
+  .vade-mecum-row-mark { grid-area: mark; }
+  .vade-mecum-row-note {
+    grid-area: note;
+    text-align: left;
+    font-size: 10.5px;
+  }
+  .vade-mecum-head-key { font-size: 9px; letter-spacing: 0.18em; }
+  .vade-mecum-head-tail { font-size: 11px; }
+}
+
+@media (max-width: 520px) {
+  .vade-mecum-row-mark--initial { width: 26px; }
+  .vade-mecum-row-mark--sigils { font-size: 16px; }
+  .vade-mecum-row-mark--italic { font-size: 13px; }
+  .vade-mecum-row-mark--rule { width: 56px; }
+  .vade-mecum-row-mark--fleuron { width: 48px; }
+}
+
+@media (max-width: 420px) {
+  .vade-mecum { padding: 4px 12px 8px; }
+  .vade-mecum-head-rule { display: none; }
+  .vade-mecum-row {
+    grid-template-columns: minmax(0, 64px) minmax(0, 1fr);
+  }
+  .vade-mecum-row-key { font-size: 8.5px; letter-spacing: 0.14em; }
+  .vade-mecum-row-note { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vade-mecum { transition: none; opacity: 1; transform: none; }
+  .vade-mecum-row { transition: none; opacity: 1; transform: none; }
 }
 
 

@@ -1,35 +1,15 @@
-# Iteration 139 — the folio earns a compass
+# Iteration 140
 
-The recto gains a single hand-drawn frontispiece: a folio compass that
-sits between the headpiece and the chapter rule. Its four cardinal
-points carry the reading — question, answer, reply, colophon — and a
-small gold needle turns to mark the reader's place. A subtle
-underscore draws beneath the verso's reply heading as the leaf opens,
-echoing the question's gold underline. The verso leaf now reads as a
-quiet title page for the reply.
+The verso earns a vade mecum — a small manuscript card that names the folio's own visual vocabulary in miniature.
+
+The answer and reply typography now breathe with a slower line-height and fluid type sizing across widths, and the folio compass gains a gold halo that flashes outward each time the needle turns to a new station, so the four cardinal moments of the reading announce themselves more clearly on the recto.
 
 ## Changes
 
-- Added a `FolioCompass` component in `src/App.tsx` rendered inside
-  the `chapter-opener`, between `ChapterHead` and the chapter rule.
-  The compass is a 240×240 hand-drawn SVG with a rotating rose, four
-  labeled cardinal stations (question, answer, reply, colophon), a
-  tick ring, a rim motto ("ad lucem · perlege / cap · xviii · folio
-  lxxvii"), and a gold needle that rotates to the current phase.
-- Added `.folio-compass` styles in `src/style.css` with reduced-motion
-  support, mobile breakpoints down to 420px, and a slow rose-spin
-  (96s) that respects `prefers-reduced-motion`.
-- Refined `.response-heading` on the verso: added an animated gold
-  underline beneath the reply label and a subtle beckoning arrow.
-- Fixed the station names so they read as the four states of the
-  reading (question → answer → reply → colophon), not as four
-  actions.
-
-## Kept the same
-
-- Title, drop cap, almanac band, moon pip, press seal, ink mark,
-  recto colophon, reader tide, and all other ornaments.
-- Reduced-motion behavior: the compass needle snaps, the rose does
-  not spin, and the underline draws instantly.
-- Keyboard accessibility, hash navigation, and self-contained
-  assets.
+- Added a new `VadeMecum` component and its CSS: a centered manuscript card on the verso (after the reply, before the colophon note) that demonstrates six typographic elements in miniature with a three-column row layout. Each row staggers in. Mobile collapses the row to two lines. Honors `prefers-reduced-motion`.
+- Added a `VadeRowMark` group that renders each miniature element (initial, sigils, italic note, rule, fleuron, wax stamp) using the same gradients and gold palette as the rest of the folio.
+- Refined the answer typography: fluid `clamp()` size, a slightly slower line-height (1.28–1.32), tighter measure (34em), and `hyphens: none` to keep the typeset line crisp.
+- Refined the reply typography: line-height raised to 1.52, measure reduced to 33em, padding adjusted for rhythm, `hyphens: none`.
+- Added a gold halo pulse to the folio compass needle: a separate radial-gradient halo that fades in and out across the dial each time the needle turns to a new station. The needle's rotation animation is unchanged; the halo is layered above and given a one-shot animation re-triggered by a per-phase key.
+- Added a slow-station pulse to the active compass station's disc.
+- All new motion respects `prefers-reduced-motion: reduce`.

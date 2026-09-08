@@ -4857,6 +4857,225 @@ function SpecimenPlate({ visible, reduced }: { visible: boolean; reduced: boolea
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 140 · the verso earns a vade mecum
+   A small manuscript card sits at the foot of the verso, after the
+   reply. It is a key to the folio's own visual language: the drop
+   cap, the marginal sigils, the italic note, the ruled hairline, the
+   fleuron, and the wax stamp — each shown in miniature, with a short
+   caption. The card arrives with the reply, in the same gold-and-
+   cream palette as the rest of the folio, and reads as a printed
+   specimen sheet, set by the printer for the reader's reference.
+   ────────────────────────────────────────────────────────────────────── */
+
+interface VadeRow {
+  key: string
+  mark: 'initial' | 'sigils' | 'italic' | 'rule' | 'fleuron' | 'wax'
+  note: string
+}
+
+const VADE_ROWS: VadeRow[] = [
+  { key: 'initial', mark: 'initial', note: 'gold leaf, on first word' },
+  { key: 'sigils', mark: 'sigils', note: 'pilcrow · dagger · double-dagger' },
+  { key: 'italic', mark: 'italic', note: 'a marginal voice' },
+  { key: 'rule', mark: 'rule', note: 'solid hairline, with dotted trace' },
+  { key: 'fleuron', mark: 'fleuron', note: 'an end ornament' },
+  { key: 'wax', mark: 'wax', note: 'the reader’s mark' },
+]
+
+function VadeRowMark({ mark }: { mark: VadeRow['mark'] }) {
+  if (mark === 'initial') {
+    return (
+      <svg viewBox="0 0 36 44" focusable="false" aria-hidden="true">
+        <defs>
+          <linearGradient id="vm-init-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+        </defs>
+        <rect
+          x="2"
+          y="2"
+          width="32"
+          height="40"
+          rx="1.2"
+          fill="rgba(255, 248, 224, 0.94)"
+          stroke="url(#vm-init-gold)"
+          strokeWidth="0.55"
+        />
+        <rect
+          x="5"
+          y="5"
+          width="26"
+          height="34"
+          rx="0.6"
+          fill="none"
+          stroke="url(#vm-init-gold)"
+          strokeWidth="0.24"
+          strokeDasharray="0.9 1.2"
+          opacity="0.78"
+        />
+        <text
+          x="18"
+          y="32"
+          textAnchor="middle"
+          fill="url(#vm-init-gold)"
+          fontSize="22"
+          fontStyle="italic"
+          fontWeight="700"
+        >
+          i
+        </text>
+      </svg>
+    )
+  }
+  if (mark === 'sigils') {
+    return (
+      <span className="vade-mecum-sigils" aria-hidden="true">
+        <em className="vade-mecum-sigil">¶</em>
+        <em className="vade-mecum-sigil vade-mecum-sigil--dagger">†</em>
+        <em className="vade-mecum-sigil vade-mecum-sigil--dbl">‡</em>
+      </span>
+    )
+  }
+  if (mark === 'italic') {
+    return (
+      <em className="vade-mecum-italic-sample" aria-hidden="true">
+        the attentive reader
+      </em>
+    )
+  }
+  if (mark === 'rule') {
+    return (
+      <svg viewBox="0 0 80 6" focusable="false" aria-hidden="true" preserveAspectRatio="none">
+        <line x1="2" y1="3" x2="78" y2="3" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" />
+        <line x1="2" y1="5" x2="78" y2="5" stroke="currentColor" strokeWidth="0.22" strokeDasharray="0.6 1.4" opacity="0.6" />
+        <circle cx="6" cy="3" r="0.5" fill="currentColor" />
+        <circle cx="74" cy="3" r="0.5" fill="currentColor" />
+      </svg>
+    )
+  }
+  if (mark === 'fleuron') {
+    return (
+      <svg viewBox="0 0 56 12" focusable="false" aria-hidden="true">
+        <path
+          d="M 4 6 Q 10 1.5 14 6 Q 18 10.5 24 6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+        />
+        <circle cx="14" cy="6" r="0.7" fill="currentColor" />
+        <path
+          d="M 32 6 Q 38 1.5 42 6 Q 46 10.5 52 6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+        />
+        <circle cx="42" cy="6" r="0.7" fill="currentColor" />
+      </svg>
+    )
+  }
+  if (mark === 'wax') {
+    return (
+      <svg viewBox="0 0 26 26" focusable="false" aria-hidden="true">
+        <defs>
+          <radialGradient id="vm-wax" cx="50%" cy="34%" r="66%">
+            <stop offset="0%" stopColor="rgba(186, 50, 30, 0.96)" />
+            <stop offset="58%" stopColor="rgba(126, 30, 18, 0.96)" />
+            <stop offset="100%" stopColor="rgba(58, 12, 6, 0.96)" />
+          </radialGradient>
+        </defs>
+        <circle
+          cx="13"
+          cy="13"
+          r="11"
+          fill="url(#vm-wax)"
+          stroke="rgba(40, 8, 4, 0.55)"
+          strokeWidth="0.4"
+        />
+        <ellipse cx="11" cy="7.6" rx="6" ry="2.2" fill="rgba(255, 232, 200, 0.32)" />
+        <circle
+          cx="13"
+          cy="13"
+          r="7.6"
+          fill="none"
+          stroke="rgba(255, 232, 200, 0.3)"
+          strokeWidth="0.3"
+        />
+        <text
+          x="13"
+          y="16.4"
+          textAnchor="middle"
+          fill="rgba(255, 232, 200, 0.95)"
+          fontSize="8.6"
+          fontStyle="italic"
+          fontWeight="700"
+        >
+          m
+        </text>
+      </svg>
+    )
+  }
+  return null
+}
+
+function VadeMecum({ visible, reduced }: { visible: boolean; reduced: boolean }) {
+  return (
+    <figure
+      className={`vade-mecum${visible ? ' is-visible' : ''}${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="vade-mecum-rule vade-mecum-rule--top" aria-hidden="true" />
+
+      <header className="vade-mecum-head">
+        <span className="vade-mecum-head-mark" aria-hidden="true">
+          <svg viewBox="0 0 14 14" focusable="false">
+            <circle cx="7" cy="7" r="5.6" fill="none" stroke="currentColor" strokeWidth="0.45" strokeDasharray="0.5 1.4" />
+            <circle cx="7" cy="7" r="0.95" fill="currentColor" />
+          </svg>
+        </span>
+        <span className="vade-mecum-head-text">
+          <em className="vade-mecum-head-key">vade mecum</em>
+          <span className="vade-mecum-head-sep" aria-hidden="true">·</span>
+          <em className="vade-mecum-head-tail">a key to this folio</em>
+        </span>
+        <span className="vade-mecum-head-rule" aria-hidden="true" />
+      </header>
+
+      <ol className="vade-mecum-list">
+        {VADE_ROWS.map((row, i) => (
+          <li
+            key={row.key}
+            className="vade-mecum-row"
+            style={{ '--i': i } as React.CSSProperties}
+          >
+            <span className="vade-mecum-row-key">{row.key}</span>
+            <span className={`vade-mecum-row-mark vade-mecum-row-mark--${row.mark}`}>
+              <VadeRowMark mark={row.mark} />
+            </span>
+            <span className="vade-mecum-row-note">{row.note}</span>
+          </li>
+        ))}
+      </ol>
+
+      <footer className="vade-mecum-foot" aria-hidden="true">
+        <span className="vade-mecum-foot-rule vade-mecum-foot-rule--left" />
+        <span className="vade-mecum-foot-cluster">
+          <em className="vade-mecum-foot-key">printed for</em>
+          <span className="vade-mecum-foot-sep" aria-hidden="true">·</span>
+          <em className="vade-mecum-foot-tail">the reader, in this folio</em>
+        </span>
+        <span className="vade-mecum-foot-rule vade-mecum-foot-rule--right" />
+      </footer>
+
+      <span className="vade-mecum-rule vade-mecum-rule--bottom" aria-hidden="true" />
+    </figure>
+  )
+}
+
 function PressSignature({ cycle, slow }: { cycle: number; slow: boolean }) {
   const paths = [
     'M 4 22 Q 14 14 28 18 Q 38 22 46 12 Q 56 4 70 12 Q 80 20 92 14',
@@ -7475,6 +7694,15 @@ function FolioCompass({
     COMPASS_STATIONS.findIndex((s) => s.phase === phase),
   )
   const needleAngle = COMPASS_STATIONS[activeIndex].angle
+  const [pulseKey, setPulseKey] = useState(0)
+  const prevPhaseRef = useRef<Phase>('idle')
+
+  useEffect(() => {
+    if (prevPhaseRef.current !== phase && phase !== 'idle') {
+      setPulseKey((k) => k + 1)
+    }
+    prevPhaseRef.current = phase
+  }, [phase])
 
   return (
     <figure
@@ -7509,6 +7737,11 @@ function FolioCompass({
             <circle cx="0.6" cy="0.4" r="0.32" fill="rgba(107, 74, 37, 0.05)" />
             <circle cx="2.2" cy="1.6" r="0.24" fill="rgba(107, 74, 37, 0.04)" />
           </pattern>
+          <radialGradient id="fc-halo-pulse" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.6)" />
+            <stop offset="62%" stopColor="rgba(245, 198, 91, 0.18)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
         </defs>
 
         <ellipse cx="120" cy="124" rx="106" ry="106" fill="url(#fc-halo)" />
@@ -7639,31 +7872,49 @@ function FolioCompass({
           })}
         </g>
 
+        {pulseKey > 0 && !reduced && (
+          <circle
+            key={`fc-halo-${pulseKey}`}
+            cx="120"
+            cy="120"
+            r="60"
+            fill="url(#fc-halo-pulse)"
+            className="fc-needle-halo"
+            style={{
+              transformOrigin: '120px 120px',
+              transform: `rotate(${needleAngle - 90}deg)`,
+            }}
+          />
+        )}
+
         <g
           className="fc-needle"
-          style={{
-            transformOrigin: '120px 120px',
-            transform: `rotate(${needleAngle - 90}deg)`,
-            transition: reduced ? 'none' : 'transform 1100ms cubic-bezier(.22, .86, .22, 1)',
-          }}
         >
-          <path
-            d="M 120 28 L 124 116 L 120 124 L 116 116 Z"
-            fill="url(#fc-gold)"
-            stroke="rgba(107, 74, 37, 0.55)"
-            strokeWidth="0.4"
-          />
-          <path
-            d="M 120 28 L 124 116 L 120 124 L 116 116 Z"
-            fill="none"
-            stroke="rgba(255, 246, 218, 0.42)"
-            strokeWidth="0.32"
-            opacity="0.7"
-          />
-          <path
-            d="M 120 212 L 116 124 L 120 116 L 124 124 Z"
-            fill="rgba(107, 74, 37, 0.42)"
-          />
+          <g
+            style={{
+              transformOrigin: '120px 120px',
+              transform: `rotate(${needleAngle - 90}deg)`,
+              transition: reduced ? 'none' : 'transform 1100ms cubic-bezier(.22, .86, .22, 1)',
+            }}
+          >
+            <path
+              d="M 120 28 L 124 116 L 120 124 L 116 116 Z"
+              fill="url(#fc-gold)"
+              stroke="rgba(107, 74, 37, 0.55)"
+              strokeWidth="0.4"
+            />
+            <path
+              d="M 120 28 L 124 116 L 120 124 L 116 116 Z"
+              fill="none"
+              stroke="rgba(255, 246, 218, 0.42)"
+              strokeWidth="0.32"
+              opacity="0.7"
+            />
+            <path
+              d="M 120 212 L 116 124 L 120 116 L 124 124 Z"
+              fill="rgba(107, 74, 37, 0.42)"
+            />
+          </g>
         </g>
 
         <circle cx="120" cy="120" r="5" fill="url(#fc-gold)" />
@@ -8358,6 +8609,8 @@ export function App() {
                 </span>
               )}
             </div>
+
+            <VadeMecum visible={replyShown} reduced={reduced} />
 
             {phase === 'complete' && (
               <div className="completion-note">
