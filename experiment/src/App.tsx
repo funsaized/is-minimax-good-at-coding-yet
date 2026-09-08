@@ -193,9 +193,9 @@ export function App() {
           <a href="#answer">answer</a>
           <a href="#marginalia">margin</a>
         </nav>
-        <span className="folio__edition" aria-label="Edition">
-          folio <i>clxxii</i>
-        </span>
+         <span className="folio__edition" aria-label="Publication note">
+           an unfinished<br /><i>answer</i>
+         </span>
       </header>
 
       <article className="proof" id="top">
@@ -321,10 +321,8 @@ export function App() {
           </div>
           <p className="colophon__line">
             pressed at <b>{formatTime(now)}</b>, {formatDate(now)}
-            <span className="colophon__sep">·</span>
-            folio <b>clxxii</b>
-            <span className="colophon__sep">·</span>
-            made with intent, not certainty
+             <span className="colophon__sep">·</span>
+             made with intent, not certainty
           </p>
           <a className="colophon__up" href="#top">return to the question <span aria-hidden="true">↑</span></a>
         </footer>
