@@ -1,26 +1,13 @@
-# Iteration 163 — composed folio heartline; press pin-prick sharpens
+# iteration 164
 
-A composed "Folio Heartline" sits between the recto's PressInstructionPlate
-and its closing RectoColophon — the recto's quiet heart, set once the page
-has been pressed. It mirrors the FolioBreath at the top in idiom: a hairline
-coral-and-gold rule, a centered press pip with a slow breathing glow, a
-pair of dashed coral threads, a centred italic inscription
-(`manu m · iii · ad lucem`, varying with cycle), and two flanking tag-lines
-that name the press state ("first press", "second press", "third press",
-"press · ad lucem"). The pip breathes for as long as the reader remains
-engaged. The cap, rule, pips, threads, seal and tag slow-reveal in sequence,
-respecting reduced-motion preferences.
+The recto's plain italic colophon becomes a composed quaestio folio plate — gold rule, Q seal, two inscriptions.
 
-Typographic refinements:
-- `.title-subject` gains `onum` and a gentle letter-spacing breathing on
-  `has-answer`, so "Minimax M3" tracks with the question it sits inside.
-- `.folio-breath-cap` gains `kern`/`liga`/`calt`/`onum` for the press's
-  italic inscription.
-- `.reader-note` gains kerning/calt/onum, a balanced line, and a slight
-  cap — the reader's note now sets like the page's own inscription.
-- `.title-questions` pin-prick pulses a touch brighter and slightly larger,
-  giving the closing question mark a livelier pulse once the page is pressed.
+## what changed
 
-The folio's opening (FolioBreath) and the recto's heart (FolioHeartline)
-now read as two beats of the same breath; the rest of the folio is left
-intact.
+- `src/App.tsx` — `RectoColophon` is replaced by a new composed `QuaestioPlate` SVG impression that mirrors the recto's other folio ornaments (FolioBreath, FolioHeartline, FolioReplyPlate) in idiom. It carries a head inscription ("the question · set in this folio"), a fading gold rule with diamond ticks, a center seal embossed with a coral "Q" over "·xviii" with a softly breathing gold pip, and a foot inscription ("quaestio xviii · ad lucem · perlege"). It slow-reveals once the leaf has been turned. The `FolioHeartline` comment is updated to reference `QuaestioPlate` instead of `RectoColophon`.
+- `src/style.css` — The `.recto-colophon` rule block (plus its reduced-motion and four responsive breakpoints) is replaced by `.quaestio-plate` and its descendants (`.quaestio-plate-head*`, `.quaestio-plate-rule*`, `.quaestio-plate-ticks`, `.quaestio-plate-pips`, `.quaestio-plate-thread`, `.quaestio-plate-seal`, `.quaestio-plate-letter`, `.quaestio-plate-roman`, `.quaestio-plate-qpip*`, `.quaestio-plate-halo`, `.quaestio-plate-foot*`). A new `quaestio-pip-breathe` keyframe gives the seal's small gold pip a 6.2-second breathing glow. Reduced-motion, three responsive breakpoints, and `is-visible` / `is-static` states are included.
+- `src/style.css` — `.answer-surface--complete .answer-copy` gains a slightly taller line-height (1.32, from 1.28) so the settled answer reads with a touch more breathing room after the page has been pressed.
+
+## why
+
+The recto's previous colophon was a plain three-em-tag italic slip with a single hairline rule and a trailing pilcrow — readable but un-composed relative to the recto's other folio ornaments, which are all SVG impressions with rule, seal, and inscriptions. Replacing it with a proper Quaestio Plate gives the recto a stronger typographic close, ties the question to the recto's other composed impressions, and lets the page's central question ("Q · xviii") earn its own quiet, breathing mark on the leaf.

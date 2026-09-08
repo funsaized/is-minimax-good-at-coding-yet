@@ -363,7 +363,7 @@ function ConstellationTrail({
    iteration 163 · a composed folio heartline
 
    A single delicate impression that sits between the recto's
-   PressInstructionPlate and its closing RectoColophon — the recto's
+   PressInstructionPlate and its closing QuaestioPlate — the recto's
    own quiet heart, set once the page has been pressed. It mirrors the
    FolioBreath at the top of the folio: a thin coral-and-gold rule,
    a centered press pip with a slow breathing glow, and an italic
@@ -6954,28 +6954,153 @@ function ReadingMoment({
   )
 }
 
-function RectoColophon({ visible, reduced }: { visible: boolean; reduced: boolean }) {
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 164 · a composed quaestio folio plate
+
+   The recto's plain italic colophon is replaced with a single composed
+   impression — a thin gold rule that fades in from either side, a
+   centered coral-and-gold seal embossed with a Q monogram and the
+   Roman xviii, and two italic inscriptions that name the question in
+   its own voice. It mirrors the FolioHeartline at the recto's heart
+   in idiom (rule · seal · inscriptions) but speaks the question's
+   voice, not the press's: quaestio xviii, the question, set in this
+   folio. The seal slow-reveals when the page has been pressed; the
+   Q-mark inside the seal has a soft breathing glow, so the question
+   stays alive in the reader's eye long after the answer has come.
+   ────────────────────────────────────────────────────────────────────── */
+
+function QuaestioPlate({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
   return (
-    <div
-      className={`recto-colophon${visible ? ' is-visible' : ''}${
+    <figure
+      className={`quaestio-plate${visible ? ' is-visible' : ''}${
         reduced ? ' is-static' : ''
       }`}
       aria-hidden="true"
     >
-      <span className="recto-colophon-rule" aria-hidden="true" />
-      <span className="recto-colophon-cluster">
-        <em className="recto-colophon-key">colophon</em>
-        <span className="recto-colophon-sep" aria-hidden="true">·</span>
-        <em className="recto-colophon-text">
-          set in italic, in this folio
-        </em>
-        <span className="recto-colophon-sep recto-colophon-sep--tail" aria-hidden="true">·</span>
-        <em className="recto-colophon-tail">
-          for the attentive reader
-        </em>
-        <span className="recto-colophon-mark" aria-hidden="true">¶</span>
+      <span className="quaestio-plate-head" aria-hidden="true">
+        <span className="quaestio-plate-head-rule quaestio-plate-head-rule--left" />
+        <span className="quaestio-plate-head-cluster">
+          <em className="quaestio-plate-head-key">the question</em>
+          <span className="quaestio-plate-head-sep" aria-hidden="true">·</span>
+          <em className="quaestio-plate-head-tail">set in this folio</em>
+        </span>
+        <span className="quaestio-plate-head-rule quaestio-plate-head-rule--right" />
       </span>
-    </div>
+
+      <svg
+        className="quaestio-plate-rule"
+        viewBox="0 0 320 36"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="qp-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="46%" stopColor="rgba(200, 146, 62, 0.78)" />
+            <stop offset="54%" stopColor="rgba(200, 146, 62, 0.78)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="qp-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.22)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="qp-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <radialGradient id="qp-shell" cx="50%" cy="36%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.86)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.42)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+          </radialGradient>
+          <radialGradient id="qp-shell-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.32)" />
+            <stop offset="60%" stopColor="rgba(245, 198, 91, 0.12)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+          <linearGradient id="qp-arc" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#9c6e26" />
+            <stop offset="50%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+        </defs>
+
+        <line
+          x1="6"
+          y1="22"
+          x2="314"
+          y2="22"
+          stroke="url(#qp-rule-ghost)"
+          strokeWidth="0.32"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="18"
+          x2="314"
+          y2="18"
+          stroke="url(#qp-rule)"
+          strokeWidth="0.6"
+          strokeLinecap="round"
+          className="quaestio-plate-rule-line"
+        />
+
+        <g className="quaestio-plate-ticks" fill="rgba(167, 60, 44, 0.62)">
+          <path d="M 50 16 L 52 18 L 50 20 L 48 18 Z" />
+          <path d="M 270 16 L 272 18 L 270 20 L 268 18 Z" />
+        </g>
+        <g className="quaestio-plate-pips" fill="rgba(167, 60, 44, 0.5)">
+          <circle cx="92" cy="18" r="0.5" />
+          <circle cx="228" cy="18" r="0.5" />
+        </g>
+
+        <g className="quaestio-plate-thread" stroke="rgba(167, 60, 44, 0.32)" strokeWidth="0.4" strokeDasharray="0.6 1.4" strokeLinecap="round" fill="none">
+          <path d="M 100 18 Q 124 22 148 18" />
+          <path d="M 172 18 Q 196 14 220 18" />
+        </g>
+
+        <g className="quaestio-plate-seal" transform="translate(160 18)">
+          <ellipse cx="0" cy="0" rx="14" ry="13" fill="url(#qp-shell-halo)" className="quaestio-plate-halo" />
+          <circle r="11" fill="url(#qp-shell)" />
+          <circle r="11" fill="none" stroke="url(#qp-gold)" strokeWidth="0.55" />
+          <circle r="9.4" fill="none" stroke="url(#qp-arc)" strokeWidth="0.28" strokeDasharray="0.4 1.2" opacity="0.82" />
+          <circle r="8" fill="none" stroke="rgba(107, 74, 37, 0.32)" strokeWidth="0.22" />
+          <text x="0" y="3.4" textAnchor="middle" className="quaestio-plate-letter">
+            Q
+          </text>
+          <text x="0" y="9.4" textAnchor="middle" className="quaestio-plate-roman">
+            ·xviii
+          </text>
+          <line x1="-5.4" y1="11" x2="5.4" y2="11" stroke="rgba(107, 74, 37, 0.5)" strokeWidth="0.3" strokeLinecap="round" />
+          <g className="quaestio-plate-qpip">
+            <circle cx="4.4" cy="-7.4" r="0.4" fill="rgba(167, 60, 44, 0.72)" />
+            <circle cx="4.4" cy="-7.4" r="1.4" fill="rgba(245, 198, 91, 0.32)" className="quaestio-plate-qpip-glow" />
+          </g>
+        </g>
+      </svg>
+
+      <figcaption className="quaestio-plate-foot" aria-hidden="true">
+        <span className="quaestio-plate-foot-rule quaestio-plate-foot-rule--left" />
+        <span className="quaestio-plate-foot-cluster">
+          <em className="quaestio-plate-foot-key">quaestio xviii</em>
+          <span className="quaestio-plate-foot-sep" aria-hidden="true">·</span>
+          <em className="quaestio-plate-foot-tail">ad lucem · perlege</em>
+          <span className="quaestio-plate-foot-mark" aria-hidden="true">¶</span>
+        </span>
+        <span className="quaestio-plate-foot-rule quaestio-plate-foot-rule--right" />
+      </figcaption>
+    </figure>
   )
 }
 
@@ -11626,7 +11751,7 @@ export function App() {
             </div>
             <FolioHeartline visible={phase !== 'idle'} cycle={cycle} reduced={reduced} />
             <ReaderInkMark />
-            <RectoColophon visible={versoOpened} reduced={reduced} />
+            <QuaestioPlate visible={versoOpened} reduced={reduced} />
           </section>
 
           <FolioSpine stage={tideStage} cycle={cycle} reduced={reduced}>
