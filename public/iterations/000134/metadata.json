@@ -1,0 +1,19 @@
+{
+  "id": 134,
+  "parentId": 133,
+  "createdAt": "2026-09-08T02:05:37.110Z",
+  "summary": "A new `ReadingsCodex` registers each reading as a dated, italicised line — \"i · mon, the eighteenth of august · 3:42 p.m",
+  "path": "/iterations/000134/index.html",
+  "screenshot": "/iterations/000134/desktop.png",
+  "mobileScreenshot": "/iterations/000134/mobile.png",
+  "sourceCommit": "8fb9cf74c73564b710ab70facbfcd1b69e441adb",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 1053,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 184392,
+    "outputTokens": 36835,
+    "steps": 119
+  }
+}
