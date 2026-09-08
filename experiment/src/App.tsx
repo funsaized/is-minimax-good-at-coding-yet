@@ -769,10 +769,27 @@ function SpecimenCard({
 
 function ReadingRibbon({ progress }: { progress: number }) {
   const pct = Math.min(100, Math.max(0, progress * 100))
+  const stops = [
+    { top: 8, label: 'Q' },
+    { top: 30, label: 'A' },
+    { top: 54, label: 'M' },
+    { top: 76, label: 'S' },
+    { top: 92, label: '·' },
+  ]
   return (
     <div className="ribbon" aria-hidden="true">
       <span className="ribbon__band" style={{ height: `${pct}%` }}>
         <span className="ribbon__gloss" />
+      </span>
+      <span className="ribbon__ruler">
+        {stops.map((s, i) => (
+          <span
+            key={i}
+            className={`ribbon__stop ${pct >= s.top ? 'is-passed' : ''}`}
+            style={{ top: `${s.top}%` }}
+            data-label={s.label}
+          />
+        ))}
       </span>
       <span className="ribbon__tail" style={{ top: `${pct}%` }}>
         <span className="ribbon__notch ribbon__notch--l" />
@@ -804,6 +821,100 @@ function PageMark({ active }: { active: string | null }) {
       <span className="page-mark__label">{label}</span>
       <span className="page-mark__rule" />
     </span>
+  )
+}
+
+type PressRow = { kind: 'key' | 'icon'; glyph: string; label: string; hint?: string }
+
+function PressKey() {
+  const rows: PressRow[] = [
+    { kind: 'key', glyph: 'P', label: 'lift the pencil', hint: 'then drag to mark the proof' },
+    { kind: 'key', glyph: 'Esc', label: 'put the pencil down' },
+    { kind: 'key', glyph: '⌫', label: 'shake off the marks' },
+    { kind: 'icon', glyph: '◯', label: 'hover a title word', hint: 'it wakes its matching note' },
+    { kind: 'icon', glyph: '◇', label: 'click a specimen flap', hint: 'the title takes its voice' },
+    { kind: 'icon', glyph: '↺', label: 'press the seal', hint: 'the answer tips into the proof' },
+  ]
+  return (
+    <aside className="press-key" aria-labelledby="press-key-title">
+      <span className="press-key__corner press-key__corner--tl" aria-hidden="true">
+        <svg viewBox="0 0 16 16">
+          <path d="M2 2 L14 2 M2 2 L2 14" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+        </svg>
+      </span>
+      <span className="press-key__corner press-key__corner--br" aria-hidden="true">
+        <svg viewBox="0 0 16 16">
+          <path d="M2 14 L14 14 M14 2 L14 14" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+        </svg>
+      </span>
+      <header className="press-key__head">
+        <p className="kicker">
+          <span>compositor's key</span>
+          <b />
+          <em>for the curious reader</em>
+        </p>
+        <h3 className="press-key__title" id="press-key-title">
+          a small <i>legend</i> for the page's hidden presses
+        </h3>
+      </header>
+      <ol className="press-key__grid">
+        {rows.map((r, i) => (
+          <li key={i} className="press-key__row">
+            <span className={`press-key__glyph press-key__glyph--${r.kind}`} aria-hidden="true">
+              {r.kind === 'icon' ? (
+                <svg viewBox="0 0 24 24" className="press-key__icon">
+                  <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" strokeWidth="1.4" />
+                  {r.glyph === '◇' && <path d="M12 5 L19 12 L12 19 L5 12 Z" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />}
+                  {r.glyph === '↺' && (
+                    <>
+                      <path d="M19 12 A 7 7 0 1 1 12 5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                      <path d="M12 5 L15 3 L15 7 Z" fill="currentColor" />
+                    </>
+                  )}
+                </svg>
+              ) : (
+                <kbd className="press-key__kbd">{r.glyph}</kbd>
+              )}
+            </span>
+            <span className="press-key__copy">
+              <strong>{r.label}</strong>
+              {r.hint && <em>{r.hint}</em>}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </aside>
+  )
+}
+
+function RibbonKnot() {
+  return (
+    <svg className="ribbon-knot" viewBox="0 0 100 24" aria-hidden="true">
+      <path
+        d="M2 12 C 12 4, 22 20, 34 12"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M66 12 C 78 4, 88 20, 98 12"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M34 12 C 38 8, 44 8, 48 12 C 52 16, 58 16, 62 12 C 64 10, 66 10, 66 12"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="50" cy="12" r="3" fill="currentColor" />
+      <circle cx="50" cy="12" r="1" fill="var(--paper-tip)" />
+    </svg>
   )
 }
 
@@ -1285,11 +1396,13 @@ export function App() {
             </div>
             <p className="specimens__hint" aria-hidden="true">
               <span className="specimens__hint-rule" />
-              <em>{openSpecimen ? `now set in ${openSpecimen.name}` : 'hover to lift the flap'}</em>
+              <em>{openSpecimen ? `now set in ${openSpecimen.name}` : 'click a flap to lift the page'}</em>
               <span className="specimens__hint-rule" />
             </p>
           </section>
         </div>
+
+        <PressKey />
 
         <div className="proof__device" aria-hidden="true">
           <span className="proof__device-rule" />
@@ -1331,6 +1444,12 @@ export function App() {
           <div className={`colophon__sign ${sigVisible ? 'is-drawn' : ''}`} aria-hidden="true">
             <Signature drawn={sigVisible} progress={progress} />
             <span className="colophon__sign-cap">{marked ? 'signed & annotated' : 'signed at the press'}</span>
+          </div>
+          <div className={`colophon__tied ${sigVisible ? 'is-tied' : ''}`} aria-hidden="true">
+            <RibbonKnot />
+            <span className="colophon__tied-text">
+              tied with care <em>— a finished proof</em>
+            </span>
           </div>
           <a className="colophon__up" href="#top">return to the question <span aria-hidden="true">↑</span></a>
         </footer>

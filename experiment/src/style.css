@@ -273,11 +273,85 @@ button {
   text-shadow: 0 1px 0 rgba(60, 10, 0, .4);
 }
 
+/* proof ruler — section notches that reveal as the reader scrolls */
+.ribbon__ruler {
+  position: absolute;
+  top: 0;
+  right: calc(100% + 4px);
+  width: 16px;
+  height: 100%;
+  pointer-events: none;
+}
+
+.ribbon__stop {
+  position: absolute;
+  right: 0;
+  width: 6px;
+  height: 1px;
+  background: var(--coral);
+  opacity: 0;
+  transform: scaleX(.2);
+  transform-origin: right center;
+  transition: opacity .55s var(--ease), transform .7s var(--ease-out), background .55s var(--ease);
+}
+
+.ribbon__stop::before {
+  content: attr(data-label);
+  position: absolute;
+  right: 9px;
+  top: -5px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 9px;
+  letter-spacing: 0;
+  color: var(--coral);
+  opacity: 0;
+  transform: translateX(4px);
+  transition: opacity .45s var(--ease) .2s, transform .6s var(--ease-out) .2s;
+}
+
+.ribbon__stop::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: -3px;
+  width: 5px;
+  height: 7px;
+  background:
+    radial-gradient(circle at 35% 30%, var(--coral) 0%, var(--coral-2) 100%);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(.4);
+  transition: opacity .4s var(--ease) .25s, transform .55s var(--ease-out) .25s;
+}
+
+.ribbon__stop.is-passed {
+  opacity: .55;
+  transform: scaleX(1);
+}
+
+.ribbon__stop.is-passed::before {
+  opacity: .75;
+  transform: translateX(0);
+}
+
+.ribbon__stop.is-passed::after {
+  opacity: .8;
+  transform: scale(1);
+}
+
+@media (max-width: 1280px) {
+  .ribbon__stop::before { display: none; }
+}
+
 @media (max-width: 1100px) {
   .ribbon { right: 6px; width: 18px; }
   .ribbon__band { width: 6px; }
   .ribbon__tail { width: 22px; height: 28px; }
   .ribbon__seal { width: 18px; height: 18px; font-size: 9px; }
+  .ribbon__ruler { width: 12px; right: calc(100% + 3px); }
+  .ribbon__stop { width: 4px; }
+  .ribbon__stop::after { width: 4px; height: 6px; }
 }
 
 @media (max-width: 720px) {
@@ -2017,6 +2091,38 @@ button {
   top: 4px;
 }
 
+/* SETTLE — a small ink tap at the corner of each marginalia when the
+   answer is revealed, as if the press taps each note into place. */
+.margin__item::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 22px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--coral);
+  box-shadow: 0 0 0 4px rgba(207, 82, 64, .15);
+  opacity: 0;
+  transform: scale(.4);
+  pointer-events: none;
+}
+
+.folio--open .margin__item::before {
+  animation: marginaliaTap 1.7s var(--ease-out) backwards;
+}
+
+.folio--open .margin__item:nth-child(1)::before { animation-delay: .42s; }
+.folio--open .margin__item:nth-child(2)::before { animation-delay: .58s; }
+.folio--open .margin__item:nth-child(3)::before { animation-delay: .74s; }
+
+@keyframes marginaliaTap {
+  0%   { opacity: 0; transform: scale(.4); }
+  18%  { opacity: 1; transform: scale(1.2); }
+  55%  { opacity: .85; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
 .margin__tether {
   position: absolute;
   top: 0;
@@ -2788,6 +2894,197 @@ button {
 }
 
 /* ============================================================== */
+/* COMPOSITOR'S KEY — small legend for the page's hidden presses   */
+/* ============================================================== */
+.press-key {
+  position: relative;
+  margin: clamp(56px, 7vw, 96px) auto clamp(34px, 4vw, 56px);
+  max-width: 760px;
+  padding: clamp(24px, 3vw, 36px) clamp(22px, 3vw, 40px) clamp(22px, 3vw, 32px);
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(255, 250, 235, .6) 0%, rgba(255, 245, 222, .35) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 250, 235, .8),
+    0 2px 4px rgba(40, 24, 8, .05),
+    0 18px 32px rgba(40, 24, 8, .08);
+  animation: pressKeyStamp 1.05s var(--ease-out) backwards;
+  animation-delay: .15s;
+}
+
+@keyframes pressKeyStamp {
+  0%   { opacity: 0; transform: translateY(10px) scale(.97); }
+  55%  { opacity: 1; transform: translateY(-2px) scale(1.012); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.press-key::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed rgba(207, 82, 64, .25);
+  pointer-events: none;
+}
+
+.press-key__corner {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  color: var(--coral);
+  opacity: .55;
+  pointer-events: none;
+}
+
+.press-key__corner svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.press-key__corner--tl { top: 6px; left: 6px; }
+.press-key__corner--br { bottom: 6px; right: 6px; }
+
+.press-key__head {
+  position: relative;
+  margin-bottom: clamp(16px, 2vw, 24px);
+  padding-bottom: clamp(12px, 1.6vw, 18px);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.press-key__title {
+  margin: 8px 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.18;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.press-key__title i {
+  color: var(--coral);
+  font-style: italic;
+}
+
+.press-key__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 4px 18px;
+}
+
+.press-key__row {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 4px;
+  border-top: 1px dotted var(--line-soft);
+  transition: background .35s var(--ease);
+}
+
+.press-key__row:first-child,
+.press-key__row:nth-child(2) {
+  border-top: 0;
+}
+
+.press-key__row:hover {
+  background: rgba(207, 82, 64, .05);
+}
+
+.press-key__glyph {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--coral);
+  border-radius: 4px;
+  background: rgba(244, 236, 219, .55);
+  color: var(--coral);
+  transition: transform .35s var(--ease-out), background .35s var(--ease), color .35s var(--ease);
+}
+
+.press-key__row:hover .press-key__glyph {
+  transform: translateY(-1px);
+  background: rgba(207, 82, 64, .1);
+}
+
+.press-key__glyph--icon {
+  border-style: dashed;
+}
+
+.press-key__kbd {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  letter-spacing: -.02em;
+  line-height: 1;
+  color: var(--coral-2);
+}
+
+.press-key__icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  color: var(--coral-2);
+}
+
+.press-key__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.press-key__copy strong {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: -.005em;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.press-key__copy em {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--faded);
+  line-height: 1.35;
+}
+
+@media (max-width: 720px) {
+  .press-key {
+    padding: 22px 18px 18px;
+  }
+  .press-key__grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .press-key__row {
+    grid-template-columns: 36px 1fr;
+    gap: 12px;
+    padding: 8px 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .press-key__title { font-size: 18px; }
+  .press-key__glyph { width: 32px; height: 32px; }
+  .press-key__kbd { font-size: 14px; }
+}
+
+/* ============================================================== */
 /* PRESS DEVICE                                                    */
 /* ============================================================== */
 .proof__device {
@@ -3038,6 +3335,66 @@ button {
   letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--faded);
+}
+
+/* PROOF TIED — small ribbon knot that appears with the signature */
+.colophon__tied {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 12px auto 28px;
+  width: max-content;
+  color: var(--coral-2);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .9s var(--ease) .25s, transform .9s var(--ease-out) .25s;
+}
+
+.colophon__tied.is-tied {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ribbon-knot {
+  display: block;
+  width: 100px;
+  height: 24px;
+  color: var(--coral);
+  flex-shrink: 0;
+  animation: knotIn 1.4s var(--ease-out) .3s backwards;
+}
+
+.colophon__tied.is-tied .ribbon-knot {
+  animation: knotDraw 1.6s var(--ease-out) .25s backwards;
+}
+
+@keyframes knotIn {
+  0%   { opacity: 0; transform: scale(.85) rotate(-4deg); }
+  60%  { opacity: 1; transform: scale(1.04) rotate(1deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes knotDraw {
+  0%   { opacity: 0; transform: translateY(4px) rotate(-3deg); }
+  55%  { opacity: 1; transform: translateY(-1px) rotate(1deg); }
+  100% { opacity: 1; transform: translateY(0) rotate(0); }
+}
+
+.colophon__tied-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: .005em;
+  text-transform: none;
+  color: var(--coral-2);
+  font-weight: 400;
+}
+
+.colophon__tied-text em {
+  color: var(--faded);
+  font-style: italic;
+  font-size: 11px;
 }
 
 .colophon__up {
@@ -3511,7 +3868,13 @@ button {
   .slips__wall.is-rest .slip { animation: none !important; }
   .slip__flap,
   .slip__leaf { transition: opacity .2s ease, max-height .2s ease; }
-  .ribbon__band { transition: none; }
+  .ribbon__band,
   .ribbon__tail { transition: none; }
-  .colophon__sign.is-drawn .signature { animation: none !important; }
+  .ribbon__stop,
+  .ribbon__stop::before,
+  .ribbon__stop::after { transition: opacity .2s ease, transform .2s ease; }
+  .colophon__sign.is-drawn .signature,
+  .colophon__tied .ribbon-knot,
+  .press-key { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .folio--open .margin__item::before { animation: none !important; opacity: 0 !important; }
 }
