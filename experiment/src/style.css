@@ -9164,4 +9164,296 @@ button { font: inherit; }
     drop-shadow(0 0 10px rgba(245, 198, 91, 0.32));
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 130 · a folio with memory: the recto earns its quiet marks
+   of having been read. Three small additions: an ink-bloom beneath the
+   question mark, a reader's ink-mark in the corner, and a page-signing
+   rule beneath the question block. Each appears with restraint; each
+   tells the same quiet story — the page has been attended to.
+   ────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --ink-warm: #6e2818;
+  --ink-blush: #c45a44;
+  --rule-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(156, 110, 38, 0.22) 14%,
+    var(--coral-deep) 36%,
+    var(--gold-glow) 60%,
+    var(--coral-deep) 80%,
+    transparent 100%
+  );
+}
+
+/* ── ink-bloom beneath the question mark ── */
+
+.title-inkbloom {
+  position: absolute;
+  inset: -8% -8% -28% -4%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  background:
+    radial-gradient(
+      ellipse 38% 56% at 78% 36%,
+      rgba(217, 101, 74, 0.18),
+      rgba(217, 101, 74, 0.05) 50%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 22% 32% at 72% 64%,
+      rgba(245, 198, 91, 0.12),
+      transparent 68%
+    );
+  mix-blend-mode: multiply;
+  transition: opacity 1100ms var(--ease) 220ms;
+}
+.has-answer .title-inkbloom { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .title-inkbloom { transition: none; }
+}
+
+/* ── page-signing rule beneath the question block ── */
+
+.recto-signing-rule {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: 32px 0 8px;
+  pointer-events: none;
+  max-width: 100%;
+}
+.recto-signing-rule::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(156, 110, 38, 0.34) 16%,
+    var(--coral-deep) 40%,
+    var(--gold-glow) 58%,
+    var(--coral) 78%,
+    transparent 100%
+  );
+  transform: translateX(-78%);
+  opacity: 0;
+  transition:
+    transform 1500ms var(--ease) 600ms,
+    opacity 1200ms var(--ease) 600ms;
+}
+.has-answer .recto-signing-rule::before {
+  transform: translateX(0);
+  opacity: 0.78;
+}
+.recto-signing-rule-tail {
+  position: absolute;
+  right: 4%;
+  top: -3px;
+  font: italic 500 9.5px/1 var(--display);
+  color: var(--coral-deep);
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 900ms var(--ease) 1600ms;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.has-answer .recto-signing-rule-tail { opacity: 0.66; }
+
+@media (prefers-reduced-motion: reduce) {
+  .recto-signing-rule::before {
+    transition: none;
+    transform: translateX(0);
+    opacity: 0.78;
+  }
+  .recto-signing-rule-tail { transition: none; opacity: 0.66; }
+}
+
+/* ── reader's ink-mark on the recto ── */
+
+.recto-reader-mark {
+  position: absolute;
+  bottom: clamp(36px, 6vw, 84px);
+  right: clamp(18px, 3.6vw, 56px);
+  width: clamp(46px, 6vw, 78px);
+  height: clamp(58px, 7.4vw, 98px);
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transform: translateY(6px) scale(0.92);
+  transition:
+    opacity 1500ms var(--ease) 800ms,
+    transform 1700ms var(--ease) 800ms,
+    filter 1700ms var(--ease) 800ms;
+  filter: blur(0.4px);
+}
+.has-answer .recto-reader-mark {
+  opacity: 0.5;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+.recto-reader-mark svg { display: block; width: 100%; height: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .recto-reader-mark {
+    transition: none;
+    opacity: 0.5;
+    transform: none;
+    filter: none;
+  }
+}
+@media (max-width: 720px) {
+  .recto-reader-mark {
+    width: 42px;
+    height: 54px;
+    bottom: 36px;
+    right: 22px;
+  }
+}
+@media (max-width: 520px) {
+  .recto-reader-mark { display: none; }
+}
+
+/* ── soft companion to the marginalia strip, on completion ── */
+
+.recto-marginalia-glow {
+  position: absolute;
+  inset: -2px -6px;
+  pointer-events: none;
+  border-radius: 2px;
+  background: radial-gradient(
+    ellipse 70% 100% at 50% 50%,
+    rgba(245, 198, 91, 0.10),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 1200ms var(--ease) 900ms;
+  z-index: -1;
+}
+.has-answer .recto-marginalia-glow { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .recto-marginalia-glow { transition: none; opacity: 1; }
+}
+
+/* ── refined question-mark glow, ties to the ink-bloom ── */
+
+.has-answer .title-questions {
+  text-shadow:
+    0 0.04em 0 rgba(167, 60, 44, 0.16),
+    0 0 8px rgba(217, 101, 74, 0.22);
+}
+
+/* ── a small "page breath" on the answer surface ── */
+
+.answer-surface--answering {
+  animation: answer-breath 4.6s ease-in-out infinite;
+}
+.answer-surface--complete .answer-quote {
+  color: var(--coral-deep);
+  opacity: 0.55;
+}
+.answer-surface--complete {
+  background:
+    radial-gradient(ellipse at 28% 22%, rgba(245, 198, 91, 0.16), transparent 72%),
+    radial-gradient(ellipse at 80% 82%, rgba(217, 101, 74, 0.06), transparent 70%),
+    linear-gradient(180deg, rgba(255, 250, 240, 0.88), rgba(245, 232, 200, 0.55));
+}
+
+/* ── recto italic: a touch more weight and confidence ── */
+
+.title-flow {
+  font-weight: 640;
+  letter-spacing: -0.024em;
+  line-height: 1.015;
+}
+
+/* ── title-subject: deeper teal, slightly more body ── */
+
+.title-subject {
+  color: #163a48;
+  font-weight: 620;
+  letter-spacing: -0.02em;
+}
+.has-answer .title-subject {
+  color: #0f3340;
+  text-shadow: 0 0 6px rgba(31, 78, 96, 0.18);
+}
+
+/* ── verso choreography: defer wax archive + colophon by a beat ── */
+
+.response-panel.is-revealed .wax-archive {
+  animation: wax-archive-in 1200ms var(--ease) 1100ms both;
+}
+@keyframes wax-archive-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.response-panel.is-revealed .colophon {
+  animation: colophon-in 1300ms var(--ease) 1400ms both;
+}
+@keyframes colophon-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.response-panel.is-revealed .press-signature {
+  animation: press-signature-in 1100ms var(--ease) 1600ms both;
+}
+@keyframes press-signature-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+.response-panel.is-revealed .ephemeris-plate {
+  animation: ephemeris-in 1100ms var(--ease) 600ms both;
+}
+@keyframes ephemeris-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.response-panel.is-revealed .cul-de-lampe {
+  animation: cul-de-lampe-in 1100ms var(--ease) 1800ms both;
+}
+@keyframes cul-de-lampe-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .response-panel.is-revealed .wax-archive,
+  .response-panel.is-revealed .colophon,
+  .response-panel.is-revealed .press-signature,
+  .response-panel.is-revealed .ephemeris-plate,
+  .response-panel.is-revealed .cul-de-lampe {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── tighter apparatus, slightly more restrained ── */
+
+.apparatus {
+  transition: filter 700ms var(--ease);
+}
+.response-panel--verso-main .apparatus-list {
+  max-width: 460px;
+}
+
+/* ── press-plate: a touch more refined typography in the press instruction ── */
+
+.press-plate-head-tail {
+  font-feature-settings: "liga" 1, "dlig" 1, "salt" 1;
+}
+
+/* ── responsive guard for new recto elements at very narrow widths ── */
+
+@media (max-width: 420px) {
+  .recto-signing-rule { margin-top: 20px; max-width: 100%; }
+  .recto-signing-rule-tail { font-size: 8.5px; }
+  .title-inkbloom { inset: -8% -6% -16% 18%; }
+}
+
 

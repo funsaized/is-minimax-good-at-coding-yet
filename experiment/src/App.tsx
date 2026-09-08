@@ -2248,6 +2248,86 @@ function InkFingerprint({ visible }: { visible: boolean }) {
   )
 }
 
+function ReaderInkMark() {
+  return (
+    <figure className="recto-reader-mark" aria-hidden="true">
+      <svg viewBox="0 0 46 60" focusable="false">
+        <defs>
+          <radialGradient id="rim-thumb" cx="50%" cy="34%" r="68%">
+            <stop offset="0%" stopColor="rgba(196, 86, 64, 0.62)" />
+            <stop offset="55%" stopColor="rgba(140, 50, 36, 0.70)" />
+            <stop offset="100%" stopColor="rgba(110, 40, 24, 0.18)" />
+          </radialGradient>
+          <radialGradient id="pad-thumb" cx="42%" cy="38%" r="62%">
+            <stop offset="0%" stopColor="rgba(217, 101, 74, 0.42)" />
+            <stop offset="62%" stopColor="rgba(167, 60, 44, 0.30)" />
+            <stop offset="100%" stopColor="rgba(110, 40, 24, 0.04)" />
+          </radialGradient>
+          <pattern id="thumb-grain" width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+            <line x1="0" y1="0" x2="0" y2="2.6" stroke="rgba(110, 40, 24, 0.10)" strokeWidth="0.4" />
+          </pattern>
+        </defs>
+        <ellipse cx="23" cy="14" rx="11.6" ry="8.4" fill="url(#pad-thumb)" />
+        <ellipse cx="23" cy="14" rx="11.6" ry="8.4" fill="url(#thumb-grain)" opacity="0.6" />
+        <ellipse cx="23" cy="14" rx="11.6" ry="8.4" fill="none" stroke="url(#rim-thumb)" strokeWidth="0.55" />
+        <path
+          d="M 11.4 14 Q 14 6 23 6 Q 32 6 34.6 14"
+          stroke="rgba(110, 40, 24, 0.45)"
+          strokeWidth="0.45"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <path
+          d="M 11.4 14 Q 14 22 23 22 Q 32 22 34.6 14"
+          stroke="rgba(110, 40, 24, 0.45)"
+          strokeWidth="0.45"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <g
+          className="thumbpad-loops"
+          stroke="rgba(110, 40, 24, 0.30)"
+          strokeWidth="0.32"
+          fill="none"
+          strokeLinecap="round"
+        >
+          <path d="M 14.5 11 Q 18 9 21.5 11" />
+          <path d="M 14.5 13.5 Q 18 11.5 21.5 13.5" />
+          <path d="M 14.5 16 Q 18 14 21.5 16" />
+          <path d="M 24.5 11 Q 28 9 31.5 11" />
+          <path d="M 24.5 13.5 Q 28 11.5 31.5 13.5" />
+          <path d="M 24.5 16 Q 28 14 31.5 16" />
+          <path d="M 19 18 Q 23 16.5 27 18" />
+        </g>
+        <ellipse cx="23" cy="32" rx="14.6" ry="20.2" fill="url(#pad-thumb)" />
+        <ellipse cx="23" cy="32" rx="14.6" ry="20.2" fill="url(#thumb-grain)" opacity="0.55" />
+        <ellipse cx="23" cy="32" rx="14.6" ry="20.2" fill="none" stroke="url(#rim-thumb)" strokeWidth="0.55" />
+        <g
+          className="thumbpad-spiral"
+          stroke="rgba(110, 40, 24, 0.30)"
+          strokeWidth="0.32"
+          fill="none"
+          strokeLinecap="round"
+        >
+          <path d="M 11 24 Q 16 18 23 19 Q 30 20 33 26" />
+          <path d="M 11 28 Q 17 22 23 23 Q 29 24 33 30" />
+          <path d="M 11 32 Q 17 26 23 27 Q 29 28 33 34" />
+          <path d="M 11 36 Q 17 30 23 31 Q 29 32 33 38" />
+          <path d="M 11 40 Q 17 34 23 35 Q 29 36 33 42" />
+          <path d="M 11 44 Q 17 38 23 39 Q 29 40 33 46" />
+        </g>
+        <path
+          d="M 19 53 Q 23 56 27 53"
+          stroke="rgba(110, 40, 24, 0.30)"
+          strokeWidth="0.32"
+          fill="none"
+          strokeLinecap="round"
+        />
+      </svg>
+    </figure>
+  )
+}
+
 function AnswerFinishing({ visible }: { visible: boolean }) {
   return (
     <div
@@ -7216,6 +7296,7 @@ export function App() {
                 <BroadsheetDropCap letter="i" pressed={phase !== 'idle'} />
               </span>
               <span className="title-flow">
+                <span className="title-inkbloom" aria-hidden="true" />
                 <span className="title-text title-text--set" style={{ '--word-i': 0 } as React.CSSProperties}>
                   s&nbsp;
                 </span>
@@ -7264,6 +7345,10 @@ export function App() {
               </span>
             </h1>
 
+            <span className="recto-signing-rule" aria-hidden="true">
+              <span className="recto-signing-rule-tail">the page remembers the question</span>
+            </span>
+
             <RectoSubEmblem />
 
             <SpecimenImprint cycle={cycle} breathing={phase === 'answering' || phase === 'replying'} />
@@ -7275,6 +7360,7 @@ export function App() {
               ref={(el) => { sectionRefs.current['sec-marginalia'] = el }}
               className="marginalia-section"
             >
+              <span className="recto-marginalia-glow" aria-hidden="true" />
               <PressInstructionPlate
                 cycle={cycle}
                 phase={phase}
@@ -7287,6 +7373,7 @@ export function App() {
                 sealBreaking={sealBreaking}
               />
             </div>
+            <ReaderInkMark />
           </section>
 
           <FolioSpine stage={tideStage} cycle={cycle} reduced={reduced}>
