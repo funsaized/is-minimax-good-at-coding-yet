@@ -5305,6 +5305,92 @@ function WaxPressSeal({
   )
 }
 
+function ReadingsCodex({
+  readings,
+  cycle,
+}: {
+  readings: Date[]
+  cycle: number
+}) {
+  if (readings.length === 0) return null
+  return (
+    <aside
+      className="readings-codex"
+      role="status"
+      aria-live="polite"
+      aria-label={`codex of ${readings.length} reading${readings.length === 1 ? '' : 's'}`}
+    >
+      <header className="readings-codex-head">
+        <span className="readings-codex-head-rule readings-codex-head-rule--left" aria-hidden="true" />
+        <span className="readings-codex-head-cluster">
+          <span className="readings-codex-head-mark" aria-hidden="true">
+            <svg viewBox="0 0 12 12" focusable="false">
+              <circle cx="6" cy="6" r="4.6" fill="none" stroke="currentColor" strokeWidth="0.4" strokeDasharray="0.4 1.4" />
+              <circle cx="6" cy="6" r="0.9" fill="currentColor" />
+            </svg>
+          </span>
+          <em className="readings-codex-head-key">codex</em>
+          <span className="readings-codex-head-sep" aria-hidden="true">·</span>
+          <em className="readings-codex-head-tail">a register of attentions</em>
+        </span>
+        <span className="readings-codex-head-rule readings-codex-head-rule--right" aria-hidden="true" />
+      </header>
+
+      <ol className="readings-codex-list" aria-hidden="true">
+        {readings.map((date, i) => {
+          const isLatest = i === readings.length - 1
+          const roman = ROMAN[Math.min(i, ROMAN.length - 1)]
+          const dayName = WEEKDAYS[date.getDay()]
+          const monthName = MONTHS[date.getMonth()]
+          const dayOrdinal = ORDINALS[Math.min(ORDINALS.length - 1, date.getDate() - 1)]
+          const hour24 = date.getHours()
+          const minutes = date.getMinutes()
+          const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
+          const h12 = ((hour24 + 11) % 12) + 1
+          const mm = String(minutes).padStart(2, '0')
+          return (
+            <li
+              key={i}
+              className={`readings-codex-row${isLatest ? ' is-latest' : ''}`}
+              style={{ '--i': i } as React.CSSProperties}
+            >
+              <span className="readings-codex-numeral">{roman}.</span>
+              <span className="readings-codex-day">
+                <em>{dayName.slice(0, 3).toLowerCase()}</em>
+                <span className="readings-codex-day-tail">
+                  , the <em>{dayOrdinal}</em>
+                </span>
+                <span className="readings-codex-day-tail">
+                  {' '}of <em>{monthName}</em>
+                </span>
+              </span>
+              <span className="readings-codex-time">
+                <em className="readings-codex-time-key">set at</em>
+                <em className="readings-codex-time-h">{h12}</em>
+                <span className="readings-codex-time-m">:{mm}</span>
+                <em className="readings-codex-time-period">{period}</em>
+              </span>
+            </li>
+          )
+        })}
+      </ol>
+
+      <footer className="readings-codex-foot">
+        <span className="readings-codex-foot-rule readings-codex-foot-rule--left" aria-hidden="true" />
+        <span className="readings-codex-foot-cluster">
+          <span className="readings-codex-foot-mark" aria-hidden="true">¶</span>
+          <em className="readings-codex-foot-key">
+            {cycle === 1 ? 'one reading' : `${ROMAN[Math.min(cycle - 1, ROMAN.length - 1)]} readings`}
+          </em>
+          <span className="readings-codex-foot-sep" aria-hidden="true">·</span>
+          <em className="readings-codex-foot-tail">the page, unchanged</em>
+        </span>
+        <span className="readings-codex-foot-rule readings-codex-foot-rule--right" aria-hidden="true" />
+      </footer>
+    </aside>
+  )
+}
+
 function PressInstructionPlate({
   cycle,
   phase,
@@ -7051,12 +7137,15 @@ export function App() {
   const [replyChars, setReplyChars] = useState(0)
   const [cycle, setCycle] = useState(0)
   const [sealPressing, setSealPressing] = useState(false)
+  const [pressSweeping, setPressSweeping] = useState(false)
   const [owlBlinking, setOwlBlinking] = useState(false)
   const [slipIntensity, setSlipIntensity] = useState(0)
   const [activeSection, setActiveSection] = useState<string>('sec-question')
   const [versoOpened, setVersoOpened] = useState(false)
   const [leafTurning, setLeafTurning] = useState(false)
   const [firstMoment, setFirstMoment] = useState<Date | null>(null)
+  const [readings, setReadings] = useState<Date[]>([])
+  const prevPhaseRef = useRef<Phase>('idle')
 
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({})
   const jumpRef = useRef<number | null>(null)
@@ -7116,6 +7205,13 @@ export function App() {
     return () => window.clearTimeout(timer)
   }, [phase, reduced, replyChars, slow])
 
+  useEffect(() => {
+    if (prevPhaseRef.current === 'replying' && phase === 'complete') {
+      setReadings((prev) => [...prev, new Date()])
+    }
+    prevPhaseRef.current = phase
+  }, [phase])
+
   const readAnswer = () => {
     if (phase === 'idle') {
       setFirstMoment(new Date())
@@ -7136,6 +7232,8 @@ export function App() {
     if (sealBreaking) return
     if (phase === 'answering' || phase === 'replying') return
     setSealBreaking(true)
+    setPressSweeping(true)
+    window.setTimeout(() => setPressSweeping(false), reduced ? 220 : 1180)
     if (sealBreakTimerRef.current !== null) window.clearTimeout(sealBreakTimerRef.current)
     sealBreakTimerRef.current = window.setTimeout(() => {
       setSealBreaking(false)
@@ -7356,6 +7454,10 @@ export function App() {
         <DustMotes reduced={reduced} />
         <BookmarkRibbon />
         <FoldShade active={leafTurning} />
+        <span
+          className={`press-sweep${pressSweeping ? ' is-sweeping' : ''}`}
+          aria-hidden="true"
+        />
         <span className="gilded-edge" aria-hidden="true" />
 
         <span className="sheet-watermark" aria-hidden="true">
@@ -7703,6 +7805,10 @@ export function App() {
                 <span>{FOOTNOTE}</span>
                 <span className="completion-dot" aria-hidden="true" />
               </div>
+            )}
+
+            {readings.length > 0 && (
+              <ReadingsCodex readings={readings} cycle={readings.length} />
             )}
 
             {cycle > 0 && <WaxArchive key={`wax-archive-${cycle}`} cycle={cycle} />}
