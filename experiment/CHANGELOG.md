@@ -1,25 +1,30 @@
 # Changelog
 
-## Iteration 146 — the title earns the page
+## Iteration 147
 
-A single coherent refinement: the question earns a delicate hand-drawn rule
-beneath it, and the page's typography is given a touch more weight and
-confidence throughout.
+The recto question earns a hand-drawn printer's signature beneath the title rule, giving the question its own quiet editorial closure that ties it to the chapter spread.
 
-- New `TitleRule` SVG sits below the heading: a thin gold rule with a small
-  center fleuron, two flanking diamonds, and a quiet caption ("a question ·
-  set in italic"). The rule draws itself in when the page is read, the
-  fleuron settles in last, and a soft breath keeps it alive without
-  distraction. Honors `prefers-reduced-motion`.
-- Title typography (recto) is slightly bolder and more deliberate: heavier
-  italic weight, tighter letter spacing, calmer line height, a more
-  present question mark, and a refined drop-cap size.
-- Answer typography (verso) is given more weight and a calmer spacing;
-  the em-dash leads with a coral tone; the opening/closing quotes carry a
-  little more presence; the typed caret blinks in a quieter, slower key.
-- Reply paragraph reads with a calmer italic weight and a slightly looser
-  line height for readability.
-- Colophon (book closing) is tightened: clearer key/value rhythm, slightly
-  larger numerals, and a more confident rule structure.
-- Mobile refinements: title and answer scales now read well at 480–720px,
-  with calmer letter spacing and tighter column margins.
+- Added a new `QuestionPressMark` component: a delicate italic inscription
+  that names the press and the leaf, anchored by a small gold `m · iii`
+  monogram sigil and flanked by coral gradient rules that draw in as the
+  answer begins.
+- The monogram sigil tilts into place on reveal and takes on a slow press
+  breath (a soft gold drop-shadow pulse) once the answer has completed.
+- Replaced the orphan `recto-spread-foot` cluster with the press mark, so
+  the question now reads as: *the question · set in this folio* → *manu
+  m · iii · the question, pressed in this folio* — a small editorial arc
+  that mirrors the printer's emblem at the chapter head.
+- Refined the title rule caption from "a question · set in italic" to
+  "the question · set in this folio" so the caption and press mark speak
+  in the same key.
+- Symmetrised the running heads: recto reads "the question · caput
+  xviii", verso reads "the reply · caput xviii" — both keyed to the
+  chapter numeral already set at the chapter head.
+- Added responsive behaviour for the new mark: rules shrink on mid-width
+  screens and hide entirely on phones under 480 px, with the inscription
+  wrapping onto two lines.
+- Removed the orphaned `.recto-spread-foot*` styles after the swap.
+- All motion respects `prefers-reduced-motion: reduce`; the breath
+  animation is disabled and the rules reveal instantly in that mode.
+
+Files touched: `src/App.tsx`, `src/style.css`, `CHANGELOG.md`.

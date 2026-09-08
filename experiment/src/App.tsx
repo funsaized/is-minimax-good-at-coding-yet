@@ -1445,7 +1445,103 @@ function TitleRule({
           <path d="M 0 -2.2 L 2.2 0 L 0 2.2 L -2.2 0 Z" />
         </g>
       </svg>
-      <figcaption className="title-rule-caption">a question · set in italic</figcaption>
+      <figcaption className="title-rule-caption">the question · set in this folio</figcaption>
+    </figure>
+  )
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   the question press mark — the printer's hand beneath the question.
+   A small monogram sigil and a hand-drawn italic inscription that
+   names the press and the leaf. Replaces the orphan recto-spread-foot
+   and gives the recto its own quiet editorial closure.
+   ────────────────────────────────────────────────────────────────────── */
+
+function QuestionPressMark({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <figure
+      className={`question-press-mark${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <span className="question-press-mark-rule question-press-mark-rule--left" />
+      <span className="question-press-mark-cluster">
+        <span className="question-press-mark-sigil" aria-hidden="true">
+          <svg viewBox="0 0 22 22" focusable="false">
+            <defs>
+              <linearGradient id="qpm-gold" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#f6d076" />
+                <stop offset="50%" stopColor="#c8923e" />
+                <stop offset="100%" stopColor="#9c6e26" />
+              </linearGradient>
+              <radialGradient id="qpm-face" cx="50%" cy="34%" r="64%">
+                <stop offset="0%" stopColor="rgba(255, 246, 218, 0.55)" />
+                <stop offset="62%" stopColor="rgba(245, 220, 168, 0.18)" />
+                <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+              </radialGradient>
+            </defs>
+            <ellipse cx="11" cy="11" rx="10" ry="10" fill="url(#qpm-face)" />
+            <circle
+              cx="11"
+              cy="11"
+              r="9.4"
+              fill="none"
+              stroke="url(#qpm-gold)"
+              strokeWidth="0.55"
+            />
+            <circle
+              cx="11"
+              cy="11"
+              r="8.4"
+              fill="none"
+              stroke="url(#qpm-gold)"
+              strokeWidth="0.28"
+              strokeDasharray="0.5 1.4"
+              opacity="0.78"
+            />
+            <text
+              x="11"
+              y="12.6"
+              textAnchor="middle"
+              className="question-press-mark-letter"
+            >
+              m
+            </text>
+            <text
+              x="11"
+              y="15.4"
+              textAnchor="middle"
+              className="question-press-mark-roman"
+            >
+              ·iii
+            </text>
+            <line
+              x1="6.6"
+              y1="16.6"
+              x2="15.4"
+              y2="16.6"
+              stroke="url(#qpm-gold)"
+              strokeWidth="0.3"
+              strokeLinecap="round"
+              opacity="0.7"
+            />
+          </svg>
+        </span>
+        <em className="question-press-mark-key">manu m · iii</em>
+        <span className="question-press-mark-sep" aria-hidden="true">·</span>
+        <em className="question-press-mark-tail">
+          the question, pressed in this folio
+        </em>
+        <span className="question-press-mark-pilcrow" aria-hidden="true">¶</span>
+      </span>
+      <span className="question-press-mark-rule question-press-mark-rule--right" />
     </figure>
   )
 }
@@ -9286,7 +9382,7 @@ export function App() {
 
         <header className="sheet-header sheet-header--recto">
           <p className="running-head-title">
-            <span aria-hidden="true">§</span> cap. xviii · an experiment in questioning
+            <span aria-hidden="true">§</span> the question · caput xviii
           </p>
           <span className="running-head-pilcrow" aria-hidden="true">¶</span>
           <p className="running-head-folio">
@@ -9352,17 +9448,9 @@ export function App() {
 
             <TitleRule visible={phase !== 'idle'} reduced={reduced} />
 
-            <ReadingTide progress={Math.min(1, inkProgress + 0.15)} reduced={reduced} />
+            <QuestionPressMark visible={phase !== 'idle'} reduced={reduced} />
 
-            <div className="recto-spread-foot" aria-hidden="true">
-              <span className="recto-spread-foot-rule recto-spread-foot-rule--left" />
-              <span className="recto-spread-foot-cluster">
-                <em className="recto-spread-foot-key">the question, set</em>
-                <span className="recto-spread-foot-sep" aria-hidden="true">·</span>
-                <em className="recto-spread-foot-tail">the page remembers</em>
-              </span>
-              <span className="recto-spread-foot-rule recto-spread-foot-rule--right" />
-            </div>
+            <ReadingTide progress={Math.min(1, inkProgress + 0.15)} reduced={reduced} />
 
             <div className="recto-reader-stage" aria-hidden="true">
               <ManuscriptReader
@@ -9469,7 +9557,7 @@ export function App() {
             <MarginalMoth active={replyShown && !reduced} cycle={cycle} reduced={reduced} />
             <header className="sheet-header sheet-header--verso">
               <p className="running-head-title">
-                <span aria-hidden="true">§</span> the reply · set in italic
+                <span aria-hidden="true">§</span> the reply · caput xviii
               </p>
               <span className="running-head-pilcrow" aria-hidden="true">¶</span>
               <p className="running-head-folio">

@@ -1621,6 +1621,158 @@ button { font: inherit; }
   .title-rule-caption { font-size: 8.5px; letter-spacing: 0.28em; }
 }
 
+/* ────────── question press mark — a hand-drawn printer's signature beneath the question ────────── */
+
+.question-press-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.4vw, 16px);
+  margin: clamp(14px, 1.8vw, 22px) 0 clamp(8px, 1vw, 14px) clamp(122px, 13.6vw, 178px);
+  max-width: 540px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity 900ms var(--ease) 1080ms,
+    transform 900ms var(--ease) 1080ms;
+}
+.question-press-mark.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.question-press-mark.is-static {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+.question-press-mark-rule {
+  flex: 0 0 clamp(20px, 4vw, 56px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.36) 60%,
+    rgba(217, 101, 74, 0.45)
+  );
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 1100ms var(--ease) 1280ms;
+}
+.question-press-mark-rule--left { transform-origin: right center; }
+.question-press-mark-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(167, 60, 44, 0.36) 60%,
+    rgba(217, 101, 74, 0.45)
+  );
+  transform-origin: left center;
+}
+.question-press-mark.is-visible .question-press-mark-rule,
+.question-press-mark.is-static .question-press-mark-rule {
+  transform: scaleX(1);
+}
+.question-press-mark-cluster {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 0;
+}
+.question-press-mark-sigil {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(20px, 2.2vw, 26px);
+  height: clamp(20px, 2.2vw, 26px);
+  flex: 0 0 auto;
+  filter: drop-shadow(0 1px 0 rgba(245, 198, 91, 0.18));
+  transition: transform 1200ms var(--ease) 1180ms, filter 1600ms var(--ease);
+  transform-origin: center;
+}
+.question-press-mark.is-visible .question-press-mark-sigil,
+.question-press-mark.is-static .question-press-mark-sigil {
+  transform: rotate(-4deg);
+}
+.has-complete .question-press-mark-sigil {
+  animation: press-mark-breath 5.6s ease-in-out infinite;
+}
+.is-complete .question-press-mark-sigil {
+  animation: press-mark-breath 5.6s ease-in-out infinite;
+}
+@keyframes press-mark-breath {
+  0%, 100% {
+    filter: drop-shadow(0 1px 0 rgba(245, 198, 91, 0.18));
+  }
+  50% {
+    filter: drop-shadow(0 0 6px rgba(245, 198, 91, 0.42));
+  }
+}
+.question-press-mark-sigil svg { display: block; width: 100%; height: 100%; }
+.question-press-mark-letter {
+  fill: url(#qpm-gold);
+  font: italic 700 8.4px/1 var(--display);
+  letter-spacing: -0.01em;
+  paint-order: stroke fill;
+}
+.question-press-mark-roman {
+  fill: rgba(107, 74, 37, 0.78);
+  font: italic 600 4.4px/1 var(--display);
+  letter-spacing: 0.04em;
+}
+.question-press-mark-key {
+  font: italic 600 11.5px/1.1 var(--serif);
+  letter-spacing: 0.01em;
+  color: var(--coral-deep);
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+.question-press-mark-sep {
+  color: var(--coral);
+  opacity: 0.55;
+  font: italic 600 12px/1 var(--display);
+}
+.question-press-mark-tail {
+  font: italic 400 13px/1.1 var(--serif);
+  letter-spacing: 0.005em;
+  color: rgba(17, 32, 42, 0.62);
+  white-space: nowrap;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.question-press-mark-pilcrow {
+  color: var(--coral);
+  opacity: 0.5;
+  font: italic 600 14px/1 var(--display);
+  flex: 0 0 auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .question-press-mark { transition: none; opacity: 1; transform: none; }
+  .question-press-mark-rule { transition: none; transform: scaleX(1); }
+  .question-press-mark-sigil { transition: none; transform: rotate(-4deg); animation: none !important; }
+}
+@media (max-width: 880px) {
+  .question-press-mark { margin-left: 0; max-width: 100%; }
+  .question-press-mark-rule { flex-basis: clamp(14px, 3vw, 32px); }
+  .question-press-mark-tail { font-size: 12.5px; }
+}
+@media (max-width: 640px) {
+  .question-press-mark { gap: 8px; margin-top: 12px; margin-bottom: 8px; }
+  .question-press-mark-cluster { gap: 6px; }
+  .question-press-mark-key { font-size: 10.5px; }
+  .question-press-mark-tail { font-size: 11.5px; }
+  .question-press-mark-pilcrow { font-size: 12px; }
+  .question-press-mark-rule { flex-basis: 14px; }
+}
+@media (max-width: 480px) {
+  .question-press-mark-cluster { flex-wrap: wrap; row-gap: 4px; }
+  .question-press-mark-rule { display: none; }
+}
+
 .question-deck {
   max-width: 460px;
   margin: 30px 0 0;
@@ -12998,48 +13150,6 @@ button { font: inherit; }
   .reading-tide-letter--key { font-size: 11px; }
   .reading-tide-cap-key { font-size: 8px; letter-spacing: 0.22em; }
   .reading-tide-cap-tail { font-size: 9.5px; }
-}
-
-/* the small recto-spread-foot — replaces the quiet recto-signing-rule beneath the question */
-.recto-spread-foot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin: 0 0 18px;
-  font-size: 10.5px;
-  color: rgba(17, 32, 42, 0.7);
-  font-style: italic;
-  letter-spacing: 0.04em;
-  opacity: 0;
-  transform: translateY(-2px);
-  transition: opacity 800ms var(--ease) 1600ms, transform 800ms var(--ease) 1600ms;
-}
-.has-answer .recto-spread-foot { opacity: 0.86; transform: none; }
-.recto-spread-foot-rule {
-  flex: 0 0 clamp(28px, 5vw, 56px);
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(167, 60, 44, 0.36));
-}
-.recto-spread-foot-rule--right {
-  background: linear-gradient(to left, transparent, rgba(167, 60, 44, 0.36));
-}
-.recto-spread-foot-cluster {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-}
-.recto-spread-foot-key {
-  font: italic 700 9px/1 var(--sans);
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--coral-deep);
-}
-.recto-spread-foot-sep { color: var(--coral); opacity: 0.7; }
-.recto-spread-foot-tail { color: rgba(17, 32, 42, 0.66); }
-
-@media (prefers-reduced-motion: reduce) {
-  .recto-spread-foot { transition: none; opacity: 0.86; transform: none; }
 }
 
 /* the manuscript reader — a small marginal figure seated with the page, watching the press */
