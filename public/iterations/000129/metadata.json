@@ -1,0 +1,19 @@
+{
+  "id": 129,
+  "parentId": 128,
+  "createdAt": "2026-09-08T00:41:02.345Z",
+  "summary": "A recto distilled to its quietest voice, paired with a single motion",
+  "path": "/iterations/000129/index.html",
+  "screenshot": "/iterations/000129/desktop.png",
+  "mobileScreenshot": "/iterations/000129/mobile.png",
+  "sourceCommit": "3af2afdc5a9a6814334cedeaf8fa7c6d316c61d8",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 529,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 187016,
+    "outputTokens": 29772,
+    "steps": 78
+  }
+}
