@@ -14105,3 +14105,317 @@ button { font: inherit; }
   .press-plate-action { gap: 12px; }
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 149 · a composed recto title block
+
+   The title now earns two new composed elements: a refined specimen
+   wordmark beneath the H1 that treats "Minimax M3" as a real printer's
+   specimen, and a press key ornament that lives in the right margin of
+   the title as a single, distinctive detail.
+
+   The H1 typography is also tightened: smaller, more confident drop
+   cap; tighter kerning; refined subject treatment; better integration
+   with the press key in the right margin.
+   ────────────────────────────────────────────────────────────────────── */
+
+/* the press key — a small hand-drawn key in the right margin of the title */
+
+.broadsheet-title-key {
+  position: absolute;
+  top: clamp(60px, 7vh, 100px);
+  right: clamp(-46px, -4vw, -20px);
+  width: clamp(70px, 8.4vw, 110px);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transform: translate(-6px, -4px) rotate(-3deg);
+  transition:
+    opacity 900ms var(--ease) 760ms,
+    transform 1100ms var(--ease) 760ms;
+}
+.broadsheet-title-key .press-key {
+  opacity: 0;
+  transform: none;
+  transition: none;
+}
+.has-answer .broadsheet-title-key .press-key { opacity: 1; }
+.has-answer .broadsheet-title-key {
+  opacity: 1;
+  transform: translate(0, 0) rotate(-2deg);
+}
+.broadsheet-title-key .press-key-cap {
+  opacity: 0;
+  transition: opacity 700ms var(--ease) 1100ms;
+}
+.has-answer .broadsheet-title-key .press-key-cap { opacity: 0.78; }
+
+.press-key {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  color: var(--coral-deep);
+}
+.press-key-plate {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter:
+    drop-shadow(0 6px 12px rgba(80, 36, 14, 0.18))
+    drop-shadow(0 0 0.5px rgba(107, 74, 37, 0.32));
+}
+.press-key-bit {
+  transform-origin: 48px 48px;
+  animation: press-key-breathe 6.8s ease-in-out infinite;
+}
+@keyframes press-key-breathe {
+  0%, 100% { transform: rotate(-22deg) scale(1); }
+  50%      { transform: rotate(-19deg) scale(1.025); }
+}
+.press-key-leaf--tr { animation: press-key-sway-a 7.2s ease-in-out infinite; }
+.press-key-leaf--bl { animation: press-key-sway-b 7.2s ease-in-out infinite; }
+@keyframes press-key-sway-a {
+  0%, 100% { transform: translate(72px, 18px) rotate(20deg); }
+  50%      { transform: translate(72px, 18px) rotate(24deg); }
+}
+@keyframes press-key-sway-b {
+  0%, 100% { transform: translate(22px, 78px) rotate(-20deg); }
+  50%      { transform: translate(22px, 78px) rotate(-24deg); }
+}
+.press-key-cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font: italic 9px/1 var(--display);
+  color: var(--coral-deep);
+  letter-spacing: 0.04em;
+  text-align: center;
+  white-space: nowrap;
+}
+.press-key-cap-rule {
+  flex: 0 0 14px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.5)
+  );
+}
+.press-key-cap-rule--right {
+  background: linear-gradient(to left, transparent, rgba(167, 60, 44, 0.5));
+}
+.press-key-cap-text { display: inline-flex; align-items: baseline; gap: 4px; }
+.press-key-cap-key {
+  font: 770 7.5px/1 var(--sans);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+.press-key-cap-sep { color: var(--coral); font-weight: 700; }
+.press-key-cap-tail { color: rgba(107, 74, 37, 0.78); }
+
+.press-key.is-static .press-key-bit,
+.press-key.is-static .press-key-leaf--tr,
+.press-key.is-static .press-key-leaf--bl {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-key-bit,
+  .press-key-leaf--tr,
+  .press-key-leaf--bl { animation: none !important; }
+  .broadsheet-title-key { transition: none; opacity: 1; transform: none; }
+}
+
+/* the specimen wordmark — "Minimax M3" set as a printed specimen card */
+
+.specimen-wordmark {
+  position: relative;
+  margin: clamp(18px, 2.6vw, 28px) 0 clamp(8px, 1.2vw, 14px);
+  padding: 0 clamp(64px, 12vw, 178px);
+  max-width: 100%;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 900ms var(--ease) 760ms,
+    transform 900ms var(--ease) 760ms;
+}
+.specimen-wordmark.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.specimen-wordmark.is-static { transition: none; }
+.specimen-wordmark-plate {
+  display: block;
+  width: min(100%, 380px);
+  height: clamp(48px, 5.4vw, 60px);
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.04));
+}
+.specimen-wordmark .swm-text {
+  font: italic 660 clamp(15px, 1.86vw, 19px) / 1 var(--display);
+  fill: #163a48;
+  letter-spacing: -0.005em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1;
+}
+.has-answer .specimen-wordmark .swm-text {
+  text-shadow: 0 0 6px rgba(31, 78, 96, 0.18);
+}
+.specimen-wordmark .swm-roman {
+  font: italic 500 9px / 1 var(--display);
+  fill: rgba(107, 74, 37, 0.62);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.specimen-wordmark .swm-leaf {
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 700ms var(--ease) 1100ms, transform 700ms var(--ease) 1100ms;
+}
+.specimen-wordmark.is-visible .swm-leaf {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .specimen-wordmark { opacity: 1; transform: none; transition: none; }
+  .specimen-wordmark .swm-leaf { opacity: 1; transform: none; transition: none; }
+}
+
+@media (max-width: 720px) {
+  .broadsheet-title-key {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: clamp(54px, 18vw, 80px);
+    margin: 8px auto 0;
+    transform: none;
+  }
+  .has-answer .broadsheet-title-key { transform: none; }
+  .specimen-wordmark {
+    padding: 0 clamp(0px, 8vw, 28px);
+  }
+}
+
+/* ── refined H1 typography: tighter, more confident, calmer ── */
+
+.broadsheet-title .title-flow {
+  font-weight: 660;
+  letter-spacing: -0.028em;
+  line-height: 1.0;
+  font-feature-settings:
+    "kern" 1, "liga" 1, "calt" 1,
+    "swsh" 1, "salt" 1, "onum" 1, "dlig" 1;
+}
+.broadsheet-title .title-initial-wrap {
+  width: clamp(96px, 11vw, 152px);
+  filter:
+    drop-shadow(0 10px 16px rgba(80, 36, 14, 0.22))
+    drop-shadow(0 0 0.5px rgba(107, 74, 37, 0.32));
+}
+.broadsheet-title .title-subject {
+  color: #163a48;
+  font-weight: 640;
+  letter-spacing: -0.022em;
+  position: relative;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "swsh" 1, "onum" 1;
+  transition: text-shadow 900ms var(--ease);
+}
+.has-answer .broadsheet-title .title-subject {
+  text-shadow: 0 0 10px rgba(31, 78, 96, 0.18);
+}
+
+/* a refined question mark — subtle gold pin-prick above the hook */
+.broadsheet-title .title-questions {
+  position: relative;
+  display: inline-block;
+  font-style: italic;
+  font-weight: 620;
+  font-size: 1.16em;
+  line-height: 0.86;
+  margin-left: 0.04em;
+  color: var(--coral-deep);
+  transform: translateY(0.06em);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1;
+  text-shadow:
+    0 0.04em 0 rgba(167, 60, 44, 0.1),
+    0 0 0 rgba(217, 101, 74, 0);
+  transition: text-shadow 1200ms var(--ease) 600ms;
+}
+.has-answer .broadsheet-title .title-questions {
+  text-shadow:
+    0 0.04em 0 rgba(167, 60, 44, 0.16),
+    0 0 12px rgba(217, 101, 74, 0.32);
+}
+
+/* ── the broadsheet-title gains a refined spacing rhythm ── */
+.broadsheet-title {
+  margin-top: clamp(0px, 0.4vw, 4px);
+  padding-right: clamp(96px, 12vw, 152px);
+  row-gap: 4px;
+}
+
+@media (max-width: 720px) {
+  .broadsheet-title {
+    grid-template-columns: minmax(0, 80px) minmax(0, 1fr);
+    column-gap: 14px;
+    padding-right: 0;
+  }
+  .broadsheet-title .title-initial-wrap {
+    width: clamp(72px, 16vw, 92px);
+  }
+}
+
+@media (max-width: 480px) {
+  .broadsheet-title .title-flow {
+    font-size: clamp(28px, 9.2vw, 40px);
+    letter-spacing: -0.03em;
+  }
+  .broadsheet-title .title-questions { font-size: 1.18em; }
+  .specimen-wordmark { padding: 0 4px; }
+}
+
+/* ── better keyboard focus on the wax seal and other interactive elements ── */
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible {
+  outline: none;
+}
+.wax-seal:focus-visible,
+.reader-tide-station-button:focus-visible,
+.marginalia-note:focus-visible,
+.press-plate-mark-note:focus-visible {
+  outline: 2px solid rgba(245, 198, 91, 0.95);
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+.wax-seal:focus-visible {
+  outline-color: rgba(245, 198, 91, 0.78);
+  box-shadow:
+    0 0 0 6px rgba(245, 198, 91, 0.18),
+    0 0 30px 6px rgba(245, 198, 91, 0.32);
+  outline-offset: 4px;
+}
+
+/* ── the chapter opener tightens to a single composed masthead ── */
+.chapter-opener {
+  padding: clamp(18px, 2.6vw, 30px) 0 clamp(14px, 2vw, 20px);
+}
+.chapter-opener + .annotation {
+  margin-top: clamp(2px, 0.4vw, 6px);
+}
+
+/* ── the verso opening flow tightens: recto-verses gains a quieter hairline ── */
+.recto-verses {
+  padding: clamp(8px, 1.4vw, 14px) 0 clamp(12px, 2vw, 18px);
+}
+
+/* ── a small refinement to the almanac band: slightly tighter padding ── */
+.almanac-band {
+  margin: 4px 0 22px;
+  padding: 6px 4px;
+}
+

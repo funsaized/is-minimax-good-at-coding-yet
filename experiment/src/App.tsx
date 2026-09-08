@@ -5043,6 +5043,293 @@ function ReadingTally({ cycle }: { cycle: number }) {
 }
 
 /* ──────────────────────────────────────────────────────────────────────
+   iteration 149 · a refined specimen wordmark and a press key
+
+   The recto title now earns two new composed elements:
+
+   1. A small printer's specimen wordmark for "Minimax M3" — a hairline
+      rule above and below, an italic wordmark set between them, with a
+      small Roman numeral and a hand-drawn leaf beneath. It treats the
+      model being tested as a real printer's specimen, not just a span
+      styled with a hand-drawn rule.
+
+   2. A single hand-drawn press key — a small leaf-and-key ornament
+      that lives in the right margin of the title block as a quiet,
+      memorable ornament. It draws the eye as a single, distinctive
+      detail that earns its place beside the broadsheet drop cap.
+   ────────────────────────────────────────────────────────────────────── */
+
+function SpecimenWordmark({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <figure
+      className={`specimen-wordmark${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg
+        className="specimen-wordmark-plate"
+        viewBox="0 0 320 56"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="swm-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="50%" stopColor="rgba(156, 110, 38, 0.62)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="swm-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+        </defs>
+
+        <line
+          x1="2"
+          y1="6"
+          x2="318"
+          y2="6"
+          stroke="url(#swm-rule)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+        />
+        <circle cx="160" cy="6" r="1.4" fill="url(#swm-gold)" />
+        <circle cx="160" cy="6" r="0.5" fill="rgba(255, 248, 224, 0.95)" />
+
+        <text x="160" y="32" textAnchor="middle" className="swm-text">
+          Minimax M3
+        </text>
+
+        <line
+          x1="2"
+          y1="40"
+          x2="318"
+          y2="40"
+          stroke="url(#swm-rule)"
+          strokeWidth="0.32"
+          strokeLinecap="round"
+          strokeDasharray="0.6 1.4"
+          opacity="0.7"
+        />
+
+        <g className="swm-leaf">
+          <path
+            d="M 152 48 Q 156 44 160 47 Q 164 44 168 48"
+            fill="none"
+            stroke="rgba(167, 60, 44, 0.6)"
+            strokeWidth="0.45"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 152 48 Q 156 52 160 49 Q 164 52 168 48"
+            fill="none"
+            stroke="rgba(167, 60, 44, 0.36)"
+            strokeWidth="0.35"
+            strokeLinecap="round"
+          />
+        </g>
+
+        <text x="160" y="54" textAnchor="middle" className="swm-roman">
+          specimen · no. xviii · set for the reader
+        </text>
+      </svg>
+    </figure>
+  )
+}
+
+function PressKey({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <figure
+      className={`press-key${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg
+        className="press-key-plate"
+        viewBox="0 0 96 96"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="pk-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <linearGradient id="pk-gold-soft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#a47026" />
+          </linearGradient>
+          <radialGradient id="pk-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.42)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="48" cy="48" rx="46" ry="46" fill="url(#pk-halo)" />
+
+        <circle
+          cx="48"
+          cy="48"
+          r="38"
+          fill="rgba(255, 248, 224, 0.62)"
+          stroke="url(#pk-gold)"
+          strokeWidth="0.55"
+        />
+        <circle
+          cx="48"
+          cy="48"
+          r="34"
+          fill="none"
+          stroke="url(#pk-gold)"
+          strokeWidth="0.32"
+          strokeDasharray="0.5 1.4"
+          opacity="0.78"
+        />
+
+        <g
+          className="press-key-bit"
+          transform="translate(48 48) rotate(-22)"
+        >
+          <circle
+            r="4.4"
+            fill="none"
+            stroke="url(#pk-gold)"
+            strokeWidth="1.0"
+          />
+          <circle r="1.6" fill="rgba(107, 74, 37, 0.85)" />
+          <line
+            x1="0"
+            y1="-22"
+            x2="0"
+            y2="-4.4"
+            stroke="url(#pk-gold-soft)"
+            strokeWidth="0.95"
+            strokeLinecap="round"
+          />
+          <line
+            x1="0"
+            y1="4.4"
+            x2="0"
+            y2="22"
+            stroke="url(#pk-gold-soft)"
+            strokeWidth="0.95"
+            strokeLinecap="round"
+          />
+          <line
+            x1="-22"
+            y1="0"
+            x2="-4.4"
+            y2="0"
+            stroke="url(#pk-gold-soft)"
+            strokeWidth="0.95"
+            strokeLinecap="round"
+          />
+          <line
+            x1="4.4"
+            y1="0"
+            x2="22"
+            y2="0"
+            stroke="url(#pk-gold-soft)"
+            strokeWidth="0.95"
+            strokeLinecap="round"
+          />
+          <line
+            x1="15"
+            y1="-15"
+            x2="20"
+            y2="-20"
+            stroke="url(#pk-gold-soft)"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+            opacity="0.85"
+          />
+          <line
+            x1="-15"
+            y1="-15"
+            x2="-20"
+            y2="-20"
+            stroke="url(#pk-gold-soft)"
+            strokeWidth="0.7"
+            strokeLinecap="round"
+            opacity="0.85"
+          />
+        </g>
+
+        <g
+          className="press-key-leaf press-key-leaf--tr"
+          transform="translate(72 18) rotate(20)"
+        >
+          <path
+            d="M 0 0 Q 6 -6 12 -2 Q 10 4 0 0 Z"
+            fill="rgba(217, 101, 74, 0.32)"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.32"
+          />
+          <path
+            d="M 2 -1 Q 6 -4 10 -2"
+            fill="none"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.3"
+            strokeLinecap="round"
+          />
+        </g>
+        <g
+          className="press-key-leaf press-key-leaf--bl"
+          transform="translate(22 78) rotate(-20)"
+        >
+          <path
+            d="M 0 0 Q 6 -6 12 -2 Q 10 4 0 0 Z"
+            fill="rgba(217, 101, 74, 0.32)"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.32"
+          />
+          <path
+            d="M 2 -1 Q 6 -4 10 -2"
+            fill="none"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.3"
+            strokeLinecap="round"
+          />
+        </g>
+
+        <g fill="url(#pk-gold-soft)">
+          <circle cx="48" cy="9" r="0.55" />
+          <circle cx="48" cy="87" r="0.55" />
+          <circle cx="9" cy="48" r="0.5" />
+          <circle cx="87" cy="48" r="0.5" />
+        </g>
+      </svg>
+      <figcaption className="press-key-cap">
+        <span className="press-key-cap-rule press-key-cap-rule--left" aria-hidden="true" />
+        <span className="press-key-cap-text">
+          <em className="press-key-cap-key">the press key</em>
+          <span className="press-key-cap-sep" aria-hidden="true">·</span>
+          <em className="press-key-cap-tail">set beside the question</em>
+        </span>
+        <span className="press-key-cap-rule press-key-cap-rule--right" aria-hidden="true" />
+      </figcaption>
+    </figure>
+  )
+}
+
+/* ──────────────────────────────────────────────────────────────────────
    iteration 148 · a reading glance sits beneath the press instruction.
 
    A small horizontal whisper at the foot of the question panel. It
@@ -9543,9 +9830,13 @@ export function App() {
               </span>
             </h1>
 
+            <span className="broadsheet-title-key" aria-hidden="true">
+              <PressKey visible={phase !== 'idle'} reduced={reduced} />
+            </span>
+
             <TitleRule visible={phase !== 'idle'} reduced={reduced} />
 
-            <QuestionPressMark visible={phase !== 'idle'} reduced={reduced} />
+            <SpecimenWordmark visible={phase !== 'idle'} reduced={reduced} />
 
             <ReadingTide progress={Math.min(1, inkProgress + 0.15)} reduced={reduced} />
 
