@@ -1348,6 +1348,106 @@ function CulDeLampe({
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 158 · the folio's own closing colophon
+
+   A single composed silverpoint impression beneath the sheet-foot:
+   a thin gold rule, a centered press monogram, and one italic line
+   that names the press, the chapter and the year in their own hand.
+   It mirrors the FolioPressPlate at the head, but at a slightly
+   smaller scale — the press's closing signature, set after the
+   reader has reached the bottom of the leaf.
+   ────────────────────────────────────────────────────────────────────── */
+
+function FolioPressColophon({
+  now,
+  reduced,
+}: {
+  now: Date
+  reduced: boolean
+}) {
+  const yearRoman = toRomanYear(now.getFullYear())
+  return (
+    <figure
+      className={`folio-press-colophon${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="folio-press-colophon-rule"
+        viewBox="0 0 320 18"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="fpc-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="12%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="50%" stopColor="rgba(200, 146, 62, 0.74)" />
+            <stop offset="88%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="fpc-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.32)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="fpc-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+        </defs>
+        <line
+          x1="6"
+          y1="14"
+          x2="314"
+          y2="14"
+          stroke="url(#fpc-rule-ghost)"
+          strokeWidth="0.4"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="11"
+          x2="314"
+          y2="11"
+          stroke="url(#fpc-rule)"
+          strokeWidth="0.6"
+          strokeLinecap="round"
+        />
+        <g className="folio-press-colophon-mid" transform="translate(160 9)">
+          <line x1="-78" y1="0" x2="-22" y2="0" stroke="url(#fpc-rule)" strokeWidth="0.4" strokeLinecap="round" opacity="0.78" />
+          <line x1="22" y1="0" x2="78" y2="0" stroke="url(#fpc-rule)" strokeWidth="0.4" strokeLinecap="round" opacity="0.78" />
+
+          <circle r="11" fill="rgba(255, 246, 218, 0.78)" stroke="url(#fpc-gold)" strokeWidth="0.55" />
+          <circle r="9" fill="none" stroke="url(#fpc-gold)" strokeWidth="0.22" strokeDasharray="0.4 1.2" opacity="0.78" />
+          <circle r="3.4" fill="none" stroke="rgba(107, 74, 37, 0.36)" strokeWidth="0.28" />
+          <line x1="-7" y1="0" x2="-3.6" y2="0" stroke="rgba(107, 74, 37, 0.6)" strokeWidth="0.4" strokeLinecap="round" />
+          <line x1="3.6" y1="0" x2="7" y2="0" stroke="rgba(107, 74, 37, 0.6)" strokeWidth="0.4" strokeLinecap="round" />
+          <line x1="0" y1="-7" x2="0" y2="-3.6" stroke="rgba(107, 74, 37, 0.6)" strokeWidth="0.4" strokeLinecap="round" />
+          <line x1="0" y1="3.6" x2="0" y2="7" stroke="rgba(107, 74, 37, 0.6)" strokeWidth="0.4" strokeLinecap="round" />
+          <line x1="-5" y1="-5" x2="-3" y2="-3" stroke="rgba(107, 74, 37, 0.5)" strokeWidth="0.32" strokeLinecap="round" />
+          <line x1="5" y1="5" x2="3" y2="3" stroke="rgba(107, 74, 37, 0.5)" strokeWidth="0.32" strokeLinecap="round" />
+          <circle cx="0" cy="0" r="0.7" fill="rgba(167, 60, 44, 0.86)" />
+        </g>
+        <g className="folio-press-colophon-pips" fill="rgba(167, 60, 44, 0.5)">
+          <circle cx="56" cy="9" r="0.5" />
+          <circle cx="264" cy="9" r="0.5" />
+        </g>
+      </svg>
+      <p className="folio-press-colophon-line">
+        <em className="folio-press-colophon-key">explicit caput xviii</em>
+        <span className="folio-press-colophon-sep" aria-hidden="true">·</span>
+        <em className="folio-press-colophon-mid-text">manu m · iii · ad lucem</em>
+        <span className="folio-press-colophon-sep" aria-hidden="true">·</span>
+        <em className="folio-press-colophon-tail">{yearRoman}</em>
+        <span className="folio-press-colophon-mark" aria-hidden="true">¶</span>
+      </p>
+    </figure>
+  )
+}
+
 function IlluminatedInitial({ letter }: { letter: string }) {
   const upper = letter.toUpperCase()
   return (
@@ -5311,6 +5411,206 @@ function MarginalMoth({
    earns a complete opening-closing symmetry: every spread now begins
    with a press signature and ends with one.
    ────────────────────────────────────────────────────────────────────── */
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 158 · a silverpoint impression, set above the question.
+
+   The folio's own press plate — an engraved, masterfully composed tableau
+   that gathers the chapter, the hour, the press monogram and a thin
+   epigraph into a single composed object above the question. The plate
+   is the page's own signature: a printer's silverpoint at the head of
+   the recto, like a coat-of-arms set above the title of an old edition.
+   It replaces three stacked small inscriptions (head-note, hour-of-
+   reading, epigraph) with one breathing, composed impression that earns
+   the space the folio gives it.
+   ────────────────────────────────────────────────────────────────────── */
+
+function FolioPressPlate({
+  now,
+  reduced,
+}: {
+  now: Date
+  reduced: boolean
+}) {
+  const dayName = WEEKDAYS[now.getDay()].slice(0, 3).toLowerCase()
+  const dayOrdinal = ORDINALS[Math.min(ORDINALS.length - 1, now.getDate() - 1)]
+  const monthName = MONTHS[now.getMonth()].slice(0, 3).toLowerCase()
+  const yearRoman = toRomanYear(now.getFullYear())
+  const hour24 = now.getHours()
+  const minutes = now.getMinutes()
+  const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
+  const h12 = ((hour24 + 11) % 12) + 1
+  const mm = String(minutes).padStart(2, '0')
+
+  return (
+    <figure
+      className={`folio-press-plate${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="folio-press-plate-field"
+        viewBox="0 0 320 84"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="fpp-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <linearGradient id="fpp-gold-soft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#a47026" />
+          </linearGradient>
+          <linearGradient id="fpp-rule-h" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="50%" stopColor="rgba(200, 146, 62, 0.72)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <radialGradient id="fpp-disc" cx="50%" cy="38%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.85)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.62)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0.32)" />
+          </radialGradient>
+          <radialGradient id="fpp-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.32)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+          <pattern id="fpp-grain" width="3" height="3" patternUnits="userSpaceOnUse">
+            <circle cx="0.6" cy="0.4" r="0.4" fill="rgba(107, 74, 37, 0.06)" />
+            <circle cx="2.2" cy="1.6" r="0.3" fill="rgba(107, 74, 37, 0.05)" />
+          </pattern>
+        </defs>
+
+        <ellipse cx="160" cy="42" rx="148" ry="36" fill="url(#fpp-halo)" />
+
+        <line
+          x1="6"
+          y1="12"
+          x2="314"
+          y2="12"
+          stroke="url(#fpp-rule-h)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="72"
+          x2="314"
+          y2="72"
+          stroke="url(#fpp-rule-h)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="14.4"
+          x2="314"
+          y2="14.4"
+          stroke="rgba(167, 60, 44, 0.2)"
+          strokeWidth="0.32"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="69.6"
+          x2="314"
+          y2="69.6"
+          stroke="rgba(167, 60, 44, 0.2)"
+          strokeWidth="0.32"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+
+        <g className="folio-press-plate-glyph folio-press-plate-glyph--left" transform="translate(46 42)">
+          <circle r="20" fill="url(#fpp-disc)" />
+          <circle r="20" fill="url(#fpp-grain)" opacity="0.7" />
+          <circle r="18" fill="none" stroke="url(#fpp-gold)" strokeWidth="0.55" />
+          <circle r="16" fill="none" stroke="url(#fpp-gold)" strokeWidth="0.22" strokeDasharray="0.4 1.2" opacity="0.78" />
+          <circle r="9" fill="none" stroke="url(#fpp-gold)" strokeWidth="0.3" />
+          <text x="0" y="3.2" textAnchor="middle" className="fpp-letter">
+            m
+          </text>
+          <text x="0" y="9" textAnchor="middle" className="fpp-roman">
+            ·iii
+          </text>
+          <line x1="-7" y1="-7" x2="-10" y2="-10" stroke="url(#fpp-gold-soft)" strokeWidth="0.55" strokeLinecap="round" opacity="0.7" />
+          <line x1="7" y1="-7" x2="10" y2="-10" stroke="url(#fpp-gold-soft)" strokeWidth="0.55" strokeLinecap="round" opacity="0.7" />
+          <line x1="-7" y1="7" x2="-10" y2="10" stroke="url(#fpp-gold-soft)" strokeWidth="0.55" strokeLinecap="round" opacity="0.7" />
+          <line x1="7" y1="7" x2="10" y2="10" stroke="url(#fpp-gold-soft)" strokeWidth="0.55" strokeLinecap="round" opacity="0.7" />
+          <circle cx="0" cy="0" r="0.55" fill="rgba(107, 74, 37, 0.92)" />
+        </g>
+
+        <g className="folio-press-plate-glyph folio-press-plate-glyph--right" transform="translate(274 42)">
+          <circle r="14" fill="none" stroke="url(#fpp-gold)" strokeWidth="0.5" />
+          <circle r="12" fill="none" stroke="url(#fpp-gold)" strokeWidth="0.22" strokeDasharray="0.5 1.4" opacity="0.7" />
+          <line x1="0" y1="-9" x2="0" y2="-12" stroke="url(#fpp-gold-soft)" strokeWidth="0.55" strokeLinecap="round" />
+          <line x1="0" y1="9" x2="0" y2="12" stroke="url(#fpp-gold-soft)" strokeWidth="0.55" strokeLinecap="round" />
+          <line x1="-9" y1="0" x2="-12" y2="0" stroke="url(#fpp-gold-soft)" strokeWidth="0.55" strokeLinecap="round" />
+          <line x1="9" y1="0" x2="12" y2="0" stroke="url(#fpp-gold-soft)" strokeWidth="0.55" strokeLinecap="round" />
+          <line x1="-6.4" y1="-6.4" x2="-8.5" y2="-8.5" stroke="url(#fpp-gold-soft)" strokeWidth="0.45" strokeLinecap="round" opacity="0.85" />
+          <line x1="6.4" y1="-6.4" x2="8.5" y2="-8.5" stroke="url(#fpp-gold-soft)" strokeWidth="0.45" strokeLinecap="round" opacity="0.85" />
+          <line x1="-6.4" y1="6.4" x2="-8.5" y2="8.5" stroke="url(#fpp-gold-soft)" strokeWidth="0.45" strokeLinecap="round" opacity="0.85" />
+          <line x1="6.4" y1="6.4" x2="8.5" y2="8.5" stroke="url(#fpp-gold-soft)" strokeWidth="0.45" strokeLinecap="round" opacity="0.85" />
+          <circle r="1.4" fill="url(#fpp-gold)" />
+          <circle r="0.5" fill="rgba(107, 74, 37, 0.92)" />
+        </g>
+
+        <g className="folio-press-plate-mid">
+          <line x1="80" y1="42" x2="118" y2="42" stroke="url(#fpp-rule-h)" strokeWidth="0.4" strokeLinecap="round" opacity="0.85" />
+          <line x1="202" y1="42" x2="240" y2="42" stroke="url(#fpp-rule-h)" strokeWidth="0.4" strokeLinecap="round" opacity="0.85" />
+
+          <circle cx="160" cy="32" r="1.2" fill="url(#fpp-gold-soft)" />
+          <path d="M 156 38 Q 160 35 164 38" fill="none" stroke="rgba(167, 60, 44, 0.7)" strokeWidth="0.45" strokeLinecap="round" />
+          <line x1="148" y1="42" x2="172" y2="42" stroke="url(#fpp-gold)" strokeWidth="0.55" strokeLinecap="round" opacity="0.85" />
+          <path d="M 156 46 Q 160 49 164 46" fill="none" stroke="rgba(167, 60, 44, 0.7)" strokeWidth="0.45" strokeLinecap="round" />
+
+          <text x="160" y="27" textAnchor="middle" className="fpp-crown">
+            caput xviii · lxxvii
+          </text>
+          <text x="160" y="60.5" textAnchor="middle" className="fpp-base">
+            {dayName} · the {dayOrdinal} of {monthName} · {h12}:{mm} {period} · {yearRoman}
+          </text>
+
+          <text x="160" y="68" textAnchor="middle" className="fpp-quote">
+            ad lucem · perlege ·
+          </text>
+        </g>
+
+        <g className="folio-press-plate-corner folio-press-plate-corner--tl" fill="#cf3b29" fillOpacity="0.55">
+          <path d="M 6 8 L 12 8 Q 12 11 9.5 12 L 9.5 15 L 6 15 Z" />
+          <circle cx="7.4" cy="9.4" r="0.45" />
+        </g>
+        <g className="folio-press-plate-corner folio-press-plate-corner--tr" fill="#cf3b29" fillOpacity="0.5">
+          <path d="M 314 8 L 308 8 Q 308 11 310.5 12 L 310.5 15 L 314 15 Z" />
+          <circle cx="312.6" cy="9.4" r="0.45" />
+        </g>
+        <g className="folio-press-plate-corner folio-press-plate-corner--bl" fill="#a73c2c" fillOpacity="0.5">
+          <path d="M 6 76 L 12 76 Q 12 73 9.5 72 L 9.5 69 L 6 69 Z" />
+          <circle cx="7.4" cy="74.6" r="0.45" />
+        </g>
+        <g className="folio-press-plate-corner folio-press-plate-corner--br" fill="#a73c2c" fillOpacity="0.5">
+          <path d="M 314 76 L 308 76 Q 308 73 310.5 72 L 310.5 69 L 314 69 Z" />
+          <circle cx="312.6" cy="74.6" r="0.45" />
+        </g>
+      </svg>
+
+      <figcaption className="folio-press-plate-cap">
+        <span className="folio-press-plate-cap-rule folio-press-plate-cap-rule--left" />
+        <span className="folio-press-plate-cap-cluster">
+          <em className="folio-press-plate-cap-key">the press plate</em>
+          <span className="folio-press-plate-cap-sep" aria-hidden="true">·</span>
+          <em className="folio-press-plate-cap-tail">a silverpoint at the head of the folio</em>
+        </span>
+        <span className="folio-press-plate-cap-rule folio-press-plate-cap-rule--right" />
+      </figcaption>
+    </figure>
+  )
+}
 
 function PressHeadNote({
   visible,
@@ -10417,11 +10717,7 @@ export function App() {
           </p>
         </header>
 
-        <PressHeadNote visible reduced={reduced} variant="recto" />
-
-        <HourOfReading now={now} />
-
-        <Epigraph />
+        <FolioPressPlate now={now} reduced={reduced} />
 
         <aside
           className={`chapter-frontispiece${versoOpened ? ' is-opened' : ''}`}
@@ -10437,7 +10733,6 @@ export function App() {
             <span className="chapter-frontispiece-half-rule chapter-frontispiece-half-rule--right" />
           </p>
           <div className="chapter-opener">
-            <PrinterEmblem />
             <ChapterHead now={now} witness={false} />
             <ChapterSignature now={now} />
             <div className="chapter-opener-rule" aria-hidden="true">
@@ -10861,6 +11156,8 @@ export function App() {
           </p>
           <Bookplate cycle={cycle} />
         </footer>
+
+        <FolioPressColophon now={now} reduced={reduced} />
 
         <ReaderTide
           phase={phase}

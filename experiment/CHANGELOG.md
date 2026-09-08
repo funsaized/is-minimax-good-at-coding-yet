@@ -1,10 +1,11 @@
-# Changelog
+# Frontend iteration 158
 
-## Iteration 157
+## Summary
+Replace the stacked press-head-note, hour-of-reading and epigraph above the question with a single composed silverpoint impression (FolioPressPlate), and close the sheet with a matching composed colophon (FolioPressColophon).
 
-A scholar's marginalia — once a reading completes, eight marked words in the answer and reply become hoverable and focusable anchors, each opening a small printed gloss below the panel. The notes draw on the same folio vocabulary that runs through the page (folium, ipse, legere, nunc, semel, iterum, tarde) and reward the reader for slowing down to look. Keyboard accessible, tap-to-pin on touch, and respectful of reduced-motion preferences.
-
-### Changed
-
-- `src/App.tsx`: added `ANSWER_GLOSSES` and `REPLY_GLOSSES` with eight word/observation pairs; added `wrapWithScholarAnchors` helper that splits a string around the matched words and renders each as a `scholar-anchor` span; added `ScholarGlosses` panel that renders the active observation; added `activeGloss` state and a phase-transition effect that clears it on a new reading; wired the anchors into the answer and reply text rendering, gated on `phase === 'complete'`.
-- `src/style.css`: added styles for `.scholar-anchor` (dotted underline, coral hover, gold underscore), `.scholar-glosses` (paper card with coral rule and seal mark), with reduced-motion and small-viewport media queries.
+## Changes
+- New `FolioPressPlate` at the head of the recto: one composed SVG impression that gathers the chapter sigil (Caput XVIII · LXXVII), the day's hour rosette, a centered "ad lucem · perlege" motto, and a press monogram to its left into a single engraved tableau.
+- Removed the small stacked `PressHeadNote`, `HourOfReading`, and `Epigraph` above the recto question; their content is now folded into the silverpoint plate.
+- Removed the duplicate `PrinterEmblem` from `chapter-frontispiece`; the frontispiece now opens more breathing — half-title above, chapter sigil + signature in the middle, closing italic line below — so the title below receives the page.
+- New `FolioPressColophon` at the foot of the sheet, mirroring the head impression at a slightly smaller scale: a thin gold rule with a centered press rosette, and one italic line that names "explicit caput xviii · manu m · iii · ad lucem · MMXXVI" in the press's own hand.
+- New pin-prick mark above the question-mark in the title — a small coral-and-gold dot that earns the question's weight and gently breathes once the page is pressed.

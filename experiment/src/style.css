@@ -1491,6 +1491,46 @@ button { font: inherit; }
   position: relative;
   padding: 0 0.02em 0 0.05em;
 }
+.has-answer .title-questions {
+  text-shadow:
+    0 0.04em 0 rgba(167, 60, 44, 0.1),
+    0 0 18px rgba(245, 198, 91, 0.18);
+}
+.title-questions::before {
+  content: "";
+  position: absolute;
+  left: 0.32em;
+  top: -0.42em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(167, 60, 44, 0.7);
+  box-shadow: 0 0 0 1px rgba(245, 198, 91, 0.55), 0 0 6px rgba(245, 198, 91, 0.5);
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: center;
+  transition: opacity 600ms var(--ease) 1400ms, transform 700ms var(--ease) 1400ms;
+}
+.has-answer .title-questions::before {
+  opacity: 1;
+  transform: scale(1);
+  animation: title-pin-prick 4.2s ease-in-out 2.2s infinite;
+}
+@keyframes title-pin-prick {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 1px rgba(245, 198, 91, 0.55), 0 0 6px rgba(245, 198, 91, 0.5);
+  }
+  50% {
+    transform: scale(1.18);
+    box-shadow: 0 0 0 1.5px rgba(245, 198, 91, 0.78), 0 0 10px rgba(245, 198, 91, 0.85);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .has-answer .title-questions::before {
+    animation: none !important;
+  }
+}
 
 /* a small printer's separator that breaks the title between subject and predicate */
 .title-verb-pivot {
@@ -15812,3 +15852,298 @@ a:focus-visible {
   .scholar-glosses-text { letter-spacing: 0.005em; }
 }
 
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 158 · the folio's silverpoint impression
+
+   The FolioPressPlate is the press's own composed head-impression —
+   a silverpoint at the top of the recto. It replaces the chain of
+   press-head-note, hour-of-reading, and epigraph with one engraved
+   tableau: chapter sigil on the left, hour rosette on the right, and
+   a composed mid-band that names the chapter, the day and the press
+   motto in their own hand.
+   ────────────────────────────────────────────────────────────────────── */
+
+.folio-press-plate {
+  position: relative;
+  margin: 0 auto clamp(8px, 1.6vw, 18px);
+  max-width: 520px;
+  padding: 6px clamp(10px, 2.4vw, 22px) 0;
+  opacity: 0;
+  transform: translateY(-3px);
+  animation: folio-press-plate-in 1200ms var(--ease) 80ms both;
+}
+.folio-press-plate.is-static { animation: none; opacity: 1; transform: none; }
+@keyframes folio-press-plate-in {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: none; }
+}
+.folio-press-plate-field {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.05));
+}
+.folio-press-plate-glyph--left {
+  transform-origin: 46px 42px;
+  transition: transform 900ms var(--ease);
+}
+.folio-press-plate-glyph--right {
+  transform-origin: 274px 42px;
+  transition: transform 900ms var(--ease);
+}
+.folio-press-plate:hover .folio-press-plate-glyph--left,
+.has-answer .folio-press-plate-glyph--left {
+  animation: fpp-glyph-left 12s ease-in-out 1.4s infinite;
+}
+.folio-press-plate:hover .folio-press-plate-glyph--right,
+.has-answer .folio-press-plate-glyph--right {
+  animation: fpp-glyph-right 14s ease-in-out 2s infinite;
+}
+@keyframes fpp-glyph-left {
+  0%, 100% { transform: translate(46px, 42px) rotate(-0.6deg); }
+  50%      { transform: translate(46px, 42px) rotate(0.6deg); }
+}
+@keyframes fpp-glyph-right {
+  0%, 100% { transform: translate(274px, 42px) rotate(2deg); }
+  50%      { transform: translate(274px, 42px) rotate(-2deg); }
+}
+.fpp-letter {
+  font: italic 700 13px/1 var(--display);
+  fill: url(#fpp-gold);
+  letter-spacing: -0.02em;
+  paint-order: stroke fill;
+}
+.fpp-roman {
+  font: italic 600 7.2px/1 var(--display);
+  fill: rgba(107, 74, 37, 0.78);
+  letter-spacing: 0.04em;
+}
+.fpp-crown {
+  font: 600 8.5px/1 var(--sans);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  fill: rgba(167, 60, 44, 0.78);
+}
+.fpp-base {
+  font: italic 600 8.4px/1 var(--display);
+  letter-spacing: 0.06em;
+  fill: rgba(17, 32, 42, 0.78);
+  text-transform: lowercase;
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.fpp-quote {
+  font: italic 600 7.4px/1 var(--display);
+  fill: rgba(167, 60, 44, 0.7);
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+}
+.folio-press-plate-mid {
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.04));
+}
+.folio-press-plate-cap {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 clamp(6px, 1.1vw, 12px);
+  margin: 8px 0 0;
+  padding: 0 clamp(6px, 1.4vw, 14px);
+  width: 100%;
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-style: italic;
+  letter-spacing: 0.022em;
+}
+.folio-press-plate-cap-rule {
+  flex: 0 0 clamp(18px, 4vw, 36px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(156, 110, 38, 0.4) 50%,
+    rgba(167, 60, 44, 0.46)
+  );
+}
+.folio-press-plate-cap-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(156, 110, 38, 0.4) 50%,
+    rgba(167, 60, 44, 0.46)
+  );
+}
+.folio-press-plate-cap-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.folio-press-plate-cap-key {
+  color: var(--coral-deep);
+  font: italic 600 12px/1 var(--display);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.folio-press-plate-cap-sep {
+  color: var(--coral);
+  font: 700 10.5px/1 var(--display);
+  opacity: 0.7;
+}
+.folio-press-plate-cap-tail {
+  color: var(--ink-soft);
+  font: italic 500 11px/1.2 var(--display);
+  letter-spacing: 0.012em;
+}
+@media (max-width: 720px) {
+  .folio-press-plate { padding: 4px 12px 0; }
+  .fpp-crown { font-size: 8px; letter-spacing: 0.36em; }
+  .fpp-base { font-size: 7.8px; letter-spacing: 0.04em; }
+  .fpp-quote { font-size: 7px; }
+  .folio-press-plate-cap-key { font-size: 11px; }
+  .folio-press-plate-cap-tail { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .folio-press-plate { animation: none; opacity: 1; transform: none; }
+  .folio-press-plate-glyph--left,
+  .folio-press-plate-glyph--right { animation: none !important; transform: none !important; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 158 · the folio's closing colophon
+
+   A single composed silverpoint impression beneath the sheet-foot:
+   a thin gold rule, a centered press monogram, one italic line that
+   names the press, the chapter and the year in their own hand.
+   Mirrors the FolioPressPlate at the head, but at a slightly smaller
+   scale — the press's closing signature.
+   ────────────────────────────────────────────────────────────────────── */
+
+.folio-press-colophon {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: clamp(20px, 3.2vw, 36px) auto 0;
+  padding: 0 clamp(12px, 3vw, 28px) clamp(6px, 1.2vw, 12px);
+  max-width: 520px;
+  opacity: 0;
+  transform: translateY(2px);
+  animation: folio-press-colophon-in 1500ms var(--ease) 360ms both;
+}
+.folio-press-colophon.is-static {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+@keyframes folio-press-colophon-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: none; }
+}
+.folio-press-colophon-rule {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.06));
+}
+.folio-press-colophon-mid {
+  transform-origin: 160px 9px;
+  animation: fpc-mid-breath 12s ease-in-out 1.6s infinite;
+}
+@keyframes fpc-mid-breath {
+  0%, 100% { transform: translate(160px, 9px) rotate(0deg); filter: drop-shadow(0 0 0 rgba(245, 198, 91, 0)); }
+  50%      { transform: translate(160px, 9px) rotate(45deg); filter: drop-shadow(0 0 6px rgba(245, 198, 91, 0.42)); }
+}
+.folio-press-colophon-pips circle {
+  animation: fpc-pip-pulse 6.4s ease-in-out infinite;
+}
+.folio-press-colophon-pips circle:last-child {
+  animation-delay: 0.6s;
+}
+@keyframes fpc-pip-pulse {
+  0%, 100% { fill: rgba(167, 60, 44, 0.5); }
+  50%      { fill: rgba(245, 198, 91, 0.78); }
+}
+.folio-press-colophon-line {
+  margin: 0;
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 8px;
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--ink-soft);
+  letter-spacing: 0.022em;
+}
+.folio-press-colophon-key {
+  color: var(--coral-deep);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.folio-press-colophon-mid-text {
+  color: var(--ink-soft);
+  font-weight: 500;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+}
+.folio-press-colophon-sep {
+  color: var(--coral);
+  opacity: 0.65;
+  font-weight: 600;
+  font-size: 11px;
+}
+.folio-press-colophon-tail {
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.folio-press-colophon-mark {
+  color: var(--coral);
+  opacity: 0.7;
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+@media (max-width: 720px) {
+  .folio-press-colophon-line { gap: 0 6px; }
+  .folio-press-colophon-key { font-size: 11px; }
+  .folio-press-colophon-mid-text { font-size: 10.5px; }
+  .folio-press-colophon-tail { font-size: 12px; }
+  .folio-press-colophon-mark { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .folio-press-colophon { animation: none; opacity: 1; transform: none; }
+  .folio-press-colophon-mid { animation: none !important; transform: translate(160px, 9px) !important; }
+  .folio-press-colophon-pips circle { animation: none !important; fill: rgba(167, 60, 44, 0.5) !important; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 158 · the chapter-frontispiece breathes
+
+   With the folio's silverpoint impression now carrying the press's
+   signature at the head, the chapter-frontispiece can drop the
+   printer-emblem and stand more breathing — the half-title above,
+   the chapter sigil and signature in the middle, and the closing
+   italic line below. The leaf opens with less weight and more
+   clarity, the title below receives the page.
+   ────────────────────────────────────────────────────────────────────── */
+
+.chapter-frontispiece {
+  padding: 0;
+}
+.chapter-opener {
+  padding: 14px 0 22px;
+}
+@media (max-width: 720px) {
+  .chapter-opener { padding: 10px 0 16px; }
+}
