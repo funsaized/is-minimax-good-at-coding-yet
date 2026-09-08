@@ -82,14 +82,14 @@ function Dust() {
 
     const seed = () => {
       const area = w * h
-      const count = Math.min(70, Math.max(24, Math.floor(area / 26000)))
+      const count = Math.min(46, Math.max(18, Math.floor(area / 32000)))
       motes = Array.from({ length: count }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        r: 0.3 + Math.random() * 1.6,
-        vy: 0.04 + Math.random() * 0.18,
-        vx: (Math.random() - 0.5) * 0.06,
-        a: 0.05 + Math.random() * 0.18,
+        r: 0.25 + Math.random() * 1.3,
+        vy: 0.03 + Math.random() * 0.12,
+        vx: (Math.random() - 0.5) * 0.04,
+        a: 0.04 + Math.random() * 0.13,
         ph: Math.random() * Math.PI * 2,
         tw: 0.4 + Math.random() * 0.6,
       }))
@@ -110,14 +110,14 @@ function Dust() {
       ctx.clearRect(0, 0, w, h)
       for (const p of motes) {
         p.y -= p.vy
-        p.x += p.vx + Math.sin(t * 0.0005 + p.ph) * 0.05
+        p.x += p.vx + Math.sin(t * 0.0005 + p.ph) * 0.04
         if (p.y < -6) {
           p.y = h + 6
           p.x = Math.random() * w
         }
         if (p.x < -6) p.x = w + 6
         if (p.x > w + 6) p.x = -6
-        const flicker = 0.55 + 0.45 * Math.sin(t * 0.0008 * p.tw + p.ph)
+        const flicker = 0.6 + 0.4 * Math.sin(t * 0.0008 * p.tw + p.ph)
         ctx.beginPath()
         ctx.fillStyle = `rgba(36, 30, 22, ${p.a * flicker})`
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
@@ -145,6 +145,32 @@ function Dust() {
   }, [])
 
   return <canvas ref={ref} className="dust" aria-hidden="true" />
+}
+
+function CropMarks() {
+  return (
+    <div className="crops" aria-hidden="true">
+      <span className="crop crop--tl" />
+      <span className="crop crop--tr" />
+      <span className="crop crop--bl" />
+      <span className="crop crop--br" />
+    </div>
+  )
+}
+
+function EditionPlate() {
+  return (
+    <div className="plate" aria-hidden="true">
+      <span className="plate__row plate__row--top">
+        <span className="plate__rule" />
+        <span className="plate__label">proof sheet</span>
+      </span>
+      <span className="plate__row plate__row--bot">
+        <span className="plate__sub">not for issue</span>
+        <span className="plate__rule plate__rule--end" />
+      </span>
+    </div>
+  )
 }
 
 function Seal() {
@@ -207,6 +233,30 @@ function InkBlot({ path }: { path: string }) {
   )
 }
 
+function Flourish() {
+  return (
+    <svg className="flourish" viewBox="0 0 60 18" aria-hidden="true">
+      <path d="M2 9 C 12 2, 22 16, 30 9 C 38 2, 48 16, 58 9" />
+      <circle cx="30" cy="9" r="1.2" fill="currentColor" />
+    </svg>
+  )
+}
+
+function Signature() {
+  return (
+    <svg className="signature" viewBox="0 0 110 30" aria-hidden="true">
+      <g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 22 C 9 12, 13 18, 16 22" />
+        <path d="M20 24 C 22 16, 26 10, 27 18 C 28 24, 30 22, 32 16" />
+        <path d="M44 12 C 40 16, 39 24, 46 24 C 52 24, 52 16, 48 12 C 44 9, 42 16, 47 19" />
+        <path d="M60 12 C 64 16, 64 24, 60 24 M 60 18 L 67 18" />
+        <path d="M74 24 L 74 12 L 86 24 L 86 12" />
+      </g>
+      <path d="M93 26 C 96 18, 100 22, 102 18" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 type WordProps = {
   text: string
   id?: string
@@ -229,6 +279,10 @@ function TitleWord({ text, id, active, onEnter, onLeave, scribble }: WordProps) 
       onBlur={onLeave}
       aria-describedby={`gloss-${id}`}
     >
+      <span className="word__brackets" aria-hidden="true">
+        <span className="bracket bracket--tl" />
+        <span className="bracket bracket--tr" />
+      </span>
       {text}
       {scribble && <Scribble path={scribble} />}
     </span>
@@ -277,11 +331,15 @@ export function App() {
       </header>
 
       <article className="proof" id="top">
+        <CropMarks />
+
         <aside className="proof__rail" aria-hidden="true">
           <span className="proof__q">Q.</span>
           <i className="proof__thread" />
           <small className="proof__hint">read<br />slowly</small>
         </aside>
+
+        <EditionPlate />
 
         <div className="proof__layout">
           <div className="proof__main">
@@ -337,8 +395,8 @@ export function App() {
                   aria-controls={answerId}
                   data-pulse={pulse}
                 >
+                  <span className="seal-cta__halo" aria-hidden="true" />
                   <span className="seal-cta__disc" aria-hidden="true">
-                    <span className="seal-cta__ring" />
                     <span className="seal-cta__icon"><Seal /></span>
                   </span>
                   <span className="seal-cta__text">
@@ -346,8 +404,13 @@ export function App() {
                       {open ? 'lift the seal' : 'press the seal'}
                     </strong>
                     <em className="seal-cta__sub">
-                      {open ? 'to fold the page back' : 'and the answer unfolds'}
+                      {open ? 'to fold the page back' : 'and the answer tips in'}
                     </em>
+                  </span>
+                  <span className="seal-cta__splat" aria-hidden="true">
+                    <svg viewBox="0 0 40 40" preserveAspectRatio="none">
+                      <path d="M20 18 C 26 16, 32 22, 28 28 C 24 34, 14 32, 12 26 C 10 20, 16 14, 22 18 C 26 22, 20 26, 18 22 Z" />
+                    </svg>
                   </span>
                 </button>
                 <p className="proof__aside">
@@ -363,8 +426,10 @@ export function App() {
               aria-hidden={!open}
               aria-labelledby="answer-title"
             >
-              <div className="answer__fold">
+              <div className="answer__plate">
                 <div className="answer__hatch" aria-hidden="true" />
+                <span className="answer__pin answer__pin--tl" aria-hidden="true" />
+                <span className="answer__pin answer__pin--tr" aria-hidden="true" />
                 <div className="answer__inner">
                   <div className="answer__stamp">
                     <Seal />
@@ -380,7 +445,10 @@ export function App() {
                       <em>for now</em>
                     </p>
                     <p className="answer__lead">
-                      <span className="answer__dropcap" aria-hidden="true">Y</span>
+                      <span className="answer__dropcap" aria-hidden="true">
+                        <span className="answer__dropcap-letter">Y</span>
+                        <span className="answer__dropcap-flourish"><Flourish /></span>
+                      </span>
                       <span className="sr-only">Y</span>es — when it stops trying to look impressive.
                     </p>
                     <div className="answer__columns">
@@ -461,6 +529,10 @@ export function App() {
              <span className="colophon__sep">·</span>
              made with intent, not certainty
           </p>
+          <div className="colophon__sign" aria-hidden="true">
+            <Signature />
+            <span className="colophon__sign-cap">signed at the press</span>
+          </div>
           <a className="colophon__up" href="#top">return to the question <span aria-hidden="true">↑</span></a>
         </footer>
       </article>
