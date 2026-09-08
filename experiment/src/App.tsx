@@ -2,21 +2,35 @@ import { useEffect, useId, useRef, useState } from 'react'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
-const MARGINALIA = [
+type Gloss = {
+  id: string
+  n: string
+  head: string
+  text: string
+  gloss: string
+}
+
+const MARGINALIA: Gloss[] = [
   {
+    id: 'm3',
     n: 'i.',
+    head: 'Keep the fingerprint',
+    gloss: 'a habit, not a name',
+    text: 'The maker is a habit, not a name. When the model rotates, the page should still feel like someone — or something — was here.',
+  },
+  {
+    id: 'good',
+    n: 'ii.',
     head: 'Choose a side',
+    gloss: 'one confident claim',
     text: 'A page gets clearer when it makes one confident choice instead of presenting every possible direction at once.',
   },
   {
-    n: 'ii.',
-    head: 'Keep the fingerprint',
-    text: 'A pause, an off-kilter line, a detail with no obvious reason — these are the traces that make a surface feel authored.',
-  },
-  {
+    id: 'yet',
     n: 'iii.',
     head: 'Protect the quiet',
-    text: 'Whitespace is not an empty state. It is the interval that lets the important thing arrive.',
+    gloss: 'the pause that matters',
+    text: '"Yet" carries the question. The pause before it is where the answer lives — and where the page earns its reading.',
   },
 ]
 
@@ -106,8 +120,9 @@ function Dust() {
 
     resize()
     window.addEventListener('resize', resize)
-    if (!reduce) raf = requestAnimationFrame(tick)
-    else {
+    if (!reduce) {
+      raf = requestAnimationFrame(tick)
+    } else {
       for (const p of motes) {
         ctx.beginPath()
         ctx.fillStyle = `rgba(36, 30, 22, ${p.a})`
@@ -168,17 +183,59 @@ function Kite() {
   )
 }
 
+function Caret() {
+  return (
+    <svg className="caret" viewBox="0 0 12 12" aria-hidden="true">
+      <path d="M6 1 L11 10 L1 10 Z" />
+    </svg>
+  )
+}
+
+type WordProps = {
+  text: string
+  id?: string
+  active?: boolean
+  onEnter?: () => void
+  onLeave?: () => void
+}
+
+function TitleWord({ text, id, active, onEnter, onLeave }: WordProps) {
+  if (!id) return <>{text}</>
+  return (
+    <span
+      className={`word ${active ? 'word--active' : ''}`}
+      data-id={id}
+      tabIndex={0}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      onFocus={onEnter}
+      onBlur={onLeave}
+      aria-describedby={`gloss-${id}`}
+    >
+      {text}
+    </span>
+  )
+}
+
 export function App() {
   const [open, setOpen] = useState(false)
+  const [hovered, setHovered] = useState<string | null>(null)
+  const [pulse, setPulse] = useState(0)
   const answerId = useId()
   const now = useNow(30_000)
+  const sealRef = useRef<HTMLButtonElement>(null)
+
+  const onToggle = () => {
+    setOpen(v => !v)
+    setPulse(p => p + 1)
+  }
 
   return (
     <main className="folio">
       <Dust />
+      <div className="folio__lamp" aria-hidden="true" />
       <div className="folio__vignette" aria-hidden="true" />
       <div className="folio__grain" aria-hidden="true" />
-      <div className="folio__lamp" aria-hidden="true" />
 
       <header className="folio__head">
         <a className="folio__sig" href="#top" aria-label="Return to the question">
@@ -190,12 +247,17 @@ export function App() {
         </a>
         <nav aria-label="Sections" className="folio__nav">
           <a href="#question">question</a>
-          <a href="#answer">answer</a>
+          <a
+            href="#answer"
+            onClick={() => setOpen(true)}
+          >
+            answer
+          </a>
           <a href="#marginalia">margin</a>
         </nav>
-         <span className="folio__edition" aria-label="Publication note">
-           an unfinished<br /><i>answer</i>
-         </span>
+        <span className="folio__edition" aria-label="Publication note">
+          an unfinished<br /><i>answer</i>
+        </span>
       </header>
 
       <article className="proof" id="top">
@@ -213,7 +275,31 @@ export function App() {
           </p>
           <h1 className="proof__title">
             <span aria-hidden="true" className="proof__title-rule" />
-            {TITLE}
+            <TitleWord text="is Minimax " />
+            <TitleWord
+              text="M3"
+              id="m3"
+              active={hovered === 'm3'}
+              onEnter={() => setHovered('m3')}
+              onLeave={() => setHovered(null)}
+            />
+            <TitleWord text=" " />
+            <TitleWord
+              text="good at"
+              id="good"
+              active={hovered === 'good'}
+              onEnter={() => setHovered('good')}
+              onLeave={() => setHovered(null)}
+            />
+            <TitleWord text=" frontend " />
+            <TitleWord
+              text="yet"
+              id="yet"
+              active={hovered === 'yet'}
+              onEnter={() => setHovered('yet')}
+              onLeave={() => setHovered(null)}
+            />
+            <TitleWord text="?" />
             <span aria-hidden="true" className="proof__title-rule" />
           </h1>
           <p className="proof__lede">
@@ -222,16 +308,25 @@ export function App() {
 
           <div className="proof__cue">
             <button
+              ref={sealRef}
               type="button"
-              className={`turn ${open ? 'turn--open' : ''}`}
-              onClick={() => setOpen(v => !v)}
+              className={`seal-cta ${open ? 'seal-cta--open' : ''}`}
+              onClick={onToggle}
               aria-expanded={open}
               aria-controls={answerId}
+              data-pulse={pulse}
             >
-              <span className="turn__dot" aria-hidden="true">{open ? '−' : '+'}</span>
-              <span className="turn__label">{open ? 'fold the page back' : 'turn the page'}</span>
-              <span className="turn__arrow" aria-hidden="true">
-                <Arrow />
+              <span className="seal-cta__disc" aria-hidden="true">
+                <span className="seal-cta__ring" />
+                <span className="seal-cta__icon"><Seal /></span>
+              </span>
+              <span className="seal-cta__text">
+                <strong className="seal-cta__label">
+                  {open ? 'lift the seal' : 'press the seal'}
+                </strong>
+                <em className="seal-cta__sub">
+                  {open ? 'to fold the page back' : 'and the answer unfolds'}
+                </em>
               </span>
             </button>
             <p className="proof__aside">
@@ -291,22 +386,37 @@ export function App() {
             <p className="kicker">
               <span>marginalia</span>
               <b />
-              <em>scribbled in the gutter</em>
+              <em>hover a word above to read its note</em>
             </p>
             <h2 id="margin-title" className="margin__title">
-              a few things <i>worth keeping</i>
+              three notes from <i>the fold</i>
             </h2>
             <p className="margin__lede">
-              Not rules. Just the residue of pressing this page.
+              Not rules. The residue of pressing this page.
             </p>
           </header>
           <ol className="margin__list">
             {MARGINALIA.map(m => (
-              <li key={m.n} className="margin__item">
+              <li
+                key={m.n}
+                className={`margin__item ${hovered === m.id ? 'margin__item--active' : ''}`}
+                onMouseEnter={() => setHovered(m.id)}
+                onMouseLeave={() => setHovered(null)}
+                onFocus={() => setHovered(m.id)}
+                onBlur={() => setHovered(null)}
+                tabIndex={0}
+                aria-describedby={`gloss-${m.id}`}
+              >
                 <span className="margin__n">{m.n}</span>
                 <div className="margin__copy">
-                  <h3 className="margin__h">{m.head}</h3>
+                  <h3 className="margin__h" id={`gloss-${m.id}`}>
+                    {m.head}
+                    <span className="margin__gloss">— {m.gloss}</span>
+                  </h3>
                   <p className="margin__p">{m.text}</p>
+                  <span className="margin__caret" aria-hidden="true">
+                    <Caret />
+                  </span>
                 </div>
               </li>
             ))}
