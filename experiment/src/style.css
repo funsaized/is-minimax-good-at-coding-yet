@@ -3418,7 +3418,7 @@ button {
 }
 
 /* ============================================================== */
-/* MARK LAYER — pencil draws here                                  */
+/* MARK LAYER — proofreader's stamps live here                     */
 /* ============================================================== */
 .marks {
   position: absolute;
@@ -3436,14 +3436,41 @@ button {
   touch-action: none;
 }
 
-.marks__stroke {
-  fill: none;
-  stroke: var(--coral);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0.82;
-  vector-effect: non-scaling-stroke;
+.marks--active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(207, 82, 64, .035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(207, 82, 64, .035) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+  pointer-events: none;
+  opacity: 0;
+  animation: gridIn .55s var(--ease-out) forwards;
+}
+
+@keyframes gridIn {
+  to { opacity: 1; }
+}
+
+.mark-stamp {
+  pointer-events: none;
+  color: var(--coral);
+  animation: stampIn .55s var(--ease-out) backwards;
+  transform-origin: center;
+  will-change: opacity, transform;
+}
+
+.mark-stamp svg {
+  display: block;
+  overflow: visible;
+}
+
+@keyframes stampIn {
+  0%   { opacity: 0; transform: scale(.55); }
+  55%  { opacity: 1; transform: scale(1.12); }
+  100% { opacity: .92; transform: scale(1); }
 }
 
 .folio--pencil .proof__stage,
@@ -3453,11 +3480,375 @@ button {
 
 .folio--pencil .pencil-toggle,
 .folio--pencil .pencil-clear,
+.folio--pencil .mark-palette__btn,
 .folio--pencil .seal-cta,
 .folio--pencil .word,
 .folio--pencil .margin__item,
 .folio--pencil a {
   cursor: pointer;
+}
+
+/* ============================================================== */
+/* PROOFREADER'S CIRCLE — title word mark-up                       */
+/* ============================================================== */
+.word__circle {
+  position: absolute;
+  inset: -.32em -.18em -.32em -.18em;
+  width: calc(100% + .36em);
+  height: calc(100% + .64em);
+  pointer-events: none;
+  overflow: visible;
+  opacity: 0;
+  transform: scale(.94) rotate(-1deg);
+  transform-origin: center;
+  color: var(--coral);
+  transition:
+    opacity .42s var(--ease),
+    transform .6s var(--ease-out);
+  z-index: 0;
+}
+
+.word__circle ellipse {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 230;
+  stroke-dashoffset: 230;
+}
+
+.word:hover .word__circle,
+.word:focus-visible .word__circle,
+.word--active .word__circle {
+  opacity: .9;
+  transform: scale(1) rotate(-1.2deg);
+}
+
+.word:hover .word__circle ellipse,
+.word:focus-visible .word__circle ellipse,
+.word--active .word__circle ellipse {
+  animation: circleDraw .85s var(--ease-out) forwards;
+}
+
+@keyframes circleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ============================================================== */
+/* MARK PALETTE — the proofreader's case                            */
+/* ============================================================== */
+.mark-palette {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 8px 10px;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 235, .92) 0%, rgba(244, 233, 207, .92) 100%);
+  border: 1px solid var(--ink);
+  box-shadow:
+    3px 4px 0 var(--gold-soft),
+    inset 0 0 0 1px rgba(255, 245, 222, .6);
+  animation: paletteIn .45s var(--ease-out) backwards;
+  transform-origin: top right;
+}
+
+.mark-palette::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed rgba(207, 82, 64, .18);
+  pointer-events: none;
+}
+
+@keyframes paletteIn {
+  0%   { opacity: 0; transform: translateY(-6px) scale(.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.mark-palette__legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px 4px;
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--faded);
+}
+
+.mark-palette__legend em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: .005em;
+  text-transform: none;
+  color: var(--coral);
+  font-weight: 400;
+}
+
+.mark-palette__legend-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line) 50%, var(--line) 100%);
+}
+
+.mark-palette__row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.mark-palette__btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 4px 5px;
+  border: 1px solid var(--line);
+  background: rgba(255, 250, 235, .6);
+  color: var(--coral);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  transition:
+    background .22s var(--ease),
+    border-color .22s var(--ease),
+    color .22s var(--ease),
+    transform .2s var(--ease-out);
+  min-width: 56px;
+}
+
+.mark-palette__btn:hover,
+.mark-palette__btn:focus-visible {
+  background: rgba(255, 250, 235, .95);
+  border-color: var(--coral);
+  color: var(--coral-2);
+  transform: translate(-1px, -1px);
+  outline: none;
+}
+
+.mark-palette__btn.is-selected {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--coral) inset, 2px 3px 0 var(--coral-soft);
+}
+
+.mark-palette__btn.is-selected::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--coral);
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+.mark-glyph {
+  display: block;
+  width: 48px;
+  height: 18px;
+  overflow: visible;
+  color: currentColor;
+}
+
+.mark-glyph--small {
+  width: 38px;
+  height: 16px;
+}
+
+.mark-glyph text {
+  font-family: Georgia, 'Iowan Old Style', serif;
+}
+
+/* ============================================================== */
+/* COLOPHON MARKS LEDGER                                            */
+/* ============================================================== */
+.colophon__ledger {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 14px auto 22px;
+  max-width: 760px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  animation: ledgerIn .65s var(--ease-out) backwards;
+}
+
+@keyframes ledgerIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.colophon__ledger-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line) 50%);
+  min-width: 16px;
+  max-width: 80px;
+}
+
+.colophon__ledger-rule--end {
+  background: linear-gradient(to left, transparent, var(--line) 50%);
+}
+
+.colophon__ledger-head {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--faded);
+  white-space: nowrap;
+}
+
+.colophon__ledger-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 10px 14px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.colophon__ledger-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--coral-2);
+  animation: tallyIn .55s var(--ease-out) backwards;
+}
+
+.colophon__ledger-item:nth-child(1) { animation-delay: .05s; }
+.colophon__ledger-item:nth-child(2) { animation-delay: .12s; }
+.colophon__ledger-item:nth-child(3) { animation-delay: .18s; }
+.colophon__ledger-item:nth-child(4) { animation-delay: .24s; }
+.colophon__ledger-item:nth-child(5) { animation-delay: .3s; }
+.colophon__ledger-item:nth-child(6) { animation-delay: .36s; }
+
+.colophon__ledger-glyph {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 22px;
+  border: 1px solid var(--coral);
+  border-radius: 2px;
+  background: rgba(255, 250, 235, .6);
+  color: var(--coral);
+}
+
+.colophon__ledger-count {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.colophon__ledger-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-2);
+  font-weight: 400;
+}
+
+/* ============================================================== */
+/* PENCIL CLEAR — shake off marks                                   */
+/* ============================================================== */
+.pencil-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pencil-clear__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border: 1px solid currentColor;
+  border-radius: 9px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================== */
+/* PRESS KEY — mark rows                                            */
+/* ============================================================== */
+.press-key__row--mark .press-key__glyph {
+  border-color: var(--coral);
+}
+
+.press-key__row--mark .press-key__glyph .mark-glyph {
+  width: 28px;
+  height: 14px;
+}
+
+.press-key__row--mark .press-key__copy strong {
+  font-size: 13px;
+}
+
+@media (max-width: 720px) {
+  .mark-palette__row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .mark-palette {
+    padding: 7px 7px 9px;
+  }
+  .mark-palette__btn {
+    min-width: 0;
+    padding: 5px 3px;
+  }
+  .mark-glyph {
+    width: 34px;
+    height: 14px;
+  }
+  .mark-glyph--small {
+    width: 30px;
+    height: 14px;
+  }
+  .colophon__ledger {
+    gap: 8px 10px;
+    padding: 10px 8px;
+  }
+  .colophon__ledger-glyph {
+    width: 32px;
+    height: 18px;
+  }
+  .colophon__ledger-head {
+    flex-basis: 100%;
+    text-align: center;
+  }
+  .colophon__ledger-list {
+    gap: 8px;
+  }
 }
 
 /* ============================================================== */
@@ -3877,4 +4268,11 @@ button {
   .colophon__tied .ribbon-knot,
   .press-key { animation: none !important; opacity: 1 !important; transform: none !important; }
   .folio--open .margin__item::before { animation: none !important; opacity: 0 !important; }
+  .mark-palette,
+  .mark-stamp,
+  .colophon__ledger,
+  .colophon__ledger-item { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .word__circle,
+  .word__circle ellipse { transition: none !important; animation: none !important; opacity: .9 !important; stroke-dashoffset: 0 !important; }
+  .marks--active::after { animation: none !important; opacity: 1 !important; }
 }

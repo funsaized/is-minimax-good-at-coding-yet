@@ -94,7 +94,25 @@ const SPECIMENS: Specimen[] = [
   },
 ]
 
-type Mark = { id: string; d: string }
+type MarkKind = 'stet' | 'dele' | 'caret' | 'pilcrow' | 'question' | 'emdash' | 'trans' | 'italic'
+
+type Mark = {
+  id: string
+  kind: MarkKind
+  x: number
+  y: number
+  rot: number
+  scale: number
+}
+
+const PROOFREADER_MARKS: { kind: MarkKind; short: string; name: string; hint: string }[] = [
+  { kind: 'stet', short: 'stet', name: 'let it stand', hint: 'the original is correct — keep it' },
+  { kind: 'dele', short: 'dele', name: 'delete', hint: 'strike through, remove the line' },
+  { kind: 'caret', short: '^', name: 'insert', hint: 'add new material here' },
+  { kind: 'pilcrow', short: '¶', name: 'paragraph', hint: 'break for a new ¶' },
+  { kind: 'question', short: '?', name: 'flag', hint: 'this needs a second look' },
+  { kind: 'emdash', short: '—', name: 'em-dash', hint: 'substitute a long pause' },
+]
 
 function useNow(intervalMs: number) {
   const [now, setNow] = useState(() => new Date())
@@ -528,6 +546,107 @@ function EraserGlyph() {
   )
 }
 
+function MarkPath({ kind }: { kind: MarkKind }) {
+  switch (kind) {
+    case 'stet':
+      return (
+        <g>
+          <ellipse cx="40" cy="16" rx="32" ry="9" fill="none" stroke="currentColor" strokeWidth="1.5" />
+          <text x="40" y="20" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">stet</text>
+        </g>
+      )
+    case 'dele':
+      return (
+        <g>
+          <path d="M6 16 C 14 10, 22 22, 30 16 C 38 10, 46 22, 54 16 C 62 10, 70 22, 74 16"
+            fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <text x="40" y="28" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="9" fill="currentColor">dele</text>
+        </g>
+      )
+    case 'caret':
+      return (
+        <g>
+          <path d="M28 6 L 40 1 L 52 6"
+            fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M10 24 L 70 24"
+            fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        </g>
+      )
+    case 'pilcrow':
+      return (
+        <g>
+          <path d="M26 4 C 18 4, 14 12, 18 20 C 22 24, 30 24, 34 20 C 36 18, 36 16, 34 14"
+            fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M26 4 L 26 28 M 38 4 L 38 28"
+            fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+        </g>
+      )
+    case 'question':
+      return (
+        <g>
+          <path d="M40 6 C 30 6, 24 14, 32 22 C 36 25, 42 25, 44 22 M 40 6 C 50 6, 56 14, 48 22 C 44 25, 42 22, 42 22"
+            fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="43" cy="29" r="1.6" fill="currentColor" />
+        </g>
+      )
+    case 'emdash':
+      return (
+        <g>
+          <path d="M22 16 L 58 16"
+            fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+        </g>
+      )
+    case 'trans':
+      return (
+        <g>
+          <text x="40" y="22" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="16" fill="currentColor">tr</text>
+        </g>
+      )
+    case 'italic':
+      return (
+        <g>
+          <text x="40" y="22" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="13" fill="currentColor">ital</text>
+        </g>
+      )
+  }
+}
+
+function MarkGlyph({ kind, small = false }: { kind: MarkKind; small?: boolean }) {
+  return (
+    <svg className={`mark-glyph ${small ? 'mark-glyph--small' : ''}`} viewBox="0 0 80 32" aria-hidden="true">
+      <MarkPath kind={kind} />
+    </svg>
+  )
+}
+
+function MarkPalette({ selected, onSelect }: { selected: MarkKind; onSelect: (k: MarkKind) => void }) {
+  return (
+    <div className="mark-palette" role="radiogroup" aria-label="Proofreader's marks">
+      <span className="mark-palette__legend" aria-hidden="true">
+        <span className="mark-palette__legend-rule" />
+        <em>pick a mark, then click the proof</em>
+      </span>
+      <div className="mark-palette__row">
+        {PROOFREADER_MARKS.map(m => (
+          <button
+            key={m.kind}
+            type="button"
+            className={`mark-palette__btn ${selected === m.kind ? 'is-selected' : ''}`}
+            onClick={() => onSelect(m.kind)}
+            role="radio"
+            aria-checked={selected === m.kind}
+            aria-label={`${m.short} — ${m.name}`}
+            title={`${m.short} — ${m.hint}`}
+          >
+            <MarkGlyph kind={m.kind} small />
+            <span className="mark-palette__label" aria-hidden="true">{m.short}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 type WordProps = {
   text: string
   id?: string
@@ -564,6 +683,9 @@ function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay, supers
         onBlur={onLeave}
         aria-describedby={`gloss-${id}`}
       >
+        <svg className="word__circle" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+          <ellipse cx="50" cy="20" rx="49" ry="13" />
+        </svg>
         <span className="word__brackets" aria-hidden="true">
           <span className="bracket bracket--tl" />
           <span className="bracket bracket--tr" />
@@ -589,6 +711,9 @@ function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay, supers
       onBlur={onLeave}
       aria-describedby={`gloss-${id}`}
     >
+      <svg className="word__circle" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+        <ellipse cx="50" cy="20" rx="49" ry="13" />
+      </svg>
       <span className="word__brackets" aria-hidden="true">
         <span className="bracket bracket--tl" />
         <span className="bracket bracket--tr" />
@@ -605,67 +730,22 @@ function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay, supers
 type MarkLayerProps = {
   active: boolean
   marks: Mark[]
-  currentPath: string
   svgRef: React.RefObject<SVGSVGElement | null>
-  onPathStart: (x: number, y: number) => void
-  onPathMove: (x: number, y: number) => void
-  onPathEnd: () => void
-  onPathCancel: () => void
+  onStamp: (x: number, y: number) => void
 }
 
-function MarkLayer({ active, marks, currentPath, svgRef, onPathStart, onPathMove, onPathEnd, onPathCancel }: MarkLayerProps) {
-  const downRef = useRef(false)
-
-  const getPoint = (e: React.PointerEvent) => {
-    const svg = svgRef.current
-    if (!svg) return null
-    const rect = svg.getBoundingClientRect()
-    if (rect.width <= 0 || rect.height <= 0) return null
-    return {
-      x: Math.max(0, Math.min(rect.width, e.clientX - rect.left)),
-      y: Math.max(0, Math.min(rect.height, e.clientY - rect.top)),
-    }
-  }
-
+function MarkLayer({ active, marks, svgRef, onStamp }: MarkLayerProps) {
   const handleDown = (e: React.PointerEvent) => {
     if (!active) return
     if (e.button !== undefined && e.button !== 0) return
-    const p = getPoint(e)
-    if (!p) return
-    downRef.current = true
-    try {
-      ;(e.target as Element).setPointerCapture?.(e.pointerId)
-    } catch {
-      // ignore capture failures
-    }
-    onPathStart(p.x, p.y)
+    const svg = svgRef.current
+    if (!svg) return
+    const rect = svg.getBoundingClientRect()
+    if (rect.width <= 0 || rect.height <= 0) return
+    const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left))
+    const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top))
+    onStamp(x, y)
     e.preventDefault()
-  }
-
-  const handleMove = (e: React.PointerEvent) => {
-    if (!active || !downRef.current) return
-    const p = getPoint(e)
-    if (!p) return
-    onPathMove(p.x, p.y)
-  }
-
-  const handleUp = (e: React.PointerEvent) => {
-    if (!active) return
-    if (!downRef.current) return
-    downRef.current = false
-    try {
-      ;(e.target as Element).releasePointerCapture?.(e.pointerId)
-    } catch {
-      // ignore release failures
-    }
-    onPathEnd()
-  }
-
-  const handleCancel = () => {
-    if (!active) return
-    if (!downRef.current) return
-    downRef.current = false
-    onPathCancel()
   }
 
   return (
@@ -674,32 +754,26 @@ function MarkLayer({ active, marks, currentPath, svgRef, onPathStart, onPathMove
       className={`marks ${active ? 'marks--active' : ''}`}
       preserveAspectRatio="none"
       onPointerDown={handleDown}
-      onPointerMove={handleMove}
-      onPointerUp={handleUp}
-      onPointerCancel={handleCancel}
-      onPointerLeave={handleUp}
       aria-hidden="true"
     >
       <defs>
         <filter id="markRough" x="-2%" y="-2%" width="104%" height="104%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="7" />
-          <feDisplacementMap in="SourceGraphic" scale="1.6" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="2" seed="5" />
+          <feDisplacementMap in="SourceGraphic" scale="1.1" />
         </filter>
       </defs>
       <g className="marks__g" filter="url(#markRough)">
         {marks.map(m => (
-          <path
+          <g
             key={m.id}
-            className="marks__stroke"
-            d={m.d}
-          />
+            transform={`translate(${m.x} ${m.y}) rotate(${m.rot}) translate(-40 -16) scale(${m.scale})`}
+            className="mark-stamp"
+          >
+            <svg width="80" height="32" viewBox="0 0 80 32">
+              <MarkPath kind={m.kind} />
+            </svg>
+          </g>
         ))}
-        {currentPath && (
-          <path
-            className="marks__stroke"
-            d={currentPath}
-          />
-        )}
       </g>
     </svg>
   )
@@ -824,13 +898,20 @@ function PageMark({ active }: { active: string | null }) {
   )
 }
 
-type PressRow = { kind: 'key' | 'icon'; glyph: string; label: string; hint?: string }
+type PressRow = { kind: 'key' | 'icon' | 'mark'; glyph: string; label: string; hint?: string; markKind?: MarkKind }
 
 function PressKey() {
   const rows: PressRow[] = [
-    { kind: 'key', glyph: 'P', label: 'lift the pencil', hint: 'then drag to mark the proof' },
+    { kind: 'key', glyph: 'P', label: 'lift the pencil', hint: 'then click the proof to stamp a mark' },
     { kind: 'key', glyph: 'Esc', label: 'put the pencil down' },
     { kind: 'key', glyph: '⌫', label: 'shake off the marks' },
+    ...PROOFREADER_MARKS.map(m => ({
+      kind: 'mark' as const,
+      glyph: m.kind,
+      label: m.short,
+      hint: m.hint,
+      markKind: m.kind,
+    })),
     { kind: 'icon', glyph: '◯', label: 'hover a title word', hint: 'it wakes its matching note' },
     { kind: 'icon', glyph: '◇', label: 'click a specimen flap', hint: 'the title takes its voice' },
     { kind: 'icon', glyph: '↺', label: 'press the seal', hint: 'the answer tips into the proof' },
@@ -859,7 +940,7 @@ function PressKey() {
       </header>
       <ol className="press-key__grid">
         {rows.map((r, i) => (
-          <li key={i} className="press-key__row">
+          <li key={i} className={`press-key__row press-key__row--${r.kind}`}>
             <span className={`press-key__glyph press-key__glyph--${r.kind}`} aria-hidden="true">
               {r.kind === 'icon' ? (
                 <svg viewBox="0 0 24 24" className="press-key__icon">
@@ -872,6 +953,8 @@ function PressKey() {
                     </>
                   )}
                 </svg>
+              ) : r.kind === 'mark' && r.markKind ? (
+                <MarkGlyph kind={r.markKind} small />
               ) : (
                 <kbd className="press-key__kbd">{r.glyph}</kbd>
               )}
@@ -924,7 +1007,7 @@ export function App() {
   const [pulse, setPulse] = useState(0)
   const [pencil, setPencil] = useState(false)
   const [marks, setMarks] = useState<Mark[]>([])
-  const [currentPath, setCurrentPath] = useState('')
+  const [selectedMark, setSelectedMark] = useState<MarkKind>('stet')
   const [announcement, setAnnouncement] = useState('')
   const [sealPasses, setSealPasses] = useState(0)
   const [sigVisible, setSigVisible] = useState(false)
@@ -950,22 +1033,28 @@ export function App() {
   const onPencilToggle = useCallback(() => {
     setPencil(v => {
       const next = !v
-      setAnnouncement(next ? 'Pencil on. Drag to mark the proof.' : 'Pencil off.')
+      setAnnouncement(next ? `Pencil on — ${PROOFREADER_MARKS.find(m => m.kind === selectedMark)?.short || 'stet'} selected.` : 'Pencil off.')
       return next
     })
+  }, [selectedMark])
+
+  const onSelectMark = useCallback((kind: MarkKind) => {
+    setSelectedMark(kind)
+    const found = PROOFREADER_MARKS.find(m => m.kind === kind)
+    setAnnouncement(found ? `${found.short} selected — ${found.hint}` : '')
   }, [])
 
   const onClearMarks = useCallback(() => {
+    const n = marks.length
     setMarks([])
-    setCurrentPath('')
-    setAnnouncement('Marks cleared.')
-  }, [])
+    setAnnouncement(n === 0 ? 'No marks to shake off.' : `Shaken off ${n} mark${n === 1 ? '' : 's'}.`)
+  }, [marks.length])
 
-  useEffect(() => {
-    if (!pencil) {
-      setCurrentPath('')
-    }
-  }, [pencil])
+  const onStamp = useCallback((x: number, y: number) => {
+    const rot = (Math.random() - 0.5) * 10
+    const scale = 0.95 + Math.random() * 0.12
+    setMarks(m => [...m, { id: uid(), kind: selectedMark, x, y, rot, scale }])
+  }, [selectedMark])
 
   useEffect(() => {
     const el = colophonRef.current
@@ -1018,27 +1107,6 @@ export function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [pencil, marks.length, onPencilToggle, onClearMarks])
 
-  const onPathStart = useCallback((x: number, y: number) => {
-    setCurrentPath(`M${x.toFixed(1)} ${y.toFixed(1)}`)
-  }, [])
-
-  const onPathMove = useCallback((x: number, y: number) => {
-    setCurrentPath(prev => (prev ? `${prev} L${x.toFixed(1)} ${y.toFixed(1)}` : `M${x.toFixed(1)} ${y.toFixed(1)}`))
-  }, [])
-
-  const onPathEnd = useCallback(() => {
-    setCurrentPath(prev => {
-      if (prev && prev.length > 12) {
-        setMarks(m => [...m, { id: uid(), d: prev }])
-      }
-      return ''
-    })
-  }, [])
-
-  const onPathCancel = useCallback(() => {
-    setCurrentPath('')
-  }, [])
-
   const scribbles = Object.fromEntries(MARGINALIA.map(m => [m.id, m.scribble]))
   const blots = Object.fromEntries(MARGINALIA.map(m => [m.id, m.blot]))
   const marksSvg = Object.fromEntries(MARGINALIA.map(m => [m.id, m.mark]))
@@ -1048,6 +1116,9 @@ export function App() {
   const marked = marks.length > 0
 
   const openSpecimen = SPECIMENS.find(s => s.id === openCase) || null
+  const markByKind = (k: MarkKind) => marks.filter(m => m.kind === k).length
+  const lastStamped = marks.length > 0 ? marks[marks.length - 1] : null
+  const lastStampInfo = lastStamped ? PROOFREADER_MARKS.find(m => m.kind === lastStamped.kind) : null
 
   return (
     <main
@@ -1110,31 +1181,35 @@ export function App() {
             className={`pencil-toggle ${pencil ? 'pencil-toggle--on' : ''}`}
             onClick={onPencilToggle}
             aria-pressed={pencil}
-            aria-label={pencil ? 'Pencil on, drag to mark the proof' : 'Pencil off, click to mark the proof'}
-            title={pencil ? 'Pencil on (press P or Esc to turn off)' : 'Pencil off (press P to turn on)'}
+            aria-label={pencil ? `Pencil on, ${lastStampInfo ? lastStampInfo.short : 'stet'} ready` : 'Pencil off, click to lift it'}
+            title={pencil ? `Pencil on — ${PROOFREADER_MARKS.find(m => m.kind === selectedMark)?.short} (P or Esc to turn off)` : 'Pencil off (press P to lift)'}
           >
             <span className="pencil-toggle__rule" aria-hidden="true" />
             <span className="pencil-toggle__face" aria-hidden="true">
               <PencilGlyph active={pencil} />
             </span>
             <span className="pencil-toggle__text">
-              <strong>{pencil ? 'marking' : 'mark'}</strong>
-              <em>the proof</em>
+              <strong>{pencil ? 'stamping' : 'pencil'}</strong>
+              <em>{pencil ? `${PROOFREADER_MARKS.find(m => m.kind === selectedMark)?.short} ready` : 'lift to mark'}</em>
             </span>
             <span className="pencil-toggle__count" aria-hidden="true">
               {marked ? <>{marks.length}<i>{marks.length === 1 ? 'mark' : 'marks'}</i></> : <i>empty</i>}
             </span>
           </button>
+          {pencil && (
+            <MarkPalette selected={selectedMark} onSelect={onSelectMark} />
+          )}
           {marked && (
             <button
               type="button"
               className="pencil-clear"
               onClick={onClearMarks}
               aria-label={`Clear all ${marks.length} marks`}
-              title="Clear all marks (Backspace)"
+              title="Shake off all marks (Backspace)"
             >
               <EraserGlyph />
               <span>shake off</span>
+              <span className="pencil-clear__count" aria-hidden="true">{marks.length}</span>
             </button>
           )}
         </div>
@@ -1143,12 +1218,8 @@ export function App() {
           <MarkLayer
             active={pencil}
             marks={marks}
-            currentPath={currentPath}
             svgRef={svgRef}
-            onPathStart={onPathStart}
-            onPathMove={onPathMove}
-            onPathEnd={onPathEnd}
-            onPathCancel={onPathCancel}
+            onStamp={onStamp}
           />
 
           <div className="proof__layout">
@@ -1427,7 +1498,7 @@ export function App() {
             {formatDate(now)}
              <span className="colophon__sep">·</span>
              {marked
-               ? <>marked with care<small className="colophon__marks">· {marks.length} hand-drawn</small></>
+               ? <>marked with care<small className="colophon__marks">· {marks.length} hand-stamped{marks.length === 1 ? '' : 's'}</small></>
                : 'made with intent, not certainty'}
              {sealPasses > 0 && (<>
                <span className="colophon__sep">·</span>
@@ -1451,6 +1522,24 @@ export function App() {
               tied with care <em>— a finished proof</em>
             </span>
           </div>
+          {marked && (
+            <div className="colophon__ledger" aria-label="Marks stamped on this proof">
+              <span className="colophon__ledger-rule" aria-hidden="true" />
+              <span className="colophon__ledger-head">the proofreader's hand:</span>
+              <ul className="colophon__ledger-list">
+                {PROOFREADER_MARKS.filter(m => markByKind(m.kind) > 0).map(m => (
+                  <li key={m.kind} className="colophon__ledger-item">
+                    <span className="colophon__ledger-glyph" aria-hidden="true">
+                      <MarkGlyph kind={m.kind} small />
+                    </span>
+                    <span className="colophon__ledger-count">{markByKind(m.kind)}</span>
+                    <span className="colophon__ledger-name">{m.short}</span>
+                  </li>
+                ))}
+              </ul>
+              <span className="colophon__ledger-rule colophon__ledger-rule--end" aria-hidden="true" />
+            </div>
+          )}
           <a className="colophon__up" href="#top">return to the question <span aria-hidden="true">↑</span></a>
         </footer>
       </article>
