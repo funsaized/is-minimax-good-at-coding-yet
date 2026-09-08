@@ -1434,9 +1434,9 @@ button { font: inherit; }
   align-self: center;
   margin: 0;
   color: var(--ink);
-  font: italic 640 clamp(40px, 6vw, 92px)/1.04 var(--display);
-  letter-spacing: -0.022em;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1, "onum" 1;
+  font: italic 660 clamp(40px, 6vw, 92px)/1.06 var(--display);
+  letter-spacing: -0.02em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1, "onum" 1, "dlig" 1;
   padding-top: 0.02em;
   opacity: 0;
   transform: translateY(6px);
@@ -3756,10 +3756,10 @@ button { font: inherit; }
   position: relative; z-index: 1;
   margin: 0;
   color: var(--ink);
-  font: italic 620 clamp(28px, 4vw, 46px)/1.26 var(--display);
+  font: italic 640 clamp(28px, 4vw, 46px)/1.28 var(--display);
   letter-spacing: -0.014em;
   text-indent: 0;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1, "liga" 1, "dlig" 1;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1, "liga" 1, "dlig" 1, "ss01" 1;
   padding-right: 4px;
   hanging-punctuation: first last;
   text-wrap: pretty;
@@ -3772,6 +3772,8 @@ button { font: inherit; }
 .answer-surface--replying .answer-copy { color: #14202a; }
 .answer-surface--complete .answer-copy {
   letter-spacing: -0.022em;
+  color: var(--ink);
+  font-style: italic;
 }
 
 .self-annotations {
@@ -4676,9 +4678,9 @@ button { font: inherit; }
 .reply-paragraph {
   display: block;
   position: relative;
-  font: italic 540 clamp(21px, 2.8vw, 30px)/1.5 var(--display);
-  letter-spacing: 0.005em;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "salt" 1;
+  font: italic 540 clamp(21px, 2.8vw, 30px)/1.52 var(--display);
+  letter-spacing: 0.006em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "salt" 1, "dlig" 1;
   color: var(--ink);
   text-wrap: pretty;
   text-wrap: balance;
@@ -12102,7 +12104,7 @@ button { font: inherit; }
   grid-template-columns: minmax(0, 1fr);
 }
 .answer-copy {
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1, "dlig" 1, "liga" 1;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "onum" 1, "dlig" 1, "liga" 1, "ss01" 1;
   max-width: 34em;
   margin-inline: auto;
   text-indent: 0;
@@ -12111,23 +12113,23 @@ button { font: inherit; }
 @media (min-width: 721px) {
   .answer-copy {
     font: italic 660 clamp(32px, 4.4vw, 42px)/1.32 var(--display);
-    letter-spacing: -0.012em;
+    letter-spacing: -0.014em;
     hyphens: none;
   }
 }
 @media (min-width: 1024px) {
   .answer-copy {
-    font: italic 680 clamp(36px, 4vw, 46px)/1.28 var(--display);
-    letter-spacing: -0.014em;
+    font: italic 690 clamp(36px, 4vw, 46px)/1.3 var(--display);
+    letter-spacing: -0.018em;
   }
 }
 
 /* ── reply typography: a clean italic, no drop cap ── */
 
 .reply-paragraph {
-  font: italic 540 clamp(22px, 2.8vw, 30px)/1.52 var(--display);
-  letter-spacing: 0.005em;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "salt" 1;
+  font: italic 540 clamp(22px, 2.8vw, 30px)/1.54 var(--display);
+  letter-spacing: 0.006em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "salt" 1, "dlig" 1;
   color: var(--ink);
   text-wrap: pretty;
   hanging-punctuation: first last;
@@ -16429,4 +16431,196 @@ a:focus-visible {
 }
 @media (max-width: 720px) {
   .chapter-opener { padding: 10px 0 16px; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 160 · the verso's body earns its own composed plate
+
+   A single grand typographic impression that closes the reply's body,
+   mirroring the recto's ReadingTideTail in idiom but speaking in the
+   reply's slower voice. A thin gold rule fades in from either side, a
+   leaf-and-fleuron sigil takes the centre, and a single italic
+   inscription names the moment. Replaces the simple reply-close.
+   ────────────────────────────────────────────────────────────────────── */
+
+.folio-reply-plate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: clamp(20px, 2.6vw, 30px) auto clamp(8px, 1.2vw, 14px);
+  padding: 4px clamp(14px, 3.6vw, 36px) 0;
+  max-width: 460px;
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-feature-settings: "kern" 1, "onum" 1, "liga" 1;
+  opacity: 0;
+  transform: translateY(4px);
+  animation: folio-reply-plate-in 1200ms var(--ease) 220ms both;
+}
+.folio-reply-plate.is-static { animation: none; opacity: 1; transform: none; }
+@keyframes folio-reply-plate-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.folio-reply-plate-rule {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.05));
+}
+.folio-reply-plate:not(.is-static) .folio-reply-plate-line {
+  stroke-dasharray: 0 320;
+  animation: folio-reply-plate-line-draw 1500ms var(--ease) 320ms forwards;
+}
+@keyframes folio-reply-plate-line-draw {
+  to { stroke-dasharray: 320 0; }
+}
+.folio-reply-plate:not(.is-static) .folio-reply-plate-bloom {
+  opacity: 0;
+  transform: translate(160px, 11px) scale(0.7);
+  transform-origin: center;
+  animation: folio-reply-plate-bloom-in 900ms var(--ease) 1280ms forwards;
+}
+@keyframes folio-reply-plate-bloom-in {
+  0%   { opacity: 0; transform: translate(160px, 11px) scale(0.7); }
+  60%  { opacity: 0.9; transform: translate(160px, 11px) scale(1.05); }
+  100% { opacity: 0.85; transform: translate(160px, 11px) scale(1); }
+}
+.folio-reply-plate:not(.is-static) .folio-reply-plate-leaf {
+  opacity: 0;
+  transform: translate(160px, 11px) scale(0.7) rotate(-12deg);
+  transform-origin: center;
+  animation: folio-reply-plate-leaf-in 900ms var(--ease) 1280ms forwards;
+}
+@keyframes folio-reply-plate-leaf-in {
+  0%   { opacity: 0; transform: translate(160px, 11px) scale(0.7) rotate(-12deg); }
+  100% { opacity: 1; transform: translate(160px, 11px) scale(1) rotate(0deg); }
+}
+.folio-reply-plate:not(.is-static) .folio-reply-plate-pip,
+.folio-reply-plate:not(.is-static) .folio-reply-plate-diamond {
+  opacity: 0;
+  animation: folio-reply-plate-pip-in 600ms var(--ease) 1500ms forwards;
+}
+.folio-reply-plate:not(.is-static) .folio-reply-plate-pip--r,
+.folio-reply-plate:not(.is-static) .folio-reply-plate-diamond--r {
+  animation-delay: 1620ms;
+}
+@keyframes folio-reply-plate-pip-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.folio-reply-plate-leaf {
+  filter: drop-shadow(0 0 6px rgba(245, 198, 91, 0.18));
+  animation: folio-reply-plate-leaf-breath 8.6s ease-in-out 2.6s infinite;
+}
+@keyframes folio-reply-plate-leaf-breath {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(245, 198, 91, 0.18)); }
+  50%      { filter: drop-shadow(0 0 10px rgba(245, 198, 91, 0.42)); }
+}
+.folio-reply-plate-fleuron {
+  animation: folio-reply-plate-fleuron-sway 6.4s ease-in-out 3.2s infinite;
+  transform-origin: center;
+}
+@keyframes folio-reply-plate-fleuron-sway {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(2.4deg); }
+}
+
+.folio-reply-plate-cap {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 clamp(8px, 1.4vw, 14px);
+  margin: 4px 0 0;
+  padding: 0 clamp(4px, 1vw, 10px);
+  width: 100%;
+  color: var(--ink-soft);
+  font-style: italic;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  animation: folio-reply-plate-cap-in 700ms var(--ease) 1480ms forwards;
+}
+.folio-reply-plate.is-static .folio-reply-plate-cap { animation: none; opacity: 1; }
+@keyframes folio-reply-plate-cap-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: none; }
+}
+.folio-reply-plate-cap-rule {
+  flex: 0 0 clamp(22px, 5vw, 44px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(156, 110, 38, 0.42) 50%,
+    rgba(167, 60, 44, 0.55)
+  );
+}
+.folio-reply-plate-cap-rule--right {
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(156, 110, 38, 0.42) 50%,
+    rgba(167, 60, 44, 0.55)
+  );
+}
+.folio-reply-plate-cap-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  color: var(--ink);
+}
+.folio-reply-plate-cap-key {
+  color: var(--coral-deep);
+  font: italic 600 12px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.folio-reply-plate-cap-sep {
+  color: var(--coral);
+  font: 700 10.5px/1 var(--display);
+  opacity: 0.7;
+}
+.folio-reply-plate-cap-tail {
+  color: var(--ink-soft);
+  font: italic 500 11.5px/1.2 var(--display);
+  letter-spacing: 0.014em;
+  font-feature-settings: "kern" 1, "onum" 1, "salt" 1;
+}
+.folio-reply-plate-cap-mark {
+  color: var(--coral);
+  font: italic 700 13px/1 var(--display);
+  opacity: 0.62;
+  margin-left: 2px;
+}
+.folio-reply-plate.is-slow .folio-reply-plate-cap-tail {
+  color: var(--coral-deep);
+}
+.folio-reply-plate.is-slow .folio-reply-plate-leaf {
+  animation: folio-reply-plate-leaf-breath 14s ease-in-out 2.6s infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .folio-reply-plate { animation: none; opacity: 1; transform: none; }
+  .folio-reply-plate:not(.is-static) .folio-reply-plate-line,
+  .folio-reply-plate:not(.is-static) .folio-reply-plate-bloom,
+  .folio-reply-plate:not(.is-static) .folio-reply-plate-leaf,
+  .folio-reply-plate:not(.is-static) .folio-reply-plate-pip,
+  .folio-reply-plate:not(.is-static) .folio-reply-plate-diamond,
+  .folio-reply-plate:not(.is-static) .folio-reply-plate-cap {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 720px) {
+  .folio-reply-plate { padding: 2px 14px 0; max-width: 100%; }
+  .folio-reply-plate-cap-key { font-size: 11px; }
+  .folio-reply-plate-cap-tail { font-size: 10.5px; }
+  .folio-reply-plate-cap-rule { flex-basis: clamp(14px, 4vw, 22px); }
 }

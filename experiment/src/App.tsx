@@ -10499,6 +10499,217 @@ function TideLamp({
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 160 · the verso's body earns its own composed plate.
+
+   A single grand typographic impression that closes the reply's body,
+   mirroring the recto's ReadingTideTail in idiom but speaking in the
+   reply's slower voice. A thin gold rule fades in from either side, a
+   leaf-and-fleuron sigil (the reply's own motif, shared with
+   ReplyCatchword) takes the centre, and a single italic inscription —
+   "the reply · ad lucem · perlege" — names the moment. It replaces
+   the simple reply-close and earns its place as the verse's own quiet
+   closure, completing the recto-verso typographic symmetry: every body
+   on the folio now ends with a composed impression, not a small rule.
+   ────────────────────────────────────────────────────────────────────── */
+
+function FolioReplyPlate({
+  visible,
+  reduced,
+  slow,
+}: {
+  visible: boolean
+  reduced: boolean
+  slow: boolean
+}) {
+  const label = slow ? 'set slowly · ad lucem' : 'ad lucem · perlege'
+  return (
+    <figure
+      className={`folio-reply-plate${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }${slow ? ' is-slow' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="folio-reply-plate-rule"
+        viewBox="0 0 320 22"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="frp-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="46%" stopColor="rgba(200, 146, 62, 0.66)" />
+            <stop offset="54%" stopColor="rgba(200, 146, 62, 0.66)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="frp-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.16)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.22)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.16)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="frp-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <radialGradient id="frp-bloom" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.45)" />
+            <stop offset="62%" stopColor="rgba(245, 198, 91, 0.12)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+          <linearGradient id="frp-leaf" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(154, 110, 38, 0.62)" />
+            <stop offset="100%" stopColor="rgba(78, 56, 28, 0.78)" />
+          </linearGradient>
+        </defs>
+
+        <line
+          x1="6"
+          y1="14"
+          x2="314"
+          y2="14"
+          stroke="url(#frp-rule-ghost)"
+          strokeWidth="0.22"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="11"
+          x2="314"
+          y2="11"
+          stroke="url(#frp-rule)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+          className="folio-reply-plate-line"
+        />
+
+        <g className="folio-reply-plate-bloom" transform="translate(160 11)">
+          <circle r="7.2" fill="url(#frp-bloom)" />
+        </g>
+
+        <g className="folio-reply-plate-leaf" transform="translate(160 11)">
+          <path
+            d="M 0 -6.4 Q 4.4 -4.4 5.4 -1 Q 4.4 4.4 0 6.4 Q -4.4 4.4 -5.4 1 Q -4.4 -4.4 0 -6.4 Z"
+            fill="rgba(154, 110, 38, 0.34)"
+            stroke="url(#frp-leaf)"
+            strokeWidth="0.42"
+          />
+          <path
+            d="M 0 -6.4 Q 4.4 -4.4 5.4 -1 Q 4.4 4.4 0 6.4 Z"
+            fill="rgba(167, 60, 44, 0.22)"
+            stroke="none"
+          />
+          <line
+            x1="0"
+            y1="-6"
+            x2="0"
+            y2="6"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.32"
+            strokeLinecap="round"
+          />
+          <line
+            x1="0"
+            y1="-3"
+            x2="3"
+            y2="-1"
+            stroke="rgba(107, 74, 37, 0.5)"
+            strokeWidth="0.28"
+            strokeLinecap="round"
+          />
+          <line
+            x1="0"
+            y1="0"
+            x2="3.4"
+            y2="0"
+            stroke="rgba(107, 74, 37, 0.5)"
+            strokeWidth="0.28"
+            strokeLinecap="round"
+          />
+          <line
+            x1="0"
+            y1="3"
+            x2="3"
+            y2="1"
+            stroke="rgba(107, 74, 37, 0.5)"
+            strokeWidth="0.28"
+            strokeLinecap="round"
+          />
+          <line
+            x1="0"
+            y1="-3"
+            x2="-3"
+            y2="-1"
+            stroke="rgba(107, 74, 37, 0.5)"
+            strokeWidth="0.28"
+            strokeLinecap="round"
+          />
+          <line
+            x1="0"
+            y1="0"
+            x2="-3.4"
+            y2="0"
+            stroke="rgba(107, 74, 37, 0.5)"
+            strokeWidth="0.28"
+            strokeLinecap="round"
+          />
+          <line
+            x1="0"
+            y1="3"
+            x2="-3"
+            y2="1"
+            stroke="rgba(107, 74, 37, 0.5)"
+            strokeWidth="0.28"
+            strokeLinecap="round"
+          />
+          <circle cx="0" cy="0" r="0.6" fill="rgba(167, 60, 44, 0.88)" />
+          <circle cx="0" cy="0" r="0.18" fill="rgba(255, 248, 224, 0.95)" />
+
+          <path
+            className="folio-reply-plate-fleuron"
+            d="M 0 7.6 Q -2.6 6.4 -3 5 M 0 7.6 Q 2.6 6.4 3 5"
+            fill="none"
+            stroke="rgba(167, 60, 44, 0.7)"
+            strokeWidth="0.36"
+            strokeLinecap="round"
+          />
+        </g>
+
+        <g className="folio-reply-plate-pip folio-reply-plate-pip--l" transform="translate(58 11)">
+          <circle r="0.5" fill="rgba(167, 60, 44, 0.62)" />
+        </g>
+        <g className="folio-reply-plate-pip folio-reply-plate-pip--r" transform="translate(262 11)">
+          <circle r="0.5" fill="rgba(167, 60, 44, 0.62)" />
+        </g>
+
+        <g className="folio-reply-plate-diamond folio-reply-plate-diamond--l" transform="translate(96 11)">
+          <path d="M 0 -1.6 L 1.6 0 L 0 1.6 L -1.6 0 Z" fill="rgba(167, 60, 44, 0.42)" />
+        </g>
+        <g className="folio-reply-plate-diamond folio-reply-plate-diamond--r" transform="translate(224 11)">
+          <path d="M 0 -1.6 L 1.6 0 L 0 1.6 L -1.6 0 Z" fill="rgba(167, 60, 44, 0.42)" />
+        </g>
+      </svg>
+
+      <figcaption className="folio-reply-plate-cap">
+        <span className="folio-reply-plate-cap-rule folio-reply-plate-cap-rule--left" aria-hidden="true" />
+        <span className="folio-reply-plate-cap-cluster">
+          <em className="folio-reply-plate-cap-key">the reply</em>
+          <span className="folio-reply-plate-cap-sep" aria-hidden="true">·</span>
+          <em className="folio-reply-plate-cap-tail">{label}</em>
+          <span className="folio-reply-plate-cap-mark" aria-hidden="true">¶</span>
+        </span>
+        <span className="folio-reply-plate-cap-rule folio-reply-plate-cap-rule--right" aria-hidden="true" />
+      </figcaption>
+    </figure>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
@@ -11229,15 +11440,7 @@ export function App() {
                 {phase === 'replying' && <span className="typing-caret" aria-hidden="true">|</span>}
               </span>
               {phase === 'complete' && (
-                <span className="reply-close">
-                  <span className="reply-close-rule reply-close-rule--left" />
-                  <span className="reply-close-text">
-                    <em className="reply-close-key">end of the reply</em>
-                    <span className="reply-close-sep">·</span>
-                    <em className="reply-close-tail">the page, unchanged</em>
-                  </span>
-                  <span className="reply-close-rule reply-close-rule--right" />
-                </span>
+                <FolioReplyPlate visible reduced={reduced} slow={slow} />
               )}
               {phase === 'complete' && (
                 <span className="reply-manicule">
