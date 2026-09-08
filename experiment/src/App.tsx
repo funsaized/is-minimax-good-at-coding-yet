@@ -55,10 +55,38 @@ function useNow(intervalMs: number) {
   return now
 }
 
+function useScrollProgress() {
+  const [progress, setProgress] = useState(0)
+  useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const h = document.documentElement
+      const max = h.scrollHeight - h.clientHeight
+      const p = max > 0 ? Math.min(1, Math.max(0, h.scrollTop / max)) : 0
+      setProgress(p)
+    }
+    const onScroll = () => {
+      if (raf) return
+      raf = requestAnimationFrame(update)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+  return progress
+}
+
 function formatTime(d: Date) {
   const h = d.getHours()
   const m = d.getMinutes().toString().padStart(2, '0')
-  return `${h}:${m}`
+  const s = d.getSeconds().toString().padStart(2, '0')
+  return `${h}:${m}:${s}`
 }
 
 const MONTHS = [
@@ -281,13 +309,23 @@ type WordProps = {
   onEnter?: () => void
   onLeave?: () => void
   scribble?: string
+  delay?: number
 }
 
-function TitleWord({ text, id, active, onEnter, onLeave, scribble }: WordProps) {
-  if (!id) return <>{text}</>
+function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay }: WordProps) {
+  const cls = `tline${id ? ` word ${active ? 'word--active' : ''}` : ''}`
+  const style = delay !== undefined ? { animationDelay: `${delay}s` } : undefined
+  if (!id) {
+    return (
+      <span className={cls} style={style}>
+        {text}
+      </span>
+    )
+  }
   return (
     <span
-      className={`word ${active ? 'word--active' : ''}`}
+      className={cls}
+      style={style}
       data-id={id}
       tabIndex={0}
       onMouseEnter={onEnter}
@@ -314,7 +352,8 @@ export function App() {
   const [hovered, setHovered] = useState<string | null>(null)
   const [pulse, setPulse] = useState(0)
   const answerId = useId()
-  const now = useNow(30_000)
+  const now = useNow(1000)
+  const progress = useScrollProgress()
   const sealRef = useRef<HTMLButtonElement>(null)
 
   const onToggle = () => {
@@ -325,8 +364,15 @@ export function App() {
   const scribbles = Object.fromEntries(MARGINALIA.map(m => [m.id, m.scribble]))
   const blots = Object.fromEntries(MARGINALIA.map(m => [m.id, m.blot]))
 
+  const beatOn = now.getSeconds() % 2 === 0
+
+  const titleDelays = [0.0, 0.08, 0.16, 0.24, 0.32, 0.4, 0.48]
+
   return (
-    <main className={`folio ${open ? 'folio--open' : ''}`}>
+    <main
+      className={`folio ${open ? 'folio--open' : ''}`}
+      style={{ ['--progress' as string]: progress }}
+    >
       <Dust />
       <div className="folio__lamp" aria-hidden="true" />
       <div className="folio__vignette" aria-hidden="true" />
@@ -371,7 +417,7 @@ export function App() {
               </p>
               <h1 className="proof__title">
                 <span aria-hidden="true" className="proof__title-rule" />
-                <TitleWord text="is Minimax " />
+                <TitleWord text="is Minimax " delay={titleDelays[0]} />
                 <TitleWord
                   text="M3"
                   id="m3"
@@ -379,8 +425,9 @@ export function App() {
                   onEnter={() => setHovered('m3')}
                   onLeave={() => setHovered(null)}
                   scribble={scribbles.m3}
+                  delay={titleDelays[1]}
                 />
-                <TitleWord text=" " />
+                <TitleWord text=" " delay={titleDelays[2]} />
                 <TitleWord
                   text="good at"
                   id="good"
@@ -388,8 +435,9 @@ export function App() {
                   onEnter={() => setHovered('good')}
                   onLeave={() => setHovered(null)}
                   scribble={scribbles.good}
+                  delay={titleDelays[3]}
                 />
-                <TitleWord text=" frontend " />
+                <TitleWord text=" frontend " delay={titleDelays[4]} />
                 <TitleWord
                   text="yet"
                   id="yet"
@@ -397,8 +445,9 @@ export function App() {
                   onEnter={() => setHovered('yet')}
                   onLeave={() => setHovered(null)}
                   scribble={scribbles.yet}
+                  delay={titleDelays[5]}
                 />
-                <TitleWord text="?" />
+                <TitleWord text="?" delay={titleDelays[6]} />
                 <span aria-hidden="true" className="proof__title-rule" />
               </h1>
               <p className="proof__lede">
@@ -560,7 +609,10 @@ export function App() {
             <span />
           </div>
           <p className="colophon__line">
-            pressed at <b>{formatTime(now)}</b>, {formatDate(now)}
+            pressed at <b>{formatTime(now)}</b>
+            <span className={`colophon__beat ${beatOn ? 'is-on' : ''}`} aria-hidden="true" />
+            <span className="colophon__sep">·</span>
+            {formatDate(now)}
              <span className="colophon__sep">·</span>
              made with intent, not certainty
           </p>

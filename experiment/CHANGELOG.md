@@ -1,13 +1,12 @@
-## 177 — wired marginalia, press device, and ink-settle on press
+# Iteration 178
 
-Wires the marginalia to the title and seals the proof with a printer's device.
-On hover or focus of a title word or its margin note, a coral leader curve
-draws out from each side into the column gap (one from the word, one from
-the note), each with a small terminal dot, so the gloss feels visibly
-plugged in. A small press device now closes the proof — a hairline rule,
-a circular monogram ("m³ press"), and a two-line caption — that fades and
-stamps itself in on page load. Pressing the seal now releases a brief
-ink-settle border around the answer plate as it lifts, so the moment of
-the page tipping in reads more like a letterpress impression. Mobile
-collapses the wires (no gap to bridge) and tightens the device; reduced
-motion shows the leaders at rest rather than drawing.
+Wakes the proof sheet into a live press: title sets in wet ink, the rail reads with you, the colophon ticks.
+
+## Changes
+
+- **Title typeset ink**: every title fragment now settles on first paint via a staggered ink-bleed animation (color shifts from coral-2 through coral to ink, with a brief blur and rise), so the page reads as if the press is rolling while you arrive.
+- **Reading-progress rail**: the left coral thread now fills with a coral→coral-2 gradient driven by scroll progress, with a soft glow; it traces your journey through the broadside instead of staying a static rule.
+- **Live colophon**: the press time now ticks every second (HH:MM:SS) and a small coral heartbeat dot beside it pulses with each beat — the press feels on, not paused.
+- **Refined palette**: deepened ink (#14201a), more saturated coral (#cf5240), warmer gold, cooler night backdrop (#0e1714), and a slightly more luminous paper so the folio glows against the night.
+- **Mobile refinements**: title words carry extra padding on narrow screens for larger tap targets; rail thread becomes a horizontal progress bar in the mobile rail row.
+- **Reduced-motion respect**: the typeset ink, heartbeat, and rail fill all collapse to static end states under `prefers-reduced-motion`.
