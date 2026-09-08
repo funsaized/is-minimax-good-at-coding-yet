@@ -215,13 +215,31 @@ button {
   color: var(--faded);
   border-bottom: 1px solid transparent;
   padding-bottom: 4px;
-  transition: color .25s, border-color .25s;
+  transition: color .3s var(--ease), border-color .3s var(--ease);
 }
 
 .folio__nav a:hover,
-.folio__nav a:focus-visible {
+.folio__nav a:focus-visible,
+.folio__nav a.is-active {
   color: var(--ink);
   border-color: var(--coral);
+}
+
+.folio__nav a.is-active::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--coral);
+  transform: translateY(-1px);
+  animation: navPulse 2.4s var(--ease) infinite;
+}
+
+@keyframes navPulse {
+  0%, 100% { opacity: 1; transform: translateY(-1px) scale(1); }
+  50%      { opacity: .4; transform: translateY(-1px) scale(.7); }
 }
 
 .folio__edition {
@@ -551,7 +569,7 @@ button {
   flex: 1;
   background: rgba(207, 82, 64, .16);
   min-height: 80px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .proof__thread::after {
@@ -562,7 +580,49 @@ button {
   background: linear-gradient(to bottom, var(--coral) 0%, var(--coral-2) 100%);
   box-shadow: 0 0 6px rgba(207, 82, 64, .35);
   transition: height .35s var(--ease);
+  z-index: 0;
 }
+
+.proof__thread-mark {
+  position: absolute;
+  left: -3px;
+  width: 7px;
+  height: 1px;
+  background: var(--coral-2);
+  opacity: 0;
+  transform: scaleX(.2);
+  transform-origin: left center;
+  transition: opacity .5s var(--ease), transform .55s var(--ease-out);
+  z-index: 1;
+}
+
+.proof__thread-mark::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: -1px;
+  width: 4px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--coral);
+  opacity: 0;
+  transition: opacity .35s var(--ease) .15s;
+}
+
+.proof__thread-mark.is-on {
+  opacity: .9;
+  transform: scaleX(1);
+}
+
+.proof__thread-mark.is-on::after {
+  opacity: .9;
+}
+
+.proof__thread-mark--1 { top: 14%; }
+.proof__thread-mark--2 { top: 34%; }
+.proof__thread-mark--3 { top: 54%; }
+.proof__thread-mark--4 { top: 74%; }
+.proof__thread-mark--5 { top: 92%; }
 
 .proof__hint {
   font-family: var(--sans);
@@ -647,7 +707,7 @@ button {
   letter-spacing: -.038em;
   color: var(--ink);
   text-wrap: balance;
-  text-shadow: 1px 1px 0 rgba(218, 207, 178, .7);
+  text-shadow: 1px 1px 0 rgba(218, 207, 178, calc(.7 - var(--ink-set, 0) * .45));
 }
 
 @media (min-width: 1024px) {
@@ -717,6 +777,7 @@ button {
   display: inline-block;
   animation: tlineIn 1.15s var(--ease-out) backwards;
   will-change: opacity, transform, filter;
+  transition: filter .55s var(--ease), text-shadow .55s var(--ease);
 }
 
 @keyframes tlineIn {
@@ -1295,6 +1356,31 @@ button {
   transform: scale(.4);
   transition: opacity .5s var(--ease) .15s, transform .5s var(--ease-out) .15s;
   z-index: 2;
+}
+
+/* FOLD CREASE — the line where the tipped-in plate bends into the page */
+.answer__crease {
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    var(--coral) 12%,
+    var(--coral) 88%,
+    transparent 100%);
+  opacity: 0;
+  transform: scaleX(.3);
+  transform-origin: center;
+  transition: transform .85s var(--ease-out) .25s, opacity .55s var(--ease) .25s;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.answer--open .answer__crease {
+  opacity: .55;
+  transform: scaleX(1);
 }
 
 .answer--open .answer__pin {
@@ -2062,22 +2148,7 @@ button {
 
 .signature .sig-path {
   stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-}
-
-.signature.is-drawn .sig-path {
-  animation: sigDraw 1.2s var(--ease-out) forwards;
-}
-
-.signature.is-drawn .sig-path:nth-of-type(1) { animation-delay: .05s; }
-.signature.is-drawn .sig-path:nth-of-type(2) { animation-delay: .22s; }
-.signature.is-drawn .sig-path:nth-of-type(3) { animation-delay: .42s; }
-.signature.is-drawn .sig-path:nth-of-type(4) { animation-delay: .6s; }
-.signature.is-drawn .sig-path:nth-of-type(5) { animation-delay: .78s; }
-.signature.is-drawn .sig-path:nth-of-type(6) { animation-delay: .96s; }
-
-@keyframes sigDraw {
-  to { stroke-dashoffset: 0; }
+  transition: stroke-dashoffset .35s var(--ease);
 }
 
 @keyframes signIn {
@@ -2344,12 +2415,38 @@ button {
     height: 1px;
     min-height: 0;
     flex: 0 0 40px;
+    overflow: visible;
   }
 
   .proof__thread::after {
     width: calc(var(--progress, 0) * 100%);
     height: 100%;
   }
+
+  .proof__thread-mark {
+    left: auto;
+    top: auto;
+    width: 1px;
+    height: 7px;
+    transform: scaleY(.2);
+    transform-origin: center top;
+  }
+
+  .proof__thread-mark.is-on {
+    transform: scaleY(1);
+  }
+
+  .proof__thread-mark::after {
+    right: auto;
+    top: -2px;
+    left: -1.5px;
+  }
+
+  .proof__thread-mark--1 { top: auto; left: 10%; }
+  .proof__thread-mark--2 { top: auto; left: 30%; }
+  .proof__thread-mark--3 { top: auto; left: 50%; }
+  .proof__thread-mark--4 { top: auto; left: 70%; }
+  .proof__thread-mark--5 { top: auto; left: 90%; }
 
   .proof__hint {
     text-align: left;
@@ -2560,6 +2657,7 @@ button {
   }
   .answer__pin { opacity: .9 !important; transform: scale(1) !important; }
   .answer__hatch { opacity: 0 !important; }
+  .answer__crease { opacity: .55 !important; transform: none !important; }
   .seal-cta__halo { animation: none !important; }
   .seal-cta[data-pulse="1"] .seal-cta__icon { animation: none !important; }
   .seal-cta[data-pulse="1"] .seal-cta__splat { animation: none !important; opacity: 0 !important; }
@@ -2579,6 +2677,7 @@ button {
   }
   .answer__plate::after { animation: none !important; }
   .proof__thread::after { transition: none !important; }
+  .proof__thread-mark { opacity: .9 !important; transform: none !important; }
   .colophon__beat { transition: none !important; }
   .proof__subtitle { animation: none !important; opacity: 1; transform: none; }
   .colophon__sign .signature { animation: none !important; opacity: 1; }
@@ -2589,4 +2688,5 @@ button {
   .signature .sig-path { stroke-dashoffset: 0 !important; }
   .signature:not(.is-drawn) .sig-path { opacity: 1 !important; }
   .answer__dropcap-swash { opacity: .65 !important; transform: none !important; }
+  .folio__nav a.is-active::before { animation: none !important; }
 }

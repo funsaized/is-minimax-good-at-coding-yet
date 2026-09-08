@@ -61,16 +61,59 @@ function useNow(intervalMs: number) {
   return now
 }
 
-function useScrollProgress() {
-  const [progress, setProgress] = useState(0)
+function useScrollState() {
+  const [state, setState] = useState<{ progress: number; activeWord: string | null; activeSection: string | null }>({ progress: 0, activeWord: null, activeSection: null })
   useEffect(() => {
     let raf = 0
     const update = () => {
       raf = 0
       const h = document.documentElement
       const max = h.scrollHeight - h.clientHeight
-      const p = max > 0 ? Math.min(1, Math.max(0, h.scrollTop / max)) : 0
-      setProgress(p)
+      const progress = max > 0 ? Math.min(1, Math.max(0, h.scrollTop / max)) : 0
+
+      const center = window.innerHeight * 0.5
+      const threshold = Math.max(120, window.innerHeight * 0.32)
+      const words = document.querySelectorAll<HTMLElement>('.word[data-id]')
+      let found: string | null = null
+      let bestDistance = Infinity
+      for (const w of words) {
+        const rect = w.getBoundingClientRect()
+        if (rect.bottom < -40 || rect.top > window.innerHeight + 40) continue
+        const wordCenter = (rect.top + rect.bottom) / 2
+        const distance = Math.abs(wordCenter - center)
+        if (distance < bestDistance && distance < threshold) {
+          bestDistance = distance
+          found = w.dataset.id || null
+        }
+      }
+
+      const eyeY = window.scrollY + window.innerHeight * 0.32
+      const sectionIds = ['question', 'answer', 'marginalia']
+      let section: string | null = null
+      for (const id of sectionIds) {
+        const el = document.getElementById(id)
+        if (!el) continue
+        const rect = el.getBoundingClientRect()
+        const top = window.scrollY + rect.top
+        const bottom = top + rect.height
+        if (eyeY >= top && eyeY <= bottom) {
+          section = id
+          break
+        }
+      }
+      if (!section) {
+        const last = sectionIds[sectionIds.length - 1]
+        const lastEl = document.getElementById(last)
+        if (lastEl) {
+          const r = lastEl.getBoundingClientRect()
+          if (r.top < window.innerHeight * 0.5) section = last
+        }
+      }
+
+      setState(prev => {
+        if (prev.progress === progress && prev.activeWord === found && prev.activeSection === section) return prev
+        return { progress, activeWord: found, activeSection: section }
+      })
     }
     const onScroll = () => {
       if (raf) return
@@ -85,7 +128,7 @@ function useScrollProgress() {
       if (raf) cancelAnimationFrame(raf)
     }
   }, [])
-  return progress
+  return state
 }
 
 function formatTime(d: Date) {
@@ -284,18 +327,22 @@ function Flourish() {
   )
 }
 
-type SignatureProps = { drawn?: boolean }
-function Signature({ drawn = true }: SignatureProps) {
+type SignatureProps = { drawn?: boolean; progress?: number }
+function Signature({ drawn = true, progress = 1 }: SignatureProps) {
+  const offset = (start: number, end: number) => {
+    const t = Math.max(0, Math.min(1, (progress - start) / (end - start)))
+    return (1 - t).toFixed(3)
+  }
   return (
     <svg className={`signature ${drawn ? 'is-drawn' : ''}`} viewBox="0 0 110 30" aria-hidden="true">
       <g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path className="sig-path" pathLength={1} d="M6 22 C 9 12, 13 18, 16 22" />
-        <path className="sig-path" pathLength={1} d="M20 24 C 22 16, 26 10, 27 18 C 28 24, 30 22, 32 16" />
-        <path className="sig-path" pathLength={1} d="M44 12 C 40 16, 39 24, 46 24 C 52 24, 52 16, 48 12 C 44 9, 42 16, 47 19" />
-        <path className="sig-path" pathLength={1} d="M60 12 C 64 16, 64 24, 60 24 M 60 18 L 67 18" />
-        <path className="sig-path" pathLength={1} d="M74 24 L 74 12 L 86 24 L 86 12" />
+        <path className="sig-path" pathLength={1} d="M6 22 C 9 12, 13 18, 16 22" style={{ strokeDasharray: 1, strokeDashoffset: offset(0, 0.62) }} />
+        <path className="sig-path" pathLength={1} d="M20 24 C 22 16, 26 10, 27 18 C 28 24, 30 22, 32 16" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.08, 0.7) }} />
+        <path className="sig-path" pathLength={1} d="M44 12 C 40 16, 39 24, 46 24 C 52 24, 52 16, 48 12 C 44 9, 42 16, 47 19" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.16, 0.78) }} />
+        <path className="sig-path" pathLength={1} d="M60 12 C 64 16, 64 24, 60 24 M 60 18 L 67 18" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.24, 0.84) }} />
+        <path className="sig-path" pathLength={1} d="M74 24 L 74 12 L 86 24 L 86 12" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.32, 0.9) }} />
       </g>
-      <path className="sig-path" pathLength={1} d="M93 26 C 96 18, 100 22, 102 18" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <path className="sig-path" pathLength={1} d="M93 26 C 96 18, 100 22, 102 18" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.42, 0.96) }} />
     </svg>
   )
 }
@@ -569,12 +616,14 @@ export function App() {
   const [sigVisible, setSigVisible] = useState(false)
   const answerId = useId()
   const now = useNow(1000)
-  const progress = useScrollProgress()
+  const { progress, activeWord, activeSection } = useScrollState()
   const sealRef = useRef<HTMLButtonElement>(null)
   const pencilRef = useRef<HTMLButtonElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const colophonRef = useRef<HTMLElement>(null)
+
+  const effectiveActive = hovered || activeWord
 
   const onToggle = () => {
     setOpen(v => !v)
@@ -674,7 +723,7 @@ export function App() {
   return (
     <main
       className={`folio ${open ? 'folio--open' : ''} ${pencil ? 'folio--pencil' : ''}`}
-      style={{ ['--progress' as string]: progress }}
+      style={{ ['--progress' as string]: progress, ['--ink-set' as string]: String(Math.min(1, Math.max(0, progress * 5))) }}
     >
       <Dust />
       <div className="folio__lamp" aria-hidden="true" />
@@ -691,9 +740,9 @@ export function App() {
           </span>
         </a>
         <nav aria-label="Sections" className="folio__nav">
-          <a href="#question">question</a>
-          <a href="#answer" onClick={() => setOpen(true)}>answer</a>
-          <a href="#marginalia">margin</a>
+          <a href="#question" className={activeSection === 'question' ? 'is-active' : ''}>question</a>
+          <a href="#answer" onClick={() => setOpen(true)} className={activeSection === 'answer' ? 'is-active' : ''}>answer</a>
+          <a href="#marginalia" className={activeSection === 'marginalia' ? 'is-active' : ''}>margin</a>
         </nav>
         <span className="folio__edition" aria-label="Publication note">
           an unfinished<br /><i>answer</i>
@@ -705,7 +754,13 @@ export function App() {
 
         <aside className="proof__rail" aria-hidden="true">
           <span className="proof__q">Q.</span>
-          <i className="proof__thread" />
+          <span className="proof__thread">
+            <span className={`proof__thread-mark proof__thread-mark--1 ${progress >= 0.12 ? 'is-on' : ''}`} />
+            <span className={`proof__thread-mark proof__thread-mark--2 ${progress >= 0.32 ? 'is-on' : ''}`} />
+            <span className={`proof__thread-mark proof__thread-mark--3 ${progress >= 0.52 ? 'is-on' : ''}`} />
+            <span className={`proof__thread-mark proof__thread-mark--4 ${progress >= 0.72 ? 'is-on' : ''}`} />
+            <span className={`proof__thread-mark proof__thread-mark--5 ${progress >= 0.9 ? 'is-on' : ''}`} />
+          </span>
           <small className="proof__hint">read<br />slowly</small>
         </aside>
 
@@ -774,7 +829,7 @@ export function App() {
                   <TitleWord
                     text="M3"
                     id="m3"
-                    active={hovered === 'm3'}
+                    active={effectiveActive === 'm3'}
                     onEnter={() => setHovered('m3')}
                     onLeave={() => setHovered(null)}
                     scribble={scribbles.m3}
@@ -784,7 +839,7 @@ export function App() {
                   <TitleWord
                     text="good at"
                     id="good"
-                    active={hovered === 'good'}
+                    active={effectiveActive === 'good'}
                     onEnter={() => setHovered('good')}
                     onLeave={() => setHovered(null)}
                     scribble={scribbles.good}
@@ -794,7 +849,7 @@ export function App() {
                   <TitleWord
                     text="yet"
                     id="yet"
-                    active={hovered === 'yet'}
+                    active={effectiveActive === 'yet'}
                     onEnter={() => setHovered('yet')}
                     onLeave={() => setHovered(null)}
                     scribble={scribbles.yet}
@@ -856,6 +911,7 @@ export function App() {
               >
                 <div className="answer__plate">
                   <div className="answer__hatch" aria-hidden="true" />
+                  <span className="answer__crease" aria-hidden="true" />
                   <span className="answer__pin answer__pin--tl" aria-hidden="true" />
                   <span className="answer__pin answer__pin--tr" aria-hidden="true" />
                   <div className="answer__inner">
@@ -911,7 +967,7 @@ export function App() {
                 <p className="kicker">
                   <span>marginalia</span>
                   <b />
-                  <em>hover a word to read</em>
+                  <em>read, or hover a word</em>
                 </p>
                 <h2 id="margin-title" className="margin__title">
                   three notes from <i>the fold</i>
@@ -924,7 +980,7 @@ export function App() {
                 {MARGINALIA.map(m => (
                   <li
                     key={m.n}
-                    className={`margin__item ${hovered === m.id ? 'margin__item--active' : ''}`}
+                    className={`margin__item ${effectiveActive === m.id ? 'margin__item--active' : ''}`}
                     onMouseEnter={() => setHovered(m.id)}
                     onMouseLeave={() => setHovered(null)}
                     onFocus={() => setHovered(m.id)}
@@ -993,7 +1049,7 @@ export function App() {
              </>)}
           </p>
           <div className={`colophon__sign ${sigVisible ? 'is-drawn' : ''}`} aria-hidden="true">
-            <Signature drawn={sigVisible} />
+            <Signature drawn={sigVisible} progress={progress} />
             <span className="colophon__sign-cap">{marked ? 'signed & annotated' : 'signed at the press'}</span>
           </div>
           <a className="colophon__up" href="#top">return to the question <span aria-hidden="true">↑</span></a>
