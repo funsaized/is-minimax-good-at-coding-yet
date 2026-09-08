@@ -8170,6 +8170,361 @@ function FolioCompass({
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 143 · the chapter spread earns a single reading tide and
+   a small manuscript reader. A hand-drawn rule now runs beneath the
+   H1 question, crosses the column, and ties the recto to the verso's
+   answer-plate; a tiny marginal figure of a reader sits in the right
+   gutter of the question, watching the press. Together they replace
+   the question's quiet emptiness with one composed editorial gesture
+   that earns the eye before the answer arrives.
+   ────────────────────────────────────────────────────────────────────── */
+
+function ReadingTide({
+  progress,
+  reduced,
+}: {
+  progress: number
+  reduced: boolean
+}) {
+  const p = Math.max(0, Math.min(1, progress))
+  return (
+    <figure
+      className="reading-tide-line"
+      aria-hidden="true"
+      style={{ '--tide-progress': p } as React.CSSProperties}
+    >
+      <svg
+        className="reading-tide-svg"
+        viewBox="0 0 1200 96"
+        preserveAspectRatio="none"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="tide-line-ink" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(156, 110, 38, 0)" />
+            <stop offset="6%" stopColor="rgba(167, 60, 44, 0.42)" />
+            <stop offset="32%" stopColor="rgba(120, 30, 12, 0.78)" />
+            <stop offset="52%" stopColor="rgba(167, 60, 44, 0.62)" />
+            <stop offset="76%" stopColor="rgba(245, 198, 91, 0.7)" />
+            <stop offset="94%" stopColor="rgba(245, 198, 91, 0.18)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </linearGradient>
+          <linearGradient id="tide-line-dash" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(107, 74, 37, 0)" />
+            <stop offset="6%" stopColor="rgba(107, 74, 37, 0.34)" />
+            <stop offset="50%" stopColor="rgba(107, 74, 37, 0.5)" />
+            <stop offset="94%" stopColor="rgba(107, 74, 37, 0.34)" />
+            <stop offset="100%" stopColor="rgba(107, 74, 37, 0)" />
+          </linearGradient>
+          <radialGradient id="tide-pip-glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.6)" />
+            <stop offset="55%" stopColor="rgba(245, 198, 91, 0.18)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+        </defs>
+
+        <g className="reading-tide-track">
+          <path
+            d="M 12 64 Q 92 50 188 60 Q 284 70 376 56 Q 472 40 564 54 Q 660 70 752 58 Q 848 44 940 56 Q 1036 70 1124 60 Q 1170 56 1190 64"
+            stroke="url(#tide-line-dash)"
+            strokeWidth="0.5"
+            strokeDasharray="1.2 4.2"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </g>
+
+        <path
+          className="reading-tide-main"
+          d="M 12 64 Q 92 50 188 60 Q 284 70 376 56 Q 472 40 564 54 Q 660 70 752 58 Q 848 44 940 56 Q 1036 70 1124 60 Q 1170 56 1190 64"
+          stroke="url(#tide-line-ink)"
+          strokeWidth="0.85"
+          fill="none"
+          strokeLinecap="round"
+        />
+
+        <g className="reading-tide-marks">
+          <line x1="84" y1="44" x2="84" y2="78" stroke="rgba(107, 74, 37, 0.5)" strokeWidth="0.5" strokeLinecap="round" />
+          <line x1="284" y1="44" x2="284" y2="80" stroke="rgba(107, 74, 37, 0.5)" strokeWidth="0.5" strokeLinecap="round" />
+          <line x1="488" y1="36" x2="488" y2="80" stroke="rgba(107, 74, 37, 0.55)" strokeWidth="0.6" strokeLinecap="round" />
+          <line x1="700" y1="42" x2="700" y2="80" stroke="rgba(107, 74, 37, 0.5)" strokeWidth="0.5" strokeLinecap="round" />
+          <line x1="908" y1="44" x2="908" y2="78" stroke="rgba(107, 74, 37, 0.5)" strokeWidth="0.5" strokeLinecap="round" />
+          <line x1="1108" y1="46" x2="1108" y2="76" stroke="rgba(107, 74, 37, 0.5)" strokeWidth="0.5" strokeLinecap="round" />
+
+          <circle cx="84" cy="64" r="0.9" fill="rgba(167, 60, 44, 0.7)" />
+          <circle cx="284" cy="64" r="0.9" fill="rgba(167, 60, 44, 0.7)" />
+          <circle cx="488" cy="56" r="1.1" fill="rgba(120, 30, 12, 0.82)" />
+          <circle cx="700" cy="64" r="0.9" fill="rgba(167, 60, 44, 0.7)" />
+          <circle cx="908" cy="58" r="0.9" fill="rgba(167, 60, 44, 0.7)" />
+          <circle cx="1108" cy="60" r="0.9" fill="rgba(167, 60, 44, 0.7)" />
+        </g>
+
+        <g className="reading-tide-letters" fill="rgba(107, 74, 37, 0.78)">
+          <text x="84" y="32" textAnchor="middle" className="reading-tide-letter">¶</text>
+          <text x="284" y="32" textAnchor="middle" className="reading-tide-letter">†</text>
+          <text x="488" y="22" textAnchor="middle" className="reading-tide-letter reading-tide-letter--key">Q</text>
+          <text x="700" y="32" textAnchor="middle" className="reading-tide-letter">A</text>
+          <text x="908" y="32" textAnchor="middle" className="reading-tide-letter">R</text>
+          <text x="1108" y="32" textAnchor="middle" className="reading-tide-letter">¶</text>
+        </g>
+
+        <g className="reading-tide-pendant" transform="translate(488 56)">
+          <circle r="9" fill="url(#tide-pip-glow)" className="reading-tide-pendant-halo" />
+          <circle r="3.4" fill="none" stroke="rgba(120, 30, 12, 0.78)" strokeWidth="0.6" />
+          <circle r="1.6" fill="rgba(245, 198, 91, 0.95)" />
+          <line x1="0" y1="3.6" x2="0" y2="22" stroke="rgba(107, 74, 37, 0.55)" strokeWidth="0.5" strokeLinecap="round" strokeDasharray="0.6 1.4" />
+          <path d="M -2 24 L 0 28 L 2 24 Z" fill="rgba(107, 74, 37, 0.7)" />
+        </g>
+
+        <g className="reading-tide-arrow" transform="translate(1186 64)">
+          <path d="M -6 -4 L 4 0 L -6 4 Z" fill="rgba(120, 30, 12, 0.7)" />
+        </g>
+      </svg>
+      <figcaption className="reading-tide-cap" aria-hidden="true">
+        <span className="reading-tide-cap-rule reading-tide-cap-rule--left" />
+        <span className="reading-tide-cap-cluster">
+          <em className="reading-tide-cap-key">the reading tide</em>
+          <span className="reading-tide-cap-sep" aria-hidden="true">·</span>
+          <em className="reading-tide-cap-tail">a single hand-drawn rule, beneath the question</em>
+        </span>
+        <span className="reading-tide-cap-rule reading-tide-cap-rule--right" />
+      </figcaption>
+    </figure>
+  )
+}
+
+function ManuscriptReader({
+  active,
+  reduced,
+  watchPoint,
+}: {
+  active: boolean
+  reduced: boolean
+  watchPoint: { x: number; y: number; inside: boolean }
+}) {
+  const clamp = (v: number, lo: number, hi: number) =>
+    Math.max(lo, Math.min(hi, v))
+  const headX = watchPoint.inside ? clamp(watchPoint.x * 1.6, -1.6, 1.6) : 0
+  const headY = watchPoint.inside ? clamp(watchPoint.y * 1.0, -1.0, 1.0) : 0
+  return (
+    <figure
+      className={`manuscript-reader${active ? ' is-active' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg
+        className="manuscript-reader-plate"
+        viewBox="0 0 120 132"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id="mr-frame" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#9c6e26" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#7a4f1a" />
+          </linearGradient>
+          <radialGradient id="mr-paper" cx="50%" cy="38%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 248, 224, 0.94)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.82)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0.6)" />
+          </radialGradient>
+          <radialGradient id="mr-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.34)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+          <linearGradient id="mr-cloak" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0.78)" />
+            <stop offset="100%" stopColor="rgba(96, 28, 14, 0.92)" />
+          </linearGradient>
+          <linearGradient id="mr-skin" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(245, 198, 142, 0.96)" />
+            <stop offset="100%" stopColor="rgba(196, 144, 96, 0.92)" />
+          </linearGradient>
+        </defs>
+
+        <ellipse cx="60" cy="68" rx="56" ry="62" fill="url(#mr-halo)" />
+
+        <rect
+          x="2"
+          y="2"
+          width="116"
+          height="128"
+          rx="1.4"
+          fill="url(#mr-paper)"
+          stroke="url(#mr-frame)"
+          strokeWidth="0.85"
+        />
+        <rect
+          x="6"
+          y="6"
+          width="108"
+          height="120"
+          rx="0.8"
+          fill="none"
+          stroke="url(#mr-frame)"
+          strokeWidth="0.32"
+          strokeDasharray="1.2 1.6"
+          opacity="0.78"
+        />
+
+        <g className="mr-corners" fill="#cf3b29" fillOpacity="0.55">
+          <path d="M 9 9 L 16 9 Q 16 12 13 13 L 13 16 L 9 16 Z" />
+          <circle cx="11" cy="11" r="0.6" />
+          <path d="M 111 9 L 104 9 Q 104 12 107 13 L 107 16 L 111 16 Z" />
+          <circle cx="109" cy="11" r="0.6" />
+          <path d="M 9 123 L 16 123 Q 16 120 13 119 L 13 116 L 9 116 Z" />
+          <circle cx="11" cy="121" r="0.6" />
+          <path d="M 111 123 L 104 123 Q 104 120 107 119 L 107 116 L 111 116 Z" />
+          <circle cx="109" cy="121" r="0.6" />
+        </g>
+
+        <g className="mr-pips" fill="url(#mr-frame)">
+          <circle cx="60" cy="9" r="0.6" />
+          <circle cx="60" cy="123" r="0.6" />
+          <circle cx="9" cy="66" r="0.55" />
+          <circle cx="111" cy="66" r="0.55" />
+        </g>
+
+        <g className="mr-pedestal" stroke="rgba(107, 74, 37, 0.6)" fill="none" strokeLinecap="round">
+          <line x1="22" y1="110" x2="98" y2="110" strokeWidth="0.7" />
+          <line x1="30" y1="113" x2="90" y2="113" strokeWidth="0.35" strokeDasharray="0.5 1.2" opacity="0.7" />
+          <line x1="38" y1="110" x2="38" y2="116" strokeWidth="0.4" />
+          <line x1="60" y1="110" x2="60" y2="118" strokeWidth="0.4" />
+          <line x1="82" y1="110" x2="82" y2="116" strokeWidth="0.4" />
+        </g>
+
+        <g className="mr-body">
+          <path
+            d="M 32 108 Q 38 70 60 64 Q 82 70 88 108 L 32 108 Z"
+            fill="url(#mr-cloak)"
+            stroke="rgba(58, 12, 6, 0.55)"
+            strokeWidth="0.5"
+          />
+          <path
+            d="M 60 64 L 60 108"
+            stroke="rgba(58, 12, 6, 0.32)"
+            strokeWidth="0.4"
+            strokeDasharray="0.4 1.2"
+            opacity="0.6"
+          />
+          <g
+            className="mr-fold-lines"
+            stroke="rgba(255, 232, 200, 0.22)"
+            strokeWidth="0.4"
+            fill="none"
+            strokeLinecap="round"
+          >
+            <path d="M 44 92 Q 48 88 52 92" />
+            <path d="M 50 100 Q 54 96 58 100" />
+            <path d="M 66 92 Q 70 88 74 92" />
+            <path d="M 70 100 Q 74 96 78 100" />
+            <path d="M 56 78 Q 60 74 64 78" />
+          </g>
+        </g>
+
+        <g className="mr-book" transform="translate(60 92)">
+          <path
+            d="M -16 -2 L 0 -6 L 16 -2 L 14 6 L 0 4 L -14 6 Z"
+            fill="rgba(245, 220, 168, 0.92)"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.45"
+          />
+          <line x1="0" y1="-6" x2="0" y2="4" stroke="rgba(107, 74, 37, 0.45)" strokeWidth="0.4" />
+          <line
+            x1="-12"
+            y1="0"
+            x2="-4"
+            y2="-1.4"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.3"
+            strokeDasharray="0.4 1.1"
+          />
+          <line
+            x1="4"
+            y1="-1.4"
+            x2="12"
+            y2="0"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.3"
+            strokeDasharray="0.4 1.1"
+          />
+        </g>
+
+        <g
+          className="mr-head"
+          style={
+            reduced
+              ? undefined
+              : { transform: `translate(${headX}px, ${headY}px)` }
+          }
+        >
+          <ellipse cx="60" cy="48" rx="11" ry="13" fill="url(#mr-skin)" stroke="rgba(107, 74, 37, 0.45)" strokeWidth="0.4" />
+          <path
+            d="M 49 44 Q 60 30 71 44 Q 70 38 60 36 Q 50 38 49 44 Z"
+            fill="rgba(58, 36, 18, 0.88)"
+          />
+          <path
+            d="M 50 50 Q 60 56 70 50 Q 68 56 60 58 Q 52 56 50 50 Z"
+            fill="rgba(167, 60, 44, 0.32)"
+            opacity="0.85"
+          />
+          <g
+            className="mr-eyes"
+            fill="rgba(28, 22, 16, 0.92)"
+          >
+            <circle cx="55" cy="49" r="0.95" />
+            <circle cx="65" cy="49" r="0.95" />
+          </g>
+          <line
+            x1="60"
+            y1="52"
+            x2="60"
+            y2="55"
+            stroke="rgba(107, 74, 37, 0.55)"
+            strokeWidth="0.4"
+            strokeLinecap="round"
+          />
+        </g>
+
+        <g
+          className="mr-hand"
+          stroke="url(#mr-skin)"
+          strokeWidth="0.5"
+          fill="rgba(196, 144, 96, 0.6)"
+        >
+          <ellipse cx="44" cy="92" rx="3" ry="1.6" transform="rotate(-8 44 92)" />
+          <ellipse cx="76" cy="92" rx="3" ry="1.6" transform="rotate(8 76 92)" />
+        </g>
+
+        <g className="mr-quill" transform="translate(78 86)">
+          <line
+            x1="0"
+            y1="0"
+            x2="14"
+            y2="-8"
+            stroke="rgba(60, 36, 16, 0.7)"
+            strokeWidth="0.6"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 12 -7 Q 18 -10 22 -7 Q 20 -3 14 -4 Q 12 -6 12 -7 Z"
+            fill="rgba(190, 150, 100, 0.78)"
+            stroke="rgba(60, 36, 16, 0.5)"
+            strokeWidth="0.3"
+          />
+          <circle cx="22" cy="-7" r="0.5" fill="rgba(28, 22, 16, 0.8)" />
+        </g>
+
+        <text x="60" y="126" textAnchor="middle" className="mr-tag">
+          the reader
+        </text>
+      </svg>
+    </figure>
+  )
+}
+
 export function App() {
   const reduced = useReducedMotion()
   const now = useNow()
@@ -8579,9 +8934,25 @@ export function App() {
               </span>
             </h1>
 
-            <span className="recto-signing-rule" aria-hidden="true">
-              <span className="recto-signing-rule-tail">the page remembers the question</span>
-            </span>
+            <ReadingTide progress={Math.min(1, inkProgress + 0.15)} reduced={reduced} />
+
+            <div className="recto-spread-foot" aria-hidden="true">
+              <span className="recto-spread-foot-rule recto-spread-foot-rule--left" />
+              <span className="recto-spread-foot-cluster">
+                <em className="recto-spread-foot-key">the question, set</em>
+                <span className="recto-spread-foot-sep" aria-hidden="true">·</span>
+                <em className="recto-spread-foot-tail">the page remembers</em>
+              </span>
+              <span className="recto-spread-foot-rule recto-spread-foot-rule--right" />
+            </div>
+
+            <div className="recto-reader-stage" aria-hidden="true">
+              <ManuscriptReader
+                active={phase !== 'idle'}
+                reduced={reduced}
+                watchPoint={watchPoint}
+              />
+            </div>
 
             <AlmanacBand now={now} cycle={cycle} moonPhase={moonPhase} />
 

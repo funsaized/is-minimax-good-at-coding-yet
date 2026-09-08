@@ -584,7 +584,7 @@ button { font: inherit; }
   position: relative; z-index: 3;
   display: flex; flex-direction: column;
   align-items: center;
-  padding: 22px 0 26px;
+  padding: 26px 0 32px;
   animation: content-in 0.85s 0.18s both;
 }
 .chapter-head {
@@ -1221,20 +1221,21 @@ button { font: inherit; }
   display: grid;
   grid-template-columns: minmax(0, auto) minmax(0, 1fr);
   align-items: stretch;
-  column-gap: clamp(18px, 2.4vw, 30px);
+  column-gap: clamp(20px, 2.6vw, 34px);
   margin: 0;
   max-width: 760px;
   position: relative;
+  padding-right: clamp(86px, 10vw, 130px);
 }
 .title-initial-wrap {
   display: inline-block;
   position: relative;
-  width: clamp(98px, 11vw, 142px);
+  width: clamp(108px, 12.4vw, 162px);
   align-self: start;
   margin-top: 0.02em;
   transition: transform 520ms var(--ease), filter 520ms var(--ease);
   filter:
-    drop-shadow(0 10px 16px rgba(80, 36, 14, 0.24))
+    drop-shadow(0 12px 18px rgba(80, 36, 14, 0.24))
     drop-shadow(0 0 0.5px rgba(107, 74, 37, 0.32));
 }
 .title-initial-wrap.is-pressing {
@@ -1280,7 +1281,7 @@ button { font: inherit; }
   align-self: center;
   margin: 0;
   color: var(--ink);
-  font: italic 620 clamp(38px, 5.8vw, 84px)/1.02 var(--display);
+  font: italic 640 clamp(40px, 6vw, 92px)/1.02 var(--display);
   letter-spacing: -0.022em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1, "onum" 1;
   padding-top: 0.02em;
@@ -1428,11 +1429,16 @@ button { font: inherit; }
   color: #1d4a59;
   position: relative;
   font-style: italic;
-  font-weight: 600;
+  font-weight: 680;
   display: inline-block;
-  padding: 0 0.04em;
-  letter-spacing: -0.018em;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1;
+  padding: 0 0.05em;
+  letter-spacing: -0.02em;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "salt" 1, "swsh" 1;
+  text-shadow: 0 0 0 rgba(29, 74, 89, 0);
+  transition: text-shadow 800ms var(--ease);
+}
+.has-answer .title-subject {
+  text-shadow: 0 0 12px rgba(245, 198, 91, 0.18);
 }
 .title-subject-rule {
   position: absolute;
@@ -6377,6 +6383,7 @@ button { font: inherit; }
   .broadsheet-title {
     grid-template-columns: minmax(0, 86px) minmax(0, 1fr);
     column-gap: 12px;
+    padding-right: 0;
   }
   .title-initial-wrap {
     width: 86px;
@@ -12561,5 +12568,327 @@ button { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .has-answer .title-initial-wrap::before { animation: none; opacity: 0.85; }
 }
+
+/* ────────── iteration 143 · the chapter spread earns a reading tide and a manuscript reader ────────── */
+
+/* the reading tide — a single hand-drawn rule that runs beneath the H1 question
+   and ties the recto to the verso. The progress variable drives a quiet draw-on
+   that culminates in the press. The pendant marks the question as the centre. */
+.reading-tide-line {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: clamp(28px, 4vw, 48px) 0 clamp(20px, 3vw, 32px);
+  pointer-events: none;
+  --tide-progress: 0;
+}
+.reading-tide-svg {
+  display: block;
+  width: 100%;
+  height: clamp(56px, 6.4vw, 84px);
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.06));
+}
+.reading-tide-track { opacity: 0.55; }
+.reading-tide-main {
+  stroke-dasharray: 1280;
+  stroke-dashoffset: 1280;
+  transition: stroke-dashoffset 1900ms cubic-bezier(.22, .86, .22, 1) 280ms;
+}
+.has-answer .reading-tide-main {
+  stroke-dashoffset: calc(1280 * (1 - var(--tide-progress, 0)));
+}
+.reading-tide-marks line,
+.reading-tide-marks circle {
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+}
+.has-answer .reading-tide-marks line,
+.has-answer .reading-tide-marks circle {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(220ms + var(--mark-i, 0) * 80ms);
+}
+.reading-tide-marks line:nth-of-type(1),
+.reading-tide-marks circle:nth-of-type(1) { transition-delay: 320ms; --mark-i: 0; }
+.reading-tide-marks line:nth-of-type(2),
+.reading-tide-marks circle:nth-of-type(2) { transition-delay: 420ms; --mark-i: 1; }
+.reading-tide-marks line:nth-of-type(3),
+.reading-tide-marks circle:nth-of-type(3) { transition-delay: 560ms; --mark-i: 2; }
+.reading-tide-marks line:nth-of-type(4),
+.reading-tide-marks circle:nth-of-type(4) { transition-delay: 720ms; --mark-i: 3; }
+.reading-tide-marks line:nth-of-type(5),
+.reading-tide-marks circle:nth-of-type(5) { transition-delay: 860ms; --mark-i: 4; }
+.reading-tide-marks line:nth-of-type(6),
+.reading-tide-marks circle:nth-of-type(6) { transition-delay: 980ms; --mark-i: 5; }
+.reading-tide-letters {
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 900ms var(--ease) 720ms, transform 900ms var(--ease) 720ms;
+}
+.has-answer .reading-tide-letters { opacity: 0.82; transform: none; }
+.reading-tide-letter {
+  font: italic 500 10px/1 var(--display);
+  letter-spacing: 0.05em;
+  fill: rgba(107, 74, 37, 0.72);
+}
+.reading-tide-letter--key {
+  font: italic 760 13px/1 var(--display);
+  fill: rgba(167, 60, 44, 0.88);
+}
+.reading-tide-pendant {
+  opacity: 0;
+  transform-origin: 488px 56px;
+  transform: scale(0.6) translateY(2px);
+  transition: opacity 700ms var(--ease) 1100ms, transform 900ms var(--ease) 1100ms;
+}
+.has-answer .reading-tide-pendant {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+.reading-tide-pendant-halo {
+  animation: tide-pendant-pulse 5.2s ease-in-out infinite;
+}
+@keyframes tide-pendant-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 0.9; transform: scale(1.2); }
+}
+.reading-tide-arrow {
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 700ms var(--ease) 1200ms, transform 700ms var(--ease) 1200ms;
+}
+.has-answer .reading-tide-arrow {
+  opacity: 0.85;
+  transform: none;
+}
+.reading-tide-cap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: rgba(107, 74, 37, 0.62);
+  font-style: italic;
+  opacity: 0;
+  transition: opacity 800ms var(--ease) 1400ms;
+}
+.has-answer .reading-tide-cap { opacity: 0.78; }
+.reading-tide-cap-rule {
+  flex: 0 0 clamp(20px, 4vw, 40px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(167, 60, 44, 0.32)
+  );
+}
+.reading-tide-cap-rule--right {
+  background: linear-gradient(to left, transparent, rgba(167, 60, 44, 0.32));
+}
+.reading-tide-cap-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.reading-tide-cap-key {
+  font: italic 700 9.5px/1 var(--sans);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+}
+.reading-tide-cap-sep { color: var(--coral); opacity: 0.6; }
+.reading-tide-cap-tail { color: rgba(17, 32, 42, 0.6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-tide-main { transition: none; stroke-dashoffset: 0; }
+  .reading-tide-marks line,
+  .reading-tide-marks circle,
+  .reading-tide-letters,
+  .reading-tide-pendant,
+  .reading-tide-arrow,
+  .reading-tide-cap { transition: none; opacity: 1; transform: none; }
+  .reading-tide-pendant-halo { animation: none; }
+  .has-answer .reading-tide-marks line,
+  .has-answer .reading-tide-marks circle { transition: none; opacity: 1; }
+}
+@media (max-width: 720px) {
+  .reading-tide-svg { height: 48px; }
+  .reading-tide-letter { font-size: 8.5px; }
+  .reading-tide-letter--key { font-size: 11px; }
+  .reading-tide-cap-key { font-size: 8px; letter-spacing: 0.22em; }
+  .reading-tide-cap-tail { font-size: 9.5px; }
+}
+
+/* the small recto-spread-foot — replaces the quiet recto-signing-rule beneath the question */
+.recto-spread-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  font-size: 10.5px;
+  color: rgba(17, 32, 42, 0.7);
+  font-style: italic;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity 800ms var(--ease) 1600ms, transform 800ms var(--ease) 1600ms;
+}
+.has-answer .recto-spread-foot { opacity: 0.86; transform: none; }
+.recto-spread-foot-rule {
+  flex: 0 0 clamp(28px, 5vw, 56px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(167, 60, 44, 0.36));
+}
+.recto-spread-foot-rule--right {
+  background: linear-gradient(to left, transparent, rgba(167, 60, 44, 0.36));
+}
+.recto-spread-foot-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.recto-spread-foot-key {
+  font: italic 700 9px/1 var(--sans);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+}
+.recto-spread-foot-sep { color: var(--coral); opacity: 0.7; }
+.recto-spread-foot-tail { color: rgba(17, 32, 42, 0.66); }
+
+@media (prefers-reduced-motion: reduce) {
+  .recto-spread-foot { transition: none; opacity: 0.86; transform: none; }
+}
+
+/* the manuscript reader — a small marginal figure seated with the page, watching the press */
+.recto-reader-stage {
+  position: absolute;
+  top: clamp(120px, 18vh, 220px);
+  right: clamp(-22px, -1.6vw, -8px);
+  width: clamp(78px, 9.6vw, 116px);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transform: translate(-6px, -4px) rotate(-2deg);
+  transition:
+    opacity 1100ms var(--ease) 720ms,
+    transform 1100ms var(--ease) 720ms;
+  filter: drop-shadow(0 10px 18px rgba(40, 22, 8, 0.18));
+}
+.recto-reader-stage::before {
+  content: "";
+  position: absolute;
+  left: -28px;
+  top: 50%;
+  width: 22px;
+  height: 1px;
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(107, 74, 37, 0.5) 60%,
+    rgba(167, 60, 44, 0.5)
+  );
+  opacity: 0;
+  transform: translateY(-0.5px) scaleX(0.4);
+  transform-origin: right center;
+  transition: opacity 700ms var(--ease) 1100ms, transform 700ms var(--ease) 1100ms;
+  pointer-events: none;
+}
+.recto-reader-stage::after {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(167, 60, 44, 0.6);
+  box-shadow: 0 0 4px rgba(245, 198, 91, 0.6);
+  opacity: 0;
+  transform: translateY(-50%) scale(0.4);
+  transition: opacity 600ms var(--ease) 1300ms, transform 600ms var(--ease) 1300ms;
+  pointer-events: none;
+}
+.has-answer .recto-reader-stage::before {
+  opacity: 0.7;
+  transform: translateY(-0.5px) scaleX(1);
+}
+.has-answer .recto-reader-stage::after {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+.has-answer .recto-reader-stage {
+  opacity: 1;
+  transform: none;
+  animation: manuscript-reader-sway 9s ease-in-out infinite 1500ms;
+}
+@keyframes manuscript-reader-sway {
+  0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+  50%      { transform: translateY(-1px) rotate(0.6deg); }
+}
+.manuscript-reader-plate {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.mr-eyes {
+  transform-origin: center;
+  animation: mr-blink 7.5s ease-in-out infinite 1800ms;
+}
+@keyframes mr-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95%           { transform: scaleY(0.18); }
+}
+.mr-hand { opacity: 0.92; }
+.mr-quill {
+  transform-origin: 0 0;
+  animation: mr-quill-write 4.6s ease-in-out infinite;
+}
+@keyframes mr-quill-write {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(2.4deg); }
+}
+.mr-tag {
+  font: italic 500 7.5px/1 var(--serif);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  fill: rgba(107, 74, 37, 0.78);
+}
+.manuscript-reader.is-static .mr-eyes,
+.manuscript-reader.is-static .mr-quill,
+.manuscript-reader.is-static .recto-reader-stage {
+  animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .recto-reader-stage {
+    transition: none;
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .mr-eyes, .mr-quill { animation: none; }
+}
+@media (max-width: 880px) {
+  .recto-reader-stage {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 92px;
+    margin: 18px auto 0;
+    transform: rotate(-1.5deg);
+  }
+  .has-answer .recto-reader-stage {
+    transform: rotate(-1.5deg);
+  }
+}
+@media (max-width: 480px) {
+  .recto-reader-stage { width: 76px; }
+}
+
 
 
