@@ -12,6 +12,7 @@ type Gloss = {
   blot: string
   tether: string
   note: string
+  mark: string
 }
 
 const MARGINALIA: Gloss[] = [
@@ -25,6 +26,7 @@ const MARGINALIA: Gloss[] = [
     blot: 'M11 3 C 17 5, 21 11, 18 17 C 14 21, 5 20, 3 14 C 1 9, 6 3, 11 3 Z',
     tether: 'M58 4 C 40 14, 18 28, 4 56',
     note: 'the press remembers the hand, not the pressman',
+    mark: 'M2 8 L18 8 M10 2 L10 14',
   },
   {
     id: 'good',
@@ -36,6 +38,7 @@ const MARGINALIA: Gloss[] = [
     blot: 'M10 4 C 16 3, 21 8, 20 14 C 19 20, 11 21, 6 17 C 1 13, 4 6, 10 4 Z',
     tether: 'M58 6 C 36 14, 14 32, 4 64',
     note: 'a clean claim is a kindness to the reader',
+    mark: 'M2 8 L18 8 M14 2 L14 14 M6 5 L14 5',
   },
   {
     id: 'yet',
@@ -47,6 +50,47 @@ const MARGINALIA: Gloss[] = [
     blot: 'M9 3 C 14 2, 20 7, 19 13 C 18 19, 10 20, 5 16 C 1 11, 4 4, 9 3 Z',
     tether: 'M58 8 C 40 18, 20 38, 4 70',
     note: 'leave room for the reader to arrive',
+    mark: 'M2 8 L18 8 M2 2 L18 14',
+  },
+]
+
+type Specimen = {
+  id: 'cut' | 'hand' | 'wood'
+  n: 'i.' | 'ii.' | 'iii.'
+  name: string
+  press: string
+  casing: 'small' | 'italic' | 'wood'
+  note: string
+  ornament: string
+}
+
+const SPECIMENS: Specimen[] = [
+  {
+    id: 'cut',
+    n: 'i.',
+    name: 'the foundry cut',
+    press: 'roman, 12pt · leaded',
+    casing: 'small',
+    note: 'reads like a job ticket — useful, no flourish',
+    ornament: 'M2 8 L18 8 M10 2 L10 14',
+  },
+  {
+    id: 'hand',
+    n: 'ii.',
+    name: "the scribe's hand",
+    press: 'italic copperplate, 18pt',
+    casing: 'italic',
+    note: 'reads like a dedication — quiet, slightly personal',
+    ornament: 'M2 9 C 6 3, 10 15, 14 9 C 16 5, 18 11, 20 8',
+  },
+  {
+    id: 'wood',
+    n: 'iii.',
+    name: 'the wood type',
+    press: 'clarendon, 48pt · reversed',
+    casing: 'wood',
+    note: 'reads like a poster — answers whether you like it or not',
+    ornament: 'M2 8 L18 8 M5 2 L13 14 M13 2 L5 14',
   },
 ]
 
@@ -88,7 +132,7 @@ function useScrollState() {
       }
 
       const eyeY = window.scrollY + window.innerHeight * 0.32
-      const sectionIds = ['question', 'answer', 'marginalia']
+      const sectionIds = ['question', 'answer', 'marginalia', 'specimens']
       let section: string | null = null
       for (const id of sectionIds) {
         const el = document.getElementById(id)
@@ -162,21 +206,22 @@ function Dust() {
     let raf = 0
     let w = 0
     let h = 0
-    type P = { x: number; y: number; r: number; vy: number; vx: number; a: number; ph: number; tw: number }
+    type P = { x: number; y: number; r: number; vy: number; vx: number; a: number; ph: number; tw: number; hue: number }
     let motes: P[] = []
 
     const seed = () => {
       const area = w * h
-      const count = Math.min(46, Math.max(18, Math.floor(area / 32000)))
+      const count = Math.min(56, Math.max(22, Math.floor(area / 28000)))
       motes = Array.from({ length: count }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        r: 0.25 + Math.random() * 1.3,
-        vy: 0.03 + Math.random() * 0.12,
+        r: 0.25 + Math.random() * 1.4,
+        vy: 0.03 + Math.random() * 0.1,
         vx: (Math.random() - 0.5) * 0.04,
-        a: 0.04 + Math.random() * 0.13,
+        a: 0.04 + Math.random() * 0.14,
         ph: Math.random() * Math.PI * 2,
         tw: 0.4 + Math.random() * 0.6,
+        hue: Math.random(),
       }))
     }
 
@@ -203,10 +248,18 @@ function Dust() {
         if (p.x < -6) p.x = w + 6
         if (p.x > w + 6) p.x = -6
         const flicker = 0.6 + 0.4 * Math.sin(t * 0.0008 * p.tw + p.ph)
-        ctx.beginPath()
-        ctx.fillStyle = `rgba(36, 30, 22, ${p.a * flicker})`
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fill()
+        const warm = p.hue > 0.78
+        if (warm) {
+          ctx.beginPath()
+          ctx.fillStyle = `rgba(199, 91, 59, ${p.a * flicker * 1.1})`
+          ctx.arc(p.x, p.y, p.r * 0.9, 0, Math.PI * 2)
+          ctx.fill()
+        } else {
+          ctx.beginPath()
+          ctx.fillStyle = `rgba(24, 43, 53, ${p.a * flicker})`
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+          ctx.fill()
+        }
       }
       if (!reduce) raf = requestAnimationFrame(tick)
     }
@@ -218,7 +271,7 @@ function Dust() {
     } else {
       for (const p of motes) {
         ctx.beginPath()
-        ctx.fillStyle = `rgba(36, 30, 22, ${p.a})`
+        ctx.fillStyle = `rgba(24, 43, 53, ${p.a})`
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
         ctx.fill()
       }
@@ -394,6 +447,30 @@ function DropcapSwash() {
         strokeLinecap="round"
       />
       <circle cx="58" cy="14" r="1.4" fill="currentColor" />
+    </svg>
+  )
+}
+
+function DropcapGlyph() {
+  return (
+    <svg className="dropcap-glyph" viewBox="0 0 64 64" aria-hidden="true">
+      <path
+        d="M44 8 C 32 8, 22 14, 20 26 C 18 36, 24 46, 36 48 C 42 49, 48 47, 50 44 M44 8 C 44 18, 44 28, 44 38 M44 8 C 38 12, 32 16, 28 22 M44 38 C 40 42, 36 46, 30 48"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M48 50 C 50 54, 54 56, 58 56"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        opacity="0.7"
+      />
+      <circle cx="58" cy="56" r="1.6" fill="currentColor" opacity="0.85" />
     </svg>
   )
 }
@@ -604,6 +681,62 @@ function MarkLayer({ active, marks, currentPath, svgRef, onPathStart, onPathMove
   )
 }
 
+function SpecimenSetting({ s }: { s: Specimen }) {
+  const lineA = s.id === 'cut' ? 'is Minimax' : s.id === 'hand' ? 'is M^3' : 'IS'
+  const lineB = s.id === 'cut' ? 'good at frontend' : s.id === 'hand' ? 'good at frontend' : 'GOOD AT'
+  const lineC = s.id === 'cut' ? 'yet ?' : s.id === 'hand' ? 'yet?' : 'FRONTEND YET'
+  return (
+    <div className={`specimen__setting specimen__setting--${s.casing}`} aria-hidden="true">
+      <span className="specimen__line specimen__line--a">{lineA}</span>
+      <span className="specimen__line specimen__line--b">{lineB}</span>
+      <span className="specimen__line specimen__line--c">{lineC}</span>
+    </div>
+  )
+}
+
+function SpecimenCard({
+  s,
+  active,
+  onEnter,
+  onLeave,
+}: {
+  s: Specimen
+  active: boolean
+  onEnter: () => void
+  onLeave: () => void
+}) {
+  return (
+    <article
+      className={`specimen specimen--${s.casing} ${active ? 'is-active' : ''}`}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      onFocus={onEnter}
+      onBlur={onLeave}
+      tabIndex={0}
+    >
+      <span className="specimen__corner specimen__corner--tl" aria-hidden="true" />
+      <span className="specimen__corner specimen__corner--tr" aria-hidden="true" />
+      <span className="specimen__corner specimen__corner--bl" aria-hidden="true" />
+      <span className="specimen__corner specimen__corner--br" aria-hidden="true" />
+      <header className="specimen__head">
+        <span className="specimen__n">{s.n}</span>
+        <span className="specimen__rule" />
+        <span className="specimen__press">{s.press}</span>
+      </header>
+      <SpecimenSetting s={s} />
+      <footer className="specimen__foot">
+        <h3 className="specimen__name">{s.name}</h3>
+        <p className="specimen__note">{s.note}</p>
+        <span className="specimen__ornament" aria-hidden="true">
+          <svg viewBox="0 0 20 16">
+            <path d={s.ornament} fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </footer>
+    </article>
+  )
+}
+
 export function App() {
   const [open, setOpen] = useState(false)
   const [hovered, setHovered] = useState<string | null>(null)
@@ -614,6 +747,8 @@ export function App() {
   const [announcement, setAnnouncement] = useState('')
   const [sealPasses, setSealPasses] = useState(0)
   const [sigVisible, setSigVisible] = useState(false)
+  const [specimenFocus, setSpecimenFocus] = useState<string | null>(null)
+  const [specimenRest, setSpecimenRest] = useState(true)
   const answerId = useId()
   const now = useNow(1000)
   const { progress, activeWord, activeSection } = useScrollState()
@@ -671,6 +806,16 @@ export function App() {
   }, [])
 
   useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduce) {
+      setSpecimenRest(false)
+      return
+    }
+    const id = window.setTimeout(() => setSpecimenRest(false), 2200)
+    return () => window.clearTimeout(id)
+  }, [])
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return
@@ -715,18 +860,26 @@ export function App() {
 
   const scribbles = Object.fromEntries(MARGINALIA.map(m => [m.id, m.scribble]))
   const blots = Object.fromEntries(MARGINALIA.map(m => [m.id, m.blot]))
+  const marksSvg = Object.fromEntries(MARGINALIA.map(m => [m.id, m.mark]))
 
   const beatOn = now.getSeconds() % 2 === 0
   const titleDelays = [0.0, 0.08, 0.16, 0.24, 0.32, 0.4, 0.48]
   const marked = marks.length > 0
 
+  const focusedSpecimen = SPECIMENS.find(s => s.id === specimenFocus) || null
+
   return (
     <main
-      className={`folio ${open ? 'folio--open' : ''} ${pencil ? 'folio--pencil' : ''}`}
-      style={{ ['--progress' as string]: progress, ['--ink-set' as string]: String(Math.min(1, Math.max(0, progress * 5))) }}
+      className={`folio ${open ? 'folio--open' : ''} ${pencil ? 'folio--pencil' : ''} ${focusedSpecimen ? `folio--voice-${focusedSpecimen.id}` : ''}`}
+      style={{
+        ['--progress' as string]: progress,
+        ['--ink-set' as string]: String(Math.min(1, Math.max(0, progress * 5))),
+        ['--voice-tint' as string]: focusedSpecimen ? '1' : '0',
+      }}
     >
       <Dust />
       <div className="folio__lamp" aria-hidden="true" />
+      <div className="folio__lamp folio__lamp--warm" aria-hidden="true" />
       <div className="folio__vignette" aria-hidden="true" />
       <div className="folio__grain" aria-hidden="true" />
       <span className="sr-only" aria-live="polite">{announcement}</span>
@@ -743,6 +896,7 @@ export function App() {
           <a href="#question" className={activeSection === 'question' ? 'is-active' : ''}>question</a>
           <a href="#answer" onClick={() => setOpen(true)} className={activeSection === 'answer' ? 'is-active' : ''}>answer</a>
           <a href="#marginalia" className={activeSection === 'marginalia' ? 'is-active' : ''}>margin</a>
+          <a href="#specimens" className={activeSection === 'specimens' ? 'is-active' : ''}>specimens</a>
         </nav>
         <span className="folio__edition" aria-label="Publication note">
           an unfinished<br /><i>answer</i>
@@ -931,6 +1085,9 @@ export function App() {
                       <p className="answer__lead">
                         <span className="answer__dropcap" aria-hidden="true">
                           <span className="answer__dropcap-letter">Y</span>
+                          <span className="answer__dropcap-glyph" aria-hidden="true">
+                            <DropcapGlyph />
+                          </span>
                           <span className="answer__dropcap-flourish"><Flourish /></span>
                           <span className="answer__dropcap-swash"><DropcapSwash /></span>
                         </span>
@@ -990,6 +1147,11 @@ export function App() {
                   >
                     <span className="margin__n">{m.n}</span>
                     <div className="margin__copy">
+                      <span className="margin__mark" aria-hidden="true">
+                        <svg viewBox="0 0 20 16">
+                          <path d={marksSvg[m.id]} fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                        </svg>
+                      </span>
                       <span className="margin__tether" aria-hidden="true">
                         <svg viewBox="0 0 60 80" preserveAspectRatio="none">
                           <path d={m.tether} />
@@ -1016,6 +1178,38 @@ export function App() {
               </ol>
             </aside>
           </div>
+
+          <section className="specimens" id="specimens" aria-labelledby="specimens-title">
+            <header className="specimens__head">
+              <p className="kicker">
+                <span>specimens</span>
+                <b />
+                <em>from the press drawer</em>
+              </p>
+              <h2 id="specimens-title" className="specimens__title">
+                three ways to <i>set the question</i>
+              </h2>
+              <p className="specimens__lede">
+                The same question, pulled three times from the drawer. Read any one aloud and the answer changes a little.
+              </p>
+            </header>
+            <div className={`specimens__wall ${specimenRest ? 'is-rest' : ''}`}>
+              {SPECIMENS.map(s => (
+                <SpecimenCard
+                  key={s.id}
+                  s={s}
+                  active={specimenFocus === s.id}
+                  onEnter={() => setSpecimenFocus(s.id)}
+                  onLeave={() => setSpecimenFocus(null)}
+                />
+              ))}
+            </div>
+            <p className="specimens__hint" aria-hidden="true">
+              <span className="specimens__hint-rule" />
+              <em>hover a card</em> — the title above takes its voice
+              <span className="specimens__hint-rule" />
+            </p>
+          </section>
         </div>
 
         <div className="proof__device" aria-hidden="true">
@@ -1046,6 +1240,10 @@ export function App() {
              {sealPasses > 0 && (<>
                <span className="colophon__sep">·</span>
                <span className="colophon__passes">{sealPasses === 1 ? 'one stamp' : `${sealPasses} stamps`}</span>
+             </>)}
+             {focusedSpecimen && (<>
+               <span className="colophon__sep">·</span>
+               <span className="colophon__voice">in the voice of <em>{focusedSpecimen.name}</em></span>
              </>)}
           </p>
           <div className={`colophon__sign ${sigVisible ? 'is-drawn' : ''}`} aria-hidden="true">
