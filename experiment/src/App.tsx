@@ -360,6 +360,460 @@ function ConstellationTrail({
 }
 
 /* ──────────────────────────────────────────────────────────────────────
+   iteration 167 · a composed spread opening
+
+   The recto's opening has accumulated three stacked horizontal plates
+   (FolioBreath + FolioMasthead + FolioRectoHeadmark) that together
+   compete with the question H1 for the eye. This composed impression
+   replaces all three with a single, breathing frontispiece: a thin
+   double rule, a centred press monogram with a slow warm halo, the
+   chapter mark and folio number set as roman numerals on either side,
+   the press's own italic motto, and four corner pips that quietly
+   frame the composition. It animates in slowly over ~1.6 s and stays
+   — the page's own quiet opening signature, set before the question
+   arrives.
+
+   The verso earns a slimmer companion (ReplyOpeningPlate): same idiom,
+   smaller scale, an "r" pip beside the monogram (echoing the recto's
+   "q" pip), speaking in the reply's slower voice.
+   ────────────────────────────────────────────────────────────────────── */
+
+function SpreadOpeningPlate({
+  now,
+  reduced,
+}: {
+  now: Date
+  reduced: boolean
+}) {
+  const dayName = WEEKDAYS[now.getDay()].slice(0, 3).toLowerCase()
+  const dayOrdinal = ORDINALS[Math.min(ORDINALS.length - 1, now.getDate() - 1)]
+  const monthName = MONTHS[now.getMonth()].slice(0, 3).toLowerCase()
+  const yearRoman = toRomanYear(now.getFullYear())
+  const hour24 = now.getHours()
+  const minutes = now.getMinutes()
+  const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
+  const h12 = ((hour24 + 11) % 12) + 1
+  const mm = String(minutes).padStart(2, '0')
+
+  return (
+    <figure
+      className={`spread-opening${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="spread-opening-plate"
+        viewBox="0 0 640 144"
+        focusable="false"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <defs>
+          <linearGradient id="so-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="10%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="50%" stopColor="rgba(200, 146, 62, 0.78)" />
+            <stop offset="90%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="so-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.18)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="so-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <linearGradient id="so-gold-soft" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f5c65b" />
+            <stop offset="100%" stopColor="#a47026" />
+          </linearGradient>
+          <radialGradient id="so-face" cx="50%" cy="34%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.86)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.38)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+          </radialGradient>
+          <radialGradient id="so-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.34)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+          <radialGradient id="so-pulse" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245, 198, 91, 0.18)" />
+            <stop offset="100%" stopColor="rgba(245, 198, 91, 0)" />
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="320" cy="72" rx="290" ry="60" fill="url(#so-halo)" />
+
+        {/* top rule */}
+        <line
+          x1="20"
+          y1="14"
+          x2="620"
+          y2="14"
+          stroke="url(#so-rule-ghost)"
+          strokeWidth="0.32"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="20"
+          y1="11"
+          x2="620"
+          y2="11"
+          stroke="url(#so-rule)"
+          strokeWidth="0.6"
+          strokeLinecap="round"
+          className="spread-opening-rule"
+        />
+
+        {/* top corner pips */}
+        <g className="spread-opening-corner spread-opening-corner--tl" fill="rgba(167, 60, 44, 0.55)">
+          <path d="M 18 11 L 12 11 L 12 17 L 18 17 L 18 14 L 14 14 L 14 11 Z" />
+          <circle cx="13" cy="13" r="0.5" fill="rgba(245, 198, 91, 0.85)" />
+        </g>
+        <g className="spread-opening-corner spread-opening-corner--tr" fill="rgba(167, 60, 44, 0.5)">
+          <path d="M 622 11 L 628 11 L 628 17 L 622 17 L 622 14 L 626 14 L 626 11 Z" />
+          <circle cx="627" cy="13" r="0.5" fill="rgba(245, 198, 91, 0.85)" />
+        </g>
+
+        {/* motto above the seal */}
+        <text x="320" y="29" textAnchor="middle" className="spread-opening-above">
+          manu m · iii · the press · caput xviii
+        </text>
+
+        {/* left numeral xviii */}
+        <g className="spread-opening-numeral spread-opening-numeral--l" transform="translate(110 76)">
+          <rect x="-32" y="-12" width="64" height="24" rx="1.2" fill="rgba(255, 246, 218, 0.62)" stroke="url(#so-gold-soft)" strokeWidth="0.4" />
+          <rect x="-29" y="-9" width="58" height="18" rx="0.6" fill="none" stroke="url(#so-gold-soft)" strokeWidth="0.22" strokeDasharray="0.6 1.4" opacity="0.78" />
+          <text x="0" y="3.2" textAnchor="middle" className="spread-opening-numeral-glyph">XVIII</text>
+          <text x="0" y="-15" textAnchor="middle" className="spread-opening-numeral-key">caput</text>
+          <text x="0" y="22" textAnchor="middle" className="spread-opening-numeral-tail">the chapter</text>
+          <line x1="-22" y1="-9" x2="22" y2="-9" stroke="rgba(167, 60, 44, 0.35)" strokeWidth="0.3" strokeLinecap="round" />
+          <line x1="-22" y1="9" x2="22" y2="9" stroke="rgba(167, 60, 44, 0.35)" strokeWidth="0.3" strokeLinecap="round" />
+          <circle cx="-30" cy="-12" r="0.5" fill="rgba(167, 60, 44, 0.62)" />
+          <circle cx="30" cy="-12" r="0.5" fill="rgba(167, 60, 44, 0.62)" />
+          <circle cx="-30" cy="12" r="0.5" fill="rgba(167, 60, 44, 0.62)" />
+          <circle cx="30" cy="12" r="0.5" fill="rgba(167, 60, 44, 0.62)" />
+        </g>
+
+        {/* connector rules from numerals to seal */}
+        <g className="spread-opening-thread" stroke="rgba(167, 60, 44, 0.32)" strokeWidth="0.45" strokeDasharray="0.6 1.4" strokeLinecap="round" fill="none">
+          <path d="M 144 76 Q 200 70 252 76" />
+          <path d="M 388 76 Q 440 82 496 76" />
+        </g>
+
+        {/* central monogram seal */}
+        <g className="spread-opening-seal" transform="translate(320 76)">
+          <ellipse cx="0" cy="0" rx="32" ry="30" fill="url(#so-pulse)" className="spread-opening-seal-glow" />
+          <circle r="24" fill="url(#so-face)" />
+          <circle r="24" fill="none" stroke="url(#so-gold)" strokeWidth="0.7" />
+          <circle r="22" fill="none" stroke="url(#so-gold-soft)" strokeWidth="0.32" strokeDasharray="0.5 1.6" opacity="0.85" />
+          <circle r="14" fill="none" stroke="url(#so-gold-soft)" strokeWidth="0.32" />
+          <circle r="14" fill="none" stroke="rgba(107, 74, 37, 0.32)" strokeWidth="0.22" strokeDasharray="0.4 1.2" opacity="0.7" />
+
+          {/* the monogram M with a small roman numeral cluster */}
+          <text x="-3" y="3.2" textAnchor="middle" className="spread-opening-letter">m</text>
+          <text x="6" y="3.2" textAnchor="middle" className="spread-opening-letter-roman">·iii</text>
+          <line x1="-9" y1="7" x2="9" y2="7" stroke="url(#so-gold-soft)" strokeWidth="0.42" strokeLinecap="round" opacity="0.78" />
+
+          {/* four cardinal pip accents on the rim */}
+          <circle cx="0" cy="-19" r="0.7" fill="rgba(167, 60, 44, 0.72)" />
+          <circle cx="19" cy="0" r="0.7" fill="rgba(167, 60, 44, 0.72)" />
+          <circle cx="0" cy="19" r="0.7" fill="rgba(167, 60, 44, 0.72)" />
+          <circle cx="-19" cy="0" r="0.7" fill="rgba(167, 60, 44, 0.72)" />
+
+          {/* Q-pip to the right (echoes the recto headmark's Q-mark) */}
+          <circle cx="29" cy="-8" r="2.4" fill="rgba(255, 246, 218, 0.7)" stroke="url(#so-gold)" strokeWidth="0.32" />
+          <text x="29" y="-7" textAnchor="middle" className="spread-opening-q-letter">Q</text>
+        </g>
+
+        {/* right numeral lxxvii */}
+        <g className="spread-opening-numeral spread-opening-numeral--r" transform="translate(530 76)">
+          <rect x="-32" y="-12" width="64" height="24" rx="1.2" fill="rgba(255, 246, 218, 0.62)" stroke="url(#so-gold-soft)" strokeWidth="0.4" />
+          <rect x="-29" y="-9" width="58" height="18" rx="0.6" fill="none" stroke="url(#so-gold-soft)" strokeWidth="0.22" strokeDasharray="0.6 1.4" opacity="0.78" />
+          <text x="0" y="3.2" textAnchor="middle" className="spread-opening-numeral-glyph">LXXVII</text>
+          <text x="0" y="-15" textAnchor="middle" className="spread-opening-numeral-key">folio</text>
+          <text x="0" y="22" textAnchor="middle" className="spread-opening-numeral-tail">the leaf</text>
+          <line x1="-22" y1="-9" x2="22" y2="-9" stroke="rgba(167, 60, 44, 0.35)" strokeWidth="0.3" strokeLinecap="round" />
+          <line x1="-22" y1="9" x2="22" y2="9" stroke="rgba(167, 60, 44, 0.35)" strokeWidth="0.3" strokeLinecap="round" />
+          <circle cx="-30" cy="-12" r="0.5" fill="rgba(167, 60, 44, 0.62)" />
+          <circle cx="30" cy="-12" r="0.5" fill="rgba(167, 60, 44, 0.62)" />
+          <circle cx="-30" cy="12" r="0.5" fill="rgba(167, 60, 44, 0.62)" />
+          <circle cx="30" cy="12" r="0.5" fill="rgba(167, 60, 44, 0.62)" />
+        </g>
+
+        {/* inscription beneath the seal — day, hour, year */}
+        <text x="320" y="118" textAnchor="middle" className="spread-opening-day">
+          {dayName} · the {dayOrdinal} of {monthName} · {h12}:{mm} {period} · {yearRoman}
+        </text>
+
+        {/* motto beneath */}
+        <text x="320" y="129" textAnchor="middle" className="spread-opening-motto">
+          ad lucem · perlege
+        </text>
+
+        {/* bottom rule */}
+        <line
+          x1="20"
+          y1="138"
+          x2="620"
+          y2="138"
+          stroke="url(#so-rule-ghost)"
+          strokeWidth="0.32"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="20"
+          y1="141"
+          x2="620"
+          y2="141"
+          stroke="url(#so-rule)"
+          strokeWidth="0.6"
+          strokeLinecap="round"
+          className="spread-opening-rule spread-opening-rule--bot"
+        />
+
+        {/* bottom corner pips */}
+        <g className="spread-opening-corner spread-opening-corner--bl" fill="rgba(167, 60, 44, 0.55)">
+          <path d="M 18 141 L 12 141 L 12 135 L 18 135 L 18 138 L 14 138 L 14 141 Z" />
+          <circle cx="13" cy="139" r="0.5" fill="rgba(245, 198, 91, 0.85)" />
+        </g>
+        <g className="spread-opening-corner spread-opening-corner--br" fill="rgba(167, 60, 44, 0.5)">
+          <path d="M 622 141 L 628 141 L 628 135 L 622 135 L 622 138 L 626 138 L 626 141 Z" />
+          <circle cx="627" cy="139" r="0.5" fill="rgba(245, 198, 91, 0.85)" />
+        </g>
+      </svg>
+
+      <figcaption className="spread-opening-cap">
+        <span className="spread-opening-cap-rule spread-opening-cap-rule--left" aria-hidden="true" />
+        <span className="spread-opening-cap-cluster">
+          <em className="spread-opening-cap-key">the press opening</em>
+          <span className="spread-opening-cap-sep" aria-hidden="true">·</span>
+          <em className="spread-opening-cap-tail">a single composed impression, set above the question</em>
+        </span>
+        <span className="spread-opening-cap-rule spread-opening-cap-rule--right" aria-hidden="true" />
+      </figcaption>
+    </figure>
+  )
+}
+
+function ReplyOpeningPlate({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <figure
+      className={`reply-opening${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg
+        className="reply-opening-plate"
+        viewBox="0 0 480 80"
+        focusable="false"
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <defs>
+          <linearGradient id="rop-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(120, 30, 12, 0)" />
+            <stop offset="10%" stopColor="rgba(120, 30, 12, 0.5)" />
+            <stop offset="50%" stopColor="rgba(154, 110, 38, 0.72)" />
+            <stop offset="90%" stopColor="rgba(120, 30, 12, 0.5)" />
+            <stop offset="100%" stopColor="rgba(120, 30, 12, 0)" />
+          </linearGradient>
+          <linearGradient id="rop-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(120, 30, 12, 0)" />
+            <stop offset="50%" stopColor="rgba(120, 30, 12, 0.2)" />
+            <stop offset="100%" stopColor="rgba(120, 30, 12, 0)" />
+          </linearGradient>
+          <linearGradient id="rop-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <radialGradient id="rop-face" cx="50%" cy="34%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.78)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.32)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+          </radialGradient>
+          <radialGradient id="rop-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.26)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="240" cy="40" rx="200" ry="34" fill="url(#rop-halo)" />
+
+        <line
+          x1="14"
+          y1="11"
+          x2="466"
+          y2="11"
+          stroke="url(#rop-rule-ghost)"
+          strokeWidth="0.3"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="14"
+          y1="8"
+          x2="466"
+          y2="8"
+          stroke="url(#rop-rule)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+          className="reply-opening-rule"
+        />
+
+        <g className="reply-opening-corner reply-opening-corner--tl" fill="rgba(120, 30, 12, 0.55)">
+          <path d="M 12 8 L 8 8 L 8 12 L 12 12 L 12 10 L 10 10 L 10 8 Z" />
+          <circle cx="9" cy="9" r="0.45" fill="rgba(245, 198, 91, 0.85)" />
+        </g>
+        <g className="reply-opening-corner reply-opening-corner--tr" fill="rgba(120, 30, 12, 0.5)">
+          <path d="M 468 8 L 472 8 L 472 12 L 468 12 L 468 10 L 470 10 L 470 8 Z" />
+          <circle cx="471" cy="9" r="0.45" fill="rgba(245, 198, 91, 0.85)" />
+        </g>
+
+        <g className="reply-opening-monogram" transform="translate(240 38)">
+          <circle r="18" fill="url(#rop-face)" />
+          <circle r="18" fill="none" stroke="url(#rop-gold)" strokeWidth="0.55" />
+          <circle r="16" fill="none" stroke="url(#rop-gold)" strokeWidth="0.22" strokeDasharray="0.4 1.2" opacity="0.78" />
+          <circle r="10" fill="none" stroke="url(#rop-gold)" strokeWidth="0.28" />
+          <text x="-3" y="2.4" textAnchor="middle" className="reply-opening-letter">m</text>
+          <text x="6" y="2.4" textAnchor="middle" className="reply-opening-letter-roman">·iii</text>
+          <line x1="-7" y1="6" x2="7" y2="6" stroke="url(#rop-gold)" strokeWidth="0.32" strokeLinecap="round" opacity="0.7" />
+
+          {/* r-pip — the reply's signature, echoing the recto's q-pip */}
+          <circle cx="22" cy="-7" r="1.8" fill="rgba(255, 246, 218, 0.7)" stroke="url(#rop-gold)" strokeWidth="0.28" />
+          <text x="22" y="-6" textAnchor="middle" className="reply-opening-r-letter">r</text>
+        </g>
+
+        <text x="240" y="22" textAnchor="middle" className="reply-opening-above">
+          manu m · iii · the reply
+        </text>
+        <text x="240" y="63" textAnchor="middle" className="reply-opening-below">
+          set slowly · in this folio
+        </text>
+        <text x="240" y="72" textAnchor="middle" className="reply-opening-tail">
+          ¶ · ad lucem · perlege
+        </text>
+
+        <line
+          x1="14"
+          y1="74"
+          x2="466"
+          y2="74"
+          stroke="url(#rop-rule-ghost)"
+          strokeWidth="0.3"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="14"
+          y1="77"
+          x2="466"
+          y2="77"
+          stroke="url(#rop-rule)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+          className="reply-opening-rule reply-opening-rule--bot"
+        />
+        <g className="reply-opening-corner reply-opening-corner--bl" fill="rgba(120, 30, 12, 0.55)">
+          <path d="M 12 77 L 8 77 L 8 73 L 12 73 L 12 75 L 10 75 L 10 77 Z" />
+          <circle cx="9" cy="76" r="0.45" fill="rgba(245, 198, 91, 0.85)" />
+        </g>
+        <g className="reply-opening-corner reply-opening-corner--br" fill="rgba(120, 30, 12, 0.5)">
+          <path d="M 468 77 L 472 77 L 472 73 L 468 73 L 468 75 L 470 75 L 470 77 Z" />
+          <circle cx="471" cy="76" r="0.45" fill="rgba(245, 198, 91, 0.85)" />
+        </g>
+      </svg>
+
+      <figcaption className="reply-opening-cap">
+        <span className="reply-opening-cap-rule reply-opening-cap-rule--left" aria-hidden="true" />
+        <span className="reply-opening-cap-cluster">
+          <em className="reply-opening-cap-key">the reply opens</em>
+          <span className="reply-opening-cap-sep" aria-hidden="true">·</span>
+          <em className="reply-opening-cap-tail">a quieter opening, in the reply's own voice</em>
+        </span>
+        <span className="reply-opening-cap-rule reply-opening-cap-rule--right" aria-hidden="true" />
+      </figcaption>
+    </figure>
+  )
+}
+
+/* iteration 167 · a small hand-drawn "press tally" flourish that sits
+   beside the recto's title rule. It earns its place as a counterpoint
+   to the existing marginal sigils — a single italic slip that tracks
+   readings and quietly answers the question "have you read this?".
+   The flourish grows with each press of the seal. */
+function PressTally({
+  cycle,
+  reduced,
+}: {
+  cycle: number
+  reduced: boolean
+}) {
+  const max = 4
+  const lit = Math.min(cycle, max)
+  const noun = lit === 1 ? 'first press' : lit === 2 ? 'second press' : lit === 3 ? 'third press' : lit >= max ? `${lit} presses` : 'awaiting the press'
+  return (
+    <aside
+      className={`press-tally${cycle > 0 ? ' is-reread' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <span className="press-tally-rule press-tally-rule--left" />
+      <span className="press-tally-cluster">
+        <em className="press-tally-key">readings</em>
+        <span className="press-tally-sep" aria-hidden="true">·</span>
+        <span className="press-tally-marks">
+          {Array.from({ length: max }, (_, i) => (
+            <span
+              key={i}
+              className={`press-tally-mark${i < lit ? ' is-lit' : ''}${
+                i === lit - 1 ? ' is-latest' : ''
+              }`}
+              style={{ '--mark-i': i } as React.CSSProperties}
+            >
+              <svg viewBox="0 0 12 12" focusable="false">
+                <circle
+                  cx="6"
+                  cy="6"
+                  r="4.6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="0.42"
+                  strokeDasharray={i < lit ? '0' : '0.4 1.4'}
+                  opacity={i < lit ? 0.85 : 0.5}
+                />
+                <circle
+                  cx="6"
+                  cy="6"
+                  r={i < lit ? 1.3 : 0.8}
+                  fill="currentColor"
+                  opacity={i < lit ? 0.85 : 0.45}
+                />
+              </svg>
+            </span>
+          ))}
+        </span>
+        <span className="press-tally-tail">
+          <em className="press-tally-state">{noun}</em>
+        </span>
+      </span>
+      <span className="press-tally-rule press-tally-rule--right" />
+    </aside>
+  )
+}
+
+/* ──────────────────────────────────────────────────────────────────────
    iteration 163 · a composed folio heartline
 
    A single delicate impression that sits between the recto's
@@ -11883,11 +12337,7 @@ export function App() {
           </p>
         </header>
 
-        <FolioBreath reduced={reduced} />
-
-        <FolioMasthead now={now} reduced={reduced} />
-
-        <FolioRectoHeadmark reduced={reduced} />
+        <SpreadOpeningPlate now={now} reduced={reduced} />
 
         <div className="sheet-content">
           <section className="question-panel" aria-labelledby="page-title">
@@ -11900,6 +12350,9 @@ export function App() {
                 active={phase === 'answering' || phase === 'replying' || phase === 'complete'}
                 reduced={reduced}
               />
+            </div>
+            <div className="recto-title-flank">
+              <PressTally cycle={cycle} reduced={reduced} />
             </div>
             <div className="broadsheet-title-rule" aria-hidden="true">
               <span className="broadsheet-title-rule-line" />
@@ -12012,7 +12465,7 @@ export function App() {
             aria-hidden={!versoOpened}
           >
 
-            <FolioVersoHeadmark visible={replyShown} reduced={reduced} />
+            <ReplyOpeningPlate visible={replyShown} reduced={reduced} />
 
             <RectoVerses />
 
