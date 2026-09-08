@@ -1,3 +1,21 @@
-## iteration 161
+# Changelog
 
-A composed folio masthead replaces the silverpoint press plate and the chapter-frontispiece stack with a single, breathing editorial header that unifies the press, the chapter, and the hour. The recto now opens on one composed impression — a delicate gold rule, a press monogram centerpiece, the chapter mark set in italic, the day and hour as a single inscription, and a closing "ad lucem · perlege" — before the reader turns to the question. The broadsheet title gains a slightly more relaxed line-height and a softer letter-spacing for better breathing room. The chapter-frontispiece is reduced to a quiet half-title. Reduced-motion, keyboard accessibility, and the document title are preserved.
+## iteration 162
+
+A composed folio breath seal opens the recto; the subject earns a hand-set rule.
+
+- Added `FolioBreath`, a single delicate impression placed between the
+  sheet-header running head and the folio masthead. It is the page's
+  first breath: a thin gold rule, a center coral-and-gold press seal,
+  a curved breath trail, and an italic inscription that names the press
+  in its own hand ("manu m · iii · primum halitum"). Slow-reveals in
+  four stages over 1.6s and respects reduced-motion preferences.
+- Added the previously-unused `.title-subject-rule` to the title's
+  subject span, so "Minimax M3" now sits above a hand-drawn coral-and-
+  gold hairline that draws in once the question is asked. The rule is
+  shaped by a wavy clip-path, faded by a coral ghost line, and animated
+  with a slow shimmer.
+- Both elements compose with the existing recto opening sequence
+  (running head → breath seal → masthead → half-title → question) so
+  the recto now leads with one composed moment before the chapter
+  plate.

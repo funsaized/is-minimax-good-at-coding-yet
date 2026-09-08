@@ -628,6 +628,123 @@ button { font: inherit; }
   padding: 26px 0 32px;
   animation: content-in 0.85s 0.18s both;
 }
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 162 · a composed folio breath seal
+
+   A single delicate impression that sits between the running head and
+   the folio masthead. It is the page's first breath — three small
+   breath dots arranged in a soft curve, a center coral-and-gold press
+   pip, and an italic inscription that names the press in its own hand.
+   ────────────────────────────────────────────────────────────────────── */
+
+.folio-breath {
+  position: relative;
+  width: min(320px, 100%);
+  margin: 8px auto 6px;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  animation: folio-breath-in 1600ms var(--ease) 320ms both;
+}
+@keyframes folio-breath-in {
+  0%   { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: none; }
+}
+.folio-breath-plate {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.folio-breath-rule {
+  transform-origin: 50% 50%;
+  transform: scaleX(0.78);
+  animation: folio-breath-rule-grow 1400ms var(--ease) 480ms both;
+}
+@keyframes folio-breath-rule-grow {
+  0%   { transform: scaleX(0.78); opacity: 0.6; }
+  100% { transform: scaleX(1);    opacity: 1;   }
+}
+.folio-breath-seal {
+  transform-origin: 160px 7px;
+  transform: scale(0.6);
+  opacity: 0;
+  animation: folio-breath-seal-arrive 1200ms var(--ease) 760ms both;
+}
+@keyframes folio-breath-seal-arrive {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.folio-breath-dots circle {
+  transform-origin: center;
+  animation: folio-breath-dot 1400ms var(--ease) 920ms both;
+}
+.folio-breath-dots circle:last-child {
+  animation-delay: 1040ms;
+}
+@keyframes folio-breath-dot {
+  0%   { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.folio-breath-thread {
+  opacity: 0;
+  animation: folio-breath-thread-in 1100ms var(--ease) 1080ms both;
+}
+@keyframes folio-breath-thread-in {
+  0%   { opacity: 0; stroke-dashoffset: 24; }
+  100% { opacity: 1; stroke-dashoffset: 0; }
+}
+.folio-breath-curve-line {
+  stroke-dasharray: 180;
+  stroke-dashoffset: 180;
+  animation: folio-breath-curve-in 1400ms var(--ease) 920ms both;
+}
+@keyframes folio-breath-curve-in {
+  0%   { stroke-dashoffset: 180; }
+  100% { stroke-dashoffset: 0;   }
+}
+.folio-breath-curve-glow {
+  transform-origin: 170px 42px;
+  animation: folio-breath-glow 5.2s ease-in-out 2200ms infinite;
+}
+@keyframes folio-breath-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.4); }
+}
+.folio-breath-cap {
+  font: italic 600 10.5px/1 var(--display);
+  letter-spacing: 0.14em;
+  text-transform: lowercase;
+  fill: var(--ink-soft);
+  opacity: 0;
+  animation: folio-breath-cap-in 1100ms var(--ease) 1180ms both;
+}
+@keyframes folio-breath-cap-in {
+  0%   { opacity: 0; transform: translateY(2px); }
+  100% { opacity: 0.86; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .folio-breath,
+  .folio-breath-rule,
+  .folio-breath-seal,
+  .folio-breath-dots circle,
+  .folio-breath-thread,
+  .folio-breath-curve-line,
+  .folio-breath-curve-glow,
+  .folio-breath-cap {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+    stroke-dashoffset: 0;
+  }
+  .folio-breath-curve-glow { transform: scale(1); }
+}
+@media (max-width: 560px) {
+  .folio-breath { width: min(260px, 92%); margin: 6px auto 4px; }
+  .folio-breath-cap { font-size: 9.5px; letter-spacing: 0.1em; }
+}
 .chapter-head {
   display: flex; flex-direction: column; align-items: center;
   gap: 10px;

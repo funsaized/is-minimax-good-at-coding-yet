@@ -359,6 +359,123 @@ function ConstellationTrail({
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 162 · a composed folio breath seal
+
+   A single delicate impression that sits between the running head and
+   the folio masthead. It is the page's first breath — three small
+   breath dots arranged in a soft curve, a center coral-and-gold press
+   pip, and an italic inscription that names the press in its own hand.
+   Slow-reveals when the page arrives; never moves again.
+   ────────────────────────────────────────────────────────────────────── */
+
+function FolioBreath({ reduced }: { reduced: boolean }) {
+  return (
+    <figure
+      className={`folio-breath${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="folio-breath-plate"
+        viewBox="0 0 320 48"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="fb-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="50%" stopColor="rgba(200, 146, 62, 0.74)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="fb-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.22)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <radialGradient id="fb-face" cx="50%" cy="36%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.74)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.32)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+          </radialGradient>
+          <radialGradient id="fb-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.18)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="160" cy="24" rx="68" ry="14" fill="url(#fb-halo)" />
+
+        <line
+          x1="6"
+          y1="9"
+          x2="314"
+          y2="9"
+          stroke="url(#fb-rule-ghost)"
+          strokeWidth="0.32"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="7"
+          x2="314"
+          y2="7"
+          stroke="url(#fb-rule)"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+          className="folio-breath-rule"
+        />
+
+        <g className="folio-breath-dots" fill="rgba(167, 60, 44, 0.6)">
+          <circle cx="44" cy="7" r="0.5" />
+          <circle cx="276" cy="7" r="0.5" />
+        </g>
+
+        <g className="folio-breath-seal">
+          <circle cx="160" cy="7" r="3.6" fill="url(#fb-face)" />
+          <circle cx="160" cy="7" r="3.6" fill="none" stroke="url(#fb-rule)" strokeWidth="0.5" />
+          <circle cx="160" cy="7" r="2.6" fill="none" stroke="url(#fb-rule)" strokeWidth="0.22" strokeDasharray="0.4 1.2" opacity="0.78" />
+          <circle cx="160" cy="7" r="0.9" fill="rgba(167, 60, 44, 0.78)" />
+          <circle cx="160" cy="7" r="0.32" fill="rgba(255, 248, 224, 0.95)" />
+        </g>
+
+        <g
+          className="folio-breath-thread"
+          stroke="rgba(167, 60, 44, 0.32)"
+          strokeWidth="0.4"
+          strokeDasharray="0.6 1.4"
+          strokeLinecap="round"
+          fill="none"
+        >
+          <path d="M 70 7 Q 100 10 130 7" />
+          <path d="M 190 7 Q 220 4 250 7" />
+        </g>
+
+        <g className="folio-breath-curve">
+          <path
+            d="M 110 38 Q 130 30 150 36 Q 170 42 190 32 Q 210 22 230 36"
+            stroke="rgba(167, 60, 44, 0.42)"
+            strokeWidth="0.55"
+            strokeLinecap="round"
+            fill="none"
+            className="folio-breath-curve-line"
+          />
+          <circle cx="110" cy="38" r="0.55" fill="rgba(167, 60, 44, 0.6)" />
+          <circle cx="170" cy="42" r="0.7" fill="rgba(245, 198, 91, 0.74)" />
+          <circle cx="170" cy="42" r="1.6" fill="rgba(245, 198, 91, 0.18)" className="folio-breath-curve-glow" />
+          <circle cx="230" cy="36" r="0.55" fill="rgba(167, 60, 44, 0.6)" />
+        </g>
+
+        <text x="160" y="40" textAnchor="middle" className="folio-breath-cap">
+          manu m · iii · primum halitum
+        </text>
+      </svg>
+    </figure>
+  )
+}
+
 function PressStamp({ visible, cycle, reduced }: { visible: boolean; cycle: number; reduced: boolean }) {
   const impression =
     cycle === 0 ? 'prima impressio' : cycle === 1 ? 'secunda impressio' : 'tertia impressio'
@@ -11241,6 +11358,8 @@ export function App() {
           </p>
         </header>
 
+        <FolioBreath reduced={reduced} />
+
         <FolioMasthead now={now} reduced={reduced} />
 
         <aside
@@ -11295,6 +11414,7 @@ export function App() {
                 </span>
                 <span className="title-subject title-text--set" style={{ '--word-i': 1 } as React.CSSProperties}>
                   Minimax M3
+                  <span className="title-subject-rule" aria-hidden="true" />
                 </span>
                 <span className="title-text title-text--set" style={{ '--word-i': 2 } as React.CSSProperties}>
                   {' '}good at frontend yet<span className="title-questions">?</span>
