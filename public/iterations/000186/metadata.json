@@ -1,0 +1,19 @@
+{
+  "id": 186,
+  "parentId": 185,
+  "createdAt": "2026-09-08T22:55:14.812Z",
+  "summary": "The proof sheet gains a compositor's legend and a print-shop ruler, so the page itself teaches you how to read it.",
+  "path": "/iterations/000186/index.html",
+  "screenshot": "/iterations/000186/desktop.png",
+  "mobileScreenshot": "/iterations/000186/mobile.png",
+  "sourceCommit": "5338d929d56b5ec4cc6e76ab6dd05524ba86592e",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 332,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 75547,
+    "outputTokens": 41271,
+    "steps": 49
+  }
+}
