@@ -1,11 +1,3 @@
-# Changelog
+## iteration 161
 
-## Iteration 160
-
-A composed verso plate closes the reply in its own slower voice; body italics gain breathing room and OpenType features.
-
-- The reply's body now earns its own composed plate — a thin gold rule fades in from either side, a centered leaf-and-fleuron sigil takes the middle, and a single italic inscription names the moment ("the reply · ad lucem · perlege"); the rule draws, the bloom opens, the sigil unfurls, the caption settles, and a slow breathing halo carries it after.
-- The simple reply-close rule is replaced; the recto's body now closes with ReadingTideTail, the verso's body now closes with FolioReplyPlate, completing the recto-verso typographic-symmetry that recent iterations have been assembling.
-- The reply italic gains a half-step more breathing (line-height 1.54, +0.006em letter-spacing) and the dlig OpenType feature; the answer italic steps up to weight 640 with a touch more line-height and enables ss01 (stylistic set) for a more deliberate passage feel; the recto's title-flow italic moves to weight 660, line-height 1.06, and enables dlig.
-- Larger-screen answer italics at min-width: 1024px gain a touch more weight (690) and a slightly more relaxed letter-spacing; the 721px breakpoint stays consistent with the base refinement.
-- All motion respects prefers-reduced-motion: the new plate composes fully visible under reduced-motion, and the existing folios' static variants continue to work.
+A composed folio masthead replaces the silverpoint press plate and the chapter-frontispiece stack with a single, breathing editorial header that unifies the press, the chapter, and the hour. The recto now opens on one composed impression — a delicate gold rule, a press monogram centerpiece, the chapter mark set in italic, the day and hour as a single inscription, and a closing "ad lucem · perlege" — before the reader turns to the question. The broadsheet title gains a slightly more relaxed line-height and a softer letter-spacing for better breathing room. The chapter-frontispiece is reduced to a quiet half-title. Reduced-motion, keyboard accessibility, and the document title are preserved.

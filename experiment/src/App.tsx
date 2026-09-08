@@ -5612,6 +5612,176 @@ function FolioPressPlate({
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 161 · a composed folio masthead
+
+   A single, breathing editorial header that unifies the silverpoint
+   press plate, the chapter frontispiece, and the running head into
+   one composed impression. The masthead is the folio's own opening
+   signature: a delicate gold rule, a press monogram centerpiece, the
+   chapter mark set in italic, the day and hour as a single composed
+   inscription, and a closing "ad lucem" rule. It earns its place as
+   the folio's quiet, self-contained opening — the press, the chapter
+   and the hour set in a single composed typography, before the
+   reader turns to the question.
+   ────────────────────────────────────────────────────────────────────── */
+
+function FolioMasthead({
+  now,
+  reduced,
+}: {
+  now: Date
+  reduced: boolean
+}) {
+  const dayName = WEEKDAYS[now.getDay()].slice(0, 3).toLowerCase()
+  const dayOrdinal = ORDINALS[Math.min(ORDINALS.length - 1, now.getDate() - 1)]
+  const monthName = MONTHS[now.getMonth()].slice(0, 3).toLowerCase()
+  const hour24 = now.getHours()
+  const minutes = now.getMinutes()
+  const period = hour24 >= 12 ? 'p.m.' : 'a.m.'
+  const h12 = ((hour24 + 11) % 12) + 1
+  const mm = String(minutes).padStart(2, '0')
+
+  return (
+    <figure
+      className={`folio-masthead${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <svg
+        className="folio-masthead-plate"
+        viewBox="0 0 320 96"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="masthead-gold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f6d076" />
+            <stop offset="50%" stopColor="#c8923e" />
+            <stop offset="100%" stopColor="#9c6e26" />
+          </linearGradient>
+          <linearGradient id="masthead-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="50%" stopColor="rgba(200, 146, 62, 0.74)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.55)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="masthead-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.32)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <radialGradient id="masthead-face" cx="50%" cy="34%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.78)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.32)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+          </radialGradient>
+          <radialGradient id="masthead-halo" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.28)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="160" cy="48" rx="148" ry="40" fill="url(#masthead-halo)" />
+
+        <line
+          x1="6"
+          y1="11"
+          x2="314"
+          y2="11"
+          stroke="url(#masthead-rule-ghost)"
+          strokeWidth="0.32"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="8"
+          x2="314"
+          y2="8"
+          stroke="url(#masthead-rule)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+        />
+        <g className="masthead-top-pip" transform="translate(160 8)">
+          <circle r="2.6" fill="rgba(255, 246, 218, 0.78)" stroke="url(#masthead-gold)" strokeWidth="0.55" />
+          <circle r="1.4" fill="rgba(167, 60, 44, 0.78)" />
+          <circle r="0.4" fill="rgba(255, 248, 224, 0.95)" />
+        </g>
+
+        <text x="160" y="22" textAnchor="middle" className="masthead-half">
+          folio lxxvii · caput xviii
+        </text>
+
+        <g className="folio-masthead-monogram" transform="translate(160 50)">
+          <circle r="16" fill="url(#masthead-face)" />
+          <circle r="14.5" fill="none" stroke="url(#masthead-gold)" strokeWidth="0.5" />
+          <circle
+            r="12.5"
+            fill="none"
+            stroke="url(#masthead-gold)"
+            strokeWidth="0.22"
+            strokeDasharray="0.4 1.2"
+            opacity="0.78"
+          />
+          <circle r="7" fill="none" stroke="url(#masthead-gold)" strokeWidth="0.32" opacity="0.85" />
+          <text x="-2.4" y="1.6" textAnchor="middle" className="masthead-letter">
+            m
+          </text>
+          <text x="3.4" y="1.6" textAnchor="middle" className="masthead-roman">
+            ·iii
+          </text>
+          <line
+            x1="-5"
+            y1="5"
+            x2="5"
+            y2="5"
+            stroke="url(#masthead-gold)"
+            strokeWidth="0.32"
+            strokeLinecap="round"
+            opacity="0.7"
+          />
+          <circle cx="0" cy="-10.4" r="0.55" fill="rgba(167, 60, 44, 0.78)" />
+          <circle cx="10.4" cy="0" r="0.55" fill="rgba(167, 60, 44, 0.78)" />
+          <circle cx="-10.4" cy="0" r="0.55" fill="rgba(167, 60, 44, 0.78)" />
+          <circle cx="0" cy="10.4" r="0.55" fill="rgba(167, 60, 44, 0.78)" />
+        </g>
+
+        <text x="160" y="79" textAnchor="middle" className="masthead-base">
+          {dayName}, the {dayOrdinal} of {monthName} · {h12}:{mm} {period}
+        </text>
+        <text x="160" y="89" textAnchor="middle" className="masthead-quote">
+          ad lucem · perlege
+        </text>
+
+        <line
+          x1="6"
+          y1="93.5"
+          x2="314"
+          y2="93.5"
+          stroke="url(#masthead-rule)"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+        />
+        <g className="masthead-bottom-pips" fill="rgba(167, 60, 44, 0.5)">
+          <circle cx="56" cy="93.5" r="0.55" />
+          <circle cx="264" cy="93.5" r="0.55" />
+        </g>
+      </svg>
+
+      <figcaption className="folio-masthead-cap">
+        <span className="folio-masthead-cap-rule folio-masthead-cap-rule--left" />
+        <span className="folio-masthead-cap-cluster">
+          <em className="folio-masthead-cap-key">the folio opens</em>
+          <span className="folio-masthead-cap-sep" aria-hidden="true">·</span>
+          <em className="folio-masthead-cap-tail">a press, a chapter, an hour</em>
+        </span>
+        <span className="folio-masthead-cap-rule folio-masthead-cap-rule--right" />
+      </figcaption>
+    </figure>
+  )
+}
+
 function PressHeadNote({
   visible,
   reduced,
@@ -11071,7 +11241,7 @@ export function App() {
           </p>
         </header>
 
-        <FolioPressPlate now={now} reduced={reduced} />
+        <FolioMasthead now={now} reduced={reduced} />
 
         <aside
           className={`chapter-frontispiece${versoOpened ? ' is-opened' : ''}`}
@@ -11086,26 +11256,6 @@ export function App() {
             </span>
             <span className="chapter-frontispiece-half-rule chapter-frontispiece-half-rule--right" />
           </p>
-          <div className="chapter-opener">
-            <ChapterHead now={now} witness={false} />
-            <ChapterSignature now={now} />
-            <div className="chapter-opener-rule" aria-hidden="true">
-              <span className="chapter-opener-rule-line" />
-              <span className="chapter-opener-rule-mark">¶</span>
-              <span className="chapter-opener-rule-line" />
-            </div>
-            <p className="chapter-frontispiece-foot">
-              <span className="chapter-frontispiece-foot-rule chapter-frontispiece-foot-rule--left" />
-              <span className="chapter-frontispiece-foot-cluster">
-                <em className="chapter-frontispiece-foot-key">hîc folium aperitur</em>
-                <span className="chapter-frontispiece-foot-sep" aria-hidden="true">·</span>
-                <em className="chapter-frontispiece-foot-tail">the folio opens here</em>
-                <span className="chapter-frontispiece-foot-sep" aria-hidden="true">·</span>
-                <em className="chapter-frontispiece-foot-mark">set for the reader</em>
-              </span>
-              <span className="chapter-frontispiece-foot-rule chapter-frontispiece-foot-rule--right" />
-            </p>
-          </div>
         </aside>
 
         <div className="sheet-content">

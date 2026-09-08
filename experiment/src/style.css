@@ -1434,8 +1434,8 @@ button { font: inherit; }
   align-self: center;
   margin: 0;
   color: var(--ink);
-  font: italic 660 clamp(40px, 6vw, 92px)/1.06 var(--display);
-  letter-spacing: -0.02em;
+  font: italic 640 clamp(40px, 6vw, 92px)/1.08 var(--display);
+  letter-spacing: -0.024em;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "swsh" 1, "salt" 1, "onum" 1, "dlig" 1;
   padding-top: 0.02em;
   opacity: 0;
@@ -16623,4 +16623,206 @@ a:focus-visible {
   .folio-reply-plate-cap-key { font-size: 11px; }
   .folio-reply-plate-cap-tail { font-size: 10.5px; }
   .folio-reply-plate-cap-rule { flex-basis: clamp(14px, 4vw, 22px); }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 161 · a composed folio masthead
+
+   The folio's own opening signature — a single composed impression
+   that unifies the press plate, the chapter frontispiece and the
+   running head into one quiet, breathing editorial header. It sits
+   at the very top of the recto, before the question, as the press's
+   first word to the reader: a delicate gold rule, a centered press
+   monogram, the chapter mark set in italic, the day and hour as a
+   single composed inscription, and a closing "ad lucem" rule.
+   ────────────────────────────────────────────────────────────────────── */
+
+.folio-masthead {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: min(100%, 720px);
+  margin: clamp(6px, 1vw, 14px) auto clamp(8px, 1.4vw, 18px);
+  padding: 0 clamp(8px, 2vw, 18px);
+  opacity: 0;
+  transform: translateY(-4px);
+  animation: folio-masthead-in 1500ms var(--ease) 80ms both;
+}
+.folio-masthead.is-static {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+@keyframes folio-masthead-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.folio-masthead-plate {
+  display: block;
+  width: 100%;
+  height: clamp(72px, 9vw, 108px);
+  filter: drop-shadow(0 1px 0 rgba(107, 74, 37, 0.06));
+}
+
+.masthead-top-pip circle:first-child {
+  animation: masthead-pip-breathe 5.6s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+@keyframes masthead-pip-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.78; }
+  50%      { transform: scale(1.18); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .masthead-top-pip circle:first-child { animation: none; }
+}
+
+.masthead-half {
+  font: italic 580 10.5px/1 var(--display);
+  letter-spacing: 0.22em;
+  fill: var(--coral-deep);
+  font-feature-settings: "kern" 1, "onum" 1;
+  text-transform: lowercase;
+}
+.masthead-base {
+  font: italic 500 11.5px/1 var(--display);
+  letter-spacing: 0.04em;
+  fill: rgba(17, 32, 42, 0.62);
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.masthead-quote {
+  font: italic 540 10.5px/1 var(--display);
+  letter-spacing: 0.18em;
+  fill: var(--coral);
+  text-transform: lowercase;
+  font-feature-settings: "kern" 1, "salt" 1;
+  opacity: 0.92;
+}
+
+.folio-masthead-monogram circle:first-of-type {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: masthead-monogram-breath 8s ease-in-out infinite;
+}
+@keyframes masthead-monogram-breath {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.04); opacity: 0.94; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .folio-masthead-monogram circle:first-of-type { animation: none; }
+}
+
+.masthead-letter {
+  font: italic 760 11px/1 var(--display);
+  fill: rgba(17, 32, 42, 0.92);
+  letter-spacing: -0.02em;
+}
+.masthead-roman {
+  font: italic 600 7.5px/1 var(--display);
+  fill: var(--coral-deep);
+  letter-spacing: 0.02em;
+}
+
+.masthead-bottom-pips circle {
+  animation: masthead-pip-pulse 5.2s ease-in-out infinite;
+}
+.masthead-bottom-pips circle:last-child {
+  animation-delay: 0.4s;
+}
+@keyframes masthead-pip-pulse {
+  0%, 100% { fill: rgba(167, 60, 44, 0.5); }
+  50%      { fill: rgba(245, 198, 91, 0.85); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .masthead-bottom-pips circle { animation: none; }
+}
+
+.folio-masthead-cap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0 clamp(8px, 1.2vw, 14px);
+  margin: 4px auto 0;
+  padding: 0 clamp(10px, 2vw, 18px);
+  width: 100%;
+  max-width: min(440px, 100%);
+  color: var(--ink-soft);
+  font-family: var(--display);
+  font-style: italic;
+  letter-spacing: 0.022em;
+  opacity: 0;
+  transform: translateY(2px);
+  animation: folio-masthead-cap-in 1500ms var(--ease) 380ms both;
+}
+@keyframes folio-masthead-cap-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 0.92; transform: none; }
+}
+.folio-masthead-cap-rule {
+  flex: 0 0 clamp(16px, 4vw, 36px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(156, 110, 38, 0.42) 42%,
+    rgba(167, 60, 44, 0.5) 100%
+  );
+}
+.folio-masthead-cap-rule--right {
+  background: linear-gradient(to left, transparent, rgba(167, 60, 44, 0.5));
+}
+.folio-masthead-cap-cluster {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.folio-masthead-cap-key {
+  color: var(--coral-deep);
+  font: italic 600 13px/1 var(--display);
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+.folio-masthead-cap-sep {
+  color: var(--coral);
+  font: 700 11px/1 var(--display);
+  opacity: 0.7;
+}
+.folio-masthead-cap-tail {
+  color: var(--ink-soft);
+  font: italic 500 11.5px/1.2 var(--display);
+  letter-spacing: 0.012em;
+}
+@media (max-width: 720px) {
+  .folio-masthead { margin: 4px auto 8px; }
+  .folio-masthead-plate { height: 64px; }
+  .masthead-half { font-size: 9.5px; letter-spacing: 0.18em; }
+  .masthead-base { font-size: 10.5px; }
+  .masthead-quote { font-size: 9.5px; letter-spacing: 0.16em; }
+  .folio-masthead-cap-key { font-size: 12px; }
+  .folio-masthead-cap-tail { font-size: 10.5px; }
+  .folio-masthead-cap-rule { flex-basis: clamp(12px, 3vw, 22px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .folio-masthead,
+  .folio-masthead-cap {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* the chapter-frontispiece, now reduced to a single italic half-title */
+.chapter-frontispiece {
+  padding: 0;
+  margin: 0 auto;
+}
+.chapter-frontispiece-half {
+  margin: 0 auto 4px;
+  max-width: min(420px, 100%);
 }
