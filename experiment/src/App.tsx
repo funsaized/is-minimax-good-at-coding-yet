@@ -5816,7 +5816,7 @@ function ReadingLines({
   )
 }
 
-function VersoMarginRule({ visible }: { visible: boolean }) {
+function VersoMarginRule({ visible, cycle }: { visible: boolean; cycle: number }) {
   return (
     <span
       className={`verso-margin-rule${visible ? ' is-visible' : ''}`}
@@ -5831,11 +5831,72 @@ function VersoMarginRule({ visible }: { visible: boolean }) {
         <span className="verso-margin-rule-tick-mark" />
         <em className="verso-margin-rule-tick-key">the reply</em>
       </span>
+      {cycle > 0 && (
+        <span className="verso-margin-rule-tick verso-margin-rule-tick--reader">
+          <span className="verso-margin-rule-tick-mark" />
+          <em className="verso-margin-rule-tick-key">the reader, marked</em>
+        </span>
+      )}
       <span className="verso-margin-rule-tick verso-margin-rule-tick--c">
         <span className="verso-margin-rule-tick-mark" />
         <em className="verso-margin-rule-tick-key">cap · xviii</em>
       </span>
     </span>
+  )
+}
+
+function ReaderNote({
+  visible,
+  cycle,
+  reduced,
+}: {
+  visible: boolean
+  cycle: number
+  reduced: boolean
+}) {
+  const firstLine =
+    cycle === 0
+      ? 'the page, once set, is set —'
+      : 'the page is patient —'
+  const secondLine =
+    cycle === 0
+      ? 'what changes is the reader.'
+      : 'read again; it has not moved.'
+  return (
+    <aside
+      className={`page-voice${visible ? ' is-visible' : ''}${
+        cycle > 0 ? ' is-reread' : ''
+      }${reduced ? ' is-static' : ''}`}
+      aria-hidden="true"
+    >
+      <span className="page-voice-rule page-voice-rule--left" aria-hidden="true" />
+      <span className="page-voice-cluster">
+        <span className="page-voice-mark" aria-hidden="true">
+          <svg viewBox="0 0 14 14" focusable="false">
+            <circle
+              cx="7"
+              cy="7"
+              r="5.6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="0.45"
+              strokeDasharray="0.5 1.4"
+            />
+            <circle cx="7" cy="7" r="0.95" fill="currentColor" />
+          </svg>
+        </span>
+        <span className="page-voice-lines">
+          <em className="page-voice-line page-voice-line--one">{firstLine}</em>
+          <em className="page-voice-line page-voice-line--two">{secondLine}</em>
+        </span>
+        <span className="page-voice-attribution" aria-hidden="true">
+          <span className="page-voice-attribution-rule" />
+          <em className="page-voice-attribution-key">a note, in the reader's hand</em>
+          <span className="page-voice-attribution-mark">¶</span>
+        </span>
+      </span>
+      <span className="page-voice-rule page-voice-rule--right" aria-hidden="true" />
+    </aside>
   )
 }
 
@@ -7569,7 +7630,7 @@ export function App() {
           >
             <span className="verso-shine" aria-hidden="true" />
             <ReadingLines count={lineCount} visible={readingLinesVisible} />
-            <VersoMarginRule visible={replyShown} />
+            <VersoMarginRule visible={replyShown} cycle={cycle} />
             <FoldCorner />
             <header className="sheet-header sheet-header--verso">
               <p className="running-head-title">
@@ -7643,6 +7704,12 @@ export function App() {
             <ProofSlip
               visible={phase === 'complete' && slow}
               slow={slow}
+              reduced={reduced}
+            />
+
+            <ReaderNote
+              visible={phase === 'complete'}
+              cycle={cycle}
               reduced={reduced}
             />
 

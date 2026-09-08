@@ -10557,6 +10557,20 @@ button { font: inherit; }
   );
   position: relative;
   top: -0.05em;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 12%,
+    #000 88%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 12%,
+    #000 88%,
+    transparent 100%
+  );
 }
 
 .recto-colophon-cluster {
@@ -10697,6 +10711,272 @@ button { font: inherit; }
   .recto-colophon-mark { display: none; }
   .recto-colophon-text,
   .recto-colophon-tail { font-size: 11px; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 137 · the page earns a single quiet marginal voice
+   A small italic note appears between the answer and the reply, set in
+   sepia and gold, in two lines — the page speaking in the reader's
+   hand. The verso margin rule also gains a fourth tick after the
+   second reading: "the reader, marked".
+   ────────────────────────────────────────────────────────────────────── */
+
+.page-voice {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: clamp(10px, 1.6vw, 22px) clamp(2px, 0.8vw, 14px) clamp(18px, 2.4vw, 32px);
+  padding: clamp(10px, 1.4vw, 16px) clamp(14px, 2.4vw, 26px);
+  max-width: min(560px, 100%);
+  color: var(--sepia);
+  font-family: var(--display);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 1300ms var(--ease) 220ms,
+    transform 1300ms var(--ease) 220ms;
+}
+
+.page-voice.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.page-voice.is-static {
+  transition: none;
+  opacity: 1;
+  transform: none;
+}
+
+.page-voice::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 0;
+  pointer-events: none;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  background:
+    radial-gradient(
+      ellipse at 12% 50%,
+      rgba(167, 60, 44, 0.10),
+      transparent 64%
+    );
+  z-index: -1;
+}
+
+.page-voice-rule {
+  flex: 0 0 clamp(20px, 3.2vw, 38px);
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.page-voice-rule--left::before,
+.page-voice-rule--right::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(154, 110, 38, 0.32) 24%,
+    rgba(167, 60, 44, 0.42) 50%,
+    rgba(154, 110, 38, 0.32) 76%,
+    transparent 100%
+  );
+  width: 1px;
+}
+
+.page-voice-rule--left::before { left: 0; }
+.page-voice-rule--right::before { right: 0; }
+
+.page-voice-rule::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--coral-deep);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 900ms var(--ease) 1100ms;
+}
+
+.page-voice.is-visible .page-voice-rule::after {
+  opacity: 0.55;
+}
+
+.page-voice-cluster {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: clamp(10px, 1.4vw, 16px);
+  align-items: start;
+  row-gap: 4px;
+  padding: 0;
+  min-width: 0;
+}
+
+.page-voice-mark {
+  grid-row: 1 / span 2;
+  align-self: start;
+  width: 14px;
+  height: 14px;
+  margin-top: 4px;
+  color: var(--coral-deep);
+  opacity: 0;
+  transform: scale(0.5) rotate(-12deg);
+  transform-origin: center;
+  transition:
+    opacity 800ms var(--ease) 480ms,
+    transform 800ms var(--ease) 480ms;
+}
+
+.page-voice.is-visible .page-voice-mark {
+  opacity: 0.85;
+  transform: scale(1) rotate(0deg);
+}
+
+.page-voice-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.page-voice-line {
+  display: block;
+  font-style: italic;
+  color: var(--ink);
+  font-size: clamp(15px, 1.8vw, 18.5px);
+  line-height: 1.36;
+  letter-spacing: 0.004em;
+  text-wrap: balance;
+  text-indent: -0.04em;
+  padding-left: 0;
+}
+
+.page-voice-line--two {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-weight: 460;
+}
+
+.page-voice.is-reread .page-voice-line--one {
+  color: var(--ink-soft);
+}
+
+.page-voice-attribution {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(107, 74, 37, 0.28);
+  font-style: italic;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+  opacity: 0;
+  transition: opacity 900ms var(--ease) 1300ms;
+}
+
+.page-voice.is-visible .page-voice-attribution {
+  opacity: 0.85;
+}
+
+.page-voice-attribution-rule {
+  flex: 0 0 clamp(14px, 2vw, 24px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(156, 110, 38, 0.4),
+    rgba(167, 60, 44, 0.5)
+  );
+  position: relative;
+  top: -0.06em;
+}
+
+.page-voice-attribution-key {
+  font: italic 600 9.5px/1 var(--display);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--coral-deep);
+}
+
+.page-voice-attribution-mark {
+  font: italic 700 13px/1 var(--display);
+  color: var(--gold-deep);
+  position: relative;
+  top: -0.04em;
+  margin-left: auto;
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-voice,
+  .page-voice-mark,
+  .page-voice-attribution,
+  .page-voice-rule::after {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-voice {
+    margin: 14px 6px 22px;
+    padding: 10px 14px;
+    gap: 10px;
+  }
+  .page-voice-rule { flex-basis: clamp(14px, 4vw, 22px); }
+  .page-voice-line { font-size: 14px; line-height: 1.34; }
+  .page-voice-attribution { font-size: 9px; }
+}
+
+@media (max-width: 520px) {
+  .page-voice-rule { display: none; }
+  .page-voice { padding: 8px 10px; }
+  .page-voice-cluster { column-gap: 8px; }
+}
+
+/* verso-margin-rule gains a fourth tick — the reader, marked —
+   that appears once the page has been read at least once. */
+
+.verso-margin-rule-tick--reader {
+  top: 38%;
+  transition-delay: 1160ms;
+  color: var(--coral);
+}
+
+.verso-margin-rule-tick--reader .verso-margin-rule-tick-mark {
+  width: 18px;
+  background: linear-gradient(
+    to right,
+    currentColor 0%,
+    currentColor 60%,
+    transparent 100%
+  );
+}
+
+.verso-margin-rule-tick--reader .verso-margin-rule-tick-key {
+  font-style: italic;
+  letter-spacing: 0.16em;
+  color: var(--coral-deep);
+  opacity: 0.92;
+}
+
+@media (max-width: 720px) {
+  .verso-margin-rule-tick--reader { top: 40%; }
+  .verso-margin-rule-tick--reader .verso-margin-rule-tick-mark { width: 14px; }
 }
 
 
