@@ -9931,6 +9931,28 @@ export function App() {
             aria-hidden={!versoOpened}
           >
 
+            <aside
+              className={`verso-frontispiece${replyShown ? ' is-revealed' : ''}`}
+              aria-hidden="true"
+            >
+              <p className="verso-frontispiece-half">
+                <span className="verso-frontispiece-half-rule verso-frontispiece-half-rule--left" />
+                <span className="verso-frontispiece-half-cluster">
+                  <em className="verso-frontispiece-half-key">the reply</em>
+                  <span className="verso-frontispiece-half-sep" aria-hidden="true">·</span>
+                  <em className="verso-frontispiece-half-tail">a half-title of folio lxxvii</em>
+                </span>
+                <span className="verso-frontispiece-half-rule verso-frontispiece-half-rule--right" />
+              </p>
+              <div className="verso-frontispiece-pin" aria-hidden="true">
+                <svg viewBox="0 0 220 18" focusable="false" preserveAspectRatio="none">
+                  <line x1="2" y1="9" x2="218" y2="9" stroke="currentColor" strokeWidth="0.35" strokeDasharray="0.5 1.8" />
+                  <circle cx="110" cy="9" r="1.2" fill="currentColor" />
+                  <circle cx="110" cy="9" r="0.4" fill="var(--paper)" />
+                </svg>
+              </div>
+            </aside>
+
             <RectoVerses />
 
             <ReadingTrace cycle={cycle} reduced={reduced} />
@@ -9957,6 +9979,21 @@ export function App() {
             </p>
 
             <RectoSignOff visible={isTyping || phase === 'complete'} />
+
+            <p
+              className={`verso-frontispiece-foot${phase === 'complete' ? ' is-sealed' : ''}`}
+              aria-hidden="true"
+            >
+              <span className="verso-frontispiece-foot-rule verso-frontispiece-foot-rule--left" />
+              <span className="verso-frontispiece-foot-cluster">
+                <em className="verso-frontispiece-foot-key">hîc folium replicatur</em>
+                <span className="verso-frontispiece-foot-sep" aria-hidden="true">·</span>
+                <em className="verso-frontispiece-foot-tail">the folio replies here</em>
+                <span className="verso-frontispiece-foot-sep" aria-hidden="true">·</span>
+                <em className="verso-frontispiece-foot-mark">set slowly</em>
+              </span>
+              <span className="verso-frontispiece-foot-rule verso-frontispiece-foot-rule--right" />
+            </p>
           </section>
 
           <section
