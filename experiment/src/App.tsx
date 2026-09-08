@@ -623,6 +623,138 @@ function FolioBreath({ reduced }: { reduced: boolean }) {
   )
 }
 
+/* ──────────────────────────────────────────────────────────────────────
+   iteration 165 · a composed verso headmark opens the leaf
+
+   The verso-top section used to open with three small slips (the
+   PressHeadNote, the VersoFrontispiece half-title, and the
+   ReplyCatchword) that each named the reply in a slightly different
+   voice — cluttered for the page's quiet editorial opening. The new
+   FolioVersoHeadmark replaces those three with a single composed
+   horizontal impression that mirrors the recto's FolioBreath: a thin
+   coral-and-gold rule that fades from both sides, a centered press
+   monogram with a slow halo, an italic inscription naming the press,
+   and a closing pilcrow. It is the verso's own first breath — the
+   recto's breath opens the question; the verso's breath opens the
+   reply — so the folio now earns a clear opening-breath cadence:
+   FolioBreath (recto) ↔ FolioVersoHeadmark (verso).
+   ────────────────────────────────────────────────────────────────────── */
+
+function FolioVersoHeadmark({
+  visible,
+  reduced,
+}: {
+  visible: boolean
+  reduced: boolean
+}) {
+  return (
+    <figure
+      className={`folio-verso-headmark${visible ? ' is-visible' : ''}${
+        reduced ? ' is-static' : ''
+      }`}
+      aria-hidden="true"
+    >
+      <svg
+        className="folio-verso-headmark-plate"
+        viewBox="0 0 320 40"
+        focusable="false"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="fvh-rule" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="14%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="50%" stopColor="rgba(200, 146, 62, 0.74)" />
+            <stop offset="86%" stopColor="rgba(167, 60, 44, 0.5)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <linearGradient id="fvh-rule-ghost" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(167, 60, 44, 0)" />
+            <stop offset="50%" stopColor="rgba(167, 60, 44, 0.22)" />
+            <stop offset="100%" stopColor="rgba(167, 60, 44, 0)" />
+          </linearGradient>
+          <radialGradient id="fvh-face" cx="50%" cy="36%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 246, 218, 0.74)" />
+            <stop offset="62%" stopColor="rgba(245, 220, 168, 0.32)" />
+            <stop offset="100%" stopColor="rgba(214, 178, 116, 0)" />
+          </radialGradient>
+          <radialGradient id="fvh-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 220, 150, 0.18)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 150, 0)" />
+          </radialGradient>
+        </defs>
+
+        <ellipse cx="160" cy="20" rx="80" ry="14" fill="url(#fvh-halo)" />
+
+        <line
+          x1="6"
+          y1="11"
+          x2="314"
+          y2="11"
+          stroke="url(#fvh-rule-ghost)"
+          strokeWidth="0.32"
+          strokeDasharray="0.6 1.6"
+          strokeLinecap="round"
+        />
+        <line
+          x1="6"
+          y1="9"
+          x2="314"
+          y2="9"
+          stroke="url(#fvh-rule)"
+          strokeWidth="0.55"
+          strokeLinecap="round"
+          className="folio-verso-headmark-rule"
+        />
+
+        <g className="folio-verso-headmark-pips" fill="rgba(167, 60, 44, 0.55)">
+          <circle cx="50" cy="9" r="0.5" />
+          <circle cx="270" cy="9" r="0.5" />
+        </g>
+
+        <g className="folio-verso-headmark-seal">
+          <circle cx="160" cy="9" r="3.6" fill="url(#fvh-face)" />
+          <circle cx="160" cy="9" r="3.6" fill="none" stroke="url(#fvh-rule)" strokeWidth="0.5" />
+          <circle
+            cx="160"
+            cy="9"
+            r="2.6"
+            fill="none"
+            stroke="url(#fvh-rule)"
+            strokeWidth="0.22"
+            strokeDasharray="0.4 1.2"
+            opacity="0.78"
+          />
+          <circle cx="160" cy="9" r="0.9" fill="rgba(167, 60, 44, 0.78)" />
+          <circle cx="160" cy="9" r="0.32" fill="rgba(255, 248, 224, 0.95)" />
+        </g>
+
+        <text x="160" y="22" textAnchor="middle" className="folio-verso-headmark-cap">
+          manu m · iii · the reply · set slowly
+        </text>
+        <text x="160" y="33" textAnchor="middle" className="folio-verso-headmark-tail">
+          folio lxxvii · primum responsum
+        </text>
+
+        <g
+          className="folio-verso-headmark-tick"
+          fill="rgba(167, 60, 44, 0.7)"
+          aria-hidden="true"
+        >
+          <path d="M 304 9 L 308 6 L 308 12 Z" />
+        </g>
+        <g
+          className="folio-verso-headmark-tick folio-verso-headmark-tick--left"
+          fill="rgba(167, 60, 44, 0.7)"
+          aria-hidden="true"
+        >
+          <path d="M 16 9 L 12 6 L 12 12 Z" />
+        </g>
+      </svg>
+    </figure>
+  )
+}
+
 function PressStamp({ visible, cycle, reduced }: { visible: boolean; cycle: number; reduced: boolean }) {
   const impression =
     cycle === 0 ? 'prima impressio' : cycle === 1 ? 'secunda impressio' : 'tertia impressio'
@@ -11772,31 +11904,7 @@ export function App() {
             aria-hidden={!versoOpened}
           >
 
-            <PressHeadNote visible={replyShown} reduced={reduced} variant="verso" />
-
-            <aside
-              className={`verso-frontispiece${replyShown ? ' is-revealed' : ''}`}
-              aria-hidden="true"
-            >
-              <p className="verso-frontispiece-half">
-                <span className="verso-frontispiece-half-rule verso-frontispiece-half-rule--left" />
-                <span className="verso-frontispiece-half-cluster">
-                  <em className="verso-frontispiece-half-key">the reply</em>
-                  <span className="verso-frontispiece-half-sep" aria-hidden="true">·</span>
-                  <em className="verso-frontispiece-half-tail">a half-title of folio lxxvii</em>
-                </span>
-                <span className="verso-frontispiece-half-rule verso-frontispiece-half-rule--right" />
-              </p>
-              <div className="verso-frontispiece-pin" aria-hidden="true">
-                <svg viewBox="0 0 220 18" focusable="false" preserveAspectRatio="none">
-                  <line x1="2" y1="9" x2="218" y2="9" stroke="currentColor" strokeWidth="0.35" strokeDasharray="0.5 1.8" />
-                  <circle cx="110" cy="9" r="1.2" fill="currentColor" />
-                  <circle cx="110" cy="9" r="0.4" fill="var(--paper)" />
-                </svg>
-              </div>
-            </aside>
-
-            <ReplyCatchword visible={replyShown} reduced={reduced} />
+            <FolioVersoHeadmark visible={replyShown} reduced={reduced} />
 
             <RectoVerses />
 

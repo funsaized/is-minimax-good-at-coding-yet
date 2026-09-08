@@ -748,6 +748,157 @@ button { font: inherit; }
 }
 
 /* ──────────────────────────────────────────────────────────────────────
+   iteration 165 · a composed verso headmark
+
+   The verso's opening breath — replaces three small slips (the verso
+   PressHeadNote, the VersoFrontispiece half-title, and the
+   ReplyCatchword) with a single composed horizontal impression that
+   mirrors the recto's FolioBreath in idiom: a hairline gold rule that
+   fades from both sides, a centered coral pip with a slow halo, an
+   italic inscription that names the press, and a closing pilcrow.
+   Slow-reveals when the verso turns; the seal glows gently as long
+   as the leaf remains open. Together with FolioBreath at the top of
+   the recto, the folio now opens on both sides with the same composed
+   breath.
+   ────────────────────────────────────────────────────────────────────── */
+
+.folio-verso-headmark {
+  position: relative;
+  width: min(360px, 92%);
+  margin: clamp(10px, 1.4vw, 18px) auto clamp(8px, 1vw, 14px);
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 1100ms var(--ease) 200ms,
+    transform 1100ms var(--ease) 200ms;
+}
+.folio-verso-headmark.is-visible {
+  opacity: 1;
+  transform: none;
+}
+.folio-verso-headmark-plate {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.folio-verso-headmark-rule {
+  transform-origin: 50% 50%;
+  transform: scaleX(0.78);
+  opacity: 0;
+  transition:
+    transform 1300ms var(--ease) 360ms,
+    opacity 1100ms var(--ease) 360ms;
+}
+.folio-verso-headmark.is-visible .folio-verso-headmark-rule {
+  transform: scaleX(1);
+  opacity: 1;
+}
+.folio-verso-headmark-seal {
+  transform-origin: 160px 9px;
+  transform: scale(0.5);
+  opacity: 0;
+  transition:
+    transform 1100ms var(--ease) 540ms,
+    opacity 900ms var(--ease) 540ms;
+}
+.folio-verso-headmark.is-visible .folio-verso-headmark-seal {
+  transform: scale(1);
+  opacity: 1;
+  animation: folio-verso-headmark-glow 6.2s ease-in-out 1600ms infinite;
+}
+@keyframes folio-verso-headmark-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 0 rgba(245, 198, 91, 0));
+  }
+  50% {
+    filter: drop-shadow(0 0 6px rgba(245, 198, 91, 0.55));
+  }
+}
+.folio-verso-headmark-pips circle {
+  transform-origin: center;
+  opacity: 0;
+  transition:
+    transform 900ms var(--ease) 760ms,
+    opacity 900ms var(--ease) 760ms;
+}
+.folio-verso-headmark.is-visible .folio-verso-headmark-pips circle {
+  opacity: 1;
+  transform: scale(1);
+}
+.folio-verso-headmark-tick {
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 900ms var(--ease) 880ms,
+    transform 900ms var(--ease) 880ms;
+}
+.folio-verso-headmark.is-visible .folio-verso-headmark-tick {
+  opacity: 0.7;
+  transform: none;
+}
+.folio-verso-headmark-cap,
+.folio-verso-headmark-tail {
+  opacity: 0;
+  transition:
+    opacity 900ms var(--ease) 940ms,
+    transform 900ms var(--ease) 940ms;
+}
+.folio-verso-headmark.is-visible .folio-verso-headmark-cap {
+  opacity: 0.86;
+}
+.folio-verso-headmark.is-visible .folio-verso-headmark-tail {
+  opacity: 0.55;
+  transition-delay: 1080ms;
+}
+.folio-verso-headmark-cap {
+  font: italic 600 10px/1 var(--display);
+  letter-spacing: 0.16em;
+  text-transform: lowercase;
+  fill: var(--ink-soft);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "onum" 1, "salt" 1;
+}
+.folio-verso-headmark-tail {
+  font: italic 500 8.5px/1 var(--display);
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+  fill: var(--ink-mute);
+  font-feature-settings: "kern" 1, "onum" 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-verso-headmark,
+  .folio-verso-headmark-rule,
+  .folio-verso-headmark-seal,
+  .folio-verso-headmark-pips circle,
+  .folio-verso-headmark-tick,
+  .folio-verso-headmark-cap,
+  .folio-verso-headmark-tail {
+    transition: none !important;
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .folio-verso-headmark-rule { transform: scaleX(1); }
+  .folio-verso-headmark-seal { transform: scale(1); }
+  .folio-verso-headmark-cap { opacity: 0.86; }
+  .folio-verso-headmark-tail { opacity: 0.55; }
+  .folio-verso-headmark-tick { opacity: 0.7; }
+}
+@media (max-width: 720px) {
+  .folio-verso-headmark { width: min(320px, 92%); margin: 8px auto 6px; }
+  .folio-verso-headmark-cap { font-size: 9px; letter-spacing: 0.12em; }
+  .folio-verso-headmark-tail { font-size: 8px; letter-spacing: 0.18em; }
+}
+@media (max-width: 560px) {
+  .folio-verso-headmark { width: min(280px, 90%); margin: 6px auto 4px; }
+  .folio-verso-headmark-cap { font-size: 8.5px; }
+  .folio-verso-headmark-tail { font-size: 7.5px; letter-spacing: 0.14em; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────
    iteration 163 · a composed folio heartline
 
    The recto's quiet heart — sits between the PressInstructionPlate and
