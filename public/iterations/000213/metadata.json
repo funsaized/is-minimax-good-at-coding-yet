@@ -1,0 +1,19 @@
+{
+  "id": 213,
+  "parentId": 212,
+  "createdAt": "2026-09-09T21:36:53.465Z",
+  "summary": "The specimen spread opens like a real drawer — three pressings laid out side by side, each its own proof.",
+  "path": "/iterations/000213/index.html",
+  "screenshot": "/iterations/000213/desktop.png",
+  "mobileScreenshot": "/iterations/000213/mobile.png",
+  "sourceCommit": "d1a8f673ef28270e01b0526334bae064350a46b2",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 263,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 212680,
+    "outputTokens": 36041,
+    "steps": 49
+  }
+}
