@@ -1,0 +1,19 @@
+{
+  "id": 201,
+  "parentId": 200,
+  "createdAt": "2026-09-09T05:09:05.326Z",
+  "summary": "Added a hand-corrected second proof section and a hand-traced underline on the marked words in the title. The \"editor's ",
+  "path": "/iterations/000201/index.html",
+  "screenshot": "/iterations/000201/desktop.png",
+  "mobileScreenshot": "/iterations/000201/mobile.png",
+  "sourceCommit": "e0b1061e9fa048630cb48e62b4dd0de16e771726",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 291,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 91921,
+    "outputTokens": 14113,
+    "steps": 47
+  }
+}
