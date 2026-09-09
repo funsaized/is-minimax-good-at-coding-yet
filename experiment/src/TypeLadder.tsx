@@ -56,6 +56,12 @@ export function TypeLadder({ active, onSelect }: TypeLadderProps) {
           const isActive = entry.voice === active
           return (
             <li key={entry.voice} className={`type-ladder__cell type-ladder__cell--${entry.voice} ${isActive ? 'is-active' : ''}`}>
+              {isActive && (
+                <span className="type-ladder__now" aria-hidden="true">
+                  <span className="type-ladder__now-tick" />
+                  now setting
+                </span>
+              )}
               <button
                 type="button"
                 className="type-ladder__row"
