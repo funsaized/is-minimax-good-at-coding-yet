@@ -1,20 +1,18 @@
-# Iteration 214
+# Changelog
 
-A morning at the desk — the hero calms down so the question stands; the answer carries more weight when tipped in.
-
-## Hero
-- Removed the four corner brackets and four registration marks from the cream-paper spread; the dashed inner border and a single morning plate now carry the framing.
-- The morning plate reads `this morning · folio i · set in {voice}` and updates with the active voice, so the press name lives at the top of the page rather than the bottom.
-- The hand-traced rule under the title gains a small spark dot at the end; its path was tightened to feel more like a single pen stroke than a long wave.
-
-## Notes (folio vi · marginalia)
-- The three cards are now pinned to the page with colored thumbtacks (acid, coral, blue) at their top edges; the tacks wobble on hover or focus.
-- A small `marginalia` stamp and two hand-drawn vertical arrows connect the cards along the same reading rule, making the trio feel like one editor's pinned marginalia instead of three unrelated cards.
-- The `seen · …` scrawl was nudged down to clear the new thumbtack.
-
-## Answer (folio viii · tipped-in leaf)
-- A wax ink-drip now hangs from the press seal and draws itself onto the leaf as the answer opens, ending in a small bead and a couple of splash dots.
-- A `press · used` stamp and short caption are tipped onto the bottom-right of the leaf, naming the voice that pressed this particular sheet so the lever's effect is traceable back to the leaf itself.
-
-## Colophon
-- The `this impression` line was tightened into a single confident sentence and a small monospace tag for the proof mark `(stet) / (caret) / (query)`, replacing the looser three-column wrap.
+## Iteration 215 — the desk settles, the leaf carries one more drop
+- Removed the redundant `MarginalThread` sidebar; the page now records its
+  progress in two clear places only — the top reading trace and a new folio
+  footer at the bottom.
+- Added a `ReadingFolio` footer that shows the current folio, the active
+  marked word, the active voice, and whether the answer leaf is folded or
+  tipped in — a single line that captures the page's live state.
+- Calmed the hero: dropped the "a page that listens" tagline from the
+  header, then added a hand-traced marginalia rule under the title that
+  ties the question to the rest of the spread.
+- Strengthened the answer reveal with a small wax drop that falls from the
+  seal as the leaf tips in, paired with a thin ink wisp — the leaf now
+  announces its arrival.
+- Cleaned up the dead `TypeLadder` import and tightened responsive
+  behaviour for the new folio footer (2-up at 880px, single column at
+  540px).

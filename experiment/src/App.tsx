@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { NOTES, type WordId } from './notes'
-import { MarginalThread } from './MarginalThread'
 import { PressStamp } from './PressStamp'
 import { SpecimenSpread } from './SpecimenSpread'
 import { MarkedProof } from './MarkedProof'
@@ -277,6 +276,10 @@ function AnswerReveal({ open, onClose, triggerRef, voice }: {
           <span className="answer-reveal__gluetop answer-reveal__gluetop--right" aria-hidden="true" />
           <div className="answer-reveal__seal" aria-hidden="true">
             <PressStamp voice={voice} size={124} />
+            <span className="answer-reveal__wax-drop" aria-hidden="true">
+              <span className="answer-reveal__wax-drop-bead" />
+              <span className="answer-reveal__wax-drop-wisp" />
+            </span>
           </div>
           <svg className="answer-reveal__ink-drip" viewBox="0 0 36 110" aria-hidden="true">
             <path
@@ -648,6 +651,76 @@ function ReadingStrip({ progress, activeSection }: { progress: number; activeSec
   )
 }
 
+const VOICE_LABEL: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
+const VOICE_SHORT: Record<VoiceId, string> = { quiet: 'A · quiet', human: 'B · human', bold: 'C · bold' }
+const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
+const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
+
+function ReadingFolio({ activeId, voice, word, answerOpen }: {
+  activeId: string
+  voice: VoiceId
+  word: WordId
+  answerOpen: boolean
+}) {
+  const section = READING_SECTIONS.find(item => item.id === activeId) ?? READING_SECTIONS[0]
+  return (
+    <footer className="reading-folio" aria-label="Folio footer">
+      <div className="reading-folio__plate" aria-hidden="true">
+        <span className="reading-folio__plate-line" />
+        <span className="reading-folio__plate-tag">folio footer · set today</span>
+        <span className="reading-folio__plate-line" />
+      </div>
+      <ol className="reading-folio__row" aria-label="Reading state at the foot of the page">
+        <li className="reading-folio__cell reading-folio__cell--folio">
+          <span className="reading-folio__cell-tag">now reading</span>
+          <span className="reading-folio__cell-main">
+            <span className="reading-folio__cell-num">{section.index}</span>
+            <span className="reading-folio__cell-name">{section.label}</span>
+          </span>
+        </li>
+        <li className="reading-folio__cell reading-folio__cell--word">
+          <span className="reading-folio__cell-tag">marked word</span>
+          <span className="reading-folio__cell-main">
+            <span className={`reading-folio__cell-mark reading-folio__cell-mark--${word}`}>{WORD_MARK[word]}</span>
+            <span className="reading-folio__cell-name">{WORD_LABEL[word]}</span>
+          </span>
+        </li>
+        <li className="reading-folio__cell reading-folio__cell--voice">
+          <span className="reading-folio__cell-tag">the press is set in</span>
+          <span className="reading-folio__cell-main">
+            <span className={`reading-folio__cell-voice reading-folio__cell-voice--${voice}`}>{VOICE_SHORT[voice]}</span>
+            <span className="reading-folio__cell-name">{VOICE_LABEL[voice]}</span>
+          </span>
+        </li>
+        <li className="reading-folio__cell reading-folio__cell--state">
+          <span className="reading-folio__cell-tag">the leaf</span>
+          <span className="reading-folio__cell-main">
+            <span className={`reading-folio__cell-state ${answerOpen ? 'is-open' : ''}`}>
+              <span className="reading-folio__cell-state-dot" aria-hidden="true" />
+              {answerOpen ? 'tipped in' : 'folded away'}
+            </span>
+          </span>
+        </li>
+      </ol>
+      <span className="reading-folio__sign" aria-hidden="true">
+        <svg viewBox="0 0 220 22" preserveAspectRatio="none">
+          <path
+            d="M2 14c10-9 22 6 36-2s22-9 36-1 22 7 36-2 22-7 36-1 22 6 36-2 18-4 18-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
+            pathLength="100"
+            strokeDasharray="100 100"
+            className="reading-folio__sign-stroke"
+          />
+          <circle cx="216" cy="11" r="1.6" fill="currentColor" className="reading-folio__sign-dot" />
+        </svg>
+      </span>
+    </footer>
+  )
+}
+
 export function App() {
   const [answerOpen, setAnswerOpen] = useState(false)
   const [selectedWord, setSelectedWord] = useState<WordId>('good')
@@ -808,8 +881,6 @@ export function App() {
           </nav>
           <span className="site-header__note">
             <PressFolio section={activeSection} />
-            <span className="site-header__sep" aria-hidden="true">·</span>
-            <span className="site-header__tagline">a page that listens</span>
           </span>
         </div>
         <HeaderRuler />
@@ -857,6 +928,18 @@ export function App() {
                 <span>set in {voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'} · folio i · folded once</span>
                 <span className="hero__title-tag-mark" />
               </span>
+              <svg className="hero__marginalia" viewBox="0 0 320 18" preserveAspectRatio="none" aria-hidden="true">
+                <path
+                  className="hero__marginalia-stroke"
+                  d="M2 12c10-9 22 6 36-2s22-7 36-1 22 6 36-2 22-7 36-1 22 6 36-2 22-7 36-1 22 6 36-2 18-2 18-2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.1"
+                  strokeLinecap="round"
+                  pathLength="100"
+                />
+                <circle className="hero__marginalia-dot" cx="316" cy="10" r="1.5" fill="currentColor" />
+              </svg>
             </div>
           </div>
 
@@ -938,7 +1021,7 @@ export function App() {
         <Colophon voice={voice} word={activeWord} />
       </div>
 
-      <MarginalThread activeId={activeSection === 'question' || activeSection === 'press-room' || activeSection === 'compose' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' || activeSection === 'proof' ? activeSection : 'question'} />
+      <ReadingFolio activeId={activeSection} voice={voice} word={activeWord} answerOpen={answerOpen} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )
