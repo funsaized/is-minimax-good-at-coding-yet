@@ -1,13 +1,13 @@
-# Changelog
+Calmed the hero; added a chapter mark, a hand-traced reading rule, and a simpler footer.
 
-## Iteration 206
+The hero was carrying too much around the title: an editor's trace wave, an annotation row with a scrawl and a stamp, and a footer with six marks competing for the eye. Removed the trace and the annotation; the title and the live margin rail now share the stage.
 
-The hero grows an editor's hand: a traced margin beneath the title, and the side rail becomes a real margin note.
+Added a centered chapter mark between the proof sheet and the type ladder. It carries the page's thesis in italic serif ("attention, not ornament"), framed by a hand-traced coral rule, dashed rules, corner crops, and a small fleuron with a "a note for the reader" tag. The rule draws in on load, then the quote rises, then the fleuron settles.
 
-- Added `EditorTrace` beneath the title: a wavy hand-drawn line that draws itself on first paint, fades in an "editor's trace" tag, and ends with the active word's proof mark (stet / caret / query). Its ink color tracks the active word.
-- Replaced the dot-only `hero__gloss` with a folded-corner margin note: a "the margin" tag, a folded top-left dog-ear, the active word's italic label, its gloss in quotes, the live proof glyph with its name, the active ink tag-dot, the index dots, and the `seen` note. Each variant (m3 / good / yet) takes the matching ink tone.
-- Added a small scrawl line beneath the hero summary that draws itself, in the active word's ink.
-- Added an active proof-mark stamp to the hero footer (stet / caret / query, in the active ink). Renamed the existing stamp slot to `hero__footer-seal`.
-- Added a "now setting" stamp to the active cell of `TypeLadder`, with a pulsing dot in the active ink and a frame in the same tone.
-- Added reduced-motion overrides so all new animations resolve to their final state.
-- Tightened mobile responsive rules for the new trace, scrawl, and margin note.
+Replaced the three-dot index in the margin rail with a hand-traced reading rule: a numbered ruler of 01 → 02 → 03, one node per marked word, each tinted by its ink (acid, coral, blue). The active node fills with its color and its number flips to ink, so the reader can always see where they are in the three readings.
+
+The hero footer went from six items to three: an imprint line ("composed by hand · for a careful reader"), the press stamp, and a single continue arrow to the compose floor. A faint acid rule now runs through the top edge to mark the chapter's end.
+
+Layout is unchanged otherwise: title tokens still draw their circles and underlines, the gloss rail still carries the active label and proof mark, the type ladder and body still flow below. The hero gains breathing room where the trace and annotation used to live, and the chapter mark gives the page a real epigraph before the readings begin.
+
+Responsive: the chapter mark tightens its padding and rule width under 540px, the footer seal centers itself on small screens, and the reduced-motion rules drop the trace animations without losing the title and chapter draw-ins.

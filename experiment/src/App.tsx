@@ -8,6 +8,33 @@ import { LetterToReader } from './LetterToReader'
 import { ComposeFloor } from './ComposeFloor'
 import { TypeLadder } from './TypeLadder'
 
+function HeroChapterMark() {
+  return (
+    <aside className="hero__chapter" aria-label="Chapter mark">
+      <svg className="hero__chapter-rule" viewBox="0 0 360 14" preserveAspectRatio="none" aria-hidden="true">
+        <path
+          className="hero__chapter-rule-stroke"
+          d="M2 7c24-6 48 4 72 0s48-8 72-2 48 8 72 0 48-8 72 0 48 4 72-2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth=".8"
+          strokeLinecap="round"
+        />
+      </svg>
+      <em className="hero__chapter-quote">
+        attention, <span className="hero__chapter-accent">not ornament.</span>
+      </em>
+      <span className="hero__chapter-mark" aria-hidden="true">
+        <svg viewBox="0 0 28 16">
+          <path d="M2 8c4-5 8-5 12 0 4 5 8 5 12 0" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
+          <circle cx="14" cy="8" r="1.6" fill="currentColor" />
+        </svg>
+        <span className="hero__chapter-mark-tag">a note for the reader</span>
+      </span>
+    </aside>
+  )
+}
+
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
 type VoiceId = 'quiet' | 'human' | 'bold'
@@ -561,29 +588,6 @@ function MarginProofGlyph({ word }: { word: WordId }) {
   )
 }
 
-function EditorTrace({ word }: { word: WordId }) {
-  return (
-    <span className={`hero__trace hero__trace--${word}`} aria-hidden="true">
-      <svg viewBox="0 0 360 22" preserveAspectRatio="none">
-        <path
-          className="hero__trace-wave"
-          d="M2 14c16-8 32 4 48-2s28-10 44-4 28 8 44 2 28-8 44-2 28 6 44 0 28-6 44-2 28 4 44 0 28-4 44-2"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-          pathLength="100"
-        />
-        <circle className="hero__trace-dot" cx="354" cy="11" r="1.7" fill="currentColor" />
-      </svg>
-      <span className="hero__trace-tag">editor's trace</span>
-      <span className="hero__trace-mark" aria-hidden="true">
-        <MarginProofGlyph word={word} />
-      </span>
-    </span>
-  )
-}
-
 function Colophon({ voice }: { voice: VoiceId }) {
   const tag = voice === 'bold' ? 'NO APOLOGIES' : voice === 'human' ? 'BY HAND' : 'SET WITH CARE'
   return (
@@ -798,20 +802,6 @@ export function App() {
                 <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
                 <span className="hero__title-fold" aria-hidden="true" />
               </h1>
-              <EditorTrace word={activeWord} />
-              <span className="hero__annotation" aria-hidden="true">
-                <span className="hero__annotation-mark">
-                  <svg viewBox="0 0 40 16">
-                    <path d="M2 13c5-7 12 5 18-3 4-5 8 4 12-2 2-3 4-1 6-4" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-                    <circle cx="2" cy="13" r="0.8" fill="currentColor" />
-                  </svg>
-                </span>
-                <em>read each marked word — the margin answers</em>
-                <span className="hero__annotation-rule" />
-                <span className="hero__annotation-mark hero__annotation-mark--end" aria-hidden="true">
-                  <PressStamp voice={voice} size={22} />
-                </span>
-              </span>
             </div>
             <aside className={`hero__gloss hero__gloss--${activeWord}`} aria-label="Live margin note for the active marked word">
               <span className="hero__gloss-fold" aria-hidden="true" />
@@ -831,18 +821,26 @@ export function App() {
                 <MarginProofGlyph word={activeWord} />
                 <span className="hero__gloss-mark-name">{getProofLabel(activeWord)}</span>
               </div>
-              <footer className="hero__gloss-foot" aria-hidden="true">
-                <ol className="hero__gloss-index">
-                  {NOTES.map(n => (
-                    <li key={n.id} className={`hero__gloss-item hero__gloss-item--${n.id} ${activeWord === n.id ? 'is-active' : ''}`}>
-                      <span className={`hero__gloss-dot hero__gloss-dot--${n.id}`} />
-                    </li>
+              <footer className="hero__gloss-foot">
+                <div className="hero__reading-rule" aria-hidden="true">
+                  <span className="hero__reading-rule__line" />
+                  {NOTES.map((n, index) => (
+                    <span
+                      key={n.id}
+                      className={`hero__reading-rule__node hero__reading-rule__node--${n.id} ${activeWord === n.id ? 'is-active' : ''}`}
+                    >
+                      <span className="hero__reading-rule__pip" />
+                      <span className="hero__reading-rule__num">{String(index + 1).padStart(2, '0')}</span>
+                    </span>
                   ))}
-                </ol>
-                <span className="hero__gloss-cue">{NOTES.find(n => n.id === activeWord)?.seen}</span>
+                  <span className="hero__reading-rule__line" />
+                </div>
+                <span className="hero__gloss-cue" aria-live="polite">{NOTES.find(n => n.id === activeWord)?.seen}</span>
               </footer>
             </aside>
           </div>
+
+          <HeroChapterMark />
 
           <TypeLadder active={voice} onSelect={selectVoice} />
 
@@ -876,20 +874,14 @@ export function App() {
           </div>
 
           <div className="hero__footer">
-            <span><i className="hero__footer-dot" /> compose, slowly</span>
-            <span>marked words open the margin</span>
-            <span className={`hero__footer-mark hero__footer-mark--${activeWord}`} aria-hidden="true">
-              <MarginProofGlyph word={activeWord} />
-              <em>{getProofLabel(activeWord)}</em>
+            <span className="hero__footer-imprint">composed by hand <em>·</em> for a careful reader</span>
+            <span className="hero__footer-seal" aria-hidden="true">
+              <PressStamp voice={voice} size={30} />
             </span>
-            <a className="hero__footer-proof" href="#proof" aria-label="See the editor's proof">
-              <span>see the proof</span>
+            <a className="hero__footer-arrow" href="#compose" aria-label="Continue to the compose floor">
+              <span>continue</span>
               <span aria-hidden="true">↓</span>
             </a>
-            <span className="hero__footer-seal" aria-hidden="true">
-              <PressStamp voice={voice} size={28} />
-            </span>
-            <a href="#answer" onClick={openAnswerFromNav} aria-label="Jump to the answer">↓</a>
           </div>
         </section>
 
