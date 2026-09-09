@@ -1,2526 +1,473 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
-type Gloss = {
-  id: string
-  n: string
-  head: string
+type WordId = 'm3' | 'good' | 'yet'
+type VoiceId = 'quiet' | 'human' | 'bold'
+
+type Note = {
+  id: WordId
+  index: string
+  label: string
+  title: string
   gloss: string
-  text: string
-  scribble: string
-  blot: string
-  tether: string
-  note: string
-  mark: string
+  body: string
+  prompt: string
 }
 
-const MARGINALIA: Gloss[] = [
+type Voice = {
+  id: VoiceId
+  name: string
+  descriptor: string
+  body: string
+  lines: [string, string, string]
+}
+
+const NOTES: Note[] = [
   {
     id: 'm3',
-    n: 'i.',
-    head: 'Keep the fingerprint',
+    index: '01',
+    label: 'M3',
+    title: 'Keep the fingerprint',
     gloss: 'a habit, not a name',
-    text: 'The maker is a habit, not a name. When the model rotates, the page should still feel like someone — or something — was here.',
-    scribble: 'M2 9 C 8 3, 16 15, 24 9 C 30 5, 38 13, 46 9',
-    blot: 'M11 3 C 17 5, 21 11, 18 17 C 14 21, 5 20, 3 14 C 1 9, 6 3, 11 3 Z',
-    tether: 'M58 4 C 40 14, 18 28, 4 56',
-    note: 'the press remembers the hand, not the pressman',
-    mark: 'M2 8 L18 8 M10 2 L10 14',
+    body: 'A useful page should leave evidence of a point of view. Not a logo. Not a trick. A small, repeatable act of judgment.',
+    prompt: 'the maker is a habit',
   },
   {
     id: 'good',
-    n: 'ii.',
-    head: 'Choose a side',
-    gloss: 'one confident claim',
-    text: 'A page gets clearer when it makes one confident choice instead of presenting every possible direction at once.',
-    scribble: 'M2 9 C 12 3, 22 15, 32 9 C 42 3, 52 15, 62 9',
-    blot: 'M10 4 C 16 3, 21 8, 20 14 C 19 20, 11 21, 6 17 C 1 13, 4 6, 10 4 Z',
-    tether: 'M58 6 C 36 14, 14 32, 4 64',
-    note: 'a clean claim is a kindness to the reader',
-    mark: 'M2 8 L18 8 M14 2 L14 14 M6 5 L14 5',
+    index: '02',
+    label: 'good at',
+    title: 'Choose one clear thing',
+    gloss: 'confidence is generous',
+    body: 'The interface gets quieter when it stops presenting every possible answer. A confident choice gives the reader somewhere to stand.',
+    prompt: 'make room for attention',
   },
   {
     id: 'yet',
-    n: 'iii.',
-    head: 'Protect the quiet',
-    gloss: 'the pause that matters',
-    text: '"Yet" carries the question. The pause before it is where the answer lives — and where the page earns its reading.',
-    scribble: 'M2 9 C 8 3, 16 15, 24 9 C 30 5, 36 13, 42 9',
-    blot: 'M9 3 C 14 2, 20 7, 19 13 C 18 19, 10 20, 5 16 C 1 11, 4 4, 9 3 Z',
-    tether: 'M58 8 C 40 18, 20 38, 4 70',
-    note: 'leave room for the reader to arrive',
-    mark: 'M2 8 L18 8 M2 2 L18 14',
+    index: '03',
+    label: 'yet?',
+    title: 'Protect the pause',
+    gloss: 'the question stays open',
+    body: '“Yet” carries the honest part. The space before an answer is not a gap to decorate; it is where the reader arrives.',
+    prompt: 'leave room to arrive',
   },
 ]
 
-type Specimen = {
-  id: 'cut' | 'hand' | 'wood'
-  n: 'i.' | 'ii.' | 'iii.'
-  name: string
-  press: string
-  casing: 'small' | 'italic' | 'wood'
-  note: string
-  ornament: string
-}
-
-const SPECIMENS: Specimen[] = [
+const VOICES: Voice[] = [
   {
-    id: 'cut',
-    n: 'i.',
-    name: 'the foundry cut',
-    press: 'roman, 12pt · leaded',
-    casing: 'small',
-    note: 'reads like a job ticket — useful, no flourish',
-    ornament: 'M2 8 L18 8 M10 2 L10 14',
+    id: 'quiet',
+    name: 'quiet cut',
+    descriptor: 'small caps / close set',
+    body: 'The practical reading. It gets out of the way and lets the question do the work.',
+    lines: ['is Minimax', 'good at frontend', 'yet?'],
   },
   {
-    id: 'hand',
-    n: 'ii.',
-    name: "the scribe's hand",
-    press: 'italic copperplate, 18pt',
-    casing: 'italic',
-    note: 'reads like a dedication — quiet, slightly personal',
-    ornament: 'M2 9 C 6 3, 10 15, 14 9 C 16 5, 18 11, 20 8',
+    id: 'human',
+    name: 'human hand',
+    descriptor: 'italic / a little warm',
+    body: 'The personal reading. A little wobble makes the machine feel less like a machine.',
+    lines: ['is M3', 'good at frontend', 'yet?'],
   },
   {
-    id: 'wood',
-    n: 'iii.',
-    name: 'the wood type',
-    press: 'clarendon, 48pt · reversed',
-    casing: 'wood',
-    note: 'reads like a poster — answers whether you like it or not',
-    ornament: 'M2 8 L18 8 M5 2 L13 14 M13 2 L5 14',
+    id: 'bold',
+    name: 'bold signal',
+    descriptor: 'display / no apology',
+    body: 'The poster reading. It answers with its whole chest, then leaves the room for doubt.',
+    lines: ['IS', 'GOOD AT', 'FRONTEND YET?'],
   },
 ]
 
-type MarkKind = 'stet' | 'dele' | 'caret' | 'pilcrow' | 'question' | 'emdash' | 'trans' | 'italic'
-
-type Mark = {
-  id: string
-  kind: MarkKind
-  x: number
-  y: number
-  rot: number
-  scale: number
-}
-
-const PROOFREADER_MARKS: { kind: MarkKind; short: string; name: string; hint: string }[] = [
-  { kind: 'stet', short: 'stet', name: 'let it stand', hint: 'the original is correct — keep it' },
-  { kind: 'dele', short: 'dele', name: 'delete', hint: 'strike through, remove the line' },
-  { kind: 'caret', short: '^', name: 'insert', hint: 'add new material here' },
-  { kind: 'pilcrow', short: '¶', name: 'paragraph', hint: 'break for a new ¶' },
-  { kind: 'question', short: '?', name: 'flag', hint: 'this needs a second look' },
-  { kind: 'emdash', short: '—', name: 'em-dash', hint: 'substitute a long pause' },
-]
-
-function useNow(intervalMs: number) {
-  const [now, setNow] = useState(() => new Date())
-  useEffect(() => {
-    const id = window.setInterval(() => setNow(new Date()), intervalMs)
-    return () => window.clearInterval(id)
-  }, [intervalMs])
-  return now
-}
-
-function useScrollState() {
-  const [state, setState] = useState<{ progress: number; activeWord: string | null; activeSection: string | null }>({ progress: 0, activeWord: null, activeSection: null })
-  useEffect(() => {
-    let raf = 0
-    const update = () => {
-      raf = 0
-      const h = document.documentElement
-      const max = h.scrollHeight - h.clientHeight
-      const progress = max > 0 ? Math.min(1, Math.max(0, h.scrollTop / max)) : 0
-
-      const center = window.innerHeight * 0.5
-      const threshold = Math.max(120, window.innerHeight * 0.32)
-      const words = document.querySelectorAll<HTMLElement>('.word[data-id]')
-      let found: string | null = null
-      let bestDistance = Infinity
-      for (const w of words) {
-        const rect = w.getBoundingClientRect()
-        if (rect.bottom < -40 || rect.top > window.innerHeight + 40) continue
-        const wordCenter = (rect.top + rect.bottom) / 2
-        const distance = Math.abs(wordCenter - center)
-        if (distance < bestDistance && distance < threshold) {
-          bestDistance = distance
-          found = w.dataset.id || null
-        }
-      }
-
-      const eyeY = window.scrollY + window.innerHeight * 0.32
-      const sectionIds = ['question', 'answer', 'marginalia', 'specimens']
-      let section: string | null = null
-      for (const id of sectionIds) {
-        const el = document.getElementById(id)
-        if (!el) continue
-        const rect = el.getBoundingClientRect()
-        const top = window.scrollY + rect.top
-        const bottom = top + rect.height
-        if (eyeY >= top && eyeY <= bottom) {
-          section = id
-          break
-        }
-      }
-      if (!section) {
-        const last = sectionIds[sectionIds.length - 1]
-        const lastEl = document.getElementById(last)
-        if (lastEl) {
-          const r = lastEl.getBoundingClientRect()
-          if (r.top < window.innerHeight * 0.5) section = last
-        }
-      }
-
-      setState(prev => {
-        if (prev.progress === progress && prev.activeWord === found && prev.activeSection === section) return prev
-        return { progress, activeWord: found, activeSection: section }
-      })
-    }
-    const onScroll = () => {
-      if (raf) return
-      raf = requestAnimationFrame(update)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll, { passive: true })
-    update()
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
-  return state
-}
-
-function formatTime(d: Date) {
-  const h = d.getHours()
-  const m = d.getMinutes().toString().padStart(2, '0')
-  const s = d.getSeconds().toString().padStart(2, '0')
-  return `${h}:${m}:${s}`
-}
-
-const MONTHS = [
-  'january', 'february', 'march', 'april', 'may', 'june',
-  'july', 'august', 'september', 'october', 'november', 'december',
-]
-function formatDate(d: Date) {
-  return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`
-}
-
-function uid() {
-  return Math.random().toString(36).slice(2, 9)
-}
-
-function Dust() {
-  const ref = useRef<HTMLCanvasElement>(null)
-  useEffect(() => {
-    const canvas = ref.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const dpr = Math.min(window.devicePixelRatio || 1, 2)
-    let raf = 0
-    let w = 0
-    let h = 0
-    type P = { x: number; y: number; r: number; vy: number; vx: number; a: number; ph: number; tw: number; hue: number }
-    let motes: P[] = []
-
-    const seed = () => {
-      const area = w * h
-      const count = Math.min(56, Math.max(22, Math.floor(area / 28000)))
-      motes = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        r: 0.25 + Math.random() * 1.4,
-        vy: 0.03 + Math.random() * 0.1,
-        vx: (Math.random() - 0.5) * 0.04,
-        a: 0.04 + Math.random() * 0.14,
-        ph: Math.random() * Math.PI * 2,
-        tw: 0.4 + Math.random() * 0.6,
-        hue: Math.random(),
-      }))
-    }
-
-    const resize = () => {
-      w = window.innerWidth
-      h = window.innerHeight
-      canvas.width = Math.floor(w * dpr)
-      canvas.height = Math.floor(h * dpr)
-      canvas.style.width = w + 'px'
-      canvas.style.height = h + 'px'
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      seed()
-    }
-
-    const tick = (t: number) => {
-      ctx.clearRect(0, 0, w, h)
-      for (const p of motes) {
-        p.y -= p.vy
-        p.x += p.vx + Math.sin(t * 0.0005 + p.ph) * 0.04
-        if (p.y < -6) {
-          p.y = h + 6
-          p.x = Math.random() * w
-        }
-        if (p.x < -6) p.x = w + 6
-        if (p.x > w + 6) p.x = -6
-        const flicker = 0.6 + 0.4 * Math.sin(t * 0.0008 * p.tw + p.ph)
-        const warm = p.hue > 0.78
-        if (warm) {
-          ctx.beginPath()
-          ctx.fillStyle = `rgba(199, 91, 59, ${p.a * flicker * 1.1})`
-          ctx.arc(p.x, p.y, p.r * 0.9, 0, Math.PI * 2)
-          ctx.fill()
-        } else {
-          ctx.beginPath()
-          ctx.fillStyle = `rgba(24, 43, 53, ${p.a * flicker})`
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-          ctx.fill()
-        }
-      }
-      if (!reduce) raf = requestAnimationFrame(tick)
-    }
-
-    resize()
-    window.addEventListener('resize', resize)
-    if (!reduce) {
-      raf = requestAnimationFrame(tick)
-    } else {
-      for (const p of motes) {
-        ctx.beginPath()
-        ctx.fillStyle = `rgba(24, 43, 53, ${p.a})`
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fill()
-      }
-    }
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('resize', resize)
-    }
-  }, [])
-
-  return <canvas ref={ref} className="dust" aria-hidden="true" />
-}
-
-function PaperDeckle() {
+function LogoMark() {
   return (
-    <svg className="deckle" viewBox="0 0 1200 22" preserveAspectRatio="none" aria-hidden="true">
-      <path
-        d="M0 22 L0 4 C 32 7, 56 2, 88 5 C 116 7, 142 1, 178 5 C 220 9, 256 3, 296 6 C 334 9, 372 4, 408 7 C 446 10, 482 3, 522 6 C 558 9, 598 3, 636 7 C 676 11, 712 4, 750 8 C 788 12, 824 5, 862 9 C 900 12, 936 5, 974 9 C 1010 12, 1048 6, 1088 10 C 1118 13, 1152 7, 1200 11 L1200 22 Z"
-        fill="currentColor"
-      />
+    <svg className="brand__mark" viewBox="0 0 42 42" aria-hidden="true">
+      <circle cx="21" cy="21" r="18" fill="none" stroke="currentColor" strokeWidth="1" />
+      <circle cx="21" cy="21" r="12" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="1.5 2.5" />
+      <path d="M9 21h24M21 9v24" stroke="currentColor" strokeWidth=".7" opacity=".55" />
+      <text x="21" y="25.5" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="12" fill="currentColor">m³</text>
     </svg>
   )
 }
 
-function CropMarks() {
+function ArrowIcon() {
   return (
-    <div className="crops" aria-hidden="true">
-      <span className="crop crop--tl" />
-      <span className="crop crop--tr" />
-      <span className="crop crop--bl" />
-      <span className="crop crop--br" />
-    </div>
-  )
-}
-
-function EditionPlate() {
-  return (
-    <div className="plate" aria-hidden="true">
-      <span className="plate__row plate__row--top">
-        <span className="plate__rule" />
-        <span className="plate__label">proof sheet</span>
-      </span>
-      <span className="plate__row plate__row--bot">
-        <span className="plate__sub">not for issue</span>
-        <span className="plate__rule plate__rule--end" />
-      </span>
-    </div>
-  )
-}
-
-function Seal() {
-  return (
-    <svg className="seal" viewBox="0 0 64 64" aria-hidden="true">
-      <defs>
-        <radialGradient id="seal-glow" cx="50%" cy="42%" r="62%">
-          <stop offset="0%" stopColor="#d77b5e" />
-          <stop offset="55%" stopColor="#a83a23" />
-          <stop offset="100%" stopColor="#6c1d10" />
-        </radialGradient>
-      </defs>
-      <path
-        d="M32 3 C 50 4, 61 17, 60.5 33 C 60 50, 47.5 61, 32 60.5 C 17 60, 3.5 49.5, 4 32 C 4.5 16, 17.5 3.5, 32 3 Z"
-        fill="url(#seal-glow)"
-      />
-      <path
-        d="M32 4 C 49 5, 59 18, 58.5 33 C 58 49, 46 58.5, 32 58 C 18 57.5, 5 47, 5.5 32 C 6 17, 18 4.5, 32 4 Z"
-        fill="none"
-        stroke="rgba(60,18,8,.32)"
-        strokeWidth="0.5"
-      />
-      <circle cx="32" cy="32" r="23" fill="none" stroke="rgba(255,235,225,.45)" strokeWidth="0.8" strokeDasharray="1.6 2.4" />
-      <text x="32" y="38.5" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="22" fill="#fff3ea">m³</text>
-      <path d="M22 22 C 18 26, 17 32, 20 36" fill="none" stroke="rgba(255,235,225,.18)" strokeWidth="0.7" strokeLinecap="round" />
+    <svg className="arrow-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
 
-function Spark() {
+function OrbitGlyph() {
   return (
-    <svg className="spark" viewBox="0 0 80 12" aria-hidden="true">
-      <path d="M0 6h30M50 6h30M40 1l5 5-5 5" />
+    <svg className="orbit-glyph" viewBox="0 0 420 420" aria-hidden="true">
+      <circle className="orbit-glyph__outer" cx="210" cy="210" r="164" />
+      <ellipse className="orbit-glyph__tilt" cx="210" cy="210" rx="164" ry="74" />
+      <ellipse className="orbit-glyph__tilt orbit-glyph__tilt--reverse" cx="210" cy="210" rx="164" ry="74" />
+      <circle className="orbit-glyph__core" cx="210" cy="210" r="45" />
+      <circle className="orbit-glyph__dot orbit-glyph__dot--one" cx="210" cy="46" r="5" />
+      <circle className="orbit-glyph__dot orbit-glyph__dot--two" cx="370" cy="210" r="4" />
+      <circle className="orbit-glyph__dot orbit-glyph__dot--three" cx="89" cy="303" r="3" />
+      <path className="orbit-glyph__cross" d="M210 128v164M128 210h164" />
+      <text x="210" y="222" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="34">m³</text>
     </svg>
   )
 }
 
-function Kite() {
-  return (
-    <svg className="kite" viewBox="0 0 80 80" aria-hidden="true">
-      <path d="M40 6 L74 40 L40 74 L6 40 Z" />
-      <path d="M40 6 L40 74 M6 40 L74 40" />
-      <circle cx="40" cy="40" r="2" fill="currentColor" />
-    </svg>
-  )
-}
-
-function Caret() {
-  return (
-    <svg className="caret" viewBox="0 0 12 12" aria-hidden="true">
-      <path d="M6 1 L11 10 L1 10 Z" />
-    </svg>
-  )
-}
-
-function Scribble({ path }: { path: string }) {
-  return (
-    <svg className="scribble" viewBox="0 0 100 18" preserveAspectRatio="none" aria-hidden="true">
-      <path d={path} />
-    </svg>
-  )
-}
-
-function InkBlot({ path }: { path: string }) {
-  return (
-    <svg className="inkblot" viewBox="0 0 24 24" aria-hidden="true">
-      <path d={path} />
-    </svg>
-  )
-}
-
-function Flourish() {
-  return (
-    <svg className="flourish" viewBox="0 0 60 18" aria-hidden="true">
-      <path d="M2 9 C 12 2, 22 16, 30 9 C 38 2, 48 16, 58 9" />
-      <circle cx="30" cy="9" r="1.2" fill="currentColor" />
-    </svg>
-  )
-}
-
-type SignatureProps = { drawn?: boolean; progress?: number }
-function Signature({ drawn = true, progress = 1 }: SignatureProps) {
-  const offset = (start: number, end: number) => {
-    const t = Math.max(0, Math.min(1, (progress - start) / (end - start)))
-    return (1 - t).toFixed(3)
-  }
-  return (
-    <svg className={`signature ${drawn ? 'is-drawn' : ''}`} viewBox="0 0 130 30" aria-hidden="true">
-      <g fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path className="sig-path" pathLength={1} d="M6 22 C 10 10, 14 14, 17 22 C 19 27, 22 24, 24 18 C 26 12, 30 14, 32 22" style={{ strokeDasharray: 1, strokeDashoffset: offset(0, 0.32) }} />
-        <path className="sig-path" pathLength={1} d="M36 21 C 39 12, 43 13, 46 20 C 48 25, 52 22, 54 16" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.1, 0.46) }} />
-        <path className="sig-path" pathLength={1} d="M58 14 C 62 19, 64 25, 60 27 M 60 18 L 67 18 M 60 14 L 60 27" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.22, 0.6) }} />
-      </g>
-      <g fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-        <path className="sig-path" pathLength={1} d="M82 22 C 86 11, 92 16, 94 23 C 95 27, 99 25, 100 19" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.38, 0.68) }} />
-        <path className="sig-path" pathLength={1} d="M104 19 C 107 13, 111 14, 113 21 C 114 26, 117 23, 118 17" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.5, 0.78) }} />
-      </g>
-      <path className="sig-path" pathLength={1} d="M120 14 C 121 12, 124 13, 124 16 C 124 19, 120 19, 119 17 C 118 14, 122 13, 124 16" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.62, 0.92) }} />
-      <path className="sig-path" pathLength={1} d="M74 27 C 84 22, 100 25, 116 24" fill="none" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" opacity="0.55" style={{ strokeDasharray: 1, strokeDashoffset: offset(0.78, 0.98) }} />
-    </svg>
-  )
-}
-
-function PressTally({ count }: { count: number }) {
-  const visible = Math.min(count, 6)
-  const over = Math.max(0, count - 6)
-  return (
-    <div className={`press-tally ${count > 0 ? 'press-tally--has' : ''}`} aria-hidden="true">
-      <span className="press-tally__rule" />
-      <span className="press-tally__label">{count === 0 ? 'no pass yet' : `${count} pass${count === 1 ? '' : 'es'}`}</span>
-      <span className="press-tally__row">
-        {Array.from({ length: visible }).map((_, i) => (
-          <svg key={i} className="press-tally__blot" viewBox="0 0 12 12">
-            <path d="M6 1.5 C 9 1.5, 11 4.5, 10.4 7.2 C 9.8 9.8, 6.6 10.6, 4.2 9.4 C 1.6 8.2, 1.6 5, 3.4 3.2 C 4.6 2, 5.6 1.5, 6 1.5 Z" />
-          </svg>
-        ))}
-        {over > 0 && <span className="press-tally__more">+{over}</span>}
-      </span>
-    </div>
-  )
-}
-
-const TYPE_LADDER: { label: string; sample: string; style: React.CSSProperties; rule: string }[] = [
-  { label: 'roman, body', rule: 'Iowan Old Style', sample: 'is M³, yet?', style: { fontStyle: 'normal', fontWeight: 400 } },
-  { label: 'italic, marks', rule: 'Iowan Old Style', sample: 'attention', style: { fontStyle: 'italic', fontWeight: 400 } },
-  { label: 'small caps', rule: 'Iowan Old Style', sample: 'is M³', style: { fontVariant: 'small-caps', fontStyle: 'normal', fontWeight: 400, letterSpacing: '0.08em' } },
-  { label: 'upright, wood', rule: 'Iowan Old Style', sample: 'YET?', style: { fontStyle: 'normal', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase' as const } },
-]
-
-const PRESS_SCHEDULE: { n: string; line: string; em?: string }[] = [
-  { n: '01', line: 'set the question' },
-  { n: '02', line: 'tip in the answer', em: 'on press' },
-  { n: '03', line: 'lift three voices' },
-]
-
-function PressTicket({
-  open,
-  onToggle,
-  progress,
-  time,
-  marks,
-  sealPasses,
-  specimens,
-}: {
-  open: boolean
-  onToggle: () => void
-  progress: number
-  time: Date
-  marks: number
-  sealPasses: number
-  specimens: number
-}) {
-  const ts = time.getSeconds().toString().padStart(2, '0')
-  const tm = time.getMinutes().toString().padStart(2, '0')
-  const th = time.getHours()
-  const th12 = ((th + 11) % 12) + 1
-
-  const visitRows: { n: string; label: string; count: number; total: number; sub?: string }[] = [
-    { n: '01', label: 'marks stamped', count: marks, total: 0 },
-    { n: '02', label: 'voices opened', count: specimens, total: 3 },
-    { n: '03', label: 'seal presses', count: sealPasses, total: 0 },
-  ]
-  const pct = Math.min(100, Math.max(0, progress * 100))
-  return (
-    <aside className={`press-ticket ${open ? 'is-open' : ''}`} aria-label="A pressman's folded note">
-      <span className="press-ticket__tack" aria-hidden="true">
-        <svg viewBox="0 0 14 14">
-          <circle cx="7" cy="7" r="3.4" fill="var(--paper-tip)" stroke="currentColor" strokeWidth="0.9" />
-          <circle cx="7" cy="7" r="1" fill="currentColor" />
-          <path d="M7 3.4 L7 1.4 M7 10.6 L7 12.6 M3.4 7 L1.4 7 M10.6 7 L12.6 7"
-            stroke="currentColor" strokeWidth="0.6" strokeLinecap="round" />
-        </svg>
-      </span>
-      <span className="press-ticket__deckle" aria-hidden="true">
-        <svg viewBox="0 0 120 10" preserveAspectRatio="none">
-          <path d="M0 10 L0 3 C 12 5, 24 1, 36 4 C 48 7, 60 2, 72 5 C 84 8, 96 3, 108 6 L120 4 L120 10 Z" />
-        </svg>
-      </span>
-      <span className="press-ticket__fold" aria-hidden="true">
-        <svg viewBox="0 0 120 14" preserveAspectRatio="none">
-          <path d="M0 0 L120 0 L120 6 C 96 8, 72 4, 48 6 C 24 8, 12 5, 0 7 Z" fill="var(--paper-tip)" />
-          <path d="M0 0 L120 0" stroke="var(--line)" strokeWidth="0.5" strokeDasharray="2 3" opacity="0.55" />
-        </svg>
-      </span>
-
-      <button
-        type="button"
-        className="press-ticket__lid"
-        onClick={onToggle}
-        aria-expanded={open}
-        aria-controls="press-ticket-leaf"
-        aria-label={open ? 'Fold the pressman\u2019s note back up' : 'Unfold the pressman\u2019s note'}
-        title={open ? 'fold back up' : 'tap to unfold'}
-      >
-        <span className="press-ticket__lid-q" aria-hidden="true">Q.</span>
-        <span className="press-ticket__lid-rule" aria-hidden="true" />
-        <span className="press-ticket__lid-note" aria-hidden="true">
-          <em>pressman&rsquo;s</em>
-          <strong>note</strong>
-        </span>
-        <span className="press-ticket__lid-hint" aria-hidden="true">
-          <span className="press-ticket__lid-hint-text">{open ? 'fold back' : 'tap to unfold'}</span>
-          <span className="press-ticket__lid-arrow" aria-hidden="true">
-            <svg viewBox="0 0 14 14">
-              <path d="M3 5 L7 9 L11 5" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </span>
-        </span>
-      </button>
-
-      <div className="press-ticket__leaf" id="press-ticket-leaf" aria-hidden={!open}>
-        <div className="press-ticket__section press-ticket__section--ladder">
-          <span className="press-ticket__head">
-            <span className="press-ticket__head-label">type ladder</span>
-            <span className="press-ticket__head-rule" />
-            <span className="press-ticket__head-note">in use today</span>
-          </span>
-          <ol className="press-ticket__ladder">
-            {TYPE_LADDER.map((row, i) => (
-              <li key={i} className="press-ticket__ladder-row" style={{ animationDelay: `${0.12 + i * 0.06}s` }}>
-                <span className="press-ticket__ladder-n">{String(i + 1).padStart(2, '0')}</span>
-                <span className="press-ticket__ladder-sample" style={row.style}>{row.sample}</span>
-                <span className="press-ticket__ladder-label">{row.label}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-
-        <div className="press-ticket__section press-ticket__section--visit">
-          <span className="press-ticket__head">
-            <span className="press-ticket__head-label">your visit</span>
-            <span className="press-ticket__head-rule" />
-            <span className="press-ticket__head-note">{Math.round(pct)}% read</span>
-          </span>
-          <ol className="press-ticket__visit">
-            {visitRows.map((row, i) => (
-              <li
-                key={i}
-                className={`press-ticket__visit-row ${row.count > 0 ? 'is-on' : ''}`}
-                style={{ animationDelay: `${0.24 + i * 0.06}s` }}
-              >
-                <span className="press-ticket__visit-n">{row.n}</span>
-                <span className="press-ticket__visit-label">{row.label}</span>
-                <span className="press-ticket__visit-count">
-                  <b>{row.count}</b>
-                  {row.total > 0 && <i>/{row.total}</i>}
-                </span>
-                <span className="press-ticket__visit-bar" aria-hidden="true">
-                  <span
-                    className="press-ticket__visit-bar-fill"
-                    style={{ width: row.total > 0 ? `${Math.min(100, (row.count / row.total) * 100)}%` : (row.count > 0 ? '100%' : '0%') }}
-                  />
-                </span>
-              </li>
-            ))}
-          </ol>
-        </div>
-
-        <div className="press-ticket__section press-ticket__section--schedule">
-          <span className="press-ticket__head">
-            <span className="press-ticket__head-label">today&rsquo;s run</span>
-            <span className="press-ticket__head-rule" />
-            <span className="press-ticket__head-note">3 stops</span>
-          </span>
-          <ol className="press-ticket__schedule">
-            {PRESS_SCHEDULE.map((row, i) => (
-              <li key={i} className="press-ticket__schedule-row" style={{ animationDelay: `${0.32 + i * 0.07}s` }}>
-                <span className="press-ticket__schedule-n">{row.n}</span>
-                <span className="press-ticket__schedule-line">
-                  {row.line}
-                  {row.em && <em className="press-ticket__schedule-em">{row.em}</em>}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </div>
-
-        <div className="press-ticket__foot">
-          <span className="press-ticket__foot-rule" aria-hidden="true" />
-          <span className="press-ticket__foot-time" aria-hidden="true">
-            <em>pressed at</em>
-            <b>
-              {th12}<i>:</i>{tm}<i>:</i>{ts}
-            </b>
-          </span>
-          <span className="press-ticket__foot-wax" aria-hidden="true">
-            <svg viewBox="0 0 18 18">
-              <circle cx="9" cy="9" r="7.5" fill="rgba(157, 60, 38, .85)" />
-              <circle cx="9" cy="9" r="5.4" fill="none" stroke="rgba(252, 245, 228, .45)" strokeWidth="0.5" strokeDasharray="1 1.6" />
-              <text x="9" y="12.4" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="9" fill="#fcf5e4">m³</text>
-            </svg>
-          </span>
-          <span className="press-ticket__foot-rule press-ticket__foot-rule--end" aria-hidden="true" />
-        </div>
-      </div>
-    </aside>
-  )
-}
-
-function DropcapSwash() {
-  return (
-    <svg className="answer__dropcap-swash" viewBox="0 0 60 24" preserveAspectRatio="none" aria-hidden="true">
-      <path
-        d="M2 6 C 8 2, 14 10, 22 8 C 30 6, 38 12, 46 9 C 52 7, 58 11, 58 14"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <circle cx="58" cy="14" r="1.4" fill="currentColor" />
-    </svg>
-  )
-}
-
-function DropcapGlyph() {
-  return (
-    <svg className="dropcap-glyph" viewBox="0 0 64 64" aria-hidden="true">
-      <path
-        d="M44 8 C 32 8, 22 14, 20 26 C 18 36, 24 46, 36 48 C 42 49, 48 47, 50 44 M44 8 C 44 18, 44 28, 44 38 M44 8 C 38 12, 32 16, 28 22 M44 38 C 40 42, 36 46, 30 48"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M48 50 C 50 54, 54 56, 58 56"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        opacity="0.7"
-      />
-      <circle cx="58" cy="56" r="1.6" fill="currentColor" opacity="0.85" />
-    </svg>
-  )
-}
-
-function PressMark() {
-  return (
-    <svg className="press-mark" viewBox="0 0 64 64" aria-hidden="true">
-      <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" strokeWidth="0.9" />
-      <circle cx="32" cy="32" r="23" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1.2 2.4" />
-      <text x="32" y="38" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="20" fill="currentColor">m³</text>
-      <path d="M16 48 Q 32 54 48 48" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" />
-      <circle cx="14" cy="32" r="0.8" fill="currentColor" />
-      <circle cx="50" cy="32" r="0.8" fill="currentColor" />
-    </svg>
-  )
-}
-
-function PrintshopClock({ size = 130, withDate = true }: { size?: number; withDate?: boolean }) {
-  const [time, setTime] = useState(() => new Date())
-
-  useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) {
-      const id = window.setInterval(() => setTime(new Date()), 1000)
-      return () => window.clearInterval(id)
-    }
-    let raf = 0
-    let last = 0
-    const tick = (t: number) => {
-      if (t - last > 60) {
-        setTime(new Date())
-        last = t
-      }
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [])
-
-  const ms = time.getMilliseconds()
-  const s = time.getSeconds() + ms / 1000
-  const m = time.getMinutes() + s / 60
-  const h = (time.getHours() % 12) + m / 60
-
-  const hourDeg = h * 30
-  const minDeg = m * 6
-  const secDeg = s * 6
-
-  const cx = 70
-  const cy = 70
-  const rInner = 56
-
-  const ticks: React.ReactElement[] = []
-  for (let i = 0; i < 60; i++) {
-    if (i === 3) continue
-    const angle = (i * 6 - 90) * Math.PI / 180
-    const isMajor = i % 5 === 0
-    const isQuarter = i % 15 === 0
-    const outer = rInner + (isQuarter ? 4 : isMajor ? 2.5 : 1)
-    const x1 = cx + Math.cos(angle) * rInner
-    const y1 = cy + Math.sin(angle) * rInner
-    const x2 = cx + Math.cos(angle) * outer
-    const y2 = cy + Math.sin(angle) * outer
-    ticks.push(
-      <line
-        key={i}
-        x1={x1}
-        y1={y1}
-        x2={x2}
-        y2={y2}
-        stroke="currentColor"
-        strokeWidth={isQuarter ? 1.7 : isMajor ? 1.1 : 0.45}
-        opacity={isQuarter ? 0.92 : isMajor ? 0.78 : 0.34}
-        strokeLinecap="round"
-      />
+function NoteGlyph({ id }: { id: WordId }) {
+  if (id === 'm3') {
+    return (
+      <svg viewBox="0 0 40 24" aria-hidden="true">
+        <path d="M2 17c6-14 10 10 17-3 6-12 10 7 19-7" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
     )
   }
-
-  const hourRad = ((hourDeg - 90) * Math.PI) / 180
-  const minRad = ((minDeg - 90) * Math.PI) / 180
-  const secRad = ((secDeg - 90) * Math.PI) / 180
-
-  const rHandHour = 28
-  const rHandMin = 42
-  const rHandSec = 48
-
-  const hourX = cx + Math.cos(hourRad) * rHandHour
-  const hourY = cy + Math.sin(hourRad) * rHandHour
-  const minX = cx + Math.cos(minRad) * rHandMin
-  const minY = cy + Math.sin(minRad) * rHandMin
-  const secX = cx + Math.cos(secRad) * rHandSec
-  const secY = cy + Math.sin(secRad) * rHandSec
-  const secTailX = cx - Math.cos(secRad) * 11
-  const secTailY = cy - Math.sin(secRad) * 11
-
-  const hour24 = time.getHours()
-  const isNight = hour24 < 6 || hour24 >= 20
-  const isDusk = (!isNight) && (hour24 >= 17 || hour24 < 7)
-  const phase = isNight ? 'night' : isDusk ? 'dusk' : 'day'
-
-  const dayOfMonth = time.getDate()
-  const weekdayShort = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][time.getDay()]
-
+  if (id === 'good') {
+    return (
+      <svg viewBox="0 0 40 24" aria-hidden="true">
+        <path d="M2 12h36M20 3v18M14 6l6-3 6 3" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    )
+  }
   return (
-    <svg
-      viewBox="0 0 140 140"
-      className={`printshop-clock printshop-clock--${phase}`}
-      style={{ width: size, height: size }}
-      role="img"
-      aria-label={`Print clock, currently ${formatTime(time)}`}
-    >
-      <defs>
-        <radialGradient id="pc-face-day" cx="50%" cy="40%" r="65%">
-          <stop offset="0%" stopColor="#fff8e7" />
-          <stop offset="62%" stopColor="#f1e6cb" />
-          <stop offset="100%" stopColor="#c5b186" />
-        </radialGradient>
-        <radialGradient id="pc-face-dusk" cx="50%" cy="40%" r="65%">
-          <stop offset="0%" stopColor="#f9d2a4" />
-          <stop offset="62%" stopColor="#cc8654" />
-          <stop offset="100%" stopColor="#6f3a1f" />
-        </radialGradient>
-        <radialGradient id="pc-face-night" cx="50%" cy="40%" r="65%">
-          <stop offset="0%" stopColor="#3a4358" />
-          <stop offset="62%" stopColor="#1b2238" />
-          <stop offset="100%" stopColor="#070b14" />
-        </radialGradient>
-        <filter id="pcGrain" x="0" y="0" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
-          <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0" />
-          <feComposite in2="SourceGraphic" operator="in" />
-        </filter>
-      </defs>
-
-      <circle cx="70" cy="70" r="65" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.32" />
-      <circle cx="70" cy="70" r="64" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.75" />
-      <circle cx="70" cy="70" r="61" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.4" />
-
-      <circle cx="70" cy="70" r="56" fill={`url(#pc-face-${phase})`} stroke="currentColor" strokeWidth="0.7" opacity="0.97" />
-      <circle cx="70" cy="70" r="56" fill={`url(#pc-face-${phase})`} filter="url(#pcGrain)" opacity="0.6" />
-
-      {isNight && (
-        <g className="pc-stars" fill="currentColor">
-          {[
-            { x: 30, y: 45, r: 0.75 },
-            { x: 105, y: 38, r: 0.55 },
-            { x: 100, y: 95, r: 0.7 },
-            { x: 35, y: 100, r: 0.5 },
-            { x: 50, y: 30, r: 0.4 },
-            { x: 88, y: 52, r: 0.35 },
-            { x: 45, y: 90, r: 0.3 },
-            { x: 110, y: 75, r: 0.4 },
-          ].map((star, i) => (
-            <circle key={i} cx={star.x} cy={star.y} r={star.r} opacity="0.7" />
-          ))}
-        </g>
-      )}
-
-      {!isNight && !isDusk && (
-        <g className="pc-sun" opacity="0.18">
-          {Array.from({ length: 16 }).map((_, i) => {
-            const a = (i * 22.5 - 90) * Math.PI / 180
-            return (
-              <line
-                key={i}
-                x1={70 + Math.cos(a) * 58}
-                y1={70 + Math.sin(a) * 58}
-                x2={70 + Math.cos(a) * 62}
-                y2={70 + Math.sin(a) * 62}
-                stroke="currentColor"
-                strokeWidth="0.5"
-                strokeLinecap="round"
-              />
-            )
-          })}
-        </g>
-      )}
-
-      <g className="pc-ticks">{ticks}</g>
-
-      <g className="pc-numerals" fill="currentColor" fontFamily="Georgia, 'Iowan Old Style', serif" fontStyle="italic">
-        <text x="70" y="32" textAnchor="middle" fontSize="11" opacity="0.78">XII</text>
-        <text x="70" y="116" textAnchor="middle" fontSize="9" opacity="0.62">VI</text>
-        <text x="34" y="74" textAnchor="middle" fontSize="9" opacity="0.62">IX</text>
-      </g>
-
-      <g className="pc-mark" transform="translate(70 90)">
-        <text x="0" y="0" textAnchor="middle" fontFamily="Georgia, 'Iowan Old Style', serif" fontStyle="italic" fontSize="9" fill="currentColor" opacity="0.55">m³</text>
-      </g>
-
-      <g className="pc-wday" transform="translate(70 14)">
-        <text x="0" y="0" textAnchor="middle" fontFamily="ui-sans-serif, system-ui, sans-serif" fontSize="6" letterSpacing="1.8" fill="currentColor" opacity="0.55">{weekdayShort.toUpperCase()}</text>
-      </g>
-
-      <line
-        x1={cx}
-        y1={cy}
-        x2={hourX}
-        y2={hourY}
-        stroke="currentColor"
-        strokeWidth="3.2"
-        strokeLinecap="round"
-      />
-
-      <line
-        x1={cx}
-        y1={cy}
-        x2={minX}
-        y2={minY}
-        stroke="currentColor"
-        strokeWidth="1.9"
-        strokeLinecap="round"
-      />
-
-      <line
-        x1={secTailX}
-        y1={secTailY}
-        x2={secX}
-        y2={secY}
-        stroke="var(--coral)"
-        strokeWidth="0.95"
-        strokeLinecap="round"
-      />
-      <circle cx={secX} cy={secY} r="1.4" fill="var(--coral)" opacity="0.9" />
-
-      <circle cx={cx} cy={cy} r="2.6" fill="currentColor" />
-      <circle cx={cx} cy={cy} r="1.1" fill="var(--paper-tip)" />
-
-      {withDate && (
-        <g className="pc-date" transform="translate(99 70)">
-          <rect x="-7.5" y="-7.5" width="15" height="15" rx="1" fill="var(--paper-tip)" stroke="currentColor" strokeWidth="0.5" opacity="0.96" />
-          <text
-            x="0"
-            y="3"
-            textAnchor="middle"
-            fontFamily="Georgia, 'Iowan Old Style', serif"
-            fontStyle="italic"
-            fontSize="9"
-            fontWeight="500"
-            fill="currentColor"
-          >
-            {dayOfMonth}
-          </text>
-        </g>
-      )}
+    <svg viewBox="0 0 40 24" aria-hidden="true">
+      <path d="M3 5l16 14L37 5M3 19l8-7M37 19l-8-7" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
 
-function PressSignature({ large = false }: { large?: boolean }) {
+function TitleToken({
+  id,
+  text,
+  selected,
+  onSelect,
+  onHover,
+  onLeave,
+  tokenRef,
+}: {
+  id: WordId
+  text: string
+  selected: boolean
+  onSelect: (id: WordId) => void
+  onHover: (id: WordId) => void
+  onLeave: () => void
+  tokenRef: (node: HTMLButtonElement | null) => void
+}) {
   return (
-    <svg
-      className={`press-sig ${large ? 'press-sig--large' : ''}`}
-      viewBox="0 0 120 120"
-      aria-hidden="true"
+    <button
+      ref={tokenRef}
+      type="button"
+      className={`title-token title-token--${id} ${selected ? 'is-selected' : ''}`}
+      data-word={id}
+      aria-pressed={selected}
+      aria-describedby={`note-${id}`}
+      onClick={() => onSelect(id)}
+      onMouseEnter={() => onHover(id)}
+      onMouseLeave={onLeave}
+      onFocus={() => onHover(id)}
+      onBlur={onLeave}
     >
-      <defs>
-        <radialGradient id="psGlow" cx="50%" cy="46%" r="58%">
-          <stop offset="0%" stopColor="rgba(199, 91, 59, .14)" />
-          <stop offset="70%" stopColor="rgba(199, 91, 59, .04)" />
-          <stop offset="100%" stopColor="rgba(199, 91, 59, 0)" />
-        </radialGradient>
-      </defs>
-      <circle cx="60" cy="60" r="56" fill="url(#psGlow)" />
-      <circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" strokeWidth="0.6" strokeDasharray="1.2 2.2" opacity=".35" />
-      <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" strokeWidth="0.9" />
-      <circle cx="60" cy="60" r="38" fill="none" stroke="currentColor" strokeWidth="0.4" opacity=".55" />
-      <g transform="translate(60 60)">
-        <text
-          x="0"
-          y="6"
-          textAnchor="middle"
-          fontFamily="Georgia, 'Iowan Old Style', serif"
-          fontStyle="italic"
-          fontWeight="400"
-          fontSize="34"
-          letterSpacing="-1.4"
-          fill="currentColor"
-        >
-          m
-        </text>
-        <text
-          x="0"
-          y="6"
-          textAnchor="middle"
-          fontFamily="Georgia, 'Iowan Old Style', serif"
-          fontStyle="italic"
-          fontWeight="400"
-          fontSize="22"
-          letterSpacing="-1"
-          fill="currentColor"
-          opacity=".92"
-        >
-          ³
-        </text>
-      </g>
-      <path
-        d="M30 86 Q 60 100 90 86"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-        opacity=".85"
-      />
-      <circle cx="30" cy="86" r="1.1" fill="currentColor" />
-      <circle cx="90" cy="86" r="1.1" fill="currentColor" />
-      <g stroke="currentColor" strokeWidth="0.6" opacity=".5">
-        <path d="M22 60 L 28 60" strokeLinecap="round" />
-        <path d="M92 60 L 98 60" strokeLinecap="round" />
-        <path d="M60 22 L 60 28" strokeLinecap="round" />
-        <path d="M60 92 L 60 98" strokeLinecap="round" />
-      </g>
-      <g fill="none" stroke="currentColor" strokeWidth="0.5" opacity=".45">
-        <path d="M44 28 Q 60 22 76 28" strokeLinecap="round" />
-        <path d="M44 92 Q 60 98 76 92" strokeLinecap="round" />
-      </g>
-      <g fontFamily="Georgia, 'Iowan Old Style', serif" fontStyle="italic" fill="currentColor" opacity=".7">
-        <text x="60" y="14" textAnchor="middle" fontSize="6.5" letterSpacing="2.2">PRESS</text>
-        <text x="60" y="112" textAnchor="middle" fontSize="6.5" letterSpacing="2.2">EST. MMXXVI</text>
-      </g>
-    </svg>
+      {text}
+    </button>
   )
 }
 
-const PRESS_INKS = [
-  { id: 'ink', name: 'lamp-black', hex: '#14201a', soft: 'rgba(20, 32, 27, .85)' },
-  { id: 'coral', name: 'carmine', hex: '#cf5240', soft: 'rgba(207, 82, 64, .9)' },
-  { id: 'gold', name: 'gilt', hex: '#95742a', soft: 'rgba(149, 116, 42, .85)' },
-  { id: 'leaf', name: 'paper-tip', hex: '#fcf5e4', soft: 'rgba(252, 245, 228, 1)' },
-] as const
-
-function InkSwatches() {
+function SignalCard({ word, voice }: { word: WordId; voice: VoiceId }) {
+  const wordLabel = NOTES.find(note => note.id === word)?.prompt ?? 'make room for attention'
   return (
-    <span className="press-folio__inks" aria-hidden="true">
-      {PRESS_INKS.map((ink, i) => (
-        <span
-          key={ink.id}
-          className={`press-folio__ink press-folio__ink--${ink.id}`}
-          style={{ animationDelay: `${0.35 + i * 0.07}s` }}
-          title={ink.name}
-        >
-          <span className="press-folio__ink-dot" style={{ background: ink.soft }} />
-          <span className="press-folio__ink-name">{ink.name}</span>
-        </span>
-      ))}
-    </span>
-  )
-}
-
-function PressFolio({ time }: { time: Date }) {
-  const hours = time.getHours()
-  const phase = hours < 5 ? 'small hours' : hours < 12 ? 'morning' : hours < 17 ? 'afternoon' : hours < 21 ? 'evening' : 'night'
-  return (
-    <aside className="press-folio" aria-label="Edition statement">
-      <span className="press-folio__watermark" aria-hidden="true">
-        <PressSignature />
-      </span>
-      <span className="press-folio__corner press-folio__corner--tl" aria-hidden="true">
-        <svg viewBox="0 0 20 20">
-          <path d="M2 2 L18 2 M2 2 L2 18" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" />
-          <path d="M6 2 L6 6 M2 6 L6 6" fill="none" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" opacity="0.55" />
-        </svg>
-      </span>
-      <span className="press-folio__corner press-folio__corner--br" aria-hidden="true">
-        <svg viewBox="0 0 20 20">
-          <path d="M2 18 L18 18 M18 2 L18 18" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" />
-          <path d="M14 18 L14 14 M18 14 L14 14" fill="none" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" opacity="0.55" />
-        </svg>
-      </span>
-
-      <div className="press-folio__mark" aria-hidden="true">
-        <PrintshopClock />
+    <aside className={`signal-card signal-card--${voice}`} aria-label="A visual study of the question">
+      <div className="signal-card__topline">
+        <span>field note</span>
+        <span>the signal desk</span>
       </div>
-
-      <div className="press-folio__copy">
-        <p className="press-folio__kicker">
-          <span className="press-folio__kicker-line" />
-          <em>front matter</em>
-          <i className="press-folio__kicker-dot" aria-hidden="true" />
-          <em className={`press-folio__phase press-folio__phase--${time.getHours() < 6 || time.getHours() >= 20 ? 'night' : time.getHours() >= 17 || time.getHours() < 7 ? 'dusk' : 'day'}`}>{phase}</em>
-          <span className="press-folio__kicker-line" />
-        </p>
-        <h2 className="press-folio__title">
-          a small <i>proof sheet</i>, set today, for one reader
-        </h2>
-        <p className="press-folio__lede">
-          Pulled from the case by hand. Not for issue. Each word chosen, each margin left for breath.
-        </p>
-
-        <dl className="press-folio__grid">
-          <div className="press-folio__cell">
-            <dt>paper</dt>
-            <dd>
-              <i>cream laid</i>
-              <span>120 gsm</span>
-            </dd>
-          </div>
-          <div className="press-folio__cell">
-            <dt>ink set</dt>
-            <dd>
-              <InkSwatches />
-            </dd>
-          </div>
-          <div className="press-folio__cell">
-            <dt>edition</dt>
-            <dd>
-              <i>first</i>
-              <span>of one</span>
-            </dd>
-          </div>
-          <div className="press-folio__cell">
-            <dt>pressed</dt>
-            <dd>
-              <i>{phase}</i>
-              <span className="press-folio__time">{formatTime(time)}</span>
-            </dd>
-          </div>
-        </dl>
-
-        <p className="press-folio__foot" aria-hidden="true">
-          <span className="press-folio__foot-rule" />
-          <em>set in three voices, returned with care</em>
-          <span className="press-folio__foot-rule" />
-        </p>
+      <div className="signal-card__art">
+        <OrbitGlyph />
+        <span className="signal-card__crosshair signal-card__crosshair--one" aria-hidden="true" />
+        <span className="signal-card__crosshair signal-card__crosshair--two" aria-hidden="true" />
+        <span className="signal-card__annotation signal-card__annotation--top">attention</span>
+        <span className="signal-card__annotation signal-card__annotation--side">pause / repeat</span>
+      </div>
+      <div className="signal-card__bottomline">
+        <span className="signal-card__prompt">{wordLabel}</span>
+        <span className="signal-card__mark" aria-hidden="true">↗</span>
       </div>
     </aside>
   )
 }
 
-function PencilGlyph({ active }: { active: boolean }) {
+function AnswerPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
-    <svg className="pencil-glyph" viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d="M3 21 L7 17 L18 6 L21 3 L18 0 L15 3 L4 14 L3 21 Z"
-        fill="currentColor"
-        fillOpacity={active ? 0.85 : 0.18}
-      />
-      <path
-        d="M14 7 L18 11"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M3 21 L7 17"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M18 0 L21 3"
-        stroke="currentColor"
-        strokeWidth=".9"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.5"
-      />
-    </svg>
+    <section
+      className={`answer-panel ${open ? 'is-open' : ''}`}
+      id="answer"
+      aria-labelledby="answer-title"
+      aria-hidden={!open}
+    >
+      <div className="answer-panel__clip">
+        <div className="answer-panel__paper">
+          <span className="answer-panel__pin answer-panel__pin--one" aria-hidden="true" />
+          <span className="answer-panel__pin answer-panel__pin--two" aria-hidden="true" />
+          <div className="answer-panel__grid">
+            <div className="answer-panel__stamp" aria-hidden="true">
+              <span className="answer-panel__stamp-ring">m³</span>
+              <span>for now</span>
+            </div>
+            <div className="answer-panel__copy">
+              <p className="eyebrow eyebrow--dark"><span className="eyebrow__line" />the answer <em>for now</em></p>
+              <h2 id="answer-title">Yes — when it stops trying to look impressive.</h2>
+              <div className="answer-panel__columns">
+                <p>The good part is not the gradient, the flourish, or the clever little mechanism. It is the moment the page gives you room to notice <em>one thing</em>. Then another.</p>
+                <p>So this is a qualified yes: good at front-end means attentive to the person on the other side of the glass. The rest is decoration with a job to do.</p>
+              </div>
+              <div className="answer-panel__pull"><span />attention, not ornament<span /></div>
+              <div className="answer-panel__footer">
+                <span>an answer can remain unfinished</span>
+                <button type="button" onClick={onClose} tabIndex={open ? 0 : -1}>
+                  fold it back <ArrowIcon />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 
-function EraserGlyph() {
+function NotesSection({ selected, onSelect }: { selected: WordId; onSelect: (id: WordId) => void }) {
   return (
-    <svg className="eraser-glyph" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M3 16 L11 8 L19 16 L14 21 L7 21 Z" fill="currentColor" fillOpacity="0.2" />
-      <path d="M3 16 L11 8 L19 16" stroke="currentColor" strokeWidth="1.1" fill="none" strokeLinejoin="round" />
-      <path d="M3 16 L14 21" stroke="currentColor" strokeWidth="1.1" fill="none" strokeLinecap="round" />
-      <path d="M11 8 L14 21" stroke="currentColor" strokeWidth="0.8" fill="none" strokeDasharray="1.5 1.6" opacity="0.5" />
-    </svg>
-  )
-}
-
-function MarkPath({ kind }: { kind: MarkKind }) {
-  switch (kind) {
-    case 'stet':
-      return (
-        <g>
-          <ellipse cx="40" cy="16" rx="32" ry="9" fill="none" stroke="currentColor" strokeWidth="1.5" />
-          <text x="40" y="20" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">stet</text>
-        </g>
-      )
-    case 'dele':
-      return (
-        <g>
-          <path d="M6 16 C 14 10, 22 22, 30 16 C 38 10, 46 22, 54 16 C 62 10, 70 22, 74 16"
-            fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <text x="40" y="28" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="9" fill="currentColor">dele</text>
-        </g>
-      )
-    case 'caret':
-      return (
-        <g>
-          <path d="M28 6 L 40 1 L 52 6"
-            fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M10 24 L 70 24"
-            fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-        </g>
-      )
-    case 'pilcrow':
-      return (
-        <g>
-          <path d="M26 4 C 18 4, 14 12, 18 20 C 22 24, 30 24, 34 20 C 36 18, 36 16, 34 14"
-            fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M26 4 L 26 28 M 38 4 L 38 28"
-            fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-        </g>
-      )
-    case 'question':
-      return (
-        <g>
-          <path d="M40 6 C 30 6, 24 14, 32 22 C 36 25, 42 25, 44 22 M 40 6 C 50 6, 56 14, 48 22 C 44 25, 42 22, 42 22"
-            fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          <circle cx="43" cy="29" r="1.6" fill="currentColor" />
-        </g>
-      )
-    case 'emdash':
-      return (
-        <g>
-          <path d="M22 16 L 58 16"
-            fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
-        </g>
-      )
-    case 'trans':
-      return (
-        <g>
-          <text x="40" y="22" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="16" fill="currentColor">tr</text>
-        </g>
-      )
-    case 'italic':
-      return (
-        <g>
-          <text x="40" y="22" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="13" fill="currentColor">ital</text>
-        </g>
-      )
-  }
-}
-
-function MarkGlyph({ kind, small = false }: { kind: MarkKind; small?: boolean }) {
-  return (
-    <svg className={`mark-glyph ${small ? 'mark-glyph--small' : ''}`} viewBox="0 0 80 32" aria-hidden="true">
-      <MarkPath kind={kind} />
-    </svg>
-  )
-}
-
-function MarkPalette({ selected, onSelect }: { selected: MarkKind; onSelect: (k: MarkKind) => void }) {
-  return (
-    <div className="mark-palette" role="radiogroup" aria-label="Proofreader's marks">
-      <span className="mark-palette__legend" aria-hidden="true">
-        <span className="mark-palette__legend-rule" />
-        <em>pick a mark, then click the proof</em>
-      </span>
-      <div className="mark-palette__row">
-        {PROOFREADER_MARKS.map(m => (
+    <section className="section notes-section" id="notes" aria-labelledby="notes-title">
+      <div className="section__header">
+        <p className="eyebrow"><span className="eyebrow__line" />marginalia <em>three things worth keeping</em></p>
+        <h2 id="notes-title">The page gets better when it <i>pays attention.</i></h2>
+        <p className="section__lede">Hover or focus a marked word above. These are not rules; they are the small decisions underneath the surface.</p>
+      </div>
+      <div className="notes-grid">
+        {NOTES.map(note => (
           <button
-            key={m.kind}
+            key={note.id}
+            id={`note-${note.id}`}
             type="button"
-            className={`mark-palette__btn ${selected === m.kind ? 'is-selected' : ''}`}
-            onClick={() => onSelect(m.kind)}
-            role="radio"
-            aria-checked={selected === m.kind}
-            aria-label={`${m.short} — ${m.name}`}
-            title={`${m.short} — ${m.hint}`}
+            className={`note-card note-card--${note.id} ${selected === note.id ? 'is-selected' : ''}`}
+            aria-pressed={selected === note.id}
+            onClick={() => onSelect(note.id)}
           >
-            <MarkGlyph kind={m.kind} small />
-            <span className="mark-palette__label" aria-hidden="true">{m.short}</span>
+            <span className="note-card__head">
+              <span>{note.index}</span>
+              <NoteGlyph id={note.id} />
+            </span>
+            <span className="note-card__label">{note.label}</span>
+            <strong>{note.title}</strong>
+            <em>{note.gloss}</em>
+            <span className="note-card__body">{note.body}</span>
+            <span className="note-card__prompt">{note.prompt} <span aria-hidden="true">↗</span></span>
           </button>
         ))}
       </div>
-    </div>
+    </section>
   )
 }
 
-type WordProps = {
-  text: string
-  id?: string
-  active?: boolean
-  onEnter?: () => void
-  onLeave?: () => void
-  scribble?: string
-  delay?: number
-  superscript?: boolean
-  read?: boolean
-}
-
-function TitleWord({ text, id, active, onEnter, onLeave, scribble, delay, superscript, read }: WordProps) {
-  const cls = `tline${id ? ` word ${active ? 'word--active' : ''} ${read ? 'word--read' : ''}` : ''}`
-  const style = delay !== undefined ? { animationDelay: `${delay}s` } : undefined
-  if (!id) {
-    return (
-      <span className={cls} style={style}>
-        {text}
-      </span>
-    )
-  }
-  if (superscript) {
-    const base = text.slice(0, -1)
-    const sup = text.slice(-1)
-    return (
-      <span
-        className={cls}
-        style={style}
-        data-id={id}
-        tabIndex={0}
-        onMouseEnter={onEnter}
-        onMouseLeave={onLeave}
-        onFocus={onEnter}
-        onBlur={onLeave}
-        aria-describedby={`gloss-${id}`}
-      >
-        <svg className="word__circle" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
-          <ellipse cx="50" cy="20" rx="49" ry="13" />
-        </svg>
-        <span className="word__brackets" aria-hidden="true">
-          <span className="bracket bracket--tl" />
-          <span className="bracket bracket--tr" />
-        </span>
-        <RegistrationMark pos="tr" />
-        <span className="word__base">{base}</span>
-        <span className="word__sup" aria-hidden="true">{sup}</span>
-        {scribble && <Scribble path={scribble} />}
-        <svg className="word__wire" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M2 14 Q 40 6 98 14" />
-        </svg>
-      </span>
-    )
-  }
-  return (
-    <span
-      className={cls}
-      style={style}
-      data-id={id}
-      tabIndex={0}
-      onMouseEnter={onEnter}
-      onMouseLeave={onLeave}
-      onFocus={onEnter}
-      onBlur={onLeave}
-      aria-describedby={`gloss-${id}`}
-    >
-      <svg className="word__circle" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
-        <ellipse cx="50" cy="20" rx="49" ry="13" />
-      </svg>
-      <span className="word__brackets" aria-hidden="true">
-        <span className="bracket bracket--tl" />
-        <span className="bracket bracket--tr" />
-      </span>
-      <RegistrationMark pos="tl" />
-      {text}
-      {scribble && <Scribble path={scribble} />}
-      <svg className="word__wire" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M2 14 Q 40 6 98 14" />
-      </svg>
-    </span>
-  )
-}
-
-type MarkLayerProps = {
-  active: boolean
-  marks: Mark[]
-  svgRef: React.RefObject<SVGSVGElement | null>
-  onStamp: (x: number, y: number) => void
-}
-
-function MarkLayer({ active, marks, svgRef, onStamp }: MarkLayerProps) {
-  const handleDown = (e: React.PointerEvent) => {
-    if (!active) return
-    if (e.button !== undefined && e.button !== 0) return
-    const svg = svgRef.current
-    if (!svg) return
-    const rect = svg.getBoundingClientRect()
-    if (rect.width <= 0 || rect.height <= 0) return
-    const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left))
-    const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top))
-    onStamp(x, y)
-    e.preventDefault()
-  }
-
-  return (
-    <svg
-      ref={svgRef}
-      className={`marks ${active ? 'marks--active' : ''}`}
-      preserveAspectRatio="none"
-      onPointerDown={handleDown}
-      aria-hidden="true"
-    >
-      <defs>
-        <filter id="markRough" x="-2%" y="-2%" width="104%" height="104%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="2" seed="5" />
-          <feDisplacementMap in="SourceGraphic" scale="1.1" />
-        </filter>
-      </defs>
-      <g className="marks__g" filter="url(#markRough)">
-        {marks.map(m => (
-          <g
-            key={m.id}
-            transform={`translate(${m.x} ${m.y}) rotate(${m.rot}) translate(-40 -16) scale(${m.scale})`}
-            className="mark-stamp"
-          >
-            <svg width="80" height="32" viewBox="0 0 80 32">
-              <MarkPath kind={m.kind} />
-            </svg>
-          </g>
-        ))}
-      </g>
-    </svg>
-  )
-}
-
-function SpecimenSetting({ s }: { s: Specimen }) {
-  const lineA = s.id === 'cut' ? 'is Minimax' : s.id === 'hand' ? 'is M³' : 'IS'
-  const lineB = s.id === 'cut' ? 'good at frontend' : s.id === 'hand' ? 'good at frontend' : 'GOOD AT'
-  const lineC = s.id === 'cut' ? 'yet ?' : s.id === 'hand' ? 'yet?' : 'FRONTEND YET'
-  return (
-    <div className={`specimen__setting specimen__setting--${s.casing}`} aria-hidden="true">
-      <span className="specimen__line specimen__line--a">{lineA}</span>
-      <span className="specimen__line specimen__line--b">{lineB}</span>
-      <span className="specimen__line specimen__line--c">{lineC}</span>
-    </div>
-  )
-}
-
-function SpecimenCard({
-  s,
-  isOpen,
-  onToggle,
-  cardId,
-}: {
-  s: Specimen
-  isOpen: boolean
-  onToggle: () => void
-  cardId: string
+function VoicesSection({ voice, onVoice, voiceRefs }: {
+  voice: VoiceId
+  onVoice: (id: VoiceId) => void
+  voiceRefs: React.MutableRefObject<Partial<Record<VoiceId, HTMLButtonElement | null>>>
 }) {
+  const selectByKey = (event: ReactKeyboardEvent<HTMLButtonElement>, id: VoiceId) => {
+    const index = VOICES.findIndex(item => item.id === id)
+    let nextIndex = index
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') nextIndex = (index + 1) % VOICES.length
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') nextIndex = (index - 1 + VOICES.length) % VOICES.length
+    if (event.key === 'Home') nextIndex = 0
+    if (event.key === 'End') nextIndex = VOICES.length - 1
+    if (nextIndex === index) return
+    event.preventDefault()
+    const next = VOICES[nextIndex].id
+    onVoice(next)
+    window.requestAnimationFrame(() => voiceRefs.current[next]?.focus())
+  }
+
+  const current = VOICES.find(item => item.id === voice) ?? VOICES[0]
+
   return (
-    <article
-      className={`slip slip--${s.casing} ${isOpen ? 'is-open' : ''}`}
-      data-n={s.n}
-    >
-      <button
-        type="button"
-        className="slip__flap"
-        onClick={onToggle}
-        aria-expanded={isOpen}
-        aria-controls={cardId}
-        aria-label={`${isOpen ? 'Close' : 'Open'} ${s.name}`}
-        title={isOpen ? 'Close this voice' : `Open the ${s.name}`}
-      >
-        <span className="slip__flap-fold" aria-hidden="true" />
-        <span className="slip__flap-row">
-          <span className="slip__flap-n">{s.n}</span>
-          <span className="slip__flap-name">{s.name}</span>
-        </span>
-        <span className="slip__flap-press">{s.press}</span>
-        <span className="slip__flap-ornament" aria-hidden="true">
-          <svg viewBox="0 0 20 16">
-            <path d={s.ornament} fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </span>
-      </button>
-      <div className="slip__leaf" id={cardId}>
-        <span className="slip__leaf-mark" aria-hidden="true">{s.n}</span>
-        <SpecimenSetting s={s} />
-        <span className="slip__leaf-press">{s.press}</span>
+    <section className="section voices-section" id="voices" aria-labelledby="voices-title">
+      <div className="section__header voices-section__header">
+        <p className="eyebrow eyebrow--dark"><span className="eyebrow__line" />type drawer <em>one question, three readings</em></p>
+        <h2 id="voices-title">Let the same words <i>change clothes.</i></h2>
+        <p className="section__lede">Choose a voice. The title above shifts with it, because typography is part of the answer.</p>
       </div>
-      <footer className="slip__foot">
-        <p className="slip__note">{s.note}</p>
-      </footer>
-    </article>
-  )
-}
-
-function ReadingRibbon({ progress }: { progress: number }) {
-  const pct = Math.min(100, Math.max(0, progress * 100))
-  const stops = [
-    { top: 8, label: 'Q' },
-    { top: 30, label: 'A' },
-    { top: 54, label: 'M' },
-    { top: 76, label: 'S' },
-    { top: 92, label: '·' },
-  ]
-  return (
-    <div className="ribbon" aria-hidden="true">
-      <span className="ribbon__band" style={{ height: `${pct}%` }}>
-        <span className="ribbon__gloss" />
-      </span>
-      <span className="ribbon__ruler">
-        {stops.map((s, i) => (
-          <span
-            key={i}
-            className={`ribbon__stop ${pct >= s.top ? 'is-passed' : ''}`}
-            style={{ top: `${s.top}%` }}
-            data-label={s.label}
-          />
-        ))}
-      </span>
-      <span className="ribbon__tail" style={{ top: `${pct}%` }}>
-        <span className="ribbon__notch ribbon__notch--l" />
-        <span className="ribbon__notch ribbon__notch--r" />
-        <span className="ribbon__seal">m³</span>
-      </span>
-    </div>
-  )
-}
-
-function PageMark({ active }: { active: string | null }) {
-  const labels: Record<string, string> = {
-    question: 'the question',
-    answer: 'the answer',
-    marginalia: 'the margin',
-    specimens: 'the specimens',
-  }
-  const order = ['question', 'answer', 'marginalia', 'specimens']
-  const i = active ? Math.max(0, order.indexOf(active)) : 0
-  const label = labels[order[i]] || labels.question
-  return (
-    <span className="page-mark" aria-hidden="true">
-      <span className="page-mark__rule" />
-      <span className="page-mark__chip">
-        <span className="page-mark__chip-n">{String(i + 1).padStart(2, '0')}</span>
-        <span className="page-mark__chip-of">/</span>
-        <span className="page-mark__chip-total">{String(order.length).padStart(2, '0')}</span>
-      </span>
-      <span className="page-mark__label">{label}</span>
-      <span className="page-mark__rule" />
-    </span>
-  )
-}
-
-type PressRow = { kind: 'key' | 'icon' | 'mark'; glyph: string; label: string; hint?: string; markKind?: MarkKind }
-
-function PressKey() {
-  const rows: PressRow[] = [
-    { kind: 'key', glyph: 'P', label: 'lift the pencil', hint: 'then click the proof to stamp a mark' },
-    { kind: 'key', glyph: 'Esc', label: 'put the pencil down' },
-    { kind: 'key', glyph: '⌫', label: 'shake off the marks' },
-    ...PROOFREADER_MARKS.map(m => ({
-      kind: 'mark' as const,
-      glyph: m.kind,
-      label: m.short,
-      hint: m.hint,
-      markKind: m.kind,
-    })),
-    { kind: 'icon', glyph: '◯', label: 'hover a title word', hint: 'it wakes its matching note' },
-    { kind: 'icon', glyph: '◇', label: 'click a specimen flap', hint: 'the title takes its voice' },
-    { kind: 'icon', glyph: '↺', label: 'press the seal', hint: 'the answer tips into the proof' },
-  ]
-  return (
-    <aside className="press-key" aria-labelledby="press-key-title">
-      <span className="press-key__corner press-key__corner--tl" aria-hidden="true">
-        <svg viewBox="0 0 16 16">
-          <path d="M2 2 L14 2 M2 2 L2 14" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-        </svg>
-      </span>
-      <span className="press-key__corner press-key__corner--br" aria-hidden="true">
-        <svg viewBox="0 0 16 16">
-          <path d="M2 14 L14 14 M14 2 L14 14" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-        </svg>
-      </span>
-      <header className="press-key__head">
-        <p className="kicker">
-          <span>compositor's key</span>
-          <b />
-          <em>for the curious reader</em>
-        </p>
-        <h3 className="press-key__title" id="press-key-title">
-          a small <i>legend</i> for the page's hidden presses
-        </h3>
-      </header>
-      <ol className="press-key__grid">
-        {rows.map((r, i) => (
-          <li key={i} className={`press-key__row press-key__row--${r.kind}`}>
-            <span className={`press-key__glyph press-key__glyph--${r.kind}`} aria-hidden="true">
-              {r.kind === 'icon' ? (
-                <svg viewBox="0 0 24 24" className="press-key__icon">
-                  <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" strokeWidth="1.4" />
-                  {r.glyph === '◇' && <path d="M12 5 L19 12 L12 19 L5 12 Z" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />}
-                  {r.glyph === '↺' && (
-                    <>
-                      <path d="M19 12 A 7 7 0 1 1 12 5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                      <path d="M12 5 L15 3 L15 7 Z" fill="currentColor" />
-                    </>
-                  )}
-                </svg>
-              ) : r.kind === 'mark' && r.markKind ? (
-                <MarkGlyph kind={r.markKind} small />
-              ) : (
-                <kbd className="press-key__kbd">{r.glyph}</kbd>
-              )}
-            </span>
-            <span className="press-key__copy">
-              <strong>{r.label}</strong>
-              {r.hint && <em>{r.hint}</em>}
-            </span>
-          </li>
-        ))}
-      </ol>
-    </aside>
-  )
-}
-
-function RibbonKnot() {
-  return (
-    <svg className="ribbon-knot" viewBox="0 0 100 24" aria-hidden="true">
-      <path
-        d="M2 12 C 12 4, 22 20, 34 12"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M66 12 C 78 4, 88 20, 98 12"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M34 12 C 38 8, 44 8, 48 12 C 52 16, 58 16, 62 12 C 64 10, 66 10, 66 12"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="50" cy="12" r="3" fill="currentColor" />
-      <circle cx="50" cy="12" r="1" fill="var(--paper-tip)" />
-    </svg>
-  )
-}
-
-function RegistrationMark({ pos = 'tr' }: { pos?: 'tl' | 'tr' | 'bl' | 'br' }) {
-  return (
-    <span className={`reg reg--${pos}`} aria-hidden="true">
-      <svg viewBox="0 0 14 14">
-        <circle cx="7" cy="7" r="3.2" fill="none" stroke="currentColor" strokeWidth="0.7" />
-        <path d="M7 0 L7 14 M0 7 L14 7" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" />
-        <circle cx="7" cy="7" r="0.7" fill="currentColor" />
-      </svg>
-    </span>
-  )
-}
-
-type ReadingMapProps = {
-  readWords: Record<string, boolean>
-  readMargins: Record<string, boolean>
-  openedSpecimens: Record<string, boolean>
-  sealPasses: number
-  marks: Mark[]
-  scrollProgress: number
-}
-
-function ReadingPath({
-  readWords,
-  readMargins,
-  openedSpecimens,
-  sealPasses,
-  marks,
-  scrollProgress,
-}: ReadingMapProps) {
-  const w = 720
-  const h = 360
-
-  const titleY = 60
-  const marginY = 150
-  const specimenY = 240
-  const stampY = 320
-  const sealX = w - 70
-
-  const wordSlots = [
-    { id: 'm3', label: 'm³', x: w * 0.22, visited: !!readWords.m3 },
-    { id: 'good', label: 'good', x: w * 0.5, visited: !!readWords.good },
-    { id: 'yet', label: 'yet', x: w * 0.78, visited: !!readWords.yet },
-  ]
-
-  const marginSlots = [
-    { id: 'm3', n: 'i.', x: w * 0.22, label: 'habit', visited: !!readMargins.m3 },
-    { id: 'good', n: 'ii.', x: w * 0.5, label: 'choice', visited: !!readMargins.good },
-    { id: 'yet', n: 'iii.', x: w * 0.78, label: 'pause', visited: !!readMargins.yet },
-  ]
-
-  const specimenSlots = [
-    { id: 'cut', x: w * 0.22, label: 'cut', visited: !!openedSpecimens.cut },
-    { id: 'hand', x: w * 0.5, label: 'hand', visited: !!openedSpecimens.hand },
-    { id: 'wood', x: w * 0.78, label: 'wood', visited: !!openedSpecimens.wood },
-  ]
-
-  const trail: string[] = []
-  const visitedWords = [wordSlots[0].visited, wordSlots[1].visited, wordSlots[2].visited]
-  const visitedMargins = [marginSlots[0].visited, marginSlots[1].visited, marginSlots[2].visited]
-  const visitedSpecimens = [specimenSlots[0].visited, specimenSlots[1].visited, specimenSlots[2].visited]
-
-  let firstM = false
-  for (let i = 0; i < 3; i++) {
-    const wx = w * (0.22 + i * 0.28)
-    const my = marginY
-    if (visitedWords[i] && !firstM) { trail.push(`M ${wx} ${titleY}`); firstM = true }
-    if (visitedMargins[i] && !firstM) { trail.push(`M ${wx} ${my}`); firstM = true }
-  }
-  if (!firstM) trail.push(`M ${w * 0.22} ${titleY}`)
-
-  for (let i = 0; i < 3; i++) {
-    const wx = w * (0.22 + i * 0.28)
-    if (visitedWords[i] && visitedMargins[i]) {
-      trail.push(`L ${wx} ${marginY}`)
-    } else if (visitedWords[i] && visitedSpecimens[i]) {
-      trail.push(`L ${wx} ${specimenY}`)
-    }
-  }
-
-  for (let i = 0; i < 3; i++) {
-    if (visitedMargins[i] && visitedSpecimens[i]) {
-      const mx = w * (0.22 + i * 0.28)
-      trail.push(`L ${mx} ${specimenY}`)
-    }
-  }
-
-  const traveledSteps = trail.length
-
-  const stampSlots = marks.slice(-8).map((m, i) => {
-    const startIdx = Math.max(0, marks.length - 8)
-    const localIdx = i - startIdx
-    const total = Math.min(8, marks.length)
-    const range = w - 200
-    const slotIdx = total > 1 ? localIdx : 0
-    const x = 100 + slotIdx * (range / Math.max(1, total - 1))
-    return { x, y: stampY + ((i % 2) - 0.5) * 6, kind: m.kind, key: m.id }
-  })
-
-  const sealBlots = Math.min(sealPasses, 5)
-
-  return (
-    <figure className="reading-path" aria-labelledby="reading-path-title">
-      <header className="reading-path__head">
-        <p className="kicker">
-          <span>the reading path</span>
-          <b />
-          <em>a small proof that you were here</em>
-        </p>
-        <h3 className="reading-path__title" id="reading-path-title">
-          three <i>presses</i>, drawn from your visit
-        </h3>
-      </header>
-      <svg
-        className="reading-path__svg"
-        viewBox={`0 0 ${w} ${h}`}
-        role="img"
-        aria-label="A schematic of which parts of the page you have attended to."
-      >
-        <defs>
-          <filter id="rpInk" x="-4%" y="-4%" width="108%" height="108%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="3" />
-            <feDisplacementMap in="SourceGraphic" scale="0.7" />
-          </filter>
-          <pattern id="rpDots" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
-            <circle cx="1" cy="1" r="0.6" fill="rgba(207,82,64,.14)" />
-          </pattern>
-        </defs>
-
-        <rect x="6" y="6" width={w - 12} height={h - 12} fill="url(#rpDots)" opacity="0.6" />
-
-        <g className="rp-ruler" stroke="rgba(20,32,27,.18)" strokeDasharray="2 4">
-          <line x1="40" y1="20" x2="40" y2={h - 20} />
-          <line x1="6" y1={h - 40} x2={w - 6} y2={h - 40} />
-          <line x1="44" y1={titleY} x2={w - 44} y2={titleY} strokeDasharray="1 6" />
-          <line x1="44" y1={marginY} x2={w - 44} y2={marginY} strokeDasharray="1 6" />
-          <line x1="44" y1={specimenY} x2={w - 44} y2={specimenY} strokeDasharray="1 6" />
-        </g>
-
-        <g className="rp-labels" fontFamily="ui-sans-serif, system-ui, sans-serif" fontSize="9" letterSpacing="2.4" fill="rgba(20,32,27,.5)">
-          <text x="14" y={titleY + 3}>title</text>
-          <text x="14" y={marginY + 3}>margin</text>
-          <text x="14" y={specimenY + 3}>voices</text>
-          <text x="14" y={stampY + 4}>stamps</text>
-          <text x={w - 70} y={h - 16} textAnchor="start" fill="rgba(207,82,64,.7)">scribble-key ↓</text>
-        </g>
-
-        <g className="rp-path" stroke="rgba(207,82,64,.85)" strokeWidth="1.1" fill="none" strokeLinecap="round" strokeLinejoin="round">
-          <path
-            d={trail.join(' ')}
-            filter="url(#rpInk)"
-          />
-        </g>
-
-        {wordSlots.map(s => (
-          <g key={s.id} className={`rp-word rp-word--${s.id} ${s.visited ? 'is-on' : ''}`} transform={`translate(${s.x} ${titleY})`}>
-            <circle r="14" fill="none" stroke="currentColor" strokeWidth="1.1" strokeDasharray="3 3" />
-            <circle r="3" fill="currentColor" />
-            <text
-              y="-22"
-              textAnchor="middle"
-              fontFamily="Iowan Old Style, Palatino Linotype, Palatino, Georgia, serif"
-              fontStyle="italic"
-              fontSize="14"
-              fill="currentColor"
+      <div className="voices-board">
+        <div className="voice-tabs" role="tablist" aria-label="Choose a typographic voice">
+          {VOICES.map(item => (
+            <button
+              key={item.id}
+              ref={node => { voiceRefs.current[item.id] = node }}
+              type="button"
+              className={`voice-tab voice-tab--${item.id} ${voice === item.id ? 'is-active' : ''}`}
+              role="tab"
+              aria-selected={voice === item.id}
+              aria-controls="voice-panel"
+              tabIndex={voice === item.id ? 0 : -1}
+              onClick={() => onVoice(item.id)}
+              onKeyDown={event => selectByKey(event, item.id)}
             >
-              {s.label}
-            </text>
-            <line x1="0" y1="14" x2="0" y2={marginY - titleY - 12} stroke="currentColor" strokeWidth="0.6" strokeDasharray="2 4" opacity="0.35" />
-          </g>
-        ))}
-
-        {marginSlots.map(s => (
-          <g key={s.id} className={`rp-note ${s.visited ? 'is-on' : ''}`} transform={`translate(${s.x} ${marginY})`}>
-            <rect x="-22" y="-14" width="44" height="28" rx="2" fill="none" stroke="currentColor" strokeWidth="0.8" />
-            <text x="-17" y="-3" fontFamily="ui-sans-serif, system-ui, sans-serif" fontSize="9" letterSpacing="1.5" fill="currentColor">{s.n}</text>
-            <text x="6" y="3" fontFamily="Iowan Old Style, Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">{s.label}</text>
-            <text x="0" y="20" textAnchor="middle" fontFamily="ui-sans-serif, system-ui, sans-serif" fontSize="7" letterSpacing="1.4" fill="currentColor">note</text>
-          </g>
-        ))}
-
-        {specimenSlots.map(s => (
-          <g key={s.id} className={`rp-spec ${s.visited ? 'is-on' : ''}`} transform={`translate(${s.x} ${specimenY})`}>
-            <path
-              d="M -22 -10 L 22 -10 L 26 -2 L 22 14 L -22 14 L -18 6 Z"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="0.9"
-              strokeLinejoin="round"
-            />
-            <text x="0" y="6" textAnchor="middle" fontFamily="Iowan Old Style, Georgia, serif" fontStyle="italic" fontSize="13" fill="currentColor">{s.label}</text>
-            <text x="0" y="-14" textAnchor="middle" fontFamily="ui-sans-serif, system-ui, sans-serif" fontSize="7" letterSpacing="1.4" fill="currentColor">voice</text>
-          </g>
-        ))}
-
-        {stampSlots.map((s, i) => (
-          <g key={s.key} className="rp-stamp" transform={`translate(${s.x} ${s.y}) rotate(${(i % 5) * 6 - 12})`}>
-            <MarkPathGlyph kind={s.kind} small />
-          </g>
-        ))}
-        {marks.length === 0 && (
-          <text
-            x={w / 2}
-            y={stampY + 5}
-            textAnchor="middle"
-            fontFamily="Iowan Old Style, Georgia, serif"
-            fontStyle="italic"
-            fontSize="11"
-            fill="rgba(20,32,27,.4)"
-          >
-            — no marks stamped yet —
-          </text>
-        )}
-
-        <g className="rp-seal" transform={`translate(${sealX} ${218})`}>
-          {sealBlots === 0 ? (
-            <text
-              y="6"
-              textAnchor="middle"
-              fontFamily="Iowan Old Style, Georgia, serif"
-              fontStyle="italic"
-              fontSize="10"
-              fill="rgba(20,32,27,.45)"
-            >
-              seal untested
-            </text>
-          ) : (
-            <>
-              <circle r="24" fill="none" stroke="rgba(207,82,64,.6)" strokeWidth="0.9" />
-              <circle r="14" fill="rgba(207,82,64,.18)" stroke="rgba(207,82,64,.7)" strokeWidth="0.7" />
-              {Array.from({ length: sealBlots }).map((_, i) => (
-                <circle
-                  key={i}
-                  cx={(i % 3 - 1) * 4}
-                  cy={Math.floor(i / 3) * 4 - 1}
-                  r="1.6"
-                  fill="rgba(207,82,64,.85)"
-                />
-              ))}
-              <text
-                y="-34"
-                textAnchor="middle"
-                fontFamily="ui-sans-serif, system-ui, sans-serif"
-                fontSize="8"
-                letterSpacing="1.5"
-                fill="rgba(207,82,64,.85)"
-              >
-                {sealPasses === 1 ? 'seal pressed' : `${sealPasses} presses`}
-              </text>
-            </>
-          )}
-        </g>
-
-        <g className="rp-progress" fontFamily="Iowan Old Style, Georgia, serif" fontStyle="italic" fill="rgba(20,32,27,.55)">
-          <text x={w - 90} y="32" fontSize="10" letterSpacing="0.5">
-            read {Math.round(scrollProgress * 100)}%
-          </text>
-        </g>
-      </svg>
-      <figcaption className="reading-path__key">
-        <span className="reading-path__key-item">
-          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" /><circle cx="8" cy="8" r="1.5" fill="currentColor" /></svg>
-          <em>a title word attended</em>
-        </span>
-        <span className="reading-path__key-item">
-          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="4" width="12" height="8" fill="none" stroke="currentColor" strokeWidth="0.9" rx="1" /></svg>
-          <em>a margin note opened</em>
-        </span>
-        <span className="reading-path__key-item">
-          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 6 L14 6 L16 10 L14 12 L2 12 L4 9 Z" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinejoin="round" /></svg>
-          <em>a specimen voice opened</em>
-        </span>
-        <span className="reading-path__key-item">
-          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" strokeWidth="1" /><circle cx="8" cy="8" r="2" fill="currentColor" /></svg>
-          <em>a seal press</em>
-        </span>
-        <span className="reading-path__key-item">
-          <em>— the line connects them in order —</em>
-        </span>
-      </figcaption>
-    </figure>
-  )
-}
-
-function MarkPathGlyph({ kind, small = false }: { kind: MarkKind; small?: boolean }) {
-  const v = small ? '0 0 40 18' : '0 0 80 32'
-  return (
-    <svg width={small ? 30 : 60} height={small ? 12 : 22} viewBox={v} aria-hidden="true">
-      <MarkPath kind={kind} />
-    </svg>
+              <span className="voice-tab__number">{item.id === 'quiet' ? 'A' : item.id === 'human' ? 'B' : 'C'}</span>
+              <span>
+                <strong>{item.name}</strong>
+                <em>{item.descriptor}</em>
+              </span>
+              <span className="voice-tab__arrow" aria-hidden="true">↗</span>
+            </button>
+          ))}
+        </div>
+        <div className={`voice-stage voice-stage--${voice}`} id="voice-panel" role="tabpanel" aria-label={`${current.name} specimen`}>
+          <div className="voice-stage__topline">
+            <span>the selected setting</span>
+            <span>{current.descriptor}</span>
+          </div>
+          <div className="voice-stage__sample" aria-hidden="true">
+            <span>{current.lines[0]}</span>
+            <span>{current.lines[1]}</span>
+            <span>{current.lines[2]}</span>
+          </div>
+          <div className="voice-stage__bottomline">
+            <p>{current.body}</p>
+            <span className="voice-stage__cursor" aria-hidden="true">▌</span>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 
 export function App() {
-  const [open, setOpen] = useState(false)
-  const [hovered, setHovered] = useState<string | null>(null)
-  const [pulse, setPulse] = useState(0)
-  const [pencil, setPencil] = useState(false)
-  const [marks, setMarks] = useState<Mark[]>([])
-  const [selectedMark, setSelectedMark] = useState<MarkKind>('stet')
+  const [answerOpen, setAnswerOpen] = useState(false)
+  const [selectedWord, setSelectedWord] = useState<WordId>('good')
+  const [hoveredWord, setHoveredWord] = useState<WordId | null>(null)
+  const [voice, setVoice] = useState<VoiceId>('quiet')
+  const [activeSection, setActiveSection] = useState('question')
   const [announcement, setAnnouncement] = useState('')
-  const [sealPasses, setSealPasses] = useState(0)
-  const [sigVisible, setSigVisible] = useState(false)
-  const [openCase, setOpenCase] = useState<string | null>(null)
-  const [specimenRest, setSpecimenRest] = useState(true)
-  const [readWords, setReadWords] = useState<Record<string, boolean>>({})
-  const [readMargins, setReadMargins] = useState<Record<string, boolean>>({})
-  const [openedSpecimens, setOpenedSpecimens] = useState<Record<string, boolean>>({})
-  const [pathRevealed, setPathRevealed] = useState(false)
-  const [ticketOpen, setTicketOpen] = useState(false)
-  const answerId = useId()
-  const now = useNow(1000)
-  const { progress, activeWord, activeSection } = useScrollState()
-  const sealRef = useRef<HTMLButtonElement>(null)
-  const pencilRef = useRef<HTMLButtonElement>(null)
-  const stageRef = useRef<HTMLDivElement>(null)
-  const svgRef = useRef<SVGSVGElement>(null)
-  const colophonRef = useRef<HTMLElement>(null)
-  const pathRef = useRef<HTMLElement>(null)
+  const tokenRefs = useRef<Partial<Record<WordId, HTMLButtonElement | null>>>({})
+  const voiceRefs = useRef<Partial<Record<VoiceId, HTMLButtonElement | null>>>({})
+  const answerTriggerRef = useRef<HTMLButtonElement>(null)
 
-  const effectiveActive = hovered || activeWord
+  const activeWord = hoveredWord ?? selectedWord
 
-  const onToggle = () => {
-    setOpen(v => !v)
-    setPulse(p => p + 1)
-    setSealPasses(p => p + 1)
+  useEffect(() => {
+    document.title = TITLE
+  }, [])
+
+  useEffect(() => {
+    const elements = ['question', 'answer', 'notes', 'voices']
+      .map(id => document.getElementById(id))
+      .filter((element): element is HTMLElement => Boolean(element))
+    if (!('IntersectionObserver' in window)) return
+    const observer = new IntersectionObserver(
+      entries => {
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+        if (visible[0]) setActiveSection(visible[0].target.id)
+      },
+      { rootMargin: '-22% 0px -58% 0px', threshold: [0.05, 0.25, 0.6] },
+    )
+    elements.forEach(element => observer.observe(element))
+    return () => observer.disconnect()
+  }, [answerOpen])
+
+  const selectWord = (id: WordId, focus = false) => {
+    const note = NOTES.find(item => item.id === id)
+    setSelectedWord(id)
+    setAnnouncement(note ? `${note.label}: ${note.title}.` : '')
+    if (focus) window.requestAnimationFrame(() => tokenRefs.current[id]?.focus())
   }
 
-  const visitWord = useCallback((id: string | null) => {
-    if (!id) return
-    setReadWords(prev => (prev[id] ? prev : { ...prev, [id]: true }))
-  }, [])
+  const selectVoice = (id: VoiceId) => {
+    const next = VOICES.find(item => item.id === id)
+    setVoice(id)
+    setAnnouncement(next ? `${next.name} selected.` : '')
+  }
 
-  const visitMargin = useCallback((id: string) => {
-    setReadMargins(prev => (prev[id] ? prev : { ...prev, [id]: true }))
-  }, [])
+  const toggleAnswer = () => {
+    const next = !answerOpen
+    setAnswerOpen(next)
+    setAnnouncement(next ? 'Answer revealed.' : 'Answer folded away.')
+    if (!next) window.requestAnimationFrame(() => answerTriggerRef.current?.focus())
+  }
 
-  const recordSpecimen = useCallback((id: string) => {
-    setOpenedSpecimens(prev => (prev[id] ? prev : { ...prev, [id]: true }))
-  }, [])
-
-  const onPencilToggle = useCallback(() => {
-    setPencil(v => {
-      const next = !v
-      setAnnouncement(next ? `Pencil on — ${PROOFREADER_MARKS.find(m => m.kind === selectedMark)?.short || 'stet'} selected.` : 'Pencil off.')
-      return next
-    })
-  }, [selectedMark])
-
-  const onSelectMark = useCallback((kind: MarkKind) => {
-    setSelectedMark(kind)
-    const found = PROOFREADER_MARKS.find(m => m.kind === kind)
-    setAnnouncement(found ? `${found.short} selected — ${found.hint}` : '')
-  }, [])
-
-  const onClearMarks = useCallback(() => {
-    const n = marks.length
-    setMarks([])
-    setAnnouncement(n === 0 ? 'No marks to shake off.' : `Shaken off ${n} mark${n === 1 ? '' : 's'}.`)
-  }, [marks.length])
-
-  const onStamp = useCallback((x: number, y: number) => {
-    const rot = (Math.random() - 0.5) * 10
-    const scale = 0.95 + Math.random() * 0.12
-    setMarks(m => [...m, { id: uid(), kind: selectedMark, x, y, rot, scale }])
-  }, [selectedMark])
-
-  useEffect(() => {
-    const el = colophonRef.current
-    if (!el) return
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            setSigVisible(true)
-            obs.disconnect()
-            break
-          }
-        }
-      },
-      { threshold: 0.35 }
-    )
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [])
-
-  useEffect(() => {
-    if (!openCase) return
-    recordSpecimen(openCase)
-  }, [openCase, recordSpecimen])
-
-  useEffect(() => {
-    const el = pathRef.current
-    if (!el) return
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            setPathRevealed(true)
-            obs.disconnect()
-            break
-          }
-        }
-      },
-      { threshold: 0.18 }
-    )
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) {
-      setSpecimenRest(false)
-      return
-    }
-    const id = window.setTimeout(() => setSpecimenRest(false), 2200)
-    return () => window.clearTimeout(id)
-  }, [])
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const t = e.target as HTMLElement | null
-      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return
-      if (e.key === 'p' || e.key === 'P') {
-        if (e.metaKey || e.ctrlKey || e.altKey) return
-        e.preventDefault()
-        onPencilToggle()
-      } else if (e.key === 'Escape' && pencil) {
-        e.preventDefault()
-        setPencil(false)
-        setAnnouncement('Pencil off.')
-      } else if ((e.key === 'Backspace' || e.key === 'Delete') && pencil && marks.length > 0) {
-        if (e.metaKey || e.ctrlKey || e.altKey) return
-        e.preventDefault()
-        onClearMarks()
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [pencil, marks.length, onPencilToggle, onClearMarks])
-
-  const scribbles = Object.fromEntries(MARGINALIA.map(m => [m.id, m.scribble]))
-  const blots = Object.fromEntries(MARGINALIA.map(m => [m.id, m.blot]))
-  const marksSvg = Object.fromEntries(MARGINALIA.map(m => [m.id, m.mark]))
-
-  const beatOn = now.getSeconds() % 2 === 0
-  const titleDelays = [0.0, 0.08, 0.16, 0.24, 0.32, 0.4, 0.48]
-  const marked = marks.length > 0
-
-  const openSpecimen = SPECIMENS.find(s => s.id === openCase) || null
-  const markByKind = (k: MarkKind) => marks.filter(m => m.kind === k).length
-  const lastStamped = marks.length > 0 ? marks[marks.length - 1] : null
-  const lastStampInfo = lastStamped ? PROOFREADER_MARKS.find(m => m.kind === lastStamped.kind) : null
+  const openAnswerFromNav = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+    if (!answerOpen) setAnswerOpen(true)
+    window.requestAnimationFrame(() => document.getElementById('answer')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
 
   return (
-    <main
-      className={`folio ${open ? 'folio--open' : ''} ${pencil ? 'folio--pencil' : ''} ${openSpecimen ? `folio--voice-${openSpecimen.id}` : ''}`}
-      style={{
-        ['--progress' as string]: progress,
-        ['--ink-set' as string]: String(Math.min(1, Math.max(0, progress * 5))),
-        ['--voice-tint' as string]: openSpecimen ? '1' : '0',
-      }}
-    >
-      <Dust />
-      <PaperDeckle />
-      <ReadingRibbon progress={progress} />
-      <div className="folio__lamp" aria-hidden="true" />
-      <div className="folio__lamp folio__lamp--warm" aria-hidden="true" />
-      <div className="folio__vignette" aria-hidden="true" />
-      <div className="folio__grain" aria-hidden="true" />
-      <span className="sr-only" aria-live="polite">{announcement}</span>
-
-      <header className="folio__head">
-        <a className="folio__sig" href="#top" aria-label="Return to the question">
-          <span className="folio__mark" aria-hidden="true">m³</span>
-          <span className="folio__press">
-            <span>a small</span>
-            <strong>front-end press</strong>
+    <main className={`app app--voice-${voice} app--word-${activeWord}`}>
+      <div className="app__grain" aria-hidden="true" />
+      <header className="site-header">
+        <a className="brand" href="#question" aria-label="Return to the question">
+          <LogoMark />
+          <span className="brand__copy">
+            <strong>m³ / front-end</strong>
+            <em>an open question</em>
           </span>
         </a>
-        <PageMark active={activeSection} />
-        <nav aria-label="Sections" className="folio__nav">
-          <a href="#question" className={activeSection === 'question' ? 'is-active' : ''}>question</a>
-          <a href="#answer" onClick={() => setOpen(true)} className={activeSection === 'answer' ? 'is-active' : ''}>answer</a>
-          <a href="#marginalia" className={activeSection === 'marginalia' ? 'is-active' : ''}>margin</a>
-          <a href="#specimens" className={activeSection === 'specimens' ? 'is-active' : ''}>specimens</a>
+        <nav className="site-nav" aria-label="Sections">
+          <a href="#question" className={activeSection === 'question' ? 'is-active' : ''} aria-current={activeSection === 'question' ? 'location' : undefined}>question</a>
+          <a href="#answer" className={activeSection === 'answer' ? 'is-active' : ''} aria-current={activeSection === 'answer' ? 'location' : undefined} onClick={openAnswerFromNav}>answer</a>
+          <a href="#notes" className={activeSection === 'notes' ? 'is-active' : ''} aria-current={activeSection === 'notes' ? 'location' : undefined}>notes</a>
+          <a href="#voices" className={activeSection === 'voices' ? 'is-active' : ''} aria-current={activeSection === 'voices' ? 'location' : undefined}>voices</a>
         </nav>
-        <span className="folio__edition" aria-label="Publication note">
-          an unfinished<br /><i>answer</i>
-        </span>
+        <span className="site-header__note">a page that listens</span>
       </header>
 
-      <article className="proof" id="top">
-        <CropMarks />
-
-        <PressTicket
-          open={ticketOpen}
-          onToggle={() => setTicketOpen(v => !v)}
-          progress={progress}
-          time={now}
-          marks={marks.length}
-          sealPasses={sealPasses}
-          specimens={Object.values(openedSpecimens).filter(Boolean).length}
-        />
-
-        <EditionPlate />
-
-        <div className="proof__cue-tools" aria-label="Editor's tools">
-          <button
-            ref={pencilRef}
-            type="button"
-            className={`pencil-toggle ${pencil ? 'pencil-toggle--on' : ''}`}
-            onClick={onPencilToggle}
-            aria-pressed={pencil}
-            aria-label={pencil ? `Pencil on, ${lastStampInfo ? lastStampInfo.short : 'stet'} ready` : 'Pencil off, click to lift it'}
-            title={pencil ? `Pencil on — ${PROOFREADER_MARKS.find(m => m.kind === selectedMark)?.short} (P or Esc to turn off)` : 'Pencil off (press P to lift)'}
-          >
-            <span className="pencil-toggle__rule" aria-hidden="true" />
-            <span className="pencil-toggle__face" aria-hidden="true">
-              <PencilGlyph active={pencil} />
-            </span>
-            <span className="pencil-toggle__text">
-              <strong>{pencil ? 'stamping' : 'pencil'}</strong>
-              <em>{pencil ? `${PROOFREADER_MARKS.find(m => m.kind === selectedMark)?.short} ready` : 'lift to mark'}</em>
-            </span>
-            <span className="pencil-toggle__count" aria-hidden="true">
-              {marked ? <>{marks.length}<i>{marks.length === 1 ? 'mark' : 'marks'}</i></> : <i>empty</i>}
-            </span>
-          </button>
-          {pencil && (
-            <MarkPalette selected={selectedMark} onSelect={onSelectMark} />
-          )}
-          {marked && (
-            <button
-              type="button"
-              className="pencil-clear"
-              onClick={onClearMarks}
-              aria-label={`Clear all ${marks.length} marks`}
-              title="Shake off all marks (Backspace)"
-            >
-              <EraserGlyph />
-              <span>shake off</span>
-              <span className="pencil-clear__count" aria-hidden="true">{marks.length}</span>
-            </button>
-          )}
-        </div>
-
-        <div className="proof__stage" ref={stageRef}>
-          <MarkLayer
-            active={pencil}
-            marks={marks}
-            svgRef={svgRef}
-            onStamp={onStamp}
-          />
-
-          <PressFolio time={now} />
-
-          <div className="proof__layout">
-            <div className="proof__main">
-              <header className="proof__head" id="question">
-                <p className="kicker">
-                  <span>the question</span>
-                  <b />
-                  <em>pressed in good faith</em>
-                </p>
-                <h1 className="proof__title">
-                  <span aria-hidden="true" className="proof__title-rule" />
-                  <TitleWord text="is Minimax " delay={titleDelays[0]} />
-                  <TitleWord
-                    text="M3"
-                    id="m3"
-                    active={effectiveActive === 'm3'}
-                    onEnter={() => { setHovered('m3'); visitWord('m3') }}
-                    onLeave={() => setHovered(null)}
-                    scribble={scribbles.m3}
-                    delay={titleDelays[1]}
-                    superscript
-                    read={!!readWords.m3}
-                  />
-                  <TitleWord text=" " delay={titleDelays[2]} />
-                  <TitleWord
-                    text="good at"
-                    id="good"
-                    active={effectiveActive === 'good'}
-                    onEnter={() => { setHovered('good'); visitWord('good') }}
-                    onLeave={() => setHovered(null)}
-                    scribble={scribbles.good}
-                    delay={titleDelays[3]}
-                    read={!!readWords.good}
-                  />
-                  <TitleWord text=" frontend " delay={titleDelays[4]} />
-                  <TitleWord
-                    text="yet"
-                    id="yet"
-                    active={effectiveActive === 'yet'}
-                    onEnter={() => { setHovered('yet'); visitWord('yet') }}
-                    onLeave={() => setHovered(null)}
-                    scribble={scribbles.yet}
-                    delay={titleDelays[5]}
-                    read={!!readWords.yet}
-                  />
-                  <TitleWord text="?" delay={titleDelays[6]} />
-                  <span aria-hidden="true" className="proof__title-rule" />
-                </h1>
-                <p className={`proof__subtitle ${openSpecimen ? 'proof__subtitle--voiced' : ''}`} aria-hidden="true">
-                  <span>{openSpecimen ? `set in ${openSpecimen.name}` : 'set by hand'}</span>
-                  <i />
-                  <em>this edition, for one reader</em>
-                </p>
-                <p className="proof__lede">
-                  A small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here</em>.
-                </p>
-
-                <div className="proof__cue">
-                  <button
-                    ref={sealRef}
-                    type="button"
-                    className={`seal-cta ${open ? 'seal-cta--open' : ''}`}
-                    onClick={onToggle}
-                    aria-expanded={open}
-                    aria-controls={answerId}
-                    data-pulse={pulse}
-                  >
-                    <span className="seal-cta__halo" aria-hidden="true" />
-                    <span className="seal-cta__disc" aria-hidden="true">
-                      <span className="seal-cta__icon"><Seal /></span>
-                    </span>
-                    <span className="seal-cta__text">
-                      <strong className="seal-cta__label">
-                        {open ? 'lift the seal' : 'press the seal'}
-                      </strong>
-                      <em className="seal-cta__sub">
-                        {open ? 'to fold the page back' : 'and the answer tips in'}
-                      </em>
-                    </span>
-                    <span className="seal-cta__splat" aria-hidden="true">
-                      <svg viewBox="0 0 40 40" preserveAspectRatio="none">
-                        <path d="M20 18 C 26 16, 32 22, 28 28 C 24 34, 14 32, 12 26 C 10 20, 16 14, 22 18 C 26 22, 20 26, 18 22 Z" />
-                      </svg>
-                    </span>
-                  </button>
-                  <p className="proof__aside">
-                    <i>a useful question</i><br />
-                    is rarely tidy
-                  </p>
-                </div>
-                <PressTally count={sealPasses} />
-              </header>
-
-              <section
-                className={`answer ${open ? 'answer--open' : ''}`}
-                id="answer"
-                aria-hidden={!open}
-                aria-labelledby="answer-title"
-              >
-                <div className="answer__plate">
-                  <div className="answer__hatch" aria-hidden="true" />
-                  <span className="answer__crease" aria-hidden="true" />
-                  <span className="answer__pin answer__pin--tl" aria-hidden="true" />
-                  <span className="answer__pin answer__pin--tr" aria-hidden="true" />
-                  <span className="answer__watermark" aria-hidden="true">
-                    <span>is M³</span>
-                    <span>good at front-</span>
-                    <span>end yet?</span>
-                  </span>
-                  <span className="answer__deckle" aria-hidden="true">
-                    <svg viewBox="0 0 600 14" preserveAspectRatio="none">
-                      <path d="M0 14 L0 5 C 40 8, 78 2, 120 6 C 162 10, 198 3, 240 7 C 282 11, 320 4, 360 8 C 400 12, 438 5, 478 9 C 518 13, 558 6, 600 10 L600 14 Z" />
-                    </svg>
-                  </span>
-                  <div className="answer__inner">
-                    <div className="answer__stamp">
-                      <Seal />
-                      <span className="answer__stamp-text">
-                        pressed<br />
-                        <b>by hand</b>
-                      </span>
-                    </div>
-                    <div className="answer__body" id={answerId}>
-                      <p className="kicker kicker--ink" id="answer-title">
-                        <span>the answer</span>
-                        <b />
-                        <em>for now</em>
-                      </p>
-                      <p className="answer__lead">
-                        <span className="answer__dropcap" aria-hidden="true">
-                          <span className="answer__dropcap-letter">Y</span>
-                          <span className="answer__dropcap-glyph" aria-hidden="true">
-                            <DropcapGlyph />
-                          </span>
-                          <span className="answer__dropcap-flourish"><Flourish /></span>
-                          <span className="answer__dropcap-swash"><DropcapSwash /></span>
-                        </span>
-                        <span className="sr-only">Y</span>es — when it stops trying to look impressive.
-                      </p>
-                      <div className="answer__columns">
-                        <p>
-                          The good part is not the gradient, the flourish, or the clever little mechanism. It is the moment the page gives you room to notice <em>one thing</em>. Then another.
-                        </p>
-                        <p>
-                          So this is a qualified yes: <em>good at front-end</em> means attentive to the person on the other side of the glass. The rest is decoration with a job to do.
-                        </p>
-                      </div>
-                      <p className="answer__pull" aria-hidden="true">
-                        <span className="answer__pull-rule" />
-                        <em>attention, not ornament</em>
-                        <span className="answer__pull-rule answer__pull-rule--end" />
-                      </p>
-                      <div className="answer__sign">
-                        <Spark />
-                        <span>— m³, still learning the pause</span>
-                        <span className="answer__sign-corner" aria-hidden="true">
-                          <Kite />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="answer__fresh" aria-hidden="true">
-                    <svg viewBox="0 0 140 60">
-                      <rect x="2" y="2" width="136" height="56" rx="2" fill="none" stroke="currentColor" strokeWidth="0.8" strokeDasharray="2.4 1.6" opacity="0.6" />
-                      <text x="70" y="22" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" letterSpacing="3" fill="currentColor">FRESH</text>
-                      <text x="70" y="36" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="9" letterSpacing="2.2" fill="currentColor" opacity="0.85">FROM THE</text>
-                      <text x="70" y="48" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="9" letterSpacing="2.2" fill="currentColor" opacity="0.85">PRESS</text>
-                    </svg>
-                  </div>
-                  <div className="answer__setby" aria-hidden="true">
-                    <span className="answer__setby-rule" />
-                    <em>set in this hand, {formatDate(now)}</em>
-                    <span className="answer__setby-rule" />
-                  </div>
-                </div>
-              </section>
+      <div className="page">
+        <section className="hero" id="question" aria-labelledby="page-title">
+          <div className="hero__eyebrow-row">
+            <p className="eyebrow"><span className="eyebrow__line" />frontend experiment <em>read the question first</em></p>
+            <span className="hero__coordinates">signal / noise / care</span>
+          </div>
+          <div className="hero__layout">
+            <div className="hero__copy">
+              <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
+                <span className="title__line">is Minimax </span>
+                <span className="title__line">
+                  <TitleToken id="m3" text="M3" selected={activeWord === 'm3'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.m3 = node }} />{' '}
+                  <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} />
+                </span>
+                <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} />?</span>
+              </h1>
+              <p className="hero__summary">A small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em></p>
+              <div className="hero__actions">
+                <button ref={answerTriggerRef} type="button" className={`button button--primary ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
+                  <span>{answerOpen ? 'fold the answer' : 'reveal the answer'}</span>
+                  <ArrowIcon />
+                </button>
+                <a className="text-link" href="#notes">follow the annotation <span aria-hidden="true">↓</span></a>
+              </div>
+              <div className="hero__note">
+                <span className="hero__note-mark" aria-hidden="true">*</span>
+                <p><strong>Good front-end work</strong> is less about showing what can be made than noticing what should remain quiet.</p>
+              </div>
             </div>
-
-            <aside className="margin" id="marginalia" aria-labelledby="margin-title">
-              <header className="margin__head">
-                <p className="kicker">
-                  <span>marginalia</span>
-                  <b />
-                  <em>read, or hover a word</em>
-                </p>
-                <h2 id="margin-title" className="margin__title">
-                  three notes from <i>the fold</i>
-                </h2>
-                <p className="margin__lede">
-                  Not rules. The residue of pressing this page.
-                </p>
-              </header>
-              <ol className="margin__list">
-                {MARGINALIA.map(m => (
-                  <li
-                    key={m.n}
-                    className={`margin__item ${effectiveActive === m.id ? 'margin__item--active' : ''}`}
-                    onMouseEnter={() => { setHovered(m.id); visitMargin(m.id) }}
-                    onMouseLeave={() => setHovered(null)}
-                    onFocus={() => { setHovered(m.id); visitMargin(m.id) }}
-                    onBlur={() => setHovered(null)}
-                    tabIndex={0}
-                    aria-describedby={`gloss-${m.id}`}
-                  >
-                    <span className="margin__n">{m.n}</span>
-                    <div className="margin__copy">
-                      <span className="margin__mark" aria-hidden="true">
-                        <svg viewBox="0 0 20 16">
-                          <path d={marksSvg[m.id]} fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                        </svg>
-                      </span>
-                      <span className="margin__tether" aria-hidden="true">
-                        <svg viewBox="0 0 60 80" preserveAspectRatio="none">
-                          <path d={m.tether} />
-                        </svg>
-                      </span>
-                      <span className="margin__blot" aria-hidden="true">
-                        <InkBlot path={blots[m.id]} />
-                      </span>
-                      <h3 className="margin__h" id={`gloss-${m.id}`}>
-                        {m.head}
-                        <span className="margin__gloss">— {m.gloss}</span>
-                      </h3>
-                      <p className="margin__p">{m.text}</p>
-                      <p className="margin__note" aria-hidden="true">
-                        <span className="margin__note-rule" />
-                        <em>ed.</em> {m.note}
-                      </p>
-                      <span className="margin__caret" aria-hidden="true">
-                        <Caret />
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </aside>
+            <SignalCard word={activeWord} voice={voice} />
           </div>
-
-          <section className="specimens" id="specimens" aria-labelledby="specimens-title">
-            <header className="specimens__head">
-              <p className="kicker">
-                <span>specimens</span>
-                <b />
-                <em>from the press drawer</em>
-              </p>
-              <h2 id="specimens-title" className="specimens__title">
-                three ways to <i>set the question</i>
-              </h2>
-              <p className="specimens__lede">
-                The same question, pulled three times from the drawer. Read any one aloud and the answer changes a little.
-              </p>
-            </header>
-            <p className="specimens__cue" aria-live="polite">
-              <span className="specimens__cue-rule" />
-              <span>
-                <em>click a flap</em> — the title above takes the voice inside
-              </span>
-              <span className="specimens__cue-rule" />
-            </p>
-            <div className={`slips__wall ${specimenRest ? 'is-rest' : ''} ${openCase ? 'has-open' : ''}`}>
-              {SPECIMENS.map(s => (
-                <SpecimenCard
-                  key={s.id}
-                  s={s}
-                  cardId={`slip-leaf-${s.id}`}
-                  isOpen={openCase === s.id}
-                  onToggle={() => setOpenCase(prev => (prev === s.id ? null : s.id))}
-                />
-              ))}
-            </div>
-            <p className="specimens__hint" aria-hidden="true">
-              <span className="specimens__hint-rule" />
-              <em>{openSpecimen ? `now set in ${openSpecimen.name}` : 'click a flap to lift the page'}</em>
-              <span className="specimens__hint-rule" />
-            </p>
-          </section>
-        </div>
-
-        <PressKey />
-
-        <div className="proof__device" aria-hidden="true">
-          <span className="proof__device-rule" />
-          <span className="proof__device-mark">
-            <PressSignature />
-          </span>
-          <span className="proof__device-text">
-            <em>m³ press</em>
-            <small>set & printed in-browser</small>
-          </span>
-          <span className="proof__device-rule proof__device-rule--end" />
-        </div>
-
-        <footer className="colophon" aria-label="Colophon" ref={colophonRef}>
-          <div className="colophon__rule" aria-hidden="true">
-            <span />
-            <i>m³</i>
-            <span />
+          <div className="hero__footer">
+            <span><i className="hero__footer-dot" /> drag your attention slowly</span>
+            <span>the marked words open the margin</span>
+            <a href="#answer" onClick={openAnswerFromNav} aria-label="Jump to the answer">↓</a>
           </div>
-          <p className="colophon__line">
-            pressed at <b>{formatTime(now)}</b>
-            <span className={`colophon__beat ${beatOn ? 'is-on' : ''}`} aria-hidden="true" />
-            <span className="colophon__sep">·</span>
-            {formatDate(now)}
-             <span className="colophon__sep">·</span>
-             {marked
-               ? <>marked with care<small className="colophon__marks">· {marks.length} hand-stamped{marks.length === 1 ? '' : 's'}</small></>
-               : 'made with intent, not certainty'}
-             {sealPasses > 0 && (<>
-               <span className="colophon__sep">·</span>
-               <span className="colophon__passes">{sealPasses === 1 ? 'one stamp' : `${sealPasses} stamps`}</span>
-             </>)}
-             {openSpecimen && (<>
-                <span className="colophon__sep">·</span>
-                <span className="colophon__voice">in the voice of <em>{openSpecimen.name}</em></span>
-              </>)}
-          </p>
-          <p className="colophon__tonight" aria-hidden="true">
-            <span>tonight's proof — pressed for one reader, returned with care</span>
-          </p>
-          <div className={`colophon__sign ${sigVisible ? 'is-drawn' : ''}`} aria-hidden="true">
-            <Signature drawn={sigVisible} progress={progress} />
-            <span className="colophon__sign-cap">{marked ? 'signed & annotated' : 'signed at the press'}</span>
-          </div>
-          <div className={`colophon__tied ${sigVisible ? 'is-tied' : ''}`} aria-hidden="true">
-            <RibbonKnot />
-            <span className="colophon__tied-text">
-              tied with care <em>— a finished proof</em>
-            </span>
-          </div>
-          {marked && (
-            <div className="colophon__ledger" aria-label="Marks stamped on this proof">
-              <span className="colophon__ledger-rule" aria-hidden="true" />
-              <span className="colophon__ledger-head">the proofreader's hand:</span>
-              <ul className="colophon__ledger-list">
-                {PROOFREADER_MARKS.filter(m => markByKind(m.kind) > 0).map(m => (
-                  <li key={m.kind} className="colophon__ledger-item">
-                    <span className="colophon__ledger-glyph" aria-hidden="true">
-                      <MarkGlyph kind={m.kind} small />
-                    </span>
-                    <span className="colophon__ledger-count">{markByKind(m.kind)}</span>
-                    <span className="colophon__ledger-name">{m.short}</span>
-                  </li>
-                ))}
-              </ul>
-              <span className="colophon__ledger-rule colophon__ledger-rule--end" aria-hidden="true" />
-            </div>
-          )}
-          <a className="colophon__up" href="#top">return to the question <span aria-hidden="true">↑</span></a>
-        </footer>
-
-        <section className={`reading-path-wrap ${pathRevealed ? 'is-revealed' : ''}`} ref={pathRef} aria-label="Your reading path through this proof">
-          <ReadingPath
-            readWords={readWords}
-            readMargins={readMargins}
-            openedSpecimens={openedSpecimens}
-            sealPasses={sealPasses}
-            marks={marks}
-            scrollProgress={progress}
-          />
         </section>
-      </article>
+
+        <AnswerPanel open={answerOpen} onClose={toggleAnswer} />
+        <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
+        <VoicesSection voice={voice} onVoice={selectVoice} voiceRefs={voiceRefs} />
+
+        <footer className="site-footer">
+          <div className="site-footer__rule"><span /><LogoMark /><span /></div>
+          <p className="site-footer__line">the question remains useful <i>because the answer can change</i></p>
+          <a className="site-footer__back" href="#question">back to the question <ArrowIcon /></a>
+        </footer>
+      </div>
+      <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )
 }
