@@ -693,6 +693,20 @@ export function App() {
     setAnnouncement(next ? `${next.name} selected.` : '')
   }
 
+  const selectVoiceByKey = (event: ReactKeyboardEvent<HTMLButtonElement>, id: VoiceId) => {
+    const index = VOICES.findIndex(item => item.id === id)
+    let nextIndex = index
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') nextIndex = (index + 1) % VOICES.length
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') nextIndex = (index - 1 + VOICES.length) % VOICES.length
+    if (event.key === 'Home') nextIndex = 0
+    if (event.key === 'End') nextIndex = VOICES.length - 1
+    if (nextIndex === index) return
+    event.preventDefault()
+    const next = VOICES[nextIndex].id
+    selectVoice(next)
+    window.requestAnimationFrame(() => voiceRefs.current[next]?.focus())
+  }
+
   const toggleAnswer = () => {
     const next = !answerOpen
     setAnswerOpen(next)
@@ -822,9 +836,10 @@ export function App() {
                     className={`hero__voice-tab hero__voice-tab--${item.id} ${isActive ? 'is-active' : ''}`}
                     onClick={() => selectVoice(item.id)}
                     role="tab"
-                    aria-selected={isActive}
-                    tabIndex={isActive ? 0 : -1}
-                  >
+                     aria-selected={isActive}
+                     tabIndex={isActive ? 0 : -1}
+                     onKeyDown={event => selectVoiceByKey(event, item.id)}
+                   >
                     <span className="hero__voice-tab-letter" aria-hidden="true">{item.id === 'quiet' ? 'A' : item.id === 'human' ? 'B' : 'C'}</span>
                     <span className="hero__voice-tab-name">{item.name}</span>
                   </button>
