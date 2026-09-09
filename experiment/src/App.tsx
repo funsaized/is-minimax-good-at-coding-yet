@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { ComposeSpecimen } from './ComposeSpecimen'
 import { MarginalThread } from './MarginalThread'
+import { PressStamp } from './PressStamp'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -409,10 +410,11 @@ function SpecimenStrip({ voice, word }: { voice: VoiceId; word: WordId }) {
   )
 }
 
-function AnswerReveal({ open, onClose, triggerRef }: {
+function AnswerReveal({ open, onClose, triggerRef, voice }: {
   open: boolean
   onClose: () => void
   triggerRef: React.MutableRefObject<HTMLButtonElement | null>
+  voice: VoiceId
 }) {
   return (
     <section
@@ -423,28 +425,9 @@ function AnswerReveal({ open, onClose, triggerRef }: {
     >
       <div className="answer-reveal__clip">
         <div className="answer-reveal__paper">
+          <span className="answer-reveal__fold" aria-hidden="true" />
           <div className="answer-reveal__seal" aria-hidden="true">
-            <svg viewBox="0 0 140 140">
-              <defs>
-                <filter id="wax-grain" x="-10%" y="-10%" width="120%" height="120%">
-                  <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="2" seed="4" stitchTiles="stitch" />
-                  <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .7 0" />
-                  <feComposite in2="SourceGraphic" operator="in" />
-                </filter>
-                <filter id="wax-shadow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="2.2" />
-                </filter>
-              </defs>
-              <ellipse cx="70" cy="76" rx="56" ry="6" fill="rgba(60, 24, 18, .45)" filter="url(#wax-shadow)" />
-              <g filter="url(#wax-grain)" opacity="0.92">
-                <circle cx="70" cy="70" r="56" fill="currentColor" />
-                <circle cx="70" cy="70" r="56" fill="none" stroke="rgba(34, 17, 12, .35)" strokeWidth="1.4" />
-                <circle cx="70" cy="70" r="48" fill="none" stroke="rgba(34, 17, 12, .25)" strokeWidth=".7" strokeDasharray="2 3" />
-                <path d="M30 92 Q50 110 70 102 T110 92" fill="none" stroke="rgba(34, 17, 12, .25)" strokeWidth="1.2" />
-                <text x="70" y="68" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="26" fill="rgba(34, 17, 12, .88)">yes,</text>
-                <text x="70" y="88" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="rgba(34, 17, 12, .85)">when quiet</text>
-              </g>
-            </svg>
+            <PressStamp voice={voice} size={128} />
           </div>
           <div className="answer-reveal__inner">
             <div className="answer-reveal__row">
@@ -584,6 +567,9 @@ function VoicesSection({ voice, onVoice, voiceRefs }: {
               <span className="voice-tile__body">{item.body}</span>
               <span className="voice-tile__mark" aria-hidden="true">{voice === item.id ? '●' : '○'}</span>
             </span>
+            <span className="voice-tile__stamp" aria-hidden="true">
+              <PressStamp voice={voice} size={36} />
+            </span>
           </button>
         ))}
       </div>
@@ -591,9 +577,10 @@ function VoicesSection({ voice, onVoice, voiceRefs }: {
   )
 }
 
-function PressSignature() {
+function PressSignature({ voice }: { voice: VoiceId }) {
+  const tag = voice === 'bold' ? 'NO APOLOGIES' : voice === 'human' ? 'BY HAND' : 'SET WITH CARE'
   return (
-    <svg className="press-signature" viewBox="0 0 240 88" aria-hidden="true">
+    <svg className={`press-signature press-signature--${voice}`} viewBox="0 0 240 88" aria-hidden="true">
       <defs>
         <filter id="press-signature-grain" x="-5%" y="-5%" width="110%" height="110%">
           <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="9" stitchTiles="stitch" />
@@ -604,7 +591,7 @@ function PressSignature() {
       <g filter="url(#press-signature-grain)" opacity=".88">
         <rect x="3" y="3" width="234" height="80" rx="2" fill="none" stroke="currentColor" strokeWidth="1.4" />
         <rect x="10" y="10" width="220" height="66" rx="1" fill="none" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 3" />
-        <text x="22" y="32" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="currentColor">set with care</text>
+        <text x="22" y="32" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="currentColor">{tag}</text>
         <text x="22" y="64" fontFamily="ui-monospace, monospace" fontSize="7" letterSpacing="1.6" fill="currentColor" opacity=".75">PRESS · M³ · NO TWO PRESSES ALIKE</text>
         <line x1="22" y1="40" x2="158" y2="40" stroke="currentColor" strokeWidth=".4" opacity=".4" />
         <line x1="22" y1="71" x2="158" y2="71" stroke="currentColor" strokeWidth=".4" opacity=".4" />
@@ -698,6 +685,11 @@ export function App() {
     <main className={`app app--voice-${voice} app--word-${activeWord}`}>
       <div className="app__grain" aria-hidden="true" />
       <div className="app__pencil" aria-hidden="true" />
+      <svg className="press-mark-bg" viewBox="0 0 400 400" aria-hidden="true">
+        <circle cx="200" cy="200" r="170" fill="none" stroke="currentColor" strokeWidth="1.4" />
+        <circle cx="200" cy="200" r="150" fill="none" stroke="currentColor" strokeWidth=".6" strokeDasharray="2 4" />
+        <text x="200" y="224" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="96" fill="currentColor">m³</text>
+      </svg>
       <MakeReadyMarks />
       <header className="site-header">
         <div className="site-header__row">
@@ -739,6 +731,7 @@ export function App() {
                   <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} circleKey={circleKey.good} />
                 </span>
                 <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
+                <span className="hero__title-fold" aria-hidden="true" />
               </h1>
               <span className="hero__annotation" aria-hidden="true">
                 <span className="hero__annotation-mark">
@@ -749,6 +742,9 @@ export function App() {
                 </span>
                 <em>read each marked word — the marginalia listens</em>
                 <span className="hero__annotation-rule" />
+                <span className="hero__annotation-mark hero__annotation-mark--end" aria-hidden="true">
+                  <PressStamp voice={voice} size={22} />
+                </span>
               </span>
               <p className="hero__summary">
                 <span className="hero__dropcap" aria-hidden="true">A</span>
@@ -778,11 +774,14 @@ export function App() {
           <div className="hero__footer">
             <span><i className="hero__footer-dot" /> compose, slowly</span>
             <span>marked words open the margin</span>
+            <span className="hero__footer-mark" aria-hidden="true">
+              <PressStamp voice={voice} size={28} />
+            </span>
             <a href="#answer" onClick={openAnswerFromNav} aria-label="Jump to the answer">↓</a>
           </div>
         </section>
 
-        <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} />
+        <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} />
 
         <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
         <VoicesSection voice={voice} onVoice={selectVoice} voiceRefs={voiceRefs} />
@@ -790,7 +789,7 @@ export function App() {
         <footer className="site-footer">
           <div className="site-footer__rule"><span /><LogoMark size={30} accent="var(--coral)" /><span /></div>
           <p className="site-footer__line">the question remains useful <i>because the answer can change</i></p>
-          <div className="site-footer__press"><PressSignature /></div>
+          <div className="site-footer__press"><PressSignature voice={voice} /></div>
           <p className="site-footer__colophon">
             <span>set in system serif</span>
             <span aria-hidden="true">·</span>

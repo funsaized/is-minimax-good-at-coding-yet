@@ -47,6 +47,11 @@ export function MarginalThread({ activeId }: { activeId: string }) {
           className="marginal-thread__progress"
           style={{ height: `${progress * 100}%` }}
         />
+        <span
+          className="marginal-thread__bead"
+          style={{ top: `calc(14px + (100% - 28px) * ${progress})` }}
+          aria-hidden="true"
+        />
         {THREAD_SECTIONS.map((section, index) => (
           <li
             key={section.id}
