@@ -186,23 +186,7 @@ function PushPin({ tone = 'wax' }: { tone?: 'wax' | 'acid' | 'blue' }) {
   )
 }
 
-function PinnedMarkSlip({ id, active }: { id: WordId; active: boolean }) {
-  const note = NOTES.find(n => n.id === id)
-  return (
-    <div className={`slip slip--${id} ${active ? 'is-active' : ''}`} aria-hidden="true">
-      <span className="slip__pin"><PushPin tone={id === 'm3' ? 'acid' : id === 'good' ? 'wax' : 'blue'} /></span>
-      <span className="slip__paper">
-        <span className="slip__head">
-          <span className="slip__label">{getProofLabel(id)}</span>
-          <span className="slip__glyph"><NoteGlyph id={id} /></span>
-        </span>
-        <span className="slip__sub">{getProofSub(id)}</span>
-        {note && <span className="slip__editor">{note.editor}</span>}
-        <span className="slip__tape" aria-hidden="true" />
-      </span>
-    </div>
-  )
-}
+
 
 function Marginalia({ activeWord, tokenRefs }: {
   activeWord: WordId
@@ -228,21 +212,36 @@ function Marginalia({ activeWord, tokenRefs }: {
   }, [activeWord, tokenRefs])
 
   const style = { ['--my' as string]: `${y}px` } as CSSProperties
+  const activeIndex = NOTES.findIndex(n => n.id === activeWord)
+  const note = NOTES[activeIndex]
 
   return (
     <div ref={ref} className={`marginalia marginalia--${activeWord}`} style={style}>
-      <span className="marginalia__cork" aria-hidden="true" />
-      <span className="marginalia__lead" aria-hidden="true" />
-      <div className="marginalia__stack" key={activeWord}>
-        <span className="marginalia__heading">tipped in</span>
-        <div className="marginalia__slips">
-          <PinnedMarkSlip id="m3" active={activeWord === 'm3'} />
-          <PinnedMarkSlip id="good" active={activeWord === 'good'} />
-          <PinnedMarkSlip id="yet" active={activeWord === 'yet'} />
-        </div>
-        <span className="marginalia__foot">three pinned notes</span>
+      <ol className="marginalia__index" aria-hidden="true">
+        {NOTES.map((n, i) => (
+          <li key={n.id} className={`marginalia__index-item marginalia__index-item--${n.id} ${activeWord === n.id ? 'is-active' : ''}`}>
+            <span className="marginalia__index-line" />
+            <span className={`marginalia__index-dot marginalia__index-dot--${n.id}`} />
+            <span className="marginalia__index-num">{String(i + 1).padStart(2, '0')}</span>
+          </li>
+        ))}
+      </ol>
+      <div className="marginalia__card" key={activeWord}>
+        <span className="marginalia__card-pin" aria-hidden="true">
+          <PushPin tone={activeWord === 'm3' ? 'acid' : activeWord === 'good' ? 'wax' : 'blue'} />
+        </span>
+        <span className="marginalia__card-head">
+          <span className="marginalia__card-num">№ {String(activeIndex + 1).padStart(2, '0')}</span>
+          <span className="marginalia__card-mark">{getProofLabel(activeWord)}</span>
+        </span>
+        <span className="marginalia__card-title">{note?.title}</span>
+        <span className="marginalia__card-gloss">{note?.gloss}</span>
+        <span className="marginalia__card-body">{note?.body}</span>
+        <span className="marginalia__card-foot">
+          <span className="marginalia__card-prompt">{note?.prompt}</span>
+          <span className="marginalia__card-seen">seen · {note?.seen}</span>
+        </span>
       </div>
-      <span className="marginalia__lead marginalia__lead--end" aria-hidden="true" />
     </div>
   )
 }
@@ -312,10 +311,12 @@ function StageMarkers({ active }: { active: number }) {
 function PressFolio({ section }: { section: string }) {
   const map: Record<string, { folio: string; mark: string }> = {
     question: { folio: 'i', mark: 'set' },
-    pressings: { folio: 'ii', mark: 'specimen' },
-    notes: { folio: 'iii', mark: 'marginalia' },
-    voices: { folio: 'iv', mark: 'voices' },
-    answer: { folio: 'v', mark: 'proof' },
+    contents: { folio: 'ii', mark: 'contents' },
+    proof: { folio: 'iii', mark: 'proof' },
+    pressings: { folio: 'iv', mark: 'specimen' },
+    notes: { folio: 'v', mark: 'marginalia' },
+    voices: { folio: 'vi', mark: 'voices' },
+    answer: { folio: 'vii', mark: 'answer' },
   }
   const entry = map[section] ?? map.question
   return (
@@ -424,7 +425,7 @@ function AnswerReveal({ open, onClose, triggerRef, voice }: {
     >
       <div className="answer-reveal__clip">
         <div className="answer-reveal__leaf">
-          <span className="answer-reveal__tipped" aria-hidden="true">tipped in · folio iv</span>
+          <span className="answer-reveal__tipped" aria-hidden="true">tipped in · folio vii</span>
           <span className="answer-reveal__gluetop" aria-hidden="true" />
           <span className="answer-reveal__gluetop answer-reveal__gluetop--right" aria-hidden="true" />
           <div className="answer-reveal__seal" aria-hidden="true">
@@ -432,7 +433,7 @@ function AnswerReveal({ open, onClose, triggerRef, voice }: {
           </div>
           <div className="answer-reveal__inner">
             <div className="answer-reveal__row">
-              <span className="answer-reveal__folio" aria-hidden="true">folio iv · the proof</span>
+              <span className="answer-reveal__folio" aria-hidden="true">folio vii · the proof</span>
               <span className="answer-reveal__stamp" aria-hidden="true">
                 <span>m³</span>
                 <em>for now</em>
@@ -578,6 +579,50 @@ function VoicesSection({ voice, onVoice, voiceRefs }: {
   )
 }
 
+function FolioLedger() {
+  const items = [
+    { id: 'question', num: 'i', title: 'the question, set', note: 'three marked words, one margin' },
+    { id: 'contents', num: 'ii', title: 'this page, listed', note: 'the press log · folio contents', self: true },
+    { id: 'proof', num: 'iii', title: 'the second proof', note: 'marks attached to the words worth keeping' },
+    { id: 'pressings', num: 'iv', title: 'three pressings', note: 'the same question set three ways' },
+    { id: 'notes', num: 'v', title: 'the marginalia', note: 'three things worth keeping' },
+    { id: 'voices', num: 'vi', title: 'voices', note: 'typography tries on the words' },
+    { id: 'answer', num: 'vii', title: 'the answer, tipped in', note: 'folded once, then folded back', closing: true },
+  ]
+  return (
+    <section className="folio-ledger section" id="contents" aria-labelledby="folio-ledger-title">
+      <div className="folio-ledger__head">
+        <p className="eyebrow"><span className="eyebrow__line" />press log <em>folio contents</em></p>
+        <h2 id="folio-ledger-title">What the <i>page holds.</i></h2>
+        <p className="section__lede">A working spread. Each folio carries one idea; the marks between them carry the reader.</p>
+      </div>
+      <ol className="folio-ledger__list">
+        {items.map(entry => (
+          <li key={entry.id} className={`folio-ledger__item ${entry.self ? 'is-self' : ''} ${entry.closing ? 'is-closing' : ''}`}>
+            <a className="folio-ledger__link" href={`#${entry.id}`} aria-current={entry.self ? 'location' : undefined}>
+              <span className="folio-ledger__num" aria-hidden="true">{entry.num}</span>
+              <span className="folio-ledger__copy">
+                <span className="folio-ledger__title">
+                  {entry.title}
+                  {entry.self && <span className="folio-ledger__here" aria-hidden="true">·  you are here</span>}
+                </span>
+                <span className="folio-ledger__note">{entry.note}</span>
+              </span>
+              <span className="folio-ledger__arrow" aria-hidden="true">
+                <ArrowIcon />
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <p className="folio-ledger__foot">
+        <span aria-hidden="true">※</span>
+        the folios run in order; the reading trace on the right shows where you are.
+      </p>
+    </section>
+  )
+}
+
 function Colophon({ voice }: { voice: VoiceId }) {
   const tag = voice === 'bold' ? 'NO APOLOGIES' : voice === 'human' ? 'BY HAND' : 'SET WITH CARE'
   return (
@@ -668,7 +713,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'proof', 'pressings', 'notes', 'voices', 'answer']
+    const elements = ['question', 'contents', 'proof', 'pressings', 'notes', 'voices', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -687,7 +732,7 @@ export function App() {
 
   useEffect(() => {
     if (activeSection === 'question') setActiveStage(answerOpen ? 2 : 0)
-    else if (activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
+    else if (activeSection === 'contents' || activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
     else setActiveStage(2)
   }, [activeSection, answerOpen])
 
@@ -748,6 +793,7 @@ export function App() {
           </a>
           <nav className="site-nav" aria-label="Sections">
             <a href="#question" className={activeSection === 'question' ? 'is-active' : ''} aria-current={activeSection === 'question' ? 'location' : undefined}>question</a>
+            <a href="#contents" className={activeSection === 'contents' ? 'is-active' : ''} aria-current={activeSection === 'contents' ? 'location' : undefined}>contents</a>
             <a href="#proof" className={activeSection === 'proof' ? 'is-active' : ''} aria-current={activeSection === 'proof' ? 'location' : undefined}>proof</a>
             <a href="#pressings" className={activeSection === 'pressings' ? 'is-active' : ''} aria-current={activeSection === 'pressings' ? 'location' : undefined}>pressings</a>
             <a href="#notes" className={activeSection === 'notes' ? 'is-active' : ''} aria-current={activeSection === 'notes' ? 'location' : undefined}>marginalia</a>
@@ -771,11 +817,6 @@ export function App() {
           </div>
 
           <div className="hero__sheet">
-            <span className="hero__sheet-crop hero__sheet-crop--tl" aria-hidden="true" />
-            <span className="hero__sheet-crop hero__sheet-crop--tr" aria-hidden="true" />
-            <span className="hero__sheet-crop hero__sheet-crop--bl" aria-hidden="true" />
-            <span className="hero__sheet-crop hero__sheet-crop--br" aria-hidden="true" />
-            <span className="hero__sheet-mark" aria-hidden="true">proof sheet · m³</span>
             <div className="hero__copy">
               <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
                 <span className="title__line">is Minimax </span>
@@ -841,6 +882,8 @@ export function App() {
           </div>
         </section>
 
+        <FolioLedger />
+
         <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} />
 
         <MarkedProof selected={selectedWord} onSelect={id => selectWord(id, true)} />
@@ -853,7 +896,7 @@ export function App() {
         <Colophon voice={voice} />
       </div>
 
-      <MarginalThread activeId={activeSection === 'question' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' || activeSection === 'proof' ? activeSection : 'question'} />
+      <MarginalThread activeId={activeSection === 'question' || activeSection === 'contents' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' || activeSection === 'proof' ? activeSection : 'question'} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )

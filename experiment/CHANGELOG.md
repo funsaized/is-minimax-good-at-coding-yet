@@ -1,10 +1,19 @@
 # Changelog
 
-## 201
+## 202 — A reading folio refined
 
-Added a hand-corrected second proof section and a hand-traced underline on the marked words in the title. The "editor's proof" sits between the question and the three pressings, with proofreader's marks (stet, caret, query) that mirror the three marked words. A new "see the proof" link in the hero footer connects the two. The marginal thread now includes the proof as folio ii, and the navigation has been extended with a "proof" entry.
+The page is given an editorial table of contents; the marginalia is focused on one slip at a time.
 
-- New section: editor's proof (folio ii) with stet / caret / query marks
-- Hand-traced underline animation on marked title words
-- "See the proof" cue in the hero footer
-- Marginal thread and nav extended with the proof entry
+### What changed
+
+- **Folio ledger (new section)** — a six-entry press log lands between the question and the proof. Each entry carries a folio number, a short title, and a one-line note; the entry for *this page, listed* is marked as *you are here*, and the answer entry spans the row as a closing flourish.
+- **Marginalia redesigned** — the cork board with three always-visible pinned slips is replaced by a single focused slip and a small three-note index. The slip carries the title, gloss, body, and prompt for the active word; the index on the left shows which of the three notes is in view.
+- **Hero chrome reduced** — the four proof-sheet corner crops and the *proof sheet · m³* plate are removed from the hero sheet, letting the title lead. The dashed inner border and registration marks elsewhere are kept.
+- **Folio numbers re-sequenced** — the new contents entry takes folio *ii*, so the proof is now *iii*, the pressings *iv*, the notes *v*, the voices *vi*, and the answer *vii*.
+- **Type-case active state** — the lifted composing piece now tilts at a small angle based on its position in the line, and the pica scale at the foot is recalibrated.
+- **Site nav, marginal thread, and press folio** — all updated to recognise the new *contents* section so the reading trace and header label stay in sync.
+- **Removed** — unused `PinnedMarkSlip` component and the `.slip`, `.slip__*`, `.push-pin`, `.marginalia__cork`, `.marginalia__lead`, `.marginalia__stack`, `.marginalia__slips`, `.marginalia__heading`, and `.marginalia__foot` classes, plus the hero sheet corner crops and plate.
+
+### What stayed
+
+The marked proof, three pressings, three marginalia cards, voice triptych, and colophon all remain in their existing form, with only the folio numbers updated.

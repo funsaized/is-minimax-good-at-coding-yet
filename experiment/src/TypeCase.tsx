@@ -42,7 +42,7 @@ export function TypeCase({ voice, word }: TypeCaseProps) {
         </span>
         <span className="type-case__face">{VOICE_FACE[voice]}</span>
         <span className="type-case__meta">
-          <span className="type-case__folio" aria-hidden="true">folio iii</span>
+          <span className="type-case__folio" aria-hidden="true">folio iv</span>
           <span aria-hidden="true">·</span>
           <span>set today</span>
         </span>
