@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from 'react'
-import { ComposeSpecimen } from './ComposeSpecimen'
+import { TypeCase } from './TypeCase'
 import { MarginalThread } from './MarginalThread'
 import { PressStamp } from './PressStamp'
 
@@ -232,7 +232,7 @@ function Marginalia({ activeWord, tokenRefs }: {
       <span className="marginalia__cork" aria-hidden="true" />
       <span className="marginalia__lead" aria-hidden="true" />
       <div className="marginalia__stack" key={activeWord}>
-        <span className="marginalia__heading">editor's marks</span>
+        <span className="marginalia__heading">tipped in</span>
         <div className="marginalia__slips">
           <PinnedMarkSlip id="m3" active={activeWord === 'm3'} />
           <PinnedMarkSlip id="good" active={activeWord === 'good'} />
@@ -388,28 +388,6 @@ function TitleToken({
   )
 }
 
-function SpecimenStrip({ voice, word }: { voice: VoiceId; word: WordId }) {
-  const current = VOICES.find(item => item.id === voice) ?? VOICES[0]
-  const note = NOTES.find(item => item.id === word)
-  const prompt = note?.prompt ?? 'leave room to arrive'
-  const display = voice === 'bold' ? 'IS M3 GOOD AT FRONTEND YET?' : 'is M3 good at frontend yet?'
-  return (
-    <aside className={`specimen-strip specimen-strip--${voice}`} aria-label="The composed specimen">
-      <div className="specimen-strip__head">
-        <span className="specimen-strip__tag">specimen · {current.descriptor}</span>
-        <span className="specimen-strip__id" aria-hidden="true">№ 03</span>
-      </div>
-      <div className="specimen-strip__art">
-        <ComposeSpecimen voice={voice} display={display} />
-      </div>
-      <div className="specimen-strip__foot">
-        <span className="specimen-strip__prompt">{prompt}</span>
-        <span className="specimen-strip__rule" aria-hidden="true" />
-      </div>
-    </aside>
-  )
-}
-
 function AnswerReveal({ open, onClose, triggerRef, voice }: {
   open: boolean
   onClose: () => void
@@ -424,10 +402,12 @@ function AnswerReveal({ open, onClose, triggerRef, voice }: {
       aria-hidden={!open}
     >
       <div className="answer-reveal__clip">
-        <div className="answer-reveal__paper">
-          <span className="answer-reveal__fold" aria-hidden="true" />
+        <div className="answer-reveal__leaf">
+          <span className="answer-reveal__tipped" aria-hidden="true">tipped in · folio iv</span>
+          <span className="answer-reveal__gluetop" aria-hidden="true" />
+          <span className="answer-reveal__gluetop answer-reveal__gluetop--right" aria-hidden="true" />
           <div className="answer-reveal__seal" aria-hidden="true">
-            <PressStamp voice={voice} size={128} />
+            <PressStamp voice={voice} size={124} />
           </div>
           <div className="answer-reveal__inner">
             <div className="answer-reveal__row">
@@ -482,7 +462,7 @@ function NotesSection({ selected, onSelect }: { selected: WordId; onSelect: (id:
   return (
     <section className="section notes-section" id="notes" aria-labelledby="notes-title">
       <div className="section__header">
-        <p className="eyebrow"><span className="eyebrow__line" />marginalia <em>three things worth keeping</em></p>
+        <p className="eyebrow"><span className="eyebrow__line" />margin ledger <em>three things worth keeping</em></p>
         <h2 id="notes-title">The page gets better when it <i>pays attention.</i></h2>
         <p className="section__lede">Hover or focus a marked word above. These are not rules; they are the small decisions underneath the surface.</p>
       </div>
@@ -577,28 +557,58 @@ function VoicesSection({ voice, onVoice, voiceRefs }: {
   )
 }
 
-function PressSignature({ voice }: { voice: VoiceId }) {
+function Colophon({ voice }: { voice: VoiceId }) {
   const tag = voice === 'bold' ? 'NO APOLOGIES' : voice === 'human' ? 'BY HAND' : 'SET WITH CARE'
   return (
-    <svg className={`press-signature press-signature--${voice}`} viewBox="0 0 240 88" aria-hidden="true">
-      <defs>
-        <filter id="press-signature-grain" x="-5%" y="-5%" width="110%" height="110%">
-          <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="9" stitchTiles="stitch" />
-          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0" />
-          <feComposite in2="SourceGraphic" operator="in" />
-        </filter>
-      </defs>
-      <g filter="url(#press-signature-grain)" opacity=".88">
-        <rect x="3" y="3" width="234" height="80" rx="2" fill="none" stroke="currentColor" strokeWidth="1.4" />
-        <rect x="10" y="10" width="220" height="66" rx="1" fill="none" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 3" />
-        <text x="22" y="32" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="currentColor">{tag}</text>
-        <text x="22" y="64" fontFamily="ui-monospace, monospace" fontSize="7" letterSpacing="1.6" fill="currentColor" opacity=".75">PRESS · M³ · NO TWO PRESSES ALIKE</text>
-        <line x1="22" y1="40" x2="158" y2="40" stroke="currentColor" strokeWidth=".4" opacity=".4" />
-        <line x1="22" y1="71" x2="158" y2="71" stroke="currentColor" strokeWidth=".4" opacity=".4" />
-        <text x="196" y="52" fontFamily="Georgia, serif" fontStyle="italic" fontSize="26" fill="currentColor" textAnchor="middle">m³</text>
-        <text x="196" y="68" fontFamily="ui-monospace, monospace" fontSize="5.5" letterSpacing="1.4" fill="currentColor" opacity=".65" textAnchor="middle">OPUS · TODAY</text>
-      </g>
-    </svg>
+    <footer className="colophon" aria-label="Colophon">
+      <div className="colophon__plate">
+        <div className="colophon__head">
+          <div className="colophon__identity">
+            <span className="colophon__mark">
+              <LogoMark size={34} accent="var(--coral)" />
+            </span>
+            <div className="colophon__title">
+              <span className="colophon__press">m³ press</span>
+              <em>a single-page editorial experiment</em>
+            </div>
+          </div>
+          <div className="colophon__seal" aria-hidden="true">
+            <PressStamp voice={voice} size={68} />
+          </div>
+        </div>
+        <div className="colophon__grid">
+          <div className="colophon__row">
+            <span className="colophon__label">set in</span>
+            <span className="colophon__value">system serif · italic</span>
+          </div>
+          <div className="colophon__row">
+            <span className="colophon__label">composed</span>
+            <span className="colophon__value">by hand, folded once</span>
+          </div>
+          <div className="colophon__row">
+            <span className="colophon__label">tag</span>
+            <span className="colophon__value">{tag}</span>
+          </div>
+          <div className="colophon__row">
+            <span className="colophon__label">ink</span>
+            <span className="colophon__swatches" aria-hidden="true">
+              <span className="colophon__swatch" style={{ background: 'var(--acid)' }} title="acid" />
+              <span className="colophon__swatch" style={{ background: 'var(--coral)' }} title="coral" />
+              <span className="colophon__swatch" style={{ background: 'var(--blue)' }} title="blue" />
+              <span className="colophon__swatch" style={{ background: 'var(--paper)' }} title="paper" />
+            </span>
+          </div>
+        </div>
+        <div className="colophon__foot">
+          <p className="colophon__line">the question remains useful <i>because the answer can change</i></p>
+          <a className="colophon__back" href="#question">back to the question <ArrowIcon /></a>
+        </div>
+      </div>
+      <p className="colophon__signature-note">
+        <span aria-hidden="true">※</span>
+        a quiet piece of an ongoing conversation about what good front-end work actually is.
+      </p>
+    </footer>
   )
 }
 
@@ -722,7 +732,12 @@ export function App() {
             <StageMarkers active={activeStage} />
           </div>
 
-          <div className="hero__layout">
+          <div className="hero__sheet">
+            <span className="hero__sheet-crop hero__sheet-crop--tl" aria-hidden="true" />
+            <span className="hero__sheet-crop hero__sheet-crop--tr" aria-hidden="true" />
+            <span className="hero__sheet-crop hero__sheet-crop--bl" aria-hidden="true" />
+            <span className="hero__sheet-crop hero__sheet-crop--br" aria-hidden="true" />
+            <span className="hero__sheet-mark" aria-hidden="true">proof sheet · m³</span>
             <div className="hero__copy">
               <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
                 <span className="title__line">is Minimax </span>
@@ -746,31 +761,34 @@ export function App() {
                   <PressStamp voice={voice} size={22} />
                 </span>
               </span>
-              <p className="hero__summary">
-                <span className="hero__dropcap" aria-hidden="true">A</span>
-                small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em>
-              </p>
-              <div className="hero__actions">
-                <button ref={answerTriggerRef} type="button" className={`button button--primary ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
-                  <span>{answerOpen ? 'fold the answer back' : 'read the editor’s note'}</span>
-                  <ArrowIcon />
-                </button>
-                <a className="text-link" href="#notes">follow the marginalia <span aria-hidden="true">↓</span></a>
-              </div>
-              <div className="hero__note">
-                <span className="hero__note-mark" aria-hidden="true">*</span>
-                <p><strong>Good front-end work</strong> is less about showing what can be made than noticing what should remain quiet.</p>
-              </div>
             </div>
             <aside className="hero__spine" aria-label="Proofreader's marks for the marked words">
               <div className="spine__rail">
                 <Marginalia activeWord={activeWord} tokenRefs={tokenRefs} />
               </div>
             </aside>
-            <div className="hero__specimen">
-              <SpecimenStrip voice={voice} word={activeWord} />
+          </div>
+
+          <div className="hero__body">
+            <p className="hero__summary">
+              <span className="hero__dropcap" aria-hidden="true">A</span>
+              small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em>
+            </p>
+            <div className="hero__actions">
+              <button ref={answerTriggerRef} type="button" className={`button button--primary ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
+                <span>{answerOpen ? 'fold the answer back' : 'read the editor’s note'}</span>
+                <ArrowIcon />
+              </button>
+              <a className="text-link" href="#notes">follow the marginalia <span aria-hidden="true">↓</span></a>
+            </div>
+            <div className="hero__note">
+              <span className="hero__note-mark" aria-hidden="true">*</span>
+              <p><strong>Good front-end work</strong> is less about showing what can be made than noticing what should remain quiet.</p>
             </div>
           </div>
+
+          <TypeCase voice={voice} word={activeWord} />
+
           <div className="hero__footer">
             <span><i className="hero__footer-dot" /> compose, slowly</span>
             <span>marked words open the margin</span>
@@ -786,19 +804,7 @@ export function App() {
         <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
         <VoicesSection voice={voice} onVoice={selectVoice} voiceRefs={voiceRefs} />
 
-        <footer className="site-footer">
-          <div className="site-footer__rule"><span /><LogoMark size={30} accent="var(--coral)" /><span /></div>
-          <p className="site-footer__line">the question remains useful <i>because the answer can change</i></p>
-          <div className="site-footer__press"><PressSignature voice={voice} /></div>
-          <p className="site-footer__colophon">
-            <span>set in system serif</span>
-            <span aria-hidden="true">·</span>
-            <span>composed by hand</span>
-            <span aria-hidden="true">·</span>
-            <span>folded once</span>
-          </p>
-          <a className="site-footer__back" href="#question">back to the question <ArrowIcon /></a>
-        </footer>
+        <Colophon voice={voice} />
       </div>
 
       <MarginalThread activeId={activeSection === 'question' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' ? activeSection : 'question'} />
