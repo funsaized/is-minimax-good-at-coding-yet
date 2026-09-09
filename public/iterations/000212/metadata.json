@@ -1,0 +1,19 @@
+{
+  "id": 212,
+  "parentId": 211,
+  "createdAt": "2026-09-09T08:27:23.796Z",
+  "summary": "Reframed the hero question as a cream paper proof resting on the night studio, with a darker voice bar overlapping its f",
+  "path": "/iterations/000212/index.html",
+  "screenshot": "/iterations/000212/desktop.png",
+  "mobileScreenshot": "/iterations/000212/mobile.png",
+  "sourceCommit": "ca5a0bf7bd8d591a2d43150476c5f6bc66de99b4",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 549,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 255523,
+    "outputTokens": 8696,
+    "steps": 21
+  }
+}
