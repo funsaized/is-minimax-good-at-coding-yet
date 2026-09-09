@@ -1,0 +1,19 @@
+{
+  "id": 214,
+  "parentId": 213,
+  "createdAt": "2026-09-09T21:56:43.382Z",
+  "summary": "A morning at the desk — the hero calms down so the question stands; the answer carries more weight when tipped in.",
+  "path": "/iterations/000214/index.html",
+  "screenshot": "/iterations/000214/desktop.png",
+  "mobileScreenshot": "/iterations/000214/mobile.png",
+  "sourceCommit": "1dd0a13e5ad8ab3f47d33049ad6a4e22c9673407",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 542,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 181321,
+    "outputTokens": 28808,
+    "steps": 104
+  }
+}
