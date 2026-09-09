@@ -94,9 +94,9 @@ const STAGES: Stage[] = [
   { id: 'proof', name: 'proof', hint: 'an answer is allowed to arrive' },
 ]
 
-function LogoMark() {
+function LogoMark({ size = 38, accent = 'var(--acid)' }: { size?: number; accent?: string }) {
   return (
-    <svg className="brand__mark" viewBox="0 0 42 42" aria-hidden="true">
+    <svg className="brand__mark" width={size} height={size} viewBox="0 0 42 42" aria-hidden="true" style={{ color: accent }}>
       <circle cx="21" cy="21" r="18" fill="none" stroke="currentColor" strokeWidth="1" />
       <circle cx="21" cy="21" r="12" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="1.5 2.5" />
       <path d="M9 21h24M21 9v24" stroke="currentColor" strokeWidth=".7" opacity=".55" />
@@ -109,14 +109,6 @@ function ArrowIcon() {
   return (
     <svg className="arrow-icon" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function PressPullIcon() {
-  return (
-    <svg className="press-pull__icon" viewBox="0 0 24 14" aria-hidden="true">
-      <path d="M0 7h18M12 1l6 6-6 6M22 2v10" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -143,16 +135,6 @@ function NoteGlyph({ id }: { id: WordId }) {
   )
 }
 
-function SpineMark() {
-  return (
-    <svg className="spine__mark" viewBox="0 0 14 14" aria-hidden="true">
-      <circle cx="7" cy="7" r="5.6" fill="none" stroke="currentColor" strokeWidth=".7" />
-      <line x1="7" y1="0" x2="7" y2="14" stroke="currentColor" strokeWidth=".7" />
-      <line x1="0" y1="7" x2="14" y2="7" stroke="currentColor" strokeWidth=".7" />
-    </svg>
-  )
-}
-
 function getProofLabel(id: WordId): string {
   if (id === 'm3') return 'stet'
   if (id === 'good') return 'caret'
@@ -167,7 +149,7 @@ function getProofSub(id: WordId): string {
 
 function Marginalia({ activeWord, tokenRefs }: {
   activeWord: WordId
-  tokenRefs: React.MutableRefObject<Partial<Record<WordId, HTMLButtonElement | null>>>
+  tokenRefs: React.MutableRefObject<Partial<Record<WordId, HTMLSpanElement | null>>>
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [y, setY] = useState(0)
@@ -208,14 +190,9 @@ function HeaderRuler() {
   return (
     <div className="header-ruler" aria-hidden="true">
       <div className="header-ruler__line">
-        {Array.from({ length: 24 }).map((_, index) => (
-          <span key={index} className={index % 6 === 0 ? 'is-major' : ''} />
+        {Array.from({ length: 32 }).map((_, index) => (
+          <span key={index} className={index % 8 === 0 ? 'is-major' : index % 4 === 0 ? 'is-mid' : ''} />
         ))}
-      </div>
-      <div className="header-ruler__legend">
-        <span style={{ left: '8%' }}>set</span>
-        <span style={{ left: '50%' }}>compose</span>
-        <span style={{ left: '92%' }}>proof</span>
       </div>
     </div>
   )
@@ -256,14 +233,15 @@ function TitleToken({
   onSelect: (id: WordId) => void
   onHover: (id: WordId) => void
   onLeave: () => void
-  tokenRef: (node: HTMLButtonElement | null) => void
+  tokenRef: (node: HTMLSpanElement | null) => void
 }) {
   return (
-    <button
+    <span
       ref={tokenRef}
-      type="button"
       className={`title-token title-token--${id} ${selected ? 'is-selected' : ''}`}
       data-word={id}
+      role="button"
+      tabIndex={0}
       aria-pressed={selected}
       aria-describedby={`note-${id}`}
       onClick={() => onSelect(id)}
@@ -271,107 +249,92 @@ function TitleToken({
       onMouseLeave={onLeave}
       onFocus={() => onHover(id)}
       onBlur={onLeave}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          onSelect(id)
+        }
+      }}
     >
       <span className="title-token__set" aria-hidden="true" />
       {text}
-    </button>
+    </span>
   )
 }
 
-function SignalCard({ word, voice }: { word: WordId; voice: VoiceId }) {
-  const wordLabel = NOTES.find(note => note.id === word)?.prompt ?? 'make room for attention'
-  const setDate = useRef(new Date())
-  const dateLabel = setDate.current.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+function SpecimenStrip({ voice, word }: { voice: VoiceId; word: WordId }) {
+  const current = VOICES.find(item => item.id === voice) ?? VOICES[0]
+  const note = NOTES.find(item => item.id === word)
+  const prompt = note?.prompt ?? 'leave room to arrive'
   return (
-    <aside className={`signal-card signal-card--${voice}`} aria-label="A typographic specimen of the question">
-      <div className="signal-card__topline">
-        <span>specimen</span>
-        <span>the compose desk</span>
+    <aside className={`specimen-strip specimen-strip--${voice}`} aria-label="The composed specimen">
+      <div className="specimen-strip__head">
+        <span className="specimen-strip__tag">specimen · {current.descriptor}</span>
+        <span className="specimen-strip__id" aria-hidden="true">№ 03</span>
       </div>
-      <div className="signal-card__art">
+      <div className="specimen-strip__art">
         <ComposeSpecimen voice={voice} />
-        <span className="signal-card__crop signal-card__crop--tl" aria-hidden="true" />
-        <span className="signal-card__crop signal-card__crop--tr" aria-hidden="true" />
-        <span className="signal-card__crop signal-card__crop--bl" aria-hidden="true" />
-        <span className="signal-card__crop signal-card__crop--br" aria-hidden="true" />
-        <span className="signal-card__annotation signal-card__annotation--top">set slowly</span>
-        <span className="signal-card__annotation signal-card__annotation--side">measure / read again</span>
       </div>
-      <div className="signal-card__bottomline">
-        <span className="signal-card__prompt">{wordLabel}</span>
-        <span className="signal-card__set" aria-hidden="true">set {dateLabel}</span>
-        <span className="signal-card__mark" aria-hidden="true">↗</span>
+      <div className="specimen-strip__foot">
+        <span className="specimen-strip__prompt">{prompt}</span>
+        <span className="specimen-strip__rule" aria-hidden="true" />
       </div>
     </aside>
   )
 }
 
-function AnswerPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
+function AnswerReveal({ open, onClose, triggerRef }: {
+  open: boolean
+  onClose: () => void
+  triggerRef: React.MutableRefObject<HTMLButtonElement | null>
+}) {
   return (
     <section
-      className={`answer-panel ${open ? 'is-open' : ''}`}
+      className={`answer-reveal ${open ? 'is-open' : ''}`}
       id="answer"
       aria-labelledby="answer-title"
       aria-hidden={!open}
     >
-      <div className="answer-panel__clip">
-        <div className="answer-panel__paper">
-          <span className="answer-panel__pin answer-panel__pin--one" aria-hidden="true" />
-          <span className="answer-panel__pin answer-panel__pin--two" aria-hidden="true" />
-          <span className="answer-panel__crease" aria-hidden="true" />
-          <span className="answer-panel__crop answer-panel__crop--tl" aria-hidden="true" />
-          <span className="answer-panel__crop answer-panel__crop--tr" aria-hidden="true" />
-          <span className="answer-panel__crop answer-panel__crop--bl" aria-hidden="true" />
-          <span className="answer-panel__crop answer-panel__crop--br" aria-hidden="true" />
-          <div className="answer-panel__grid">
-            <div className="answer-panel__stamp" aria-hidden="true">
-              <span className="answer-panel__stamp-ring">m³</span>
-              <span>for now</span>
+      <div className="answer-reveal__clip">
+        <div className="answer-reveal__paper">
+          <div className="answer-reveal__inner">
+            <div className="answer-reveal__row">
+              <span className="answer-reveal__folio" aria-hidden="true">folio iv · the proof</span>
+              <span className="answer-reveal__stamp" aria-hidden="true">
+                <span>m³</span>
+                <em>for now</em>
+              </span>
             </div>
-            <div className="answer-panel__copy">
+            <div className="answer-reveal__copy">
               <p className="eyebrow eyebrow--dark"><span className="eyebrow__line" />the answer <em>for now</em></p>
               <h2 id="answer-title">Yes — when it stops trying to look impressive.</h2>
-              <div className="answer-panel__columns">
-                <p>The good part is not the gradient, the flourish, or the clever little mechanism. It is the moment the page gives you room to notice <em>one thing</em>. Then another.</p>
+              <div className="answer-reveal__columns">
+                <p>
+                  <span className="answer-reveal__dropcap" aria-hidden="true">T</span>
+                  he good part is not the gradient, the flourish, or the clever little mechanism. It is the moment the page gives you room to notice <em>one thing</em>. Then another.
+                </p>
                 <p>So this is a qualified yes: good at front-end means attentive to the person on the other side of the glass. The rest is decoration with a job to do.</p>
               </div>
-              <div className="answer-panel__pull"><span />attention, not ornament<span /></div>
-              <div className="answer-panel__colophon">
+              <div className="answer-reveal__pull">
+                <span aria-hidden="true" />
+                <em>attention, not ornament</em>
+                <span aria-hidden="true" />
+              </div>
+              <div className="answer-reveal__colophon">
                 <span>set in system serif</span>
                 <span aria-hidden="true">·</span>
                 <span>composed by hand</span>
                 <span aria-hidden="true">·</span>
                 <span>folded once</span>
               </div>
-              <div className="answer-panel__footer">
-                <span>an answer can remain unfinished</span>
-                <button type="button" onClick={onClose} tabIndex={open ? 0 : -1}>
-                  fold it back <ArrowIcon />
-                </button>
-              </div>
+              <button type="button" className="answer-reveal__close" onClick={() => { onClose(); window.requestAnimationFrame(() => triggerRef.current?.focus()) }} tabIndex={open ? 0 : -1}>
+                fold it back <ArrowIcon />
+              </button>
             </div>
           </div>
         </div>
       </div>
     </section>
-  )
-}
-
-function PressPull({ open, onToggle }: { open: boolean; onToggle: () => void }) {
-  return (
-    <button
-      type="button"
-      className={`press-pull ${open ? 'is-open' : ''}`}
-      onClick={onToggle}
-      aria-expanded={open}
-      aria-controls="answer"
-    >
-      <span className="press-pull__crease" aria-hidden="true" />
-      <span className="press-pull__tab">
-        <span className="press-pull__label">{open ? 'fold the answer back' : 'pull to read the answer'}</span>
-        <PressPullIcon />
-      </span>
-    </button>
   )
 }
 
@@ -429,8 +392,6 @@ function VoicesSection({ voice, onVoice, voiceRefs }: {
     window.requestAnimationFrame(() => voiceRefs.current[next]?.focus())
   }
 
-  const current = VOICES.find(item => item.id === voice) ?? VOICES[0]
-
   return (
     <section className="section voices-section" id="voices" aria-labelledby="voices-title">
       <div className="section__header voices-section__header">
@@ -438,65 +399,59 @@ function VoicesSection({ voice, onVoice, voiceRefs }: {
         <h2 id="voices-title">Let the same words <i>change clothes.</i></h2>
         <p className="section__lede">Choose a voice. The title above shifts with it, because typography is part of the answer.</p>
       </div>
-      <div className="voices-board">
-        <div className="voice-tabs" role="tablist" aria-label="Choose a typographic voice">
-          {VOICES.map(item => (
-            <button
-              key={item.id}
-              ref={node => { voiceRefs.current[item.id] = node }}
-              type="button"
-              className={`voice-tab voice-tab--${item.id} ${voice === item.id ? 'is-active' : ''}`}
-              role="tab"
-              aria-selected={voice === item.id}
-              aria-controls="voice-panel"
-              tabIndex={voice === item.id ? 0 : -1}
-              onClick={() => onVoice(item.id)}
-              onKeyDown={event => selectByKey(event, item.id)}
-            >
-              <span className="voice-tab__number">{item.id === 'quiet' ? 'A' : item.id === 'human' ? 'B' : 'C'}</span>
-              <span>
-                <strong>{item.name}</strong>
-                <em>{item.descriptor}</em>
-              </span>
-              <span className="voice-tab__arrow" aria-hidden="true">↗</span>
-            </button>
-          ))}
-        </div>
-        <div className={`voice-stage voice-stage--${voice}`} id="voice-panel" role="tabpanel" aria-label={`${current.name} specimen`}>
-          <div className="voice-stage__topline">
-            <span>the selected setting</span>
-            <span>{current.descriptor}</span>
-          </div>
-          <div className="voice-stage__sample" aria-hidden="true">
-            <span>{current.lines[0]}</span>
-            <span>{current.lines[1]}</span>
-            <span>{current.lines[2]}</span>
-          </div>
-          <div className="voice-stage__bottomline">
-            <p>{current.body}</p>
-            <span className="voice-stage__cursor" aria-hidden="true">▌</span>
-          </div>
-        </div>
-      </div>
-      <div className="voice-comparison" aria-hidden="true">
-        <div className="voice-comparison__legend">
-          <span className="eyebrow eyebrow--dark"><span className="eyebrow__line" />comparative specimen <em>at a glance</em></span>
-        </div>
-        <div className="voice-comparison__strip">
-          {VOICES.map(item => (
-            <div key={item.id} className={`voice-comparison__cell voice-comparison__cell--${item.id} ${voice === item.id ? 'is-active' : ''}`}>
-              <span className="voice-comparison__name">{item.name}</span>
-              <div className={`voice-comparison__type voice-comparison__type--${item.id}`}>
-                <span>good at</span>
-                <span>frontend</span>
-              </div>
-              <span className="voice-comparison__rule" />
-              <span className="voice-comparison__hint">{item.id === 'quiet' ? 'close set' : item.id === 'human' ? 'a little warm' : 'no apology'}</span>
-            </div>
-          ))}
-        </div>
+      <div className="voice-triptych" role="tablist" aria-label="Choose a typographic voice">
+        {VOICES.map(item => (
+          <button
+            key={item.id}
+            ref={node => { voiceRefs.current[item.id] = node }}
+            type="button"
+            className={`voice-tile voice-tile--${item.id} ${voice === item.id ? 'is-active' : ''}`}
+            role="tab"
+            aria-selected={voice === item.id}
+            tabIndex={voice === item.id ? 0 : -1}
+            onClick={() => onVoice(item.id)}
+            onKeyDown={event => selectByKey(event, item.id)}
+          >
+            <span className="voice-tile__head">
+              <span className="voice-tile__letter" aria-hidden="true">{item.id === 'quiet' ? 'A' : item.id === 'human' ? 'B' : 'C'}</span>
+              <span className="voice-tile__name">{item.name}</span>
+              <span className="voice-tile__descriptor">{item.descriptor}</span>
+            </span>
+            <span className={`voice-tile__sample voice-tile__sample--${item.id}`} aria-hidden="true">
+              <span>{item.lines[0]}</span>
+              <span>{item.lines[1]}</span>
+              <span>{item.lines[2]}</span>
+            </span>
+            <span className="voice-tile__foot">
+              <span className="voice-tile__body">{item.body}</span>
+              <span className="voice-tile__rule" aria-hidden="true" />
+              <span className="voice-tile__mark" aria-hidden="true">{voice === item.id ? '●' : '○'}</span>
+            </span>
+          </button>
+        ))}
       </div>
     </section>
+  )
+}
+
+function PressSignature() {
+  return (
+    <svg className="press-signature" viewBox="0 0 220 64" aria-hidden="true">
+      <defs>
+        <filter id="press-signature-grain" x="-5%" y="-5%" width="110%" height="110%">
+          <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" seed="7" stitchTiles="stitch" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0" />
+          <feComposite in2="SourceGraphic" operator="in" />
+        </filter>
+      </defs>
+      <g filter="url(#press-signature-grain)" opacity=".85">
+        <rect x="3" y="3" width="214" height="58" rx="2" fill="none" stroke="currentColor" strokeWidth="1.2" />
+        <rect x="9" y="9" width="202" height="46" rx="1" fill="none" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 3" />
+        <text x="22" y="28" fontFamily="Georgia, serif" fontStyle="italic" fontSize="13" fill="currentColor">set with care</text>
+        <text x="22" y="48" fontFamily="ui-monospace, monospace" fontSize="7.5" letterSpacing="1.6" fill="currentColor" opacity=".75">PRESS · M³ · NO TWO PRESSES ALIKE</text>
+        <text x="178" y="44" fontFamily="Georgia, serif" fontStyle="italic" fontSize="18" fill="currentColor" textAnchor="middle">m³</text>
+      </g>
+    </svg>
   )
 }
 
@@ -508,7 +463,7 @@ export function App() {
   const [activeSection, setActiveSection] = useState('question')
   const [activeStage, setActiveStage] = useState(0)
   const [announcement, setAnnouncement] = useState('')
-  const tokenRefs = useRef<Partial<Record<WordId, HTMLButtonElement | null>>>({})
+  const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
   const voiceRefs = useRef<Partial<Record<VoiceId, HTMLButtonElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
 
@@ -559,7 +514,16 @@ export function App() {
     const next = !answerOpen
     setAnswerOpen(next)
     setAnnouncement(next ? 'Answer revealed.' : 'Answer folded away.')
-    if (!next) window.requestAnimationFrame(() => answerTriggerRef.current?.focus())
+    if (next) {
+      window.requestAnimationFrame(() => document.getElementById('answer')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+    } else {
+      window.requestAnimationFrame(() => answerTriggerRef.current?.focus())
+    }
+  }
+
+  const closeAnswer = () => {
+    setAnswerOpen(false)
+    setAnnouncement('Answer folded away.')
   }
 
   const openAnswerFromNav = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -574,7 +538,7 @@ export function App() {
       <header className="site-header">
         <div className="site-header__row">
           <a className="brand" href="#question" aria-label="Return to the question">
-            <LogoMark />
+            <LogoMark size={36} />
             <span className="brand__copy">
               <strong>m³ / compose desk</strong>
               <em>an open question</em>
@@ -597,6 +561,7 @@ export function App() {
             <p className="eyebrow"><span className="eyebrow__line" />frontend experiment <em>read the question first</em></p>
             <StageMarkers active={activeStage} />
           </div>
+
           <div className="hero__layout">
             <div className="hero__copy">
               <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
@@ -607,10 +572,13 @@ export function App() {
                 </span>
                 <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} />?</span>
               </h1>
-              <p className="hero__summary">A small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em></p>
+              <p className="hero__summary">
+                <span className="hero__dropcap" aria-hidden="true">A</span>
+                small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em>
+              </p>
               <div className="hero__actions">
                 <button ref={answerTriggerRef} type="button" className={`button button--primary ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
-                  <span>{answerOpen ? 'fold the answer' : 'reveal the answer'}</span>
+                  <span>{answerOpen ? 'fold the answer back' : 'read the editor\u2019s note'}</span>
                   <ArrowIcon />
                 </button>
                 <a className="text-link" href="#notes">follow the marginalia <span aria-hidden="true">↓</span></a>
@@ -621,14 +589,12 @@ export function App() {
               </div>
             </div>
             <aside className="hero__spine" aria-label="Proofreader's marks for the marked words">
-              <SpineMark />
               <div className="spine__rail">
                 <Marginalia activeWord={activeWord} tokenRefs={tokenRefs} />
               </div>
-              <SpineMark />
             </aside>
             <div className="hero__specimen">
-              <SignalCard word={activeWord} voice={voice} />
+              <SpecimenStrip voice={voice} word={activeWord} />
             </div>
           </div>
           <div className="hero__footer">
@@ -638,18 +604,15 @@ export function App() {
           </div>
         </section>
 
-        <div className="press-pull-wrap">
-          <PressPull open={answerOpen} onToggle={toggleAnswer} />
-          <span className="press-pull-wrap__rule" aria-hidden="true" />
-        </div>
+        <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} />
 
-        <AnswerPanel open={answerOpen} onClose={toggleAnswer} />
         <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
         <VoicesSection voice={voice} onVoice={selectVoice} voiceRefs={voiceRefs} />
 
         <footer className="site-footer">
-          <div className="site-footer__rule"><span /><LogoMark /><span /></div>
+          <div className="site-footer__rule"><span /><LogoMark size={30} accent="var(--coral)" /><span /></div>
           <p className="site-footer__line">the question remains useful <i>because the answer can change</i></p>
+          <div className="site-footer__press"><PressSignature /></div>
           <p className="site-footer__colophon">
             <span>set in system serif</span>
             <span aria-hidden="true">·</span>

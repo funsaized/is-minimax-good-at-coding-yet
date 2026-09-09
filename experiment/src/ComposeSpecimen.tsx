@@ -8,19 +8,10 @@ export function ComposeSpecimen({ voice }: ComposeSpecimenProps) {
   return (
     <svg className={`specimen specimen--${voice}`} viewBox="0 0 320 360" aria-hidden="true">
       <defs>
-        <filter id="specimen-grain" x="0" y="0" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" stitchTiles="stitch" />
-          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0" />
-        </filter>
         <linearGradient id="specimen-trace" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
           <stop offset="35%" stopColor="currentColor" stopOpacity=".9" />
           <stop offset="65%" stopColor="currentColor" stopOpacity=".9" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="specimen-trace-glow" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
-          <stop offset="50%" stopColor="currentColor" stopOpacity=".35" />
           <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
         </linearGradient>
       </defs>
@@ -31,9 +22,6 @@ export function ComposeSpecimen({ voice }: ComposeSpecimenProps) {
         <path className="specimen__crop" d="M316 346h-10M306 356v-10" />
         <path className="specimen__crop" d="M14 356v-10M4 346h10" />
       </g>
-
-      <text className="specimen__label specimen__label--top" x="28" y="42">specimen · set 1</text>
-      <line className="specimen__trace" x1="118" y1="38" x2="138" y2="38" />
 
       <g className="specimen__guides">
         <line className="specimen__guide" x1="28" y1="100" x2="232" y2="100" />
@@ -54,29 +42,13 @@ export function ComposeSpecimen({ voice }: ComposeSpecimenProps) {
       </g>
 
       <g className="specimen__type">
-        <text
-          className="specimen__line specimen__line--lg"
-          x="28"
-          y="100"
-          fontSize="32"
-          fontStyle="italic"
-        >
+        <text className="specimen__line specimen__line--lg" x="28" y="100" fontSize="32" fontStyle="italic">
           good at frontend yet
         </text>
-        <text
-          className="specimen__line specimen__line--md"
-          x="28"
-          y="166"
-          fontSize="18"
-        >
+        <text className="specimen__line specimen__line--md" x="28" y="166" fontSize="18">
           good at frontend yet
         </text>
-        <text
-          className="specimen__line specimen__line--sm"
-          x="28"
-          y="232"
-          fontSize="12"
-        >
+        <text className="specimen__line specimen__line--sm" x="28" y="232" fontSize="12">
           good at frontend yet
         </text>
       </g>
@@ -110,24 +82,14 @@ export function ComposeSpecimen({ voice }: ComposeSpecimenProps) {
       </g>
 
       <g className="specimen__trace-bar" aria-hidden="true">
-        <rect className="specimen__trace-glow" x="20" y="-3" width="252" height="6" fill="url(#specimen-trace-glow)" />
         <line className="specimen__trace-line" x1="20" y1="0" x2="272" y2="0" stroke="url(#specimen-trace)" strokeWidth=".9" />
         <circle className="specimen__trace-bead" cx="146" cy="0" r="1.6" />
       </g>
 
       <g className="specimen__seal" aria-hidden="true">
-        <circle cx="284" cy="306" r="18" />
-        <circle cx="284" cy="306" r="14" />
-        <text x="284" y="310" fontSize="11" textAnchor="middle" fontStyle="italic">m³</text>
+        <text className="specimen__seal-mark" x="284" y="306" fontSize="11" textAnchor="middle" fontStyle="italic">m³</text>
+        <text className="specimen__seal-text" x="284" y="318" fontSize="5" textAnchor="middle">set today</text>
       </g>
-
-      <text className="specimen__label specimen__label--bottom" x="28" y="306">
-        set in serif · measured in points
-      </text>
-      <text className="specimen__label specimen__label--meta" x="28" y="330">
-        a study, no. 1
-      </text>
-      <line className="specimen__trace specimen__trace--end" x1="86" y1="326" x2="118" y2="326" />
     </svg>
   )
 }
