@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
+import { ComposeSpecimen } from './ComposeSpecimen'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -8,6 +9,7 @@ type VoiceId = 'quiet' | 'human' | 'bold'
 type Note = {
   id: WordId
   index: string
+  folio: string
   label: string
   title: string
   gloss: string
@@ -27,6 +29,7 @@ const NOTES: Note[] = [
   {
     id: 'm3',
     index: '01',
+    folio: 'i',
     label: 'M3',
     title: 'Keep the fingerprint',
     gloss: 'a habit, not a name',
@@ -36,6 +39,7 @@ const NOTES: Note[] = [
   {
     id: 'good',
     index: '02',
+    folio: 'ii',
     label: 'good at',
     title: 'Choose one clear thing',
     gloss: 'confidence is generous',
@@ -45,6 +49,7 @@ const NOTES: Note[] = [
   {
     id: 'yet',
     index: '03',
+    folio: 'iii',
     label: 'yet?',
     title: 'Protect the pause',
     gloss: 'the question stays open',
@@ -96,18 +101,10 @@ function ArrowIcon() {
   )
 }
 
-function OrbitGlyph() {
+function PressPullIcon() {
   return (
-    <svg className="orbit-glyph" viewBox="0 0 420 420" aria-hidden="true">
-      <circle className="orbit-glyph__outer" cx="210" cy="210" r="164" />
-      <ellipse className="orbit-glyph__tilt" cx="210" cy="210" rx="164" ry="74" />
-      <ellipse className="orbit-glyph__tilt orbit-glyph__tilt--reverse" cx="210" cy="210" rx="164" ry="74" />
-      <circle className="orbit-glyph__core" cx="210" cy="210" r="45" />
-      <circle className="orbit-glyph__dot orbit-glyph__dot--one" cx="210" cy="46" r="5" />
-      <circle className="orbit-glyph__dot orbit-glyph__dot--two" cx="370" cy="210" r="4" />
-      <circle className="orbit-glyph__dot orbit-glyph__dot--three" cx="89" cy="303" r="3" />
-      <path className="orbit-glyph__cross" d="M210 128v164M128 210h164" />
-      <text x="210" y="222" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="34">m³</text>
+    <svg className="press-pull__icon" viewBox="0 0 24 14" aria-hidden="true">
+      <path d="M0 7h18M12 1l6 6-6 6M22 2v10" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
@@ -131,6 +128,23 @@ function NoteGlyph({ id }: { id: WordId }) {
     <svg viewBox="0 0 40 24" aria-hidden="true">
       <path d="M3 5l16 14L37 5M3 19l8-7M37 19l-8-7" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+  )
+}
+
+function HeaderRuler() {
+  return (
+    <div className="header-ruler" aria-hidden="true">
+      <div className="header-ruler__line">
+        {Array.from({ length: 24 }).map((_, index) => (
+          <span key={index} className={index % 6 === 0 ? 'is-major' : ''} />
+        ))}
+      </div>
+      <div className="header-ruler__legend">
+        <span style={{ left: '8%' }}>set</span>
+        <span style={{ left: '50%' }}>compose</span>
+        <span style={{ left: '92%' }}>proof</span>
+      </div>
+    </div>
   )
 }
 
@@ -165,6 +179,7 @@ function TitleToken({
       onFocus={() => onHover(id)}
       onBlur={onLeave}
     >
+      <span className="title-token__set" aria-hidden="true" />
       {text}
     </button>
   )
@@ -173,17 +188,19 @@ function TitleToken({
 function SignalCard({ word, voice }: { word: WordId; voice: VoiceId }) {
   const wordLabel = NOTES.find(note => note.id === word)?.prompt ?? 'make room for attention'
   return (
-    <aside className={`signal-card signal-card--${voice}`} aria-label="A visual study of the question">
+    <aside className={`signal-card signal-card--${voice}`} aria-label="A typographic specimen of the question">
       <div className="signal-card__topline">
-        <span>field note</span>
-        <span>the signal desk</span>
+        <span>specimen</span>
+        <span>the compose desk</span>
       </div>
       <div className="signal-card__art">
-        <OrbitGlyph />
-        <span className="signal-card__crosshair signal-card__crosshair--one" aria-hidden="true" />
-        <span className="signal-card__crosshair signal-card__crosshair--two" aria-hidden="true" />
-        <span className="signal-card__annotation signal-card__annotation--top">attention</span>
-        <span className="signal-card__annotation signal-card__annotation--side">pause / repeat</span>
+        <ComposeSpecimen voice={voice} />
+        <span className="signal-card__crop signal-card__crop--tl" aria-hidden="true" />
+        <span className="signal-card__crop signal-card__crop--tr" aria-hidden="true" />
+        <span className="signal-card__crop signal-card__crop--bl" aria-hidden="true" />
+        <span className="signal-card__crop signal-card__crop--br" aria-hidden="true" />
+        <span className="signal-card__annotation signal-card__annotation--top">set slowly</span>
+        <span className="signal-card__annotation signal-card__annotation--side">measure / read again</span>
       </div>
       <div className="signal-card__bottomline">
         <span className="signal-card__prompt">{wordLabel}</span>
@@ -205,6 +222,10 @@ function AnswerPanel({ open, onClose }: { open: boolean; onClose: () => void }) 
         <div className="answer-panel__paper">
           <span className="answer-panel__pin answer-panel__pin--one" aria-hidden="true" />
           <span className="answer-panel__pin answer-panel__pin--two" aria-hidden="true" />
+          <span className="answer-panel__crop answer-panel__crop--tl" aria-hidden="true" />
+          <span className="answer-panel__crop answer-panel__crop--tr" aria-hidden="true" />
+          <span className="answer-panel__crop answer-panel__crop--bl" aria-hidden="true" />
+          <span className="answer-panel__crop answer-panel__crop--br" aria-hidden="true" />
           <div className="answer-panel__grid">
             <div className="answer-panel__stamp" aria-hidden="true">
               <span className="answer-panel__stamp-ring">m³</span>
@@ -218,6 +239,13 @@ function AnswerPanel({ open, onClose }: { open: boolean; onClose: () => void }) 
                 <p>So this is a qualified yes: good at front-end means attentive to the person on the other side of the glass. The rest is decoration with a job to do.</p>
               </div>
               <div className="answer-panel__pull"><span />attention, not ornament<span /></div>
+              <div className="answer-panel__colophon">
+                <span>set in system serif</span>
+                <span aria-hidden="true">·</span>
+                <span>composed by hand</span>
+                <span aria-hidden="true">·</span>
+                <span>folded once</span>
+              </div>
               <div className="answer-panel__footer">
                 <span>an answer can remain unfinished</span>
                 <button type="button" onClick={onClose} tabIndex={open ? 0 : -1}>
@@ -229,6 +257,24 @@ function AnswerPanel({ open, onClose }: { open: boolean; onClose: () => void }) 
         </div>
       </div>
     </section>
+  )
+}
+
+function PressPull({ open, onToggle }: { open: boolean; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      className={`press-pull ${open ? 'is-open' : ''}`}
+      onClick={onToggle}
+      aria-expanded={open}
+      aria-controls="answer"
+    >
+      <span className="press-pull__crease" aria-hidden="true" />
+      <span className="press-pull__tab">
+        <span className="press-pull__label">{open ? 'fold the answer back' : 'pull to read the answer'}</span>
+        <PressPullIcon />
+      </span>
+    </button>
   )
 }
 
@@ -250,6 +296,7 @@ function NotesSection({ selected, onSelect }: { selected: WordId; onSelect: (id:
             aria-pressed={selected === note.id}
             onClick={() => onSelect(note.id)}
           >
+            <span className="note-card__folio" aria-hidden="true">folio {note.folio}</span>
             <span className="note-card__head">
               <span>{note.index}</span>
               <NoteGlyph id={note.id} />
@@ -334,6 +381,24 @@ function VoicesSection({ voice, onVoice, voiceRefs }: {
           </div>
         </div>
       </div>
+      <div className="voice-comparison" aria-hidden="true">
+        <div className="voice-comparison__legend">
+          <span className="eyebrow eyebrow--dark"><span className="eyebrow__line" />comparative specimen <em>at a glance</em></span>
+        </div>
+        <div className="voice-comparison__strip">
+          {VOICES.map(item => (
+            <div key={item.id} className={`voice-comparison__cell voice-comparison__cell--${item.id} ${voice === item.id ? 'is-active' : ''}`}>
+              <span className="voice-comparison__name">{item.name}</span>
+              <div className={`voice-comparison__type voice-comparison__type--${item.id}`}>
+                <span>good at</span>
+                <span>frontend</span>
+              </div>
+              <span className="voice-comparison__rule" />
+              <span className="voice-comparison__hint">{item.id === 'quiet' ? 'close set' : item.id === 'human' ? 'a little warm' : 'no apology'}</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   )
 }
@@ -356,7 +421,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'answer', 'notes', 'voices']
+    const elements = ['question', 'notes', 'voices']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -371,7 +436,7 @@ export function App() {
     )
     elements.forEach(element => observer.observe(element))
     return () => observer.disconnect()
-  }, [answerOpen])
+  }, [])
 
   const selectWord = (id: WordId, focus = false) => {
     const note = NOTES.find(item => item.id === id)
@@ -403,27 +468,30 @@ export function App() {
     <main className={`app app--voice-${voice} app--word-${activeWord}`}>
       <div className="app__grain" aria-hidden="true" />
       <header className="site-header">
-        <a className="brand" href="#question" aria-label="Return to the question">
-          <LogoMark />
-          <span className="brand__copy">
-            <strong>m³ / front-end</strong>
-            <em>an open question</em>
-          </span>
-        </a>
-        <nav className="site-nav" aria-label="Sections">
-          <a href="#question" className={activeSection === 'question' ? 'is-active' : ''} aria-current={activeSection === 'question' ? 'location' : undefined}>question</a>
-          <a href="#answer" className={activeSection === 'answer' ? 'is-active' : ''} aria-current={activeSection === 'answer' ? 'location' : undefined} onClick={openAnswerFromNav}>answer</a>
-          <a href="#notes" className={activeSection === 'notes' ? 'is-active' : ''} aria-current={activeSection === 'notes' ? 'location' : undefined}>notes</a>
-          <a href="#voices" className={activeSection === 'voices' ? 'is-active' : ''} aria-current={activeSection === 'voices' ? 'location' : undefined}>voices</a>
-        </nav>
-        <span className="site-header__note">a page that listens</span>
+        <div className="site-header__row">
+          <a className="brand" href="#question" aria-label="Return to the question">
+            <LogoMark />
+            <span className="brand__copy">
+              <strong>m³ / compose desk</strong>
+              <em>an open question</em>
+            </span>
+          </a>
+          <nav className="site-nav" aria-label="Sections">
+            <a href="#question" className={activeSection === 'question' ? 'is-active' : ''} aria-current={activeSection === 'question' ? 'location' : undefined}>question</a>
+            <a href="#notes" className={activeSection === 'notes' ? 'is-active' : ''} aria-current={activeSection === 'notes' ? 'location' : undefined}>marginalia</a>
+            <a href="#voices" className={activeSection === 'voices' ? 'is-active' : ''} aria-current={activeSection === 'voices' ? 'location' : undefined}>voices</a>
+            <a href="#answer" className={activeSection === 'answer' ? 'is-active' : ''} aria-current={activeSection === 'answer' ? 'location' : undefined} onClick={openAnswerFromNav}>answer</a>
+          </nav>
+          <span className="site-header__note">a page that listens</span>
+        </div>
+        <HeaderRuler />
       </header>
 
       <div className="page">
         <section className="hero" id="question" aria-labelledby="page-title">
           <div className="hero__eyebrow-row">
             <p className="eyebrow"><span className="eyebrow__line" />frontend experiment <em>read the question first</em></p>
-            <span className="hero__coordinates">signal / noise / care</span>
+            <span className="hero__coordinates">set / compose / proof</span>
           </div>
           <div className="hero__layout">
             <div className="hero__copy">
@@ -441,7 +509,7 @@ export function App() {
                   <span>{answerOpen ? 'fold the answer' : 'reveal the answer'}</span>
                   <ArrowIcon />
                 </button>
-                <a className="text-link" href="#notes">follow the annotation <span aria-hidden="true">↓</span></a>
+                <a className="text-link" href="#notes">follow the marginalia <span aria-hidden="true">↓</span></a>
               </div>
               <div className="hero__note">
                 <span className="hero__note-mark" aria-hidden="true">*</span>
@@ -451,11 +519,16 @@ export function App() {
             <SignalCard word={activeWord} voice={voice} />
           </div>
           <div className="hero__footer">
-            <span><i className="hero__footer-dot" /> drag your attention slowly</span>
-            <span>the marked words open the margin</span>
+            <span><i className="hero__footer-dot" /> compose, slowly</span>
+            <span>marked words open the margin</span>
             <a href="#answer" onClick={openAnswerFromNav} aria-label="Jump to the answer">↓</a>
           </div>
         </section>
+
+        <div className="press-pull-wrap">
+          <PressPull open={answerOpen} onToggle={toggleAnswer} />
+          <span className="press-pull-wrap__rule" aria-hidden="true" />
+        </div>
 
         <AnswerPanel open={answerOpen} onClose={toggleAnswer} />
         <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
@@ -464,6 +537,13 @@ export function App() {
         <footer className="site-footer">
           <div className="site-footer__rule"><span /><LogoMark /><span /></div>
           <p className="site-footer__line">the question remains useful <i>because the answer can change</i></p>
+          <p className="site-footer__colophon">
+            <span>set in system serif</span>
+            <span aria-hidden="true">·</span>
+            <span>composed by hand</span>
+            <span aria-hidden="true">·</span>
+            <span>folded once</span>
+          </p>
           <a className="site-footer__back" href="#question">back to the question <ArrowIcon /></a>
         </footer>
       </div>
