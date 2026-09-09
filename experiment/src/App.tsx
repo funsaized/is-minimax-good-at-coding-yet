@@ -7,7 +7,7 @@ import { MarkedProof } from './MarkedProof'
 import { LetterToReader } from './LetterToReader'
 import { ComposeFloor } from './ComposeFloor'
 import { TypeLadder } from './TypeLadder'
-import { PressBay } from './PressBay'
+import { PressRoom } from './PressRoom'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -225,6 +225,7 @@ function StageMarkers({ active }: { active: number }) {
 function PressFolio({ section }: { section: string }) {
   const map: Record<string, { folio: string; mark: string }> = {
     question: { folio: 'i', mark: 'set' },
+    'press-room': { folio: 'i·', mark: 'press' },
     compose: { folio: 'ii', mark: 'compose' },
     contents: { folio: 'iii', mark: 'contents' },
     note: { folio: '·', mark: 'slip' },
@@ -505,6 +506,7 @@ function VoicesSection({ voice, onVoice, voiceRefs }: {
 function FolioLedger() {
   const items = [
     { id: 'question', num: 'i', title: 'the question, set', note: 'three marked words, one margin' },
+    { id: 'press-room', num: 'i·', title: 'the press bay', note: 'a lever, three voices, one pull' },
     { id: 'compose', num: 'ii', title: 'the compose floor', note: 'a working spread of type and margin' },
     { id: 'contents', num: 'iii', title: 'this page, listed', note: 'the press log · folio contents', self: true },
     { id: 'note', num: '·', title: 'a folded slip', note: 'a short letter to the reader' },
@@ -673,7 +675,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'compose', 'contents', 'note', 'proof', 'pressings', 'notes', 'voices', 'answer']
+    const elements = ['question', 'press-room', 'compose', 'contents', 'note', 'proof', 'pressings', 'notes', 'voices', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -692,7 +694,7 @@ export function App() {
 
   useEffect(() => {
     if (activeSection === 'question') setActiveStage(answerOpen ? 2 : 0)
-    else if (activeSection === 'compose' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
+    else if (activeSection === 'press-room' || activeSection === 'compose' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
     else setActiveStage(2)
   }, [activeSection, answerOpen])
 
@@ -773,6 +775,7 @@ export function App() {
           </a>
           <nav className="site-nav" aria-label="Sections">
             <a href="#question" className={activeSection === 'question' ? 'is-active' : ''} aria-current={activeSection === 'question' ? 'location' : undefined}>question</a>
+            <a href="#press-room" className={activeSection === 'press-room' ? 'is-active' : ''} aria-current={activeSection === 'press-room' ? 'location' : undefined}>press bay</a>
             <a href="#compose" className={activeSection === 'compose' ? 'is-active' : ''} aria-current={activeSection === 'compose' ? 'location' : undefined}>compose</a>
             <a href="#contents" className={activeSection === 'contents' ? 'is-active' : ''} aria-current={activeSection === 'contents' ? 'location' : undefined}>contents</a>
             <a href="#note" className={activeSection === 'note' ? 'is-active' : ''} aria-current={activeSection === 'note' ? 'location' : undefined}>note</a>
@@ -809,8 +812,11 @@ export function App() {
                 <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
                 <span className="hero__title-fold" aria-hidden="true" />
               </h1>
+              <span className="hero__title-pip" aria-hidden="true">
+                <span className="hero__title-pip-line" />
+                <span className="hero__title-pip-mark">folio i</span>
+              </span>
             </div>
-            <PressBay voice={voice} word={activeWord} onVoice={selectVoice} />
           </div>
 
           <HeroChapterMark />
@@ -848,15 +854,23 @@ export function App() {
 
           <div className="hero__footer">
             <span className="hero__footer-imprint">composed by hand <em>·</em> for a careful reader</span>
+            <span className={`hero__footer-voice hero__voice-pill--${voice}`} aria-label={`Now setting in ${voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}`}>
+              <span className="hero__footer-voice-dot" aria-hidden="true" />
+              <span className="hero__footer-voice-eyebrow">now setting in</span>
+              <span className="hero__footer-voice-name">{voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}</span>
+              <span className="hero__footer-voice-shortcut" aria-hidden="true">⇧V</span>
+            </span>
             <span className="hero__footer-seal" aria-hidden="true">
               <PressStamp voice={voice} size={30} />
             </span>
-            <a className="hero__footer-arrow" href="#compose" aria-label="Continue to the compose floor">
-              <span>continue</span>
+            <a className="hero__footer-arrow" href="#press-room" aria-label="Continue to the press bay">
+              <span>continue to the press</span>
               <span aria-hidden="true">↓</span>
             </a>
           </div>
         </section>
+
+        <PressRoom voice={voice} word={activeWord} onVoice={selectVoice} />
 
         <ComposeFloor voice={voice} word={activeWord} />
 
@@ -876,7 +890,7 @@ export function App() {
         <Colophon voice={voice} word={activeWord} />
       </div>
 
-      <MarginalThread activeId={activeSection === 'question' || activeSection === 'compose' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' || activeSection === 'proof' ? activeSection : 'question'} />
+      <MarginalThread activeId={activeSection === 'question' || activeSection === 'press-room' || activeSection === 'compose' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' || activeSection === 'proof' ? activeSection : 'question'} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )

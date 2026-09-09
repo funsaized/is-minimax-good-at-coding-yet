@@ -9,6 +9,7 @@ type ThreadSection = {
 
 const THREAD_SECTIONS: ThreadSection[] = [
   { id: 'question', index: 'i', label: 'question', note: 'the question is set' },
+  { id: 'press-room', index: 'i·', label: 'press bay', note: 'the voice is pulled' },
   { id: 'compose', index: 'ii', label: 'compose', note: 'a working spread of type and margin' },
   { id: 'contents', index: 'iii', label: 'contents', note: 'the press log' },
   { id: 'note', index: '·', label: 'note', note: 'a folded slip' },
