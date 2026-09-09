@@ -1,4 +1,5 @@
-type VoiceId = 'quiet' | 'human' | 'bold'
+import type { CSSProperties } from 'react'
+import type { VoiceId } from './PressBay'
 
 type SpecimenSpreadProps = {
   active: VoiceId
@@ -14,6 +15,9 @@ type Pressing = {
   pointSize: string
   ink: string
   inkSwatch: string
+  paperTone: string
+  textInk: string
+  rules: [string, string, string]
   lines: [string, string, string]
 }
 
@@ -23,10 +27,13 @@ const PRESSINGS: Pressing[] = [
     letter: 'A',
     name: 'quiet cut',
     descriptor: 'the practical reading',
-    face: 'serif · italic · paper',
+    face: 'serif · italic · close set',
     pointSize: '88 pt',
     ink: 'paper on midnight',
     inkSwatch: 'var(--paper)',
+    paperTone: 'rgba(243, 236, 214, .045)',
+    textInk: 'var(--paper)',
+    rules: ['cap', 'x', 'base'],
     lines: ['is Minimax', 'good at frontend', 'yet?'],
   },
   {
@@ -38,6 +45,9 @@ const PRESSINGS: Pressing[] = [
     pointSize: '88 pt',
     ink: 'coral on plum',
     inkSwatch: 'var(--coral)',
+    paperTone: 'rgba(255, 118, 95, .055)',
+    textInk: 'var(--coral)',
+    rules: ['cap', 'x', 'base'],
     lines: ['is M3', 'good at frontend', 'yet?'],
   },
   {
@@ -49,119 +59,169 @@ const PRESSINGS: Pressing[] = [
     pointSize: '84 pt',
     ink: 'acid on midnight',
     inkSwatch: 'var(--acid)',
+    paperTone: 'rgba(216, 255, 106, .055)',
+    textInk: 'var(--acid)',
+    rules: ['cap', 'x', 'base'],
     lines: ['IS', 'GOOD AT', 'FRONTEND YET?'],
   },
 ]
 
-const FOLIO = 'v'
-
-function PressingTab({ pressing, isActive, onSelect }: { pressing: Pressing; isActive: boolean; onSelect: (id: VoiceId) => void }) {
+function RegMark({ corner }: { corner: 'tl' | 'tr' | 'bl' | 'br' }) {
+  const rotation = corner === 'tl' ? 0 : corner === 'tr' ? 90 : corner === 'br' ? 180 : 270
   return (
-    <button
-      type="button"
-      className={`pressings__tab pressings__tab--${pressing.voice} ${isActive ? 'is-active' : ''}`}
-      onClick={() => onSelect(pressing.voice)}
-      aria-pressed={isActive}
-      aria-label={`Press the title in the ${pressing.name} voice`}
-    >
-      <span className="pressings__tab-letter" aria-hidden="true">{pressing.letter}</span>
-      <span className={`pressings__tab-mini pressings__tab-mini--${pressing.voice}`} aria-hidden="true">
-        <span>{pressing.lines[0]}</span>
-        <span>{pressing.lines[1]}</span>
-        <span>{pressing.lines[2]}</span>
-      </span>
-      <span className="pressings__tab-name">{pressing.name}</span>
-      <span className="pressings__tab-mark" aria-hidden="true">
-        <span className="pressings__tab-mark-dot" style={{ background: pressing.inkSwatch }} />
-        {isActive ? 'set' : 'press'}
-      </span>
-    </button>
+    <svg viewBox="0 0 14 14" aria-hidden="true" style={{ transform: `rotate(${rotation}deg)` }}>
+      <circle cx="7" cy="7" r="5.5" fill="none" stroke="currentColor" strokeWidth=".5" />
+      <path d="M2 7h10M7 2v10" stroke="currentColor" strokeWidth=".55" fill="none" />
+    </svg>
   )
 }
 
-export function SpecimenSpread({ active, onSelect }: SpecimenSpreadProps) {
-  const activeIndex = PRESSINGS.findIndex(pressing => pressing.voice === active)
-  const pressing = PRESSINGS[activeIndex] ?? PRESSINGS[0]
+function PulledStamp({ letter }: { letter: string }) {
   return (
-    <section className="specimen-spread section" id="pressings" aria-labelledby="specimen-spread-title">
-      <header className="section__header specimen-spread__header">
-        <p className="eyebrow"><span className="eyebrow__line" />type specimen <em>folio {FOLIO} · one question, three pressings</em></p>
-        <h2 id="specimen-spread-title">One question, <i>three pressings.</i></h2>
-        <p className="section__lede">Pick a pressing below. The title above shifts with it — typography is part of any honest answer, not a decoration after.</p>
-      </header>
+    <svg viewBox="0 0 60 60" aria-hidden="true">
+      <circle cx="30" cy="30" r="24" fill="none" stroke="currentColor" strokeWidth=".8" />
+      <circle cx="30" cy="30" r="20" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2" />
+      <text
+        x="30" y="20"
+        textAnchor="middle"
+        fontFamily="ui-monospace, monospace"
+        fontSize="3.6" letterSpacing="1.6"
+        fill="currentColor"
+      >PULLED · {letter}</text>
+      <text
+        x="30" y="34"
+        textAnchor="middle"
+        fontFamily="Georgia, serif"
+        fontStyle="italic"
+        fontSize="11"
+        fill="currentColor"
+      >m³</text>
+      <text
+        x="30" y="44"
+        textAnchor="middle"
+        fontFamily="ui-monospace, monospace"
+        fontSize="3.6" letterSpacing="1.6"
+        fill="currentColor"
+      >FOLIO · V</text>
+    </svg>
+  )
+}
 
-      <div className="specimen-spread__stage">
-        <article key={pressing.voice} className={`specimen-stage specimen-stage--${pressing.voice}`} aria-label={`Pressing ${pressing.letter} of three: ${pressing.name}`}>
-          <span className="specimen-stage__corner specimen-stage__corner--tl" aria-hidden="true" />
-          <span className="specimen-stage__corner specimen-stage__corner--tr" aria-hidden="true" />
-          <span className="specimen-stage__corner specimen-stage__corner--bl" aria-hidden="true" />
-          <span className="specimen-stage__corner specimen-stage__corner--br" aria-hidden="true" />
+function PressingCard({ pressing, isActive, onSelect }: { pressing: Pressing; isActive: boolean; onSelect: (id: VoiceId) => void }) {
+  const style = {
+    '--card-paper': pressing.paperTone,
+    '--card-ink': pressing.textInk,
+  } as CSSProperties
+  return (
+    <li className={`specimen-drawer__slot specimen-drawer__slot--${pressing.voice} ${isActive ? 'is-active' : ''}`}>
+      <button
+        type="button"
+        className={`specimen-drawer__card specimen-drawer__card--${pressing.voice}`}
+        onClick={() => onSelect(pressing.voice)}
+        aria-pressed={isActive}
+        aria-label={`Press the title in the ${pressing.name} voice`}
+        style={style}
+      >
+        <span className="specimen-drawer__corner specimen-drawer__corner--tl" aria-hidden="true" />
+        <span className="specimen-drawer__corner specimen-drawer__corner--tr" aria-hidden="true" />
+        <span className="specimen-drawer__corner specimen-drawer__corner--bl" aria-hidden="true" />
+        <span className="specimen-drawer__corner specimen-drawer__corner--br" aria-hidden="true" />
 
-          <span className="specimen-stage__plate" aria-hidden="true">
-            <svg viewBox="0 0 32 32">
-              <circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" strokeWidth=".8" />
-              <text x="16" y="20" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">{pressing.letter}</text>
-            </svg>
-            pressing {String(activeIndex + 1).padStart(2, '0')} / 03
+        <span className="specimen-drawer__reg specimen-drawer__reg--tl" aria-hidden="true"><RegMark corner="tl" /></span>
+        <span className="specimen-drawer__reg specimen-drawer__reg--tr" aria-hidden="true"><RegMark corner="tr" /></span>
+        <span className="specimen-drawer__reg specimen-drawer__reg--bl" aria-hidden="true"><RegMark corner="bl" /></span>
+        <span className="specimen-drawer__reg specimen-drawer__reg--br" aria-hidden="true"><RegMark corner="br" /></span>
+
+        <header className="specimen-drawer__head">
+          <span className="specimen-drawer__letter" aria-hidden="true">{pressing.letter}</span>
+          <span className="specimen-drawer__copy">
+            <span className="specimen-drawer__name">{pressing.name}</span>
+            <span className="specimen-drawer__descriptor">{pressing.descriptor}</span>
           </span>
+        </header>
 
-          <div className="specimen-stage__guides" aria-hidden="true">
-            <span className="specimen-stage__guide specimen-stage__guide--cap" />
-            <span className="specimen-stage__guide specimen-stage__guide--x" />
-            <span className="specimen-stage__guide specimen-stage__guide--base" />
-            <span className="specimen-stage__guide specimen-stage__guide--drop" />
+        <div className="specimen-drawer__stage" aria-hidden="true">
+          <div className="specimen-drawer__guides">
+            <span className="specimen-drawer__guide specimen-drawer__guide--cap" />
+            <span className="specimen-drawer__guide specimen-drawer__guide--x" />
+            <span className="specimen-drawer__guide specimen-drawer__guide--base" />
           </div>
-
-          <div className={`specimen-stage__lines specimen-stage__lines--${pressing.voice}`} aria-hidden="true">
+          <div className={`specimen-drawer__specimen specimen-drawer__specimen--${pressing.voice}`}>
             <span>{pressing.lines[0]}</span>
             <span>{pressing.lines[1]}</span>
             <span>{pressing.lines[2]}</span>
           </div>
+        </div>
 
-          <span className="specimen-stage__scale" aria-hidden="true">
-            <span /> <span /> <span className="is-major" /> <span /> <span /> <span className="is-major" /> <span /> <span /> <span className="is-major" /> <span /> <span /> <span className="is-major" />
+        <footer className="specimen-drawer__foot">
+          <div className="specimen-drawer__row">
+            <span className="specimen-drawer__row-label">face</span>
+            <span className="specimen-drawer__row-value">{pressing.face}</span>
+          </div>
+          <div className="specimen-drawer__row">
+            <span className="specimen-drawer__row-label">size</span>
+            <span className="specimen-drawer__row-value">{pressing.pointSize}</span>
+          </div>
+          <div className="specimen-drawer__row">
+            <span className="specimen-drawer__row-label">ink</span>
+            <span className="specimen-drawer__row-value specimen-drawer__row-value--ink">
+              <span className="specimen-drawer__swatch" style={{ background: pressing.inkSwatch }} aria-hidden="true" />
+              {pressing.ink}
+            </span>
+          </div>
+        </footer>
+
+        <span className="specimen-drawer__pulled" aria-hidden="true">
+          <PulledStamp letter={pressing.letter} />
+        </span>
+      </button>
+    </li>
+  )
+}
+
+export function SpecimenSpread({ active, onSelect }: SpecimenSpreadProps) {
+  return (
+    <section className="specimen-spread section" id="pressings" aria-labelledby="specimen-spread-title">
+      <header className="section__header specimen-spread__header">
+        <p className="eyebrow"><span className="eyebrow__line" />type specimen <em>folio v · the open drawer</em></p>
+        <h2 id="specimen-spread-title">One question, <i>three pressings.</i></h2>
+        <p className="section__lede">The drawer is open. Three proofs of the same question, each set in its own voice. Pull one out and the title above answers with it.</p>
+      </header>
+
+      <div className="specimen-drawer">
+        <div className="specimen-drawer__rail" aria-hidden="true">
+          <span className="specimen-drawer__rail-handle">
+            <span className="specimen-drawer__rail-dot" />
+            <span className="specimen-drawer__rail-dot specimen-drawer__rail-dot--mid" />
+            <span className="specimen-drawer__rail-dot" />
           </span>
-        </article>
+          <span className="specimen-drawer__rail-line" />
+          <span className="specimen-drawer__rail-text">drawer open · three proofs laid out</span>
+          <span className="specimen-drawer__rail-line" />
+          <span className="specimen-drawer__rail-tag">folio v</span>
+        </div>
 
-        <aside key={`legend-${pressing.voice}`} className="specimen-stage__legend" aria-label="Pressing details">
-          <span className="specimen-stage__legend-eyebrow" aria-hidden="true">on the press</span>
-          <h3 className="specimen-stage__legend-name">{pressing.name}</h3>
-          <p className="specimen-stage__legend-descriptor">{pressing.descriptor}</p>
-          <dl className="specimen-stage__legend-grid">
-            <div className="specimen-stage__legend-row">
-              <dt>face</dt>
-              <dd>{pressing.face}</dd>
-            </div>
-            <div className="specimen-stage__legend-row">
-              <dt>size</dt>
-              <dd>{pressing.pointSize}</dd>
-            </div>
-            <div className="specimen-stage__legend-row">
-              <dt>ink</dt>
-              <dd>
-                <span className="specimen-stage__legend-dot" style={{ background: pressing.inkSwatch }} aria-hidden="true" />
-                {pressing.ink}
-              </dd>
-            </div>
-            <div className="specimen-stage__legend-row">
-              <dt>folio</dt>
-              <dd>v · pressing {String(activeIndex + 1).padStart(2, '0')}</dd>
-            </div>
-          </dl>
-        </aside>
+        <ol className="specimen-drawer__stack" role="list" aria-label="Three pressings of the title">
+          {PRESSINGS.map(pressing => (
+            <PressingCard
+              key={pressing.voice}
+              pressing={pressing}
+              isActive={active === pressing.voice}
+              onSelect={onSelect}
+            />
+          ))}
+        </ol>
+
+        <div className="specimen-drawer__plate" aria-hidden="true">
+          <span className="specimen-drawer__plate-bar" />
+          <span className="specimen-drawer__plate-text">three readings · one mark · the question keeps moving</span>
+          <span className="specimen-drawer__plate-bar" />
+        </div>
       </div>
 
-      <ol className="pressings__tabs" role="list" aria-label="Pressings of the title">
-        {PRESSINGS.map(entry => (
-          <li key={entry.voice} className="pressings__tab-item">
-            <PressingTab pressing={entry} isActive={entry.voice === active} onSelect={onSelect} />
-          </li>
-        ))}
-      </ol>
-
-      <p className="pressings__foot">
+      <p className="specimen-drawer__foot-note">
         <span aria-hidden="true">※</span>
-        Each pressing is a different answer to the same question. None of them are final.
+        Each pressing is a different answer to the same question. None of them are final. The marked words above remain marked in every reading.
       </p>
     </section>
   )

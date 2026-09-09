@@ -791,6 +791,19 @@ export function App() {
             <span className="hero__corner hero__corner--br" aria-hidden="true">
               <svg viewBox="0 0 22 22"><path d="M6 6h14M6 20V6" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="square" /></svg>
             </span>
+            <span className="hero__reg hero__reg--tl" aria-hidden="true">
+              <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth=".5" /><path d="M3 8h10M8 3v10" stroke="currentColor" strokeWidth=".55" fill="none" /></svg>
+            </span>
+            <span className="hero__reg hero__reg--tr" aria-hidden="true">
+              <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth=".5" /><path d="M3 8h10M8 3v10" stroke="currentColor" strokeWidth=".55" fill="none" /></svg>
+            </span>
+            <span className="hero__reg hero__reg--bl" aria-hidden="true">
+              <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth=".5" /><path d="M3 8h10M8 3v10" stroke="currentColor" strokeWidth=".55" fill="none" /></svg>
+            </span>
+            <span className="hero__reg hero__reg--br" aria-hidden="true">
+              <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth=".5" /><path d="M3 8h10M8 3v10" stroke="currentColor" strokeWidth=".55" fill="none" /></svg>
+            </span>
+            <span className="hero__plate" aria-hidden="true">proof · cream stock · letterpress</span>
             <div className="hero__copy">
               <span className="hero__lead-in" aria-hidden="true">
                 <span className="hero__lead-in-line" />
