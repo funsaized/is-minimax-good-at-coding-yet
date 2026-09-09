@@ -4,6 +4,7 @@ import { MarginalThread } from './MarginalThread'
 import { PressStamp } from './PressStamp'
 import { SpecimenSpread } from './SpecimenSpread'
 import { MarkedProof } from './MarkedProof'
+import { LetterToReader } from './LetterToReader'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -312,6 +313,7 @@ function PressFolio({ section }: { section: string }) {
   const map: Record<string, { folio: string; mark: string }> = {
     question: { folio: 'i', mark: 'set' },
     contents: { folio: 'ii', mark: 'contents' },
+    note: { folio: '·', mark: 'slip' },
     proof: { folio: 'iii', mark: 'proof' },
     pressings: { folio: 'iv', mark: 'specimen' },
     notes: { folio: 'v', mark: 'marginalia' },
@@ -319,11 +321,18 @@ function PressFolio({ section }: { section: string }) {
     answer: { folio: 'vii', mark: 'answer' },
   }
   const entry = map[section] ?? map.question
+  const isSlip = entry.folio === '·'
   return (
-    <span className="press-folio" aria-live="polite">
-      <span className="press-folio__num">folio {entry.folio}</span>
-      <span className="press-folio__mark" aria-hidden="true">·</span>
-      <span className="press-folio__label">{entry.mark}</span>
+    <span className={`press-folio ${isSlip ? 'press-folio--slip' : ''}`} aria-live="polite">
+      {isSlip ? (
+        <span className="press-folio__label">{entry.mark}</span>
+      ) : (
+        <>
+          <span className="press-folio__num">folio {entry.folio}</span>
+          <span className="press-folio__mark" aria-hidden="true">·</span>
+          <span className="press-folio__label">{entry.mark}</span>
+        </>
+      )}
     </span>
   )
 }
@@ -583,6 +592,7 @@ function FolioLedger() {
   const items = [
     { id: 'question', num: 'i', title: 'the question, set', note: 'three marked words, one margin' },
     { id: 'contents', num: 'ii', title: 'this page, listed', note: 'the press log · folio contents', self: true },
+    { id: 'note', num: '·', title: 'a folded slip', note: 'a short letter to the reader' },
     { id: 'proof', num: 'iii', title: 'the second proof', note: 'marks attached to the words worth keeping' },
     { id: 'pressings', num: 'iv', title: 'three pressings', note: 'the same question set three ways' },
     { id: 'notes', num: 'v', title: 'the marginalia', note: 'three things worth keeping' },
@@ -644,19 +654,15 @@ function Colophon({ voice }: { voice: VoiceId }) {
         </div>
         <div className="colophon__grid">
           <div className="colophon__row">
-            <span className="colophon__label">set in</span>
-            <span className="colophon__value">system serif · italic</span>
-          </div>
-          <div className="colophon__row">
             <span className="colophon__label">composed</span>
             <span className="colophon__value">by hand, folded once</span>
           </div>
           <div className="colophon__row">
-            <span className="colophon__label">tag</span>
+            <span className="colophon__label">voice</span>
             <span className="colophon__value">{tag}</span>
           </div>
           <div className="colophon__row">
-            <span className="colophon__label">ink</span>
+            <span className="colophon__label">palette</span>
             <span className="colophon__swatches" aria-hidden="true">
               <span className="colophon__swatch" style={{ background: 'var(--acid)' }} title="acid" />
               <span className="colophon__swatch" style={{ background: 'var(--coral)' }} title="coral" />
@@ -713,7 +719,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'contents', 'proof', 'pressings', 'notes', 'voices', 'answer']
+    const elements = ['question', 'contents', 'note', 'proof', 'pressings', 'notes', 'voices', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -732,7 +738,7 @@ export function App() {
 
   useEffect(() => {
     if (activeSection === 'question') setActiveStage(answerOpen ? 2 : 0)
-    else if (activeSection === 'contents' || activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
+    else if (activeSection === 'contents' || activeSection === 'note' || activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
     else setActiveStage(2)
   }, [activeSection, answerOpen])
 
@@ -794,6 +800,7 @@ export function App() {
           <nav className="site-nav" aria-label="Sections">
             <a href="#question" className={activeSection === 'question' ? 'is-active' : ''} aria-current={activeSection === 'question' ? 'location' : undefined}>question</a>
             <a href="#contents" className={activeSection === 'contents' ? 'is-active' : ''} aria-current={activeSection === 'contents' ? 'location' : undefined}>contents</a>
+            <a href="#note" className={activeSection === 'note' ? 'is-active' : ''} aria-current={activeSection === 'note' ? 'location' : undefined}>note</a>
             <a href="#proof" className={activeSection === 'proof' ? 'is-active' : ''} aria-current={activeSection === 'proof' ? 'location' : undefined}>proof</a>
             <a href="#pressings" className={activeSection === 'pressings' ? 'is-active' : ''} aria-current={activeSection === 'pressings' ? 'location' : undefined}>pressings</a>
             <a href="#notes" className={activeSection === 'notes' ? 'is-active' : ''} aria-current={activeSection === 'notes' ? 'location' : undefined}>marginalia</a>
@@ -884,6 +891,8 @@ export function App() {
 
         <FolioLedger />
 
+        <LetterToReader voice={voice} onReadAnswer={openAnswerFromNav} />
+
         <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} />
 
         <MarkedProof selected={selectedWord} onSelect={id => selectWord(id, true)} />
@@ -896,7 +905,7 @@ export function App() {
         <Colophon voice={voice} />
       </div>
 
-      <MarginalThread activeId={activeSection === 'question' || activeSection === 'contents' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' || activeSection === 'proof' ? activeSection : 'question'} />
+      <MarginalThread activeId={activeSection === 'question' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' || activeSection === 'proof' ? activeSection : 'question'} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )
