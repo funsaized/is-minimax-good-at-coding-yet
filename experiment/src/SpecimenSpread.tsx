@@ -53,74 +53,110 @@ const PRESSINGS: Pressing[] = [
   },
 ]
 
-const FOLIO = 'vi'
+const FOLIO = 'v'
+
+function PressingTab({ pressing, isActive, onSelect }: { pressing: Pressing; isActive: boolean; onSelect: (id: VoiceId) => void }) {
+  return (
+    <button
+      type="button"
+      className={`pressings__tab pressings__tab--${pressing.voice} ${isActive ? 'is-active' : ''}`}
+      onClick={() => onSelect(pressing.voice)}
+      aria-pressed={isActive}
+      aria-label={`Press the title in the ${pressing.name} voice`}
+    >
+      <span className="pressings__tab-letter" aria-hidden="true">{pressing.letter}</span>
+      <span className={`pressings__tab-mini pressings__tab-mini--${pressing.voice}`} aria-hidden="true">
+        <span>{pressing.lines[0]}</span>
+        <span>{pressing.lines[1]}</span>
+        <span>{pressing.lines[2]}</span>
+      </span>
+      <span className="pressings__tab-name">{pressing.name}</span>
+      <span className="pressings__tab-mark" aria-hidden="true">
+        <span className="pressings__tab-mark-dot" style={{ background: pressing.inkSwatch }} />
+        {isActive ? 'set' : 'press'}
+      </span>
+    </button>
+  )
+}
 
 export function SpecimenSpread({ active, onSelect }: SpecimenSpreadProps) {
+  const activeIndex = PRESSINGS.findIndex(pressing => pressing.voice === active)
+  const pressing = PRESSINGS[activeIndex] ?? PRESSINGS[0]
   return (
     <section className="specimen-spread section" id="pressings" aria-labelledby="specimen-spread-title">
       <header className="section__header specimen-spread__header">
-        <p className="eyebrow"><span className="eyebrow__line" />type specimen <em>folio {FOLIO} · the question set three ways</em></p>
+        <p className="eyebrow"><span className="eyebrow__line" />type specimen <em>folio {FOLIO} · one question, three pressings</em></p>
         <h2 id="specimen-spread-title">One question, <i>three pressings.</i></h2>
-        <p className="section__lede">The same words typeset three different ways. Pick a pressing and the title above settles into its voice — typography is part of the answer.</p>
+        <p className="section__lede">Pick a pressing below. The title above shifts with it — typography is part of any honest answer, not a decoration after.</p>
       </header>
 
-      <ol className="pressings" role="list" aria-label="Pressings of the title in three voices">
-        {PRESSINGS.map((pressing, index) => {
-          const isActive = pressing.voice === active
-          return (
-            <li key={pressing.voice} className={`pressings__row pressings__row--${pressing.voice} ${isActive ? 'is-active' : ''}`}>
-              <button
-                type="button"
-                className="pressings__button"
-                onClick={() => onSelect(pressing.voice)}
-                aria-pressed={isActive}
-                aria-label={`Set the title in the ${pressing.name} voice`}
-              >
-                <span className="pressings__sidemark" aria-hidden="true">
-                  <span className="pressings__sidemark-letter">{pressing.letter}</span>
-                  <span className="pressings__sidemark-rule" />
-                </span>
+      <div className="specimen-spread__stage">
+        <article key={pressing.voice} className={`specimen-stage specimen-stage--${pressing.voice}`} aria-label={`Pressing ${pressing.letter} of three: ${pressing.name}`}>
+          <span className="specimen-stage__corner specimen-stage__corner--tl" aria-hidden="true" />
+          <span className="specimen-stage__corner specimen-stage__corner--tr" aria-hidden="true" />
+          <span className="specimen-stage__corner specimen-stage__corner--bl" aria-hidden="true" />
+          <span className="specimen-stage__corner specimen-stage__corner--br" aria-hidden="true" />
 
-                <span className={`pressings__specimen pressings__specimen--${pressing.voice}`} aria-hidden="true">
-                  <span className="pressings__guide pressings__guide--cap" />
-                  <span className="pressings__guide pressings__guide--x" />
-                  <span className="pressings__guide pressings__guide--base" />
-                  <span className="pressings__guide pressings__guide--drop" />
-                  <span className="pressings__lines">
-                    <span className="pressings__line">{pressing.lines[0]}</span>
-                    <span className="pressings__line">{pressing.lines[1]}</span>
-                    <span className="pressings__line">{pressing.lines[2]}</span>
-                  </span>
-                </span>
+          <span className="specimen-stage__plate" aria-hidden="true">
+            <svg viewBox="0 0 32 32">
+              <circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" strokeWidth=".8" />
+              <text x="16" y="20" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">{pressing.letter}</text>
+            </svg>
+            pressing {String(activeIndex + 1).padStart(2, '0')} / 03
+          </span>
 
-                <span className="pressings__meta" aria-hidden="true">
-                  <span className="pressings__name">{pressing.name}</span>
-                  <span className="pressings__descriptor">{pressing.descriptor}</span>
-                  <span className="pressings__legend">
-                    <span><em>face</em>{pressing.face}</span>
-                    <span><em>size</em>{pressing.pointSize}</span>
-                    <span className="pressings__ink">
-                      <em>ink</em>
-                      <span className="pressings__ink-dot" style={{ background: pressing.inkSwatch }} />
-                      {pressing.ink}
-                    </span>
-                  </span>
-                </span>
+          <div className="specimen-stage__guides" aria-hidden="true">
+            <span className="specimen-stage__guide specimen-stage__guide--cap" />
+            <span className="specimen-stage__guide specimen-stage__guide--x" />
+            <span className="specimen-stage__guide specimen-stage__guide--base" />
+            <span className="specimen-stage__guide specimen-stage__guide--drop" />
+          </div>
 
-                <span className="pressings__select" aria-hidden="true">
-                  <span className="pressings__select-dot" />
-                  <span className="pressings__select-label">{isActive ? 'set' : 'press'}</span>
-                </span>
-              </button>
-              <span className="pressings__plate" aria-hidden="true">
-                <svg className="pressings__cutter" viewBox="0 0 24 24">
-                  <path d="M4 4l16 16M4 20L20 4" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
-                </svg>
-                <span className="pressings__plate-folio">pressing {String(index + 1).padStart(2, '0')}</span>
-              </span>
-            </li>
-          )
-        })}
+          <div className={`specimen-stage__lines specimen-stage__lines--${pressing.voice}`} aria-hidden="true">
+            <span>{pressing.lines[0]}</span>
+            <span>{pressing.lines[1]}</span>
+            <span>{pressing.lines[2]}</span>
+          </div>
+
+          <span className="specimen-stage__scale" aria-hidden="true">
+            <span /> <span /> <span className="is-major" /> <span /> <span /> <span className="is-major" /> <span /> <span /> <span className="is-major" /> <span /> <span /> <span className="is-major" />
+          </span>
+        </article>
+
+        <aside key={`legend-${pressing.voice}`} className="specimen-stage__legend" aria-label="Pressing details">
+          <span className="specimen-stage__legend-eyebrow" aria-hidden="true">on the press</span>
+          <h3 className="specimen-stage__legend-name">{pressing.name}</h3>
+          <p className="specimen-stage__legend-descriptor">{pressing.descriptor}</p>
+          <dl className="specimen-stage__legend-grid">
+            <div className="specimen-stage__legend-row">
+              <dt>face</dt>
+              <dd>{pressing.face}</dd>
+            </div>
+            <div className="specimen-stage__legend-row">
+              <dt>size</dt>
+              <dd>{pressing.pointSize}</dd>
+            </div>
+            <div className="specimen-stage__legend-row">
+              <dt>ink</dt>
+              <dd>
+                <span className="specimen-stage__legend-dot" style={{ background: pressing.inkSwatch }} aria-hidden="true" />
+                {pressing.ink}
+              </dd>
+            </div>
+            <div className="specimen-stage__legend-row">
+              <dt>folio</dt>
+              <dd>v · pressing {String(activeIndex + 1).padStart(2, '0')}</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+
+      <ol className="pressings__tabs" role="list" aria-label="Pressings of the title">
+        {PRESSINGS.map(entry => (
+          <li key={entry.voice} className="pressings__tab-item">
+            <PressingTab pressing={entry} isActive={entry.voice === active} onSelect={onSelect} />
+          </li>
+        ))}
       </ol>
 
       <p className="pressings__foot">

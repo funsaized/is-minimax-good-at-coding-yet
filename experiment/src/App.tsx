@@ -6,44 +6,12 @@ import { SpecimenSpread } from './SpecimenSpread'
 import { MarkedProof } from './MarkedProof'
 import { LetterToReader } from './LetterToReader'
 import { ComposeFloor } from './ComposeFloor'
-import { TypeLadder } from './TypeLadder'
 import { PressRoom } from './PressRoom'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
   human: 'bold',
   bold: 'quiet',
-}
-
-function HeroChapterMark() {
-  return (
-    <aside className="hero__chapter" aria-label="Editor's note">
-      <span className="hero__chapter-rule" aria-hidden="true">
-        <svg viewBox="0 0 360 14" preserveAspectRatio="none">
-          <path
-            className="hero__chapter-rule-stroke"
-            d="M2 7c24-6 48 4 72 0s48-8 72-2 48 8 72 0 48-8 72 0 48 4 72-2"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth=".8"
-            strokeLinecap="round"
-          />
-        </svg>
-        <span className="hero__chapter-rule-pip" aria-hidden="true" />
-        <span className="hero__chapter-rule-pip hero__chapter-rule-pip--end" aria-hidden="true" />
-      </span>
-      <em className="hero__chapter-quote">
-        attention, <span className="hero__chapter-accent">not ornament.</span>
-      </em>
-      <span className="hero__chapter-mark" aria-hidden="true">
-        <svg viewBox="0 0 28 16">
-          <path d="M2 8c4-5 8-5 12 0 4 5 8 5 12 0" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
-          <circle cx="14" cy="8" r="1.6" fill="currentColor" />
-        </svg>
-        <span className="hero__chapter-mark-tag">a note for the reader</span>
-      </span>
-    </aside>
-  )
 }
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
@@ -71,12 +39,6 @@ type Voice = {
   lines: [string, string, string]
 }
 
-type Stage = {
-  id: 'set' | 'compose' | 'proof'
-  name: string
-  hint: string
-}
-
 const VOICES: Voice[] = [
   {
     id: 'quiet',
@@ -99,12 +61,6 @@ const VOICES: Voice[] = [
     body: 'The poster reading. It answers with its whole chest, then leaves the room for doubt.',
     lines: ['IS', 'GOOD AT', 'FRONTEND YET?'],
   },
-]
-
-const STAGES: Stage[] = [
-  { id: 'set', name: 'set', hint: 'a question is fixed' },
-  { id: 'compose', name: 'compose', hint: 'typography tries on the words' },
-  { id: 'proof', name: 'proof', hint: 'an answer is allowed to arrive' },
 ]
 
 function LogoMark({ size = 38, accent = 'var(--acid)' }: { size?: number; accent?: string }) {
@@ -186,26 +142,6 @@ function HeaderRuler() {
         ))}
       </div>
     </div>
-  )
-}
-
-function StageMarkers({ active }: { active: number }) {
-  return (
-    <ol className="stage-markers" aria-label="The three stages of the page">
-      {STAGES.map((stage, index) => (
-        <li
-          key={stage.id}
-          className={`stage-markers__item ${index === active ? 'is-active' : ''} ${index < active ? 'is-past' : ''}`}
-          aria-current={index === active ? 'step' : undefined}
-        >
-          <span className="stage-markers__dot" aria-hidden="true">
-            <span />
-          </span>
-          <span className="stage-markers__name">{stage.name}</span>
-          <span className="stage-markers__hint">{stage.hint}</span>
-        </li>
-      ))}
-    </ol>
   )
 }
 
@@ -596,15 +532,15 @@ function Colophon({ voice, word }: { voice: VoiceId; word: WordId }) {
               <span aria-hidden="true">·</span>
               <span>press <em>·</em> m³ bay</span>
               <span aria-hidden="true">·</span>
-              <span>shift + v to pull again</span>
+              <span>press the lever · or shift + v</span>
             </span>
           </span>
-          <a className="colophon__impression-pull" href="#question">
-            <span>re-pull</span>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <span className="colophon__impression-mark" aria-hidden="true">
+            <svg viewBox="0 0 56 18">
+              <path d="M2 11c6-8 14 4 22-3s8-6 14-1 12 4 16-1" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+              <circle cx="54" cy="9" r="1.6" fill="currentColor" />
             </svg>
-          </a>
+          </span>
         </div>
         <div className="colophon__signature" aria-hidden="true">
           <svg className="colophon__signature-mark" viewBox="0 0 260 36">
@@ -672,7 +608,6 @@ export function App() {
   const [hoveredWord, setHoveredWord] = useState<WordId | null>(null)
   const [voice, setVoice] = useState<VoiceId>('quiet')
   const [activeSection, setActiveSection] = useState('question')
-  const [activeStage, setActiveStage] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [announcement, setAnnouncement] = useState('')
   const [circleKey, setCircleKey] = useState<Record<WordId, number>>({ m3: 0, good: 0, yet: 0 })
@@ -703,12 +638,6 @@ export function App() {
     elements.forEach(element => observer.observe(element))
     return () => observer.disconnect()
   }, [])
-
-  useEffect(() => {
-    if (activeSection === 'question') setActiveStage(answerOpen ? 2 : 0)
-    else if (activeSection === 'press-room' || activeSection === 'compose' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
-    else setActiveStage(2)
-  }, [activeSection, answerOpen])
 
   useEffect(() => {
     const compute = () => {
@@ -830,7 +759,9 @@ export function App() {
         <section className="hero" id="question" aria-labelledby="page-title">
           <div className="hero__eyebrow-row">
             <p className="eyebrow"><span className="eyebrow__line" />frontend experiment <em>read the question first</em></p>
-            <StageMarkers active={activeStage} />
+            <span className="hero__stamp" aria-hidden="true">
+              <PressStamp voice={voice} size={42} />
+            </span>
           </div>
 
           <div className="hero__spread">
@@ -859,32 +790,52 @@ export function App() {
                   <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} circleKey={circleKey.good} />
                 </span>
                 <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
-                <span className="hero__title-fold" aria-hidden="true" />
+                <svg key={voice} className="hero__title-rule" viewBox="0 0 720 22" preserveAspectRatio="none" aria-hidden="true">
+                  <path
+                    className="hero__title-rule-stroke"
+                    d="M2 12c36-12 72 6 108 0s72-10 108-2 72 12 108 0 72-12 108-2 72 8 108-4 72-2 72 4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.1"
+                    strokeLinecap="round"
+                  />
+                  <circle className="hero__title-rule-end" cx="718" cy="10" r="2.4" fill="currentColor" />
+                </svg>
               </h1>
               <span className="hero__title-tag" aria-hidden="true">
                 <span className="hero__title-tag-mark" />
-                <span>set in system serif · folded once</span>
+                <span>set in {voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'} · folio i · folded once</span>
                 <span className="hero__title-tag-mark" />
               </span>
             </div>
           </div>
 
-          <div className="hero__voice-rail">
-            <span className={`hero__voice-rail-pill hero__voice-pill--${voice}`} aria-label={`Now setting in ${voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}`}>
-              <span className="hero__voice-rail-pill-dot" aria-hidden="true" />
-              <span className="hero__voice-rail-pill-eyebrow">now setting in</span>
-              <span className="hero__voice-rail-pill-name">{voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}</span>
-              <span className="hero__voice-rail-pill-shortcut" aria-hidden="true">⇧V</span>
-            </span>
-            <button ref={answerTriggerRef} type="button" className={`button button--primary ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
-              <span>{answerOpen ? 'fold the answer back' : 'read the editor’s note'}</span>
+          <div className="hero__voice-row">
+            <span className="hero__voice-row-eyebrow" aria-hidden="true">try a voice</span>
+            <div className="hero__voice-tabs" role="tablist" aria-label="Choose a typographic voice">
+              {VOICES.map(item => {
+                const isActive = item.id === voice
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={`hero__voice-tab hero__voice-tab--${item.id} ${isActive ? 'is-active' : ''}`}
+                    onClick={() => selectVoice(item.id)}
+                    role="tab"
+                    aria-selected={isActive}
+                    tabIndex={isActive ? 0 : -1}
+                  >
+                    <span className="hero__voice-tab-letter" aria-hidden="true">{item.id === 'quiet' ? 'A' : item.id === 'human' ? 'B' : 'C'}</span>
+                    <span className="hero__voice-tab-name">{item.name}</span>
+                  </button>
+                )
+              })}
+            </div>
+            <button ref={answerTriggerRef} type="button" className={`hero__note-link ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
+              <span>{answerOpen ? 'fold the answer back' : 'open the editor’s note'}</span>
               <ArrowIcon />
             </button>
           </div>
-
-          <HeroChapterMark />
-
-          <TypeLadder active={voice} onSelect={selectVoice} />
 
           <div className="hero__body">
             <p className="hero__summary">
