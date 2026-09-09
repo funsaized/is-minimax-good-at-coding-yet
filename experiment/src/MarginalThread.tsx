@@ -9,10 +9,11 @@ type ThreadSection = {
 
 const THREAD_SECTIONS: ThreadSection[] = [
   { id: 'question', index: 'i', label: 'compose', note: 'the question is set' },
-  { id: 'pressings', index: 'ii', label: 'pressings', note: 'the question set three ways' },
-  { id: 'notes', index: 'iii', label: 'marginalia', note: 'three things worth keeping' },
-  { id: 'voices', index: 'iv', label: 'voices', note: 'the words try on clothes' },
-  { id: 'answer', index: 'v', label: 'proof', note: 'the answer is tipped in' },
+  { id: 'proof', index: 'ii', label: 'proof', note: 'the question, marked up' },
+  { id: 'pressings', index: 'iii', label: 'pressings', note: 'the question set three ways' },
+  { id: 'notes', index: 'iv', label: 'marginalia', note: 'three things worth keeping' },
+  { id: 'voices', index: 'v', label: 'voices', note: 'the words try on clothes' },
+  { id: 'answer', index: 'vi', label: 'answer', note: 'the answer is tipped in' },
 ]
 
 export function MarginalThread({ activeId }: { activeId: string }) {

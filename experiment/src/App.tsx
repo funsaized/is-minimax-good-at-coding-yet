@@ -3,6 +3,7 @@ import { TypeCase } from './TypeCase'
 import { MarginalThread } from './MarginalThread'
 import { PressStamp } from './PressStamp'
 import { SpecimenSpread } from './SpecimenSpread'
+import { MarkedProof } from './MarkedProof'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -390,6 +391,18 @@ function TitleToken({
         />
         <circle className="title-token__circle-dot" cx="13" cy="16.5" r="1.4" fill="currentColor" />
       </svg>
+      <svg className="title-token__underline" viewBox="0 0 200 14" aria-hidden="true" preserveAspectRatio="none">
+        <path
+          className="title-token__underline-stroke"
+          d="M2 9c20-4 40 4 60 0s40-6 60-2 40 8 60 2 18-2 18-2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          pathLength="100"
+          strokeDasharray="100 100"
+        />
+      </svg>
       <span className="title-token__set" aria-hidden="true" />
       {text}
     </span>
@@ -655,7 +668,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'pressings', 'notes', 'voices', 'answer']
+    const elements = ['question', 'proof', 'pressings', 'notes', 'voices', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -674,7 +687,7 @@ export function App() {
 
   useEffect(() => {
     if (activeSection === 'question') setActiveStage(answerOpen ? 2 : 0)
-    else if (activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
+    else if (activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
     else setActiveStage(2)
   }, [activeSection, answerOpen])
 
@@ -735,6 +748,7 @@ export function App() {
           </a>
           <nav className="site-nav" aria-label="Sections">
             <a href="#question" className={activeSection === 'question' ? 'is-active' : ''} aria-current={activeSection === 'question' ? 'location' : undefined}>question</a>
+            <a href="#proof" className={activeSection === 'proof' ? 'is-active' : ''} aria-current={activeSection === 'proof' ? 'location' : undefined}>proof</a>
             <a href="#pressings" className={activeSection === 'pressings' ? 'is-active' : ''} aria-current={activeSection === 'pressings' ? 'location' : undefined}>pressings</a>
             <a href="#notes" className={activeSection === 'notes' ? 'is-active' : ''} aria-current={activeSection === 'notes' ? 'location' : undefined}>marginalia</a>
             <a href="#voices" className={activeSection === 'voices' ? 'is-active' : ''} aria-current={activeSection === 'voices' ? 'location' : undefined}>voices</a>
@@ -816,6 +830,10 @@ export function App() {
           <div className="hero__footer">
             <span><i className="hero__footer-dot" /> compose, slowly</span>
             <span>marked words open the margin</span>
+            <a className="hero__footer-proof" href="#proof" aria-label="See the editor's proof">
+              <span>see the proof</span>
+              <span aria-hidden="true">↓</span>
+            </a>
             <span className="hero__footer-mark" aria-hidden="true">
               <PressStamp voice={voice} size={28} />
             </span>
@@ -825,6 +843,8 @@ export function App() {
 
         <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} />
 
+        <MarkedProof selected={selectedWord} onSelect={id => selectWord(id, true)} />
+
         <SpecimenSpread active={voice} onSelect={selectVoice} />
 
         <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
@@ -833,7 +853,7 @@ export function App() {
         <Colophon voice={voice} />
       </div>
 
-      <MarginalThread activeId={activeSection === 'question' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' ? activeSection : 'question'} />
+      <MarginalThread activeId={activeSection === 'question' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' || activeSection === 'proof' ? activeSection : 'question'} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )
