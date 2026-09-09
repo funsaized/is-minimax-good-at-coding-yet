@@ -18,7 +18,7 @@ export function LetterToReader({ voice, onReadAnswer }: LetterToReaderProps) {
   return (
     <section className="letter section" id="note" aria-labelledby="letter-title">
       <div className="letter__sheet">
-        <span className="letter__plate" aria-hidden="true">tipped slip · between ii &amp; iii</span>
+        <span className="letter__plate" aria-hidden="true">tipped slip · between iii &amp; iv</span>
         <span className="letter__crease letter__crease--v" aria-hidden="true" />
         <span className="letter__crease letter__crease--h" aria-hidden="true" />
         <span className="letter__dogeare" aria-hidden="true">

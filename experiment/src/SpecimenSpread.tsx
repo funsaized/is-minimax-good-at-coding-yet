@@ -53,7 +53,7 @@ const PRESSINGS: Pressing[] = [
   },
 ]
 
-const FOLIO = 'v'
+const FOLIO = 'vi'
 
 export function SpecimenSpread({ active, onSelect }: SpecimenSpreadProps) {
   return (

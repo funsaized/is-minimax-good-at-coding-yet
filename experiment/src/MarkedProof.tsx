@@ -102,7 +102,7 @@ export function MarkedProof({ selected, onSelect }: MarkedProofProps) {
         <span className="marked-proof__plate" aria-hidden="true">second proof · editor's pass</span>
 
         <div className="marked-proof__head">
-          <p className="eyebrow"><span className="eyebrow__line" />editor's proof <em>folio iii · second reading</em></p>
+          <p className="eyebrow"><span className="eyebrow__line" />editor's proof <em>folio iv · second reading</em></p>
           <h2 id="marked-proof-title">The question, <i>marked up.</i></h2>
           <p className="section__lede">A working proof of the same line, with proofreader's marks attached to the words worth keeping. Tap a mark to follow the thought into the margin.</p>
         </div>
@@ -202,7 +202,7 @@ export function MarkedProof({ selected, onSelect }: MarkedProofProps) {
               <circle cx="24" cy="24" r="16" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2" opacity=".7" />
               <text x="24" y="20" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="4" letterSpacing="1.6" fill="currentColor">PROOF · 02</text>
               <text x="24" y="30" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">m³</text>
-              <text x="24" y="38" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.6" letterSpacing="1.4" fill="currentColor">FOLIO iii</text>
+              <text x="24" y="38" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.6" letterSpacing="1.4" fill="currentColor">FOLIO iv</text>
             </svg>
           </span>
           <p className="marked-proof__caption">

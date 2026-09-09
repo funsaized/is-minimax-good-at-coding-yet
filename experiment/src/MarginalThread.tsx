@@ -8,14 +8,15 @@ type ThreadSection = {
 }
 
 const THREAD_SECTIONS: ThreadSection[] = [
-  { id: 'question', index: 'i', label: 'compose', note: 'the question is set' },
-  { id: 'contents', index: 'ii', label: 'contents', note: 'the press log' },
+  { id: 'question', index: 'i', label: 'question', note: 'the question is set' },
+  { id: 'compose', index: 'ii', label: 'compose', note: 'a working spread of type and margin' },
+  { id: 'contents', index: 'iii', label: 'contents', note: 'the press log' },
   { id: 'note', index: '·', label: 'note', note: 'a folded slip' },
-  { id: 'proof', index: 'iii', label: 'proof', note: 'the question, marked up' },
-  { id: 'pressings', index: 'iv', label: 'pressings', note: 'the question set three ways' },
-  { id: 'notes', index: 'v', label: 'marginalia', note: 'three things worth keeping' },
-  { id: 'voices', index: 'vi', label: 'voices', note: 'the words try on clothes' },
-  { id: 'answer', index: 'vii', label: 'answer', note: 'the answer is tipped in' },
+  { id: 'proof', index: 'iv', label: 'proof', note: 'the question, marked up' },
+  { id: 'pressings', index: 'v', label: 'pressings', note: 'the question set three ways' },
+  { id: 'notes', index: 'vi', label: 'marginalia', note: 'three things worth keeping' },
+  { id: 'voices', index: 'vii', label: 'voices', note: 'the words try on clothes' },
+  { id: 'answer', index: 'viii', label: 'answer', note: 'the answer is tipped in' },
 ]
 
 export function MarginalThread({ activeId }: { activeId: string }) {

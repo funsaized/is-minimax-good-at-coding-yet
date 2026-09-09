@@ -1,28 +1,15 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from 'react'
-import { TypeCase } from './TypeCase'
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
+import { NOTES, type WordId } from './notes'
 import { MarginalThread } from './MarginalThread'
 import { PressStamp } from './PressStamp'
 import { SpecimenSpread } from './SpecimenSpread'
 import { MarkedProof } from './MarkedProof'
 import { LetterToReader } from './LetterToReader'
+import { ComposeFloor } from './ComposeFloor'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
-type WordId = 'm3' | 'good' | 'yet'
 type VoiceId = 'quiet' | 'human' | 'bold'
-
-type Note = {
-  id: WordId
-  index: string
-  folio: string
-  label: string
-  title: string
-  gloss: string
-  body: string
-  prompt: string
-  editor: string
-  seen: string
-}
 
 type Voice = {
   id: VoiceId
@@ -37,45 +24,6 @@ type Stage = {
   name: string
   hint: string
 }
-
-const NOTES: Note[] = [
-  {
-    id: 'm3',
-    index: '01',
-    folio: 'i',
-    label: 'M3',
-    title: 'Keep the fingerprint',
-    gloss: 'a habit, not a name',
-    body: 'A useful page should leave evidence of a point of view. Not a logo. Not a trick. A small, repeatable act of judgment.',
-    prompt: 'the maker is a habit',
-    editor: 'a quiet corner of the title — leave it alone',
-    seen: 'seen twice today',
-  },
-  {
-    id: 'good',
-    index: '02',
-    folio: 'ii',
-    label: 'good at',
-    title: 'Choose one clear thing',
-    gloss: 'confidence is generous',
-    body: 'The interface gets quieter when it stops presenting every possible answer. A confident choice gives the reader somewhere to stand.',
-    prompt: 'make room for attention',
-    editor: 'the verb of the question — keep it present tense',
-    seen: 'read aloud once',
-  },
-  {
-    id: 'yet',
-    index: '03',
-    folio: 'iii',
-    label: 'yet?',
-    title: 'Protect the pause',
-    gloss: 'the question stays open',
-    body: '“Yet” carries the honest part. The space before an answer is not a gap to decorate; it is where the reader arrives.',
-    prompt: 'leave room to arrive',
-    editor: 'the question mark is doing real work here',
-    seen: 'circled in pencil',
-  },
-]
 
 const VOICES: Voice[] = [
   {
@@ -189,64 +137,6 @@ function PushPin({ tone = 'wax' }: { tone?: 'wax' | 'acid' | 'blue' }) {
 
 
 
-function Marginalia({ activeWord, tokenRefs }: {
-  activeWord: WordId
-  tokenRefs: React.MutableRefObject<Partial<Record<WordId, HTMLSpanElement | null>>>
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [y, setY] = useState(0)
-
-  useLayoutEffect(() => {
-    const update = () => {
-      const tokenEl = tokenRefs.current[activeWord]
-      const marginaliaEl = ref.current
-      if (!tokenEl || !marginaliaEl) return
-      const rail = marginaliaEl.parentElement
-      if (!rail) return
-      const tr = tokenEl.getBoundingClientRect()
-      const rr = rail.getBoundingClientRect()
-      setY(tr.top - rr.top + tr.height / 2)
-    }
-    update()
-    window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
-  }, [activeWord, tokenRefs])
-
-  const style = { ['--my' as string]: `${y}px` } as CSSProperties
-  const activeIndex = NOTES.findIndex(n => n.id === activeWord)
-  const note = NOTES[activeIndex]
-
-  return (
-    <div ref={ref} className={`marginalia marginalia--${activeWord}`} style={style}>
-      <ol className="marginalia__index" aria-hidden="true">
-        {NOTES.map((n, i) => (
-          <li key={n.id} className={`marginalia__index-item marginalia__index-item--${n.id} ${activeWord === n.id ? 'is-active' : ''}`}>
-            <span className="marginalia__index-line" />
-            <span className={`marginalia__index-dot marginalia__index-dot--${n.id}`} />
-            <span className="marginalia__index-num">{String(i + 1).padStart(2, '0')}</span>
-          </li>
-        ))}
-      </ol>
-      <div className="marginalia__card" key={activeWord}>
-        <span className="marginalia__card-pin" aria-hidden="true">
-          <PushPin tone={activeWord === 'm3' ? 'acid' : activeWord === 'good' ? 'wax' : 'blue'} />
-        </span>
-        <span className="marginalia__card-head">
-          <span className="marginalia__card-num">№ {String(activeIndex + 1).padStart(2, '0')}</span>
-          <span className="marginalia__card-mark">{getProofLabel(activeWord)}</span>
-        </span>
-        <span className="marginalia__card-title">{note?.title}</span>
-        <span className="marginalia__card-gloss">{note?.gloss}</span>
-        <span className="marginalia__card-body">{note?.body}</span>
-        <span className="marginalia__card-foot">
-          <span className="marginalia__card-prompt">{note?.prompt}</span>
-          <span className="marginalia__card-seen">seen · {note?.seen}</span>
-        </span>
-      </div>
-    </div>
-  )
-}
-
 function HeaderRuler() {
   return (
     <div className="header-ruler" aria-hidden="true">
@@ -312,13 +202,14 @@ function StageMarkers({ active }: { active: number }) {
 function PressFolio({ section }: { section: string }) {
   const map: Record<string, { folio: string; mark: string }> = {
     question: { folio: 'i', mark: 'set' },
-    contents: { folio: 'ii', mark: 'contents' },
+    compose: { folio: 'ii', mark: 'compose' },
+    contents: { folio: 'iii', mark: 'contents' },
     note: { folio: '·', mark: 'slip' },
-    proof: { folio: 'iii', mark: 'proof' },
-    pressings: { folio: 'iv', mark: 'specimen' },
-    notes: { folio: 'v', mark: 'marginalia' },
-    voices: { folio: 'vi', mark: 'voices' },
-    answer: { folio: 'vii', mark: 'answer' },
+    proof: { folio: 'iv', mark: 'proof' },
+    pressings: { folio: 'v', mark: 'specimen' },
+    notes: { folio: 'vi', mark: 'marginalia' },
+    voices: { folio: 'vii', mark: 'voices' },
+    answer: { folio: 'viii', mark: 'answer' },
   }
   const entry = map[section] ?? map.question
   const isSlip = entry.folio === '·'
@@ -434,7 +325,7 @@ function AnswerReveal({ open, onClose, triggerRef, voice }: {
     >
       <div className="answer-reveal__clip">
         <div className="answer-reveal__leaf">
-          <span className="answer-reveal__tipped" aria-hidden="true">tipped in · folio vii</span>
+          <span className="answer-reveal__tipped" aria-hidden="true">tipped in · folio viii</span>
           <span className="answer-reveal__gluetop" aria-hidden="true" />
           <span className="answer-reveal__gluetop answer-reveal__gluetop--right" aria-hidden="true" />
           <div className="answer-reveal__seal" aria-hidden="true">
@@ -442,7 +333,7 @@ function AnswerReveal({ open, onClose, triggerRef, voice }: {
           </div>
           <div className="answer-reveal__inner">
             <div className="answer-reveal__row">
-              <span className="answer-reveal__folio" aria-hidden="true">folio vii · the proof</span>
+              <span className="answer-reveal__folio" aria-hidden="true">folio viii · the proof</span>
               <span className="answer-reveal__stamp" aria-hidden="true">
                 <span>m³</span>
                 <em>for now</em>
@@ -591,13 +482,14 @@ function VoicesSection({ voice, onVoice, voiceRefs }: {
 function FolioLedger() {
   const items = [
     { id: 'question', num: 'i', title: 'the question, set', note: 'three marked words, one margin' },
-    { id: 'contents', num: 'ii', title: 'this page, listed', note: 'the press log · folio contents', self: true },
+    { id: 'compose', num: 'ii', title: 'the compose floor', note: 'a working spread of type and margin' },
+    { id: 'contents', num: 'iii', title: 'this page, listed', note: 'the press log · folio contents', self: true },
     { id: 'note', num: '·', title: 'a folded slip', note: 'a short letter to the reader' },
-    { id: 'proof', num: 'iii', title: 'the second proof', note: 'marks attached to the words worth keeping' },
-    { id: 'pressings', num: 'iv', title: 'three pressings', note: 'the same question set three ways' },
-    { id: 'notes', num: 'v', title: 'the marginalia', note: 'three things worth keeping' },
-    { id: 'voices', num: 'vi', title: 'voices', note: 'typography tries on the words' },
-    { id: 'answer', num: 'vii', title: 'the answer, tipped in', note: 'folded once, then folded back', closing: true },
+    { id: 'proof', num: 'iv', title: 'the second proof', note: 'marks attached to the words worth keeping' },
+    { id: 'pressings', num: 'v', title: 'three pressings', note: 'the same question set three ways' },
+    { id: 'notes', num: 'vi', title: 'the marginalia', note: 'three things worth keeping' },
+    { id: 'voices', num: 'vii', title: 'voices', note: 'typography tries on the words' },
+    { id: 'answer', num: 'viii', title: 'the answer, tipped in', note: 'folded once, then folded back', closing: true },
   ]
   return (
     <section className="folio-ledger section" id="contents" aria-labelledby="folio-ledger-title">
@@ -676,9 +568,10 @@ function Colophon({ voice }: { voice: VoiceId }) {
           <a className="colophon__back" href="#question">back to the question <ArrowIcon /></a>
         </div>
         <div className="colophon__signature" aria-hidden="true">
-          <svg className="colophon__signature-mark" viewBox="0 0 220 28">
+          <svg className="colophon__signature-mark" viewBox="0 0 260 36">
             <path
-              d="M2 18c4-6 10-2 14-7s8-9 16-5 10 8 18 4 12-12 22-6 14 10 22 4 12-9 20-3 14 10 22 4 14-12 24-6 18 8 26 2 18-12 28-4"
+              className="colophon__signature-wave"
+              d="M2 22c6-8 14-2 22-8s12-12 24-6 14 10 24 4 14-12 26-6 16 12 28 4 14-14 26-6 18 12 30 4 16-14 28-4 18 12 28 2"
               fill="none"
               stroke="currentColor"
               strokeWidth="1"
@@ -686,7 +579,18 @@ function Colophon({ voice }: { voice: VoiceId }) {
               strokeLinejoin="round"
               opacity=".55"
             />
-            <circle cx="216" cy="14" r="1.6" fill="currentColor" opacity=".7" />
+            <path
+              className="colophon__signature-wave colophon__signature-wave--2"
+              d="M2 26c8-5 18 1 28-5s14-10 26-2 16 8 28 0 16-8 28 0 18 4 30-2 18-6 30 2 22 6 34-2 22-8 28 4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth=".7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity=".3"
+            />
+            <circle cx="254" cy="20" r="1.8" fill="currentColor" opacity=".7" />
+            <path className="colophon__signature-tick" d="M248 28l4-2 4 2" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".55" />
           </svg>
           <span className="colophon__signature-tag">composed by m³ · for the reader</span>
         </div>
@@ -719,7 +623,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'contents', 'note', 'proof', 'pressings', 'notes', 'voices', 'answer']
+    const elements = ['question', 'compose', 'contents', 'note', 'proof', 'pressings', 'notes', 'voices', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -738,7 +642,7 @@ export function App() {
 
   useEffect(() => {
     if (activeSection === 'question') setActiveStage(answerOpen ? 2 : 0)
-    else if (activeSection === 'contents' || activeSection === 'note' || activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
+    else if (activeSection === 'compose' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
     else setActiveStage(2)
   }, [activeSection, answerOpen])
 
@@ -799,6 +703,7 @@ export function App() {
           </a>
           <nav className="site-nav" aria-label="Sections">
             <a href="#question" className={activeSection === 'question' ? 'is-active' : ''} aria-current={activeSection === 'question' ? 'location' : undefined}>question</a>
+            <a href="#compose" className={activeSection === 'compose' ? 'is-active' : ''} aria-current={activeSection === 'compose' ? 'location' : undefined}>compose</a>
             <a href="#contents" className={activeSection === 'contents' ? 'is-active' : ''} aria-current={activeSection === 'contents' ? 'location' : undefined}>contents</a>
             <a href="#note" className={activeSection === 'note' ? 'is-active' : ''} aria-current={activeSection === 'note' ? 'location' : undefined}>note</a>
             <a href="#proof" className={activeSection === 'proof' ? 'is-active' : ''} aria-current={activeSection === 'proof' ? 'location' : undefined}>proof</a>
@@ -841,17 +746,28 @@ export function App() {
                     <circle cx="2" cy="13" r="0.8" fill="currentColor" />
                   </svg>
                 </span>
-                <em>read each marked word — the marginalia listens</em>
+                <em>read each marked word — the margin answers</em>
                 <span className="hero__annotation-rule" />
                 <span className="hero__annotation-mark hero__annotation-mark--end" aria-hidden="true">
                   <PressStamp voice={voice} size={22} />
                 </span>
               </span>
             </div>
-            <aside className="hero__spine" aria-label="Proofreader's marks for the marked words">
-              <div className="spine__rail">
-                <Marginalia activeWord={activeWord} tokenRefs={tokenRefs} />
-              </div>
+            <aside className="hero__gloss" aria-label="Live gloss for the active marked word">
+              <ol className="hero__gloss-index" aria-hidden="true">
+                {NOTES.map(n => (
+                  <li key={n.id} className={`hero__gloss-item hero__gloss-item--${n.id} ${activeWord === n.id ? 'is-active' : ''}`}>
+                    <span className={`hero__gloss-dot hero__gloss-dot--${n.id}`} />
+                  </li>
+                ))}
+              </ol>
+              <span className="hero__gloss-rule" />
+              <span className="hero__gloss-cue" aria-hidden="true">
+                <span className="hero__gloss-cue-key">active</span>
+                <span className="hero__gloss-cue-value">{NOTES.find(n => n.id === activeWord)?.label}</span>
+                <span className="hero__gloss-cue-arrow">↓</span>
+                <span className="hero__gloss-cue-target">the compose floor</span>
+              </span>
             </aside>
           </div>
 
@@ -865,15 +781,13 @@ export function App() {
                 <span>{answerOpen ? 'fold the answer back' : 'read the editor’s note'}</span>
                 <ArrowIcon />
               </button>
-              <a className="text-link" href="#notes">follow the marginalia <span aria-hidden="true">↓</span></a>
+              <a className="text-link" href="#compose">follow the type into the margin <span aria-hidden="true">↓</span></a>
             </div>
             <div className="hero__note">
               <span className="hero__note-mark" aria-hidden="true">*</span>
               <p><strong>Good front-end work</strong> is less about showing what can be made than noticing what should remain quiet.</p>
             </div>
           </div>
-
-          <TypeCase voice={voice} word={activeWord} />
 
           <div className="hero__footer">
             <span><i className="hero__footer-dot" /> compose, slowly</span>
@@ -888,6 +802,8 @@ export function App() {
             <a href="#answer" onClick={openAnswerFromNav} aria-label="Jump to the answer">↓</a>
           </div>
         </section>
+
+        <ComposeFloor voice={voice} word={activeWord} />
 
         <FolioLedger />
 
@@ -905,7 +821,7 @@ export function App() {
         <Colophon voice={voice} />
       </div>
 
-      <MarginalThread activeId={activeSection === 'question' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' || activeSection === 'proof' ? activeSection : 'question'} />
+      <MarginalThread activeId={activeSection === 'question' || activeSection === 'compose' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' || activeSection === 'proof' ? activeSection : 'question'} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )
