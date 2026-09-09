@@ -460,6 +460,183 @@ function PressTally({ count }: { count: number }) {
   )
 }
 
+const TYPE_LADDER: { label: string; sample: string; style: React.CSSProperties; rule: string }[] = [
+  { label: 'roman, body', rule: 'Iowan Old Style', sample: 'is M³, yet?', style: { fontStyle: 'normal', fontWeight: 400 } },
+  { label: 'italic, marks', rule: 'Iowan Old Style', sample: 'attention', style: { fontStyle: 'italic', fontWeight: 400 } },
+  { label: 'small caps', rule: 'Iowan Old Style', sample: 'is M³', style: { fontVariant: 'small-caps', fontStyle: 'normal', fontWeight: 400, letterSpacing: '0.08em' } },
+  { label: 'upright, wood', rule: 'Iowan Old Style', sample: 'YET?', style: { fontStyle: 'normal', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase' as const } },
+]
+
+const PRESS_SCHEDULE: { n: string; line: string; em?: string }[] = [
+  { n: '01', line: 'set the question' },
+  { n: '02', line: 'tip in the answer', em: 'on press' },
+  { n: '03', line: 'lift three voices' },
+]
+
+function PressTicket({
+  open,
+  onToggle,
+  progress,
+  time,
+  marks,
+  sealPasses,
+  specimens,
+}: {
+  open: boolean
+  onToggle: () => void
+  progress: number
+  time: Date
+  marks: number
+  sealPasses: number
+  specimens: number
+}) {
+  const ts = time.getSeconds().toString().padStart(2, '0')
+  const tm = time.getMinutes().toString().padStart(2, '0')
+  const th = time.getHours()
+  const th12 = ((th + 11) % 12) + 1
+
+  const visitRows: { n: string; label: string; count: number; total: number; sub?: string }[] = [
+    { n: '01', label: 'marks stamped', count: marks, total: 0 },
+    { n: '02', label: 'voices opened', count: specimens, total: 3 },
+    { n: '03', label: 'seal presses', count: sealPasses, total: 0 },
+  ]
+  const pct = Math.min(100, Math.max(0, progress * 100))
+  return (
+    <aside className={`press-ticket ${open ? 'is-open' : ''}`} aria-label="A pressman's folded note">
+      <span className="press-ticket__tack" aria-hidden="true">
+        <svg viewBox="0 0 14 14">
+          <circle cx="7" cy="7" r="3.4" fill="var(--paper-tip)" stroke="currentColor" strokeWidth="0.9" />
+          <circle cx="7" cy="7" r="1" fill="currentColor" />
+          <path d="M7 3.4 L7 1.4 M7 10.6 L7 12.6 M3.4 7 L1.4 7 M10.6 7 L12.6 7"
+            stroke="currentColor" strokeWidth="0.6" strokeLinecap="round" />
+        </svg>
+      </span>
+      <span className="press-ticket__deckle" aria-hidden="true">
+        <svg viewBox="0 0 120 10" preserveAspectRatio="none">
+          <path d="M0 10 L0 3 C 12 5, 24 1, 36 4 C 48 7, 60 2, 72 5 C 84 8, 96 3, 108 6 L120 4 L120 10 Z" />
+        </svg>
+      </span>
+      <span className="press-ticket__fold" aria-hidden="true">
+        <svg viewBox="0 0 120 14" preserveAspectRatio="none">
+          <path d="M0 0 L120 0 L120 6 C 96 8, 72 4, 48 6 C 24 8, 12 5, 0 7 Z" fill="var(--paper-tip)" />
+          <path d="M0 0 L120 0" stroke="var(--line)" strokeWidth="0.5" strokeDasharray="2 3" opacity="0.55" />
+        </svg>
+      </span>
+
+      <button
+        type="button"
+        className="press-ticket__lid"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls="press-ticket-leaf"
+        aria-label={open ? 'Fold the pressman\u2019s note back up' : 'Unfold the pressman\u2019s note'}
+        title={open ? 'fold back up' : 'tap to unfold'}
+      >
+        <span className="press-ticket__lid-q" aria-hidden="true">Q.</span>
+        <span className="press-ticket__lid-rule" aria-hidden="true" />
+        <span className="press-ticket__lid-note" aria-hidden="true">
+          <em>pressman&rsquo;s</em>
+          <strong>note</strong>
+        </span>
+        <span className="press-ticket__lid-hint" aria-hidden="true">
+          <span className="press-ticket__lid-hint-text">{open ? 'fold back' : 'tap to unfold'}</span>
+          <span className="press-ticket__lid-arrow" aria-hidden="true">
+            <svg viewBox="0 0 14 14">
+              <path d="M3 5 L7 9 L11 5" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+        </span>
+      </button>
+
+      <div className="press-ticket__leaf" id="press-ticket-leaf" aria-hidden={!open}>
+        <div className="press-ticket__section press-ticket__section--ladder">
+          <span className="press-ticket__head">
+            <span className="press-ticket__head-label">type ladder</span>
+            <span className="press-ticket__head-rule" />
+            <span className="press-ticket__head-note">in use today</span>
+          </span>
+          <ol className="press-ticket__ladder">
+            {TYPE_LADDER.map((row, i) => (
+              <li key={i} className="press-ticket__ladder-row" style={{ animationDelay: `${0.12 + i * 0.06}s` }}>
+                <span className="press-ticket__ladder-n">{String(i + 1).padStart(2, '0')}</span>
+                <span className="press-ticket__ladder-sample" style={row.style}>{row.sample}</span>
+                <span className="press-ticket__ladder-label">{row.label}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="press-ticket__section press-ticket__section--visit">
+          <span className="press-ticket__head">
+            <span className="press-ticket__head-label">your visit</span>
+            <span className="press-ticket__head-rule" />
+            <span className="press-ticket__head-note">{Math.round(pct)}% read</span>
+          </span>
+          <ol className="press-ticket__visit">
+            {visitRows.map((row, i) => (
+              <li
+                key={i}
+                className={`press-ticket__visit-row ${row.count > 0 ? 'is-on' : ''}`}
+                style={{ animationDelay: `${0.24 + i * 0.06}s` }}
+              >
+                <span className="press-ticket__visit-n">{row.n}</span>
+                <span className="press-ticket__visit-label">{row.label}</span>
+                <span className="press-ticket__visit-count">
+                  <b>{row.count}</b>
+                  {row.total > 0 && <i>/{row.total}</i>}
+                </span>
+                <span className="press-ticket__visit-bar" aria-hidden="true">
+                  <span
+                    className="press-ticket__visit-bar-fill"
+                    style={{ width: row.total > 0 ? `${Math.min(100, (row.count / row.total) * 100)}%` : (row.count > 0 ? '100%' : '0%') }}
+                  />
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="press-ticket__section press-ticket__section--schedule">
+          <span className="press-ticket__head">
+            <span className="press-ticket__head-label">today&rsquo;s run</span>
+            <span className="press-ticket__head-rule" />
+            <span className="press-ticket__head-note">3 stops</span>
+          </span>
+          <ol className="press-ticket__schedule">
+            {PRESS_SCHEDULE.map((row, i) => (
+              <li key={i} className="press-ticket__schedule-row" style={{ animationDelay: `${0.32 + i * 0.07}s` }}>
+                <span className="press-ticket__schedule-n">{row.n}</span>
+                <span className="press-ticket__schedule-line">
+                  {row.line}
+                  {row.em && <em className="press-ticket__schedule-em">{row.em}</em>}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="press-ticket__foot">
+          <span className="press-ticket__foot-rule" aria-hidden="true" />
+          <span className="press-ticket__foot-time" aria-hidden="true">
+            <em>pressed at</em>
+            <b>
+              {th12}<i>:</i>{tm}<i>:</i>{ts}
+            </b>
+          </span>
+          <span className="press-ticket__foot-wax" aria-hidden="true">
+            <svg viewBox="0 0 18 18">
+              <circle cx="9" cy="9" r="7.5" fill="rgba(157, 60, 38, .85)" />
+              <circle cx="9" cy="9" r="5.4" fill="none" stroke="rgba(252, 245, 228, .45)" strokeWidth="0.5" strokeDasharray="1 1.6" />
+              <text x="9" y="12.4" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="9" fill="#fcf5e4">m³</text>
+            </svg>
+          </span>
+          <span className="press-ticket__foot-rule press-ticket__foot-rule--end" aria-hidden="true" />
+        </div>
+      </div>
+    </aside>
+  )
+}
+
 function DropcapSwash() {
   return (
     <svg className="answer__dropcap-swash" viewBox="0 0 60 24" preserveAspectRatio="none" aria-hidden="true">
@@ -1735,6 +1912,7 @@ export function App() {
   const [readMargins, setReadMargins] = useState<Record<string, boolean>>({})
   const [openedSpecimens, setOpenedSpecimens] = useState<Record<string, boolean>>({})
   const [pathRevealed, setPathRevealed] = useState(false)
+  const [ticketOpen, setTicketOpen] = useState(false)
   const answerId = useId()
   const now = useNow(1000)
   const { progress, activeWord, activeSection } = useScrollState()
@@ -1921,17 +2099,15 @@ export function App() {
       <article className="proof" id="top">
         <CropMarks />
 
-        <aside className="proof__rail" aria-hidden="true">
-          <span className="proof__q">Q.</span>
-          <span className="proof__thread">
-            <span className={`proof__thread-mark proof__thread-mark--1 ${progress >= 0.12 ? 'is-on' : ''}`} />
-            <span className={`proof__thread-mark proof__thread-mark--2 ${progress >= 0.32 ? 'is-on' : ''}`} />
-            <span className={`proof__thread-mark proof__thread-mark--3 ${progress >= 0.52 ? 'is-on' : ''}`} />
-            <span className={`proof__thread-mark proof__thread-mark--4 ${progress >= 0.72 ? 'is-on' : ''}`} />
-            <span className={`proof__thread-mark proof__thread-mark--5 ${progress >= 0.9 ? 'is-on' : ''}`} />
-          </span>
-          <small className="proof__hint">read<br />slowly</small>
-        </aside>
+        <PressTicket
+          open={ticketOpen}
+          onToggle={() => setTicketOpen(v => !v)}
+          progress={progress}
+          time={now}
+          marks={marks.length}
+          sealPasses={sealPasses}
+          specimens={Object.values(openedSpecimens).filter(Boolean).length}
+        />
 
         <EditionPlate />
 
