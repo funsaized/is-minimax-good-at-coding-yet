@@ -512,6 +512,238 @@ function PressMark() {
   )
 }
 
+function PrintshopClock({ size = 130, withDate = true }: { size?: number; withDate?: boolean }) {
+  const [time, setTime] = useState(() => new Date())
+
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduce) {
+      const id = window.setInterval(() => setTime(new Date()), 1000)
+      return () => window.clearInterval(id)
+    }
+    let raf = 0
+    let last = 0
+    const tick = (t: number) => {
+      if (t - last > 60) {
+        setTime(new Date())
+        last = t
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  const ms = time.getMilliseconds()
+  const s = time.getSeconds() + ms / 1000
+  const m = time.getMinutes() + s / 60
+  const h = (time.getHours() % 12) + m / 60
+
+  const hourDeg = h * 30
+  const minDeg = m * 6
+  const secDeg = s * 6
+
+  const cx = 70
+  const cy = 70
+  const rInner = 56
+
+  const ticks: React.ReactElement[] = []
+  for (let i = 0; i < 60; i++) {
+    if (i === 3) continue
+    const angle = (i * 6 - 90) * Math.PI / 180
+    const isMajor = i % 5 === 0
+    const isQuarter = i % 15 === 0
+    const outer = rInner + (isQuarter ? 4 : isMajor ? 2.5 : 1)
+    const x1 = cx + Math.cos(angle) * rInner
+    const y1 = cy + Math.sin(angle) * rInner
+    const x2 = cx + Math.cos(angle) * outer
+    const y2 = cy + Math.sin(angle) * outer
+    ticks.push(
+      <line
+        key={i}
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        stroke="currentColor"
+        strokeWidth={isQuarter ? 1.7 : isMajor ? 1.1 : 0.45}
+        opacity={isQuarter ? 0.92 : isMajor ? 0.78 : 0.34}
+        strokeLinecap="round"
+      />
+    )
+  }
+
+  const hourRad = ((hourDeg - 90) * Math.PI) / 180
+  const minRad = ((minDeg - 90) * Math.PI) / 180
+  const secRad = ((secDeg - 90) * Math.PI) / 180
+
+  const rHandHour = 28
+  const rHandMin = 42
+  const rHandSec = 48
+
+  const hourX = cx + Math.cos(hourRad) * rHandHour
+  const hourY = cy + Math.sin(hourRad) * rHandHour
+  const minX = cx + Math.cos(minRad) * rHandMin
+  const minY = cy + Math.sin(minRad) * rHandMin
+  const secX = cx + Math.cos(secRad) * rHandSec
+  const secY = cy + Math.sin(secRad) * rHandSec
+  const secTailX = cx - Math.cos(secRad) * 11
+  const secTailY = cy - Math.sin(secRad) * 11
+
+  const hour24 = time.getHours()
+  const isNight = hour24 < 6 || hour24 >= 20
+  const isDusk = (!isNight) && (hour24 >= 17 || hour24 < 7)
+  const phase = isNight ? 'night' : isDusk ? 'dusk' : 'day'
+
+  const dayOfMonth = time.getDate()
+  const weekdayShort = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][time.getDay()]
+
+  return (
+    <svg
+      viewBox="0 0 140 140"
+      className={`printshop-clock printshop-clock--${phase}`}
+      style={{ width: size, height: size }}
+      role="img"
+      aria-label={`Print clock, currently ${formatTime(time)}`}
+    >
+      <defs>
+        <radialGradient id="pc-face-day" cx="50%" cy="40%" r="65%">
+          <stop offset="0%" stopColor="#fff8e7" />
+          <stop offset="62%" stopColor="#f1e6cb" />
+          <stop offset="100%" stopColor="#c5b186" />
+        </radialGradient>
+        <radialGradient id="pc-face-dusk" cx="50%" cy="40%" r="65%">
+          <stop offset="0%" stopColor="#f9d2a4" />
+          <stop offset="62%" stopColor="#cc8654" />
+          <stop offset="100%" stopColor="#6f3a1f" />
+        </radialGradient>
+        <radialGradient id="pc-face-night" cx="50%" cy="40%" r="65%">
+          <stop offset="0%" stopColor="#3a4358" />
+          <stop offset="62%" stopColor="#1b2238" />
+          <stop offset="100%" stopColor="#070b14" />
+        </radialGradient>
+        <filter id="pcGrain" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
+          <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0" />
+          <feComposite in2="SourceGraphic" operator="in" />
+        </filter>
+      </defs>
+
+      <circle cx="70" cy="70" r="65" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.32" />
+      <circle cx="70" cy="70" r="64" fill="none" stroke="currentColor" strokeWidth="1.6" opacity="0.75" />
+      <circle cx="70" cy="70" r="61" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.4" />
+
+      <circle cx="70" cy="70" r="56" fill={`url(#pc-face-${phase})`} stroke="currentColor" strokeWidth="0.7" opacity="0.97" />
+      <circle cx="70" cy="70" r="56" fill={`url(#pc-face-${phase})`} filter="url(#pcGrain)" opacity="0.6" />
+
+      {isNight && (
+        <g className="pc-stars" fill="currentColor">
+          {[
+            { x: 30, y: 45, r: 0.75 },
+            { x: 105, y: 38, r: 0.55 },
+            { x: 100, y: 95, r: 0.7 },
+            { x: 35, y: 100, r: 0.5 },
+            { x: 50, y: 30, r: 0.4 },
+            { x: 88, y: 52, r: 0.35 },
+            { x: 45, y: 90, r: 0.3 },
+            { x: 110, y: 75, r: 0.4 },
+          ].map((star, i) => (
+            <circle key={i} cx={star.x} cy={star.y} r={star.r} opacity="0.7" />
+          ))}
+        </g>
+      )}
+
+      {!isNight && !isDusk && (
+        <g className="pc-sun" opacity="0.18">
+          {Array.from({ length: 16 }).map((_, i) => {
+            const a = (i * 22.5 - 90) * Math.PI / 180
+            return (
+              <line
+                key={i}
+                x1={70 + Math.cos(a) * 58}
+                y1={70 + Math.sin(a) * 58}
+                x2={70 + Math.cos(a) * 62}
+                y2={70 + Math.sin(a) * 62}
+                stroke="currentColor"
+                strokeWidth="0.5"
+                strokeLinecap="round"
+              />
+            )
+          })}
+        </g>
+      )}
+
+      <g className="pc-ticks">{ticks}</g>
+
+      <g className="pc-numerals" fill="currentColor" fontFamily="Georgia, 'Iowan Old Style', serif" fontStyle="italic">
+        <text x="70" y="32" textAnchor="middle" fontSize="11" opacity="0.78">XII</text>
+        <text x="70" y="116" textAnchor="middle" fontSize="9" opacity="0.62">VI</text>
+        <text x="34" y="74" textAnchor="middle" fontSize="9" opacity="0.62">IX</text>
+      </g>
+
+      <g className="pc-mark" transform="translate(70 90)">
+        <text x="0" y="0" textAnchor="middle" fontFamily="Georgia, 'Iowan Old Style', serif" fontStyle="italic" fontSize="9" fill="currentColor" opacity="0.55">m³</text>
+      </g>
+
+      <g className="pc-wday" transform="translate(70 14)">
+        <text x="0" y="0" textAnchor="middle" fontFamily="ui-sans-serif, system-ui, sans-serif" fontSize="6" letterSpacing="1.8" fill="currentColor" opacity="0.55">{weekdayShort.toUpperCase()}</text>
+      </g>
+
+      <line
+        x1={cx}
+        y1={cy}
+        x2={hourX}
+        y2={hourY}
+        stroke="currentColor"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+
+      <line
+        x1={cx}
+        y1={cy}
+        x2={minX}
+        y2={minY}
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+      />
+
+      <line
+        x1={secTailX}
+        y1={secTailY}
+        x2={secX}
+        y2={secY}
+        stroke="var(--coral)"
+        strokeWidth="0.95"
+        strokeLinecap="round"
+      />
+      <circle cx={secX} cy={secY} r="1.4" fill="var(--coral)" opacity="0.9" />
+
+      <circle cx={cx} cy={cy} r="2.6" fill="currentColor" />
+      <circle cx={cx} cy={cy} r="1.1" fill="var(--paper-tip)" />
+
+      {withDate && (
+        <g className="pc-date" transform="translate(99 70)">
+          <rect x="-7.5" y="-7.5" width="15" height="15" rx="1" fill="var(--paper-tip)" stroke="currentColor" strokeWidth="0.5" opacity="0.96" />
+          <text
+            x="0"
+            y="3"
+            textAnchor="middle"
+            fontFamily="Georgia, 'Iowan Old Style', serif"
+            fontStyle="italic"
+            fontSize="9"
+            fontWeight="500"
+            fill="currentColor"
+          >
+            {dayOfMonth}
+          </text>
+        </g>
+      )}
+    </svg>
+  )
+}
+
 function PressSignature({ large = false }: { large?: boolean }) {
   return (
     <svg
@@ -634,13 +866,15 @@ function PressFolio({ time }: { time: Date }) {
       </span>
 
       <div className="press-folio__mark" aria-hidden="true">
-        <PressSignature />
+        <PrintshopClock />
       </div>
 
       <div className="press-folio__copy">
         <p className="press-folio__kicker">
           <span className="press-folio__kicker-line" />
           <em>front matter</em>
+          <i className="press-folio__kicker-dot" aria-hidden="true" />
+          <em className={`press-folio__phase press-folio__phase--${time.getHours() < 6 || time.getHours() >= 20 ? 'night' : time.getHours() >= 17 || time.getHours() < 7 ? 'dusk' : 'day'}`}>{phase}</em>
           <span className="press-folio__kicker-line" />
         </p>
         <h2 className="press-folio__title">

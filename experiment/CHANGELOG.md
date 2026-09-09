@@ -1,13 +1,5 @@
 # Changelog
 
-## Iteration 189
+## Iteration 190 — the front matter gains a live timepiece
 
-A small proof sheet, set today — a hand-typeset front matter and a tipped-in answer.
-
-- Added a `PressFolio` element at the top of the proof: a hand-typeset edition statement with a new `PressSignature` printer's device, a four-ink swatch row (lamp-black, carmine, gilt, paper-tip), and a two-column grid of paper, ink, edition, and time-of-press details. The folio fades in like a sheet being placed on the case.
-- Added a faint `PressSignature` watermark inside the folio, like a printer's mark on the back of the paper; very subtle, scales gently when the folio is hovered.
-- Reworked the answer card into a proper tipped-in leaf: the title now bleeds through as a soft watermark behind the answer, a hand-cut `deckle` edge appears at the top of the plate, a `FRESH FROM THE PRESS` stamp lands in the corner, and a `set in this hand, <date>` line is set beneath the body.
-- Replaced the colophon's plain `PressMark` with the more distinctive `PressSignature` (concentric rules, m³ device, `PRESS` / `EST. MMXXVI` micro-type, and corner registration ticks).
-- Added a `press-sig` color/style hook so the new signature is reusable; the existing single-circle `PressMark` is kept for any future internal use.
-- Polished responsive behavior: the folio stacks to a single centered column at narrow widths, the answer watermark re-sizes fluidly, and the fresh-press stamp repositions gracefully on small screens.
-- Honored `prefers-reduced-motion`: all new animations (folio entrance, ink swatch drop, watermark fade, fresh-press stamp, press signature draw) collapse to instant state under reduced-motion.
+The press folio's centerpiece becomes a small printshop clock instead of the static press signature. The clock has live hour, minute, and second hands (the second hand sweeps smoothly via requestAnimationFrame, with a reduced-motion fallback), a date aperture at three o'clock, the day-of-week above XII, and a tiny m³ hallmark below VI. Its face changes with the hour — cream at midday, peach at dusk, deep navy with slowly twinkling stars at night — so the page reads differently at different hours. The folio's kicker gains a matching phase tag and a small sun/half-moon/star glyph so the data table agrees with the clock face. PressSignature is kept as a very faint watermark for atmospheric depth; the bottom proof device keeps its press signature too.
