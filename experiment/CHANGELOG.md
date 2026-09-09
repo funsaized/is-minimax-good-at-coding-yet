@@ -1,17 +1,23 @@
 # Changelog
 
-## 204
+## 2025-09-09 · iteration 205
 
-Calmed the hero and gave the composing stick its own working spread, so the marked words lead to a single compose floor.
+A type ladder now sits beneath the question, so the three readings meet the eye immediately. The hero calms around it: a quieter title fold with a terminal ink dot, stage markers drawn as numbered ticks rather than plain dots, and a single gradient accent that runs under the hero's foot. The page still feels like a press proof; the title now answers faster.
 
-The page used to fight itself for the reader's first moment: the title, the marginalia panel, the type case, the stage markers and the press folio all shared the hero. Iteration 204 lets the title breathe. The composing stick and its margin note now live together on folio ii, a wide working spread between the question and the press log. The mark → gloss → reading-thread loop is still one continuous gesture, just spread out enough to read.
+### Added
+- `src/TypeLadder.tsx` — a compact three-pressings specimen placed directly beneath the title, with click-to-set voice behaviour, voice-tinted marks (a/b/c), face/ink meta, and a "set / press" indicator. Mirrors the larger SpecimenSpread but is small enough to live inside the hero.
 
-- **Hero is quieter.** Removed the inline marginalia panel and the in-hero type case. The right column of the hero sheet now carries a slim gloss cue (three ink dots, the active label, an arrow pointing at the compose floor) instead of a dense card. The hero annotation line now reads "the margin answers" instead of "the marginalia listens".
-- **New section: the compose floor (folio ii).** A wide working spread between the question and the press log. Holds the composing stick as full-width type pieces plus a horizontal margin card with the active word's gloss, proof mark, and editorial prompt. Tinted edges shift to match the active ink (acid / coral / blue). Corner crops and a folio plate match the marked-proof sheet, so the two feel like a pair.
-- **Marginalia interaction stays alive.** Hovering a marked word in the title still drives the active piece on the compose floor and the active note card. The mark → gloss → reading-thread loop is now one scrollable moment instead of three.
-- **Folio numbering shifted.** compose → ii, contents → iii, note stays `·`, proof → iv, pressings → v, notes → vi, voices → vii, answer → viii. Updated everywhere: nav, PressFolio, FolioLedger, MarginalThread, MarkedProof, SpecimenSpread, LetterToReader.
-- **New `notes.ts`** module holds the NOTES data so the hero gloss, the compose-floor margin, the marked proof, and the notes grid all read from one source.
-- **Colophon signature gains a second wave** that traces in alongside the first; the palette shifts from coral to acid on hover.
-- **Removed `TypeCase.tsx`** — its role is now played by `ComposeFloor.tsx` with the same composing stick but in a section that earns its own folio.
+### Changed
+- `src/App.tsx` — imports `TypeLadder` and slots it between the hero sheet and the hero body so the three readings meet the question without scrolling.
+- `src/style.css`
+  - Hero title fold grows to a refined terminal dot keyed to the active reading (acid / coral / acid).
+  - Stage markers redrawn as small numbered ticks with a gradient rule between stages; past stages rule in coral.
+  - Hero foot gains a single gradient line accent beneath the divider so the close reads as composed rather than as a separator.
+  - Press-mark watermark slightly stronger and lightly blurred to read as paper texture rather than flat shape.
+  - Hero body margin tightened because the type ladder now carries the breath between sheet and copy.
 
-Build passes (`npm run build`); no new dependencies; motion respects `prefers-reduced-motion`.
+### Notes
+- No new dependencies. No network calls. The three readings above (quiet / human / bold) remain the only voices; no fabricated counts, metrics, or status data introduced.
+- Title (`is Minimax M3 good at frontend?`) and document title preserved.
+- Existing keyboard navigation, focus order, and reduced-motion handling extended to the type ladder (transforms and the edge-in keyframe are stripped under `prefers-reduced-motion: reduce`).
+- Responsive: the type ladder collapses to one column below 880px and shares the same dashed-inset plate language as the hero sheet so the two read as siblings.

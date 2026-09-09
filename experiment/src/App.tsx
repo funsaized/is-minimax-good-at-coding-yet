@@ -6,6 +6,7 @@ import { SpecimenSpread } from './SpecimenSpread'
 import { MarkedProof } from './MarkedProof'
 import { LetterToReader } from './LetterToReader'
 import { ComposeFloor } from './ComposeFloor'
+import { TypeLadder } from './TypeLadder'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -770,6 +771,8 @@ export function App() {
               </span>
             </aside>
           </div>
+
+          <TypeLadder active={voice} onSelect={selectVoice} />
 
           <div className="hero__body">
             <p className="hero__summary">
