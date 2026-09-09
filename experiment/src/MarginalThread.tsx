@@ -63,6 +63,12 @@ export function MarginalThread({ activeId }: { activeId: string }) {
           </li>
         ))}
       </ol>
+      <span className="marginal-thread__seal" aria-hidden="true">
+        <svg viewBox="0 0 40 40">
+          <circle cx="20" cy="20" r="14" fill="none" stroke="currentColor" strokeWidth="0.7" strokeDasharray="2 2" />
+          <text x="20" y="23" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">m³</text>
+        </svg>
+      </span>
       <span className="marginal-thread__foot">read at your own pace</span>
     </aside>
   )

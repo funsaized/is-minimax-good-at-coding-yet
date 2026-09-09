@@ -1,25 +1,29 @@
-# Iteration 196 — The editor's working page
+# Changelog
 
-## Summary
-Compose desk becomes a working editor's spread with a full mark stack, reading trace, and wax-seal flourish.
+## Iteration 197 — a working make-ready proof
 
-## Added
-- Marginal reading trace: a fixed aside (desktop) listing the page's four sections (compose, proof, marginalia, voices) with scroll-progress fill and handwritten section notes.
-- Editor's-mark stack in the central spine: the marginalia rail now displays all three proofreader's marks (stet / caret / query) at once, with the active word's mark fully shown and the others as ghost variants. Each mark carries a handwritten editor's note.
-- Hand-drawn circle annotation that traces around the selected title word on click.
-- Wax-seal stamp that drops onto the folded answer sheet when opened, with a grainy press texture.
-- Pencil icon and refined close affordance on the answer reveal's "fold it back" control.
-- Subtle pencil-grain overlay on the page background for ambient texture.
-- "seen · …" scrawl in the top-right of each note card, in handwritten italic.
+Evolve the compose desk into a working press proof: a type ladder with three
+sizes of the question, three paper slips pinned to a cork rail, and the make-ready
+chrome of crop marks, registration cross, and CMYK color bars framing the page.
 
-## Refined
-- The hero's spine column widened to comfortably hold the full editor's-mark stack; the press signature in the footer now reads as a proper two-line stamp with "OPUS · TODAY" under the m³ monogram.
-- Title tokens' visual feedback sharpened: focus and selected states draw an outlined ellipse and a small registration dot, with a spring on selection.
-- Marginalia lead lines now take the colour of the active word instead of a neutral grey.
-- Voice tile glyph notes reduced to a single mark indicator, removing a redundant rule glyph.
-- The press signature's viewbox widened to allow more legible m³ typography.
-
-## Mobile
-- The marginalia rail collapses into a horizontal scrollable strip of the three marks at <=780px.
-- The reading trace is hidden below 1180px (most phones and small tablets) where it would crowd the layout.
-- Answer reveal's wax seal scales down at <=780px.
+- Rewrite `ComposeSpecimen` into a three-size type ladder (38 / 22 / 14 pt) with
+  measurement caps, a hand-drawn wax pin, a CMYK color bar, a pica ruler, a
+  press number, and a small wax seal in the corner.
+- Replace the marginalia stack with three paper slips pinned to a textured cork
+  rail using SVG push-pins; the active slip straightens, lifts, and shows a
+  bigger shadow.
+- Add `MakeReadyMarks` — four corner crop marks, a registration cross at the
+  top center, and two vertical color bars along the page edges — to frame the
+  page like a real working proof.
+- Strengthen the answer reveal wax seal with a darker grain, a wax-spill path,
+  and a dropped shadow; add a small wax-stamp trail of impressions leading
+  from the seal.
+- Redraw the marked-word circle as a hand-drawn pen loop with an opening notch
+  and add a small dashed crosshair tick that fades in beneath the active word.
+- Add a pressfolio indicator in the site header that names the current folio
+  (i–iv) and its mark, with a small m³ wax seal in the marginal-thread reading
+  trace.
+- Add a handwritten editor's annotation between the title and the hero summary,
+  with a small pencil scribble mark and a two-tone dotted underline.
+- Preserve the visible title and document title exactly, and keep keyboard,
+  reduced-motion, and responsive behaviour intact.

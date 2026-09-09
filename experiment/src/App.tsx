@@ -170,15 +170,33 @@ function getProofSub(id: WordId): string {
   return 'mark for review'
 }
 
-function MarkCard({ id, active }: { id: WordId; active: boolean }) {
+function PushPin({ tone = 'wax' }: { tone?: 'wax' | 'acid' | 'blue' }) {
+  const fill = tone === 'acid' ? 'var(--acid)' : tone === 'blue' ? 'var(--blue)' : 'var(--wax)'
   return (
-    <div className={`mark mark--${id} ${active ? 'is-active' : ''}`} aria-hidden="true">
-      <span className="mark__head">
-        <span className="mark__label">{getProofLabel(id)}</span>
-        <span className="mark__glyph"><NoteGlyph id={id} /></span>
+    <svg className={`push-pin push-pin--${tone}`} viewBox="0 0 22 22" aria-hidden="true">
+      <ellipse cx="11" cy="19" rx="4.5" ry="1.2" fill="rgba(0, 0, 0, .35)" />
+      <line x1="11" y1="14" x2="11" y2="20" stroke="rgba(0, 0, 0, .35)" strokeWidth=".8" />
+      <circle cx="11" cy="9" r="6.5" fill={fill} />
+      <circle cx="9.5" cy="7.5" r="2" fill="rgba(255, 255, 255, .45)" />
+      <circle cx="12" cy="10.5" r="1.2" fill="rgba(0, 0, 0, .25)" />
+    </svg>
+  )
+}
+
+function PinnedMarkSlip({ id, active }: { id: WordId; active: boolean }) {
+  const note = NOTES.find(n => n.id === id)
+  return (
+    <div className={`slip slip--${id} ${active ? 'is-active' : ''}`} aria-hidden="true">
+      <span className="slip__pin"><PushPin tone={id === 'm3' ? 'acid' : id === 'good' ? 'wax' : 'blue'} /></span>
+      <span className="slip__paper">
+        <span className="slip__head">
+          <span className="slip__label">{getProofLabel(id)}</span>
+          <span className="slip__glyph"><NoteGlyph id={id} /></span>
+        </span>
+        <span className="slip__sub">{getProofSub(id)}</span>
+        {note && <span className="slip__editor">{note.editor}</span>}
+        <span className="slip__tape" aria-hidden="true" />
       </span>
-      <span className="mark__sub">{getProofSub(id)}</span>
-      <span className="mark__editor">{NOTES.find(n => n.id === id)?.editor}</span>
     </div>
   )
 }
@@ -210,12 +228,16 @@ function Marginalia({ activeWord, tokenRefs }: {
 
   return (
     <div ref={ref} className={`marginalia marginalia--${activeWord}`} style={style}>
+      <span className="marginalia__cork" aria-hidden="true" />
       <span className="marginalia__lead" aria-hidden="true" />
       <div className="marginalia__stack" key={activeWord}>
         <span className="marginalia__heading">editor's marks</span>
-        <MarkCard id="m3" active={activeWord === 'm3'} />
-        <MarkCard id="good" active={activeWord === 'good'} />
-        <MarkCard id="yet" active={activeWord === 'yet'} />
+        <div className="marginalia__slips">
+          <PinnedMarkSlip id="m3" active={activeWord === 'm3'} />
+          <PinnedMarkSlip id="good" active={activeWord === 'good'} />
+          <PinnedMarkSlip id="yet" active={activeWord === 'yet'} />
+        </div>
+        <span className="marginalia__foot">three pinned notes</span>
       </div>
       <span className="marginalia__lead marginalia__lead--end" aria-hidden="true" />
     </div>
@@ -230,6 +252,36 @@ function HeaderRuler() {
           <span key={index} className={index % 8 === 0 ? 'is-major' : index % 4 === 0 ? 'is-mid' : ''} />
         ))}
       </div>
+    </div>
+  )
+}
+
+function MakeReadyMarks() {
+  return (
+    <div className="make-ready" aria-hidden="true">
+      <svg className="make-ready__corner make-ready__corner--tl" viewBox="0 0 18 18">
+        <line x1="0" y1="14" x2="14" y2="14" />
+        <line x1="14" y1="0" x2="14" y2="14" />
+      </svg>
+      <svg className="make-ready__corner make-ready__corner--tr" viewBox="0 0 18 18">
+        <line x1="4" y1="14" x2="18" y2="14" />
+        <line x1="4" y1="0" x2="4" y2="14" />
+      </svg>
+      <svg className="make-ready__corner make-ready__corner--bl" viewBox="0 0 18 18">
+        <line x1="0" y1="4" x2="14" y2="4" />
+        <line x1="14" y1="4" x2="14" y2="18" />
+      </svg>
+      <svg className="make-ready__corner make-ready__corner--br" viewBox="0 0 18 18">
+        <line x1="4" y1="4" x2="18" y2="4" />
+        <line x1="4" y1="4" x2="4" y2="18" />
+      </svg>
+      <svg className="make-ready__register" viewBox="0 0 16 16">
+        <circle cx="8" cy="8" r="3" />
+        <line x1="2" y1="8" x2="14" y2="8" />
+        <line x1="8" y1="2" x2="8" y2="14" />
+      </svg>
+      <span className="make-ready__colorbar" aria-hidden="true" />
+      <span className="make-ready__colorbar make-ready__colorbar--left" aria-hidden="true" />
     </div>
   )
 }
@@ -251,6 +303,23 @@ function StageMarkers({ active }: { active: number }) {
         </li>
       ))}
     </ol>
+  )
+}
+
+function PressFolio({ section }: { section: string }) {
+  const map: Record<string, { folio: string; mark: string }> = {
+    question: { folio: 'i', mark: 'set' },
+    notes: { folio: 'ii', mark: 'marginalia' },
+    voices: { folio: 'iii', mark: 'type drawer' },
+    answer: { folio: 'iv', mark: 'proof' },
+  }
+  const entry = map[section] ?? map.question
+  return (
+    <span className="press-folio" aria-live="polite">
+      <span className="press-folio__num">folio {entry.folio}</span>
+      <span className="press-folio__mark" aria-hidden="true">·</span>
+      <span className="press-folio__label">{entry.mark}</span>
+    </span>
   )
 }
 
@@ -294,11 +363,24 @@ function TitleToken({
         }
       }}
     >
-      <svg className="title-token__circle" viewBox="0 0 64 32" aria-hidden="true" key={circleKey}>
-        <ellipse cx="32" cy="16" rx="29" ry="11" fill="none" stroke="currentColor" strokeWidth="1" />
-        <path d="M5 16c-.6-2 .3-4 2-5" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
-        <path d="M59 17c.4-2-.5-4-2-5" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+      <svg className="title-token__circle" viewBox="0 0 80 38" aria-hidden="true" key={circleKey}>
+        <path
+          d="M40 6c14 0 32 4 32 13s-16 13-32 13S8 28 8 19 26 6 40 6Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          strokeDasharray="160 200"
+        />
+        <path d="M10 14c-1 2-1.4 4-.6 5.4" fill="none" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" />
+        <circle cx="9" cy="18.6" r="1.1" fill="currentColor" />
       </svg>
+      <span className="title-token__cross" aria-hidden="true">
+        <svg viewBox="0 0 28 28">
+          <line x1="2" y1="14" x2="26" y2="14" stroke="currentColor" strokeWidth=".7" strokeDasharray="2 2" />
+          <line x1="14" y1="2" x2="14" y2="26" stroke="currentColor" strokeWidth=".7" strokeDasharray="2 2" />
+        </svg>
+      </span>
       <span className="title-token__set" aria-hidden="true" />
       {text}
     </span>
@@ -309,6 +391,7 @@ function SpecimenStrip({ voice, word }: { voice: VoiceId; word: WordId }) {
   const current = VOICES.find(item => item.id === voice) ?? VOICES[0]
   const note = NOTES.find(item => item.id === word)
   const prompt = note?.prompt ?? 'leave room to arrive'
+  const display = voice === 'bold' ? 'IS M3 GOOD AT FRONTEND YET?' : 'is M3 good at frontend yet?'
   return (
     <aside className={`specimen-strip specimen-strip--${voice}`} aria-label="The composed specimen">
       <div className="specimen-strip__head">
@@ -316,7 +399,7 @@ function SpecimenStrip({ voice, word }: { voice: VoiceId; word: WordId }) {
         <span className="specimen-strip__id" aria-hidden="true">№ 03</span>
       </div>
       <div className="specimen-strip__art">
-        <ComposeSpecimen voice={voice} />
+        <ComposeSpecimen voice={voice} display={display} />
       </div>
       <div className="specimen-strip__foot">
         <span className="specimen-strip__prompt">{prompt}</span>
@@ -341,20 +424,25 @@ function AnswerReveal({ open, onClose, triggerRef }: {
       <div className="answer-reveal__clip">
         <div className="answer-reveal__paper">
           <div className="answer-reveal__seal" aria-hidden="true">
-            <svg viewBox="0 0 120 120">
+            <svg viewBox="0 0 140 140">
               <defs>
                 <filter id="wax-grain" x="-10%" y="-10%" width="120%" height="120%">
                   <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="2" seed="4" stitchTiles="stitch" />
                   <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .7 0" />
                   <feComposite in2="SourceGraphic" operator="in" />
                 </filter>
+                <filter id="wax-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="2.2" />
+                </filter>
               </defs>
-              <g filter="url(#wax-grain)" opacity="0.85">
-                <circle cx="60" cy="60" r="48" fill="currentColor" />
-                <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(34, 17, 12, .35)" strokeWidth="1.4" />
-                <circle cx="60" cy="60" r="40" fill="none" stroke="rgba(34, 17, 12, .25)" strokeWidth=".7" strokeDasharray="2 3" />
-                <text x="60" y="58" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="22" fill="rgba(34, 17, 12, .85)">yes,</text>
-                <text x="60" y="78" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="rgba(34, 17, 12, .85)">when quiet</text>
+              <ellipse cx="70" cy="76" rx="56" ry="6" fill="rgba(60, 24, 18, .45)" filter="url(#wax-shadow)" />
+              <g filter="url(#wax-grain)" opacity="0.92">
+                <circle cx="70" cy="70" r="56" fill="currentColor" />
+                <circle cx="70" cy="70" r="56" fill="none" stroke="rgba(34, 17, 12, .35)" strokeWidth="1.4" />
+                <circle cx="70" cy="70" r="48" fill="none" stroke="rgba(34, 17, 12, .25)" strokeWidth=".7" strokeDasharray="2 3" />
+                <path d="M30 92 Q50 110 70 102 T110 92" fill="none" stroke="rgba(34, 17, 12, .25)" strokeWidth="1.2" />
+                <text x="70" y="68" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="26" fill="rgba(34, 17, 12, .88)">yes,</text>
+                <text x="70" y="88" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="rgba(34, 17, 12, .85)">when quiet</text>
               </g>
             </svg>
           </div>
@@ -366,6 +454,12 @@ function AnswerReveal({ open, onClose, triggerRef }: {
                 <em>for now</em>
               </span>
             </div>
+            <span className="answer-reveal__trail" aria-hidden="true">
+              <span className="answer-reveal__trail-dot" />
+              <span className="answer-reveal__trail-dot" />
+              <span className="answer-reveal__trail-dot" />
+              <span className="answer-reveal__trail-dot answer-reveal__trail-dot--big" />
+            </span>
             <div className="answer-reveal__copy">
               <p className="eyebrow eyebrow--dark"><span className="eyebrow__line" />the answer <em>for now</em></p>
               <h2 id="answer-title">Yes — when it stops trying to look impressive.</h2>
@@ -604,6 +698,7 @@ export function App() {
     <main className={`app app--voice-${voice} app--word-${activeWord}`}>
       <div className="app__grain" aria-hidden="true" />
       <div className="app__pencil" aria-hidden="true" />
+      <MakeReadyMarks />
       <header className="site-header">
         <div className="site-header__row">
           <a className="brand" href="#question" aria-label="Return to the question">
@@ -619,7 +714,11 @@ export function App() {
             <a href="#voices" className={activeSection === 'voices' ? 'is-active' : ''} aria-current={activeSection === 'voices' ? 'location' : undefined}>voices</a>
             <a href="#answer" className={activeSection === 'answer' ? 'is-active' : ''} aria-current={activeSection === 'answer' ? 'location' : undefined} onClick={openAnswerFromNav}>answer</a>
           </nav>
-          <span className="site-header__note">a page that listens</span>
+          <span className="site-header__note">
+            <PressFolio section={activeSection} />
+            <span className="site-header__sep" aria-hidden="true">·</span>
+            <span className="site-header__tagline">a page that listens</span>
+          </span>
         </div>
         <HeaderRuler />
       </header>
@@ -641,6 +740,16 @@ export function App() {
                 </span>
                 <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
               </h1>
+              <span className="hero__annotation" aria-hidden="true">
+                <span className="hero__annotation-mark">
+                  <svg viewBox="0 0 40 16">
+                    <path d="M2 13c5-7 12 5 18-3 4-5 8 4 12-2 2-3 4-1 6-4" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+                    <circle cx="2" cy="13" r="0.8" fill="currentColor" />
+                  </svg>
+                </span>
+                <em>read each marked word — the marginalia listens</em>
+                <span className="hero__annotation-rule" />
+              </span>
               <p className="hero__summary">
                 <span className="hero__dropcap" aria-hidden="true">A</span>
                 small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em>
