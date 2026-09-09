@@ -1,13 +1,12 @@
 # Changelog
 
-## 209 — the press bay earns its own folio
-The hero is calmed so the question can stand alone; the composing press moves into a dedicated "press room" between the question and the compose floor. A new folio i· joins the press log, and a small voice pill in the hero footer keeps the active voice visible at every stage.
+A calm opening spread with a reading trace.
 
-- Promoted `PressBay` from a busy right-rail inside the hero into a full section, **folio i· · the press bay**, with its own plate, crop marks, and editorial header.
-- Stripped `PressBay` from the hero sheet; the title now sits alone on a centered platen, framed by a folio i pip and a quieter inner border.
-- Added a compact **voice pill** to the hero footer: a small badge showing the currently-set voice with a colored dot, voice name, and the `⇧V` shortcut hint. The pill tints to match the active voice.
-- Built `src/PressRoom.tsx`: a dedicated section that pairs the press bay with a side margin listing the three voices and the keyboard shortcut. The current voice is marked inline in the list.
-- Added the press-room entry to the `MarginalThread` and `FolioLedger` (id `press-room`, folio `i·`, label `press bay`); the `PressFolio` map and `IntersectionObserver` were updated to match.
-- Updated the navigation site nav, hero footer arrow, and active-stage logic so the hero leads cleanly into the press bay before the compose floor.
-- Removed the hero's two-column sheet grid, the title's hanging indent (title is now centered for monumental weight), and the padding-right that used to gap against the press bay.
-- Mobile: hero footer voice pill wraps to its own row on narrow widths; press bay collapses the side notes above the lever at < 880px.
+- Replaced the boxy hero sheet with an open `.hero__spread` so the question can stand alone, framed by four registration corners.
+- Added a slim reading strip pinned inside the site header: an always-visible trace with current section, folio, and progress bead that works at every viewport (the desktop-only marginal thread stays in place beneath it).
+- Removed the make-ready colorbars and dead registration marks; the page no longer carries decorative ink swatches it does not earn.
+- Reframed the chapter mark with leading and trailing pips so the "attention, not ornament" note reads as a real break, not an aside.
+- Moved the voice pill and the reader's-note button onto a single `.hero__voice-rail` directly under the title, so the chapter voice and the answer live one beat apart.
+- Calm hero body: summary and aside share a two-column rule with a single "continue to the press" link underneath, removing the redundant footer row.
+- Hardened the answer reveal's paper-fold shadow (with a small hover lift) and gave the composing stick a stronger bench feel — type pieces now sit like real slugs with beveled edges.
+- Trimmed dead hero, gloss, footer, and reading-rule CSS so the stylesheet reads as one coherent page rather than nine stacked panels.

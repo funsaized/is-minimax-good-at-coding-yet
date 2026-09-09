@@ -17,17 +17,21 @@ const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
 
 function HeroChapterMark() {
   return (
-    <aside className="hero__chapter" aria-label="Chapter mark">
-      <svg className="hero__chapter-rule" viewBox="0 0 360 14" preserveAspectRatio="none" aria-hidden="true">
-        <path
-          className="hero__chapter-rule-stroke"
-          d="M2 7c24-6 48 4 72 0s48-8 72-2 48 8 72 0 48-8 72 0 48 4 72-2"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth=".8"
-          strokeLinecap="round"
-        />
-      </svg>
+    <aside className="hero__chapter" aria-label="Editor's note">
+      <span className="hero__chapter-rule" aria-hidden="true">
+        <svg viewBox="0 0 360 14" preserveAspectRatio="none">
+          <path
+            className="hero__chapter-rule-stroke"
+            d="M2 7c24-6 48 4 72 0s48-8 72-2 48 8 72 0 48-8 72 0 48 4 72-2"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth=".8"
+            strokeLinecap="round"
+          />
+        </svg>
+        <span className="hero__chapter-rule-pip" aria-hidden="true" />
+        <span className="hero__chapter-rule-pip hero__chapter-rule-pip--end" aria-hidden="true" />
+      </span>
       <em className="hero__chapter-quote">
         attention, <span className="hero__chapter-accent">not ornament.</span>
       </em>
@@ -43,6 +47,19 @@ function HeroChapterMark() {
 }
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
+
+const READING_SECTIONS: { id: string; index: string; label: string }[] = [
+  { id: 'question', index: 'i', label: 'question' },
+  { id: 'press-room', index: 'i·', label: 'press bay' },
+  { id: 'compose', index: 'ii', label: 'compose' },
+  { id: 'contents', index: 'iii', label: 'contents' },
+  { id: 'note', index: '·', label: 'note' },
+  { id: 'proof', index: 'iv', label: 'proof' },
+  { id: 'pressings', index: 'v', label: 'pressings' },
+  { id: 'notes', index: 'vi', label: 'marginalia' },
+  { id: 'voices', index: 'vii', label: 'voices' },
+  { id: 'answer', index: 'viii', label: 'answer' },
+]
 
 type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -168,36 +185,6 @@ function HeaderRuler() {
           <span key={index} className={index % 8 === 0 ? 'is-major' : index % 4 === 0 ? 'is-mid' : ''} />
         ))}
       </div>
-    </div>
-  )
-}
-
-function MakeReadyMarks() {
-  return (
-    <div className="make-ready" aria-hidden="true">
-      <svg className="make-ready__corner make-ready__corner--tl" viewBox="0 0 18 18">
-        <line x1="0" y1="14" x2="14" y2="14" />
-        <line x1="14" y1="0" x2="14" y2="14" />
-      </svg>
-      <svg className="make-ready__corner make-ready__corner--tr" viewBox="0 0 18 18">
-        <line x1="4" y1="14" x2="18" y2="14" />
-        <line x1="4" y1="0" x2="4" y2="14" />
-      </svg>
-      <svg className="make-ready__corner make-ready__corner--bl" viewBox="0 0 18 18">
-        <line x1="0" y1="4" x2="14" y2="4" />
-        <line x1="14" y1="4" x2="14" y2="18" />
-      </svg>
-      <svg className="make-ready__corner make-ready__corner--br" viewBox="0 0 18 18">
-        <line x1="4" y1="4" x2="18" y2="4" />
-        <line x1="4" y1="4" x2="4" y2="18" />
-      </svg>
-      <svg className="make-ready__register" viewBox="0 0 16 16">
-        <circle cx="8" cy="8" r="3" />
-        <line x1="2" y1="8" x2="14" y2="8" />
-        <line x1="8" y1="2" x2="8" y2="14" />
-      </svg>
-      <span className="make-ready__colorbar" aria-hidden="true" />
-      <span className="make-ready__colorbar make-ready__colorbar--left" aria-hidden="true" />
     </div>
   )
 }
@@ -655,6 +642,30 @@ function Colophon({ voice, word }: { voice: VoiceId; word: WordId }) {
   )
 }
 
+function ReadingStrip({ progress, activeSection }: { progress: number; activeSection: string }) {
+  const active = READING_SECTIONS.find(section => section.id === activeSection) ?? READING_SECTIONS[0]
+  return (
+    <div className="reading-strip" aria-hidden="true">
+      <div className="reading-strip__inner">
+        <span className="reading-strip__cap">
+          <span className="reading-strip__cap-mark" />
+          reading trace
+        </span>
+        <span className="reading-strip__rail">
+          <span className="reading-strip__progress" style={{ transform: `scaleX(${progress})` }} />
+          <span className="reading-strip__bead" style={{ left: `${progress * 100}%` }}>
+            <span className="reading-strip__bead-dot" />
+          </span>
+        </span>
+        <span className="reading-strip__now">
+          <span className="reading-strip__now-folio">{active.index}</span>
+          <span className="reading-strip__now-name">{active.label}</span>
+        </span>
+      </div>
+    </div>
+  )
+}
+
 export function App() {
   const [answerOpen, setAnswerOpen] = useState(false)
   const [selectedWord, setSelectedWord] = useState<WordId>('good')
@@ -662,6 +673,7 @@ export function App() {
   const [voice, setVoice] = useState<VoiceId>('quiet')
   const [activeSection, setActiveSection] = useState('question')
   const [activeStage, setActiveStage] = useState(0)
+  const [scrollProgress, setScrollProgress] = useState(0)
   const [announcement, setAnnouncement] = useState('')
   const [circleKey, setCircleKey] = useState<Record<WordId, number>>({ m3: 0, good: 0, yet: 0 })
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
@@ -697,6 +709,26 @@ export function App() {
     else if (activeSection === 'press-room' || activeSection === 'compose' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
     else setActiveStage(2)
   }, [activeSection, answerOpen])
+
+  useEffect(() => {
+    const compute = () => {
+      const doc = document.documentElement
+      const max = doc.scrollHeight - window.innerHeight
+      if (max <= 0) {
+        setScrollProgress(0)
+        return
+      }
+      const value = Math.max(0, Math.min(1, window.scrollY / max))
+      setScrollProgress(value)
+    }
+    compute()
+    window.addEventListener('scroll', compute, { passive: true })
+    window.addEventListener('resize', compute)
+    return () => {
+      window.removeEventListener('scroll', compute)
+      window.removeEventListener('resize', compute)
+    }
+  }, [])
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -763,8 +795,8 @@ export function App() {
         <circle cx="200" cy="200" r="150" fill="none" stroke="currentColor" strokeWidth=".6" strokeDasharray="2 4" />
         <text x="200" y="224" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="96" fill="currentColor">m³</text>
       </svg>
-      <MakeReadyMarks />
       <header className="site-header">
+        <ReadingStrip progress={scrollProgress} activeSection={activeSection} />
         <div className="site-header__row">
           <a className="brand" href="#question" aria-label="Return to the question">
             <LogoMark size={36} />
@@ -801,8 +833,25 @@ export function App() {
             <StageMarkers active={activeStage} />
           </div>
 
-          <div className="hero__sheet">
+          <div className="hero__spread">
+            <span className="hero__corner hero__corner--tl" aria-hidden="true">
+              <svg viewBox="0 0 22 22"><path d="M2 16h14M16 2v14" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="square" /></svg>
+            </span>
+            <span className="hero__corner hero__corner--tr" aria-hidden="true">
+              <svg viewBox="0 0 22 22"><path d="M6 16H20M6 2v14" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="square" /></svg>
+            </span>
+            <span className="hero__corner hero__corner--bl" aria-hidden="true">
+              <svg viewBox="0 0 22 22"><path d="M2 6h14M16 20V6" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="square" /></svg>
+            </span>
+            <span className="hero__corner hero__corner--br" aria-hidden="true">
+              <svg viewBox="0 0 22 22"><path d="M6 6h14M6 20V6" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="square" /></svg>
+            </span>
             <div className="hero__copy">
+              <span className="hero__lead-in" aria-hidden="true">
+                <span className="hero__lead-in-line" />
+                <span className="hero__lead-in-tag">folio i · the question</span>
+                <span className="hero__lead-in-line" />
+              </span>
               <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
                 <span className="title__line">is Minimax </span>
                 <span className="title__line">
@@ -812,11 +861,25 @@ export function App() {
                 <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
                 <span className="hero__title-fold" aria-hidden="true" />
               </h1>
-              <span className="hero__title-pip" aria-hidden="true">
-                <span className="hero__title-pip-line" />
-                <span className="hero__title-pip-mark">folio i</span>
+              <span className="hero__title-tag" aria-hidden="true">
+                <span className="hero__title-tag-mark" />
+                <span>set in system serif · folded once</span>
+                <span className="hero__title-tag-mark" />
               </span>
             </div>
+          </div>
+
+          <div className="hero__voice-rail">
+            <span className={`hero__voice-rail-pill hero__voice-pill--${voice}`} aria-label={`Now setting in ${voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}`}>
+              <span className="hero__voice-rail-pill-dot" aria-hidden="true" />
+              <span className="hero__voice-rail-pill-eyebrow">now setting in</span>
+              <span className="hero__voice-rail-pill-name">{voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}</span>
+              <span className="hero__voice-rail-pill-shortcut" aria-hidden="true">⇧V</span>
+            </span>
+            <button ref={answerTriggerRef} type="button" className={`button button--primary ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
+              <span>{answerOpen ? 'fold the answer back' : 'read the editor’s note'}</span>
+              <ArrowIcon />
+            </button>
           </div>
 
           <HeroChapterMark />
@@ -839,33 +902,16 @@ export function App() {
                 <circle cx="216" cy="7" r="1.4" fill="currentColor" />
               </svg>
             </p>
-            <div className="hero__actions">
-              <button ref={answerTriggerRef} type="button" className={`button button--primary ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
-                <span>{answerOpen ? 'fold the answer back' : 'read the editor’s note'}</span>
-                <ArrowIcon />
-              </button>
-              <a className="text-link" href="#compose">follow the type into the margin <span aria-hidden="true">↓</span></a>
-            </div>
             <div className="hero__note">
               <span className="hero__note-mark" aria-hidden="true">*</span>
               <p><strong>Good front-end work</strong> is less about showing what can be made than noticing what should remain quiet.</p>
             </div>
-          </div>
-
-          <div className="hero__footer">
-            <span className="hero__footer-imprint">composed by hand <em>·</em> for a careful reader</span>
-            <span className={`hero__footer-voice hero__voice-pill--${voice}`} aria-label={`Now setting in ${voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}`}>
-              <span className="hero__footer-voice-dot" aria-hidden="true" />
-              <span className="hero__footer-voice-eyebrow">now setting in</span>
-              <span className="hero__footer-voice-name">{voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}</span>
-              <span className="hero__footer-voice-shortcut" aria-hidden="true">⇧V</span>
-            </span>
-            <span className="hero__footer-seal" aria-hidden="true">
-              <PressStamp voice={voice} size={30} />
-            </span>
-            <a className="hero__footer-arrow" href="#press-room" aria-label="Continue to the press bay">
-              <span>continue to the press</span>
-              <span aria-hidden="true">↓</span>
+            <a className="hero__continue" href="#press-room" aria-label="Continue to the press bay">
+              <span className="hero__continue-imprint">composed by hand <em>·</em> for a careful reader</span>
+              <span className="hero__continue-arrow">
+                <span>continue to the press</span>
+                <span aria-hidden="true" className="hero__continue-arrow-mark">↓</span>
+              </span>
             </a>
           </div>
         </section>
