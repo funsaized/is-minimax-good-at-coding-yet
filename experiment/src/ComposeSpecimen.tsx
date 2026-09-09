@@ -7,6 +7,24 @@ type ComposeSpecimenProps = {
 export function ComposeSpecimen({ voice }: ComposeSpecimenProps) {
   return (
     <svg className={`specimen specimen--${voice}`} viewBox="0 0 320 360" aria-hidden="true">
+      <defs>
+        <filter id="specimen-grain" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" stitchTiles="stitch" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.55 0" />
+        </filter>
+        <linearGradient id="specimen-trace" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
+          <stop offset="35%" stopColor="currentColor" stopOpacity=".9" />
+          <stop offset="65%" stopColor="currentColor" stopOpacity=".9" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="specimen-trace-glow" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
+          <stop offset="50%" stopColor="currentColor" stopOpacity=".35" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+
       <g className="specimen__crops">
         <path className="specimen__crop" d="M4 14h10M14 4v10" />
         <path className="specimen__crop" d="M306 4v10M316 14h-10" />
@@ -89,6 +107,12 @@ export function ComposeSpecimen({ voice }: ComposeSpecimenProps) {
         <text className="specimen__point" x="276" y="71" fontSize="7">32</text>
         <text className="specimen__point" x="276" y="103" fontSize="7">18</text>
         <text className="specimen__point" x="276" y="135" fontSize="7">12</text>
+      </g>
+
+      <g className="specimen__trace-bar" aria-hidden="true">
+        <rect className="specimen__trace-glow" x="20" y="-3" width="252" height="6" fill="url(#specimen-trace-glow)" />
+        <line className="specimen__trace-line" x1="20" y1="0" x2="272" y2="0" stroke="url(#specimen-trace)" strokeWidth=".9" />
+        <circle className="specimen__trace-bead" cx="146" cy="0" r="1.6" />
       </g>
 
       <g className="specimen__seal" aria-hidden="true">

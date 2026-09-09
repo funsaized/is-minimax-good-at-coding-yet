@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { ComposeSpecimen } from './ComposeSpecimen'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
@@ -23,6 +23,12 @@ type Voice = {
   descriptor: string
   body: string
   lines: [string, string, string]
+}
+
+type Stage = {
+  id: 'set' | 'compose' | 'proof'
+  name: string
+  hint: string
 }
 
 const NOTES: Note[] = [
@@ -82,6 +88,12 @@ const VOICES: Voice[] = [
   },
 ]
 
+const STAGES: Stage[] = [
+  { id: 'set', name: 'set', hint: 'a question is fixed' },
+  { id: 'compose', name: 'compose', hint: 'typography tries on the words' },
+  { id: 'proof', name: 'proof', hint: 'an answer is allowed to arrive' },
+]
+
 function LogoMark() {
   return (
     <svg className="brand__mark" viewBox="0 0 42 42" aria-hidden="true">
@@ -113,21 +125,82 @@ function NoteGlyph({ id }: { id: WordId }) {
   if (id === 'm3') {
     return (
       <svg viewBox="0 0 40 24" aria-hidden="true">
-        <path d="M2 17c6-14 10 10 17-3 6-12 10 7 19-7" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M2 17c6-14 10 10 17-3 6-12 10 7 19-7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
       </svg>
     )
   }
   if (id === 'good') {
     return (
       <svg viewBox="0 0 40 24" aria-hidden="true">
-        <path d="M2 12h36M20 3v18M14 6l6-3 6 3" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M2 12h36M20 3v18M14 6l6-3 6 3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     )
   }
   return (
     <svg viewBox="0 0 40 24" aria-hidden="true">
-      <path d="M3 5l16 14L37 5M3 19l8-7M37 19l-8-7" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M3 5l16 14L37 5M3 19l8-7M37 19l-8-7" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+  )
+}
+
+function SpineMark() {
+  return (
+    <svg className="spine__mark" viewBox="0 0 14 14" aria-hidden="true">
+      <circle cx="7" cy="7" r="5.6" fill="none" stroke="currentColor" strokeWidth=".7" />
+      <line x1="7" y1="0" x2="7" y2="14" stroke="currentColor" strokeWidth=".7" />
+      <line x1="0" y1="7" x2="14" y2="7" stroke="currentColor" strokeWidth=".7" />
+    </svg>
+  )
+}
+
+function getProofLabel(id: WordId): string {
+  if (id === 'm3') return 'stet'
+  if (id === 'good') return 'caret'
+  return 'query'
+}
+
+function getProofSub(id: WordId): string {
+  if (id === 'm3') return 'let it stand'
+  if (id === 'good') return 'insert here'
+  return 'mark for review'
+}
+
+function Marginalia({ activeWord, tokenRefs }: {
+  activeWord: WordId
+  tokenRefs: React.MutableRefObject<Partial<Record<WordId, HTMLButtonElement | null>>>
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [y, setY] = useState(0)
+
+  useLayoutEffect(() => {
+    const update = () => {
+      const tokenEl = tokenRefs.current[activeWord]
+      const marginaliaEl = ref.current
+      if (!tokenEl || !marginaliaEl) return
+      const rail = marginaliaEl.parentElement
+      if (!rail) return
+      const tr = tokenEl.getBoundingClientRect()
+      const rr = rail.getBoundingClientRect()
+      setY(tr.top - rr.top + tr.height / 2)
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [activeWord, tokenRefs])
+
+  const style = { ['--my' as string]: `${y}px` } as CSSProperties
+
+  return (
+    <div ref={ref} className={`marginalia marginalia--${activeWord}`} style={style}>
+      <span className="marginalia__lead" aria-hidden="true" />
+      <div className="marginalia__inner" key={activeWord}>
+        <span className="marginalia__caption">{getProofLabel(activeWord)}</span>
+        <span className="marginalia__glyph"><NoteGlyph id={activeWord} /></span>
+        <span className="marginalia__sub">{getProofSub(activeWord)}</span>
+        <span className="marginalia__rule" />
+      </div>
+      <span className="marginalia__lead marginalia__lead--end" aria-hidden="true" />
+    </div>
   )
 }
 
@@ -145,6 +218,26 @@ function HeaderRuler() {
         <span style={{ left: '92%' }}>proof</span>
       </div>
     </div>
+  )
+}
+
+function StageMarkers({ active }: { active: number }) {
+  return (
+    <ol className="stage-markers" aria-label="The three stages of the page">
+      {STAGES.map((stage, index) => (
+        <li
+          key={stage.id}
+          className={`stage-markers__item ${index === active ? 'is-active' : ''} ${index < active ? 'is-past' : ''}`}
+          aria-current={index === active ? 'step' : undefined}
+        >
+          <span className="stage-markers__dot" aria-hidden="true">
+            <span />
+          </span>
+          <span className="stage-markers__name">{stage.name}</span>
+          <span className="stage-markers__hint">{stage.hint}</span>
+        </li>
+      ))}
+    </ol>
   )
 }
 
@@ -187,6 +280,8 @@ function TitleToken({
 
 function SignalCard({ word, voice }: { word: WordId; voice: VoiceId }) {
   const wordLabel = NOTES.find(note => note.id === word)?.prompt ?? 'make room for attention'
+  const setDate = useRef(new Date())
+  const dateLabel = setDate.current.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   return (
     <aside className={`signal-card signal-card--${voice}`} aria-label="A typographic specimen of the question">
       <div className="signal-card__topline">
@@ -204,6 +299,7 @@ function SignalCard({ word, voice }: { word: WordId; voice: VoiceId }) {
       </div>
       <div className="signal-card__bottomline">
         <span className="signal-card__prompt">{wordLabel}</span>
+        <span className="signal-card__set" aria-hidden="true">set {dateLabel}</span>
         <span className="signal-card__mark" aria-hidden="true">↗</span>
       </div>
     </aside>
@@ -222,6 +318,7 @@ function AnswerPanel({ open, onClose }: { open: boolean; onClose: () => void }) 
         <div className="answer-panel__paper">
           <span className="answer-panel__pin answer-panel__pin--one" aria-hidden="true" />
           <span className="answer-panel__pin answer-panel__pin--two" aria-hidden="true" />
+          <span className="answer-panel__crease" aria-hidden="true" />
           <span className="answer-panel__crop answer-panel__crop--tl" aria-hidden="true" />
           <span className="answer-panel__crop answer-panel__crop--tr" aria-hidden="true" />
           <span className="answer-panel__crop answer-panel__crop--bl" aria-hidden="true" />
@@ -409,6 +506,7 @@ export function App() {
   const [hoveredWord, setHoveredWord] = useState<WordId | null>(null)
   const [voice, setVoice] = useState<VoiceId>('quiet')
   const [activeSection, setActiveSection] = useState('question')
+  const [activeStage, setActiveStage] = useState(0)
   const [announcement, setAnnouncement] = useState('')
   const tokenRefs = useRef<Partial<Record<WordId, HTMLButtonElement | null>>>({})
   const voiceRefs = useRef<Partial<Record<VoiceId, HTMLButtonElement | null>>>({})
@@ -437,6 +535,12 @@ export function App() {
     elements.forEach(element => observer.observe(element))
     return () => observer.disconnect()
   }, [])
+
+  useEffect(() => {
+    if (activeSection === 'question') setActiveStage(answerOpen ? 2 : 0)
+    else if (activeSection === 'notes') setActiveStage(1)
+    else setActiveStage(2)
+  }, [activeSection, answerOpen])
 
   const selectWord = (id: WordId, focus = false) => {
     const note = NOTES.find(item => item.id === id)
@@ -491,7 +595,7 @@ export function App() {
         <section className="hero" id="question" aria-labelledby="page-title">
           <div className="hero__eyebrow-row">
             <p className="eyebrow"><span className="eyebrow__line" />frontend experiment <em>read the question first</em></p>
-            <span className="hero__coordinates">set / compose / proof</span>
+            <StageMarkers active={activeStage} />
           </div>
           <div className="hero__layout">
             <div className="hero__copy">
@@ -516,7 +620,16 @@ export function App() {
                 <p><strong>Good front-end work</strong> is less about showing what can be made than noticing what should remain quiet.</p>
               </div>
             </div>
-            <SignalCard word={activeWord} voice={voice} />
+            <aside className="hero__spine" aria-label="Proofreader's marks for the marked words">
+              <SpineMark />
+              <div className="spine__rail">
+                <Marginalia activeWord={activeWord} tokenRefs={tokenRefs} />
+              </div>
+              <SpineMark />
+            </aside>
+            <div className="hero__specimen">
+              <SignalCard word={activeWord} voice={voice} />
+            </div>
           </div>
           <div className="hero__footer">
             <span><i className="hero__footer-dot" /> compose, slowly</span>
