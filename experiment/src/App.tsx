@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { ComposeSpecimen } from './ComposeSpecimen'
+import { MarginalThread } from './MarginalThread'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -15,6 +16,8 @@ type Note = {
   gloss: string
   body: string
   prompt: string
+  editor: string
+  seen: string
 }
 
 type Voice = {
@@ -41,6 +44,8 @@ const NOTES: Note[] = [
     gloss: 'a habit, not a name',
     body: 'A useful page should leave evidence of a point of view. Not a logo. Not a trick. A small, repeatable act of judgment.',
     prompt: 'the maker is a habit',
+    editor: 'a quiet corner of the title — leave it alone',
+    seen: 'seen twice today',
   },
   {
     id: 'good',
@@ -51,6 +56,8 @@ const NOTES: Note[] = [
     gloss: 'confidence is generous',
     body: 'The interface gets quieter when it stops presenting every possible answer. A confident choice gives the reader somewhere to stand.',
     prompt: 'make room for attention',
+    editor: 'the verb of the question — keep it present tense',
+    seen: 'read aloud once',
   },
   {
     id: 'yet',
@@ -61,6 +68,8 @@ const NOTES: Note[] = [
     gloss: 'the question stays open',
     body: '“Yet” carries the honest part. The space before an answer is not a gap to decorate; it is where the reader arrives.',
     prompt: 'leave room to arrive',
+    editor: 'the question mark is doing real work here',
+    seen: 'circled in pencil',
   },
 ]
 
@@ -113,24 +122,38 @@ function ArrowIcon() {
   )
 }
 
+function PencilIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3 21l4-1 11-11-3-3L4 17l-1 4zM14.5 6.5l3 3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 function NoteGlyph({ id }: { id: WordId }) {
   if (id === 'm3') {
     return (
-      <svg viewBox="0 0 40 24" aria-hidden="true">
-        <path d="M2 17c6-14 10 10 17-3 6-12 10 7 19-7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <svg viewBox="0 0 56 30" aria-hidden="true">
+        <path d="M3 22c10-18 16 14 26-4 8-15 14 9 24-9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        <circle cx="3" cy="22" r="1.4" fill="currentColor" />
       </svg>
     )
   }
   if (id === 'good') {
     return (
-      <svg viewBox="0 0 40 24" aria-hidden="true">
-        <path d="M2 12h36M20 3v18M14 6l6-3 6 3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      <svg viewBox="0 0 56 30" aria-hidden="true">
+        <path d="M6 22l22-14 22 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M28 8v14M22 12l6-4 6 4" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     )
   }
   return (
-    <svg viewBox="0 0 40 24" aria-hidden="true">
-      <path d="M3 5l16 14L37 5M3 19l8-7M37 19l-8-7" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    <svg viewBox="0 0 56 30" aria-hidden="true">
+      <path d="M14 5c-4 4-4 10 0 14M22 5c-4 4-4 10 0 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      <circle cx="6" cy="25" r="1.2" fill="currentColor" />
+      <circle cx="14" cy="26" r="1.2" fill="currentColor" />
+      <circle cx="22" cy="25" r="1.2" fill="currentColor" />
+      <path d="M10 27h8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
     </svg>
   )
 }
@@ -145,6 +168,19 @@ function getProofSub(id: WordId): string {
   if (id === 'm3') return 'let it stand'
   if (id === 'good') return 'insert here'
   return 'mark for review'
+}
+
+function MarkCard({ id, active }: { id: WordId; active: boolean }) {
+  return (
+    <div className={`mark mark--${id} ${active ? 'is-active' : ''}`} aria-hidden="true">
+      <span className="mark__head">
+        <span className="mark__label">{getProofLabel(id)}</span>
+        <span className="mark__glyph"><NoteGlyph id={id} /></span>
+      </span>
+      <span className="mark__sub">{getProofSub(id)}</span>
+      <span className="mark__editor">{NOTES.find(n => n.id === id)?.editor}</span>
+    </div>
+  )
 }
 
 function Marginalia({ activeWord, tokenRefs }: {
@@ -175,11 +211,11 @@ function Marginalia({ activeWord, tokenRefs }: {
   return (
     <div ref={ref} className={`marginalia marginalia--${activeWord}`} style={style}>
       <span className="marginalia__lead" aria-hidden="true" />
-      <div className="marginalia__inner" key={activeWord}>
-        <span className="marginalia__caption">{getProofLabel(activeWord)}</span>
-        <span className="marginalia__glyph"><NoteGlyph id={activeWord} /></span>
-        <span className="marginalia__sub">{getProofSub(activeWord)}</span>
-        <span className="marginalia__rule" />
+      <div className="marginalia__stack" key={activeWord}>
+        <span className="marginalia__heading">editor's marks</span>
+        <MarkCard id="m3" active={activeWord === 'm3'} />
+        <MarkCard id="good" active={activeWord === 'good'} />
+        <MarkCard id="yet" active={activeWord === 'yet'} />
       </div>
       <span className="marginalia__lead marginalia__lead--end" aria-hidden="true" />
     </div>
@@ -226,6 +262,7 @@ function TitleToken({
   onHover,
   onLeave,
   tokenRef,
+  circleKey,
 }: {
   id: WordId
   text: string
@@ -234,6 +271,7 @@ function TitleToken({
   onHover: (id: WordId) => void
   onLeave: () => void
   tokenRef: (node: HTMLSpanElement | null) => void
+  circleKey: number
 }) {
   return (
     <span
@@ -256,6 +294,11 @@ function TitleToken({
         }
       }}
     >
+      <svg className="title-token__circle" viewBox="0 0 64 32" aria-hidden="true" key={circleKey}>
+        <ellipse cx="32" cy="16" rx="29" ry="11" fill="none" stroke="currentColor" strokeWidth="1" />
+        <path d="M5 16c-.6-2 .3-4 2-5" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+        <path d="M59 17c.4-2-.5-4-2-5" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+      </svg>
       <span className="title-token__set" aria-hidden="true" />
       {text}
     </span>
@@ -297,6 +340,24 @@ function AnswerReveal({ open, onClose, triggerRef }: {
     >
       <div className="answer-reveal__clip">
         <div className="answer-reveal__paper">
+          <div className="answer-reveal__seal" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <defs>
+                <filter id="wax-grain" x="-10%" y="-10%" width="120%" height="120%">
+                  <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="2" seed="4" stitchTiles="stitch" />
+                  <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .7 0" />
+                  <feComposite in2="SourceGraphic" operator="in" />
+                </filter>
+              </defs>
+              <g filter="url(#wax-grain)" opacity="0.85">
+                <circle cx="60" cy="60" r="48" fill="currentColor" />
+                <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(34, 17, 12, .35)" strokeWidth="1.4" />
+                <circle cx="60" cy="60" r="40" fill="none" stroke="rgba(34, 17, 12, .25)" strokeWidth=".7" strokeDasharray="2 3" />
+                <text x="60" y="58" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="22" fill="rgba(34, 17, 12, .85)">yes,</text>
+                <text x="60" y="78" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="rgba(34, 17, 12, .85)">when quiet</text>
+              </g>
+            </svg>
+          </div>
           <div className="answer-reveal__inner">
             <div className="answer-reveal__row">
               <span className="answer-reveal__folio" aria-hidden="true">folio iv · the proof</span>
@@ -328,7 +389,9 @@ function AnswerReveal({ open, onClose, triggerRef }: {
                 <span>folded once</span>
               </div>
               <button type="button" className="answer-reveal__close" onClick={() => { onClose(); window.requestAnimationFrame(() => triggerRef.current?.focus()) }} tabIndex={open ? 0 : -1}>
-                fold it back <ArrowIcon />
+                <PencilIcon />
+                <span>fold it back</span>
+                <ArrowIcon />
               </button>
             </div>
           </div>
@@ -356,6 +419,7 @@ function NotesSection({ selected, onSelect }: { selected: WordId; onSelect: (id:
             aria-pressed={selected === note.id}
             onClick={() => onSelect(note.id)}
           >
+            <span className="note-card__scrawl" aria-hidden="true">seen · {note.seen}</span>
             <span className="note-card__folio" aria-hidden="true">folio {note.folio}</span>
             <span className="note-card__head">
               <span>{note.index}</span>
@@ -424,7 +488,6 @@ function VoicesSection({ voice, onVoice, voiceRefs }: {
             </span>
             <span className="voice-tile__foot">
               <span className="voice-tile__body">{item.body}</span>
-              <span className="voice-tile__rule" aria-hidden="true" />
               <span className="voice-tile__mark" aria-hidden="true">{voice === item.id ? '●' : '○'}</span>
             </span>
           </button>
@@ -436,20 +499,23 @@ function VoicesSection({ voice, onVoice, voiceRefs }: {
 
 function PressSignature() {
   return (
-    <svg className="press-signature" viewBox="0 0 220 64" aria-hidden="true">
+    <svg className="press-signature" viewBox="0 0 240 88" aria-hidden="true">
       <defs>
         <filter id="press-signature-grain" x="-5%" y="-5%" width="110%" height="110%">
-          <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" seed="7" stitchTiles="stitch" />
+          <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="9" stitchTiles="stitch" />
           <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0" />
           <feComposite in2="SourceGraphic" operator="in" />
         </filter>
       </defs>
-      <g filter="url(#press-signature-grain)" opacity=".85">
-        <rect x="3" y="3" width="214" height="58" rx="2" fill="none" stroke="currentColor" strokeWidth="1.2" />
-        <rect x="9" y="9" width="202" height="46" rx="1" fill="none" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 3" />
-        <text x="22" y="28" fontFamily="Georgia, serif" fontStyle="italic" fontSize="13" fill="currentColor">set with care</text>
-        <text x="22" y="48" fontFamily="ui-monospace, monospace" fontSize="7.5" letterSpacing="1.6" fill="currentColor" opacity=".75">PRESS · M³ · NO TWO PRESSES ALIKE</text>
-        <text x="178" y="44" fontFamily="Georgia, serif" fontStyle="italic" fontSize="18" fill="currentColor" textAnchor="middle">m³</text>
+      <g filter="url(#press-signature-grain)" opacity=".88">
+        <rect x="3" y="3" width="234" height="80" rx="2" fill="none" stroke="currentColor" strokeWidth="1.4" />
+        <rect x="10" y="10" width="220" height="66" rx="1" fill="none" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 3" />
+        <text x="22" y="32" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="currentColor">set with care</text>
+        <text x="22" y="64" fontFamily="ui-monospace, monospace" fontSize="7" letterSpacing="1.6" fill="currentColor" opacity=".75">PRESS · M³ · NO TWO PRESSES ALIKE</text>
+        <line x1="22" y1="40" x2="158" y2="40" stroke="currentColor" strokeWidth=".4" opacity=".4" />
+        <line x1="22" y1="71" x2="158" y2="71" stroke="currentColor" strokeWidth=".4" opacity=".4" />
+        <text x="196" y="52" fontFamily="Georgia, serif" fontStyle="italic" fontSize="26" fill="currentColor" textAnchor="middle">m³</text>
+        <text x="196" y="68" fontFamily="ui-monospace, monospace" fontSize="5.5" letterSpacing="1.4" fill="currentColor" opacity=".65" textAnchor="middle">OPUS · TODAY</text>
       </g>
     </svg>
   )
@@ -463,6 +529,7 @@ export function App() {
   const [activeSection, setActiveSection] = useState('question')
   const [activeStage, setActiveStage] = useState(0)
   const [announcement, setAnnouncement] = useState('')
+  const [circleKey, setCircleKey] = useState<Record<WordId, number>>({ m3: 0, good: 0, yet: 0 })
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
   const voiceRefs = useRef<Partial<Record<VoiceId, HTMLButtonElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
@@ -474,14 +541,14 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'notes', 'voices']
+    const elements = ['question', 'notes', 'voices', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
     const observer = new IntersectionObserver(
       entries => {
         const visible = entries
-          .filter(entry => entry.isIntersecting)
+          .filter(entry => entry.isIntersecting && entry.intersectionRatio > 0.05)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
         if (visible[0]) setActiveSection(visible[0].target.id)
       },
@@ -501,6 +568,7 @@ export function App() {
     const note = NOTES.find(item => item.id === id)
     setSelectedWord(id)
     setAnnouncement(note ? `${note.label}: ${note.title}.` : '')
+    setCircleKey(keys => ({ ...keys, [id]: (keys[id] ?? 0) + 1 }))
     if (focus) window.requestAnimationFrame(() => tokenRefs.current[id]?.focus())
   }
 
@@ -535,6 +603,7 @@ export function App() {
   return (
     <main className={`app app--voice-${voice} app--word-${activeWord}`}>
       <div className="app__grain" aria-hidden="true" />
+      <div className="app__pencil" aria-hidden="true" />
       <header className="site-header">
         <div className="site-header__row">
           <a className="brand" href="#question" aria-label="Return to the question">
@@ -567,10 +636,10 @@ export function App() {
               <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
                 <span className="title__line">is Minimax </span>
                 <span className="title__line">
-                  <TitleToken id="m3" text="M3" selected={activeWord === 'm3'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.m3 = node }} />{' '}
-                  <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} />
+                  <TitleToken id="m3" text="M3" selected={activeWord === 'm3'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.m3 = node }} circleKey={circleKey.m3} />{' '}
+                  <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} circleKey={circleKey.good} />
                 </span>
-                <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} />?</span>
+                <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
               </h1>
               <p className="hero__summary">
                 <span className="hero__dropcap" aria-hidden="true">A</span>
@@ -578,7 +647,7 @@ export function App() {
               </p>
               <div className="hero__actions">
                 <button ref={answerTriggerRef} type="button" className={`button button--primary ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
-                  <span>{answerOpen ? 'fold the answer back' : 'read the editor\u2019s note'}</span>
+                  <span>{answerOpen ? 'fold the answer back' : 'read the editor’s note'}</span>
                   <ArrowIcon />
                 </button>
                 <a className="text-link" href="#notes">follow the marginalia <span aria-hidden="true">↓</span></a>
@@ -623,6 +692,8 @@ export function App() {
           <a className="site-footer__back" href="#question">back to the question <ArrowIcon /></a>
         </footer>
       </div>
+
+      <MarginalThread activeId={activeSection === 'question' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' ? activeSection : 'question'} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )

@@ -1,0 +1,69 @@
+import { useEffect, useState } from 'react'
+
+type ThreadSection = {
+  id: string
+  index: string
+  label: string
+  note: string
+}
+
+const THREAD_SECTIONS: ThreadSection[] = [
+  { id: 'question', index: 'i', label: 'compose', note: 'the question is set' },
+  { id: 'answer', index: 'ii', label: 'proof', note: 'the answer is tipped in' },
+  { id: 'notes', index: 'iii', label: 'marginalia', note: 'three things worth keeping' },
+  { id: 'voices', index: 'iv', label: 'voices', note: 'the words try on clothes' },
+]
+
+export function MarginalThread({ activeId }: { activeId: string }) {
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const compute = () => {
+      const doc = document.documentElement
+      const max = doc.scrollHeight - window.innerHeight
+      if (max <= 0) {
+        setProgress(0)
+        return
+      }
+      const value = Math.max(0, Math.min(1, window.scrollY / max))
+      setProgress(value)
+    }
+    compute()
+    window.addEventListener('scroll', compute, { passive: true })
+    window.addEventListener('resize', compute)
+    return () => {
+      window.removeEventListener('scroll', compute)
+      window.removeEventListener('resize', compute)
+    }
+  }, [])
+
+  const activeIndex = Math.max(0, THREAD_SECTIONS.findIndex(s => s.id === activeId))
+
+  return (
+    <aside className="marginal-thread" aria-hidden="true">
+      <span className="marginal-thread__caption">a reading trace</span>
+      <ol className="marginal-thread__list">
+        <span
+          className="marginal-thread__progress"
+          style={{ height: `${progress * 100}%` }}
+        />
+        {THREAD_SECTIONS.map((section, index) => (
+          <li
+            key={section.id}
+            className={`marginal-thread__item ${index === activeIndex ? 'is-active' : ''} ${index < activeIndex ? 'is-past' : ''}`}
+          >
+            <span className="marginal-thread__node">
+              <span className="marginal-thread__dot" />
+              <span className="marginal-thread__index">{section.index}</span>
+            </span>
+            <span className="marginal-thread__label">
+              <strong>{section.label}</strong>
+              <em>{section.note}</em>
+            </span>
+          </li>
+        ))}
+      </ol>
+      <span className="marginal-thread__foot">read at your own pace</span>
+    </aside>
+  )
+}
