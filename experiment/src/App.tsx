@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type 
 import { TypeCase } from './TypeCase'
 import { MarginalThread } from './MarginalThread'
 import { PressStamp } from './PressStamp'
+import { SpecimenSpread } from './SpecimenSpread'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -310,9 +311,10 @@ function StageMarkers({ active }: { active: number }) {
 function PressFolio({ section }: { section: string }) {
   const map: Record<string, { folio: string; mark: string }> = {
     question: { folio: 'i', mark: 'set' },
-    notes: { folio: 'ii', mark: 'marginalia' },
-    voices: { folio: 'iii', mark: 'type drawer' },
-    answer: { folio: 'iv', mark: 'proof' },
+    pressings: { folio: 'ii', mark: 'specimen' },
+    notes: { folio: 'iii', mark: 'marginalia' },
+    voices: { folio: 'iv', mark: 'voices' },
+    answer: { folio: 'v', mark: 'proof' },
   }
   const entry = map[section] ?? map.question
   return (
@@ -364,24 +366,30 @@ function TitleToken({
         }
       }}
     >
-      <svg className="title-token__circle" viewBox="0 0 80 38" aria-hidden="true" key={circleKey}>
+      <svg className="title-token__circle" viewBox="0 0 90 40" aria-hidden="true" key={circleKey}>
         <path
-          d="M40 6c14 0 32 4 32 13s-16 13-32 13S8 28 8 19 26 6 40 6Z"
+          className="title-token__circle-stroke"
+          d="M45 8c14 0 36 4 36 12S61 32 45 32 9 28 9 20 31 8 45 8Z"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.2"
+          strokeWidth="1.3"
           strokeLinecap="round"
-          strokeDasharray="160 200"
+          strokeLinejoin="round"
+          pathLength="100"
+          strokeDasharray="100 100"
         />
-        <path d="M10 14c-1 2-1.4 4-.6 5.4" fill="none" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" />
-        <circle cx="9" cy="18.6" r="1.1" fill="currentColor" />
+        <path
+          className="title-token__circle-tail"
+          d="M14 11c-.4 1.6-1.2 3.6-.4 5.4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1"
+          strokeLinecap="round"
+          pathLength="100"
+          strokeDasharray="100 100"
+        />
+        <circle className="title-token__circle-dot" cx="13" cy="16.5" r="1.4" fill="currentColor" />
       </svg>
-      <span className="title-token__cross" aria-hidden="true">
-        <svg viewBox="0 0 28 28">
-          <line x1="2" y1="14" x2="26" y2="14" stroke="currentColor" strokeWidth=".7" strokeDasharray="2 2" />
-          <line x1="14" y1="2" x2="14" y2="26" stroke="currentColor" strokeWidth=".7" strokeDasharray="2 2" />
-        </svg>
-      </span>
       <span className="title-token__set" aria-hidden="true" />
       {text}
     </span>
@@ -603,6 +611,21 @@ function Colophon({ voice }: { voice: VoiceId }) {
           <p className="colophon__line">the question remains useful <i>because the answer can change</i></p>
           <a className="colophon__back" href="#question">back to the question <ArrowIcon /></a>
         </div>
+        <div className="colophon__signature" aria-hidden="true">
+          <svg className="colophon__signature-mark" viewBox="0 0 220 28">
+            <path
+              d="M2 18c4-6 10-2 14-7s8-9 16-5 10 8 18 4 12-12 22-6 14 10 22 4 12-9 20-3 14 10 22 4 14-12 24-6 18 8 26 2 18-12 28-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity=".55"
+            />
+            <circle cx="216" cy="14" r="1.6" fill="currentColor" opacity=".7" />
+          </svg>
+          <span className="colophon__signature-tag">composed by m³ · for the reader</span>
+        </div>
       </div>
       <p className="colophon__signature-note">
         <span aria-hidden="true">※</span>
@@ -632,7 +655,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'notes', 'voices', 'answer']
+    const elements = ['question', 'pressings', 'notes', 'voices', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -651,7 +674,7 @@ export function App() {
 
   useEffect(() => {
     if (activeSection === 'question') setActiveStage(answerOpen ? 2 : 0)
-    else if (activeSection === 'notes') setActiveStage(1)
+    else if (activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
     else setActiveStage(2)
   }, [activeSection, answerOpen])
 
@@ -712,6 +735,7 @@ export function App() {
           </a>
           <nav className="site-nav" aria-label="Sections">
             <a href="#question" className={activeSection === 'question' ? 'is-active' : ''} aria-current={activeSection === 'question' ? 'location' : undefined}>question</a>
+            <a href="#pressings" className={activeSection === 'pressings' ? 'is-active' : ''} aria-current={activeSection === 'pressings' ? 'location' : undefined}>pressings</a>
             <a href="#notes" className={activeSection === 'notes' ? 'is-active' : ''} aria-current={activeSection === 'notes' ? 'location' : undefined}>marginalia</a>
             <a href="#voices" className={activeSection === 'voices' ? 'is-active' : ''} aria-current={activeSection === 'voices' ? 'location' : undefined}>voices</a>
             <a href="#answer" className={activeSection === 'answer' ? 'is-active' : ''} aria-current={activeSection === 'answer' ? 'location' : undefined} onClick={openAnswerFromNav}>answer</a>
@@ -801,13 +825,15 @@ export function App() {
 
         <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} />
 
+        <SpecimenSpread active={voice} onSelect={selectVoice} />
+
         <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
         <VoicesSection voice={voice} onVoice={selectVoice} voiceRefs={voiceRefs} />
 
         <Colophon voice={voice} />
       </div>
 
-      <MarginalThread activeId={activeSection === 'question' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' ? activeSection : 'question'} />
+      <MarginalThread activeId={activeSection === 'question' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' ? activeSection : 'question'} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )
