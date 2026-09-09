@@ -7,6 +7,13 @@ import { MarkedProof } from './MarkedProof'
 import { LetterToReader } from './LetterToReader'
 import { ComposeFloor } from './ComposeFloor'
 import { TypeLadder } from './TypeLadder'
+import { PressBay } from './PressBay'
+
+const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
+  quiet: 'human',
+  human: 'bold',
+  bold: 'quiet',
+}
 
 function HeroChapterMark() {
   return (
@@ -136,18 +143,6 @@ function NoteGlyph({ id }: { id: WordId }) {
       <path d="M10 27h8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
     </svg>
   )
-}
-
-function getProofLabel(id: WordId): string {
-  if (id === 'm3') return 'stet'
-  if (id === 'good') return 'caret'
-  return 'query'
-}
-
-function getProofSub(id: WordId): string {
-  if (id === 'm3') return 'let it stand'
-  if (id === 'good') return 'insert here'
-  return 'mark for review'
 }
 
 function PushPin({ tone = 'wax' }: { tone?: 'wax' | 'acid' | 'blue' }) {
@@ -553,43 +548,11 @@ function FolioLedger() {
   )
 }
 
-function MarginProofGlyph({ word }: { word: WordId }) {
-  if (word === 'm3') {
-    return (
-      <svg viewBox="0 0 64 22" aria-hidden="true">
-        <text x="0" y="9" fontFamily="ui-monospace, monospace" fontSize="6.2" letterSpacing="2" fill="currentColor" opacity=".75">stet</text>
-        <path
-          d="M2 18c8-6 14 6 22 0s14-6 22 0 14 6 14 0"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.1"
-          strokeLinecap="round"
-          pathLength="100"
-          strokeDasharray="100 100"
-        />
-      </svg>
-    )
-  }
-  if (word === 'good') {
-    return (
-      <svg viewBox="0 0 52 22" aria-hidden="true">
-        <text x="0" y="9" fontFamily="ui-monospace, monospace" fontSize="6.2" letterSpacing="2" fill="currentColor" opacity=".75">caret</text>
-        <path d="M26 19l-10-11h20z" fill="currentColor" />
-        <line x1="2" y1="19" x2="50" y2="19" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" />
-      </svg>
-    )
-  }
-  return (
-    <svg viewBox="0 0 56 22" aria-hidden="true">
-      <text x="0" y="9" fontFamily="ui-monospace, monospace" fontSize="6.2" letterSpacing="2" fill="currentColor" opacity=".75">query</text>
-      <text x="38" y="20" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="currentColor">?</text>
-      <ellipse cx="38" cy="14" rx="11" ry="8" fill="none" stroke="currentColor" strokeWidth="1" pathLength="100" strokeDasharray="100 100" />
-    </svg>
-  )
-}
-
-function Colophon({ voice }: { voice: VoiceId }) {
+function Colophon({ voice, word }: { voice: VoiceId; word: WordId }) {
   const tag = voice === 'bold' ? 'NO APOLOGIES' : voice === 'human' ? 'BY HAND' : 'SET WITH CARE'
+  const voiceName = voice === 'bold' ? 'bold signal' : voice === 'human' ? 'human hand' : 'quiet cut'
+  const mark = word === 'm3' ? 'stet' : word === 'good' ? 'caret' : 'query'
+  const label = word === 'm3' ? 'M3' : word === 'good' ? 'good at' : 'yet?'
   return (
     <footer className="colophon" aria-label="Colophon">
       <div className="colophon__plate">
@@ -629,6 +592,30 @@ function Colophon({ voice }: { voice: VoiceId }) {
         <div className="colophon__foot">
           <p className="colophon__line">the question remains useful <i>because the answer can change</i></p>
           <a className="colophon__back" href="#question">back to the question <ArrowIcon /></a>
+        </div>
+        <div className="colophon__impression">
+          <span className="colophon__impression-tag">
+            <span className="colophon__impression-tag-dot" aria-hidden="true" />
+            this impression
+          </span>
+          <span className="colophon__impression-line">
+            <span className="colophon__impression-head">
+              pulled in <em>{voiceName}</em> · the active mark is <em>{label}</em> ({mark})
+            </span>
+            <span className="colophon__impression-meta">
+              <span>folio viii</span>
+              <span aria-hidden="true">·</span>
+              <span>press <em>·</em> m³ bay</span>
+              <span aria-hidden="true">·</span>
+              <span>shift + v to pull again</span>
+            </span>
+          </span>
+          <a className="colophon__impression-pull" href="#question">
+            <span>re-pull</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
         </div>
         <div className="colophon__signature" aria-hidden="true">
           <svg className="colophon__signature-mark" viewBox="0 0 260 36">
@@ -708,6 +695,26 @@ export function App() {
     else if (activeSection === 'compose' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'proof' || activeSection === 'pressings' || activeSection === 'notes') setActiveStage(1)
     else setActiveStage(2)
   }, [activeSection, answerOpen])
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) return
+      const target = event.target as HTMLElement | null
+      const tag = target?.tagName?.toLowerCase()
+      if (tag === 'input' || tag === 'textarea' || target?.isContentEditable) return
+      if (event.shiftKey && (event.key === 'V' || event.key === 'v')) {
+        event.preventDefault()
+        setVoice(prev => {
+          const next = VOICE_CYCLE[prev]
+          const labelMap: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
+          setAnnouncement(`Lever pulled. Now setting in ${labelMap[next]}.`)
+          return next
+        })
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   const selectWord = (id: WordId, focus = false) => {
     const note = NOTES.find(item => item.id === id)
@@ -803,41 +810,7 @@ export function App() {
                 <span className="hero__title-fold" aria-hidden="true" />
               </h1>
             </div>
-            <aside className={`hero__gloss hero__gloss--${activeWord}`} aria-label="Live margin note for the active marked word">
-              <span className="hero__gloss-fold" aria-hidden="true" />
-              <header className="hero__gloss-head">
-                <span className="hero__gloss-tag" aria-hidden="true">
-                  <span className="hero__gloss-tag-dot" />
-                  the margin
-                </span>
-                <span className="hero__gloss-folio" aria-hidden="true">folio ii →</span>
-              </header>
-              <div className="hero__gloss-active">
-                <span className="hero__gloss-active-eyebrow" aria-hidden="true">the eye rests on</span>
-                <span className="hero__gloss-active-label">{NOTES.find(n => n.id === activeWord)?.label}</span>
-                <span className="hero__gloss-active-gloss">“{NOTES.find(n => n.id === activeWord)?.gloss}”</span>
-              </div>
-              <div className="hero__gloss-mark" aria-hidden="true">
-                <MarginProofGlyph word={activeWord} />
-                <span className="hero__gloss-mark-name">{getProofLabel(activeWord)}</span>
-              </div>
-              <footer className="hero__gloss-foot">
-                <div className="hero__reading-rule" aria-hidden="true">
-                  <span className="hero__reading-rule__line" />
-                  {NOTES.map((n, index) => (
-                    <span
-                      key={n.id}
-                      className={`hero__reading-rule__node hero__reading-rule__node--${n.id} ${activeWord === n.id ? 'is-active' : ''}`}
-                    >
-                      <span className="hero__reading-rule__pip" />
-                      <span className="hero__reading-rule__num">{String(index + 1).padStart(2, '0')}</span>
-                    </span>
-                  ))}
-                  <span className="hero__reading-rule__line" />
-                </div>
-                <span className="hero__gloss-cue" aria-live="polite">{NOTES.find(n => n.id === activeWord)?.seen}</span>
-              </footer>
-            </aside>
+            <PressBay voice={voice} word={activeWord} onVoice={selectVoice} />
           </div>
 
           <HeroChapterMark />
@@ -900,7 +873,7 @@ export function App() {
         <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
         <VoicesSection voice={voice} onVoice={selectVoice} voiceRefs={voiceRefs} />
 
-        <Colophon voice={voice} />
+        <Colophon voice={voice} word={activeWord} />
       </div>
 
       <MarginalThread activeId={activeSection === 'question' || activeSection === 'compose' || activeSection === 'contents' || activeSection === 'note' || activeSection === 'notes' || activeSection === 'voices' || activeSection === 'answer' || activeSection === 'pressings' || activeSection === 'proof' ? activeSection : 'question'} />

@@ -1,13 +1,32 @@
-Calmed the hero; added a chapter mark, a hand-traced reading rule, and a simpler footer.
+# Changelog
 
-The hero was carrying too much around the title: an editor's trace wave, an annotation row with a scrawl and a stamp, and a footer with six marks competing for the eye. Removed the trace and the annotation; the title and the live margin rail now share the stage.
+## Iteration 208 — the composing desk, opened
 
-Added a centered chapter mark between the proof sheet and the type ladder. It carries the page's thesis in italic serif ("attention, not ornament"), framed by a hand-traced coral rule, dashed rules, corner crops, and a small fleuron with a "a note for the reader" tag. The rule draws in on load, then the quote rises, then the fleuron settles.
+A new PressBay replaces the static margin gloss in the hero. The press becomes
+tangible: a real composing lever with a wooden knob and brass base, a "next
+impression" card showing the question set in the next voice, and an "on the
+plate" readout of the active mark. Pulling the lever — by click, by
+<kbd>shift</kbd>+<kbd>v</kbd>, or by hitting the swap button — cycles the
+page through its three pressings.
 
-Replaced the three-dot index in the margin rail with a hand-traced reading rule: a numbered ruler of 01 → 02 → 03, one node per marked word, each tinted by its ink (acid, coral, blue). The active node fills with its color and its number flips to ink, so the reader can always see where they are in the three readings.
+- New `src/PressBay.tsx`: a working press interface that sits in the right
+  column of the hero sheet. It shows the current voice, previews the next
+  impression, holds the physical lever, and carries the active mark's gloss
+  on the plate.
+- The hero sheet's right column is widened to fit the press (clamped between
+  240px and 332px), and stacks below the title on narrow viewports.
+- `ComposeFloor` type pieces now re-set with a staggered physical lift when
+  the voice changes — they tilt up off the composing stick, settle back, and
+  the active piece rises higher to meet the new mark.
+- A small "this impression" plate is added to the colophon, summarising the
+  current voice and active mark in plain language.
+- The reading rule is preserved as a "pulled" sequence of three pip-nodes
+  on the press bay, indicating which word the eye is resting on.
+- Reduced-motion users still get a calm, fully readable press: the lever
+  doesn't tilt, the impression card doesn't nudge, and the compose floor
+  pieces settle without the springy lift.
 
-The hero footer went from six items to three: an imprint line ("composed by hand · for a careful reader"), the press stamp, and a single continue arrow to the compose floor. A faint acid rule now runs through the top edge to mark the chapter's end.
-
-Layout is unchanged otherwise: title tokens still draw their circles and underlines, the gloss rail still carries the active label and proof mark, the type ladder and body still flow below. The hero gains breathing room where the trace and annotation used to live, and the chapter mark gives the page a real epigraph before the readings begin.
-
-Responsive: the chapter mark tightens its padding and rule width under 540px, the footer seal centers itself on small screens, and the reduced-motion rules drop the trace animations without losing the title and chapter draw-ins.
+Everything else is kept. The chapter mark, the type ladder, the specimen
+spread, the marked proof, the marginalia, the letter to the reader, the
+answer leaf, the marginal thread, and the colophon remain where they
+were, undisturbed.

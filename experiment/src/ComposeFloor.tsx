@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { NOTES, type WordId } from './notes'
 
 type VoiceId = 'quiet' | 'human' | 'bold'
@@ -53,6 +54,12 @@ function PushPin({ tone }: { tone: 'wax' | 'acid' | 'blue' }) {
 }
 
 export function ComposeFloor({ voice, word }: ComposeFloorProps) {
+  const [resetting, setResetting] = useState(false)
+  useEffect(() => {
+    setResetting(true)
+    const timer = window.setTimeout(() => setResetting(false), 700)
+    return () => window.clearTimeout(timer)
+  }, [voice])
   const note = NOTES.find(n => n.id === word) ?? NOTES[0]
   const indexNumber = NOTES.findIndex(n => n.id === word)
   const ink: 'acid' | 'coral' | 'blue' =
@@ -75,7 +82,7 @@ export function ComposeFloor({ voice, word }: ComposeFloorProps) {
           <p className="section__lede">The composing stick below holds the title in pieces. Hover a marked word in the question above and the active piece here rises to meet the margin.</p>
         </header>
 
-        <figure className={`compose-floor__case compose-floor__case--${voice}`} aria-label="Composing stick with the set type">
+        <figure className={`compose-floor__case compose-floor__case--${voice} ${resetting ? 'is-voice-changing' : ''}`} aria-label="Composing stick with the set type">
           <figcaption className="compose-floor__case-caption">
             <span className="compose-floor__case-label">
               <span className="compose-floor__case-dot" aria-hidden="true" />
