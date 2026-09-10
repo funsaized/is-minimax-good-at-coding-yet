@@ -206,17 +206,16 @@ A lock directory records the worker PID. A second worker refuses to run while th
 
 ## 9. Wait, then repeat
 
-After publication, the runner targets the next start for 15 minutes after the previous turn began. Generation, validation, and deployment all count toward that interval. If they take longer than 15 minutes, the next turn can begin immediately after publication. The loop sleeps in short intervals and checks for pause markers and allowances. It does not start overlapping model turns, so a slow response delays publication rather than creating concurrent work.
+After publication, the runner targets the next start for 30 minutes after the previous turn began. Generation, validation, and deployment all count toward that interval. If they take longer than 30 minutes, the next turn can begin immediately after publication. Failed turns retry after the same 30-minute interval and never trigger an automatic pause. The loop sleeps in short intervals and checks for operator pause markers and allowances. It does not start overlapping model turns, so a slow response delays publication rather than creating concurrent work.
 
 Defaults are in [`runner/config.json`](../runner/config.json):
 
 | Setting | Default | Purpose |
 | --- | --- | --- |
-| Interval | 15 minutes between starts | Controls the experiment's pace, including generation time |
+| Interval | 30 minutes between starts | Controls successful and failed-attempt cadence |
 | Turn timeout | 18 minutes | Bounds a stuck model process |
-| Daily model runs | 96 per UTC day | Allows a full day at the target cadence |
+| Daily model runs | 48 per UTC day | Allows a full day at the target cadence |
 | Reported daily cost | $10 | Stops new turns when reported usage reaches it |
-| Consecutive failures | 20 | Tolerates extended provider outages before pausing |
 | Snapshot / archive allowance | 12 MB / 10 GB | Supports multi-week runs while retaining a deliberate upper bound |
 
 Cost reports may be zero for subscription providers. The cost allowance is checked between turns and is not a hard provider billing cap. Time and run-count limits still apply. Failed turns back off, and a successful publication clears the failure counter.

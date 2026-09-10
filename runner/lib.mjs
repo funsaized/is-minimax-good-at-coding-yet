@@ -92,6 +92,9 @@ export function nextRunAt(iteration, now = Date.now(), intervalMinutes = config.
     : Date.parse(iteration.acceptedAt) - (iteration.durationSeconds ?? 0) * 1000
   return new Date(Math.max(now, started + intervalMinutes * 60_000)).toISOString()
 }
+export function failureRetryAt(now = Date.now(), intervalMinutes = config.intervalMinutes) {
+  return new Date(now + intervalMinutes * 60_000).toISOString()
+}
 export async function acquireLock() {
   await fs.mkdir(RUNTIME, { recursive: true })
   const lock = path.join(RUNTIME, 'lock')

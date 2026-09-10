@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
-import { ROOT, RUNTIME, TITLE, config, command, readJSON, writeJSON, readState, saveState, readManifest, log, sleep, exists, hash, git, directorySize, acquireLock, dailyGate, parseUsage } from './lib.mjs'
+import { ROOT, RUNTIME, TITLE, config, command, readJSON, writeJSON, readState, saveState, readManifest, log, sleep, exists, hash, git, directorySize, acquireLock, dailyGate, parseUsage, failureRetryAt } from './lib.mjs'
 import { captureSnapshot } from './browser.mjs'
 import { makeCandidate, runModel, verifyCandidate } from './sandbox.mjs'
 import { publishPending } from './publish.mjs'
@@ -136,13 +136,9 @@ async function recordFailure(error) {
   const state = await readState()
   state.failures = (state.failures ?? 0) + 1
   state.lastError = { message: error.message, at: new Date().toISOString() }
-  state.nextRunAt = new Date(Date.now() + Math.min(60, 5 * 2 ** (state.failures - 1)) * 60_000).toISOString()
+  state.nextRunAt = failureRetryAt()
   await saveState(state)
   log(`Attempt failed: ${error.message}`)
-  if (state.failures >= config.maxConsecutiveFailures) {
-    await fs.writeFile(path.join(RUNTIME, 'paused'), `Paused after ${state.failures} failures. ${error.message}\n`)
-    log('Worker paused after repeated failures. Review npm run status, then npm run resume.')
-  }
 }
 
 async function loop() {
