@@ -969,8 +969,27 @@ export function App() {
             <span key={`pm-${strikeTick}`} className="hero__press-mark" aria-hidden="true">
               <PressMark voice={voice} setToday={setToday} />
             </span>
+            <span className="hero__corner hero__corner--tl" aria-hidden="true">
+              <svg viewBox="0 0 28 28"><path d="M2 14V2h12" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="2" cy="2" r="1.4" fill="currentColor" /></svg>
+            </span>
+            <span className="hero__corner hero__corner--tr" aria-hidden="true">
+              <svg viewBox="0 0 28 28"><path d="M14 2h12v12" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="26" cy="2" r="1.4" fill="currentColor" /></svg>
+            </span>
+            <span className="hero__corner hero__corner--bl" aria-hidden="true">
+              <svg viewBox="0 0 28 28"><path d="M2 14v12h12" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="2" cy="26" r="1.4" fill="currentColor" /></svg>
+            </span>
+            <span className="hero__corner hero__corner--br" aria-hidden="true">
+              <svg viewBox="0 0 28 28"><path d="M26 14v12h-12" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="26" cy="26" r="1.4" fill="currentColor" /></svg>
+            </span>
             <div className="hero__plate">
               <div className="hero__copy">
+                <span className="hero__plate-stamp" aria-hidden="true">
+                  <span className="hero__plate-stamp-rule" />
+                  <span className="hero__plate-stamp-core">
+                    <span className="hero__plate-stamp-line">this impression · pulled {setToday}</span>
+                  </span>
+                  <span className="hero__plate-stamp-rule" />
+                </span>
                 <span className="hero__lead-in" aria-hidden="true">
                   <span className="hero__lead-in-line" />
                   <span className="hero__lead-in-tag">

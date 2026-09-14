@@ -17161,3 +17161,443 @@ a small act of typesetting.
 }
 
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 238 · the page reads as a single letterpress proof.
+   The title spread gains a paper plate frame with corner
+   registration marks; a small plate stamp signs the impression;
+   marked words in the title receive a refined editor's underline;
+   the hero plate breathes with calmer spacing on every screen.
+   ──────────────────────────────────────────────────────────── */
+
+/* The four corner registration marks anchor the proof spread. They
+   sit slightly inside the corners so they read as press-shop marks,
+   not as browser crops. Each corner is a tiny L with a pip. */
+
+.hero__corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  color: var(--paper);
+  opacity: 0;
+  pointer-events: none;
+  animation: cornerMarkIn .9s var(--ease-out) 1.1s forwards;
+  transition: color .55s var(--ease);
+}
+
+.hero__corner--tl { top: 12px; left: 12px; }
+.hero__corner--tr { top: 12px; right: 12px; }
+.hero__corner--bl { bottom: 12px; left: 12px; }
+.hero__corner--br { bottom: 12px; right: 12px; }
+
+.hero__corner svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  opacity: .65;
+}
+
+.hero__corner--tl { animation-delay: 1.1s; }
+.hero__corner--tr { animation-delay: 1.18s; }
+.hero__corner--bl { animation-delay: 1.26s; }
+.hero__corner--br { animation-delay: 1.34s; }
+
+@keyframes cornerMarkIn {
+  from { opacity: 0; transform: scale(.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.app--voice-quiet .hero__corner { color: var(--blue); }
+.app--voice-human .hero__corner { color: var(--coral); }
+.app--voice-bold  .hero__corner { color: var(--acid); }
+
+/* The plate stamp signs the impression in a single quiet line,
+   centred above the title. It reads as a pressman's note, not as
+   a label. The rules that bracket the line are barely visible. */
+
+.hero__plate-stamp {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  width: clamp(280px, 70%, 720px);
+  margin: 0 auto clamp(2px, .4vw, 6px);
+  opacity: 0;
+  animation: plateStampIn .8s var(--ease-out) .9s forwards;
+}
+
+.hero__plate-stamp-rule {
+  display: block;
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line) 80%);
+  opacity: .7;
+}
+
+.hero__plate-stamp-rule:last-of-type {
+  background: linear-gradient(to left, transparent, var(--line) 80%);
+}
+
+.hero__plate-stamp-core {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: .72;
+}
+
+.hero__plate-stamp-line {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hero__plate-stamp-line em {
+  color: var(--coral);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: -.005em;
+  text-transform: none;
+  transition: color .45s var(--ease);
+}
+
+.app--voice-quiet .hero__plate-stamp-line em { color: var(--blue); }
+.app--voice-human .hero__plate-stamp-line em { color: var(--coral); }
+.app--voice-bold  .hero__plate-stamp-line em { color: var(--acid); }
+
+@keyframes plateStampIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: .72; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__corner,
+  .hero__plate-stamp {
+    animation: none !important;
+    opacity: .65 !important;
+    transform: none !important;
+  }
+}
+
+/* The plate frame is the gentle box that holds the proof. A
+   single soft inset replaces the heavy ::before/::after stack
+   so the title breathes inside an honest paper margin. */
+
+.hero__spread {
+  position: relative;
+}
+
+.hero__spread::before {
+  inset: 6px;
+  border-color: rgba(146, 186, 255, .075);
+}
+
+.hero__spread::after {
+  inset: 14px;
+  border-color: rgba(243, 236, 214, .03);
+}
+
+/* The title tokens now sit on the same baseline as the rest of
+   the line and inherit the voice tone with restraint. The
+   coloured underline reads as a printer's mark, not as a link. */
+
+.title-token {
+  position: relative;
+  display: inline-block;
+  padding: 0 .02em .04em;
+  background: transparent;
+  font-family: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  transition:
+    color .35s var(--ease),
+    background-color .35s var(--ease),
+    border-color .35s var(--ease),
+    text-shadow .45s var(--ease);
+}
+
+.title-token--m3,
+.title-token--good,
+.title-token--yet {
+  color: var(--paper);
+  border-bottom: 0;
+  background-image: linear-gradient(
+    to right,
+    transparent 0%,
+    currentColor 8%,
+    currentColor 92%,
+    transparent 100%
+  );
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 1.5px;
+}
+
+.title-token--m3 { background-image: linear-gradient(to right, transparent, var(--acid), transparent); }
+.title-token--good { background-image: linear-gradient(to right, transparent, var(--coral), transparent); }
+.title-token--yet { background-image: linear-gradient(to right, transparent, var(--blue), transparent); }
+
+.app--word-m3 .title-token--m3,
+.title-token--m3.is-selected {
+  color: var(--acid);
+}
+
+.app--word-good .title-token--good,
+.title-token--good.is-selected {
+  color: var(--coral);
+}
+
+.app--word-yet .title-token--yet,
+.title-token--yet.is-selected {
+  color: var(--blue);
+}
+
+.title-token__halo {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 1.4em;
+  height: 1.4em;
+  border-radius: 50%;
+  background: var(--acid);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.4);
+  filter: blur(14px);
+  pointer-events: none;
+  transition: opacity .45s var(--ease), transform .75s var(--ease-spring);
+  z-index: -1;
+}
+
+.title-token--good .title-token__halo { background: var(--coral); }
+.title-token--yet  .title-token__halo { background: var(--blue); }
+
+.title-token:hover .title-token__halo,
+.title-token:focus-visible .title-token__halo,
+.title-token.is-selected .title-token__halo {
+  opacity: .18;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.title-token:hover,
+.title-token:focus-visible {
+  color: var(--paper);
+  text-shadow: 0 0 .55em rgba(216, 255, 106, .2);
+}
+
+.title-token--good:hover,
+.title-token--good:focus-visible {
+  color: var(--paper);
+  text-shadow: 0 0 .55em rgba(255, 118, 95, .24);
+}
+
+.title-token--yet:hover,
+.title-token--yet:focus-visible {
+  color: var(--paper);
+  text-shadow: 0 0 .55em rgba(155, 188, 255, .24);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-token__halo { transition: none !important; }
+}
+
+/* The compose rule beneath the title is the press line. It now
+   arrives with a slightly longer, calmer draw and the trailing
+   bead feels like a settled ink drop rather than a target. */
+
+.hero__compose-rule {
+  width: clamp(360px, 88%, 1080px);
+  margin: clamp(22px, 2.8vw, 38px) auto clamp(10px, 1.1vw, 16px);
+  height: 18px;
+  color: var(--coral);
+  display: block;
+}
+
+.hero__compose-rule-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: composeRuleDraw 1.25s var(--ease-out) .5s forwards;
+}
+
+.hero__compose-rule-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: composeRuleBead .5s var(--ease-spring) 1.7s forwards;
+}
+
+.hero__compose-rule-bead--ring,
+.hero__compose-rule-bead--ring-2 {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: composeRuleRing .6s var(--ease-out) 1.78s forwards;
+}
+
+.hero__compose-rule-bead--ring-2 {
+  animation-delay: 1.95s;
+}
+
+/* The publication mark beneath the rule breathes with a wider
+   reach. Its rules extend further into the gutters so the title
+   sits between two long, quiet horizons. */
+
+.publication-mark {
+  margin-top: clamp(14px, 1.8vw, 22px);
+}
+
+/* The hero body summary gains a slightly longer leading and a
+   gentler drop cap so the paragraph that sits below the title
+   reads as a continuation, not as a caption. */
+
+.hero__summary {
+  font-size: clamp(15px, 1.15vw, 17px);
+  line-height: 1.62;
+  letter-spacing: -.003em;
+  max-width: 56ch;
+  color: var(--lead-2);
+}
+
+.hero__dropcap {
+  font-size: clamp(3.4em, 4.6vw, 4.6em);
+  line-height: .82;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  padding: .04em .12em .04em 0;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, .2);
+}
+
+/* The voice tabs beneath the title settle a little closer to the
+   plate so the proof reads as one composed strip. */
+
+.hero__voice-row {
+  margin-top: clamp(20px, 2.6vw, 32px);
+  padding-top: clamp(14px, 1.6vw, 22px);
+  border-top: 1px dashed rgba(146, 186, 255, .12);
+}
+
+.hero__voice-tab {
+  padding: 9px 14px 10px;
+  letter-spacing: .02em;
+}
+
+.hero__voice-tab-name {
+  letter-spacing: .01em;
+}
+
+/* The lead-in above the title now sits with a small, deliberate
+   gap from the plate stamp so the two quiet lines do not crowd. */
+
+.hero__lead-in {
+  margin-bottom: clamp(2px, .4vw, 6px);
+}
+
+/* On wide screens the title sits inside a soft proof box. The
+   plate frame is a single hairline border, slightly inside the
+   spread's own frame. The result is a nested frame: outer spread
+   frame, inner proof frame, title centred within both. */
+
+@media (min-width: 980px) {
+  .hero__plate {
+    padding: clamp(36px, 4.2vw, 60px) clamp(28px, 3.6vw, 48px);
+    border: 1px solid rgba(146, 186, 255, .07);
+    background:
+      linear-gradient(180deg, rgba(28, 36, 52, .08), rgba(14, 20, 32, .14));
+    box-shadow: inset 0 0 0 1px rgba(146, 186, 255, .025);
+  }
+}
+
+/* Mobile: the proof frame stays, the corners settle to the
+   inside of the plate, the title sizes down a touch. The result
+   is a tight, breathable single column. */
+
+@media (max-width: 720px) {
+  .hero__corner { width: 18px; height: 18px; }
+  .hero__corner--tl { top: 8px; left: 8px; }
+  .hero__corner--tr { top: 8px; right: 8px; }
+  .hero__corner--bl { bottom: 8px; left: 8px; }
+  .hero__corner--br { bottom: 8px; right: 8px; }
+
+  .hero__plate-stamp-core {
+    font-size: 8.5px;
+    letter-spacing: .22em;
+  }
+}
+
+@media (max-width: 540px) {
+  .hero__plate-stamp-line em {
+    font-size: 11px;
+  }
+
+  .hero__plate-stamp {
+    width: clamp(240px, 92%, 360px);
+  }
+}
+
+/* Reduced motion: the corner marks and plate stamp settle
+   without their entrance so they read as part of the page. */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__compose-rule-stroke { stroke-dashoffset: 0 !important; animation: none !important; }
+  .hero__compose-rule-bead,
+  .hero__compose-rule-bead--ring,
+  .hero__compose-rule-bead--ring-2 { opacity: 1 !important; animation: none !important; transform: none !important; }
+  .hero__compose-rule-bead--ring { opacity: .55 !important; }
+  .hero__compose-rule-bead--ring-2 { opacity: .35 !important; }
+}
+
+/* ─── title set in three voices ─────────────────────────────── */
+
+/* The three voices inherit a confident rhythm. Quiet reads in a
+   small serif italic that feels handwritten but composed. Human
+   takes its warm coral ink from the original. Bold is the
+   display voice; it answers the question in green. */
+
+.app--voice-quiet .hero__title {
+  color: var(--lead-1);
+}
+
+.app--voice-human .hero__title {
+  color: var(--coral);
+}
+
+.app--voice-bold .hero__title {
+  color: var(--acid);
+}
+
+/* The body copy below the title reads in a longer, calmer line
+   that matches the page's prose rhythm. */
+
+.hero__continue {
+  margin-top: clamp(24px, 2.4vw, 32px);
+  padding-top: clamp(18px, 1.8vw, 24px);
+  border-top: 1px solid rgba(146, 186, 255, .08);
+}
+
+.hero__continue-imprint {
+  letter-spacing: .02em;
+  color: var(--muted);
+}
+
+.hero__continue-arrow {
+  letter-spacing: .01em;
+}
+
+/* On narrow screens the lead-in settles into a single line. */
+
+@media (max-width: 540px) {
+  .hero__lead-in {
+    gap: 10px;
+    font-size: 9px;
+    letter-spacing: .22em;
+  }
+}
+
+
