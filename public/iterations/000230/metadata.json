@@ -1,0 +1,19 @@
+{
+  "id": 230,
+  "parentId": 229,
+  "createdAt": "2026-09-14T15:31:06.166Z",
+  "summary": "A single unifying band that runs through the page, and a typographic specimen",
+  "path": "/iterations/000230/index.html",
+  "screenshot": "/iterations/000230/desktop.png",
+  "mobileScreenshot": "/iterations/000230/mobile.png",
+  "sourceCommit": "1f6e75f01b53c294c42aef1bbd5938217fd79711",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 515,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 120047,
+    "outputTokens": 21494,
+    "steps": 62
+  }
+}
