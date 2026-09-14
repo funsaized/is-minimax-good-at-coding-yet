@@ -10,11 +10,11 @@ import { InkTrail } from './InkTrail'
 import { DaySheet } from './DaySheet'
 import { MarginThread } from './MarginThread'
 import { MarginNotes } from './MarginNotes'
+import { MarginGutter } from './MarginGutter'
 import { Watermark } from './Watermark'
 import { PressMark } from './PressMark'
 import { TypePlate } from './TypePlate'
 import { PressSignature } from './PressSignature'
-import { AnnotationRibbon } from './AnnotationRibbon'
 import { PressRibbon } from './PressRibbon'
 import { SecondReading } from './SecondReading'
 import { ReadingTrace } from './ReadingTrace'
@@ -1002,18 +1002,15 @@ export function App() {
                 </svg>
                 <PublicationMark key={voice} voice={voice} setToday={setToday} className="publication-mark--in-hero" />
               </div>
+              <MarginGutter
+                active={selectedWord}
+                hovered={hoveredWord}
+                voice={voice}
+                onSelect={id => selectWord(id)}
+                onHover={setHoveredWord}
+                onLeave={() => setHoveredWord(null)}
+              />
             </div>
-          </div>
-
-          <div className="hero__marks">
-            <AnnotationRibbon
-              active={selectedWord}
-              hovered={hoveredWord}
-              voice={voice}
-              onSelect={id => selectWord(id)}
-              onHover={setHoveredWord}
-              onLeave={() => setHoveredWord(null)}
-            />
           </div>
 
           <div className="hero__voice-row">
