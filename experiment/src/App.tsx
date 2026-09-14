@@ -12,6 +12,7 @@ import { InkDust } from './InkDust'
 import { InkTrail } from './InkTrail'
 import { DaySheet } from './DaySheet'
 import { MarginThread } from './MarginThread'
+import { FolioStitch } from './FolioStitch'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -1245,6 +1246,7 @@ export function App() {
       </nav>
 
       <MarginThread activeId={activeSection} progress={scrollProgress} voice={voice} />
+      <FolioStitch activeId={activeSection} voice={voice} word={activeWord} />
 
       <ReadingFolio activeId={activeSection} voice={voice} word={activeWord} answerOpen={answerOpen} setToday={setToday} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
