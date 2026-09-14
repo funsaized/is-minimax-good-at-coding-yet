@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import type { VoiceId, WordId } from './PressSignature'
+import type { VoiceId } from './PressBay'
+import type { WordId } from './notes'
 
 export type ImpressionMark =
   | { kind: 'voice'; voice: VoiceId }

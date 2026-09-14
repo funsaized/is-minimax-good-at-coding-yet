@@ -15,6 +15,7 @@ import { ProofCard } from './ProofCard'
 import { Watermark } from './Watermark'
 import { FolioSeal } from './FolioSeal'
 import { TypePlate } from './TypePlate'
+import { PressSignature } from './PressSignature'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -931,41 +932,8 @@ export function App() {
           </div>
 
           <div className="hero__spread">
-            <span className="hero__spread-deckle" aria-hidden="true" />
-            <span className="hero__spread-rule hero__spread-rule--top" aria-hidden="true" />
-            <span className="hero__spread-rule hero__spread-rule--bottom" aria-hidden="true" />
-            <span className="hero__reg-mark hero__reg-mark--tl" aria-hidden="true">
-              <svg viewBox="0 0 18 18">
-                <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" strokeWidth=".7" />
-                <path d="M9 2v14M2 9h14" stroke="currentColor" strokeWidth=".7" />
-                <circle cx="9" cy="9" r="1" fill="currentColor" />
-              </svg>
-            </span>
-            <span className="hero__reg-mark hero__reg-mark--br" aria-hidden="true">
-              <svg viewBox="0 0 18 18">
-                <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" strokeWidth=".7" />
-                <path d="M9 2v14M2 9h14" stroke="currentColor" strokeWidth=".7" />
-                <circle cx="9" cy="9" r="1" fill="currentColor" />
-              </svg>
-            </span>
             <span className="hero__seal" aria-hidden="true">
-              <FolioSeal voice={voice} folio="i" setToday={setToday} size={168} />
-            </span>
-            <span className="hero__corner-tab" aria-hidden="true">
-              <span className="hero__corner-tab-line" />
-              <span className="hero__corner-tab-tag">folio i · the question</span>
-              <span className="hero__corner-tab-line" />
-            </span>
-            <span className="hero__slip" aria-hidden="true">
-              <span className="hero__slip-rule" />
-              <span className="hero__slip-body">
-                <span>set on <em>{setToday}</em></span>
-                <span className="hero__slip-dot" />
-                <span>folio <em>i</em></span>
-                <span className="hero__slip-dot" />
-                <span>pressed in <em>{voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}</em></span>
-              </span>
-              <span className="hero__slip-rule" />
+              <FolioSeal voice={voice} folio="i" setToday={setToday} size={150} />
             </span>
             <div className="hero__copy">
               <span className="hero__lead-in" aria-hidden="true">
@@ -1058,6 +1026,8 @@ export function App() {
             </button>
           </div>
 
+          <PressSignature folio="i" voice={voice} word={activeWord} setToday={setToday} variant="inline" />
+
           <div className="hero__body">
             <div className="hero__body-grid">
               <p className="hero__summary">
@@ -1131,6 +1101,8 @@ export function App() {
         </section>
 
         <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
+
+        <PressSignature folio="viii" voice={voice} word={activeWord} setToday={setToday} variant="footer" />
 
         <Colophon voice={voice} word={activeWord} setToday={setToday} />
       </div>

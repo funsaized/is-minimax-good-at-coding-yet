@@ -1,160 +1,125 @@
 import type { CSSProperties } from 'react'
-
-export type VoiceId = 'quiet' | 'human' | 'bold'
-export type WordId = 'm3' | 'good' | 'yet'
+import type { VoiceId } from './PressBay'
+import type { WordId } from './notes'
 
 type PressSignatureProps = {
+  folio: string
   voice: VoiceId
   word: WordId
-  tone?: 'plate' | 'card' | 'plate-light'
+  setToday: string
+  variant?: 'inline' | 'footer'
+  label?: string
 }
 
-const VOICE_LABEL: Record<VoiceId, string> = {
-  quiet: 'quiet cut',
-  human: 'human hand',
-  bold: 'bold signal',
+const VOICE_LABEL: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
+const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
+const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
+const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
+const FOLIO_TITLE: Record<string, string> = {
+  i: 'the question',
+  'i·': 'the press bay',
+  ii: 'the compose floor',
+  iii: 'this page, listed',
+  'iii·': 'the day sheet',
+  '·': 'a folded slip',
+  iv: 'the second proof',
+  v: 'three pressings',
+  vi: 'the marginalia',
+  viii: 'the answer',
 }
 
-const VOICE_FACE: Record<VoiceId, string> = {
-  quiet: 'serif · italic · close set',
-  human: 'serif · italic · warm',
-  bold: 'sans · heavy · no apology',
-}
-
-const VOICE_LETTER: Record<VoiceId, string> = {
-  quiet: 'A',
-  human: 'B',
-  bold: 'C',
-}
-
-const WORD_LABEL: Record<WordId, string> = {
-  m3: 'm³',
-  good: 'good at',
-  yet: 'yet?',
-}
-
-const WORD_MARK: Record<WordId, string> = {
-  m3: 'stet',
-  good: 'caret',
-  yet: 'query',
-}
-
-const WORD_GLYPH: Record<WordId, string> = {
-  m3: '⌇',
-  good: '∧',
-  yet: '?',
-}
-
-function VoicePrint({ voice, size = 56 }: { voice: VoiceId; size?: number }) {
-  if (voice === 'quiet') {
-    return (
-      <svg className="press-signature__print" width={size} height={size} viewBox="0 0 56 56" aria-hidden="true">
-        <circle cx="28" cy="28" r="25" fill="none" stroke="currentColor" strokeWidth=".6" opacity=".35" />
-        <circle cx="28" cy="28" r="18" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2.4" opacity=".55" />
-        <path
-          d="M14 32c4-6 8 6 14 0s10-6 14 0"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.1"
-          strokeLinecap="round"
-        />
-        <text x="28" y="24" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">a</text>
-        <circle cx="44" cy="36" r="1" fill="currentColor" />
-      </svg>
-    )
-  }
-  if (voice === 'human') {
-    return (
-      <svg className="press-signature__print" width={size} height={size} viewBox="0 0 56 56" aria-hidden="true">
-        <ellipse cx="28" cy="28" rx="24" ry="22" fill="none" stroke="currentColor" strokeWidth=".6" opacity=".35" />
-        <ellipse cx="28" cy="28" rx="17" ry="15" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2" opacity=".5" />
-        <path
-          d="M16 26c2-4 6-2 8 2s4 6 8 4 6-4 8 0"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <text x="28" y="44" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="10" fill="currentColor">b</text>
-        <circle cx="44" cy="40" r="1.2" fill="currentColor" />
-      </svg>
-    )
-  }
+export function PressSignature({ folio, voice, word, setToday, variant = 'inline', label }: PressSignatureProps) {
+  const folioTitle = FOLIO_TITLE[folio] ?? 'a folio'
+  const style = {
+    '--sig-voice': `var(--sig-${voice})`,
+  } as CSSProperties
   return (
-    <svg className="press-signature__print" width={size} height={size} viewBox="0 0 56 56" aria-hidden="true">
-      <rect x="3" y="3" width="50" height="50" fill="none" stroke="currentColor" strokeWidth=".6" opacity=".35" />
-      <rect x="9" y="9" width="38" height="38" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1.5 2" opacity=".5" />
-      <text x="28" y="34" textAnchor="middle" fontFamily="ui-sans-serif, system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="22" letterSpacing="-1.2" fill="currentColor">M³</text>
-      <path d="M14 44h28" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function WordMark({ word }: { word: WordId }) {
-  return (
-    <span className={`press-signature__wordmark press-signature__wordmark--${word}`} aria-hidden="true">
-      <svg viewBox="0 0 40 40">
-        <circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" strokeWidth=".7" opacity=".5" />
-        {word === 'm3' && (
-          <>
-            <path d="M8 22c4-8 8 8 12-2s8 6 12-4" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-            <circle cx="8" cy="22" r="1.1" fill="currentColor" />
-          </>
-        )}
-        {word === 'good' && (
-          <>
-            <path d="M20 30l-9-10h18z" fill="currentColor" opacity=".85" />
-            <line x1="9" y1="30" x2="31" y2="30" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" />
-          </>
-        )}
-        {word === 'yet' && (
-          <>
-            <text x="20" y="26" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="22" fill="currentColor">?</text>
-            <ellipse cx="20" cy="20" rx="11" ry="9" fill="none" stroke="currentColor" strokeWidth=".8" strokeDasharray="60 60" opacity=".7" />
-          </>
-        )}
-      </svg>
-    </span>
-  )
-}
-
-export function PressSignature({ voice, word, tone = 'plate' }: PressSignatureProps) {
-  const style = { '--sig-tone': tone } as CSSProperties
-  return (
-    <div className={`press-signature press-signature--${voice} press-signature--${tone} press-signature--word-${word}`} style={style}>
-      <span className="press-signature__plate" aria-hidden="true">
-        <VoicePrint voice={voice} size={56} />
-      </span>
-      <span className="press-signature__body">
-        <span className="press-signature__eyebrow">
-          <span className="press-signature__eyebrow-mark" aria-hidden="true" />
-          press signature · {VOICE_LETTER[voice]}
+    <div className={`press-signature press-signature--${voice} press-signature--${variant}`} style={style} aria-hidden="true">
+      <span className="press-signature__rule press-signature__rule--left" />
+      <span className="press-signature__core">
+        <span className="press-signature__seal">
+          <svg viewBox="0 0 56 56" aria-hidden="true">
+            <defs>
+              <radialGradient id={`sig-wax-${voice}`} cx="50%" cy="38%" r="62%">
+                <stop offset="0%" stopColor="currentColor" stopOpacity=".92" />
+                <stop offset="65%" stopColor="currentColor" stopOpacity=".72" />
+                <stop offset="100%" stopColor="currentColor" stopOpacity=".5" />
+              </radialGradient>
+            </defs>
+            <circle cx="28" cy="28" r="26" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2.4" opacity=".55" />
+            <circle cx="28" cy="28" r="22" fill={`url(#sig-wax-${voice})`} />
+            <circle cx="28" cy="28" r="22" fill="none" stroke="currentColor" strokeWidth=".6" />
+            <circle cx="28" cy="28" r="17" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".55" />
+            <text
+              x="28"
+              y="20"
+              textAnchor="middle"
+              fontFamily="ui-monospace, monospace"
+              fontSize="3.2"
+              letterSpacing="1.6"
+              fill="currentColor"
+              opacity=".78"
+            >PRESS</text>
+            <text
+              x="28"
+              y="34"
+              textAnchor="middle"
+              fontFamily="Georgia, serif"
+              fontStyle="italic"
+              fontSize="11"
+              fill="currentColor"
+            >m³</text>
+            <text
+              x="28"
+              y="42"
+              textAnchor="middle"
+              fontFamily="ui-monospace, monospace"
+              fontSize="2.6"
+              letterSpacing="1.2"
+              fill="currentColor"
+              opacity=".7"
+            >FOLIO {folio}</text>
+            <circle cx="6.5" cy="28" r=".9" fill="currentColor" opacity=".5" />
+            <circle cx="49.5" cy="28" r=".9" fill="currentColor" opacity=".5" />
+            <circle cx="28" cy="6.5" r=".7" fill="currentColor" opacity=".5" />
+            <circle cx="28" cy="49.5" r=".7" fill="currentColor" opacity=".5" />
+          </svg>
         </span>
-        <span className="press-signature__line">
-          <span className="press-signature__name">{VOICE_LABEL[voice]}</span>
-          <span className="press-signature__sep" aria-hidden="true">/</span>
-          <span className={`press-signature__word press-signature__word--${word}`}>
-            <WordMark word={word} />
-            <span className="press-signature__word-label">{WORD_LABEL[word]}</span>
-            <span className="press-signature__word-mark">{WORD_MARK[word]}</span>
+        <span className="press-signature__text">
+          <span className="press-signature__row press-signature__row--head">
+            <span className="press-signature__mark">m³ press</span>
+            <span className="press-signature__dot" aria-hidden="true">·</span>
+            <span className="press-signature__folio">folio {folio}</span>
+            <span className="press-signature__dot" aria-hidden="true">·</span>
+            <span className="press-signature__title">{label ?? folioTitle}</span>
+          </span>
+          <span className="press-signature__row press-signature__row--sub">
+            <span className="press-signature__voice">
+              <span className="press-signature__voice-letter">{VOICE_LETTER[voice]}</span>
+              <span className="press-signature__voice-name">{VOICE_LABEL[voice]}</span>
+            </span>
+            <span className="press-signature__dot" aria-hidden="true">·</span>
+            <span className="press-signature__word">
+              <span className="press-signature__word-mark">{WORD_MARK[word]}</span>
+              <span className="press-signature__word-name">{WORD_LABEL[word]}</span>
+            </span>
+            <span className="press-signature__dot" aria-hidden="true">·</span>
+            <span className="press-signature__date">set on {setToday}</span>
           </span>
         </span>
-        <span className="press-signature__face">{VOICE_FACE[voice]}</span>
       </span>
-      <span className="press-signature__sign" aria-hidden="true">
-        <svg viewBox="0 0 80 22" preserveAspectRatio="none">
+      <span className="press-signature__rule press-signature__rule--right" />
+      <span className="press-signature__sweep" aria-hidden="true">
+        <svg viewBox="0 0 220 22" preserveAspectRatio="none">
           <path
-            d="M2 14c6-6 14 4 22-2s14-6 22-1 14 4 18-2 8-2 14-2"
+            d="M2 14c10-9 22 6 36-2s22-9 36-1 22 7 36-2 22-7 36-1 22 6 36-2 18-4 18-4"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.1"
+            strokeWidth=".9"
             strokeLinecap="round"
-            pathLength="100"
-            strokeDasharray="100 100"
-            className="press-signature__sign-stroke"
+            className="press-signature__sweep-stroke"
           />
-          <circle cx="78" cy="14" r="1.6" fill="currentColor" />
+          <circle cx="216" cy="11" r="1.6" fill="currentColor" className="press-signature__sweep-dot" />
         </svg>
       </span>
     </div>
