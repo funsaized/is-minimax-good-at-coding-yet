@@ -3183,6 +3183,706 @@ button {
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+   HERO PLATE · the title page: title at center, marginalia
+   ribbon running alongside on the right. On mobile the ribbon
+   slips below the title and reads as a stack of three proof
+   notes pinned to the page.
+   ──────────────────────────────────────────────────────────── */
+
+.hero__plate {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(220px, 22vw, 320px);
+  gap: clamp(24px, 3.2vw, 48px);
+  align-items: center;
+  width: 100%;
+  z-index: 1;
+  perspective: 1200px;
+  perspective-origin: 50% 0%;
+}
+
+.hero__plate > .hero__copy {
+  max-width: none;
+}
+
+.hero__plate-foot {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin: clamp(20px, 2.6vw, 32px) auto 0;
+  color: var(--coral);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: traceFade .7s var(--ease-out) .55s forwards;
+}
+
+.hero__plate-foot-line {
+  display: block;
+  width: clamp(28px, 5vw, 60px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor, transparent);
+}
+
+.hero__plate-foot-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero__plate-foot-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(255, 118, 95, .14);
+}
+
+@media (max-width: 980px) {
+  .hero__plate {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(36px, 5vw, 56px);
+  }
+
+  .hero__plate .hero__title {
+    max-width: 1100px;
+  }
+}
+
+/* when the ribbon is alongside, the title is constrained, so
+   scale it down a touch so the bold voice keeps its measure. */
+@media (min-width: 981px) {
+  .hero__plate .hero__title {
+    max-width: 960px;
+    font-size: clamp(3.2rem, 7.4vw, 8.8rem);
+  }
+
+  .hero__plate .hero__title--quiet {
+    font-size: clamp(3.1rem, 6.8vw, 8.2rem);
+  }
+
+  .hero__plate .hero__title--bold {
+    font-size: clamp(3.4rem, 8vw, 9.6rem);
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ANNOTATION RIBBON · the reader's marginalia column that runs
+   alongside the title. Three proof-card slots stacked on top
+   of each other, each keyed to a marked word in the title. A
+   delicate connector leaves the active slot and reaches toward
+   the title's marked word.
+   ──────────────────────────────────────────────────────────── */
+
+.annotation-ribbon {
+  position: relative;
+  display: grid;
+  gap: clamp(16px, 2vw, 22px);
+  align-self: stretch;
+  color: var(--paper);
+  opacity: 0;
+  animation: ribbonIn 1s var(--ease-out) .85s forwards;
+}
+
+@keyframes ribbonIn {
+  0% { opacity: 0; transform: translateX(14px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .annotation-ribbon {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+.annotation-ribbon__head {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--coral);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+}
+
+.annotation-ribbon__head-line {
+  display: block;
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor, transparent);
+}
+
+.annotation-ribbon__head-line:last-child {
+  background: linear-gradient(to left, transparent, currentColor, transparent);
+}
+
+.annotation-ribbon__head-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.annotation-ribbon__head-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(255, 118, 95, .16);
+  animation: composePulse 2.4s var(--ease) infinite;
+}
+
+.app--voice-quiet .annotation-ribbon__head,
+.app--voice-quiet .annotation-ribbon__head-tag,
+.app--voice-quiet .annotation-ribbon__head-dot {
+  color: var(--blue);
+}
+
+.app--voice-bold .annotation-ribbon__head,
+.app--voice-bold .annotation-ribbon__head-tag,
+.app--voice-bold .annotation-ribbon__head-dot {
+  color: var(--acid);
+}
+
+.annotation-ribbon__cap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 2px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.annotation-ribbon__cap-folio {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.annotation-ribbon__cap-press {
+  color: var(--muted);
+}
+
+.annotation-ribbon__list {
+  display: grid;
+  gap: clamp(12px, 1.4vw, 16px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.annotation-ribbon__item {
+  position: relative;
+  margin: 0;
+}
+
+.annotation-ribbon__item::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  width: 8px;
+  height: 1px;
+  background: var(--line);
+  opacity: .4;
+  transform: translateY(-50%);
+  transition: width .35s var(--ease), background .4s var(--ease), opacity .35s var(--ease);
+}
+
+.annotation-ribbon__item.is-active::before {
+  width: 14px;
+  background: var(--coral);
+  opacity: .9;
+}
+
+.app--voice-quiet .annotation-ribbon__item.is-active::before { background: var(--blue); }
+.app--voice-bold .annotation-ribbon__item.is-active::before { background: var(--acid); }
+
+.annotation-ribbon__card {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 14px 13px;
+  border: 1px solid var(--line);
+  border-radius: 1px;
+  background:
+    linear-gradient(180deg, rgba(28, 36, 52, .52), rgba(14, 20, 32, .7));
+  color: var(--paper);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color .4s var(--ease),
+    background .45s var(--ease),
+    transform .45s var(--ease-spring),
+    box-shadow .45s var(--ease);
+}
+
+.annotation-ribbon__card--acid {
+  border-left: 2px solid rgba(216, 255, 106, .55);
+}
+
+.annotation-ribbon__card--coral {
+  border-left: 2px solid rgba(255, 118, 95, .55);
+}
+
+.annotation-ribbon__card--blue {
+  border-left: 2px solid rgba(155, 188, 255, .55);
+}
+
+.annotation-ribbon__item:hover .annotation-ribbon__card,
+.annotation-ribbon__item:focus-within .annotation-ribbon__card,
+.annotation-ribbon__item.is-active .annotation-ribbon__card {
+  border-color: var(--line);
+  background:
+    linear-gradient(180deg, rgba(36, 46, 66, .65), rgba(20, 28, 42, .8));
+  box-shadow: 0 14px 32px -22px rgba(0, 0, 0, .6);
+}
+
+.annotation-ribbon__item.is-active .annotation-ribbon__card {
+  transform: translateY(-1px);
+  box-shadow:
+    0 18px 38px -22px rgba(0, 0, 0, .65),
+    inset 0 0 0 1px rgba(216, 255, 106, .08);
+}
+
+.annotation-ribbon__item--good.is-active .annotation-ribbon__card {
+  box-shadow:
+    0 18px 38px -22px rgba(0, 0, 0, .65),
+    inset 0 0 0 1px rgba(255, 118, 95, .1);
+}
+
+.annotation-ribbon__item--yet.is-active .annotation-ribbon__card {
+  box-shadow:
+    0 18px 38px -22px rgba(0, 0, 0, .65),
+    inset 0 0 0 1px rgba(155, 188, 255, .1);
+}
+
+.annotation-ribbon__rule {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 14px;
+  height: 14px;
+  color: var(--muted);
+  opacity: .35;
+}
+
+.annotation-ribbon__rule::before,
+.annotation-ribbon__rule::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+}
+
+.annotation-ribbon__rule::before {
+  top: 0;
+  right: 0;
+  width: 14px;
+  height: 1px;
+}
+
+.annotation-ribbon__rule::after {
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 14px;
+}
+
+.annotation-ribbon__pin {
+  position: absolute;
+  top: -10px;
+  left: 18px;
+  width: 18px;
+  height: 18px;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .4));
+  transform: rotate(-6deg);
+  transition: transform .5s var(--ease-spring);
+}
+
+.annotation-ribbon__item.is-active .annotation-ribbon__pin {
+  transform: rotate(2deg) scale(1.05);
+}
+
+.annotation-ribbon__head-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.annotation-ribbon__num {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: background .35s var(--ease), color .35s var(--ease);
+}
+
+.annotation-ribbon__item.is-active .annotation-ribbon__num {
+  background: currentColor;
+  color: var(--night);
+}
+
+.annotation-ribbon__item--m3 .annotation-ribbon__num { color: var(--acid); }
+.annotation-ribbon__item--good .annotation-ribbon__num { color: var(--coral); }
+.annotation-ribbon__item--yet .annotation-ribbon__num { color: var(--blue); }
+
+.annotation-ribbon__folio {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11.5px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.annotation-ribbon__divider {
+  font-style: normal;
+  opacity: .5;
+}
+
+.annotation-ribbon__mark {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  color: var(--coral);
+  opacity: .9;
+}
+
+.annotation-ribbon__item--m3 .annotation-ribbon__mark { color: var(--acid); }
+.annotation-ribbon__item--good .annotation-ribbon__mark { color: var(--coral); }
+.annotation-ribbon__item--yet .annotation-ribbon__mark { color: var(--blue); }
+
+.annotation-ribbon__mark-svg {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: 72px;
+}
+
+.annotation-ribbon__mark-tag {
+  font-family: var(--mono);
+  font-size: 7px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  fill: currentColor;
+  opacity: .8;
+}
+
+.annotation-ribbon__mark-tag--acid { fill: var(--acid); }
+.annotation-ribbon__mark-tag--coral { fill: var(--coral); }
+.annotation-ribbon__mark-tag--blue { fill: var(--blue); }
+
+.annotation-ribbon__mark-stroke {
+  opacity: .85;
+  stroke-dashoffset: 160;
+  transition: stroke-dashoffset 1.2s var(--ease-out);
+}
+
+.annotation-ribbon__item.is-active .annotation-ribbon__mark-stroke {
+  stroke-dashoffset: 0;
+}
+
+.annotation-ribbon__mark-fill {
+  opacity: 0;
+  transform: scale(.5);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity .45s var(--ease), transform .65s var(--ease-spring);
+}
+
+.annotation-ribbon__item.is-active .annotation-ribbon__mark-fill {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.annotation-ribbon__word {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(28px, 2.6vw, 38px);
+  font-weight: 400;
+  letter-spacing: -.04em;
+  line-height: 1;
+  transition: transform .45s var(--ease-spring);
+}
+
+.annotation-ribbon__word--acid { color: var(--acid); }
+.annotation-ribbon__word--coral { color: var(--coral); }
+.annotation-ribbon__word--blue { color: var(--blue); }
+
+.annotation-ribbon__item.is-active .annotation-ribbon__word {
+  transform: translateX(2px);
+}
+
+.annotation-ribbon__gloss {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  padding: 4px 0 2px;
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.05vw, 15px);
+  line-height: 1.45;
+  letter-spacing: -.005em;
+}
+
+.annotation-ribbon__gloss-mark {
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: 14px;
+  line-height: 1;
+  opacity: .85;
+}
+
+.annotation-ribbon__gloss-mark--acid { color: var(--acid); }
+.annotation-ribbon__gloss-mark--coral { color: var(--coral); }
+.annotation-ribbon__gloss-mark--blue { color: var(--blue); }
+
+.annotation-ribbon__meta {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(146, 186, 255, .12);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.annotation-ribbon__meta-mark {
+  color: var(--paper);
+}
+
+.annotation-ribbon__meta-sep {
+  opacity: .5;
+  font-style: normal;
+}
+
+.annotation-ribbon__meta-label {
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.annotation-ribbon__scribble {
+  display: block;
+  width: 100%;
+  height: 8px;
+  margin-top: 4px;
+  color: var(--muted);
+  opacity: .35;
+}
+
+.annotation-ribbon__item.is-active .annotation-ribbon__scribble {
+  opacity: 1;
+  color: var(--coral);
+}
+
+.annotation-ribbon__item--m3.is-active .annotation-ribbon__scribble { color: var(--acid); }
+.annotation-ribbon__item--good.is-active .annotation-ribbon__scribble { color: var(--coral); }
+.annotation-ribbon__item--yet.is-active .annotation-ribbon__scribble { color: var(--blue); }
+
+.annotation-ribbon__scribble-stroke {
+  stroke-dasharray: 120 120;
+  stroke-dashoffset: 120;
+}
+
+.annotation-ribbon__item.is-active .annotation-ribbon__scribble-stroke {
+  animation: scribbleDraw 1.1s var(--ease-out) .12s forwards;
+}
+
+.annotation-ribbon__scribble-dot {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.annotation-ribbon__item.is-active .annotation-ribbon__scribble-dot {
+  animation: scribbleDot .35s var(--ease-spring) 1.1s forwards;
+}
+
+@keyframes scribbleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes scribbleDot {
+  from { opacity: 0; transform: scale(.3); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.annotation-ribbon__connector-slot {
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  width: clamp(36px, 4vw, 56px);
+  height: 80px;
+  margin-right: 0;
+  pointer-events: none;
+  color: var(--coral);
+  z-index: 1;
+}
+
+.annotation-ribbon__item--m3 .annotation-ribbon__connector-slot { color: var(--acid); }
+.annotation-ribbon__item--good .annotation-ribbon__connector-slot { color: var(--coral); }
+.annotation-ribbon__item--yet .annotation-ribbon__connector-slot { color: var(--blue); }
+
+.annotation-ribbon__thread {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.annotation-ribbon__thread-path {
+  stroke-dasharray: 1 3;
+  stroke-dashoffset: 0;
+  opacity: 0;
+  animation: threadFade .45s var(--ease-out) .15s forwards;
+}
+
+.annotation-ribbon__thread-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: threadBead .35s var(--ease-spring) .55s forwards;
+}
+
+.annotation-ribbon__thread-tip {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: threadTip .35s var(--ease-spring) 1.05s forwards;
+}
+
+@keyframes threadFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes threadBead {
+  from { opacity: 0; transform: scale(.3); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes threadTip {
+  from { opacity: 0; transform: scale(.3); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .annotation-ribbon__thread-path,
+  .annotation-ribbon__thread-bead,
+  .annotation-ribbon__thread-tip,
+  .annotation-ribbon__scribble-stroke,
+  .annotation-ribbon__scribble-dot,
+  .annotation-ribbon__mark-stroke,
+  .annotation-ribbon__mark-fill {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+.annotation-ribbon__foot {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 4px 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.annotation-ribbon__foot-mark {
+  color: var(--coral);
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.annotation-ribbon__foot-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11.5px;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.45;
+  color: var(--mist);
+}
+
+@media (max-width: 980px) {
+  .annotation-ribbon {
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .annotation-ribbon__connector-slot {
+    display: none;
+  }
+}
+
+@media (max-width: 540px) {
+  .annotation-ribbon {
+    gap: 12px;
+  }
+
+  .annotation-ribbon__cap {
+    flex-wrap: wrap;
+  }
+
+  .annotation-ribbon__card {
+    padding: 12px 12px 11px;
+  }
+
+  .annotation-ribbon__word {
+    font-size: clamp(24px, 8vw, 32px);
+  }
+
+  .annotation-ribbon__gloss {
+    font-size: 13px;
+  }
+}
+
 
 .title-token {
   position: relative;

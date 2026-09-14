@@ -1,9 +1,12 @@
 # Changelog
 
-## Iteration 228 — a quieter title, a single press signature
-Tightened the title page so the question can breathe; added a press signature that runs through the page as a unifying printer's mark; gave the three voices a more decisive typographic identity.
+## Iteration 229
 
-- Hero chrome: removed the deckle, registration marks, corner tab and bottom slip so the title sits alone inside the spread; the wax seal keeps its corner position with a softer drop.
-- Title typography: quiet cut now sets smaller and tighter, human hand leans into a swashier italic with a warm coral tint, bold signal sits heavier, larger and tighter in sans caps; each voice picks up its own text-shadow so the press feels distinct, not just recolored.
-- Press signature: a new `PressSignature` component (m³ seal + folio mark + voice + word mark + date, bookended by growing rules and a sweeping ink line) appears once at the foot of the hero and again at the foot of the page, just before the colophon.
-- Removed a block of dead press-signature CSS from a previous iteration and re-threaded the existing ImpressionRibbon imports cleanly through `PressBay`/`notes`.
+A reader's marginalia column now runs alongside the title; the standalone proof card retires so the marked words meet their glosses on the same page.
+
+- Added `AnnotationRibbon`: three proof-card slots stacked beside the title, each pinned, keyed to a marked word, and showing its proof mark, gloss, mark label, and folio.
+- Each slot is a button and shares selection state with the title's marked words; hovering or focusing a marked word highlights the matching slot.
+- A delicate dashed connector emerges from the active slot toward the title; an ink-bead appears at the card edge when the active word changes.
+- Re-laid the hero as a true title plate: the title sits with a marginalia column, framed by a new "a single line, set in three voices" inscription under the rule.
+- When the ribbon is alongside, the title type scales down a touch so the bold voice keeps its measure; below 980px the ribbon slips under the title and reads as a stack of three proof cards.
+- Removed the standalone proof card from the hero — its surface is now carried by the ribbon here, the second-proof section below, and the marginalia cards further down.

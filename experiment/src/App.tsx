@@ -11,11 +11,11 @@ import { InkTrail } from './InkTrail'
 import { DaySheet } from './DaySheet'
 import { MarginThread } from './MarginThread'
 import { FolioStitch } from './FolioStitch'
-import { ProofCard } from './ProofCard'
 import { Watermark } from './Watermark'
 import { FolioSeal } from './FolioSeal'
 import { TypePlate } from './TypePlate'
 import { PressSignature } from './PressSignature'
+import { AnnotationRibbon } from './AnnotationRibbon'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -935,66 +935,83 @@ export function App() {
             <span className="hero__seal" aria-hidden="true">
               <FolioSeal voice={voice} folio="i" setToday={setToday} size={150} />
             </span>
-            <div className="hero__copy">
-              <span className="hero__lead-in" aria-hidden="true">
-                <span className="hero__lead-in-line" />
-                <span className="hero__lead-in-tag">
-                  <span className="hero__lead-in-num">i</span>
-                  folio i · the question
+            <div className="hero__plate">
+              <div className="hero__copy">
+                <span className="hero__lead-in" aria-hidden="true">
+                  <span className="hero__lead-in-line" />
+                  <span className="hero__lead-in-tag">
+                    <span className="hero__lead-in-num">i</span>
+                    folio i · the question
+                  </span>
+                  <span className="hero__lead-in-line" />
                 </span>
-                <span className="hero__lead-in-line" />
-              </span>
-              <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
-                <span className="title__line">is Minimax </span>
-                <span className="title__line">
-                  <TitleToken id="m3" text="M3" selected={activeWord === 'm3'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.m3 = node }} circleKey={circleKey.m3} />{' '}
-                  <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} circleKey={circleKey.good} />
+                <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
+                  <span className="title__line">is Minimax </span>
+                  <span className="title__line">
+                    <TitleToken id="m3" text="M3" selected={activeWord === 'm3'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.m3 = node }} circleKey={circleKey.m3} />{' '}
+                    <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} circleKey={circleKey.good} />
+                  </span>
+                  <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
+                  <svg key={voice} className="hero__title-rule" viewBox="0 0 920 32" preserveAspectRatio="none" aria-hidden="true">
+                    <path
+                      className="hero__title-rule-stroke"
+                      d="M3 17c40-16 80 18 120-2s80-18 120-2 80 16 120-8 80-22 120 2 80 14 120-12 80-16 120 4 80 18 120-8 78-12 78-12"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      className="hero__title-rule-shadow"
+                      d="M3 22c40-16 80 18 120-2s80-18 120-2 80 16 120-8 80-22 120 2 80 14 120-12 80-16 120 4 80 18 120-8 78-12 78-12"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="0.7"
+                      strokeLinecap="round"
+                      opacity="0.32"
+                    />
+                    <path
+                      className="hero__title-rule-flourish"
+                      d="M903 16c-3 7-9 13-18 11"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      className="hero__title-rule-flourish hero__title-rule-flourish--b"
+                      d="M900 22c-3 4-7 6-11 4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeLinecap="round"
+                    />
+                    <circle className="hero__title-rule-end" cx="916" cy="16" r="3.2" fill="currentColor" />
+                    <circle className="hero__title-rule-end-ring" cx="916" cy="16" r="6.2" fill="none" stroke="currentColor" strokeWidth="0.6" />
+                    <circle className="hero__title-rule-end-ring" cx="916" cy="16" r="9" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.6" />
+                    <circle className="hero__title-rule-spark" cx="904" cy="6" r="1.2" fill="currentColor" />
+                    <circle className="hero__title-rule-spark hero__title-rule-spark--b" cx="892" cy="24" r="0.8" fill="currentColor" />
+                    <circle className="hero__title-rule-spark hero__title-rule-spark--c" cx="908" cy="27" r="0.5" fill="currentColor" />
+                    <circle className="hero__title-rule-spark" cx="14" cy="9" r="0.8" fill="currentColor" opacity="0.6" />
+                  </svg>
+                </h1>
+                <span className="hero__plate-foot" aria-hidden="true">
+                  <span className="hero__plate-foot-line" />
+                  <span className="hero__plate-foot-tag">
+                    <span className="hero__plate-foot-dot" />
+                    a single line, set in three voices
+                  </span>
+                  <span className="hero__plate-foot-line" />
                 </span>
-                <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
-                <svg key={voice} className="hero__title-rule" viewBox="0 0 920 32" preserveAspectRatio="none" aria-hidden="true">
-                  <path
-                    className="hero__title-rule-stroke"
-                    d="M3 17c40-16 80 18 120-2s80-18 120-2 80 16 120-8 80-22 120 2 80 14 120-12 80-16 120 4 80 18 120-8 78-12 78-12"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    className="hero__title-rule-shadow"
-                    d="M3 22c40-16 80 18 120-2s80-18 120-2 80 16 120-8 80-22 120 2 80 14 120-12 80-16 120 4 80 18 120-8 78-12 78-12"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="0.7"
-                    strokeLinecap="round"
-                    opacity="0.32"
-                  />
-                  <path
-                    className="hero__title-rule-flourish"
-                    d="M903 16c-3 7-9 13-18 11"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    className="hero__title-rule-flourish hero__title-rule-flourish--b"
-                    d="M900 22c-3 4-7 6-11 4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                  />
-                  <circle className="hero__title-rule-end" cx="916" cy="16" r="3.2" fill="currentColor" />
-                  <circle className="hero__title-rule-end-ring" cx="916" cy="16" r="6.2" fill="none" stroke="currentColor" strokeWidth="0.6" />
-                  <circle className="hero__title-rule-end-ring" cx="916" cy="16" r="9" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.6" />
-                  <circle className="hero__title-rule-spark" cx="904" cy="6" r="1.2" fill="currentColor" />
-                  <circle className="hero__title-rule-spark hero__title-rule-spark--b" cx="892" cy="24" r="0.8" fill="currentColor" />
-                  <circle className="hero__title-rule-spark hero__title-rule-spark--c" cx="908" cy="27" r="0.5" fill="currentColor" />
-                  <circle className="hero__title-rule-spark" cx="14" cy="9" r="0.8" fill="currentColor" opacity="0.6" />
-                </svg>
-              </h1>
-              <ProofCard word={selectedWord} voice={voice} />
+              </div>
+              <AnnotationRibbon
+                active={selectedWord}
+                hovered={hoveredWord}
+                voice={voice}
+                onSelect={id => selectWord(id)}
+                onHover={setHoveredWord}
+                onLeave={() => setHoveredWord(null)}
+              />
             </div>
           </div>
 
