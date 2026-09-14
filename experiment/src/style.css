@@ -3650,14 +3650,17 @@ button {
   color: var(--ink);
   transform: translateY(-36px) scale(.985) rotateX(-12deg);
   transform-origin: top center;
-  transition: transform .95s var(--ease-out), box-shadow .95s var(--ease-out);
+  transition: transform 1.15s var(--ease-out), box-shadow 1.15s var(--ease-out);
   opacity: 0;
 }
 
 .answer-reveal.is-open .answer-reveal__leaf {
   transform: translateY(0) scale(1) rotateX(0);
   opacity: 1;
-  transition: transform .95s var(--ease-out), opacity .65s var(--ease) .12s, box-shadow .95s var(--ease-out);
+  transition:
+    transform 1.15s var(--ease-out),
+    opacity .7s var(--ease) .08s,
+    box-shadow 1.15s var(--ease-out);
 }
 
 .answer-reveal__leaf:hover {
@@ -9190,5 +9193,624 @@ body {
   .hero__spread {
     transform: none !important;
   }
+}
+
+/* ────────────────────────────────────────────────────────────
+   PRESS SIGNATURE · a tactile illustrated element that lives
+   inside the hero, showing the active voice + active word
+   together in a hand-set card
+   ──────────────────────────────────────────────────────────── */
+
+.hero__signature {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 880px;
+  margin: clamp(8px, 1.4vw, 14px) auto 0;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: traceFade .7s var(--ease-out) .55s forwards;
+}
+
+.press-signature {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(14px, 2vw, 22px);
+  align-items: center;
+  padding: clamp(12px, 1.6vw, 18px) clamp(18px, 2.2vw, 26px);
+  border: 1px solid var(--line);
+  border-radius: 1px;
+  background:
+    linear-gradient(180deg, rgba(243, 236, 214, .025), rgba(243, 236, 214, .012)),
+    rgba(20, 24, 34, .42);
+  box-shadow:
+    inset 0 1px 0 rgba(146, 186, 255, .06),
+    inset 0 0 0 1px rgba(243, 236, 214, .02),
+    0 14px 36px -22px rgba(0, 0, 0, .5);
+  transition: border-color .6s var(--ease), background .6s var(--ease), transform .6s var(--ease);
+}
+
+.press-signature::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 10px;
+  height: 10px;
+  border-top: 1px solid currentColor;
+  border-left: 1px solid currentColor;
+  opacity: .35;
+  pointer-events: none;
+}
+
+.press-signature::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 10px;
+  height: 10px;
+  border-bottom: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  opacity: .35;
+  pointer-events: none;
+}
+
+.app--voice-quiet .press-signature { border-color: rgba(155, 188, 255, .22); }
+.app--voice-human .press-signature { border-color: rgba(255, 118, 95, .24); }
+.app--voice-bold .press-signature { border-color: rgba(216, 255, 106, .26); }
+
+.press-signature__plate {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(52px, 5.4vw, 64px);
+  height: clamp(52px, 5.4vw, 64px);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(243, 236, 214, .06), transparent 70%);
+  overflow: hidden;
+}
+
+.app--voice-quiet .press-signature__plate { color: var(--blue); border-color: rgba(155, 188, 255, .35); }
+.app--voice-human .press-signature__plate { color: var(--coral); border-color: rgba(255, 118, 95, .38); }
+.app--voice-bold .press-signature__plate { color: var(--acid); border-color: rgba(216, 255, 106, .42); }
+
+.press-signature__print {
+  display: block;
+  transition: transform .55s var(--ease-spring), opacity .55s var(--ease);
+}
+
+.press-signature--quiet .press-signature__print { transform: rotate(-2deg); }
+.press-signature--human .press-signature__print { transform: rotate(1.5deg); }
+.press-signature--bold .press-signature__print { transform: rotate(-1deg) scale(1.04); }
+
+.press-signature__plate::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed currentColor;
+  border-radius: 50%;
+  opacity: .35;
+  pointer-events: none;
+}
+
+.press-signature__body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.press-signature__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.press-signature__eyebrow-mark {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .65;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .04);
+}
+
+.app--voice-quiet .press-signature__eyebrow { color: var(--blue); }
+.app--voice-human .press-signature__eyebrow { color: var(--coral); }
+.app--voice-bold .press-signature__eyebrow { color: var(--acid); }
+
+.press-signature__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.press-signature__name {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(20px, 2.2vw, 28px);
+  letter-spacing: -.015em;
+  line-height: 1;
+}
+
+.press-signature__sep {
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(18px, 2vw, 24px);
+  opacity: .55;
+}
+
+.press-signature__word {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 4px 10px 5px;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+  transition: color .5s var(--ease);
+}
+
+.press-signature__wordmark {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+}
+
+.press-signature__wordmark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.press-signature__word-label {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(16px, 1.6vw, 20px);
+  color: var(--paper);
+  letter-spacing: -.01em;
+}
+
+.press-signature__word-mark {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.press-signature__word--m3 { color: var(--acid); }
+.press-signature__word--good { color: var(--coral); }
+.press-signature__word--yet { color: var(--blue); }
+
+.press-signature__face {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.press-signature__sign {
+  display: block;
+  width: clamp(60px, 8vw, 92px);
+  height: 16px;
+  color: var(--muted);
+  opacity: .7;
+}
+
+.press-signature__sign-stroke {
+  stroke-dashoffset: 100;
+  animation: titleRuleDraw 1.4s var(--ease-out) .85s forwards;
+}
+
+.app--voice-quiet .press-signature__sign { color: var(--blue); opacity: .85; }
+.app--voice-human .press-signature__sign { color: var(--coral); opacity: .85; }
+.app--voice-bold .press-signature__sign { color: var(--acid); opacity: .9; }
+
+@media (max-width: 720px) {
+  .press-signature {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 14px;
+    padding: 14px 16px;
+  }
+
+  .press-signature__sign {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .press-signature__plate {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   IMPRESSION RIBBON · a thin session-trace that lives between
+   the hero and the press bay, recording voice pulls and word
+   selections as marks on a tape
+   ──────────────────────────────────────────────────────────── */
+
+.hero-trace {
+  position: relative;
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  padding: clamp(6px, 1vw, 12px) var(--gutter) clamp(10px, 1.6vw, 18px);
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  background:
+    linear-gradient(180deg, rgba(243, 236, 214, .022), rgba(243, 236, 214, .008)),
+    linear-gradient(180deg, rgba(14, 18, 28, .2), rgba(14, 18, 28, 0));
+  opacity: 0;
+  transform: translateY(6px);
+  animation: traceFade .7s var(--ease-out) .75s forwards;
+}
+
+.impression-ribbon {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(14px, 2vw, 24px);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.impression-ribbon__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--coral);
+  white-space: nowrap;
+}
+
+.impression-ribbon__tag-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, .35),
+    0 0 0 4px rgba(255, 118, 95, .15),
+    0 0 8px rgba(255, 118, 95, .35);
+  animation: composePulse 2.6s var(--ease) infinite;
+}
+
+.impression-ribbon__tape {
+  position: relative;
+  height: 28px;
+}
+
+.impression-ribbon__line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent 0, var(--line) 6%, var(--line) 94%, transparent 100%);
+  transform: translateY(-50%);
+}
+
+.impression-ribbon__line--in {
+  background: linear-gradient(to right, transparent, var(--acid-soft) 20%, var(--coral-soft) 60%, var(--blue-soft) 100%);
+  opacity: .35;
+}
+
+.impression-ribbon__marks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.impression-ribbon__mark {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  display: grid;
+  place-items: center;
+  animation: ribbonMarkIn .55s var(--ease-spring) backwards;
+}
+
+.impression-ribbon__mark-voice-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(14, 15, 21, .9);
+  opacity: .9;
+}
+
+.impression-ribbon__mark-voice-letter {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, 4px);
+  font-family: var(--mono);
+  font-size: 7.5px;
+  letter-spacing: .14em;
+  color: currentColor;
+  opacity: .7;
+}
+
+.impression-ribbon__mark--voice-quiet { color: var(--blue); }
+.impression-ribbon__mark--voice-human { color: var(--coral); }
+.impression-ribbon__mark--voice-bold { color: var(--acid); }
+
+.impression-ribbon__mark-pull {
+  position: relative;
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  background: var(--night);
+}
+
+.impression-ribbon__mark-pull-glow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  opacity: .35;
+  animation: ribbonPullGlow 1.6s var(--ease) infinite;
+}
+
+.impression-ribbon__mark--pull.impression-ribbon__mark--voice-quiet { color: var(--blue); }
+.impression-ribbon__mark--pull.impression-ribbon__mark--voice-human { color: var(--coral); }
+.impression-ribbon__mark--pull.impression-ribbon__mark--voice-bold { color: var(--acid); }
+
+.impression-ribbon__mark-word-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px dashed currentColor;
+  background: rgba(14, 15, 21, .85);
+  color: currentColor;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.impression-ribbon__mark--word-m3 { color: var(--acid); }
+.impression-ribbon__mark--word-good { color: var(--coral); }
+.impression-ribbon__mark--word-yet { color: var(--blue); }
+
+.impression-ribbon__now {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  transition: left .55s var(--ease-spring);
+}
+
+.impression-ribbon__now-bead {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow:
+    0 0 0 2px var(--ink),
+    0 0 0 4px rgba(243, 236, 214, .25),
+    0 0 12px rgba(243, 236, 214, .35);
+  animation: beadPulse 1.4s var(--ease) infinite;
+}
+
+.impression-ribbon__now--voice-quiet .impression-ribbon__now-bead { background: var(--blue); box-shadow: 0 0 0 2px var(--ink), 0 0 0 4px rgba(155, 188, 255, .2), 0 0 12px rgba(155, 188, 255, .35); }
+.impression-ribbon__now--voice-human .impression-ribbon__now-bead { background: var(--coral); box-shadow: 0 0 0 2px var(--ink), 0 0 0 4px rgba(255, 118, 95, .2), 0 0 12px rgba(255, 118, 95, .35); }
+.impression-ribbon__now--voice-bold .impression-ribbon__now-bead { background: var(--acid); box-shadow: 0 0 0 2px var(--ink), 0 0 0 4px rgba(216, 255, 106, .22), 0 0 12px rgba(216, 255, 106, .4); }
+.impression-ribbon__now--word-m3 .impression-ribbon__now-bead { background: var(--acid); }
+.impression-ribbon__now--word-good .impression-ribbon__now-bead { background: var(--coral); }
+.impression-ribbon__now--word-yet .impression-ribbon__now-bead { background: var(--blue); }
+.impression-ribbon__now--pull .impression-ribbon__now-bead { background: var(--paper); }
+.impression-ribbon__now--idle .impression-ribbon__now-bead { background: var(--paper); }
+
+.impression-ribbon__now-label {
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 10px;
+  white-space: nowrap;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.impression-ribbon__now-label-tag {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.impression-ribbon__now-label-text {
+  font-size: clamp(13px, 1.2vw, 15px);
+  color: var(--paper);
+}
+
+.impression-ribbon__now-label-meta {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.app--voice-quiet .impression-ribbon__now-label-meta { color: var(--blue); }
+.app--voice-human .impression-ribbon__now-label-meta { color: var(--coral); }
+.app--voice-bold .impression-ribbon__now-label-meta { color: var(--acid); }
+
+@keyframes ribbonMarkIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(.4); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes ribbonPullGlow {
+  0%, 100% { transform: scale(1); opacity: .35; }
+  50% { transform: scale(1.6); opacity: 0; }
+}
+
+@keyframes beadPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+}
+
+@media (max-width: 760px) {
+  .impression-ribbon {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .impression-ribbon__tag {
+    justify-content: flex-start;
+  }
+
+  .impression-ribbon__now-label {
+    justify-content: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .impression-ribbon__tag-dot,
+  .impression-ribbon__now-bead,
+  .impression-ribbon__mark-pull-glow {
+    animation: none !important;
+  }
+
+  .impression-ribbon__mark {
+    animation: none !important;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   NOTEBOOK MARGINALIA · refine the notes cards to feel like
+   ruled notebook pages with hand-drawn corners
+   ──────────────────────────────────────────────────────────── */
+
+.note-card {
+  position: relative;
+}
+
+.note-card__rules {
+  position: absolute;
+  inset: 14px 18px;
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+  pointer-events: none;
+  opacity: .55;
+}
+
+.note-card__rule {
+  border-bottom: 1px dashed rgba(155, 188, 255, .14);
+}
+
+.note-card__rule:last-child {
+  border-bottom-color: rgba(155, 188, 255, .22);
+}
+
+.note-card__corner {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 30px;
+  height: 30px;
+  color: var(--muted);
+  opacity: .65;
+  pointer-events: none;
+}
+
+.note-card__corner svg {
+  width: 100%;
+  height: 100%;
+}
+
+.note-card__tape {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 64px;
+  height: 18px;
+  background: linear-gradient(180deg, rgba(243, 236, 214, .18), rgba(243, 236, 214, .08));
+  border: 1px solid rgba(243, 236, 214, .18);
+  border-radius: 1px;
+  pointer-events: none;
+  box-shadow: 0 4px 8px -4px rgba(0, 0, 0, .4);
+}
+
+.note-card__tape::before,
+.note-card__tape::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background-image: linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, .15) 50%);
+  background-size: 8px 8px;
+}
+
+.note-card__tape::before { left: 0; }
+.note-card__tape::after { right: 0; transform: scaleX(-1); }
+
+.note-card__underline {
+  display: block;
+  position: absolute;
+  bottom: 14px;
+  left: 18px;
+  right: 18px;
+  height: 8px;
+  color: currentColor;
+  opacity: .7;
+}
+
+.note-card__underline svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.note-card--m3 .note-card__underline { color: var(--acid); opacity: .85; }
+.note-card--good .note-card__underline { color: var(--coral); opacity: .85; }
+.note-card--yet .note-card__underline { color: var(--blue); opacity: .85; }
+
+.note-card__body {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(20, 24, 34, .35), rgba(20, 24, 34, .18));
+  border-radius: 1px;
 }
 

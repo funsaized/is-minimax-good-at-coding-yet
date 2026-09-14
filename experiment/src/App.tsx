@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { NOTES, type WordId } from './notes'
 import { PressStamp } from './PressStamp'
+import { PressSignature } from './PressSignature'
+import { ImpressionRibbon, type ImpressionMark } from './ImpressionRibbon'
 import { SpecimenSpread } from './SpecimenSpread'
 import { MarkedProof } from './MarkedProof'
 import { LetterToReader } from './LetterToReader'
@@ -436,6 +438,18 @@ function NotesSection({ selected, onSelect }: { selected: WordId; onSelect: (id:
             aria-pressed={selected === note.id}
             onClick={() => onSelect(note.id)}
           >
+            <span className="note-card__rules" aria-hidden="true">
+              {Array.from({ length: 7 }).map((_, index) => (
+                <span key={index} className="note-card__rule" />
+              ))}
+            </span>
+            <span className="note-card__corner" aria-hidden="true">
+              <svg viewBox="0 0 40 40">
+                <path d="M2 38L38 2" stroke="currentColor" strokeWidth=".6" fill="none" opacity=".5" />
+                <path d="M2 32c4-2 8 2 12-2s6-8 10-4" stroke="currentColor" strokeWidth=".7" fill="none" opacity=".55" />
+                <circle cx="6" cy="34" r="1" fill="currentColor" opacity=".65" />
+              </svg>
+            </span>
             <span className="note-card__pin" aria-hidden="true">
               <svg viewBox="0 0 18 18">
                 <ellipse cx="9" cy="16" rx="3.4" ry=".8" fill="rgba(0,0,0,.35)" />
@@ -444,6 +458,7 @@ function NotesSection({ selected, onSelect }: { selected: WordId; onSelect: (id:
                 <circle cx="7.5" cy="5.5" r="1.6" fill="rgba(255,255,255,.5)" />
               </svg>
             </span>
+            <span className="note-card__tape" aria-hidden="true" />
             <span className="note-card__scrawl" aria-hidden="true">seen · {note.seen}</span>
             <span className="note-card__folio" aria-hidden="true">folio {note.folio}</span>
             <span className="note-card__head">
@@ -455,6 +470,17 @@ function NotesSection({ selected, onSelect }: { selected: WordId; onSelect: (id:
             <em>{note.gloss}</em>
             <span className="note-card__body">{note.body}</span>
             <span className="note-card__prompt">{note.prompt} <span aria-hidden="true">↗</span></span>
+            <span className="note-card__underline" aria-hidden="true">
+              <svg viewBox="0 0 200 10" preserveAspectRatio="none">
+                <path
+                  d="M2 6c12-4 24 4 36 0s24-6 36-1 24 4 36-2 24-6 36-1 24 4 24 4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.1"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
           </button>
         ))}
       </div>
@@ -783,11 +809,19 @@ export function App() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [announcement, setAnnouncement] = useState('')
   const [circleKey, setCircleKey] = useState<Record<WordId, number>>({ m3: 0, good: 0, yet: 0 })
+  const [marks, setMarks] = useState<ImpressionMark[]>([])
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
   const voiceRefs = useRef<Partial<Record<VoiceId, HTMLButtonElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
 
   const activeWord = hoveredWord ?? selectedWord
+
+  const pushMark = useCallback((mark: ImpressionMark) => {
+    setMarks(prev => {
+      const next = [...prev, mark]
+      return next.length > 24 ? next.slice(next.length - 24) : next
+    })
+  }, [])
 
   useEffect(() => {
     document.title = TITLE
@@ -843,27 +877,33 @@ export function App() {
           const next = VOICE_CYCLE[prev]
           const labelMap: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
           setAnnouncement(`Lever pulled. Now setting in ${labelMap[next]}.`)
+          pushMark({ kind: 'pull', voice: next, from: prev })
           return next
         })
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [])
+  }, [pushMark])
 
   const selectWord = (id: WordId, focus = false) => {
     const note = NOTES.find(item => item.id === id)
     setSelectedWord(id)
     setAnnouncement(note ? `${note.label}: ${note.title}.` : '')
     setCircleKey(keys => ({ ...keys, [id]: (keys[id] ?? 0) + 1 }))
+    pushMark({ kind: 'word', word: id })
     if (focus) window.requestAnimationFrame(() => tokenRefs.current[id]?.focus())
   }
 
   const selectVoice = (id: VoiceId) => {
+    setVoice(prev => (prev === id ? prev : id))
     const next = VOICES.find(item => item.id === id)
-    setVoice(id)
     setAnnouncement(next ? `${next.name} selected.` : '')
   }
+
+  useEffect(() => {
+    pushMark({ kind: 'voice', voice })
+  }, [voice, pushMark])
 
   const selectVoiceByKey = (event: ReactKeyboardEvent<HTMLButtonElement>, id: VoiceId) => {
     const index = VOICES.findIndex(item => item.id === id)
@@ -1020,6 +1060,9 @@ export function App() {
                   <span className="hero__dial-label-name">{voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}</span>
                 </span>
               </span>
+              <span className="hero__signature">
+                <PressSignature voice={voice} word={activeWord} tone="plate" />
+              </span>
             </div>
           </div>
 
@@ -1080,6 +1123,10 @@ export function App() {
             </a>
           </div>
         </section>
+
+        <div className="hero-trace" aria-hidden="false">
+          <ImpressionRibbon voice={voice} word={activeWord} marks={marks} />
+        </div>
 
         <PressRoom voice={voice} word={activeWord} onVoice={selectVoice} />
 
