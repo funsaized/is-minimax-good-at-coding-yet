@@ -9,6 +9,7 @@ import { LetterToReader } from './LetterToReader'
 import { ComposeFloor } from './ComposeFloor'
 import { PressRoom } from './PressRoom'
 import { InkDust } from './InkDust'
+import { DaySheet } from './DaySheet'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -31,6 +32,7 @@ const READING_SECTIONS: { id: string; index: string; label: string }[] = [
   { id: 'press-room', index: 'i·', label: 'press bay' },
   { id: 'compose', index: 'ii', label: 'compose' },
   { id: 'contents', index: 'iii', label: 'contents' },
+  { id: 'day', index: 'iii·', label: 'day sheet' },
   { id: 'note', index: '·', label: 'note' },
   { id: 'proof', index: 'iv', label: 'proof' },
   { id: 'pressings', index: 'v', label: 'pressings' },
@@ -202,6 +204,7 @@ function PressFolio({ section }: { section: string }) {
     'press-room': { folio: 'i·', mark: 'press' },
     compose: { folio: 'ii', mark: 'compose' },
     contents: { folio: 'iii', mark: 'contents' },
+    day: { folio: 'iii·', mark: 'day sheet' },
     note: { folio: '·', mark: 'slip' },
     proof: { folio: 'iv', mark: 'proof' },
     pressings: { folio: 'v', mark: 'specimen' },
@@ -570,6 +573,7 @@ function FolioLedger() {
     { id: 'press-room', num: 'i·', title: 'the press bay', note: 'a lever, three voices, one pull' },
     { id: 'compose', num: 'ii', title: 'the compose floor', note: 'a working spread of type and margin' },
     { id: 'contents', num: 'iii', title: 'this page, listed', note: 'the press log · folio contents', self: true },
+    { id: 'day', num: 'iii·', title: 'the day sheet', note: 'the hour, the week, the day’s record' },
     { id: 'note', num: '·', title: 'a folded slip', note: 'a short letter to the reader' },
     { id: 'proof', num: 'iv', title: 'the second proof', note: 'marks attached to the words worth keeping' },
     { id: 'pressings', num: 'v', title: 'three pressings', note: 'the same question set three ways' },
@@ -851,7 +855,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'press-room', 'compose', 'contents', 'note', 'proof', 'pressings', 'notes', 'voices', 'answer']
+    const elements = ['question', 'press-room', 'compose', 'contents', 'day', 'note', 'proof', 'pressings', 'notes', 'voices', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -990,6 +994,7 @@ export function App() {
             <a href="#press-room" className={activeSection === 'press-room' ? 'is-active' : ''} aria-current={activeSection === 'press-room' ? 'location' : undefined}>press bay</a>
             <a href="#compose" className={activeSection === 'compose' ? 'is-active' : ''} aria-current={activeSection === 'compose' ? 'location' : undefined}>compose</a>
             <a href="#contents" className={activeSection === 'contents' ? 'is-active' : ''} aria-current={activeSection === 'contents' ? 'location' : undefined}>contents</a>
+            <a href="#day" className={activeSection === 'day' ? 'is-active' : ''} aria-current={activeSection === 'day' ? 'location' : undefined}>day sheet</a>
             <a href="#note" className={activeSection === 'note' ? 'is-active' : ''} aria-current={activeSection === 'note' ? 'location' : undefined}>note</a>
             <a href="#proof" className={activeSection === 'proof' ? 'is-active' : ''} aria-current={activeSection === 'proof' ? 'location' : undefined}>proof</a>
             <a href="#pressings" className={activeSection === 'pressings' ? 'is-active' : ''} aria-current={activeSection === 'pressings' ? 'location' : undefined}>pressings</a>
@@ -1220,6 +1225,8 @@ export function App() {
         <FolioLedger />
 
         <LetterToReader voice={voice} onReadAnswer={openAnswerFromNav} />
+
+        <DaySheet voice={voice} word={activeWord} marks={marks} setToday={setToday} />
 
         <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} setToday={setToday} />
 
