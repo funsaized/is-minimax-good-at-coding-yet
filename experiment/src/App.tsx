@@ -79,10 +79,13 @@ const VOICES: Voice[] = [
 function LogoMark({ size = 38, accent = 'var(--acid)' }: { size?: number; accent?: string }) {
   return (
     <svg className="brand__mark" width={size} height={size} viewBox="0 0 42 42" aria-hidden="true" style={{ color: accent }}>
-      <circle cx="21" cy="21" r="18" fill="none" stroke="currentColor" strokeWidth="1" />
-      <circle cx="21" cy="21" r="12" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="1.5 2.5" />
-      <path d="M9 21h24M21 9v24" stroke="currentColor" strokeWidth=".7" opacity=".55" />
+      <circle cx="21" cy="21" r="18.5" fill="none" stroke="currentColor" strokeWidth=".9" />
+      <circle cx="21" cy="21" r="12" fill="none" stroke="currentColor" strokeWidth=".7" strokeDasharray="1.2 2.4" opacity=".85" />
+      <path d="M9 21h24M21 9v24" stroke="currentColor" strokeWidth=".55" opacity=".45" />
+      <path d="M5 21a16 16 0 0 1 32 0" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".55" />
       <text x="21" y="25.5" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="12" fill="currentColor">m³</text>
+      <circle cx="21" cy="6" r=".9" fill="currentColor" />
+      <circle cx="21" cy="36" r=".9" fill="currentColor" />
     </svg>
   )
 }
@@ -630,9 +633,11 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
               <circle cx="16" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth=".9" opacity=".7" />
               <circle cx="16" cy="18" r="9" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2" opacity=".55" />
               <text x="16" y="22" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">m³</text>
+              <circle cx="16" cy="3.6" r=".65" fill="currentColor" />
+              <circle cx="16" cy="32.4" r=".65" fill="currentColor" />
             </svg>
           </span>
-          <svg className="colophon__signature-mark" viewBox="0 0 220 36">
+          <svg className="colophon__signature-mark" viewBox="0 0 240 36">
             <path
               className="colophon__signature-wave"
               d="M2 22c6-8 14-2 22-8s12-12 24-6 14 10 24 4 14-12 26-6 16 12 28 4 14-14 26-6 18 12 30 4 16-14 28-4 18 12 26 2"
@@ -653,8 +658,11 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
               strokeLinejoin="round"
               opacity=".3"
             />
-            <circle cx="214" cy="20" r="1.8" fill="currentColor" opacity=".7" />
-            <path className="colophon__signature-tick" d="M208 28l4-2 4 2" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".55" />
+            <circle cx="234" cy="20" r="2.4" fill="currentColor" opacity=".7" />
+            <circle cx="234" cy="20" r="4.8" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".5" />
+            <circle cx="234" cy="20" r="7.2" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".3" />
+            <path className="colophon__signature-tick" d="M226 28l4-2 4 2" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".55" />
+            <path className="colophon__signature-tick colophon__signature-tick--a" d="M10 30l4-2 4 2" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".4" />
           </svg>
           <span className="colophon__signature-tag">composed by m³ · for the reader · {setToday}</span>
         </div>
@@ -977,6 +985,14 @@ export function App() {
           </div>
 
           <div className="hero__spread">
+            <span className="hero__spread-deckle" aria-hidden="true" />
+            <span className="hero__spread-rule hero__spread-rule--top" aria-hidden="true" />
+            <span className="hero__spread-rule hero__spread-rule--bottom" aria-hidden="true" />
+            <span className="hero__spread-folio-mark" aria-hidden="true">
+              <span className="hero__spread-folio-mark-dot" />
+              m³ press · broadside
+              <span className="hero__spread-folio-mark-dot" />
+            </span>
             <span className="hero__reg-mark hero__reg-mark--tl" aria-hidden="true">
               <svg viewBox="0 0 18 18">
                 <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" strokeWidth=".7" />
@@ -1046,45 +1062,47 @@ export function App() {
                   <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} circleKey={circleKey.good} />
                 </span>
                 <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
-                <svg key={voice} className="hero__title-rule" viewBox="0 0 720 26" preserveAspectRatio="none" aria-hidden="true">
+                <svg key={voice} className="hero__title-rule" viewBox="0 0 920 32" preserveAspectRatio="none" aria-hidden="true">
                   <path
                     className="hero__title-rule-stroke"
-                    d="M2 14c20-12 40 8 60-2s40-10 60-2 40 8 60-4 40-10 60 0 40 8 60-6 40-8 60 2 40 10 60-4 40-6 60 4 40 8 60-2 38-4 38-4"
+                    d="M3 17c40-16 80 18 120-2s80-18 120-2 80 16 120-8 80-22 120 2 80 14 120-12 80-16 120 4 80 18 120-8 78-12 78-12"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="1.15"
+                    strokeWidth="1.6"
                     strokeLinecap="round"
                   />
                   <path
                     className="hero__title-rule-shadow"
-                    d="M2 18c20-12 40 8 60-2s40-10 60-2 40 8 60-4 40-10 60 0 40 8 60-6 40-8 60 2 40 10 60-4 40-6 60 4 40 8 60-2 38-4 38-4"
+                    d="M3 22c40-16 80 18 120-2s80-18 120-2 80 16 120-8 80-22 120 2 80 14 120-12 80-16 120 4 80 18 120-8 78-12 78-12"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="0.5"
+                    strokeWidth="0.7"
                     strokeLinecap="round"
-                    opacity="0.35"
+                    opacity="0.32"
                   />
                   <path
                     className="hero__title-rule-flourish"
-                    d="M704 13c-2 5-6 9-12 7"
+                    d="M903 16c-3 7-9 13-18 11"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    className="hero__title-rule-flourish hero__title-rule-flourish--b"
+                    d="M900 22c-3 4-7 6-11 4"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1"
                     strokeLinecap="round"
                   />
-                  <path
-                    className="hero__title-rule-flourish hero__title-rule-flourish--b"
-                    d="M702 17c-2 3-5 4-8 3"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="0.7"
-                    strokeLinecap="round"
-                  />
-                  <circle className="hero__title-rule-end" cx="716" cy="13" r="2.6" fill="currentColor" />
-                  <circle className="hero__title-rule-end-ring" cx="716" cy="13" r="5" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                  <circle className="hero__title-rule-spark" cx="706" cy="6" r="1" fill="currentColor" />
-                  <circle className="hero__title-rule-spark hero__title-rule-spark--b" cx="697" cy="20" r="0.6" fill="currentColor" />
-                  <circle className="hero__title-rule-spark hero__title-rule-spark--c" cx="710" cy="22" r="0.4" fill="currentColor" />
+                  <circle className="hero__title-rule-end" cx="916" cy="16" r="3.2" fill="currentColor" />
+                  <circle className="hero__title-rule-end-ring" cx="916" cy="16" r="6.2" fill="none" stroke="currentColor" strokeWidth="0.6" />
+                  <circle className="hero__title-rule-end-ring" cx="916" cy="16" r="9" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.6" />
+                  <circle className="hero__title-rule-spark" cx="904" cy="6" r="1.2" fill="currentColor" />
+                  <circle className="hero__title-rule-spark hero__title-rule-spark--b" cx="892" cy="24" r="0.8" fill="currentColor" />
+                  <circle className="hero__title-rule-spark hero__title-rule-spark--c" cx="908" cy="27" r="0.5" fill="currentColor" />
+                  <circle className="hero__title-rule-spark" cx="14" cy="9" r="0.8" fill="currentColor" opacity="0.6" />
                 </svg>
               </h1>
               <svg className="hero__marginalia" viewBox="0 0 360 22" preserveAspectRatio="none" aria-hidden="true">

@@ -1,28 +1,21 @@
-# Iteration 223 — A vertical margin thread threads the page together
+# Changelog
 
-A vertical folio margin now runs alongside the page, replacing the redundant
-"voices" section with a true marginalia thread that tracks the reader's
-position, offers quick navigation, and peeks the label of every folio.
+## iteration 224 · one folio, one hand-ruled title
 
-## Added
-- **Margin thread** — a fixed vertical column on the right edge of the page
-  (desktop) that pairs a tactile rail of pip-marks with a labeled folio list.
-  Hovering any entry reveals its hint; the rail's gradient fills with reading
-  progress, and the active folio's pip glows in the active voice color.
-- **Mobile folio index** — a horizontally-scrolling pill bar of folio names
-  appears below the page on small screens, replacing the desktop thread.
-- **Voice-colored thread** — the rail gradient, active pip, hint text, and
-  footer counter shift with the active voice (quiet = blue, human = coral,
-  bold = acid) so the navigation reads as part of the press.
-- **Folio ledger trimmed** — the "voices" entry is removed from the contents
-  (its content is duplicated elsewhere); the page ends on folio viii, the
-  answer.
+A single broadside frames the page. The hero title grows up to claim
+the sheet; a hand-ruled ink line with a trailing flourish sits beneath
+it; the press controls tighten into smaller instruments; the colophon
+ends on a printer's signature with a doubled ring.
 
-## Refined
-- **Hero title** gains `position: relative` to anchor the title rule above
-  the spread without affecting the surrounding text-shadow depth.
-- **Reading sections** updated to a ten-folio run (i → viii) so the margin
-  thread, ledger, and nav all agree.
-- **Press folio header** and **folio ledger** mapping strips the removed
-  voices entry.
-- **Intersection observer** watches only the ten real sections.
+- **Hero broadside**: `m³ press · broadside` plate mark, ruled top & bottom
+  hairlines, registration dots keyed to the active voice, corner marks
+  enlarged to 24px.
+- **Title**: scaled to `clamp(4.4rem, 11.6vw, 13.8rem)` (bold voice to
+  `clamp(4rem, 9.4vw, 11.2rem)`); italic voices gain weight and tracking.
+- **Title rule**: redrawn SVG with a 1.6 stroke, wider viewBox (920×32),
+  doubled ring at the end, opening spark at the start.
+- **Dial**: bigger label name, voice-keyed pips at the rim.
+- **Brand mark**: inner quadrant cross, north/south tone dots, outer ring.
+- **Colophon signature**: 240px wave with doubled ring + opening tick.
+- **Tactile**: thicker (1.5px) title-token underlines; tightened borders
+  across cards, sheets, ledger; reading strip text nudged up half a point.
