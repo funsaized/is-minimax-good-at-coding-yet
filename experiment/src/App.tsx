@@ -592,10 +592,17 @@ function Colophon({ voice, word }: { voice: VoiceId; word: WordId }) {
           </span>
         </div>
         <div className="colophon__signature" aria-hidden="true">
-          <svg className="colophon__signature-mark" viewBox="0 0 260 36">
+          <span className="colophon__signature-mark-mono" aria-hidden="true">
+            <svg viewBox="0 0 32 36">
+              <circle cx="16" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth=".9" opacity=".7" />
+              <circle cx="16" cy="18" r="9" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2" opacity=".55" />
+              <text x="16" y="22" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">m³</text>
+            </svg>
+          </span>
+          <svg className="colophon__signature-mark" viewBox="0 0 220 36">
             <path
               className="colophon__signature-wave"
-              d="M2 22c6-8 14-2 22-8s12-12 24-6 14 10 24 4 14-12 26-6 16 12 28 4 14-14 26-6 18 12 30 4 16-14 28-4 18 12 28 2"
+              d="M2 22c6-8 14-2 22-8s12-12 24-6 14 10 24 4 14-12 26-6 16 12 28 4 14-14 26-6 18 12 30 4 16-14 28-4 18 12 26 2"
               fill="none"
               stroke="currentColor"
               strokeWidth="1"
@@ -605,7 +612,7 @@ function Colophon({ voice, word }: { voice: VoiceId; word: WordId }) {
             />
             <path
               className="colophon__signature-wave colophon__signature-wave--2"
-              d="M2 26c8-5 18 1 28-5s14-10 26-2 16 8 28 0 16-8 28 0 18 4 30-2 18-6 30 2 22 6 34-2 22-8 28 4"
+              d="M2 26c8-5 18 1 28-5s14-10 26-2 16 8 28 0 16-8 28 0 18 4 30-2 18-6 30 2 18 6 26-2 22-8 22 4"
               fill="none"
               stroke="currentColor"
               strokeWidth=".7"
@@ -613,8 +620,8 @@ function Colophon({ voice, word }: { voice: VoiceId; word: WordId }) {
               strokeLinejoin="round"
               opacity=".3"
             />
-            <circle cx="254" cy="20" r="1.8" fill="currentColor" opacity=".7" />
-            <path className="colophon__signature-tick" d="M248 28l4-2 4 2" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".55" />
+            <circle cx="214" cy="20" r="1.8" fill="currentColor" opacity=".7" />
+            <path className="colophon__signature-tick" d="M208 28l4-2 4 2" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".55" />
           </svg>
           <span className="colophon__signature-tag">composed by m³ · for the reader</span>
         </div>
@@ -865,6 +872,7 @@ export function App() {
             <span className="brand__copy">
               <strong>m³ / compose desk</strong>
               <em>an open question</em>
+              <span className="brand__motto" aria-hidden="true">a single-page editorial experiment</span>
             </span>
           </a>
           <nav className="site-nav" aria-label="Sections">
@@ -896,11 +904,26 @@ export function App() {
           </div>
 
           <div className="hero__spread">
-            <span className="hero__plate" aria-hidden="true">this morning · folio i · set in {voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}</span>
+            <span className="hero__plate" aria-hidden="true">
+              <svg className="hero__plate-ornament" viewBox="0 0 24 12" preserveAspectRatio="none">
+                <path
+                  d="M2 6c4-5 8 5 12 0s6-5 8 0"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                />
+                <circle cx="12" cy="6" r="1.1" fill="currentColor" />
+              </svg>
+              this morning · folio i · set in {voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}
+            </span>
             <div className="hero__copy">
               <span className="hero__lead-in" aria-hidden="true">
                 <span className="hero__lead-in-line" />
-                <span className="hero__lead-in-tag">folio i · the question</span>
+                <span className="hero__lead-in-tag">
+                  <span className="hero__lead-in-num">i</span>
+                  folio i · the question
+                </span>
                 <span className="hero__lead-in-line" />
               </span>
               <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
@@ -913,20 +936,29 @@ export function App() {
                 <svg key={voice} className="hero__title-rule" viewBox="0 0 720 22" preserveAspectRatio="none" aria-hidden="true">
                   <path
                     className="hero__title-rule-stroke"
-                    d="M2 13c22-9 44 4 66-2s44-7 66-2 44 5 66-3 44-7 66-1 44 5 66-4 44-7 66 0 44 7 66-3 44-5 66 1 44 6 66-2 40-2 40-2"
+                    d="M2 12c20-10 40 6 60-3s40-8 60-2 40 6 60-4 40-8 60-1 40 6 60-5 40-7 60 0 40 8 60-4 40-5 60 2 40 7 60-3 38-2 38-2"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.1"
                     strokeLinecap="round"
                   />
+                  <path
+                    className="hero__title-rule-flourish"
+                    d="M712 11c-3 4-7 8-12 6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    strokeLinecap="round"
+                  />
                   <circle className="hero__title-rule-end" cx="718" cy="11" r="2.4" fill="currentColor" />
-                  <circle className="hero__title-rule-spark" cx="708" cy="6" r=".9" fill="currentColor" />
+                  <circle className="hero__title-rule-spark" cx="708" cy="5.5" r="1" fill="currentColor" />
+                  <circle className="hero__title-rule-spark hero__title-rule-spark--b" cx="700" cy="14" r=".6" fill="currentColor" />
                 </svg>
               </h1>
               <span className="hero__title-tag" aria-hidden="true">
                 <span className="hero__title-tag-mark" />
                 <span>set in {voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'} · folio i · folded once</span>
-                <span className="hero__title-tag-mark" />
+                <span className="hero__title-tag-mark hero__title-tag-mark--end" />
               </span>
               <svg className="hero__marginalia" viewBox="0 0 320 18" preserveAspectRatio="none" aria-hidden="true">
                 <path

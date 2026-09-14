@@ -60,6 +60,8 @@ function PressLever({ voice, pulling, onPull }: PressLeverProps) {
         <span className="press-bay__lever-cage-rail press-bay__lever-cage-rail--left" />
         <span className="press-bay__lever-cage-rail press-bay__lever-cage-rail--right" />
         <span className="press-bay__lever-cage-cap" />
+        <span className="press-bay__lever-cage-tick press-bay__lever-cage-tick--top" />
+        <span className="press-bay__lever-cage-tick press-bay__lever-cage-tick--mid" />
       </span>
       <button
         type="button"
@@ -73,6 +75,8 @@ function PressLever({ voice, pulling, onPull }: PressLeverProps) {
           <span className="press-bay__lever-knob-shadow" />
           <span className="press-bay__lever-knob-highlight" />
           <span className="press-bay__lever-knob-band" />
+          <span className="press-bay__lever-knob-rivet press-bay__lever-knob-rivet--a" />
+          <span className="press-bay__lever-knob-rivet press-bay__lever-knob-rivet--b" />
         </span>
         <span className="press-bay__lever-stem" aria-hidden="true">
           <span className="press-bay__lever-stem-rail" />

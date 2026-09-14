@@ -781,6 +781,37 @@ button {
   font-style: italic;
 }
 
+.brand__motto {
+  display: inline-block;
+  margin-top: 2px;
+  padding-top: 4px;
+  border-top: 1px dotted var(--line-soft);
+  color: var(--ink-mist);
+  font-family: var(--serif);
+  font-size: 10px;
+  font-style: italic;
+  letter-spacing: -.005em;
+  line-height: 1.2;
+  opacity: .8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+  transition: color .35s var(--ease), opacity .35s var(--ease);
+}
+
+.brand:hover .brand__motto,
+.brand:focus-visible .brand__motto {
+  color: var(--coral);
+  opacity: 1;
+}
+
+@media (max-width: 1180px) {
+  .brand__motto {
+    display: none;
+  }
+}
+
 .site-nav {
   display: flex;
   align-items: center;
@@ -1093,15 +1124,21 @@ button {
   font-size: clamp(3.6rem, 8.8vw, 9rem);
   font-weight: 400;
   letter-spacing: -.078em;
+  word-spacing: -.04em;
   line-height: .86;
   text-wrap: balance;
-  transition: color .45s var(--ease), letter-spacing .65s var(--ease), font-family .55s var(--ease);
+  transition: color .45s var(--ease), letter-spacing .65s var(--ease), font-family .55s var(--ease), word-spacing .65s var(--ease);
 }
 
 .hero__title .title__line {
   display: block;
+  padding-left: .04em;
   text-align: center;
   animation: lineIn .95s var(--ease-out) backwards;
+}
+
+.hero__title .title__line:last-child {
+  padding-left: 0;
 }
 
 .hero__title .title__line:nth-child(1) { animation-delay: .08s; }
@@ -1140,6 +1177,15 @@ button {
   border-radius: 50%;
   background: currentColor;
   opacity: .55;
+  transition: transform .4s var(--ease-out), opacity .35s var(--ease);
+}
+
+.hero__title-tag-mark--end {
+  width: 6px;
+  height: 6px;
+  border: 1px solid currentColor;
+  background: transparent;
+  opacity: .65;
 }
 
 .hero__voice-row {
@@ -1767,16 +1813,22 @@ button {
 }
 
 .hero__title-rule-stroke {
-  stroke-dasharray: 1100 1100;
-  stroke-dashoffset: 1100;
-  animation: titleRuleDraw 1.85s var(--ease-out) .65s forwards;
+  stroke-dasharray: 1300 1300;
+  stroke-dashoffset: 1300;
+  animation: titleRuleDraw 2.1s var(--ease-out) .55s forwards;
   transition: stroke .6s var(--ease);
+}
+
+.hero__title-rule-flourish {
+  stroke-dasharray: 30 30;
+  stroke-dashoffset: 30;
+  animation: titleRuleDraw .6s var(--ease-out) 2.7s forwards;
 }
 
 .hero__title-rule-end {
   opacity: 0;
   transform-origin: center;
-  animation: titleRuleDot .55s var(--ease-spring) 2.5s forwards;
+  animation: titleRuleDot .55s var(--ease-spring) 2.6s forwards;
   transition: fill .6s var(--ease);
 }
 
@@ -1784,7 +1836,12 @@ button {
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: titleRuleSpark .45s var(--ease-spring) 2.4s forwards;
+  animation: titleRuleSpark .45s var(--ease-spring) 2.45s forwards;
+}
+
+.hero__title-rule-spark--b {
+  animation-delay: 2.85s;
+  animation-duration: .4s;
 }
 
 .app--voice-quiet .hero__title-rule { color: var(--blue); }
@@ -5112,13 +5169,42 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding-top: 24px;
   border-top: 1px dashed var(--line);
 }
 
+.colophon__signature-mark-mono {
+  display: inline-flex;
+  width: 36px;
+  height: 40px;
+  color: var(--coral);
+  opacity: .7;
+  transform: translateY(2px);
+  transition: transform .55s var(--ease-spring), color .4s var(--ease), opacity .4s var(--ease);
+  animation: colophonMonoIn 1s var(--ease-spring) .15s backwards;
+}
+
+.colophon__signature-mark-mono svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.colophon__signature:hover .colophon__signature-mark-mono {
+  transform: translateY(0) rotate(-6deg);
+  color: var(--acid);
+  opacity: .95;
+}
+
+@keyframes colophonMonoIn {
+  0% { opacity: 0; transform: translateY(8px) scale(.85); }
+  60% { opacity: .8; transform: translateY(0) scale(1.04); }
+  100% { opacity: .7; transform: translateY(2px) scale(1); }
+}
+
 .colophon__signature-mark {
-  width: clamp(220px, 34vw, 340px);
+  width: clamp(180px, 28vw, 280px);
   height: auto;
   color: var(--coral);
   opacity: .6;
@@ -7487,6 +7573,26 @@ button {
   transform: translateY(-50%);
 }
 
+.press-bay__lever-knob-rivet {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .55), rgba(0, 0, 0, .55) 80%);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .4);
+  opacity: .7;
+}
+
+.press-bay__lever-knob-rivet--a {
+  top: 28%;
+  right: 26%;
+}
+
+.press-bay__lever-knob-rivet--b {
+  bottom: 28%;
+  left: 26%;
+}
+
 .press-bay__lever-pull {
   position: absolute;
   top: -20px;
@@ -7576,6 +7682,26 @@ button {
   width: 24px;
   height: 1px;
   background: var(--line);
+}
+
+.press-bay__lever-cage-tick {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 1px;
+  background: var(--line);
+  opacity: .7;
+}
+
+.press-bay__lever-cage-tick--top {
+  top: 22%;
+}
+
+.press-bay__lever-cage-tick--mid {
+  top: 48%;
+  width: 14px;
+  background: linear-gradient(to right, transparent, var(--line) 20%, var(--line) 80%, transparent);
 }
 
 .press-bay__lever-shadow {
@@ -8575,6 +8701,21 @@ body {
   transition: color .45s var(--ease), border-color .45s var(--ease);
 }
 
+.hero__plate-ornament {
+  display: block;
+  width: 22px;
+  height: 10px;
+  flex: 0 0 auto;
+  color: currentColor;
+  opacity: .65;
+  transition: opacity .4s var(--ease), transform .5s var(--ease-out);
+}
+
+.hero__plate:hover .hero__plate-ornament {
+  opacity: 1;
+  transform: translateX(-2px);
+}
+
 .app--voice-quiet .hero__plate { border-color: rgba(155, 188, 255, .55); color: var(--ink-soft); }
 .app--voice-human .hero__plate { border-color: rgba(240, 113, 96, .55); color: var(--coral); }
 .app--voice-bold .hero__plate { border-color: rgba(216, 255, 98, .55); color: var(--ink); }
@@ -8605,6 +8746,22 @@ body {
   box-shadow: 0 0 0 3px rgba(240, 113, 96, .16);
 }
 
+.hero__lead-in-num {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 2px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 10px;
+  letter-spacing: 0;
+  line-height: 1;
+  opacity: .9;
+}
+
 .hero__title,
 .hero__title .title__line {
   color: var(--ink);
@@ -8615,6 +8772,11 @@ body {
   max-width: 980px;
   font-size: clamp(3.8rem, 8.3vw, 9.25rem);
   letter-spacing: -.085em;
+  word-spacing: -.05em;
+}
+
+.hero__title .title__line:last-child {
+  padding-left: 0;
 }
 
 .hero__title--bold {

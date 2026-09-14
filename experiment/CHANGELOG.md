@@ -1,18 +1,14 @@
 # Changelog
 
-## Iteration 215 — the desk settles, the leaf carries one more drop
-- Removed the redundant `MarginalThread` sidebar; the page now records its
-  progress in two clear places only — the top reading trace and a new folio
-  footer at the bottom.
-- Added a `ReadingFolio` footer that shows the current folio, the active
-  marked word, the active voice, and whether the answer leaf is folded or
-  tipped in — a single line that captures the page's live state.
-- Calmed the hero: dropped the "a page that listens" tagline from the
-  header, then added a hand-traced marginalia rule under the title that
-  ties the question to the rest of the spread.
-- Strengthened the answer reveal with a small wax drop that falls from the
-  seal as the leaf tips in, paired with a thin ink wisp — the leaf now
-  announces its arrival.
-- Cleaned up the dead `TypeLadder` import and tightened responsive
-  behaviour for the new folio footer (2-up at 880px, single column at
-  540px).
+## 216
+A small refinement pass — the composing desk earns a few more deliberate touches without adding new folios.
+
+- Hero plate: opened with a tiny ornament (a hand-drawn flourish) so the "this morning" masthead reads like an editorial imprint.
+- Hero lead-in: the "folio i · the question" tag now wears a small italic numeral ring, anchored to the page's numbering.
+- Hero title: tightened word-spacing on the display cut and added a per-line optical indent so the three readings breathe more deliberately.
+- Hero title rule: a longer, slower trace with a finishing curl and a second spark — the underline now lands like a hand setting the period.
+- Hero title tag: a hollow ring closes the caption, balancing the solid dot at the start.
+- Press bay lever: two tiny rivets on the knob and two new cage ticks above it — the lever reads as a real piece of furniture now.
+- Colophon signature: a small m³ monogram sits above the wave, so the signature has a quiet mark to begin from.
+- Site header brand: a faint italic motto ("a single-page editorial experiment") sits beneath the brand copy, visible on wide viewports.
+- Mobile and reduced-motion paths preserved.
