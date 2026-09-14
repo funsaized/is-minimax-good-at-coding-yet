@@ -1,0 +1,19 @@
+{
+  "id": 240,
+  "parentId": 239,
+  "createdAt": "2026-09-14T21:04:53.856Z",
+  "summary": "An editorial preface above the title and two quiet folds of fake \"live\" motion back to single statements.",
+  "path": "/iterations/000240/index.html",
+  "screenshot": "/iterations/000240/desktop.png",
+  "mobileScreenshot": "/iterations/000240/mobile.png",
+  "sourceCommit": "dec830ca1c1a715d37e52fbfea42f2bb8b84372d",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 181,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 135872,
+    "outputTokens": 12055,
+    "steps": 91
+  }
+}
