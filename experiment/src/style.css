@@ -176,6 +176,25 @@ button {
 }
 
 /* ────────────────────────────────────────────────────────────
+   INK DUST · ambient motes drifting up from the press
+   ──────────────────────────────────────────────────────────── */
+
+.ink-dust {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: .55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ink-dust {
+    display: none;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
    READING STRIP · slim trace that lives above the header on
    every viewport, replacing the desktop-only marginal thread
    ──────────────────────────────────────────────────────────── */
@@ -1062,6 +1081,84 @@ button {
   z-index: 0;
 }
 
+.hero__reg-mark {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  color: var(--coral);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  animation: regMarkIn .85s var(--ease-out) .2s forwards;
+}
+
+.hero__reg-mark--tl { top: 14px; left: 14px; }
+.hero__reg-mark--tr { top: 14px; right: 14px; }
+.hero__reg-mark--bl { bottom: 14px; left: 14px; }
+.hero__reg-mark--br { bottom: 14px; right: 14px; }
+
+.hero__reg-mark--tl { animation-delay: .2s; }
+.hero__reg-mark--tr { animation-delay: .32s; }
+.hero__reg-mark--bl { animation-delay: .44s; }
+.hero__reg-mark--br { animation-delay: .56s; }
+
+.hero__reg-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: color .5s var(--ease), transform .55s var(--ease-spring);
+}
+
+.app--voice-quiet .hero__reg-mark { color: var(--blue); }
+.app--voice-human .hero__reg-mark { color: var(--coral); }
+.app--voice-bold .hero__reg-mark { color: var(--acid); }
+
+.hero__reg-mark--tl:hover,
+.hero__reg-mark--tr:hover,
+.hero__reg-mark--bl:hover,
+.hero__reg-mark--br:hover {
+  transform: scale(1.18);
+}
+
+.hero__set-stamp {
+  position: absolute;
+  top: 22px;
+  right: 60px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 2;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: regMarkIn .75s var(--ease-out) .8s forwards;
+}
+
+.hero__set-stamp-tag {
+  display: inline-block;
+  padding: 2px 7px 3px;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+  background: rgba(14, 18, 28, .55);
+  white-space: nowrap;
+  transition: color .5s var(--ease), border-color .5s var(--ease);
+}
+
+.hero__set-stamp-tag--alt {
+  color: var(--coral);
+}
+
+.hero__set-stamp-rule {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: linear-gradient(to right, var(--coral), transparent);
+  opacity: .7;
+}
+
 .hero__corner,
 .hero__reg {
   display: none;
@@ -1121,12 +1218,14 @@ button {
   margin: 0;
   color: var(--paper);
   font-family: var(--serif);
-  font-size: clamp(3.6rem, 8.8vw, 9rem);
+  font-size: clamp(3.65rem, 9vw, 9.4rem);
   font-weight: 400;
-  letter-spacing: -.078em;
-  word-spacing: -.04em;
-  line-height: .86;
+  letter-spacing: -.082em;
+  word-spacing: -.045em;
+  line-height: .88;
   text-wrap: balance;
+  text-rendering: geometricPrecision;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 0;
   transition: color .45s var(--ease), letter-spacing .65s var(--ease), font-family .55s var(--ease), word-spacing .65s var(--ease);
 }
 
@@ -1537,7 +1636,9 @@ button {
   color: var(--mist);
   font-family: var(--serif);
   font-size: clamp(17px, 1.55vw, 21px);
-  line-height: 1.5;
+  line-height: 1.52;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  text-wrap: pretty;
 }
 
 .hero__summary em {
@@ -1897,43 +1998,67 @@ button {
   position: relative;
   display: block;
   width: clamp(280px, 72%, 720px);
-  height: 22px;
+  height: 26px;
   margin: clamp(14px, 1.8vw, 22px) auto 4px;
   color: var(--coral);
-  opacity: .8;
+  opacity: .85;
   overflow: visible;
 }
 
 .hero__title-rule-stroke {
-  stroke-dasharray: 1300 1300;
-  stroke-dashoffset: 1300;
-  animation: titleRuleDraw 2.1s var(--ease-out) .55s forwards;
+  stroke-dasharray: 1400 1400;
+  stroke-dashoffset: 1400;
+  animation: titleRuleDraw 2.3s var(--ease-out) .55s forwards;
   transition: stroke .6s var(--ease);
+}
+
+.hero__title-rule-shadow {
+  stroke-dasharray: 1400 1400;
+  stroke-dashoffset: 1400;
+  animation: heroTitleShadowDraw 2.3s var(--ease-out) .7s forwards;
 }
 
 .hero__title-rule-flourish {
   stroke-dasharray: 30 30;
   stroke-dashoffset: 30;
-  animation: titleRuleDraw .6s var(--ease-out) 2.7s forwards;
+  animation: titleRuleDraw .6s var(--ease-out) 2.9s forwards;
+}
+
+.hero__title-rule-flourish--b {
+  stroke-dasharray: 20 20;
+  stroke-dashoffset: 20;
+  animation: titleRuleDraw .55s var(--ease-out) 3.1s forwards;
 }
 
 .hero__title-rule-end {
   opacity: 0;
   transform-origin: center;
-  animation: titleRuleDot .55s var(--ease-spring) 2.6s forwards;
+  animation: titleRuleDot .6s var(--ease-spring) 2.8s forwards;
   transition: fill .6s var(--ease);
+}
+
+.hero__title-rule-end-ring {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: titleRuleSpark .65s var(--ease-out) 3.05s forwards;
 }
 
 .hero__title-rule-spark {
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: titleRuleSpark .45s var(--ease-spring) 2.45s forwards;
+  animation: titleRuleSpark .45s var(--ease-spring) 2.6s forwards;
 }
 
 .hero__title-rule-spark--b {
-  animation-delay: 2.85s;
+  animation-delay: 3s;
   animation-duration: .4s;
+}
+
+.hero__title-rule-spark--c {
+  animation-delay: 3.15s;
+  animation-duration: .35s;
 }
 
 .app--voice-quiet .hero__title-rule { color: var(--blue); }
@@ -1943,8 +2068,8 @@ button {
 .hero__marginalia {
   position: relative;
   display: block;
-  width: clamp(200px, 38%, 320px);
-  height: 16px;
+  width: clamp(220px, 42%, 360px);
+  height: 22px;
   margin: clamp(6px, .8vw, 12px) auto 0;
   color: var(--coral);
   opacity: 0;
@@ -1959,11 +2084,33 @@ button {
   transition: stroke .6s var(--ease);
 }
 
+.hero__marginalia-stroke--echo {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: traceDraw 1.4s var(--ease-out) 1.45s forwards;
+}
+
 .hero__marginalia-dot {
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: traceDot .4s var(--ease-spring) 2.45s forwards;
+  animation: traceDot .4s var(--ease-spring) 2.55s forwards;
+}
+
+.hero__marginalia-dot--ring {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: traceDot .55s var(--ease-out) 2.7s forwards;
+  transform: scale(.3);
+}
+
+.hero__marginalia-spark {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: titleRuleSpark .5s var(--ease-spring) 1.8s forwards;
+  transform: scale(.3);
 }
 
 .app--voice-quiet .hero__marginalia { color: var(--blue); }
@@ -1973,12 +2120,32 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .hero__marginalia,
   .hero__marginalia-stroke,
-  .hero__marginalia-dot {
+  .hero__marginalia-stroke--echo,
+  .hero__marginalia-dot,
+  .hero__marginalia-dot--ring,
+  .hero__marginalia-spark {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
     stroke-dashoffset: 0 !important;
   }
+
+  .hero__title-rule-stroke,
+  .hero__title-rule-shadow,
+  .hero__title-rule-flourish,
+  .hero__title-rule-flourish--b,
+  .hero__title-rule-end,
+  .hero__title-rule-end-ring,
+  .hero__title-rule-spark,
+  .hero__reg-mark,
+  .hero__set-stamp {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .hero__reg-mark { opacity: .55 !important; }
 }
 
 @keyframes titleRuleDraw {
@@ -2007,6 +2174,15 @@ button {
 @keyframes traceFade {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes regMarkIn {
+  from { opacity: 0; transform: scale(.4) rotate(-30deg); }
+  to { opacity: .55; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes heroTitleShadowDraw {
+  to { stroke-dashoffset: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -9652,12 +9828,23 @@ body {
   font-size: 9px;
   letter-spacing: .22em;
   text-transform: uppercase;
+  padding: 2px 6px 3px;
+  border: 1px solid var(--line-soft);
+  border-radius: 1px;
+  background: rgba(14, 18, 28, .45);
 }
 
 .impression-ribbon__now-label-text {
   font-size: clamp(13px, 1.2vw, 15px);
   color: var(--paper);
+  font-style: italic;
+  letter-spacing: -.005em;
+  transition: color .4s var(--ease);
 }
+
+.app--voice-quiet .impression-ribbon__now-label-text { color: var(--blue); }
+.app--voice-human .impression-ribbon__now-label-text { color: var(--coral); }
+.app--voice-bold .impression-ribbon__now-label-text { color: var(--acid); }
 
 .impression-ribbon__now-label-meta {
   color: var(--muted);
@@ -9666,6 +9853,19 @@ body {
   font-size: 9px;
   letter-spacing: .2em;
   text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.impression-ribbon__now-label-meta::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .65;
 }
 
 .app--voice-quiet .impression-ribbon__now-label-meta { color: var(--blue); }

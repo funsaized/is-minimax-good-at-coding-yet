@@ -8,6 +8,7 @@ import { MarkedProof } from './MarkedProof'
 import { LetterToReader } from './LetterToReader'
 import { ComposeFloor } from './ComposeFloor'
 import { PressRoom } from './PressRoom'
+import { InkDust } from './InkDust'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -943,6 +944,7 @@ export function App() {
 
   return (
     <main className={`app app--voice-${voice} app--word-${activeWord}`}>
+      <InkDust />
       <div className="app__grain" aria-hidden="true" />
       <div className="app__pencil" aria-hidden="true" />
       <svg className="press-mark-bg" viewBox="0 0 400 400" aria-hidden="true">
@@ -990,6 +992,39 @@ export function App() {
           </div>
 
           <div className="hero__spread">
+            <span className="hero__reg-mark hero__reg-mark--tl" aria-hidden="true">
+              <svg viewBox="0 0 18 18">
+                <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" strokeWidth=".7" />
+                <path d="M9 2v14M2 9h14" stroke="currentColor" strokeWidth=".7" />
+                <circle cx="9" cy="9" r="1" fill="currentColor" />
+              </svg>
+            </span>
+            <span className="hero__reg-mark hero__reg-mark--tr" aria-hidden="true">
+              <svg viewBox="0 0 18 18">
+                <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" strokeWidth=".7" />
+                <path d="M9 2v14M2 9h14" stroke="currentColor" strokeWidth=".7" />
+                <circle cx="9" cy="9" r="1" fill="currentColor" />
+              </svg>
+            </span>
+            <span className="hero__reg-mark hero__reg-mark--bl" aria-hidden="true">
+              <svg viewBox="0 0 18 18">
+                <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" strokeWidth=".7" />
+                <path d="M9 2v14M2 9h14" stroke="currentColor" strokeWidth=".7" />
+                <circle cx="9" cy="9" r="1" fill="currentColor" />
+              </svg>
+            </span>
+            <span className="hero__reg-mark hero__reg-mark--br" aria-hidden="true">
+              <svg viewBox="0 0 18 18">
+                <circle cx="9" cy="9" r="6.5" fill="none" stroke="currentColor" strokeWidth=".7" />
+                <path d="M9 2v14M2 9h14" stroke="currentColor" strokeWidth=".7" />
+                <circle cx="9" cy="9" r="1" fill="currentColor" />
+              </svg>
+            </span>
+            <span className="hero__set-stamp" aria-hidden="true">
+              <span className="hero__set-stamp-tag">set today</span>
+              <span className="hero__set-stamp-rule" />
+              <span className="hero__set-stamp-tag hero__set-stamp-tag--alt">folio i</span>
+            </span>
             <span className="hero__plate" aria-hidden="true">
               <svg className="hero__plate-ornament" viewBox="0 0 24 12" preserveAspectRatio="none">
                 <path
@@ -1019,39 +1054,70 @@ export function App() {
                   <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} circleKey={circleKey.good} />
                 </span>
                 <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
-                <svg key={voice} className="hero__title-rule" viewBox="0 0 720 22" preserveAspectRatio="none" aria-hidden="true">
+                <svg key={voice} className="hero__title-rule" viewBox="0 0 720 26" preserveAspectRatio="none" aria-hidden="true">
                   <path
                     className="hero__title-rule-stroke"
-                    d="M2 12c20-10 40 6 60-3s40-8 60-2 40 6 60-4 40-8 60-1 40 6 60-5 40-7 60 0 40 8 60-4 40-5 60 2 40 7 60-3 38-2 38-2"
+                    d="M2 14c20-12 40 8 60-2s40-10 60-2 40 8 60-4 40-10 60 0 40 8 60-6 40-8 60 2 40 10 60-4 40-6 60 4 40 8 60-2 38-4 38-4"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="1.1"
+                    strokeWidth="1.15"
                     strokeLinecap="round"
                   />
                   <path
+                    className="hero__title-rule-shadow"
+                    d="M2 18c20-12 40 8 60-2s40-10 60-2 40 8 60-4 40-10 60 0 40 8 60-6 40-8 60 2 40 10 60-4 40-6 60 4 40 8 60-2 38-4 38-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="0.5"
+                    strokeLinecap="round"
+                    opacity="0.35"
+                  />
+                  <path
                     className="hero__title-rule-flourish"
-                    d="M712 11c-3 4-7 8-12 6"
+                    d="M704 13c-2 5-6 9-12 7"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1"
                     strokeLinecap="round"
                   />
-                  <circle className="hero__title-rule-end" cx="718" cy="11" r="2.4" fill="currentColor" />
-                  <circle className="hero__title-rule-spark" cx="708" cy="5.5" r="1" fill="currentColor" />
-                  <circle className="hero__title-rule-spark hero__title-rule-spark--b" cx="700" cy="14" r=".6" fill="currentColor" />
+                  <path
+                    className="hero__title-rule-flourish hero__title-rule-flourish--b"
+                    d="M702 17c-2 3-5 4-8 3"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="0.7"
+                    strokeLinecap="round"
+                  />
+                  <circle className="hero__title-rule-end" cx="716" cy="13" r="2.6" fill="currentColor" />
+                  <circle className="hero__title-rule-end-ring" cx="716" cy="13" r="5" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                  <circle className="hero__title-rule-spark" cx="706" cy="6" r="1" fill="currentColor" />
+                  <circle className="hero__title-rule-spark hero__title-rule-spark--b" cx="697" cy="20" r="0.6" fill="currentColor" />
+                  <circle className="hero__title-rule-spark hero__title-rule-spark--c" cx="710" cy="22" r="0.4" fill="currentColor" />
                 </svg>
               </h1>
-              <svg className="hero__marginalia" viewBox="0 0 320 18" preserveAspectRatio="none" aria-hidden="true">
+              <svg className="hero__marginalia" viewBox="0 0 360 22" preserveAspectRatio="none" aria-hidden="true">
                 <path
                   className="hero__marginalia-stroke"
-                  d="M2 12c10-9 22 6 36-2s22-7 36-1 22 6 36-2 22-7 36-1 22 6 36-2 22-7 36-1 22 6 36-2 18-2 18-2"
+                  d="M2 13c12-10 26 7 42-2s26-8 42-1 26 7 42-2 26-8 42-1 26 7 42-2 26-8 42-1 26 7 42-2 26-3 38-3"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.1"
+                  strokeWidth="1.15"
                   strokeLinecap="round"
                   pathLength="100"
                 />
-                <circle className="hero__marginalia-dot" cx="316" cy="10" r="1.5" fill="currentColor" />
+                <path
+                  className="hero__marginalia-stroke hero__marginalia-stroke--echo"
+                  d="M2 17c12-10 26 7 42-2s26-8 42-1 26 7 42-2 26-8 42-1 26 7 42-2 26-8 42-1 26 7 42-2 26-3 38-3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="0.5"
+                  strokeLinecap="round"
+                  pathLength="100"
+                  opacity="0.35"
+                />
+                <circle className="hero__marginalia-dot" cx="356" cy="11" r="1.8" fill="currentColor" />
+                <circle className="hero__marginalia-dot hero__marginalia-dot--ring" cx="356" cy="11" r="4" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.7" />
+                <circle className="hero__marginalia-spark" cx="22" cy="6" r="0.8" fill="currentColor" opacity="0.6" />
               </svg>
               <span className="hero__dial" aria-hidden="true">
                 <VoiceDial voice={voice} />
