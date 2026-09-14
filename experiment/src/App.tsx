@@ -21,6 +21,8 @@ import { PressStrikeFlash } from './PressStrikeFlash'
 import { Flourish } from './Flourish'
 import { FolioMark } from './FolioMark'
 import { VoiceSelector } from './VoiceSelector'
+import { PaperGrain } from './PaperGrain'
+import { TitleSeal } from './TitleSeal'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -922,6 +924,7 @@ export function App() {
 
   return (
     <main className={`app app--voice-${voice} app--word-${activeWord}`}>
+      <PaperGrain />
       <InkDust />
       <InkTrail />
       <div className="app__grain" aria-hidden="true" />
@@ -930,7 +933,7 @@ export function App() {
       <header className="site-header site-header--running-head">
         <div className="site-header__row site-header__row--primary">
           <a className="brand" href="#question" aria-label="Return to the question">
-            <LogoMark size={34} />
+            <LogoMark size={32} />
             <span className="brand__copy">
               <strong>m³ press</strong>
               <em>an open question, set today</em>
@@ -948,25 +951,17 @@ export function App() {
             </span>
             <span className="site-header__running-rule" aria-hidden="true" />
           </div>
-          <div className="site-header__edition" aria-label="Edition mark">
-            <span className="site-header__edition-tag">edition</span>
-            <span className="site-header__edition-num">
-              <span className="site-header__edition-num-now">{romanize(sectionIndex(activeSection))}</span>
-              <span className="site-header__edition-num-sep" aria-hidden="true">/</span>
-              <span className="site-header__edition-num-total">ix</span>
-            </span>
-            <span className="site-header__edition-date">{setToday}</span>
-          </div>
+          <a className="site-header__back" href="#question" aria-label="Back to the first folio">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M3 8h10M8 3l-5 5 5 5" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span>folio i</span>
+          </a>
         </div>
         <div className="site-header__row site-header__row--map">
           <span className="site-header__map-eyebrow" aria-hidden="true">reading map</span>
           <ReadingTrace className="reading-trace--in-header" />
-          <a className="site-header__map-back" href="#question" aria-label="Back to the first folio">
-            <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M3 8h10M8 3l-5 5 5 5" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span>back to folio i</span>
-          </a>
+          <span className="site-header__map-meta" aria-hidden="true">set {setToday} · {romanize(sectionIndex(activeSection))} / ix</span>
         </div>
       </header>
 
@@ -1021,6 +1016,14 @@ export function App() {
                 </h1>
 
                 <Flourish voice={voice} active={selectedWord} hovered={hoveredWord} />
+
+                <TitleSeal
+                  voice={voice}
+                  voiceLabel={VOICE_LABEL[voice]}
+                  voiceLetter={VOICE_LETTER[voice]}
+                  setToday={setToday}
+                  active={activeWord}
+                />
 
                 <span className="hero__pull" aria-hidden="true">
                   <span className="hero__pull-rule hero__pull-rule--start" />
