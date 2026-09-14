@@ -1015,6 +1015,613 @@ button {
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 234 · refinement on the title page and bound page
+   ──────────────────────────────────────────────────────────── */
+
+/* Inherit a slightly tighter, hand-drawn read on the title baseline. */
+
+.hero__spread::before {
+  inset: 7px;
+  border-color: rgba(146, 186, 255, .085);
+}
+
+.hero__spread::after {
+  inset: 17px;
+  border-color: rgba(243, 236, 214, .035);
+}
+
+.hero__copy {
+  perspective-origin: 50% 10%;
+  transform-style: preserve-3d;
+}
+
+.hero__lead-in {
+  position: relative;
+}
+
+.hero__lead-in::before,
+.hero__lead-in::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 1px;
+  background: currentColor;
+  opacity: .5;
+  transform: translateY(-50%);
+}
+
+.hero__lead-in::before { left: -16px; }
+.hero__lead-in::after { right: -16px; }
+
+/* Gentle ink-stain pulse propagated when the voice is reset. */
+
+.app--voice-quiet .hero__compose-rule::before,
+.app--voice-human .hero__compose-rule::before,
+.app--voice-bold .hero__compose-rule::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, currentColor 0%, transparent 60%);
+  opacity: 0;
+  pointer-events: none;
+  animation: heroComposePulse 1.2s var(--ease-out);
+}
+
+@keyframes heroComposePulse {
+  0% { opacity: 0; transform: scale(.6); }
+  35% { opacity: .14; transform: scale(.8); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--voice-quiet .hero__compose-rule::before,
+  .app--voice-human .hero__compose-rule::before,
+  .app--voice-bold .hero__compose-rule::before {
+    animation: none !important;
+  }
+}
+
+/* Marked words gain a subtle ink halo on hover, focus, or selection. */
+
+.title-token {
+  position: relative;
+  display: inline;
+  padding: 0 .04em .06em;
+  background: transparent;
+  font-family: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  text-shadow: none;
+  cursor: pointer;
+  transition:
+    color .35s var(--ease),
+    background-color .35s var(--ease),
+    border-color .35s var(--ease),
+    text-shadow .45s var(--ease);
+}
+
+.title-token--m3 {
+  border-bottom: 1.5px solid rgba(216, 255, 106, .55);
+  color: var(--acid);
+}
+
+.title-token--good {
+  border-bottom: 1.5px solid rgba(255, 118, 95, .55);
+  color: var(--paper);
+}
+
+.title-token--yet {
+  border-bottom: 1.5px solid rgba(155, 188, 255, .55);
+  color: var(--coral);
+}
+
+.title-token__halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: 50%;
+  background: var(--acid);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.4);
+  filter: blur(14px);
+  pointer-events: none;
+  transition: opacity .45s var(--ease), transform .75s var(--ease-spring);
+  z-index: -1;
+}
+
+.title-token--good .title-token__halo { background: var(--coral); }
+.title-token--yet .title-token__halo { background: var(--blue); }
+
+.title-token:hover .title-token__halo,
+.title-token:focus-visible .title-token__halo,
+.title-token.is-selected .title-token__halo {
+  opacity: .22;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.title-token:hover,
+.title-token:focus-visible,
+.title-token.is-selected {
+  color: var(--paper);
+  text-shadow: 0 0 .55em rgba(216, 255, 106, .22);
+}
+
+.title-token--good:hover,
+.title-token--good:focus-visible,
+.title-token--good.is-selected {
+  color: var(--paper);
+  text-shadow: 0 0 .55em rgba(255, 118, 95, .26);
+}
+
+.title-token--yet:hover,
+.title-token--yet:focus-visible,
+.title-token--yet.is-selected {
+  color: var(--paper);
+  text-shadow: 0 0 .55em rgba(155, 188, 255, .26);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-token__halo { transition: none !important; }
+}
+
+/* When a marked word is active on the page, the hairline below the
+   title picks up that word's tone subtly. */
+
+.app--word-m3 .hero__compose-rule { color: var(--acid); }
+.app--word-good .hero__compose-rule { color: var(--coral); }
+.app--word-yet .hero__compose-rule { color: var(--blue); }
+
+/* ────────────────────────────────────────────────────────────
+   PUBLICATION MARK · a centered, three-column imprint that
+   closes the title with the press mark, voice, and date.
+   ──────────────────────────────────────────────────────────── */
+
+.publication-mark {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.6vw, 18px);
+  width: clamp(360px, 88%, 1080px);
+  margin: clamp(12px, 1.6vw, 18px) auto 0;
+  color: var(--pm-tone, var(--coral));
+  opacity: 0;
+  animation: publicationMarkIn .85s var(--ease-out) 1.05s forwards;
+}
+
+.publication-mark--in-hero {
+  margin-top: clamp(8px, 1.2vw, 12px);
+}
+
+.publication-mark::before,
+.publication-mark::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: .25;
+}
+
+.publication-mark::before {
+  background: linear-gradient(to right, transparent, currentColor);
+}
+
+.publication-mark::after {
+  background: linear-gradient(to left, transparent, currentColor);
+}
+
+@keyframes publicationMarkIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .publication-mark {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+.publication-mark__rule {
+  display: block;
+  flex: 1;
+  height: 1px;
+  max-width: 80px;
+  background: currentColor;
+  opacity: .3;
+}
+
+.publication-mark__rule--left {
+  background: linear-gradient(to right, transparent, currentColor);
+}
+
+.publication-mark__rule--right {
+  background: linear-gradient(to left, transparent, currentColor);
+}
+
+.publication-mark__core {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 16px);
+  flex: 0 0 auto;
+}
+
+.publication-mark__core-mark {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(28px, 3vw, 36px);
+  height: clamp(28px, 3vw, 36px);
+  color: currentColor;
+}
+
+.publication-mark__core-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(8px, 1.2vw, 14px);
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: clamp(8px, .75vw, 9.5px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.publication-mark__press {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  color: var(--paper);
+  font-family: var(--mono);
+}
+
+.publication-mark__press-mark {
+  font-weight: 600;
+  letter-spacing: .22em;
+}
+
+.publication-mark__press-folio {
+  color: currentColor;
+}
+
+.publication-mark__press-sep {
+  color: var(--muted);
+  opacity: .6;
+}
+
+.publication-mark__voice {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 8px 4px;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+  color: currentColor;
+}
+
+.publication-mark__voice-letter {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 10px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.publication-mark__voice-name {
+  font-size: inherit;
+  letter-spacing: .18em;
+}
+
+.publication-mark__date {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .95vw, 13px);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.publication-mark__date-tag {
+  color: currentColor;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.publication-mark__date-text {
+  white-space: nowrap;
+}
+
+.publication-mark__sweep {
+  position: absolute;
+  left: 50%;
+  bottom: -16px;
+  width: clamp(160px, 22vw, 240px);
+  height: 10px;
+  color: currentColor;
+  opacity: .55;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .publication-mark__core {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 6px;
+  }
+
+  .publication-mark {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .publication-mark__rule {
+    max-width: 60%;
+  }
+}
+
+@media (max-width: 540px) {
+  .publication-mark__core-row {
+    gap: 6px;
+  }
+
+  .publication-mark__voice {
+    padding: 2px 6px 3px;
+  }
+
+  .publication-mark__date {
+    font-size: 11px;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   HERO REFINEMENT · smaller, more delicate touch on the lead-in
+   and the eyebrow row that "binds" the title page.
+   ──────────────────────────────────────────────────────────── */
+
+.hero__plate .hero__copy {
+  position: relative;
+}
+
+@media (max-width: 720px) {
+  .hero__spread {
+    padding: clamp(72px, 9vw, 116px) 16px clamp(40px, 6vw, 60px);
+  }
+
+  .hero__copy {
+    gap: clamp(14px, 1.8vw, 20px);
+  }
+
+  .hero__voice-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .hero__voice-tabs {
+    border-right: 0;
+    border-bottom: 1px solid var(--line-soft);
+    padding-bottom: 4px;
+  }
+}
+
+@media (max-width: 540px) {
+  .hero__title {
+    letter-spacing: -.084em;
+  }
+
+  .hero__title--bold {
+    letter-spacing: -.106em;
+  }
+
+  .hero__title,
+  .hero__title--bold {
+    font-size: clamp(3rem, 13.6vw, 4.8rem);
+    line-height: .86;
+  }
+
+  .hero__dropcap {
+    font-size: 2.6em;
+  }
+
+  .publication-mark__core-mark {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .publication-mark {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   READING FOLIO · tighter two-line cell with a quiet caption
+   under each state. Adds a "※ ... ※" plate-tag ornament and
+   consistent foot text alignment.
+   ──────────────────────────────────────────────────────────── */
+
+.reading-folio__plate-mark {
+  display: inline-block;
+  margin: 0 6px;
+  color: var(--coral);
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0;
+  opacity: .55;
+}
+
+.reading-folio__plate-mark--alt {
+  transform: scaleX(-1);
+}
+
+.reading-folio__cell {
+  position: relative;
+}
+
+.reading-folio__cell-foot {
+  display: block;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line-soft);
+  color: var(--muted);
+  font-family: var(--serif);
+  font-size: clamp(11px, .9vw, 12px);
+  font-style: italic;
+  letter-spacing: 0;
+  line-height: 1.2;
+  text-transform: none;
+  opacity: .85;
+}
+
+.reading-folio__cell-foot::before {
+  content: '— ';
+  color: var(--coral);
+  font-style: normal;
+  opacity: .55;
+}
+
+@media (max-width: 720px) {
+  .reading-folio__plate-mark { display: none; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   HERO VOICE-ROW · refined voice tabs: more confident active
+   state, quieter non-active state, tighter alignment.
+   ──────────────────────────────────────────────────────────── */
+
+.hero__voice-tab.is-active {
+  background:
+    linear-gradient(180deg, rgba(216, 255, 106, .05), rgba(216, 255, 106, 0)),
+    rgba(0, 0, 0, .22);
+  box-shadow: inset 0 0 0 1px rgba(216, 255, 106, .08);
+}
+
+.app--voice-quiet .hero__voice-tab--quiet.is-active {
+  background:
+    linear-gradient(180deg, rgba(155, 188, 255, .08), rgba(155, 188, 255, 0)),
+    rgba(0, 0, 0, .22);
+  box-shadow: inset 0 0 0 1px rgba(155, 188, 255, .14);
+}
+
+.app--voice-human .hero__voice-tab--human.is-active {
+  background:
+    linear-gradient(180deg, rgba(255, 118, 95, .08), rgba(255, 118, 95, 0)),
+    rgba(0, 0, 0, .22);
+  box-shadow: inset 0 0 0 1px rgba(255, 118, 95, .14);
+}
+
+.app--voice-bold .hero__voice-tab--bold.is-active {
+  background:
+    linear-gradient(180deg, rgba(216, 255, 106, .1), rgba(216, 255, 106, 0)),
+    rgba(0, 0, 0, .22);
+  box-shadow: inset 0 0 0 1px rgba(216, 255, 106, .18);
+}
+
+.hero__voice-tab-letter {
+  transition: transform .4s var(--ease-spring), background .35s var(--ease), color .35s var(--ease);
+}
+
+.hero__voice-tab.is-active .hero__voice-tab-letter {
+  transform: scale(1.08);
+}
+
+/* Quiet hairline below the active voice name for emphasis. */
+.hero__voice-tab.is-active .hero__voice-tab-name::after {
+  content: '';
+  display: inline-block;
+  margin-left: 8px;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  opacity: .85;
+  vertical-align: middle;
+  animation: voiceTabLead 1s var(--ease-out) .15s forwards;
+}
+
+@keyframes voiceTabLead {
+  0% { width: 0; opacity: 0; }
+  100% { width: 24px; opacity: .85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__voice-tab.is-active .hero__voice-tab-name::after { animation: none !important; width: 24px; opacity: .85; }
+  .hero__voice-tab-letter { transform: none !important; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ANNOTATION RIBBON · refine the card and the connector for a
+   cleaner, more editorial register.
+   ──────────────────────────────────────────────────────────── */
+
+.annotation-ribbon__card {
+  padding: 18px 16px 16px;
+  border-top: 0;
+  border-left: 3px solid currentColor;
+  background:
+    linear-gradient(180deg, rgba(28, 36, 52, .42), rgba(14, 20, 32, .62));
+  box-shadow: inset 0 0 0 1px rgba(146, 186, 255, .04);
+}
+
+.annotation-ribbon__item.is-active .annotation-ribbon__card {
+  background:
+    linear-gradient(180deg, rgba(36, 46, 66, .58), rgba(20, 28, 42, .76));
+}
+
+.annotation-ribbon__card .annotation-ribbon__gloss {
+  border-left: 1px solid rgba(146, 186, 255, .1);
+  padding-left: 10px;
+  font-style: italic;
+}
+
+.annotation-ribbon__card .annotation-ribbon__gloss-mark {
+  position: absolute;
+  left: -10px;
+  top: 0;
+  background: linear-gradient(180deg, rgba(28, 36, 52, .85), rgba(14, 20, 32, .85));
+  padding: 2px 4px 2px 0;
+  font-size: 13px;
+}
+
+/* Reset the rule corner we no longer want. */
+.annotation-ribbon__rule {
+  display: none;
+}
+
+.annotation-ribbon__pin {
+  top: -12px;
+  left: 14px;
+}
+
+/* ────────────────────────────────────────────────────────────
+   COMPOSITION SIGNATURE · a tasteful press mark that sits
+   between the hero and the marks section, summarizing what
+   the page just composed.
+   ──────────────────────────────────────────────────────────── */
+
+.app--voice-quiet { --compose-tone: var(--blue); }
+.app--voice-human { --compose-tone: var(--coral); }
+.app--voice-bold { --compose-tone: var(--acid); }
 .press-stamp {
   display: block;
   color: var(--coral);

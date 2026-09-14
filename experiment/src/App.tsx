@@ -19,6 +19,7 @@ import { AnnotationRibbon } from './AnnotationRibbon'
 import { PressRibbon } from './PressRibbon'
 import { SecondReading } from './SecondReading'
 import { ReadingTrace } from './ReadingTrace'
+import { PublicationMark } from './PublicationMark'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -232,20 +233,7 @@ function TitleToken({
         }
       }}
     >
-      <svg className="title-token__underline" viewBox="0 0 200 14" aria-hidden="true" preserveAspectRatio="none">
-        <path
-          className="title-token__underline-stroke"
-          d="M2 9c20-4 40 4 60 0s40-6 60-2 40 8 60 2 18-2 18-2"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          pathLength="100"
-          strokeDasharray="100 100"
-        />
-      </svg>
-      <span className="title-token__spark" aria-hidden="true" />
-      <span className="title-token__set" aria-hidden="true" />
+      <span className="title-token__halo" aria-hidden="true" />
       {text}
     </span>
   )
@@ -648,7 +636,11 @@ function ReadingFolio({ activeId, voice, word, answerOpen, setToday }: {
     <footer className="reading-folio" aria-label="Folio footer">
       <div className="reading-folio__plate" aria-hidden="true">
         <span className="reading-folio__plate-line" />
-        <span className="reading-folio__plate-tag">folio footer · set on {setToday}</span>
+        <span className="reading-folio__plate-tag">
+          <span className="reading-folio__plate-mark">※</span>
+          folio footer · set on {setToday}
+          <span className="reading-folio__plate-mark reading-folio__plate-mark--alt">※</span>
+        </span>
         <span className="reading-folio__plate-line" />
       </div>
       <ol className="reading-folio__row" aria-label="Reading state at the foot of the page">
@@ -658,6 +650,7 @@ function ReadingFolio({ activeId, voice, word, answerOpen, setToday }: {
             <span className="reading-folio__cell-num">{section.index}</span>
             <span className="reading-folio__cell-name">{section.label}</span>
           </span>
+          <span className="reading-folio__cell-foot">folio · {activeId}</span>
         </li>
         <li className="reading-folio__cell reading-folio__cell--word">
           <span className="reading-folio__cell-tag">marked word</span>
@@ -665,6 +658,7 @@ function ReadingFolio({ activeId, voice, word, answerOpen, setToday }: {
             <span className={`reading-folio__cell-mark reading-folio__cell-mark--${word}`}>{WORD_MARK[word]}</span>
             <span className="reading-folio__cell-name">{WORD_LABEL[word]}</span>
           </span>
+          <span className="reading-folio__cell-foot">the verb kept close</span>
         </li>
         <li className="reading-folio__cell reading-folio__cell--voice">
           <span className="reading-folio__cell-tag">the press is set in</span>
@@ -672,6 +666,7 @@ function ReadingFolio({ activeId, voice, word, answerOpen, setToday }: {
             <span className={`reading-folio__cell-voice reading-folio__cell-voice--${voice}`}>{VOICE_SHORT[voice]}</span>
             <span className="reading-folio__cell-name">{VOICE_LABEL[voice]}</span>
           </span>
+          <span className="reading-folio__cell-foot">active setting · shift + v to cycle</span>
         </li>
         <li className="reading-folio__cell reading-folio__cell--state">
           <span className="reading-folio__cell-tag">the leaf</span>
@@ -681,6 +676,7 @@ function ReadingFolio({ activeId, voice, word, answerOpen, setToday }: {
               {answerOpen ? 'tipped in' : 'folded away'}
             </span>
           </span>
+          <span className="reading-folio__cell-foot">folio viii · the proof</span>
         </li>
       </ol>
       <span className="reading-folio__sign" aria-hidden="true">
@@ -920,6 +916,7 @@ export function App() {
                   <circle className="hero__compose-rule-bead hero__compose-rule-bead--ring" cx="996" cy="8" r="5.4" fill="none" stroke="currentColor" strokeWidth="0.5" />
                   <circle className="hero__compose-rule-bead hero__compose-rule-bead--ring hero__compose-rule-bead--ring-2" cx="996" cy="8" r="8.2" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.5" />
                 </svg>
+                <PublicationMark key={voice} voice={voice} setToday={setToday} className="publication-mark--in-hero" />
               </div>
             </div>
           </div>
