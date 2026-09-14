@@ -12,14 +12,15 @@ import { MarginThread } from './MarginThread'
 import { MarginNotes } from './MarginNotes'
 import { MarginGutter } from './MarginGutter'
 import { Watermark } from './Watermark'
-import { PressMark } from './PressMark'
 import { TypePlate } from './TypePlate'
 import { PressSignature } from './PressSignature'
 import { PressRibbon } from './PressRibbon'
 import { SecondReading } from './SecondReading'
 import { ReadingTrace } from './ReadingTrace'
-import { PublicationMark } from './PublicationMark'
 import { PressStrikeFlash } from './PressStrikeFlash'
+import { Flourish } from './Flourish'
+import { FolioMark } from './FolioMark'
+import { VoiceSelector } from './VoiceSelector'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -287,8 +288,26 @@ function TitleToken({
         }
       }}
     >
-      <span className="title-token__halo" aria-hidden="true" />
-      {text}
+      <span className="title-token__text">{text}</span>
+      <svg className="title-token__mark" viewBox="0 0 200 18" preserveAspectRatio="none" aria-hidden="true">
+        <path
+          className="title-token__stroke"
+          d="M2 12 C 24 4, 48 16, 72 8 S 120 0, 144 10 S 178 14, 198 6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          pathLength="100"
+          strokeDasharray="100 100"
+          strokeDashoffset="100"
+        />
+        <circle className="title-token__tail" cx="196" cy="6" r="1.8" />
+      </svg>
+      <span className="title-token__glyph" aria-hidden="true">
+        <svg viewBox="0 0 60 22">
+          <path d="M14 4 C 18 14, 10 16, 14 18" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+        </svg>
+      </span>
     </span>
   )
 }
@@ -674,6 +693,7 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
 }
 
 const VOICE_LABEL: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
+const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 const VOICE_SHORT: Record<VoiceId, string> = { quiet: 'A · quiet', human: 'B · human', bold: 'C · bold' }
 const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
@@ -952,52 +972,31 @@ export function App() {
 
       <div className="page">
         <section className="hero" id="question" aria-labelledby="page-title">
-          <div className="hero__eyebrow-row">
-            <p className="eyebrow"><span className="eyebrow__line" />frontend experiment <em>read the question first</em></p>
-            <span className="hero__edition-mark" aria-hidden="true">
-              <span className="hero__edition-mark-rule" />
-              <span className="hero__edition-mark-core">
-                <span className="hero__edition-mark-line">edition <em>i</em> · folio <em>i</em> of <em>ix</em></span>
-                <span className="hero__edition-mark-line hero__edition-mark-line--soft">set on {setToday} · pulled by hand</span>
-              </span>
-              <span className="hero__edition-mark-rule" />
-            </span>
-          </div>
+          <FolioMark
+            folio="i"
+            setToday={setToday}
+            voiceLabel={VOICE_LABEL[voice]}
+            voiceLetter={VOICE_LETTER[voice]}
+            voiceTone={voice === 'quiet' ? 'var(--blue)' : voice === 'human' ? 'var(--coral)' : 'var(--acid)'}
+          />
 
           <div className="hero__spread">
             <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
-            <span key={`pm-${strikeTick}`} className="hero__press-mark" aria-hidden="true">
-              <PressMark voice={voice} setToday={setToday} />
-            </span>
             <span className="hero__corner hero__corner--tl" aria-hidden="true">
-              <svg viewBox="0 0 28 28"><path d="M2 14V2h12" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="2" cy="2" r="1.4" fill="currentColor" /></svg>
+              <svg viewBox="0 0 36 36"><path d="M2 18V2h14" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="2" cy="2" r="1.6" fill="currentColor" /></svg>
             </span>
             <span className="hero__corner hero__corner--tr" aria-hidden="true">
-              <svg viewBox="0 0 28 28"><path d="M14 2h12v12" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="26" cy="2" r="1.4" fill="currentColor" /></svg>
+              <svg viewBox="0 0 36 36"><path d="M18 2h16v16" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="34" cy="2" r="1.6" fill="currentColor" /></svg>
             </span>
             <span className="hero__corner hero__corner--bl" aria-hidden="true">
-              <svg viewBox="0 0 28 28"><path d="M2 14v12h12" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="2" cy="26" r="1.4" fill="currentColor" /></svg>
+              <svg viewBox="0 0 36 36"><path d="M2 18v16h14" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="2" cy="34" r="1.6" fill="currentColor" /></svg>
             </span>
             <span className="hero__corner hero__corner--br" aria-hidden="true">
-              <svg viewBox="0 0 28 28"><path d="M26 14v12h-12" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="26" cy="26" r="1.4" fill="currentColor" /></svg>
+              <svg viewBox="0 0 36 36"><path d="M34 18v16h-16" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="34" cy="34" r="1.6" fill="currentColor" /></svg>
             </span>
+
             <div className="hero__plate">
               <div className="hero__copy">
-                <span className="hero__plate-stamp" aria-hidden="true">
-                  <span className="hero__plate-stamp-rule" />
-                  <span className="hero__plate-stamp-core">
-                    <span className="hero__plate-stamp-line">this impression · pulled {setToday}</span>
-                  </span>
-                  <span className="hero__plate-stamp-rule" />
-                </span>
-                <span className="hero__lead-in" aria-hidden="true">
-                  <span className="hero__lead-in-line" />
-                  <span className="hero__lead-in-tag">
-                    <span className="hero__lead-in-num">i</span>
-                    folio i · the question
-                  </span>
-                  <span className="hero__lead-in-line" />
-                </span>
                 <h1 key={`title-${strikeTick}`} className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
                   <span className="title__line">is Minimax </span>
                   <span className="title__line">
@@ -1006,21 +1005,20 @@ export function App() {
                   </span>
                   <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} />?</span>
                 </h1>
-                <svg key={voice} className="hero__compose-rule" viewBox="0 0 1000 16" preserveAspectRatio="none" aria-hidden="true">
-                  <path
-                    className="hero__compose-rule-stroke"
-                    d="M2 9c40-10 80 8 120 0s80-10 120 0 80 10 120-4 80-10 120 0 80 8 120-4 80-8 120 2 80 8 120-6 78-2"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                  <circle className="hero__compose-rule-bead" cx="996" cy="8" r="2.2" fill="currentColor" />
-                  <circle className="hero__compose-rule-bead hero__compose-rule-bead--ring" cx="996" cy="8" r="5.4" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                  <circle className="hero__compose-rule-bead hero__compose-rule-bead--ring hero__compose-rule-bead--ring-2" cx="996" cy="8" r="8.2" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.5" />
-                </svg>
-                <PublicationMark key={voice} voice={voice} setToday={setToday} className="publication-mark--in-hero" />
+
+                <Flourish voice={voice} active={selectedWord} hovered={hoveredWord} />
+
+                <span className="hero__pull" aria-hidden="true">
+                  <span className="hero__pull-rule hero__pull-rule--start" />
+                  <span className="hero__pull-text">
+                    <span className="hero__pull-mark">※</span>
+                    <em>attention, not ornament</em>
+                    <span className="hero__pull-mark hero__pull-mark--alt">※</span>
+                  </span>
+                  <span className="hero__pull-rule hero__pull-rule--end" />
+                </span>
               </div>
+
               <MarginGutter
                 active={selectedWord}
                 hovered={hoveredWord}
@@ -1032,31 +1030,22 @@ export function App() {
             </div>
           </div>
 
-          <div className="hero__voice-row">
-            <span className="hero__voice-row-eyebrow" aria-hidden="true">try a voice</span>
-            <div className="hero__voice-tabs" role="tablist" aria-label="Choose a typographic voice">
-              {VOICES.map(item => {
-                const isActive = item.id === voice
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    className={`hero__voice-tab hero__voice-tab--${item.id} ${isActive ? 'is-active' : ''}`}
-                    onClick={() => selectVoice(item.id)}
-                    role="tab"
-                     aria-selected={isActive}
-                     tabIndex={isActive ? 0 : -1}
-                     onKeyDown={event => selectVoiceByKey(event, item.id)}
-                   >
-                    <span className="hero__voice-tab-letter" aria-hidden="true">{item.id === 'quiet' ? 'A' : item.id === 'human' ? 'B' : 'C'}</span>
-                    <span className="hero__voice-tab-name">{item.name}</span>
-                  </button>
-                )
-              })}
-            </div>
+          <div className="hero__chrome">
+            <VoiceSelector
+              voice={voice}
+              onSelect={selectVoice}
+              onKey={selectVoiceByKey}
+            />
             <button ref={answerTriggerRef} type="button" className={`hero__note-link ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
-              <span>{answerOpen ? 'fold the answer back' : 'open the editor’s note'}</span>
-              <ArrowIcon />
+              <span className="hero__note-link-text">
+                <span className="hero__note-link-mark" aria-hidden="true">folio viii</span>
+                <span className="hero__note-link-line">{answerOpen ? 'fold the answer back' : "open the editor's note"}</span>
+              </span>
+              <span className="hero__note-link-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
             </button>
           </div>
 
@@ -1064,17 +1053,6 @@ export function App() {
             <p className="hero__summary">
               <span className="hero__dropcap" aria-hidden="true">A</span>
               small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em>
-              <svg className="hero__summary-scrawl" viewBox="0 0 220 14" aria-hidden="true" preserveAspectRatio="none">
-                <path
-                  d="M2 9c12-7 24 4 36-2s24-7 36-2 24 6 36-1 24-7 36-1 24 4 36-1 24-6 36-1"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.1"
-                  strokeLinecap="round"
-                  pathLength="100"
-                />
-                <circle cx="216" cy="7" r="1.4" fill="currentColor" />
-              </svg>
             </p>
             <a className="hero__continue" href="#press" aria-label="Continue to the press bed">
               <span className="hero__continue-imprint">composed by hand <em>·</em> for a careful reader</span>
