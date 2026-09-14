@@ -23,6 +23,7 @@ import { FolioMark } from './FolioMark'
 import { VoiceSelector } from './VoiceSelector'
 import { PaperGrain } from './PaperGrain'
 import { TitleSeal } from './TitleSeal'
+import { MarginalLedger } from './MarginalLedger'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -1005,6 +1006,13 @@ export function App() {
             </span>
 
             <div className="hero__plate">
+              <MarginalLedger
+                active={selectedWord}
+                hovered={hoveredWord}
+                onHover={setHoveredWord}
+                onLeave={() => setHoveredWord(null)}
+                onSelect={id => selectWord(id)}
+              />
               <div className="hero__copy">
                 <h1 key={`title-${strikeTick}`} className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
                   <span className="title__line">is Minimax </span>

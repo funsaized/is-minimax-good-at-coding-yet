@@ -1,11 +1,27 @@
 # Changelog
 
-## Iteration 241 · the singular question
+## Iteration 242
 
-- A new `PaperGrain` canvas drapes a quiet drift of warm motes behind the page, replacing the static grain with a slow, breathing paper texture.
-- A new `TitleSeal` closes the title with a single confident strip — press, voice, active mark, and date — replacing the layered chrome that previously competed with the question.
-- The site header collapses to one elegant row with a small `back to folio i` link; the second row keeps only the reading map and a quiet `set / folio` meta.
-- The title typography is set with tighter optical spacing and a stronger voice-specific read (quiet serif italic, human warm italic, bold display).
-- The marked words gain a hand-traced caret mark that appears beside the active token and a softened halo glow that tracks the active word tone.
-- The press lever sits in a heavier armature with a satisfying hover lift and a quieter pull animation.
-- Mobile typography gets a tighter rhythm: the title scales fluidly, the title seal collapses into a single column, and the header back link collapses to an icon.
+The hero earns a marginal ledger. A thin pencil rule now runs down the
+left edge of the title plate; three small proof-ticks (stet, caret,
+query) sit beside the three marked words and ink themselves in their
+voice colour when active. The title's three lines cascade in a
+deliberate indent so the question reads as one composed statement.
+
+- new: `src/MarginalLedger.tsx` — vertical editor's ledger running
+  alongside the title's left edge, balancing the right-hand
+  `MarginGutter`. Three small mark-ticks (stet / caret / query),
+  an active pulse on the rule, a quieter dashed pencil spine.
+- hero: the `.hero__plate` becomes a three-column spread on wide
+  screens (ledger | title | gutter). On narrow screens the ledger
+  collapses below the title and reads as a small proof tape.
+- typography: the human voice italic tightens slightly so the
+  title's three lines cascade in confidence. The three title
+  lines gain a deliberate left-indent that walks the eye through
+  the question.
+- `TitleSeal`: tighter gap and quieter cell-feet so the four
+  voices (press · voice · mark · date) read as one breath, not a
+  table.
+- a11y: every ledger tick is a real button with `aria-pressed`
+  and `aria-describedby`; reduced-motion disables the entry draw
+  and the active pulse.
