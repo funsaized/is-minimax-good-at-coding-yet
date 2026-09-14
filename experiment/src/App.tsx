@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { NOTES, type WordId } from './notes'
 import { PressStamp } from './PressStamp'
-import { PressSignature } from './PressSignature'
 import { ImpressionRibbon, type ImpressionMark } from './ImpressionRibbon'
 import { SpecimenSpread } from './SpecimenSpread'
 import { MarkedProof } from './MarkedProof'
@@ -13,6 +12,8 @@ import { InkTrail } from './InkTrail'
 import { DaySheet } from './DaySheet'
 import { MarginThread } from './MarginThread'
 import { FolioStitch } from './FolioStitch'
+import { ProofCard } from './ProofCard'
+import { Watermark } from './Watermark'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -159,47 +160,6 @@ function HeaderRuler() {
         ))}
       </div>
     </div>
-  )
-}
-
-function VoiceDial({ voice }: { voice: VoiceId }) {
-  const index = voice === 'quiet' ? 0 : voice === 'human' ? 1 : 2
-  const rotation = index * -120
-  return (
-    <span className={`voice-dial voice-dial--${voice}`} aria-hidden="true">
-      <svg className="voice-dial__svg" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth=".6" opacity=".32" />
-        <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 3" opacity=".5" />
-        <g className="voice-dial__letters" style={{ transform: `rotate(${rotation}deg)`, transformOrigin: '50px 50px', transition: 'transform .9s var(--ease-spring)' }}>
-          {(['A', 'B', 'C'] as const).map((letter, i) => {
-            const a = (i * 120 - 90) * (Math.PI / 180)
-            const x = 50 + 28 * Math.cos(a)
-            const y = 50 + 28 * Math.sin(a)
-            return (
-              <text
-                key={letter}
-                x={x}
-                y={y + 4}
-                textAnchor="middle"
-                fontFamily="ui-monospace, monospace"
-                fontSize="9"
-                letterSpacing=".18em"
-                fill="currentColor"
-                opacity={i === index ? 1 : .35}
-                style={{ transition: 'opacity .45s var(--ease)' }}
-              >{letter}</text>
-            )
-          })}
-        </g>
-        <g className="voice-dial__indicator" key={voice}>
-          <path d="M46 4 L54 4 L50 12 Z" fill="currentColor" />
-          <line x1="50" y1="42" x2="50" y2="14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-          <circle cx="50" cy="10" r="1.6" fill="currentColor" />
-        </g>
-        <circle cx="50" cy="50" r="3" fill="currentColor" />
-        <circle cx="50" cy="50" r="6.5" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".55" />
-      </svg>
-    </span>
   )
 }
 
@@ -929,23 +889,7 @@ export function App() {
       <InkTrail />
       <div className="app__grain" aria-hidden="true" />
       <div className="app__pencil" aria-hidden="true" />
-      <svg className="press-mark-bg" viewBox="0 0 400 400" aria-hidden="true">
-        <circle cx="200" cy="200" r="174" fill="none" stroke="currentColor" strokeWidth=".8" />
-        <circle cx="200" cy="200" r="152" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="2 5" opacity=".7" />
-        <circle cx="200" cy="200" r="118" fill="none" stroke="currentColor" strokeWidth=".3" strokeDasharray="1 4" opacity=".4" />
-        <text
-          x="200"
-          y="288"
-          textAnchor="middle"
-          fontFamily="Georgia, 'Iowan Old Style', serif"
-          fontStyle="italic"
-          fontWeight="400"
-          fontSize="360"
-          fill="currentColor"
-          letterSpacing="-.04em"
-        >?</text>
-        <circle cx="200" cy="320" r="3.2" fill="currentColor" opacity=".7" />
-      </svg>
+      <Watermark />
       <header className="site-header">
         <ReadingStrip progress={scrollProgress} activeSection={activeSection} />
         <div className="site-header__row">
@@ -1049,13 +993,6 @@ export function App() {
                 </span>
                 <span className="hero__lead-in-line" />
               </span>
-              <p className="hero__deck" aria-hidden="true">
-                <span className="hero__deck-rule" />
-                <span className="hero__deck-text">
-                  A folio of one question — set this morning, typeset three ways, with the answer tucked into the back.
-                </span>
-                <span className="hero__deck-rule" />
-              </p>
               <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
                 <span className="title__line">is Minimax </span>
                 <span className="title__line">
@@ -1106,30 +1043,7 @@ export function App() {
                   <circle className="hero__title-rule-spark" cx="14" cy="9" r="0.8" fill="currentColor" opacity="0.6" />
                 </svg>
               </h1>
-              <svg className="hero__marginalia" viewBox="0 0 360 22" preserveAspectRatio="none" aria-hidden="true">
-                <path
-                  className="hero__marginalia-stroke"
-                  d="M2 13c12-10 26 7 42-2s26-8 42-1 26 7 42-2 26-8 42-1 26 7 42-2 26-8 42-1 26 7 42-2 26-3 38-3"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.15"
-                  strokeLinecap="round"
-                  pathLength="100"
-                />
-                <circle className="hero__marginalia-dot" cx="356" cy="11" r="1.8" fill="currentColor" />
-                <circle className="hero__marginalia-dot hero__marginalia-dot--ring" cx="356" cy="11" r="4" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.7" />
-                <circle className="hero__marginalia-spark" cx="22" cy="6" r="0.8" fill="currentColor" opacity="0.6" />
-              </svg>
-              <span className="hero__dial" aria-hidden="true">
-                <VoiceDial voice={voice} />
-                <span className="hero__dial-label">
-                  <span className="hero__dial-label-eyebrow">the press is set in</span>
-                  <span className="hero__dial-label-name">{voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}</span>
-                </span>
-              </span>
-              <span className="hero__signature">
-                <PressSignature voice={voice} word={activeWord} tone="plate" />
-              </span>
+              <ProofCard word={selectedWord} voice={voice} />
             </div>
           </div>
 
@@ -1162,21 +1076,36 @@ export function App() {
           </div>
 
           <div className="hero__body">
-            <p className="hero__summary">
-              <span className="hero__dropcap" aria-hidden="true">A</span>
-              small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em>
-              <svg className="hero__summary-scrawl" viewBox="0 0 220 14" aria-hidden="true" preserveAspectRatio="none">
-                <path
-                  d="M2 9c12-7 24 4 36-2s24-7 36-2 24 6 36-1 24-7 36-1 24 4 36-1 24-6 36-1"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.1"
-                  strokeLinecap="round"
-                  pathLength="100"
-                />
-                <circle cx="216" cy="7" r="1.4" fill="currentColor" />
-              </svg>
-            </p>
+            <div className="hero__body-grid">
+              <p className="hero__summary">
+                <span className="hero__dropcap" aria-hidden="true">A</span>
+                small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em>
+                <svg className="hero__summary-scrawl" viewBox="0 0 220 14" aria-hidden="true" preserveAspectRatio="none">
+                  <path
+                    d="M2 9c12-7 24 4 36-2s24-7 36-2 24 6 36-1 24-7 36-1 24 4 36-1 24-6 36-1"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.1"
+                    strokeLinecap="round"
+                    pathLength="100"
+                  />
+                  <circle cx="216" cy="7" r="1.4" fill="currentColor" />
+                </svg>
+              </p>
+              <aside className="hero__marginalia" aria-label="Editor's margin note">
+                <span className="hero__marginalia-thread" aria-hidden="true">
+                  <svg viewBox="0 0 6 120" preserveAspectRatio="none">
+                    <path d="M3 0c0 14-3 24 1 38s-2 26 1 42s-2 22 0 38" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" />
+                    <circle cx="3" cy="116" r="1.2" fill="currentColor" />
+                  </svg>
+                </span>
+                <p className="hero__marginalia-note">
+                  <span className="hero__marginalia-mark" aria-hidden="true">※</span>
+                  <em>in the margin</em><br />
+                  The page you are reading was set by hand. Every word here earned its place; some have been replaced by quieter ones, and some have been circled twice.
+                </p>
+              </aside>
+            </div>
             <div className="hero__note">
               <span className="hero__note-mark" aria-hidden="true">*</span>
               <p><strong>Good front-end work</strong> is less about showing what can be made than noticing what should remain quiet.</p>

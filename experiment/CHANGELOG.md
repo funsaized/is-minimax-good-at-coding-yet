@@ -1,7 +1,10 @@
-# Changelog
+Iteration 226: a proof card keyed to each marked word, a quieter printer's-mark watermark, and a tightened hero.
 
-## Iteration 225 — a folio stitch ties the broadside together
-
-Added a vertical FolioStitch that runs along the left edge of the page, replacing the standalone read more discrete folio rail. The new stitch unifies the page into a single unfolding broadside: ten folio nodes bead the rule, a fill grows with scroll, the bead tracks reading progress, and a small now slip + press card follow the active folio and voice. The hero spread sheds two dashed inner frames so the title can sit more confidently. The answer reveal's wax seal now visibly presses into the paper — blurring as it falls, sharpening as it lands, with a paper-shadow depression behind it. Mobile breakpoints hide the desktop stitch and rely on the existing margin-thread mobile bar.
-
-Iteration summary: a folio stitch ties the broadside together.
+- Added a new `ProofCard` that unfurls beneath the hero title. It opens the marked word at scale, stamps it with its editorial mark (stet / caret / query), and shows the editor's italic note, a pencil-line gloss, and a margin whisper. Keyed to the selected word, so each marked token reveals a different proof.
+- Replaced the floating giant "?" with a real printer's mark: a `Watermark` of "m³ · broadside · set on today" with cardinal ticks, layered with a cycling italic editor's whisper ("the answer, for now" … "composed, not generated"). It gently fades as the reader descends the page.
+- Removed the redundant hero `VoiceDial` so the proof card stands as the visual response to the title. The proof card's color now carries the voice cue (acid / coral / blue).
+- Tightened the hero: dropped the decorative `hero__deck` tagline and the `hero__marginalia` squiggle, and added a real margin note alongside the lead summary paragraph in `hero__body-grid`.
+- Made the lead summary voice-aware: italic close-set in quiet, italic warm in human, upright weighted in bold. The shift is subtle but the page now reads differently with each voice.
+- Cleaned up the codebase: removed `PressSignature` import (no longer rendered), removed the now-orphan `VoiceDial` function, and quieted the dead `.press-mark-bg` rule.
+- Polished the proof-card transition: a small rotateX/translateY/filter shift on selection change so the card feels like a slip being swapped in, with `perspective` set on the parent hero copy.
+- Verified mobile: the proof card stacks its grid for narrow screens, the new margin note collapses into the column flow, and the watermark seal sizes down without overpowering the text.
