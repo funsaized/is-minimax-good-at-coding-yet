@@ -20,6 +20,7 @@ import { PressRibbon } from './PressRibbon'
 import { SecondReading } from './SecondReading'
 import { ReadingTrace } from './ReadingTrace'
 import { PublicationMark } from './PublicationMark'
+import { PressStrikeFlash } from './PressStrikeFlash'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -708,6 +709,8 @@ export function App() {
   const [announcement, setAnnouncement] = useState('')
   const [marks, setMarks] = useState<ImpressionMark[]>([])
   const [setToday] = useState(() => formatSetToday())
+  const [strikeTick, setStrikeTick] = useState(0)
+  const firstVoiceRef = useRef(true)
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
 
@@ -801,6 +804,14 @@ export function App() {
     pushMark({ kind: 'voice', voice })
   }, [voice, pushMark])
 
+  useEffect(() => {
+    if (firstVoiceRef.current) {
+      firstVoiceRef.current = false
+      return
+    }
+    setStrikeTick(tick => tick + 1)
+  }, [voice])
+
   const selectVoiceByKey = (event: ReactKeyboardEvent<HTMLButtonElement>, id: VoiceId) => {
     const index = VOICES.findIndex(item => item.id === id)
     let nextIndex = index
@@ -882,7 +893,8 @@ export function App() {
             <span className="hero__seal" aria-hidden="true">
               <FolioSeal voice={voice} folio="i" setToday={setToday} size={150} />
             </span>
-            <span className="hero__press-mark" aria-hidden="true">
+            <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
+            <span key={`pm-${strikeTick}`} className="hero__press-mark" aria-hidden="true">
               <PressMark voice={voice} setToday={setToday} />
             </span>
             <div className="hero__plate">
@@ -895,7 +907,7 @@ export function App() {
                   </span>
                   <span className="hero__lead-in-line" />
                 </span>
-                <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
+                <h1 key={`title-${strikeTick}`} className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
                   <span className="title__line">is Minimax </span>
                   <span className="title__line">
                     <TitleToken id="m3" text="M3" selected={activeWord === 'm3'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.m3 = node }} />{' '}

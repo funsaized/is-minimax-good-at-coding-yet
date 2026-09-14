@@ -22,9 +22,11 @@ const WORD_GLYPH: Record<WordId, string> = { m3: '⌇', good: '∧', yet: '?' }
 export function ImpressionRibbon({ voice, word, marks, setToday }: ImpressionRibbonProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [pulse, setPulse] = useState(0)
+  const [splashTick, setSplashTick] = useState(0)
 
   useEffect(() => {
     setPulse(value => value + 1)
+    if (marks.length > 0) setSplashTick(value => value + 1)
   }, [marks.length])
 
   const visible = marks.slice(-MAX_MARKS)
@@ -50,8 +52,9 @@ export function ImpressionRibbon({ voice, word, marks, setToday }: ImpressionRib
         <span className="impression-ribbon__marks">
           {visible.map((mark, index) => {
             const ratio = visible.length <= 1 ? 1 : index / (visible.length - 1)
+            const isLatest = index === visible.length - 1
             return (
-              <MarkOnRibbon key={`${mark.kind}-${index}-${ratio.toFixed(3)}`} mark={mark} ratio={ratio} />
+              <MarkOnRibbon key={`${mark.kind}-${index}-${ratio.toFixed(3)}`} mark={mark} ratio={ratio} latest={isLatest} splashTick={isLatest ? splashTick : 0} />
             )
           })}
           <span
@@ -83,7 +86,7 @@ export function ImpressionRibbon({ voice, word, marks, setToday }: ImpressionRib
   )
 }
 
-function MarkOnRibbon({ mark, ratio }: { mark: ImpressionMark; ratio: number }) {
+function MarkOnRibbon({ mark, ratio, latest, splashTick }: { mark: ImpressionMark; ratio: number; latest: boolean; splashTick: number }) {
   if (mark.kind === 'pull') {
     return (
       <span
@@ -91,6 +94,9 @@ function MarkOnRibbon({ mark, ratio }: { mark: ImpressionMark; ratio: number }) 
         style={{ left: `${ratio * 100}%` }}
         aria-hidden="true"
       >
+        {latest && splashTick > 0 && (
+          <span key={`splash-${splashTick}`} className="impression-ribbon__mark-splash" aria-hidden="true" />
+        )}
         <span className="impression-ribbon__mark-pull" />
         <span className="impression-ribbon__mark-pull-glow" />
       </span>
@@ -103,6 +109,9 @@ function MarkOnRibbon({ mark, ratio }: { mark: ImpressionMark; ratio: number }) 
         style={{ left: `${ratio * 100}%` }}
         aria-hidden="true"
       >
+        {latest && splashTick > 0 && (
+          <span key={`splash-${splashTick}`} className="impression-ribbon__mark-splash" aria-hidden="true" />
+        )}
         <span className="impression-ribbon__mark-voice-dot" />
         <span className="impression-ribbon__mark-voice-letter">{VOICE_LETTER[mark.voice]}</span>
       </span>
@@ -114,6 +123,9 @@ function MarkOnRibbon({ mark, ratio }: { mark: ImpressionMark; ratio: number }) 
       style={{ left: `${ratio * 100}%` }}
       aria-hidden="true"
     >
+      {latest && splashTick > 0 && (
+        <span key={`splash-${splashTick}`} className="impression-ribbon__mark-splash" aria-hidden="true" />
+      )}
       <span className="impression-ribbon__mark-word-glyph">{WORD_GLYPH[mark.word]}</span>
     </span>
   )
