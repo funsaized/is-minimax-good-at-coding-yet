@@ -1,26 +1,12 @@
-# Changelog
+# Iteration 231
 
-## Iteration 230 — a press ribbon and a second reading
+Stripped the chrome, gave the title the room: hero now reads as one composed broadside.
 
-A single unifying band that runs through the page, and a typographic specimen
-that lets the same question be re-read in three voices.
-
-- New `PressRibbon` (src/PressRibbon.tsx) sits beneath the hero and reappears
-  between the day sheet and the answer. It binds the page together: the
-  title set in the active voice, three tags showing all readings with the
-  active one marked, and a quiet meta line with the day's date.
-- New `SecondReading` (src/SecondReading.tsx) is a single, deliberate
-  interactive specimen that shows the question set three ways. Hovering or
-  focusing a tab shows that reading; clicking pulls the press. The three
-  lines use the system serif italic and the system sans heavy so the
-  difference is real, not nominal.
-- The answer reveal's colophon (the close, the colophon line, the pull quote)
-  gets a tighter, more deliberate frame — a `tip-in stamp`, a `trail dot`
-  row, and a clearer `fold it back` button. The leaf itself keeps its paper
-  feel but reads more confidently.
-- Mobile layout: the hero voice row stacks on small screens, the press
-  ribbon collapses gracefully, the second reading specimen simplifies to
-  bordered tabs, and the title tightens its letter-spacing at narrow widths.
-- Global rhythm: section padding, header spacing, and the answer reveal's
-  small typographic ornaments were tightened so the page reads with a
-  steadier beat without changing the section order.
+- Removed redundant nav indicators: dropped the left folio stitch and the top reading trace, leaving the right margin thread as the single folio index.
+- Simplified the hero: dropped the inline press signature, inline press ribbon, marginalia aside, asterisk note, plate-foot label, and eyebrow stamp; the title now sits inside a clean spread with only FolioSeal, AnnotationRibbon, and the question.
+- Simplified the TitleToken: dropped the loop-circle SVG and its draw-on-select animation; the selection state now reads through a calm underline and a corner spark.
+- Added a single composed gesture: a horizontal press rule below the title that draws across the page on load and re-draws whenever the voice changes, replacing the previous elaborate flourish SVG. Colors track the active voice.
+- Refined title typography: slightly larger sizes, tighter measure, calmer letter-spacing across quiet / human / bold voices.
+- Tightened the hero body: dropped the two-column summary grid, kept a single-column summary with dropcap and one underline scrawl, and let the continue link carry its own hairline rule.
+- Removed unused CSS for dropped decoration (folio stitch, reading strip, hero marginalia, hero asterisk note, plate-foot, eyebrow stamp, spread rules, registration marks, dial controls, hero corners) and dead keyframes.
+- App.tsx: 1178 → 1049 lines; style.css: 15343 → 14029 lines; CSS bundle: 268 kB → 245 kB.

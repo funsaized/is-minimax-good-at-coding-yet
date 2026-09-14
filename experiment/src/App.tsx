@@ -10,7 +10,6 @@ import { InkDust } from './InkDust'
 import { InkTrail } from './InkTrail'
 import { DaySheet } from './DaySheet'
 import { MarginThread } from './MarginThread'
-import { FolioStitch } from './FolioStitch'
 import { Watermark } from './Watermark'
 import { FolioSeal } from './FolioSeal'
 import { TypePlate } from './TypePlate'
@@ -205,7 +204,6 @@ function TitleToken({
   onHover,
   onLeave,
   tokenRef,
-  circleKey,
 }: {
   id: WordId
   text: string
@@ -214,7 +212,6 @@ function TitleToken({
   onHover: (id: WordId) => void
   onLeave: () => void
   tokenRef: (node: HTMLSpanElement | null) => void
-  circleKey: number
 }) {
   return (
     <span
@@ -237,42 +234,19 @@ function TitleToken({
         }
       }}
     >
-      <svg className="title-token__circle" viewBox="0 0 90 40" aria-hidden="true" key={circleKey}>
-        <path
-          className="title-token__circle-stroke"
-          d="M45 8c14 0 36 4 36 12S61 32 45 32 9 28 9 20 31 8 45 8Z"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          pathLength="100"
-          strokeDasharray="100 100"
-        />
-        <path
-          className="title-token__circle-tail"
-          d="M14 11c-.4 1.6-1.2 3.6-.4 5.4"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1"
-          strokeLinecap="round"
-          pathLength="100"
-          strokeDasharray="100 100"
-        />
-        <circle className="title-token__circle-dot" cx="13" cy="16.5" r="1.4" fill="currentColor" />
-      </svg>
       <svg className="title-token__underline" viewBox="0 0 200 14" aria-hidden="true" preserveAspectRatio="none">
         <path
           className="title-token__underline-stroke"
           d="M2 9c20-4 40 4 60 0s40-6 60-2 40 8 60 2 18-2 18-2"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.4"
+          strokeWidth="1.6"
           strokeLinecap="round"
           pathLength="100"
           strokeDasharray="100 100"
         />
       </svg>
+      <span className="title-token__spark" aria-hidden="true" />
       <span className="title-token__set" aria-hidden="true" />
       {text}
     </span>
@@ -640,42 +614,6 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
   )
 }
 
-function ReadingStrip({ progress, activeSection }: { progress: number; activeSection: string }) {
-  const activeIndex = Math.max(0, READING_SECTIONS.findIndex(section => section.id === activeSection))
-  const active = READING_SECTIONS[activeIndex] ?? READING_SECTIONS[0]
-  const next = READING_SECTIONS[activeIndex + 1]
-  return (
-    <div className="reading-strip" aria-hidden="true">
-      <div className="reading-strip__inner">
-        <span className="reading-strip__cap">
-          <span className="reading-strip__cap-mark" />
-          reading trace
-        </span>
-        <span className="reading-strip__rail">
-          <span className="reading-strip__progress" style={{ transform: `scaleX(${progress})` }} />
-          <span className="reading-strip__bead" style={{ left: `${progress * 100}%` }}>
-            <span className="reading-strip__bead-dot" />
-          </span>
-          {next && (
-            <span className="reading-strip__next" style={{ left: `${progress * 100}%` }} key={next.id}>
-              <span className="reading-strip__next-line" />
-              <span className="reading-strip__next-label">
-                <span className="reading-strip__next-arrow" aria-hidden="true">↓</span>
-                <span className="reading-strip__next-folio">{next.index}</span>
-                <span className="reading-strip__next-name">{next.label}</span>
-              </span>
-            </span>
-          )}
-        </span>
-        <span className="reading-strip__now">
-          <span className="reading-strip__now-folio">{active.index}</span>
-          <span className="reading-strip__now-name">{active.label}</span>
-        </span>
-      </div>
-    </div>
-  )
-}
-
 const VOICE_LABEL: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
 const VOICE_SHORT: Record<VoiceId, string> = { quiet: 'A · quiet', human: 'B · human', bold: 'C · bold' }
 const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
@@ -755,7 +693,6 @@ export function App() {
   const [activeSection, setActiveSection] = useState('question')
   const [scrollProgress, setScrollProgress] = useState(0)
   const [announcement, setAnnouncement] = useState('')
-  const [circleKey, setCircleKey] = useState<Record<WordId, number>>({ m3: 0, good: 0, yet: 0 })
   const [marks, setMarks] = useState<ImpressionMark[]>([])
   const [setToday] = useState(() => formatSetToday())
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
@@ -837,7 +774,6 @@ export function App() {
     const note = NOTES.find(item => item.id === id)
     setSelectedWord(id)
     setAnnouncement(note ? `${note.label}: ${note.title}.` : '')
-    setCircleKey(keys => ({ ...keys, [id]: (keys[id] ?? 0) + 1 }))
     pushMark({ kind: 'word', word: id })
     if (focus) window.requestAnimationFrame(() => tokenRefs.current[id]?.focus())
   }
@@ -895,7 +831,6 @@ export function App() {
       <div className="app__pencil" aria-hidden="true" />
       <Watermark />
       <header className="site-header">
-        <ReadingStrip progress={scrollProgress} activeSection={activeSection} />
         <div className="site-header__row">
           <a className="brand" href="#question" aria-label="Return to the question">
             <LogoMark size={36} />
@@ -928,9 +863,6 @@ export function App() {
         <section className="hero" id="question" aria-labelledby="page-title">
           <div className="hero__eyebrow-row">
             <p className="eyebrow"><span className="eyebrow__line" />frontend experiment <em>read the question first</em></p>
-            <span className="hero__stamp" aria-hidden="true">
-              <PressStamp voice={voice} size={42} />
-            </span>
           </div>
 
           <div className="hero__spread">
@@ -950,61 +882,24 @@ export function App() {
                 <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
                   <span className="title__line">is Minimax </span>
                   <span className="title__line">
-                    <TitleToken id="m3" text="M3" selected={activeWord === 'm3'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.m3 = node }} circleKey={circleKey.m3} />{' '}
-                    <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} circleKey={circleKey.good} />
+                    <TitleToken id="m3" text="M3" selected={activeWord === 'm3'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.m3 = node }} />{' '}
+                    <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} />
                   </span>
-                  <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} circleKey={circleKey.yet} />?</span>
-                  <svg key={voice} className="hero__title-rule" viewBox="0 0 920 32" preserveAspectRatio="none" aria-hidden="true">
-                    <path
-                      className="hero__title-rule-stroke"
-                      d="M3 17c40-16 80 18 120-2s80-18 120-2 80 16 120-8 80-22 120 2 80 14 120-12 80-16 120 4 80 18 120-8 78-12 78-12"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      className="hero__title-rule-shadow"
-                      d="M3 22c40-16 80 18 120-2s80-18 120-2 80 16 120-8 80-22 120 2 80 14 120-12 80-16 120 4 80 18 120-8 78-12 78-12"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="0.7"
-                      strokeLinecap="round"
-                      opacity="0.32"
-                    />
-                    <path
-                      className="hero__title-rule-flourish"
-                      d="M903 16c-3 7-9 13-18 11"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      className="hero__title-rule-flourish hero__title-rule-flourish--b"
-                      d="M900 22c-3 4-7 6-11 4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                    />
-                    <circle className="hero__title-rule-end" cx="916" cy="16" r="3.2" fill="currentColor" />
-                    <circle className="hero__title-rule-end-ring" cx="916" cy="16" r="6.2" fill="none" stroke="currentColor" strokeWidth="0.6" />
-                    <circle className="hero__title-rule-end-ring" cx="916" cy="16" r="9" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.6" />
-                    <circle className="hero__title-rule-spark" cx="904" cy="6" r="1.2" fill="currentColor" />
-                    <circle className="hero__title-rule-spark hero__title-rule-spark--b" cx="892" cy="24" r="0.8" fill="currentColor" />
-                    <circle className="hero__title-rule-spark hero__title-rule-spark--c" cx="908" cy="27" r="0.5" fill="currentColor" />
-                    <circle className="hero__title-rule-spark" cx="14" cy="9" r="0.8" fill="currentColor" opacity="0.6" />
-                  </svg>
+                  <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} />?</span>
                 </h1>
-                <span className="hero__plate-foot" aria-hidden="true">
-                  <span className="hero__plate-foot-line" />
-                  <span className="hero__plate-foot-tag">
-                    <span className="hero__plate-foot-dot" />
-                    a single line, set in three voices
-                  </span>
-                  <span className="hero__plate-foot-line" />
-                </span>
+                <svg key={voice} className="hero__compose-rule" viewBox="0 0 1000 16" preserveAspectRatio="none" aria-hidden="true">
+                  <path
+                    className="hero__compose-rule-stroke"
+                    d="M2 9c40-10 80 8 120 0s80-10 120 0 80 10 120-4 80-10 120 0 80 8 120-4 80-8 120 2 80 8 120-6 78-2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                  />
+                  <circle className="hero__compose-rule-bead" cx="996" cy="8" r="2.2" fill="currentColor" />
+                  <circle className="hero__compose-rule-bead hero__compose-rule-bead--ring" cx="996" cy="8" r="5.4" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                  <circle className="hero__compose-rule-bead hero__compose-rule-bead--ring hero__compose-rule-bead--ring-2" cx="996" cy="8" r="8.2" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.5" />
+                </svg>
               </div>
               <AnnotationRibbon
                 active={selectedWord}
@@ -1045,45 +940,22 @@ export function App() {
             </button>
           </div>
 
-          <PressSignature folio="i" voice={voice} word={activeWord} setToday={setToday} variant="inline" />
-
-          <PressRibbon voice={voice} setToday={setToday} />
-
           <div className="hero__body">
-            <div className="hero__body-grid">
-              <p className="hero__summary">
-                <span className="hero__dropcap" aria-hidden="true">A</span>
-                small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em>
-                <svg className="hero__summary-scrawl" viewBox="0 0 220 14" aria-hidden="true" preserveAspectRatio="none">
-                  <path
-                    d="M2 9c12-7 24 4 36-2s24-7 36-2 24 6 36-1 24-7 36-1 24 4 36-1 24-6 36-1"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.1"
-                    strokeLinecap="round"
-                    pathLength="100"
-                  />
-                  <circle cx="216" cy="7" r="1.4" fill="currentColor" />
-                </svg>
-              </p>
-              <aside className="hero__marginalia" aria-label="Editor's margin note">
-                <span className="hero__marginalia-thread" aria-hidden="true">
-                  <svg viewBox="0 0 6 120" preserveAspectRatio="none">
-                    <path d="M3 0c0 14-3 24 1 38s-2 26 1 42s-2 22 0 38" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" />
-                    <circle cx="3" cy="116" r="1.2" fill="currentColor" />
-                  </svg>
-                </span>
-                <p className="hero__marginalia-note">
-                  <span className="hero__marginalia-mark" aria-hidden="true">※</span>
-                  <em>in the margin</em><br />
-                  The page you are reading was set by hand. Every word here earned its place; some have been replaced by quieter ones, and some have been circled twice.
-                </p>
-              </aside>
-            </div>
-            <div className="hero__note">
-              <span className="hero__note-mark" aria-hidden="true">*</span>
-              <p><strong>Good front-end work</strong> is less about showing what can be made than noticing what should remain quiet.</p>
-            </div>
+            <p className="hero__summary">
+              <span className="hero__dropcap" aria-hidden="true">A</span>
+              small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em>
+              <svg className="hero__summary-scrawl" viewBox="0 0 220 14" aria-hidden="true" preserveAspectRatio="none">
+                <path
+                  d="M2 9c12-7 24 4 36-2s24-7 36-2 24 6 36-1 24-7 36-1 24 4 36-1 24-6 36-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.1"
+                  strokeLinecap="round"
+                  pathLength="100"
+                />
+                <circle cx="216" cy="7" r="1.4" fill="currentColor" />
+              </svg>
+            </p>
             <a className="hero__continue" href="#press-room" aria-label="Continue to the press bay">
               <span className="hero__continue-imprint">composed by hand <em>·</em> for a careful reader</span>
               <span className="hero__continue-arrow">
@@ -1169,7 +1041,6 @@ export function App() {
       </nav>
 
       <MarginThread activeId={activeSection} progress={scrollProgress} voice={voice} />
-      <FolioStitch activeId={activeSection} voice={voice} word={activeWord} />
 
       <ReadingFolio activeId={activeSection} voice={voice} word={activeWord} answerOpen={answerOpen} setToday={setToday} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
