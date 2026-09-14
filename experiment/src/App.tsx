@@ -17,6 +17,7 @@ import { PressSignature } from './PressSignature'
 import { AnnotationRibbon } from './AnnotationRibbon'
 import { PressRibbon } from './PressRibbon'
 import { SecondReading } from './SecondReading'
+import { ReadingTrace } from './ReadingTrace'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -576,32 +577,40 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
               <circle cx="16" cy="32.4" r=".65" fill="currentColor" />
             </svg>
           </span>
-          <svg className="colophon__signature-mark" viewBox="0 0 240 36">
+          <svg className="colophon__signature-mark" viewBox="0 0 320 36">
             <path
               className="colophon__signature-wave"
-              d="M2 22c6-8 14-2 22-8s12-12 24-6 14 10 24 4 14-12 26-6 16 12 28 4 14-14 26-6 18 12 30 4 16-14 28-4 18 12 26 2"
+              d="M2 19c24-2 48 4 72 0s48-6 72-1 48 5 72-2 48-5 72 0"
               fill="none"
               stroke="currentColor"
               strokeWidth="1"
               strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity=".55"
+              opacity=".5"
             />
-            <path
-              className="colophon__signature-wave colophon__signature-wave--2"
-              d="M2 26c8-5 18 1 28-5s14-10 26-2 16 8 28 0 16-8 28 0 18 4 30-2 18-6 30 2 18 6 26-2 22-8 22 4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth=".7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity=".3"
-            />
-            <circle cx="234" cy="20" r="2.4" fill="currentColor" opacity=".7" />
-            <circle cx="234" cy="20" r="4.8" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".5" />
-            <circle cx="234" cy="20" r="7.2" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".3" />
-            <path className="colophon__signature-tick" d="M226 28l4-2 4 2" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".55" />
-            <path className="colophon__signature-tick colophon__signature-tick--a" d="M10 30l4-2 4 2" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".4" />
+            <g className="colophon__signature-flourish">
+              <path
+                d="M296 19c4-2 8 0 12 2s8 1 10-3"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".9"
+                strokeLinecap="round"
+                opacity=".7"
+              />
+              <circle cx="294" cy="19" r="1.6" fill="currentColor" opacity=".75" />
+              <circle cx="294" cy="19" r="3.4" fill="none" stroke="currentColor" strokeWidth=".35" opacity=".45" />
+              <circle cx="294" cy="19" r="5.6" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".25" />
+            </g>
+            <g className="colophon__signature-tail">
+              <path
+                d="M2 25c12-1 24 2 36 0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".6"
+                strokeLinecap="round"
+                opacity=".35"
+              />
+              <circle cx="2" cy="25" r=".9" fill="currentColor" opacity=".55" />
+            </g>
           </svg>
           <span className="colophon__signature-tag">composed by m³ · for the reader · {setToday}</span>
         </div>
@@ -857,6 +866,7 @@ export function App() {
           </span>
         </div>
         <HeaderRuler />
+        <ReadingTrace className="reading-trace--in-header" />
       </header>
 
       <div className="page">
@@ -901,15 +911,18 @@ export function App() {
                   <circle className="hero__compose-rule-bead hero__compose-rule-bead--ring hero__compose-rule-bead--ring-2" cx="996" cy="8" r="8.2" fill="none" stroke="currentColor" strokeWidth="0.3" opacity="0.5" />
                 </svg>
               </div>
-              <AnnotationRibbon
-                active={selectedWord}
-                hovered={hoveredWord}
-                voice={voice}
-                onSelect={id => selectWord(id)}
-                onHover={setHoveredWord}
-                onLeave={() => setHoveredWord(null)}
-              />
             </div>
+          </div>
+
+          <div className="hero__marks">
+            <AnnotationRibbon
+              active={selectedWord}
+              hovered={hoveredWord}
+              voice={voice}
+              onSelect={id => selectWord(id)}
+              onHover={setHoveredWord}
+              onLeave={() => setHoveredWord(null)}
+            />
           </div>
 
           <div className="hero__voice-row">

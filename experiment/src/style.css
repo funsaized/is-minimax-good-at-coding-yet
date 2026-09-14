@@ -2196,7 +2196,7 @@ button {
 .hero__plate {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(220px, 22vw, 320px);
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(24px, 3.2vw, 48px);
   align-items: center;
   width: 100%;
@@ -2221,20 +2221,87 @@ button {
   }
 }
 
-/* when the ribbon is alongside, the title is constrained, so
-   scale it down a touch so the bold voice keeps its measure. */
+/* the ribbon now sits below the title in its own row, so the title
+   can claim the full measure of the spread. */
 @media (min-width: 981px) {
   .hero__plate .hero__title {
-    max-width: 960px;
-    font-size: clamp(3.2rem, 7.4vw, 8.8rem);
+    max-width: 1180px;
+    font-size: clamp(3.8rem, 9.6vw, 11.4rem);
   }
 
   .hero__plate .hero__title--quiet {
-    font-size: clamp(3.1rem, 6.8vw, 8.2rem);
+    font-size: clamp(3.7rem, 9.2vw, 10.8rem);
   }
 
   .hero__plate .hero__title--bold {
-    font-size: clamp(3.4rem, 8vw, 9.6rem);
+    font-size: clamp(4rem, 10.4vw, 12.4rem);
+  }
+}
+
+/* the marginalia now lives in its own band directly under the title */
+.hero__marks {
+  position: relative;
+  margin-top: clamp(28px, 3.4vw, 44px);
+  padding-top: clamp(20px, 2.4vw, 30px);
+  border-top: 1px solid var(--line-soft);
+}
+
+.hero__marks .annotation-ribbon {
+  max-width: 1080px;
+  margin: 0 auto;
+  width: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 2.2vw, 28px);
+  align-self: stretch;
+}
+
+.hero__marks .annotation-ribbon__head,
+.hero__marks .annotation-ribbon__cap,
+.hero__marks .annotation-ribbon__foot,
+.hero__marks .annotation-ribbon__connector-slot {
+  display: none;
+}
+
+.hero__marks .annotation-ribbon__list {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+  padding: 0;
+  border: 0;
+}
+
+.hero__marks .annotation-ribbon__item {
+  display: contents;
+}
+
+.hero__marks .annotation-ribbon__card {
+  width: 100%;
+  padding: clamp(14px, 1.6vw, 20px);
+  border-top: 1px solid var(--line);
+  border-left: 0;
+  background:
+    linear-gradient(180deg, rgba(28, 36, 52, .24), rgba(14, 20, 32, .38));
+  box-shadow:
+    inset 0 0 0 1px rgba(146, 186, 255, .03),
+    0 16px 40px -22px rgba(0, 0, 0, .5);
+}
+
+.hero__marks .annotation-ribbon__card:hover,
+.hero__marks .annotation-ribbon__card:focus-visible {
+  background:
+    linear-gradient(180deg, rgba(28, 36, 52, .36), rgba(14, 20, 32, .5));
+  border-top-color: currentColor;
+}
+
+@media (max-width: 880px) {
+  .hero__marks .annotation-ribbon__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero__marks .annotation-ribbon__card {
+    border-top: 0;
+    border-left: 1px solid var(--line);
   }
 }
 
@@ -6292,27 +6359,42 @@ button {
 }
 
 .colophon__signature-mark {
-  width: clamp(180px, 28vw, 280px);
+  width: clamp(240px, 34vw, 360px);
   height: auto;
   color: var(--coral);
-  opacity: .6;
+  opacity: .65;
   animation: colophonTrace 1.4s var(--ease-out) .2s backwards;
 }
 
 .colophon__signature-wave {
-  stroke-dasharray: 600 600;
-  stroke-dashoffset: 600;
+  stroke-dasharray: 380 380;
+  stroke-dashoffset: 380;
   animation: signatureDraw 1.7s var(--ease-out) .4s forwards;
 }
 
-.colophon__signature-wave--2 {
-  stroke-dasharray: 600 600;
-  stroke-dashoffset: 600;
-  animation: signatureDraw 1.9s var(--ease-out) .7s forwards;
+.colophon__signature-flourish {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: translateX(-6px);
+  animation: signatureFlourish 1.2s var(--ease-out) 1.6s forwards;
+}
+
+.colophon__signature-tail {
+  opacity: 0;
+  animation: signatureTail .9s var(--ease-out) .25s forwards;
 }
 
 @keyframes signatureDraw {
   to { stroke-dashoffset: 0; }
+}
+
+@keyframes signatureFlourish {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes signatureTail {
+  to { opacity: 1; }
 }
 
 @keyframes colophonTrace {
@@ -6321,7 +6403,7 @@ button {
     transform: translateY(8px);
   }
   to {
-    opacity: .6;
+    opacity: .65;
     transform: translateY(0);
   }
 }
@@ -6329,10 +6411,6 @@ button {
 .colophon__signature:hover .colophon__signature-mark {
   opacity: .9;
   color: var(--acid);
-}
-
-.colophon__signature:hover .colophon__signature-wave--2 {
-  animation-duration: 2.4s;
 }
 
 .colophon__signature-tag {
@@ -11671,7 +11749,7 @@ body {
 }
 
 .colophon__signature-mark {
-  width: clamp(220px, 32vw, 340px);
+  width: clamp(280px, 38vw, 400px);
 }
 
 .note-card {
@@ -14023,6 +14101,255 @@ body {
     flex-direction: column;
     align-items: flex-start;
     gap: 14px;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+READING TRACE · a delicate ink scroll-progress that lives as
+the bottom row of the site header. It marks the reader's place
+in the page without competing with the margin thread on the
+right; it is horizontal, restrained, and turns the scroll into
+a small act of typesetting.
+──────────────────────────────────────────────────────────── */
+
+.reading-trace {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(14px, 1.8vw, 22px);
+  padding: clamp(8px, .9vw, 11px) clamp(22px, 4vw, 96px);
+  border-top: 1px solid var(--line-soft);
+  color: var(--paper);
+  opacity: 0;
+  animation: readingTraceIn .8s var(--ease-out) .25s forwards;
+}
+
+.reading-trace__rule {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, var(--line) 0%, var(--line-soft) 100%);
+  border-radius: 1px;
+  overflow: hidden;
+  order: 2;
+}
+
+.reading-trace__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(to right, var(--acid), var(--coral));
+  width: 0;
+  transition: width .25s linear;
+  border-radius: 1px;
+}
+
+.app--voice-quiet .reading-trace__fill {
+  background: linear-gradient(to right, var(--blue), var(--acid));
+}
+
+.app--voice-bold .reading-trace__fill {
+  background: linear-gradient(to right, var(--acid), var(--coral));
+}
+
+.reading-trace__dots {
+  position: absolute;
+  inset: -3px 0;
+  pointer-events: none;
+}
+
+.reading-trace__dot {
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--night);
+  border: 1px solid var(--muted);
+  transform: translate(-50%, -50%);
+  transition: background .45s var(--ease), border-color .45s var(--ease), transform .55s var(--ease-spring), box-shadow .55s var(--ease);
+}
+
+.reading-trace__dot.is-past {
+  border-color: var(--coral);
+  background: rgba(240, 110, 91, .15);
+}
+
+.reading-trace__dot.is-active {
+  border-color: var(--coral);
+  background: var(--coral);
+  transform: translate(-50%, -50%) scale(1.45);
+  box-shadow: 0 0 0 4px rgba(240, 110, 91, .15), 0 0 14px rgba(240, 110, 91, .4);
+}
+
+.app--voice-quiet .reading-trace__dot.is-past,
+.app--voice-quiet .reading-trace__dot.is-active {
+  border-color: var(--blue);
+}
+
+.app--voice-quiet .reading-trace__dot.is-active {
+  background: var(--blue);
+  box-shadow: 0 0 0 4px rgba(155, 188, 255, .15), 0 0 14px rgba(155, 188, 255, .4);
+}
+
+.app--voice-bold .reading-trace__dot.is-past,
+.app--voice-bold .reading-trace__dot.is-active {
+  border-color: var(--acid);
+}
+
+.app--voice-bold .reading-trace__dot.is-active {
+  background: var(--acid);
+  box-shadow: 0 0 0 4px rgba(216, 240, 106, .15), 0 0 14px rgba(216, 240, 106, .4);
+}
+
+.reading-trace__ink {
+  display: none;
+  width: 110px;
+  height: 14px;
+  color: var(--coral);
+  order: 1;
+}
+
+.app--voice-quiet .reading-trace__ink { color: var(--blue); }
+.app--voice-bold .reading-trace__ink { color: var(--acid); }
+
+.reading-trace__ink-stroke {
+  stroke-dasharray: 220 220;
+  stroke-dashoffset: 220;
+  animation: readingTraceInkDraw 1.6s var(--ease-out) .9s forwards;
+}
+
+.reading-trace__ink-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: readingTraceInkBead .55s var(--ease-spring) 2.4s forwards;
+}
+
+@keyframes readingTraceInkDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes readingTraceInkBead {
+  from { opacity: 0; transform: scale(.3); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.reading-trace__readout {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: clamp(9px, .82vw, 11px);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  order: 3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reading-trace__readout-folio {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: var(--coral);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
+  flex: 0 0 auto;
+  transition: color .4s var(--ease);
+}
+
+.app--voice-quiet .reading-trace__readout-folio { color: var(--blue); }
+.app--voice-bold .reading-trace__readout-folio { color: var(--acid); }
+
+.reading-trace__readout-name {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .9vw, 13px);
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 400;
+}
+
+.reading-trace__readout-hint {
+  display: none;
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .9vw, 13px);
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 400;
+  max-width: 30ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes readingTraceIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (min-width: 880px) {
+  .reading-trace__ink {
+    display: inline-block;
+  }
+
+  .reading-trace__readout-hint {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-trace {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  .reading-trace__fill {
+    transition: none !important;
+  }
+
+  .reading-trace__ink-stroke {
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+
+  .reading-trace__ink-bead {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .reading-trace {
+    padding: 8px 14px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .reading-trace__rule {
+    order: 3;
+    grid-column: 1 / -1;
+  }
+
+  .reading-trace__ink {
+    display: none;
+  }
+
+  .reading-trace__readout-name {
+    display: none;
   }
 }
 

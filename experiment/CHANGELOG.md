@@ -1,12 +1,19 @@
-# Iteration 231
+# Changelog
 
-Stripped the chrome, gave the title the room: hero now reads as one composed broadside.
+## Iteration 232
 
-- Removed redundant nav indicators: dropped the left folio stitch and the top reading trace, leaving the right margin thread as the single folio index.
-- Simplified the hero: dropped the inline press signature, inline press ribbon, marginalia aside, asterisk note, plate-foot label, and eyebrow stamp; the title now sits inside a clean spread with only FolioSeal, AnnotationRibbon, and the question.
-- Simplified the TitleToken: dropped the loop-circle SVG and its draw-on-select animation; the selection state now reads through a calm underline and a corner spark.
-- Added a single composed gesture: a horizontal press rule below the title that draws across the page on load and re-draws whenever the voice changes, replacing the previous elaborate flourish SVG. Colors track the active voice.
-- Refined title typography: slightly larger sizes, tighter measure, calmer letter-spacing across quiet / human / bold voices.
-- Tightened the hero body: dropped the two-column summary grid, kept a single-column summary with dropcap and one underline scrawl, and let the continue link carry its own hairline rule.
-- Removed unused CSS for dropped decoration (folio stitch, reading strip, hero marginalia, hero asterisk note, plate-foot, eyebrow stamp, spread rules, registration marks, dial controls, hero corners) and dead keyframes.
-- App.tsx: 1178 → 1049 lines; style.css: 15343 → 14029 lines; CSS bundle: 268 kB → 245 kB.
+Marks move beneath the title; a Reading Trace threads the header; the colophon signs once.
+
+- Lifted the AnnotationRibbon out of the title spread into its own band so
+  the question claims the full measure of the hero; the marks below now sit
+  as a three-up grid in a single quiet row.
+- Tightened the colophon signature: replaced the two stacked waves with a
+  single drawn line, a small flourish on the right, and a tail on the left.
+  The animation now feels like signing once, not twice.
+- Added ReadingTrace: a horizontal ink scroll-progress that sits as the
+  bottom row of the site header, showing the current folio, section name,
+  and a one-line hint, with a node for each section along the rule.
+- Scaled the hero title up where the ribbon used to constrain it, and gave
+  the marks below the title their own subtle border so they read as a
+  single composed band with the question above.
+- All new motion respects `prefers-reduced-motion`.
