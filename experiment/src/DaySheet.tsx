@@ -135,21 +135,11 @@ function ClockFace({ now }: { now: Date }) {
 
 export function DaySheet({ voice, word, marks, setToday }: DaySheetProps) {
   const [now, setNow] = useState(() => new Date())
-  const [quoteIndex, setQuoteIndex] = useState(0)
 
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduceMotion) return
     const timer = window.setInterval(() => setNow(new Date()), 1000)
-    return () => window.clearInterval(timer)
-  }, [])
-
-  useEffect(() => {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduceMotion) return
-    const timer = window.setInterval(() => {
-      setQuoteIndex(previous => (previous + 1) % PULL_QUOTES.length)
-    }, 7200)
     return () => window.clearInterval(timer)
   }, [])
 
@@ -159,7 +149,7 @@ export function DaySheet({ voice, word, marks, setToday }: DaySheetProps) {
   const todayIndex = now.getDay()
   const longForm = longDate(now)
   const year = now.getFullYear()
-  const quote = PULL_QUOTES[quoteIndex]
+  const quote = PULL_QUOTES[0]
   const wordColor: CSSProperties = { '--word-ink': WORD_INK[word] } as CSSProperties
 
   return (
@@ -291,7 +281,7 @@ export function DaySheet({ voice, word, marks, setToday }: DaySheetProps) {
             <span className="day-sheet__quote-bar day-sheet__quote-bar--a" aria-hidden="true" />
             <span className="day-sheet__quote-bar day-sheet__quote-bar--b" aria-hidden="true" />
             <span className="day-sheet__quote-quote" aria-hidden="true">“</span>
-            <blockquote className="day-sheet__quote-body" key={quoteIndex}>
+            <blockquote className="day-sheet__quote-body">
               <p className="day-sheet__quote-line">{quote.line}</p>
               <span className="day-sheet__quote-note">{quote.note}</span>
             </blockquote>
@@ -299,11 +289,6 @@ export function DaySheet({ voice, word, marks, setToday }: DaySheetProps) {
               <span aria-hidden="true">※</span>
               {quote.source}
             </figcaption>
-            <span className="day-sheet__quote-rounds" aria-hidden="true">
-              {PULL_QUOTES.map((_, index) => (
-                <span key={index} className={`day-sheet__quote-round ${index === quoteIndex ? 'is-on' : ''}`} />
-              ))}
-            </span>
           </figure>
         </div>
 

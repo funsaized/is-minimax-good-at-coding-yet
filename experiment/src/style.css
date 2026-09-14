@@ -2245,6 +2245,108 @@ button {
   padding: clamp(40px, 5vw, 80px) 0 clamp(40px, 5vw, 72px);
 }
 
+/* ────────────────────────────────────
+   HERO EPIGRAPH · a delicate editorial
+   tone-setter above the folio mark. Two
+   small ornament stars flank a single
+   italic line that names the page's
+   matter. It is the page's own preface.
+   ──────────────────────────────────── */
+
+.hero__epigraph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: 0 auto clamp(14px, 1.6vw, 22px);
+  padding: 0;
+  max-width: 720px;
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12.5px, 1.15vw, 15px);
+  letter-spacing: -.005em;
+  line-height: 1.35;
+  text-align: center;
+  opacity: 0;
+  animation: traceFade .7s var(--ease-out) .12s forwards;
+}
+
+.hero__epigraph em {
+  font-style: italic;
+  color: var(--paper);
+  text-wrap: balance;
+}
+
+.hero__epigraph-mark {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  color: var(--coral);
+  opacity: .8;
+  transition: color .5s var(--ease), transform .6s var(--ease-spring);
+  animation: heroEpigraphMarkPulse 4s var(--ease) 1.2s infinite;
+  transform-origin: center;
+}
+
+.hero__epigraph-mark--alt {
+  animation-delay: 1.6s;
+}
+
+.app--voice-quiet .hero__epigraph-mark { color: var(--blue); }
+.app--voice-human .hero__epigraph-mark { color: var(--coral); }
+.app--voice-bold .hero__epigraph-mark { color: var(--acid); }
+
+.hero__epigraph-rule {
+  display: block;
+  flex: 0 0 auto;
+  width: clamp(28px, 5vw, 56px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line));
+  transform-origin: left center;
+  animation: heroEpigraphRuleDraw .9s var(--ease-out) .35s backwards;
+}
+
+.hero__epigraph-rule--end {
+  background: linear-gradient(to left, transparent, var(--line));
+  transform-origin: right center;
+}
+
+@keyframes heroEpigraphMarkPulse {
+  0%, 100% { transform: rotate(0deg) scale(1); opacity: .8; }
+  50% { transform: rotate(18deg) scale(1.06); opacity: 1; }
+}
+
+@keyframes heroEpigraphRuleDraw {
+  0% { transform: scaleX(0); opacity: 0; }
+  100% { transform: scaleX(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__epigraph-mark,
+  .hero__epigraph-rule {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 540px) {
+  .hero__epigraph {
+    font-size: 12px;
+    gap: 8px;
+  }
+
+  .hero__epigraph-mark {
+    width: 11px;
+    height: 11px;
+  }
+
+  .hero__epigraph-rule {
+    width: clamp(14px, 5vw, 28px);
+  }
+}
+
 .hero__eyebrow-row {
   display: flex;
   align-items: center;
@@ -2536,16 +2638,16 @@ button {
   display: block;
   padding-left: .04em;
   text-align: center;
-  animation: lineIn .55s var(--ease-out) backwards;
+  animation: lineIn .65s var(--ease-out) backwards;
 }
 
 .hero__title .title__line:last-child {
   padding-left: 0;
 }
 
-.hero__title .title__line:nth-child(1) { animation-delay: .04s; }
-.hero__title .title__line:nth-child(2) { animation-delay: .12s; }
-.hero__title .title__line:nth-child(3) { animation-delay: .2s; }
+.hero__title .title__line:nth-child(1) { animation-delay: .22s; }
+.hero__title .title__line:nth-child(2) { animation-delay: .34s; }
+.hero__title .title__line:nth-child(3) { animation-delay: .46s; }
 
 /* ────────────────────────────────────
    HERO FLOURISH · a single signature
@@ -13661,27 +13763,11 @@ body {
 }
 
 .day-sheet__quote-rounds {
-  position: absolute;
-  right: clamp(18px, 2.4vw, 28px);
-  bottom: clamp(14px, 1.8vw, 22px);
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+  display: none;
 }
 
 .day-sheet__quote-round {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--muted);
-  opacity: .3;
-  transition: opacity .35s var(--ease), background .35s var(--ease), transform .35s var(--ease);
-}
-
-.day-sheet__quote-round.is-on {
-  background: var(--acid);
-  opacity: 1;
-  transform: scale(1.2);
+  display: none;
 }
 
 @keyframes daySheetQuoteIn {

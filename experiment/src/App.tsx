@@ -972,6 +972,20 @@ export function App() {
 
       <div className="page">
         <section className="hero" id="question" aria-labelledby="page-title">
+          <span className="hero__epigraph" aria-label="Editorial epigraph">
+            <svg className="hero__epigraph-mark" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3l1.6 5.2 5.2 1.6-5.2 1.6L12 16.6l-1.6-5.2L5.2 9.8l5.2-1.6z" fill="currentColor" opacity=".85" />
+              <circle cx="12" cy="9.8" r="1.4" fill="var(--night)" />
+            </svg>
+            <span className="hero__epigraph-rule" aria-hidden="true" />
+            <em>on attention, ornament, &amp; the matter of good front-end work</em>
+            <span className="hero__epigraph-rule hero__epigraph-rule--end" aria-hidden="true" />
+            <svg className="hero__epigraph-mark hero__epigraph-mark--alt" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3l1.6 5.2 5.2 1.6-5.2 1.6L12 16.6l-1.6-5.2L5.2 9.8l5.2-1.6z" fill="currentColor" opacity=".85" />
+              <circle cx="12" cy="9.8" r="1.4" fill="var(--night)" />
+            </svg>
+          </span>
+
           <FolioMark
             folio="i"
             setToday={setToday}

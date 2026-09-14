@@ -1,53 +1,27 @@
-# Iteration 239 — the quiet folio
+# Changelog
 
-A confident, single broadside replaces the busy letterpress chrome. The hero
-reads as one composed question; the marks beneath it carry the page.
+An editorial preface above the title and two quiet folds of fake "live" motion back to single statements.
 
-## What changed
+## Iteration 240 — the page speaks its own preface
 
-- **Consolidated the hero.** The eyebrow row, plate stamp, lead-in tag,
-  four corner crops, the large press mark stamp, and the publication-mark
-  imprint were removed. In their place sits a single folio mark above the
-  spread and one short pull-quote beneath the title.
-- **Added a signature flourish.** A calligraphic SVG sweeps beneath the
-  title, threads the three marked words (M3, good at, yet?), and resolves
-  into small labelled nodes. The line draws itself on arrival and holds
-  quiet afterwards.
-- **Replaced the title-token halo with a hand-drawn underline.** Each
-  marked word now sits inside its own composition; on hover, focus, or
-  selection a wavy stroke traces itself beneath the type and finishes with
-  a small ink tail.
-- **Refined the voice selector.** The busy three-tab strip became a single
-  editorial line — typesetter's voice, three settings — with a bullet,
-  letter, name, and face for each voice.
-- **Made the title larger and the body more readable.** Title font-size
-  climbs to clamp(5rem, 14.4vw, 17rem) on the broadside and small-caps the
-  folio line. The hero summary keeps its dropcap but loses the redundant
-  scrawl under it.
-- **Improved responsive behaviour.** The folio mark wraps gracefully on
-  narrow viewports; the voice selector collapses its face labels and the
-  note-link stacks beneath. Title remains readable from 320px upward.
+A small editorial preface now sits above the folio mark on the title page, and two pieces of fake "live" motion have been folded back to a single quiet statement.
 
-## Files touched
+### What changed
 
-- `src/App.tsx` — hero restructured; new imports for `Flourish`,
-  `FolioMark`, `VoiceSelector`. Removed `PressMark` and `PublicationMark`
-  imports.
-- `src/Flourish.tsx` — new signature SVG component.
-- `src/FolioMark.tsx` — new single-line folio indicator.
-- `src/VoiceSelector.tsx` — new editorial voice line.
-- `src/style.css` — replaced `.hero__compose-rule` block with new
-  `.hero__flourish`, `.hero__pull`, `.hero__folio-mark`, `.hero__chrome`,
-  `.hero__note-link`, and `.hero__voice-line` styles; tightened title
-  typography and the responsive title overrides; refreshed `.title-token`
-  to use a hand-drawn underline rather than a coloured border + halo.
+- Added a delicate editorial epigraph above the title — a single italic line flanked by two small ornament stars, drawing itself in once on arrival. It names the page's matter: *on attention, ornament, and the matter of good front-end work*. The stars rotate slowly between them, a quiet gesture rather than a banner.
+- Folded the rotating quote in the day sheet into a single static line. The page's almanac now reads as one almanac, not a slideshow. The indicator dots that suggested a carousel are gone.
+- Folded the rotating watermark fragment into one static line. The watermark now carries a single phrase (*a small, stubborn question · composed, not generated*) instead of cycling through seven.
+- Slowed the title's three lines into a more confident entrance — each line settles a beat later, giving the question room to arrive as one thought rather than three frames.
 
-## Behaviour preserved
+### What stayed
 
-- Document title unchanged.
-- Title text unchanged.
-- Three voices, three marked words, and the editor's note button all
-  behave as before.
-- Keyboard navigation still cycles voices with Shift+V.
-- Reduced-motion users see the flourish and underline in their final
-  state without animation.
+- The title, the title tokens, the voice selector, the answer button, the press bed, the day sheet clock, the impression ribbon, the marginalia cards, the specimen plate, the answer reveal, the press signature, the colophon, the reading folio — all unchanged in structure and content.
+- The keyboard contract is unchanged: `shift + v` still cycles voice, `tab` still walks through the title tokens, `enter` and `space` still select.
+- `prefers-reduced-motion` still turns off every animation this iteration added.
+
+### Files touched
+
+- `src/App.tsx` — added the `hero__epigraph` element above `FolioMark`.
+- `src/DaySheet.tsx` — removed the quote rotation interval, the `quoteIndex` state, the `key` on the blockquote, and the carousel indicator dots.
+- `src/Watermark.tsx` — removed the rotating interval and the `FRAGMENTS` array; kept a single static phrase.
+- `src/style.css` — added `.hero__epigraph` styles and keyframes; removed the obsolete `.day-sheet__quote-rounds` and `.day-sheet__quote-round` rules; adjusted the title line entrance timings.

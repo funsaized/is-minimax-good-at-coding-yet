@@ -1,27 +1,9 @@
 import { useEffect, useState } from 'react'
 
-const FRAGMENTS = [
-  'the answer, for now',
-  'set by hand, on a quiet day',
-  'the editor in passing',
-  '— to be folded back —',
-  'a small, stubborn question',
-  'read it once, then again',
-  'composed, not generated',
-]
+const FRAGMENT = 'a small, stubborn question · composed, not generated'
 
 export function Watermark() {
-  const [index, setIndex] = useState(0)
   const [scrolled, setScrolled] = useState(0)
-
-  useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) return
-    const interval = window.setInterval(() => {
-      setIndex(prev => (prev + 1) % FRAGMENTS.length)
-    }, 9000)
-    return () => window.clearInterval(interval)
-  }, [])
 
   useEffect(() => {
     const onScroll = () => {
@@ -97,9 +79,9 @@ export function Watermark() {
         <circle cx="210" cy="210" r="2.4" fill="currentColor" opacity=".7" />
         <circle cx="210" cy="210" r="5" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".5" />
       </svg>
-      <span className="watermark__line" key={index}>
+      <span className="watermark__line">
         <span className="watermark__line-rule" aria-hidden="true" />
-        <span className="watermark__line-text">{FRAGMENTS[index]}</span>
+        <span className="watermark__line-text">{FRAGMENT}</span>
         <span className="watermark__line-rule" aria-hidden="true" />
       </span>
     </div>
