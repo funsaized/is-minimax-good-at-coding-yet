@@ -11,6 +11,7 @@ import { PressRoom } from './PressRoom'
 import { InkDust } from './InkDust'
 import { InkTrail } from './InkTrail'
 import { DaySheet } from './DaySheet'
+import { MarginThread } from './MarginThread'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -38,7 +39,6 @@ const READING_SECTIONS: { id: string; index: string; label: string }[] = [
   { id: 'proof', index: 'iv', label: 'proof' },
   { id: 'pressings', index: 'v', label: 'pressings' },
   { id: 'notes', index: 'vi', label: 'marginalia' },
-  { id: 'voices', index: 'vii', label: 'voices' },
   { id: 'answer', index: 'viii', label: 'answer' },
 ]
 
@@ -210,7 +210,6 @@ function PressFolio({ section }: { section: string }) {
     proof: { folio: 'iv', mark: 'proof' },
     pressings: { folio: 'v', mark: 'specimen' },
     notes: { folio: 'vi', mark: 'marginalia' },
-    voices: { folio: 'vii', mark: 'voices' },
     answer: { folio: 'viii', mark: 'answer' },
   }
   const entry = map[section] ?? map.question
@@ -505,69 +504,6 @@ function NotesSection({ selected, onSelect }: { selected: WordId; onSelect: (id:
   )
 }
 
-function VoicesSection({ voice, onVoice, voiceRefs }: {
-  voice: VoiceId
-  onVoice: (id: VoiceId) => void
-  voiceRefs: React.MutableRefObject<Partial<Record<VoiceId, HTMLButtonElement | null>>>
-}) {
-  const selectByKey = (event: ReactKeyboardEvent<HTMLButtonElement>, id: VoiceId) => {
-    const index = VOICES.findIndex(item => item.id === id)
-    let nextIndex = index
-    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') nextIndex = (index + 1) % VOICES.length
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') nextIndex = (index - 1 + VOICES.length) % VOICES.length
-    if (event.key === 'Home') nextIndex = 0
-    if (event.key === 'End') nextIndex = VOICES.length - 1
-    if (nextIndex === index) return
-    event.preventDefault()
-    const next = VOICES[nextIndex].id
-    onVoice(next)
-    window.requestAnimationFrame(() => voiceRefs.current[next]?.focus())
-  }
-
-  return (
-    <section className="section voices-section" id="voices" aria-labelledby="voices-title">
-      <div className="section__header voices-section__header">
-        <p className="eyebrow eyebrow--dark"><span className="eyebrow__line" />type drawer <em>one question, three readings</em></p>
-        <h2 id="voices-title">Let the same words <i>change clothes.</i></h2>
-        <p className="section__lede">Choose a voice. The title above shifts with it, because typography is part of the answer.</p>
-      </div>
-      <div className="voice-triptych" role="tablist" aria-label="Choose a typographic voice">
-        {VOICES.map(item => (
-          <button
-            key={item.id}
-            ref={node => { voiceRefs.current[item.id] = node }}
-            type="button"
-            className={`voice-tile voice-tile--${item.id} ${voice === item.id ? 'is-active' : ''}`}
-            role="tab"
-            aria-selected={voice === item.id}
-            tabIndex={voice === item.id ? 0 : -1}
-            onClick={() => onVoice(item.id)}
-            onKeyDown={event => selectByKey(event, item.id)}
-          >
-            <span className="voice-tile__head">
-              <span className="voice-tile__letter" aria-hidden="true">{item.id === 'quiet' ? 'A' : item.id === 'human' ? 'B' : 'C'}</span>
-              <span className="voice-tile__name">{item.name}</span>
-              <span className="voice-tile__descriptor">{item.descriptor}</span>
-            </span>
-            <span className={`voice-tile__sample voice-tile__sample--${item.id}`} aria-hidden="true">
-              <span>{item.lines[0]}</span>
-              <span>{item.lines[1]}</span>
-              <span>{item.lines[2]}</span>
-            </span>
-            <span className="voice-tile__foot">
-              <span className="voice-tile__body">{item.body}</span>
-              <span className="voice-tile__mark" aria-hidden="true">{voice === item.id ? '●' : '○'}</span>
-            </span>
-            <span className="voice-tile__stamp" aria-hidden="true">
-              <PressStamp voice={voice} size={36} />
-            </span>
-          </button>
-        ))}
-      </div>
-    </section>
-  )
-}
-
 function FolioLedger() {
   const items = [
     { id: 'question', num: 'i', title: 'the question, set', note: 'three marked words, one margin' },
@@ -579,7 +515,6 @@ function FolioLedger() {
     { id: 'proof', num: 'iv', title: 'the second proof', note: 'marks attached to the words worth keeping' },
     { id: 'pressings', num: 'v', title: 'three pressings', note: 'the same question set three ways' },
     { id: 'notes', num: 'vi', title: 'the marginalia', note: 'three things worth keeping' },
-    { id: 'voices', num: 'vii', title: 'voices', note: 'typography tries on the words' },
     { id: 'answer', num: 'viii', title: 'the answer, tipped in', note: 'folded once, then folded back', closing: true },
   ]
   return (
@@ -851,7 +786,6 @@ export function App() {
   const [marks, setMarks] = useState<ImpressionMark[]>([])
   const [setToday] = useState(() => formatSetToday())
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
-  const voiceRefs = useRef<Partial<Record<VoiceId, HTMLButtonElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
 
   const activeWord = hoveredWord ?? selectedWord
@@ -868,7 +802,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'press-room', 'compose', 'contents', 'day', 'note', 'proof', 'pressings', 'notes', 'voices', 'answer']
+    const elements = ['question', 'press-room', 'compose', 'contents', 'day', 'note', 'proof', 'pressings', 'notes', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -956,7 +890,6 @@ export function App() {
     event.preventDefault()
     const next = VOICES[nextIndex].id
     selectVoice(next)
-    window.requestAnimationFrame(() => voiceRefs.current[next]?.focus())
   }
 
   const toggleAnswer = () => {
@@ -1025,7 +958,6 @@ export function App() {
             <a href="#proof" className={activeSection === 'proof' ? 'is-active' : ''} aria-current={activeSection === 'proof' ? 'location' : undefined}>proof</a>
             <a href="#pressings" className={activeSection === 'pressings' ? 'is-active' : ''} aria-current={activeSection === 'pressings' ? 'location' : undefined}>pressings</a>
             <a href="#notes" className={activeSection === 'notes' ? 'is-active' : ''} aria-current={activeSection === 'notes' ? 'location' : undefined}>marginalia</a>
-            <a href="#voices" className={activeSection === 'voices' ? 'is-active' : ''} aria-current={activeSection === 'voices' ? 'location' : undefined}>voices</a>
             <a href="#answer" className={activeSection === 'answer' ? 'is-active' : ''} aria-current={activeSection === 'answer' ? 'location' : undefined} onClick={openAnswerFromNav}>answer</a>
           </nav>
           <span className="site-header__note">
@@ -1261,10 +1193,40 @@ export function App() {
         <SpecimenSpread active={voice} onSelect={selectVoice} />
 
         <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
-        <VoicesSection voice={voice} onVoice={selectVoice} voiceRefs={voiceRefs} />
 
         <Colophon voice={voice} word={activeWord} setToday={setToday} />
       </div>
+
+      <nav className="margin-thread--mobile" aria-label="Folio index">
+        <ol className="margin-thread__list">
+          {[
+            { id: 'question', index: 'i', label: 'the question' },
+            { id: 'press-room', index: 'i·', label: 'press bay' },
+            { id: 'compose', index: 'ii', label: 'compose' },
+            { id: 'contents', index: 'iii', label: 'contents' },
+            { id: 'day', index: 'iii·', label: 'day sheet' },
+            { id: 'note', index: '·', label: 'note' },
+            { id: 'proof', index: 'iv', label: 'proof' },
+            { id: 'pressings', index: 'v', label: 'pressings' },
+            { id: 'notes', index: 'vi', label: 'marginalia' },
+            { id: 'answer', index: 'viii', label: 'answer' },
+          ].map(folio => {
+            const isActive = activeSection === folio.id
+            return (
+              <li key={folio.id} className={`margin-thread__item ${isActive ? 'is-active' : ''}`} aria-current={isActive ? 'location' : undefined}>
+                <a className="margin-thread__link" href={`#${folio.id}`}>
+                  <span className="margin-thread__num" aria-hidden="true">{folio.index}</span>
+                  <span className="margin-thread__copy">
+                    <span className="margin-thread__label">{folio.label}</span>
+                  </span>
+                </a>
+              </li>
+            )
+          })}
+        </ol>
+      </nav>
+
+      <MarginThread activeId={activeSection} progress={scrollProgress} voice={voice} />
 
       <ReadingFolio activeId={activeSection} voice={voice} word={activeWord} answerOpen={answerOpen} setToday={setToday} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
