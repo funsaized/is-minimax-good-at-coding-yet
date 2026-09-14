@@ -1,12 +1,26 @@
 # Changelog
 
-## Iteration 229
+## Iteration 230 — a press ribbon and a second reading
 
-A reader's marginalia column now runs alongside the title; the standalone proof card retires so the marked words meet their glosses on the same page.
+A single unifying band that runs through the page, and a typographic specimen
+that lets the same question be re-read in three voices.
 
-- Added `AnnotationRibbon`: three proof-card slots stacked beside the title, each pinned, keyed to a marked word, and showing its proof mark, gloss, mark label, and folio.
-- Each slot is a button and shares selection state with the title's marked words; hovering or focusing a marked word highlights the matching slot.
-- A delicate dashed connector emerges from the active slot toward the title; an ink-bead appears at the card edge when the active word changes.
-- Re-laid the hero as a true title plate: the title sits with a marginalia column, framed by a new "a single line, set in three voices" inscription under the rule.
-- When the ribbon is alongside, the title type scales down a touch so the bold voice keeps its measure; below 980px the ribbon slips under the title and reads as a stack of three proof cards.
-- Removed the standalone proof card from the hero — its surface is now carried by the ribbon here, the second-proof section below, and the marginalia cards further down.
+- New `PressRibbon` (src/PressRibbon.tsx) sits beneath the hero and reappears
+  between the day sheet and the answer. It binds the page together: the
+  title set in the active voice, three tags showing all readings with the
+  active one marked, and a quiet meta line with the day's date.
+- New `SecondReading` (src/SecondReading.tsx) is a single, deliberate
+  interactive specimen that shows the question set three ways. Hovering or
+  focusing a tab shows that reading; clicking pulls the press. The three
+  lines use the system serif italic and the system sans heavy so the
+  difference is real, not nominal.
+- The answer reveal's colophon (the close, the colophon line, the pull quote)
+  gets a tighter, more deliberate frame — a `tip-in stamp`, a `trail dot`
+  row, and a clearer `fold it back` button. The leaf itself keeps its paper
+  feel but reads more confidently.
+- Mobile layout: the hero voice row stacks on small screens, the press
+  ribbon collapses gracefully, the second reading specimen simplifies to
+  bordered tabs, and the title tightens its letter-spacing at narrow widths.
+- Global rhythm: section padding, header spacing, and the answer reveal's
+  small typographic ornaments were tightened so the page reads with a
+  steadier beat without changing the section order.

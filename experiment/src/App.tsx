@@ -16,6 +16,8 @@ import { FolioSeal } from './FolioSeal'
 import { TypePlate } from './TypePlate'
 import { PressSignature } from './PressSignature'
 import { AnnotationRibbon } from './AnnotationRibbon'
+import { PressRibbon } from './PressRibbon'
+import { SecondReading } from './SecondReading'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -1045,6 +1047,8 @@ export function App() {
 
           <PressSignature folio="i" voice={voice} word={activeWord} setToday={setToday} variant="inline" />
 
+          <PressRibbon voice={voice} setToday={setToday} />
+
           <div className="hero__body">
             <div className="hero__body-grid">
               <p className="hero__summary">
@@ -1103,6 +1107,17 @@ export function App() {
         <LetterToReader voice={voice} onReadAnswer={openAnswerFromNav} />
 
         <DaySheet voice={voice} word={activeWord} marks={marks} setToday={setToday} />
+
+        <section className="second-reading-section section" aria-labelledby="second-reading-title">
+          <div className="section__header second-reading-section__header">
+            <p className="eyebrow"><span className="eyebrow__line" />a second reading <em>the same line, set again</em></p>
+            <h2 id="second-reading-title">Read it <i>the second time.</i></h2>
+            <p className="section__lede">A second specimen sits beneath the day sheet. The page is read once with the eye, and again with the ear. Pulling a voice here answers the line above as a single confident setting.</p>
+          </div>
+          <SecondReading voice={voice} onSelect={selectVoice} setToday={setToday} />
+        </section>
+
+        <PressRibbon voice={voice} setToday={setToday} className="press-ribbon--interlude" />
 
         <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} setToday={setToday} />
 
