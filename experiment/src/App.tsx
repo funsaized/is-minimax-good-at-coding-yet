@@ -18,6 +18,14 @@ const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
+function formatSetToday() {
+  const now = new Date()
+  const month = now.toLocaleString('en-US', { month: 'short' }).toLowerCase()
+  const day = String(now.getDate()).padStart(2, '0')
+  const year = String(now.getFullYear()).slice(-2)
+  return `${month} · ${day} · ${year}`
+}
+
 const READING_SECTIONS: { id: string; index: string; label: string }[] = [
   { id: 'question', index: 'i', label: 'question' },
   { id: 'press-room', index: 'i·', label: 'press bay' },
@@ -300,11 +308,12 @@ function TitleToken({
   )
 }
 
-function AnswerReveal({ open, onClose, triggerRef, voice }: {
+function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
   open: boolean
   onClose: () => void
   triggerRef: React.MutableRefObject<HTMLButtonElement | null>
   voice: VoiceId
+  setToday: string
 }) {
   return (
     <section
@@ -396,7 +405,10 @@ function AnswerReveal({ open, onClose, triggerRef, voice }: {
                 <text x="20" y="32" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3" letterSpacing="1" fill="currentColor">{voice === 'quiet' ? 'A · QUIET' : voice === 'human' ? 'B · HUMAN' : 'C · BOLD'}</text>
               </svg>
             </span>
-            <span className="answer-reveal__press-used-text">this leaf was pressed in the {voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'} voice · fold back when you are done</span>
+            <span className="answer-reveal__press-used-text">
+              <strong>this leaf was pressed in the {voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'} voice</strong>
+              <em>set on {setToday} · folio viii · fold it back when you are done</em>
+            </span>
           </span>
         </div>
       </div>
@@ -599,7 +611,7 @@ function FolioLedger() {
   )
 }
 
-function Colophon({ voice, word }: { voice: VoiceId; word: WordId }) {
+function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; setToday: string }) {
   const tag = voice === 'bold' ? 'NO APOLOGIES' : voice === 'human' ? 'BY HAND' : 'SET WITH CARE'
   const voiceName = voice === 'bold' ? 'bold signal' : voice === 'human' ? 'human hand' : 'quiet cut'
   const mark = word === 'm3' ? 'stet' : word === 'good' ? 'caret' : 'query'
@@ -607,6 +619,14 @@ function Colophon({ voice, word }: { voice: VoiceId; word: WordId }) {
   return (
     <footer className="colophon" aria-label="Colophon">
       <div className="colophon__plate">
+        <span className="colophon__date" aria-hidden="true">
+          <span className="colophon__date-rule" />
+          <span className="colophon__date-tag">
+            <span className="colophon__date-dot" />
+            set today · {setToday}
+          </span>
+          <span className="colophon__date-rule" />
+        </span>
         <div className="colophon__head">
           <div className="colophon__identity">
             <span className="colophon__mark">
@@ -696,7 +716,7 @@ function Colophon({ voice, word }: { voice: VoiceId; word: WordId }) {
             <circle cx="214" cy="20" r="1.8" fill="currentColor" opacity=".7" />
             <path className="colophon__signature-tick" d="M208 28l4-2 4 2" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".55" />
           </svg>
-          <span className="colophon__signature-tag">composed by m³ · for the reader</span>
+          <span className="colophon__signature-tag">composed by m³ · for the reader · {setToday}</span>
         </div>
       </div>
       <p className="colophon__signature-note">
@@ -736,18 +756,19 @@ const VOICE_SHORT: Record<VoiceId, string> = { quiet: 'A · quiet', human: 'B ·
 const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
 
-function ReadingFolio({ activeId, voice, word, answerOpen }: {
+function ReadingFolio({ activeId, voice, word, answerOpen, setToday }: {
   activeId: string
   voice: VoiceId
   word: WordId
   answerOpen: boolean
+  setToday: string
 }) {
   const section = READING_SECTIONS.find(item => item.id === activeId) ?? READING_SECTIONS[0]
   return (
     <footer className="reading-folio" aria-label="Folio footer">
       <div className="reading-folio__plate" aria-hidden="true">
         <span className="reading-folio__plate-line" />
-        <span className="reading-folio__plate-tag">folio footer · set today</span>
+        <span className="reading-folio__plate-tag">folio footer · set on {setToday}</span>
         <span className="reading-folio__plate-line" />
       </div>
       <ol className="reading-folio__row" aria-label="Reading state at the foot of the page">
@@ -811,6 +832,7 @@ export function App() {
   const [announcement, setAnnouncement] = useState('')
   const [circleKey, setCircleKey] = useState<Record<WordId, number>>({ m3: 0, good: 0, yet: 0 })
   const [marks, setMarks] = useState<ImpressionMark[]>([])
+  const [setToday] = useState(() => formatSetToday())
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
   const voiceRefs = useRef<Partial<Record<VoiceId, HTMLButtonElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
@@ -958,9 +980,9 @@ export function App() {
           <a className="brand" href="#question" aria-label="Return to the question">
             <LogoMark size={36} />
             <span className="brand__copy">
-              <strong>m³ / compose desk</strong>
-              <em>an open question</em>
-              <span className="brand__motto" aria-hidden="true">a single-page editorial experiment</span>
+              <strong>m³ press</strong>
+              <em>an open question, set today</em>
+              <span className="brand__motto" aria-hidden="true">a single-page editorial experiment · {setToday}</span>
             </span>
           </a>
           <nav className="site-nav" aria-label="Sections">
@@ -1036,7 +1058,7 @@ export function App() {
                 />
                 <circle cx="12" cy="6" r="1.1" fill="currentColor" />
               </svg>
-              this morning · folio i · set in {voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}
+              set on {setToday} · folio i · pressed in {voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}
             </span>
             <div className="hero__copy">
               <span className="hero__lead-in" aria-hidden="true">
@@ -1047,6 +1069,13 @@ export function App() {
                 </span>
                 <span className="hero__lead-in-line" />
               </span>
+              <p className="hero__deck" aria-hidden="true">
+                <span className="hero__deck-rule" />
+                <span className="hero__deck-text">
+                  A folio of one question — set this morning, typeset three ways, with the answer tucked into the back.
+                </span>
+                <span className="hero__deck-rule" />
+              </p>
               <h1 className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
                 <span className="title__line">is Minimax </span>
                 <span className="title__line">
@@ -1104,16 +1133,6 @@ export function App() {
                   strokeWidth="1.15"
                   strokeLinecap="round"
                   pathLength="100"
-                />
-                <path
-                  className="hero__marginalia-stroke hero__marginalia-stroke--echo"
-                  d="M2 17c12-10 26 7 42-2s26-8 42-1 26 7 42-2 26-8 42-1 26 7 42-2 26-8 42-1 26 7 42-2 26-3 38-3"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                  strokeLinecap="round"
-                  pathLength="100"
-                  opacity="0.35"
                 />
                 <circle className="hero__marginalia-dot" cx="356" cy="11" r="1.8" fill="currentColor" />
                 <circle className="hero__marginalia-dot hero__marginalia-dot--ring" cx="356" cy="11" r="4" fill="none" stroke="currentColor" strokeWidth="0.4" opacity="0.7" />
@@ -1191,7 +1210,7 @@ export function App() {
         </section>
 
         <div className="hero-trace" aria-hidden="false">
-          <ImpressionRibbon voice={voice} word={activeWord} marks={marks} />
+          <ImpressionRibbon voice={voice} word={activeWord} marks={marks} setToday={setToday} />
         </div>
 
         <PressRoom voice={voice} word={activeWord} onVoice={selectVoice} />
@@ -1202,7 +1221,7 @@ export function App() {
 
         <LetterToReader voice={voice} onReadAnswer={openAnswerFromNav} />
 
-        <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} />
+        <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} setToday={setToday} />
 
         <MarkedProof selected={selectedWord} onSelect={id => selectWord(id, true)} />
 
@@ -1211,10 +1230,10 @@ export function App() {
         <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
         <VoicesSection voice={voice} onVoice={selectVoice} voiceRefs={voiceRefs} />
 
-        <Colophon voice={voice} word={activeWord} />
+        <Colophon voice={voice} word={activeWord} setToday={setToday} />
       </div>
 
-      <ReadingFolio activeId={activeSection} voice={voice} word={activeWord} answerOpen={answerOpen} />
+      <ReadingFolio activeId={activeSection} voice={voice} word={activeWord} answerOpen={answerOpen} setToday={setToday} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )

@@ -12,12 +12,13 @@ type ImpressionRibbonProps = {
   voice: VoiceId
   word: WordId
   marks: ImpressionMark[]
+  setToday: string
 }
 
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 const WORD_GLYPH: Record<WordId, string> = { m3: '⌇', good: '∧', yet: '?' }
 
-export function ImpressionRibbon({ voice, word, marks }: ImpressionRibbonProps) {
+export function ImpressionRibbon({ voice, word, marks, setToday }: ImpressionRibbonProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [pulse, setPulse] = useState(0)
 
@@ -27,12 +28,20 @@ export function ImpressionRibbon({ voice, word, marks }: ImpressionRibbonProps) 
 
   const visible = marks.slice(-MAX_MARKS)
   const last = visible[visible.length - 1]
+  const pullCount = marks.reduce<Record<VoiceId, number>>((acc, mark) => {
+    if (mark.kind === 'pull') {
+      acc[mark.voice] = (acc[mark.voice] ?? 0) + 1
+    }
+    return acc
+  }, { quiet: 0, human: 0, bold: 0 })
+  const totalPulls = pullCount.quiet + pullCount.human + pullCount.bold
 
   return (
     <div className="impression-ribbon" role="group" aria-label="Press session impression log">
       <span className="impression-ribbon__tag" aria-hidden="true">
         <span className="impression-ribbon__tag-dot" />
         impression log
+        <span className="impression-ribbon__tag-date">{setToday}</span>
       </span>
       <span className="impression-ribbon__tape" ref={ref}>
         <span className="impression-ribbon__line" aria-hidden="true" />
@@ -66,7 +75,7 @@ export function ImpressionRibbon({ voice, word, marks }: ImpressionRibbonProps) 
             : 'awaiting the first pull'}
         </span>
         <span className="impression-ribbon__now-label-meta">
-          {voice === 'quiet' ? 'A' : voice === 'human' ? 'B' : 'C'} · {word === 'm3' ? 'm³' : word === 'good' ? 'good at' : 'yet?'}
+          {voice === 'quiet' ? 'A' : voice === 'human' ? 'B' : 'C'} · {word === 'm3' ? 'm³' : word === 'good' ? 'good at' : 'yet?'} · {totalPulls} {totalPulls === 1 ? 'pull' : 'pulls'} this session
         </span>
       </span>
     </div>
