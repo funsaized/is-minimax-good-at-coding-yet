@@ -1,10 +1,13 @@
-Iteration 226: a proof card keyed to each marked word, a quieter printer's-mark watermark, and a tightened hero.
+# Changelog
 
-- Added a new `ProofCard` that unfurls beneath the hero title. It opens the marked word at scale, stamps it with its editorial mark (stet / caret / query), and shows the editor's italic note, a pencil-line gloss, and a margin whisper. Keyed to the selected word, so each marked token reveals a different proof.
-- Replaced the floating giant "?" with a real printer's mark: a `Watermark` of "m³ · broadside · set on today" with cardinal ticks, layered with a cycling italic editor's whisper ("the answer, for now" … "composed, not generated"). It gently fades as the reader descends the page.
-- Removed the redundant hero `VoiceDial` so the proof card stands as the visual response to the title. The proof card's color now carries the voice cue (acid / coral / blue).
-- Tightened the hero: dropped the decorative `hero__deck` tagline and the `hero__marginalia` squiggle, and added a real margin note alongside the lead summary paragraph in `hero__body-grid`.
-- Made the lead summary voice-aware: italic close-set in quiet, italic warm in human, upright weighted in bold. The shift is subtle but the page now reads differently with each voice.
-- Cleaned up the codebase: removed `PressSignature` import (no longer rendered), removed the now-orphan `VoiceDial` function, and quieted the dead `.press-mark-bg` rule.
-- Polished the proof-card transition: a small rotateX/translateY/filter shift on selection change so the card feels like a slip being swapped in, with `perspective` set on the parent hero copy.
-- Verified mobile: the proof card stacks its grid for narrow screens, the new margin note collapses into the column flow, and the watermark seal sizes down without overpowering the text.
+## Iteration 227
+
+A folio seal anchors the broadside and a single type plate sets the question three ways.
+
+### Changes
+
+- Added `src/FolioSeal.tsx` — a circular wax seal with arc-set labels, folio number, voice letter, a slow halo, and a drip bead; tinted by the active voice. Anchors the hero's top-right.
+- Added `src/TypePlate.tsx` — a single specimen sheet that lays out the three voices as stacked rows (display, body, micro, swatch, rule, motto). Replaces the old three-card drawer at folio v.
+- Refined the hero composition in `src/App.tsx` — removed redundant `hero__set-stamp`, `hero__plate`, `hero__spread-folio-mark`, and two of the four `hero__reg-mark` elements. Added a corner tab (`folio i · the question`) top-left, the seal top-right, and a bottom slip (`set on {date} · folio i · pressed in {voice}`).
+- `src/style.css` — added styles for `.folio-seal`, `.hero__seal`, `.hero__corner-tab`, `.hero__slip`, `.specimen-plate-section`, and `.type-plate*`. New keyframes: `sealHaloSpin`, `sealPressIn`, `sealDripStretch`, `sealDripPulse`. Mobile breakpoints shrink the seal, hide the corner tab text, and stack the type plate rules.
+- The page preserves its existing flow: hero, press bay, compose, contents, day sheet, letter, answer, proof, specimen, marginalia, colophon, folio footer.
