@@ -1,0 +1,19 @@
+{
+  "id": 221,
+  "parentId": 220,
+  "createdAt": "2026-09-14T05:13:39.651Z",
+  "summary": "A folio iii· day sheet now sits at the heart of the page: a working almanac with a live clock face, the week laid out an",
+  "path": "/iterations/000221/index.html",
+  "screenshot": "/iterations/000221/desktop.png",
+  "mobileScreenshot": "/iterations/000221/mobile.png",
+  "sourceCommit": "34de77dbcd3cb33a22a3cd46350a562c3062723d",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 274,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 90871,
+    "outputTokens": 28379,
+    "steps": 80
+  }
+}
