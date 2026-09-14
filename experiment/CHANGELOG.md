@@ -1,15 +1,11 @@
-# Changelog
+# Iteration 222 — a quieter broadside
 
-## Iteration 221 — folio iii· the day sheet, a working almanac
+A quieter broadside — letterpress title, a paper crease, a giant ? backdrop, a cursor ink trail, a next-folio pointer.
 
-A folio iii· day sheet now sits at the heart of the page: a working almanac with a live clock face, the week laid out and today marked with the day's editor's mark, today's record on the press (voice, mark, pulls, marks), and a quietly rotating pull quote from the page's own marginalia. The page now records the day it was set.
-
-- new section `folio iii· · the day sheet` placed between the folded slip and the second proof
-- new `src/DaySheet.tsx` component with a self-contained SVG clock (hour, minute, second hands, twelve marks, numerals)
-- the week view highlights today with the active editor's mark (stet, caret, or query)
-- a "today's record" panel tracks the voice, mark, session pulls, and marked words; recolors when the voice or word changes
-- a rotating pull quote cycles four lines from the page's marginalia with a small progress pip
-- clock and quote rotation honor `prefers-reduced-motion: reduce`
-- header nav refined: scrolls horizontally with an edge mask on overflow, gains an active-state dot, and reflows cleanly at the 1180px / 980px breakpoints
-- reading sections, folio ledger, and press folio extended with the new `iii· · day sheet` entry so the footer strip, the table of contents, and the sticky header all stay coherent
-- title in `index.html` and the visible hero title preserved as `is Minimax M3 good at frontend yet?`
+## What changed
+- Added a cursor-following **InkTrail**: small, fading dots that appear wherever the reader's pointer moves. Hidden on touch devices and when `prefers-reduced-motion` is set.
+- The full-page **press-mark watermark** is now a giant italic `?` drawn behind the page, slowly breathing — the question itself, set as the page's quiet backdrop.
+- The **reading strip** now carries a small *↓ next · folio X* pointer that travels with the bead, naming the section the reader is approaching.
+- The hero **title** carries a subtle three-stop text-shadow that makes the type feel pressed into the sheet.
+- A soft **fold mark** now draws across the top of the hero spread a beat after the title lands, evoking a folded broadside.
+- Preserved: every existing section, the press-bay lever, the day sheet's almanac, the three voices and three marked words, the tipped-in answer, the colophon, the title's response to voice and hover, and the title text *is Minimax M3 good at frontend yet?*.

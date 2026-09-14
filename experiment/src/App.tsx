@@ -9,6 +9,7 @@ import { LetterToReader } from './LetterToReader'
 import { ComposeFloor } from './ComposeFloor'
 import { PressRoom } from './PressRoom'
 import { InkDust } from './InkDust'
+import { InkTrail } from './InkTrail'
 import { DaySheet } from './DaySheet'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
@@ -732,7 +733,9 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
 }
 
 function ReadingStrip({ progress, activeSection }: { progress: number; activeSection: string }) {
-  const active = READING_SECTIONS.find(section => section.id === activeSection) ?? READING_SECTIONS[0]
+  const activeIndex = Math.max(0, READING_SECTIONS.findIndex(section => section.id === activeSection))
+  const active = READING_SECTIONS[activeIndex] ?? READING_SECTIONS[0]
+  const next = READING_SECTIONS[activeIndex + 1]
   return (
     <div className="reading-strip" aria-hidden="true">
       <div className="reading-strip__inner">
@@ -745,6 +748,16 @@ function ReadingStrip({ progress, activeSection }: { progress: number; activeSec
           <span className="reading-strip__bead" style={{ left: `${progress * 100}%` }}>
             <span className="reading-strip__bead-dot" />
           </span>
+          {next && (
+            <span className="reading-strip__next" style={{ left: `${progress * 100}%` }} key={next.id}>
+              <span className="reading-strip__next-line" />
+              <span className="reading-strip__next-label">
+                <span className="reading-strip__next-arrow" aria-hidden="true">↓</span>
+                <span className="reading-strip__next-folio">{next.index}</span>
+                <span className="reading-strip__next-name">{next.label}</span>
+              </span>
+            </span>
+          )}
         </span>
         <span className="reading-strip__now">
           <span className="reading-strip__now-folio">{active.index}</span>
@@ -971,12 +984,25 @@ export function App() {
   return (
     <main className={`app app--voice-${voice} app--word-${activeWord}`}>
       <InkDust />
+      <InkTrail />
       <div className="app__grain" aria-hidden="true" />
       <div className="app__pencil" aria-hidden="true" />
       <svg className="press-mark-bg" viewBox="0 0 400 400" aria-hidden="true">
-        <circle cx="200" cy="200" r="170" fill="none" stroke="currentColor" strokeWidth="1.4" />
-        <circle cx="200" cy="200" r="150" fill="none" stroke="currentColor" strokeWidth=".6" strokeDasharray="2 4" />
-        <text x="200" y="224" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="96" fill="currentColor">m³</text>
+        <circle cx="200" cy="200" r="174" fill="none" stroke="currentColor" strokeWidth=".8" />
+        <circle cx="200" cy="200" r="152" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="2 5" opacity=".7" />
+        <circle cx="200" cy="200" r="118" fill="none" stroke="currentColor" strokeWidth=".3" strokeDasharray="1 4" opacity=".4" />
+        <text
+          x="200"
+          y="288"
+          textAnchor="middle"
+          fontFamily="Georgia, 'Iowan Old Style', serif"
+          fontStyle="italic"
+          fontWeight="400"
+          fontSize="360"
+          fill="currentColor"
+          letterSpacing="-.04em"
+        >?</text>
+        <circle cx="200" cy="320" r="3.2" fill="currentColor" opacity=".7" />
       </svg>
       <header className="site-header">
         <ReadingStrip progress={scrollProgress} activeSection={activeSection} />
