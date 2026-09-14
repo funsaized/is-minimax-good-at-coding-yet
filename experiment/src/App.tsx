@@ -11,7 +11,6 @@ import { DaySheet } from './DaySheet'
 import { MarginThread } from './MarginThread'
 import { MarginNotes } from './MarginNotes'
 import { Watermark } from './Watermark'
-import { FolioSeal } from './FolioSeal'
 import { PressMark } from './PressMark'
 import { TypePlate } from './TypePlate'
 import { PressSignature } from './PressSignature'
@@ -94,6 +93,60 @@ function LogoMark({ size = 38, accent = 'var(--acid)' }: { size?: number; accent
       <circle cx="21" cy="36" r=".9" fill="currentColor" />
     </svg>
   )
+}
+
+const FOLIO_LABEL: Record<string, string> = {
+  question: 'the question',
+  press: 'press bed',
+  contents: 'contents',
+  day: 'day sheet',
+  note: 'a folded slip',
+  proof: 'the proof',
+  pressings: 'pressings',
+  notes: 'marginalia',
+  answer: 'the answer',
+}
+
+const FOLIO_NUM: Record<string, string> = {
+  question: 'i',
+  press: 'ii',
+  contents: 'iii',
+  day: 'iii·',
+  note: '·',
+  proof: 'iv',
+  pressings: 'v',
+  notes: 'vi',
+  answer: 'viii',
+}
+
+const FOLIO_ORDER: string[] = ['question', 'press', 'contents', 'day', 'note', 'proof', 'pressings', 'notes', 'answer']
+
+function sectionFolioLabel(id: string) {
+  return FOLIO_LABEL[id] ?? FOLIO_LABEL.question
+}
+
+function sectionFolioNum(id: string) {
+  return FOLIO_NUM[id] ?? FOLIO_NUM.question
+}
+
+function sectionIndex(id: string) {
+  const i = FOLIO_ORDER.indexOf(id)
+  return i >= 0 ? i + 1 : 1
+}
+
+function romanize(n: number) {
+  const numerals: [number, string][] = [
+    [10, 'x'], [9, 'ix'], [5, 'v'], [4, 'iv'], [1, 'i'],
+  ]
+  let result = ''
+  let remaining = n
+  for (const [value, symbol] of numerals) {
+    while (remaining >= value) {
+      result += symbol
+      remaining -= value
+    }
+  }
+  return result
 }
 
 function ArrowIcon() {
@@ -854,45 +907,64 @@ export function App() {
       <div className="app__grain" aria-hidden="true" />
       <div className="app__pencil" aria-hidden="true" />
       <Watermark />
-      <header className="site-header">
-        <div className="site-header__row">
+      <header className="site-header site-header--running-head">
+        <div className="site-header__row site-header__row--primary">
           <a className="brand" href="#question" aria-label="Return to the question">
-            <LogoMark size={36} />
+            <LogoMark size={34} />
             <span className="brand__copy">
               <strong>m³ press</strong>
               <em>an open question, set today</em>
-              <span className="brand__motto" aria-hidden="true">a single-page editorial experiment · {setToday}</span>
             </span>
           </a>
-          <nav className="site-nav" aria-label="Sections">
-            <a href="#question" className={activeSection === 'question' ? 'is-active' : ''} aria-current={activeSection === 'question' ? 'location' : undefined}>question</a>
-            <a href="#press" className={activeSection === 'press' ? 'is-active' : ''} aria-current={activeSection === 'press' ? 'location' : undefined}>press bed</a>
-            <a href="#contents" className={activeSection === 'contents' ? 'is-active' : ''} aria-current={activeSection === 'contents' ? 'location' : undefined}>contents</a>
-            <a href="#day" className={activeSection === 'day' ? 'is-active' : ''} aria-current={activeSection === 'day' ? 'location' : undefined}>day sheet</a>
-            <a href="#note" className={activeSection === 'note' ? 'is-active' : ''} aria-current={activeSection === 'note' ? 'location' : undefined}>note</a>
-            <a href="#proof" className={activeSection === 'proof' ? 'is-active' : ''} aria-current={activeSection === 'proof' ? 'location' : undefined}>proof</a>
-            <a href="#pressings" className={activeSection === 'pressings' ? 'is-active' : ''} aria-current={activeSection === 'pressings' ? 'location' : undefined}>pressings</a>
-            <a href="#notes" className={activeSection === 'notes' ? 'is-active' : ''} aria-current={activeSection === 'notes' ? 'location' : undefined}>marginalia</a>
-            <a href="#answer" className={activeSection === 'answer' ? 'is-active' : ''} aria-current={activeSection === 'answer' ? 'location' : undefined} onClick={openAnswerFromNav}>answer</a>
-          </nav>
-          <span className="site-header__note">
-            <PressFolio section={activeSection} />
-          </span>
+          <div className="site-header__running" aria-label="Current folio">
+            <span className="site-header__running-rule" aria-hidden="true" />
+            <span className="site-header__running-core">
+              <span className="site-header__running-eyebrow">now reading</span>
+              <span className="site-header__running-line">
+                <span className="site-header__running-num">{sectionFolioNum(activeSection)}</span>
+                <span className="site-header__running-sep" aria-hidden="true">·</span>
+                <span className="site-header__running-label">{sectionFolioLabel(activeSection)}</span>
+              </span>
+            </span>
+            <span className="site-header__running-rule" aria-hidden="true" />
+          </div>
+          <div className="site-header__edition" aria-label="Edition mark">
+            <span className="site-header__edition-tag">edition</span>
+            <span className="site-header__edition-num">
+              <span className="site-header__edition-num-now">{romanize(sectionIndex(activeSection))}</span>
+              <span className="site-header__edition-num-sep" aria-hidden="true">/</span>
+              <span className="site-header__edition-num-total">ix</span>
+            </span>
+            <span className="site-header__edition-date">{setToday}</span>
+          </div>
         </div>
-        <HeaderRuler />
-        <ReadingTrace className="reading-trace--in-header" />
+        <div className="site-header__row site-header__row--map">
+          <span className="site-header__map-eyebrow" aria-hidden="true">reading map</span>
+          <ReadingTrace className="reading-trace--in-header" />
+          <a className="site-header__map-back" href="#question" aria-label="Back to the first folio">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M3 8h10M8 3l-5 5 5 5" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span>back to folio i</span>
+          </a>
+        </div>
       </header>
 
       <div className="page">
         <section className="hero" id="question" aria-labelledby="page-title">
           <div className="hero__eyebrow-row">
             <p className="eyebrow"><span className="eyebrow__line" />frontend experiment <em>read the question first</em></p>
+            <span className="hero__edition-mark" aria-hidden="true">
+              <span className="hero__edition-mark-rule" />
+              <span className="hero__edition-mark-core">
+                <span className="hero__edition-mark-line">edition <em>i</em> · folio <em>i</em> of <em>ix</em></span>
+                <span className="hero__edition-mark-line hero__edition-mark-line--soft">set on {setToday} · pulled by hand</span>
+              </span>
+              <span className="hero__edition-mark-rule" />
+            </span>
           </div>
 
           <div className="hero__spread">
-            <span className="hero__seal" aria-hidden="true">
-              <FolioSeal voice={voice} folio="i" setToday={setToday} size={150} />
-            </span>
             <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
             <span key={`pm-${strikeTick}`} className="hero__press-mark" aria-hidden="true">
               <PressMark voice={voice} setToday={setToday} />

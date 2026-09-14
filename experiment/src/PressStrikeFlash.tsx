@@ -17,6 +17,8 @@ export function PressStrikeFlash({ strikeTick, voice }: PressStrikeFlashProps) {
   const style = { '--strike-color': TONE[voice] } as CSSProperties
   return (
     <span key={`strike-${strikeTick}`} className="press-strike" aria-hidden="true" style={style}>
+      <span className="press-strike__wash" />
+      <span className="press-strike__rule" />
       <svg className="press-strike__line" viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true">
         <path
           className="press-strike__line-path"

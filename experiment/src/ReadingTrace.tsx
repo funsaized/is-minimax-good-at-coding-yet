@@ -74,39 +74,36 @@ export function ReadingTrace({ className = '' }: ReadingTraceProps) {
   return (
     <div
       className={`reading-trace ${className}`}
-      role="presentation"
-      aria-hidden="true"
+      role="navigation"
+      aria-label="Reading map"
       style={{ '--trace-progress': progress } as CSSProperties}
     >
       <span className="reading-trace__rule">
         <span className="reading-trace__fill" style={{ width: fillWidth }} />
       </span>
-      <span className="reading-trace__dots" aria-hidden="true">
+      <ol className="reading-trace__dots" aria-label="Folios in reading order">
         {TRACE.map((item, index) => (
-          <span
+          <li
             key={item.id}
-            className={`reading-trace__dot ${index === activeIndex ? 'is-active' : ''} ${index < activeIndex ? 'is-past' : ''}`}
+            className={`reading-trace__dot-wrap ${index === activeIndex ? 'is-active' : ''} ${index < activeIndex ? 'is-past' : ''}`}
             style={{ left: `${(index / (TRACE.length - 1)) * 100}%` }}
-          />
+          >
+            <a
+              href={`#${item.id}`}
+              className={`reading-trace__dot ${index === activeIndex ? 'is-active' : ''} ${index < activeIndex ? 'is-past' : ''}`}
+              aria-label={`Folio ${item.index} · ${item.label}`}
+              aria-current={index === activeIndex ? 'location' : undefined}
+            >
+              <span className="reading-trace__dot-num">{item.index}</span>
+              <span className="reading-trace__dot-label">{item.label}</span>
+            </a>
+          </li>
         ))}
-      </span>
-      <span className="reading-trace__ink" aria-hidden="true">
-        <svg viewBox="0 0 220 26" preserveAspectRatio="none">
-          <path
-            className="reading-trace__ink-stroke"
-            d="M2 14c10-9 22 6 36-2s22-9 36-1 22 7 36-2 22-7 36-1 22 6 36-2 18-4 18-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-            strokeLinecap="round"
-          />
-          <circle className="reading-trace__ink-bead" cx="216" cy="11" r="2" fill="currentColor" />
-        </svg>
-      </span>
+      </ol>
       <span className="reading-trace__readout" aria-hidden="true">
+        <span className="reading-trace__readout-eyebrow">now</span>
         <span className="reading-trace__readout-folio">{active.index}</span>
         <span className="reading-trace__readout-name">{active.label}</span>
-        <span className="reading-trace__readout-hint">{active.hint}</span>
       </span>
     </div>
   )
