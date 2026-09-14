@@ -144,6 +144,47 @@ function HeaderRuler() {
   )
 }
 
+function VoiceDial({ voice }: { voice: VoiceId }) {
+  const index = voice === 'quiet' ? 0 : voice === 'human' ? 1 : 2
+  const rotation = index * -120
+  return (
+    <span className={`voice-dial voice-dial--${voice}`} aria-hidden="true">
+      <svg className="voice-dial__svg" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth=".6" opacity=".32" />
+        <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 3" opacity=".5" />
+        <g className="voice-dial__letters" style={{ transform: `rotate(${rotation}deg)`, transformOrigin: '50px 50px', transition: 'transform .9s var(--ease-spring)' }}>
+          {(['A', 'B', 'C'] as const).map((letter, i) => {
+            const a = (i * 120 - 90) * (Math.PI / 180)
+            const x = 50 + 28 * Math.cos(a)
+            const y = 50 + 28 * Math.sin(a)
+            return (
+              <text
+                key={letter}
+                x={x}
+                y={y + 4}
+                textAnchor="middle"
+                fontFamily="ui-monospace, monospace"
+                fontSize="9"
+                letterSpacing=".18em"
+                fill="currentColor"
+                opacity={i === index ? 1 : .35}
+                style={{ transition: 'opacity .45s var(--ease)' }}
+              >{letter}</text>
+            )
+          })}
+        </g>
+        <g className="voice-dial__indicator" key={voice}>
+          <path d="M46 4 L54 4 L50 12 Z" fill="currentColor" />
+          <line x1="50" y1="42" x2="50" y2="14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+          <circle cx="50" cy="10" r="1.6" fill="currentColor" />
+        </g>
+        <circle cx="50" cy="50" r="3" fill="currentColor" />
+        <circle cx="50" cy="50" r="6.5" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".55" />
+      </svg>
+    </span>
+  )
+}
+
 function PressFolio({ section }: { section: string }) {
   const map: Record<string, { folio: string; mark: string }> = {
     question: { folio: 'i', mark: 'set' },
@@ -274,6 +315,11 @@ function AnswerReveal({ open, onClose, triggerRef, voice }: {
           <span className="answer-reveal__tipped" aria-hidden="true">tipped in · folio viii</span>
           <span className="answer-reveal__gluetop" aria-hidden="true" />
           <span className="answer-reveal__gluetop answer-reveal__gluetop--right" aria-hidden="true" />
+          <span className="answer-reveal__foldline" aria-hidden="true">
+            <svg viewBox="0 0 600 24" preserveAspectRatio="none">
+              <path d="M2 12c40-6 80 6 120 0s80-8 120-2 80 6 120-4 80-8 120-1 80 6 118 1" fill="none" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" />
+            </svg>
+          </span>
           <div className="answer-reveal__seal" aria-hidden="true">
             <PressStamp voice={voice} size={124} />
             <span className="answer-reveal__wax-drop" aria-hidden="true">
@@ -955,11 +1001,6 @@ export function App() {
                   <circle className="hero__title-rule-spark hero__title-rule-spark--b" cx="700" cy="14" r=".6" fill="currentColor" />
                 </svg>
               </h1>
-              <span className="hero__title-tag" aria-hidden="true">
-                <span className="hero__title-tag-mark" />
-                <span>set in {voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'} · folio i · folded once</span>
-                <span className="hero__title-tag-mark hero__title-tag-mark--end" />
-              </span>
               <svg className="hero__marginalia" viewBox="0 0 320 18" preserveAspectRatio="none" aria-hidden="true">
                 <path
                   className="hero__marginalia-stroke"
@@ -972,6 +1013,13 @@ export function App() {
                 />
                 <circle className="hero__marginalia-dot" cx="316" cy="10" r="1.5" fill="currentColor" />
               </svg>
+              <span className="hero__dial" aria-hidden="true">
+                <VoiceDial voice={voice} />
+                <span className="hero__dial-label">
+                  <span className="hero__dial-label-eyebrow">the press is set in</span>
+                  <span className="hero__dial-label-name">{voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}</span>
+                </span>
+              </span>
             </div>
           </div>
 
