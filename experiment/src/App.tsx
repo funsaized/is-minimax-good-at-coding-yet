@@ -4,14 +4,15 @@ import { PressStamp } from './PressStamp'
 import { ImpressionRibbon, type ImpressionMark } from './ImpressionRibbon'
 import { MarkedProof } from './MarkedProof'
 import { LetterToReader } from './LetterToReader'
-import { ComposeFloor } from './ComposeFloor'
-import { PressRoom } from './PressRoom'
+import { Press, type VoiceId } from './Press'
 import { InkDust } from './InkDust'
 import { InkTrail } from './InkTrail'
 import { DaySheet } from './DaySheet'
 import { MarginThread } from './MarginThread'
+import { MarginNotes } from './MarginNotes'
 import { Watermark } from './Watermark'
 import { FolioSeal } from './FolioSeal'
+import { PressMark } from './PressMark'
 import { TypePlate } from './TypePlate'
 import { PressSignature } from './PressSignature'
 import { AnnotationRibbon } from './AnnotationRibbon'
@@ -37,8 +38,7 @@ function formatSetToday() {
 
 const READING_SECTIONS: { id: string; index: string; label: string }[] = [
   { id: 'question', index: 'i', label: 'question' },
-  { id: 'press-room', index: 'i·', label: 'press bay' },
-  { id: 'compose', index: 'ii', label: 'compose' },
+  { id: 'press', index: 'ii', label: 'press bed' },
   { id: 'contents', index: 'iii', label: 'contents' },
   { id: 'day', index: 'iii·', label: 'day sheet' },
   { id: 'note', index: '·', label: 'note' },
@@ -47,8 +47,6 @@ const READING_SECTIONS: { id: string; index: string; label: string }[] = [
   { id: 'notes', index: 'vi', label: 'marginalia' },
   { id: 'answer', index: 'viii', label: 'answer' },
 ]
-
-type VoiceId = 'quiet' | 'human' | 'bold'
 
 type Voice = {
   id: VoiceId
@@ -170,8 +168,7 @@ function HeaderRuler() {
 function PressFolio({ section }: { section: string }) {
   const map: Record<string, { folio: string; mark: string }> = {
     question: { folio: 'i', mark: 'set' },
-    'press-room': { folio: 'i·', mark: 'press' },
-    compose: { folio: 'ii', mark: 'compose' },
+    press: { folio: 'ii', mark: 'press bed' },
     contents: { folio: 'iii', mark: 'contents' },
     day: { folio: 'iii·', mark: 'day sheet' },
     note: { folio: '·', mark: 'slip' },
@@ -450,8 +447,7 @@ function NotesSection({ selected, onSelect }: { selected: WordId; onSelect: (id:
 function FolioLedger() {
   const items = [
     { id: 'question', num: 'i', title: 'the question, set', note: 'three marked words, one margin' },
-    { id: 'press-room', num: 'i·', title: 'the press bay', note: 'a lever, three voices, one pull' },
-    { id: 'compose', num: 'ii', title: 'the compose floor', note: 'a working spread of type and margin' },
+    { id: 'press', num: 'ii', title: 'the press bed', note: 'a lever, a stick, a pulled impression' },
     { id: 'contents', num: 'iii', title: 'this page, listed', note: 'the press log · folio contents', self: true },
     { id: 'day', num: 'iii·', title: 'the day sheet', note: 'the hour, the week, the day’s record' },
     { id: 'note', num: '·', title: 'a folded slip', note: 'a short letter to the reader' },
@@ -510,6 +506,14 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
           </span>
           <span className="colophon__date-rule" />
         </span>
+        <span className="colophon__crease" aria-hidden="true" />
+        <span className="colophon__crease colophon__crease--v" aria-hidden="true" />
+        <span className="colophon__flap" aria-hidden="true">
+          <svg viewBox="0 0 100 60" preserveAspectRatio="none">
+            <path d="M2 2L50 38L98 2" fill="none" stroke="currentColor" strokeWidth=".7" strokeDasharray="2 2.4" opacity=".55" />
+            <circle cx="50" cy="38" r="1.6" fill="currentColor" opacity=".65" />
+          </svg>
+        </span>
         <div className="colophon__head">
           <div className="colophon__identity">
             <span className="colophon__mark">
@@ -522,6 +526,10 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
           </div>
           <div className="colophon__seal" aria-hidden="true">
             <PressStamp voice={voice} size={68} />
+            <span className="colophon__seal-wax" aria-hidden="true">
+              <span className="colophon__seal-wax-bead" />
+              <span className="colophon__seal-wax-wisp" />
+            </span>
           </div>
         </div>
         <div className="colophon__grid">
@@ -721,7 +729,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'press-room', 'compose', 'contents', 'day', 'note', 'proof', 'pressings', 'notes', 'answer']
+    const elements = ['question', 'press', 'contents', 'day', 'note', 'proof', 'pressings', 'notes', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -851,8 +859,7 @@ export function App() {
           </a>
           <nav className="site-nav" aria-label="Sections">
             <a href="#question" className={activeSection === 'question' ? 'is-active' : ''} aria-current={activeSection === 'question' ? 'location' : undefined}>question</a>
-            <a href="#press-room" className={activeSection === 'press-room' ? 'is-active' : ''} aria-current={activeSection === 'press-room' ? 'location' : undefined}>press bay</a>
-            <a href="#compose" className={activeSection === 'compose' ? 'is-active' : ''} aria-current={activeSection === 'compose' ? 'location' : undefined}>compose</a>
+            <a href="#press" className={activeSection === 'press' ? 'is-active' : ''} aria-current={activeSection === 'press' ? 'location' : undefined}>press bed</a>
             <a href="#contents" className={activeSection === 'contents' ? 'is-active' : ''} aria-current={activeSection === 'contents' ? 'location' : undefined}>contents</a>
             <a href="#day" className={activeSection === 'day' ? 'is-active' : ''} aria-current={activeSection === 'day' ? 'location' : undefined}>day sheet</a>
             <a href="#note" className={activeSection === 'note' ? 'is-active' : ''} aria-current={activeSection === 'note' ? 'location' : undefined}>note</a>
@@ -878,6 +885,9 @@ export function App() {
           <div className="hero__spread">
             <span className="hero__seal" aria-hidden="true">
               <FolioSeal voice={voice} folio="i" setToday={setToday} size={150} />
+            </span>
+            <span className="hero__press-mark" aria-hidden="true">
+              <PressMark voice={voice} setToday={setToday} />
             </span>
             <div className="hero__plate">
               <div className="hero__copy">
@@ -969,10 +979,10 @@ export function App() {
                 <circle cx="216" cy="7" r="1.4" fill="currentColor" />
               </svg>
             </p>
-            <a className="hero__continue" href="#press-room" aria-label="Continue to the press bay">
+            <a className="hero__continue" href="#press" aria-label="Continue to the press bed">
               <span className="hero__continue-imprint">composed by hand <em>·</em> for a careful reader</span>
               <span className="hero__continue-arrow">
-                <span>continue to the press</span>
+                <span>continue to the press bed</span>
                 <span aria-hidden="true" className="hero__continue-arrow-mark">↓</span>
               </span>
             </a>
@@ -983,9 +993,7 @@ export function App() {
           <ImpressionRibbon voice={voice} word={activeWord} marks={marks} setToday={setToday} />
         </div>
 
-        <PressRoom voice={voice} word={activeWord} onVoice={selectVoice} />
-
-        <ComposeFloor voice={voice} word={activeWord} />
+        <Press voice={voice} word={activeWord} onVoice={selectVoice} />
 
         <FolioLedger />
 
@@ -1028,8 +1036,7 @@ export function App() {
         <ol className="margin-thread__list">
           {[
             { id: 'question', index: 'i', label: 'the question' },
-            { id: 'press-room', index: 'i·', label: 'press bay' },
-            { id: 'compose', index: 'ii', label: 'compose' },
+            { id: 'press', index: 'ii', label: 'press bed' },
             { id: 'contents', index: 'iii', label: 'contents' },
             { id: 'day', index: 'iii·', label: 'day sheet' },
             { id: 'note', index: '·', label: 'note' },
@@ -1054,6 +1061,8 @@ export function App() {
       </nav>
 
       <MarginThread activeId={activeSection} progress={scrollProgress} voice={voice} />
+
+      <MarginNotes activeId={activeSection} voice={voice} />
 
       <ReadingFolio activeId={activeSection} voice={voice} word={activeWord} answerOpen={answerOpen} setToday={setToday} />
       <span className="sr-only" aria-live="polite">{announcement}</span>

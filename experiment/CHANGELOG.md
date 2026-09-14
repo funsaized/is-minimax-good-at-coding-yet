@@ -1,19 +1,36 @@
 # Changelog
 
-## Iteration 232
+## 233 — Press bed, margin hand, and a sealed colophon
 
-Marks move beneath the title; a Reading Trace threads the header; the colophon signs once.
+Iteration 233 consolidates the press bay and compose floor into a single
+"press bed" folio, adds a handwritten margin note column on the left edge,
+stamps a small press mark into the hero corner, and seals the colophon with
+an envelope flap, a horizontal crease, and a wax drop.
 
-- Lifted the AnnotationRibbon out of the title spread into its own band so
-  the question claims the full measure of the hero; the marks below now sit
-  as a three-up grid in a single quiet row.
-- Tightened the colophon signature: replaced the two stacked waves with a
-  single drawn line, a small flourish on the right, and a tail on the left.
-  The animation now feels like signing once, not twice.
-- Added ReadingTrace: a horizontal ink scroll-progress that sits as the
-  bottom row of the site header, showing the current folio, section name,
-  and a one-line hint, with a node for each section along the rule.
-- Scaled the hero title up where the ribbon used to constrain it, and gave
-  the marks below the title their own subtle border so they read as a
-  single composed band with the question above.
-- All new motion respects `prefers-reduced-motion`.
+### What changed
+
+- **New `Press.tsx` folio.** A unified three-column spread that places the
+  composing lever on the left, the composing stick with active-piece callout
+  in the middle, and a "pulled impression" panel on the right. The lever
+  knob slides down on pull; the impression panel animates in with a brief
+  blur-and-settle. Replaces the previous press bay + compose floor pair.
+
+- **New `PressMark.tsx` stamp.** A small, grain-textured press stamp that
+  animates into the upper-right corner of the hero. Re-tints with the
+  active voice (blue / coral / acid).
+
+- **New `MarginNotes.tsx` column.** A small left-edge notelet that surfaces
+  a single editor's hand-written line for the current folio. Each note
+  carries a proofreader's glyph and ink color. Sections without a note
+  fall back to an idle state.
+
+- **Colophon refined.** A dashed flap line, a horizontal crease, a vertical
+  seam, and a wax drop beside the press stamp give the colophon plate the
+  feel of a sealed envelope rather than a metadata block.
+
+- **Navigation updated.** The site nav, mobile margin thread, ledger, and
+  active-folio indicator now reference the unified press bed folio; the
+  old press bay + compose entries are removed.
+
+- **ReadingTrace, MarginThread, FolioStitch** all updated to reflect the
+  new folio order.

@@ -11,8 +11,7 @@ type Folio = {
 
 const FOLIOS: Folio[] = [
   { id: 'question', index: 'i', label: 'the question', hint: 'a folio of one line, set three ways' },
-  { id: 'press-room', index: 'i·', label: 'the press bay', hint: 'a lever, three voices, one pull' },
-  { id: 'compose', index: 'ii', label: 'the compose floor', hint: 'the line held in pieces' },
+  { id: 'press', index: 'ii', label: 'the press bed', hint: 'a lever, a stick, a pulled impression' },
   { id: 'contents', index: 'iii', label: 'this page, listed', hint: 'the press log · folio contents' },
   { id: 'day', index: 'iii·', label: 'the day sheet', hint: 'the hour, the week, the day’s record' },
   { id: 'note', index: '·', label: 'a folded slip', hint: 'a short letter to the reader' },
