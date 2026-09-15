@@ -1,11 +1,5 @@
-# Changelog
+# Iteration 254 · one composed sheet, signed once
 
-## Iteration 253 — one composed sheet
+A decisive fold earns the title-to-body transition; the hero CTA becomes a "turn the page" gesture.
 
-The hero sheds accumulated chrome — the four animated corner marks, the lamp glow, the redundant title trace, and the title-block's flanking pseudo-rules retire. The dashed inner border on the spread drops, and the title stands alone above the title-rule.
-
-Each marked word in the title now carries a faint caret mark at rest, present without attention and confident on it. The page reads as a marked proof, not a marquee.
-
-Mobile typography earns its own rhythm: the title scales from a confident floor at 320px without ever feeling cramped, and the hero chrome stacks cleanly. The press-flourish loses its tag so it reads as a single hairline rule. The marginal ledger, reader's note, and folio-mark each earn a small pencil-mark detail so the page reads as one authored sheet.
-
-The title still composes itself line by line on arrival, respecting reduced-motion.
+A single, decisive PageFold sits between the hero and the body — a hairline that breaks at the centre for the page's monogram seal, with a small editorial caption beneath. The hero continue CTA becomes a deliberate "turn the page" gesture: a hand-drawn arrow that arrives with confidence, in a small framed button with a confident pressed-paper edge. The "open the editor's note" button earns a small fold glyph that hints at the leaf to come, so the click feels earned. The answer reveal's leaf settles with a confident spring, its fold-line draws itself, the wax-drop beads fall one beat later, and the fresh-impression seal arrives last. Section ledes are unified in italic serif — same register as the rest of the page — and the brand mark gains a quiet hairline corner. Mobile keeps the rhythm with stacked hero chrome, tighter body spacing, and a centred fold.

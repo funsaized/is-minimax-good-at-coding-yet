@@ -25,6 +25,7 @@ import { WayfinderSeal } from './WayfinderSeal'
 import { TitleRule } from './TitleRule'
 import { PressSignatureMark } from './PressSignatureMark'
 import { NotesSection } from './NotesSection'
+import { PageFold } from './PageFold'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -90,12 +91,14 @@ function LogoMark({ size = 38, accent = 'var(--acid)' }: { size?: number; accent
   return (
     <svg className="brand__mark" width={size} height={size} viewBox="0 0 42 42" aria-hidden="true" style={{ color: accent }}>
       <circle cx="21" cy="21" r="18.5" fill="none" stroke="currentColor" strokeWidth=".9" />
-      <circle cx="21" cy="21" r="12" fill="none" stroke="currentColor" strokeWidth=".7" strokeDasharray="1.2 2.4" opacity=".85" />
-      <path d="M9 21h24M21 9v24" stroke="currentColor" strokeWidth=".55" opacity=".45" />
-      <path d="M5 21a16 16 0 0 1 32 0" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".55" />
-      <text x="21" y="25.5" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="12" fill="currentColor">m³</text>
-      <circle cx="21" cy="6" r=".9" fill="currentColor" />
-      <circle cx="21" cy="36" r=".9" fill="currentColor" />
+      <circle cx="21" cy="21" r="13.5" fill="none" stroke="currentColor" strokeWidth=".55" strokeDasharray="1.2 2.4" opacity=".85" />
+      <path d="M8 21h26M21 8v26" stroke="currentColor" strokeWidth=".5" opacity=".4" />
+      <path d="M5.5 19.5a16 16 0 0 1 31 0" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".55" />
+      <text x="21" y="25.5" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11.5" fill="currentColor">m³</text>
+      <circle cx="21" cy="5.4" r=".95" fill="currentColor" />
+      <circle cx="21" cy="36.6" r=".95" fill="currentColor" />
+      <circle cx="5.4" cy="21" r=".65" fill="currentColor" opacity=".55" />
+      <circle cx="36.6" cy="21" r=".65" fill="currentColor" opacity=".55" />
     </svg>
   )
 }
@@ -760,6 +763,20 @@ export function App() {
               onKey={selectVoiceByKey}
             />
             <button ref={answerTriggerRef} type="button" className={`hero__note-link ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
+              <span className="hero__note-link-fold" aria-hidden="true">
+                <svg viewBox="0 0 32 32" className="hero__note-link-fold-svg">
+                  <path
+                    d="M3 8 L16 18 L29 8"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="hero__note-link-fold-curve"
+                  />
+                  <circle cx="16" cy="18" r="1.4" fill="currentColor" className="hero__note-link-fold-bead" />
+                </svg>
+              </span>
               <span className="hero__note-link-text">
                 <span className="hero__note-link-mark" aria-hidden="true">folio viii</span>
                 <span className="hero__note-link-line">{answerOpen ? 'fold the answer back' : "open the editor's note"}</span>
@@ -775,7 +792,7 @@ export function App() {
           <div className="hero__body">
             <p className="hero__summary">
               <span className="hero__dropcap" aria-hidden="true">A</span>
-              page that earns the right to ask whether a machine can make a place feel like <em>someone was here.</em> Read it once with the eye, again with the ear — and again, when the answer is folded open.
+              page that earns the right to ask whether a machine can make a place feel like <em>someone was here.</em> Read it once with the eye, again with the ear — and a third time, when the answer is folded open.
             </p>
             <span className="hero__press-flourish" aria-hidden="true">
               <svg className="hero__press-flourish-rule" viewBox="0 0 360 12" preserveAspectRatio="none">
@@ -795,17 +812,34 @@ export function App() {
                 <span className="hero__press-flourish-tag-mark" aria-hidden="true" />
               </span>
             </span>
-            <a className="hero__continue" href="#press" aria-label="Continue to the press bed">
+            <a className="hero__continue" href="#press" aria-label="Turn the page to the press bed">
               <span className="hero__continue-imprint">composed by hand <em>·</em> for a careful reader</span>
               <span className="hero__continue-arrow">
-                <span>continue to the press bed</span>
-                <span aria-hidden="true" className="hero__continue-arrow-mark">↓</span>
+                <span className="hero__continue-arrow-text">
+                  <span className="hero__continue-arrow-eyebrow">turn the page</span>
+                  <span className="hero__continue-arrow-label">to the press bed</span>
+                </span>
+                <span aria-hidden="true" className="hero__continue-arrow-mark">
+                  <svg viewBox="0 0 36 36" className="hero__continue-arrow-svg">
+                    <path
+                      className="hero__continue-arrow-curve"
+                      d="M6 6c8 8 16 12 24 12M22 12h8M22 6l8 6-8 6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
               </span>
             </a>
 
             <PressSignatureMark voice={voice} setToday={setToday} />
           </div>
         </section>
+
+        <PageFold voice={voice} setToday={setToday} />
 
         <div className="hero-trace" aria-hidden="false">
           <ImpressionRibbon voice={voice} word={activeWord} marks={marks} setToday={setToday} />

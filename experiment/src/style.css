@@ -7516,11 +7516,13 @@ button {
 .section__lede {
   max-width: 56ch;
   margin: 0;
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .04em;
-  line-height: 1.7;
+  color: var(--ink-mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.35vw, 18px);
+  letter-spacing: -.005em;
+  line-height: 1.55;
+  text-wrap: pretty;
 }
 
 .marginalia-section {
@@ -23503,6 +23505,747 @@ a small act of typesetting.
   .title-rule:hover .title-rule__caption-mark--alt {
     transform: scaleX(-1) rotate(-45deg);
   }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 254 · ONE COMPOSED SHEET, SIGNED ONCE
+
+   The page earns a single decisive "fold" between the title
+   page and the body that follows: a hairline that breaks at
+   the centre for the page's own monogram seal, with a small
+   editorial caption beneath. The hero continue CTA becomes
+   a deliberate "turn the page" gesture — a hand-drawn arrow
+   that arrives with confidence. Mobile keeps the rhythm.
+   ──────────────────────────────────────────────────────────── */
+
+.page-fold {
+  --fold-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(12px, 1.6vw, 22px);
+  width: min(100%, 1320px);
+  margin: clamp(36px, 5vw, 68px) auto clamp(28px, 3.4vw, 48px);
+  padding: clamp(20px, 2.4vw, 32px) var(--gutter) clamp(22px, 2.6vw, 36px);
+  color: var(--fold-tone);
+  opacity: 0;
+  animation: pageFoldIn .9s var(--ease-out) .15s forwards;
+}
+
+.page-fold::before,
+.page-fold::after {
+  content: '';
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor 12%, currentColor 88%, transparent);
+  opacity: .5;
+}
+
+.page-fold::before { top: 0; }
+
+.page-fold::after {
+  top: auto;
+  bottom: 0;
+  opacity: .25;
+}
+
+.page-fold__hairline {
+  display: block;
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor 8%, currentColor 92%, transparent);
+  opacity: .55;
+  align-self: center;
+}
+
+.page-fold__hairline--left {
+  background: linear-gradient(to right, transparent, currentColor 60%, currentColor 100%);
+}
+
+.page-fold__hairline--right {
+  background: linear-gradient(to left, transparent, currentColor 60%, currentColor 100%);
+}
+
+.page-fold__seal {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: clamp(120px, 16vw, 168px);
+  height: clamp(38px, 4.4vw, 48px);
+  color: currentColor;
+}
+
+.page-fold__seal-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.page-fold__seal-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: pageFoldDraw 1.4s var(--ease-out) .55s forwards;
+}
+
+.page-fold__seal-bead {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.4);
+  opacity: 0;
+  animation: pageFoldBead .55s var(--ease-spring) 1.85s forwards;
+}
+
+.page-fold__seal-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  transform: scale(.4);
+  animation: pageFoldRing .65s var(--ease-spring) 1.7s forwards;
+}
+
+.page-fold__seal-orbit {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: pageFoldOrbit 1.4s var(--ease-out) 1.9s forwards;
+}
+
+.page-fold__seal-tick {
+  opacity: 0;
+  animation: pageFoldTick .55s var(--ease-out) forwards;
+}
+
+.page-fold__seal-tick--start { animation-delay: .35s; }
+.page-fold__seal-tick--end { animation-delay: 1.95s; }
+
+.page-fold__caption {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: clamp(12px, 1.4vw, 18px) 0 0;
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12.5px, 1.1vw, 14.5px);
+  letter-spacing: -.005em;
+  line-height: 1.35;
+  text-align: center;
+  text-wrap: balance;
+  opacity: 0;
+  animation: pageFadeIn .85s var(--ease-out) 1.1s forwards;
+}
+
+.page-fold__caption em {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.page-fold__caption-mark {
+  display: inline-block;
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: clamp(13px, 1.1vw, 15px);
+  letter-spacing: 0;
+  color: currentColor;
+  opacity: .55;
+  transform: scaleX(-1);
+}
+
+.page-fold__caption-mark--alt { transform: none; }
+
+.page-fold__meta {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 1.8vw, 22px);
+  margin: clamp(8px, 1vw, 14px) 0 0;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: pageFadeIn .85s var(--ease-out) 1.3s forwards;
+}
+
+.page-fold__meta-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(8px, 1vw, 12px);
+}
+
+.page-fold__meta-tag {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.page-fold__meta-text {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12.5px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+}
+
+.page-fold__meta-rule {
+  display: block;
+  width: clamp(20px, 3vw, 36px);
+  height: 1px;
+  background: currentColor;
+  opacity: .35;
+}
+
+@keyframes pageFoldIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pageFoldDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pageFoldBead {
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pageFoldRing {
+  to { opacity: .55; transform: scale(1); }
+}
+
+@keyframes pageFoldOrbit {
+  to { opacity: .35; transform: scale(1); }
+}
+
+@keyframes pageFoldTick {
+  to { opacity: .85; }
+}
+
+@keyframes pageFadeIn {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-fold,
+  .page-fold__seal-stroke,
+  .page-fold__seal-bead,
+  .page-fold__seal-ring,
+  .page-fold__seal-orbit,
+  .page-fold__seal-tick,
+  .page-fold__caption,
+  .page-fold__meta {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-fold {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    padding: clamp(18px, 3vw, 26px) clamp(22px, 4vw, 36px);
+    row-gap: 12px;
+  }
+
+  .page-fold__hairline {
+    grid-row: 1;
+  }
+
+  .page-fold__seal {
+    grid-row: 1;
+    grid-column: 2;
+    width: clamp(96px, 30vw, 132px);
+    height: clamp(34px, 8vw, 42px);
+  }
+
+  .page-fold__caption {
+    margin-top: 6px;
+    grid-row: 2;
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+
+  .page-fold__meta {
+    grid-row: 3;
+    gap: 10px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-fold__hairline {
+    display: none;
+  }
+
+  .page-fold {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-fold__seal {
+    grid-column: 1;
+    justify-self: center;
+    width: clamp(120px, 38vw, 168px);
+  }
+
+  .page-fold__caption {
+    padding: 0 6px;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   HERO CONTINUE · the title page earns a deliberate "turn the
+   page" gesture — a hand-drawn arrow arrives with confidence,
+   not a default ↓ glyph. The link is a quiet press cue.
+   ──────────────────────────────────────────────────────────── */
+
+.hero__continue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(16px, 2vw, 28px);
+  padding: clamp(14px, 1.6vw, 22px) clamp(18px, 2.2vw, 28px);
+  margin: clamp(8px, 1vw, 14px) auto 0;
+  max-width: clamp(440px, 60%, 720px);
+  color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 1px;
+  background:
+    linear-gradient(180deg, rgba(28, 36, 52, .38), rgba(14, 20, 32, .58));
+  text-decoration: none;
+  transition: border-color .4s var(--ease), background .4s var(--ease), color .4s var(--ease), transform .55s var(--ease-spring);
+}
+
+.hero__continue:hover,
+.hero__continue:focus-visible {
+  border-color: rgba(216, 255, 106, .32);
+  background:
+    linear-gradient(180deg, rgba(36, 46, 66, .5), rgba(20, 28, 42, .68));
+  transform: translateY(-1px);
+}
+
+.hero__continue-imprint {
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+}
+
+.hero__continue-imprint em {
+  font-style: normal;
+  color: var(--coral);
+  font-family: var(--mono);
+  font-size: clamp(9px, .85vw, 11px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  margin: 0 2px;
+}
+
+.app--voice-quiet .hero__continue-imprint em { color: var(--blue); }
+.app--voice-human .hero__continue-imprint em { color: var(--coral); }
+.app--voice-bold .hero__continue-imprint em { color: var(--acid); }
+
+.hero__continue-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 18px);
+}
+
+.hero__continue-arrow-text {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  line-height: 1.05;
+}
+
+.hero__continue-arrow-eyebrow {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.hero__continue-arrow-label {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.4vw, 19px);
+  letter-spacing: -.01em;
+}
+
+.hero__continue-arrow-mark {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(38px, 4vw, 46px);
+  height: clamp(38px, 4vw, 46px);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: var(--coral);
+  transition: transform .55s var(--ease-spring), background .4s var(--ease), color .4s var(--ease), box-shadow .55s var(--ease);
+}
+
+.app--voice-quiet .hero__continue-arrow-mark { color: var(--blue); }
+.app--voice-human .hero__continue-arrow-mark { color: var(--coral); }
+.app--voice-bold .hero__continue-arrow-mark { color: var(--acid); }
+
+.hero__continue-arrow-svg {
+  width: 60%;
+  height: 60%;
+  display: block;
+}
+
+.hero__continue-arrow-curve {
+  stroke-dasharray: 60 60;
+  stroke-dashoffset: 60;
+  transition: stroke-dashoffset .9s var(--ease-out);
+}
+
+.hero__continue:hover .hero__continue-arrow-mark,
+.hero__continue:focus-visible .hero__continue-arrow-mark {
+  background: currentColor;
+  color: var(--night);
+  transform: rotate(-12deg) scale(1.05);
+  box-shadow: 0 0 0 4px rgba(216, 255, 106, .14);
+}
+
+.app--voice-quiet .hero__continue:hover .hero__continue-arrow-mark,
+.app--voice-quiet .hero__continue:focus-visible .hero__continue-arrow-mark { box-shadow: 0 0 0 4px rgba(155, 188, 255, .14); }
+
+.app--voice-bold .hero__continue:hover .hero__continue-arrow-mark,
+.app--voice-bold .hero__continue:focus-visible .hero__continue-arrow-mark { box-shadow: 0 0 0 4px rgba(216, 255, 106, .16); }
+
+.hero__continue:hover .hero__continue-arrow-curve,
+.hero__continue:focus-visible .hero__continue-arrow-curve {
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__continue-arrow-curve {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero__continue {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px 18px;
+    max-width: 100%;
+  }
+
+  .hero__continue-arrow {
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .hero__continue-arrow-text {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero__continue-arrow-mark {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ANSWER REVEAL · the moment the editor's note is opened
+   earns a slightly more theatrical entrance: the leaf's
+   fold-line draws itself, the ink-drip beads fall one beat
+   later, and the inner copy settles with a confident spring.
+   ──────────────────────────────────────────────────────────── */
+
+.answer-reveal__leaf {
+  position: relative;
+  transform-origin: 50% 0%;
+}
+
+.answer-reveal.is-open .answer-reveal__leaf {
+  animation: answerLeafOpen 1.1s var(--ease-out) forwards;
+}
+
+@keyframes answerLeafOpen {
+  0% { transform: perspective(1400px) rotateX(-6deg) translateY(8px); opacity: .85; }
+  60% { transform: perspective(1400px) rotateX(1deg) translateY(0); opacity: 1; }
+  100% { transform: perspective(1400px) rotateX(0) translateY(0); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-reveal.is-open .answer-reveal__leaf {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* The answer reveal's fold-line draws itself when the leaf opens. */
+
+.answer-reveal__foldline svg path {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.6s var(--ease-out) .15s;
+}
+
+.answer-reveal.is-open .answer-reveal__foldline svg path {
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-reveal__foldline svg path {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+}
+
+/* The ink-drip's beads fall one beat later, after the leaf has
+   settled, so the opening has its own rhythm. */
+
+.answer-reveal.is-open .answer-reveal__ink-drip-stroke {
+  stroke-dasharray: 120 120;
+  stroke-dashoffset: 120;
+  animation: inkDripDraw 1.4s var(--ease-out) .85s forwards;
+}
+
+.answer-reveal.is-open .answer-reveal__ink-drip-bead {
+  opacity: 0;
+  animation: inkDripBead .6s var(--ease-spring) 1.95s forwards;
+}
+
+.answer-reveal.is-open .answer-reveal__ink-drip-splash {
+  opacity: 0;
+  animation: inkDripBead .55s var(--ease-spring) 2.1s forwards;
+}
+
+@keyframes inkDripDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes inkDripBead {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-reveal.is-open .answer-reveal__ink-drip-stroke,
+  .answer-reveal.is-open .answer-reveal__ink-drip-bead,
+  .answer-reveal.is-open .answer-reveal__ink-drip-splash {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+  }
+}
+
+/* The "fresh impression" seal earns a small ink-bloom when
+   the leaf opens — the page acknowledges its own arrival. */
+
+.answer-reveal.is-open .answer-reveal__fresh-seal {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  transform: scale(.7);
+  animation: freshSealSettle .9s var(--ease-spring) 1.55s forwards;
+}
+
+@keyframes freshSealSettle {
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-reveal.is-open .answer-reveal__fresh-seal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* The "open the editor's note" button earns a confident
+   pressed-paper edge — its borders carry the page's own
+   hairline texture. */
+
+.hero__note-link {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero__note-link::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+  opacity: 0;
+  transform: scale(.94);
+  transition: opacity .35s var(--ease), transform .55s var(--ease-spring);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero__note-link:hover::before,
+.hero__note-link:focus-visible::before {
+  opacity: .35;
+  transform: scale(1);
+}
+
+.hero__note-link.is-open::before {
+  opacity: .55;
+  transform: scale(1);
+}
+
+/* ────────────────────────────────────────────────────────────
+   SITE HEADER · the brand mark earns a subtle press-mark
+   border at the corner: a single hairline that hints at a
+   trimmed corner without breaking the type. It gives the
+   brand a quieter, more composed silhouette.
+   ──────────────────────────────────────────────────────────── */
+
+.brand__mark {
+  position: relative;
+}
+
+.brand__mark::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  opacity: .25;
+  transition: opacity .4s var(--ease), transform .5s var(--ease-spring);
+  pointer-events: none;
+}
+
+.brand:hover .brand__mark::after,
+.brand:focus-visible .brand__mark::after {
+  opacity: .55;
+  transform: rotate(-22deg) scale(1.04);
+}
+
+/* ────────────────────────────────────────────────────────────
+   MOBILE POLISH · the page earns a more confident rhythm
+   below 720px: tighter section heads, less aggressive
+   spacing, and a hero title that holds its line.
+   ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 720px) {
+  .site-header__set-line em {
+    font-size: 11px;
+  }
+
+  .hero__body {
+    gap: clamp(12px, 2.6vw, 20px);
+  }
+
+  .hero__summary {
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+
+  .hero__press-flourish {
+    width: clamp(180px, 60%, 280px);
+  }
+
+  .page-fold__meta-cell:nth-child(3) {
+    flex-basis: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero__summary {
+    font-size: 14px;
+  }
+
+  .hero__press-flourish {
+    width: clamp(160px, 60%, 240px);
+  }
+
+  .hero__continue-arrow-text {
+    align-items: flex-start;
+  }
+
+  .page-fold__meta {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .page-fold__meta-rule { display: none; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ANSWER LINK FOLD · a small, hand-drawn fold glyph sits
+   next to the "open the editor's note" copy. It hints at
+   the leaf that will open, so the click feels earned.
+   ──────────────────────────────────────────────────────────── */
+
+.hero__note-link-fold {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(28px, 2.6vw, 32px);
+  height: clamp(28px, 2.6vw, 32px);
+  margin-right: clamp(8px, 1vw, 12px);
+  color: var(--coral);
+  transition: color .4s var(--ease), transform .55s var(--ease-spring);
+  flex: 0 0 auto;
+}
+
+.app--voice-quiet .hero__note-link-fold { color: var(--blue); }
+.app--voice-human .hero__note-link-fold { color: var(--coral); }
+.app--voice-bold .hero__note-link-fold { color: var(--acid); }
+
+.hero__note-link-fold-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hero__note-link-fold-curve {
+  stroke-dasharray: 60 60;
+  stroke-dashoffset: 60;
+  transition: stroke-dashoffset 1.1s var(--ease-out);
+}
+
+.hero__note-link-fold-bead {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.4);
+  opacity: 0;
+  transition: opacity .4s var(--ease) .15s, transform .55s var(--ease-spring) .15s;
+}
+
+.hero__note-link:hover .hero__note-link-fold,
+.hero__note-link:focus-visible .hero__note-link-fold {
+  transform: rotate(-8deg);
+}
+
+.hero__note-link:hover .hero__note-link-fold-curve,
+.hero__note-link:focus-visible .hero__note-link-fold-curve {
+  stroke-dashoffset: 0;
+}
+
+.hero__note-link:hover .hero__note-link-fold-bead,
+.hero__note-link:focus-visible .hero__note-link-fold-bead {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hero__note-link.is-open .hero__note-link-fold {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__note-link-fold-curve { stroke-dashoffset: 0 !important; transition: none !important; }
+  .hero__note-link-fold-bead { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .hero__note-link:hover .hero__note-link-fold,
+  .hero__note-link:focus-visible .hero__note-link-fold,
+  .hero__note-link.is-open .hero__note-link-fold { transform: none !important; }
 }
 
 
