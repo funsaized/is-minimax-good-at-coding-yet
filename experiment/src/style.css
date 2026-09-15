@@ -2781,16 +2781,21 @@ button {
 
 /* ────────────────────────────────────
    HERO PULL · a single short editorial
-   note that closes the title. Replaces
-   the wider publication mark.
+   motto that closes the body and opens
+   the page-turn. Two thin printer's
+   rules flank the line; the second clause
+   sits in a softer tone so the line reads
+   as a single breath.
    ──────────────────────────────────── */
 
 .hero__pull {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: clamp(10px, 1.6vw, 18px);
-  margin: clamp(4px, .8vw, 10px) auto clamp(20px, 2.8vw, 32px);
+  margin: clamp(4px, .8vw, 10px) auto clamp(14px, 1.8vw, 24px);
+  padding: clamp(8px, 1.1vw, 14px) 0;
   color: var(--mist);
   font-family: var(--serif);
   font-style: italic;
@@ -2798,13 +2803,19 @@ button {
   letter-spacing: -.005em;
   line-height: 1;
   opacity: 0;
-  animation: traceFade .7s var(--ease-out) 1.4s forwards;
+  transform: translateY(4px);
+  transition: opacity .9s var(--ease-out) 1.05s, transform .9s var(--ease-out) 1.05s;
+}
+
+.hero__body.is-in-view .hero__pull {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hero__pull-rule {
   display: block;
   flex: 1;
-  max-width: 60px;
+  max-width: 90px;
   height: 1px;
   background: linear-gradient(to right, transparent, var(--line));
 }
@@ -2815,10 +2826,13 @@ button {
 
 .hero__pull-text {
   display: inline-flex;
-  align-items: center;
-  gap: 12px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(6px, .7vw, 10px);
   color: var(--mist);
   white-space: nowrap;
+  text-align: center;
 }
 
 .hero__pull-mark {
@@ -2838,6 +2852,59 @@ button {
 .app--voice-quiet .hero__pull-mark { color: var(--blue); }
 .app--voice-human .hero__pull-mark { color: var(--coral); }
 .app--voice-bold .hero__pull-mark { color: var(--acid); }
+
+.hero__pull-motto {
+  color: var(--paper);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -.005em;
+}
+
+.hero__pull-divider {
+  display: inline-block;
+  color: var(--ink-mist);
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: clamp(10px, .9vw, 12px);
+  letter-spacing: 0;
+  opacity: .55;
+  transform: translateY(-.06em);
+}
+
+.hero__pull-second {
+  color: var(--mist);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -.005em;
+  opacity: .85;
+}
+
+@media (max-width: 540px) {
+  .hero__pull {
+    flex-wrap: wrap;
+    gap: clamp(8px, 1vw, 12px);
+  }
+
+  .hero__pull-rule {
+    flex: 0 0 36px;
+    max-width: 36px;
+  }
+
+  .hero__pull-text {
+    flex: 0 0 100%;
+    order: 2;
+    white-space: normal;
+    line-height: 1.4;
+  }
+
+  .hero__pull-rule--end {
+    order: 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__pull { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
 
 .hero__pull em {
   color: var(--paper);
@@ -26372,7 +26439,121 @@ a small act of typesetting.
 
 .hero__summary-text {
   grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, .9vw, 12px);
+}
+
+.hero__summary-paragraph {
   display: block;
+  margin: 0;
+}
+
+.hero__summary-paragraph + .hero__summary-paragraph {
+  margin: 0;
+}
+
+.hero__summary-sign {
+  display: inline-flex;
+  align-self: flex-end;
+  align-items: baseline;
+  gap: clamp(6px, .7vw, 9px);
+  margin-top: clamp(2px, .4vw, 6px);
+  padding-top: clamp(4px, .55vw, 8px);
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.1vw, 15px);
+  letter-spacing: -.005em;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity .7s var(--ease-out) .9s, transform .7s var(--ease-out) .9s;
+}
+
+.hero__body.is-in-view .hero__summary-sign {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero__summary-sign-dash {
+  color: var(--ink-mist);
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: clamp(15px, 1.25vw, 17px);
+  letter-spacing: 0;
+  transform: translateY(-.04em);
+}
+
+.hero__summary-sign-name {
+  color: var(--paper);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -.005em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__summary-sign { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ────────────────────────────────────
+   HERO SET RULE · a thin printer's
+   ornament that bridges the body grid
+   and the pull quote. Two fading rules
+   with a hand-drawn bead in the middle —
+   the page's own seam between the
+   editorial note and the printer's motto.
+   ──────────────────────────────────── */
+
+.hero__set-rule {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 18px);
+  max-width: min(640px, 100%);
+  margin: clamp(10px, 1.6vw, 22px) auto clamp(8px, 1.1vw, 16px);
+  color: var(--ink-mist);
+  opacity: 0;
+  transition: opacity .9s var(--ease-out) .85s;
+}
+
+.hero__body.is-in-view .hero__set-rule {
+  opacity: .75;
+}
+
+.hero__set-rule-line {
+  display: block;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line) 50%, var(--line));
+  opacity: .55;
+}
+
+.hero__set-rule-line--end {
+  background: linear-gradient(to left, transparent, var(--line) 50%, var(--line));
+}
+
+.hero__set-rule-bead {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(28px, 3vw, 40px);
+  height: clamp(10px, 1.1vw, 14px);
+  color: var(--coral);
+  transform: translateY(.04em);
+  transition: color .5s var(--ease);
+}
+
+.app--voice-quiet .hero__set-rule-bead { color: var(--blue); }
+.app--voice-human .hero__set-rule-bead { color: var(--coral); }
+.app--voice-bold .hero__set-rule-bead { color: var(--acid); }
+
+.hero__set-rule-bead svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__set-rule { opacity: .75 !important; transition: none !important; }
 }
 
 .hero__summary-scrawl {

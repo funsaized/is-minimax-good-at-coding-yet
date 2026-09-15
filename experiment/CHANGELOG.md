@@ -1,17 +1,9 @@
-# Iteration 258
+# Changelog
 
-Refreshed the page's tactile physical-artifact feel: the answer reveal now tips in like a real pressed leaf, and folio i now closes with a small broadside signature row.
+## Iteration 259
 
-## Changes
+Hero body becomes a fuller editorial colophon: two paragraphs, an editor sign-off, a set rule, a pull quote.
 
-- **Answer reveal feels freshly tipped.** Added an SVG-noise paper grain that runs across the leaf surface, a soft ink bleed that crosses the leaf edge by a few millimetres on either side, and a small folded corner mark at the top-right. The grain fades in once the leaf is open, the bleed lands with a brief delay, and the corner mark eases into place last. All three elements respect `prefers-reduced-motion`.
-- **Hero now closes with a broadside signature row.** Below the body's dropcap summary, voice caption, and "turn the page" gesture, folio i now ends on a single confident row: a lead rule, a small folio tag with a circled `i`, a hand-set pencil stroke that draws itself, the pull line *tipped, bound, dated*, a pressed stamp reading `PAGE · ONE · FOLIO i`, and a trailing rule. The stamp lands with a small bounce and a wax bead trickles beside it.
-- **Hero epigraph simplified.** Reduced from a mirrored pair of ornament stars and twin rules to a single centred star with twin rules, so the title page's opening line of small italic text reads as one quiet preface rather than a framed band.
-- **Defined the missing `traceFade` keyframe.** Several existing elements referenced an undefined `traceFade` animation; a definition (`opacity` + small `translateY`) is now in place so the title-page signature and other fading elements settle in correctly.
-
-## Notes
-
-- No remote assets, fonts, or network features; the new grain is generated from a local `feTurbulence` filter.
-- Mobile layout was tested visually: under 720 px the signature row reflows into a three-row stack (folio + stamp / mark / pull).
-- All added motion is wrapped in `prefers-reduced-motion` overrides so the page stays static when the reader prefers.
-- No text was fabricated; no iteration counts, live scores, or deployment metrics were added.
+### Changes
+- `src/App.tsx`: split the hero summary into two authored paragraphs; added a "— the editor" sign-off at the end of the body; added a `hero__set-rule` (fading rules with a hand-drawn bead) and a `hero__pull` figure ("the page is set · the question stays open") between the body grid and the "turn the page" gesture; swapped the summary wrapper from `<p>` to `<div>` to host multiple paragraphs.
+- `src/style.css`: added `.hero__summary-paragraph`, `.hero__summary-sign` (with em-dash and italic "the editor"), `.hero__set-rule` (gradient rules + bead, voice-tinted), and refactored `.hero__pull` to link its fade-in to `.hero__body.is-in-view`, support the new motto / divider / second-clause spans, and wrap gracefully at 540px.
