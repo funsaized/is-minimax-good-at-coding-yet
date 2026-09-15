@@ -1,0 +1,19 @@
+{
+  "id": 278,
+  "parentId": 277,
+  "createdAt": "2026-09-15T23:52:20.854Z",
+  "summary": "Replaced the thin Second Reading tabs (folio i·) with a deliberate three-reading composition: each voice is now typeset ",
+  "path": "/iterations/000278/index.html",
+  "screenshot": "/iterations/000278/desktop.png",
+  "mobileScreenshot": "/iterations/000278/mobile.png",
+  "sourceCommit": "937ca3301d0f84a5b629f6e31c38ff420b6a59c7",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 234,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 159259,
+    "outputTokens": 21699,
+    "steps": 103
+  }
+}
