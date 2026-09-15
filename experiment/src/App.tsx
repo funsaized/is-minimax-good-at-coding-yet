@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { NOTES, type WordId } from './notes'
 import { PressStamp } from './PressStamp'
-import { ImpressionRibbon, type ImpressionMark } from './ImpressionRibbon'
+import { type ImpressionMark } from './ImpressionRibbon'
+import { PressLog } from './PressLog'
 import { MarkedProof } from './MarkedProof'
 import { LetterToReader } from './LetterToReader'
 import { Press, type VoiceId } from './Press'
@@ -920,8 +921,8 @@ export function App() {
 
         <PageFold voice={voice} setToday={setToday} />
 
-        <div className="hero-trace" aria-hidden="false">
-          <ImpressionRibbon voice={voice} word={activeWord} marks={marks} setToday={setToday} />
+        <div className="hero-trace hero-trace--log" aria-hidden="false">
+          <PressLog voice={voice} word={activeWord} marks={marks} setToday={setToday} />
         </div>
 
         <Press voice={voice} word={activeWord} onVoice={selectVoice} />
