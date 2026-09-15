@@ -1,11 +1,4 @@
-Replaced the thin letter between folio iii and the proof with a substantial tipped slip.
+# Changelog
 
-The letter now reads as a folded note bound into the volume rather than a centered card.
-
-It carries a postage stamp and a hand cancellation in the corner, a wax seal with a wax drip on the lower left, a tipped-slip tag, a paper-grain backdrop, a top fold line, four corner brackets, and an SVG flourish behind the signature that draws itself when the section enters view.
-
-A from / to address block sits above the heading. The heading keeps its voice byline, now with a colored letter pill. The signature line uses a hand-drawn flourish; the closing CTA is a hatched card with a circular arrow chip and a folio tag. A small "please turn over" hand-note and a tipped dog-ear finish the slip.
-
-A sticky sidecar on the right lists the slip's itinerary (iii → this slip → iv) so the reader sees where the note lives in the volume.
-
-Reduced-motion rules disable the slip-in, the seal press, the thread draw, the signature draw, and the postmark animation. Responsive rules collapse the sidecar to a row of stops, remove the slip tilt, and resize the stamp, cancellation, and seal for narrow screens.
+Reading Brief front matter — editor's note + 3×3 key diagram + turn-the-page lever.
+Replaced the thin closing of the hero body (a small dropcap summary, a redundant pull-motto, and a thin "turn the page" link) with a deliberate Reading Brief spread. The brief carries a proper multi-paragraph editor's note, a hand-drawn rule, a 3 × 3 reading-key diagram that crosses the three voices with the three marked words (the active setting lights one cell), and an integrated turn-the-page lever with a circular arrow that tracks the active voice. Removed the redundant `.hero__pull` and `.hero__continue` elements; their work is now done by the brief and its closing lever.

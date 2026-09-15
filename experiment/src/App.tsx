@@ -520,8 +520,6 @@ export function App() {
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
   const heroBodyRef = useRef<HTMLDivElement>(null)
   const bodyGrainId = useId().replace(/:/g, '')
-  const continueGrainId = useId().replace(/:/g, '')
-  const continueFadeId = useId().replace(/:/g, '')
 
   const activeWord = hoveredWord ?? selectedWord
 
@@ -747,171 +745,225 @@ export function App() {
               <span className="hero__body-plate-rule" />
               <span className="hero__body-plate-tag">
                 <span className="hero__body-plate-dot" />
-                colophon of the title page
+                the editor's note <em>·</em> front matter
                 <span className="hero__body-plate-dot" />
               </span>
               <span className="hero__body-plate-rule" />
             </span>
 
-            <div className="hero__body-grid hero__body-grid--single">
-              <div className="hero__summary">
-                <span className="hero__dropcap" aria-hidden="true">
-                  <svg className="hero__dropcap-svg" viewBox="0 0 64 64">
-                    <defs>
-                      <filter id={`dropcap-grain-${bodyGrainId}`} x="-6%" y="-6%" width="112%" height="112%">
-                        <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="4" stitchTiles="stitch" />
-                        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
-                        <feComposite in2="SourceGraphic" operator="in" />
-                      </filter>
-                    </defs>
-                    <g filter={`url(#dropcap-grain-${bodyGrainId})`} opacity=".95">
-                      <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" strokeWidth=".7" opacity=".5" />
-                      <circle cx="32" cy="32" r="24" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 2.2" opacity=".4" />
-                      <text
-                        x="32"
-                        y="44"
-                        textAnchor="middle"
-                        fontFamily="Georgia, 'Iowan Old Style', serif"
-                        fontStyle="italic"
-                        fontSize="40"
-                        fill="currentColor"
-                      >A</text>
-                      <line x1="18" y1="14" x2="46" y2="14" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".65" />
-                      <circle cx="32" cy="10" r="1.4" fill="currentColor" opacity=".75" />
-                    </g>
-                  </svg>
+            <article className="hero__brief" aria-labelledby="hero-brief-title">
+              <header className="hero__brief-head">
+                <span className="hero__brief-eyebrow" aria-hidden="true">
+                  <span className="hero__brief-eyebrow-tick" />
+                  <em>how to read this page</em>
+                  <span className="hero__brief-eyebrow-tick hero__brief-eyebrow-tick--alt" />
                 </span>
-                <span className="hero__summary-text">
-                  <span className="hero__summary-paragraph">
-                    The title page is set to ask whether a machine can build a place that feels like <em>someone was here.</em> Three words earn the marginalia; three voices are tried because typography is part of any honest answer.
+                <h2 id="hero-brief-title" className="hero__brief-title">
+                  <span className="hero__brief-title-row">
+                    <em>Three words.</em>
+                    <span className="hero__brief-title-row-sep" aria-hidden="true">·</span>
+                    <span>Three voices.</span>
                   </span>
-                  <span className="hero__summary-paragraph">
-                    Read it once with the eye, again with the ear — and a third time, when the answer is folded open. The page is the press. You are the only reader it has.
+                  <span className="hero__brief-title-row hero__brief-title-row--soft">
+                    <span>One open question.</span>
                   </span>
-                </span>
-                <svg className="hero__summary-scrawl" viewBox="0 0 220 18" preserveAspectRatio="none" aria-hidden="true">
+                </h2>
+              </header>
+
+              <div className="hero__brief-body">
+                <p className="hero__brief-paragraph hero__brief-paragraph--lead">
+                  <span className="hero__dropcap" aria-hidden="true">
+                    <svg className="hero__dropcap-svg" viewBox="0 0 64 64">
+                      <defs>
+                        <filter id={`dropcap-grain-${bodyGrainId}`} x="-6%" y="-6%" width="112%" height="112%">
+                          <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="4" stitchTiles="stitch" />
+                          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
+                          <feComposite in2="SourceGraphic" operator="in" />
+                        </filter>
+                      </defs>
+                      <g filter={`url(#dropcap-grain-${bodyGrainId})`} opacity=".95">
+                        <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" strokeWidth=".7" opacity=".5" />
+                        <circle cx="32" cy="32" r="24" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 2.2" opacity=".4" />
+                        <text
+                          x="32"
+                          y="44"
+                          textAnchor="middle"
+                          fontFamily="Georgia, 'Iowan Old Style', serif"
+                          fontStyle="italic"
+                          fontSize="40"
+                          fill="currentColor"
+                        >T</text>
+                        <line x1="18" y1="14" x2="46" y2="14" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".65" />
+                        <circle cx="32" cy="10" r="1.4" fill="currentColor" opacity=".75" />
+                      </g>
+                    </svg>
+                  </span>
+                  <span className="hero__brief-paragraph-text">
+                    The title page is set to ask whether a machine can build a place that feels like <em>someone was here.</em> Three words earn the marginalia — <em>m³</em>, <em>good at</em>, <em>yet?</em> — and three voices are tried because typography is part of any honest answer.
+                  </span>
+                </p>
+
+                <p className="hero__brief-paragraph">
+                  The reading is short on purpose. The first read takes the line at face value. The second listens for the word the question mark is leaning on. The third — and last — opens the editor's note on folio viii.
+                </p>
+
+                <p className="hero__brief-paragraph hero__brief-paragraph--signed">
+                  Pull a voice to set the line above. Mark a word to read it back. The press is bound to both, and the title answers with whichever is set. <em>The page remembers; the question stays open.</em>
+                </p>
+              </div>
+
+              <span className="hero__brief-rule" aria-hidden="true">
+                <svg viewBox="0 0 600 8" preserveAspectRatio="none">
                   <path
-                    className="hero__summary-scrawl-stroke"
-                    d="M2 12c12-8 24 4 36-1s24-6 36-2 24 6 36-2 24-6 36-1 24 4 38-2"
+                    className="hero__brief-rule-stroke"
+                    d="M2 4c40-3 80 3 120 0s80-3 120 0 80 3 120 0 80-3 120 0 80 3 98 0"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="1"
+                    strokeWidth=".9"
                     strokeLinecap="round"
                     pathLength="100"
                   />
-                  <circle className="hero__summary-scrawl-bead" cx="216" cy="9" r="1.6" fill="currentColor" />
-                </svg>
-              </div>
-
-              <aside className="hero__readings" aria-label="Three readings of the question">
-                <span className="hero__readings-rule hero__readings-rule--lead" aria-hidden="true" />
-                <span className="hero__readings-eyebrow" aria-hidden="true">
-                  <span className="hero__readings-eyebrow-mark" />
-                  the same question, set three ways
-                </span>
-                <SpecimenTray active={voice} onSelect={selectVoice} />
-                <span className="hero__readings-rule hero__readings-rule--trail" aria-hidden="true" />
-                <span className="hero__readings-foot" aria-hidden="true">
-                  pull a setting above · the title answers with whichever is active
-                </span>
-              </aside>
-            </div>
-
-            <figure className="hero__pull" aria-label="A printer's motto">
-              <span className="hero__pull-rule" aria-hidden="true" />
-              <span className="hero__pull-text">
-                <em className="hero__pull-motto">set in type, kept in time</em>
-                <span className="hero__pull-divider" aria-hidden="true">·</span>
-                <span className="hero__pull-second">the page remembers · the question stays open</span>
-              </span>
-              <span className="hero__pull-rule hero__pull-rule--end" aria-hidden="true" />
-            </figure>
-
-            <a className="hero__continue" href="#press" aria-label="Turn the page to the press bed">
-              <span className="hero__continue-corner" aria-hidden="true">
-                <svg viewBox="0 0 64 64" className="hero__continue-corner-svg">
-                  <defs>
-                    <linearGradient id={`continue-fade-${continueFadeId}`} x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
-                      <stop offset="42%" stopColor="currentColor" stopOpacity=".35" />
-                      <stop offset="100%" stopColor="currentColor" stopOpacity=".75" />
-                    </linearGradient>
-                    <filter id={`continue-grain-${continueGrainId}`} x="-4%" y="-4%" width="108%" height="108%">
-                      <feTurbulence type="fractalNoise" baseFrequency="3" numOctaves="2" seed="6" stitchTiles="stitch" />
-                      <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .45 0" />
-                      <feComposite in2="SourceGraphic" operator="in" />
-                    </filter>
-                  </defs>
-                  <g filter={`url(#continue-grain-${continueGrainId})`}>
-                    <path
-                      d="M2 2 L4 60 L62 58"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth=".8"
-                      strokeLinecap="round"
-                      className="hero__continue-corner-edge"
-                    />
-                    <path
-                      d="M2 2 L62 58 L62 4 Z"
-                      fill={`url(#continue-fade-${continueFadeId})`}
-                      className="hero__continue-corner-fold"
-                    />
-                    <path
-                      d="M2 2 L62 58"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth=".9"
-                      strokeLinecap="round"
-                      className="hero__continue-corner-crease"
-                    />
-                    <path
-                      d="M2 2 L18 2 M2 18 L2 2"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth=".5"
-                      strokeLinecap="round"
-                      opacity=".55"
-                      className="hero__continue-corner-rule"
-                    />
-                    <circle cx="56" cy="56" r="1.6" fill="currentColor" className="hero__continue-corner-bead" />
-                  </g>
+                  <circle className="hero__brief-rule-bead" cx="2" cy="4" r="1.3" fill="currentColor" />
+                  <circle className="hero__brief-rule-bead hero__brief-rule-bead--end" cx="598" cy="4" r="1.3" fill="currentColor" />
                 </svg>
               </span>
-              <span className="hero__continue-body">
-                <span className="hero__continue-imprint">composed by hand <em>·</em> for a careful reader</span>
-                <span className="hero__continue-arrow">
-                  <span className="hero__continue-arrow-text">
-                    <span className="hero__continue-arrow-eyebrow">turn the page</span>
-                    <span className="hero__continue-arrow-label">to the press bed</span>
+
+              <figure className="hero__key" aria-label="A key to the page: three voices crossed with three marked words">
+                <span className="hero__key-corner hero__key-corner--tl" aria-hidden="true" />
+                <span className="hero__key-corner hero__key-corner--tr" aria-hidden="true" />
+                <span className="hero__key-corner hero__key-corner--bl" aria-hidden="true" />
+                <span className="hero__key-corner hero__key-corner--br" aria-hidden="true" />
+
+                <figcaption className="hero__key-caption">
+                  <span className="hero__key-caption-mark" aria-hidden="true">※</span>
+                  the key <em>·</em> three voices × three marks
+                  <span className="hero__key-caption-mark" aria-hidden="true">※</span>
+                </figcaption>
+
+                <div className="hero__key-grid" role="table" aria-label="The page's three voices and three marked words, crossed">
+                  <span className="hero__key-axis hero__key-axis--head" aria-hidden="true" />
+                  <span className="hero__key-axis hero__key-axis--body" aria-hidden="true" />
+
+                  <span className="hero__key-col-head hero__key-col-head--m3" aria-hidden="true">
+                    <span className="hero__key-col-head-num">i</span>
+                    <span className="hero__key-col-head-name">m³</span>
+                    <span className="hero__key-col-head-mark">stet</span>
                   </span>
-                  <span aria-hidden="true" className="hero__continue-arrow-mark">
-                    <svg viewBox="0 0 36 36" className="hero__continue-arrow-svg">
-                      <path
-                        className="hero__continue-arrow-curve"
-                        d="M6 6c8 8 16 12 24 12M22 12h8M22 6l8 6-8 6"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                  <span className="hero__key-col-head hero__key-col-head--good" aria-hidden="true">
+                    <span className="hero__key-col-head-num">ii</span>
+                    <span className="hero__key-col-head-name">good at</span>
+                    <span className="hero__key-col-head-mark">caret</span>
                   </span>
+                  <span className="hero__key-col-head hero__key-col-head--yet" aria-hidden="true">
+                    <span className="hero__key-col-head-num">iii</span>
+                    <span className="hero__key-col-head-name">yet?</span>
+                    <span className="hero__key-col-head-mark">query</span>
+                  </span>
+
+                  {(['quiet', 'human', 'bold'] as VoiceId[]).map(v => (
+                    <span
+                      key={`row-${v}`}
+                      className={`hero__key-row hero__key-row--${v}`}
+                      aria-hidden="true"
+                    >
+                      <span className={`hero__key-row-head hero__key-row-head--${v}`}>
+                        <span className="hero__key-row-head-letter">{v === 'quiet' ? 'A' : v === 'human' ? 'B' : 'C'}</span>
+                        <span className="hero__key-row-head-name">
+                          {v === 'quiet' ? 'quiet cut' : v === 'human' ? 'human hand' : 'bold signal'}
+                        </span>
+                      </span>
+                      {(['m3', 'good', 'yet'] as WordId[]).map(w => {
+                        const isActive = v === voice && w === activeWord
+                        return (
+                          <span
+                            key={`cell-${v}-${w}`}
+                            className={`hero__key-cell hero__key-cell--${v}-${w} ${isActive ? 'is-active' : ''}`}
+                            aria-hidden="true"
+                          >
+                            <svg className="hero__key-cell-svg" viewBox="0 0 64 64">
+                              <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".65" />
+                              <circle cx="32" cy="32" r="14" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 1.6" opacity=".45" />
+                              {isActive && (
+                                <circle cx="32" cy="32" r="6" fill="currentColor" opacity=".9" />
+                              )}
+                              {isActive && (
+                                <circle cx="32" cy="32" r="11" fill="none" stroke="currentColor" strokeWidth=".55" />
+                              )}
+                              <text
+                                x="32"
+                                y="36"
+                                textAnchor="middle"
+                                fontFamily={v === 'bold' ? 'Inter, ui-sans-serif, system-ui, sans-serif' : 'Georgia, serif'}
+                                fontStyle={v === 'quiet' ? 'italic' : v === 'human' ? 'italic' : 'normal'}
+                                fontWeight={v === 'bold' ? 800 : 400}
+                                fontSize={w === 'good' ? '12' : w === 'yet' ? '14' : '14'}
+                                letterSpacing={v === 'bold' ? '-.04em' : '-.02em'}
+                                fill="currentColor"
+                                opacity={isActive ? '1' : '.85'}
+                              >
+                                {w === 'm3' ? 'm³' : w === 'good' ? 'good' : 'yet?'}
+                              </text>
+                            </svg>
+                          </span>
+                        )
+                      })}
+                    </span>
+                  ))}
+
+                  <span className="hero__key-tag" aria-hidden="true">
+                    <span className="hero__key-tag-row">
+                      <span className="hero__key-tag-mark" />
+                      <em>set · mark · press</em>
+                      <span className="hero__key-tag-mark hero__key-tag-mark--alt" />
+                    </span>
+                    <span className="hero__key-tag-line">
+                      the lit cell shows the active setting on the page
+                    </span>
+                  </span>
+                </div>
+              </figure>
+            </article>
+
+            <aside className="hero__readings" aria-label="Three readings of the question">
+              <span className="hero__readings-rule hero__readings-rule--lead" aria-hidden="true" />
+              <span className="hero__readings-eyebrow" aria-hidden="true">
+                <span className="hero__readings-eyebrow-mark" />
+                the same question, set three ways
+              </span>
+              <SpecimenTray active={voice} onSelect={selectVoice} />
+              <span className="hero__readings-rule hero__readings-rule--trail" aria-hidden="true" />
+              <span className="hero__readings-foot" aria-hidden="true">
+                pull a setting above · the title answers with whichever is active
+              </span>
+            </aside>
+
+            <a className="hero__brief-lever" href="#press" aria-label="Turn the page to the press bed">
+              <span className="hero__brief-lever-tag" aria-hidden="true">
+                <span className="hero__brief-lever-tag-mark" />
+                then <em>·</em> turn the page
+              </span>
+              <span className="hero__brief-lever-row">
+                <span className="hero__brief-lever-line">
+                  <span className="hero__brief-lever-eyebrow">folio ii</span>
+                  <span className="hero__brief-lever-label">the press bed</span>
+                </span>
+                <span className="hero__brief-lever-arrow" aria-hidden="true">
+                  <svg viewBox="0 0 36 36">
+                    <path
+                      className="hero__brief-lever-curve"
+                      d="M6 18h22M22 10l8 8-8 8"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </span>
               </span>
-              <span className="hero__continue-hint" aria-hidden="true">
-                <svg viewBox="0 0 90 12" preserveAspectRatio="none" className="hero__continue-hint-svg">
-                  <path
-                    d="M2 8c10-6 22 4 34-1s22-5 34-2 22 4 18 1"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth=".7"
-                    strokeLinecap="round"
-                    className="hero__continue-hint-stroke"
-                  />
-                  <circle cx="86" cy="7" r="1" fill="currentColor" className="hero__continue-hint-bead" />
-                </svg>
-                <span className="hero__continue-hint-tag">a small fold, a long look</span>
+              <span className="hero__brief-lever-hint" aria-hidden="true">
+                <span className="hero__brief-lever-hint-mark" />
+                a small fold, a long look
               </span>
             </a>
 
