@@ -1,0 +1,19 @@
+{
+  "id": 277,
+  "parentId": 276,
+  "createdAt": "2026-09-15T23:24:19.560Z",
+  "summary": "Reading Brief front matter — editor's note + 3×3 key diagram + turn-the-page lever.",
+  "path": "/iterations/000277/index.html",
+  "screenshot": "/iterations/000277/desktop.png",
+  "mobileScreenshot": "/iterations/000277/mobile.png",
+  "sourceCommit": "9236fec76b6ef533e04053c0db2a298e863a8ea1",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 355,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 161165,
+    "outputTokens": 18286,
+    "steps": 105
+  }
+}
