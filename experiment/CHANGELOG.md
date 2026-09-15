@@ -1,15 +1,17 @@
-# Iteration 257
+# Iteration 258
 
-Hero body becomes a hand-set editorial colophon: dropcap draws itself, voice is named in the margin, the page turns on a real paper corner.
+Refreshed the page's tactile physical-artifact feel: the answer reveal now tips in like a real pressed leaf, and folio i now closes with a small broadside signature row.
 
 ## Changes
 
-- **Hero body reframed as an editorial epilogue.** The body now opens with a delicate "colophon of the title page" rule that names its own register, then settles into a two-column grid (summary on the left, a small voice caption on the right) before the turn-the-page gesture.
-- **Dropcap is now a hand-drawn initial.** A 64px SVG renders an italic serif "A" inside a doubled press seal with a grain filter, replacing the floating text dropcap. The new glyph sits on its own grid column rather than floating, so it reads as part of the page's own vocabulary.
-- **Voice caption (new).** A small folio card beside the summary names the active voice setting (A/B/C, italic name, a hand-drawn scribble, and the shift+V shortcut). The card adopts the active voice's color and is keyboard-styled to read like a typesetter's note.
-- **"Turn the page" is a tactile paper-corner fold.** The simple arrow is replaced by a corner-fold SVG with a shadowed fold gradient and a small bead at the corner. On hover/focus the corner lifts and a single scrawl ("a small fold, a long look") draws itself beneath the CTA. The corner ink tracks the active voice.
-- **Answer-link button is a pressed leaf.** The note-link icon now draws three lines that read as a folded corner (crease, fold, and shadow). A small pin bead animates on hover/focus and turns solid when the answer is open. The fold tilts forward in the is-open state to suggest the leaf has been tipped.
-- **Scroll-gated reveal.** The hero body now uses an IntersectionObserver so the dropcap, the summary scrawl, and the "turn the page" CTA compose themselves in sequence once they enter the viewport — preserving the "composed, not assembled" feel.
-- **Mobile composition.** Below 880px the two-column grid collapses to a single column with the voice caption slipping beneath the summary; the continue keeps its corner + body grid and stacks the hint full-width.
-- **Reduced-motion respect.** Every new animation (body fade, plate reveal, scrawl draw, corner bead, hint stroke) is disabled under `prefers-reduced-motion: reduce`.
-- **Accessibility.** The new structures preserve the existing keyboard and screen-reader contracts: the answer-link keeps its `aria-expanded`/`aria-controls`, the continue link retains its label, the voice caption is an `aside` with `aria-label`, and the dropcap is `aria-hidden` because the "A" duplicates the prose.
+- **Answer reveal feels freshly tipped.** Added an SVG-noise paper grain that runs across the leaf surface, a soft ink bleed that crosses the leaf edge by a few millimetres on either side, and a small folded corner mark at the top-right. The grain fades in once the leaf is open, the bleed lands with a brief delay, and the corner mark eases into place last. All three elements respect `prefers-reduced-motion`.
+- **Hero now closes with a broadside signature row.** Below the body's dropcap summary, voice caption, and "turn the page" gesture, folio i now ends on a single confident row: a lead rule, a small folio tag with a circled `i`, a hand-set pencil stroke that draws itself, the pull line *tipped, bound, dated*, a pressed stamp reading `PAGE · ONE · FOLIO i`, and a trailing rule. The stamp lands with a small bounce and a wax bead trickles beside it.
+- **Hero epigraph simplified.** Reduced from a mirrored pair of ornament stars and twin rules to a single centred star with twin rules, so the title page's opening line of small italic text reads as one quiet preface rather than a framed band.
+- **Defined the missing `traceFade` keyframe.** Several existing elements referenced an undefined `traceFade` animation; a definition (`opacity` + small `translateY`) is now in place so the title-page signature and other fading elements settle in correctly.
+
+## Notes
+
+- No remote assets, fonts, or network features; the new grain is generated from a local `feTurbulence` filter.
+- Mobile layout was tested visually: under 720 px the signature row reflows into a three-row stack (folio + stamp / mark / pull).
+- All added motion is wrapped in `prefers-reduced-motion` overrides so the page stays static when the reader prefers.
+- No text was fabricated; no iteration counts, live scores, or deployment metrics were added.

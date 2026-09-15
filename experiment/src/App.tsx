@@ -200,6 +200,7 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
   voice: VoiceId
   setToday: string
 }) {
+  const leafGrainId = useId().replace(/:/g, '')
   return (
     <section
       className={`answer-reveal ${open ? 'is-open' : ''}`}
@@ -209,6 +210,20 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
     >
       <div className="answer-reveal__clip">
         <div className="answer-reveal__leaf">
+          <span className="answer-reveal__leaf-grain" aria-hidden="true">
+            <svg viewBox="0 0 600 600" preserveAspectRatio="none">
+              <defs>
+                <filter id={`answer-leaf-paper-${leafGrainId}`} x="0%" y="0%" width="100%" height="100%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" seed="22" stitchTiles="stitch" />
+                  <feColorMatrix type="matrix" values="0 0 0 0 .14  0 0 0 0 .08  0 0 0 0 .04  0 0 0 .09 0" />
+                  <feComposite in2="SourceGraphic" operator="in" />
+                </filter>
+              </defs>
+              <rect x="28" y="0" width="544" height="600" fill="#f7f1e0" filter={`url(#answer-leaf-paper-${leafGrainId})`} />
+            </svg>
+          </span>
+          <span className="answer-reveal__leaf-bleed" aria-hidden="true" />
+          <span className="answer-reveal__leaf-cornermark" aria-hidden="true" />
           <span className="answer-reveal__tipped" aria-hidden="true">tipped in · folio viii</span>
           <span className="answer-reveal__gluetop" aria-hidden="true" />
           <span className="answer-reveal__gluetop answer-reveal__gluetop--right" aria-hidden="true" />
@@ -721,17 +736,13 @@ export function App() {
       <div className="page">
         <section className="hero" id="question" aria-labelledby="page-title">
           <span className="hero__epigraph" aria-label="Editorial epigraph">
+            <span className="hero__epigraph-rule" aria-hidden="true" />
             <svg className="hero__epigraph-mark" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 3l1.6 5.2 5.2 1.6-5.2 1.6L12 16.6l-1.6-5.2L5.2 9.8l5.2-1.6z" fill="currentColor" opacity=".85" />
+              <path d="M12 3l1.6 5.2 5.2 1.6-5.2 1.6L12 16.6l-1.6-5.2L5.2 9.8l5.2-1.6z" fill="currentColor" opacity=".9" />
               <circle cx="12" cy="9.8" r="1.4" fill="var(--night)" />
             </svg>
-            <span className="hero__epigraph-rule" aria-hidden="true" />
             <em>on attention, ornament, &amp; the matter of good front-end work</em>
             <span className="hero__epigraph-rule hero__epigraph-rule--end" aria-hidden="true" />
-            <svg className="hero__epigraph-mark hero__epigraph-mark--alt" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 3l1.6 5.2 5.2 1.6-5.2 1.6L12 16.6l-1.6-5.2L5.2 9.8l5.2-1.6z" fill="currentColor" opacity=".85" />
-              <circle cx="12" cy="9.8" r="1.4" fill="var(--night)" />
-            </svg>
           </span>
 
           <FolioMark
@@ -999,6 +1010,59 @@ export function App() {
                 <span className="hero__continue-hint-tag">a small fold, a long look</span>
               </span>
             </a>
+
+            <span className="hero__signature" aria-hidden="true">
+              <span className="hero__signature-rule hero__signature-rule--lead" />
+              <span className="hero__signature-row">
+                <span className="hero__signature-folio">
+                  <span className="hero__signature-folio-letter">i</span>
+                  <span className="hero__signature-folio-tag">folio ends</span>
+                </span>
+                <span className="hero__signature-mark" aria-hidden="true">
+                  <svg viewBox="0 0 220 14" preserveAspectRatio="none">
+                    <path
+                      className="hero__signature-mark-stroke"
+                      d="M2 8c12-7 26 5 42-1s28-7 44-1 26 5 42-2 26-7 42-1 24 5 46-1"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth=".9"
+                      strokeLinecap="round"
+                      pathLength="100"
+                      strokeDasharray="100 100"
+                      strokeDashoffset="100"
+                    />
+                    <circle className="hero__signature-mark-bead" cx="216" cy="7" r="1.4" fill="currentColor" />
+                  </svg>
+                </span>
+                <span className="hero__signature-pull">
+                  <em>tipped, bound, dated</em>
+                  <span className="hero__signature-pull-meta">set today · {setToday}</span>
+                </span>
+                <span className="hero__signature-stamp" aria-hidden="true">
+                  <svg viewBox="0 0 56 56">
+                    <defs>
+                      <filter id={`hero-sig-grain-${continueFadeId}`} x="-12%" y="-12%" width="124%" height="124%">
+                        <feTurbulence type="fractalNoise" baseFrequency="2.6" numOctaves="2" seed="14" stitchTiles="stitch" />
+                        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
+                        <feComposite in2="SourceGraphic" operator="in" />
+                      </filter>
+                    </defs>
+                    <g filter={`url(#hero-sig-grain-${continueFadeId})`} opacity=".92">
+                      <circle cx="28" cy="28" r="24" fill="none" stroke="currentColor" strokeWidth=".9" />
+                      <circle cx="28" cy="28" r="20" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".8 1.6" opacity=".55" />
+                      <text x="28" y="20" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.6" letterSpacing="1.5" fill="currentColor">PAGE · ONE</text>
+                      <text x="28" y="34" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="13" fill="currentColor">m³</text>
+                      <text x="28" y="44" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.2" letterSpacing="1.3" fill="currentColor">FOLIO · i</text>
+                    </g>
+                  </svg>
+                  <span className="hero__signature-stamp-wax" aria-hidden="true">
+                    <span className="hero__signature-stamp-wax-bead" />
+                    <span className="hero__signature-stamp-wax-wisp" />
+                  </span>
+                </span>
+              </span>
+              <span className="hero__signature-rule hero__signature-rule--trail" />
+            </span>
           </div>
         </section>
 
