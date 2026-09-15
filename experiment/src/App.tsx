@@ -32,6 +32,7 @@ import { PlateProvenance } from './PlateProvenance'
 import { FirstReading } from './FirstReading'
 import { ReaderPlate } from './ReaderPlate'
 import { PressPlate } from './PressPlate'
+import { SpecimenTray } from './SpecimenTray'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -944,37 +945,7 @@ export function App() {
                   <span className="hero__readings-eyebrow-mark" />
                   the same question, set three ways
                 </span>
-                <ol className="hero__readings-list">
-                  {VOICES.map(v => (
-                    <li key={v.id} className={`hero__readings-item hero__readings-item--${v.id} ${v.id === voice ? 'is-active' : ''}`}>
-                      <span className="hero__readings-letter" aria-hidden="true">{VOICE_LETTER[v.id]}</span>
-                      <span className="hero__readings-copy">
-                        <span className="hero__readings-setting">{v.name}</span>
-                        <span className="hero__readings-lines" aria-hidden="false">
-                          {v.id === 'quiet' && (
-                            <>
-                              <span><em>is</em> Minimax <em>M3</em></span>
-                              <span><em>good</em> at frontend <em>yet?</em></span>
-                            </>
-                          )}
-                          {v.id === 'human' && (
-                            <>
-                              <span><em>is</em> M3</span>
-                              <span><em>good</em> at frontend <em>yet?</em></span>
-                            </>
-                          )}
-                          {v.id === 'bold' && (
-                            <>
-                              <span>IS M3</span>
-                              <span>GOOD AT FRONTEND YET?</span>
-                            </>
-                          )}
-                        </span>
-                      </span>
-                      <span className="hero__readings-face">{v.descriptor}</span>
-                    </li>
-                  ))}
-                </ol>
+                <SpecimenTray active={voice} onSelect={selectVoice} />
                 <span className="hero__readings-rule hero__readings-rule--trail" aria-hidden="true" />
                 <span className="hero__readings-foot" aria-hidden="true">
                   pull a setting above · the title answers with whichever is active

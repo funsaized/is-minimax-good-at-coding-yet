@@ -29129,15 +29129,11 @@ a small act of typesetting.
 .hero__readings {
   position: relative;
   display: grid;
-  gap: clamp(10px, 1.1vw, 14px);
-  padding: clamp(14px, 1.6vw, 22px) clamp(14px, 1.7vw, 24px);
-  border: 1px solid var(--line);
-  border-radius: 1px;
-  background:
-    linear-gradient(180deg, rgba(28, 36, 52, .32), rgba(14, 20, 32, .5));
-  box-shadow:
-    inset 0 0 0 1px rgba(146, 186, 255, .04),
-    0 18px 36px -28px rgba(0, 0, 0, .6);
+  gap: clamp(12px, 1.2vw, 16px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
   opacity: 0;
   transform: translateY(6px);
   transition: opacity .7s var(--ease-out) .1s, transform .7s var(--ease-out) .1s;
@@ -29321,6 +29317,671 @@ a small act of typesetting.
   line-height: 1.4;
   text-align: center;
   opacity: .7;
+}
+
+/* ────────────────────────────────────────────────────────────
+   SPECIMEN TRAY · three paper sheets fanned across the press
+   tray. The active sheet stands forward, the others settle
+   back with paper grain, crop marks, ink chip, and a subtle
+   press-rule. Replaces the previous flat hero readings list
+   so the hero body carries the same tactile weight as the
+   press bed below it.
+   ──────────────────────────────────────────────────────────── */
+
+.specimen-tray {
+  --tray-pad-x: clamp(16px, 2vw, 26px);
+  --tray-pad-y: clamp(18px, 2.4vw, 30px);
+  --tray-tilt: var(--specimen-tilt, 0deg);
+  --tray-stack-x: var(--specimen-stack-x, 0px);
+  --tray-stack-y: var(--specimen-stack-y, 0px);
+  --tray-z: var(--specimen-z, 1);
+  position: relative;
+  display: grid;
+  gap: clamp(10px, 1vw, 14px);
+  padding: var(--tray-pad-y) var(--tray-pad-x) clamp(14px, 1.6vw, 22px);
+  border: 1px solid var(--line);
+  border-radius: 1px;
+  background:
+    linear-gradient(180deg, rgba(20, 28, 44, .42), rgba(10, 14, 22, .62));
+  box-shadow:
+    inset 0 0 0 1px rgba(146, 186, 255, .05),
+    0 26px 60px -36px rgba(0, 0, 0, .65),
+    0 8px 18px -14px rgba(0, 0, 0, .55);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.specimen-tray::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px dashed rgba(243, 236, 214, .08);
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.specimen-tray__rail {
+  position: absolute;
+  inset: 14px 8px 14px 8px;
+  color: var(--paper);
+  opacity: .55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.specimen-tray__rail svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.specimen-tray__rail-tag {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 11px;
+  background: var(--night);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-mist);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  z-index: 1;
+}
+
+.specimen-tray__rail-tag-mark {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  position: relative;
+}
+
+.specimen-tray__rail-tag-mark::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px;
+  border-radius: 50%;
+  background: var(--paper);
+  opacity: .65;
+}
+
+.specimen-tray__deck {
+  position: relative;
+  height: clamp(310px, 36vw, 380px);
+  perspective: 1400px;
+  z-index: 1;
+}
+
+.specimen-tray__sheet {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  gap: clamp(10px, 1.2vw, 14px);
+  padding: clamp(18px, 2.2vw, 26px) clamp(20px, 2.4vw, 28px);
+  text-align: left;
+  border: 1px solid var(--specimen-edge);
+  border-radius: 2px;
+  background: var(--specimen-paper);
+  color: var(--paper);
+  font-family: var(--serif);
+  cursor: pointer;
+  transform-origin: center center;
+  transition:
+    transform .85s var(--ease-out),
+    opacity .65s var(--ease),
+    filter .65s var(--ease),
+    box-shadow .85s var(--ease-out),
+    z-index 0s linear .35s;
+  z-index: var(--tray-z);
+  opacity: .55;
+  filter: saturate(.65) brightness(.82);
+  box-shadow:
+    0 22px 38px -22px rgba(0, 0, 0, .55),
+    0 10px 14px -10px rgba(0, 0, 0, .35),
+    inset 0 0 0 1px rgba(255, 255, 255, .02);
+  will-change: transform, opacity;
+}
+
+.specimen-tray__sheet--quiet {
+  --specimen-tilt: -3.2deg;
+  --specimen-stack-x: -16px;
+  --specimen-stack-y: -10px;
+  --specimen-edge: rgba(155, 188, 255, .34);
+  --specimen-ink: var(--paper);
+  --specimen-paper: linear-gradient(180deg, #1a2030 0%, #0f1424 100%);
+}
+
+.specimen-tray__sheet--human {
+  --specimen-tilt: 1.6deg;
+  --specimen-stack-x: 6px;
+  --specimen-stack-y: 8px;
+  --specimen-edge: rgba(255, 118, 95, .42);
+  --specimen-ink: var(--coral);
+  --specimen-paper: linear-gradient(180deg, #21151c 0%, #160e15 100%);
+}
+
+.specimen-tray__sheet--bold {
+  --specimen-tilt: -1.6deg;
+  --specimen-stack-x: 18px;
+  --specimen-stack-y: -4px;
+  --specimen-edge: rgba(216, 240, 106, .4);
+  --specimen-ink: var(--acid);
+  --specimen-paper: linear-gradient(180deg, #11181f 0%, #0a0e14 100%);
+}
+
+.specimen-tray__sheet:not(.is-active):not(.is-hovered) {
+  transform:
+    translate(var(--specimen-stack-x), var(--specimen-stack-y))
+    rotate(var(--specimen-tilt))
+    scale(.94);
+}
+
+.specimen-tray__sheet.is-hovered {
+  opacity: .88;
+  filter: saturate(.95) brightness(.96);
+  transform:
+    translate(calc(var(--specimen-stack-x) * .5), calc(var(--specimen-stack-y) * .5))
+    rotate(calc(var(--specimen-tilt) * .5))
+    scale(.97);
+  box-shadow:
+    0 28px 44px -20px rgba(0, 0, 0, .55),
+    0 12px 18px -12px rgba(0, 0, 0, .4),
+    inset 0 0 0 1px rgba(255, 255, 255, .04);
+}
+
+.specimen-tray__sheet.is-active {
+  cursor: default;
+  opacity: 1;
+  filter: none;
+  z-index: 4;
+  transform:
+    translate(0, 0)
+    rotate(0deg)
+    scale(1);
+  box-shadow:
+    0 38px 64px -22px rgba(0, 0, 0, .7),
+    0 18px 28px -16px rgba(0, 0, 0, .5),
+    0 0 0 1px rgba(243, 236, 214, .04),
+    inset 0 0 60px rgba(0, 0, 0, .25);
+}
+
+.specimen-tray__sheet:focus-visible {
+  outline: 1px solid var(--acid);
+  outline-offset: 6px;
+}
+
+.specimen-tray__paper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .85;
+  mix-blend-mode: multiply;
+}
+
+.specimen-tray__paper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 18% 6%, rgba(243, 236, 214, .06), transparent 50%),
+    radial-gradient(ellipse at 82% 92%, rgba(0, 0, 0, .28), transparent 60%);
+  pointer-events: none;
+}
+
+.specimen-tray__grain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: .55;
+}
+
+.specimen-tray__edge {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  height: 1px;
+  background: var(--specimen-edge);
+  opacity: .7;
+  pointer-events: none;
+}
+
+.specimen-tray__edge--top { top: 6px; }
+.specimen-tray__edge--bottom { bottom: 6px; }
+
+.specimen-tray__corners {
+  position: absolute;
+  inset: 6px 6px 6px 6px;
+  color: var(--specimen-edge);
+  pointer-events: none;
+}
+
+.specimen-tray__crop {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+}
+
+.specimen-tray__crop--tl { top: 0; left: 0; }
+.specimen-tray__crop--tr { top: 0; right: 0; }
+.specimen-tray__crop--bl { bottom: 0; left: 0; }
+.specimen-tray__crop--br { bottom: 0; right: 0; }
+
+.specimen-tray__plate {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .65vw, 9px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--muted);
+  position: relative;
+  z-index: 1;
+}
+
+.specimen-tray__plate-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--specimen-edge), transparent);
+  opacity: .8;
+}
+
+.specimen-tray__plate-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.specimen-tray__plate-tag-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--specimen-ink);
+  opacity: .8;
+}
+
+.specimen-tray__chip-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 14px);
+  position: relative;
+  z-index: 1;
+}
+
+.specimen-tray__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+}
+
+.specimen-tray__chip-disc {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: clamp(36px, 3.4vw, 46px);
+  height: clamp(36px, 3.4vw, 46px);
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.4vw, 19px);
+  letter-spacing: -.02em;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, .22),
+    inset 0 -3px 6px rgba(0, 0, 0, .22),
+    0 4px 10px rgba(0, 0, 0, .35);
+}
+
+.specimen-tray__chip-disc em {
+  position: relative;
+  z-index: 1;
+}
+
+.specimen-tray__chip-disc-ring {
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed currentColor;
+  border-radius: 50%;
+  opacity: .4;
+}
+
+.specimen-tray__chip-rule {
+  width: clamp(20px, 2vw, 36px);
+  height: 1px;
+  background: var(--specimen-edge);
+}
+
+.specimen-tray__chip-meta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.specimen-tray__chip-name {
+  color: var(--specimen-ink);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.35vw, 19px);
+  font-weight: 500;
+  letter-spacing: -.012em;
+  line-height: 1.1;
+}
+
+.specimen-tray__chip-face {
+  color: var(--ink-mist);
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .65vw, 9px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.specimen-tray__chip-swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.specimen-tray__chip-swatch-ink {
+  display: inline-block;
+  width: clamp(14px, 1.4vw, 18px);
+  height: clamp(14px, 1.4vw, 18px);
+  border-radius: 50%;
+  border: 1px solid rgba(243, 236, 214, .35);
+  box-shadow:
+    inset 0 -2px 4px rgba(0, 0, 0, .25),
+    0 1px 2px rgba(0, 0, 0, .35);
+}
+
+.specimen-tray__chip-swatch-rule {
+  display: none;
+}
+
+.specimen-tray__sample {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 2px;
+  min-height: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.specimen-tray__sample-display {
+  color: var(--specimen-ink);
+  font-size: clamp(2rem, 4.4vw, 3rem);
+  line-height: 1;
+}
+
+.specimen-tray__sample-body {
+  color: var(--paper);
+  font-size: clamp(1.1rem, 1.9vw, 1.6rem);
+  line-height: 1.1;
+  opacity: .92;
+}
+
+.specimen-tray__sample-micro {
+  color: var(--paper);
+  font-size: clamp(.95rem, 1.55vw, 1.25rem);
+  line-height: 1.1;
+  opacity: .82;
+}
+
+.specimen-tray__sheet--bold .specimen-tray__sample-display,
+.specimen-tray__sheet--bold .specimen-tray__sample-body,
+.specimen-tray__sheet--bold .specimen-tray__sample-micro {
+  font-family: var(--sans);
+  font-weight: 800;
+  letter-spacing: -.06em;
+  text-transform: uppercase;
+  color: var(--specimen-ink);
+}
+
+.specimen-tray__sheet--bold .specimen-tray__sample-body,
+.specimen-tray__sheet--bold .specimen-tray__sample-micro {
+  color: var(--paper);
+  opacity: .96;
+}
+
+.specimen-tray__motto {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, .9vw, 12px);
+  letter-spacing: -.01em;
+  line-height: 1.3;
+  position: relative;
+  z-index: 1;
+}
+
+.specimen-tray__motto-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--specimen-edge), transparent);
+  opacity: .65;
+}
+
+.specimen-tray__motto em {
+  white-space: nowrap;
+  opacity: .85;
+}
+
+.specimen-tray__foot {
+  display: grid;
+  gap: 4px;
+  position: relative;
+  z-index: 1;
+  padding-top: 8px;
+  border-top: 1px solid rgba(243, 236, 214, .08);
+}
+
+.specimen-tray__foot-row {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(10px, 1.2vw, 14px);
+  flex-wrap: wrap;
+}
+
+.specimen-tray__foot-tag {
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .65vw, 9px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.specimen-tray__foot-value {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, 1vw, 13px);
+  color: var(--paper);
+  letter-spacing: -.005em;
+  opacity: .9;
+}
+
+.specimen-tray__foot-value span {
+  margin: 0 6px;
+  opacity: .55;
+}
+
+.specimen-tray__now {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(15, 20, 32, .82);
+  border: 1px solid var(--specimen-edge);
+  color: var(--specimen-ink);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity .55s var(--ease);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.specimen-tray__sheet.is-active .specimen-tray__now,
+.specimen-tray__sheet.is-hovered .specimen-tray__now {
+  opacity: 1;
+}
+
+.specimen-tray__now-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--specimen-ink);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .12);
+  animation: specimenNowPulse 2.4s var(--ease-out) infinite;
+}
+
+.specimen-tray__sheet.is-active .specimen-tray__now-dot {
+  animation: specimenNowPulse 1.6s var(--ease-out) infinite;
+}
+
+@keyframes specimenNowPulse {
+  0%, 100% { transform: scale(1); opacity: .9; }
+  50% { transform: scale(1.18); opacity: 1; }
+}
+
+.specimen-tray__hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-top: 1px dashed var(--line-soft);
+  color: var(--ink-mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .9vw, 12.5px);
+  letter-spacing: -.005em;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.specimen-tray__hint-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--paper);
+  opacity: .55;
+}
+
+@media (max-width: 980px) {
+  .specimen-tray__deck {
+    height: clamp(330px, 56vw, 420px);
+  }
+
+  .specimen-tray__sheet:not(.is-active):not(.is-hovered) {
+    transform:
+      translate(calc(var(--specimen-stack-x) * .8), calc(var(--specimen-stack-y) * .8))
+      rotate(calc(var(--specimen-tilt) * .8))
+      scale(.94);
+  }
+}
+
+@media (max-width: 720px) {
+  .specimen-tray {
+    --tray-pad-x: 14px;
+    --tray-pad-y: 16px;
+  }
+
+  .specimen-tray__deck {
+    height: 380px;
+  }
+
+  .specimen-tray__sheet {
+    padding: 14px 16px;
+  }
+
+  .specimen-tray__sample-display {
+    font-size: clamp(1.65rem, 6.4vw, 2.3rem);
+  }
+
+  .specimen-tray__sample-body {
+    font-size: clamp(.95rem, 3.6vw, 1.15rem);
+  }
+
+  .specimen-tray__sample-micro {
+    font-size: clamp(.85rem, 3vw, 1rem);
+  }
+
+  .specimen-tray__foot-value {
+    font-size: 11px;
+  }
+
+  .specimen-tray__rail-tag {
+    font-size: 8px;
+    letter-spacing: .18em;
+    padding: 2px 9px;
+  }
+
+  .specimen-tray__now {
+    top: 6px;
+    right: 8px;
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 540px) {
+  .specimen-tray__deck {
+    height: 360px;
+  }
+
+  .specimen-tray__chip-name {
+    font-size: 14px;
+  }
+
+  .specimen-tray__chip-face {
+    font-size: 7.5px;
+    letter-spacing: .18em;
+  }
+
+  .specimen-tray__hint {
+    font-size: 10.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .specimen-tray,
+  .specimen-tray__sheet,
+  .specimen-tray__now-dot,
+  .specimen-tray__grain {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .specimen-tray__sheet.is-active {
+    transform: translate(0, 0) !important;
+  }
+
+  .specimen-tray__sheet:not(.is-active):not(.is-hovered) {
+    transform:
+      translate(var(--specimen-stack-x), var(--specimen-stack-y))
+      rotate(var(--specimen-tilt))
+      scale(.94) !important;
+  }
 }
 
 /* End hero body refinements: hide what's been removed. */
