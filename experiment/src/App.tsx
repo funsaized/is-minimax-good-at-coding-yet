@@ -11,8 +11,8 @@ import { Almanac } from './Almanac'
 import { MarginNotes } from './MarginNotes'
 import { Watermark } from './Watermark'
 import { TypePlate } from './TypePlate'
-import { PressRibbon } from './PressRibbon'
 import { SecondReading } from './SecondReading'
+import { ReadingFloor } from './ReadingFloor'
 import { PressStrikeFlash } from './PressStrikeFlash'
 import { FolioMark } from './FolioMark'
 
@@ -960,7 +960,7 @@ export function App() {
           <SecondReading voice={voice} onSelect={selectVoice} setToday={setToday} />
         </section>
 
-        <PressRibbon voice={voice} setToday={setToday} className="press-ribbon--interlude" />
+        <ReadingFloor voice={voice} setToday={setToday} />
 
         <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} setToday={setToday} />
 
