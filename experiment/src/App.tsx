@@ -29,6 +29,7 @@ import { NotesSection } from './NotesSection'
 import { PageFold } from './PageFold'
 import { PressSpine } from './PressSpine'
 import { PlateProvenance } from './PlateProvenance'
+import { FirstReading } from './FirstReading'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -833,6 +834,8 @@ export function App() {
               onSelect={id => selectWord(id)}
             />
           </div>
+
+          <FirstReading voice={voice} setToday={setToday} />
 
           <div className="hero__chrome">
             <VoiceSelector

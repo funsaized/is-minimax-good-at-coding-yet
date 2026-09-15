@@ -2660,9 +2660,17 @@ button {
 
 .hero__title--human {
   font-style: italic;
-  letter-spacing: -.094em;
-  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'onum' 1, 'swsh' 1;
+  letter-spacing: -.058em;
+  word-spacing: .03em;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'onum' 1, 'swsh' 1, 'salt' 1;
   color: var(--lead-2);
+  font-size: clamp(5.05rem, 14vw, 16rem);
+  line-height: .9;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, .32),
+    0 2px 0 rgba(0, 0, 0, .16),
+    0 5px 14px rgba(0, 0, 0, .38),
+    0 14px 28px rgba(0, 0, 0, .2);
 }
 
 .hero__title--bold {
@@ -2707,16 +2715,14 @@ button {
   display: block;
   padding-left: .04em;
   text-align: center;
-  animation: lineIn .65s var(--ease-out) backwards;
+  animation: lineIn .85s var(--ease-out) backwards;
+  opacity: 0;
+  transform: translateY(.22em);
 }
 
 .hero__title .title__line:last-child {
   padding-left: 0;
 }
-
-.hero__title .title__line:nth-child(1) { animation-delay: .22s; }
-.hero__title .title__line:nth-child(2) { animation-delay: .34s; }
-.hero__title .title__line:nth-child(3) { animation-delay: .46s; }
 
 /* ────────────────────────────────────
    HERO FLOURISH · a single signature
@@ -3147,7 +3153,7 @@ button {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: clamp(14px, 2vw, 24px);
-  margin-top: clamp(20px, 3vw, 36px);
+  margin-top: clamp(8px, 1.4vw, 18px);
   padding: 0;
 }
 
@@ -23882,9 +23888,9 @@ a small act of typesetting.
   animation-name: heroTitleSettle;
 }
 
-.hero__title .title__line:nth-child(1) { animation-delay: .18s; }
-.hero__title .title__line:nth-child(2) { animation-delay: .32s; }
-.hero__title .title__line:nth-child(3) { animation-delay: .46s; }
+.hero__title .title__line:nth-child(1) { animation-delay: .25s; }
+.hero__title .title__line:nth-child(2) { animation-delay: .42s; }
+.hero__title .title__line:nth-child(3) { animation-delay: .58s; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero__title .title__line {
@@ -26416,9 +26422,9 @@ a small act of typesetting.
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: clamp(22px, 2.6vw, 36px);
-  margin-top: clamp(36px, 4.4vw, 56px);
-  padding-top: clamp(28px, 3.2vw, 40px);
+  gap: clamp(18px, 2.2vw, 32px);
+  margin-top: clamp(24px, 3vw, 40px);
+  padding-top: clamp(22px, 2.6vw, 32px);
   border-top: 1px solid var(--line-soft);
   text-align: center;
   opacity: 0;
@@ -26605,9 +26611,9 @@ a small act of typesetting.
 .hero__summary-scrawl {
   grid-column: 1 / -1;
   display: block;
-  width: clamp(180px, 26vw, 240px);
-  height: 12px;
-  margin: 14px 0 0;
+  width: clamp(120px, 16vw, 160px);
+  height: 10px;
+  margin: 6px 0 0;
   justify-self: start;
   color: var(--coral);
   opacity: 0;
@@ -26615,7 +26621,7 @@ a small act of typesetting.
 }
 
 .hero__body.is-in-view .hero__summary-scrawl {
-  opacity: .85;
+  opacity: .55;
 }
 
 .hero__summary-scrawl-stroke {
@@ -27804,5 +27810,293 @@ a small act of typesetting.
   .answer-reveal__foldhere-tag {
     font-size: 7px;
   }
+}
+
+/* ────────────────────────────────────────────────────────────
+   FIRST READING · a deliberate rule between the title and the
+   colophon body. A thin horizontal line holds a single italic
+   phrase — "read it once with the eye, then again with the
+   ear" — flanked by two small registration marks. A hand-drawn
+   stroke sits beneath, dated to today. It earns the page's own
+   breathing room before the colophon begins.
+   ──────────────────────────────────────────────────────────── */
+
+.first-reading {
+  --first-reading-tone: var(--coral);
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  margin: clamp(28px, 3.6vw, 52px) auto clamp(28px, 3.4vw, 46px);
+  padding: 0 var(--gutter);
+  max-width: 920px;
+  width: 100%;
+  color: var(--first-reading-tone);
+  transition: color .55s var(--ease);
+}
+
+.first-reading--quiet { --first-reading-tone: var(--blue); }
+.first-reading--human { --first-reading-tone: var(--coral); }
+.first-reading--bold  { --first-reading-tone: var(--acid); }
+
+.first-reading__crop {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  opacity: 0;
+  color: var(--line);
+  transition: opacity .6s var(--ease) 1.2s;
+}
+
+.first-reading.is-revealed .first-reading__crop {
+  opacity: .55;
+}
+
+.first-reading__crop--tl {
+  top: -6px;
+  left: clamp(8px, 3vw, 28px);
+  border-top: 1px solid currentColor;
+  border-left: 1px solid currentColor;
+}
+
+.first-reading__crop--tr {
+  top: -6px;
+  right: clamp(8px, 3vw, 28px);
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+}
+
+.first-reading__rule {
+  display: block;
+  width: min(100%, 760px);
+  height: 14px;
+  overflow: visible;
+}
+
+.first-reading__rule-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.4s var(--ease-out);
+}
+
+.first-reading.is-revealed .first-reading__rule-stroke {
+  stroke-dashoffset: 0;
+}
+
+.first-reading__rule-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.4);
+  transition:
+    opacity .35s var(--ease) 1.05s,
+    transform .55s var(--ease-spring) 1.05s;
+}
+
+.first-reading.is-revealed .first-reading__rule-bead {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.first-reading__inscription {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.6vw, 19.5px);
+  letter-spacing: -.005em;
+  line-height: 1.2;
+  text-align: left;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity .9s var(--ease-out) .55s,
+    transform .9s var(--ease-out) .55s;
+}
+
+.first-reading.is-revealed .first-reading__inscription {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.first-reading__inscription-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  color: var(--first-reading-tone);
+  opacity: .85;
+}
+
+.first-reading__inscription-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.first-reading__inscription-body {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.first-reading__inscription-line {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(4px, .5vw, 6px);
+  white-space: nowrap;
+}
+
+.first-reading__inscription-line--alt {
+  padding-left: clamp(10px, 1.4vw, 18px);
+  font-style: italic;
+  color: var(--mist);
+}
+
+.first-reading__inscription-em {
+  color: var(--paper);
+  font-style: italic;
+  font-family: var(--serif);
+}
+
+.first-reading__inscription-em--alt {
+  color: var(--mist);
+  font-style: italic;
+  font-size: clamp(13px, 1.3vw, 16.5px);
+}
+
+.first-reading__inscription-comma {
+  color: var(--first-reading-tone);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.05em;
+  opacity: .8;
+  margin: 0 2px;
+}
+
+.first-reading__sign {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1vw, 12px);
+  color: var(--mist);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .8vw, 10.5px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity .8s var(--ease-out) 1.4s;
+}
+
+.first-reading.is-revealed .first-reading__sign {
+  opacity: .8;
+}
+
+.first-reading__sign-svg {
+  display: block;
+  width: clamp(72px, 9vw, 110px);
+  height: 14px;
+}
+
+.first-reading__sign-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.1s var(--ease-out) .95s;
+}
+
+.first-reading.is-revealed .first-reading__sign-stroke {
+  stroke-dashoffset: 0;
+}
+
+.first-reading__sign-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.4);
+  transition:
+    opacity .35s var(--ease) 1.85s,
+    transform .55s var(--ease-spring) 1.85s;
+}
+
+.first-reading.is-revealed .first-reading__sign-bead {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.first-reading__sign-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.first-reading__sign-tag em {
+  color: var(--mist);
+  font-style: normal;
+  opacity: .55;
+  font-family: var(--serif);
+  font-size: 1.05em;
+}
+
+.first-reading__sign-tag-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--first-reading-tone);
+  opacity: .8;
+}
+
+@media (max-width: 720px) {
+  .first-reading {
+    margin: clamp(22px, 6vw, 32px) auto clamp(22px, 6vw, 32px);
+  }
+
+  .first-reading__inscription {
+    font-size: clamp(13.5px, 4.2vw, 16px);
+    gap: 8px;
+  }
+
+  .first-reading__inscription-line--alt {
+    padding-left: 0;
+  }
+
+  .first-reading__inscription-em--alt {
+    font-size: clamp(12px, 3.6vw, 14.5px);
+  }
+
+  .first-reading__rule {
+    width: 100%;
+  }
+
+  .first-reading__sign-tag {
+    font-size: 8px;
+    letter-spacing: .18em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .first-reading__crop,
+  .first-reading__rule-stroke,
+  .first-reading__rule-bead,
+  .first-reading__inscription,
+  .first-reading__sign,
+  .first-reading__sign-stroke,
+  .first-reading__sign-bead {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .first-reading__crop { opacity: .55; }
+  .first-reading__rule-stroke { stroke-dashoffset: 0; }
+  .first-reading__rule-bead { opacity: 1; transform: none; }
+  .first-reading__inscription { opacity: 1; transform: none; }
+  .first-reading__sign { opacity: .8; }
+  .first-reading__sign-stroke { stroke-dashoffset: 0; }
+  .first-reading__sign-bead { opacity: 1; transform: none; }
 }
 

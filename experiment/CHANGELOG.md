@@ -1,8 +1,9 @@
-# Iteration 261
+# Changelog
 
-Bound the page as one volume and gave the title page a deliberate press imprint.
+## Iteration 262 — the page earns its first reading
 
-- Added `PressSpine`, a left-edge binding thread that runs the height of the page with a stitch knot at each folio, so all nine folios read as a single bound artifact rather than a stack of separate sections. The active folio brightens; hovering any knot brings the folio's name into the gutter.
-- Added `PlateProvenance`, a deliberate press-plate stamp at the top of the title page (corner registration marks, dashed rules, m³ seal, italic name). It lands first and sets the page's authority before the title reads.
-- Added a small "fold · here" registration mark to the answer-leaf: a delicate circle with crosshairs and a quiet tag, anchored on the fold line so a careful reader notices where the leaf was originally creased.
-- Wired the spine to the existing `activeSection` so it tracks reading position via the same observer that drives the Wayfinder seal and the reading folio. All animations honor `prefers-reduced-motion`. The spine collapses to a quieter, knot-only treatment on narrow screens.
+- Added a new `FirstReading` element between the title spread and the action chrome: a thin ruled line holds a single italic instruction ("read it once with the eye · then again with the ear"), flanked by two small registration marks and dated to today; it draws itself in once on arrival and respects reduced-motion.
+- Distinguished the human-hand voice in the title from the quiet-cut voice with looser letter- and word-spacing, a slightly larger size, and a relaxed line-height so the three settings read as three genuinely different typesettings.
+- Eased the title's arrival: each line settles in over 0.85s with a calmer ease and longer cascading delays so the title lands like a hand-set page rather than a flash.
+- Tightened the hero colophon body (smaller gaps, smaller top margin) and reduced the summary scrawl's visual weight so the dropcap, paragraphs, and editor sign-off carry the colophon on their own.
+- Reduced the chrome's top margin so the new FirstReading breathes between the title and the action row without creating dead air.
