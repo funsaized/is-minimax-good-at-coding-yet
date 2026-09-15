@@ -35,24 +35,25 @@ export function FolioTicket({ voice, setToday, folio }: FolioTicketProps) {
     <figure className="folio-ticket" style={style} aria-hidden="true">
       <svg
         className="folio-ticket__string"
-        viewBox="0 0 80 80"
+        viewBox="0 0 80 90"
         preserveAspectRatio="none"
         aria-hidden="true"
       >
         <path
-          d="M76 4 C 60 22, 44 42, 28 70"
+          d="M76 6 C 60 24, 44 48, 28 78"
           fill="none"
           stroke="currentColor"
-          strokeWidth=".8"
+          strokeWidth=".7"
           strokeLinecap="round"
-          opacity=".6"
+          strokeDasharray="1.6 2.4"
+          opacity=".55"
           className="folio-ticket__string-path"
         />
         <path
-          d="M70 2 L 78 6 L 72 12"
+          d="M70 4 L 78 8 L 72 14"
           fill="none"
           stroke="currentColor"
-          strokeWidth=".8"
+          strokeWidth=".7"
           strokeLinecap="round"
           strokeLinejoin="round"
           opacity=".7"

@@ -18,13 +18,14 @@ import { PressRibbon } from './PressRibbon'
 import { SecondReading } from './SecondReading'
 import { ReadingTrace } from './ReadingTrace'
 import { PressStrikeFlash } from './PressStrikeFlash'
-import { Flourish } from './Flourish'
 import { FolioMark } from './FolioMark'
 import { VoiceSelector } from './VoiceSelector'
 import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
 import { MarginalLedger } from './MarginalLedger'
 import { FolioTicket } from './FolioTicket'
+import { ComposePlate } from './ComposePlate'
+import { TitleTrace } from './TitleTrace'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -972,22 +973,9 @@ export function App() {
                   <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} />?</span>
                 </h1>
 
-                <Flourish voice={voice} active={selectedWord} hovered={hoveredWord} />
+                <TitleTrace voice={voice} active={selectedWord} hovered={hoveredWord} />
 
-                <div className="hero__keep">
-                  <span className="hero__keep-rule" aria-hidden="true" />
-                  <KeptMark voice={voice} variant="hero" />
-                </div>
-
-                <span className="hero__pull" aria-hidden="true">
-                  <span className="hero__pull-rule hero__pull-rule--start" />
-                  <span className="hero__pull-text">
-                    <span className="hero__pull-mark">※</span>
-                    <em>attention, not ornament</em>
-                    <span className="hero__pull-mark hero__pull-mark--alt">※</span>
-                  </span>
-                  <span className="hero__pull-rule hero__pull-rule--end" />
-                </span>
+                <ComposePlate voice={voice} word={activeWord} setToday={setToday} />
               </div>
 
               <ReaderNote
