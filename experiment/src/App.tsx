@@ -8,7 +8,6 @@ import { Press, type VoiceId } from './Press'
 import { InkDust } from './InkDust'
 import { InkTrail } from './InkTrail'
 import { DaySheet } from './DaySheet'
-import { MarginThread } from './MarginThread'
 import { MarginNotes } from './MarginNotes'
 import { ReaderNote } from './ReaderNote'
 import { Watermark } from './Watermark'
@@ -16,14 +15,13 @@ import { TypePlate } from './TypePlate'
 import { PressSignature } from './PressSignature'
 import { PressRibbon } from './PressRibbon'
 import { SecondReading } from './SecondReading'
-import { ReadingTrace } from './ReadingTrace'
 import { PressStrikeFlash } from './PressStrikeFlash'
 import { FolioMark } from './FolioMark'
 import { VoiceSelector } from './VoiceSelector'
 import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
 import { MarginalLedger } from './MarginalLedger'
-import { FolioTicket } from './FolioTicket'
+import { WayfinderSeal } from './WayfinderSeal'
 import { ComposePlate } from './ComposePlate'
 import { TitleTrace } from './TitleTrace'
 import { NotesSection } from './NotesSection'
@@ -102,59 +100,7 @@ function LogoMark({ size = 38, accent = 'var(--acid)' }: { size?: number; accent
   )
 }
 
-const FOLIO_LABEL: Record<string, string> = {
-  question: 'the question',
-  press: 'press bed',
-  contents: 'contents',
-  day: 'day sheet',
-  note: 'a folded slip',
-  proof: 'the proof',
-  pressings: 'pressings',
-  notes: 'marginalia',
-  answer: 'the answer',
-}
-
-const FOLIO_NUM: Record<string, string> = {
-  question: 'i',
-  press: 'ii',
-  contents: 'iii',
-  day: 'iii·',
-  note: '·',
-  proof: 'iv',
-  pressings: 'v',
-  notes: 'vi',
-  answer: 'viii',
-}
-
 const FOLIO_ORDER: string[] = ['question', 'press', 'contents', 'day', 'note', 'proof', 'pressings', 'notes', 'answer']
-
-function sectionFolioLabel(id: string) {
-  return FOLIO_LABEL[id] ?? FOLIO_LABEL.question
-}
-
-function sectionFolioNum(id: string) {
-  return FOLIO_NUM[id] ?? FOLIO_NUM.question
-}
-
-function sectionIndex(id: string) {
-  const i = FOLIO_ORDER.indexOf(id)
-  return i >= 0 ? i + 1 : 1
-}
-
-function romanize(n: number) {
-  const numerals: [number, string][] = [
-    [10, 'x'], [9, 'ix'], [5, 'v'], [4, 'iv'], [1, 'i'],
-  ]
-  let result = ''
-  let remaining = n
-  for (const [value, symbol] of numerals) {
-    while (remaining >= value) {
-      result += symbol
-      remaining -= value
-    }
-  }
-  return result
-}
 
 function ArrowIcon() {
   return (
@@ -328,6 +274,31 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
           </div>
           <span className="answer-reveal__keep" aria-hidden="true">
             <KeptMark voice={voice} variant="answer" size={104} caption={`pressed in the ${voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'} voice · set on ${setToday}`} />
+          </span>
+          <span className="answer-reveal__fresh" aria-hidden="true">
+            <span className="answer-reveal__fresh-tag">fresh impression</span>
+            <svg viewBox="0 0 64 64" className="answer-reveal__fresh-seal">
+              <defs>
+                <filter id={`answer-fresh-grain`} x="-10%" y="-10%" width="120%" height="120%">
+                  <feTurbulence type="fractalNoise" baseFrequency="2.6" numOctaves="2" seed="9" stitchTiles="stitch" />
+                  <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
+                  <feComposite in2="SourceGraphic" operator="in" />
+                </filter>
+              </defs>
+              <g filter="url(#answer-fresh-grain)" opacity="0.9">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" strokeWidth=".9" />
+                <circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".8 1.6" opacity=".7" />
+                <text x="32" y="22" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.4" letterSpacing="1.2" fill="currentColor">YES</text>
+                <text x="32" y="38" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="currentColor">m³</text>
+                <text x="32" y="48" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.2" letterSpacing="1.1" fill="currentColor">FOR NOW</text>
+              </g>
+            </svg>
+            <span className="answer-reveal__fresh-pencil" aria-hidden="true">
+              <svg viewBox="0 0 80 12" preserveAspectRatio="none">
+                <path d="M2 8c10-6 22 4 34-1s22-5 34-2 22 4 8 1" fill="none" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" />
+              </svg>
+              <em>pressed at the moment of unfolding</em>
+            </span>
           </span>
         </div>
       </div>
@@ -566,7 +537,6 @@ export function App() {
   const [hoveredWord, setHoveredWord] = useState<WordId | null>(null)
   const [voice, setVoice] = useState<VoiceId>('quiet')
   const [activeSection, setActiveSection] = useState('question')
-  const [scrollProgress, setScrollProgress] = useState(0)
   const [announcement, setAnnouncement] = useState('')
   const [marks, setMarks] = useState<ImpressionMark[]>([])
   const [setToday] = useState(() => formatSetToday())
@@ -604,26 +574,6 @@ export function App() {
     )
     elements.forEach(element => observer.observe(element))
     return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const compute = () => {
-      const doc = document.documentElement
-      const max = doc.scrollHeight - window.innerHeight
-      if (max <= 0) {
-        setScrollProgress(0)
-        return
-      }
-      const value = Math.max(0, Math.min(1, window.scrollY / max))
-      setScrollProgress(value)
-    }
-    compute()
-    window.addEventListener('scroll', compute, { passive: true })
-    window.addEventListener('resize', compute)
-    return () => {
-      window.removeEventListener('scroll', compute)
-      window.removeEventListener('resize', compute)
-    }
   }, [])
 
   useEffect(() => {
@@ -716,7 +666,7 @@ export function App() {
       <div className="app__grain" aria-hidden="true" />
       <div className="app__pencil" aria-hidden="true" />
       <Watermark />
-      <header className="site-header site-header--running-head">
+      <header className="site-header site-header--single">
         <div className="site-header__row site-header__row--primary">
           <a className="brand" href="#question" aria-label="Return to the question">
             <LogoMark size={32} />
@@ -725,29 +675,12 @@ export function App() {
               <em>an open question, set today</em>
             </span>
           </a>
-          <div className="site-header__running" aria-label="Current folio">
-            <span className="site-header__running-rule" aria-hidden="true" />
-            <span className="site-header__running-core">
-              <span className="site-header__running-eyebrow">now reading</span>
-              <span className="site-header__running-line">
-                <span className="site-header__running-num">{sectionFolioNum(activeSection)}</span>
-                <span className="site-header__running-sep" aria-hidden="true">·</span>
-                <span className="site-header__running-label">{sectionFolioLabel(activeSection)}</span>
-              </span>
-            </span>
-            <span className="site-header__running-rule" aria-hidden="true" />
-          </div>
-          <a className="site-header__back" href="#question" aria-label="Back to the first folio">
-            <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M3 8h10M8 3l-5 5 5 5" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span>folio i</span>
-          </a>
-        </div>
-        <div className="site-header__row site-header__row--map">
-          <span className="site-header__map-eyebrow" aria-hidden="true">reading map</span>
-          <ReadingTrace className="reading-trace--in-header" />
-          <span className="site-header__map-meta" aria-hidden="true">set {setToday} · {romanize(sectionIndex(activeSection))} / ix</span>
+          <span className="site-header__set" aria-hidden="true">
+            <span className="site-header__set-mark" />
+            <span className="site-header__set-line">set <em>{setToday}</em></span>
+            <span className="site-header__set-mark site-header__set-mark--alt" />
+          </span>
+          <WayfinderSeal activeId={activeSection} voice={voice} setToday={setToday} />
         </div>
       </header>
 
@@ -791,8 +724,6 @@ export function App() {
             </span>
 
             <span className="hero__lamp" aria-hidden="true" />
-
-            <FolioTicket voice={voice} setToday={setToday} folio="i" />
 
             <div className="hero__plate">
               <MarginalLedger
@@ -948,36 +879,6 @@ export function App() {
 
         <Colophon voice={voice} word={activeWord} setToday={setToday} />
       </div>
-
-      <nav className="margin-thread--mobile" aria-label="Folio index">
-        <ol className="margin-thread__list">
-          {[
-            { id: 'question', index: 'i', label: 'the question' },
-            { id: 'press', index: 'ii', label: 'press bed' },
-            { id: 'contents', index: 'iii', label: 'contents' },
-            { id: 'day', index: 'iii·', label: 'day sheet' },
-            { id: 'note', index: '·', label: 'note' },
-            { id: 'proof', index: 'iv', label: 'proof' },
-            { id: 'pressings', index: 'v', label: 'pressings' },
-            { id: 'notes', index: 'vi', label: 'marginalia' },
-            { id: 'answer', index: 'viii', label: 'answer' },
-          ].map(folio => {
-            const isActive = activeSection === folio.id
-            return (
-              <li key={folio.id} className={`margin-thread__item ${isActive ? 'is-active' : ''}`} aria-current={isActive ? 'location' : undefined}>
-                <a className="margin-thread__link" href={`#${folio.id}`}>
-                  <span className="margin-thread__num" aria-hidden="true">{folio.index}</span>
-                  <span className="margin-thread__copy">
-                    <span className="margin-thread__label">{folio.label}</span>
-                  </span>
-                </a>
-              </li>
-            )
-          })}
-        </ol>
-      </nav>
-
-      <MarginThread activeId={activeSection} progress={scrollProgress} voice={voice} />
 
       <MarginNotes activeId={activeSection} voice={voice} />
 

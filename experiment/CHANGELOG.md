@@ -1,14 +1,18 @@
 # Changelog
 
-## Iteration 248
+## Iteration 249 · A single quiet wayfinder and a fresh impression
 
-A quieter, more deliberate title page. The hero's italic carries more breathing room; the marginal ledger becomes a thinner ribbon of marks; a single page-end ornament ties the title page to the body; small motion refinements honor reduced-motion preferences; mobile composition gets cleaner margins.
+Replaces the dual-row header, the right-edge margin thread, and the
+mobile folio strip with one pressed wayfinder seal that opens a folio
+index card on demand. The hero loses its corner ticket. The answer
+leaf gains a small fresh impression stamp that lands when the page is
+unfolded.
 
-- **Hero title · a more deliberate italic.** The quiet and human voices read as italic with confident letter-spacing, line-height, and font-feature settings (swashes, salt, calt). The title's text-shadow takes a faint voice-coloured bloom instead of a uniform black mass.
-- **Marginal ledger · quieter.** Labels set in italic serif at lower opacity; ticks reduced in padding and weight; the whole column feels like margin notes rather than a button strip.
-- **Compose plate · a hand-set colophon.** Caption mark raised, monogram refined, the plate's signature ring catches a touch more on hover.
-- **Reader note · tighter typography.** Title and body gain more elegant kerning and ligature behaviour; the pull-quote italic is more deliberate.
-- **Page-end ornament · one new anchor.** A single circular "m³" mark sits between the hero body and the hero-trace ribbon. Two hairline rules flank it; an italic caption reads "attention, not ornament." It breathes gently when the page is at rest, and stops under reduced-motion.
-- **Press breath.** When the voice lever is pulled, the entire hero spread takes a single ~0.9s settle (subtle scale, brightness, and saturate). The strike is felt across the title, not only inside the press bed.
-- **Mobile polish.** Hero padding, chrome gap, and title letter-spacing get cleaner breakpoint treatment at 720px and 540px.
-- **Reduced-motion respected.** All new motion is silenced for `prefers-reduced-motion: reduce`.
+- Header: a single row now — brand, "set today" tag, pressed wayfinder seal.
+- New `WayfinderSeal.tsx`: a pressed circular seal at the top-right that opens a folio index panel. Keyboard accessible (Enter / ArrowDown opens, Escape closes, focus is restored to the trigger).
+- The right-edge `MarginThread` and the bottom mobile nav are removed; their role is folded into the wayfinder.
+- The `FolioTicket` from the hero is removed; the hero spread is lighter and breathes more.
+- `AnswerReveal`: a small "fresh impression" stamp (tinted in the active voice) and a pencil line fade in at the bottom-right when the leaf opens.
+- `scrollProgress` state and its scroll listener are removed (no consumer).
+- Unused helpers (`sectionFolioLabel`, `sectionFolioNum`, `sectionIndex`, `romanize`, `FOLIO_LABEL`, `FOLIO_NUM`) are removed.
+- New CSS: `.site-header--single`, `.site-header__set`, `.wayfinder`, `.wayfinder__seal`, `.wayfinder__panel`, `.answer-reveal__fresh`. Reduced-motion guards are in place.
