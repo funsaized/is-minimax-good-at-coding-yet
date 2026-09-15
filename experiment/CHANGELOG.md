@@ -1,27 +1,24 @@
-# Changelog
+# Iteration 243
 
-## Iteration 242
+A confident right-hand reader note replaces the redundant margin gutter; the hero spread now has one purpose per zone.
 
-The hero earns a marginal ledger. A thin pencil rule now runs down the
-left edge of the title plate; three small proof-ticks (stet, caret,
-query) sit beside the three marked words and ink themselves in their
-voice colour when active. The title's three lines cascade in a
-deliberate indent so the question reads as one composed statement.
+## Hero · a single composed spread
+- New `ReaderNote` (`src/ReaderNote.tsx`) replaces `MarginGutter`. The note shows the active mark's full prose — title, gloss, body, prompt, and an editor's pencil line — rather than repeating the index. A slim three-button switch above the prose lets the reader step between the marks without leaving the hero.
+- `TitleSeal` drops its redundant "active mark" cell. The seal is now press · voice · date (three cells) so its voice reads as one composed breath.
+- Title typography is tightened: bolder weight on the bold voice, slightly looser line-height on the quiet/human voices, optical old-style figures on, and the `onum`/`swsh` OpenType features turned on for the italic voices.
+- Drop cap on the hero summary is redrawn with two thin ruled lines and a per-voice color, and reacts on hover with the rest of the title.
+- Hero summary type and width are recalibrated for calmer reading.
+- Site header running head is set a half-step larger so the current folio reads from across the page.
 
-- new: `src/MarginalLedger.tsx` — vertical editor's ledger running
-  alongside the title's left edge, balancing the right-hand
-  `MarginGutter`. Three small mark-ticks (stet / caret / query),
-  an active pulse on the rule, a quieter dashed pencil spine.
-- hero: the `.hero__plate` becomes a three-column spread on wide
-  screens (ledger | title | gutter). On narrow screens the ledger
-  collapses below the title and reads as a small proof tape.
-- typography: the human voice italic tightens slightly so the
-  title's three lines cascade in confidence. The three title
-  lines gain a deliberate left-indent that walks the eye through
-  the question.
-- `TitleSeal`: tighter gap and quieter cell-feet so the four
-  voices (press · voice · mark · date) read as one breath, not a
-  table.
-- a11y: every ledger tick is a real button with `aria-pressed`
-  and `aria-describedby`; reduced-motion disables the entry draw
-  and the active pulse.
+## Composition
+- The hero plate grid widens the right-hand reader-note column (≈ 290–360 px) and breathes the column gap slightly.
+- Removed the standalone `MarginGutter` component; the `MarginLedger` (left, the marks index) is unchanged.
+
+## Accessibility & motion
+- The reader note animates in once, transitions its leaf on mark change, and respects `prefers-reduced-motion`.
+- All key elements remain keyboard reachable; the three mark switches are buttons with `aria-pressed`.
+
+## Files
+- Added: `src/ReaderNote.tsx`.
+- Removed: `src/MarginGutter.tsx`.
+- Edited: `src/App.tsx`, `src/TitleSeal.tsx`, `src/style.css`.

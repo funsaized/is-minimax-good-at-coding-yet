@@ -1,13 +1,11 @@
 import type { CSSProperties } from 'react'
 import type { VoiceId } from './Press'
-import type { WordId } from './notes'
 
 type TitleSealProps = {
   voice: VoiceId
   voiceLabel: string
   voiceLetter: string
   setToday: string
-  active: WordId
 }
 
 const VOICE_TONE: Record<VoiceId, string> = {
@@ -16,10 +14,7 @@ const VOICE_TONE: Record<VoiceId, string> = {
   bold: 'var(--acid)',
 }
 
-const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
-const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
-
-export function TitleSeal({ voice, voiceLabel, voiceLetter, setToday, active }: TitleSealProps) {
+export function TitleSeal({ voice, voiceLabel, voiceLetter, setToday }: TitleSealProps) {
   const tone = VOICE_TONE[voice]
   const style = { '--seal-tone': tone } as CSSProperties
 
@@ -60,17 +55,6 @@ export function TitleSeal({ voice, voiceLabel, voiceLetter, setToday, active }: 
             <span className="title-seal__voice-name">{voiceLabel}</span>
           </span>
           <span className="title-seal__cell-foot">shift + v to cycle</span>
-        </span>
-
-        <span className="title-seal__divider" aria-hidden="true" />
-
-        <span className="title-seal__cell title-seal__cell--mark">
-          <span className="title-seal__cell-tag">active mark</span>
-          <span className="title-seal__cell-main">
-            <span className={`title-seal__mark-title title-seal__mark-title--${active}`}>{WORD_LABEL[active]}</span>
-            <span className="title-seal__mark-tag">{WORD_MARK[active]}</span>
-          </span>
-          <span className="title-seal__cell-foot">click a marked word</span>
         </span>
 
         <span className="title-seal__divider" aria-hidden="true" />

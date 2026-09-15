@@ -10,7 +10,7 @@ import { InkTrail } from './InkTrail'
 import { DaySheet } from './DaySheet'
 import { MarginThread } from './MarginThread'
 import { MarginNotes } from './MarginNotes'
-import { MarginGutter } from './MarginGutter'
+import { ReaderNote } from './ReaderNote'
 import { Watermark } from './Watermark'
 import { TypePlate } from './TypePlate'
 import { PressSignature } from './PressSignature'
@@ -1030,7 +1030,6 @@ export function App() {
                   voiceLabel={VOICE_LABEL[voice]}
                   voiceLetter={VOICE_LETTER[voice]}
                   setToday={setToday}
-                  active={activeWord}
                 />
 
                 <span className="hero__pull" aria-hidden="true">
@@ -1044,7 +1043,7 @@ export function App() {
                 </span>
               </div>
 
-              <MarginGutter
+              <ReaderNote
                 active={selectedWord}
                 hovered={hoveredWord}
                 voice={voice}
