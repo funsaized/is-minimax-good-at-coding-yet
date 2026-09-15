@@ -1,14 +1,11 @@
-## Iteration 275 — replaced the thin session ribbon with a deliberate press log
+Replaced the thin letter between folio iii and the proof with a substantial tipped slip.
 
-The impression ribbon between the title page and the press bed was a thin horizontal progress bar that carried the session's activity but read as a single line. Replaced it with a substantive **Press Log** that opens folio ii and earns the space between the title and the press.
+The letter now reads as a folded note bound into the volume rather than a centered card.
 
-The new composition is one authored plate with four parts:
-- A header strip identifying the plate as `folio ii · the session` with twin diamond ticks.
-- A three-cell topline showing the active voice, the active mark, and the set-today date, separated by vertical rules.
-- A horizontal session timeline with up to twenty-four marks and a pulsing "now" bead; first/now cells flank the rule.
-- Three shelves for **pulls**, **marks**, and **voices**, each headed by an italic eyebrow, a labelled count, and a dashed separator. Each shelf lists up to five recent entries with their own glyph, index, copy, and tail rule.
-- A footer row reporting the now-action, the running session totals (pulls / marks / voice sets), and the total event count.
+It carries a postage stamp and a hand cancellation in the corner, a wax seal with a wax drip on the lower left, a tipped-slip tag, a paper-grain backdrop, a top fold line, four corner brackets, and an SVG flourish behind the signature that draws itself when the section enters view.
 
-The component reads the existing session state from `marks` and reacts to new entries with a splash animation on the latest mark and a stagger on the new shelf row. Reduced-motion preferences disable both. The plate stacks to a single column under 880 px and the glyph column collapses under 540 px.
+A from / to address block sits above the heading. The heading keeps its voice byline, now with a colored letter pill. The signature line uses a hand-drawn flourish; the closing CTA is a hatched card with a circular arrow chip and a folio tag. A small "please turn over" hand-note and a tipped dog-ear finish the slip.
 
-`src/PressLog.tsx` is the new file. `src/App.tsx` swaps the impression ribbon for the press log. The impression ribbon file is kept for the `ImpressionMark` type still used by `Almanac`, `ClosingPlate`, and `DaySheet`. CSS for `.press-log` and its descendants is added to `src/style.css`.
+A sticky sidecar on the right lists the slip's itinerary (iii → this slip → iv) so the reader sees where the note lives in the volume.
+
+Reduced-motion rules disable the slip-in, the seal press, the thread draw, the signature draw, and the postmark animation. Responsive rules collapse the sidecar to a row of stops, remove the slip tilt, and resize the stamp, cancellation, and seal for narrow screens.
