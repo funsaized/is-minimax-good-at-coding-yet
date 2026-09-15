@@ -104,32 +104,6 @@ function PaperWarmth({ voice }: { voice: VoiceId }) {
   return <span className={`paper-warmth paper-warmth--${voice}`} aria-hidden="true" />
 }
 
-function TitleRibbon({ word, voice }: { word: WordId; voice: VoiceId }) {
-  const tone =
-    word === 'm3' ? 'var(--acid)' : word === 'good' ? 'var(--coral)' : 'var(--blue)'
-  return (
-    <svg className="title-ribbon" viewBox="0 0 1200 14" preserveAspectRatio="none" aria-hidden="true">
-      <path
-        className={`title-ribbon__stroke title-ribbon__stroke--${word}`}
-        d="M2 8c80-6 160 6 240 0s160-9 240-1 160 6 240-2 160-9 240-2 158 5 236-3"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-        pathLength="100"
-        style={{ color: tone }}
-      />
-      <circle
-        className={`title-ribbon__bead title-ribbon__bead--${word}`}
-        cx="1196"
-        cy="6"
-        r="1.8"
-        fill={tone}
-      />
-    </svg>
-  )
-}
-
 const FOLIO_ORDER: string[] = ['question', 'press', 'contents', 'day', 'note', 'proof', 'pressings', 'notes', 'answer']
 
 function ArrowIcon() {
@@ -741,20 +715,6 @@ export function App() {
           <div className="hero__spread">
             <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
             <PaperWarmth voice={voice} />
-            <span className="hero__corner hero__corner--tl" aria-hidden="true">
-              <svg viewBox="0 0 36 36"><path d="M2 18V2h14" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="2" cy="2" r="1.6" fill="currentColor" /></svg>
-            </span>
-            <span className="hero__corner hero__corner--tr" aria-hidden="true">
-              <svg viewBox="0 0 36 36"><path d="M18 2h16v16" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="34" cy="2" r="1.6" fill="currentColor" /></svg>
-            </span>
-            <span className="hero__corner hero__corner--bl" aria-hidden="true">
-              <svg viewBox="0 0 36 36"><path d="M2 18v16h14" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="2" cy="34" r="1.6" fill="currentColor" /></svg>
-            </span>
-            <span className="hero__corner hero__corner--br" aria-hidden="true">
-              <svg viewBox="0 0 36 36"><path d="M34 18v16h-16" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="34" cy="34" r="1.6" fill="currentColor" /></svg>
-            </span>
-
-            <span className="hero__lamp" aria-hidden="true" />
 
             <div className="hero__plate">
               <MarginalLedger
@@ -778,9 +738,6 @@ export function App() {
                     </span>
                   </span>
                 </h1>
-                <span className="hero__title-trace" aria-hidden="true">
-                  <TitleRibbon word={activeWord} voice={voice} />
-                </span>
 
                 <TitleRule voice={voice} active={selectedWord} hovered={hoveredWord} setToday={setToday} />
               </div>

@@ -23212,5 +23212,298 @@ a small act of typesetting.
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 253 · ONE COMPOSED SHEET
+
+   The hero sheds accumulated chrome — the four animated corner
+   marks, the lamp glow that duplicated the paper-warmth, and the
+   title-trace that competed with the title-rule. The dashed inner
+   border on the spread drops. The three title words each carry a
+   quiet pencil mark beneath them, present at rest and confident
+   on attention — a proof sheet, not a marquee. Mobile typography
+   earns its own rhythm; the title scales from a confident
+   poster to a single confident line, never cramped.
+   ──────────────────────────────────────────────────────────── */
+
+/* Defensive: hide any chrome that earlier passes left in the DOM */
+.hero__corner,
+.hero__lamp,
+.hero__title-trace {
+  display: none !important;
+}
+
+/* The spread keeps a single, delicate frame. The dashed inner
+   border and the heavy box-shadow are retired. */
+.hero__spread {
+  border-color: rgba(146, 186, 255, .08);
+  box-shadow:
+    inset 0 0 0 1px rgba(146, 186, 255, .035),
+    0 24px 64px -28px rgba(0, 0, 0, .55);
+}
+
+.hero__spread::before { display: none; }
+
+.hero__spread::after {
+  inset: 12px;
+  border-color: rgba(243, 236, 214, .025);
+}
+
+/* Each marked word carries a faint caret mark at rest. When the
+   reader's attention lights up the word, the mark becomes
+   confident — a proof sheet, marked in pencil. */
+
+.title-token__stroke {
+  stroke-dashoffset: 0;
+  opacity: .22;
+  transition: opacity .35s var(--ease), stroke-width .35s var(--ease);
+}
+
+.title-token__tail {
+  opacity: .22;
+  transform: scale(1);
+  transition: opacity .35s var(--ease), transform .55s var(--ease-spring);
+}
+
+.title-token:hover .title-token__stroke,
+.title-token:focus-visible .title-token__stroke,
+.title-token.is-selected .title-token__stroke {
+  opacity: 1;
+}
+
+.title-token:hover .title-token__tail,
+.title-token:focus-visible .title-token__tail,
+.title-token.is-selected .title-token__tail {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Each token also wears a small caret hint — a tiny angled mark
+   that sits beneath the type and lifts when the word is attended. */
+
+.app--word-m3 .title-token--m3 .title-token__mark,
+.title-token--m3:hover .title-token__mark,
+.title-token--m3:focus-visible .title-token__mark,
+.title-token--m3.is-selected .title-token__mark { color: var(--acid); }
+
+.app--word-good .title-token--good .title-token__mark,
+.title-token--good:hover .title-token__mark,
+.title-token--good:focus-visible .title-token__mark,
+.title-token--good.is-selected .title-token__mark { color: var(--coral); }
+
+.app--word-yet .title-token--yet .title-token__mark,
+.title-token--yet:hover .title-token__mark,
+.title-token--yet:focus-visible .title-token__mark,
+.title-token--yet.is-selected .title-token__mark { color: var(--blue); }
+
+@media (prefers-reduced-motion: reduce) {
+  .title-token__stroke,
+  .title-token__tail { transition: none !important; }
+  .title-token__stroke { opacity: .3 !important; stroke-dashoffset: 0 !important; }
+  .title-token__tail { opacity: .3 !important; transform: none !important; }
+}
+
+/* The title becomes a single confident composition: the trace's
+   pseudo-rule below the title-block is retired so the type
+   stands alone above the title-rule. */
+
+.hero__copy::before { display: none; }
+.hero__copy::after { display: none; }
+
+/* The title-rule earns a touch more breathing room now that the
+   trace is gone, and its caption keeps the same italic line. */
+
+.hero__copy {
+  gap: clamp(20px, 2.2vw, 30px);
+}
+
+.title-rule {
+  margin-top: clamp(8px, 1.1vw, 14px);
+}
+
+/* The hero body is tidied: the press-flourish becomes a single
+   hairline rule without the heavy tag. */
+
+.hero__press-flourish-tag { display: none; }
+.hero__press-flourish {
+  width: clamp(220px, 32%, 340px);
+}
+
+/* The page earns a composed entrance: when the title first
+   arrives, its three lines settle with a tiny rotation, like
+   type being placed in the stick. */
+
+@keyframes heroTitleSettle {
+  0% { opacity: 0; transform: translateY(.14em) rotate(-.4deg); }
+  60% { opacity: 1; transform: translateY(0) rotate(.15deg); }
+  100% { opacity: 1; transform: translateY(0) rotate(0); }
+}
+
+.hero__title .title__line {
+  animation-name: heroTitleSettle;
+}
+
+.hero__title .title__line:nth-child(1) { animation-delay: .18s; }
+.hero__title .title__line:nth-child(2) { animation-delay: .32s; }
+.hero__title .title__line:nth-child(3) { animation-delay: .46s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title .title__line {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Mobile typography earns its own rhythm. The title scales from
+   a confident floor on small screens, never below the eye's
+   comfortable reading. The hero body summary keeps its
+   line-height. Font-sizes only — letter-spacing inherits from
+   the iteration-252 settings. */
+
+.hero__title {
+  font-size: clamp(4.4rem, 14.6vw, 17rem);
+}
+
+.hero__title--quiet,
+.hero__title--human {
+  font-size: clamp(4.2rem, 13.6vw, 15.6rem);
+}
+
+.hero__title--bold {
+  font-size: clamp(4.8rem, 15.4vw, 18.4rem);
+}
+
+@media (max-width: 720px) {
+  .hero__title {
+    font-size: clamp(3.4rem, 15.2vw, 6rem);
+  }
+
+  .hero__title--quiet,
+  .hero__title--human {
+    font-size: clamp(3.2rem, 14vw, 5.6rem);
+  }
+
+  .hero__title--bold {
+    font-size: clamp(3.6rem, 16.2vw, 6.4rem);
+  }
+
+  .hero__copy { gap: clamp(16px, 2vw, 22px); }
+
+  .hero__summary { font-size: 15px; line-height: 1.55; }
+
+  .hero__spread { padding: clamp(64px, 9vw, 96px) clamp(22px, 4vw, 36px) clamp(48px, 7vw, 76px); }
+}
+
+@media (max-width: 480px) {
+  .hero__title {
+    font-size: clamp(2.8rem, 14vw, 3.8rem);
+  }
+
+  .hero__title--quiet,
+  .hero__title--human {
+    font-size: clamp(2.7rem, 13vw, 3.6rem);
+  }
+
+  .hero__title--bold {
+    font-size: clamp(3rem, 14.8vw, 4rem);
+  }
+}
+
+/* On wide screens the title scales with intent — a poster that
+   never loses its optical balance. */
+
+@media (min-width: 1180px) {
+  .hero__title {
+    font-size: clamp(5.6rem, 11.4vw, 13.4rem);
+  }
+
+  .hero__title--quiet {
+    font-size: clamp(5.2rem, 10.6vw, 12.6rem);
+  }
+
+  .hero__title--human {
+    font-size: clamp(5.4rem, 11vw, 12.8rem);
+  }
+
+  .hero__title--bold {
+    font-size: clamp(5.8rem, 12vw, 14.4rem);
+  }
+}
+
+/* The hero chrome (voice selector + answer link) earns a more
+   generous gap and stacks cleanly on narrow screens. */
+
+.hero__chrome {
+  gap: clamp(18px, 2.4vw, 30px);
+  margin-top: clamp(22px, 3vw, 36px);
+}
+
+@media (max-width: 720px) {
+  .hero__chrome {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .hero__note-link { min-height: 52px; }
+}
+
+/* The hero body's press-flourish line earns a small interactive
+   moment on hover. */
+
+.hero__press-flourish-stroke {
+  transition: stroke-dashoffset .9s var(--ease-out);
+}
+
+.hero__press-flourish:hover .hero__press-flourish-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: strikeLineDraw .9s var(--ease-out) forwards;
+}
+
+/* The folio-mark date becomes a touch more confident in its
+   italic and the voice letter picks up a subtle hover-lift. */
+
+.hero__folio-mark-voice-letter {
+  transition: transform .4s var(--ease-spring), background .3s var(--ease);
+}
+
+.hero__folio-mark:hover .hero__folio-mark-voice-letter {
+  transform: rotate(8deg) scale(1.06);
+}
+
+/* The marginal-ledger's active row earns a small pencil inset
+   underline — a single quiet mark that survives the redesigned
+   hero. */
+
+.marginal-ledger__row.is-active .marginal-ledger__tick-glyph {
+  box-shadow:
+    inset 0 -2px 0 var(--ledger-mark),
+    inset 4px 0 0 var(--ledger-mark);
+}
+
+/* The reader-note's index tick picks up a small pressed mark
+   beneath the active row. */
+
+.reader-note__index-tick {
+  transition: opacity .35s var(--ease), color .35s var(--ease);
+}
+
+.reader-note__index-item.is-active .reader-note__index-tick {
+  box-shadow: inset 0 -2px 0 currentColor;
+}
+
+/* The title-rule's caption-mark gains a gentle swing on
+   attention — like a small mark waking up to the reader. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .title-rule:hover .title-rule__caption-mark {
+    transform: rotate(45deg);
+  }
+  .title-rule:hover .title-rule__caption-mark--alt {
+    transform: scaleX(-1) rotate(-45deg);
+  }
+}
+
 
 
