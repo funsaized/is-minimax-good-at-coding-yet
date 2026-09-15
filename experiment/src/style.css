@@ -24249,4 +24249,807 @@ a small act of typesetting.
 }
 
 
+/* ────────────────────────────────────────────────────────────
+   ALMANAC · folio iii· earns a hand-set day page. It replaces
+   the dense clock-face day sheet with an editorial almanac:
+   a quiet week's grid, a single sun-or-moon mark, a thin
+   record of the day's pulls, and one of the page's kept notes.
+   It reads as a printed page, not a dashboard.
+   ──────────────────────────────────────────────────────────── */
+
+.almanac {
+  position: relative;
+  padding: clamp(96px, 12vw, 150px) 0 clamp(48px, 7vw, 96px);
+  color: var(--paper);
+}
+
+.almanac__sheet {
+  position: relative;
+  display: grid;
+  gap: clamp(28px, 3.4vw, 44px);
+  padding: clamp(40px, 5vw, 70px) clamp(28px, 4vw, 64px);
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 96% 4%, rgba(146, 186, 255, .08), transparent 32rem),
+    radial-gradient(circle at 4% 96%, rgba(216, 255, 106, .04), transparent 28rem),
+    linear-gradient(180deg, rgba(26, 30, 42, .55), rgba(12, 16, 26, .7));
+  box-shadow:
+    inset 0 0 0 1px rgba(146, 186, 255, .05),
+    0 36px 96px -38px rgba(0, 0, 0, .6);
+  isolation: isolate;
+}
+
+.almanac__sheet::before {
+  position: absolute;
+  inset: 9px;
+  border: 1px dashed rgba(146, 186, 255, .07);
+  pointer-events: none;
+  content: '';
+}
+
+.almanac__plate {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  padding: 4px 14px;
+  border: 1px solid var(--line);
+  border-top: 0;
+  background: var(--night);
+  color: var(--acid);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.almanac__crop {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 0 solid var(--acid);
+  pointer-events: none;
+  opacity: .55;
+  z-index: 1;
+}
+
+.almanac__crop--tl { top: -1px; left: -1px; border-top-width: 1px; border-left-width: 1px; }
+.almanac__crop--tr { top: -1px; right: -1px; border-top-width: 1px; border-right-width: 1px; }
+.almanac__crop--bl { bottom: -1px; left: -1px; border-bottom-width: 1px; border-left-width: 1px; }
+.almanac__crop--br { bottom: -1px; right: -1px; border-bottom-width: 1px; border-right-width: 1px; }
+
+.app--voice-quiet .almanac__crop { border-color: var(--blue); }
+.app--voice-human .almanac__crop { border-color: var(--coral); }
+.app--voice-bold .almanac__crop { border-color: var(--acid); }
+
+.almanac__rule {
+  position: absolute;
+  left: clamp(28px, 4vw, 64px);
+  right: clamp(28px, 4vw, 64px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line) 14%, var(--line) 86%, transparent);
+  pointer-events: none;
+}
+
+.almanac__rule--top { top: clamp(70px, 9vw, 110px); opacity: .55; }
+.almanac__rule--bottom { bottom: clamp(50px, 6vw, 80px); opacity: .35; }
+
+.almanac__head {
+  position: relative;
+  max-width: 820px;
+  padding-top: clamp(8px, 1.4vw, 18px);
+}
+
+.almanac__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: clamp(8px, 1.2vw, 16px);
+  margin: 22px 0 18px;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 4.8vw, 5rem);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -.054em;
+  line-height: .96;
+  text-wrap: balance;
+}
+
+.almanac__title-set {
+  color: var(--muted);
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: clamp(10px, 1vw, 12px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+
+.almanac__title-date {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.almanac__title-year {
+  color: var(--coral);
+  font-style: italic;
+  font-size: clamp(1.2rem, 2vw, 2.2rem);
+  letter-spacing: -.02em;
+}
+
+.app--voice-quiet .almanac__title-year { color: var(--blue); }
+.app--voice-human .almanac__title-year { color: var(--coral); }
+.app--voice-bold .almanac__title-year { color: var(--acid); }
+
+.almanac__lede {
+  max-width: 56ch;
+}
+
+/* the day's almanac page (left column) */
+
+.almanac__layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .85fr) minmax(0, 1fr);
+  gap: clamp(20px, 2.6vw, 36px);
+  align-items: stretch;
+  z-index: 1;
+}
+
+.almanac__day {
+  position: relative;
+  display: grid;
+  gap: clamp(16px, 2vw, 22px);
+  padding: clamp(18px, 2.4vw, 28px) clamp(16px, 2.2vw, 24px) clamp(18px, 2.4vw, 24px);
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(216, 255, 106, .04), transparent 50%),
+    linear-gradient(180deg, rgba(20, 26, 38, .45), rgba(12, 16, 26, .65));
+  align-self: stretch;
+}
+
+.almanac__day-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: clamp(8px, 1.2vw, 14px);
+  padding-bottom: clamp(10px, 1.4vw, 14px);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.almanac__day-eyebrow {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.almanac__day-num {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-style: italic;
+  letter-spacing: -.06em;
+  line-height: 1;
+}
+
+.almanac__day-month {
+  color: var(--coral);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(14px, 1.4vw, 18px);
+  letter-spacing: -.01em;
+  margin-left: auto;
+}
+
+.app--voice-quiet .almanac__day-month { color: var(--blue); }
+.app--voice-human .almanac__day-month { color: var(--coral); }
+.app--voice-bold .almanac__day-month { color: var(--acid); }
+
+.almanac__week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(6px, .8vw, 10px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.almanac__week-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: clamp(10px, 1.4vw, 14px) 4px clamp(12px, 1.6vw, 16px);
+  border: 1px solid var(--line-soft);
+  background: rgba(20, 26, 38, .35);
+  color: var(--muted);
+  font-family: var(--mono);
+  transition: border-color .35s var(--ease), background .35s var(--ease);
+}
+
+.almanac__week-cell.is-weekend { opacity: .75; }
+
+.almanac__week-cell.is-today {
+  border-color: var(--word-ink, var(--coral));
+  color: var(--paper);
+  background: rgba(20, 26, 38, .55);
+}
+
+.almanac__week-letter {
+  font-size: clamp(8px, .8vw, 10px);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.almanac__week-num {
+  font-family: var(--serif);
+  font-size: clamp(15px, 1.4vw, 19px);
+  font-style: italic;
+  letter-spacing: -.01em;
+  line-height: 1;
+}
+
+.almanac__week-cell.is-today .almanac__week-num {
+  color: var(--word-ink, var(--coral));
+}
+
+.almanac__week-mark {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  padding: 2px 6px 3px;
+  border: 1px solid currentColor;
+  background: var(--night);
+  color: var(--word-ink, var(--coral));
+  font-family: var(--mono);
+  font-size: 7.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  transform: translate(-50%, 0);
+  white-space: nowrap;
+}
+
+.almanac__week-mark-glyph {
+  display: none;
+}
+
+.almanac__week-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.almanac__week-meta-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .55;
+}
+
+.almanac__sky {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 18px);
+  padding-top: clamp(8px, 1.2vw, 12px);
+  border-top: 1px dashed var(--line-soft);
+  color: var(--gold);
+}
+
+.app--voice-quiet .almanac__sky { color: var(--blue); }
+.app--voice-human .almanac__sky { color: var(--coral); }
+.app--voice-bold .almanac__sky { color: var(--acid); }
+
+.almanac__sunmoon-svg {
+  display: block;
+  width: clamp(54px, 5vw, 72px);
+  height: clamp(54px, 5vw, 72px);
+  flex: 0 0 auto;
+  color: inherit;
+}
+
+.almanac__sky-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.almanac__sky-tag {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.almanac__sky-name {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: clamp(15px, 1.4vw, 19px);
+  font-style: italic;
+  letter-spacing: -.01em;
+  line-height: 1.1;
+}
+
+/* the day's record (middle column) */
+
+.almanac__record {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vw, 20px);
+  padding: clamp(18px, 2.4vw, 28px) clamp(16px, 2.2vw, 24px);
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(20, 26, 38, .45), rgba(12, 16, 26, .7));
+}
+
+.almanac__record::before {
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(146, 186, 255, .06);
+  pointer-events: none;
+  content: '';
+}
+
+.almanac__record-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: clamp(10px, 1.4vw, 14px);
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--coral);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.app--voice-quiet .almanac__record-head { color: var(--blue); }
+.app--voice-human .almanac__record-head { color: var(--coral); }
+.app--voice-bold .almanac__record-head { color: var(--acid); }
+
+.almanac__record-head-mark {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(255, 118, 95, .12);
+}
+
+.almanac__record-head-tag {
+  color: inherit;
+}
+
+.almanac__record-head-folio {
+  margin-left: auto;
+  color: var(--muted);
+  font-style: italic;
+  font-family: var(--serif);
+  font-size: clamp(11px, 1vw, 13px);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.almanac__record-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.4vw, 14px);
+  margin: 0;
+  padding: 0;
+}
+
+.almanac__record-row {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  align-items: baseline;
+  gap: clamp(10px, 1.4vw, 14px);
+  padding-bottom: clamp(8px, 1vw, 12px);
+  border-bottom: 1px dashed var(--line-soft);
+}
+
+.almanac__record-row:last-child { border-bottom: 0; padding-bottom: 0; }
+
+.almanac__record-row dt {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.almanac__record-row dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: clamp(14px, 1.3vw, 17px);
+  font-style: italic;
+  letter-spacing: -.005em;
+}
+
+.almanac__record-row dd em {
+  color: var(--muted);
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.almanac__record-voice {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0;
+  color: currentColor;
+}
+
+.almanac__record-voice--quiet { color: var(--blue); }
+.almanac__record-voice--human { color: var(--coral); }
+.almanac__record-voice--bold { color: var(--acid); }
+
+.almanac__record-voice-name {
+  color: var(--paper);
+}
+
+.almanac__record-mark {
+  display: inline-grid;
+  place-items: center;
+  min-width: 32px;
+  padding: 2px 8px 3px;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: currentColor;
+}
+
+.almanac__record-mark--m3 { color: var(--acid); }
+.almanac__record-mark--good { color: var(--coral); }
+.almanac__record-mark--yet { color: var(--blue); }
+
+.almanac__record-mark-name {
+  color: var(--paper);
+}
+
+.almanac__record-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 30px;
+  padding: 2px 8px 3px;
+  border: 1px solid var(--line);
+  border-radius: 1px;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+
+.almanac__record-count--soft {
+  color: var(--muted);
+  border-color: var(--line-soft);
+}
+
+.almanac__record-count-meta {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--muted);
+  font-family: var(--serif);
+  font-size: clamp(12px, 1.1vw, 14px);
+  font-style: italic;
+  letter-spacing: -.005em;
+  line-height: 1.1;
+}
+
+.almanac__record-count-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .55;
+  align-self: center;
+}
+
+.almanac__record-row--soft dt,
+.almanac__record-row--soft dd {
+  color: var(--muted);
+}
+
+.almanac__record-tag {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: clamp(10px, 1.4vw, 14px);
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.1vw, 14px);
+  letter-spacing: -.005em;
+  line-height: 1.35;
+}
+
+.almanac__record-tag em {
+  color: var(--paper);
+  font-style: italic;
+}
+
+.almanac__record-tag-line {
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  opacity: .45;
+  flex: 0 0 auto;
+}
+
+/* the kept note (right column) */
+
+.almanac__quote {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vw, 22px);
+  padding: clamp(18px, 2.4vw, 28px) clamp(16px, 2.2vw, 24px);
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 0 0%, rgba(216, 255, 106, .05), transparent 55%),
+    linear-gradient(180deg, rgba(20, 26, 38, .45), rgba(12, 16, 26, .7));
+}
+
+.almanac__quote-bar {
+  position: absolute;
+  left: 0;
+  width: 2px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.almanac__quote-bar--a { top: 14px; bottom: 56%; }
+.almanac__quote-bar--b { top: 56%; bottom: 14px; opacity: .25; }
+
+.almanac__quote-glyph {
+  position: absolute;
+  top: 6px;
+  right: 14px;
+  color: var(--coral);
+  font-family: var(--serif);
+  font-size: clamp(54px, 7vw, 96px);
+  font-style: italic;
+  line-height: 1;
+  opacity: .25;
+}
+
+.app--voice-quiet .almanac__quote-glyph { color: var(--blue); }
+.app--voice-human .almanac__quote-glyph { color: var(--coral); }
+.app--voice-bold .almanac__quote-glyph { color: var(--acid); }
+
+.almanac__quote-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.4vw, 16px);
+  margin: 0;
+  padding: 0;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+.almanac__quote-line {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.4vw, 2.2rem);
+  letter-spacing: -.024em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.almanac__quote-note {
+  display: block;
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.15vw, 15.5px);
+  letter-spacing: -.005em;
+  line-height: 1.45;
+}
+
+.almanac__quote-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: clamp(10px, 1.4vw, 14px);
+  border-top: 1px solid var(--line-soft);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+/* the almanac footer */
+
+.almanac__foot {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(14px, 2vw, 22px);
+  padding-top: clamp(14px, 2vw, 22px);
+  border-top: 1px solid var(--line);
+}
+
+.almanac__foot-mark {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(48px, 4vw, 60px);
+  height: clamp(48px, 4vw, 60px);
+  color: var(--coral);
+  opacity: .85;
+  flex: 0 0 auto;
+}
+
+.app--voice-quiet .almanac__foot-mark { color: var(--blue); }
+.app--voice-human .almanac__foot-mark { color: var(--coral); }
+.app--voice-bold .almanac__foot-mark { color: var(--acid); }
+
+.almanac__foot-line {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.15vw, 15.5px);
+  letter-spacing: -.005em;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.almanac__foot-date {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .almanac__week-cell,
+  .almanac__week-cell * { transition: none !important; }
+}
+
+@media (max-width: 980px) {
+  .almanac__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .almanac__sheet {
+    padding: clamp(36px, 6vw, 50px) clamp(20px, 5vw, 32px);
+  }
+
+  .almanac__title {
+    font-size: clamp(1.8rem, 7vw, 2.6rem);
+  }
+
+  .almanac__day-num {
+    font-size: clamp(2rem, 8vw, 2.8rem);
+  }
+
+  .almanac__week-cell {
+    padding: 10px 4px 12px;
+  }
+
+  .almanac__week-letter {
+    font-size: 8px;
+  }
+
+  .almanac__week-num {
+    font-size: 13px;
+  }
+
+  .almanac__foot {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 540px) {
+  .almanac__title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .almanac__title-year {
+    font-size: clamp(1rem, 5vw, 1.4rem);
+  }
+
+  .almanac__week {
+    gap: 4px;
+  }
+
+  .almanac__week-cell {
+    padding: 8px 2px 10px;
+  }
+
+  .almanac__quote-line {
+    font-size: 1.25rem;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 255 · small refinements on the title page's
+   closing gesture and the press signature's frame.
+   ──────────────────────────────────────────────────────────── */
+
+/* the press signature earns a quiet trim corner on hover, so
+   the press mark feels like a clipped page rather than a button */
+
+.sig-mark {
+  position: relative;
+  isolation: isolate;
+}
+
+.sig-mark::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(225deg, var(--night) 50%, transparent 50%);
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  opacity: 0;
+  transition: opacity .5s var(--ease);
+  pointer-events: none;
+}
+
+.hero__signature:hover .sig-mark::after,
+.hero__signature:focus-within .sig-mark::after {
+  opacity: .55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sig-mark::after { transition: none !important; }
+}
+
+
 

@@ -1,5 +1,2 @@
-# Iteration 254 · one composed sheet, signed once
-
-A decisive fold earns the title-to-body transition; the hero CTA becomes a "turn the page" gesture.
-
-A single, decisive PageFold sits between the hero and the body — a hairline that breaks at the centre for the page's monogram seal, with a small editorial caption beneath. The hero continue CTA becomes a deliberate "turn the page" gesture: a hand-drawn arrow that arrives with confidence, in a small framed button with a confident pressed-paper edge. The "open the editor's note" button earns a small fold glyph that hints at the leaf to come, so the click feels earned. The answer reveal's leaf settles with a confident spring, its fold-line draws itself, the wax-drop beads fall one beat later, and the fresh-impression seal arrives last. Section ledes are unified in italic serif — same register as the rest of the page — and the brand mark gains a quiet hairline corner. Mobile keeps the rhythm with stacked hero chrome, tighter body spacing, and a centred fold.
+## 255 — folio iii· earns a hand-set day page; press signature gets a quiet trim
+The dense clock-face day sheet is replaced by an editorial almanac folio: a typed date ("Tuesday · the fifteenth of September · anno 2026"), a quiet week's grid with today marked in the active word's ink, a sun-or-moon mark keyed to the hour, a thin record of the day's pulls, marks, and voice sets, and one of the page's kept quotes as a pull note. The press signature mark earns a quiet trim corner on hover so it reads as a clipped page rather than a button.

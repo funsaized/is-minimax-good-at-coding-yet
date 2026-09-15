@@ -7,7 +7,7 @@ import { LetterToReader } from './LetterToReader'
 import { Press, type VoiceId } from './Press'
 import { InkDust } from './InkDust'
 import { InkTrail } from './InkTrail'
-import { DaySheet } from './DaySheet'
+import { Almanac } from './Almanac'
 import { MarginNotes } from './MarginNotes'
 import { ReaderNote } from './ReaderNote'
 import { Watermark } from './Watermark'
@@ -851,7 +851,7 @@ export function App() {
 
         <LetterToReader voice={voice} onReadAnswer={openAnswerFromNav} />
 
-        <DaySheet voice={voice} word={activeWord} marks={marks} setToday={setToday} />
+        <Almanac voice={voice} word={activeWord} marks={marks} setToday={setToday} />
 
         <section className="second-reading-section section" aria-labelledby="second-reading-title">
           <div className="section__header second-reading-section__header">
