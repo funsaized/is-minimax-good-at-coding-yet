@@ -14,7 +14,6 @@ import { TypePlate } from './TypePlate'
 import { SecondReading } from './SecondReading'
 import { ReadingFloor } from './ReadingFloor'
 import { PressStrikeFlash } from './PressStrikeFlash'
-import { FolioMark } from './FolioMark'
 
 import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
@@ -28,7 +27,7 @@ import { PressSignatureMark } from './PressSignatureMark'
 import { NotesSection } from './NotesSection'
 import { PageFold } from './PageFold'
 import { PressSpine } from './PressSpine'
-import { PlateProvenance } from './PlateProvenance'
+import { PressMasthead } from './PressMasthead'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -502,7 +501,6 @@ function Colophon({ voice, word, setToday, readerName }: { voice: VoiceId; word:
 }
 
 const VOICE_LABEL: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
-const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 
 export function App() {
   const [answerOpen, setAnswerOpen] = useState(false)
@@ -688,25 +686,7 @@ export function App() {
 
       <div className="page">
         <section className="hero" id="question" aria-labelledby="page-title">
-          <span className="hero__epigraph" aria-label="Editorial epigraph">
-            <span className="hero__epigraph-rule" aria-hidden="true" />
-            <svg className="hero__epigraph-mark" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 3l1.6 5.2 5.2 1.6-5.2 1.6L12 16.6l-1.6-5.2L5.2 9.8l5.2-1.6z" fill="currentColor" opacity=".9" />
-              <circle cx="12" cy="9.8" r="1.4" fill="var(--night)" />
-            </svg>
-            <em>on attention, ornament, &amp; the matter of good front-end work</em>
-            <span className="hero__epigraph-rule hero__epigraph-rule--end" aria-hidden="true" />
-          </span>
-
-          <PlateProvenance voice={voice} setToday={setToday} />
-
-          <FolioMark
-            folio="i"
-            setToday={setToday}
-            voiceLabel={VOICE_LABEL[voice]}
-            voiceLetter={VOICE_LETTER[voice]}
-            voiceTone={voice === 'quiet' ? 'var(--blue)' : voice === 'human' ? 'var(--coral)' : 'var(--acid)'}
-          />
+          <PressMasthead voice={voice} setToday={setToday} />
 
           <div className="hero__spread">
             <PressStrikeFlash strikeTick={strikeTick} voice={voice} />

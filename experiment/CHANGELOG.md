@@ -1,14 +1,12 @@
 # Changelog
 
-## Iteration 273
+## Iteration 274 — Press masthead front-matter spread
 
-Replaced the thin `FirstReading` strip with a deliberate **Reading Prologue** plate that sets up the press lever as the next move.
+Replaced the three loose opening elements above the title (a thin italic epigraph, a small plate stamp, and a hairline folio mark) with a single deliberate Press Masthead — a two-tier front-matter spread that announces the press and the specific impression before the title begins.
 
-- **New `src/ReadingPrologue.tsx`** — a composed plate (crop corners, eyebrow header, lede, two reading rows, sign, footer) that sits between the title spread and the press lever. Each reading row is a button that marks the word its voice earns (`caret → good`, `query → yet`).
-- **Visual thread** — a thin vertical rule on the right edge draws downward after the prologue reveals, with a small bobbing `↓` glyph and the tag *then · pull*, leading the eye to the lever below.
-- **Voice tones** — the plate's tone tracks the active voice (`quiet → blue`, `human → coral`, `bold → acid`); the active reading's pill and index mark fill with that tone.
-- **Footer cells** — `now setting in` (active voice), `set today` (date), and an optional `to the lever →` button that focuses the press lever trigger for keyboard users.
-- **Removed** — the empty `<div className="hero__chrome">` wrapper around `PressLever` and the old `FirstReading.tsx` component.
-- **Keyboard** — the two reading buttons share a `roving` arrow-key pattern and surface their word choice in the `aria-label`.
-- **Reduced motion** — the reveal transition, the rule draw-in, the thread draw-in, and the bobbing arrow all collapse to their end state under `prefers-reduced-motion: reduce`.
-- **Responsive** — at ≤720px the prologue collapses to a single column, the thread centers itself, and the footer stacks with the lever hint left-aligned.
+- New `src/PressMasthead.tsx` renders the masthead with a monospace topline of identity tags, a centred italic display of "m³ press" flanked by fleurons, a hand-drawn rule with seeded dashes, and four cells carrying folio, section, active voice, and set-today. A tagline closes it.
+- The masthead inherits the voice tone (blue / coral / acid), declares the year suffix and the season of the impression, and announces the current voice with letter and face.
+- Entry animations are sequenced (topline → display row → sub-line → rule → cells → tagline), and the full sequence collapses to a static, fully visible state under `prefers-reduced-motion`.
+- Mobile layouts collapse the fleurons, hide inter-cell rules, and let the four cells stack into a 2×2 / 1×1 grid below 460px.
+- Imports of `PlateProvenance` and `FolioMark` were removed from `src/App.tsx`; their JSX is replaced by `<PressMasthead voice setToday />`.
+- Unused `VOICE_LETTER` constant removed from `src/App.tsx`.
