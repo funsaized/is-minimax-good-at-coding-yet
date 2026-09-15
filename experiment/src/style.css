@@ -19903,3 +19903,626 @@ a small act of typesetting.
 }
 
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 245 · LAMPLIGHT EDITION
+
+   The hero spreads warm up. A cream "lamp" overlay pools at the
+   center of the title, and the surrounding night recedes. A
+   FolioTicket hangs from the upper-right corner — a paper tag,
+   written by hand, listing the press, voice, and date. The
+   MarginalLedger trims its frame to feel more like marginalia
+   than a button strip. The hero body picks up a confident
+   byline outdented above the summary.
+
+   The page is meant to feel like a careful proof read under a
+   desk lamp at the end of the day — one warm pool of light, one
+   subject at the center, the rest in shadow.
+   ──────────────────────────────────────────────────────────── */
+
+:root {
+  --lamp: #f3dca0;
+  --lamp-soft: rgba(243, 220, 160, .12);
+  --lamp-glow: rgba(243, 220, 160, .04);
+  --paper-warm: #ece2c4;
+  --paper-warm-2: #d8c89c;
+  --ink-warm: #2a231a;
+  --ink-warm-soft: rgba(42, 35, 26, .55);
+  --tag-string: rgba(243, 220, 160, .55);
+}
+
+/* A single warm radial "lamp" overlay painted on the hero
+   spread, falling from above the title down to the deck. */
+
+.hero__lamp {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 64% 56% at 50% 38%,
+      rgba(243, 220, 160, .12) 0%,
+      rgba(243, 220, 160, .06) 28%,
+      rgba(243, 220, 160, .025) 50%,
+      transparent 76%
+    ),
+    radial-gradient(
+      ellipse 38% 30% at 50% 36%,
+      rgba(243, 232, 200, .06) 0%,
+      transparent 70%
+    );
+  mix-blend-mode: screen;
+  animation: heroLampWarm 1.2s var(--ease-out) .25s backwards;
+}
+
+@keyframes heroLampWarm {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__lamp { animation: none !important; opacity: 1; }
+}
+
+/* The hero spread gets a warmer base, with the lamp glow
+   doing the heavy lifting. */
+
+.hero__spread {
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(243, 220, 160, .085), transparent 62%),
+    radial-gradient(ellipse at 50% 100%, rgba(255, 118, 95, .045), transparent 60%),
+    linear-gradient(180deg, rgba(34, 28, 22, .38), rgba(14, 12, 16, .55)) !important;
+}
+
+/* The title picks up a faint warm shadow under the lamp. */
+
+.hero__title {
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, .42),
+    0 2px 0 rgba(0, 0, 0, .22),
+    0 6px 18px rgba(0, 0, 0, .5),
+    0 18px 36px rgba(0, 0, 0, .25),
+    0 0 64px rgba(243, 220, 160, .06);
+}
+
+.hero__title--bold {
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, .5),
+    0 2px 0 rgba(0, 0, 0, .28),
+    0 8px 22px rgba(0, 0, 0, .55),
+    0 22px 44px rgba(0, 0, 0, .28),
+    0 0 80px rgba(243, 220, 160, .07);
+}
+
+/* A small "deck" line sits under the title byline. */
+
+.hero__byline {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 14px);
+  margin: 0 auto clamp(8px, 1vw, 14px);
+  color: var(--lamp);
+  font-family: var(--serif);
+  font-size: clamp(11px, .95vw, 12.5px);
+  font-style: italic;
+  letter-spacing: .02em;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  max-width: 100%;
+  opacity: 0;
+  animation: traceFade .85s var(--ease-out) .2s forwards;
+}
+
+.hero__byline em {
+  font-style: italic;
+  color: var(--paper);
+  letter-spacing: .015em;
+  text-transform: lowercase;
+}
+
+.hero__byline-rule {
+  display: inline-block;
+  width: clamp(28px, 4vw, 56px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--lamp) 50%, var(--lamp));
+  opacity: .65;
+}
+
+.hero__byline-rule--alt {
+  background: linear-gradient(to left, transparent, var(--lamp) 50%, var(--lamp));
+}
+
+.hero__byline-mark {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--lamp);
+  box-shadow: 0 0 0 3px rgba(243, 220, 160, .15);
+}
+
+.app--voice-quiet .hero__byline,
+.app--voice-quiet .hero__byline-mark,
+.app--voice-quiet .hero__byline-rule { color: var(--blue); }
+.app--voice-quiet .hero__byline-mark { background: var(--blue); box-shadow: 0 0 0 3px rgba(155, 188, 255, .15); }
+.app--voice-quiet .hero__byline-rule { background: linear-gradient(to right, transparent, var(--blue) 50%, var(--blue)); }
+.app--voice-quiet .hero__byline-rule--alt { background: linear-gradient(to left, transparent, var(--blue) 50%, var(--blue)); }
+
+.app--voice-human .hero__byline,
+.app--voice-human .hero__byline-mark,
+.app--voice-human .hero__byline-rule { color: var(--coral); }
+.app--voice-human .hero__byline-mark { background: var(--coral); box-shadow: 0 0 0 3px rgba(240, 110, 91, .15); }
+.app--voice-human .hero__byline-rule { background: linear-gradient(to right, transparent, var(--coral) 50%, var(--coral)); }
+.app--voice-human .hero__byline-rule--alt { background: linear-gradient(to left, transparent, var(--coral) 50%, var(--coral)); }
+
+.app--voice-bold .hero__byline,
+.app--voice-bold .hero__byline-mark,
+.app--voice-bold .hero__byline-rule { color: var(--acid); }
+.app--voice-bold .hero__byline-mark { background: var(--acid); box-shadow: 0 0 0 3px rgba(216, 240, 106, .15); }
+.app--voice-bold .hero__byline-rule { background: linear-gradient(to right, transparent, var(--acid) 50%, var(--acid)); }
+.app--voice-bold .hero__byline-rule--alt { background: linear-gradient(to left, transparent, var(--acid) 50%, var(--acid)); }
+
+/* The hero body summary sits in a calmer column under the
+   byline. The dropcap gets a tiny refinement. */
+
+.hero__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 1.8vw, 18px);
+  margin-top: clamp(20px, 3vw, 36px);
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 var(--gutter);
+}
+
+.hero__summary {
+  margin: 0;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: clamp(15.5px, 1.4vw, 19px);
+  font-style: italic;
+  line-height: 1.55;
+  letter-spacing: -.005em;
+}
+
+.hero__summary em {
+  font-style: italic;
+  color: var(--lamp);
+}
+
+.app--voice-quiet .hero__summary em { color: var(--blue); }
+.app--voice-human .hero__summary em { color: var(--coral); }
+.app--voice-bold .hero__summary em { color: var(--acid); }
+
+.hero__dropcap {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.4em;
+  line-height: 1;
+  color: var(--lamp);
+  padding-right: .04em;
+}
+
+.app--voice-quiet .hero__dropcap { color: var(--blue); }
+.app--voice-human .hero__dropcap { color: var(--coral); }
+.app--voice-bold .hero__dropcap { color: var(--acid); }
+
+/* ────────────────────────────────────────────────────────────
+   FOLIO TICKET · a paper hang-tag tied to the upper-right
+   corner of the hero spread by a drawn string. The card is
+   cream-warm paper, the type is hand-set, and a wax pin keeps
+   the impression. It lists the press mark, voice, and the
+   date the line was set — the page's own colophon, hanging
+   from the corner like a proof ticket in a print room.
+   ──────────────────────────────────────────────────────────── */
+
+.folio-ticket {
+  --ticket-tone: var(--coral);
+  position: absolute;
+  top: clamp(44px, 5vw, 76px);
+  right: clamp(22px, 4vw, 72px);
+  width: clamp(96px, 10vw, 128px);
+  height: clamp(146px, 15vw, 188px);
+  z-index: 4;
+  color: var(--ticket-tone);
+  pointer-events: none;
+  transform-origin: 88% 0%;
+  transform: rotate(-3deg);
+  animation: folioTicketSettle 1.2s var(--ease-spring) .55s backwards;
+  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, .38));
+}
+
+@keyframes folioTicketSettle {
+  0% { opacity: 0; transform: rotate(-12deg) translateY(-22px) scale(.92); }
+  60% { opacity: 1; transform: rotate(-1.5deg) translateY(2px) scale(1.01); }
+  100% { opacity: 1; transform: rotate(-3deg) translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-ticket {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: rotate(-3deg);
+  }
+}
+
+.folio-ticket__string {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 60px;
+  height: 80px;
+  color: var(--tag-string);
+  opacity: .9;
+}
+
+.folio-ticket__string-path {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  animation: folioTicketStringDraw 1s var(--ease-out) .8s forwards;
+}
+
+@keyframes folioTicketStringDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-ticket__string-path {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+.folio-ticket__eyelet {
+  position: absolute;
+  top: -4px;
+  right: 8px;
+  width: 14px;
+  height: 14px;
+  z-index: 2;
+  color: var(--ink-warm);
+}
+
+.folio-ticket__card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto auto auto 1fr auto;
+  gap: clamp(6px, .8vw, 9px);
+  width: 100%;
+  height: 100%;
+  padding: clamp(14px, 1.4vw, 18px) clamp(11px, 1.1vw, 14px) clamp(14px, 1.4vw, 18px);
+  border-radius: 1px;
+  color: var(--ink-warm);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.folio-ticket__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.folio-ticket__edge {
+  position: absolute;
+  inset: 1.5px;
+  border: 1px solid rgba(60, 40, 22, .14);
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.folio-ticket__notch {
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  height: 4px;
+  transform: translateX(-50%);
+  background: rgba(14, 12, 16, .35);
+  border-radius: 0 0 4px 4px;
+  z-index: 2;
+}
+
+.folio-ticket__notch--top { top: 0; }
+.folio-ticket__notch--bot { bottom: 0; border-radius: 4px 4px 0 0; }
+
+.folio-ticket__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--ink-warm-soft);
+  font-size: 7.5px;
+  letter-spacing: .2em;
+  z-index: 3;
+}
+
+.folio-ticket__row--top {
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(60, 40, 22, .14);
+}
+
+.folio-ticket__press {
+  color: var(--ink-warm);
+  font-weight: 600;
+  letter-spacing: .2em;
+}
+
+.folio-ticket__folio {
+  color: var(--ticket-tone);
+  font-weight: 700;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 10px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.folio-ticket__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(8px, .9vw, 11px);
+  align-items: center;
+  padding: 2px 0 4px;
+  z-index: 3;
+}
+
+.folio-ticket__seal {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(26px, 2.6vw, 32px);
+  height: clamp(26px, 2.6vw, 32px);
+  color: var(--ticket-tone);
+}
+
+.folio-ticket__copy {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.folio-ticket__eyebrow {
+  color: var(--ink-warm-soft);
+  font-size: 7px;
+  letter-spacing: .24em;
+}
+
+.folio-ticket__title {
+  color: var(--ink-warm);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.3vw, 15.5px);
+  font-weight: 400;
+  letter-spacing: -.012em;
+  line-height: 1;
+  text-transform: none;
+}
+
+.folio-ticket__ruler {
+  display: block;
+  width: 100%;
+  height: 8px;
+  opacity: .55;
+  z-index: 3;
+}
+
+.folio-ticket__meta {
+  display: grid;
+  gap: 4px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(60, 40, 22, .14);
+  z-index: 3;
+}
+
+.folio-ticket__meta-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.folio-ticket__meta-label {
+  color: var(--ink-warm-soft);
+  font-size: 7px;
+  letter-spacing: .24em;
+}
+
+.folio-ticket__meta-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink-warm);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 10px;
+  letter-spacing: -.01em;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.folio-ticket__meta-value--date {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 8px;
+  letter-spacing: .14em;
+  text-transform: lowercase;
+}
+
+.folio-ticket__voice-letter {
+  display: inline-grid;
+  place-items: center;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--ticket-tone);
+  border-radius: 50%;
+  color: var(--ticket-tone);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 8.5px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.folio-ticket__pin {
+  position: absolute;
+  top: -7px;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  z-index: 4;
+}
+
+/* Ticket falls to the bottom of the spread on narrow screens. */
+
+@media (max-width: 920px) {
+  .folio-ticket {
+    top: clamp(32px, 6vw, 56px);
+    right: clamp(14px, 3vw, 32px);
+    width: clamp(82px, 16vw, 108px);
+    height: clamp(124px, 22vw, 158px);
+    transform: rotate(-5deg);
+    opacity: 0;
+    animation: folioTicketSettleMobile 1s var(--ease-out) .8s forwards;
+  }
+
+  @keyframes folioTicketSettleMobile {
+    0% { opacity: 0; transform: rotate(-12deg) translateY(-12px); }
+    100% { opacity: 1; transform: rotate(-5deg) translateY(0); }
+  }
+}
+
+@media (max-width: 640px) {
+  .folio-ticket {
+    display: none;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   MARGINAL LEDGER · trimmed. The frame thins, the buttons
+   become more typographic, and the whole column feels like a
+   marginal index rather than a button strip.
+   ──────────────────────────────────────────────────────────── */
+
+.marginal-ledger {
+  width: clamp(64px, 6.4vw, 86px);
+}
+
+.marginal-ledger__tick {
+  align-items: flex-end;
+  gap: 2px;
+  padding: 2px 0;
+}
+
+.marginal-ledger__tick-glyph {
+  width: clamp(24px, 2.6vw, 30px);
+  height: clamp(18px, 1.8vw, 22px);
+  background: transparent;
+  border-right: 1px solid color-mix(in srgb, currentColor 65%, transparent);
+  border-top: 0;
+  border-bottom: 0;
+  border-left: 0;
+}
+
+.marginal-ledger__row.is-active .marginal-ledger__tick-glyph {
+  background: transparent;
+  border-right-color: currentColor;
+  box-shadow: none;
+}
+
+.marginal-ledger__tick-label {
+  font-size: clamp(10.5px, .85vw, 12px);
+  letter-spacing: -.005em;
+  padding-right: 4px;
+}
+
+.marginal-ledger__tick-num {
+  font-size: 7.5px;
+  letter-spacing: .26em;
+  padding-right: 4px;
+  opacity: .6;
+}
+
+.marginal-ledger__rule {
+  right: 0;
+  top: clamp(20px, 2vw, 28px);
+  bottom: clamp(22px, 2.6vw, 32px);
+  width: 1px;
+}
+
+.marginal-ledger__head-tag {
+  font-size: 8px;
+  letter-spacing: .26em;
+}
+
+.marginal-ledger__head-dot {
+  width: 3px;
+  height: 3px;
+  box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.marginal-ledger__foot {
+  font-size: 8.5px;
+  letter-spacing: .14em;
+  align-self: stretch;
+  text-align: right;
+  padding-right: 2px;
+}
+
+@media (max-width: 920px) {
+  .marginal-ledger {
+    width: clamp(56px, 11vw, 70px);
+  }
+}
+
+/* Tighten the new byline + summary on narrow screens. */
+
+@media (max-width: 720px) {
+  .hero__byline {
+    font-size: 10.5px;
+    gap: 6px;
+  }
+
+  .hero__byline-rule {
+    width: clamp(18px, 4vw, 32px);
+  }
+
+  .hero__byline em {
+    font-size: 11px;
+  }
+
+  .hero__body {
+    padding: 0 22px;
+  }
+
+  .hero__summary {
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 540px) {
+  .folio-ticket {
+    display: none;
+  }
+
+  .hero__byline {
+    font-size: 9.5px;
+  }
+
+  .hero__dropcap {
+    font-size: 1.3em;
+  }
+}
+
+

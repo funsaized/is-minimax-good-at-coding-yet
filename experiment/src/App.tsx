@@ -24,6 +24,7 @@ import { VoiceSelector } from './VoiceSelector'
 import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
 import { MarginalLedger } from './MarginalLedger'
+import { FolioTicket } from './FolioTicket'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -949,6 +950,10 @@ export function App() {
               <svg viewBox="0 0 36 36"><path d="M34 18v16h-16" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" /><circle cx="34" cy="34" r="1.6" fill="currentColor" /></svg>
             </span>
 
+            <span className="hero__lamp" aria-hidden="true" />
+
+            <FolioTicket voice={voice} setToday={setToday} folio="i" />
+
             <div className="hero__plate">
               <MarginalLedger
                 active={selectedWord}
@@ -1016,9 +1021,16 @@ export function App() {
           </div>
 
           <div className="hero__body">
+            <span className="hero__byline" aria-hidden="true">
+              <span className="hero__byline-mark" />
+              <span className="hero__byline-rule" />
+              <em>a small, stubborn inquiry</em>
+              <span className="hero__byline-rule hero__byline-rule--alt" />
+              <span className="hero__byline-mark" />
+            </span>
             <p className="hero__summary">
               <span className="hero__dropcap" aria-hidden="true">A</span>
-              small, stubborn inquiry into whether a machine can make a page feel like <em>someone was here.</em>
+              page that earns the right to ask whether a machine can make a place feel like <em>someone was here.</em> Read it once with the eye, again with the ear.
             </p>
             <a className="hero__continue" href="#press" aria-label="Continue to the press bed">
               <span className="hero__continue-imprint">composed by hand <em>·</em> for a careful reader</span>
