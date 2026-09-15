@@ -27238,6 +27238,571 @@ a small act of typesetting.
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+   PRESS SPINE · a continuous binding thread running along
+   the left edge of the page. Each folio leaves a knot at its
+   section break; the active knot brightens, the past knots
+   dim, and a hover brings the folio label into the gutter.
+   The thread is what makes the page feel like one bound
+   volume rather than a stack of separate artifacts.
+   ──────────────────────────────────────────────────────────── */
 
+.press-spine {
+  --spine-tone: var(--coral);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: clamp(14px, 2.4vw, 28px);
+  width: 38px;
+  z-index: 3;
+  pointer-events: none;
+  color: var(--spine-tone);
+  transition: color .55s var(--ease);
+  animation: spineIn .9s var(--ease-out) .25s backwards;
+}
 
+@keyframes spineIn {
+  from { opacity: 0; transform: translateX(-6px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.press-spine--quiet { --spine-tone: var(--blue); }
+.press-spine--human { --spine-tone: var(--coral); }
+.press-spine--bold { --spine-tone: var(--acid); }
+
+.press-spine__thread {
+  position: absolute;
+  top: clamp(80px, 12vh, 130px);
+  bottom: clamp(80px, 12vh, 130px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  pointer-events: none;
+  color: var(--spine-tone);
+}
+
+.press-spine__thread-line {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      currentColor 0 4px,
+      transparent 4px 9px
+    );
+  opacity: .22;
+  transition: opacity .55s var(--ease);
+}
+
+.press-spine__thread-cap {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  color: currentColor;
+  opacity: .6;
+  transition: opacity .55s var(--ease);
+}
+
+.press-spine__thread-cap--top { top: -7px; }
+.press-spine__thread-cap--bot { bottom: -7px; }
+
+.press-spine__thread-cap svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.press-spine:hover .press-spine__thread-line,
+.press-spine:focus-within .press-spine__thread-line {
+  opacity: .35;
+}
+
+.press-spine__folios {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.press-spine__folio {
+  position: absolute;
+  top: calc(
+    clamp(80px, 12vh, 130px) +
+    (100vh - clamp(160px, 24vh, 260px)) * (var(--folio-i, 0) / 8)
+  );
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+}
+
+.press-spine__knot {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: var(--mist);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(20, 24, 36, .92), rgba(14, 15, 21, .96));
+  border: 1px solid var(--line);
+  transition:
+    color .45s var(--ease),
+    border-color .45s var(--ease),
+    transform .55s var(--ease-spring),
+    box-shadow .55s var(--ease);
+}
+
+.press-spine__knot-svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  transition: transform .55s var(--ease);
+}
+
+.press-spine__knot:hover,
+.press-spine__knot:focus-visible {
+  border-color: currentColor;
+  color: var(--spine-tone);
+  transform: scale(1.08);
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, .02),
+    0 4px 16px -6px currentColor;
+}
+
+.press-spine__knot-core {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform .45s var(--ease-spring);
+}
+
+.press-spine__knot-cross {
+  opacity: 0;
+  transition: opacity .35s var(--ease);
+}
+
+.press-spine__folio.is-past .press-spine__knot {
+  color: var(--ink-mist);
+  opacity: .55;
+}
+
+.press-spine__folio.is-active .press-spine__knot {
+  color: var(--spine-tone);
+  border-color: currentColor;
+  transform: scale(1.2);
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, .03),
+    0 0 22px -4px currentColor,
+    inset 0 0 0 1px rgba(255, 255, 255, .06);
+}
+
+.press-spine__folio.is-active .press-spine__knot-core {
+  animation: spineCorePulse 2.4s var(--ease) infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.press-spine__folio.is-active .press-spine__knot-cross {
+  opacity: .55;
+}
+
+@keyframes spineCorePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+}
+
+.press-spine__caption {
+  position: absolute;
+  left: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%) translateX(-6px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 6px 4px;
+  background: rgba(14, 15, 21, .86);
+  border: 1px solid var(--line);
+  border-left: 2px solid currentColor;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s var(--ease), transform .35s var(--ease-out);
+  z-index: 4;
+  backdrop-filter: blur(8px);
+}
+
+.press-spine__caption.is-visible {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.press-spine__caption-index {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid currentColor;
+  color: currentColor;
+  font-size: 10px;
+  font-style: italic;
+  font-family: Georgia, serif;
+  letter-spacing: 0;
+  text-transform: lowercase;
+}
+
+.press-spine__caption-label {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: 11.5px;
+  font-style: italic;
+  letter-spacing: -.005em;
+  text-transform: none;
+}
+
+@media (max-width: 720px) {
+  .press-spine {
+    left: 8px;
+    width: 22px;
+  }
+
+  .press-spine__thread {
+    top: 64px;
+    bottom: 64px;
+  }
+
+  .press-spine__folio {
+    top: calc(
+      64px +
+      (100% - 128px) * (var(--folio-i, 0) / 8)
+    );
+  }
+
+  .press-spine__knot {
+    width: 18px;
+    height: 18px;
+  }
+
+  .press-spine__knot-svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .press-spine__caption {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-spine {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .press-spine__folio.is-active .press-spine__knot-core {
+    animation: none !important;
+    transform: none !important;
+  }
+  .press-spine__caption { transition: none !important; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   PLATE PROVENANCE · a deliberate press stamp at the top of
+   the title page. It frames the page's identity (PLATE · i)
+   and announces the date and the active voice. The stamp is
+   drawn as if pulled fresh from the press: a faint grain
+   pass, a settled frame, and a single line of monospace text
+   that arrives last. Sets the title page's authority.
+   ──────────────────────────────────────────────────────────── */
+
+.plate-provenance {
+  --provenance-tone: var(--coral);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(6px, .8vw, 10px);
+  margin: clamp(6px, 1.2vw, 14px) auto clamp(18px, 2.4vw, 28px);
+  max-width: 720px;
+  color: var(--provenance-tone);
+  transition: color .55s var(--ease);
+}
+
+.plate-provenance--quiet { --provenance-tone: var(--blue); }
+.plate-provenance--human { --provenance-tone: var(--coral); }
+.plate-provenance--bold { --provenance-tone: var(--acid); }
+
+.plate-provenance__stamp {
+  display: block;
+  width: 100%;
+  height: clamp(56px, 6vw, 88px);
+  color: inherit;
+}
+
+.plate-provenance__group {
+  opacity: 0;
+  animation: provenanceIn .85s var(--ease-out) .4s forwards;
+}
+
+.plate-provenance__rule {
+  stroke-dasharray: 2 4;
+  stroke-dashoffset: 0;
+  transform-origin: left center;
+  animation: provenanceRuleDraw .9s var(--ease-out) .65s backwards;
+}
+
+.plate-provenance__rule--bot {
+  animation-delay: 1.05s;
+  transform-origin: right center;
+}
+
+.plate-provenance__eyebrow {
+  opacity: 0;
+  animation: provenanceEyebrowIn .55s var(--ease-out) 1.15s forwards;
+}
+
+.plate-provenance__name {
+  opacity: 0;
+  animation: provenanceNameIn .75s var(--ease-out) 1.35s forwards;
+}
+
+.plate-provenance__name-rule {
+  stroke-dasharray: .6 1.4;
+  transform-origin: center;
+  animation: provenanceRuleGrow .55s var(--ease-out) 1.95s backwards;
+}
+
+.plate-provenance__corner {
+  opacity: 0;
+  animation: provenanceCornerIn .35s var(--ease-out) backwards;
+}
+
+.plate-provenance__corner--tl { animation-delay: 1.5s; }
+.plate-provenance__corner--tr { animation-delay: 1.6s; }
+.plate-provenance__corner--bl { animation-delay: 1.7s; }
+.plate-provenance__corner--br { animation-delay: 1.8s; }
+
+.plate-provenance__seal {
+  opacity: 0;
+  animation: provenanceSealIn .55s var(--ease-out) 2s forwards;
+}
+
+@keyframes provenanceIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes provenanceRuleDraw {
+  from { opacity: 0; stroke-dashoffset: 160; }
+  to { opacity: .8; stroke-dashoffset: 0; }
+}
+
+@keyframes provenanceEyebrowIn {
+  from { opacity: 0; }
+  to { opacity: .82; }
+}
+
+@keyframes provenanceNameIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes provenanceRuleGrow {
+  from { opacity: 0; transform: scaleX(0); }
+  to { opacity: .55; transform: scaleX(1); }
+}
+
+@keyframes provenanceCornerIn {
+  from { opacity: 0; }
+  to { opacity: .9; }
+}
+
+@keyframes provenanceSealIn {
+  from { opacity: 0; transform: scale(.6); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.plate-provenance__caption {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--ink-mist);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .76vw, 10px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: provenanceCaptionIn .55s var(--ease-out) 2.1s forwards;
+}
+
+.plate-provenance__caption em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(11px, 1vw, 13px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.plate-provenance__caption-divider {
+  color: currentColor;
+  opacity: .5;
+}
+
+.plate-provenance__caption-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  color: currentColor;
+  opacity: .75;
+  transition: opacity .35s var(--ease);
+}
+
+.plate-provenance__caption-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.plate-provenance:hover .plate-provenance__caption-mark {
+  opacity: 1;
+}
+
+@keyframes provenanceCaptionIn {
+  from { opacity: 0; }
+  to { opacity: .9; }
+}
+
+@media (max-width: 720px) {
+  .plate-provenance {
+    margin: 4px auto 14px;
+  }
+
+  .plate-provenance__stamp {
+    height: 64px;
+  }
+
+  .plate-provenance__caption {
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plate-provenance__group,
+  .plate-provenance__rule,
+  .plate-provenance__eyebrow,
+  .plate-provenance__name,
+  .plate-provenance__name-rule,
+  .plate-provenance__corner,
+  .plate-provenance__seal,
+  .plate-provenance__caption {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    letter-spacing: 2.4px !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ANSWER REVEAL · "FOLD HERE" · a small registration mark
+   that lands at the spot where the leaf was folded. It is
+   the kind of detail a real tipped-in artifact would carry:
+   a delicate circle with crosshairs and a quiet "fold ·
+   here" tag, plus a small trail leading back to the fold
+   line. It rewards the reader who looks closely.
+   ──────────────────────────────────────────────────────────── */
+
+.answer-reveal__foldhere {
+  position: absolute;
+  top: calc(38% - 32px);
+  right: clamp(60px, 8vw, 110px);
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  color: var(--wax);
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: center;
+  transition:
+    opacity .65s var(--ease) .85s,
+    transform .85s var(--ease-spring) .85s;
+  z-index: 3;
+}
+
+.answer-reveal__foldhere svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .08));
+}
+
+.answer-reveal__foldhere-tag {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: var(--wax);
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  opacity: .85;
+}
+
+.answer-reveal__foldhere-trail {
+  position: absolute;
+  top: calc(100% + 22px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 8px;
+  color: var(--wax);
+  opacity: .55;
+}
+
+.answer-reveal__foldhere-trail svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.answer-reveal.is-open .answer-reveal__foldhere {
+  opacity: 1;
+  transform: translateY(8px) rotate(-3deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-reveal__foldhere {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: translateY(8px) rotate(-3deg) !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .answer-reveal__foldhere {
+    width: 48px;
+    height: 48px;
+    right: 18px;
+  }
+
+  .answer-reveal__foldhere-tag {
+    font-size: 7px;
+  }
+}
 

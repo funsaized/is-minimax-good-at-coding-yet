@@ -27,6 +27,8 @@ import { TitleRule } from './TitleRule'
 import { PressSignatureMark } from './PressSignatureMark'
 import { NotesSection } from './NotesSection'
 import { PageFold } from './PageFold'
+import { PressSpine } from './PressSpine'
+import { PlateProvenance } from './PlateProvenance'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -232,6 +234,20 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
             <svg viewBox="0 0 600 24" preserveAspectRatio="none">
               <path d="M2 12c40-6 80 6 120 0s80-8 120-2 80 6 120-4 80-8 120-1 80 6 118 1" fill="none" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" />
             </svg>
+          </span>
+          <span className="answer-reveal__foldhere" aria-hidden="true">
+            <svg viewBox="0 0 64 64" preserveAspectRatio="none">
+              <circle cx="32" cy="32" r="11" fill="none" stroke="currentColor" strokeWidth=".55" />
+              <circle cx="32" cy="32" r="14" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".7 1.6" opacity=".6" />
+              <path d="M32 18v28M18 32h28" stroke="currentColor" strokeWidth=".45" strokeLinecap="round" opacity=".7" />
+              <circle cx="32" cy="32" r="1.4" fill="currentColor" />
+            </svg>
+            <span className="answer-reveal__foldhere-tag">fold · here</span>
+            <span className="answer-reveal__foldhere-trail" aria-hidden="true">
+              <svg viewBox="0 0 56 8" preserveAspectRatio="none">
+                <path d="M2 4c8-4 18 4 28 0s20-2 24-1" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" />
+              </svg>
+            </span>
           </span>
           <div className="answer-reveal__seal" aria-hidden="true">
             <PressStamp voice={voice} size={124} />
@@ -758,28 +774,9 @@ export function App() {
         </div>
       </header>
 
+      <PressSpine activeId={activeSection} voice={voice} />
+
       <div className="page">
-        <span className="page-rule" aria-hidden="true">
-          <span className="page-rule__line" />
-          <span className="page-rule__knot page-rule__knot--a" aria-hidden="true">
-            <svg viewBox="0 0 16 16">
-              <circle cx="8" cy="8" r="3.4" fill="none" stroke="currentColor" strokeWidth=".55" />
-              <circle cx="8" cy="8" r="1.1" fill="currentColor" />
-            </svg>
-          </span>
-          <span className="page-rule__knot page-rule__knot--b" aria-hidden="true">
-            <svg viewBox="0 0 16 16">
-              <circle cx="8" cy="8" r="3.4" fill="none" stroke="currentColor" strokeWidth=".55" />
-              <circle cx="8" cy="8" r="1.1" fill="currentColor" />
-            </svg>
-          </span>
-          <span className="page-rule__knot page-rule__knot--c" aria-hidden="true">
-            <svg viewBox="0 0 16 16">
-              <circle cx="8" cy="8" r="3.4" fill="none" stroke="currentColor" strokeWidth=".55" />
-              <circle cx="8" cy="8" r="1.1" fill="currentColor" />
-            </svg>
-          </span>
-        </span>
         <section className="hero" id="question" aria-labelledby="page-title">
           <span className="hero__epigraph" aria-label="Editorial epigraph">
             <span className="hero__epigraph-rule" aria-hidden="true" />
@@ -790,6 +787,8 @@ export function App() {
             <em>on attention, ornament, &amp; the matter of good front-end work</em>
             <span className="hero__epigraph-rule hero__epigraph-rule--end" aria-hidden="true" />
           </span>
+
+          <PlateProvenance voice={voice} setToday={setToday} />
 
           <FolioMark
             folio="i"
