@@ -35,6 +35,7 @@ import { PressPlate } from './PressPlate'
 import { SpecimenTray } from './SpecimenTray'
 import { FolioLedger } from './FolioLedger'
 import { TitleFolio } from './TitleFolio'
+import { ClosingPlate } from './ClosingPlate'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -501,83 +502,6 @@ function Colophon({ voice, word, setToday, readerName }: { voice: VoiceId; word:
 
 const VOICE_LABEL: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
-const VOICE_SHORT: Record<VoiceId, string> = { quiet: 'A · quiet', human: 'B · human', bold: 'C · bold' }
-const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
-const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
-
-function ReadingFolio({ activeId, voice, word, answerOpen, setToday }: {
-  activeId: string
-  voice: VoiceId
-  word: WordId
-  answerOpen: boolean
-  setToday: string
-}) {
-  const section = READING_SECTIONS.find(item => item.id === activeId) ?? READING_SECTIONS[0]
-  return (
-    <footer className="reading-folio" aria-label="Folio footer">
-      <div className="reading-folio__plate" aria-hidden="true">
-        <span className="reading-folio__plate-line" />
-        <span className="reading-folio__plate-tag">
-          <span className="reading-folio__plate-mark">※</span>
-          folio footer · set on {setToday}
-          <span className="reading-folio__plate-mark reading-folio__plate-mark--alt">※</span>
-        </span>
-        <span className="reading-folio__plate-line" />
-      </div>
-      <ol className="reading-folio__row" aria-label="Reading state at the foot of the page">
-        <li className="reading-folio__cell reading-folio__cell--folio">
-          <span className="reading-folio__cell-tag">now reading</span>
-          <span className="reading-folio__cell-main">
-            <span className="reading-folio__cell-num">{section.index}</span>
-            <span className="reading-folio__cell-name">{section.label}</span>
-          </span>
-          <span className="reading-folio__cell-foot">folio · {activeId}</span>
-        </li>
-        <li className="reading-folio__cell reading-folio__cell--word">
-          <span className="reading-folio__cell-tag">marked word</span>
-          <span className="reading-folio__cell-main">
-            <span className={`reading-folio__cell-mark reading-folio__cell-mark--${word}`}>{WORD_MARK[word]}</span>
-            <span className="reading-folio__cell-name">{WORD_LABEL[word]}</span>
-          </span>
-          <span className="reading-folio__cell-foot">the verb kept close</span>
-        </li>
-        <li className="reading-folio__cell reading-folio__cell--voice">
-          <span className="reading-folio__cell-tag">the press is set in</span>
-          <span className="reading-folio__cell-main">
-            <span className={`reading-folio__cell-voice reading-folio__cell-voice--${voice}`}>{VOICE_SHORT[voice]}</span>
-            <span className="reading-folio__cell-name">{VOICE_LABEL[voice]}</span>
-          </span>
-          <span className="reading-folio__cell-foot">active setting · shift + v to cycle</span>
-        </li>
-        <li className="reading-folio__cell reading-folio__cell--state">
-          <span className="reading-folio__cell-tag">the leaf</span>
-          <span className="reading-folio__cell-main">
-            <span className={`reading-folio__cell-state ${answerOpen ? 'is-open' : ''}`}>
-              <span className="reading-folio__cell-state-dot" aria-hidden="true" />
-              {answerOpen ? 'tipped in' : 'folded away'}
-            </span>
-          </span>
-          <span className="reading-folio__cell-foot">folio viii · the proof</span>
-        </li>
-      </ol>
-      <span className="reading-folio__sign" aria-hidden="true">
-        <svg viewBox="0 0 220 22" preserveAspectRatio="none">
-          <path
-            d="M2 14c10-9 22 6 36-2s22-9 36-1 22 7 36-2 22-7 36-1 22 6 36-2 18-4 18-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-            strokeLinecap="round"
-            pathLength="100"
-            strokeDasharray="100 100"
-            className="reading-folio__sign-stroke"
-          />
-          <circle cx="216" cy="11" r="1.6" fill="currentColor" className="reading-folio__sign-dot" />
-        </svg>
-      </span>
-    </footer>
-  )
-}
 
 export function App() {
   const [answerOpen, setAnswerOpen] = useState(false)
@@ -1060,7 +984,15 @@ export function App() {
 
       <MarginNotes activeId={activeSection} voice={voice} />
 
-      <ReadingFolio activeId={activeSection} voice={voice} word={activeWord} answerOpen={answerOpen} setToday={setToday} />
+      <ClosingPlate
+        voice={voice}
+        word={activeWord}
+        readerName={readerName}
+        marks={marks}
+        setToday={setToday}
+        activeFolioIndex={READING_SECTIONS.find(item => item.id === activeSection)?.index ?? 'viii'}
+        activeFolioLabel={READING_SECTIONS.find(item => item.id === activeSection)?.label ?? 'the answer'}
+      />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )

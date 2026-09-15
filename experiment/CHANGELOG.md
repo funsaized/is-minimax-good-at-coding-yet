@@ -1,18 +1,7 @@
-# Changelog
+# Iteration 269
 
-## 268 · signed the title page with a pressed folio closing
+Replaced the loose row-based folio footer with one deliberate closing press plate that seals the volume.
 
-Replaced the loose row-based `hero__signature` that closed the title
-page with a new `TitleFolio` component. The new closing reads as one
-authored plate: a thin ruled lead edge, a bordered "imprint" panel
-with corner crops, a large italic inscription ("for the next reader"),
-a hand-set date, a pressed monogram stamp with wax, and a foot strip
-showing the press, the active voice, and the cycle key. The piece
-points on to folio ii with a small trail and answers the voice color
-(blue / coral / acid) across its rules, crops, and folio letter.
-
-The plate is bordered so it sits as a distinct, hand-bound sheet
-inside the title page; the inline inscription, signature rule, and
-pressed stamp now share one composed row instead of three loose
-elements. Responsive: the folio column drops below the copy on small
-screens, then stacks fully on phones. Motion is reduced-motion safe.
+- The row of four `reading-folio` status cells is replaced by a single paper-backed `ClosingPlate` at the foot of the page. It carries one composed inscription (set in [voice], marked at [word], for [reader], on [date]), a small "press log" tally of the session, a three-voice type-table naming what was used, a hand-set signature flourish that draws itself across the top, and a pressed seal — like the back-matter of a single printed volume.
+- Removed the unused `ReadingFolio` component and its CSS; the new plate reuses the existing type palette and press-stamp components so it sits inside the same vocabulary as the title spread and the answer reveal.
+- The plate reveals on scroll, respects `prefers-reduced-motion`, stays keyboard-accessible, and collapses to a single column with the inscription stacking vertically on small screens.
