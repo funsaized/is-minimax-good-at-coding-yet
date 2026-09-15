@@ -30,6 +30,7 @@ import { PageFold } from './PageFold'
 import { PressSpine } from './PressSpine'
 import { PlateProvenance } from './PlateProvenance'
 import { FirstReading } from './FirstReading'
+import { ReaderPlate } from './ReaderPlate'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -53,6 +54,7 @@ const READING_SECTIONS: { id: string; index: string; label: string }[] = [
   { id: 'contents', index: 'iii', label: 'contents' },
   { id: 'day', index: 'iii·', label: 'day sheet' },
   { id: 'note', index: '·', label: 'note' },
+  { id: 'reader-plate', index: '·', label: 'bookplate' },
   { id: 'proof', index: 'iv', label: 'proof' },
   { id: 'pressings', index: 'v', label: 'pressings' },
   { id: 'notes', index: 'vi', label: 'marginalia' },
@@ -111,7 +113,7 @@ function PaperWarmth({ voice }: { voice: VoiceId }) {
   return <span className={`paper-warmth paper-warmth--${voice}`} aria-hidden="true" />
 }
 
-const FOLIO_ORDER: string[] = ['question', 'press', 'contents', 'day', 'note', 'proof', 'pressings', 'notes', 'answer']
+const FOLIO_ORDER: string[] = ['question', 'press', 'contents', 'day', 'note', 'reader-plate', 'proof', 'pressings', 'notes', 'answer']
 
 function ArrowIcon() {
   return (
@@ -419,13 +421,17 @@ function FolioLedger() {
   )
 }
 
-function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; setToday: string }) {
+function Colophon({ voice, word, setToday, readerName }: { voice: VoiceId; word: WordId; setToday: string; readerName: string }) {
   const tag = voice === 'bold' ? 'NO APOLOGIES' : voice === 'human' ? 'BY HAND' : 'SET WITH CARE'
   const voiceName = voice === 'bold' ? 'bold signal' : voice === 'human' ? 'human hand' : 'quiet cut'
   const mark = word === 'm3' ? 'stet' : word === 'good' ? 'caret' : 'query'
   const label = word === 'm3' ? 'M3' : word === 'good' ? 'good at' : 'yet?'
+  const signedReader = readerName.trim()
+  const signedLine = signedReader
+    ? `impressed for ${signedReader}`
+    : 'impressed for the next reader'
   return (
-    <footer className="colophon" aria-label="Colophon">
+    <footer className={`colophon ${signedReader ? 'is-signed' : ''}`} aria-label="Colophon">
       <div className="colophon__plate">
         <span className="colophon__date" aria-hidden="true">
           <span className="colophon__date-rule" />
@@ -471,6 +477,25 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
             <span className="colophon__value">{tag}</span>
           </div>
           <div className="colophon__row">
+            <span className="colophon__label">impressed for</span>
+            <span className={`colophon__value colophon__reader ${signedReader ? 'is-set' : ''}`}>
+              <em className="colophon__reader-name">{signedReader || 'the next reader'}</em>
+              <span className="colophon__reader-rule" aria-hidden="true">
+                <svg viewBox="0 0 120 8" preserveAspectRatio="none">
+                  <path
+                    d="M2 4c12-4 26 4 42-1s28-5 42-1 24 6 32-1"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth=".8"
+                    strokeLinecap="round"
+                    className="colophon__reader-rule-stroke"
+                  />
+                  <circle className="colophon__reader-rule-bead" cx="118" cy="4" r="1" fill="currentColor" />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div className="colophon__row">
             <span className="colophon__label">palette</span>
             <span className="colophon__swatches" aria-hidden="true">
               <span className="colophon__swatch" style={{ background: 'var(--acid)' }} title="acid" />
@@ -491,7 +516,7 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
           </span>
           <span className="colophon__impression-line">
             <span className="colophon__impression-head">
-              pulled in <em>{voiceName}</em> · the active mark is <em>{label}</em> <span className="colophon__impression-mark-tag" aria-hidden="true">({mark})</span>
+              pulled in <em>{voiceName}</em> · the active mark is <em>{label}</em> <span className="colophon__impression-mark-tag" aria-hidden="true">({mark})</span> · <em>{signedLine}</em>
             </span>
             <span className="colophon__impression-meta">
               folio viii <span aria-hidden="true">·</span> press <em>·</em> m³ bay <span aria-hidden="true">·</span> shift + v to cycle
@@ -505,7 +530,7 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
           </span>
         </div>
         <div className="colophon__signature" aria-hidden="true">
-          <KeptMark voice={voice} variant="colophon" size={120} caption={`composed by m³ · for the reader · ${setToday}`} />
+          <KeptMark voice={voice} variant="colophon" size={120} caption={`composed by m³ · ${signedLine} · ${setToday}`} />
         </div>
       </div>
       <p className="colophon__signature-note">
@@ -607,6 +632,7 @@ export function App() {
   const [setToday] = useState(() => formatSetToday())
   const [strikeTick, setStrikeTick] = useState(0)
   const [heroBodyVisible, setHeroBodyVisible] = useState(false)
+  const [readerName, setReaderName] = useState('')
   const firstVoiceRef = useRef(true)
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
@@ -629,7 +655,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'press', 'contents', 'day', 'note', 'proof', 'pressings', 'notes', 'answer']
+    const elements = ['question', 'press', 'contents', 'day', 'note', 'reader-plate', 'proof', 'pressings', 'notes', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -882,6 +908,12 @@ export function App() {
                   <span className="hero__note-link-mark-pin" aria-hidden="true" />
                 </span>
                 <span className="hero__note-link-line">{answerOpen ? 'fold the answer back' : "open the editor's note"}</span>
+                {readerName.trim().length > 0 && (
+                  <span className="hero__note-link-for">
+                    <span className="hero__note-link-for-rule" aria-hidden="true" />
+                    for <em>{readerName.trim()}</em>
+                  </span>
+                )}
               </span>
               <span className="hero__note-link-arrow" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
@@ -1158,6 +1190,8 @@ export function App() {
 
         <LetterToReader voice={voice} onReadAnswer={openAnswerFromNav} />
 
+        <ReaderPlate readerName={readerName} onReaderNameChange={setReaderName} setToday={setToday} />
+
         <Almanac voice={voice} word={activeWord} marks={marks} setToday={setToday} />
 
         <section className="second-reading-section section" aria-labelledby="second-reading-title">
@@ -1188,7 +1222,7 @@ export function App() {
 
         <PressSignature folio="viii" voice={voice} word={activeWord} setToday={setToday} variant="footer" />
 
-        <Colophon voice={voice} word={activeWord} setToday={setToday} />
+        <Colophon voice={voice} word={activeWord} setToday={setToday} readerName={readerName} />
       </div>
 
       <MarginNotes activeId={activeSection} voice={voice} />

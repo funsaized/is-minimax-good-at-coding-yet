@@ -1,18 +1,8 @@
 # Changelog
 
-## Iteration 263 — Refreshed the hero colophon, replaced the voice aside with a press certificate
+## Iteration 264 — the reader's bookplate
 
-The hero body colophon was tightened so it stops competing with the answer reveal.
-The aside that previously named the active voice is replaced by a tactile press
-certificate: a framed definition list with set date, voice, and materials, and a
-small shift+V hint at its foot. The redundant "attention, not ornament" pull
-quote is retired from the hero in favor of "set in type, kept in time". The
-editor sign-off line is folded back into the body prose so the note reads as one
-paragraph instead of two. Drop, voice-tone rules, and mobile layout all follow.
-
-- `src/App.tsx`: rewrote `.hero__summary` copy to a tighter two-paragraph note,
-  replaced `.hero__voice-caption` aside with `.hero__certificate`, and changed
-  the `.hero__pull` motto to a fresh line that no longer duplicates the answer.
-- `src/style.css`: added styles for the press certificate (frame corners,
-  definition list, voice letter, footer hint, voice-tone top accent, reduced-
-  motion fallback) and tuned the grid spacing and mobile layout.
+- Added a new `ReaderPlate` section between the letter to the reader and the day sheet: a tipped slip of paper with a signable bookplate. The reader types a name, a hand-set ink line draws itself beneath it, and a small wax seal lands on the corner of the plate.
+- Wired the signed reader into the colophon below: a new "impressed for" row echoes the name in coral, and the running "this impression" line and `KeptMark` caption both remember the signature.
+- Echoed the signature back into the title page chrome: the editor's-note button gains a small "for [name]" tag once the reader has signed.
+- The plate sits between folios iii· and iv, follows the existing paper grain / wax / hand-stroke vocabulary, and respects `prefers-reduced-motion`.
