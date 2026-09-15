@@ -1,9 +1,18 @@
 # Changelog
 
-## Iteration 262 — the page earns its first reading
+## Iteration 263 — Refreshed the hero colophon, replaced the voice aside with a press certificate
 
-- Added a new `FirstReading` element between the title spread and the action chrome: a thin ruled line holds a single italic instruction ("read it once with the eye · then again with the ear"), flanked by two small registration marks and dated to today; it draws itself in once on arrival and respects reduced-motion.
-- Distinguished the human-hand voice in the title from the quiet-cut voice with looser letter- and word-spacing, a slightly larger size, and a relaxed line-height so the three settings read as three genuinely different typesettings.
-- Eased the title's arrival: each line settles in over 0.85s with a calmer ease and longer cascading delays so the title lands like a hand-set page rather than a flash.
-- Tightened the hero colophon body (smaller gaps, smaller top margin) and reduced the summary scrawl's visual weight so the dropcap, paragraphs, and editor sign-off carry the colophon on their own.
-- Reduced the chrome's top margin so the new FirstReading breathes between the title and the action row without creating dead air.
+The hero body colophon was tightened so it stops competing with the answer reveal.
+The aside that previously named the active voice is replaced by a tactile press
+certificate: a framed definition list with set date, voice, and materials, and a
+small shift+V hint at its foot. The redundant "attention, not ornament" pull
+quote is retired from the hero in favor of "set in type, kept in time". The
+editor sign-off line is folded back into the body prose so the note reads as one
+paragraph instead of two. Drop, voice-tone rules, and mobile layout all follow.
+
+- `src/App.tsx`: rewrote `.hero__summary` copy to a tighter two-paragraph note,
+  replaced `.hero__voice-caption` aside with `.hero__certificate`, and changed
+  the `.hero__pull` motto to a fresh line that no longer duplicates the answer.
+- `src/style.css`: added styles for the press certificate (frame corners,
+  definition list, voice letter, footer hint, voice-tone top accent, reduced-
+  motion fallback) and tuned the grid spacing and mobile layout.

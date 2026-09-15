@@ -26818,6 +26818,242 @@ a small act of typesetting.
   vertical-align: .05em;
 }
 
+/* ────────────────────────────────────────────────────────────
+   PRESS CERTIFICATE · a tactile replacement for the older
+   voice-caption aside. The certificate reads as a printer's
+   own receipt for the impression: set today, voice, and
+   materials. Four cropped corners frame a small definition
+   list so the aside feels distinct from the editor's note
+   on the left and the press section below.
+   ──────────────────────────────────────────────────────────── */
+
+.hero__certificate {
+  --cert-tone: var(--coral);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.2vw, 14px);
+  align-self: stretch;
+  margin: 0;
+  padding: clamp(18px, 2vw, 24px) clamp(16px, 1.8vw, 22px) clamp(14px, 1.6vw, 18px);
+  border: 1px solid rgba(146, 186, 255, .12);
+  border-top-color: var(--cert-tone);
+  border-top-width: 2px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 26px, rgba(243, 236, 214, .018) 26px 27px),
+    linear-gradient(180deg, rgba(28, 36, 52, .36), rgba(14, 20, 32, .55));
+  box-shadow: inset 0 0 0 1px rgba(146, 186, 255, .04);
+  text-align: left;
+  transition: border-color .45s var(--ease);
+}
+
+.app--voice-quiet .hero__certificate { --cert-tone: var(--blue); }
+.app--voice-human .hero__certificate { --cert-tone: var(--coral); }
+.app--voice-bold .hero__certificate { --cert-tone: var(--acid); }
+
+.hero__certificate-frame {
+  position: absolute;
+  inset: 6px;
+  pointer-events: none;
+}
+
+.hero__certificate-frame-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 1px solid currentColor;
+  color: var(--cert-tone);
+  opacity: .85;
+}
+
+.hero__certificate-frame-corner--tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.hero__certificate-frame-corner--tr { top: -1px; right: -1px; border-left: 0; border-bottom: 0; }
+.hero__certificate-frame-corner--bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; }
+.hero__certificate-frame-corner--br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+.hero__certificate-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: clamp(6px, .8vw, 10px);
+  border-bottom: 1px dashed var(--line);
+}
+
+.hero__certificate-head-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cert-tone);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.hero__certificate-head-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(255, 118, 95, .14);
+  transition: background .4s var(--ease);
+}
+
+.app--voice-quiet .hero__certificate-head-eyebrow::before { box-shadow: 0 0 0 3px rgba(155, 188, 255, .14); }
+.app--voice-bold .hero__certificate-head-eyebrow::before { box-shadow: 0 0 0 3px rgba(216, 240, 106, .14); }
+
+.hero__certificate-head-folio {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  opacity: .7;
+}
+
+.hero__certificate-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1vw, 12px);
+  margin: 0;
+  padding: 0;
+}
+
+.hero__certificate-row {
+  display: grid;
+  grid-template-columns: minmax(58px, 84px) minmax(0, 1fr);
+  align-items: baseline;
+  gap: clamp(8px, 1.2vw, 14px);
+  padding-bottom: clamp(6px, .8vw, 10px);
+  border-bottom: 1px dotted rgba(146, 186, 255, .08);
+}
+
+.hero__certificate-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.hero__certificate-row dt {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.hero__certificate-row dd {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(14px, 1.2vw, 16px);
+  letter-spacing: -.005em;
+  line-height: 1.25;
+}
+
+.hero__certificate-letter {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 1;
+  color: var(--cert-tone);
+  background: rgba(0, 0, 0, .22);
+  transition: background .45s var(--ease), color .45s var(--ease);
+}
+
+.app--voice-quiet .hero__certificate-letter--quiet,
+.app--voice-human .hero__certificate-letter--human,
+.app--voice-bold .hero__certificate-letter--bold {
+  background: currentColor;
+  color: var(--night);
+  border-color: currentColor;
+}
+
+.hero__certificate-voice-name {
+  color: var(--paper);
+  font-style: italic;
+}
+
+.hero__certificate-foot {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 12px);
+  padding-top: clamp(8px, 1vw, 12px);
+  border-top: 1px dashed var(--line);
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, .98vw, 13px);
+  line-height: 1.4;
+}
+
+.hero__certificate-foot-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.hero__certificate-foot-hint kbd {
+  display: inline-block;
+  padding: 1px 5px 2px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: rgba(0, 0, 0, .25);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: .08em;
+  line-height: 1;
+  vertical-align: .05em;
+}
+
+.hero__certificate-foot-text {
+  display: block;
+  opacity: .9;
+}
+
+@media (max-width: 540px) {
+  .hero__certificate {
+    padding: 14px 14px 12px;
+  }
+
+  .hero__certificate-row {
+    grid-template-columns: minmax(54px, 70px) minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .hero__certificate-foot {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__certificate {
+    transition: none !important;
+  }
+}
+
 .hero__continue {
   position: relative;
   display: grid;

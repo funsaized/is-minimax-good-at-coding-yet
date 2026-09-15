@@ -932,14 +932,10 @@ export function App() {
                 </span>
                 <span className="hero__summary-text">
                   <span className="hero__summary-paragraph">
-                    page that earns the right to ask whether a machine can make a place feel like <em>someone was here.</em> Not the gradient, the flourish, or the clever little mechanism — the moment a page gives you room to notice <em>one thing.</em> Then another.
+                    title page is set to ask whether a machine can build a place that feels like <em>someone was here.</em> Three words are marked because they earn the marginalia; three voices are tried because typography is part of any honest answer.
                   </span>
                   <span className="hero__summary-paragraph">
-                    Three words are marked because they earn the marginalia; three voices are tried because typography is part of any honest answer. Read it once with the eye, again with the ear — and a third time, when the answer is folded open.
-                  </span>
-                  <span className="hero__summary-sign">
-                    <span aria-hidden="true" className="hero__summary-sign-dash">—</span>
-                    <em className="hero__summary-sign-name">the editor</em>
+                    Read it once with the eye, again with the ear — and a third time, when the answer is folded open. The page is the press; you are the only reader it has.
                   </span>
                 </span>
                 <svg className="hero__summary-scrawl" viewBox="0 0 220 18" preserveAspectRatio="none" aria-hidden="true">
@@ -956,36 +952,53 @@ export function App() {
                 </svg>
               </div>
 
-              <aside className="hero__voice-caption" aria-label="The current voice setting">
-                <span className="hero__voice-caption-rule" aria-hidden="true" />
-                <span className="hero__voice-caption-row">
-                  <span className={`hero__voice-caption-letter hero__voice-caption-letter--${voice}`} aria-hidden="true">
-                    {VOICE_LETTER[voice]}
-                  </span>
-                  <span className="hero__voice-caption-copy">
-                    <span className="hero__voice-caption-eyebrow">set in</span>
-                    <em className="hero__voice-caption-name">{VOICE_LABEL[voice]}</em>
-                  </span>
-                  <span className="hero__voice-caption-mark" aria-hidden="true">
-                    <svg viewBox="0 0 36 14">
-                      <path d="M2 8c4-5 8 5 12 0s8-5 12 0 6 1 8-1" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
-                      <circle cx="33" cy="6" r="1" fill="currentColor" />
-                    </svg>
-                  </span>
+              <aside className="hero__certificate" aria-label="A printer's certificate for this impression">
+                <span className="hero__certificate-frame" aria-hidden="true">
+                  <span className="hero__certificate-frame-corner hero__certificate-frame-corner--tl" />
+                  <span className="hero__certificate-frame-corner hero__certificate-frame-corner--tr" />
+                  <span className="hero__certificate-frame-corner hero__certificate-frame-corner--bl" />
+                  <span className="hero__certificate-frame-corner hero__certificate-frame-corner--br" />
                 </span>
-                <span className="hero__voice-caption-foot">
-                  <span aria-hidden="true">※</span>
-                  the press answers above with this voice · change it any time with <kbd>shift</kbd><span aria-hidden="true">+</span><kbd>v</kbd>
-                </span>
+                <header className="hero__certificate-head">
+                  <span className="hero__certificate-head-eyebrow">press certificate</span>
+                  <span className="hero__certificate-head-folio" aria-hidden="true">№ {setToday.replace(/[^0-9]/g, '').slice(0, 4) || '0001'}</span>
+                </header>
+                <dl className="hero__certificate-list">
+                  <div className="hero__certificate-row">
+                    <dt>set today</dt>
+                    <dd>{setToday}</dd>
+                  </div>
+                  <div className="hero__certificate-row">
+                    <dt>voice</dt>
+                    <dd>
+                      <span className={`hero__certificate-letter hero__certificate-letter--${voice}`} aria-hidden="true">
+                        {VOICE_LETTER[voice]}
+                      </span>
+                      <span className="hero__certificate-voice-name">{VOICE_LABEL[voice]}</span>
+                    </dd>
+                  </div>
+                  <div className="hero__certificate-row">
+                    <dt>materials</dt>
+                    <dd>system serif · folded once · by hand</dd>
+                  </div>
+                </dl>
+                <footer className="hero__certificate-foot">
+                  <span className="hero__certificate-foot-hint" aria-hidden="true">
+                    <kbd>shift</kbd><span aria-hidden="true">+</span><kbd>v</kbd>
+                  </span>
+                  <span className="hero__certificate-foot-text">
+                    change the voice at any time — the title above answers with it
+                  </span>
+                </footer>
               </aside>
             </div>
 
             <figure className="hero__pull" aria-label="A printer's motto">
               <span className="hero__pull-rule" aria-hidden="true" />
               <span className="hero__pull-text">
-                <em className="hero__pull-motto">attention, not ornament</em>
+                <em className="hero__pull-motto">set in type, kept in time</em>
                 <span className="hero__pull-divider" aria-hidden="true">·</span>
-                <span className="hero__pull-second">the page is set · the question stays open</span>
+                <span className="hero__pull-second">the page remembers · the question stays open</span>
               </span>
               <span className="hero__pull-rule hero__pull-rule--end" aria-hidden="true" />
             </figure>
