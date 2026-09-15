@@ -1,8 +1,9 @@
-# Changelog
+Bound the title page as one press plate and replaced the hero certificate with three readings.
 
-## Iteration 264 — the reader's bookplate
-
-- Added a new `ReaderPlate` section between the letter to the reader and the day sheet: a tipped slip of paper with a signable bookplate. The reader types a name, a hand-set ink line draws itself beneath it, and a small wax seal lands on the corner of the plate.
-- Wired the signed reader into the colophon below: a new "impressed for" row echoes the name in coral, and the running "this impression" line and `KeptMark` caption both remember the signature.
-- Echoed the signature back into the title page chrome: the editor's-note button gains a small "for [name]" tag once the reader has signed.
-- The plate sits between folios iii· and iv, follows the existing paper grain / wax / hand-stroke vocabulary, and respects `prefers-reduced-motion`.
+- Added `src/PressPlate.tsx` — a single card that owns the press chrome. Three voice chips on the left, a centered hairline ornament, and the "open the editor's note" action on the right. A small caption row names the plate; a footer row records the current setting, the `shift` + `v` cycle hint, and `set today`.
+- Replaced the two-piece hero chrome (voice selector + note link) in `src/App.tsx` with the unified `<PressPlate />`. The action button receives the existing `answerTriggerRef` via `forwardRef`, so focus returns correctly when the answer is folded back.
+- Removed the redundant `hero__certificate` panel from the hero body; introduced a `hero__readings` ribbon that shows the same question set in each of the three voices, with the active voice lifted. Focuses the colophon on meaning instead of metadata.
+- Tightened the hero body summary wording and added a `.hero__body-grid--single` layout so the summary and the readings ribbon sit side by side at desktop sizes and stack gracefully below ~920 px.
+- Updated `.hero__summary-paragraph em`, `.hero__summary-scrawl`, and the new press plate surfaces to take their colour from the active voice (`--blue` / `--coral` / `--acid`), so the title page answers the voice change as a single composition.
+- Hid the obsolete certificate selectors with `display: none !important` rather than stripping them, so any other component still wired to those classes continues to render safely.
+- Wrapped every new motion (press-plate settle, scrawl draw, arrow nudge, corner-fold reverse, voice-bullet lift) in `prefers-reduced-motion: reduce` fallbacks; keyboard semantics preserved via `role="tablist"` / `aria-selected` on the voice chips and `aria-expanded` / `aria-controls` on the action button.

@@ -15,7 +15,7 @@ import { PressRibbon } from './PressRibbon'
 import { SecondReading } from './SecondReading'
 import { PressStrikeFlash } from './PressStrikeFlash'
 import { FolioMark } from './FolioMark'
-import { VoiceSelector } from './VoiceSelector'
+
 import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
 import { MarginalCaret } from './MarginalCaret'
@@ -31,6 +31,7 @@ import { PressSpine } from './PressSpine'
 import { PlateProvenance } from './PlateProvenance'
 import { FirstReading } from './FirstReading'
 import { ReaderPlate } from './ReaderPlate'
+import { PressPlate } from './PressPlate'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -864,63 +865,16 @@ export function App() {
           <FirstReading voice={voice} setToday={setToday} />
 
           <div className="hero__chrome">
-            <VoiceSelector
+            <PressPlate
+              ref={answerTriggerRef}
               voice={voice}
-              onSelect={selectVoice}
-              onKey={selectVoiceByKey}
+              answerOpen={answerOpen}
+              readerName={readerName}
+              onVoice={selectVoice}
+              onVoiceKey={selectVoiceByKey}
+              onToggleAnswer={toggleAnswer}
+              setToday={setToday}
             />
-            <button ref={answerTriggerRef} type="button" className={`hero__note-link ${answerOpen ? 'is-open' : ''}`} onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer">
-              <span className="hero__note-link-fold" aria-hidden="true">
-                <svg viewBox="0 0 32 32" className="hero__note-link-fold-svg">
-                  <path
-                    d="M5 6 L5 28 L27 28"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth=".7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="hero__note-link-fold-crease"
-                  />
-                  <path
-                    d="M5 6 L27 28"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="hero__note-link-fold-corner"
-                  />
-                  <path
-                    d="M5 6 L18 6 L27 15 L27 28"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth=".5"
-                    strokeDasharray="1.4 2"
-                    opacity=".55"
-                    className="hero__note-link-fold-shadow"
-                  />
-                  <circle cx="16" cy="18" r="1.4" fill="currentColor" className="hero__note-link-fold-bead" />
-                </svg>
-              </span>
-              <span className="hero__note-link-text">
-                <span className="hero__note-link-mark" aria-hidden="true">
-                  <span className="hero__note-link-mark-tag">folio viii</span>
-                  <span className="hero__note-link-mark-pin" aria-hidden="true" />
-                </span>
-                <span className="hero__note-link-line">{answerOpen ? 'fold the answer back' : "open the editor's note"}</span>
-                {readerName.trim().length > 0 && (
-                  <span className="hero__note-link-for">
-                    <span className="hero__note-link-for-rule" aria-hidden="true" />
-                    for <em>{readerName.trim()}</em>
-                  </span>
-                )}
-              </span>
-              <span className="hero__note-link-arrow" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-            </button>
           </div>
 
           <div className={`hero__body ${heroBodyVisible ? 'is-in-view' : ''}`} ref={heroBodyRef}>
@@ -934,7 +888,7 @@ export function App() {
               <span className="hero__body-plate-rule" />
             </span>
 
-            <div className="hero__body-grid">
+            <div className="hero__body-grid hero__body-grid--single">
               <div className="hero__summary">
                 <span className="hero__dropcap" aria-hidden="true">
                   <svg className="hero__dropcap-svg" viewBox="0 0 64 64">
@@ -964,10 +918,10 @@ export function App() {
                 </span>
                 <span className="hero__summary-text">
                   <span className="hero__summary-paragraph">
-                    title page is set to ask whether a machine can build a place that feels like <em>someone was here.</em> Three words are marked because they earn the marginalia; three voices are tried because typography is part of any honest answer.
+                    The title page is set to ask whether a machine can build a place that feels like <em>someone was here.</em> Three words earn the marginalia; three voices are tried because typography is part of any honest answer.
                   </span>
                   <span className="hero__summary-paragraph">
-                    Read it once with the eye, again with the ear — and a third time, when the answer is folded open. The page is the press; you are the only reader it has.
+                    Read it once with the eye, again with the ear — and a third time, when the answer is folded open. The page is the press. You are the only reader it has.
                   </span>
                 </span>
                 <svg className="hero__summary-scrawl" viewBox="0 0 220 18" preserveAspectRatio="none" aria-hidden="true">
@@ -984,44 +938,47 @@ export function App() {
                 </svg>
               </div>
 
-              <aside className="hero__certificate" aria-label="A printer's certificate for this impression">
-                <span className="hero__certificate-frame" aria-hidden="true">
-                  <span className="hero__certificate-frame-corner hero__certificate-frame-corner--tl" />
-                  <span className="hero__certificate-frame-corner hero__certificate-frame-corner--tr" />
-                  <span className="hero__certificate-frame-corner hero__certificate-frame-corner--bl" />
-                  <span className="hero__certificate-frame-corner hero__certificate-frame-corner--br" />
+              <aside className="hero__readings" aria-label="Three readings of the question">
+                <span className="hero__readings-rule hero__readings-rule--lead" aria-hidden="true" />
+                <span className="hero__readings-eyebrow" aria-hidden="true">
+                  <span className="hero__readings-eyebrow-mark" />
+                  the same question, set three ways
                 </span>
-                <header className="hero__certificate-head">
-                  <span className="hero__certificate-head-eyebrow">press certificate</span>
-                  <span className="hero__certificate-head-folio" aria-hidden="true">№ {setToday.replace(/[^0-9]/g, '').slice(0, 4) || '0001'}</span>
-                </header>
-                <dl className="hero__certificate-list">
-                  <div className="hero__certificate-row">
-                    <dt>set today</dt>
-                    <dd>{setToday}</dd>
-                  </div>
-                  <div className="hero__certificate-row">
-                    <dt>voice</dt>
-                    <dd>
-                      <span className={`hero__certificate-letter hero__certificate-letter--${voice}`} aria-hidden="true">
-                        {VOICE_LETTER[voice]}
+                <ol className="hero__readings-list">
+                  {VOICES.map(v => (
+                    <li key={v.id} className={`hero__readings-item hero__readings-item--${v.id} ${v.id === voice ? 'is-active' : ''}`}>
+                      <span className="hero__readings-letter" aria-hidden="true">{VOICE_LETTER[v.id]}</span>
+                      <span className="hero__readings-copy">
+                        <span className="hero__readings-setting">{v.name}</span>
+                        <span className="hero__readings-lines" aria-hidden="false">
+                          {v.id === 'quiet' && (
+                            <>
+                              <span><em>is</em> Minimax <em>M3</em></span>
+                              <span><em>good</em> at frontend <em>yet?</em></span>
+                            </>
+                          )}
+                          {v.id === 'human' && (
+                            <>
+                              <span><em>is</em> M3</span>
+                              <span><em>good</em> at frontend <em>yet?</em></span>
+                            </>
+                          )}
+                          {v.id === 'bold' && (
+                            <>
+                              <span>IS M3</span>
+                              <span>GOOD AT FRONTEND YET?</span>
+                            </>
+                          )}
+                        </span>
                       </span>
-                      <span className="hero__certificate-voice-name">{VOICE_LABEL[voice]}</span>
-                    </dd>
-                  </div>
-                  <div className="hero__certificate-row">
-                    <dt>materials</dt>
-                    <dd>system serif · folded once · by hand</dd>
-                  </div>
-                </dl>
-                <footer className="hero__certificate-foot">
-                  <span className="hero__certificate-foot-hint" aria-hidden="true">
-                    <kbd>shift</kbd><span aria-hidden="true">+</span><kbd>v</kbd>
-                  </span>
-                  <span className="hero__certificate-foot-text">
-                    change the voice at any time — the title above answers with it
-                  </span>
-                </footer>
+                      <span className="hero__readings-face">{v.descriptor}</span>
+                    </li>
+                  ))}
+                </ol>
+                <span className="hero__readings-rule hero__readings-rule--trail" aria-hidden="true" />
+                <span className="hero__readings-foot" aria-hidden="true">
+                  pull a setting above · the title answers with whichever is active
+                </span>
               </aside>
             </div>
 
