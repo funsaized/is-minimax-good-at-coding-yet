@@ -22937,4 +22937,280 @@ a small act of typesetting.
 }
 
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 252 · "ONE PRESSED SHEET"
+   The title is the page. Three quiet additions earn their place:
+     · a paper-warmth wash that follows the active voice
+     · a delicate ink-trace that threads the title composition
+     · a tighter title kerning + a more confident bold voice
+   Each one reinforces the page-as-pressed-sheet metaphor and
+   nothing else changes around them.
+   ──────────────────────────────────────────────────────────── */
+
+.paper-warmth {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(ellipse 68% 48% at 30% 34%, var(--warmth-color) 0%, transparent 62%),
+    radial-gradient(ellipse 46% 36% at 70% 62%, var(--warmth-color) 0%, transparent 64%);
+  filter: blur(28px);
+  animation: paperWarmthIn 1.6s var(--ease-out) .15s forwards;
+}
+
+.paper-warmth--quiet { --warmth-color: rgba(155, 188, 255, .18); }
+.paper-warmth--human { --warmth-color: rgba(255, 118, 95, .16); }
+.paper-warmth--bold { --warmth-color: rgba(216, 255, 106, .2); }
+
+@keyframes paperWarmthIn {
+  0% { opacity: 0; transform: scale(.96); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-warmth {
+    animation: none !important;
+    opacity: 1;
+    transform: none !important;
+  }
+}
+
+/* The hero title trace threads the composition: a single hand-set
+   ink stroke that runs beneath the title's center and ends in a
+   small bead. It echoes the type-rule but lives with the title. */
+
+.hero__title-trace {
+  display: block;
+  width: clamp(380px, 64%, 760px);
+  height: clamp(12px, 1.4vw, 18px);
+  margin: clamp(4px, .6vw, 10px) auto clamp(2px, .4vw, 6px);
+  color: var(--paper);
+  opacity: .85;
+}
+
+.title-ribbon {
+  width: 100%;
+  height: 100%;
+  display: block;
+  color: inherit;
+}
+
+.title-ribbon__stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: titleRibbonDraw 1.4s var(--ease-out) .55s forwards;
+}
+
+.title-ribbon__bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: titleRibbonBead .4s var(--ease-spring) 1.85s forwards;
+}
+
+@keyframes titleRibbonDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes titleRibbonBead {
+  from { opacity: 0; transform: scale(.4); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-ribbon__stroke {
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+
+  .title-ribbon__bead {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+/* The title earns a small but decisive refinement: more confidence
+   in the bold voice, a slightly larger quiet/human read, and a
+   tighter optical rhythm between the three lines. */
+
+.hero__title {
+  letter-spacing: -.102em;
+  word-spacing: -.05em;
+}
+
+.hero__title--quiet,
+.hero__title--human {
+  letter-spacing: -.092em;
+  line-height: .9;
+  word-spacing: -.06em;
+}
+
+.hero__title--bold {
+  font-weight: 880;
+  letter-spacing: -.128em;
+  word-spacing: -.05em;
+  text-transform: uppercase;
+}
+
+.hero__title .title__line {
+  text-wrap: balance;
+  padding-left: 0;
+}
+
+.hero__title .title__line:nth-child(1) {
+  padding-left: .05em;
+}
+
+.hero__title .title__line:nth-child(2) {
+  padding-left: .02em;
+  letter-spacing: -.005em;
+}
+
+.hero__title .title__line:nth-child(3) {
+  padding-left: 0;
+}
+
+/* Subtle ink-bloom under the active word: a soft halo that lets the
+   reader's eye rest on the marked word without competing with the
+   type. */
+
+.hero__title .title-token.is-selected,
+.hero__title .title-token:hover,
+.hero__title .title-token:focus-visible {
+  text-shadow:
+    0 0 .5em rgba(255, 255, 255, .12),
+    0 0 1.2em var(--token-bloom, transparent);
+}
+
+.title-token--m3.is-selected,
+.title-token--m3:hover,
+.title-token--m3:focus-visible { --token-bloom: rgba(216, 255, 106, .18); }
+
+.title-token--good.is-selected,
+.title-token--good:hover,
+.title-token--good:focus-visible { --token-bloom: rgba(255, 118, 95, .18); }
+
+.title-token--yet.is-selected,
+.title-token--yet:hover,
+.title-token--yet:focus-visible { --token-bloom: rgba(155, 188, 255, .2); }
+
+/* A small compositional flourish under the title copy: a hairline
+   ornament that sits between the title and the title-rule. This is
+   the page's own gesture, drawn once and held quiet. */
+
+.hero__copy::after {
+  content: '';
+  display: block;
+  width: clamp(80px, 14vw, 140px);
+  height: 1px;
+  margin: clamp(2px, .4vw, 6px) auto 0;
+  background: linear-gradient(to right, transparent, var(--rule-tone, var(--coral)) 40%, var(--rule-tone, var(--coral)) 60%, transparent);
+  opacity: .55;
+}
+
+/* The hero body becomes a touch more confident: the lead-in summary
+   keeps its rhythm but the spacing closes a little, so the body
+   reads as part of the title page rather than a separate column. */
+
+.hero__body {
+  margin-top: clamp(20px, 2.6vw, 36px);
+  gap: clamp(14px, 1.8vw, 22px);
+}
+
+.hero__summary {
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* The marginal ledger's active row earns a single underline hint —
+   the kind of pencil mark a careful reader leaves when they decide
+   to keep a word close. */
+
+.marginal-ledger__row.is-active .marginal-ledger__tick-glyph {
+  box-shadow: inset 0 -2px 0 var(--ledger-mark);
+}
+
+.marginal-ledger__row.is-active .marginal-ledger__tick {
+  transform: translateX(-3px);
+}
+
+/* On small screens the title trace stays inside the title block but
+   sits a touch closer to the type so it doesn't separate. */
+
+@media (max-width: 720px) {
+  .hero__title-trace {
+    width: clamp(280px, 84%, 520px);
+    margin-top: clamp(2px, .4vw, 6px);
+  }
+
+  .hero__copy::after {
+    width: clamp(48px, 24vw, 90px);
+  }
+}
+
+/* A small refinement to the folio-mark so the date keeps the same
+   cadence as the voice letter. The leading "set" now sits as an
+   italic serif and the date follows in the same italic body. */
+
+.hero__folio-mark-date em {
+  font-family: var(--serif);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: clamp(11.5px, 1vw, 13px);
+}
+
+.hero__folio-mark-folio em {
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+/* A delicate print-mark above the hero spread: a thin dashed line
+   that runs the full width and breaks in the middle for the
+   folio-mark's lettering. Quietly reinforces the press bed. */
+
+.hero::before {
+  content: '';
+  display: block;
+  width: min(100%, 1440px);
+  margin: clamp(20px, 2.6vw, 32px) auto clamp(8px, 1vw, 14px);
+  height: 1px;
+  background-image: linear-gradient(to right, var(--line) 0, var(--line) 4px, transparent 4px, transparent 8px);
+  background-size: 8px 1px;
+  background-repeat: repeat-x;
+  opacity: .6;
+}
+
+@media (max-width: 720px) {
+  .hero::before {
+    margin-top: 14px;
+    margin-bottom: 8px;
+  }
+}
+
+/* The title-block gains a confident print-bed rule: a single hairline
+   beneath the trace that visually anchors the type to the page. */
+
+.hero__copy::before {
+  content: '';
+  display: block;
+  width: clamp(140px, 22vw, 220px);
+  height: 1px;
+  margin: 0 auto clamp(6px, .8vw, 12px);
+  background: linear-gradient(to right, transparent, var(--rule-tone, var(--coral)) 30%, var(--rule-tone, var(--coral)) 70%, transparent);
+  opacity: .4;
+}
+
+@media (max-width: 720px) {
+  .hero__copy::before {
+    width: clamp(80px, 28vw, 140px);
+  }
+}
+
+
 
