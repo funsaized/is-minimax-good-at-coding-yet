@@ -732,7 +732,7 @@ export function App() {
               </div>
             </div>
 
-            <TitleSweep voice={voice} setToday={setToday} />
+            <TitleSweep voice={voice} word={activeWord} setToday={setToday} onVoice={selectVoice} onWord={id => selectWord(id, true)} />
 
             <MarginaliaStrip
               active={selectedWord}
