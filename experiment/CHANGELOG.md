@@ -1,38 +1,11 @@
 # Changelog
 
-## Iteration 271 — title-page type case swapped in for the post-title sweep.
+## Iteration 272
 
-Replaced the lightweight `TitleSweep` decoration with a substantial new
-press cabinet set just below the hero plate. Three metal type-sorts
-(quiet cut / human hand / bold signal) sit shoulder to shoulder inside
-a wooden drawer trimmed with brass pulls; each sort carries the
-question set in its voice's typography, scaled to the sort's face, and
-a smaller word-shelf beneath holds the three marked word-sorts
-(m³, good at, yet?).
+Replaced the cramped three-column press plate with one deliberate press-lever spread that opens the editor's note.
 
-Picking a sort via keyboard or pointer sets the title above to that
-voice and triggers the existing word → marginalia focus cycle, which
-flows through the page's shared `announcement` live region. Roving
-`aria-pressed`, arrow / Home / End keyboard navigation, and labelled
-buttons match the patterns used by the rest of the page. The active
-sort rises with a deeper drop-shadow, bears a briefly-blotting ink-
-tide in the voice tone, and lights its letter badge; inactive sorts
-receive a soft hover lift and a focus-visible ring. A faint dotted
-rising-arrow sits between the cabinet and the title above, confirming
-the relationship.
-
-The drawer uses three layered SVG noise filters (paper pulp, drawer
-grain, sort rim) plus voice-tone gradients per sort; the rest is pure
-CSS. Layout collapses to a single column under 560 px, so the cabinet
-still reads on a phone. Honours `prefers-reduced-motion` by killing the
-lift, blot entry, and shadow transitions; an existing global `color-mix`
-palette keeps the cabinet's tone in step with the rest of the page.
-
-### Files
-- `src/TitleSweep.tsx` rewritten (kept the same export name so the
-  surrounding harness compiles unchanged)
-- `src/App.tsx` updated to pass `word`, `onVoice`, and `onWord` to the
-  new `TitleSweep`
-- `src/style.css` appended with the new `.press-cabinet*` block
-  (palette, drawer, sorts, word-shelf, caption, rising-arrow,
-  responsive collapse, and reduced-motion fallbacks)
+- `src/PressLever.tsx` · new. A single, substantial press plate: a tall hand-set lever (cage, shaft, knob, pivot, base) on the left; the editor's-note fold button on the right; a meta footer that names the active voice, the cycling keys, and the date. The lever is decorative and mirrors `answerOpen` — it rests when the answer is folded and rocks 28° around its base pivot when pulled. Voice selection is intentionally left to TitleSweep and the SpecimenTray, where it is already given proper physical and editorial weight; the lever only owns the answer fold.
+- `src/PressPlate.tsx` · removed. Its voice-pill grid duplicated TitleSweep and SpecimenTray, and its three-column inner layout crowded the answer toggle.
+- `src/App.tsx` · the `hero__chrome` now mounts `PressLever` and no longer threads `onVoice`/`onVoiceKey` down through a redundant control cluster. The shift+v global handler in `App` continues to drive voice cycling.
+- `src/style.css` · new `.press-lever` block: print-style corner crops in the active voice tone; soft tonal bloom that brightens when the answer opens; spring-eased shaft rotation that respects `prefers-reduced-motion`; a substantial, italic fold-button with four inner crop corners, an arrow that flips when open, and a "for {reader}" line that picks up the voice tone when set; a meta footer grid that collapses cleanly at 880px (two-row with date spanning) and again at 640px (single column with the kbd hint stacked above the date).
+- Title and document title are unchanged: `is Minimax M3 good at frontend yet?`

@@ -31,7 +31,7 @@ import { PressSpine } from './PressSpine'
 import { PlateProvenance } from './PlateProvenance'
 import { FirstReading } from './FirstReading'
 import { ReaderPlate } from './ReaderPlate'
-import { PressPlate } from './PressPlate'
+import { PressLever } from './PressLever'
 import { SpecimenTray } from './SpecimenTray'
 import { FolioLedger } from './FolioLedger'
 import { TitleFolio } from './TitleFolio'
@@ -746,13 +746,11 @@ export function App() {
           <FirstReading voice={voice} setToday={setToday} />
 
           <div className="hero__chrome">
-            <PressPlate
+            <PressLever
               ref={answerTriggerRef}
               voice={voice}
               answerOpen={answerOpen}
               readerName={readerName}
-              onVoice={selectVoice}
-              onVoiceKey={selectVoiceByKey}
               onToggleAnswer={toggleAnswer}
               setToday={setToday}
             />
