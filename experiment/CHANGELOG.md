@@ -1,9 +1,11 @@
 # Changelog
 
-## Iteration 259
+## Iteration 260 — tighten the editorial colophon
 
-Hero body becomes a fuller editorial colophon: two paragraphs, an editor sign-off, a set rule, a pull quote.
+**Tightened the hero pull quote, rebuilt the answer dropcap, and added a thin page rule.**
 
-### Changes
-- `src/App.tsx`: split the hero summary into two authored paragraphs; added a "— the editor" sign-off at the end of the body; added a `hero__set-rule` (fading rules with a hand-drawn bead) and a `hero__pull` figure ("the page is set · the question stays open") between the body grid and the "turn the page" gesture; swapped the summary wrapper from `<p>` to `<div>` to host multiple paragraphs.
-- `src/style.css`: added `.hero__summary-paragraph`, `.hero__summary-sign` (with em-dash and italic "the editor"), `.hero__set-rule` (gradient rules + bead, voice-tinted), and refactored `.hero__pull` to link its fade-in to `.hero__body.is-in-view`, support the new motto / divider / second-clause spans, and wrap gracefully at 540px.
+- **Hero body**: dropped the redundant `hero__set-rule` decorative element and its CSS; the pull quote now reads as a single italic motto ("attention, not ornament") with a quieter supporting line ("the page is set · the question stays open").
+- **Answer reveal**: the "T" dropcap is rebuilt as an SVG-rendered hand-pressed letter with its own grain filter; the pull quote is reset to a single serif italic in `var(--coral)` with two gradient rule spans on either side; the answer colophon and close button are unchanged.
+- **Page rule**: a new `.page-rule` hairline runs vertically along the left edge of `.page`, aligned to the header gutter, with three small voice-coloured knots placed at 18%, 50%, and 82% of the page; respectful of reduced-motion.
+
+Unchanged: the title and document title ("is Minimax M3 good at frontend yet?"), the entry point, framework, package files, build configuration, tests, harness, navigation systems, voice and word state machines, and the press lever mechanic.

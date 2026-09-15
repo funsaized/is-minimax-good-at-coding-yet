@@ -201,6 +201,7 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
   setToday: string
 }) {
   const leafGrainId = useId().replace(/:/g, '')
+  const dropcapGrainId = useId().replace(/:/g, '')
   return (
     <section
       className={`answer-reveal ${open ? 'is-open' : ''}`}
@@ -271,15 +272,39 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
               <h2 id="answer-title">Yes — when it stops trying to look impressive.</h2>
               <div className="answer-reveal__columns">
                 <p>
-                  <span className="answer-reveal__dropcap" aria-hidden="true">T</span>
+                  <span className="answer-reveal__dropcap" aria-hidden="true">
+                    <svg className="answer-reveal__dropcap-svg" viewBox="0 0 64 64" aria-hidden="true">
+                      <defs>
+                        <filter id={`answer-dropcap-grain-${dropcapGrainId}`} x="-6%" y="-6%" width="112%" height="112%">
+                          <feTurbulence type="fractalNoise" baseFrequency="2.6" numOctaves="2" seed="11" stitchTiles="stitch" />
+                          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
+                          <feComposite in2="SourceGraphic" operator="in" />
+                        </filter>
+                      </defs>
+                      <g filter={`url(#answer-dropcap-grain-${dropcapGrainId})`} opacity=".95">
+                        <text
+                          x="32"
+                          y="50"
+                          textAnchor="middle"
+                          fontFamily="Georgia, 'Iowan Old Style', serif"
+                          fontStyle="italic"
+                          fontSize="58"
+                          letterSpacing="-.045em"
+                          fill="currentColor"
+                        >T</text>
+                        <line x1="6" y1="10" x2="58" y2="10" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".55" />
+                        <circle cx="32" cy="6" r="1.4" fill="currentColor" opacity=".7" />
+                      </g>
+                    </svg>
+                  </span>
                   he good part is not the gradient, the flourish, or the clever little mechanism. It is the moment the page gives you room to notice <em>one thing</em>. Then another.
                 </p>
                 <p>So this is a qualified yes: good at front-end means attentive to the person on the other side of the glass. The rest is decoration with a job to do.</p>
               </div>
               <div className="answer-reveal__pull">
-                <span aria-hidden="true" />
+                <span className="answer-reveal__pull-rule" aria-hidden="true" />
                 <em>attention, not ornament</em>
-                <span aria-hidden="true" />
+                <span className="answer-reveal__pull-rule" aria-hidden="true" />
               </div>
               <div className="answer-reveal__colophon">
                 <span>set in system serif</span>
@@ -734,6 +759,27 @@ export function App() {
       </header>
 
       <div className="page">
+        <span className="page-rule" aria-hidden="true">
+          <span className="page-rule__line" />
+          <span className="page-rule__knot page-rule__knot--a" aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <circle cx="8" cy="8" r="3.4" fill="none" stroke="currentColor" strokeWidth=".55" />
+              <circle cx="8" cy="8" r="1.1" fill="currentColor" />
+            </svg>
+          </span>
+          <span className="page-rule__knot page-rule__knot--b" aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <circle cx="8" cy="8" r="3.4" fill="none" stroke="currentColor" strokeWidth=".55" />
+              <circle cx="8" cy="8" r="1.1" fill="currentColor" />
+            </svg>
+          </span>
+          <span className="page-rule__knot page-rule__knot--c" aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <circle cx="8" cy="8" r="3.4" fill="none" stroke="currentColor" strokeWidth=".55" />
+              <circle cx="8" cy="8" r="1.1" fill="currentColor" />
+            </svg>
+          </span>
+        </span>
         <section className="hero" id="question" aria-labelledby="page-title">
           <span className="hero__epigraph" aria-label="Editorial epigraph">
             <span className="hero__epigraph-rule" aria-hidden="true" />
@@ -932,24 +978,12 @@ export function App() {
               </aside>
             </div>
 
-            <span className="hero__set-rule" aria-hidden="true">
-              <span className="hero__set-rule-line" />
-              <span className="hero__set-rule-bead">
-                <svg viewBox="0 0 24 12" preserveAspectRatio="none">
-                  <path d="M2 6c3-3 6 3 9 0s6-3 11 0" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
-                  <circle cx="12" cy="6" r="1" fill="currentColor" />
-                </svg>
-              </span>
-              <span className="hero__set-rule-line hero__set-rule-line--end" />
-            </span>
-
             <figure className="hero__pull" aria-label="A printer's motto">
               <span className="hero__pull-rule" aria-hidden="true" />
               <span className="hero__pull-text">
-                <span className="hero__pull-mark" aria-hidden="true">※</span>
-                <em className="hero__pull-motto">the page is set</em>
+                <em className="hero__pull-motto">attention, not ornament</em>
                 <span className="hero__pull-divider" aria-hidden="true">·</span>
-                <span className="hero__pull-second">the question stays open</span>
+                <span className="hero__pull-second">the page is set · the question stays open</span>
               </span>
               <span className="hero__pull-rule hero__pull-rule--end" aria-hidden="true" />
             </figure>
