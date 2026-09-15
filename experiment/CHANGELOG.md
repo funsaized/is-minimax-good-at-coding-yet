@@ -1,18 +1,12 @@
-# Changelog
+# Iteration 250 · "The Press Settles"
 
-## Iteration 249 · A single quiet wayfinder and a fresh impression
+The hero title page earns its rest: the loud FolioMark metadata strip is slimmed to a single delicate row, the redundant page-end ornament is dropped, and a small pressed coral period is set beneath the question mark — a signature detail that seals the title when the answer is tipped in.
 
-Replaces the dual-row header, the right-edge margin thread, and the
-mobile folio strip with one pressed wayfinder seal that opens a folio
-index card on demand. The hero loses its corner ticket. The answer
-leaf gains a small fresh impression stamp that lands when the page is
-unfolded.
+## What changed
 
-- Header: a single row now — brand, "set today" tag, pressed wayfinder seal.
-- New `WayfinderSeal.tsx`: a pressed circular seal at the top-right that opens a folio index panel. Keyboard accessible (Enter / ArrowDown opens, Escape closes, focus is restored to the trigger).
-- The right-edge `MarginThread` and the bottom mobile nav are removed; their role is folded into the wayfinder.
-- The `FolioTicket` from the hero is removed; the hero spread is lighter and breathes more.
-- `AnswerReveal`: a small "fresh impression" stamp (tinted in the active voice) and a pencil line fade in at the bottom-right when the leaf opens.
-- `scrollProgress` state and its scroll listener are removed (no consumer).
-- Unused helpers (`sectionFolioLabel`, `sectionFolioNum`, `sectionIndex`, `romanize`, `FOLIO_LABEL`, `FOLIO_NUM`) are removed.
-- New CSS: `.site-header--single`, `.site-header__set`, `.wayfinder`, `.wayfinder__seal`, `.wayfinder__panel`, `.answer-reveal__fresh`. Reduced-motion guards are in place.
+- **FolioMark slimmed**: the previous multi-chip strip — folio, name, press, voice, date — is replaced by one delicate rule and a single italic / mono mixed line: `folio i · the question, set · [A] quiet cut · set today`. Bead separators keep it breathing. Behaves more like a colophon than a banner.
+- **Hero body reflowed**: the byline row (which duplicated FolioMark) is removed. The lede paragraph now sits centred with its dropcap, then a new press-room flourish rule and a small inline tag "a small, stubborn inquiry", then the continue arrow. One column, three purposed notes.
+- **Hero page-end ornament removed**: its redundant `folio i · the title page` tag (already in FolioMark) and `attention, not ornament` caption (already on ComposePlate) were carrying weight the page no longer needs. ComposePlate now stands as the single bottom signature of the hero.
+- **Pressed period beneath the question mark**: when the answer is folded open, a coral (or voice-toned) ink period scales in beneath the `?` with a soft bloom — the page's signature detail, marking where the answer lives. Respects reduced-motion and uses the voice's own accent (blue / coral / acid).
+- **Mobile**: pressed period grows slightly on narrow screens; press-flourish rule scales down with the gutter.
+

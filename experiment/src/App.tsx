@@ -740,7 +740,12 @@ export function App() {
                     <TitleToken id="m3" text="M3" selected={activeWord === 'm3'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.m3 = node }} />{' '}
                     <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} />
                   </span>
-                  <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} />?</span>
+                  <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} />
+                    <span className={`title__question ${answerOpen ? 'is-sealed' : ''}`} aria-hidden="true">
+                      <span className="title__question-glyph">?</span>
+                      <span className="title__question-period" />
+                    </span>
+                  </span>
                 </h1>
 
                 <TitleTrace voice={voice} active={selectedWord} hovered={hoveredWord} />
@@ -779,17 +784,28 @@ export function App() {
           </div>
 
           <div className="hero__body">
-            <span className="hero__byline" aria-hidden="true">
-              <span className="hero__byline-mark" />
-              <span className="hero__byline-rule" />
-              <em>a small, stubborn inquiry</em>
-              <span className="hero__byline-rule hero__byline-rule--alt" />
-              <span className="hero__byline-mark" />
-            </span>
             <p className="hero__summary">
               <span className="hero__dropcap" aria-hidden="true">A</span>
-              page that earns the right to ask whether a machine can make a place feel like <em>someone was here.</em> Read it once with the eye, again with the ear.
+              page that earns the right to ask whether a machine can make a place feel like <em>someone was here.</em> Read it once with the eye, again with the ear — and again, when the answer is folded open.
             </p>
+            <span className="hero__press-flourish" aria-hidden="true">
+              <svg className="hero__press-flourish-rule" viewBox="0 0 360 12" preserveAspectRatio="none">
+                <path
+                  d="M2 6c30-9 60 9 90 0s60-9 90 0 60 9 90 0 60-9 86-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth=".7"
+                  strokeLinecap="round"
+                  className="hero__press-flourish-stroke"
+                />
+                <circle cx="356" cy="6" r="1.2" fill="currentColor" className="hero__press-flourish-dot" />
+              </svg>
+              <span className="hero__press-flourish-tag">
+                <span className="hero__press-flourish-tag-mark" aria-hidden="true" />
+                a small, stubborn inquiry
+                <span className="hero__press-flourish-tag-mark" aria-hidden="true" />
+              </span>
+            </span>
             <a className="hero__continue" href="#press" aria-label="Continue to the press bed">
               <span className="hero__continue-imprint">composed by hand <em>·</em> for a careful reader</span>
               <span className="hero__continue-arrow">
@@ -797,43 +813,6 @@ export function App() {
                 <span aria-hidden="true" className="hero__continue-arrow-mark">↓</span>
               </span>
             </a>
-          </div>
-
-          <div className="hero-spread__ornament" aria-hidden="true">
-            <span className="hero-spread__ornament-tag">
-              <span className="hero-spread__ornament-tag-mark" />
-              folio i · the title page
-              <span className="hero-spread__ornament-tag-mark" />
-            </span>
-            <span className="hero-spread__ornament-rule" />
-            <span className="hero-spread__ornament-mark">
-              <svg viewBox="0 0 64 64">
-                <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth=".55" className="hero-spread__ornament-mark-circle hero-spread__ornament-mark-circle--outer" />
-                <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" strokeWidth=".55" className="hero-spread__ornament-mark-circle" />
-                <circle cx="32" cy="32" r="14" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray=".8 2.2" opacity=".55" />
-                <text
-                  x="32"
-                  y="38"
-                  textAnchor="middle"
-                  fontFamily="Georgia, 'Iowan Old Style', serif"
-                  fontStyle="italic"
-                  fontWeight="500"
-                  fontSize="18"
-                  fill="currentColor"
-                  className="hero-spread__ornament-mark-glyph"
-                >m³</text>
-                <circle cx="32" cy="9" r=".9" fill="currentColor" opacity=".55" />
-                <circle cx="32" cy="55" r=".9" fill="currentColor" opacity=".55" />
-                <circle cx="9" cy="32" r=".9" fill="currentColor" opacity=".55" />
-                <circle cx="55" cy="32" r=".9" fill="currentColor" opacity=".55" />
-              </svg>
-            </span>
-            <span className="hero-spread__ornament-rule hero-spread__ornament-rule--end" />
-            <span className="hero-spread__ornament-caption">
-              <span className="hero-spread__ornament-caption-mark" aria-hidden="true">※</span>
-              attention, not ornament
-              <span className="hero-spread__ornament-caption-mark" aria-hidden="true">※</span>
-            </span>
           </div>
         </section>
 
