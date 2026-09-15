@@ -867,6 +867,43 @@ export function App() {
               </span>
             </a>
           </div>
+
+          <div className="hero-spread__ornament" aria-hidden="true">
+            <span className="hero-spread__ornament-tag">
+              <span className="hero-spread__ornament-tag-mark" />
+              folio i · the title page
+              <span className="hero-spread__ornament-tag-mark" />
+            </span>
+            <span className="hero-spread__ornament-rule" />
+            <span className="hero-spread__ornament-mark">
+              <svg viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth=".55" className="hero-spread__ornament-mark-circle hero-spread__ornament-mark-circle--outer" />
+                <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" strokeWidth=".55" className="hero-spread__ornament-mark-circle" />
+                <circle cx="32" cy="32" r="14" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray=".8 2.2" opacity=".55" />
+                <text
+                  x="32"
+                  y="38"
+                  textAnchor="middle"
+                  fontFamily="Georgia, 'Iowan Old Style', serif"
+                  fontStyle="italic"
+                  fontWeight="500"
+                  fontSize="18"
+                  fill="currentColor"
+                  className="hero-spread__ornament-mark-glyph"
+                >m³</text>
+                <circle cx="32" cy="9" r=".9" fill="currentColor" opacity=".55" />
+                <circle cx="32" cy="55" r=".9" fill="currentColor" opacity=".55" />
+                <circle cx="9" cy="32" r=".9" fill="currentColor" opacity=".55" />
+                <circle cx="55" cy="32" r=".9" fill="currentColor" opacity=".55" />
+              </svg>
+            </span>
+            <span className="hero-spread__ornament-rule hero-spread__ornament-rule--end" />
+            <span className="hero-spread__ornament-caption">
+              <span className="hero-spread__ornament-caption-mark" aria-hidden="true">※</span>
+              attention, not ornament
+              <span className="hero-spread__ornament-caption-mark" aria-hidden="true">※</span>
+            </span>
+          </div>
         </section>
 
         <div className="hero-trace" aria-hidden="false">

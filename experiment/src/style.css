@@ -21105,5 +21105,450 @@ a small act of typesetting.
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 248 · an unmistakable opening.
+
+   The hero's voice gets quieter confidence. The title's italic
+   is more deliberate (a touch more letter-spacing and breathing
+   room), the marginal ledger is further trimmed so the title
+   carries the page, the compose plate earns a hand-set
+   colophon rule, and the hero spread gets a single page-end
+   ornament — a quiet bookplate that ties the title page to the
+   body of the page. On narrow widths the ornament becomes a
+   hairline that the eye follows into the next section.
+   ──────────────────────────────────────────────────────────── */
+
+.hero__title {
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'onum' 1, 'ss01' 1, 'salt' 1, 'calt' 1;
+  letter-spacing: -.1em;
+}
+
+.hero__title--quiet,
+.hero__title--human {
+  letter-spacing: -.094em;
+  line-height: .92;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'onum' 1, 'swsh' 1, 'salt' 1, 'calt' 1, 'ss01' 1;
+  font-style: italic;
+  font-weight: 400;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, .42),
+    0 6px 22px rgba(0, 0, 0, .5),
+    0 22px 60px rgba(0, 0, 0, .28);
+}
+
+.hero__title--quiet em,
+.hero__title--human em {
+  font-style: italic;
+}
+
+.app--voice-quiet .hero__title--quiet {
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, .4),
+    0 6px 22px rgba(0, 0, 0, .46),
+    0 22px 60px rgba(0, 0, 0, .24),
+    0 0 60px rgba(146, 186, 255, .12);
+}
+
+.app--voice-human .hero__title--human {
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, .42),
+    0 6px 22px rgba(60, 16, 10, .5),
+    0 22px 60px rgba(60, 16, 10, .32),
+    0 0 70px rgba(255, 118, 95, .14);
+}
+
+.hero__title .title__line {
+  padding-left: .02em;
+  text-wrap: balance;
+}
+
+.hero__title .title__line:nth-child(2) {
+  padding-left: .04em;
+  letter-spacing: -.002em;
+}
+
+/* the title's swash warmth is most felt on the second and third
+   lines, where the italic letters can carry a faint tail. */
+
+.hero__title--quiet .title__line:nth-child(3),
+.hero__title--human .title__line:nth-child(3) {
+  padding-left: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title,
+  .hero__title--quiet,
+  .hero__title--human,
+  .hero__title--bold {
+    text-shadow:
+      0 1px 0 rgba(0, 0, 0, .42),
+      0 6px 18px rgba(0, 0, 0, .5);
+  }
+}
+
+/* ──── MARGINAL LEDGER · trimmed further ──── */
+
+.marginal-ledger {
+  opacity: .86;
+  transition: opacity .45s var(--ease);
+}
+
+.marginal-ledger:hover,
+.marginal-ledger:focus-within {
+  opacity: 1;
+}
+
+.marginal-ledger__head {
+  margin-bottom: clamp(4px, .6vw, 8px);
+}
+
+.marginal-ledger__head-eyebrow {
+  font-size: 8.5px;
+  letter-spacing: .28em;
+}
+
+.marginal-ledger__tick {
+  padding: 3px 0;
+  gap: 1px;
+}
+
+.marginal-ledger__tick-num {
+  font-size: 7px;
+  opacity: .5;
+}
+
+.marginal-ledger__tick-label {
+  font-size: clamp(10px, .82vw, 11.5px);
+  font-style: italic;
+  font-family: var(--serif);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+  opacity: .85;
+}
+
+.marginal-ledger__row.is-active .marginal-ledger__tick-label {
+  font-style: italic;
+  opacity: 1;
+  color: currentColor;
+}
+
+.marginal-ledger__rule {
+  opacity: .22;
+}
+
+.marginal-ledger__foot {
+  margin-top: clamp(8px, 1vw, 14px);
+  padding-right: 4px;
+  font-style: italic;
+  font-family: var(--serif);
+  font-size: clamp(9.5px, .78vw, 11px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  opacity: .68;
+}
+
+.marginal-ledger__foot em {
+  color: var(--paper);
+  font-style: italic;
+}
+
+.marginal-ledger__scribble {
+  margin-top: clamp(6px, .8vw, 12px);
+  opacity: .4;
+}
+
+/* ──── COMPOSE PLATE · a hand-set colophon rule ──── */
+
+.compose-plate__caption {
+  letter-spacing: -.002em;
+}
+
+.compose-plate__caption em {
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1;
+}
+
+.compose-plate__caption-mark {
+  display: inline-block;
+  transform: translateY(2px);
+  font-size: clamp(16px, 1.4vw, 20px);
+  opacity: .4;
+}
+
+.compose-plate__monogram {
+  transition: transform .6s var(--ease-spring);
+}
+
+.compose-plate__monogram svg text:first-of-type {
+  letter-spacing: 2.4px;
+  font-weight: 600;
+}
+
+.compose-plate:hover .compose-plate__monogram svg {
+  transform: rotate(-5deg) scale(1.02);
+}
+
+/* ──── READER NOTE · more elegant typography ──── */
+
+.reader-note__title {
+  letter-spacing: -.018em;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'onum' 1;
+}
+
+.reader-note__body {
+  letter-spacing: -.002em;
+}
+
+.reader-note__pull em {
+  letter-spacing: -.002em;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1;
+}
+
+/* ──── HERO SPREAD · a single page-end ornament ──── */
+
+.hero-spread__ornament {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 1.6vw, 22px);
+  width: min(100%, 920px);
+  margin: clamp(18px, 2.4vw, 32px) auto clamp(8px, 1.2vw, 16px);
+  color: var(--coral);
+  opacity: 0;
+  animation: traceFade .9s var(--ease-out) 1.85s forwards;
+  transition: color .5s var(--ease);
+}
+
+.app--voice-quiet .hero-spread__ornament { color: var(--blue); }
+.app--voice-human .hero-spread__ornament { color: var(--coral); }
+.app--voice-bold .hero-spread__ornament { color: var(--acid); }
+
+.hero-spread__ornament-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor);
+  opacity: .55;
+}
+
+.hero-spread__ornament-rule--end {
+  background: linear-gradient(to left, transparent, currentColor);
+}
+
+.hero-spread__ornament-mark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(46px, 5.2vw, 64px);
+  height: clamp(46px, 5.2vw, 64px);
+  flex: 0 0 auto;
+  animation: heroOrnamentBreathe 8s var(--ease) 2.6s infinite;
+  transform-origin: center;
+}
+
+.hero-spread__ornament-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: currentColor;
+}
+
+.hero-spread__ornament-mark-circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: .55;
+  opacity: .75;
+}
+
+.hero-spread__ornament-mark-circle--outer {
+  stroke-dasharray: 1 2.4;
+  opacity: .55;
+}
+
+.hero-spread__ornament-mark-glyph {
+  fill: currentColor;
+  opacity: .88;
+}
+
+.hero-spread__ornament-tag {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: .8;
+}
+
+.hero-spread__ornament-tag-mark {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .85;
+}
+
+.hero-spread__ornament-caption {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, .92vw, 13px);
+  letter-spacing: -.002em;
+  white-space: nowrap;
+  opacity: .85;
+}
+
+.hero-spread__ornament-caption-mark {
+  color: var(--muted);
+  font-style: normal;
+  opacity: .55;
+}
+
+.app--voice-quiet .hero-spread__ornament-caption-mark { color: var(--blue); opacity: .7; }
+.app--voice-human .hero-spread__ornament-caption-mark { color: var(--coral); opacity: .7; }
+.app--voice-bold .hero-spread__ornament-caption-mark { color: var(--acid); opacity: .7; }
+
+.hero-spread__ornament:hover .hero-spread__ornament-mark-glyph {
+  opacity: 1;
+}
+
+.hero-spread__ornament:hover .hero-spread__ornament-mark-circle {
+  opacity: 1;
+  stroke-dashoffset: 6;
+  transition: stroke-dashoffset 1.6s var(--ease-out), opacity .35s var(--ease);
+}
+
+@keyframes heroOrnamentBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-spread__ornament,
+  .hero-spread__ornament-mark {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero-spread__ornament-rule {
+    max-width: 60px;
+  }
+
+  .hero-spread__ornament-mark {
+    width: 42px;
+    height: 42px;
+  }
+
+  .hero-spread__ornament-caption {
+    font-size: 10.5px;
+  }
+}
+
+@media (max-width: 540px) {
+  .hero-spread__ornament-tag {
+    font-size: 7px;
+    letter-spacing: .22em;
+  }
+}
+
+/* ──── HERO SPREAD · overall composition refresh ──── */
+
+.hero__spread {
+  --hero-spread-tone: var(--coral);
+}
+
+.hero__spread > .hero__copy {
+  gap: clamp(20px, 2.6vw, 36px);
+}
+
+.hero__title .title__line {
+  animation-duration: .85s;
+}
+
+.hero__chrome {
+  margin-top: clamp(24px, 3.4vw, 44px);
+}
+
+/* ──── PRESS STRIKE · a small breath when the lever pulls ──── */
+
+.app--voice-quiet .hero__spread,
+.app--voice-human .hero__spread,
+.app--voice-bold .hero__spread {
+  animation: heroSpreadBreath .9s var(--ease-out);
+}
+
+@keyframes heroSpreadBreath {
+  0% { transform: scale(1.005); filter: brightness(1.04) saturate(1.06); }
+  35% { transform: scale(1); filter: brightness(1) saturate(1); }
+  100% { transform: scale(1); filter: brightness(1) saturate(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--voice-quiet .hero__spread,
+  .app--voice-human .hero__spread,
+  .app--voice-bold .hero__spread {
+    animation: none !important;
+  }
+}
+
+/* ──── MOBILE · hero composition polish ──── */
+
+@media (max-width: 720px) {
+  .hero {
+    padding-top: clamp(28px, 4vw, 56px);
+  }
+
+  .hero__spread {
+    padding: clamp(64px, 8vw, 96px) clamp(18px, 4vw, 36px) clamp(40px, 6vw, 56px);
+  }
+
+  .hero__chrome {
+    gap: clamp(10px, 1.6vw, 16px);
+  }
+
+  .hero__body {
+    margin-top: clamp(36px, 4.6vw, 56px);
+  }
+}
+
+@media (max-width: 540px) {
+  .hero__title,
+  .hero__title--quiet,
+  .hero__title--human,
+  .hero__title--bold {
+    letter-spacing: -.094em;
+  }
+
+  .hero__title--quiet,
+  .hero__title--human {
+    line-height: .94;
+    letter-spacing: -.088em;
+  }
+
+  .hero__title--bold {
+    letter-spacing: -.118em;
+    line-height: .86;
+  }
+}
+
 
 
