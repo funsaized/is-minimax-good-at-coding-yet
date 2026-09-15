@@ -22,8 +22,8 @@ import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
 import { MarginalLedger } from './MarginalLedger'
 import { WayfinderSeal } from './WayfinderSeal'
-import { ComposePlate } from './ComposePlate'
-import { TitleTrace } from './TitleTrace'
+import { TitleRule } from './TitleRule'
+import { PressSignatureMark } from './PressSignatureMark'
 import { NotesSection } from './NotesSection'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
@@ -748,9 +748,7 @@ export function App() {
                   </span>
                 </h1>
 
-                <TitleTrace voice={voice} active={selectedWord} hovered={hoveredWord} />
-
-                <ComposePlate voice={voice} word={activeWord} setToday={setToday} />
+                <TitleRule voice={voice} active={selectedWord} hovered={hoveredWord} setToday={setToday} />
               </div>
 
               <ReaderNote
@@ -813,6 +811,8 @@ export function App() {
                 <span aria-hidden="true" className="hero__continue-arrow-mark">↓</span>
               </span>
             </a>
+
+            <PressSignatureMark voice={voice} setToday={setToday} />
           </div>
         </section>
 

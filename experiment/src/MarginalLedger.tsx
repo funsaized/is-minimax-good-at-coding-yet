@@ -44,39 +44,39 @@ const MARKS: LedgerMark[] = [
   },
 ]
 
-function MarkGlyph({ glyph, ink }: { glyph: LedgerMark['glyph']; ink: LedgerMark['ink'] }) {
+function MarkGlyph({ glyph }: { glyph: LedgerMark['glyph'] }) {
   if (glyph === 'stet') {
     return (
-      <svg className="marginal-ledger__glyph-svg" viewBox="0 0 28 18" aria-hidden="true">
+      <svg className="marginal-ledger__glyph-svg" viewBox="0 0 22 14" aria-hidden="true">
         <path
-          d="M2 12c3-4 6 4 9 0s6-4 9 0 6 4 6 4"
+          d="M2 8c3-3 5 3 8 0s5-3 8 0 3 1 3 1"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.1"
+          strokeWidth="1"
           strokeLinecap="round"
         />
-        <circle cx="26" cy="12" r="1" fill="currentColor" />
+        <circle cx="20" cy="8" r=".9" fill="currentColor" />
       </svg>
     )
   }
   if (glyph === 'caret') {
     return (
-      <svg className="marginal-ledger__glyph-svg" viewBox="0 0 28 18" aria-hidden="true">
-        <path d="M14 14l-7-9h14z" fill="currentColor" opacity=".88" />
-        <line x1="2" y1="14" x2="26" y2="14" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+      <svg className="marginal-ledger__glyph-svg" viewBox="0 0 22 14" aria-hidden="true">
+        <path d="M11 12l-5-7h10z" fill="currentColor" opacity=".88" />
+        <line x1="2" y1="12" x2="20" y2="12" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" />
       </svg>
     )
   }
   return (
-    <svg className="marginal-ledger__glyph-svg" viewBox="0 0 28 18" aria-hidden="true">
-      <ellipse cx="20" cy="11" rx="7" ry="5" fill="none" stroke="currentColor" strokeWidth=".9" />
+    <svg className="marginal-ledger__glyph-svg" viewBox="0 0 22 14" aria-hidden="true">
+      <ellipse cx="15" cy="8" rx="6" ry="4.5" fill="none" stroke="currentColor" strokeWidth=".9" />
       <text
-        x="20"
-        y="14.5"
+        x="15"
+        y="11"
         textAnchor="middle"
         fontFamily="Georgia, 'Iowan Old Style', serif"
         fontStyle="italic"
-        fontSize="11"
+        fontSize="9"
         fill="currentColor"
       >
         ?
@@ -87,21 +87,20 @@ function MarkGlyph({ glyph, ink }: { glyph: LedgerMark['glyph']; ink: LedgerMark
 
 export function MarginalLedger({ active, hovered, onHover, onLeave, onSelect }: MarginalLedgerProps) {
   const display = hovered ?? active
+  const activeIndex = MARKS.findIndex(mark => mark.id === display)
+  const activeMark = MARKS[activeIndex] ?? MARKS[0]
 
   return (
     <aside className="marginal-ledger" aria-label="Editor's marginal ledger against the title">
       <span className="marginal-ledger__head" aria-hidden="true">
         <span className="marginal-ledger__head-rule" />
-        <span className="marginal-ledger__head-tag">
-          <span className="marginal-ledger__head-dot" />
-          <span className="marginal-ledger__head-eyebrow">ledger</span>
-        </span>
+        <span className="marginal-ledger__head-tag">ledger</span>
       </span>
 
       <ol className="marginal-ledger__list">
         {MARKS.map((mark, i) => {
           const isActive = mark.id === display
-          const isPast = MARKS.findIndex(m => m.id === display) > i
+          const isPast = activeIndex > i
           return (
             <li
               key={mark.id}
@@ -119,10 +118,10 @@ export function MarginalLedger({ active, hovered, onHover, onLeave, onSelect }: 
                 aria-describedby={`note-${mark.id}`}
                 aria-label={`${mark.label} — ${mark.word}`}
               >
-                <span className="marginal-ledger__tick-glyph" aria-hidden="true">
-                  <MarkGlyph glyph={mark.glyph} ink={mark.ink} />
-                </span>
                 <span className="marginal-ledger__tick-num" aria-hidden="true">{mark.index}</span>
+                <span className="marginal-ledger__tick-glyph" aria-hidden="true">
+                  <MarkGlyph glyph={mark.glyph} />
+                </span>
                 <span className="marginal-ledger__tick-label" aria-hidden="true">{mark.label}</span>
               </button>
             </li>
@@ -138,22 +137,9 @@ export function MarginalLedger({ active, hovered, onHover, onLeave, onSelect }: 
 
       <span className="marginal-ledger__foot" aria-hidden="true">
         <span className="marginal-ledger__foot-mark">※</span>
-        <span className="marginal-ledger__foot-text">three marks <em>kept close</em></span>
-      </span>
-
-      <span className="marginal-ledger__scribble" aria-hidden="true">
-        <svg viewBox="0 0 100 12" preserveAspectRatio="none">
-          <path
-            d="M2 8c10-5 20 4 30-1s20-5 30-2 20 4 30-2 6-2 6-2"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth=".9"
-            strokeLinecap="round"
-            strokeDasharray="120 120"
-            className="marginal-ledger__scribble-stroke"
-          />
-          <circle cx="98" cy="6" r=".9" fill="currentColor" className="marginal-ledger__scribble-dot" />
-        </svg>
+        <span className="marginal-ledger__foot-text">
+          <em>{activeMark.label}</em>
+        </span>
       </span>
     </aside>
   )
