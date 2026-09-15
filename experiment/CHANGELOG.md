@@ -1,24 +1,18 @@
-# Iteration 243
+# Iteration 244
 
-A confident right-hand reader note replaces the redundant margin gutter; the hero spread now has one purpose per zone.
+A hand-drawn KeptMark seal becomes the page's single signature, replacing the busier TitleSeal chrome in the hero.
 
-## Hero · a single composed spread
-- New `ReaderNote` (`src/ReaderNote.tsx`) replaces `MarginGutter`. The note shows the active mark's full prose — title, gloss, body, prompt, and an editor's pencil line — rather than repeating the index. A slim three-button switch above the prose lets the reader step between the marks without leaving the hero.
-- `TitleSeal` drops its redundant "active mark" cell. The seal is now press · voice · date (three cells) so its voice reads as one composed breath.
-- Title typography is tightened: bolder weight on the bold voice, slightly looser line-height on the quiet/human voices, optical old-style figures on, and the `onum`/`swsh` OpenType features turned on for the italic voices.
-- Drop cap on the hero summary is redrawn with two thin ruled lines and a per-voice color, and reacts on hover with the rest of the title.
-- Hero summary type and width are recalibrated for calmer reading.
-- Site header running head is set a half-step larger so the current folio reads from across the page.
+## What changed
 
-## Composition
-- The hero plate grid widens the right-hand reader-note column (≈ 290–360 px) and breathes the column gap slightly.
-- Removed the standalone `MarginGutter` component; the `MarginLedger` (left, the marks index) is unchanged.
+- New `src/KeptMark.tsx` — a single circular seal with an italic "m³", a top/bottom monospace tag ring ("KEPT · BY · M³" / "FOLIO · KEPT · I"), a calligraphic flourish underneath, and a pulsing bead at its tail. The seal draws itself in once: ring rotates in, glyph scales in, the flourish strokes left to right, and the bead fades with a slow halo pulse.
+- Hero copy: the 3-cell `TitleSeal` row (press / voice / date) is replaced by a `.hero__keep` block — a soft hairline rule and the new `KeptMark` in the active voice color. The redundant info that the seal above the title already carries is removed; the seal now reads as one composed identity moment rather than a row of cells.
+- Answer reveal: the bottom-right press-used footnote is replaced by a centered `KeptMark` (variant `answer`, size 104) that closes the leaf as its own signature, with a caption that names the voice and the day it was set.
+- Colophon: the `.colophon__signature` block — previously a small mono mark + signature wave + tag — collapses into a single `KeptMark` (variant `colophon`, size 120) with a "composed by m³ · for the reader · {date}" caption.
+- Responsive: each variant scales down on tablet/mobile (`.78–.92`) so the seal stays composed on small screens.
+- Reduced motion: every entrance animation has a `prefers-reduced-motion: reduce` fallback that resolves the seal in its final state with no rotation, scale, or stroke-draw.
 
-## Accessibility & motion
-- The reader note animates in once, transitions its leaf on mark change, and respects `prefers-reduced-motion`.
-- All key elements remain keyboard reachable; the three mark switches are buttons with `aria-pressed`.
+## What was deliberately not changed
 
-## Files
-- Added: `src/ReaderNote.tsx`.
-- Removed: `src/MarginGutter.tsx`.
-- Edited: `src/App.tsx`, `src/TitleSeal.tsx`, `src/style.css`.
+- The folio Mark above the hero, the marginal ledger, the reader note, the press section, the day sheet, the specimen plate, the notes section, and the reading folio footer all keep their existing roles and look.
+- Voice cycling (Shift+V), the IntersectionObserver-driven active section, the impression ribbon marks, the press strike flash, the InkTrail/InkDust/PaperGrain canvas layers, and all keyboard interactions are untouched.
+- The TitleSeal component file is left in place but is no longer imported.

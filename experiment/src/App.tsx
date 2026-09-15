@@ -22,7 +22,7 @@ import { Flourish } from './Flourish'
 import { FolioMark } from './FolioMark'
 import { VoiceSelector } from './VoiceSelector'
 import { PaperGrain } from './PaperGrain'
-import { TitleSeal } from './TitleSeal'
+import { KeptMark } from './KeptMark'
 import { MarginalLedger } from './MarginalLedger'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
@@ -402,20 +402,8 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
               </button>
             </div>
           </div>
-          <span className="answer-reveal__press-used" aria-hidden="true">
-            <span className="answer-reveal__press-used-mark">
-              <svg viewBox="0 0 40 40">
-                <circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" strokeWidth=".8" />
-                <circle cx="20" cy="20" r="13" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2" />
-                <text x="20" y="16" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.2" letterSpacing="1.2" fill="currentColor">PRESS · USED</text>
-                <text x="20" y="25" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="7.5" fill="currentColor">m³</text>
-                <text x="20" y="32" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3" letterSpacing="1" fill="currentColor">{voice === 'quiet' ? 'A · QUIET' : voice === 'human' ? 'B · HUMAN' : 'C · BOLD'}</text>
-              </svg>
-            </span>
-            <span className="answer-reveal__press-used-text">
-              <strong>this leaf was pressed in the {voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'} voice</strong>
-              <em>set on {setToday} · folio viii · fold it back when you are done</em>
-            </span>
+          <span className="answer-reveal__keep" aria-hidden="true">
+            <KeptMark voice={voice} variant="answer" size={104} caption={`pressed in the ${voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'} voice · set on ${setToday}`} />
           </span>
         </div>
       </div>
@@ -640,51 +628,7 @@ function Colophon({ voice, word, setToday }: { voice: VoiceId; word: WordId; set
           </span>
         </div>
         <div className="colophon__signature" aria-hidden="true">
-          <span className="colophon__signature-mark-mono" aria-hidden="true">
-            <svg viewBox="0 0 32 36">
-              <circle cx="16" cy="18" r="13" fill="none" stroke="currentColor" strokeWidth=".9" opacity=".7" />
-              <circle cx="16" cy="18" r="9" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2" opacity=".55" />
-              <text x="16" y="22" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">m³</text>
-              <circle cx="16" cy="3.6" r=".65" fill="currentColor" />
-              <circle cx="16" cy="32.4" r=".65" fill="currentColor" />
-            </svg>
-          </span>
-          <svg className="colophon__signature-mark" viewBox="0 0 320 36">
-            <path
-              className="colophon__signature-wave"
-              d="M2 19c24-2 48 4 72 0s48-6 72-1 48 5 72-2 48-5 72 0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              strokeLinecap="round"
-              opacity=".5"
-            />
-            <g className="colophon__signature-flourish">
-              <path
-                d="M296 19c4-2 8 0 12 2s8 1 10-3"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth=".9"
-                strokeLinecap="round"
-                opacity=".7"
-              />
-              <circle cx="294" cy="19" r="1.6" fill="currentColor" opacity=".75" />
-              <circle cx="294" cy="19" r="3.4" fill="none" stroke="currentColor" strokeWidth=".35" opacity=".45" />
-              <circle cx="294" cy="19" r="5.6" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".25" />
-            </g>
-            <g className="colophon__signature-tail">
-              <path
-                d="M2 25c12-1 24 2 36 0"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth=".6"
-                strokeLinecap="round"
-                opacity=".35"
-              />
-              <circle cx="2" cy="25" r=".9" fill="currentColor" opacity=".55" />
-            </g>
-          </svg>
-          <span className="colophon__signature-tag">composed by m³ · for the reader · {setToday}</span>
+          <KeptMark voice={voice} variant="colophon" size={120} caption={`composed by m³ · for the reader · ${setToday}`} />
         </div>
       </div>
       <p className="colophon__signature-note">
@@ -1025,12 +969,10 @@ export function App() {
 
                 <Flourish voice={voice} active={selectedWord} hovered={hoveredWord} />
 
-                <TitleSeal
-                  voice={voice}
-                  voiceLabel={VOICE_LABEL[voice]}
-                  voiceLetter={VOICE_LETTER[voice]}
-                  setToday={setToday}
-                />
+                <div className="hero__keep">
+                  <span className="hero__keep-rule" aria-hidden="true" />
+                  <KeptMark voice={voice} variant="hero" />
+                </div>
 
                 <span className="hero__pull" aria-hidden="true">
                   <span className="hero__pull-rule hero__pull-rule--start" />

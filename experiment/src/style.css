@@ -19552,4 +19552,354 @@ a small act of typesetting.
   opacity: .55;
 }
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 244 · KEPT MARK
+
+   A single, hand-drawn signature seal that becomes the page's
+   identity. Replaces the busier TitleSeal chrome with one
+   composed gesture: a calligraphic "m³" inside a soft circular
+   rule, with a small kept caption underneath. The flourish
+   draws itself once on entry; the bead at its tail pulses
+   gently so the seal feels alive without being busy.
+   ──────────────────────────────────────────────────────────── */
+
+.kept-mark {
+  --kept-tone: var(--coral);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, .7vw, 10px);
+  margin: 0;
+  padding: 0;
+  color: var(--kept-tone);
+  opacity: 0;
+  animation: keptMarkIn .8s var(--ease-out) .32s forwards;
+}
+
+.kept-mark__seal {
+  display: block;
+  position: relative;
+  overflow: visible;
+  color: var(--kept-tone);
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .35))
+          drop-shadow(0 8px 16px rgba(0, 0, 0, .25));
+}
+
+.kept-mark__ring {
+  opacity: 0;
+  transform-origin: 84px 84px;
+  animation: keptRingDraw 1.4s var(--ease-out) .55s forwards;
+}
+
+.kept-mark__ring-inner {
+  opacity: 0;
+  animation: keptRingFade .8s var(--ease-out) 1.4s forwards;
+}
+
+.kept-mark__tag {
+  opacity: 0;
+  animation: keptTagFade .55s var(--ease-out) forwards;
+}
+
+.kept-mark__tag--top { animation-delay: 1.05s; }
+.kept-mark__tag--bottom { animation-delay: 1.55s; }
+
+.kept-mark__glyph {
+  opacity: 0;
+  transform-origin: 84px 84px;
+  animation: keptGlyphIn .7s var(--ease-spring) 1.1s forwards;
+}
+
+.kept-mark__flourish {
+  opacity: 0;
+  animation: keptFlourishDraw 1.1s var(--ease-out) 1.65s forwards;
+}
+
+.kept-mark__flourish--under {
+  animation-delay: 1.85s;
+  animation-duration: .9s;
+}
+
+.kept-mark__bead {
+  opacity: 0;
+  transform-origin: 150px 124px;
+  animation: keptBeadIn .45s var(--ease-spring) 2.6s forwards,
+             keptBeadPulse 3.2s var(--ease) 3.1s infinite;
+}
+
+.kept-mark__bead--halo {
+  animation: keptBeadIn .5s var(--ease) 2.7s forwards,
+             keptHaloPulse 3.2s var(--ease) 3.1s infinite;
+}
+
+.kept-mark__caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: clamp(11.5px, 1vw, 13.5px);
+  font-style: italic;
+  letter-spacing: -.005em;
+  line-height: 1;
+  opacity: 0;
+  animation: keptTagFade .55s var(--ease-out) 2.05s forwards;
+}
+
+.app--voice-quiet .kept-mark__caption { color: var(--blue); }
+.app--voice-human .kept-mark__caption { color: var(--coral); }
+.app--voice-bold .kept-mark__caption { color: var(--acid); }
+
+.kept-mark__caption-mark {
+  color: var(--kept-tone);
+  opacity: .55;
+  font-size: 1.1em;
+  line-height: 0;
+}
+
+.kept-mark--inline {
+  flex-direction: row;
+  gap: 14px;
+}
+
+.kept-mark--inline .kept-mark__caption {
+  border-left: 1px solid var(--line);
+  padding-left: 12px;
+}
+
+.kept-mark--answer .kept-mark__seal {
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .35));
+}
+
+.kept-mark--answer .kept-mark__caption {
+  color: var(--ink-soft);
+  font-size: clamp(11px, .95vw, 12.5px);
+}
+
+.kept-mark--answer .kept-mark__caption-mark {
+  color: var(--wax);
+}
+
+.kept-mark--colophon .kept-mark__seal {
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .4))
+          drop-shadow(0 4px 10px rgba(0, 0, 0, .25));
+}
+
+.kept-mark--colophon .kept-mark__caption {
+  color: var(--paper);
+  font-size: clamp(11px, .9vw, 12px);
+  opacity: .8;
+}
+
+@keyframes keptMarkIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes keptRingDraw {
+  from { opacity: 0; transform: rotate(-22deg) scale(.94); }
+  to   { opacity: 1; transform: rotate(0deg) scale(1); }
+}
+
+@keyframes keptRingFade {
+  from { opacity: 0; }
+  to   { opacity: .5; }
+}
+
+@keyframes keptTagFade {
+  from { opacity: 0; }
+  to   { opacity: var(--kept-tag-final, .7); }
+}
+
+.kept-mark__tag--bottom {
+  --kept-tag-final: .55;
+}
+
+@keyframes keptGlyphIn {
+  from { opacity: 0; transform: scale(.6); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes keptFlourishDraw {
+  to { stroke-dashoffset: 0; opacity: .9; }
+}
+
+@keyframes keptBeadIn {
+  from { opacity: 0; transform: scale(.2); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes keptBeadPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.18); }
+}
+
+@keyframes keptHaloPulse {
+  0%   { transform: scale(1); opacity: .35; }
+  60%  { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kept-mark,
+  .kept-mark__ring,
+  .kept-mark__ring-inner,
+  .kept-mark__tag,
+  .kept-mark__glyph,
+  .kept-mark__flourish,
+  .kept-mark__bead {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1;
+  }
+  .kept-mark__ring-inner { opacity: .5; }
+  .kept-mark__tag--bottom { opacity: .55; }
+  .kept-mark__flourish { stroke-dashoffset: 0 !important; opacity: .9 !important; }
+  .kept-mark__flourish--under { opacity: .5 !important; }
+}
+
+@media (max-width: 720px) {
+  .kept-mark--hero .kept-mark__seal {
+    transform: scale(.86);
+    transform-origin: center;
+  }
+
+  .kept-mark--answer .kept-mark__seal {
+    transform: scale(.9);
+    transform-origin: center;
+  }
+
+  .kept-mark--colophon .kept-mark__seal {
+    transform: scale(.92);
+    transform-origin: center;
+  }
+
+  .kept-mark__caption {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 540px) {
+  .kept-mark--hero {
+    gap: 4px;
+  }
+
+  .kept-mark--hero .kept-mark__seal {
+    transform: scale(.74);
+  }
+
+  .kept-mark--answer .kept-mark__seal {
+    transform: scale(.82);
+  }
+
+  .kept-mark__caption {
+    font-size: 10.5px;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 244 · hero composition
+
+   The three-zone spread tightens around the title. The new
+   kept-mark replaces the wider title-seal row, so the hero
+   copy sits with less chrome and the marginal columns can
+   breathe. The keep-mark sits below the flourish with a
+   hairline rule above it, replacing the redundant info row.
+   ──────────────────────────────────────────────────────────── */
+
+.hero__copy {
+  gap: clamp(14px, 1.6vw, 20px);
+}
+
+.hero__keep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  margin: clamp(2px, .4vw, 6px) 0 clamp(8px, 1vw, 14px);
+}
+
+.hero__keep-rule {
+  display: block;
+  width: clamp(80px, 12vw, 160px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line) 50%, transparent);
+  opacity: 0;
+  animation: traceFade .9s var(--ease-out) .25s forwards;
+}
+
+@media (max-width: 720px) {
+  .hero__keep-rule {
+    width: clamp(48px, 14vw, 96px);
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 244 · hero plate · balanced three-zone spread
+
+   The hero plate trims to a single editorial column where the
+   kept-mark sits beneath the title. The MarginalLedger and
+   ReaderNote continue to flank the title with measured
+   breathing room. The kept-mark earns its place as the page's
+   one composed identity mark, so the prior 3-cell TitleSeal
+   row is no longer needed.
+   ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 1180px) {
+  .hero__plate {
+    grid-template-columns: minmax(0, 1fr) clamp(220px, 22vw, 280px);
+    column-gap: clamp(22px, 2.6vw, 36px);
+    row-gap: clamp(20px, 2.4vw, 32px);
+  }
+}
+
+@media (max-width: 980px) {
+  .hero__plate {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(24px, 4vw, 36px);
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 244 · answer reveal closing flourish
+
+   The kept-mark closes the answer reveal as the proof's own
+   signature. It replaces the prior press-used footnote in the
+   leaf's lower-right corner so the reveal ends with a single
+   composed gesture rather than two stamps.
+   ──────────────────────────────────────────────────────────── */
+
+.answer-reveal__keep {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 22px auto 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(17, 21, 33, .18);
+  max-width: 360px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .55s var(--ease) .65s, transform .7s var(--ease-spring) .65s;
+}
+
+.answer-reveal.is-open .answer-reveal__keep {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.answer-reveal__keep .kept-mark__seal {
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .25));
+}
+
+@media (max-width: 720px) {
+  .answer-reveal__keep {
+    max-width: 260px;
+    padding-top: 14px;
+  }
+}
+
 
