@@ -9,10 +9,8 @@ import { InkDust } from './InkDust'
 import { InkTrail } from './InkTrail'
 import { Almanac } from './Almanac'
 import { MarginNotes } from './MarginNotes'
-import { ReaderNote } from './ReaderNote'
 import { Watermark } from './Watermark'
 import { TypePlate } from './TypePlate'
-import { PressSignature } from './PressSignature'
 import { PressRibbon } from './PressRibbon'
 import { SecondReading } from './SecondReading'
 import { PressStrikeFlash } from './PressStrikeFlash'
@@ -20,7 +18,10 @@ import { FolioMark } from './FolioMark'
 import { VoiceSelector } from './VoiceSelector'
 import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
-import { MarginalLedger } from './MarginalLedger'
+import { MarginalCaret } from './MarginalCaret'
+import { MarginaliaStrip } from './MarginaliaStrip'
+import { PressSignature } from './PressSignature'
+import { TitleSweep } from './TitleSweep'
 import { WayfinderSeal } from './WayfinderSeal'
 import { TitleRule } from './TitleRule'
 import { PressSignatureMark } from './PressSignatureMark'
@@ -720,13 +721,7 @@ export function App() {
             <PaperWarmth voice={voice} />
 
             <div className="hero__plate">
-              <MarginalLedger
-                active={selectedWord}
-                hovered={hoveredWord}
-                onHover={setHoveredWord}
-                onLeave={() => setHoveredWord(null)}
-                onSelect={id => selectWord(id)}
-              />
+              <MarginalCaret active={selectedWord} tokenRefs={tokenRefs} />
               <div className="hero__copy">
                 <h1 key={`title-${strikeTick}`} className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
                   <span className="title__line">is Minimax </span>
@@ -744,16 +739,17 @@ export function App() {
 
                 <TitleRule voice={voice} active={selectedWord} hovered={hoveredWord} setToday={setToday} />
               </div>
-
-              <ReaderNote
-                active={selectedWord}
-                hovered={hoveredWord}
-                voice={voice}
-                onSelect={id => selectWord(id)}
-                onHover={setHoveredWord}
-                onLeave={() => setHoveredWord(null)}
-              />
             </div>
+
+            <TitleSweep voice={voice} setToday={setToday} />
+
+            <MarginaliaStrip
+              active={selectedWord}
+              hovered={hoveredWord}
+              onHover={setHoveredWord}
+              onLeave={() => setHoveredWord(null)}
+              onSelect={id => selectWord(id)}
+            />
           </div>
 
           <div className="hero__chrome">
@@ -794,24 +790,6 @@ export function App() {
               <span className="hero__dropcap" aria-hidden="true">A</span>
               page that earns the right to ask whether a machine can make a place feel like <em>someone was here.</em> Read it once with the eye, again with the ear — and a third time, when the answer is folded open.
             </p>
-            <span className="hero__press-flourish" aria-hidden="true">
-              <svg className="hero__press-flourish-rule" viewBox="0 0 360 12" preserveAspectRatio="none">
-                <path
-                  d="M2 6c30-9 60 9 90 0s60-9 90 0 60 9 90 0 60-9 86-1"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth=".7"
-                  strokeLinecap="round"
-                  className="hero__press-flourish-stroke"
-                />
-                <circle cx="356" cy="6" r="1.2" fill="currentColor" className="hero__press-flourish-dot" />
-              </svg>
-              <span className="hero__press-flourish-tag">
-                <span className="hero__press-flourish-tag-mark" aria-hidden="true" />
-                a small, stubborn inquiry
-                <span className="hero__press-flourish-tag-mark" aria-hidden="true" />
-              </span>
-            </span>
             <a className="hero__continue" href="#press" aria-label="Turn the page to the press bed">
               <span className="hero__continue-imprint">composed by hand <em>·</em> for a careful reader</span>
               <span className="hero__continue-arrow">
@@ -834,8 +812,6 @@ export function App() {
                 </span>
               </span>
             </a>
-
-            <PressSignatureMark voice={voice} setToday={setToday} />
           </div>
         </section>
 

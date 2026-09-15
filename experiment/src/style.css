@@ -25051,5 +25051,817 @@ a small act of typesetting.
   .sig-mark::after { transition: none !important; }
 }
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 256 · the page earns a single, quieter hand.
+   The hero plate collapses into one centered column so the
+   title reads as the page's own gesture. A MarginalCaret
+   tracks the reader's attention against the active marked
+   word, a hand-drawn PressSignature sweep closes the title,
+   and a slim Marginalia strip below replaces the heavier
+   side rails. Color shifts toward a warmer midnight paper.
+   ──────────────────────────────────────────────────────────── */
+
+:root {
+  --midnight: #100c14;
+  --midnight-2: #161118;
+  --paper-warm: #f0e3c8;
+  --paper-warm-soft: #c9b692;
+  --ink-warm: #1a1410;
+}
+
+/* The page background warms up: midnight ink with a subtle
+   paper warmth in the upper-half radial. Coral defaults give
+   way to the active voice's tone. */
+
+.app {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(212, 168, 90, .07), transparent 56%),
+    radial-gradient(circle at 82% 8%, rgba(91, 121, 203, .12), transparent 32rem),
+    linear-gradient(168deg, var(--midnight) 0%, var(--midnight-2) 52%, #0a0810 100%);
+}
+
+.app--voice-human {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(240, 110, 91, .06), transparent 56%),
+    radial-gradient(circle at 86% 14%, rgba(255, 118, 95, .11), transparent 32rem),
+    linear-gradient(168deg, #15101b 0%, #1d1721 52%, #100c14 100%);
+}
+
+.app--voice-bold {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(216, 240, 106, .08), transparent 56%),
+    radial-gradient(circle at 80% 12%, rgba(216, 255, 106, .14), transparent 32rem),
+    linear-gradient(168deg, #10131a 0%, #13191f 52%, #0a0d12 100%);
+}
+
+/* The hero plate becomes a single, centered column. The title
+   reads as the page's own gesture — no left rail, no right rail.
+   The MarginalCaret and PressSignature live inside the plate. */
+
+.hero__plate {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  justify-items: center;
+  width: 100%;
+  padding: clamp(8px, 1.6vw, 22px) 0;
+  z-index: 1;
+}
+
+.hero__plate > .hero__copy {
+  position: relative;
+  width: 100%;
+  max-width: 1180px;
+  z-index: 2;
+}
+
+/* The title gets a small lift and a touch more breathing room. */
+
+.hero__plate .hero__title {
+  max-width: 1180px;
+  margin: 0 auto;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'onum' 1, 'ss01' 1;
+}
+
+@media (min-width: 1180px) {
+  .hero__plate .hero__title {
+    font-size: clamp(4.6rem, 11.4vw, 13.8rem);
+    line-height: .88;
+  }
+
+  .hero__plate .hero__title--quiet {
+    font-size: clamp(4.4rem, 10.6vw, 12.8rem);
+    letter-spacing: -.072em;
+  }
+
+  .hero__plate .hero__title--human {
+    font-size: clamp(4.6rem, 11.2vw, 13.4rem);
+    letter-spacing: -.094em;
+  }
+
+  .hero__plate .hero__title--bold {
+    font-size: clamp(5rem, 12.2vw, 14.6rem);
+    letter-spacing: -.12em;
+    line-height: .84;
+  }
+}
+
+/* The marked-word underline mark grows a confident brush head
+   and a tapered tail. The active state brings the brush head to
+   the surface and traces the stroke in. */
+
+.title-token__mark {
+  height: 16px;
+  bottom: -.18em;
+}
+
+.title-token__stroke {
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1s var(--ease-out);
+}
+
+.title-token:hover .title-token__stroke,
+.title-token:focus-visible .title-token__stroke,
+.title-token.is-selected .title-token__stroke {
+  stroke-dashoffset: 0;
+}
+
+.title-token__tail {
+  transform-origin: 196px 6px;
+  transition: opacity .35s var(--ease) .35s, transform .55s var(--ease-spring) .35s;
+}
+
+/* A small marginal caret that travels with the active word.
+   It draws a hand-curved stroke from the left margin to the
+   active marked word, with a knot at the end and a glyph mark. */
+
+.marginal-caret {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  z-index: 4;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  transition: transform .55s var(--ease-spring), color .4s var(--ease);
+  opacity: 0;
+  will-change: transform;
+}
+
+.marginal-caret.is-ready {
+  opacity: 1;
+}
+
+.marginal-caret__line {
+  display: block;
+  width: 30px;
+  flex: 0 0 auto;
+}
+
+.marginal-caret__stroke {
+  stroke-dasharray: 200 200;
+  stroke-dashoffset: 200;
+  animation: marginalCaretDraw .9s var(--ease-out) .15s forwards;
+}
+
+.marginal-caret__knot {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translateY(-50%) scale(.4);
+  opacity: 0;
+  animation: marginalCaretKnot .5s var(--ease-spring) .55s forwards;
+}
+
+.marginal-caret__glyph {
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  transform: translateY(-50%) translateX(-4px);
+  color: currentColor;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  opacity: 0;
+  animation: marginalCaretGlyph .4s var(--ease-out) .85s forwards;
+}
+
+.marginal-caret--query .marginal-caret__glyph { color: var(--blue); }
+.marginal-caret--stet .marginal-caret__glyph { color: var(--acid); }
+.marginal-caret--caret .marginal-caret__glyph { color: var(--coral); }
+
+@keyframes marginalCaretDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes marginalCaretKnot {
+  0% { opacity: 0; transform: translateY(-50%) scale(.4); }
+  60% { opacity: 1; transform: translateY(-50%) scale(1.15); }
+  100% { opacity: 1; transform: translateY(-50%) scale(1); }
+}
+
+@keyframes marginalCaretGlyph {
+  0% { opacity: 0; transform: translateY(-50%) translateX(-4px); }
+  100% { opacity: 1; transform: translateY(-50%) translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marginal-caret { opacity: 1 !important; transition: transform .35s linear !important; }
+  .marginal-caret__stroke { stroke-dashoffset: 0 !important; animation: none !important; }
+  .marginal-caret__knot { opacity: 1 !important; transform: translateY(-50%) scale(1) !important; animation: none !important; }
+  .marginal-caret__glyph { opacity: 1 !important; transform: translateY(-50%) translateX(0) !important; animation: none !important; }
+}
+
+@media (max-width: 720px) {
+  .marginal-caret { display: none; }
+}
+
+/* The hand-drawn press signature: a single calligraphic sweep
+   drawn once below the title plate, with a small caption rule. */
+
+.press-signature {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  margin: clamp(20px, 2.4vw, 36px) auto clamp(8px, 1.4vw, 22px);
+  width: min(100%, 920px);
+  color: var(--signature-tone, var(--coral));
+  transition: color .55s var(--ease);
+  z-index: 1;
+}
+
+.press-signature__sweep {
+  display: block;
+  width: clamp(440px, 86%, 880px);
+  height: clamp(38px, 4.4vw, 56px);
+}
+
+.press-signature__stroke {
+  animation: pressSignatureDraw 1.6s var(--ease-out) .35s forwards;
+}
+
+.press-signature__bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.press-signature__bead--start { animation: pressSignatureBead .4s var(--ease-spring) .35s forwards; }
+.press-signature__bead--end { animation: pressSignatureBead .4s var(--ease-spring) 1.85s forwards; }
+
+.press-signature__knot {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pressSignatureKnot .55s var(--ease-spring) 1.2s forwards;
+}
+
+.press-signature__knot-ring {
+  opacity: 0;
+  animation: pressSignatureRing .55s var(--ease-out) 1.55s forwards;
+}
+
+.press-signature__caption {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 14px);
+  color: var(--mist);
+  font-family: var(--mono);
+  font-size: clamp(9px, .82vw, 11px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: traceFade .6s var(--ease-out) 2s forwards;
+}
+
+.press-signature__caption-rule {
+  display: block;
+  width: clamp(28px, 4vw, 48px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor);
+  opacity: .55;
+}
+
+.press-signature__caption-rule:last-child {
+  background: linear-gradient(to left, transparent, currentColor);
+}
+
+.press-signature__caption-text {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, .8vw, 10px);
+  white-space: nowrap;
+}
+
+.press-signature__caption-text em {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.1vw, 15px);
+  letter-spacing: -.01em;
+  text-transform: none;
+}
+
+.press-signature__caption-sep {
+  color: currentColor;
+  opacity: .55;
+}
+
+@keyframes pressSignatureDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pressSignatureBead {
+  0% { opacity: 0; transform: scale(.4); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pressSignatureKnot {
+  0% { opacity: 0; transform: scale(.2) rotate(-12deg); }
+  70% { opacity: 1; transform: scale(1.18) rotate(4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes pressSignatureRing {
+  0% { opacity: 0; transform: scale(.5); }
+  100% { opacity: .55; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-signature__stroke { stroke-dashoffset: 0 !important; animation: none !important; }
+  .press-signature__bead,
+  .press-signature__knot,
+  .press-signature__knot-ring,
+  .press-signature__caption { opacity: 1 !important; transform: none !important; animation: none !important; }
+  .press-signature__knot-ring { opacity: .55 !important; }
+}
+
+@media (max-width: 540px) {
+  .press-signature__caption-text em { font-size: 12px; }
+}
+
+/* The Marginalia strip below the title plate. Three marks as
+   a single horizontal row, with rules leading and trailing,
+   and an inline caption naming the active mark. */
+
+.marginalia {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 22px);
+  width: min(100%, 1080px);
+  margin: clamp(8px, 1.4vw, 22px) auto clamp(8px, 1.2vw, 18px);
+  padding: clamp(14px, 1.6vw, 22px) clamp(18px, 2.4vw, 36px);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(146, 186, 255, .04), transparent 70%),
+    linear-gradient(180deg, rgba(20, 26, 38, .26), rgba(14, 20, 32, .4));
+  color: var(--paper);
+  opacity: 0;
+  animation: traceFade .85s var(--ease-out) .4s forwards;
+}
+
+.marginalia__rule {
+  display: block;
+  width: clamp(36px, 5vw, 88px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line) 60%);
+  opacity: .6;
+  flex: 0 0 auto;
+}
+
+.marginalia__rule--trail {
+  background: linear-gradient(to left, transparent, var(--line) 60%);
+}
+
+.marginalia__head {
+  display: none;
+}
+
+.marginalia__list {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(8px, 1.2vw, 18px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.marginalia__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.marginalia__divider {
+  display: inline-block;
+  width: 14px;
+  height: 18px;
+  color: var(--muted);
+  opacity: .45;
+}
+
+.marginalia__tick {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, auto);
+  align-items: center;
+  gap: clamp(8px, .8vw, 12px);
+  padding: clamp(8px, .8vw, 12px) clamp(10px, 1vw, 14px);
+  border: 1px solid var(--line);
+  background: rgba(14, 20, 32, .28);
+  color: var(--muted);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color .35s var(--ease),
+    border-color .35s var(--ease),
+    background .35s var(--ease),
+    transform .45s var(--ease-spring);
+}
+
+.marginalia__tick:hover,
+.marginalia__tick:focus-visible {
+  border-color: rgba(216, 240, 106, .28);
+  color: var(--paper);
+  transform: translateY(-1px);
+}
+
+.marginalia__row.is-past .marginalia__tick {
+  opacity: .55;
+  color: var(--mist);
+}
+
+.marginalia__row.is-active .marginalia__tick {
+  opacity: 1;
+  background: rgba(20, 26, 38, .7);
+}
+
+.marginalia__tick--acid { color: var(--acid); }
+.marginalia__tick--coral { color: var(--coral); }
+.marginalia__tick--blue { color: var(--blue); }
+
+.marginalia__row.is-active .marginalia__tick--acid { border-color: var(--acid); box-shadow: inset 0 0 0 1px rgba(216, 240, 106, .18); }
+.marginalia__row.is-active .marginalia__tick--coral { border-color: var(--coral); box-shadow: inset 0 0 0 1px rgba(255, 118, 95, .18); }
+.marginalia__row.is-active .marginalia__tick--blue { border-color: var(--blue); box-shadow: inset 0 0 0 1px rgba(155, 188, 255, .18); }
+
+.marginalia__tick-num {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 10px;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.marginalia__tick-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 14px;
+}
+
+.marginalia__tick-copy {
+  display: grid;
+  gap: 2px;
+}
+
+.marginalia__tick-word {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(14px, 1.1vw, 17px);
+  line-height: 1;
+}
+
+.marginalia__tick-label {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.marginalia__tick-note {
+  display: none;
+}
+
+.marginalia__caption {
+  display: none;
+}
+
+@media (min-width: 720px) {
+  .marginalia__head {
+    display: inline-flex;
+    align-items: baseline;
+    gap: clamp(6px, .6vw, 10px);
+    grid-column: 1;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 8.5px;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+  }
+
+  .marginalia__head-mark {
+    color: var(--coral);
+    font-family: var(--serif);
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 0;
+    opacity: .8;
+  }
+
+  .marginalia__head-tag {
+    color: var(--paper);
+  }
+
+  .marginalia__head-tag-em {
+    color: var(--muted);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 11px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+}
+
+@media (min-width: 920px) {
+  .marginalia__list { justify-content: stretch; }
+  .marginalia__row { flex: 1 1 0; min-width: 0; }
+  .marginalia__tick { width: 100%; }
+  .marginalia__divider { display: none; }
+  .marginalia__tick-note {
+    display: block;
+    color: var(--muted);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 12px;
+    line-height: 1.15;
+    grid-column: 1 / -1;
+    padding-top: 4px;
+    border-top: 1px dashed rgba(146, 186, 255, .08);
+  }
+}
+
+@media (min-width: 1100px) {
+  .marginalia__caption {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    grid-column: 3;
+    color: var(--muted);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 12px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .marginalia__caption-mark {
+    color: var(--coral);
+    font-style: normal;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+
+  .marginalia__caption em {
+    color: var(--paper);
+    font-style: italic;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marginalia { animation: none !important; opacity: 1; }
+  .marginalia__tick { transition: none !important; }
+}
+
+/* The hero body slims down. One paragraph, one turn-the-page link.
+   The dropcap reads as the lead-in, the rule above the continue
+   link is a single pencil hairline. */
+
+.hero__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(28px, 3.4vw, 44px);
+  align-items: start;
+  justify-items: center;
+  margin-top: clamp(36px, 4.4vw, 56px);
+  padding-top: clamp(20px, 2.6vw, 32px);
+  border-top: 1px solid var(--line-soft);
+  text-align: center;
+}
+
+.hero__summary {
+  max-width: 56ch;
+  margin: 0 auto;
+  color: var(--lead-2);
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.6;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'onum' 1;
+  text-wrap: pretty;
+  text-align: left;
+  transition: font-style .5s var(--ease), letter-spacing .55s var(--ease);
+}
+
+.hero__dropcap {
+  float: left;
+  position: relative;
+  margin: .08em .18em -.14em -.04em;
+  padding-top: .04em;
+  color: var(--coral);
+  font-family: var(--serif);
+  font-size: 3.4em;
+  font-style: italic;
+  font-weight: 400;
+  line-height: .82;
+  letter-spacing: -.045em;
+  text-shadow:
+    0 0 .04em rgba(240, 113, 96, .35),
+    0 1px 0 rgba(23, 22, 29, .12);
+  transition: color .45s var(--ease), transform .55s var(--ease-spring), text-shadow .5s var(--ease);
+}
+
+.hero__continue {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(16px, 2vw, 28px);
+  padding: clamp(8px, 1vw, 12px) 0;
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.hero__continue:hover .hero__continue-arrow,
+.hero__continue:focus-visible .hero__continue-arrow {
+  gap: clamp(12px, 1.4vw, 18px);
+  color: var(--coral);
+}
+
+@media (max-width: 540px) {
+  .hero__body { padding-top: 18px; gap: 22px; }
+  .hero__summary { font-size: 16px; line-height: 1.55; }
+}
+
+/* The voice line (now the press's lever row) gets a more
+   confident active state, with the active letter pressed into
+   its circle. */
+
+.hero__voice-line {
+  border-color: rgba(146, 186, 255, .14);
+  background:
+    linear-gradient(180deg, rgba(28, 36, 52, .42), rgba(14, 20, 32, .55));
+  box-shadow: inset 0 0 0 1px rgba(146, 186, 255, .04);
+}
+
+.hero__voice-line-item.is-active .hero__voice-line-letter {
+  background: currentColor;
+  color: var(--night);
+  border-color: currentColor;
+}
+
+/* A refined FolioMark: tighter rule, more delicate row.
+   The existing rule gets a touch more presence at the top
+   of the title plate. */
+
+.hero__folio-mark-rule {
+  height: 8px;
+  opacity: 1;
+}
+
+.hero__folio-mark-row {
+  font-size: clamp(10.5px, .96vw, 12.5px);
+  column-gap: clamp(10px, 1.1vw, 14px);
+}
+
+.hero__folio-mark-folio {
+  font-size: 8px;
+  letter-spacing: .26em;
+}
+
+.hero__folio-mark-bead {
+  width: 4px;
+  height: 4px;
+  opacity: .65;
+}
+
+/* The page-fold earns a single, decisive rule. The center
+   ornament sits like a press seal pressed onto the fold. */
+
+.page-fold__seal-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: pageFoldDraw 1.4s var(--ease-out) .15s forwards;
+}
+
+.page-fold__seal-bead { animation: pageFoldBead .4s var(--ease-spring) 1.55s backwards; }
+
+@keyframes pageFoldDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pageFoldBead {
+  0% { opacity: 0; transform: scale(.4); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* The reading folio footer settles into a single composed plate.
+   The four cells become a horizontal state-row with one signature
+   underneath. The status tags quiet down; the voice cell becomes
+   the centerpiece. */
+
+.reading-folio {
+  border-top: 1px solid var(--line);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(146, 186, 255, .04), transparent 70%),
+    linear-gradient(180deg, rgba(20, 26, 38, .36), rgba(12, 16, 25, .58));
+}
+
+.reading-folio__plate {
+  margin: 0 0 clamp(20px, 2.6vw, 32px);
+}
+
+.reading-folio__row {
+  gap: clamp(10px, 1.2vw, 18px);
+}
+
+.reading-folio__cell {
+  background:
+    radial-gradient(ellipse at 0 0%, rgba(146, 186, 255, .04), transparent 60%),
+    rgba(20, 26, 38, .55);
+}
+
+.reading-folio__cell-name {
+  font-size: clamp(16px, 1.4vw, 19px);
+}
+
+/* A small "set today" stamp on the colophon picks up the
+   warmer paper tone from the new palette. */
+
+.colophon__date-tag {
+  color: var(--paper-warm);
+}
+
+/* Mobile: the marginal caret hides. The marginalia strip becomes
+   a more compact two-column row. The title drops to a confident
+   single-line-per-row read. */
+
+@media (max-width: 720px) {
+  .hero__plate { padding: 8px 0; }
+
+  .hero__plate .hero__title {
+    font-size: clamp(3.4rem, 12.4vw, 5rem);
+    line-height: .88;
+    letter-spacing: -.09em;
+  }
+
+  .hero__plate .hero__title--quiet {
+    font-size: clamp(3.2rem, 11.6vw, 4.8rem);
+  }
+
+  .hero__plate .hero__title--bold {
+    font-size: clamp(3.6rem, 13.4vw, 5.4rem);
+    line-height: .84;
+  }
+
+  .press-signature {
+    margin: 14px auto 6px;
+  }
+
+  .press-signature__sweep { width: clamp(320px, 90%, 540px); }
+
+  .marginalia {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 14px 18px 16px;
+    gap: 12px;
+  }
+
+  .marginalia__rule { display: none; }
+
+  .marginalia__list {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .marginalia__row { flex: 1 1 calc(50% - 4px); min-width: 0; }
+
+  .marginalia__tick {
+    width: 100%;
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .marginalia__divider { display: none; }
+}
+
+@media (max-width: 420px) {
+  .hero__plate .hero__title { letter-spacing: -.084em; }
+  .hero__plate .hero__title--bold { letter-spacing: -.1em; }
+}
+
+
 
 
