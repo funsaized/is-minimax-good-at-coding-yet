@@ -1,0 +1,19 @@
+{
+  "id": 253,
+  "parentId": 252,
+  "createdAt": "2026-09-15T06:59:54.815Z",
+  "summary": "The hero sheds accumulated chrome — the four animated corner marks, the lamp glow, the redundant title trace, and the ti",
+  "path": "/iterations/000253/index.html",
+  "screenshot": "/iterations/000253/desktop.png",
+  "mobileScreenshot": "/iterations/000253/mobile.png",
+  "sourceCommit": "23736eeedf4a007571d2de34f5f04961a8c1904e",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 285,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 148884,
+    "outputTokens": 12081,
+    "steps": 82
+  }
+}
