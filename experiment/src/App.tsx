@@ -26,6 +26,7 @@ import { MarginalLedger } from './MarginalLedger'
 import { FolioTicket } from './FolioTicket'
 import { ComposePlate } from './ComposePlate'
 import { TitleTrace } from './TitleTrace'
+import { NotesSection } from './NotesSection'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -171,89 +172,10 @@ function PencilIcon() {
   )
 }
 
-function NoteGlyph({ id }: { id: WordId }) {
-  if (id === 'm3') {
-    return (
-      <svg viewBox="0 0 56 30" aria-hidden="true">
-        <path d="M3 22c10-18 16 14 26-4 8-15 14 9 24-9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-        <circle cx="3" cy="22" r="1.4" fill="currentColor" />
-      </svg>
-    )
-  }
-  if (id === 'good') {
-    return (
-      <svg viewBox="0 0 56 30" aria-hidden="true">
-        <path d="M6 22l22-14 22 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M28 8v14M22 12l6-4 6 4" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    )
-  }
-  return (
-    <svg viewBox="0 0 56 30" aria-hidden="true">
-      <path d="M14 5c-4 4-4 10 0 14M22 5c-4 4-4 10 0 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-      <circle cx="6" cy="25" r="1.2" fill="currentColor" />
-      <circle cx="14" cy="26" r="1.2" fill="currentColor" />
-      <circle cx="22" cy="25" r="1.2" fill="currentColor" />
-      <path d="M10 27h8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function PushPin({ tone = 'wax' }: { tone?: 'wax' | 'acid' | 'blue' }) {
-  const fill = tone === 'acid' ? 'var(--acid)' : tone === 'blue' ? 'var(--blue)' : 'var(--wax)'
-  return (
-    <svg className={`push-pin push-pin--${tone}`} viewBox="0 0 22 22" aria-hidden="true">
-      <ellipse cx="11" cy="19" rx="4.5" ry="1.2" fill="rgba(0, 0, 0, .35)" />
-      <line x1="11" y1="14" x2="11" y2="20" stroke="rgba(0, 0, 0, .35)" strokeWidth=".8" />
-      <circle cx="11" cy="9" r="6.5" fill={fill} />
-      <circle cx="9.5" cy="7.5" r="2" fill="rgba(255, 255, 255, .45)" />
-      <circle cx="12" cy="10.5" r="1.2" fill="rgba(0, 0, 0, .25)" />
-    </svg>
-  )
-}
 
 
 
-function HeaderRuler() {
-  return (
-    <div className="header-ruler" aria-hidden="true">
-      <div className="header-ruler__line">
-        {Array.from({ length: 32 }).map((_, index) => (
-          <span key={index} className={index % 8 === 0 ? 'is-major' : index % 4 === 0 ? 'is-mid' : ''} />
-        ))}
-      </div>
-    </div>
-  )
-}
 
-function PressFolio({ section }: { section: string }) {
-  const map: Record<string, { folio: string; mark: string }> = {
-    question: { folio: 'i', mark: 'set' },
-    press: { folio: 'ii', mark: 'press bed' },
-    contents: { folio: 'iii', mark: 'contents' },
-    day: { folio: 'iii·', mark: 'day sheet' },
-    note: { folio: '·', mark: 'slip' },
-    proof: { folio: 'iv', mark: 'proof' },
-    pressings: { folio: 'v', mark: 'specimen' },
-    notes: { folio: 'vi', mark: 'marginalia' },
-    answer: { folio: 'viii', mark: 'answer' },
-  }
-  const entry = map[section] ?? map.question
-  const isSlip = entry.folio === '·'
-  return (
-    <span className={`press-folio ${isSlip ? 'press-folio--slip' : ''}`} aria-live="polite">
-      {isSlip ? (
-        <span className="press-folio__label">{entry.mark}</span>
-      ) : (
-        <>
-          <span className="press-folio__num">folio {entry.folio}</span>
-          <span className="press-folio__mark" aria-hidden="true">·</span>
-          <span className="press-folio__label">{entry.mark}</span>
-        </>
-      )}
-    </span>
-  )
-}
 
 function TitleToken({
   id,
@@ -413,90 +335,7 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
   )
 }
 
-function NotesSection({ selected, onSelect }: { selected: WordId; onSelect: (id: WordId) => void }) {
-  return (
-    <section className="section notes-section" id="notes" aria-labelledby="notes-title">
-      <div className="section__header notes-section__header">
-        <p className="eyebrow"><span className="eyebrow__line" />margin ledger <em>three things worth keeping</em></p>
-        <h2 id="notes-title">The page gets better when it <i>pays attention.</i></h2>
-        <p className="section__lede">Hover or focus a marked word above. These are not rules; they are the small decisions underneath the surface, pinned along the same reading rule.</p>
-      </div>
-      <div className="notes-rail" aria-hidden="true">
-        <span className="notes-rail__rule" />
-        <svg className="notes-rail__arrow notes-rail__arrow--a" viewBox="0 0 60 80" preserveAspectRatio="none">
-          <path d="M30 2c-4 14 6 28-2 42s4 28-2 34" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-          <path d="M22 75l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        <svg className="notes-rail__arrow notes-rail__arrow--b" viewBox="0 0 60 80" preserveAspectRatio="none">
-          <path d="M30 2c4 14-6 28 2 42s-4 28 2 34" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-          <path d="M22 75l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        <span className="notes-rail__stamp">
-          <svg viewBox="0 0 80 30">
-            <rect x="2" y="2" width="76" height="26" fill="none" stroke="currentColor" strokeWidth=".8" strokeDasharray="2 2" />
-            <text x="40" y="19" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="11" fill="currentColor">marginalia</text>
-          </svg>
-        </span>
-      </div>
-      <div className="notes-grid">
-        {NOTES.map(note => (
-          <button
-            key={note.id}
-            id={`note-${note.id}`}
-            type="button"
-            className={`note-card note-card--${note.id} ${selected === note.id ? 'is-selected' : ''}`}
-            aria-pressed={selected === note.id}
-            onClick={() => onSelect(note.id)}
-          >
-            <span className="note-card__rules" aria-hidden="true">
-              {Array.from({ length: 7 }).map((_, index) => (
-                <span key={index} className="note-card__rule" />
-              ))}
-            </span>
-            <span className="note-card__corner" aria-hidden="true">
-              <svg viewBox="0 0 40 40">
-                <path d="M2 38L38 2" stroke="currentColor" strokeWidth=".6" fill="none" opacity=".5" />
-                <path d="M2 32c4-2 8 2 12-2s6-8 10-4" stroke="currentColor" strokeWidth=".7" fill="none" opacity=".55" />
-                <circle cx="6" cy="34" r="1" fill="currentColor" opacity=".65" />
-              </svg>
-            </span>
-            <span className="note-card__pin" aria-hidden="true">
-              <svg viewBox="0 0 18 18">
-                <ellipse cx="9" cy="16" rx="3.4" ry=".8" fill="rgba(0,0,0,.35)" />
-                <line x1="9" y1="11" x2="9" y2="16" stroke="rgba(0,0,0,.35)" strokeWidth=".6" />
-                <circle cx="9" cy="7" r="5" fill={note.id === 'm3' ? 'var(--acid)' : note.id === 'good' ? 'var(--coral)' : 'var(--blue)'} />
-                <circle cx="7.5" cy="5.5" r="1.6" fill="rgba(255,255,255,.5)" />
-              </svg>
-            </span>
-            <span className="note-card__tape" aria-hidden="true" />
-            <span className="note-card__scrawl" aria-hidden="true">seen · {note.seen}</span>
-            <span className="note-card__folio" aria-hidden="true">folio {note.folio}</span>
-            <span className="note-card__head">
-              <span>{note.index}</span>
-              <NoteGlyph id={note.id} />
-            </span>
-            <span className="note-card__label">{note.label}</span>
-            <strong>{note.title}</strong>
-            <em>{note.gloss}</em>
-            <span className="note-card__body">{note.body}</span>
-            <span className="note-card__prompt">{note.prompt} <span aria-hidden="true">↗</span></span>
-            <span className="note-card__underline" aria-hidden="true">
-              <svg viewBox="0 0 200 10" preserveAspectRatio="none">
-                <path
-                  d="M2 6c12-4 24 4 36 0s24-6 36-1 24 4 36-2 24-6 36-1 24 4 24 4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.1"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
-          </button>
-        ))}
-      </div>
-    </section>
-  )
-}
+
 
 function FolioLedger() {
   const items = [
