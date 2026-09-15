@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
+import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { NOTES, type WordId } from './notes'
 import { PressStamp } from './PressStamp'
 import { ImpressionRibbon, type ImpressionMark } from './ImpressionRibbon'
@@ -549,9 +549,14 @@ export function App() {
   const [marks, setMarks] = useState<ImpressionMark[]>([])
   const [setToday] = useState(() => formatSetToday())
   const [strikeTick, setStrikeTick] = useState(0)
+  const [heroBodyVisible, setHeroBodyVisible] = useState(false)
   const firstVoiceRef = useRef(true)
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
+  const heroBodyRef = useRef<HTMLDivElement>(null)
+  const bodyGrainId = useId().replace(/:/g, '')
+  const continueGrainId = useId().replace(/:/g, '')
+  const continueFadeId = useId().replace(/:/g, '')
 
   const activeWord = hoveredWord ?? selectedWord
 
@@ -581,6 +586,27 @@ export function App() {
       { rootMargin: '-22% 0px -58% 0px', threshold: [0.05, 0.25, 0.6] },
     )
     elements.forEach(element => observer.observe(element))
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (!('IntersectionObserver' in window)) {
+      setHeroBodyVisible(true)
+      return
+    }
+    const node = heroBodyRef.current
+    if (!node) return
+    const observer = new IntersectionObserver(
+      entries => {
+        const visible = entries.some(entry => entry.isIntersecting)
+        if (visible) {
+          setHeroBodyVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.18, rootMargin: '0px 0px -8% 0px' },
+    )
+    observer.observe(node)
     return () => observer.disconnect()
   }, [])
 
@@ -762,19 +788,40 @@ export function App() {
               <span className="hero__note-link-fold" aria-hidden="true">
                 <svg viewBox="0 0 32 32" className="hero__note-link-fold-svg">
                   <path
-                    d="M3 8 L16 18 L29 8"
+                    d="M5 6 L5 28 L27 28"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth=".7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="hero__note-link-fold-crease"
+                  />
+                  <path
+                    d="M5 6 L27 28"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="hero__note-link-fold-curve"
+                    className="hero__note-link-fold-corner"
+                  />
+                  <path
+                    d="M5 6 L18 6 L27 15 L27 28"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth=".5"
+                    strokeDasharray="1.4 2"
+                    opacity=".55"
+                    className="hero__note-link-fold-shadow"
                   />
                   <circle cx="16" cy="18" r="1.4" fill="currentColor" className="hero__note-link-fold-bead" />
                 </svg>
               </span>
               <span className="hero__note-link-text">
-                <span className="hero__note-link-mark" aria-hidden="true">folio viii</span>
+                <span className="hero__note-link-mark" aria-hidden="true">
+                  <span className="hero__note-link-mark-tag">folio viii</span>
+                  <span className="hero__note-link-mark-pin" aria-hidden="true" />
+                </span>
                 <span className="hero__note-link-line">{answerOpen ? 'fold the answer back' : "open the editor's note"}</span>
               </span>
               <span className="hero__note-link-arrow" aria-hidden="true">
@@ -785,31 +832,171 @@ export function App() {
             </button>
           </div>
 
-          <div className="hero__body">
-            <p className="hero__summary">
-              <span className="hero__dropcap" aria-hidden="true">A</span>
-              page that earns the right to ask whether a machine can make a place feel like <em>someone was here.</em> Read it once with the eye, again with the ear — and a third time, when the answer is folded open.
-            </p>
-            <a className="hero__continue" href="#press" aria-label="Turn the page to the press bed">
-              <span className="hero__continue-imprint">composed by hand <em>·</em> for a careful reader</span>
-              <span className="hero__continue-arrow">
-                <span className="hero__continue-arrow-text">
-                  <span className="hero__continue-arrow-eyebrow">turn the page</span>
-                  <span className="hero__continue-arrow-label">to the press bed</span>
-                </span>
-                <span aria-hidden="true" className="hero__continue-arrow-mark">
-                  <svg viewBox="0 0 36 36" className="hero__continue-arrow-svg">
-                    <path
-                      className="hero__continue-arrow-curve"
-                      d="M6 6c8 8 16 12 24 12M22 12h8M22 6l8 6-8 6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
+          <div className={`hero__body ${heroBodyVisible ? 'is-in-view' : ''}`} ref={heroBodyRef}>
+            <span className="hero__body-plate" aria-hidden="true">
+              <span className="hero__body-plate-rule" />
+              <span className="hero__body-plate-tag">
+                <span className="hero__body-plate-dot" />
+                colophon of the title page
+                <span className="hero__body-plate-dot" />
+              </span>
+              <span className="hero__body-plate-rule" />
+            </span>
+
+            <div className="hero__body-grid">
+              <p className="hero__summary">
+                <span className="hero__dropcap" aria-hidden="true">
+                  <svg className="hero__dropcap-svg" viewBox="0 0 64 64">
+                    <defs>
+                      <filter id={`dropcap-grain-${bodyGrainId}`} x="-6%" y="-6%" width="112%" height="112%">
+                        <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="4" stitchTiles="stitch" />
+                        <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
+                        <feComposite in2="SourceGraphic" operator="in" />
+                      </filter>
+                    </defs>
+                    <g filter={`url(#dropcap-grain-${bodyGrainId})`} opacity=".95">
+                      <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" strokeWidth=".7" opacity=".5" />
+                      <circle cx="32" cy="32" r="24" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 2.2" opacity=".4" />
+                      <text
+                        x="32"
+                        y="44"
+                        textAnchor="middle"
+                        fontFamily="Georgia, 'Iowan Old Style', serif"
+                        fontStyle="italic"
+                        fontSize="40"
+                        fill="currentColor"
+                      >A</text>
+                      <line x1="18" y1="14" x2="46" y2="14" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".65" />
+                      <circle cx="32" cy="10" r="1.4" fill="currentColor" opacity=".75" />
+                    </g>
                   </svg>
                 </span>
+                <span className="hero__summary-text">
+                  page that earns the right to ask whether a machine can make a place feel like <em>someone was here.</em> Read it once with the eye, again with the ear — and a third time, when the answer is folded open.
+                </span>
+                <svg className="hero__summary-scrawl" viewBox="0 0 220 18" preserveAspectRatio="none" aria-hidden="true">
+                  <path
+                    className="hero__summary-scrawl-stroke"
+                    d="M2 12c12-8 24 4 36-1s24-6 36-2 24 6 36-2 24-6 36-1 24 4 38-2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    strokeLinecap="round"
+                    pathLength="100"
+                  />
+                  <circle className="hero__summary-scrawl-bead" cx="216" cy="9" r="1.6" fill="currentColor" />
+                </svg>
+              </p>
+
+              <aside className="hero__voice-caption" aria-label="The current voice setting">
+                <span className="hero__voice-caption-rule" aria-hidden="true" />
+                <span className="hero__voice-caption-row">
+                  <span className={`hero__voice-caption-letter hero__voice-caption-letter--${voice}`} aria-hidden="true">
+                    {VOICE_LETTER[voice]}
+                  </span>
+                  <span className="hero__voice-caption-copy">
+                    <span className="hero__voice-caption-eyebrow">set in</span>
+                    <em className="hero__voice-caption-name">{VOICE_LABEL[voice]}</em>
+                  </span>
+                  <span className="hero__voice-caption-mark" aria-hidden="true">
+                    <svg viewBox="0 0 36 14">
+                      <path d="M2 8c4-5 8 5 12 0s8-5 12 0 6 1 8-1" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+                      <circle cx="33" cy="6" r="1" fill="currentColor" />
+                    </svg>
+                  </span>
+                </span>
+                <span className="hero__voice-caption-foot">
+                  <span aria-hidden="true">※</span>
+                  the press answers above with this voice · change it any time with <kbd>shift</kbd><span aria-hidden="true">+</span><kbd>v</kbd>
+                </span>
+              </aside>
+            </div>
+
+            <a className="hero__continue" href="#press" aria-label="Turn the page to the press bed">
+              <span className="hero__continue-corner" aria-hidden="true">
+                <svg viewBox="0 0 64 64" className="hero__continue-corner-svg">
+                  <defs>
+                    <linearGradient id={`continue-fade-${continueFadeId}`} x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
+                      <stop offset="42%" stopColor="currentColor" stopOpacity=".35" />
+                      <stop offset="100%" stopColor="currentColor" stopOpacity=".75" />
+                    </linearGradient>
+                    <filter id={`continue-grain-${continueGrainId}`} x="-4%" y="-4%" width="108%" height="108%">
+                      <feTurbulence type="fractalNoise" baseFrequency="3" numOctaves="2" seed="6" stitchTiles="stitch" />
+                      <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .45 0" />
+                      <feComposite in2="SourceGraphic" operator="in" />
+                    </filter>
+                  </defs>
+                  <g filter={`url(#continue-grain-${continueGrainId})`}>
+                    <path
+                      d="M2 2 L4 60 L62 58"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth=".8"
+                      strokeLinecap="round"
+                      className="hero__continue-corner-edge"
+                    />
+                    <path
+                      d="M2 2 L62 58 L62 4 Z"
+                      fill={`url(#continue-fade-${continueFadeId})`}
+                      className="hero__continue-corner-fold"
+                    />
+                    <path
+                      d="M2 2 L62 58"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth=".9"
+                      strokeLinecap="round"
+                      className="hero__continue-corner-crease"
+                    />
+                    <path
+                      d="M2 2 L18 2 M2 18 L2 2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth=".5"
+                      strokeLinecap="round"
+                      opacity=".55"
+                      className="hero__continue-corner-rule"
+                    />
+                    <circle cx="56" cy="56" r="1.6" fill="currentColor" className="hero__continue-corner-bead" />
+                  </g>
+                </svg>
+              </span>
+              <span className="hero__continue-body">
+                <span className="hero__continue-imprint">composed by hand <em>·</em> for a careful reader</span>
+                <span className="hero__continue-arrow">
+                  <span className="hero__continue-arrow-text">
+                    <span className="hero__continue-arrow-eyebrow">turn the page</span>
+                    <span className="hero__continue-arrow-label">to the press bed</span>
+                  </span>
+                  <span aria-hidden="true" className="hero__continue-arrow-mark">
+                    <svg viewBox="0 0 36 36" className="hero__continue-arrow-svg">
+                      <path
+                        className="hero__continue-arrow-curve"
+                        d="M6 6c8 8 16 12 24 12M22 12h8M22 6l8 6-8 6"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </span>
+              <span className="hero__continue-hint" aria-hidden="true">
+                <svg viewBox="0 0 90 12" preserveAspectRatio="none" className="hero__continue-hint-svg">
+                  <path
+                    d="M2 8c10-6 22 4 34-1s22-5 34-2 22 4 18 1"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth=".7"
+                    strokeLinecap="round"
+                    className="hero__continue-hint-stroke"
+                  />
+                  <circle cx="86" cy="7" r="1" fill="currentColor" className="hero__continue-hint-bead" />
+                </svg>
+                <span className="hero__continue-hint-tag">a small fold, a long look</span>
               </span>
             </a>
           </div>
