@@ -1,11 +1,14 @@
 # Changelog
 
-## Iteration 272
+## Iteration 273
 
-Replaced the cramped three-column press plate with one deliberate press-lever spread that opens the editor's note.
+Replaced the thin `FirstReading` strip with a deliberate **Reading Prologue** plate that sets up the press lever as the next move.
 
-- `src/PressLever.tsx` · new. A single, substantial press plate: a tall hand-set lever (cage, shaft, knob, pivot, base) on the left; the editor's-note fold button on the right; a meta footer that names the active voice, the cycling keys, and the date. The lever is decorative and mirrors `answerOpen` — it rests when the answer is folded and rocks 28° around its base pivot when pulled. Voice selection is intentionally left to TitleSweep and the SpecimenTray, where it is already given proper physical and editorial weight; the lever only owns the answer fold.
-- `src/PressPlate.tsx` · removed. Its voice-pill grid duplicated TitleSweep and SpecimenTray, and its three-column inner layout crowded the answer toggle.
-- `src/App.tsx` · the `hero__chrome` now mounts `PressLever` and no longer threads `onVoice`/`onVoiceKey` down through a redundant control cluster. The shift+v global handler in `App` continues to drive voice cycling.
-- `src/style.css` · new `.press-lever` block: print-style corner crops in the active voice tone; soft tonal bloom that brightens when the answer opens; spring-eased shaft rotation that respects `prefers-reduced-motion`; a substantial, italic fold-button with four inner crop corners, an arrow that flips when open, and a "for {reader}" line that picks up the voice tone when set; a meta footer grid that collapses cleanly at 880px (two-row with date spanning) and again at 640px (single column with the kbd hint stacked above the date).
-- Title and document title are unchanged: `is Minimax M3 good at frontend yet?`
+- **New `src/ReadingPrologue.tsx`** — a composed plate (crop corners, eyebrow header, lede, two reading rows, sign, footer) that sits between the title spread and the press lever. Each reading row is a button that marks the word its voice earns (`caret → good`, `query → yet`).
+- **Visual thread** — a thin vertical rule on the right edge draws downward after the prologue reveals, with a small bobbing `↓` glyph and the tag *then · pull*, leading the eye to the lever below.
+- **Voice tones** — the plate's tone tracks the active voice (`quiet → blue`, `human → coral`, `bold → acid`); the active reading's pill and index mark fill with that tone.
+- **Footer cells** — `now setting in` (active voice), `set today` (date), and an optional `to the lever →` button that focuses the press lever trigger for keyboard users.
+- **Removed** — the empty `<div className="hero__chrome">` wrapper around `PressLever` and the old `FirstReading.tsx` component.
+- **Keyboard** — the two reading buttons share a `roving` arrow-key pattern and surface their word choice in the `aria-label`.
+- **Reduced motion** — the reveal transition, the rule draw-in, the thread draw-in, and the bobbing arrow all collapse to their end state under `prefers-reduced-motion: reduce`.
+- **Responsive** — at ≤720px the prologue collapses to a single column, the thread centers itself, and the footer stacks with the lever hint left-aligned.

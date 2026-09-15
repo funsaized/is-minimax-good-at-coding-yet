@@ -29,13 +29,14 @@ import { NotesSection } from './NotesSection'
 import { PageFold } from './PageFold'
 import { PressSpine } from './PressSpine'
 import { PlateProvenance } from './PlateProvenance'
-import { FirstReading } from './FirstReading'
+
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
 import { SpecimenTray } from './SpecimenTray'
 import { FolioLedger } from './FolioLedger'
 import { TitleFolio } from './TitleFolio'
 import { ClosingPlate } from './ClosingPlate'
+import { ReadingPrologue } from './ReadingPrologue'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -743,18 +744,22 @@ export function App() {
             />
           </div>
 
-          <FirstReading voice={voice} setToday={setToday} />
+          <ReadingPrologue
+            voice={voice}
+            word={activeWord}
+            setToday={setToday}
+            onWord={id => selectWord(id)}
+            onLeverHint={() => window.requestAnimationFrame(() => answerTriggerRef.current?.focus())}
+          />
 
-          <div className="hero__chrome">
-            <PressLever
-              ref={answerTriggerRef}
-              voice={voice}
-              answerOpen={answerOpen}
-              readerName={readerName}
-              onToggleAnswer={toggleAnswer}
-              setToday={setToday}
-            />
-          </div>
+          <PressLever
+            ref={answerTriggerRef}
+            voice={voice}
+            answerOpen={answerOpen}
+            readerName={readerName}
+            onToggleAnswer={toggleAnswer}
+            setToday={setToday}
+          />
 
           <div className={`hero__body ${heroBodyVisible ? 'is-in-view' : ''}`} ref={heroBodyRef}>
             <span className="hero__body-plate" aria-hidden="true">
