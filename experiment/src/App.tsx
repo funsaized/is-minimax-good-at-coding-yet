@@ -33,6 +33,7 @@ import { FirstReading } from './FirstReading'
 import { ReaderPlate } from './ReaderPlate'
 import { PressPlate } from './PressPlate'
 import { SpecimenTray } from './SpecimenTray'
+import { FolioLedger } from './FolioLedger'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -376,52 +377,6 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
 }
 
 
-
-function FolioLedger() {
-  const items = [
-    { id: 'question', num: 'i', title: 'the question, set', note: 'three marked words, one margin' },
-    { id: 'press', num: 'ii', title: 'the press bed', note: 'a lever, a stick, a pulled impression' },
-    { id: 'contents', num: 'iii', title: 'this page, listed', note: 'the press log · folio contents', self: true },
-    { id: 'day', num: 'iii·', title: 'the day sheet', note: 'the hour, the week, the day’s record' },
-    { id: 'note', num: '·', title: 'a folded slip', note: 'a short letter to the reader' },
-    { id: 'proof', num: 'iv', title: 'the second proof', note: 'marks attached to the words worth keeping' },
-    { id: 'pressings', num: 'v', title: 'three pressings', note: 'the same question set three ways' },
-    { id: 'notes', num: 'vi', title: 'the marginalia', note: 'three things worth keeping' },
-    { id: 'answer', num: 'viii', title: 'the answer, tipped in', note: 'folded once, then folded back', closing: true },
-  ]
-  return (
-    <section className="folio-ledger section" id="contents" aria-labelledby="folio-ledger-title">
-      <div className="folio-ledger__head">
-        <p className="eyebrow"><span className="eyebrow__line" />press log <em>folio contents</em></p>
-        <h2 id="folio-ledger-title">What the <i>page holds.</i></h2>
-        <p className="section__lede">A working spread. Each folio carries one idea; the marks between them carry the reader.</p>
-      </div>
-      <ol className="folio-ledger__list">
-        {items.map(entry => (
-          <li key={entry.id} className={`folio-ledger__item ${entry.self ? 'is-self' : ''} ${entry.closing ? 'is-closing' : ''}`}>
-            <a className="folio-ledger__link" href={`#${entry.id}`} aria-current={entry.self ? 'location' : undefined}>
-              <span className="folio-ledger__num" aria-hidden="true">{entry.num}</span>
-              <span className="folio-ledger__copy">
-                <span className="folio-ledger__title">
-                  {entry.title}
-                  {entry.self && <span className="folio-ledger__here" aria-hidden="true">·  you are here</span>}
-                </span>
-                <span className="folio-ledger__note">{entry.note}</span>
-              </span>
-              <span className="folio-ledger__arrow" aria-hidden="true">
-                <ArrowIcon />
-              </span>
-            </a>
-          </li>
-        ))}
-      </ol>
-      <p className="folio-ledger__foot">
-        <span aria-hidden="true">※</span>
-        the folios run in order; the reading trace on the right shows where you are.
-      </p>
-    </section>
-  )
-}
 
 function Colophon({ voice, word, setToday, readerName }: { voice: VoiceId; word: WordId; setToday: string; readerName: string }) {
   const tag = voice === 'bold' ? 'NO APOLOGIES' : voice === 'human' ? 'BY HAND' : 'SET WITH CARE'
@@ -1114,7 +1069,7 @@ export function App() {
 
         <Press voice={voice} word={activeWord} onVoice={selectVoice} />
 
-        <FolioLedger />
+        <FolioLedger activeId={activeSection} />
 
         <LetterToReader voice={voice} onReadAnswer={openAnswerFromNav} />
 
