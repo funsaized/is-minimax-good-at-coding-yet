@@ -1,0 +1,19 @@
+{
+  "id": 317,
+  "parentId": 316,
+  "createdAt": "2026-09-16T22:59:39.734Z",
+  "summary": "A quiet dedication line between the title's running head and the headline, addressed to whoever opens the page.",
+  "path": "/iterations/000317/index.html",
+  "screenshot": "/iterations/000317/desktop.png",
+  "mobileScreenshot": "/iterations/000317/mobile.png",
+  "sourceCommit": "5660a13e864cd3a63c9d6aa8a83a8c2862ef768f",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 686,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 508562,
+    "outputTokens": 8954,
+    "steps": 62
+  }
+}
