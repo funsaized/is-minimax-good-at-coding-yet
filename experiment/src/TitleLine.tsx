@@ -186,6 +186,7 @@ export function TitleLine({
 }: TitleLineProps) {
   const baseId = useId().replace(/:/g, '')
   const grainId = `titleline-grain-${baseId}`
+  const threadGrainId = `titleline-thread-grain-${baseId}`
   const display = DISPLAY[voice]
   const tone = VOICE_TONE[voice]
   const style = {
@@ -233,6 +234,11 @@ export function TitleLine({
           <filter id={grainId} x="-2%" y="-12%" width="104%" height="124%">
             <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="41" stitchTiles="stitch" />
             <feColorMatrix type="matrix" values="0 0 0 0 .14  0 0 0 0 .12  0 0 0 0 .19  0 0 0 .06 0" />
+            <feComposite in2="SourceGraphic" operator="in" />
+          </filter>
+          <filter id={threadGrainId} x="-30%" y="-2%" width="160%" height="104%">
+            <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="61" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
             <feComposite in2="SourceGraphic" operator="in" />
           </filter>
         </defs>
@@ -360,6 +366,61 @@ export function TitleLine({
           </span>
         </span>
       </h2>
+
+      <span className="titleline__thread" aria-hidden="true">
+        <span className="titleline__thread-rule" />
+        <svg
+          className="titleline__thread-svg"
+          viewBox="0 0 16 168"
+          preserveAspectRatio="xMidYMid meet"
+          aria-hidden="true"
+        >
+          <g filter={`url(#${threadGrainId})`}>
+            <path
+              className="titleline__thread-stroke titleline__thread-stroke--lead"
+              d="M8 4c1.4 16-3 30 .2 46s-2.2 32 1 50-2 34 .8 54"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.15"
+              strokeLinecap="round"
+              pathLength="100"
+            />
+            <path
+              className="titleline__thread-stroke titleline__thread-stroke--trail"
+              d="M10 8c.6 14-1.4 26 .4 40s-1.2 28 .8 42-1.4 26 .4 38"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth=".55"
+              strokeLinecap="round"
+              opacity=".5"
+              pathLength="100"
+            />
+          </g>
+        </svg>
+        <span className="titleline__thread-stop" aria-hidden="true">
+          <svg viewBox="0 0 32 12" preserveAspectRatio="xMidYMid meet">
+            <line x1="2" y1="6" x2="14" y2="6" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".55" />
+            <circle cx="22" cy="6" r="1.4" fill="currentColor" opacity=".7" />
+            <line x1="28" y1="6" x2="30" y2="6" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".55" />
+          </svg>
+        </span>
+        <svg
+          className="titleline__thread-end"
+          viewBox="0 0 24 24"
+          preserveAspectRatio="xMidYMid meet"
+          aria-hidden="true"
+        >
+          <circle className="titleline__thread-bead" cx="12" cy="14" r="2.8" fill="currentColor" />
+          <circle className="titleline__thread-halo" cx="12" cy="14" r="7" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray=".8 1.6" opacity=".65" />
+          <circle className="titleline__thread-wisp" cx="14.5" cy="17" r=".6" fill="currentColor" opacity=".55" />
+          <circle className="titleline__thread-wisp titleline__thread-wisp--alt" cx="9.5" cy="11.5" r=".45" fill="currentColor" opacity=".4" />
+        </svg>
+        <span className="titleline__thread-tag" aria-hidden="true">
+          <span className="titleline__thread-tag-rule" />
+          <em>the question, descending</em>
+          <span className="titleline__thread-tag-rule titleline__thread-tag-rule--alt" />
+        </span>
+      </span>
 
       <QuestionLine active={word} hover={hover} tone={tone} />
 

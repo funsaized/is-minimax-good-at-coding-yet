@@ -52203,16 +52203,17 @@ a small act of typesetting.
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: center;
-  gap: clamp(4px, .6vw, 8px);
+  gap: clamp(5px, .72vw, 10px);
   font-family: 'Iowan Old Style', Georgia, serif;
-  font-size: clamp(2.2rem, 8.6vw, 6.6rem);
-  line-height: 1.04;
-  letter-spacing: -.022em;
+  font-size: clamp(2.2rem, 8.8vw, 6.8rem);
+  line-height: 1.0;
+  letter-spacing: -.024em;
   text-align: center;
   text-wrap: balance;
   color: var(--paper);
-  margin: clamp(8px, 1.4vw, 18px) 0 clamp(6px, .8vw, 12px);
-  text-shadow: 0 0 .04em rgba(243, 236, 214, .14);
+  margin: clamp(8px, 1.4vw, 18px) 0 clamp(2px, .4vw, 8px);
+  text-shadow: 0 0 .04em rgba(243, 236, 214, .16);
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'ss01' 1;
 }
 
 .titleline--word-m3 .titleline__headline,
@@ -52527,9 +52528,9 @@ a small act of typesetting.
 
 @media (max-width: 720px) {
   .titleline__headline {
-    font-size: clamp(2rem, 11vw, 3.4rem);
+    font-size: clamp(2rem, 11vw, 3.6rem);
     gap: 2px;
-    line-height: 1.06;
+    line-height: 1.02;
   }
 
   .titleline__headline-fragment {
@@ -52803,7 +52804,7 @@ a small act of typesetting.
   font-weight: 850;
   letter-spacing: -.062em;
   text-transform: uppercase;
-  line-height: 1.04;
+  line-height: 1.0;
 }
 
 @keyframes titlelineHeadlineIn {
@@ -53068,6 +53069,235 @@ a small act of typesetting.
   }
   .titleline__exhale-tag {
     display: none;
+  }
+}
+
+/* — Thread · a single hand-drawn ink descent that drops from the
+   question mark and crosses the horizontal QuestionLine below. The
+   thread is the page's binding signature: the question reaching
+   downward toward its answer. — */
+
+.titleline__thread {
+  --thread-tone: var(--titleline-tone);
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  height: clamp(98px, 9.4vw, 138px);
+  margin: clamp(-4px, -.4vw, 0) 0 clamp(-4px, -.4vw, 0);
+  color: var(--thread-tone);
+  isolation: isolate;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  animation: titlelineThreadIn .9s var(--ease-out) .55s forwards;
+}
+
+.app--voice-quiet .titleline__thread { --thread-tone: var(--blue); }
+.app--voice-human .titleline__thread { --thread-tone: var(--coral); }
+.app--voice-bold .titleline__thread { --thread-tone: var(--acid); }
+
+.titleline__thread-rule {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: clamp(10px, 1vw, 18px);
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--thread-tone) 32%, transparent));
+  opacity: .55;
+  transform: translateX(-50%);
+}
+
+.titleline__thread-svg {
+  display: block;
+  width: clamp(10px, 1.2vw, 16px);
+  height: calc(100% - clamp(20px, 2vw, 32px));
+  margin-top: clamp(6px, .6vw, 12px);
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
+
+.titleline__thread-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: titlelineThreadDraw 1.2s var(--ease-out) .7s forwards;
+}
+
+.titleline__thread-stroke--trail {
+  animation: titlelineThreadDraw 1.2s var(--ease-out) .85s forwards;
+}
+
+@keyframes titlelineThreadDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.titleline__thread-stop {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: clamp(40px, 4vw, 64px);
+  height: clamp(10px, 1vw, 14px);
+  color: var(--thread-tone);
+  opacity: 0;
+  animation: titlelineThreadStopIn .65s var(--ease-out) 1.35s forwards;
+}
+
+.titleline__thread-stop svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.titleline__thread-end {
+  position: absolute;
+  bottom: clamp(8px, .9vw, 14px);
+  left: 50%;
+  width: clamp(18px, 2vw, 26px);
+  height: clamp(18px, 2vw, 26px);
+  transform: translateX(-50%);
+  overflow: visible;
+}
+
+.titleline__thread-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.4);
+  animation: titlelineThreadBeadIn .55s var(--ease-spring) 1.85s forwards;
+}
+
+.titleline__thread-halo {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: titlelineThreadHaloIn .7s var(--ease) 1.95s forwards;
+}
+
+.titleline__thread-wisp {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: titlelineThreadHaloIn .55s var(--ease) 2.05s forwards;
+}
+
+.titleline__thread-wisp--alt {
+  animation-delay: 2.15s;
+}
+
+@keyframes titlelineThreadIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes titlelineThreadStopIn {
+  from { opacity: 0; transform: translate(-50%, -45%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+@keyframes titlelineThreadBeadIn {
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes titlelineThreadHaloIn {
+  to { opacity: .65; }
+}
+
+.titleline__thread-tag {
+  position: absolute;
+  top: 56%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  transform-origin: center center;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .7vw, 10px);
+  white-space: nowrap;
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(9.5px, .78vw, 11px);
+  letter-spacing: .04em;
+  color: var(--thread-tone);
+  opacity: 0;
+  animation: titlelineThreadTagIn .8s var(--ease-out) 1.55s forwards;
+}
+
+.titleline__thread-tag em {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.titleline__thread-tag-rule {
+  display: inline-block;
+  width: clamp(8px, 1vw, 14px);
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.titleline__thread-tag-rule--alt {
+  opacity: .4;
+}
+
+@keyframes titlelineThreadTagIn {
+  from { opacity: 0; transform: translate(-50%, -48%) rotate(-90deg); }
+  to { opacity: .78; transform: translate(-50%, -50%) rotate(-90deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titleline__thread {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .titleline__thread-stroke {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .titleline__thread-stop {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) !important;
+  }
+  .titleline__thread-bead {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .titleline__thread-halo {
+    animation: none !important;
+    opacity: .65 !important;
+  }
+  .titleline__thread-wisp {
+    animation: none !important;
+    opacity: .55 !important;
+  }
+  .titleline__thread-wisp--alt {
+    animation: none !important;
+    opacity: .4 !important;
+  }
+  .titleline__thread-tag {
+    animation: none !important;
+    opacity: .7 !important;
+    transform: translate(-50%, -50%) rotate(-90deg) !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .titleline__thread {
+    height: clamp(84px, 22vw, 120px);
+    margin: clamp(-6px, -2vw, -2px) 0 clamp(-8px, -2.5vw, -4px);
+  }
+  .titleline__thread-tag {
+    display: none;
+  }
+  .titleline__thread-end {
+    bottom: clamp(6px, 2vw, 10px);
   }
 }
 
@@ -54266,7 +54496,7 @@ a small act of typesetting.
 .question-line {
   display: block;
   width: min(100%, 1080px);
-  margin: clamp(-2px, -.2vw, 4px) auto clamp(8px, 1vw, 14px);
+  margin: clamp(2px, .2vw, 6px) auto clamp(10px, 1.2vw, 18px);
   color: var(--question-line-tone, var(--coral));
   opacity: 0;
   transform: translateY(6px);

@@ -1,10 +1,9 @@
-# Changelog
+# Iteration 316 — the question now descends
 
-## Iteration 315 — the arrival now exhales
+The page gains a single, hand-drawn **thread** beneath the headline: a vertical ink descent that drops from the question mark's reach, crosses the horizontal question line, and lands in a small bead with a halo. The thread is the page's binding signature — the question reaching downward toward its answer.
 
-The arrival mark grows a small italic greeting and a drawn ink descent that reaches down toward the title; the page now has four named gestures of breath.
+The headline now reads as one composed editorial moment rather than three stacked lines: the typography is tightened to a 1.0 line-height, the word gaps are slightly widened for clearer separation, and the bold voice inherits the same tighter cadence. A new SVG turbulence filter renders the thread with the same grainy ink quality as the other drawn flourishes on the page.
 
-- The arrival mark gains an italic greeting line ("for whoever opened it, today") framed by two hairlines, and a hand-drawn ink descent that drops from the seed toward the title fold below — the first breath is now an inward one, completing the four-gesture arc named in the closing curl.
-- The page-return caption is rewritten from "three exhalations" to "four exhalations" so the arc reads: arrival greets, title asks, lever pulls, answer settles, curl closes.
-- Animation cadence is rebuilt: greeting fades in mid-stagger, the descent strokes draw after the seed marks settle, and a halo-bead punctuates the end of the descent.
-- Reduced-motion users see all new arrival parts in place with no animation; small screens collapse the new greeting and tag gracefully, and the descent trims shorter on narrow viewports.
+The thread draws itself on arrival (.7s–1.9s), the bead lands with a small bounce, the wisps scatter around it, and the tag ("the question, descending") rotates in beside it. Reduced-motion users see the settled state. The horizontal question line below the thread receives slightly more breathing room so the bead has somewhere to land.
+
+No new dependencies. No remote assets. No changes to the entry point, build, harness, or surrounding viewer.
