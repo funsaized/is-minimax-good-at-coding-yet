@@ -5699,6 +5699,25 @@
         "outputTokens": 25064,
         "steps": 90
       }
+    },
+    {
+      "id": 300,
+      "parentId": 299,
+      "createdAt": "2026-09-16T14:23:54.658Z",
+      "summary": "Iteration 300 — Composed the broadside's press signature: one word set three ways on a single sheet.",
+      "path": "/iterations/000300/index.html",
+      "screenshot": "/iterations/000300/desktop.png",
+      "mobileScreenshot": "/iterations/000300/mobile.png",
+      "sourceCommit": "724352e585730320b22cf587ee125791bb591c9f",
+      "model": "minimax-coding-plan/MiniMax-M3",
+      "durationSeconds": 474,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": {
+        "estimatedCostUsd": 0,
+        "inputTokens": 284141,
+        "outputTokens": 16052,
+        "steps": 90
+      }
     }
   ]
 }
