@@ -1,6 +1,7 @@
 import { useId, type CSSProperties, type KeyboardEvent, type MutableRefObject } from 'react'
 import type { VoiceId } from './Press'
 import type { WordId } from './notes'
+import { QuestionLine } from './QuestionLine'
 
 type TitleLineProps = {
   voice: VoiceId
@@ -330,6 +331,8 @@ export function TitleLine({
           </span>
         </span>
       </h2>
+
+      <QuestionLine active={word} hover={hover} tone={tone} />
 
       <ol className="titleline__proofs" aria-label="Three proof marks beneath the question">
         {WORDS.map((id) => {

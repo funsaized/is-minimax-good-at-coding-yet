@@ -53770,3 +53770,176 @@ a small act of typesetting.
     padding: clamp(12px, 3.4vw, 18px) clamp(14px, 3.4vw, 22px);
   }
 }
+
+/* ──────────────────────────────────────────────────────────────────
+   ITERATION 309 · THE QUESTION LINE
+   A single hand-drawn inkline that threads the three marked words of
+   the headline. The line is not a series of underlines beneath each
+   word — it is one continuous stroke that visits all three, the way
+   a pen would read the line aloud. Beads at each marked word carry
+   the proof mark and label, and the active word draws the brightest.
+   ────────────────────────────────────────────────────────────────── */
+
+.question-line {
+  display: block;
+  width: min(100%, 1080px);
+  margin: clamp(-2px, -.2vw, 4px) auto clamp(8px, 1vw, 14px);
+  color: var(--question-line-tone, var(--coral));
+  opacity: 0;
+  transform: translateY(6px);
+  animation: questionLineIn .85s var(--ease-out) 1.6s forwards;
+  transition: color .5s var(--ease);
+}
+
+.app--voice-quiet .question-line { color: var(--blue); }
+.app--voice-human .question-line { color: var(--coral); }
+.app--voice-bold .question-line { color: var(--acid); }
+
+.question-line__svg {
+  display: block;
+  width: 100%;
+  height: clamp(40px, 4.4vw, 60px);
+}
+
+.question-line__wash {
+  animation: questionLineWash 1.2s var(--ease-out) 1.4s forwards;
+}
+
+.question-line__stroke {
+  animation: questionLineDraw 1.1s var(--ease-out) 1.45s forwards;
+}
+
+.question-line__rail {
+  animation: questionLineRail 1.6s var(--ease) 2.6s forwards;
+}
+
+.question-line__halo-dot {
+  transition: r .45s var(--ease-spring);
+}
+
+.question-line__bead-group {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: questionLineBead .55s var(--ease-spring) forwards;
+}
+
+.question-line__bead-group--m3 { animation-delay: 1.6s; }
+.question-line__bead-group--good { animation-delay: 1.75s; }
+.question-line__bead-group--yet { animation-delay: 1.9s; }
+
+.question-line__bead-group.is-active.question-line__bead-group--m3 { animation-delay: 1.7s; }
+.question-line__bead-group.is-active.question-line__bead-group--good { animation-delay: 1.85s; }
+.question-line__bead-group.is-active.question-line__bead-group--yet { animation-delay: 2s; }
+
+.question-line__bead-core,
+.question-line__bead-glow,
+.question-line__bead-ring {
+  transition: r .45s var(--ease-spring), stroke-width .4s var(--ease);
+}
+
+.question-line__bead-group.is-active .question-line__bead-ring--outer {
+  animation: questionLinePulse 3s var(--ease) infinite 2.4s;
+}
+
+.question-line__mark {
+  opacity: 0;
+  transform: translateY(4px);
+  animation: questionLineMark .5s var(--ease-out) forwards;
+}
+
+.question-line__mark--m3 { animation-delay: 1.85s; }
+.question-line__mark--good { animation-delay: 2s; }
+.question-line__mark--yet { animation-delay: 2.15s; }
+
+.question-line__mark.is-active,
+.question-line__mark.is-hover {
+  font-weight: 700;
+  letter-spacing: .26em;
+}
+
+.question-line__mark.is-active text:last-child,
+.question-line__mark.is-hover text:last-child {
+  letter-spacing: .32em;
+  opacity: 1;
+}
+
+.question-line__tail {
+  animation: questionLineDraw .85s var(--ease-out) 2.45s forwards;
+}
+
+.question-line__tail-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: questionLineTailBead .45s var(--ease-spring) 3.2s forwards;
+}
+
+@keyframes questionLineIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes questionLineDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes questionLineWash {
+  0% { opacity: 0; }
+  60% { opacity: .22; }
+  100% { opacity: 0; }
+}
+
+@keyframes questionLineRail {
+  to { opacity: .55; }
+}
+
+@keyframes questionLineBead {
+  0% { opacity: 0; transform: scale(.4); }
+  60% { opacity: 1; transform: scale(1.18); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes questionLineMark {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes questionLinePulse {
+  0% { transform: scale(.85); opacity: .35; }
+  60% { transform: scale(1.4); opacity: 0; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+@keyframes questionLineTailBead {
+  0% { opacity: 0; transform: scale(.4); }
+  60% { opacity: 1; transform: scale(1.6); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question-line,
+  .question-line__stroke,
+  .question-line__rail,
+  .question-line__wash,
+  .question-line__bead-group,
+  .question-line__mark,
+  .question-line__tail,
+  .question-line__tail-bead {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .question-line__bead-group.is-active .question-line__bead-ring--outer {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 540px) {
+  .question-line {
+    margin-top: 0;
+  }
+  .question-line__svg {
+    height: clamp(34px, 6vw, 48px);
+  }
+}

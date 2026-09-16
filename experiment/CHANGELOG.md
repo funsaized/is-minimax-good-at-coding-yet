@@ -1,22 +1,16 @@
-# Changelog
+# Iteration 309
 
-## Iteration 308
-Composed the headline as a single confident editorial moment — typography, question mark, ink underline.
+The headline gets a single drawn inkline threading the three marked words; the hero is quietly slimmed.
 
-### Typography
-- Tightened per-voice tracking on the headline: quiet `-0.028em`, human `-0.022em`, bold `-0.062em`; bold weight pushed from 800 to 850 for a more confident poster cut.
-- Reduced the unmarked words (`is`, `frontend`) from `.92em / .82 opacity` to `.86em / .92 opacity` so they read as set type rather than dimmed UI; bold voice uses `.82em / .85` with `.045em` tracking to stay poster-weight.
-- Headline reveal now settles through a small scale (`.985 → 1`) instead of a pure blur, so the type feels pressed rather than faded in.
+## What changed
+- Added `QuestionLine.tsx`: a hand-drawn SVG flourish beneath the headline that draws a single continuous stroke through the three marked words (m3 / good / yet), with a bead, proof mark, and label at each. The active word pulses; the line and its beads stagger in on first paint and respect reduced-motion.
+- Threaded the new flourish into `TitleLine.tsx`, between the headline and the proof cards, so the question reads as one composition.
+- Removed the redundant `SpreadRibbon` and `VoiceTrial` from the hero — the page's WayfinderSeal (header), TitleLine voice cycler, and the Press section below already cover what they did. The hero now opens with one caption, the question, the prologue, and the lever.
+- Cleaned unused rehearsal / FOLIO_ORDER state out of `App.tsx`.
+- Added `.question-line` styles in `style.css`, including the new ink-drawing, bead-bloom, mark-rise, and tail-bead keyframes.
 
-### Question mark
-- Question mark is now always present at `.18 opacity` with its tail, and lifts to `.7 opacity`, scales to `1.04`, and gains a wider tail when `yet` is the marked word — the question mark reads as the line's terminal punctuation, not an afterthought.
-- Tail path redrawn wider (96×14 viewBox) so the trailing rule feels composed rather than ornamental.
-
-### Ink underline
-- A voice-tinted `.5–.55px` rule sits centered beneath the headline, short by default and extending wider when `yet` is marked — the page's own marginalium, visible only on close inspection.
-
-### Press lever
-- The "open the editor's note" line tracks italic serif at `.022em`; the bold voice now sets the line upright at `.7 weight` with `.04em` tracking and uppercase, so the action verb matches the active voice rather than always reading italic.
-
-### Mobile
-- Reduced mobile headline proof-mark gap and added mobile-specific sizing for the new ink underline.
+## Files
+- `src/QuestionLine.tsx` (new)
+- `src/TitleLine.tsx`
+- `src/App.tsx`
+- `src/style.css`

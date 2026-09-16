@@ -27,7 +27,6 @@ import { TitlePage } from './TitlePage'
 import { FolioThumbprint } from './FolioThumbprint'
 import { TitleLine } from './TitleLine'
 import { TitleFold } from './TitleFold'
-import { VoiceTrial } from './VoiceTrial'
 import { BroadsideReveal } from './BroadsideReveal'
 import { BroadsideEdge } from './BroadsideEdge'
 
@@ -39,7 +38,6 @@ import { TitleFolio } from './TitleFolio'
 import { ClosingPlate } from './ClosingPlate'
 import { ReadingPrologue } from './ReadingPrologue'
 import { PressHandwheel } from './PressHandwheel'
-import { SpreadRibbon } from './SpreadRibbon'
 import { LetterpressCatch } from './LetterpressCatch'
 import { Opening } from './Opening'
 import { FolioImprint } from './FolioImprint'
@@ -126,8 +124,6 @@ function LogoMark({ size = 38, accent = 'var(--acid)' }: { size?: number; accent
 function PaperWarmth({ voice }: { voice: VoiceId }) {
   return <span className={`paper-warmth paper-warmth--${voice}`} aria-hidden="true" />
 }
-
-const FOLIO_ORDER: string[] = ['question', 'press', 'contents', 'day', 'note', 'reader-plate', 'proof', 'pressings', 'catch', 'notes', 'answer']
 
 function ArrowIcon() {
   return (
@@ -467,16 +463,11 @@ export function App() {
   const [strikeTick, setStrikeTick] = useState(0)
   const [heroBodyVisible, setHeroBodyVisible] = useState(false)
   const [readerName, setReaderName] = useState('')
-  const [rehearsing, setRehearsing] = useState(false)
-  const [trialTick, setTrialTick] = useState(0)
-  const [rehearsalCount, setRehearsalCount] = useState(0)
   const [leverStamping, setLeverStamping] = useState(false)
   const firstVoiceRef = useRef(true)
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
   const heroBodyRef = useRef<HTMLDivElement>(null)
-  const trialTimerRef = useRef<number | null>(null)
-  const trialIndexRef = useRef(0)
   const leverStampTimerRef = useRef<number | null>(null)
   const bodyGrainId = useId().replace(/:/g, '')
 
@@ -561,16 +552,7 @@ export function App() {
     if (focus) window.requestAnimationFrame(() => tokenRefs.current[id]?.focus())
   }
 
-  const cancelTrialPull = useCallback(() => {
-    if (trialTimerRef.current !== null) {
-      window.clearTimeout(trialTimerRef.current)
-      trialTimerRef.current = null
-    }
-    setRehearsing(false)
-  }, [])
-
   const selectVoice = (id: VoiceId) => {
-    cancelTrialPull()
     setVoice(prev => (prev === id ? prev : id))
     const next = VOICES.find(item => item.id === id)
     setAnnouncement(next ? `${next.name} selected.` : '')
@@ -590,63 +572,12 @@ export function App() {
 
   useEffect(() => {
     return () => {
-      if (trialTimerRef.current !== null) {
-        window.clearTimeout(trialTimerRef.current)
-        trialTimerRef.current = null
-      }
       if (leverStampTimerRef.current !== null) {
         window.clearTimeout(leverStampTimerRef.current)
         leverStampTimerRef.current = null
       }
     }
   }, [])
-
-  const triggerTrialPull = useCallback(() => {
-    if (rehearsing) return
-    setRehearsing(true)
-    setRehearsalCount(count => count + 1)
-    setAnnouncement('Rehearsal pull started. Cycling the three voices.')
-    const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const cycle: VoiceId[] = ['quiet', 'human', 'bold']
-    const start = cycle.indexOf(voice)
-    const order: VoiceId[] = []
-    for (let index = 1; index <= cycle.length; index += 1) {
-      order.push(cycle[(start + index) % cycle.length])
-    }
-    const settledVoice = voice
-    if (reduceMotion) {
-      setVoice(order[order.length - 1])
-      setStrikeTick(tick => tick + 1)
-      setTrialTick(tick => tick + 1)
-      window.setTimeout(() => {
-        setVoice(settledVoice)
-        setRehearsing(false)
-        setStrikeTick(tick => tick + 1)
-        setAnnouncement('Rehearsal complete.')
-      }, 380)
-      return
-    }
-    let i = 0
-    const step = () => {
-      const next = order[i]
-      setVoice(next)
-      setStrikeTick(tick => tick + 1)
-      setTrialTick(tick => tick + 1)
-      trialIndexRef.current = i
-      i += 1
-      if (i < order.length) {
-        trialTimerRef.current = window.setTimeout(step, 360)
-      } else {
-        trialTimerRef.current = window.setTimeout(() => {
-          setVoice(settledVoice)
-          setStrikeTick(tick => tick + 1)
-          setRehearsing(false)
-          setAnnouncement('Rehearsal complete.')
-        }, 420)
-      }
-    }
-    trialTimerRef.current = window.setTimeout(step, 80)
-  }, [rehearsing, voice])
 
   const selectVoiceByKey = (event: ReactKeyboardEvent<HTMLButtonElement>, id: VoiceId) => {
     const index = VOICES.findIndex(item => item.id === id)
@@ -726,22 +657,6 @@ export function App() {
 
       <div className="page">
         <Opening voice={voice} setToday={setToday}>
-          <SpreadRibbon
-            voice={voice}
-            word={activeWord}
-            setToday={setToday}
-            activeSection={activeSection}
-            totalSections={FOLIO_ORDER.length}
-          />
-
-          <VoiceTrial
-            voice={voice}
-            setToday={setToday}
-            rehearsing={rehearsing}
-            rehearsalCount={rehearsalCount}
-            onVoice={selectVoice}
-            onTrialPull={triggerTrialPull}
-          />
           <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
             <TitlePage voice={voice} word={activeWord} setToday={setToday} />
 
@@ -750,7 +665,7 @@ export function App() {
               <PaperWarmth voice={voice} />
 
               <h1 className="sr-only" id="page-title">{TITLE}</h1>
-              <TitleFold voice={voice} word={activeWord} setToday={setToday} rehearsing={rehearsing}>
+              <TitleFold voice={voice} word={activeWord} setToday={setToday}>
                 <TitleLine
                   voice={voice}
                   word={activeWord}
