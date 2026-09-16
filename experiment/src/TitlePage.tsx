@@ -28,7 +28,7 @@ const VOICE_FACE: Record<VoiceId, string> = {
 
 const VOICE_GLYPH: Record<VoiceId, string> = { quiet: '·', human: '✦', bold: '■' }
 
-const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
+const WORD_LABEL: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet?' }
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
 
 function formatSeason(): string {
@@ -52,7 +52,7 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
     <header
       className={`title-page title-page--${voice} title-page--word-${word}`}
       style={style}
-      aria-label={`Title page header · m³ press · folio i · the question · set today ${setToday} · in the ${VOICE_NAME[voice]} voice · marked at ${WORD_LABEL[word]} (${WORD_MARK[word]}).`}
+      aria-label={`Title page caption · folio i · the question · ${season} · set today ${setToday} · in the ${VOICE_NAME[voice]} voice · marked at ${WORD_LABEL[word]} (${WORD_MARK[word]}).`}
     >
       <svg className="title-page__defs" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
         <defs>
@@ -66,14 +66,14 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
         </defs>
       </svg>
 
-      <span className="title-page__rule" aria-hidden="true">
+      <span className="title-page__rule title-page__rule--lead" aria-hidden="true">
         <svg viewBox="0 0 1200 4" preserveAspectRatio="none">
           <path
             className="title-page__rule-stroke"
             d="M2 2c40-1 80 1 120 0s80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 158 0"
             fill="none"
             stroke={`url(#${ruleId})`}
-            strokeWidth=".7"
+            strokeWidth=".6"
             strokeLinecap="round"
             pathLength="100"
           />
@@ -82,29 +82,26 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
 
       <div className="title-page__row">
         <span className="title-page__cell title-page__cell--press">
-          <span className="title-page__cell-key">m³ press</span>
+          <span className="title-page__cell-key">the question</span>
           <span className="title-page__cell-value">
             <em>folio i</em>
             <span className="title-page__cell-sep" aria-hidden="true">·</span>
-            <span>the question</span>
+            <span>{season}</span>
+            <span className="title-page__cell-sep" aria-hidden="true">·</span>
+            <span>{setToday}</span>
           </span>
         </span>
 
         <span className="title-page__fleuron" aria-hidden="true">
           <svg viewBox="0 0 88 16" preserveAspectRatio="xMidYMid meet">
-            <line x1="2" y1="8" x2="28" y2="8" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".7" />
+            <line x1="2" y1="8" x2="28" y2="8" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".65" />
             <circle cx="32" cy="8" r="1.4" fill="currentColor" />
             <path d="M44 2 L50 8 L44 14 L38 8 Z" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinejoin="round" />
             <line x1="44" y1="5" x2="44" y2="11" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".7" />
             <circle cx="44" cy="8" r="1.1" fill="currentColor" />
             <circle cx="56" cy="8" r="1.4" fill="currentColor" />
-            <line x1="60" y1="8" x2="86" y2="8" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".7" />
+            <line x1="60" y1="8" x2="86" y2="8" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".65" />
           </svg>
-          <span className="title-page__fleuron-tag" aria-hidden="true">
-            <em>{season}</em>
-            <span className="title-page__fleuron-tag-sep" aria-hidden="true">·</span>
-            <span>{setToday}</span>
-          </span>
         </span>
 
         <span className="title-page__cell title-page__cell--voice">
@@ -124,7 +121,7 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
             d="M2 2c40-1 80 1 120 0s80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 158 0"
             fill="none"
             stroke={`url(#${ruleId})`}
-            strokeWidth=".7"
+            strokeWidth=".6"
             strokeLinecap="round"
             pathLength="100"
           />

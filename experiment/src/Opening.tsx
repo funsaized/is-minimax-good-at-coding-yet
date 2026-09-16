@@ -13,10 +13,15 @@ const VOICE_TONE: Record<VoiceId, string> = {
   bold: 'var(--acid)',
 }
 
+const VOICE_NAME: Record<VoiceId, string> = {
+  quiet: 'quiet cut',
+  human: 'human hand',
+  bold: 'bold signal',
+}
+
 export function Opening({ voice, setToday, children }: OpeningProps) {
   const baseId = useId().replace(/:/g, '')
   const paperId = `opening-paper-${baseId}`
-  const ruleId = `opening-rule-${baseId}`
   const creaseId = `opening-crease-${baseId}`
   const rootRef = useRef<HTMLDivElement>(null)
   const [revealed, setRevealed] = useState(false)
@@ -49,22 +54,15 @@ export function Opening({ voice, setToday, children }: OpeningProps) {
       ref={rootRef}
       className={`opening opening--${voice} ${revealed ? 'is-revealed' : ''}`}
       style={style}
-      aria-label={`m³ press · folio i · the opening broadside · set in ${voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'} on ${setToday}`}
+      aria-label={`m³ press · folio i · the opening broadside · set in ${VOICE_NAME[voice]} on ${setToday}`}
     >
       <svg className="opening__defs" viewBox="0 0 1200 1200" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <filter id={paperId} x="-2%" y="-2%" width="104%" height="104%">
             <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="2" seed="31" stitchTiles="stitch" />
-            <feColorMatrix type="matrix" values="0 0 0 0 .14  0 0 0 0 .12  0 0 0 0 .19  0 0 0 .045 0" />
+            <feColorMatrix type="matrix" values="0 0 0 0 .14  0 0 0 0 .12  0 0 0 0 .19  0 0 0 .035 0" />
             <feComposite in2="SourceGraphic" operator="in" />
           </filter>
-          <linearGradient id={ruleId} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
-            <stop offset="14%" stopColor="currentColor" stopOpacity=".5" />
-            <stop offset="50%" stopColor="currentColor" stopOpacity=".9" />
-            <stop offset="86%" stopColor="currentColor" stopOpacity=".5" />
-            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-          </linearGradient>
           <linearGradient id={creaseId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
             <stop offset="32%" stopColor="currentColor" stopOpacity=".18" />
@@ -77,29 +75,12 @@ export function Opening({ voice, setToday, children }: OpeningProps) {
 
       <span className="opening__paper" aria-hidden="true">
         <svg viewBox="0 0 1200 1200" preserveAspectRatio="none">
-          <rect x="0" y="0" width="1200" height="1200" filter={`url(#${paperId})`} opacity=".06" />
-        </svg>
-      </span>
-
-      <span className="opening__crop opening__crop--tl" aria-hidden="true" />
-      <span className="opening__crop opening__crop--tr" aria-hidden="true" />
-      <span className="opening__crop opening__crop--bl" aria-hidden="true" />
-      <span className="opening__crop opening__crop--br" aria-hidden="true" />
-
-      <span className="opening__rule opening__rule--lead" aria-hidden="true">
-        <svg viewBox="0 0 1200 4" preserveAspectRatio="none">
-          <path
-            d="M2 2c40-1 80 1 120 0s80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 158 0"
-            fill="none"
-            stroke={`url(#${ruleId})`}
-            strokeWidth=".7"
-            strokeLinecap="round"
-          />
+          <rect x="0" y="0" width="1200" height="1200" filter={`url(#${paperId})`} opacity=".045" />
         </svg>
       </span>
 
       <header className="opening__plate" aria-hidden="true">
-        <span className="opening__plate-mark opening__plate-mark--lead">‡</span>
+        <span className="opening__plate-mark">‡</span>
         <span className="opening__plate-title">
           m³ press
           <em>·</em>
@@ -133,18 +114,6 @@ export function Opening({ voice, setToday, children }: OpeningProps) {
       </span>
 
       <div className="opening__stage">{children}</div>
-
-      <span className="opening__rule opening__rule--trail" aria-hidden="true">
-        <svg viewBox="0 0 1200 4" preserveAspectRatio="none">
-          <path
-            d="M2 2c40-1 80 1 120 0s80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 158 0"
-            fill="none"
-            stroke={`url(#${ruleId})`}
-            strokeWidth=".7"
-            strokeLinecap="round"
-          />
-        </svg>
-      </span>
     </div>
   )
 }

@@ -50511,3 +50511,624 @@ a small act of typesetting.
 .opening .title-fold__crease {
   display: none;
 }
+
+/* ──────────────────────────────────────────────────────────────────
+   ITERATION 303 · the composed title frontispiece
+   ────────────────────────────────────────────────────────────────── */
+
+/* ──────────────────────────────────────────────────────────────────
+   ITERATION 303 · THE COMPOSED TITLE FRONTISPIECE
+   The page opens with a single, confident composition: a slim
+   m³-press plate, a quiet vertical fold-crease, the headline set
+   in the chosen voice, and a refracted question mark as the line's
+   signature punctuation. The decorative crops and outer rule that
+   used to wrap the broadside are gone; the headline gets to be the
+   page's centerpiece. Title-fold and title-page become two
+   supporting captions instead of two more competing headers.
+   ────────────────────────────────────────────────────────────────── */
+
+/* Opening · quieter frame, no crops, no inner dashed border, no
+   trailing horizontal rules. Just the plate header, the vertical
+   fold-crease, and the children. */
+
+.opening {
+  padding: clamp(20px, 2.6vw, 36px) clamp(20px, 3vw, 56px) clamp(36px, 4vw, 64px);
+  margin: clamp(8px, 1.2vw, 20px) 0 clamp(20px, 2.8vw, 48px);
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--opening-tone) 9%, transparent), transparent 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(155, 188, 255, .03), transparent 60%);
+  box-shadow:
+    inset 0 1px 0 rgba(243, 236, 214, .035);
+}
+
+.opening::before {
+  display: none;
+}
+
+.opening__paper {
+  opacity: .65;
+}
+
+/* Title page · single-line caption. Sits below the opening's
+   plate header as a quiet subtitle line, not a competing banner. */
+
+.title-page {
+  margin: clamp(14px, 1.8vw, 24px) 0 clamp(8px, 1vw, 14px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.title-page__rule,
+.title-page__rule--lead,
+.title-page__rule--foot {
+  display: none;
+}
+
+.title-page__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  padding: clamp(6px, .8vw, 12px) 0;
+  color: var(--paper);
+  font-family: 'Iowan Old Style', Georgia, serif;
+}
+
+.title-page__cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, .7vw, 10px);
+  font-size: clamp(11.5px, .98vw, 13.5px);
+  letter-spacing: -.005em;
+  color: var(--mist);
+  flex-wrap: wrap;
+}
+
+.title-page__cell--press { justify-self: start; }
+.title-page__cell--voice { justify-self: end; }
+
+.title-page__cell-key {
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .68vw, 8.5px);
+  font-weight: 600;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title-page__cell-value {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.title-page__cell-value em {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.title-page__cell-sep {
+  color: var(--title-page-tone);
+  margin: 0 4px;
+  opacity: .55;
+}
+
+.title-page__cell-voice {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--title-page-tone);
+}
+
+.title-page__cell-voice em {
+  color: var(--paper);
+}
+
+.title-page__cell-voice-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(12px, 1.1vw, 16px);
+  height: clamp(12px, 1.1vw, 16px);
+  color: var(--title-page-tone);
+}
+
+.title-page__cell-voice-glyph::before {
+  content: var(--title-page-glyph, "·");
+  font-family: Georgia, serif;
+  font-size: clamp(12px, 1.1vw, 15px);
+  line-height: 1;
+}
+
+.title-page__cell-face {
+  display: block;
+  width: 100%;
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(7.5px, .68vw, 8.5px);
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: .85;
+}
+
+.title-page__fleuron {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(60px, 6vw, 84px);
+  color: var(--title-page-tone);
+  opacity: .9;
+}
+
+.title-page__fleuron svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 720px) {
+  .title-page__row {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    row-gap: 8px;
+  }
+
+  .title-page__cell--press { justify-self: start; }
+  .title-page__cell--voice { justify-self: start; }
+
+  .title-page__fleuron {
+    justify-self: center;
+    width: 56px;
+  }
+}
+
+/* Title fold · quieter paper, refined seal, the headline is the
+   centerpiece. The fold crease sits only at the foot (the opening
+   carries the vertical crease through the whole sheet). */
+
+.title-fold {
+  margin: clamp(8px, 1.2vw, 18px) auto clamp(18px, 2.2vw, 32px);
+  padding: clamp(8px, 1.2vw, 16px) clamp(6px, 1vw, 16px);
+  max-width: 1100px;
+}
+
+.title-fold__paper {
+  opacity: .55;
+}
+
+.title-fold__paper::before {
+  opacity: .25;
+}
+
+.title-fold__paper::after {
+  border-top-color: color-mix(in srgb, var(--title-fold-tone) 16%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--title-fold-tone) 16%, transparent);
+}
+
+.title-fold__seal {
+  width: clamp(30px, 2.6vw, 38px);
+  height: clamp(30px, 2.6vw, 38px);
+  top: clamp(-14px, -1.2vw, -8px);
+  right: clamp(6px, 1.4vw, 18px);
+  opacity: 0;
+  animation: titleFoldSealIn .8s var(--ease-spring) 1.4s forwards;
+}
+
+/* Title line · the headline gets to be the page. Refined
+   word spacing, a signature italicised question mark as the
+   line's terminal punctuation, and a delicate mark rule under
+   each marked word. The voice strip is preserved but tighter. */
+
+.titleline {
+  margin: clamp(6px, .8vw, 12px) 0 clamp(14px, 1.8vw, 22px);
+  padding: clamp(10px, 1.4vw, 18px) clamp(4px, .8vw, 12px);
+}
+
+.titleline__stage {
+  padding: clamp(8px, 1.2vw, 14px) clamp(4px, .8vw, 10px);
+}
+
+.titleline__headline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: clamp(4px, .6vw, 8px);
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-size: clamp(2.2rem, 8.6vw, 6.6rem);
+  line-height: 1.04;
+  letter-spacing: -.022em;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--paper);
+  margin: clamp(8px, 1.4vw, 18px) 0 clamp(6px, .8vw, 12px);
+  text-shadow: 0 0 .04em rgba(243, 236, 214, .14);
+}
+
+.titleline--word-m3 .titleline__headline,
+.titleline--word-good .titleline__headline,
+.titleline--word-yet .titleline__headline {
+  letter-spacing: -.022em;
+}
+
+.titleline__headline-fragment {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--mist);
+  font-size: .58em;
+  letter-spacing: 0;
+  align-self: baseline;
+  position: relative;
+  top: -.04em;
+  opacity: .9;
+}
+
+.titleline__headline-fragment--lead {
+  margin-right: clamp(4px, .6vw, 10px);
+}
+
+.titleline__headline-fragment--mid {
+  margin: 0 clamp(4px, .6vw, 10px);
+}
+
+.titleline__headline-sep {
+  display: inline-block;
+  width: clamp(8px, .9vw, 14px);
+  height: clamp(8px, .9vw, 14px);
+  margin: 0 clamp(2px, .4vw, 6px);
+  position: relative;
+  align-self: baseline;
+  top: -.12em;
+}
+
+.titleline__headline-sep::before {
+  content: '';
+  position: absolute;
+  inset: 50% 0 0 0;
+  height: 1px;
+  background: currentColor;
+  opacity: .35;
+  transform: translateY(-.5px);
+}
+
+.titleline__headline-sep::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .55;
+  transform: translate(-50%, -50%);
+}
+
+.titleline__headline-sep--alt::before {
+  opacity: .25;
+}
+
+.titleline--voice-quiet .titleline__headline-sep {
+  color: var(--blue);
+}
+.titleline--voice-human .titleline__headline-sep {
+  color: var(--coral);
+}
+.titleline--voice-bold .titleline__headline-sep {
+  color: var(--acid);
+}
+
+.titleline__token {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0 0 clamp(6px, .9vw, 12px);
+  margin: 0 clamp(2px, .3vw, 6px);
+  color: var(--paper);
+  transition: color .55s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.titleline__token-text {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'ss01' 1;
+  transition: transform .55s var(--ease-spring), color .55s var(--ease);
+  letter-spacing: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  text-transform: inherit;
+  color: inherit;
+}
+
+.titleline__token-mark {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: clamp(7px, .8vw, 11px);
+  margin-top: clamp(2px, .3vw, 4px);
+}
+
+.titleline__token-mark-line {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 50%;
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  transform: scaleX(.4) translateY(-.5px);
+  transform-origin: 50% 50%;
+  transition: opacity .55s var(--ease), transform .55s var(--ease-spring);
+}
+
+.titleline__token-mark::before,
+.titleline__token-mark::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity .55s var(--ease), transform .55s var(--ease-spring);
+}
+
+.titleline__token-mark::before { left: calc(8% - 2px); }
+.titleline__token-mark::after { right: calc(8% - 2px); }
+
+.titleline__token.is-marked .titleline__token-mark-line,
+.titleline__token.is-hover .titleline__token-mark-line {
+  opacity: .85;
+  transform: scaleX(1) translateY(-.5px);
+}
+
+.titleline__token.is-marked .titleline__token-mark::before,
+.titleline__token.is-marked .titleline__token-mark::after,
+.titleline__token.is-hover .titleline__token-mark::before,
+.titleline__token.is-hover .titleline__token-mark::after {
+  opacity: .85;
+  transform: translateY(-50%) scale(1);
+}
+
+.titleline__token.is-marked .titleline__token-text {
+  transform: translateY(-2px);
+}
+
+.titleline__token--m3 { color: var(--acid); }
+.titleline__token--good { color: var(--coral); }
+.titleline__token--yet { color: var(--blue); }
+
+.titleline__token.is-marked.titleline__token--m3,
+.titleline__token.is-hover.titleline__token--m3 { color: var(--acid); }
+.titleline__token.is-marked.titleline__token--good,
+.titleline__token.is-hover.titleline__token--good { color: var(--coral); }
+.titleline__token.is-marked.titleline__token--yet,
+.titleline__token.is-hover.titleline__token--yet { color: var(--blue); }
+
+.titleline__token:focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 6px;
+  border-radius: 2px;
+}
+
+/* The signature question mark · a single italicised glyph set in
+   the active voice colour. It rides the baseline next to "yet"
+   and is the line's terminal punctuation. */
+
+.titleline__headline-query {
+  display: inline-flex;
+  align-items: baseline;
+  position: relative;
+  margin-left: clamp(2px, .3vw, 6px);
+  top: -.04em;
+}
+
+.titleline__headline-query-mark {
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.18em;
+  line-height: 0.85;
+  color: var(--titleline-tone);
+  letter-spacing: -.04em;
+  text-shadow: 0 0 .04em rgba(243, 236, 214, .12);
+  transform: translateY(.08em);
+  transition: color .55s var(--ease), transform .85s var(--ease-spring);
+}
+
+.titleline--voice-bold .titleline__headline-query-mark {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-style: normal;
+  font-weight: 800;
+  font-size: 1.04em;
+  letter-spacing: -.06em;
+}
+
+.titleline__headline-query::after {
+  content: '';
+  position: absolute;
+  bottom: -.05em;
+  left: 14%;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, currentColor 0%, currentColor 60%, transparent 100%);
+  opacity: 0;
+  transition: opacity .55s var(--ease);
+  pointer-events: none;
+}
+
+.titleline--word-yet .titleline__headline-query::after {
+  opacity: .25;
+}
+
+/* Proof line · a single elegant caption rather than a multi-line
+   SVG block. The SVG glyph sits to the right of the caption. */
+
+.titleline__proof {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(10px, 1.4vw, 18px);
+  margin-top: clamp(8px, 1.2vw, 16px);
+  color: var(--paper);
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(12.5px, 1.08vw, 15px);
+  letter-spacing: -.005em;
+}
+
+.titleline__proof-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid color-mix(in srgb, var(--titleline-tone) 30%, transparent);
+  border-radius: 999px;
+  color: var(--paper);
+}
+
+.titleline__proof-tag em {
+  color: var(--titleline-tone);
+  font-style: italic;
+}
+
+.titleline__proof-tag-sep {
+  color: var(--mist);
+  opacity: .65;
+}
+
+.titleline__proof-tag-mark {
+  display: inline-block;
+  padding: 1px 6px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(7.5px, .68vw, 8.5px);
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--titleline-tone);
+  background: color-mix(in srgb, var(--titleline-tone) 12%, transparent);
+  border-radius: 1px;
+}
+
+.titleline__proof-tag-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--titleline-tone);
+  opacity: .75;
+}
+
+.titleline__proof-tag-dot--alt {
+  opacity: .5;
+}
+
+.titleline__proof-svg {
+  display: none;
+}
+
+/* Voice strip · tightened to a single row with quiet cell
+   separators. */
+
+.titleline__voices {
+  margin-top: clamp(12px, 1.6vw, 20px);
+}
+
+.titleline__voices-row {
+  gap: clamp(6px, .8vw, 12px);
+}
+
+.titleline__voice {
+  padding: clamp(8px, 1vw, 12px) clamp(10px, 1.2vw, 16px);
+  gap: clamp(6px, .7vw, 10px);
+  border-radius: 1px;
+}
+
+@media (max-width: 720px) {
+  .titleline__headline {
+    font-size: clamp(2rem, 11vw, 3.4rem);
+    gap: 2px;
+    line-height: 1.06;
+  }
+
+  .titleline__headline-fragment {
+    top: -.02em;
+  }
+
+  .titleline__headline-sep {
+    width: 6px;
+    height: 6px;
+    margin: 0 2px;
+  }
+
+  .titleline__token {
+    margin: 0 2px;
+    padding: 0 0 6px;
+  }
+
+  .titleline__headline-query-mark {
+    font-size: 1.1em;
+  }
+
+  .titleline__proof {
+    gap: 8px;
+  }
+
+  .titleline__proof-tag {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .titleline__headline {
+    font-size: clamp(1.7rem, 9vw, 2.6rem);
+  }
+
+  .titleline__headline-fragment--lead,
+  .titleline__headline-fragment--mid {
+    margin: 0 2px;
+  }
+
+  .titleline__proof-tag {
+    font-size: 11.5px;
+    padding: 3px 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titleline__token-mark-line,
+  .titleline__token-mark::before,
+  .titleline__token-mark::after,
+  .titleline__headline-query-mark {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* Inside the opening, the press-lever's button corners are
+   redundant with the opening's own quiet frame. Hide them so the
+   action button reads as a single quiet chip. */
+.opening .press-lever__action-corner {
+  display: none;
+}
+
+/* Inside the opening, the title-fold's seal stays — it is the
+   signature mark of the headline itself, not of the broadside. */
+
+.opening .title-fold__seal {
+  top: clamp(-18px, -1.4vw, -10px);
+  right: clamp(8px, 1.8vw, 22px);
+}

@@ -19,12 +19,13 @@ type Display = {
   fontStyle: 'normal' | 'italic'
   tracking: string
   uppercased: boolean
+  scale: number
 }
 
 const DISPLAY: Record<VoiceId, Display> = {
-  quiet: { fontFamily: "'Iowan Old Style', Georgia, serif", fontWeight: 400, fontStyle: 'italic', tracking: '-0.012em', uppercased: false },
-  human: { fontFamily: "'Iowan Old Style', Georgia, serif", fontWeight: 500, fontStyle: 'italic', tracking: '-0.01em', uppercased: false },
-  bold: { fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', fontWeight: 800, fontStyle: 'normal', tracking: '-0.038em', uppercased: true },
+  quiet: { fontFamily: "'Iowan Old Style', Georgia, serif", fontWeight: 400, fontStyle: 'italic', tracking: '-0.014em', uppercased: false, scale: 1 },
+  human: { fontFamily: "'Iowan Old Style', Georgia, serif", fontWeight: 500, fontStyle: 'italic', tracking: '-0.012em', uppercased: false, scale: 1.06 },
+  bold: { fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', fontWeight: 800, fontStyle: 'normal', tracking: '-0.04em', uppercased: true, scale: 1.1 },
 }
 
 const VOICE_TONE: Record<VoiceId, string> = {
@@ -41,8 +42,8 @@ const VOICE_DESCRIPTOR: Record<VoiceId, string> = {
   bold: 'sans · heavy · no apology',
 }
 
-const WORD_LABEL: Record<WordId, string> = { m3: 'Minimax M3', good: 'good at', yet: 'yet?' }
-const TOKEN_TEXT: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet?' }
+const WORD_LABEL: Record<WordId, string> = { m3: 'Minimax M3', good: 'good at', yet: 'yet' }
+const TOKEN_TEXT: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet' }
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
 const WORD_KIND: Record<WordId, string> = { m3: 'let it stand', good: 'make room', yet: 'protect the pause' }
 
@@ -166,6 +167,9 @@ function HeadlineWord({
       }}
     >
       <span className="titleline__token-text">{label}</span>
+      <span className="titleline__token-mark" aria-hidden="true">
+        <span className="titleline__token-mark-line" />
+      </span>
     </span>
   )
 }
@@ -187,6 +191,7 @@ export function TitleLine({
   const style = {
     '--titleline-tone': tone,
     '--titleline-grain': `url(#${grainId})`,
+    '--titleline-scale': String(display.scale),
   } as CSSProperties
   const containerRef = useRef<HTMLDivElement>(null)
   const [strikeKey, setStrikeKey] = useState(0)
@@ -227,28 +232,17 @@ export function TitleLine({
       ref={containerRef}
       className={`titleline titleline--${voice} titleline--word-${word}`}
       style={style}
-      aria-label={`The headline: ${WORD_LABEL.m3} ${WORD_LABEL.good} frontend ${WORD_LABEL.yet}, set in the ${VOICE_NAME[voice]} voice, marked at ${WORD_LABEL[word]} (${WORD_MARK[word]}).`}
+      aria-label={`The headline: ${WORD_LABEL.m3} ${WORD_LABEL.good} frontend ${WORD_LABEL.yet}?, set in the ${VOICE_NAME[voice]} voice, marked at ${WORD_LABEL[word]} (${WORD_MARK[word]}).`}
     >
       <svg className="titleline__defs" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <filter id={grainId} x="-2%" y="-12%" width="104%" height="124%">
             <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="41" stitchTiles="stitch" />
-            <feColorMatrix type="matrix" values="0 0 0 0 .14  0 0 0 0 .12  0 0 0 0 .19  0 0 0 .08 0" />
+            <feColorMatrix type="matrix" values="0 0 0 0 .14  0 0 0 0 .12  0 0 0 0 .19  0 0 0 .06 0" />
             <feComposite in2="SourceGraphic" operator="in" />
           </filter>
         </defs>
       </svg>
-
-      <span className="titleline__eyebrow" aria-hidden="true">
-        <span className="titleline__eyebrow-mark" />
-        <span className="titleline__eyebrow-eyebrow">folio i · the line, set</span>
-        <span className="titleline__eyebrow-rule" />
-        <span className="titleline__eyebrow-voice">
-          <em>now in</em> <span className="titleline__eyebrow-voice-name">{VOICE_NAME[voice]}</span>
-        </span>
-        <span className="titleline__eyebrow-rule titleline__eyebrow-rule--alt" />
-        <span className="titleline__eyebrow-mark titleline__eyebrow-mark--alt" />
-      </span>
 
       <div
         className="titleline__stage"
@@ -316,36 +310,22 @@ export function TitleLine({
               tokenRefs.current.yet = node
             }}
           />
+          <span className="titleline__headline-query" aria-hidden="true">
+            <span className="titleline__headline-query-mark">?</span>
+          </span>
         </h2>
 
         <div className="titleline__proof" aria-hidden="true">
           <span className="titleline__proof-tag">
             <span className="titleline__proof-tag-dot" />
             marked at <em>{WORD_LABEL[word]}</em>
+            <span className="titleline__proof-tag-sep">·</span>
+            <span className="titleline__proof-tag-mark">{WORD_MARK[word]}</span>
             <span className="titleline__proof-tag-dot titleline__proof-tag-dot--alt" />
           </span>
           <ProofMark id={word} tone={tone} />
         </div>
       </div>
-
-      <figcaption className="titleline__caption">
-        <span className="titleline__caption-row titleline__caption-row--lead">
-          <span className="titleline__caption-key">the line</span>
-          <span className="titleline__caption-value">is {WORD_LABEL.m3} {WORD_LABEL.good} frontend {WORD_LABEL.yet}</span>
-        </span>
-        <span className="titleline__caption-row">
-          <span className="titleline__caption-key">set in</span>
-          <span className="titleline__caption-value">{VOICE_NAME[voice]} <em>·</em> {VOICE_DESCRIPTOR[voice]}</span>
-        </span>
-        <span className="titleline__caption-row">
-          <span className="titleline__caption-key">marked at</span>
-          <span className="titleline__caption-value">{WORD_LABEL[word]} <em>·</em> {WORD_MARK[word]} <em>·</em> {WORD_KIND[word]}</span>
-        </span>
-        <span className="titleline__caption-row titleline__caption-row--soft">
-          <span className="titleline__caption-key">set today</span>
-          <span className="titleline__caption-value">{setToday}</span>
-        </span>
-      </figcaption>
 
       <span className="titleline__rule" aria-hidden="true">
         <svg viewBox="0 0 1000 6" preserveAspectRatio="none">
@@ -420,14 +400,8 @@ export function TitleLine({
         </div>
       </div>
 
-      <span className="titleline__hint" aria-hidden="true">
-        <span className="titleline__hint-rule" />
-        click a word to mark it <em>·</em> click the open space to cycle the voice <em>·</em> arrow keys to move
-        <span className="titleline__hint-rule titleline__hint-rule--alt" />
-      </span>
-
       <span className="sr-only">
-        Use Tab to move between marked words and the three voice tabs. Use the arrow keys to cycle the voice.
+        Use Tab to move between marked words and the three voice tabs. Use the arrow keys to cycle the voice. Use shift + v to pull a rehearsal.
       </span>
       <span className="sr-only" aria-live="polite">
         {`Marked at ${WORD_LABEL[word]}, ${WORD_MARK[word]}. Set in ${VOICE_NAME[voice]}.`}
