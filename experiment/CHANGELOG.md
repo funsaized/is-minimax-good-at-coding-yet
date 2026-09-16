@@ -1,11 +1,11 @@
 # Changelog
 
-## Iteration 294
+## Iteration 295
 
-### Summary
-Made the question itself the loudest moment on the page with a single TitleLine centerpiece, replacing the hero triptych
+Re-author the FolioOpening as a single press inscription and add a MarginaliumPress to the editor's note.
 
-### Changed
-- **src/TitleLine.tsx** *(new)* — A new centerpiece that renders the question as one confident setting in the active voice (quiet cut / human hand / bold signal). The three marked words are interactive, the marked word is highlighted, and a hand-drawn proof mark (stet line, caret curve, or query ring) draws itself beneath the headline and redraws when the mark changes. Three voice tabs below cycle the voice; clicking the open space also cycles. Captures a colophon-style caption with the full line, voice, marked word, and "set today" date.
-- **src/App.tsx** — The hero spread now hosts the new `TitleLine` (replacing `PressingsTriptych`). The imported `TitleLine` wraps a new `.hero__headline` wrapper inside the spread; the existing `PressingsTriptych` import is dropped.
-- **src/style.css** — Added the `.titleline` and `.hero__headline` blocks (after iteration 293's closing block). The headline sets a single large line with a quiet voice (serif italic close-set), human voice (serif italic warm), or bold voice (sans heavy no-apology uppercase). The proof marks use SVG paths with `feTurbulence` grain, with hand-drawn draw-in animations (stet line + arrow, caret curve + point, query ring + hook + dot). Three voice tabs below use circular letter monograms, a pulsing "now" dot for the active voice, and proper keyboard navigation (arrows cycle, Home/End jump). All animations respect `prefers-reduced-motion`. Mobile breakpoint collapses the eyebrow, stacks voice tabs vertically, and reduces headline size.
+The FolioOpening between the title page and the title line has been replaced. The old 3-cell plate (set in / marked at / set today) read as a generic status strip sitting between the broadside and the question. It is now a single hand-set inscription: a typesetter's asterism whose center cluster lifts for the active marked word, one composed italic sentence ("set in three voices · marked at one word · the lever waits below."), and a quiet signature line that draws in. The opener now reads as a continuation of the title page, giving the title line room to land.
+
+The editor's note closes with a new MarginaliumPress — a hand-written, pin-set note from the press that speaks directly to the reader about how to read the page ("Read this page twice. The first time, the eye catches the verb. The second, the ear catches the question."). It is signed "m³" with a delicate pencil-line dating the impression, slightly rotated like a note tucked into the margin, breaking the brief's "editorial card" feel with a personal touch.
+
+Animation is tasteful and respects prefers-reduced-motion: the signature line draws once on scroll, the pin tilts on hover, the inscription underline slides in on hover or in-view, the active word's asterism cluster scales subtly, and the marginalium's pencil bead pops in last.

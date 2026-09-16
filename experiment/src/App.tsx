@@ -26,6 +26,7 @@ import { FolioFold } from './FolioFold'
 import { PressSpine } from './PressSpine'
 import { TitlePage } from './TitlePage'
 import { FolioOpening } from './FolioOpening'
+import { MarginaliumPress } from './MarginaliumPress'
 import { FolioThumbprint } from './FolioThumbprint'
 import { TitleLine } from './TitleLine'
 
@@ -824,6 +825,8 @@ export function App() {
                   one word is always marked <em>·</em> the title answers with whichever is set
                 </span>
               </aside>
+
+              <MarginaliumPress voice={voice} word={activeWord} setToday={setToday} />
 
               <FolioThumbprint voice={voice} word={activeWord} setToday={setToday} readerName={readerName} />
             </article>

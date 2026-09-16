@@ -45416,52 +45416,55 @@ a small act of typesetting.
    the center outward. Reduced motion holds it still.
    ──────────────────────────────────────────────────────────── */
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 295 · FOLIO OPENING AS A PRESS INSCRIPTION.
+
+   The old FolioOpening was a busy 3-cell plate (set in / marked
+   at / set today) that competed with the title page above. It
+   has been re-authored as a single, deliberate press inscription:
+   a typesetter's asterism, one composed italic sentence, and a
+   quiet signature line. The composition reads as a continuation
+   of the broadside above — a hand-set passage that hands the
+   reader off to the title line below.
+   ──────────────────────────────────────────────────────────── */
+
 .folio-opening {
   --opening-tone: var(--coral);
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  justify-items: stretch;
-  gap: clamp(12px, 1.2vw, 18px);
-  width: min(100%, 1080px);
-  margin: clamp(8px, 1vw, 14px) auto clamp(20px, 2.4vw, 36px);
-  padding: clamp(18px, 2vw, 28px) clamp(22px, 3vw, 40px) clamp(18px, 2vw, 28px);
-  border: 1px solid var(--line);
-  border-radius: 1px;
-  background:
-    linear-gradient(180deg, rgba(20, 26, 38, .34), rgba(12, 16, 26, .52));
-  box-shadow:
-    inset 0 0 0 1px rgba(243, 236, 214, .025),
-    0 18px 36px -28px rgba(0, 0, 0, .42);
+  justify-items: center;
+  gap: clamp(10px, 1.1vw, 16px);
+  width: min(100%, 920px);
+  margin: clamp(10px, 1.4vw, 22px) auto clamp(22px, 3vw, 40px);
+  padding: clamp(20px, 2.2vw, 32px) clamp(28px, 4vw, 56px) clamp(18px, 2vw, 28px);
   color: var(--paper);
   isolation: isolate;
   opacity: 0;
   transform: translateY(6px);
-  animation: folioOpeningIn .8s var(--ease-out) .18s forwards;
+  animation: folioOpeningIn .85s var(--ease-out) .25s forwards;
 }
 
 .folio-opening::before {
   content: '';
   position: absolute;
-  inset: 4px;
-  border: 1px dashed color-mix(in srgb, var(--opening-tone) 22%, transparent);
-  pointer-events: none;
-  opacity: .55;
-  z-index: -1;
-}
-
-.folio-opening::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  width: clamp(240px, 60%, 540px);
+  height: 1px;
   background:
-    radial-gradient(ellipse 80% 60% at 50% 50%, color-mix(in srgb, var(--opening-tone) 7%, transparent), transparent 70%);
+    linear-gradient(to right,
+      transparent 0%,
+      color-mix(in srgb, var(--opening-tone) 28%, transparent) 50%,
+      transparent 100%);
+  transform: translate(-50%, -50%) scaleX(.5);
+  opacity: .6;
+  pointer-events: none;
   z-index: -1;
 }
 
 @keyframes folioOpeningIn {
-  0% { opacity: 0; transform: translateY(8px); }
+  0% { opacity: 0; transform: translateY(10px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
@@ -45473,334 +45476,595 @@ a small act of typesetting.
   }
 }
 
-.folio-opening__crop {
-  position: absolute;
-  width: 12px;
-  height: 12px;
+.folio-opening__asterism {
+  display: grid;
+  justify-items: center;
+  gap: clamp(4px, .4vw, 6px);
   color: var(--opening-tone);
-  opacity: .75;
-  pointer-events: none;
+  opacity: .85;
 }
 
-.folio-opening__crop::before,
-.folio-opening__crop::after {
+.folio-opening__asterism svg {
+  display: block;
+  width: clamp(72px, 8vw, 108px);
+  height: auto;
+  color: inherit;
+}
+
+.folio-opening__asterism-cluster {
+  opacity: .9;
+  transition: transform .55s var(--ease-spring);
+}
+
+.folio-opening__asterism-cluster--a { transform-origin: 14px 16px; }
+.folio-opening__asterism-cluster--b { transform-origin: 60px 16px; }
+.folio-opening__asterism-cluster--c { transform-origin: 106px 16px; }
+
+.folio-opening--word-m3 .folio-opening__asterism-cluster--a { transform: scale(1.18); }
+.folio-opening--word-good .folio-opening__asterism-cluster--b { transform: scale(1.22); }
+.folio-opening--word-yet .folio-opening__asterism-cluster--c { transform: scale(1.18); }
+
+.folio-opening__asterism-tag {
+  font-family: var(--mono);
+  font-size: clamp(8px, .7vw, 9.5px);
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--mist);
+  opacity: .8;
+  white-space: nowrap;
+}
+
+.folio-opening__inscription {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: clamp(10px, 1.2vw, 18px);
+  margin: 0;
+  max-width: 56ch;
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.32;
+  letter-spacing: -.012em;
+  color: var(--paper);
+  font-feature-settings: 'kern' 1, 'liga' 1, 'onum' 1;
+}
+
+.app--voice-quiet .folio-opening__inscription {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.app--voice-human .folio-opening__inscription {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.app--voice-bold .folio-opening__inscription {
+  font-family: var(--sans);
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.018em;
+  text-transform: uppercase;
+  font-size: clamp(18px, 1.7vw, 24px);
+}
+
+.folio-opening__inscription em {
+  font-style: inherit;
+}
+
+.folio-opening__inscription-mark {
+  position: relative;
+  top: -.12em;
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: clamp(20px, 1.7vw, 26px);
+  color: var(--opening-tone);
+  opacity: .55;
+  transition: color .55s var(--ease), opacity .55s var(--ease), transform .55s var(--ease-spring);
+}
+
+.folio-opening__inscription-mark--trail {
+  top: -.12em;
+}
+
+.folio-opening__inscription:hover .folio-opening__inscription-mark {
+  opacity: .9;
+  color: var(--opening-tone);
+}
+
+.folio-opening__inscription-mark--lead { transform: translateX(0); }
+.folio-opening__inscription-mark--trail { transform: translateX(0); }
+
+.folio-opening__inscription:hover .folio-opening__inscription-mark--lead { transform: translateX(-2px); }
+.folio-opening__inscription:hover .folio-opening__inscription-mark--trail { transform: translateX(2px); }
+
+.folio-opening__inscription-line {
+  font-style: inherit;
+  color: var(--paper);
+  text-wrap: balance;
+}
+
+.folio-opening__inscription-wait {
+  position: relative;
+  color: var(--opening-tone);
+  font-style: inherit;
+  white-space: nowrap;
+}
+
+.folio-opening__inscription-wait::after {
   content: '';
   position: absolute;
-  background: currentColor;
-  border-radius: .5px;
-}
-
-.folio-opening__crop::before { width: 10px; height: 1px; }
-.folio-opening__crop::after { width: 1px; height: 10px; }
-
-.folio-opening__crop--tl { top: 6px; left: 6px; }
-.folio-opening__crop--tl::before { top: 0; left: 0; }
-.folio-opening__crop--tl::after { top: 0; left: 0; }
-
-.folio-opening__crop--tr { top: 6px; right: 6px; }
-.folio-opening__crop--tr::before { top: 0; right: 0; }
-.folio-opening__crop--tr::after { top: 0; right: 0; }
-
-.folio-opening__crop--bl { bottom: 6px; left: 6px; }
-.folio-opening__crop--bl::before { bottom: 0; left: 0; }
-.folio-opening__crop--bl::after { bottom: 0; left: 0; }
-
-.folio-opening__crop--br { bottom: 6px; right: 6px; }
-.folio-opening__crop--br::before { bottom: 0; right: 0; }
-.folio-opening__crop--br::after { bottom: 0; right: 0; }
-
-.folio-opening__lead {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(10px, 1.4vw, 18px);
-  color: var(--muted);
-}
-
-.folio-opening__lead-rule {
-  display: block;
+  left: 0;
+  right: 0;
+  bottom: -.18em;
   height: 1px;
-  background: linear-gradient(to right, transparent, var(--line));
-  transform-origin: left center;
-  transform: scaleX(0);
-  animation: folioOpeningRuleDraw .9s var(--ease-out) .55s forwards;
-}
-
-.folio-opening__lead-rule--b {
-  background: linear-gradient(to left, transparent, var(--line));
-  transform-origin: right center;
-}
-
-@keyframes folioOpeningRuleDraw {
-  to { transform: scaleX(1); }
-}
-
-.folio-opening__lead-tag {
-  display: inline-flex;
-  align-items: baseline;
-  gap: clamp(6px, .8vw, 12px);
-  color: var(--paper);
-  font-family: var(--mono);
-  font-size: clamp(9px, .8vw, 10.5px);
-  letter-spacing: .24em;
-  text-transform: uppercase;
-}
-
-.folio-opening__lead-tag em {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(13px, 1.1vw, 15.5px);
-  letter-spacing: -.005em;
-  text-transform: none;
-  color: var(--opening-tone);
-}
-
-.folio-opening__lead-key {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(12px, 1vw, 14px);
-  letter-spacing: -.005em;
-  text-transform: none;
-  color: var(--mist);
-  opacity: .85;
-}
-
-.folio-opening__lead-glyph {
-  font-family: var(--serif);
-  font-size: clamp(13px, 1.05vw, 15px);
-  color: var(--opening-tone);
-  opacity: .8;
-}
-
-.folio-opening__diamond {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: clamp(48px, 5vw, 72px);
-  height: clamp(14px, 1.6vw, 18px);
-  color: var(--opening-tone);
-  opacity: .85;
-  margin: -4px auto -2px;
-}
-
-.folio-opening__diamond svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.folio-opening__plate {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: start;
-  gap: clamp(10px, 1.4vw, 20px);
-  padding: clamp(8px, 1vw, 14px) clamp(4px, .4vw, 8px);
-  color: var(--paper);
-}
-
-.folio-opening__rule--v {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  width: 1px;
-  min-height: 100%;
-  align-self: stretch;
-  color: var(--line);
-  opacity: .7;
-}
-
-.folio-opening__rule--v svg {
-  width: 1px;
-  height: 100%;
-}
-
-.folio-opening__cell {
-  display: grid;
-  gap: clamp(4px, .4vw, 6px);
-  padding: clamp(2px, .2vw, 4px) clamp(2px, .2vw, 6px);
-}
-
-.folio-opening__cell-key {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: clamp(8.5px, .75vw, 10px);
-  letter-spacing: .26em;
-  text-transform: uppercase;
-}
-
-.folio-opening__cell-row {
-  display: inline-flex;
-  align-items: baseline;
-  gap: clamp(8px, .8vw, 12px);
-  color: var(--paper);
-}
-
-.folio-opening__cell-letter {
-  display: inline-grid;
-  place-items: center;
-  width: clamp(20px, 1.8vw, 26px);
-  height: clamp(20px, 1.8vw, 26px);
-  border: 1px solid color-mix(in srgb, var(--opening-tone) 50%, transparent);
-  border-radius: 999px;
-  font-family: var(--mono);
-  font-size: clamp(9px, .8vw, 10.5px);
-  letter-spacing: .12em;
-  color: var(--opening-tone);
   background:
-    radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--opening-tone) 12%, transparent), transparent 70%);
-  transition: color .45s var(--ease), border-color .45s var(--ease);
+    linear-gradient(to right,
+      transparent 0%,
+      color-mix(in srgb, var(--opening-tone) 55%, transparent) 30%,
+      color-mix(in srgb, var(--opening-tone) 55%, transparent) 70%,
+      transparent 100%);
+  opacity: .5;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform .65s var(--ease-out) .15s;
 }
 
-.folio-opening__cell-letter--quiet { color: var(--blue); border-color: color-mix(in srgb, var(--blue) 50%, transparent); }
-.folio-opening__cell-letter--human { color: var(--coral); border-color: color-mix(in srgb, var(--coral) 50%, transparent); }
-.folio-opening__cell-letter--bold { color: var(--acid); border-color: color-mix(in srgb, var(--acid) 50%, transparent); }
+.folio-opening__inscription:hover .folio-opening__inscription-wait::after,
+.folio-opening.is-in-view .folio-opening__inscription-wait::after {
+  transform: scaleX(1);
+}
 
-.folio-opening__cell-glyph {
-  display: inline-grid;
-  place-items: center;
-  width: clamp(20px, 1.8vw, 26px);
-  height: clamp(20px, 1.8vw, 26px);
-  border: 1px solid color-mix(in srgb, var(--opening-tone) 50%, transparent);
-  border-radius: 1px;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(13px, 1.1vw, 15px);
+.folio-opening__signature {
+  display: grid;
+  justify-items: center;
+  gap: clamp(6px, .6vw, 10px);
+  width: min(100%, 420px);
+  margin-top: clamp(2px, .4vw, 6px);
+  color: var(--mist);
+}
+
+.folio-opening__signature-stroke {
+  display: block;
+  width: 100%;
+  height: 14px;
   color: var(--opening-tone);
+  opacity: .55;
 }
 
-.folio-opening__cell-value {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(15px, 1.25vw, 18px);
-  letter-spacing: -.01em;
-  color: var(--paper);
+.folio-opening__signature-path {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: folioOpeningSigDraw 1.1s var(--ease-out) .55s forwards;
 }
 
-.folio-opening__cell-value--date {
-  font-feature-settings: 'tnum' 1, 'lnum' 1;
-  letter-spacing: -.005em;
+.folio-opening__signature-bead {
+  opacity: 0;
+  animation: folioOpeningBeadIn .35s var(--ease-spring) 1.45s forwards;
 }
 
-.folio-opening__cell-face {
+@keyframes folioOpeningSigDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes folioOpeningBeadIn {
+  0% { opacity: 0; transform: scale(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.folio-opening__signature-meta {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 6px;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(11.5px, .95vw, 13px);
-  letter-spacing: -.002em;
-  color: var(--mist);
-  opacity: .85;
-}
-
-.folio-opening__cell-face em {
-  font-style: italic;
-  color: var(--paper);
-  text-transform: lowercase;
-  letter-spacing: .04em;
-}
-
-.folio-opening__trail {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(10px, 1.4vw, 18px);
+  justify-content: center;
+  gap: clamp(4px, .5vw, 8px);
+  font-family: var(--mono);
+  font-size: clamp(9px, .8vw, 10.5px);
+  letter-spacing: .18em;
+  text-transform: uppercase;
   color: var(--muted);
-  opacity: .8;
+  white-space: nowrap;
 }
 
-.folio-opening__trail-mark {
-  display: block;
-  height: 1px;
-  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--opening-tone) 30%, transparent));
-  opacity: .65;
-}
-
-.folio-opening__trail-mark--b {
-  background: linear-gradient(to left, transparent, color-mix(in srgb, var(--opening-tone) 30%, transparent));
-}
-
-.folio-opening__trail-tag {
-  display: inline-flex;
-  align-items: baseline;
-  gap: clamp(6px, .8vw, 10px);
-  color: var(--mist);
+.folio-opening__signature-meta em {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(11.5px, .95vw, 13px);
-  letter-spacing: -.002em;
-  text-transform: none;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: lowercase;
+  color: var(--mist);
 }
 
-.folio-opening__trail-tag-glyph {
+.folio-opening__signature-voice {
   color: var(--opening-tone);
-  font-size: clamp(12.5px, 1vw, 14px);
-  opacity: .8;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: lowercase;
+  transition: color .45s var(--ease);
+}
+
+.folio-opening__signature-word {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: lowercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-opening__signature-path {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .folio-opening__signature-bead {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .folio-opening__inscription-wait::after {
+    transition: none !important;
+    transform: scaleX(1) !important;
+  }
 }
 
 @media (max-width: 720px) {
   .folio-opening {
-    padding: clamp(14px, 1.6vw, 20px) clamp(16px, 2vw, 22px);
+    padding: clamp(16px, 2vw, 22px) clamp(18px, 2.4vw, 28px);
+    gap: clamp(8px, 1vw, 12px);
   }
 
-  .folio-opening__plate {
-    grid-template-columns: minmax(0, 1fr);
-    gap: clamp(10px, 1.4vw, 14px);
+  .folio-opening__inscription {
+    font-size: clamp(18px, 5.4vw, 24px);
+    line-height: 1.34;
   }
 
-  .folio-opening__rule--v {
-    display: none;
-  }
-
-  .folio-opening__trail {
-    grid-template-columns: minmax(0, 1fr);
-    text-align: center;
-  }
-
-  .folio-opening__trail-mark {
-    display: none;
-  }
-
-  .folio-opening__cell-key {
-    justify-content: center;
-  }
-
-  .folio-opening__cell-row {
-    justify-content: center;
-  }
-
-  .folio-opening__cell-face {
-    justify-content: center;
+  .folio-opening__signature-meta {
+    font-size: clamp(8.5px, 2.4vw, 10px);
   }
 }
 
-@media (max-width: 540px) {
-  .folio-opening__lead-tag {
+@media (max-width: 480px) {
+  .folio-opening__inscription {
     flex-wrap: wrap;
-    row-gap: 4px;
-    justify-content: center;
+    gap: clamp(6px, 2vw, 12px);
   }
 
-  .folio-opening__lead-rule {
-    display: none;
+  .folio-opening__inscription-mark {
+    font-size: clamp(16px, 4vw, 20px);
   }
 
-  .folio-opening__lead {
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: center;
+  .folio-opening__signature-meta {
+    white-space: normal;
   }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 295 · MARGINALIUM PRESS · A HAND-WRITTEN EDITORIAL
+   NOTE.
+
+   The editor's note now closes with a small hand-written
+   marginalium — a pinned, hand-set note from the press that
+   speaks directly to the reader about how to read the page.
+   It uses a single tiny pin ornament, a leading quote glyph,
+   a quiet pencil line, and a small signature. The whole
+   composition reads as a note tucked into the margin, not
+   as another UI card.
+   ──────────────────────────────────────────────────────────── */
+
+.marginalium-press {
+  --marginalium-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    'pin note'
+    'tack pencil';
+  align-items: start;
+  column-gap: clamp(12px, 1.4vw, 22px);
+  row-gap: clamp(4px, .6vw, 10px);
+  max-width: 880px;
+  margin: clamp(8px, 1.2vw, 16px) auto clamp(4px, .6vw, 8px);
+  padding: clamp(18px, 2vw, 28px) clamp(18px, 2vw, 26px) clamp(12px, 1.4vw, 18px) clamp(8px, 1vw, 14px);
+  color: var(--paper);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(6px) rotate(-.45deg);
+  transform-origin: 50% 50%;
+  animation: marginaliumPressIn .85s var(--ease-out) .4s forwards;
+}
+
+.marginalium-press::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed color-mix(in srgb, var(--marginalium-tone) 22%, transparent);
+  border-radius: 1px;
+  pointer-events: none;
+  opacity: .55;
+  z-index: -1;
+}
+
+.marginalium-press::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 8%;
+  right: 8%;
+  height: 14px;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--paper) 6%, transparent) 0%,
+      transparent 100%);
+  border-radius: 50% 50% 0 0;
+  pointer-events: none;
+  opacity: .35;
+  z-index: -1;
+}
+
+@keyframes marginaliumPressIn {
+  0% { opacity: 0; transform: translateY(10px) rotate(-.45deg); }
+  100% { opacity: 1; transform: translateY(0) rotate(-.45deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .folio-opening__lead-rule {
+  .marginalium-press {
     animation: none !important;
-    transform: none !important;
     opacity: 1 !important;
+    transform: rotate(-.45deg) !important;
+  }
+}
+
+.marginalium-press__pin {
+  grid-area: pin;
+  display: grid;
+  place-items: center;
+  width: clamp(22px, 2.2vw, 30px);
+  height: clamp(22px, 2.2vw, 30px);
+  margin-top: clamp(2px, .3vw, 4px);
+  color: var(--marginalium-tone);
+  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, .3));
+  transform: rotate(8deg);
+  transition: transform .55s var(--ease-spring);
+}
+
+.marginalium-press:hover .marginalium-press__pin {
+  transform: rotate(14deg) translateY(-1px);
+}
+
+.marginalium-press__pin svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+}
+
+.marginalium-press__tack {
+  grid-area: tack;
+  display: grid;
+  align-self: end;
+  width: clamp(40px, 5vw, 80px);
+  height: 10px;
+  color: var(--marginalium-tone);
+  opacity: .55;
+  transform: rotate(8deg);
+  transform-origin: 0% 100%;
+}
+
+.marginalium-press__tack svg {
+  width: 100%;
+  height: 100%;
+  color: inherit;
+}
+
+.marginalium-press__tack-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: marginaliumPressTackDraw 1.1s var(--ease-out) .7s forwards;
+}
+
+@keyframes marginaliumPressTackDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.marginalium-press__note {
+  grid-area: note;
+  display: grid;
+  grid-template-columns: clamp(18px, 1.6vw, 22px) minmax(0, 1fr);
+  column-gap: clamp(8px, 1vw, 14px);
+  align-items: start;
+  margin: 0;
+  padding: 0;
+}
+
+.marginalium-press__quote {
+  display: grid;
+  place-items: start center;
+  padding-top: clamp(2px, .3vw, 6px);
+  color: var(--marginalium-tone);
+  opacity: .75;
+}
+
+.marginalium-press__quote svg {
+  display: block;
+  width: clamp(18px, 1.6vw, 22px);
+  height: auto;
+  color: inherit;
+}
+
+.marginalium-press__body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.25vw, 17.5px);
+  line-height: 1.5;
+  letter-spacing: -.005em;
+  color: var(--lead-2);
+  font-feature-settings: 'kern' 1, 'liga' 1, 'onum' 1;
+  text-wrap: pretty;
+}
+
+.marginalium-press__body p {
+  margin: 0;
+}
+
+.marginalium-press__body em {
+  color: var(--paper);
+  font-style: italic;
+  text-shadow: 0 0 .04em color-mix(in srgb, var(--marginalium-tone) 24%, transparent);
+}
+
+.marginalium-press__sign {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: clamp(6px, .8vw, 12px);
+  margin-top: clamp(8px, 1vw, 14px);
+  padding-top: clamp(6px, .8vw, 10px);
+  border-top: 1px dashed var(--line-soft);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .75vw, 10px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.marginalium-press__sign-mark {
+  color: var(--marginalium-tone);
+  font-family: var(--serif);
+  font-size: clamp(15px, 1.3vw, 17px);
+  opacity: .75;
+}
+
+.marginalium-press__sign-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(14px, 1.2vw, 16px);
+  letter-spacing: -.005em;
+  text-transform: lowercase;
+  color: var(--paper);
+}
+
+.marginalium-press__sign-rule {
+  display: block;
+  width: clamp(40px, 5vw, 80px);
+  height: 6px;
+  color: var(--marginalium-tone);
+  opacity: .55;
+}
+
+.marginalium-press__sign-rule svg {
+  width: 100%;
+  height: 100%;
+}
+
+.marginalium-press__sign-note {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, .95vw, 13px);
+  letter-spacing: -.002em;
+  text-transform: lowercase;
+  color: var(--mist);
+  opacity: .85;
+}
+
+.marginalium-press__pencil {
+  grid-area: pencil;
+  display: grid;
+  align-items: center;
+  gap: clamp(2px, .3vw, 4px);
+  margin-left: clamp(28px, 3vw, 44px);
+  color: var(--marginalium-tone);
+}
+
+.marginalium-press__pencil svg {
+  width: clamp(100px, 14vw, 140px);
+  height: 14px;
+  color: inherit;
+}
+
+.marginalium-press__pencil-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: marginaliumPressPencilDraw 1.2s var(--ease-out) 1s forwards;
+}
+
+@keyframes marginaliumPressPencilDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.marginalium-press__pencil-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: marginaliumPressPencilBead .35s var(--ease-spring) 2.1s forwards;
+}
+
+@keyframes marginaliumPressPencilBead {
+  0% { opacity: 0; transform: scale(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.marginalium-press__pencil-tag {
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .75vw, 9.5px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: .85;
+  white-space: nowrap;
+}
+
+.marginalium-press__pencil-tag span {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .95vw, 13px);
+  letter-spacing: -.002em;
+  text-transform: lowercase;
+  color: var(--mist);
+}
+
+.marginalium-press--voice-quiet .marginalium-press__pencil-tag span { color: var(--blue); }
+.marginalium-press--voice-human .marginalium-press__pencil-tag span { color: var(--coral); }
+.marginalium-press--voice-bold .marginalium-press__pencil-tag span { color: var(--acid); }
+
+@media (prefers-reduced-motion: reduce) {
+  .marginalium-press__tack-stroke,
+  .marginalium-press__pencil-stroke {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .marginalium-press__pencil-bead {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .marginalium-press {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'pin'
+      'note'
+      'pencil';
+    padding: clamp(16px, 2vw, 22px) clamp(14px, 2vw, 18px);
+  }
+
+  .marginalium-press__tack {
+    display: none;
+  }
+
+  .marginalium-press__pencil {
+    margin-left: 0;
+    justify-items: start;
   }
 }
 
