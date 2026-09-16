@@ -768,87 +768,86 @@ export function App() {
                   <span className="hero__key-caption-mark" aria-hidden="true">※</span>
                 </figcaption>
 
-                <div className="hero__key-grid" role="table" aria-label="The page's three voices and three marked words, crossed">
-                  <span className="hero__key-axis hero__key-axis--head" aria-hidden="true" />
-                  <span className="hero__key-axis hero__key-axis--body" aria-hidden="true" />
-
-                  <span className="hero__key-col-head hero__key-col-head--m3" aria-hidden="true">
-                    <span className="hero__key-col-head-num">i</span>
-                    <span className="hero__key-col-head-name">m³</span>
-                    <span className="hero__key-col-head-mark">stet</span>
-                  </span>
-                  <span className="hero__key-col-head hero__key-col-head--good" aria-hidden="true">
-                    <span className="hero__key-col-head-num">ii</span>
-                    <span className="hero__key-col-head-name">good at</span>
-                    <span className="hero__key-col-head-mark">caret</span>
-                  </span>
-                  <span className="hero__key-col-head hero__key-col-head--yet" aria-hidden="true">
-                    <span className="hero__key-col-head-num">iii</span>
-                    <span className="hero__key-col-head-name">yet?</span>
-                    <span className="hero__key-col-head-mark">query</span>
-                  </span>
-
-                  {(['quiet', 'human', 'bold'] as VoiceId[]).map(v => (
-                    <span
-                      key={`row-${v}`}
-                      className={`hero__key-row hero__key-row--${v}`}
-                      aria-hidden="true"
-                    >
-                      <span className={`hero__key-row-head hero__key-row-head--${v}`}>
-                        <span className="hero__key-row-head-letter">{v === 'quiet' ? 'A' : v === 'human' ? 'B' : 'C'}</span>
-                        <span className="hero__key-row-head-name">
-                          {v === 'quiet' ? 'quiet cut' : v === 'human' ? 'human hand' : 'bold signal'}
-                        </span>
-                      </span>
-                      {(['m3', 'good', 'yet'] as WordId[]).map(w => {
-                        const isActive = v === voice && w === activeWord
-                        return (
-                          <span
-                            key={`cell-${v}-${w}`}
-                            className={`hero__key-cell hero__key-cell--${v}-${w} ${isActive ? 'is-active' : ''}`}
-                            aria-hidden="true"
-                          >
-                            <svg className="hero__key-cell-svg" viewBox="0 0 64 64">
-                              <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".65" />
-                              <circle cx="32" cy="32" r="14" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 1.6" opacity=".45" />
-                              {isActive && (
-                                <circle cx="32" cy="32" r="6" fill="currentColor" opacity=".9" />
-                              )}
-                              {isActive && (
-                                <circle cx="32" cy="32" r="11" fill="none" stroke="currentColor" strokeWidth=".55" />
-                              )}
-                              <text
-                                x="32"
-                                y="36"
-                                textAnchor="middle"
-                                fontFamily={v === 'bold' ? 'Inter, ui-sans-serif, system-ui, sans-serif' : 'Georgia, serif'}
-                                fontStyle={v === 'quiet' ? 'italic' : v === 'human' ? 'italic' : 'normal'}
-                                fontWeight={v === 'bold' ? 800 : 400}
-                                fontSize={w === 'good' ? '12' : w === 'yet' ? '14' : '14'}
-                                letterSpacing={v === 'bold' ? '-.04em' : '-.02em'}
-                                fill="currentColor"
-                                opacity={isActive ? '1' : '.85'}
-                              >
-                                {w === 'm3' ? 'm³' : w === 'good' ? 'good' : 'yet?'}
-                              </text>
-                            </svg>
-                          </span>
-                        )
-                      })}
-                    </span>
-                  ))}
-
-                  <span className="hero__key-tag" aria-hidden="true">
-                    <span className="hero__key-tag-row">
-                      <span className="hero__key-tag-mark" />
-                      <em>set · mark · press</em>
-                      <span className="hero__key-tag-mark hero__key-tag-mark--alt" />
-                    </span>
-                    <span className="hero__key-tag-line">
-                      the lit cell shows the active setting on the page
-                    </span>
-                  </span>
+                <div className="hero__key-plate" aria-hidden="true">
+                  <svg className="hero__key-plate-svg" viewBox="0 0 480 240">
+                    <defs>
+                      <linearGradient id={`hero-key-rule-${bodyGrainId}`} x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
+                        <stop offset="50%" stopColor="currentColor" stopOpacity=".7" />
+                        <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <line x1="8" y1="22" x2="472" y2="22" stroke="currentColor" strokeWidth=".5" strokeDasharray=".8 2.4" opacity=".4" />
+                    <line x1="146" y1="30" x2="146" y2="208" stroke="currentColor" strokeWidth=".5" strokeDasharray=".8 2.4" opacity=".25" />
+                    <circle cx="146" cy="118" r="2.2" fill="currentColor" opacity=".5" />
+                    <text x="153" y="32" fontFamily="ui-monospace, monospace" fontSize="6" letterSpacing="2" fill="currentColor" opacity=".55">VOICE</text>
+                    <text x="320" y="32" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="6" letterSpacing="2" fill="currentColor" opacity=".55">×</text>
+                    <text x="460" y="32" textAnchor="end" fontFamily="ui-monospace, monospace" fontSize="6" letterSpacing="2" fill="currentColor" opacity=".55">MARK</text>
+                    <text x="153" y="218" fontFamily="ui-monospace, monospace" fontSize="5.4" letterSpacing="1.8" fill="currentColor" opacity=".42">SET · MARK · PRESS</text>
+                    <text x="460" y="218" textAnchor="end" fontFamily="ui-monospace, monospace" fontSize="5.4" letterSpacing="1.8" fill="currentColor" opacity=".42">FOLIO · I·</text>
+                    <line x1="8" y1="216" x2="472" y2="216" stroke="currentColor" strokeWidth=".5" strokeDasharray=".8 2.4" opacity=".4" />
+                  </svg>
                 </div>
+
+                <div className="hero__key-rows" role="table" aria-label="The page's three voices and three marked words, crossed">
+                  {([
+                    { v: 'quiet' as VoiceId, label: 'quiet cut', letter: 'A', column: 'voice quiet · small caps' },
+                    { v: 'human' as VoiceId, label: 'human hand', letter: 'B', column: 'voice human · a little warm' },
+                    { v: 'bold' as VoiceId, label: 'bold signal', letter: 'C', column: 'voice bold · no apology' },
+                  ]).map(row => {
+                    const rowActive = row.v === voice
+                    return (
+                      <div
+                        key={`row-${row.v}`}
+                        className={`hero__key-row hero__key-row--${row.v} ${rowActive ? 'is-active-row' : ''}`}
+                        role="row"
+                      >
+                        <div className={`hero__key-row-head hero__key-row-head--${row.v}`} role="rowheader">
+                          <span className="hero__key-row-head-letter" aria-hidden="true">{row.letter}</span>
+                          <span className="hero__key-row-head-name">{row.label}</span>
+                          <span className="hero__key-row-head-line" aria-hidden="true">sets the line above in <em>{row.column}</em></span>
+                        </div>
+                        {(['m3', 'good', 'yet'] as WordId[]).map(w => {
+                          const isActive = row.v === voice && w === activeWord
+                          return (
+                            <span
+                              key={`cell-${row.v}-${w}`}
+                              className={`hero__key-cell hero__key-cell--${row.v}-${w} ${isActive ? 'is-active' : ''}`}
+                              aria-hidden="true"
+                            >
+                              <span className="hero__key-cell-carets" aria-hidden="true">
+                                <span className="hero__key-cell-caret" />
+                                <span className="hero__key-cell-caret" />
+                                <span className="hero__key-cell-caret" />
+                              </span>
+                              <span className="hero__key-cell-word">{w === 'm3' ? 'm³' : w === 'good' ? 'good at' : 'yet?'}</span>
+                              <span className="hero__key-cell-mark">{w === 'm3' ? 'stet' : w === 'good' ? 'caret' : 'query'}</span>
+                              {isActive && (
+                                <span className="hero__key-cell-pin" aria-hidden="true">
+                                  <svg viewBox="0 0 60 16" preserveAspectRatio="none">
+                                    <path
+                                      d="M2 8c12-8 24 8 36 0s18-6 20-2"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth=".9"
+                                      strokeLinecap="round"
+                                    />
+                                    <circle cx="58" cy="8" r="1.4" fill="currentColor" />
+                                  </svg>
+                                </span>
+                              )}
+                            </span>
+                          )
+                        })}
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <p className="hero__key-gloss">
+                  <span className="hero__key-gloss-mark" aria-hidden="true" />
+                  The lit pin marks the cell you are reading on the title above. <em>Pull a voice, mark a word — the press answers.</em>
+                </p>
               </figure>
             </article>
 

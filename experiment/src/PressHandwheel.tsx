@@ -81,11 +81,14 @@ export function PressHandwheel({ voice, word, setToday, marks, onVoice, onWord, 
   const grainId = `press-handwheel-grain-${baseId}`
   const rootRef = useRef<HTMLDivElement>(null)
   const [revealed, setRevealed] = useState(false)
-  const [spinTick, setSpinTick] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
   const [pullCount, setPullCount] = useState(0)
+  const [spinAngle, setSpinAngle] = useState(0)
+  const [strikeKey, setStrikeKey] = useState(0)
   const lastVoiceRef = useRef<VoiceId>(voice)
   const lastWordRef = useRef<WordId>(word)
+  const wheelRotateRef = useRef<HTMLSpanElement>(null)
+  const markRotateRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     const node = rootRef.current
@@ -110,15 +113,16 @@ export function PressHandwheel({ voice, word, setToday, marks, onVoice, onWord, 
   useEffect(() => {
     if (lastVoiceRef.current !== voice) {
       lastVoiceRef.current = voice
-      setSpinTick(value => value + 1)
       setPullCount(value => value + 1)
+      setStrikeKey(value => value + 1)
+      setSpinAngle(value => value + 96)
     }
   }, [voice])
 
   useEffect(() => {
     if (lastWordRef.current !== word) {
       lastWordRef.current = word
-      setSpinTick(value => value + 1)
+      setStrikeKey(value => value + 1)
     }
   }, [word])
 
@@ -166,6 +170,8 @@ export function PressHandwheel({ voice, word, setToday, marks, onVoice, onWord, 
     }
   }
 
+  const wheelRotateStyle = { '--press-wheel-spin': `${spinAngle}deg` } as CSSProperties
+
   return (
     <div
       ref={rootRef}
@@ -206,7 +212,13 @@ export function PressHandwheel({ voice, word, setToday, marks, onVoice, onWord, 
               <span key={`stud-${index}`} className={`press-handwheel__wheel-stud press-handwheel__wheel-stud--${index + 1}`} />
             ))}
           </span>
-          <span key={`wheel-rotate-${spinTick}-${voice}`} className={`press-handwheel__wheel-rotate press-handwheel__wheel-rotate--${voice}`} aria-hidden="true">
+          <span
+            ref={wheelRotateRef}
+            key={`wheel-rotate-${voice}`}
+            className={`press-handwheel__wheel-rotate press-handwheel__wheel-rotate--${voice}`}
+            style={wheelRotateStyle}
+            aria-hidden="true"
+          >
             <svg viewBox="0 0 64 64" className="press-handwheel__wheel-svg">
               <g className={`press-handwheel__wheel-gear press-handwheel__wheel-gear--${voice}`}>
                 <circle cx="32" cy="32" r="24" fill="none" stroke="currentColor" strokeWidth=".5" opacity=".4" />
@@ -238,6 +250,11 @@ export function PressHandwheel({ voice, word, setToday, marks, onVoice, onWord, 
                 <circle cx="32" cy="32" r="1.6" fill="var(--night)" opacity=".7" />
               </g>
             </svg>
+            <span key={`wheel-strike-${strikeKey}`} className="press-handwheel__wheel-strike" aria-hidden="true">
+              <svg viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="28" fill="currentColor" opacity=".12" />
+              </svg>
+            </span>
           </span>
           <span className="press-handwheel__wheel-letter" aria-hidden="true">
             <span>{VOICE_LETTER[voice]}</span>
