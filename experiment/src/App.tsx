@@ -20,12 +20,12 @@ import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
 import { PressSignature } from './PressSignature'
 import { WayfinderSeal } from './WayfinderSeal'
-import { PressSignatureMark } from './PressSignatureMark'
 import { NotesSection } from './NotesSection'
 import { FolioFold } from './FolioFold'
 import { PressSpine } from './PressSpine'
 import { TitlePage } from './TitlePage'
 import { FolioOpening } from './FolioOpening'
+import { PressSignatureLine } from './PressSignatureLine'
 import { MarginaliumPress } from './MarginaliumPress'
 import { FolioThumbprint } from './FolioThumbprint'
 import { TitleLine } from './TitleLine'
@@ -647,6 +647,8 @@ export function App() {
 
           <FolioOpening voice={voice} word={activeWord} setToday={setToday} />
 
+          <PressSignatureLine voice={voice} setToday={setToday} />
+
           <div className="hero__spread">
             <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
             <PaperWarmth voice={voice} />
@@ -688,7 +690,7 @@ export function App() {
               <span className="hero__body-plate-rule" />
               <span className="hero__body-plate-tag">
                 <span className="hero__body-plate-dot" />
-                the editor's note <em>·</em> front matter
+                the editor's note <em>·</em> <em>front matter</em>
                 <span className="hero__body-plate-dot" />
               </span>
               <span className="hero__body-plate-rule" />
