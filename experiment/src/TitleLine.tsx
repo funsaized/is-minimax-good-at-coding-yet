@@ -329,6 +329,35 @@ export function TitleLine({
               </svg>
             </span>
           </span>
+          <span className="titleline__exhale" aria-hidden="true">
+            <svg className="titleline__exhale-svg" viewBox="0 0 320 36" preserveAspectRatio="xMaxYMid meet" aria-hidden="true">
+              <path
+                className="titleline__exhale-stroke titleline__exhale-stroke--lead"
+                d="M2 22c14-10 30 6 56-2s36-8 60-2 40 6 64-2 40-8 60-2 36 6 56-2"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.1"
+                strokeLinecap="round"
+                pathLength="100"
+              />
+              <path
+                className="titleline__exhale-stroke titleline__exhale-stroke--trail"
+                d="M40 28c12-4 24 4 44-1s28-4 44 0 28 4 44-1 28-4 44-1 24 6 36-1 24-4 36-1 20 4 28-1"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".55"
+                strokeLinecap="round"
+                opacity=".55"
+                pathLength="100"
+              />
+              <circle className="titleline__exhale-bead" cx="314" cy="20" r="2.2" fill="currentColor" />
+              <circle className="titleline__exhale-halo" cx="314" cy="20" r="6" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".8 2" opacity=".7" />
+            </svg>
+            <span className="titleline__exhale-tag" aria-hidden="true">
+              <span className="titleline__exhale-tag-mark" />
+              <em>the question, set down</em>
+            </span>
+          </span>
         </span>
       </h2>
 

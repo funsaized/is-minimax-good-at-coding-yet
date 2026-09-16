@@ -1,16 +1,11 @@
-# Iteration 309
+# Changelog
 
-The headline gets a single drawn inkline threading the three marked words; the hero is quietly slimmed.
+## Iteration 310 · the question's exhalation
 
-## What changed
-- Added `QuestionLine.tsx`: a hand-drawn SVG flourish beneath the headline that draws a single continuous stroke through the three marked words (m3 / good / yet), with a bead, proof mark, and label at each. The active word pulses; the line and its beads stagger in on first paint and respect reduced-motion.
-- Threaded the new flourish into `TitleLine.tsx`, between the headline and the proof cards, so the question reads as one composition.
-- Removed the redundant `SpreadRibbon` and `VoiceTrial` from the hero — the page's WayfinderSeal (header), TitleLine voice cycler, and the Press section below already cover what they did. The hero now opens with one caption, the question, the prologue, and the lever.
-- Cleaned unused rehearsal / FOLIO_ORDER state out of `App.tsx`.
-- Added `.question-line` styles in `style.css`, including the new ink-drawing, bead-bloom, mark-rise, and tail-bead keyframes.
+The headline now ends with a hand-drawn flourish that emerges from the question mark and curls out into the right margin — the question's final gesture, like a hand setting the pen down. The flourish threads two strokes (a confident lead line and a softer trail echo) and lands on a single bead, with a small italic tag beneath that reads "the question, set down." It grows fully present when the "yet" mark is active.
 
-## Files
-- `src/QuestionLine.tsx` (new)
-- `src/TitleLine.tsx`
-- `src/App.tsx`
-- `src/style.css`
+The headline typography is slightly enlarged for more confidence. The question line below is more present: bead cores, glow halos, and outer rings are larger; the marks beneath each bead are set with a touch more weight; the trailing thread lands on a slightly larger bead.
+
+The title-page running head is simplified to a single quiet line of italic serif metadata with a hand-drawn rule at its centre. It is now a caption, not a banner — the title gets the page to itself.
+
+Files: `src/TitleLine.tsx`, `src/QuestionLine.tsx`, `src/TitlePage.tsx`, `src/style.css`.

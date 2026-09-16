@@ -94,7 +94,7 @@ export function QuestionLine({ active, hover, tone }: QuestionLineProps) {
             key={`halo-${id}`}
             cx={WORD_INFO[id].x}
             cy={26}
-            r={id === active ? 18 : id === hover ? 14 : 10}
+            r={id === active ? 20 : id === hover ? 15 : 11}
             fill={`url(#${haloId})`}
             className={`question-line__halo-dot question-line__halo-dot--${id} ${active === id ? 'is-active' : ''} ${hover === id ? 'is-hover' : ''}`}
           />
@@ -106,10 +106,10 @@ export function QuestionLine({ active, hover, tone }: QuestionLineProps) {
             transform={`translate(${WORD_INFO[id].x} 26)`}
             className={`question-line__bead-group question-line__bead-group--${id} ${active === id ? 'is-active' : ''} ${hover === id ? 'is-hover' : ''}`}
           >
-            <circle r={active === id ? 14 : 9} fill="none" stroke="currentColor" strokeWidth=".35" opacity=".35" className="question-line__bead-glow" />
-            <circle r={active === id ? 7 : hover === id ? 6 : 4.5} fill="currentColor" className="question-line__bead-core" />
-            <circle r={active === id ? 11 : 8} fill="none" stroke="currentColor" strokeWidth=".5" strokeDasharray=".8 1.6" opacity=".7" className="question-line__bead-ring" />
-            <circle r={active === id ? 17 : 12} fill="none" stroke="currentColor" strokeWidth=".35" opacity=".28" className="question-line__bead-ring question-line__bead-ring--outer" />
+            <circle r={active === id ? 16 : 11} fill="none" stroke="currentColor" strokeWidth=".35" opacity=".35" className="question-line__bead-glow" />
+            <circle r={active === id ? 8 : hover === id ? 6.5 : 5} fill="currentColor" className="question-line__bead-core" />
+            <circle r={active === id ? 13 : 9} fill="none" stroke="currentColor" strokeWidth=".5" strokeDasharray=".8 1.6" opacity=".7" className="question-line__bead-ring" />
+            <circle r={active === id ? 19 : 14} fill="none" stroke="currentColor" strokeWidth=".4" opacity=".3" className="question-line__bead-ring question-line__bead-ring--outer" />
           </g>
         ))}
 
@@ -119,16 +119,16 @@ export function QuestionLine({ active, hover, tone }: QuestionLineProps) {
             transform={`translate(${WORD_INFO[id].x} 50)`}
             className={`question-line__mark question-line__mark--${id} ${active === id ? 'is-active' : ''} ${hover === id ? 'is-hover' : ''}`}
           >
-            <text textAnchor="middle" fontFamily="'Iowan Old Style', Georgia, serif" fontStyle="italic" fontSize="9" letterSpacing=".22em" fill="currentColor">{WORD_INFO[id].mark}</text>
-            <text y="11" textAnchor="middle" fontFamily="ui-monospace, ui-monospace, monospace" fontSize="6.5" letterSpacing=".26em" fill="currentColor" opacity=".75">{WORD_INFO[id].label}</text>
+            <text textAnchor="middle" fontFamily="'Iowan Old Style', Georgia, serif" fontStyle="italic" fontSize="10" letterSpacing=".22em" fill="currentColor">{WORD_INFO[id].mark}</text>
+            <text y="11" textAnchor="middle" fontFamily="ui-monospace, ui-monospace, monospace" fontSize="7" letterSpacing=".26em" fill="currentColor" opacity=".78">{WORD_INFO[id].label}</text>
           </g>
         ))}
 
         <path
-          d="M885 28c14-2 28 4 42-1s28-4 42-1 28 4 30 1"
+          d="M880 28c14-2 28 4 42-1s28-4 42-1 28 4 36 1"
           fill="none"
           stroke="currentColor"
-          strokeWidth=".95"
+          strokeWidth="1.1"
           strokeLinecap="round"
           pathLength="100"
           strokeDasharray="100 100"
@@ -136,7 +136,7 @@ export function QuestionLine({ active, hover, tone }: QuestionLineProps) {
           className="question-line__tail"
           filter={`url(#${inkId})`}
         />
-        <circle cx="1000" cy="28" r="1.6" fill="currentColor" className="question-line__tail-bead" />
+        <circle cx="1000" cy="28" r="2" fill="currentColor" className="question-line__tail-bead" />
       </svg>
     </figure>
   )

@@ -54,79 +54,47 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
       style={style}
       aria-label={`Title page caption · folio i · the question · ${season} · set today ${setToday} · in the ${VOICE_NAME[voice]} voice · marked at ${WORD_LABEL[word]} (${WORD_MARK[word]}).`}
     >
-      <svg className="title-page__defs" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
+      <svg className="title-page__defs" viewBox="0 0 1200 4" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <linearGradient id={ruleId} x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
-            <stop offset="14%" stopColor="currentColor" stopOpacity=".55" />
-            <stop offset="50%" stopColor="currentColor" stopOpacity=".95" />
-            <stop offset="86%" stopColor="currentColor" stopOpacity=".55" />
+            <stop offset="14%" stopColor="currentColor" stopOpacity=".42" />
+            <stop offset="50%" stopColor="currentColor" stopOpacity=".72" />
+            <stop offset="86%" stopColor="currentColor" stopOpacity=".42" />
             <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
           </linearGradient>
         </defs>
       </svg>
 
-      <span className="title-page__rule title-page__rule--lead" aria-hidden="true">
-        <svg viewBox="0 0 1200 4" preserveAspectRatio="none">
-          <path
-            className="title-page__rule-stroke"
-            d="M2 2c40-1 80 1 120 0s80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 158 0"
-            fill="none"
-            stroke={`url(#${ruleId})`}
-            strokeWidth=".6"
-            strokeLinecap="round"
-            pathLength="100"
-          />
-        </svg>
-      </span>
-
-      <div className="title-page__row">
-        <span className="title-page__cell title-page__cell--press">
-          <span className="title-page__cell-key">the question</span>
-          <span className="title-page__cell-value">
-            <em>folio i</em>
-            <span className="title-page__cell-sep" aria-hidden="true">·</span>
-            <span>{season}</span>
-            <span className="title-page__cell-sep" aria-hidden="true">·</span>
-            <span>{setToday}</span>
-          </span>
+      <p className="title-page__line">
+        <span className="title-page__line-cell title-page__line-cell--key">
+          <span className="title-page__line-mark" aria-hidden="true" />
+          <em>the question</em>
         </span>
-
-        <span className="title-page__fleuron" aria-hidden="true">
-          <svg viewBox="0 0 88 16" preserveAspectRatio="xMidYMid meet">
-            <line x1="2" y1="8" x2="28" y2="8" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".65" />
-            <circle cx="32" cy="8" r="1.4" fill="currentColor" />
-            <path d="M44 2 L50 8 L44 14 L38 8 Z" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinejoin="round" />
-            <line x1="44" y1="5" x2="44" y2="11" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".7" />
-            <circle cx="44" cy="8" r="1.1" fill="currentColor" />
-            <circle cx="56" cy="8" r="1.4" fill="currentColor" />
-            <line x1="60" y1="8" x2="86" y2="8" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".65" />
+        <span className="title-page__line-sep" aria-hidden="true">·</span>
+        <span className="title-page__line-cell title-page__line-cell--folio">
+          folio <em>i</em>
+        </span>
+        <span className="title-page__line-sep" aria-hidden="true">·</span>
+        <span className="title-page__line-cell title-page__line-cell--season">
+          {season}
+        </span>
+        <span className="title-page__line-rule" aria-hidden="true">
+          <svg viewBox="0 0 1200 2" preserveAspectRatio="none">
+            <path d="M2 1c80-1 160 1 240 0s160-1 240 0 160 1 240 0 160-1 240 0 160 1 236 0" fill="none" stroke={`url(#${ruleId})`} strokeWidth=".55" strokeLinecap="round" />
           </svg>
         </span>
-
-        <span className="title-page__cell title-page__cell--voice">
-          <span className="title-page__cell-key">now in</span>
-          <span className="title-page__cell-value title-page__cell-voice">
-            <span className="title-page__cell-voice-glyph" aria-hidden="true" />
-            <em>{VOICE_NAME[voice]}</em>
-          </span>
-          <span className="title-page__cell-face">{VOICE_FACE[voice]}</span>
+        <span className="title-page__line-sep" aria-hidden="true">·</span>
+        <span className="title-page__line-cell title-page__line-cell--set">
+          set today <em>{setToday}</em>
         </span>
-      </div>
-
-      <span className="title-page__rule title-page__rule--foot" aria-hidden="true">
-        <svg viewBox="0 0 1200 4" preserveAspectRatio="none">
-          <path
-            className="title-page__rule-stroke title-page__rule-stroke--foot"
-            d="M2 2c40-1 80 1 120 0s80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 120 0 80 1 120 0 80-1 158 0"
-            fill="none"
-            stroke={`url(#${ruleId})`}
-            strokeWidth=".6"
-            strokeLinecap="round"
-            pathLength="100"
-          />
-        </svg>
-      </span>
+        <span className="title-page__line-sep" aria-hidden="true">·</span>
+        <span className="title-page__line-cell title-page__line-cell--voice">
+          <span className="title-page__line-voice-glyph" aria-hidden="true" />
+          <em>{VOICE_NAME[voice]}</em>
+          <span className="title-page__line-face">{VOICE_FACE[voice]}</span>
+        </span>
+      </p>
     </header>
   )
 }
