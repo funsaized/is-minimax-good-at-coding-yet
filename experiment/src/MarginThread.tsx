@@ -17,6 +17,7 @@ const MARGIN_FOLIOS: MarginFolio[] = [
   { id: 'note', index: '·', label: 'a folded slip', hint: 'a short letter to the reader' },
   { id: 'proof', index: 'iv', label: 'the second proof', hint: 'marks on the words worth keeping' },
   { id: 'pressings', index: 'v', label: 'three pressings', hint: 'the question set three ways' },
+  { id: 'catch', index: 'v·', label: 'the signature', hint: 'one word, set three ways on a single broadside' },
   { id: 'notes', index: 'vi', label: 'the marginalia', hint: 'three things worth keeping' },
   { id: 'answer', index: 'viii', label: 'the answer', hint: 'folded once, then folded back' },
 ]

@@ -39,6 +39,7 @@ import { ClosingPlate } from './ClosingPlate'
 import { ReadingPrologue } from './ReadingPrologue'
 import { PressHandwheel } from './PressHandwheel'
 import { SpreadRibbon } from './SpreadRibbon'
+import { LetterpressCatch } from './LetterpressCatch'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -65,7 +66,8 @@ const READING_SECTIONS: { id: string; index: string; label: string }[] = [
   { id: 'reader-plate', index: '·', label: 'bookplate' },
   { id: 'proof', index: 'iv', label: 'proof' },
   { id: 'pressings', index: 'v', label: 'pressings' },
-  { id: 'notes', index: 'vi', label: 'marginalia' },
+  { id: 'catch', index: 'vi·', label: 'signature' },
+  { id: 'notes', index: 'vii', label: 'marginalia' },
   { id: 'answer', index: 'viii', label: 'answer' },
 ]
 
@@ -121,7 +123,7 @@ function PaperWarmth({ voice }: { voice: VoiceId }) {
   return <span className={`paper-warmth paper-warmth--${voice}`} aria-hidden="true" />
 }
 
-const FOLIO_ORDER: string[] = ['question', 'press', 'contents', 'day', 'note', 'reader-plate', 'proof', 'pressings', 'notes', 'answer']
+const FOLIO_ORDER: string[] = ['question', 'press', 'contents', 'day', 'note', 'reader-plate', 'proof', 'pressings', 'catch', 'notes', 'answer']
 
 function ArrowIcon() {
   return (
@@ -481,7 +483,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
-    const elements = ['question', 'press', 'contents', 'day', 'note', 'reader-plate', 'proof', 'pressings', 'notes', 'answer']
+    const elements = ['question', 'press', 'contents', 'day', 'note', 'reader-plate', 'proof', 'pressings', 'catch', 'notes', 'answer']
       .map(id => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element))
     if (!('IntersectionObserver' in window)) return
@@ -987,6 +989,15 @@ export function App() {
         </section>
 
         <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
+
+        <section className="catch-section" id="catch" aria-labelledby="catch-title">
+          <div className="catch-section__header">
+            <p className="eyebrow"><span className="eyebrow__line" />the press signature <em>a single word, three settings</em></p>
+            <h2 id="catch-title">Read the rule, <i>not the ornament.</i></h2>
+            <p className="catch-section__lede">One word pulled through three presses. The same word, set three ways, on a single broadside. Pull any voice and the rule holds; the ornament changes.</p>
+          </div>
+          <LetterpressCatch voice={voice} word={activeWord} setToday={setToday} readerName={readerName} />
+        </section>
 
         <PressSignature folio="viii" voice={voice} word={activeWord} setToday={setToday} variant="footer" />
 

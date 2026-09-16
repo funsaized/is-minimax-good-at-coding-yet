@@ -28,6 +28,7 @@ const FOLIO_INDEX: Record<string, string> = {
   'reader-plate': 'v',
   proof: 'vi',
   pressings: 'vii',
+  catch: 'vii·',
   notes: 'viii',
   answer: 'viii·',
 }
@@ -41,6 +42,7 @@ const FOLIO_HINT: Record<string, string> = {
   'reader-plate': 'the bookplate',
   proof: 'the proof',
   pressings: 'the pressings',
+  catch: 'the signature',
   notes: 'the marginalia',
   answer: 'the answer',
 }
