@@ -1,13 +1,15 @@
 # Changelog
 
-## Iteration 312 · the press's exhale
+## Iteration 313
 
-Pulling the lever now exhales a hand-drawn ink flourish from the pivot — the page's drawn arc gains a middle beat.
+The page gains a closing breath — a hand-drawn return curl closes the drawn-arc narrative.
 
-When the press lever is pulled, a single confident lead stroke and a softer trail emerge from the lever's pivot, curl outward to the right, and land on a small bead with a slow halo. The gesture sits between the question mark's tail above and the answer's period exhale below, so the question → press → answer motion now reads as one continuous drawn line through the page.
+- Added a new `PageReturn` component that renders a deliberate, hand-drawn closing flourish after the closing plate.
+- The curl spirals inward from the right, against the direction of the three earlier exhalations (title, lever, answer), giving the page a sense of return and resolution.
+- Each voice tints the curl: blue for quiet, coral for human, acid for bold.
+- The curl draws progressively as it enters the viewport, with a seed dot, lead stroke, trailing stroke, bead, and a slow halo pulse.
+- A small "the page rests" title, two italic captions, and a "return to the question" anchor frame the flourish without crowding it.
+- Animations honor `prefers-reduced-motion`: the curl snaps to its final state with no draw-in, no pulse.
+- Layout adapts at 720px and 480px breakpoints — title scales down, curl caption repositions, padding tightens.
+- Existing pressed states, voice cycling, mark system, and accessibility (focus-visible, sr-only announcer, keyboard navigation) are unchanged.
 
-- The press lever (folio viii) gains a flourish SVG inside its ink well, drawn with a confident lead stroke and a softer trail echo that follows it.
-- The flourish only resolves when the lever is pulled — at rest the ink well is invisible, so the gesture becomes a moment of action rather than permanent decoration.
-- The bead carries a slow halo that pulses every 4.6s once the flourish has settled, anchoring the press as the active hinge of the page.
-- A small italic caption ("the press's exhale") sits beside the bead, naming the gesture in the same quiet italic voice used by the other flourishes on the page.
-- All animations respect `prefers-reduced-motion: reduce`: the strokes, bead, halo, and tag settle to their end states without motion when reduced motion is requested.

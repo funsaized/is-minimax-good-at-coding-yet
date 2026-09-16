@@ -54426,3 +54426,402 @@ a small act of typesetting.
     height: clamp(34px, 6vw, 48px);
   }
 }
+
+/* ────────────────────────────────────────────────────────────
+   PAGE RETURN · the page's closing breath.
+   A small, deliberate moment at the very end of the page that
+   closes the drawn-arc narrative. After three outward exhalations
+   (title question mark, lever pivot, answer period), this curl
+   turns back inward — the answer has been received, the page
+   can rest. A hand-drawn line spirals in from the right margin
+   and settles on a small bead. Below it, a return-to-question
+   anchor and a quiet closing signature.
+   ──────────────────────────────────────────────────────────── */
+
+.page-return {
+  --page-return-tone: var(--paper);
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  width: min(100%, 640px);
+  margin: clamp(56px, 8vw, 112px) auto clamp(40px, 5vw, 80px);
+  padding: clamp(22px, 3.4vw, 36px) clamp(22px, 4vw, 52px) clamp(28px, 4vw, 44px);
+  text-align: center;
+  color: var(--paper);
+}
+
+.page-return--quiet { --page-return-tone: var(--blue); }
+.page-return--human { --page-return-tone: var(--coral); }
+.page-return--bold { --page-return-tone: var(--acid); }
+
+.page-return__rule {
+  display: block;
+  width: clamp(120px, 22vw, 220px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--page-return-tone), transparent);
+  opacity: .42;
+}
+
+.page-return__rule--trail { opacity: .32; }
+
+.page-return__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .78vw, 10.5px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--page-return-tone);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .65s var(--ease) .15s, transform .85s var(--ease-out) .15s;
+}
+
+.page-return.is-revealed .page-return__eyebrow {
+  opacity: .9;
+  transform: translateY(0);
+}
+
+.page-return__eyebrow em {
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(11px, 1vw, 13px);
+  letter-spacing: .04em;
+  text-transform: lowercase;
+  color: var(--paper);
+  opacity: .85;
+}
+
+.page-return__eyebrow-mark {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .7;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--page-return-tone) 14%, transparent);
+}
+
+.page-return__eyebrow-mark--alt { opacity: .55; }
+
+.page-return__title {
+  margin: 0;
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(28px, 3.6vw, 44px);
+  line-height: 1.05;
+  letter-spacing: -.025em;
+  color: var(--paper);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .85s var(--ease) .35s, transform 1.05s var(--ease-out) .35s;
+}
+
+.page-return.is-revealed .page-return__title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-return__title-em {
+  font-style: italic;
+  color: var(--page-return-tone);
+  position: relative;
+  padding: 0 .08em;
+}
+
+.page-return__curl-wrap {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: clamp(220px, 30vw, 320px);
+  margin: clamp(4px, .8vw, 10px) 0 clamp(2px, .4vw, 6px);
+  color: var(--page-return-tone);
+}
+
+.page-return__curl-svg {
+  display: block;
+  width: 100%;
+  height: clamp(76px, 8vw, 116px);
+  overflow: visible;
+}
+
+.page-return__curl-tail {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  transition: stroke-dashoffset .9s var(--ease-out) .65s, opacity .35s var(--ease) .65s;
+}
+
+.page-return.is-revealed .page-return__curl-tail {
+  stroke-dashoffset: 0;
+  opacity: .55;
+}
+
+.page-return__curl-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.6s var(--ease-out) .85s;
+}
+
+.page-return.is-revealed .page-return__curl-stroke {
+  stroke-dashoffset: 0;
+}
+
+.page-return__curl-stroke-trail {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.55s var(--ease-out) 1.05s, opacity .55s var(--ease) 1.05s;
+  opacity: 0;
+}
+
+.page-return.is-revealed .page-return__curl-stroke-trail {
+  stroke-dashoffset: 0;
+  opacity: .5;
+}
+
+.page-return__curl-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.4);
+  transition: opacity .5s var(--ease) 2.35s, transform .6s var(--ease-spring) 2.35s;
+}
+
+.page-return.is-revealed .page-return__curl-bead {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.page-return__curl-halo {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity .55s var(--ease) 2.5s;
+}
+
+.page-return.is-revealed .page-return__curl-halo {
+  opacity: .7;
+  animation: pageReturnCurlPulse 4.8s var(--ease) infinite 2.95s;
+}
+
+.page-return__curl-seed {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.4);
+  transition: opacity .4s var(--ease) .75s, transform .5s var(--ease-spring) .75s;
+}
+
+.page-return.is-revealed .page-return__curl-seed {
+  opacity: .85;
+  transform: scale(1);
+}
+
+@keyframes pageReturnCurlPulse {
+  0%   { transform: scale(.85); opacity: .7; }
+  60%  { transform: scale(1.5);  opacity: 0; }
+  100% { transform: scale(1.5);  opacity: 0; }
+}
+
+.page-return__curl-caption {
+  position: absolute;
+  right: clamp(-12px, -1vw, 4px);
+  top: 18%;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(9.5px, .78vw, 11px);
+  color: var(--page-return-tone);
+  letter-spacing: .04em;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity .55s var(--ease) 2.55s, transform .7s var(--ease-out) 2.55s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.page-return.is-revealed .page-return__curl-caption {
+  opacity: .78;
+  transform: translateY(0);
+}
+
+.page-return__curl-caption-rule {
+  display: inline-block;
+  width: clamp(8px, 1.4vw, 14px);
+  height: 1px;
+  background: currentColor;
+  opacity: .65;
+}
+
+.page-return__curl-caption-mark {
+  display: inline-block;
+  font-size: 90%;
+  opacity: .55;
+}
+
+.page-return__caption {
+  margin: 0;
+  max-width: 36em;
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-size: clamp(13.5px, 1.18vw, 16px);
+  line-height: 1.55;
+  letter-spacing: .005em;
+  color: color-mix(in srgb, var(--paper) 84%, transparent);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .75s var(--ease) 1.35s, transform .95s var(--ease-out) 1.35s;
+}
+
+.page-return__caption em {
+  font-style: italic;
+  color: var(--page-return-tone);
+}
+
+.page-return.is-revealed .page-return__caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-return__caption--quiet {
+  margin-top: -2px;
+  font-size: clamp(11.5px, .95vw, 13px);
+  color: var(--muted);
+  letter-spacing: .04em;
+  transition-delay: 1.55s;
+}
+
+.page-return__caption--quiet em {
+  font-style: italic;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.page-return__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: clamp(4px, .6vw, 10px);
+  padding: 6px 14px 6px 12px;
+  font-family: var(--mono);
+  font-size: clamp(9.5px, .85vw, 11px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--page-return-tone);
+  border: 1px solid color-mix(in srgb, var(--page-return-tone) 36%, transparent);
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .65s var(--ease) 1.75s, transform .85s var(--ease-out) 1.75s, gap .3s var(--ease-out), border-color .35s var(--ease), color .35s var(--ease);
+}
+
+.page-return.is-revealed .page-return__back {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-return__back:hover,
+.page-return__back:focus-visible {
+  gap: 12px;
+  border-color: var(--page-return-tone);
+  color: var(--paper);
+}
+
+.page-return__back svg {
+  width: 12px;
+  height: 12px;
+  transition: transform .3s var(--ease-out);
+}
+
+.page-return__back:hover svg,
+.page-return__back:focus-visible svg {
+  transform: translateX(-2px);
+}
+
+.page-return__signature {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  margin-top: clamp(8px, 1vw, 14px);
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(10.5px, .88vw, 12px);
+  letter-spacing: .06em;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity .65s var(--ease) 2.05s;
+}
+
+.page-return.is-revealed .page-return__signature {
+  opacity: .8;
+}
+
+.page-return__signature-rule {
+  width: clamp(28px, 4vw, 48px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor, transparent);
+  opacity: .55;
+}
+
+.page-return__signature-rule--trail {
+  background: linear-gradient(to left, transparent, currentColor, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-return__eyebrow,
+  .page-return__title,
+  .page-return__caption,
+  .page-return__back,
+  .page-return__signature {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .page-return__eyebrow { opacity: .9 !important; }
+  .page-return__curl-stroke,
+  .page-return__curl-stroke-trail,
+  .page-return__curl-tail {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+  .page-return__curl-stroke-trail { opacity: .5 !important; }
+  .page-return__curl-tail { opacity: .55 !important; }
+  .page-return__curl-bead,
+  .page-return__curl-halo,
+  .page-return__curl-seed {
+    transition: none !important;
+    animation: none !important;
+  }
+  .page-return__curl-bead,
+  .page-return__curl-seed { opacity: 1 !important; transform: none !important; }
+  .page-return__curl-halo { opacity: .7 !important; }
+  .page-return__back { opacity: 1 !important; transform: none !important; }
+}
+
+@media (max-width: 720px) {
+  .page-return {
+    margin: clamp(48px, 9vw, 80px) auto clamp(36px, 6vw, 60px);
+    padding-left: clamp(18px, 5vw, 32px);
+    padding-right: clamp(18px, 5vw, 32px);
+  }
+  .page-return__title {
+    font-size: clamp(26px, 7vw, 36px);
+  }
+  .page-return__curl-svg {
+    height: clamp(70px, 18vw, 100px);
+  }
+  .page-return__curl-caption {
+    right: -2px;
+    top: 22%;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-return__signature-rule {
+    width: 22px;
+  }
+  .page-return__caption {
+    font-size: clamp(12.5px, 3.6vw, 14px);
+  }
+}

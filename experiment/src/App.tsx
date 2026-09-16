@@ -42,6 +42,7 @@ import { LetterpressCatch } from './LetterpressCatch'
 import { Opening } from './Opening'
 import { FolioImprint } from './FolioImprint'
 import { ReadingPause } from './ReadingPause'
+import { PageReturn } from './PageReturn'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -976,6 +977,7 @@ export function App() {
         activeFolioIndex={READING_SECTIONS.find(item => item.id === activeSection)?.index ?? 'viii'}
         activeFolioLabel={READING_SECTIONS.find(item => item.id === activeSection)?.label ?? 'the answer'}
       />
+      <PageReturn voice={voice} setToday={setToday} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
   )
