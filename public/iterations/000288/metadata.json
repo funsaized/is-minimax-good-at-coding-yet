@@ -1,0 +1,19 @@
+{
+  "id": 288,
+  "parentId": 287,
+  "createdAt": "2026-09-16T07:20:29.796Z",
+  "summary": "Refined the title page composition and the editor's note so the entry to the page reads as one deliberate printed broads",
+  "path": "/iterations/000288/index.html",
+  "screenshot": "/iterations/000288/desktop.png",
+  "mobileScreenshot": "/iterations/000288/mobile.png",
+  "sourceCommit": "752b71fb931a5ad5d3868b681d76c8b68f99cdaa",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 393,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 158266,
+    "outputTokens": 17237,
+    "steps": 90
+  }
+}
