@@ -1,13 +1,5 @@
 # Changelog
 
-## Iteration 292
+## 293 — The title asks, then lands
 
-Added a broadside frontispiece — a Spread Ribbon at the top of the page.
-
-A thin, hand-set identifier (m³ press · an open folio, set in three voices), a delicate fleuron, a one-line verse that restates the active voice / marked word / set today, a quiet reading trace of all ten folios with the current position lit, and a "read on" trail that draws down toward the title page. The ribbon, the handwheel, and the title page now read as one printed sheet rather than a sequence of stacked plates.
-
-- `src/SpreadRibbon.tsx` — new frontispiece component with a hand-set identifier, fleuron, verse, reading trace, and downward trail.
-- `src/App.tsx` — placed the SpreadRibbon at the top of the page div, above the press handwheel, and wired it to the existing voice, word, set-today, and active-section state.
-- `src/style.css` — added the full `.spread-ribbon` block (plate, crops, rule, tag, fleuron, verse, trace, trail, motion, reduced-motion, responsive). Reuses existing design tokens, color palette, and ease curves. No new dependencies.
-
-The trace updates live as the reader scrolls the folios, and the current folio bead scales up with a soft tone-coloured halo. All entrance animations are disabled under `prefers-reduced-motion`, the rule draws, the trail draws, and the trace fades in to keep the frontispiece quiet on first load.
+Iteration 293 refines the title page into a single, deliberate broadside moment that lands *after* the title composes itself. A small press-strike badge strikes the upper-left of the plate once the four title rows have arrived, balancing the formal seal in the upper-right; the new mark answers the existing seal with a paired composition. Two ink ripples emanate from the strike and settle, signalling that the page has just been asked. Under the question mark, a refined pen-drawn ask stroke draws itself in, the question actively being made. The FolioOpening plate picks up a small mark-glyph refresh so the three cells read as one deliberate status row instead of three near-identical glyphs. Builds and behaves as before on mobile, respects `prefers-reduced-motion`, and keeps the existing voice color transitions.

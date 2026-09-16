@@ -33,6 +33,12 @@ const VOICE_TAGLINE: Record<VoiceId, string> = {
   bold: 'a small line, set without apology',
 }
 
+const VOICE_PRESS_TAG: Record<VoiceId, string> = {
+  quiet: 'a quiet pull',
+  human: 'a hand-set pull',
+  bold: 'a final pull',
+}
+
 const WORD_LABEL: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet' }
 const WORD_GLYPH: Record<WordId, string> = { m3: '⌇', good: '∧', yet: '?' }
 const WORD_KIND: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
@@ -59,6 +65,9 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
   const grainId = `title-page-grain-${baseId}`
   const inkId = `title-page-ink-${baseId}`
   const ruleId = `title-page-rule-${baseId}`
+  const strikeGrainId = `title-page-strike-${baseId}`
+  const strikeInkId = `title-page-strike-ink-${baseId}`
+  const askStrokeId = `title-page-ask-${baseId}`
   const style = {
     '--title-page-tone': VOICE_TONE[voice],
   } as CSSProperties
@@ -89,6 +98,16 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
           <filter id={inkId} x="-4%" y="-50%" width="108%" height="200%">
             <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="49" stitchTiles="stitch" />
             <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .46 0" />
+            <feComposite in2="SourceGraphic" operator="in" />
+          </filter>
+          <filter id={strikeGrainId} x="-12%" y="-12%" width="124%" height="124%">
+            <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="113" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .4 0" />
+            <feComposite in2="SourceGraphic" operator="in" />
+          </filter>
+          <filter id={strikeInkId} x="-6%" y="-6%" width="112%" height="112%">
+            <feTurbulence type="fractalNoise" baseFrequency="2.2" numOctaves="2" seed="127" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0" />
             <feComposite in2="SourceGraphic" operator="in" />
           </filter>
         </defs>
@@ -166,6 +185,22 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
                 <span className="title-page__title-mark-glyph">{WORD_GLYPH.yet}</span>
                 <span className="title-page__title-mark-tag">{WORD_KIND.yet}</span>
               </span>
+              <span className="title-page__title-ask" aria-hidden="true">
+                <svg viewBox="0 0 220 18" preserveAspectRatio="none" className="title-page__title-ask-svg">
+                  <path
+                    className="title-page__title-ask-stroke"
+                    d="M2 11c18-7 36 4 54-1s36-7 54-1 36 4 54-2 36-7 54-1"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    pathLength="100"
+                    id={askStrokeId}
+                  />
+                  <circle cx="2" cy="11" r="1.4" fill="currentColor" className="title-page__title-ask-bead title-page__title-ask-bead--lead" />
+                  <circle cx="218" cy="9" r="1.6" fill="currentColor" className="title-page__title-ask-bead title-page__title-ask-bead--trail" />
+                </svg>
+              </span>
             </span>
           </h1>
 
@@ -225,6 +260,31 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
             <em>typesetter's mark</em>
             <span className="title-page__fleuron-tag-sep" aria-hidden="true">·</span>
             <span>folio i</span>
+          </span>
+        </span>
+
+        <span className="title-page__strike" aria-hidden="true">
+          <span className="title-page__strike-ring" />
+          <span className="title-page__strike-ring title-page__strike-ring--alt" />
+          <svg className="title-page__strike-mark" viewBox="0 0 100 100">
+            <g filter={`url(#${strikeGrainId})`} opacity="0.9">
+              <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1.4" />
+              <circle cx="50" cy="50" r="29" fill="none" stroke="currentColor" strokeWidth=".5" strokeDasharray="1.1 1.8" opacity=".6" />
+              <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".35" />
+              <path d="M50 22 L50 30 M50 70 L50 78 M22 50 L30 50 M70 50 L78 50" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".55" />
+              <text x="50" y="40" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.6" letterSpacing="1.4" fill="currentColor" opacity=".75">ASKED</text>
+              <text x="50" y="58" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="currentColor">m³</text>
+              <text x="50" y="70" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3" letterSpacing="1.4" fill="currentColor" opacity=".65">FOLIO · I</text>
+            </g>
+            <g filter={`url(#${strikeInkId})`} opacity=".7">
+              <circle cx="34" cy="36" r="3" fill="currentColor" />
+              <circle cx="68" cy="62" r="2" fill="currentColor" opacity=".55" />
+            </g>
+          </svg>
+          <span className="title-page__strike-tag">
+            <span className="title-page__strike-tag-mark" />
+            <em>{VOICE_PRESS_TAG[voice]}</em>
+            <span className="title-page__strike-tag-mark title-page__strike-tag-mark--alt" />
           </span>
         </span>
 

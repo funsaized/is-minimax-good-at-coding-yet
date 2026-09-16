@@ -26,7 +26,12 @@ const VOICE_FACE: Record<VoiceId, string> = {
 }
 const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
-const WORD_GLYPH: Record<WordId, string> = { m3: '∧', good: '∧', yet: '⌇' }
+const WORD_GLYPH: Record<WordId, string> = { m3: '⌇', good: '∧', yet: '⌇' }
+const WORD_NOTE: Record<WordId, string> = {
+  m3: 'let it stand',
+  good: 'make room',
+  yet: 'protect the pause',
+}
 
 export function FolioOpening({ voice, word, setToday }: FolioOpeningProps) {
   const baseId = useId().replace(/:/g, '')
@@ -103,7 +108,7 @@ export function FolioOpening({ voice, word, setToday }: FolioOpeningProps) {
           <span className="folio-opening__cell-face">
             <em>{WORD_MARK[word]}</em>
             <span aria-hidden="true">·</span>
-            <span>{word === 'm3' ? 'let it stand' : word === 'good' ? 'make room' : 'protect the pause'}</span>
+            <span>{WORD_NOTE[word]}</span>
           </span>
         </span>
 
