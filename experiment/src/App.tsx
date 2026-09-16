@@ -37,6 +37,7 @@ import { TitleFolio } from './TitleFolio'
 import { ClosingPlate } from './ClosingPlate'
 import { ReadingPrologue } from './ReadingPrologue'
 import { PressHandwheel } from './PressHandwheel'
+import { SpreadRibbon } from './SpreadRibbon'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -623,6 +624,14 @@ export function App() {
       <PressSpine activeId={activeSection} voice={voice} />
 
       <div className="page">
+        <SpreadRibbon
+          voice={voice}
+          word={activeWord}
+          setToday={setToday}
+          activeSection={activeSection}
+          totalSections={FOLIO_ORDER.length}
+        />
+
         <PressHandwheel
           voice={voice}
           word={activeWord}

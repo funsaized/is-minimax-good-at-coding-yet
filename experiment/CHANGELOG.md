@@ -1,36 +1,13 @@
-# Iteration 291 — refined the press handwheel into a three-cell dashboard
+# Changelog
 
-Replaced the busy gear-driven status strip with a deliberate, three-cell press
-dashboard: a large circular voice handwheel on the left, a marked-words plate
-in the middle, and a vertical type case of the three voices on the right, all
-under a new "the press handwheel · folio i" running head and above a lever arm
-that still opens the editor's note.
+## Iteration 292
 
-- The voice handwheel now reads as a single, hand-set dial: 24 perimeter tick
-  marks, a clear pointer that rotates a quarter turn on each voice change, a
-  large italic voice letter (A/B/C) at the center, and a small "a · OF · III"
-  index that cycles with the voice. The state pill (cold / warming / armed /
-  hot) sits in the readout column instead of under the gear.
-- The marked-words plate is now its own dial: the active word glyph (m³ /
-  good at / yet?) at the center, the proof mark (stet / caret / query) as a
-  small tag above, the index ("i. · OF · III") below, and the eight-cell tick
-  row in the readout that fills with each interaction. Hover nudges it a few
-  degrees for a quiet, mechanical feel.
-- The right cell is a vertical list of all three voices as a type case. Each
-  cell shows the voice letter, name, and face; the active cell takes the
-  voice tone and adds a small "now" pip. Clicking any cell sets the voice
-  directly, so the dial and the case share the same control surface.
-- A new "the press handwheel · folio i" masthead sits above the plate with
-  two flanking rules; the bottom shows the set today date with a pair of
-  dots. Both rules and the corner crops take the active voice tone.
-- Motion: the dial pointer rotates with a spring easing, the letter and
-  mark glyph re-set with a small scale-fade, and a one-shot strike animation
-  blooms around the dial and plate on each voice or word change. The board
-  arrives with a quiet fade-up. All motion is suppressed under
-  `prefers-reduced-motion: reduce`.
-- Responsive: at ≤1180px the type case drops below the dial and mark plate
-  as a three-column strip; at ≤880px the plate stacks vertically and the
-  type case becomes a vertical list again; at ≤540px everything collapses
-  to a single column with the face row trimmed.
-- The lever arm below the plate is unchanged: it still pivots, still tilts
-  the bar and lifts the knob on hover, and still opens folio viii.
+Added a broadside frontispiece — a Spread Ribbon at the top of the page.
+
+A thin, hand-set identifier (m³ press · an open folio, set in three voices), a delicate fleuron, a one-line verse that restates the active voice / marked word / set today, a quiet reading trace of all ten folios with the current position lit, and a "read on" trail that draws down toward the title page. The ribbon, the handwheel, and the title page now read as one printed sheet rather than a sequence of stacked plates.
+
+- `src/SpreadRibbon.tsx` — new frontispiece component with a hand-set identifier, fleuron, verse, reading trace, and downward trail.
+- `src/App.tsx` — placed the SpreadRibbon at the top of the page div, above the press handwheel, and wired it to the existing voice, word, set-today, and active-section state.
+- `src/style.css` — added the full `.spread-ribbon` block (plate, crops, rule, tag, fleuron, verse, trace, trail, motion, reduced-motion, responsive). Reuses existing design tokens, color palette, and ease curves. No new dependencies.
+
+The trace updates live as the reader scrolls the folios, and the current folio bead scales up with a soft tone-coloured halo. All entrance animations are disabled under `prefers-reduced-motion`, the rule draws, the trail draws, and the trace fades in to keep the frontispiece quiet on first load.
