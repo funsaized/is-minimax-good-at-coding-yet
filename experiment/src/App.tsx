@@ -28,6 +28,7 @@ import { MarginaliumPress } from './MarginaliumPress'
 import { FolioThumbprint } from './FolioThumbprint'
 import { TitleLine } from './TitleLine'
 import { TitleFold } from './TitleFold'
+import { VoiceTrial } from './VoiceTrial'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -455,10 +456,14 @@ export function App() {
   const [strikeTick, setStrikeTick] = useState(0)
   const [heroBodyVisible, setHeroBodyVisible] = useState(false)
   const [readerName, setReaderName] = useState('')
+  const [rehearsing, setRehearsing] = useState(false)
+  const [trialTick, setTrialTick] = useState(0)
   const firstVoiceRef = useRef(true)
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
   const heroBodyRef = useRef<HTMLDivElement>(null)
+  const trialTimerRef = useRef<number | null>(null)
+  const trialIndexRef = useRef(0)
   const bodyGrainId = useId().replace(/:/g, '')
 
   const activeWord = hoveredWord ?? selectedWord
@@ -542,7 +547,16 @@ export function App() {
     if (focus) window.requestAnimationFrame(() => tokenRefs.current[id]?.focus())
   }
 
+  const cancelTrialPull = useCallback(() => {
+    if (trialTimerRef.current !== null) {
+      window.clearTimeout(trialTimerRef.current)
+      trialTimerRef.current = null
+    }
+    setRehearsing(false)
+  }, [])
+
   const selectVoice = (id: VoiceId) => {
+    cancelTrialPull()
     setVoice(prev => (prev === id ? prev : id))
     const next = VOICES.find(item => item.id === id)
     setAnnouncement(next ? `${next.name} selected.` : '')
@@ -559,6 +573,61 @@ export function App() {
     }
     setStrikeTick(tick => tick + 1)
   }, [voice])
+
+  useEffect(() => {
+    return () => {
+      if (trialTimerRef.current !== null) {
+        window.clearTimeout(trialTimerRef.current)
+        trialTimerRef.current = null
+      }
+    }
+  }, [])
+
+  const triggerTrialPull = useCallback(() => {
+    if (rehearsing) return
+    setRehearsing(true)
+    setAnnouncement('Rehearsal pull started. Cycling the three voices.')
+    const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const cycle: VoiceId[] = ['quiet', 'human', 'bold']
+    const start = cycle.indexOf(voice)
+    const order: VoiceId[] = []
+    for (let index = 1; index <= cycle.length; index += 1) {
+      order.push(cycle[(start + index) % cycle.length])
+    }
+    const settledVoice = voice
+    if (reduceMotion) {
+      setVoice(order[order.length - 1])
+      setStrikeTick(tick => tick + 1)
+      setTrialTick(tick => tick + 1)
+      window.setTimeout(() => {
+        setVoice(settledVoice)
+        setRehearsing(false)
+        setStrikeTick(tick => tick + 1)
+        setAnnouncement('Rehearsal complete.')
+      }, 380)
+      return
+    }
+    let i = 0
+    const step = () => {
+      const next = order[i]
+      setVoice(next)
+      setStrikeTick(tick => tick + 1)
+      setTrialTick(tick => tick + 1)
+      trialIndexRef.current = i
+      i += 1
+      if (i < order.length) {
+        trialTimerRef.current = window.setTimeout(step, 360)
+      } else {
+        trialTimerRef.current = window.setTimeout(() => {
+          setVoice(settledVoice)
+          setStrikeTick(tick => tick + 1)
+          setRehearsing(false)
+          setAnnouncement('Rehearsal complete.')
+        }, 420)
+      }
+    }
+    trialTimerRef.current = window.setTimeout(step, 80)
+  }, [rehearsing, voice])
 
   const selectVoiceByKey = (event: ReactKeyboardEvent<HTMLButtonElement>, id: VoiceId) => {
     const index = VOICES.findIndex(item => item.id === id)
@@ -632,14 +701,13 @@ export function App() {
           totalSections={FOLIO_ORDER.length}
         />
 
-        <PressHandwheel
+        <VoiceTrial
           voice={voice}
-          word={activeWord}
-          marks={marks}
           setToday={setToday}
+          rehearsing={rehearsing}
+          trialTick={trialTick}
           onVoice={selectVoice}
-          onWord={id => selectWord(id)}
-          onArm={toggleAnswer}
+          onTrialPull={triggerTrialPull}
         />
         <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
           <TitlePage voice={voice} word={activeWord} setToday={setToday} />
@@ -649,7 +717,7 @@ export function App() {
             <PaperWarmth voice={voice} />
 
             <h1 className="sr-only" id="page-title">{TITLE}</h1>
-            <TitleFold voice={voice} word={activeWord} setToday={setToday}>
+            <TitleFold voice={voice} word={activeWord} setToday={setToday} rehearsing={rehearsing}>
               <TitleLine
                 voice={voice}
                 word={activeWord}

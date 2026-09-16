@@ -1,3 +1,18 @@
-# Iteration 297 — a paper-folded opening for the title
+# Iteration 298 — A single Voice Trial in place of the busy handwheel
 
-Composed a single `TitleFold` moment around the headline: a quiet paper-grain wash, a thin vertical crease down the middle, a small italic seal that settles into the top-right, a "fold · here" mark beneath the line, and a compact legend strip that names the active voice, marked word, and set-today. The fold is invisible until the section comes into view, then it reveals itself in three restrained stages — seal, crease, legend — and respects reduced-motion by settling into its end state. Removed the now-redundant `FolioOpening` and `PressSignatureLine` from the front matter so the title moment reads as one composed broadside rather than three stacked panels.
+## Summary
+Replaced the busy press handwheel with a single composed Voice Trial strip; added a trial-pull rehearsal that cycles the headline through the three voices and settles back.
+
+## Changes
+- Added `src/VoiceTrial.tsx` — a single, deliberate strip with three voice pips (quiet · human · bold) and one rehearsal-pull button. Keyboard-accessible (left/right/Home/End cycle voices; space/enter trigger a rehearsal pull). Honors `prefers-reduced-motion`.
+- Replaced `<PressHandwheel />` in `src/App.tsx` with `<VoiceTrial />`. Added a `rehearsing` state and a `triggerTrialPull` callback that cycles through the three voices with timed state updates, then settles on the user's chosen voice.
+- Updated `src/TitleFold.tsx` to accept a `rehearsing` flag and show a small pulsing "rehearsing" tag in its legend while the rehearsal runs.
+- Appended styles for `.voice-trial`, `.voice-trial__pip`, `.voice-trial__pull`, `.voice-trial__trail`, and the rehearsing state of `.title-fold` in `src/style.css`. Mobile breakpoints included; reduced-motion users see a settled state.
+
+## Removed
+- The previous `PressHandwheel` import is no longer used in `src/App.tsx`. The component file and its CSS remain on disk for reference but are not rendered.
+
+## Behavior
+- Click any voice pip → headline, fold legend, and downstream sections all re-set to that voice.
+- Click "pull once" → the headline cycles through quiet, human, bold, quiet, human, bold (starting from the currently set voice), then settles back on the user's choice. The fold legend flashes a "rehearsing" tag. The press-strike flash fires on each cycle.
+- The press handwheel's keyboard binding (Shift+V to cycle voice) is unchanged.

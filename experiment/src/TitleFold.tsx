@@ -7,6 +7,7 @@ type TitleFoldProps = {
   word: WordId
   setToday: string
   children: ReactNode
+  rehearsing?: boolean
 }
 
 const VOICE_TONE: Record<VoiceId, string> = {
@@ -24,7 +25,7 @@ const VOICE_NAME: Record<VoiceId, string> = {
 const WORD_LABEL: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet?' }
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
 
-export function TitleFold({ voice, word, setToday, children }: TitleFoldProps) {
+export function TitleFold({ voice, word, setToday, children, rehearsing = false }: TitleFoldProps) {
   const baseId = useId().replace(/:/g, '')
   const paperId = `title-fold-paper-${baseId}`
   const rootRef = useRef<HTMLDivElement>(null)
@@ -57,7 +58,7 @@ export function TitleFold({ voice, word, setToday, children }: TitleFoldProps) {
   return (
     <div
       ref={rootRef}
-      className={`title-fold title-fold--${voice} title-fold--word-${word} ${revealed ? 'is-revealed' : ''}`}
+      className={`title-fold title-fold--${voice} title-fold--word-${word} ${revealed ? 'is-revealed' : ''} ${rehearsing ? 'is-rehearsing' : ''}`}
       style={style}
       aria-hidden={false}
     >
@@ -117,11 +118,12 @@ export function TitleFold({ voice, word, setToday, children }: TitleFoldProps) {
         </span>
       </span>
 
-      <span className="title-fold__legend" aria-hidden="true">
+      <span className="title-fold__legend" aria-hidden="true" data-rehearsing={rehearsing ? 'true' : 'false'}>
         <span className="title-fold__legend-cell">
           <span className="title-fold__legend-key">set in</span>
           <span className="title-fold__legend-value">
             <em>{VOICE_NAME[voice]}</em>
+            {rehearsing && <span className="title-fold__legend-rehearsing" aria-hidden="true">rehearsing</span>}
           </span>
         </span>
         <span className="title-fold__legend-bead" aria-hidden="true" />
