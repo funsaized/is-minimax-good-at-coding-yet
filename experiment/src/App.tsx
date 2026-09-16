@@ -18,17 +18,14 @@ import { PressStrikeFlash } from './PressStrikeFlash'
 
 import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
-import { MarginalCaret } from './MarginalCaret'
-import { MarginaliaStrip } from './MarginaliaStrip'
 import { PressSignature } from './PressSignature'
-import { TitleSweep } from './TitleSweep'
 import { WayfinderSeal } from './WayfinderSeal'
-import { TitleRule } from './TitleRule'
 import { PressSignatureMark } from './PressSignatureMark'
 import { NotesSection } from './NotesSection'
 import { FolioFold } from './FolioFold'
 import { PressSpine } from './PressSpine'
 import { TitlePage } from './TitlePage'
+import { PressingsTriptych } from './PressingsTriptych'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -142,68 +139,6 @@ function PencilIcon() {
 
 
 
-
-function TitleToken({
-  id,
-  text,
-  selected,
-  onSelect,
-  onHover,
-  onLeave,
-  tokenRef,
-}: {
-  id: WordId
-  text: string
-  selected: boolean
-  onSelect: (id: WordId) => void
-  onHover: (id: WordId) => void
-  onLeave: () => void
-  tokenRef: (node: HTMLSpanElement | null) => void
-}) {
-  return (
-    <span
-      ref={tokenRef}
-      className={`title-token title-token--${id} ${selected ? 'is-selected' : ''}`}
-      data-word={id}
-      role="button"
-      tabIndex={0}
-      aria-pressed={selected}
-      aria-describedby={`note-${id}`}
-      onClick={() => onSelect(id)}
-      onMouseEnter={() => onHover(id)}
-      onMouseLeave={onLeave}
-      onFocus={() => onHover(id)}
-      onBlur={onLeave}
-      onKeyDown={(event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault()
-          onSelect(id)
-        }
-      }}
-    >
-      <span className="title-token__text">{text}</span>
-      <svg className="title-token__mark" viewBox="0 0 200 18" preserveAspectRatio="none" aria-hidden="true">
-        <path
-          className="title-token__stroke"
-          d="M2 12 C 24 4, 48 16, 72 8 S 120 0, 144 10 S 178 14, 198 6"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          pathLength="100"
-          strokeDasharray="100 100"
-          strokeDashoffset="100"
-        />
-        <circle className="title-token__tail" cx="196" cy="6" r="1.8" />
-      </svg>
-      <span className="title-token__glyph" aria-hidden="true">
-        <svg viewBox="0 0 60 22">
-          <path d="M14 4 C 18 14, 10 16, 14 18" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-        </svg>
-      </span>
-    </span>
-  )
-}
 
 function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
   open: boolean
@@ -702,35 +637,18 @@ export function App() {
             <PaperWarmth voice={voice} />
 
             <div className="hero__plate">
-              <MarginalCaret active={selectedWord} tokenRefs={tokenRefs} />
-              <div className="hero__copy">
-                <h1 key={`title-${strikeTick}`} className={`hero__title hero__title--${voice}`} id="page-title" aria-label={TITLE}>
-                  <span className="title__line">is Minimax </span>
-                  <span className="title__line">
-                    <TitleToken id="m3" text="M3" selected={activeWord === 'm3'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.m3 = node }} />{' '}
-                    <TitleToken id="good" text="good at" selected={activeWord === 'good'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.good = node }} />
-                  </span>
-                  <span className="title__line"> frontend <TitleToken id="yet" text="yet" selected={activeWord === 'yet'} onSelect={id => selectWord(id)} onHover={setHoveredWord} onLeave={() => setHoveredWord(null)} tokenRef={node => { tokenRefs.current.yet = node }} />
-                    <span className={`title__question ${answerOpen ? 'is-sealed' : ''}`} aria-hidden="true">
-                      <span className="title__question-glyph">?</span>
-                      <span className="title__question-period" />
-                    </span>
-                  </span>
-                </h1>
-
-                <TitleRule voice={voice} active={selectedWord} hovered={hoveredWord} setToday={setToday} />
-              </div>
+              <h1 className="sr-only" id="page-title">{TITLE}</h1>
+              <PressingsTriptych
+                voice={voice}
+                word={activeWord}
+                hover={hoveredWord}
+                setToday={setToday}
+                onVoice={selectVoice}
+                onWord={(id, focus) => selectWord(id, focus ?? false)}
+                onHover={setHoveredWord}
+                tokenRefs={tokenRefs}
+              />
             </div>
-
-            <TitleSweep voice={voice} word={activeWord} setToday={setToday} onVoice={selectVoice} onWord={id => selectWord(id, true)} />
-
-            <MarginaliaStrip
-              active={selectedWord}
-              hovered={hoveredWord}
-              onHover={setHoveredWord}
-              onLeave={() => setHoveredWord(null)}
-              onSelect={id => selectWord(id)}
-            />
           </div>
 
           <ReadingPrologue

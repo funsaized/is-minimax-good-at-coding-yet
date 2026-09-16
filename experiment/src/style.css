@@ -41939,3 +41939,867 @@ a small act of typesetting.
   .press-handwheel__wheel-letter { display: none; }
   .press-handwheel__wheel-readout-row--face { padding-top: 4px; margin-top: 2px; }
 }
+
+/* ────────────────────────────────────────────────────────────
+   PRESSINGS TRIPTYCH · the centerpiece of the title spread.
+   A vertical stack of three pressings: the active voice is
+   expanded in the middle, the other two sit as compact ghost
+   cards above and below. Click any pressing to set the voice.
+   Click any word in the active pressing to mark it.
+   ──────────────────────────────────────────────────────────── */
+
+.pressings-triptych {
+  --pt-tone: var(--paper);
+  --pt-frame: rgba(243, 236, 214, .18);
+  --pt-frame-soft: rgba(243, 236, 214, .08);
+  --pt-paper: #1a1d29;
+  --pt-paper-2: #232636;
+  --pt-paper-edge: rgba(243, 236, 214, .14);
+  --pt-paper-shadow: rgba(0, 0, 0, .55);
+  --pt-ghost-bg: #14161f;
+  --pt-ghost-bg-2: #1a1d29;
+  --pt-ghost-opacity: .58;
+  --pt-rule: rgba(243, 236, 214, .22);
+  --pt-glyph: '⌇';
+  position: relative;
+  display: grid;
+  gap: clamp(18px, 2.6vw, 32px);
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0;
+  font-family: var(--sans);
+  color: var(--paper);
+}
+
+.pressings-triptych__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.pressings-triptych__caption {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  opacity: .55;
+}
+
+.pressings-triptych__caption-mark {
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(to right, var(--pt-tone), transparent);
+}
+
+.pressings-triptych__caption-mark--alt {
+  background: linear-gradient(to left, var(--pt-tone), transparent);
+}
+
+.app--voice-quiet .pressings-triptych { --pt-tone: var(--blue); }
+.app--voice-human .pressings-triptych { --pt-tone: var(--coral); }
+.app--voice-bold .pressings-triptych { --pt-tone: var(--acid); }
+
+.pressings-triptych__headline {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  text-align: center;
+}
+
+.pressings-triptych__headline-text {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(22px, 3.4vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -.022em;
+  color: var(--paper);
+}
+
+.pressings-triptych__headline-text i {
+  font-style: italic;
+  color: var(--pt-tone);
+  margin-left: .14em;
+}
+
+.pressings-triptych__headline-lede {
+  margin: 0 auto;
+  max-width: 56ch;
+  color: var(--ink-mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(13px, 1.1vw, 15.5px);
+  line-height: 1.55;
+}
+
+.pressings-triptych__bed {
+  position: relative;
+  display: grid;
+  gap: clamp(14px, 2vw, 22px);
+  padding: clamp(22px, 3vw, 36px) clamp(20px, 2.6vw, 36px) clamp(22px, 3vw, 32px);
+  border: 1px solid var(--pt-frame);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(216, 255, 106, .05), transparent 56%),
+    radial-gradient(ellipse at 50% 100%, rgba(255, 118, 95, .04), transparent 60%),
+    linear-gradient(180deg, rgba(20, 24, 36, .55), rgba(14, 18, 28, .72));
+  box-shadow:
+    inset 0 0 0 1px rgba(146, 186, 255, .04),
+    0 36px 96px -32px rgba(0, 0, 0, .62);
+}
+
+.pressings-triptych__bed::before,
+.pressings-triptych__bed::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.pressings-triptych__bed::before {
+  inset: 6px;
+  border: 1px dashed rgba(146, 186, 255, .08);
+}
+
+.pressings-triptych__bed::after {
+  inset: 14px;
+  border: 1px solid rgba(243, 236, 214, .03);
+}
+
+.pressings-triptych__bed-plate {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.pressings-triptych__bed-plate-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--pt-rule), transparent);
+}
+
+.pressings-triptych__bed-plate-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--pt-tone);
+  opacity: .8;
+}
+
+.pressings-triptych__bed-plate-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(216, 255, 106, .07);
+}
+
+.app--voice-quiet .pressings-triptych__bed-plate-dot { box-shadow: 0 0 0 3px rgba(155, 188, 255, .1); }
+.app--voice-human .pressings-triptych__bed-plate-dot { box-shadow: 0 0 0 3px rgba(240, 110, 91, .1); }
+.app--voice-bold .pressings-triptych__bed-plate-dot { box-shadow: 0 0 0 3px rgba(216, 240, 106, .12); }
+
+.pressings-triptych__bed-rule {
+  display: block;
+  width: 100%;
+  height: 6px;
+  color: var(--pt-rule);
+}
+
+.pressings-triptych__bed-rule svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pressings-triptych__stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(14px, 2vw, 22px);
+  position: relative;
+  z-index: 1;
+}
+
+.pressings-triptych__bed-foot {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ink-mist);
+  opacity: .7;
+}
+
+.pressings-triptych__bed-foot-mark {
+  width: 16px;
+  height: 1px;
+  background: linear-gradient(to right, currentColor, transparent);
+}
+
+.pressings-triptych__bed-foot-mark--alt {
+  background: linear-gradient(to left, currentColor, transparent);
+}
+
+/* The single pressing card. Three of these live in the stack: one expanded
+   (active) and two compressed (ghosts). Position is dictated by the order
+   in the DOM, which we re-order via the .is-active class. */
+
+.pressings-sheet {
+  --s-tone: var(--paper);
+  --s-soft: rgba(243, 236, 214, .45);
+  --s-paper: var(--pt-paper);
+  --s-edge: var(--pt-paper-edge);
+  --s-shadow: var(--pt-paper-shadow);
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(10px, 1.2vw, 18px);
+  width: 100%;
+  padding: clamp(18px, 2.2vw, 28px) clamp(20px, 2.6vw, 32px);
+  border: 1px solid var(--s-edge);
+  background:
+    linear-gradient(180deg, var(--s-paper), var(--s-paper-2, var(--s-paper)));
+  box-shadow:
+    inset 0 0 0 1px rgba(243, 236, 214, .025),
+    0 16px 32px -18px var(--s-shadow);
+  color: var(--paper);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform .65s var(--ease-out),
+    opacity .5s var(--ease-out),
+    box-shadow .6s var(--ease-out),
+    border-color .5s var(--ease-out),
+    filter .5s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+  isolation: isolate;
+}
+
+.pressings-sheet:hover,
+.pressings-sheet:focus-visible {
+  outline: none;
+}
+
+.pressings-sheet::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 0% 0%, var(--s-tone), transparent 38%),
+    radial-gradient(ellipse at 100% 100%, var(--s-tone), transparent 42%);
+  opacity: 0;
+  transition: opacity .5s var(--ease-out);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 0;
+}
+
+.pressings-sheet:hover::before {
+  opacity: .08;
+}
+
+.pressings-sheet__paper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.pressings-sheet__paper svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pressings-sheet__crop {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.pressings-sheet__crop::before,
+.pressings-sheet__crop::after {
+  content: '';
+  position: absolute;
+  background: var(--s-tone);
+  opacity: .55;
+}
+
+.pressings-sheet__crop--tl { top: 6px; left: 6px; }
+.pressings-sheet__crop--tr { top: 6px; right: 6px; }
+.pressings-sheet__crop--bl { bottom: 6px; left: 6px; }
+.pressings-sheet__crop--br { bottom: 6px; right: 6px; }
+
+.pressings-sheet__crop--tl::before,
+.pressings-sheet__crop--bl::before {
+  left: 0; width: 100%; height: 1px;
+}
+.pressings-sheet__crop--tl::after,
+.pressings-sheet__crop--tr::after {
+  top: 0; height: 100%; width: 1px;
+}
+.pressings-sheet__crop--tr::before,
+.pressings-sheet__crop--br::before {
+  right: 0; width: 100%; height: 1px;
+}
+.pressings-sheet__crop--bl::after,
+.pressings-sheet__crop--br::after {
+  bottom: 0; height: 100%; width: 1px;
+}
+
+.pressings-sheet__head {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 8px;
+}
+
+.pressings-sheet__head-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+
+.pressings-sheet__head-letter {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12.5px;
+  letter-spacing: 0;
+  color: var(--s-tone);
+}
+
+.pressings-sheet__head-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.2vw, 15px);
+  letter-spacing: .04em;
+  text-transform: none;
+  color: var(--paper);
+  opacity: .85;
+}
+
+.pressings-sheet__head-face {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mist);
+  opacity: .7;
+  text-align: right;
+}
+
+.pressings-sheet__head-rule {
+  display: block;
+  height: 6px;
+  color: var(--s-tone);
+  opacity: .55;
+}
+
+.pressings-sheet__head-rule svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pressings-sheet__body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(4px, .8vw, 10px);
+  padding: clamp(2px, .5vw, 8px) 0;
+}
+
+.pressings-sheet__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: clamp(6px, 1vw, 14px);
+  font-family: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  line-height: 1.05;
+}
+
+.pressings-sheet__line em {
+  font-style: inherit;
+  font-weight: inherit;
+  color: var(--paper);
+}
+
+.pressings-sheet__line--lead {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(18px, 2.4vw, 26px);
+  letter-spacing: -.02em;
+  color: var(--ink-mist);
+  opacity: .85;
+}
+
+.pressings-sheet__line--mid {
+  font-size: clamp(40px, 6.6vw, 78px);
+  letter-spacing: -.03em;
+  line-height: .98;
+  color: var(--paper);
+}
+
+.pressings-sheet__line--trail {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(22px, 3vw, 34px);
+  letter-spacing: -.022em;
+  color: var(--paper);
+}
+
+.pressings-sheet__line.is-upper {
+  text-transform: uppercase;
+  font-family: var(--sans);
+  font-style: normal;
+  font-weight: 850;
+  letter-spacing: -.06em;
+}
+
+.pressings-sheet__line--mid.is-upper {
+  font-size: clamp(36px, 5.8vw, 70px);
+}
+
+.pressings-sheet__line--trail.is-upper {
+  font-size: clamp(20px, 2.6vw, 30px);
+}
+
+.pressings-sheet__question {
+  display: inline-block;
+  font-family: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  color: var(--s-tone);
+  margin-left: .04em;
+  transform: translateY(.04em);
+}
+
+.pressings-sheet__foot {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(10px, 1.6vw, 24px);
+  padding-top: clamp(10px, 1.2vw, 16px);
+  border-top: 1px solid var(--s-edge);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-mist);
+  opacity: .85;
+}
+
+.pressings-sheet__foot-row {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pressings-sheet__foot-key {
+  color: var(--ink-mist);
+  opacity: .7;
+}
+
+.pressings-sheet__foot-value {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.012em;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.pressings-sheet__foot-motto {
+  color: var(--s-tone);
+}
+
+.pressings-sheet__now {
+  position: absolute;
+  top: -10px;
+  right: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: rgba(14, 16, 24, .85);
+  color: var(--s-tone);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  z-index: 3;
+}
+
+.pressings-sheet__now-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .06);
+  animation: pressingsSheetPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pressingsSheetPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .55; transform: scale(.82); }
+}
+
+/* Active pressing: expanded, full color, raised */
+
+.pressings-sheet.is-active {
+  --s-paper: #1f2230;
+  --s-paper-2: #161926;
+  --s-edge: rgba(216, 240, 106, .22);
+  --s-shadow: rgba(0, 0, 0, .62);
+  transform: scale(1);
+  opacity: 1;
+  filter: none;
+  cursor: default;
+  border-color: rgba(243, 236, 214, .24);
+  box-shadow:
+    inset 0 0 0 1px rgba(243, 236, 214, .05),
+    0 28px 56px -22px rgba(0, 0, 0, .7),
+    0 0 0 1px rgba(255, 255, 255, .02);
+}
+
+.app--voice-quiet .pressings-sheet.is-active { --s-edge: rgba(155, 188, 255, .35); }
+.app--voice-human .pressings-sheet.is-active { --s-edge: rgba(240, 110, 91, .4); }
+.app--voice-bold .pressings-sheet.is-active { --s-edge: rgba(216, 240, 106, .4); }
+
+.pressings-sheet.is-active::before {
+  opacity: .05;
+}
+
+.pressings-sheet.is-active .pressings-sheet__line--lead {
+  opacity: .75;
+}
+
+.pressings-sheet.is-active .pressings-sheet__line--mid,
+.pressings-sheet.is-active .pressings-sheet__line--trail {
+  color: var(--paper);
+}
+
+/* Ghost pressings: compressed, faded, offset, slightly tilted. The
+   ghost is signalled by being not-active and being marked with a
+   derived class from voice order. */
+
+.pressings-sheet:not(.is-active) {
+  --s-paper: var(--pt-ghost-bg);
+  --s-paper-2: var(--pt-ghost-bg-2);
+  --s-edge: rgba(243, 236, 214, .08);
+  --s-shadow: rgba(0, 0, 0, .4);
+  width: clamp(60%, 72%, 78%);
+  margin: 0 auto;
+  opacity: var(--pt-ghost-opacity);
+  filter: saturate(.7) brightness(.92);
+  cursor: pointer;
+  transform: scale(.94);
+}
+
+.pressings-sheet:not(.is-active):hover,
+.pressings-sheet:not(.is-active):focus-visible {
+  opacity: 1;
+  filter: saturate(1) brightness(1.02);
+  transform: scale(.97);
+}
+
+.pressings-sheet:not(.is-active):active {
+  transform: scale(.99);
+}
+
+.pressings-sheet:not(.is-active) .pressings-sheet__line--mid {
+  font-size: clamp(22px, 3.4vw, 38px);
+  letter-spacing: -.018em;
+}
+
+.pressings-sheet:not(.is-active) .pressings-sheet__line--lead,
+.pressings-sheet:not(.is-active) .pressings-sheet__line--trail {
+  font-size: clamp(14px, 1.4vw, 17px);
+}
+
+.pressings-sheet:not(.is-active) .pressings-sheet__line--trail.is-upper,
+.pressings-sheet:not(.is-active) .pressings-sheet__line--lead.is-upper {
+  font-size: clamp(13px, 1.3vw, 16px);
+}
+
+.pressings-sheet:not(.is-active) .pressings-sheet__foot {
+  display: none;
+}
+
+.pressings-sheet:not(.is-active) .pressings-sheet__head-face {
+  display: none;
+}
+
+/* Voice tone for ghost pressings. They preview their own color even
+   when not active, just at lower opacity. */
+
+.pressings-sheet--quiet { --s-tone: var(--blue); --s-soft: rgba(155, 188, 255, .55); }
+.pressings-sheet--human { --s-tone: var(--coral); --s-soft: rgba(240, 110, 91, .55); }
+.pressings-sheet--bold { --s-tone: var(--acid); --s-soft: rgba(216, 240, 106, .55); }
+
+/* Keep the active pressing in the middle of the stack, regardless of
+   which voice is active, so the layout doesn't jump when voice cycles. */
+
+.pressings-triptych__stack {
+  order: 0;
+}
+
+.app--voice-quiet .pressings-sheet--quiet { order: 2; }
+.app--voice-quiet .pressings-sheet--human { order: 1; }
+.app--voice-quiet .pressings-sheet--bold { order: 3; }
+
+.app--voice-human .pressings-sheet--quiet { order: 1; }
+.app--voice-human .pressings-sheet--human { order: 2; }
+.app--voice-human .pressings-sheet--bold { order: 3; }
+
+.app--voice-bold .pressings-sheet--quiet { order: 1; }
+.app--voice-bold .pressings-sheet--human { order: 3; }
+.app--voice-bold .pressings-sheet--bold { order: 2; }
+
+/* The interactive word tokens live inside the active pressing.
+   Each token is a real button with a hand-drawn caret beneath. */
+
+.pressings-token {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: .04em;
+  padding: 0 .04em .12em;
+  font-family: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  transition: color .35s var(--ease), transform .35s var(--ease);
+}
+
+.pressings-token__text {
+  position: relative;
+  z-index: 1;
+}
+
+.pressings-token__caret {
+  position: absolute;
+  left: -.04em;
+  right: -.04em;
+  bottom: -.1em;
+  height: 10px;
+  width: calc(100% + .08em);
+  color: var(--s-tone);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity .4s var(--ease), transform .45s var(--ease);
+}
+
+.pressings-token__caret svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.pressings-token.is-hover .pressings-token__caret,
+.pressings-token.is-selected .pressings-token__caret {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pressings-token.is-hover {
+  color: var(--s-tone);
+}
+
+.pressings-token.is-selected {
+  color: var(--s-tone);
+}
+
+.pressings-token.is-selected::after {
+  content: '';
+  position: absolute;
+  left: -.04em;
+  right: -.04em;
+  bottom: -.16em;
+  height: 1px;
+  background: currentColor;
+  opacity: .35;
+}
+
+.pressings-token:focus-visible {
+  outline: 2px solid var(--s-tone);
+  outline-offset: 4px;
+  border-radius: 1px;
+}
+
+/* Each pressing slides into the bed on mount. Stagger so they read as a
+   sequence being set down, not a flash of three sheets. */
+
+.pressings-triptych .pressings-sheet {
+  animation: pressingsSheetIn .9s var(--ease-out) backwards;
+}
+
+.pressings-triptych .pressings-sheet--quiet { animation-delay: .05s; }
+.pressings-triptych .pressings-sheet--human { animation-delay: .22s; }
+.pressings-triptych .pressings-sheet--bold { animation-delay: .38s; }
+
+@keyframes pressingsSheetIn {
+  0% { opacity: 0; transform: translateY(14px) scale(.94); filter: blur(2px); }
+  100% { opacity: 1; transform: translateY(0) scale(.94); filter: blur(0); }
+}
+
+/* When a pressing is active, its keyframes should land at scale(1). */
+.pressings-sheet.is-active {
+  animation-name: pressingsSheetInActive;
+}
+
+@keyframes pressingsSheetInActive {
+  0% { opacity: 0; transform: translateY(20px) scale(.92); filter: blur(2px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* When voice changes, the previously active pressing recedes and the
+   newly active pressing steps forward. We use a tick on the bed. */
+
+.app--voice-quiet .pressings-sheet.is-active,
+.app--voice-human .pressings-sheet.is-active,
+.app--voice-bold .pressings-sheet.is-active {
+  animation: pressingsSheetActiveSettle .7s var(--ease-out);
+}
+
+@keyframes pressingsSheetActiveSettle {
+  0% { transform: scale(.96); filter: brightness(1.06); }
+  60% { transform: scale(1.01); filter: brightness(1); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pressings-sheet,
+  .pressings-sheet.is-active,
+  .pressings-sheet__now-dot,
+  .app--voice-quiet .pressings-sheet.is-active,
+  .app--voice-human .pressings-sheet.is-active,
+  .app--voice-bold .pressings-sheet.is-active {
+    animation: none !important;
+  }
+  .pressings-triptych__bed,
+  .pressings-sheet {
+    transition: none !important;
+  }
+}
+
+/* Responsive: collapse to a tighter rhythm on narrow screens. */
+
+@media (max-width: 1080px) {
+  .pressings-sheet__line--mid {
+    font-size: clamp(34px, 5.6vw, 62px);
+  }
+  .pressings-sheet__line--trail {
+    font-size: clamp(20px, 2.6vw, 28px);
+  }
+}
+
+@media (max-width: 880px) {
+  .pressings-triptych__bed {
+    padding: 20px 16px;
+  }
+  .pressings-triptych__stack {
+    gap: 14px;
+  }
+  .pressings-sheet {
+    padding: 18px 18px;
+  }
+  .pressings-sheet:not(.is-active) {
+    width: 86%;
+  }
+  .pressings-sheet__line--mid {
+    font-size: clamp(30px, 7.6vw, 48px);
+  }
+  .pressings-sheet__line--lead {
+    font-size: 16px;
+  }
+  .pressings-sheet__line--trail {
+    font-size: 18px;
+  }
+  .pressings-sheet__head-face {
+    display: none;
+  }
+  .pressings-sheet__foot {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .pressings-sheet__foot-row:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 540px) {
+  .pressings-triptych__headline-text {
+    font-size: 22px;
+  }
+  .pressings-triptych__headline-lede {
+    font-size: 13px;
+  }
+  .pressings-triptych__caption {
+    font-size: 8.5px;
+  }
+  .pressings-triptych__bed-plate-tag {
+    font-size: 7.5px;
+  }
+  .pressings-triptych__bed-foot {
+    font-size: 7.5px;
+  }
+  .pressings-sheet {
+    padding: 16px 14px;
+    gap: 12px;
+  }
+  .pressings-sheet__line--mid {
+    font-size: clamp(28px, 9vw, 42px);
+  }
+  .pressings-sheet__line--trail {
+    font-size: 16px;
+  }
+  .pressings-sheet:not(.is-active) {
+    width: 92%;
+  }
+  .pressings-sheet__head-rule {
+    display: none;
+  }
+}

@@ -1,11 +1,5 @@
-# Iteration 281
+# Changelog
 
-A live `PressHandwheel` strip lives just under the header — the press room's always-on instrument. A 12-tooth gear slowly turns, rotates a quarter on every voice pull, and shows the live state as `cold · warming · armed · hot`.
+## 282 — Pressings Triptych centerpiece
 
-- A new `PressHandwheel` component (`src/PressHandwheel.tsx`) sits between the header and the hero.
-- Three button cells: the rotating handwheel (cycles voices), the marked-words plate (cycles m³ / good at / yet?), and the lever arm (opens the editor's note on folio viii).
-- Each voice or word change nudges the gear a quarter turn with a spring settle; the wheel's inner ring slowly rotates to keep the press feeling alive.
-- A live `press state` readout ticks through `cold → warming → armed → hot` as the reader engages.
-- Eight tick cells under the marked-words plate fill as marks accumulate; the most-recent ticks a little taller with a glow.
-- Grain filter, corner ticks, focusable controls, arrow-key cycling, and `prefers-reduced-motion` respect are wired in.
-- New CSS appended at the end of `src/style.css` under `.press-handwheel`. The component is rendered inside `.page` so the hero composition is unaffected.
+Replaced the scattered title cluster above the editor's note with a single, dominant three-pressings composition. The new `PressingsTriptych` sits inside the existing `hero__plate` and unifies voice selection, word marking, and the question itself into one moment: the active voice is expanded in the middle, the other two sit as compact ghost cards above and below. Click any pressing to set the voice; click any word inside the active pressing to mark it. Arrow keys cycle, Home/End jump. The previous `MarginalCaret`, `TitleRule`, `TitleSweep`, `MarginaliaStrip`, and inline `TitleToken` were removed from the hero. A visually-hidden `<h1>` still carries the document title for assistive tech.
