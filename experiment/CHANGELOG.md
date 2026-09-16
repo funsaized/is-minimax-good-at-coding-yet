@@ -1,26 +1,12 @@
 # Changelog
 
-## Iteration 284 — typed key, calmer typography, tactile wheel
+## Iteration 285 — a more deliberate opening composition
 
-Replaced the noisy 3 × 3 SVG-cell editor's key with a single typed proof-table, sharpened the typography system, and gave the press handwheel a more tactile response when the lever is pulled.
+Refined the title page, the editor's note, the pressings specimen, and the press handwheel into a quieter, more authored opening sequence. The aim was to give the question more presence on first paint and reduce competing decoration.
 
-### Front matter key
-- Replaced the nine-cell SVG grid (which gave the editor's note nine little circles of geometric noise) with a single composed **proof table** — three rows by three words, set in the page's serif / sans voices, with a single drawn pin marking the active cell. The diagram now reads as one editorial object, not nine.
-- Added a small **key plate** above the table: a single SVG with two thin rules, a few mono labels (`VOICE × MARK`, `SET · MARK · PRESS`, `FOLIO · I·`), and a small mid-rail — establishes the key's frame without crowding it.
-- The active row now takes a soft horizontal halo and the active letter-circle scales up with a focus ring; the active cell receives a small drawn caret-stroke above it instead of a pulsing SVG ring.
-
-### Typography system
-- Added `font-feature-settings: 'kern' 'liga' 'calt' 'ss01'` at the body so display text uses available ligatures and kerning features.
-- Refined the font stacks: better cross-platform fallbacks on `--sans` and `--mono`; introduced a `--display` slot for large display text.
-- Introduced `--ease-soft` as a third easing token for subtle state moves.
-- Switched the selection color from acid to coral — better contrast against the night palette, more honest as ink-on-paper.
-
-### Press handwheel — tactile pull
-- The gear wheel was being remounted on every state change to retrigger a CSS rotation (heavy + wasteful). Replaced with a `transform: rotate(var(--press-wheel-spin))` driven by an accumulated spin angle, transitioned with the existing spring easing. The wheel now spins smoothly on each pull instead of restarting.
-- Added a one-shot **strike flash** — a thin ink-coloured disc blooms around the wheel and fades on each voice change, giving the pull a satisfying tactile kick.
-- The slow idle gear rotation slowed to 24s for a calmer handwheel idle.
-
-### Files changed
-- `src/App.tsx` — replaced the 3 × 3 SVG key with the typed proof-table composition
-- `src/PressHandwheel.tsx` — spin-via-transform + strike-flash; no remounts
-- `src/style.css` — new `.hero__key*` proof-table styles, press-handwheel spin + strike, font-feature settings, refined root tokens, responsive key adjustments
+- **TitlePage** — replaced the wax stamp and edition topline with a single small seal and a clean running head. The question is now set larger (display 64→138 px on the centre line, 46→100 px on the trail) and reads as a deliberate three-line composition with the marks inline. A new `title-page__voice` chip names the active voice below the title; a small `title-page__colophon` keeps the date and season. The flourish is shorter, the plate tag carries one line, and the dedication animates in last.
+- **Editor's note (hero body)** — replaced the 3 × 3 SVG-cell key with a single typed "now reading" line that names the active voice × word combination in prose (`the title is set in [voice] · marked at [word]`). The brief body breathes more (line-height 1.62 → 1.65; gap 12 → 16 px) and the second paragraph is now quieter (mist tone) so the signed closer can land.
+- **PressingsTriptych** — the headline is larger (24 → 40 px) and each pressing row types its line at display size (22 → 38 px). The case has more padding and the rows feel like a typographic specimen rather than a dashboard.
+- **PressHandwheel** — tightened grid columns, slightly smaller internal padding, smaller date strip, and rounded outer corners for a calmer instrument.
+- **Hero brief** — more padding and a quieter paragraph rhythm.
+- Removed unused `.hero__key` and `.hero__dropcap` markup; their CSS rules remain inert.

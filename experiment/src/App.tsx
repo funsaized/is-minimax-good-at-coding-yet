@@ -438,6 +438,7 @@ function Colophon({ voice, word, setToday, readerName }: { voice: VoiceId; word:
 }
 
 const VOICE_LABEL: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
+const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 
 export function App() {
   const [answerOpen, setAnswerOpen] = useState(false)
@@ -700,38 +701,12 @@ export function App() {
 
               <div className="hero__brief-body">
                 <p className="hero__brief-paragraph hero__brief-paragraph--lead">
-                  <span className="hero__dropcap" aria-hidden="true">
-                    <svg className="hero__dropcap-svg" viewBox="0 0 64 64">
-                      <defs>
-                        <filter id={`dropcap-grain-${bodyGrainId}`} x="-6%" y="-6%" width="112%" height="112%">
-                          <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="4" stitchTiles="stitch" />
-                          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
-                          <feComposite in2="SourceGraphic" operator="in" />
-                        </filter>
-                      </defs>
-                      <g filter={`url(#dropcap-grain-${bodyGrainId})`} opacity=".95">
-                        <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" strokeWidth=".7" opacity=".5" />
-                        <circle cx="32" cy="32" r="24" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 2.2" opacity=".4" />
-                        <text
-                          x="32"
-                          y="44"
-                          textAnchor="middle"
-                          fontFamily="Georgia, 'Iowan Old Style', serif"
-                          fontStyle="italic"
-                          fontSize="40"
-                          fill="currentColor"
-                        >T</text>
-                        <line x1="18" y1="14" x2="46" y2="14" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".65" />
-                        <circle cx="32" cy="10" r="1.4" fill="currentColor" opacity=".75" />
-                      </g>
-                    </svg>
-                  </span>
                   <span className="hero__brief-paragraph-text">
                     The title page is set to ask whether a machine can build a place that feels like <em>someone was here.</em> Three words earn the marginalia — <em>m³</em>, <em>good at</em>, <em>yet?</em> — and three voices are tried because typography is part of any honest answer.
                   </span>
                 </p>
 
-                <p className="hero__brief-paragraph">
+                <p className="hero__brief-paragraph hero__brief-paragraph--quiet">
                   The reading is short on purpose. The first read takes the line at face value. The second listens for the word the question mark is leaning on. The third — and last — opens the editor's note on folio viii.
                 </p>
 
@@ -740,114 +715,34 @@ export function App() {
                 </p>
               </div>
 
-              <span className="hero__brief-rule" aria-hidden="true">
-                <svg viewBox="0 0 600 8" preserveAspectRatio="none">
-                  <path
-                    className="hero__brief-rule-stroke"
-                    d="M2 4c40-3 80 3 120 0s80-3 120 0 80 3 120 0 80-3 120 0 80 3 98 0"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth=".9"
-                    strokeLinecap="round"
-                    pathLength="100"
-                  />
-                  <circle className="hero__brief-rule-bead" cx="2" cy="4" r="1.3" fill="currentColor" />
-                  <circle className="hero__brief-rule-bead hero__brief-rule-bead--end" cx="598" cy="4" r="1.3" fill="currentColor" />
-                </svg>
-              </span>
-
-              <figure className="hero__key" aria-label="A key to the page: three voices crossed with three marked words">
-                <span className="hero__key-corner hero__key-corner--tl" aria-hidden="true" />
-                <span className="hero__key-corner hero__key-corner--tr" aria-hidden="true" />
-                <span className="hero__key-corner hero__key-corner--bl" aria-hidden="true" />
-                <span className="hero__key-corner hero__key-corner--br" aria-hidden="true" />
-
-                <figcaption className="hero__key-caption">
-                  <span className="hero__key-caption-mark" aria-hidden="true">※</span>
-                  the key <em>·</em> three voices × three marks
-                  <span className="hero__key-caption-mark" aria-hidden="true">※</span>
+              <figure className="hero__now" aria-label="What the title above is reading right now">
+                <figcaption className="hero__now-caption">
+                  <span className="hero__now-caption-mark" aria-hidden="true">※</span>
+                  now reading <em>·</em> the cell the title is set on
+                  <span className="hero__now-caption-mark" aria-hidden="true">※</span>
                 </figcaption>
 
-                <div className="hero__key-plate" aria-hidden="true">
-                  <svg className="hero__key-plate-svg" viewBox="0 0 480 240">
-                    <defs>
-                      <linearGradient id={`hero-key-rule-${bodyGrainId}`} x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
-                        <stop offset="50%" stopColor="currentColor" stopOpacity=".7" />
-                        <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-                      </linearGradient>
-                    </defs>
-                    <line x1="8" y1="22" x2="472" y2="22" stroke="currentColor" strokeWidth=".5" strokeDasharray=".8 2.4" opacity=".4" />
-                    <line x1="146" y1="30" x2="146" y2="208" stroke="currentColor" strokeWidth=".5" strokeDasharray=".8 2.4" opacity=".25" />
-                    <circle cx="146" cy="118" r="2.2" fill="currentColor" opacity=".5" />
-                    <text x="153" y="32" fontFamily="ui-monospace, monospace" fontSize="6" letterSpacing="2" fill="currentColor" opacity=".55">VOICE</text>
-                    <text x="320" y="32" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="6" letterSpacing="2" fill="currentColor" opacity=".55">×</text>
-                    <text x="460" y="32" textAnchor="end" fontFamily="ui-monospace, monospace" fontSize="6" letterSpacing="2" fill="currentColor" opacity=".55">MARK</text>
-                    <text x="153" y="218" fontFamily="ui-monospace, monospace" fontSize="5.4" letterSpacing="1.8" fill="currentColor" opacity=".42">SET · MARK · PRESS</text>
-                    <text x="460" y="218" textAnchor="end" fontFamily="ui-monospace, monospace" fontSize="5.4" letterSpacing="1.8" fill="currentColor" opacity=".42">FOLIO · I·</text>
-                    <line x1="8" y1="216" x2="472" y2="216" stroke="currentColor" strokeWidth=".5" strokeDasharray=".8 2.4" opacity=".4" />
-                  </svg>
-                </div>
-
-                <div className="hero__key-rows" role="table" aria-label="The page's three voices and three marked words, crossed">
-                  {([
-                    { v: 'quiet' as VoiceId, label: 'quiet cut', letter: 'A', column: 'voice quiet · small caps' },
-                    { v: 'human' as VoiceId, label: 'human hand', letter: 'B', column: 'voice human · a little warm' },
-                    { v: 'bold' as VoiceId, label: 'bold signal', letter: 'C', column: 'voice bold · no apology' },
-                  ]).map(row => {
-                    const rowActive = row.v === voice
-                    return (
-                      <div
-                        key={`row-${row.v}`}
-                        className={`hero__key-row hero__key-row--${row.v} ${rowActive ? 'is-active-row' : ''}`}
-                        role="row"
-                      >
-                        <div className={`hero__key-row-head hero__key-row-head--${row.v}`} role="rowheader">
-                          <span className="hero__key-row-head-letter" aria-hidden="true">{row.letter}</span>
-                          <span className="hero__key-row-head-name">{row.label}</span>
-                          <span className="hero__key-row-head-line" aria-hidden="true">sets the line above in <em>{row.column}</em></span>
-                        </div>
-                        {(['m3', 'good', 'yet'] as WordId[]).map(w => {
-                          const isActive = row.v === voice && w === activeWord
-                          return (
-                            <span
-                              key={`cell-${row.v}-${w}`}
-                              className={`hero__key-cell hero__key-cell--${row.v}-${w} ${isActive ? 'is-active' : ''}`}
-                              aria-hidden="true"
-                            >
-                              <span className="hero__key-cell-carets" aria-hidden="true">
-                                <span className="hero__key-cell-caret" />
-                                <span className="hero__key-cell-caret" />
-                                <span className="hero__key-cell-caret" />
-                              </span>
-                              <span className="hero__key-cell-word">{w === 'm3' ? 'm³' : w === 'good' ? 'good at' : 'yet?'}</span>
-                              <span className="hero__key-cell-mark">{w === 'm3' ? 'stet' : w === 'good' ? 'caret' : 'query'}</span>
-                              {isActive && (
-                                <span className="hero__key-cell-pin" aria-hidden="true">
-                                  <svg viewBox="0 0 60 16" preserveAspectRatio="none">
-                                    <path
-                                      d="M2 8c12-8 24 8 36 0s18-6 20-2"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth=".9"
-                                      strokeLinecap="round"
-                                    />
-                                    <circle cx="58" cy="8" r="1.4" fill="currentColor" />
-                                  </svg>
-                                </span>
-                              )}
-                            </span>
-                          )
-                        })}
-                      </div>
-                    )
-                  })}
-                </div>
-
-                <p className="hero__key-gloss">
-                  <span className="hero__key-gloss-mark" aria-hidden="true" />
-                  The lit pin marks the cell you are reading on the title above. <em>Pull a voice, mark a word — the press answers.</em>
+                <p className="hero__now-line">
+                  <em className="hero__now-em">the title is set in</em>
+                  <span className={`hero__now-voice hero__now-voice--${voice}`}>
+                    <span className="hero__now-voice-letter" aria-hidden="true">{VOICE_LETTER[voice]}</span>
+                    <em>{voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}</em>
+                  </span>
+                  <span className="hero__now-sep" aria-hidden="true">·</span>
+                  <em className="hero__now-em">marked at</em>
+                  <span className={`hero__now-word hero__now-word--${activeWord}`}>
+                    <span className="hero__now-word-mark">{activeWord === 'm3' ? 'stet' : activeWord === 'good' ? 'caret' : 'query'}</span>
+                    <em>{activeWord === 'm3' ? 'M3' : activeWord === 'good' ? 'good at' : 'yet?'}</em>
+                  </span>
                 </p>
+
+                <span className="hero__now-foot" aria-hidden="true">
+                  <span className="hero__now-foot-mark" />
+                  <span className="hero__now-foot-tag">
+                    pull a voice, mark a word — the press answers
+                  </span>
+                  <span className="hero__now-foot-mark hero__now-foot-mark--alt" />
+                </span>
               </figure>
             </article>
 
