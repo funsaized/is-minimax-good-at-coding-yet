@@ -1,18 +1,17 @@
-# Iteration 298 — A single Voice Trial in place of the busy handwheel
+# Iteration 299 — wheel of the rehearsal
 
 ## Summary
-Replaced the busy press handwheel with a single composed Voice Trial strip; added a trial-pull rehearsal that cycles the headline through the three voices and settles back.
+Replace the busy VoiceTrial pip row with a single composed press rehearsal: a wheel that names the three voices, a track that shows progress, a pull that does the cycle, and a counter that remembers.
 
-## Changes
-- Added `src/VoiceTrial.tsx` — a single, deliberate strip with three voice pips (quiet · human · bold) and one rehearsal-pull button. Keyboard-accessible (left/right/Home/End cycle voices; space/enter trigger a rehearsal pull). Honors `prefers-reduced-motion`.
-- Replaced `<PressHandwheel />` in `src/App.tsx` with `<VoiceTrial />`. Added a `rehearsing` state and a `triggerTrialPull` callback that cycles through the three voices with timed state updates, then settles on the user's chosen voice.
-- Updated `src/TitleFold.tsx` to accept a `rehearsing` flag and show a small pulsing "rehearsing" tag in its legend while the rehearsal runs.
-- Appended styles for `.voice-trial`, `.voice-trial__pip`, `.voice-trial__pull`, `.voice-trial__trail`, and the rehearsing state of `.title-fold` in `src/style.css`. Mobile breakpoints included; reduced-motion users see a settled state.
+## What changed
+- `src/VoiceTrial.tsx` — the strip is now a wheel + bed + pull + counter + hint. The pip row is gone; voice selection moves to the wheel itself and the rest of the page.
+- `src/App.tsx` — added a `rehearsalCount` state, bumped on every pull, passed down to the new counter.
+- `src/style.css` — rewrote the `voice-trial` block to match the new structure; added wheel spin, bed, track, and counter styles.
 
-## Removed
-- The previous `PressHandwheel` import is no longer used in `src/App.tsx`. The component file and its CSS remain on disk for reference but are not rendered.
-
-## Behavior
-- Click any voice pip → headline, fold legend, and downstream sections all re-set to that voice.
-- Click "pull once" → the headline cycles through quiet, human, bold, quiet, human, bold (starting from the currently set voice), then settles back on the user's choice. The fold legend flashes a "rehearsing" tag. The press-strike flash fires on each cycle.
-- The press handwheel's keyboard binding (Shift+V to cycle voice) is unchanged.
+## What it earns
+- The rehearsal is now the only thing this strip does. Voices are picked elsewhere on the page (TitleLine voices, Press lever, SpecimenTray, TypePlate).
+- The wheel is the page's single source of "pull once". Clicking the wheel and clicking the pull do the same thing — the cycle and the settle.
+- A counter (``001 · this session`) remembers how many rehearsals the reader has pulled.
+- The wheel's bearings spin while rehearsing; the voice letters stay put so the labels remain readable.
+- Arrow keys still set the voice; space and enter still trigger the pull.
+- prefers-reduced-motion removes the wheel spin and the pull glyph animation.

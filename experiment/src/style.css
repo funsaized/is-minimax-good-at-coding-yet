@@ -47915,47 +47915,49 @@ a small act of typesetting.
 }
 
 /* ────────────────────────────────────────────────────────────
-   VOICE TRIAL · a single composed strip that replaces the busy
-   press handwheel. Three voice pips sit in a row with a single
-   "rehearsal pull" affordance. The chosen voice returns after
-   the cycle. Quiet, deliberate, earns its place.
+/* ────────────────────────────────────────────────────────────
+   VOICE TRIAL · a single composed press rehearsal. The pip row
+   is gone; voices are set elsewhere. The wheel and the pull
+   are the page's one rehearsal affordance.
    ──────────────────────────────────────────────────────────── */
 
 .voice-trial {
   --voice-trial-tone: var(--coral);
-  --voice-trial-pip-tone: var(--coral);
   --voice-trial-rule: rgba(243, 236, 214, .14);
-  --voice-trial-rule-soft: rgba(243, 236, 214, .06);
   --voice-trial-ghost: rgba(243, 236, 214, .4);
   --voice-trial-ghost-soft: rgba(243, 236, 214, .22);
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   justify-items: center;
-  gap: clamp(10px, 1.4vw, 18px);
+  gap: clamp(14px, 1.6vw, 22px);
   width: min(100%, 1080px);
-  margin: clamp(18px, 2.2vw, 28px) auto clamp(28px, 3vw, 42px);
-  padding: clamp(18px, 2.2vw, 30px) clamp(20px, 2.6vw, 36px);
+  margin: clamp(20px, 2.4vw, 30px) auto clamp(30px, 3.2vw, 46px);
+  padding: clamp(18px, 2.2vw, 30px) clamp(22px, 2.8vw, 40px);
   border: 1px solid var(--voice-trial-rule);
   border-radius: 2px;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--voice-trial-tone) 5%, transparent), transparent 60%),
-    linear-gradient(180deg, rgba(20, 24, 36, .58), rgba(10, 14, 24, .78));
+    linear-gradient(180deg, color-mix(in srgb, var(--voice-trial-tone) 6%, transparent), transparent 60%),
+    linear-gradient(180deg, rgba(20, 24, 36, .62), rgba(10, 14, 24, .82));
   color: var(--paper);
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--voice-trial-tone) 8%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--voice-trial-tone) 10%, transparent),
     0 24px 80px -32px rgba(0, 0, 0, .55);
   isolation: isolate;
   opacity: 0;
   transform: translateY(8px);
-  animation: voiceTrialIn .85s var(--ease-out) .1s forwards;
+  animation: voiceTrialIn .9s var(--ease-out) .1s forwards;
 }
+
+.voice-trial--voice-quiet { --voice-trial-tone: var(--blue); }
+.voice-trial--voice-human { --voice-trial-tone: var(--coral); }
+.voice-trial--voice-bold { --voice-trial-tone: var(--acid); }
 
 .voice-trial::before {
   content: '';
   position: absolute;
   inset: 6px;
-  border: 1px dashed color-mix(in srgb, var(--voice-trial-tone) 18%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--voice-trial-tone) 16%, transparent);
   border-radius: 1px;
   pointer-events: none;
   z-index: 0;
@@ -47986,17 +47988,13 @@ a small act of typesetting.
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--voice-trial-tone) 16%, transparent), transparent 60%);
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--voice-trial-tone) 14%, transparent), transparent 60%);
   opacity: .55;
   z-index: -1;
 }
 
-.app--voice-quiet .voice-trial { --voice-trial-tone: var(--blue); }
-.app--voice-human .voice-trial { --voice-trial-tone: var(--coral); }
-.app--voice-bold .voice-trial { --voice-trial-tone: var(--acid); }
-
 @keyframes voiceTrialIn {
-  0% { opacity: 0; transform: translateY(8px); filter: blur(2px); }
+  0% { opacity: 0; transform: translateY(10px); filter: blur(2px); }
   100% { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
@@ -48030,6 +48028,11 @@ a small act of typesetting.
 
 .voice-trial__masthead-rule--lead {
   background: linear-gradient(to right, var(--voice-trial-tone), transparent);
+  opacity: .55;
+}
+
+.voice-trial__masthead-rule--trail {
+  background: linear-gradient(to left, var(--voice-trial-tone), transparent);
   opacity: .55;
 }
 
@@ -48072,31 +48075,48 @@ a small act of typesetting.
   color: var(--voice-trial-tone);
 }
 
-/* — Pip row — */
+/* — Press bed: the wheel — */
 
-.voice-trial__body {
+.voice-trial__bed {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(8px, 1vw, 14px);
-  width: 100%;
-}
-
-.voice-trial__pip {
-  --voice-trial-pip-tone: var(--coral);
-  position: relative;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: clamp(10px, 1vw, 14px);
-  padding: clamp(10px, 1.2vw, 14px) clamp(12px, 1.4vw, 18px);
-  border: 1px solid color-mix(in srgb, var(--voice-trial-pip-tone) 22%, transparent);
+  gap: clamp(16px, 2.4vw, 28px);
+  width: 100%;
+  padding: clamp(10px, 1.2vw, 16px) clamp(14px, 1.8vw, 26px);
+  border: 1px solid color-mix(in srgb, var(--voice-trial-tone) 16%, transparent);
   border-radius: 2px;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--voice-trial-pip-tone) 6%, transparent), transparent),
-    linear-gradient(180deg, rgba(28, 32, 44, .55), rgba(14, 18, 28, .72));
-  color: var(--paper);
+    linear-gradient(180deg, color-mix(in srgb, var(--voice-trial-tone) 4%, transparent), transparent 70%),
+    rgba(14, 18, 28, .55);
+}
+
+.voice-trial__bed-rule {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--voice-trial-tone) 35%, transparent), transparent);
+  pointer-events: none;
+  opacity: .55;
+}
+
+.voice-trial__bed-rule--top { top: 6px; }
+.voice-trial__bed-rule--bottom { bottom: 6px; }
+
+.voice-trial__wheel-button {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(14px, 1.6vw, 22px);
+  align-items: center;
+  padding: clamp(6px, 1vw, 10px) clamp(10px, 1.4vw, 16px);
+  border: 1px dashed color-mix(in srgb, var(--voice-trial-tone) 30%, transparent);
+  border-radius: 999px;
+  background: rgba(20, 24, 36, .55);
+  color: var(--voice-trial-tone);
   font: inherit;
   cursor: pointer;
   text-align: left;
@@ -48104,92 +48124,126 @@ a small act of typesetting.
   transition: transform .55s var(--ease-spring), border-color .5s var(--ease), box-shadow .55s var(--ease);
 }
 
-.voice-trial__pip::before {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border: 1px dashed color-mix(in srgb, var(--voice-trial-pip-tone) 16%, transparent);
-  border-radius: 1px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .5s var(--ease);
+.voice-trial__wheel-button:hover,
+.voice-trial__wheel-button:focus-visible {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--voice-trial-tone) 55%, transparent);
+  box-shadow: 0 16px 36px -24px color-mix(in srgb, var(--voice-trial-tone) 70%, transparent);
 }
 
-.voice-trial__pip:hover,
-.voice-trial__pip:focus-visible {
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--voice-trial-pip-tone) 55%, transparent);
-  box-shadow: 0 16px 36px -24px color-mix(in srgb, var(--voice-trial-pip-tone) 70%, transparent);
+.voice-trial__wheel-button:active {
+  transform: translateY(0) scale(.99);
 }
 
-.voice-trial__pip:hover::before,
-.voice-trial__pip:focus-visible::before,
-.voice-trial__pip.is-active::before {
-  opacity: 1;
-}
-
-.voice-trial__pip.is-active {
-  border-color: color-mix(in srgb, var(--voice-trial-pip-tone) 55%, transparent);
-  background:
-    radial-gradient(ellipse at 0% 50%, color-mix(in srgb, var(--voice-trial-pip-tone) 22%, transparent), transparent 60%),
-    linear-gradient(180deg, rgba(40, 44, 60, .55), rgba(14, 18, 28, .72));
+.voice-trial.is-rehearsing .voice-trial__wheel-button {
+  border-color: color-mix(in srgb, var(--voice-trial-tone) 65%, transparent);
   box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--voice-trial-pip-tone) 22%, transparent),
-    0 20px 44px -22px color-mix(in srgb, var(--voice-trial-pip-tone) 60%, transparent);
+    inset 0 0 0 1px color-mix(in srgb, var(--voice-trial-tone) 22%, transparent),
+    0 16px 36px -22px color-mix(in srgb, var(--voice-trial-tone) 60%, transparent);
 }
 
-.voice-trial__pip-ring {
-  display: inline-block;
-  width: clamp(26px, 2.4vw, 32px);
-  height: clamp(26px, 2.4vw, 32px);
-  color: var(--voice-trial-pip-tone);
-  transition: color .5s var(--ease), transform .55s var(--ease-spring);
-}
-
-.voice-trial__pip-ring svg {
+.voice-trial__wheel {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: clamp(54px, 5.6vw, 78px);
+  height: clamp(54px, 5.6vw, 78px);
+  color: var(--voice-trial-tone);
 }
 
-.voice-trial__pip:hover .voice-trial__pip-ring,
-.voice-trial__pip:focus-visible .voice-trial__pip-ring,
-.voice-trial__pip.is-active .voice-trial__pip-ring {
-  transform: rotate(20deg);
+.voice-trial.is-rehearsing .voice-trial__wheel-bearings {
+  animation: voiceTrialWheelSpin 1.1s linear infinite;
+  transform-origin: 32px 32px;
 }
 
-.voice-trial__pip-core {
-  transition: r .35s var(--ease);
+.voice-trial.is-rehearsing .voice-trial__wheel-rings {
+  animation: voiceTrialWheelSpin 6s linear infinite;
+  transform-origin: 32px 32px;
 }
 
-.voice-trial__pip.is-active .voice-trial__pip-core {
-  r: 2.6;
+@keyframes voiceTrialWheelSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-.voice-trial__pip-stack {
+@keyframes voiceTrialWheelSpinReverse {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-trial.is-rehearsing .voice-trial__wheel-bearings,
+  .voice-trial.is-rehearsing .voice-trial__wheel-rings { animation: none !important; }
+}
+
+.voice-trial__wheel-letter {
+  transition: opacity .45s var(--ease), font-size .45s var(--ease);
+}
+
+.voice-trial__wheel-letter.is-active {
+  font-weight: 700;
+}
+
+.voice-trial__wheel-core {
+  animation: voiceTrialWheelCorePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes voiceTrialWheelCorePulse {
+  0%, 100% { r: 2.6; }
+  50% { r: 3.2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-trial__wheel-core { animation: none !important; }
+}
+
+.voice-trial__wheel-halo {
+  transition: opacity .55s var(--ease);
+}
+
+.voice-trial.is-rehearsing .voice-trial__wheel-halo {
+  opacity: 1;
+  animation: voiceTrialWheelHalo 1.1s ease-in-out infinite;
+}
+
+@keyframes voiceTrialWheelHalo {
+  0%, 100% { opacity: .35; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voice-trial.is-rehearsing .voice-trial__wheel-halo { animation: none !important; opacity: .65 !important; }
+}
+
+.voice-trial__wheel-readout {
   display: grid;
   gap: 2px;
   min-width: 0;
-}
-
-.voice-trial__pip-letter {
-  font-family: var(--mono);
-  font-size: clamp(8.5px, .78vw, 9.5px);
-  letter-spacing: .26em;
-  text-transform: uppercase;
-  color: var(--voice-trial-pip-tone);
-  opacity: .7;
-}
-
-.voice-trial__pip-name {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(13px, 1.16vw, 15px);
-  letter-spacing: -.005em;
   color: var(--paper);
 }
 
-.voice-trial__pip-face {
+.voice-trial__wheel-readout-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.voice-trial__wheel-readout-key {
+  font-family: var(--mono);
+  font-size: clamp(8px, .72vw, 9px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--voice-trial-ghost);
+}
+
+.voice-trial__wheel-readout-voice {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.3vw, 18px);
+  letter-spacing: -.005em;
+  color: var(--voice-trial-tone);
+  transition: color .45s var(--ease);
+}
+
+.voice-trial__wheel-readout-face {
   font-family: var(--mono);
   font-size: clamp(8px, .7vw, 9px);
   letter-spacing: .18em;
@@ -48197,38 +48251,55 @@ a small act of typesetting.
   color: var(--voice-trial-ghost-soft);
 }
 
-.voice-trial__pip-state {
-  display: inline-flex;
+/* — Press bed — track (voice proof tape) — */
+
+.voice-trial__bed-track {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 6px;
-  font-family: var(--mono);
-  font-size: clamp(8.5px, .78vw, 9.5px);
-  letter-spacing: .26em;
-  text-transform: uppercase;
+  gap: clamp(10px, 1.2vw, 16px);
+  min-width: 0;
   color: var(--voice-trial-ghost);
 }
 
-.voice-trial__pip-state-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--voice-trial-pip-tone);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--voice-trial-pip-tone) 20%, transparent);
-  animation: voiceTrialPipPulse 1.4s ease-in-out infinite;
+.voice-trial__bed-track svg {
+  display: block;
+  width: 100%;
+  height: clamp(4px, .5vw, 6px);
 }
 
-@keyframes voiceTrialPipPulse {
-  0%, 100% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--voice-trial-pip-tone) 18%, transparent); }
-  50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--voice-trial-pip-tone) 6%, transparent); }
+.voice-trial__bed-track-progress {
+  transition: x .55s var(--ease);
 }
 
-.voice-trial__pip-state-tag {
+.voice-trial__bed-track-cell {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--mono);
+  font-size: clamp(8px, .7vw, 9px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.voice-trial__bed-track-cell-letter {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.1vw, 15px);
+  letter-spacing: -.01em;
+  color: var(--paper);
+  text-transform: none;
+}
+
+.voice-trial__bed-track-cell-name {
   color: var(--voice-trial-ghost-soft);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .voice-trial__pip-state-dot { animation: none !important; }
+  text-align: center;
+  max-width: 7.5em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* — Pull row (rehearsal pull affordance) — */
@@ -48247,7 +48318,7 @@ a small act of typesetting.
   --voice-trial-pull-tone: var(--voice-trial-tone);
   position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: clamp(12px, 1.2vw, 18px);
   align-items: center;
   padding: clamp(10px, 1.2vw, 14px) clamp(14px, 1.6vw, 22px);
@@ -48389,107 +48460,91 @@ a small act of typesetting.
   color: var(--voice-trial-ghost-soft);
 }
 
-.voice-trial__pull-state {
+/* — Counter — */
+
+.voice-trial__counter {
   position: relative;
-  display: inline-grid;
-  place-items: center;
-  width: clamp(40px, 3.4vw, 48px);
-  height: clamp(40px, 3.4vw, 48px);
-  border-radius: 50%;
-  color: var(--voice-trial-pull-tone);
-  border: 1px solid color-mix(in srgb, var(--voice-trial-pull-tone) 35%, transparent);
-  background: rgba(20, 24, 36, .55);
-  transition: color .45s var(--ease), border-color .45s var(--ease);
+  display: grid;
+  gap: 4px;
+  justify-items: end;
+  min-width: clamp(120px, 14vw, 180px);
+  padding: clamp(8px, 1.1vw, 12px) clamp(12px, 1.4vw, 18px);
+  border: 1px solid color-mix(in srgb, var(--voice-trial-tone) 24%, transparent);
+  border-radius: 2px;
+  background: rgba(20, 24, 36, .5);
+  color: var(--paper);
 }
 
-.voice-trial__pull-state-ring {
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  border: 1px solid currentColor;
-  opacity: 0;
-  transform: scale(.85);
-  animation: voiceTrialRing .85s var(--ease-out) forwards;
+.voice-trial__counter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: clamp(8px, .7vw, 9px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--voice-trial-ghost);
 }
 
-.voice-trial__pull-state-ring--quiet { color: var(--blue); }
-.voice-trial__pull-state-ring--human { color: var(--coral); }
-.voice-trial__pull-state-ring--bold { color: var(--acid); }
-
-@keyframes voiceTrialRing {
-  0% { opacity: 0; transform: scale(.7); }
-  35% { opacity: .9; }
-  100% { opacity: 0; transform: scale(1.15); }
+.voice-trial__counter-tag-mark {
+  display: inline-block;
+  width: 8px;
+  height: 1px;
+  background: var(--voice-trial-tone);
+  opacity: .75;
 }
 
-.voice-trial__pull-state-letter {
+.voice-trial__counter-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.voice-trial__counter-num {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(17px, 1.4vw, 20px);
+  font-size: clamp(22px, 1.9vw, 28px);
+  font-variant-numeric: tabular-nums;
   letter-spacing: -.01em;
+  color: var(--voice-trial-tone);
+  line-height: 1;
 }
 
-.voice-trial__trail {
-  display: grid;
-  gap: clamp(4px, .6vw, 8px);
-  justify-items: end;
-  color: var(--voice-trial-pull-tone);
+.voice-trial__counter-suffix {
+  font-family: var(--mono);
+  font-size: clamp(8px, .7vw, 9px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--voice-trial-ghost-soft);
 }
 
-.voice-trial__trail svg {
-  display: block;
-  width: clamp(140px, 16vw, 220px);
-  height: clamp(8px, .9vw, 10px);
-}
+/* — Hint — */
 
-.voice-trial__trail-path {
-  stroke-dasharray: 100 100;
-  stroke-dashoffset: 100;
-  animation: voiceTrialTrailDraw 1.1s var(--ease-out) .25s forwards;
-}
-
-.voice-trial__trail-bead--lead,
-.voice-trial__trail-bead--trail {
-  opacity: 0;
-  animation: voiceTrialTrailBead .45s var(--ease-out) forwards;
-}
-
-.voice-trial__trail-bead--lead { animation-delay: .25s; }
-.voice-trial__trail-bead--trail { animation-delay: 1.25s; }
-
-.voice-trial.is-rehearsing .voice-trial__trail-path {
-  animation: voiceTrialTrailDraw 1.1s var(--ease-out) forwards, voiceTrialTrailPulse 1.1s ease-in-out infinite;
-}
-
-@keyframes voiceTrialTrailDraw {
-  to { stroke-dashoffset: 0; }
-}
-
-@keyframes voiceTrialTrailPulse {
-  0%, 100% { opacity: .55; }
-  50% { opacity: 1; }
-}
-
-@keyframes voiceTrialTrailBead {
-  to { opacity: 1; }
-}
-
-.voice-trial__trail-tag {
+.voice-trial__hint {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1vw, 14px);
   font-family: var(--mono);
   font-size: clamp(8px, .7vw, 9px);
   letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--voice-trial-ghost);
-  text-align: right;
+  text-align: center;
+  justify-self: center;
 }
 
-.voice-trial__trail-tag em {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(10.5px, .9vw, 12px);
-  letter-spacing: -.005em;
-  text-transform: none;
-  color: var(--voice-trial-pull-tone);
+.voice-trial__hint-mark {
+  display: inline-block;
+  width: clamp(20px, 2.6vw, 38px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--voice-trial-tone), transparent);
+  opacity: .65;
+}
+
+.voice-trial__hint-mark--alt {
+  background: linear-gradient(to left, transparent, var(--voice-trial-tone), transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -48499,27 +48554,23 @@ a small act of typesetting.
   .voice-trial.is-rehearsing .voice-trial__pull-bead--trail {
     animation: none !important;
   }
-  .voice-trial__trail-path { animation: none !important; stroke-dashoffset: 0 !important; }
-  .voice-trial__pull-state-ring { animation: none !important; opacity: 0 !important; }
 }
 
 @media (max-width: 920px) {
-  .voice-trial__body {
+  .voice-trial__bed {
     grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
+    gap: 14px;
   }
 
   .voice-trial__pull-row {
     grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
+    gap: 12px;
   }
 
-  .voice-trial__trail {
+  .voice-trial__counter {
+    justify-self: stretch;
     justify-items: start;
-  }
-
-  .voice-trial__trail-tag {
-    text-align: left;
+    min-width: 0;
   }
 }
 
@@ -48532,15 +48583,25 @@ a small act of typesetting.
     display: none;
   }
 
-  .voice-trial__pip {
-    grid-template-columns: auto minmax(0, 1fr);
+  .voice-trial__masthead {
+    grid-template-columns: auto minmax(0, 1fr) auto;
   }
 
-  .voice-trial__pip-state {
-    grid-column: 2;
-    margin-top: 2px;
+  .voice-trial__wheel-button {
+    grid-template-columns: auto;
+    justify-items: center;
+  }
+
+  .voice-trial__wheel-readout {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .voice-trial__bed-track-cell-name {
+    display: none;
   }
 }
+
 
 /* ────────────────────────────────────────────────────────────
    TITLE FOLD · rehearsal-aware legend state

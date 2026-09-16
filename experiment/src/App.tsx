@@ -458,6 +458,7 @@ export function App() {
   const [readerName, setReaderName] = useState('')
   const [rehearsing, setRehearsing] = useState(false)
   const [trialTick, setTrialTick] = useState(0)
+  const [rehearsalCount, setRehearsalCount] = useState(0)
   const firstVoiceRef = useRef(true)
   const tokenRefs = useRef<Partial<Record<WordId, HTMLSpanElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement>(null)
@@ -586,6 +587,7 @@ export function App() {
   const triggerTrialPull = useCallback(() => {
     if (rehearsing) return
     setRehearsing(true)
+    setRehearsalCount(count => count + 1)
     setAnnouncement('Rehearsal pull started. Cycling the three voices.')
     const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const cycle: VoiceId[] = ['quiet', 'human', 'bold']
@@ -705,7 +707,7 @@ export function App() {
           voice={voice}
           setToday={setToday}
           rehearsing={rehearsing}
-          trialTick={trialTick}
+          rehearsalCount={rehearsalCount}
           onVoice={selectVoice}
           onTrialPull={triggerTrialPull}
         />
