@@ -114,12 +114,14 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
 
         <span className="title-page__seal" aria-hidden="true">
           <svg viewBox="0 0 96 96" className="title-page__seal-svg">
-            <g filter={`url(#${grainId})`} opacity=".7">
-              <circle cx="48" cy="48" r="44" fill="none" stroke="currentColor" strokeWidth=".9" />
-              <circle cx="48" cy="48" r="36" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray=".8 1.8" opacity=".55" />
-              <text x="48" y="30" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.6" letterSpacing="1.6" fill="currentColor">FOLIO · I</text>
-              <text x="48" y="58" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="22" fill="currentColor">m³</text>
-              <text x="48" y="72" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.2" letterSpacing="1.4" fill="currentColor">PRESSED TODAY</text>
+            <g filter={`url(#${grainId})`} opacity=".78">
+              <circle cx="48" cy="48" r="44" fill="none" stroke="currentColor" strokeWidth="1.2" />
+              <circle cx="48" cy="48" r="36" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray=".8 1.8" opacity=".6" />
+              <circle cx="48" cy="48" r="30" fill="none" stroke="currentColor" strokeWidth=".25" opacity=".35" />
+              <path d="M48 14 L48 22 M48 74 L48 82 M14 48 L22 48 M74 48 L82 48" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".5" />
+              <text x="48" y="29" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.6" letterSpacing="2" fill="currentColor">FOLIO · I</text>
+              <text x="48" y="58" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="24" fill="currentColor">m³</text>
+              <text x="48" y="71" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3" letterSpacing="1.8" fill="currentColor" opacity=".85">PRESSED TODAY</text>
             </g>
           </svg>
         </span>
