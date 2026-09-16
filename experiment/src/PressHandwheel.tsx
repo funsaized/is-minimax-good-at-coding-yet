@@ -33,45 +33,57 @@ const VOICE_NEXT: Record<VoiceId, VoiceId> = { quiet: 'human', human: 'bold', bo
 
 const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
+const WORD_NOTE: Record<WordId, string> = {
+  m3: 'let it stand',
+  good: 'make room',
+  yet: 'protect the pause',
+}
 const WORD_INK: Record<WordId, string> = { m3: 'var(--acid)', good: 'var(--coral)', yet: 'var(--blue)' }
 const WORD_NEXT: Record<WordId, WordId> = { m3: 'good', good: 'yet', yet: 'm3' }
 
 const TICK_COUNT = 8
 
-function WheelMark({ word, letter }: { word: WordId; letter: string }) {
+function VoiceDial({
+  voice,
+  isActive,
+  glyph,
+}: {
+  voice: VoiceId
+  isActive: boolean
+  glyph: string
+}) {
   return (
-    <svg viewBox="0 0 64 64" aria-hidden="true" className="press-handwheel__mark-svg">
-      <circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" strokeWidth=".6" opacity=".55" />
-      <circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" strokeWidth=".3" strokeDasharray="1 2" opacity=".4" />
-      <text
-        x="32"
-        y="24"
-        textAnchor="middle"
-        fontFamily="ui-monospace, monospace"
-        fontSize="3.4"
-        letterSpacing="1.4"
-        fill="currentColor"
-        opacity=".7"
-      >MARK</text>
-      <text
-        x="32"
-        y="40"
-        textAnchor="middle"
-        fontFamily="Georgia, serif"
-        fontStyle="italic"
-        fontSize="13"
-        fill="currentColor"
-      >{letter}</text>
+    <svg
+      className={`press-handwheel__voice-dial-svg press-handwheel__voice-dial-svg--${voice}`}
+      viewBox="0 0 64 64"
+      aria-hidden="true"
+    >
+      <g className={`press-handwheel__voice-dial-glyph press-handwheel__voice-dial-glyph--${voice}`}>
+        <text
+          x="32"
+          y="38"
+          textAnchor="middle"
+          fontFamily="Georgia, 'Iowan Old Style', serif"
+          fontStyle="italic"
+          fontSize="22"
+          letterSpacing="-.02em"
+          fill="currentColor"
+        >
+          {glyph}
+        </text>
+      </g>
       <text
         x="32"
         y="50"
         textAnchor="middle"
         fontFamily="ui-monospace, monospace"
-        fontSize="2.8"
-        letterSpacing="1.2"
+        fontSize="3.4"
+        letterSpacing="1.6"
         fill="currentColor"
-        opacity=".6"
-      >{word === 'm3' ? 'STET' : word === 'good' ? 'CARET' : 'QUERY'}</text>
+        opacity=".55"
+      >
+        {isActive ? 'NOW SET' : 'PULL'}
+      </text>
     </svg>
   )
 }
@@ -79,16 +91,16 @@ function WheelMark({ word, letter }: { word: WordId; letter: string }) {
 export function PressHandwheel({ voice, word, setToday, marks, onVoice, onWord, onArm }: PressHandwheelProps) {
   const baseId = useId().replace(/:/g, '')
   const grainId = `press-handwheel-grain-${baseId}`
+  const dialGrainId = `press-handwheel-dial-grain-${baseId}`
   const rootRef = useRef<HTMLDivElement>(null)
   const [revealed, setRevealed] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
+  const [hoveredFace, setHoveredFace] = useState<'wheel' | 'mark' | null>(null)
   const [pullCount, setPullCount] = useState(0)
   const [spinAngle, setSpinAngle] = useState(0)
   const [strikeKey, setStrikeKey] = useState(0)
   const lastVoiceRef = useRef<VoiceId>(voice)
   const lastWordRef = useRef<WordId>(word)
-  const wheelRotateRef = useRef<HTMLSpanElement>(null)
-  const markRotateRef = useRef<HTMLSpanElement>(null)
+  const wheelHandRef = useRef<SVGGElement>(null)
 
   useEffect(() => {
     const node = rootRef.current
@@ -141,19 +153,15 @@ export function PressHandwheel({ voice, word, setToday, marks, onVoice, onWord, 
     '--handwheel-tone': tone,
     '--handwheel-word-ink': WORD_INK[word],
     '--handwheel-grain': `url(#${grainId})`,
+    '--handwheel-dial-grain': `url(#${dialGrainId})`,
   } as CSSProperties
 
   const onWheelKey = (event: KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      const next = VOICE_NEXT[voice]
-      onVoice?.(next)
-    }
-    if (event.key === 'ArrowRight') {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       event.preventDefault()
       onVoice?.(VOICE_NEXT[voice])
     }
-    if (event.key === 'ArrowLeft') {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
       event.preventDefault()
       onVoice?.(VOICE_NEXT[VOICE_NEXT[VOICE_NEXT[voice]]])
     }
@@ -170,12 +178,16 @@ export function PressHandwheel({ voice, word, setToday, marks, onVoice, onWord, 
     }
   }
 
-  const wheelRotateStyle = { '--press-wheel-spin': `${spinAngle}deg` } as CSSProperties
+  const cycleWheel = () => onVoice?.(VOICE_NEXT[voice])
+  const cycleMark = () => onWord?.(WORD_NEXT[word])
+
+  const voiceOrder: VoiceId[] = ['quiet', 'human', 'bold']
+  const voiceIndex = voiceOrder.indexOf(voice)
 
   return (
     <div
       ref={rootRef}
-      className={`press-handwheel press-handwheel--${voice} press-handwheel--word-${word} press-handwheel--${state} ${revealed ? 'is-revealed' : ''} ${isHovered ? 'is-hovered' : ''}`}
+      className={`press-handwheel press-handwheel--${voice} press-handwheel--word-${word} press-handwheel--${state} ${revealed ? 'is-revealed' : ''}`}
       style={style}
       aria-label="Press handwheel — the press room's live status"
     >
@@ -186,6 +198,11 @@ export function PressHandwheel({ voice, word, setToday, marks, onVoice, onWord, 
             <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .42 0" />
             <feComposite in2="SourceGraphic" operator="in" />
           </filter>
+          <filter id={dialGrainId} x="-6%" y="-6%" width="112%" height="112%">
+            <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="2" seed="59" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 0" />
+            <feComposite in2="SourceGraphic" operator="in" />
+          </filter>
         </defs>
       </svg>
 
@@ -194,140 +211,317 @@ export function PressHandwheel({ voice, word, setToday, marks, onVoice, onWord, 
       <span className="press-handwheel__corner press-handwheel__corner--bl" aria-hidden="true" />
       <span className="press-handwheel__corner press-handwheel__corner--br" aria-hidden="true" />
 
-      <button
-        type="button"
-        className="press-handwheel__wheel"
-        onClick={() => onVoice?.(VOICE_NEXT[voice])}
-        onKeyDown={onWheelKey}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onFocus={() => setIsHovered(true)}
-        onBlur={() => setIsHovered(false)}
-        aria-label={`Pull the voice to ${VOICE_NEXT[voice]} (${VOICE_NAME[VOICE_NEXT[voice]]}). The press is now ${state}.`}
-        aria-pressed={false}
-      >
-        <span className="press-handwheel__wheel-housing" aria-hidden="true">
-          <span className="press-handwheel__wheel-studs" aria-hidden="true">
-            {Array.from({ length: 8 }).map((_, index) => (
-              <span key={`stud-${index}`} className={`press-handwheel__wheel-stud press-handwheel__wheel-stud--${index + 1}`} />
-            ))}
-          </span>
-          <span
-            ref={wheelRotateRef}
-            key={`wheel-rotate-${voice}`}
-            className={`press-handwheel__wheel-rotate press-handwheel__wheel-rotate--${voice}`}
-            style={wheelRotateStyle}
-            aria-hidden="true"
+      <header className="press-handwheel__masthead" aria-hidden="true">
+        <span className="press-handwheel__masthead-rule" />
+        <span className="press-handwheel__masthead-tag">
+          <span className="press-handwheel__masthead-glyph">※</span>
+          <span className="press-handwheel__masthead-eyebrow">the press handwheel</span>
+          <span className="press-handwheel__masthead-mark">folio i</span>
+          <span className="press-handwheel__masthead-glyph press-handwheel__masthead-glyph--alt">※</span>
+        </span>
+        <span className="press-handwheel__masthead-rule press-handwheel__masthead-rule--alt" />
+      </header>
+
+      <div className="press-handwheel__plate">
+        <div
+          className={`press-handwheel__dial press-handwheel__dial--${voice} ${hoveredFace === 'wheel' ? 'is-hovered' : ''}`}
+          style={{ '--press-dial-spin': `${spinAngle}deg` } as CSSProperties}
+        >
+          <span className="press-handwheel__dial-flange" aria-hidden="true" />
+
+          <button
+            type="button"
+            className="press-handwheel__dial-button"
+            onClick={cycleWheel}
+            onKeyDown={onWheelKey}
+            onMouseEnter={() => setHoveredFace('wheel')}
+            onMouseLeave={() => setHoveredFace(prev => (prev === 'wheel' ? null : prev))}
+            onFocus={() => setHoveredFace('wheel')}
+            onBlur={() => setHoveredFace(prev => (prev === 'wheel' ? null : prev))}
+            aria-label={`The voice handwheel. The press is now set in ${VOICE_NAME[voice]}. Click or use the arrow keys to cycle through the voices.`}
           >
-            <svg viewBox="0 0 64 64" className="press-handwheel__wheel-svg">
-              <g className={`press-handwheel__wheel-gear press-handwheel__wheel-gear--${voice}`}>
-                <circle cx="32" cy="32" r="24" fill="none" stroke="currentColor" strokeWidth=".5" opacity=".4" />
-                {Array.from({ length: 12 }).map((_, index) => {
-                  const angle = (index * 30 * Math.PI) / 180
-                  const inner = 22
-                  const outer = 28
-                  return (
-                    <line
-                      key={`tooth-${index}`}
-                      x1={32 + Math.cos(angle) * inner}
-                      y1={32 + Math.sin(angle) * inner}
-                      x2={32 + Math.cos(angle) * outer}
-                      y2={32 + Math.sin(angle) * outer}
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                      strokeLinecap="round"
-                      opacity={index % 3 === 0 ? '1' : '.55'}
-                    />
-                  )
-                })}
-                <circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" strokeWidth=".7" />
-                <circle cx="32" cy="32" r="14" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 1.4" opacity=".7" />
-                <g className="press-handwheel__wheel-hand">
-                  <line x1="32" y1="32" x2="32" y2="14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  <circle cx="32" cy="14" r="1.6" fill="currentColor" />
+            <span className="press-handwheel__dial-face" aria-hidden="true">
+              <svg viewBox="0 0 200 200" className="press-handwheel__dial-svg">
+                <g
+                  ref={wheelHandRef}
+                  className="press-handwheel__dial-rotate"
+                  style={{ transform: `rotate(${spinAngle}deg)` }}
+                >
+                  <circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" strokeWidth=".6" opacity=".32" />
+                  <circle cx="100" cy="100" r="82" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".9 2.4" opacity=".45" />
+                  <circle cx="100" cy="100" r="68" fill="none" stroke="currentColor" strokeWidth=".25" opacity=".32" />
+
+                  {Array.from({ length: 24 }).map((_, index) => {
+                    const angle = (index * 15 - 90) * (Math.PI / 180)
+                    const inner = index % 6 === 0 ? 76 : 80
+                    const outer = 88
+                    return (
+                      <line
+                        key={`dial-tick-${index}`}
+                        x1={100 + Math.cos(angle) * inner}
+                        y1={100 + Math.sin(angle) * inner}
+                        x2={100 + Math.cos(angle) * outer}
+                        y2={100 + Math.sin(angle) * outer}
+                        stroke="currentColor"
+                        strokeWidth={index % 6 === 0 ? 1.2 : .5}
+                        strokeLinecap="round"
+                        opacity={index % 6 === 0 ? .85 : .4}
+                      />
+                    )
+                  })}
+
+                  <text
+                    x="100"
+                    y="22"
+                    textAnchor="middle"
+                    fontFamily="ui-monospace, monospace"
+                    fontSize="6.4"
+                    letterSpacing="2.4"
+                    fill="currentColor"
+                    opacity=".55"
+                  >
+                    SET · VOICE
+                  </text>
+
+                  <g
+                    className={`press-handwheel__dial-pip press-handwheel__dial-pip--${voice}`}
+                  >
+                    <circle cx="100" cy="30" r="3.6" fill="currentColor" />
+                    <circle cx="100" cy="30" r="6" fill="none" stroke="currentColor" strokeWidth=".5" opacity=".55" />
+                  </g>
+
+                  <g className="press-handwheel__dial-pointer">
+                    <line x1="100" y1="100" x2="100" y2="42" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+                    <circle cx="100" cy="42" r="3.4" fill="currentColor" />
+                    <circle cx="100" cy="100" r="6" fill="var(--night)" />
+                    <circle cx="100" cy="100" r="3" fill="currentColor" />
+                  </g>
+
+                  <circle cx="100" cy="100" r="48" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".4" />
+                  <circle cx="100" cy="100" r="34" fill="none" stroke="currentColor" strokeWidth=".25" strokeDasharray="1 2" opacity=".32" />
                 </g>
-                <circle cx="32" cy="32" r="3.4" fill="currentColor" />
-                <circle cx="32" cy="32" r="1.6" fill="var(--night)" opacity=".7" />
-              </g>
-            </svg>
-            <span key={`wheel-strike-${strikeKey}`} className="press-handwheel__wheel-strike" aria-hidden="true">
-              <svg viewBox="0 0 64 64">
-                <circle cx="32" cy="32" r="28" fill="currentColor" opacity=".12" />
+
+                <g className="press-handwheel__dial-letter" key={`dial-letter-${voice}`}>
+                  <text
+                    x="100"
+                    y="116"
+                    textAnchor="middle"
+                    fontFamily="Georgia, 'Iowan Old Style', serif"
+                    fontStyle="italic"
+                    fontSize="56"
+                    letterSpacing="-.04em"
+                    fill="currentColor"
+                  >
+                    {VOICE_LETTER[voice]}
+                  </text>
+                  <text
+                    x="100"
+                    y="146"
+                    textAnchor="middle"
+                    fontFamily="ui-monospace, monospace"
+                    fontSize="6"
+                    letterSpacing="2"
+                    fill="currentColor"
+                    opacity=".6"
+                  >
+                    {voiceIndex === 0 ? 'a' : voiceIndex === 1 ? 'b' : 'c'} · OF · III
+                  </text>
+                </g>
+
+                <g
+                  className="press-handwheel__dial-strike"
+                  key={`dial-strike-${strikeKey}`}
+                  aria-hidden="true"
+                >
+                  <circle cx="100" cy="100" r="98" fill="none" stroke="currentColor" strokeWidth="2" opacity=".25" />
+                  <circle cx="100" cy="100" r="92" fill="currentColor" opacity=".04" />
+                </g>
               </svg>
             </span>
-          </span>
-          <span className="press-handwheel__wheel-letter" aria-hidden="true">
-            <span>{VOICE_LETTER[voice]}</span>
-            <span className="press-handwheel__wheel-letter-faint">·{VOICE_LETTER[VOICE_NEXT[voice]]}·</span>
-          </span>
-        </span>
-        <span className="press-handwheel__wheel-readout" aria-hidden="true">
-          <span className="press-handwheel__wheel-readout-row">
-            <span className="press-handwheel__wheel-readout-mark">press</span>
-            <span className={`press-handwheel__wheel-readout-state press-handwheel__wheel-readout-state--${state}`}>
-              <span className="press-handwheel__wheel-readout-state-dot" />
-              {state}
-            </span>
-          </span>
-          <span className="press-handwheel__wheel-readout-row">
-            <span className="press-handwheel__wheel-readout-mark">voice</span>
-            <span className="press-handwheel__wheel-readout-voice">{VOICE_NAME[voice]}</span>
-          </span>
-          <span className="press-handwheel__wheel-readout-row press-handwheel__wheel-readout-row--face">
-            <span className="press-handwheel__wheel-readout-face">{VOICE_FACE[voice]}</span>
-          </span>
-        </span>
-        <span className="press-handwheel__wheel-tickmark" aria-hidden="true">
-          <svg viewBox="0 0 200 8" preserveAspectRatio="none" className="press-handwheel__wheel-tickmark-svg">
-            <path
-              className="press-handwheel__wheel-tickmark-stroke"
-              d="M2 4c20-3 40 3 60 0s40-3 60 0 40 3 60 0 16-1 18 0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth=".7"
-              strokeLinecap="round"
-              pathLength="100"
-            />
-            <circle cx="2" cy="4" r="1" fill="currentColor" />
-            <circle cx="198" cy="4" r="1.4" fill="currentColor" />
-          </svg>
-        </span>
-      </button>
 
-      <button
-        type="button"
-        className="press-handwheel__mark"
-        onClick={() => onWord?.(WORD_NEXT[word])}
-        onKeyDown={onMarkKey}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onFocus={() => setIsHovered(true)}
-        onBlur={() => setIsHovered(false)}
-        aria-label={`Cycle the active mark to ${WORD_NEXT[word]} (${WORD_LABEL[WORD_NEXT[word]]}). Currently marked at ${WORD_LABEL[word]}.`}
-        aria-pressed={false}
-      >
-        <span className="press-handwheel__mark-plate" aria-hidden="true">
-          <WheelMark word={word} letter={WORD_LABEL[word]} />
-        </span>
-        <span className="press-handwheel__mark-readout">
-          <span className="press-handwheel__mark-readout-row">
-            <span className="press-handwheel__mark-readout-key">marked at</span>
-            <span className="press-handwheel__mark-readout-value">{WORD_LABEL[word]}</span>
-          </span>
-          <span className="press-handwheel__mark-readout-row">
-            <span className="press-handwheel__mark-readout-key">mark kind</span>
-            <span className="press-handwheel__mark-readout-mark">{WORD_MARK[word]}</span>
-          </span>
-          <span className="press-handwheel__mark-readout-tick" aria-hidden="true">
-            {Array.from({ length: TICK_COUNT }).map((_, index) => (
-              <span
-                key={`tick-${index}`}
-                className={`press-handwheel__mark-readout-tick-cell ${index < filledTicks ? 'is-on' : ''} ${index === justSetTick && justSetTick >= 0 ? 'is-just-set' : ''}`}
-              />
-            ))}
-          </span>
-        </span>
-      </button>
+            <span className="press-handwheel__dial-readout">
+              <span className="press-handwheel__dial-readout-row">
+                <span className="press-handwheel__dial-readout-key">voice handwheel</span>
+                <span className={`press-handwheel__dial-readout-state press-handwheel__dial-readout-state--${state}`}>
+                  <span className="press-handwheel__dial-readout-state-dot" />
+                  {state}
+                </span>
+              </span>
+              <span className="press-handwheel__dial-readout-row">
+                <span className="press-handwheel__dial-readout-key">set in</span>
+                <span className="press-handwheel__dial-readout-voice">{VOICE_NAME[voice]}</span>
+              </span>
+              <span className="press-handwheel__dial-readout-row press-handwheel__dial-readout-row--face">
+                <span className="press-handwheel__dial-readout-face">{VOICE_FACE[voice]}</span>
+              </span>
+              <span className="press-handwheel__dial-readout-hint">
+                <kbd>click</kbd>
+                <span aria-hidden="true">·</span>
+                <span><em>or</em> arrow keys to cycle</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <span className="press-handwheel__rule press-handwheel__rule--v" aria-hidden="true" />
+
+        <div
+          className={`press-handwheel__mark press-handwheel__mark--${word} ${hoveredFace === 'mark' ? 'is-hovered' : ''}`}
+        >
+          <button
+            type="button"
+            className="press-handwheel__mark-button"
+            onClick={cycleMark}
+            onKeyDown={onMarkKey}
+            onMouseEnter={() => setHoveredFace('mark')}
+            onMouseLeave={() => setHoveredFace(prev => (prev === 'mark' ? null : prev))}
+            onFocus={() => setHoveredFace('mark')}
+            onBlur={() => setHoveredFace(prev => (prev === 'mark' ? null : prev))}
+            aria-label={`The marked-word plate. The press is marked at ${WORD_LABEL[word]} (${WORD_MARK[word]}). Click or use the arrow keys to cycle through the marked words.`}
+          >
+            <span className="press-handwheel__mark-plate" aria-hidden="true">
+              <svg viewBox="0 0 200 200" className="press-handwheel__mark-svg">
+                <circle cx="100" cy="100" r="88" fill="none" stroke="currentColor" strokeWidth=".6" opacity=".32" />
+                <circle cx="100" cy="100" r="76" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2.4" opacity=".5" />
+                <circle cx="100" cy="100" r="62" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".32" />
+                <circle cx="100" cy="100" r="44" fill="currentColor" opacity=".05" />
+
+                <text
+                  x="100"
+                  y="34"
+                  textAnchor="middle"
+                  fontFamily="ui-monospace, monospace"
+                  fontSize="6.4"
+                  letterSpacing="2.4"
+                  fill="currentColor"
+                  opacity=".55"
+                >
+                  MARKED · AT
+                </text>
+
+                <text
+                  x="100"
+                  y="58"
+                  textAnchor="middle"
+                  fontFamily="ui-monospace, monospace"
+                  fontSize="5"
+                  letterSpacing="1.8"
+                  fill="currentColor"
+                  opacity=".7"
+                >
+                  {WORD_MARK[word].toUpperCase()}
+                </text>
+
+                <g className={`press-handwheel__mark-glyph press-handwheel__mark-glyph--${word}`} key={`mark-glyph-${word}`}>
+                  <text
+                    x="100"
+                    y="116"
+                    textAnchor="middle"
+                    fontFamily="Georgia, 'Iowan Old Style', serif"
+                    fontStyle="italic"
+                    fontSize="38"
+                    letterSpacing="-.025em"
+                    fill="currentColor"
+                  >
+                    {word === 'm3' ? 'm³' : word === 'good' ? 'good at' : 'yet?'}
+                  </text>
+                  <text
+                    x="100"
+                    y="148"
+                    textAnchor="middle"
+                    fontFamily="ui-monospace, monospace"
+                    fontSize="6"
+                    letterSpacing="2.2"
+                    fill="currentColor"
+                    opacity=".6"
+                  >
+                    {word === 'm3' ? 'i.' : word === 'good' ? 'ii.' : 'iii.'} · OF · III
+                  </text>
+                </g>
+
+                <text
+                  x="100"
+                  y="178"
+                  textAnchor="middle"
+                  fontFamily="ui-monospace, monospace"
+                  fontSize="5.4"
+                  letterSpacing="1.8"
+                  fill="currentColor"
+                  opacity=".5"
+                >
+                  {WORD_NOTE[word]}
+                </text>
+
+                <g
+                  className="press-handwheel__mark-strike"
+                  key={`mark-strike-${strikeKey}`}
+                  aria-hidden="true"
+                >
+                  <circle cx="100" cy="100" r="84" fill="currentColor" opacity=".06" />
+                </g>
+              </svg>
+            </span>
+
+            <span className="press-handwheel__mark-readout">
+              <span className="press-handwheel__mark-readout-row">
+                <span className="press-handwheel__mark-readout-key">marked at</span>
+                <span className="press-handwheel__mark-readout-value">{WORD_LABEL[word]}</span>
+              </span>
+              <span className="press-handwheel__mark-readout-row">
+                <span className="press-handwheel__mark-readout-key">mark kind</span>
+                <span className="press-handwheel__mark-readout-mark">{WORD_MARK[word]}</span>
+              </span>
+              <span className="press-handwheel__mark-readout-row press-handwheel__mark-readout-row--note">
+                <span className="press-handwheel__mark-readout-note">{WORD_NOTE[word]}</span>
+              </span>
+              <span className="press-handwheel__mark-readout-tick" aria-hidden="true">
+                {Array.from({ length: TICK_COUNT }).map((_, index) => (
+                  <span
+                    key={`mark-tick-${index}`}
+                    className={`press-handwheel__mark-readout-tick-cell ${index < filledTicks ? 'is-on' : ''} ${index === justSetTick && justSetTick >= 0 ? 'is-just-set' : ''}`}
+                  />
+                ))}
+              </span>
+              <span className="press-handwheel__mark-readout-hint">
+                <kbd>click</kbd>
+                <span aria-hidden="true">·</span>
+                <span><em>or</em> arrow keys to cycle</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <span className="press-handwheel__rule press-handwheel__rule--v" aria-hidden="true" />
+
+        <div className="press-handwheel__voice-list" role="group" aria-label="The three voice options, click to set">
+          {voiceOrder.map((v, index) => {
+            const isActive = v === voice
+            return (
+              <button
+                key={`voice-${v}`}
+                type="button"
+                className={`press-handwheel__voice-cell press-handwheel__voice-cell--${v} ${isActive ? 'is-active' : ''}`}
+                onClick={() => onVoice?.(v)}
+                tabIndex={-1}
+                aria-label={`Pull the voice to ${VOICE_NAME[v]}.`}
+                aria-pressed={isActive}
+              >
+                <span className="press-handwheel__voice-cell-pip" aria-hidden="true">
+                  <VoiceDial voice={v} isActive={isActive} glyph={VOICE_LETTER[v]} />
+                </span>
+                <span className="press-handwheel__voice-cell-readout">
+                  <span className="press-handwheel__voice-cell-row">
+                    <span className="press-handwheel__voice-cell-letter">{VOICE_LETTER[v]}</span>
+                    <span className="press-handwheel__voice-cell-name">{VOICE_NAME[v]}</span>
+                    {isActive && <span className="press-handwheel__voice-cell-now" aria-hidden="true">now</span>}
+                  </span>
+                  <span className="press-handwheel__voice-cell-face">{VOICE_FACE[v]}</span>
+                </span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
 
       <button
         type="button"

@@ -1,8 +1,36 @@
-# Iteration 290
+# Iteration 291 — refined the press handwheel into a three-cell dashboard
 
-Added a folio opening plate between the title page and triptych, and an authored thumbprint closing the editor's note.
+Replaced the busy gear-driven status strip with a deliberate, three-cell press
+dashboard: a large circular voice handwheel on the left, a marked-words plate
+in the middle, and a vertical type case of the three voices on the right, all
+under a new "the press handwheel · folio i" running head and above a lever arm
+that still opens the editor's note.
 
-- **FolioOpening** (`src/FolioOpening.tsx`): A thin, decisive band between `<TitlePage />` and `<PressingsTriptych />`. A leading "folio i· · the opening plate" tag with two side rules, a small typesetting diamond, three labelled cells (`set in [voice]`, `marked at [word]`, `set today [date]`) separated by hairline rules, and a trailing "a folio opens here · the question lands below" tag. The element uses the active voice tone for its accents, opens with a brief settle, and draws its leading rule from the center outward. Reduced motion holds it still. It ties the two confident elements above and below it into a single, hand-printed spread.
-- **FolioThumbprint** (`src/FolioThumbprint.tsx`): A small, distinctive signature that closes the editor's note in place of the press-imprint-mount. A leading rule carries the "folio i · a thumbprint · the page's own marginalium" tag; a tilted seal shows the active voice tone and the marked word glyph; a single hand-set line reads "Set in *quiet cut*. Marked at *good at*. Impressed for the next reader. Pressed on *set today*." with each key value in its own voice/word tone; a trailing rule and a quiet marginalium note ("a marginalium is a hand-written note in the press's own voice") close it. The reader name, when set, replaces "the next reader" and the seal settles to a slightly less rotated angle. Reduced motion holds the seal and rule draw still.
-- **`src/App.tsx`**: Added the `FolioOpening` import and rendered it directly below `<TitlePage />`. Removed the unused `PressImprint` import. Replaced the press-imprint-mount wrapper at the foot of the editor's note with `<FolioThumbprint voice word setToday readerName />`.
-- **`src/style.css`**: Appended `.folio-opening` and `.folio-thumbprint` rule sets with their reduced-motion, narrow-screen, and small-screen breakpoints. The new components sit within the existing press color system (`--blue / --coral / --acid`) and inherit the page's serif/mono pairing. No existing rules were modified.
+- The voice handwheel now reads as a single, hand-set dial: 24 perimeter tick
+  marks, a clear pointer that rotates a quarter turn on each voice change, a
+  large italic voice letter (A/B/C) at the center, and a small "a · OF · III"
+  index that cycles with the voice. The state pill (cold / warming / armed /
+  hot) sits in the readout column instead of under the gear.
+- The marked-words plate is now its own dial: the active word glyph (m³ /
+  good at / yet?) at the center, the proof mark (stet / caret / query) as a
+  small tag above, the index ("i. · OF · III") below, and the eight-cell tick
+  row in the readout that fills with each interaction. Hover nudges it a few
+  degrees for a quiet, mechanical feel.
+- The right cell is a vertical list of all three voices as a type case. Each
+  cell shows the voice letter, name, and face; the active cell takes the
+  voice tone and adds a small "now" pip. Clicking any cell sets the voice
+  directly, so the dial and the case share the same control surface.
+- A new "the press handwheel · folio i" masthead sits above the plate with
+  two flanking rules; the bottom shows the set today date with a pair of
+  dots. Both rules and the corner crops take the active voice tone.
+- Motion: the dial pointer rotates with a spring easing, the letter and
+  mark glyph re-set with a small scale-fade, and a one-shot strike animation
+  blooms around the dial and plate on each voice or word change. The board
+  arrives with a quiet fade-up. All motion is suppressed under
+  `prefers-reduced-motion: reduce`.
+- Responsive: at ≤1180px the type case drops below the dial and mark plate
+  as a three-column strip; at ≤880px the plate stacks vertically and the
+  type case becomes a vertical list again; at ≤540px everything collapses
+  to a single column with the face row trimmed.
+- The lever arm below the plate is unchanged: it still pivots, still tilts
+  the bar and lifts the knob on hover, and still opens folio viii.
