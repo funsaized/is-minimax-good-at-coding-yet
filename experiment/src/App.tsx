@@ -33,6 +33,7 @@ import { BroadsideEdge } from './BroadsideEdge'
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
 import { SpecimenTray } from './SpecimenTray'
+import { ImprintPlate } from './ImprintPlate'
 import { FolioLedger } from './FolioLedger'
 import { TitleFolio } from './TitleFolio'
 import { ClosingPlate } from './ClosingPlate'
@@ -870,6 +871,13 @@ export function App() {
                 pull a setting above <em>·</em> the title answers with whichever is active
               </p>
             </aside>
+
+            <ImprintPlate
+              voice={voice}
+              word={activeWord}
+              setToday={setToday}
+              readerName={readerName}
+            />
 
             <a className="hero__brief-lever" href="#press" aria-label="Turn the page to the press bed">
               <span className="hero__brief-lever-tag" aria-hidden="true">

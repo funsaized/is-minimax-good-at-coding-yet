@@ -6103,6 +6103,739 @@ button {
   white-space: nowrap;
 }
 
+/* ────────────────────────────────────────────────────────────
+   IMPRINT PLATE · the page's "I am reading" plate, set
+   between the editor's note and the brief lever. A single,
+   confident artifact that captures the present moment —
+   voice, marked word, set today, season, reader — with a
+   small drawn seal, a seasonal glyph, and a hand-cut thread
+   that exhales toward the next page. It is the front matter's
+   memo: not the colophon (which closes the journey) but the
+   press plate that confirms how the reader is set right now.
+   ──────────────────────────────────────────────────────────── */
+
+.imprint-plate {
+  --imprint-tone: var(--coral);
+  --imprint-word-tone: var(--acid);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(14px, 1.6vw, 22px);
+  padding: clamp(28px, 3.4vw, 44px) clamp(24px, 3.2vw, 40px);
+  margin: clamp(8px, 1vw, 14px) 0 0;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background:
+    radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--imprint-tone) 8%, transparent), transparent 56%),
+    radial-gradient(ellipse at 0% 100%, color-mix(in srgb, var(--paper) 4%, transparent), transparent 56%),
+    linear-gradient(180deg, rgba(20, 26, 38, .42), rgba(12, 16, 26, .6));
+  box-shadow:
+    inset 0 0 0 1px rgba(146, 186, 255, .04),
+    inset 0 1px 0 rgba(243, 236, 214, .04),
+    0 22px 48px -36px rgba(0, 0, 0, .42);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .85s var(--ease-out), transform .85s var(--ease-out);
+  isolation: isolate;
+}
+
+.imprint-plate.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.imprint-plate::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px dashed color-mix(in srgb, var(--imprint-tone) 14%, transparent);
+  border-radius: 1px;
+  pointer-events: none;
+  opacity: .55;
+}
+
+.app--voice-quiet .imprint-plate { --imprint-tone: var(--blue); }
+.app--voice-human .imprint-plate { --imprint-tone: var(--coral); }
+.app--voice-bold .imprint-plate { --imprint-tone: var(--acid); }
+
+.imprint-plate__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.imprint-plate__rule {
+  display: block;
+  width: 100%;
+  height: 6px;
+  color: var(--imprint-tone);
+}
+
+.imprint-plate__rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.imprint-plate__rule-stroke {
+  stroke-dashoffset: 100;
+  animation: imprintPlateRuleDraw 1.4s var(--ease-out) .25s forwards;
+}
+
+@keyframes imprintPlateRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imprint-plate__rule-stroke { animation: none !important; stroke-dashoffset: 0 !important; }
+}
+
+.imprint-plate__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(14px, 2vw, 24px);
+  padding-bottom: clamp(8px, 1vw, 14px);
+  border-bottom: 1px dashed var(--line-soft);
+}
+
+.imprint-plate__head-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(38px, 3.6vw, 48px);
+  height: clamp(38px, 3.6vw, 48px);
+  color: var(--imprint-tone);
+  transition: color .55s var(--ease), transform .55s var(--ease-spring);
+}
+
+.imprint-plate:hover .imprint-plate__head-mark {
+  transform: rotate(-6deg);
+}
+
+.imprint-plate__head-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.imprint-plate__head-stack {
+  display: grid;
+  gap: clamp(4px, .5vw, 8px);
+  min-width: 0;
+}
+
+.imprint-plate__head-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--imprint-tone);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  transition: color .55s var(--ease);
+}
+
+.imprint-plate__head-eyebrow em {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: none;
+}
+
+.imprint-plate__head-eyebrow-mark {
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  opacity: .65;
+}
+
+.imprint-plate__head-eyebrow-mark--alt { opacity: .85; }
+
+.imprint-plate__head-title {
+  display: grid;
+  gap: clamp(1px, .2vw, 3px);
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  letter-spacing: -.038em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.imprint-plate__head-title em {
+  color: var(--paper);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.imprint-plate__head-title-row {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: clamp(10px, 1.2vw, 18px);
+}
+
+.imprint-plate__head-title-folio {
+  color: var(--imprint-tone);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: .85;
+  transition: color .55s var(--ease);
+}
+
+.imprint-plate__head-stamp {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(64px, 6vw, 84px);
+  height: clamp(64px, 6vw, 84px);
+  color: var(--imprint-tone);
+  transition: color .55s var(--ease), transform .55s var(--ease-spring);
+}
+
+.imprint-plate:hover .imprint-plate__head-stamp {
+  transform: rotate(4deg);
+}
+
+.imprint-plate__head-stamp svg {
+  width: 100%;
+  height: 100%;
+}
+
+.imprint-plate__head-stamp-wax {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+}
+
+.imprint-plate__head-stamp-wax-bead {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--imprint-tone) 70%, white), color-mix(in srgb, var(--imprint-tone) 50%, transparent) 60%, transparent 100%);
+  filter: blur(.4px);
+}
+
+.imprint-plate__head-stamp-wax-wisp {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px dashed color-mix(in srgb, var(--imprint-tone) 50%, transparent);
+  opacity: .45;
+}
+
+.imprint-plate__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) auto minmax(0, 1fr) auto minmax(0, 1.1fr);
+  align-items: stretch;
+  gap: clamp(10px, 1.4vw, 18px);
+  padding: clamp(14px, 1.6vw, 22px) 0;
+}
+
+.imprint-plate.is-signed .imprint-plate__grid {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1.05fr);
+}
+
+.imprint-plate__cell {
+  display: grid;
+  align-content: start;
+  gap: clamp(6px, .8vw, 10px);
+  min-width: 0;
+  padding: clamp(2px, .3vw, 4px) 0;
+}
+
+.imprint-plate__cell-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--imprint-tone);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  transition: color .55s var(--ease);
+}
+
+.imprint-plate__cell-key-mark {
+  display: inline-block;
+  width: 10px;
+  height: 1px;
+  background: currentColor;
+  opacity: .65;
+}
+
+.imprint-plate__cell-key-mark--alt { opacity: .85; }
+
+.imprint-plate__cell-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  min-width: 0;
+}
+
+.imprint-plate__cell-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(38px, 3.6vw, 48px);
+  height: clamp(38px, 3.6vw, 48px);
+  border: 1px solid color-mix(in srgb, var(--imprint-tone) 36%, transparent);
+  border-radius: 2px;
+  color: var(--imprint-tone);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(22px, 2.2vw, 28px);
+  letter-spacing: -.04em;
+  text-shadow: 0 0 .04em color-mix(in srgb, var(--imprint-tone) 35%, transparent);
+  transition: color .55s var(--ease), border-color .55s var(--ease), text-shadow .55s var(--ease);
+}
+
+.imprint-plate__cell-stack {
+  display: grid;
+  gap: clamp(2px, .3vw, 4px);
+  min-width: 0;
+}
+
+.imprint-plate__cell-name,
+.imprint-plate__cell-word-label,
+.imprint-plate__cell-today-value,
+.imprint-plate__cell-reader-name {
+  display: block;
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(18px, 1.7vw, 22px);
+  letter-spacing: -.024em;
+  line-height: 1.08;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .14);
+  text-wrap: balance;
+}
+
+.imprint-plate--word-m3 .imprint-plate__cell-word-label,
+.imprint-plate--word-good .imprint-plate__cell-word-label,
+.imprint-plate--word-yet .imprint-plate__cell-word-label {
+  color: var(--imprint-word-tone);
+  text-shadow: 0 0 .04em color-mix(in srgb, var(--imprint-word-tone) 32%, transparent);
+}
+
+.imprint-plate__cell-face {
+  display: block;
+  margin: 0;
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, .95vw, 13px);
+  letter-spacing: -.002em;
+  opacity: .78;
+}
+
+.imprint-plate__cell-mark-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: clamp(3px, .4vw, 5px) clamp(8px, 1vw, 12px);
+  border: 1px solid color-mix(in srgb, var(--imprint-word-tone) 40%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--imprint-word-tone) 8%, transparent);
+  color: var(--imprint-word-tone);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  transition: color .55s var(--ease), border-color .55s var(--ease), background .55s var(--ease);
+}
+
+.imprint-plate__cell-mark-tag em {
+  color: inherit;
+  font-style: italic;
+  font-family: var(--serif);
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: none;
+}
+
+.imprint-plate__cell-mark-tag-rule {
+  display: inline-block;
+  width: 8px;
+  height: 1px;
+  background: currentColor;
+  opacity: .65;
+}
+
+.imprint-plate__cell-season {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--imprint-tone);
+}
+
+.imprint-plate__cell-season-svg {
+  width: clamp(22px, 2vw, 28px);
+  height: clamp(22px, 2vw, 28px);
+}
+
+.imprint-plate__cell-season-tag {
+  color: var(--imprint-tone);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  transition: color .55s var(--ease);
+}
+
+.imprint-plate__cell-reader-rule {
+  display: block;
+  width: clamp(56px, 6vw, 80px);
+  height: 10px;
+  color: var(--imprint-tone);
+  opacity: .75;
+}
+
+.imprint-plate__cell-reader-rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.imprint-plate__cell-rule {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  width: 1px;
+  min-width: 1px;
+  color: var(--line);
+  opacity: .55;
+}
+
+.imprint-plate__cell-rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.imprint-plate__thread {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(8px, 1vw, 14px);
+  justify-self: end;
+  padding: clamp(4px, .5vw, 8px) clamp(10px, 1.2vw, 14px);
+  color: var(--imprint-tone);
+  pointer-events: none;
+  transition: color .55s var(--ease);
+}
+
+.imprint-plate__thread svg {
+  width: clamp(18px, 1.6vw, 22px);
+  height: clamp(36px, 3.6vw, 44px);
+  flex: 0 0 auto;
+}
+
+.imprint-plate__thread-stroke--lead {
+  stroke-dashoffset: 100;
+  animation: imprintPlateThreadDraw 1.6s var(--ease-out) .55s forwards;
+}
+
+.imprint-plate__thread-stroke--trail {
+  stroke-dashoffset: 100;
+  animation: imprintPlateThreadDraw 1.9s var(--ease-out) .95s forwards;
+}
+
+@keyframes imprintPlateThreadDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imprint-plate__thread-stroke--lead,
+  .imprint-plate__thread-stroke--trail { animation: none !important; stroke-dashoffset: 0 !important; }
+}
+
+.imprint-plate__thread-bead {
+  opacity: 0;
+  animation: imprintPlateBeadIn .5s var(--ease-spring) 2.05s forwards;
+}
+
+.imprint-plate__thread-halo {
+  opacity: 0;
+  animation: imprintPlateHaloIn .6s var(--ease-out) 2.18s forwards;
+}
+
+@keyframes imprintPlateBeadIn { to { opacity: 1; transform: scale(1); } }
+@keyframes imprintPlateHaloIn { to { opacity: .55; transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .imprint-plate__thread-bead,
+  .imprint-plate__thread-halo { animation: none !important; opacity: 1 !important; }
+}
+
+.imprint-plate__thread-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: clamp(3px, .4vw, 5px) clamp(8px, 1vw, 12px);
+  border: 1px solid color-mix(in srgb, var(--imprint-tone) 36%, transparent);
+  border-radius: 999px;
+  background: rgba(12, 16, 25, .62);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, .95vw, 13px);
+  letter-spacing: -.002em;
+  white-space: nowrap;
+}
+
+.imprint-plate__thread-tag em {
+  color: var(--paper);
+  font-style: italic;
+}
+
+.imprint-plate__thread-tag-mark {
+  display: inline-block;
+  width: 6px;
+  height: 1px;
+  background: currentColor;
+  opacity: .65;
+}
+
+.imprint-plate__thread-tag-mark--alt { opacity: .85; }
+
+.imprint-plate__foot {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  padding-top: clamp(12px, 1.4vw, 18px);
+  border-top: 1px dashed var(--line-soft);
+}
+
+.imprint-plate__foot-rule {
+  display: block;
+  width: clamp(120px, 14vw, 200px);
+  height: 6px;
+  color: var(--line);
+}
+
+.imprint-plate__foot-rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.imprint-plate__foot-stack {
+  display: grid;
+  gap: clamp(4px, .5vw, 8px);
+  justify-items: center;
+  text-align: center;
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  line-height: 1.5;
+}
+
+.imprint-plate__foot-line {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: clamp(6px, .8vw, 10px);
+  justify-content: center;
+}
+
+.imprint-plate__foot-line em {
+  color: var(--paper);
+  font-style: italic;
+}
+
+.imprint-plate__foot-voice,
+.imprint-plate__foot-today,
+.imprint-plate__foot-season {
+  color: var(--paper);
+  font-style: italic;
+}
+
+.imprint-plate__foot-mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  color: var(--imprint-word-tone);
+}
+
+.imprint-plate__foot-mark em {
+  color: var(--imprint-word-tone);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-style: normal;
+  vertical-align: .08em;
+}
+
+.imprint-plate__foot-mark-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .65;
+}
+
+.imprint-plate__foot-mark-word {
+  color: var(--imprint-word-tone);
+}
+
+.imprint-plate__foot-reader {
+  color: var(--paper);
+  font-style: italic;
+}
+
+.imprint-plate__pencil {
+  display: block;
+  justify-self: end;
+  width: clamp(140px, 18vw, 220px);
+  height: clamp(12px, 1.4vw, 18px);
+  margin: clamp(-10px, -.6vw, -4px) 0 0;
+  color: var(--imprint-tone);
+  opacity: .55;
+  pointer-events: none;
+  transition: opacity .55s var(--ease), color .55s var(--ease);
+}
+
+.imprint-plate:hover .imprint-plate__pencil {
+  opacity: .9;
+}
+
+.imprint-plate__pencil svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.imprint-plate__pencil-stroke {
+  stroke-dashoffset: 100;
+  animation: imprintPlatePencilDraw 1.6s var(--ease-out) .9s forwards;
+}
+
+.imprint-plate__pencil-bead {
+  opacity: 0;
+  animation: imprintPlateBeadIn .5s var(--ease-spring) 2.4s forwards;
+}
+
+@keyframes imprintPlatePencilDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imprint-plate__pencil-stroke { animation: none !important; stroke-dashoffset: 0 !important; }
+  .imprint-plate__pencil-bead { animation: none !important; opacity: 1 !important; }
+}
+
+@media (max-width: 1080px) {
+  .imprint-plate__grid {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    row-gap: clamp(12px, 1.6vw, 20px);
+  }
+
+  .imprint-plate__grid > .imprint-plate__cell-rule:nth-of-type(2),
+  .imprint-plate__grid > .imprint-plate__cell-rule:nth-of-type(4) {
+    display: none;
+  }
+
+  .imprint-plate.is-signed .imprint-plate__grid {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  }
+
+  .imprint-plate.is-signed .imprint-plate__grid > .imprint-plate__cell-rule:nth-of-type(4),
+  .imprint-plate.is-signed .imprint-plate__grid > .imprint-plate__cell-rule:nth-of-type(6) {
+    display: none;
+  }
+
+  .imprint-plate__thread {
+    justify-self: end;
+    margin-top: clamp(6px, .8vw, 10px);
+  }
+}
+
+@media (max-width: 720px) {
+  .imprint-plate {
+    padding: clamp(22px, 4vw, 32px) clamp(18px, 3vw, 24px);
+  }
+
+  .imprint-plate__head {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .imprint-plate__head-stamp {
+    grid-column: 1 / -1;
+    justify-self: end;
+    width: 56px;
+    height: 56px;
+  }
+
+  .imprint-plate__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .imprint-plate__grid > .imprint-plate__cell-rule {
+    display: none;
+  }
+
+  .imprint-plate__cell-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .imprint-plate__thread {
+    align-self: center;
+    justify-self: center;
+    margin-top: clamp(8px, 1.2vw, 12px);
+  }
+}
+
+@media (max-width: 480px) {
+  .imprint-plate__head-title {
+    font-size: clamp(1.4rem, 6vw, 2rem);
+  }
+
+  .imprint-plate__cell-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(6px, .8vw, 10px);
+  }
+
+  .imprint-plate__cell-letter {
+    width: 38px;
+    height: 38px;
+  }
+
+  .imprint-plate__foot-rule {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imprint-plate,
+  .imprint-plate.is-revealed { transition: none !important; opacity: 1 !important; transform: none !important; }
+}
+
 /* the lever at the end of the brief — a deliberate turn-the-page
    gesture, replacing the previous thin continue link. */
 
