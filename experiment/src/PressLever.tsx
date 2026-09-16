@@ -1,4 +1,4 @@
-import { forwardRef, type CSSProperties } from 'react'
+import { forwardRef, useId, type CSSProperties } from 'react'
 import type { VoiceId } from './Press'
 
 type PressLeverProps = {
@@ -30,6 +30,8 @@ export const PressLever = forwardRef<HTMLButtonElement, PressLeverProps>(functio
 ) {
   const reader = readerName.trim()
   const tone = VOICE_TONE[voice]
+  const flourishId = useId().replace(/:/g, '')
+  const flourishGrainId = `press-lever-flourish-grain-${flourishId}`
   const style = { '--press-lever-tone': tone } as CSSProperties
 
   return (
@@ -127,7 +129,49 @@ export const PressLever = forwardRef<HTMLButtonElement, PressLeverProps>(functio
             <span className="press-lever__lever-hint-mark" />
             rest · pulled · rest
           </span>
-          <span className="press-lever__lever-ink" aria-hidden="true" />
+<span className="press-lever__lever-ink" aria-hidden="true">
+            <svg
+              className="press-lever__flourish-svg"
+              viewBox="0 0 220 180"
+              preserveAspectRatio="xMidYMax meet"
+              aria-hidden="true"
+            >
+              <defs>
+                <filter id={flourishGrainId} x="-4%" y="-12%" width="108%" height="124%">
+                  <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="33" stitchTiles="stitch" />
+                  <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
+                  <feComposite in2="SourceGraphic" operator="in" />
+                </filter>
+              </defs>
+              <g filter={`url(#${flourishGrainId})`}>
+                <path
+                  className="press-lever__flourish-lead"
+                  d="M104 132c14-12 36-30 60-44s36-30 52-46"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.15"
+                  strokeLinecap="round"
+                  pathLength="100"
+                />
+                <path
+                  className="press-lever__flourish-trail"
+                  d="M108 138c12-10 32-26 54-38s32-26 54-58"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth=".55"
+                  strokeLinecap="round"
+                  opacity=".5"
+                  pathLength="100"
+                />
+                <circle className="press-lever__flourish-bead" cx="216" cy="42" r="2.1" fill="currentColor" />
+                <circle className="press-lever__flourish-halo" cx="216" cy="42" r="6" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".8 2" opacity=".55" />
+              </g>
+            </svg>
+            <span className="press-lever__flourish-tag" aria-hidden="true">
+              <span className="press-lever__flourish-tag-mark" />
+              <em>the press's exhale</em>
+            </span>
+          </span>
         </span>
 
         <div className="press-lever__action">
