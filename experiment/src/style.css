@@ -54825,3 +54825,315 @@ a small act of typesetting.
     font-size: clamp(12.5px, 3.6vw, 14px);
   }
 }
+
+/* ────────────────────────────────────────────────────────────
+   ARRIVAL MARK · a top-of-page press masthead.
+   The page announces itself before the question arrives —
+   a hairline drawn rule either side of a small seed that
+   names the press, sets the date, and shows the three
+   voice dots as a quiet row of switches. After four outward
+   exhalations (title question mark, lever pivot, answer
+   period, return curl) this becomes the first inward
+   gesture: the page, set today.
+   ──────────────────────────────────────────────────────────── */
+
+.arrival-mark {
+  --arrival-tone: var(--paper);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(14px, 1.6vw, 24px);
+  width: min(100%, 920px);
+  margin: clamp(18px, 2.6vw, 36px) auto clamp(8px, 1.2vw, 18px);
+  padding: 0 clamp(8px, 1.4vw, 22px);
+  color: var(--paper);
+  text-align: center;
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(4px);
+  animation: arrivalMarkIn 1.05s var(--ease-out) .2s forwards;
+}
+
+.app--voice-quiet .arrival-mark { --arrival-tone: var(--blue); }
+.app--voice-human .arrival-mark { --arrival-tone: var(--coral); }
+.app--voice-bold .arrival-mark { --arrival-tone: var(--acid); }
+
+.arrival-mark::before {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--arrival-tone) 26%, transparent) 18%, color-mix(in srgb, var(--arrival-tone) 26%, transparent) 82%, transparent);
+  opacity: .35;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.arrival-mark__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+@keyframes arrivalMarkIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.arrival-mark__rule {
+  display: grid;
+  align-items: center;
+  height: 12px;
+  color: color-mix(in srgb, var(--arrival-tone) 70%, transparent);
+  position: relative;
+  z-index: 1;
+}
+
+.arrival-mark__rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.arrival-mark__rule-stroke {
+  animation: arrivalRuleDraw 1.35s var(--ease-out) .55s backwards;
+}
+
+.arrival-mark__rule-stroke--alt {
+  animation: arrivalRuleDraw 1.35s var(--ease-out) .75s backwards;
+  stroke-dasharray: 100 100;
+}
+
+@keyframes arrivalRuleDraw {
+  0% { stroke-dashoffset: 100; opacity: 0; }
+  60% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+.arrival-mark__rule-bead {
+  opacity: 0;
+  animation: arrivalBeadIn .5s var(--ease) 1.6s forwards;
+}
+
+.arrival-mark__rule-bead--end {
+  animation-delay: 1.85s;
+}
+
+@keyframes arrivalBeadIn {
+  to { opacity: 1; }
+}
+
+.arrival-mark__seed {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(10px, 1.1vw, 16px);
+  padding: clamp(6px, .8vw, 10px) clamp(14px, 1.6vw, 22px);
+  border-radius: 999px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--arrival-tone) 6%, transparent), transparent);
+  position: relative;
+  z-index: 2;
+}
+
+.arrival-mark__seed-mark {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(22px, 2.2vw, 28px);
+  height: clamp(22px, 2.2vw, 28px);
+  color: var(--arrival-tone);
+  opacity: 0;
+  transform: scale(.4);
+  animation: arrivalSeedMarkIn .6s var(--ease-spring) .8s forwards;
+}
+
+.arrival-mark__seed-mark svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.arrival-mark__seed-mark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--arrival-tone) 22%, transparent), transparent 70%);
+  z-index: -1;
+  opacity: .7;
+}
+
+@keyframes arrivalSeedMarkIn {
+  to { opacity: 1; transform: scale(1); }
+}
+
+.arrival-mark__seed-stack {
+  display: grid;
+  gap: 2px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .78vw, 10.5px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+  opacity: 0;
+  animation: arrivalSeedFade .8s var(--ease) 1.05s forwards;
+}
+
+@keyframes arrivalSeedFade {
+  to { opacity: 1; }
+}
+
+.arrival-mark__seed-line {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, .5vw, 7px);
+  white-space: nowrap;
+}
+
+.arrival-mark__seed-line--alt {
+  color: color-mix(in srgb, var(--paper) 62%, transparent);
+}
+
+.arrival-mark__seed-em {
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(10.5px, 1vw, 12.5px);
+  letter-spacing: .04em;
+  text-transform: lowercase;
+  color: var(--paper);
+  opacity: .92;
+}
+
+.arrival-mark__seed-key {
+  color: color-mix(in srgb, var(--paper) 64%, transparent);
+}
+
+.arrival-mark__seed-sep {
+  color: color-mix(in srgb, var(--arrival-tone) 70%, transparent);
+  opacity: .75;
+}
+
+.arrival-mark__seed-voice {
+  font-style: italic;
+  text-transform: lowercase;
+  letter-spacing: .04em;
+  color: var(--arrival-tone);
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-size: clamp(10px, .94vw, 11.5px);
+}
+
+.arrival-mark__seed-voice-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, .5vw, 6px);
+  padding-left: clamp(6px, .8vw, 10px);
+  border-left: 1px solid color-mix(in srgb, var(--arrival-tone) 32%, transparent);
+  margin-left: clamp(2px, .3vw, 4px);
+}
+
+.arrival-mark__seed-voice-dot {
+  display: grid;
+  place-items: center;
+  width: clamp(18px, 1.7vw, 22px);
+  height: clamp(18px, 1.7vw, 22px);
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--paper) 28%, transparent);
+  color: color-mix(in srgb, var(--paper) 56%, transparent);
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(10px, .9vw, 11.5px);
+  letter-spacing: 0;
+  text-transform: lowercase;
+  transition: color .35s var(--ease), border-color .35s var(--ease), background .35s var(--ease), transform .45s var(--ease-spring), box-shadow .45s var(--ease);
+  opacity: 0;
+  transform: scale(.4);
+}
+
+.arrival-mark__seed-voice-dot:nth-child(1) { animation: arrivalDotIn .55s var(--ease-spring) 1.25s forwards; }
+.arrival-mark__seed-voice-dot:nth-child(2) { animation: arrivalDotIn .55s var(--ease-spring) 1.4s forwards; }
+.arrival-mark__seed-voice-dot:nth-child(3) { animation: arrivalDotIn .55s var(--ease-spring) 1.55s forwards; }
+
+@keyframes arrivalDotIn {
+  to { opacity: 1; transform: scale(1); }
+}
+
+.arrival-mark__seed-voice-dot.is-on {
+  color: var(--arrival-tone);
+  border-color: var(--arrival-tone);
+  background: color-mix(in srgb, var(--arrival-tone) 18%, transparent);
+  transform: scale(1.08);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--arrival-tone) 14%, transparent);
+}
+
+.arrival-mark__seed-voice-letter {
+  line-height: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrival-mark,
+  .arrival-mark__rule-stroke,
+  .arrival-mark__rule-stroke--alt,
+  .arrival-mark__rule-bead,
+  .arrival-mark__seed-mark,
+  .arrival-mark__seed-stack,
+  .arrival-mark__seed-voice-dot {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .arrival-mark__rule-stroke--alt { opacity: .7 !important; }
+  .arrival-mark__seed-voice-dot.is-on { transform: scale(1.08) !important; }
+}
+
+@media (max-width: 720px) {
+  .arrival-mark {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: clamp(10px, 2vw, 16px);
+    margin: clamp(14px, 3vw, 22px) auto clamp(6px, 1.4vw, 12px);
+  }
+  .arrival-mark__seed-stack {
+    font-size: 8px;
+    letter-spacing: .18em;
+  }
+  .arrival-mark__seed-em {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 560px) {
+  .arrival-mark {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(6px, 1.6vw, 10px);
+  }
+  .arrival-mark__rule { display: none; }
+  .arrival-mark__seed {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 10px;
+    padding: 8px 12px;
+  }
+  .arrival-mark__seed-stack {
+    text-align: center;
+    width: 100%;
+    justify-items: center;
+  }
+  .arrival-mark__seed-line {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .arrival-mark__seed-voice-dots {
+    border-left: 0;
+    padding-left: 0;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .arrival-mark__seed-voice-dots {
+    display: none;
+  }
+}

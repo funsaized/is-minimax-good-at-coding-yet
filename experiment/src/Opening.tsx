@@ -1,5 +1,6 @@
 import { useId, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import type { VoiceId } from './Press'
+import { ArrivalMark } from './ArrivalMark'
 
 type OpeningProps = {
   voice: VoiceId
@@ -79,28 +80,7 @@ export function Opening({ voice, setToday, children }: OpeningProps) {
         </svg>
       </span>
 
-      <header className="opening__plate" aria-hidden="true">
-        <span className="opening__plate-mark">‡</span>
-        <span className="opening__plate-title">
-          m³ press
-          <em>·</em>
-          folio i
-          <em>·</em>
-          the opening
-        </span>
-        <span className="opening__plate-stamp">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" strokeWidth=".55" />
-            <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".8 1.6" opacity=".65" />
-            <circle cx="12" cy="12" r="1.6" fill="currentColor" />
-            <path d="M12 4v2M12 18v2M4 12h2M18 12h2" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".55" />
-          </svg>
-        </span>
-        <span className="opening__plate-meta">
-          set today · <em>{setToday}</em>
-        </span>
-        <span className="opening__plate-mark">‡</span>
-      </header>
+      <ArrivalMark voice={voice} setToday={setToday} />
 
       <span className="opening__crease" aria-hidden="true">
         <svg viewBox="0 0 12 1200" preserveAspectRatio="none">
