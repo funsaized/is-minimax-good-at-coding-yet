@@ -47617,3 +47617,299 @@ a small act of typesetting.
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+   TITLE FOLD · a single paper-folded opening that frames the
+   headline. The fold mark draws itself beneath the title; the
+   legend hangs below as a quiet record of voice, word, and
+   date. Reduced-motion users see the settled state.
+   ──────────────────────────────────────────────────────────── */
+
+.title-fold {
+  --title-fold-tone: var(--coral);
+  --title-fold-hint: rgba(243, 236, 214, .55);
+  --title-fold-rule: rgba(243, 236, 214, .14);
+  --title-fold-rule-soft: rgba(243, 236, 214, .06);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+  gap: clamp(12px, 1.6vw, 20px);
+  width: 100%;
+  max-width: 1080px;
+  margin: clamp(20px, 2.6vw, 36px) auto clamp(28px, 3.4vw, 48px);
+  padding: clamp(8px, 1.2vw, 14px) clamp(12px, 1.6vw, 20px);
+  isolation: isolate;
+  overflow: visible;
+}
+
+.title-fold__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.title-fold__paper {
+  position: absolute;
+  inset: -8px -12px;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 8%, color-mix(in srgb, var(--title-fold-tone) 12%, transparent), transparent 62%),
+    radial-gradient(ellipse at 50% 92%, color-mix(in srgb, var(--title-fold-tone) 6%, transparent), transparent 65%);
+}
+
+.title-fold__paper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 0%, color-mix(in srgb, var(--title-fold-tone) 22%, transparent) 12%, color-mix(in srgb, var(--title-fold-tone) 22%, transparent) 88%, transparent 100%);
+  transform: translateX(-50%);
+  opacity: .35;
+  pointer-events: none;
+}
+
+.title-fold__paper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-top: 1px dashed color-mix(in srgb, var(--title-fold-tone) 22%, transparent);
+  border-bottom: 1px dashed color-mix(in srgb, var(--title-fold-tone) 22%, transparent);
+  pointer-events: none;
+}
+
+.title-fold__paper svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.title-fold__seal {
+  position: absolute;
+  top: clamp(-18px, -1.6vw, -10px);
+  right: clamp(8px, 2vw, 24px);
+  z-index: 4;
+  width: clamp(34px, 3vw, 42px);
+  height: clamp(34px, 3vw, 42px);
+  color: var(--title-fold-tone);
+  opacity: 0;
+  transform: translateY(-4px) rotate(8deg);
+  animation: titleFoldSealIn .85s var(--ease-spring) 1.2s forwards;
+  pointer-events: none;
+  transition: color .55s var(--ease), transform .55s var(--ease-spring);
+}
+
+.title-fold__seal svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.title-fold:hover .title-fold__seal,
+.title-fold:focus-within .title-fold__seal {
+  transform: translateY(0) rotate(4deg);
+}
+
+@keyframes titleFoldSealIn {
+  to { opacity: .9; transform: translateY(0) rotate(8deg); }
+}
+
+.title-fold__stage {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.title-fold__crease {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  color: var(--title-fold-tone);
+  opacity: 0;
+  animation: titleFoldCreaseIn .55s var(--ease-out) 1.65s forwards;
+  padding-top: clamp(4px, .8vw, 10px);
+}
+
+.title-fold__crease svg {
+  display: block;
+  width: clamp(160px, 16vw, 220px);
+  height: clamp(12px, 1.1vw, 16px);
+}
+
+@keyframes titleFoldCreaseIn {
+  to { opacity: .9; }
+}
+
+.title-fold__crease-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--title-fold-tone);
+  font-family: var(--mono);
+  font-size: clamp(8px, .72vw, 9px);
+  font-weight: 600;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+}
+
+.title-fold__crease-tag em {
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(11px, 1vw, 12.5px);
+  font-weight: 400;
+  letter-spacing: -.005em;
+  text-transform: none;
+}
+
+.title-fold__crease-tag-rule {
+  display: inline-block;
+  width: clamp(18px, 2vw, 30px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor);
+  opacity: .55;
+}
+
+.title-fold__crease-tag-rule--alt {
+  background: linear-gradient(to left, transparent, currentColor);
+}
+
+.title-fold__legend {
+  position: relative;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  padding: 8px clamp(16px, 2.4vw, 28px);
+  color: var(--paper);
+  opacity: 0;
+  animation: titleFoldLegendIn .6s var(--ease-out) 1.95s forwards;
+  width: min(100%, 720px);
+  margin: 0 auto;
+}
+
+@keyframes titleFoldLegendIn {
+  to { opacity: .92; }
+}
+
+.title-fold__legend-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, .7vw, 10px);
+  font-family: 'Iowan Old Style', Georgia, serif;
+}
+
+.title-fold__legend-key {
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .68vw, 8.5px);
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title-fold__legend-value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(13px, 1.18vw, 15px);
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.title-fold__legend-value em {
+  font-style: italic;
+}
+
+.title-fold__legend-mark {
+  display: inline-block;
+  padding: 2px 6px 3px;
+  border: 1px solid color-mix(in srgb, var(--title-fold-tone) 45%, transparent);
+  border-radius: 1px;
+  color: var(--title-fold-tone);
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(7.5px, .68vw, 8.5px);
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.title-fold__legend-bead {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--title-fold-tone);
+  opacity: .5;
+}
+
+.app--voice-quiet .title-fold { --title-fold-tone: var(--blue); }
+.app--voice-human .title-fold { --title-fold-tone: var(--coral); }
+.app--voice-bold .title-fold { --title-fold-tone: var(--acid); }
+
+@media (prefers-reduced-motion: reduce) {
+  .title-fold { animation: none !important; transform: none !important; opacity: 1 !important; }
+  .title-fold__seal,
+  .title-fold__crease,
+  .title-fold__legend {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .title-fold {
+    padding: clamp(6px, 1.4vw, 12px) clamp(10px, 2vw, 16px);
+    gap: clamp(10px, 1.6vw, 16px);
+  }
+
+  .title-fold__seal {
+    width: 26px;
+    height: 26px;
+    top: -8px;
+    right: 12px;
+  }
+
+  .title-fold__legend {
+    gap: 8px;
+    padding: 6px 10px;
+    flex-direction: column;
+  }
+
+  .title-fold__legend-bead {
+    display: none;
+  }
+
+  .title-fold__crease-tag {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title-fold__seal {
+    width: 22px;
+    height: 22px;
+    top: -6px;
+    right: 8px;
+  }
+
+  .title-fold__crease svg {
+    width: 130px;
+    height: 10px;
+  }
+}

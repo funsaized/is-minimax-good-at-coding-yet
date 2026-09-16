@@ -24,11 +24,10 @@ import { NotesSection } from './NotesSection'
 import { FolioFold } from './FolioFold'
 import { PressSpine } from './PressSpine'
 import { TitlePage } from './TitlePage'
-import { FolioOpening } from './FolioOpening'
-import { PressSignatureLine } from './PressSignatureLine'
 import { MarginaliumPress } from './MarginaliumPress'
 import { FolioThumbprint } from './FolioThumbprint'
 import { TitleLine } from './TitleLine'
+import { TitleFold } from './TitleFold'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -645,16 +644,12 @@ export function App() {
         <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
           <TitlePage voice={voice} word={activeWord} setToday={setToday} />
 
-          <FolioOpening voice={voice} word={activeWord} setToday={setToday} />
-
-          <PressSignatureLine voice={voice} setToday={setToday} />
-
           <div className="hero__spread">
             <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
             <PaperWarmth voice={voice} />
 
             <h1 className="sr-only" id="page-title">{TITLE}</h1>
-            <div className="hero__headline">
+            <TitleFold voice={voice} word={activeWord} setToday={setToday}>
               <TitleLine
                 voice={voice}
                 word={activeWord}
@@ -665,7 +660,7 @@ export function App() {
                 onHover={setHoveredWord}
                 tokenRefs={tokenRefs}
               />
-            </div>
+            </TitleFold>
           </div>
 
           <ReadingPrologue
