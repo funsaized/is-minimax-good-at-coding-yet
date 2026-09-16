@@ -7,6 +7,7 @@ type PressLeverProps = {
   readerName: string
   onToggleAnswer: () => void
   setToday: string
+  stamping?: boolean
 }
 
 const VOICE_TONE: Record<VoiceId, string> = {
@@ -24,7 +25,7 @@ const VOICE_FACE: Record<VoiceId, string> = {
 }
 
 export const PressLever = forwardRef<HTMLButtonElement, PressLeverProps>(function PressLever(
-  { voice, answerOpen, readerName, onToggleAnswer, setToday },
+  { voice, answerOpen, readerName, onToggleAnswer, setToday, stamping = false },
   triggerRef,
 ) {
   const reader = readerName.trim()
@@ -138,7 +139,7 @@ export const PressLever = forwardRef<HTMLButtonElement, PressLeverProps>(functio
           <button
             ref={triggerRef}
             type="button"
-            className={`press-lever__action-button ${answerOpen ? 'is-open' : ''}`}
+            className={`press-lever__action-button ${answerOpen ? 'is-open' : ''} ${stamping ? 'is-stamping' : ''}`}
             onClick={onToggleAnswer}
             aria-expanded={answerOpen}
             aria-controls="answer"

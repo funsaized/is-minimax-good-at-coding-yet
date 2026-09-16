@@ -4607,6 +4607,622 @@ button {
   opacity: .85;
 }
 
+/* ────────────────────────────────────────────────────────────
+   FOLIO NOTE · the editor's note as a single confident
+   editorial spread. A typographic title moment leads, one
+   paragraph explains the contract, three marked words are
+   presented inline as elegant typographic tokens, a pull
+   quote gives the page one sentence to remember, and the
+   thumbprint closes the spread.
+   ──────────────────────────────────────────────────────────── */
+
+.folio-note {
+  --folio-note-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(28px, 3.4vw, 44px);
+  max-width: 1080px;
+  margin: 0;
+  padding: clamp(40px, 5vw, 72px) clamp(36px, 4.6vw, 72px);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background:
+    radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--folio-note-tone) 8%, transparent), transparent 60%),
+    radial-gradient(ellipse at 0% 100%, color-mix(in srgb, var(--paper) 4%, transparent), transparent 60%),
+    linear-gradient(180deg, rgba(20, 26, 38, .42), rgba(12, 16, 26, .58));
+  box-shadow:
+    inset 0 0 0 1px rgba(146, 186, 255, .04),
+    inset 0 1px 0 rgba(243, 236, 214, .04),
+    0 24px 56px -36px rgba(0, 0, 0, .45);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
+  isolation: isolate;
+}
+
+.app--voice-quiet .folio-note,
+.app--voice-quiet .folio-readings { --folio-note-tone: var(--blue); }
+.app--voice-human .folio-note,
+.app--voice-human .folio-readings { --folio-note-tone: var(--coral); }
+.app--voice-bold .folio-note,
+.app--voice-bold .folio-readings { --folio-note-tone: var(--acid); }
+
+.hero__body.is-in-view .folio-note {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.folio-note::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px dashed color-mix(in srgb, var(--folio-note-tone) 14%, transparent);
+  border-radius: 1px;
+  pointer-events: none;
+  opacity: .55;
+}
+
+.folio-note__head {
+  display: grid;
+  gap: clamp(10px, 1.2vw, 16px);
+  padding-bottom: clamp(14px, 1.6vw, 22px);
+  border-bottom: 1px dashed var(--line-soft);
+}
+
+.folio-note__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--folio-note-tone);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  transition: color .55s var(--ease);
+}
+
+.folio-note__eyebrow em {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: none;
+}
+
+.folio-note__eyebrow-mark {
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  opacity: .65;
+}
+
+.folio-note__eyebrow-mark--alt { opacity: .85; }
+
+.folio-note__title {
+  display: grid;
+  gap: clamp(2px, .3vw, 6px);
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.2vw, 3.6rem);
+  letter-spacing: -.042em;
+  line-height: 1.02;
+  text-wrap: balance;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .18);
+}
+
+.folio-note__title em {
+  color: var(--paper);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.folio-note__title-row {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: clamp(10px, 1.2vw, 18px);
+}
+
+.folio-note__title-em--alt {
+  color: var(--folio-note-tone);
+  text-shadow: 0 0 .04em color-mix(in srgb, var(--folio-note-tone) 35%, transparent);
+  transition: color .55s var(--ease), text-shadow .55s var(--ease);
+}
+
+.folio-note__copy {
+  display: grid;
+  gap: clamp(18px, 1.8vw, 24px);
+  max-width: 60ch;
+  color: var(--lead-2);
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.5vw, 20px);
+  line-height: 1.62;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'onum' 1, 'dlig' 1;
+  text-wrap: pretty;
+  hyphens: auto;
+}
+
+.app--voice-quiet .folio-note__copy,
+.app--voice-human .folio-note__copy { font-style: italic; letter-spacing: -.004em; }
+.app--voice-bold .folio-note__copy { font-style: normal; letter-spacing: .002em; }
+
+.folio-note__copy em {
+  color: var(--paper);
+  font-style: italic;
+  font-weight: inherit;
+}
+
+.folio-note__lead {
+  margin: 0;
+}
+
+.folio-note__dropcap {
+  float: left;
+  position: relative;
+  margin: .04em .22em -.18em -.04em;
+  color: var(--folio-note-tone);
+  font-family: var(--serif);
+  font-size: 3.6em;
+  font-style: italic;
+  font-weight: 400;
+  line-height: .82;
+  letter-spacing: -.045em;
+  text-shadow: 0 0 .04em color-mix(in srgb, var(--folio-note-tone) 35%, transparent);
+  transition: color .55s var(--ease), text-shadow .55s var(--ease);
+}
+
+.folio-note__dropcap::before,
+.folio-note__dropcap::after {
+  content: '';
+  position: absolute;
+  left: -.04em;
+  right: -.04em;
+  pointer-events: none;
+  background: currentColor;
+  opacity: .45;
+  transition: opacity .55s var(--ease);
+}
+
+.folio-note__dropcap::before { top: -.04em; height: 1px; }
+.folio-note__dropcap::after { bottom: -.02em; height: 1px; }
+
+.folio-note__token.is-hover ~ .folio-note__dropcap,
+.folio-note:hover .folio-note__dropcap {
+  text-shadow: 0 0 .08em color-mix(in srgb, var(--folio-note-tone) 55%, transparent);
+}
+
+.folio-note__lead-body { display: inline; }
+
+.folio-note__signed {
+  margin: 0;
+  padding-top: clamp(12px, 1.2vw, 18px);
+  border-top: 1px dashed var(--line-soft);
+  color: var(--mist);
+  font-family: var(--serif);
+  font-size: clamp(14.5px, 1.3vw, 17px);
+  font-style: italic;
+  letter-spacing: -.002em;
+  line-height: 1.55;
+}
+
+.folio-note__signed em {
+  color: var(--paper);
+  font-style: italic;
+}
+
+/* Tokens row — three marked words presented inline as elegant
+   typographic tokens. Each token carries its mark, the word, and
+   a single-word description. A hand-drawn underline draws in
+   when the token is hovered or active. */
+
+.folio-note__tokens {
+  display: grid;
+  gap: clamp(12px, 1.4vw, 20px);
+  padding-top: clamp(18px, 2vw, 28px);
+  margin: 0;
+  border-top: 1px solid var(--line-soft);
+}
+
+.folio-note__tokens-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.folio-note__tokens-eyebrow em {
+  color: var(--folio-note-tone);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  transition: color .55s var(--ease);
+}
+
+.folio-note__tokens-eyebrow-mark {
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  opacity: .65;
+}
+
+.folio-note__tokens-eyebrow-mark--alt { opacity: .85; }
+
+.folio-note__tokens-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(8px, 1.2vw, 16px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: folio-token;
+}
+
+.folio-note__token-cell { display: contents; }
+
+.folio-note__token {
+  --token-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: clamp(4px, .5vw, 8px);
+  padding: clamp(14px, 1.6vw, 20px) clamp(14px, 1.6vw, 22px);
+  border: 1px solid var(--line-soft);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(243, 236, 214, .04), rgba(243, 236, 214, 0) 65%);
+  color: var(--paper);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  transition:
+    border-color .45s var(--ease),
+    background .55s var(--ease),
+    transform .5s var(--ease-spring),
+    color .45s var(--ease);
+}
+
+.app--voice-quiet .folio-note__token-cell--m3 .folio-note__token { --token-tone: var(--acid); }
+.app--voice-quiet .folio-note__token-cell--good .folio-note__token { --token-tone: var(--coral); }
+.app--voice-quiet .folio-note__token-cell--yet .folio-note__token { --token-tone: var(--blue); }
+
+.app--voice-human .folio-note__token-cell--m3 .folio-note__token { --token-tone: var(--acid); }
+.app--voice-human .folio-note__token-cell--good .folio-note__token { --token-tone: var(--coral); }
+.app--voice-human .folio-note__token-cell--yet .folio-note__token { --token-tone: var(--blue); }
+
+.app--voice-bold .folio-note__token-cell--m3 .folio-note__token { --token-tone: var(--acid); }
+.app--voice-bold .folio-note__token-cell--good .folio-note__token { --token-tone: var(--coral); }
+.app--voice-bold .folio-note__token-cell--yet .folio-note__token { --token-tone: var(--blue); }
+
+.app--word-m3 .folio-note__token-cell--m3 .folio-note__token,
+.app--word-good .folio-note__token-cell--good .folio-note__token,
+.app--word-yet .folio-note__token-cell--yet .folio-note__token {
+  border-color: color-mix(in srgb, var(--token-tone) 60%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--token-tone) 10%, transparent), color-mix(in srgb, var(--token-tone) 2%, transparent) 60%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--token-tone) 14%, transparent);
+}
+
+.folio-note__token:hover,
+.folio-note__token.is-hover {
+  border-color: color-mix(in srgb, var(--token-tone) 48%, transparent);
+  transform: translateY(-1px);
+}
+
+.folio-note__token-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  transition: color .45s var(--ease);
+}
+
+.app--word-m3 .folio-note__token-cell--m3 .folio-note__token-mark,
+.app--word-good .folio-note__token-cell--good .folio-note__token-mark,
+.app--word-yet .folio-note__token-cell--yet .folio-note__token-mark,
+.folio-note__token:hover .folio-note__token-mark,
+.folio-note__token.is-hover .folio-note__token-mark {
+  color: var(--token-tone);
+}
+
+.folio-note__token-word {
+  display: block;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(20px, 2vw, 26px);
+  letter-spacing: -.022em;
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .16);
+  transition: color .45s var(--ease), text-shadow .55s var(--ease);
+}
+
+.app--word-m3 .folio-note__token-cell--m3 .folio-note__token-word,
+.app--word-good .folio-note__token-cell--good .folio-note__token-word,
+.app--word-yet .folio-note__token-cell--yet .folio-note__token-word {
+  color: var(--token-tone);
+  text-shadow: 0 0 .04em color-mix(in srgb, var(--token-tone) 32%, transparent);
+}
+
+.folio-note__token-kind {
+  display: block;
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, .95vw, 13px);
+  letter-spacing: -.005em;
+  opacity: .85;
+}
+
+.folio-note__token-glyph {
+  position: absolute;
+  top: clamp(10px, 1.2vw, 14px);
+  right: clamp(12px, 1.4vw, 18px);
+  width: clamp(20px, 1.8vw, 24px);
+  height: clamp(20px, 1.8vw, 24px);
+  color: var(--muted);
+  opacity: .45;
+  transition: color .45s var(--ease), opacity .55s var(--ease);
+}
+
+.app--word-m3 .folio-note__token-cell--m3 .folio-note__token-glyph,
+.app--word-good .folio-note__token-cell--good .folio-note__token-glyph,
+.app--word-yet .folio-note__token-cell--yet .folio-note__token-glyph,
+.folio-note__token:hover .folio-note__token-glyph,
+.folio-note__token.is-hover .folio-note__token-glyph {
+  color: var(--token-tone);
+  opacity: .9;
+}
+
+.folio-note__token-rule {
+  display: block;
+  width: 100%;
+  height: 8px;
+  margin-top: clamp(2px, .4vw, 4px);
+  color: var(--muted);
+  opacity: .35;
+  transition: color .55s var(--ease), opacity .55s var(--ease);
+}
+
+.app--word-m3 .folio-note__token-cell--m3 .folio-note__token-rule,
+.app--word-good .folio-note__token-cell--good .folio-note__token-rule,
+.app--word-yet .folio-note__token-cell--yet .folio-note__token-rule,
+.folio-note__token:hover .folio-note__token-rule,
+.folio-note__token.is-hover .folio-note__token-rule {
+  color: var(--token-tone);
+  opacity: .95;
+}
+
+.folio-note__token-rule-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: folioTokenRuleDraw .95s var(--ease-out) forwards;
+  animation-play-state: state;
+}
+
+@keyframes folioTokenRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.folio-note__token.is-hover .folio-note__token-rule-stroke,
+.folio-note__token:hover .folio-note__token-rule-stroke,
+.app--word-m3 .folio-note__token-cell--m3 .folio-note__token-rule-stroke,
+.app--word-good .folio-note__token-cell--good .folio-note__token-rule-stroke,
+.app--word-yet .folio-note__token-cell--yet .folio-note__token-rule-stroke {
+  animation: folioTokenRuleDraw 1.1s var(--ease-out) forwards;
+}
+
+/* Pull quote — italic, breathing, the page's one sentence. */
+
+.folio-note__pull {
+  position: relative;
+  display: grid;
+  gap: clamp(8px, 1vw, 14px);
+  padding: clamp(20px, 2.4vw, 30px) clamp(8px, 1.4vw, 18px);
+  margin: clamp(8px, 1vw, 14px) 0 0;
+  text-align: center;
+  isolation: isolate;
+}
+
+.folio-note__pull-rule {
+  display: block;
+  width: clamp(160px, 28vw, 320px);
+  height: 1px;
+  margin: 0 auto;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--folio-note-tone) 70%, transparent), transparent);
+  opacity: .6;
+}
+
+.folio-note__pull-body {
+  display: block;
+  margin: 0;
+  padding: 0;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: clamp(22px, 2.8vw, 32px);
+  font-style: italic;
+  letter-spacing: -.026em;
+  line-height: 1.18;
+  text-shadow: 0 0 .04em color-mix(in srgb, var(--folio-note-tone) 28%, transparent);
+  text-wrap: balance;
+}
+
+.folio-note__pull-body em {
+  color: var(--folio-note-tone);
+  font-style: italic;
+  transition: color .55s var(--ease), text-shadow .55s var(--ease);
+}
+
+.folio-note__pull-quote {
+  display: inline-block;
+  margin-right: .12em;
+  color: var(--folio-note-tone);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.4em;
+  line-height: .8;
+  vertical-align: -.18em;
+  transition: color .55s var(--ease);
+}
+
+.folio-note__pull-note {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0 auto;
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, .95vw, 13px);
+  letter-spacing: -.002em;
+  opacity: .75;
+}
+
+/* ────────────────────────────────────────────────────────────
+   FOLIO READINGS · the three specimen sheets as a quiet
+   complement to the editor's note. Single line header,
+   then the specimen tray. Same shape as the legacy
+   hero__readings but with breathing room.
+   ──────────────────────────────────────────────────────────── */
+
+.folio-readings {
+  position: relative;
+  display: grid;
+  gap: clamp(14px, 1.4vw, 20px);
+  padding: clamp(20px, 2.4vw, 30px) clamp(20px, 2.4vw, 32px);
+  border: 1px solid var(--line-soft);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(28, 36, 52, .28), rgba(14, 20, 32, .44));
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .8s var(--ease-out) .1s, transform .8s var(--ease-out) .1s;
+}
+
+.hero__body.is-in-view .folio-readings {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.folio-readings__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  color: var(--folio-note-tone);
+  transition: color .55s var(--ease);
+}
+
+.folio-readings__rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor 50%, transparent);
+  opacity: .5;
+}
+
+.folio-readings__rule--trail { direction: rtl; }
+
+.folio-readings__head-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: clamp(8px, .7vw, 9px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.folio-readings__head-tag em {
+  color: var(--folio-note-tone);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  transition: color .55s var(--ease);
+}
+
+.folio-readings__head-mark {
+  display: inline-block;
+  width: 12px;
+  height: 1px;
+  background: currentColor;
+  opacity: .6;
+}
+
+.folio-readings__head-mark--alt { opacity: .85; }
+
+.folio-readings__foot {
+  display: block;
+  margin: 0;
+  text-align: center;
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, .95vw, 13px);
+  letter-spacing: -.005em;
+  opacity: .75;
+}
+
+.folio-readings__foot em { color: var(--paper); font-style: italic; }
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-note,
+  .folio-note__token-rule-stroke,
+  .folio-readings { animation: none !important; transition: none !important; }
+  .folio-note { opacity: 1 !important; transform: none !important; }
+  .folio-readings { opacity: 1 !important; transform: none !important; }
+  .folio-note__token-rule-stroke { stroke-dashoffset: 0 !important; }
+}
+
+@media (max-width: 880px) {
+  .folio-note {
+    padding: clamp(24px, 3vw, 36px) clamp(20px, 3vw, 30px);
+    gap: clamp(22px, 3vw, 30px);
+  }
+
+  .folio-note__title { font-size: clamp(1.7rem, 6.4vw, 2.6rem); }
+
+  .folio-note__copy { font-size: clamp(15px, 4.4vw, 17.5px); }
+
+  .folio-readings {
+    padding: clamp(16px, 2.4vw, 22px) clamp(16px, 2.4vw, 24px);
+  }
+}
+
+@media (max-width: 540px) {
+  .folio-note__tokens-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(8px, 1.4vw, 12px);
+  }
+
+  .folio-note__pull-body { font-size: clamp(18px, 5.4vw, 24px); }
+
+  .folio-readings__head { grid-template-columns: 1fr; }
+  .folio-readings__rule { display: none; }
+}
+
 .hero__summary {
   max-width: 58ch;
   margin: 0;
@@ -8708,17 +9324,23 @@ button {
   color: var(--ink);
   transform: translateY(-36px) scale(.985) rotateX(-12deg);
   transform-origin: top center;
-  transition: transform 1.15s var(--ease-out), box-shadow 1.15s var(--ease-out);
+  transition:
+    transform 1.15s var(--ease-out),
+    box-shadow 1.15s var(--ease-out),
+    filter 1.15s var(--ease-out);
   opacity: 0;
+  filter: brightness(.92) saturate(.95);
 }
 
 .answer-reveal.is-open .answer-reveal__leaf {
   transform: translateY(0) scale(1) rotateX(0);
   opacity: 1;
+  filter: brightness(1) saturate(1);
   transition:
     transform 1.15s var(--ease-out),
     opacity .7s var(--ease) .08s,
-    box-shadow 1.15s var(--ease-out);
+    box-shadow 1.15s var(--ease-out),
+    filter 1.1s var(--ease-out) .15s;
 }
 
 .answer-reveal__leaf:hover {
@@ -38992,6 +39614,39 @@ a small act of typesetting.
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--press-lever-tone) 14%, transparent), color-mix(in srgb, var(--press-lever-tone) 4%, transparent)),
     rgba(14, 15, 21, .55);
+}
+
+.press-lever__action-button:active {
+  transform: translateY(1px) scale(.998);
+  transition-duration: .08s;
+}
+
+.press-lever__action-button::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 6px;
+  background: radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--press-lever-tone) 38%, transparent) 0%, transparent 65%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity .55s var(--ease);
+}
+
+.press-lever__action-button.is-open::after,
+.press-lever__action-button.is-stamping::after {
+  opacity: 1;
+}
+
+@keyframes pressLeverStamp {
+  0%   { transform: scale(.998); }
+  35%  { transform: scale(1.012); }
+  60%  { transform: scale(.997); }
+  100% { transform: scale(1); }
+}
+
+.press-lever__action-button.is-stamping {
+  animation: pressLeverStamp .55s var(--ease-spring);
 }
 
 .press-lever__action-corner {

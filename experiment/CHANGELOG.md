@@ -1,13 +1,36 @@
-# Iteration 305
+# Iteration 306 — The Quiet Composition
 
-Strengthened the opening folio into a single, confident editorial paper moment.
+Iteration 306 recomposes the editor's note into one confident editorial moment
+and refines the press lever so the answer feels earned.
 
-## What changed
-- **BroadsideReveal**: Rebuilt as a paper-shaped entry — masthead, verse, headline preview (a small italic version of the title), rule, and a three-cell footer. Replaces the previous generic loading card with a composition that previews the title in the same voice the page opens with.
-- **TitleFold**: Reframed as a confident paper moment — own bordered sheet, dashed inner frame, four corner ticks, vertical center crease, masthead (m³ press · folio i · the title fold), larger seal with the m³ mark and a voice-letter tag, refined crease geometry, and a signature footer (set in · marked at · set today) that pulses while rehearsing.
-- **TitleLine**: Added a refined eyebrow above the headline (voice letter in a small ring + name + mono-caps descriptor, framed by hairline rules and diamond marks), grew the headline scale (clamp 44px → 116px), and added a quiet trail row beneath the proof mark for the set-today date.
-- **SpreadRibbon**: Reframed as a four-cell row (m³ press / voice letter & name / marked word & proof tag / set today) separated by thin fleurons, with the reading trace preserved below. Each cell pairs a small mono-caps key with an italic value.
-- **CSS**: Updated `.opening .title-fold` so the new paper moment reads cleanly inside the opening context, and set the spread ribbon's track count to match the eleven-folio order.
+## Changes
 
-## What stays
-The reading prologue, the press rehearsal wheel, the press lever, the press bed, the second reading, the catch, the colophon, and every other folio are untouched in structure. This iteration composes the title page — folio i — into a more confident opening paper and leaves the rest of the broadside to keep doing what it already does well.
+- Recomposed the hero body — replaced the multi-paragraph "Reading Brief" with
+  a single spread called the "folio note": a confident typographic title, one
+  dropcapped lead paragraph, a signed italic coda, three marked words as
+  inline typographic tokens (not a button list), a centered pull quote
+  ("attention, not ornament."), and the folio thumbprint closing the spread.
+- Pulled the three marked words (M3, good at, yet?) into a single horizontal
+  sequence of typographic tokens. Each token carries its proof mark (stet,
+  caret, query), its word in italic display, a single-word description, the
+  original marginal glyph, and a hand-traced underline that draws in when
+  the token is hovered or marked.
+- Rebuilt the readings aside as "folio readings" — a quieter plate that lets
+  the specimen tray do its own work without competing with the folio note.
+- Added a press-stamp animation to the press-lever action button: a brief
+  scale punch on click (1 → 1.012 → 1) plus a soft tone halo that lingers
+  while the answer is open. The lever's existing tilt motion remains.
+- Polished the answer-reveal emergence — added a brightness/saturation filter
+  to the leaf so it lands as if pressed onto the page, not faded in.
+- Added mobile breakpoints for the new folio note: the tokens row collapses
+  to a single column under 540px and the pull quote steps down to a
+  comfortable size.
+
+## Files
+
+- `src/App.tsx` — replaced the hero body composition; added a stamping state
+  to drive the new press-lever animation; cleaned up an unused import.
+- `src/PressLever.tsx` — accepts a `stamping` prop and applies an
+  `is-stamping` class to the action button.
+- `src/style.css` — added folio-note and folio-readings styles, the
+  press-lever stamp animation, and the answer-reveal filter polish.
