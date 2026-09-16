@@ -40226,3 +40226,967 @@ a small act of typesetting.
     stroke-dashoffset: 0 !important;
   }
 }
+
+/* ────────────────────────────────────────────────────────────
+   FOLIO FOLD · a deliberate spread between the front matter
+   and the press bed. Replaces the thin page fold with a
+   make-ready composition: four tools lined up, an arm/disarm
+   status pill, a ledger of the session so far, and a fold-hinge
+   that drops a wax bead as the reader reaches it.
+   ──────────────────────────────────────────────────────────── */
+
+.folio-fold {
+  position: relative;
+  width: min(100%, 1320px);
+  margin: clamp(28px, 4vw, 56px) auto clamp(28px, 4vw, 48px);
+  padding: clamp(36px, 4.4vw, 64px) clamp(22px, 4.4vw, 56px) clamp(40px, 5vw, 64px);
+  color: var(--folio-fold-tone);
+  font-family: var(--serif);
+  isolation: isolate;
+}
+
+.folio-fold::before {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(216, 240, 106, .04), transparent 40%),
+    radial-gradient(circle at 90% 100%, rgba(216, 240, 106, .05), transparent 44%),
+    linear-gradient(180deg, rgba(28, 36, 52, .18), rgba(14, 20, 32, .32));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  pointer-events: none;
+}
+
+.folio-fold::after {
+  position: absolute;
+  inset: 8px;
+  z-index: -1;
+  border: 1px solid var(--line-soft);
+  pointer-events: none;
+}
+
+.app--voice-quiet .folio-fold { --folio-fold-tone: var(--blue); }
+.app--voice-human .folio-fold { --folio-fold-tone: var(--coral); }
+.app--voice-bold .folio-fold { --folio-fold-tone: var(--acid); }
+
+.folio-fold__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.folio-fold__crop {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  color: currentColor;
+  opacity: .55;
+  z-index: 1;
+}
+
+.folio-fold__crop::before,
+.folio-fold__crop::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  opacity: .85;
+}
+
+.folio-fold__crop::before {
+  width: 12px;
+  height: 1px;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.folio-fold__crop::after {
+  width: 1px;
+  height: 12px;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.folio-fold__crop--tl { top: -1px; left: -1px; }
+.folio-fold__crop--tr { top: -1px; right: -1px; transform: scaleX(-1); }
+.folio-fold__crop--bl { bottom: -1px; left: -1px; transform: scaleY(-1); }
+.folio-fold__crop--br { bottom: -1px; right: -1px; transform: scale(-1, -1); }
+
+.folio-fold__plate-tag {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, 1vw, 10px);
+  padding: 5px clamp(12px, 1.4vw, 18px);
+  background: var(--night);
+  border: 1px solid var(--line);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.folio-fold__plate-tag em {
+  font-style: normal;
+  color: currentColor;
+  opacity: .9;
+}
+
+.folio-fold__plate-tag-mark {
+  display: inline-block;
+  width: 8px;
+  height: 1px;
+  background: currentColor;
+  opacity: .85;
+}
+
+.folio-fold__plate-tag-mark--alt { transform: rotate(180deg); }
+
+.folio-fold__head {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  margin: 0 0 clamp(22px, 3vw, 34px);
+  text-align: center;
+}
+
+.folio-fold__title {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.folio-fold__title-eyebrow {
+  display: inline-block;
+  margin: 0 auto;
+  padding: 0 0 6px;
+  color: currentColor;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  opacity: .9;
+}
+
+.folio-fold__title-line {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 52px);
+  font-style: italic;
+  letter-spacing: -.024em;
+  line-height: 1;
+  color: var(--paper);
+}
+
+.folio-fold__title-line i {
+  font-style: italic;
+  color: currentColor;
+}
+
+.folio-fold__title-tail {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px auto 0;
+  color: currentColor;
+}
+
+.folio-fold__title-tail-rule {
+  flex: 1 1 36px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor);
+  opacity: .55;
+  min-width: 32px;
+}
+
+.folio-fold__title-tail-rule--alt { background: linear-gradient(to left, transparent, currentColor); }
+
+.folio-fold__title-tail-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.folio-fold__title-tail-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(216, 240, 106, .12);
+}
+
+.app--voice-quiet .folio-fold__title-tail-dot { box-shadow: 0 0 0 3px rgba(155, 188, 255, .14); }
+.app--voice-human .folio-fold__title-tail-dot { box-shadow: 0 0 0 3px rgba(255, 118, 95, .14); }
+.app--voice-bold .folio-fold__title-tail-dot { box-shadow: 0 0 0 3px rgba(216, 240, 106, .14); }
+
+/* ── Tools row ────────────────────────────────────────────── */
+
+.folio-fold__tools {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.6vw, 20px);
+  margin: 0 0 clamp(20px, 2.6vw, 32px);
+  padding: 0;
+  list-style: none;
+}
+
+.folio-fold__tool {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: clamp(8px, 1vw, 14px);
+  padding: clamp(14px, 1.6vw, 22px) clamp(12px, 1.4vw, 18px) clamp(18px, 2vw, 24px);
+  background:
+    linear-gradient(180deg, rgba(20, 28, 42, .55), rgba(14, 20, 32, .78));
+  border: 1px solid var(--line);
+  text-align: center;
+  color: var(--paper);
+  transition: transform .55s var(--ease-spring), border-color .45s var(--ease), background .45s var(--ease);
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.folio-fold.is-revealed .folio-fold__tool {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(.12s + var(--tool-i, 0) * 90ms);
+}
+
+.folio-fold__tool.is-now {
+  border-color: currentColor;
+  background:
+    linear-gradient(180deg, rgba(216, 240, 106, .04), rgba(216, 240, 106, 0)),
+    linear-gradient(180deg, rgba(20, 28, 42, .55), rgba(14, 20, 32, .78));
+}
+
+.app--voice-quiet .folio-fold__tool.is-now {
+  background:
+    linear-gradient(180deg, rgba(155, 188, 255, .06), rgba(155, 188, 255, 0)),
+    linear-gradient(180deg, rgba(20, 28, 42, .55), rgba(14, 20, 32, .78));
+}
+
+.app--voice-human .folio-fold__tool.is-now {
+  background:
+    linear-gradient(180deg, rgba(255, 118, 95, .06), rgba(255, 118, 95, 0)),
+    linear-gradient(180deg, rgba(20, 28, 42, .55), rgba(14, 20, 32, .78));
+}
+
+.app--voice-bold .folio-fold__tool.is-now {
+  background:
+    linear-gradient(180deg, rgba(216, 240, 106, .08), rgba(216, 240, 106, 0)),
+    linear-gradient(180deg, rgba(20, 28, 42, .55), rgba(14, 20, 32, .78));
+}
+
+.folio-fold__tool-frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.folio-fold__tool-corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 1px solid currentColor;
+  opacity: .55;
+}
+
+.folio-fold__tool-corner--tl { top: 6px; left: 6px; border-right: 0; border-bottom: 0; }
+.folio-fold__tool-corner--tr { top: 6px; right: 6px; border-left: 0; border-bottom: 0; }
+.folio-fold__tool-corner--bl { bottom: 6px; left: 6px; border-right: 0; border-top: 0; }
+.folio-fold__tool-corner--br { bottom: 6px; right: 6px; border-left: 0; border-top: 0; }
+
+.folio-fold__tool-rule {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line) 20%, var(--line) 80%, transparent);
+  pointer-events: none;
+}
+
+.folio-fold__tool-rule--top { top: 22px; }
+.folio-fold__tool-rule--bottom { bottom: 22px; }
+
+.folio-fold__tool-mark {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  margin: 0 auto;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: currentColor;
+  opacity: .75;
+}
+
+.folio-fold__tool-glyph {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  height: clamp(56px, 6.4vw, 80px);
+  color: currentColor;
+}
+
+.folio-fold__tool-svg {
+  width: clamp(48px, 5vw, 64px);
+  height: clamp(48px, 5vw, 64px);
+  display: block;
+}
+
+.folio-fold__tool-counter-num {
+  font-weight: 700;
+  letter-spacing: .04em;
+  fill: currentColor;
+}
+
+.folio-fold__tool-sort { transition: opacity .35s var(--ease); }
+
+.folio-fold__tool-name {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+}
+
+.folio-fold__tool-name-line {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.4vw, 18px);
+  letter-spacing: -.014em;
+  color: var(--paper);
+  line-height: 1.1;
+}
+
+.folio-fold__tool-name-note {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.folio-fold__tool-ticks {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.folio-fold__tick {
+  width: 14px;
+  height: 4px;
+  background: rgba(146, 186, 255, .14);
+  border-radius: 1px;
+  transition: background .35s var(--ease), transform .45s var(--ease-spring);
+}
+
+.folio-fold__tick.is-on { background: currentColor; }
+
+.folio-fold__tick.is-now {
+  background: currentColor;
+  transform: scaleY(1.6);
+  box-shadow: 0 0 0 2px rgba(216, 240, 106, .12);
+}
+
+.app--voice-quiet .folio-fold__tick.is-now { box-shadow: 0 0 0 2px rgba(155, 188, 255, .18); }
+.app--voice-human .folio-fold__tick.is-now { box-shadow: 0 0 0 2px rgba(255, 118, 95, .18); }
+.app--voice-bold .folio-fold__tick.is-now { box-shadow: 0 0 0 2px rgba(216, 240, 106, .18); }
+
+/* ── Status / arm ─────────────────────────────────────────── */
+
+.folio-fold__status {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(240px, 1.05fr) minmax(0, 2fr);
+  align-items: stretch;
+  gap: clamp(14px, 1.8vw, 22px);
+  padding: clamp(14px, 1.6vw, 20px) clamp(16px, 2vw, 26px);
+  margin: 0 0 clamp(20px, 2.6vw, 32px);
+  background: rgba(20, 28, 42, .55);
+  border: 1px solid var(--line);
+  z-index: 1;
+}
+
+.folio-fold__status-tail {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-content: center;
+  gap: clamp(10px, 1.2vw, 14px);
+  min-width: 0;
+}
+
+.folio-fold__arm {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 16px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: opacity .35s var(--ease);
+}
+
+.folio-fold__arm:hover .folio-fold__arm-ring-fill,
+.folio-fold__arm:focus-visible .folio-fold__arm-ring-fill {
+  opacity: .8;
+}
+
+.folio-fold__arm-ring {
+  position: relative;
+  width: clamp(34px, 3.2vw, 42px);
+  height: clamp(34px, 3.2vw, 42px);
+  display: inline-grid;
+  place-items: center;
+}
+
+.folio-fold__arm-ring-track {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  border-top-color: currentColor;
+  opacity: .6;
+}
+
+.folio-fold__arm-ring-fill {
+  position: absolute;
+  inset: 4px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: .25;
+  transform: scale(.4);
+  transition: transform .55s var(--ease-spring), opacity .35s var(--ease);
+}
+
+.folio-fold__arm.is-armed .folio-fold__arm-ring-fill {
+  transform: scale(1);
+  opacity: .85;
+}
+
+.folio-fold__arm.is-armed .folio-fold__arm-ring-track {
+  border-color: currentColor;
+  opacity: 1;
+}
+
+.folio-fold__arm.is-armed .folio-fold__arm-ring {
+  animation: folioFoldPulse 1.8s var(--ease) infinite;
+}
+
+@keyframes folioFoldPulse {
+  0%, 100% { filter: drop-shadow(0 0 0 currentColor); }
+  50% { filter: drop-shadow(0 0 4px currentColor); }
+}
+
+.folio-fold__arm-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.folio-fold__arm-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+
+.folio-fold__arm-eyebrow-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .55;
+}
+
+.folio-fold__arm-state {
+  display: grid;
+  gap: 2px;
+  font-family: var(--serif);
+}
+
+.folio-fold__arm-state em {
+  font-style: italic;
+  font-size: clamp(15px, 1.4vw, 19px);
+  letter-spacing: -.014em;
+  color: var(--paper);
+  transition: color .35s var(--ease);
+}
+
+.folio-fold__arm.is-armed .folio-fold__arm-state em { color: currentColor; }
+
+.folio-fold__arm-face {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: -.01em;
+}
+
+.folio-fold__arm-stamp {
+  display: inline-grid;
+  place-items: center;
+  padding: 6px 10px;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+  color: currentColor;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  opacity: .85;
+  transform: rotate(-1.6deg);
+  transform-origin: center;
+  animation: folioFoldStamp .6s var(--ease-spring);
+}
+
+@keyframes folioFoldStamp {
+  0% { opacity: 0; transform: rotate(-7deg) scale(1.18); }
+  60% { opacity: .95; transform: rotate(-1deg) scale(.96); }
+  100% { opacity: .85; transform: rotate(-1.6deg) scale(1); }
+}
+
+.folio-fold__status-rule {
+  display: grid;
+  align-items: center;
+  min-width: 0;
+}
+
+.folio-fold__status-rule svg {
+  width: 100%;
+  height: 8px;
+  display: block;
+}
+
+.folio-fold__status-rule-stroke {
+  opacity: .55;
+}
+
+.folio-fold__ledger {
+  display: grid;
+  grid-template-columns: repeat(3, auto) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(14px, 1.6vw, 22px);
+}
+
+.folio-fold__ledger-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, .8vw, 10px);
+}
+
+.folio-fold__ledger-key {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.folio-fold__ledger-value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--paper);
+}
+
+.folio-fold__ledger-value em {
+  font-style: italic;
+  font-size: clamp(15px, 1.4vw, 19px);
+  letter-spacing: -.014em;
+  color: currentColor;
+}
+
+.folio-fold__ledger-suffix {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.folio-fold__ledger-cell--date .folio-fold__ledger-value {
+  grid-column: 4;
+}
+
+.folio-fold__ledger-date {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.1vw, 15px);
+  color: var(--paper);
+  letter-spacing: -.01em;
+}
+
+.folio-fold__status-kbd {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: center;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.folio-fold__status-kbd kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, .35);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .05em;
+  color: var(--paper);
+  border-radius: 2px;
+}
+
+.folio-fold__status-kbd-tag {
+  display: inline-block;
+  margin-left: 4px;
+  color: var(--paper);
+}
+
+/* ── Hinge (fold) ─────────────────────────────────────────── */
+
+.folio-fold__hinge {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  width: 100%;
+  margin: 0;
+  padding: clamp(12px, 1.6vw, 18px) clamp(12px, 1.4vw, 18px);
+  background: transparent;
+  border: 1px dashed var(--line);
+  color: currentColor;
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+  transition: background .35s var(--ease), border-color .35s var(--ease), color .35s var(--ease);
+}
+
+.folio-fold__hinge:hover,
+.folio-fold__hinge:focus-visible {
+  background: rgba(20, 28, 42, .45);
+  border-style: solid;
+  border-color: currentColor;
+  color: currentColor;
+}
+
+.folio-fold__hinge-rule svg {
+  display: block;
+  width: 100%;
+  height: 6px;
+}
+
+.folio-fold__hinge-fold {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(60px, 6vw, 84px);
+  height: clamp(28px, 3.2vw, 38px);
+  color: currentColor;
+}
+
+.folio-fold__hinge-fold svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.folio-fold__hinge-fold-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1s var(--ease-out);
+}
+
+.folio-fold.is-revealed .folio-fold__hinge-fold-stroke {
+  stroke-dashoffset: 0;
+}
+
+.folio-fold__hinge-fold-bead {
+  animation: folioFoldBeadPulse 2.4s var(--ease) infinite;
+}
+
+@keyframes folioFoldBeadPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+}
+
+.folio-fold__hinge-fold-ring {
+  opacity: .5;
+  animation: folioFoldRingPulse 2.4s var(--ease) infinite;
+}
+
+@keyframes folioFoldRingPulse {
+  0%, 100% { transform: scale(1); opacity: .55; }
+  50% { transform: scale(1.4); opacity: .2; }
+}
+
+.folio-fold__hinge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: currentColor;
+}
+
+.folio-fold__hinge-tag em {
+  font-style: italic;
+  letter-spacing: .14em;
+  text-transform: none;
+  font-family: var(--serif);
+  font-size: clamp(13px, 1.2vw, 15px);
+}
+
+.folio-fold__hinge-tag-mark {
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.folio-fold__hinge-foot {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  justify-content: center;
+}
+
+.folio-fold__hinge-foot-rule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line) 20%, var(--line) 80%, transparent);
+}
+
+.folio-fold__hinge-foot-rule--alt { transform: scaleX(-1); }
+
+.folio-fold__hinge-foot-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.folio-fold__hinge-foot-tag em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .95vw, 13px);
+  letter-spacing: -.01em;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.folio-fold__hinge-foot-letter {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 10px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: currentColor;
+  opacity: .85;
+}
+
+.folio-fold__hinge-wax {
+  position: absolute;
+  top: -8px;
+  right: 22%;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.folio-fold.is-revealed .folio-fold__hinge-wax {
+  animation: folioFoldWaxDrop 1.4s var(--ease) .55s forwards;
+}
+
+@keyframes folioFoldWaxDrop {
+  0% { opacity: 0; transform: translateY(-8px); }
+  35% { opacity: 1; transform: translateY(0); }
+  60% { transform: translateY(2px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.folio-fold__hinge-wax-drop {
+  display: block;
+  width: 22px;
+  height: 28px;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, .45), transparent 38%),
+    radial-gradient(circle at 50% 70%, rgba(179, 74, 58, .95), rgba(120, 36, 30, 1));
+  border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .35);
+}
+
+.folio-fold__hinge-wax-bead {
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 4px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(179, 74, 58, 1);
+  transform: translateX(-50%);
+  opacity: .7;
+}
+
+/* ── Face print footer ────────────────────────────────────── */
+
+.folio-fold__faceprint {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  margin-top: clamp(14px, 1.8vw, 22px);
+  padding: 10px clamp(12px, 1.6vw, 18px);
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.folio-fold__faceprint-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  justify-content: center;
+}
+
+.folio-fold__faceprint-cell em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .98vw, 14px);
+  letter-spacing: -.01em;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.folio-fold__faceprint-key {
+  color: var(--muted);
+}
+
+.folio-fold__faceprint-rule {
+  width: 1px;
+  height: 14px;
+  background: var(--line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-fold__tool,
+  .folio-fold__arm-stamp,
+  .folio-fold__hinge-wax,
+  .folio-fold__hinge-fold-bead,
+  .folio-fold__hinge-fold-ring {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .folio-fold__hinge-fold-stroke { stroke-dashoffset: 0 !important; }
+  .folio-fold__tool { transform: none !important; opacity: 1 !important; }
+  .folio-fold__arm-ring-fill { transform: scale(1) !important; }
+}
+
+@media (max-width: 1180px) {
+  .folio-fold__status {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(10px, 1.4vw, 16px);
+  }
+
+  .folio-fold__ledger {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 8px;
+  }
+
+  .folio-fold__status-rule { display: none; }
+
+  .folio-fold__status-kbd { justify-self: start; }
+}
+
+@media (max-width: 880px) {
+  .folio-fold__tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .folio-fold__faceprint {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .folio-fold__faceprint-rule { display: none; }
+}
+
+@media (max-width: 540px) {
+  .folio-fold {
+    padding: clamp(28px, 4vw, 44px) clamp(14px, 3vw, 22px) clamp(32px, 5vw, 48px);
+  }
+
+  .folio-fold__tools {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .folio-fold__title-line {
+    font-size: clamp(24px, 7vw, 36px);
+  }
+
+  .folio-fold__ledger {
+    grid-template-columns: 1fr;
+  }
+
+  .folio-fold__plate-tag {
+    font-size: 8px;
+    letter-spacing: .18em;
+  }
+}

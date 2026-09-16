@@ -26,7 +26,7 @@ import { WayfinderSeal } from './WayfinderSeal'
 import { TitleRule } from './TitleRule'
 import { PressSignatureMark } from './PressSignatureMark'
 import { NotesSection } from './NotesSection'
-import { PageFold } from './PageFold'
+import { FolioFold } from './FolioFold'
 import { PressSpine } from './PressSpine'
 import { TitlePage } from './TitlePage'
 
@@ -971,7 +971,7 @@ export function App() {
           </div>
         </section>
 
-        <PageFold voice={voice} setToday={setToday} />
+        <FolioFold voice={voice} word={activeWord} setToday={setToday} marks={marks} />
 
         <div className="hero-trace hero-trace--log" aria-hidden="false">
           <PressLog voice={voice} word={activeWord} marks={marks} setToday={setToday} />
