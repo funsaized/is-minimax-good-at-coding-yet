@@ -56425,3 +56425,297 @@ a small act of typesetting.
     display: none;
   }
 }
+
+/* ──────────────────────────────────────────────────────────────────
+   BROADSIDE RULE · a single, hand-drawn printer's device that closes
+   the title page. Two hand-drawn rules draw inward from either side,
+   meeting at a small press flower in the middle. Below the rule a
+   single italic caption reads "and so the title page, set · turn the
+   leaf", and a small footer carries the press identity. The device
+   earns its place as the title page's maker's mark.
+   ────────────────────────────────────────────────────────────────── */
+
+.broadside-rule {
+  --broadside-rule-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(14px, 2vw, 28px);
+  row-gap: clamp(10px, 1.4vw, 16px);
+  padding: clamp(18px, 2.4vw, 32px) clamp(8px, 1.6vw, 22px) clamp(6px, 1vw, 14px);
+  margin: clamp(20px, 3vw, 38px) auto 0;
+  max-width: 88ch;
+  color: var(--broadside-rule-tone);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 1s var(--ease-out) .05s, transform 1s var(--ease-out) .05s;
+}
+
+.broadside-rule.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.broadside-rule--quiet { --broadside-rule-tone: var(--blue); }
+.broadside-rule--human { --broadside-rule-tone: var(--coral); }
+.broadside-rule--bold { --broadside-rule-tone: var(--acid); }
+
+.broadside-rule__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.broadside-rule__line {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(10px, 1.2vw, 14px);
+  color: var(--broadside-rule-tone);
+}
+
+.broadside-rule__line svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.broadside-rule__line-stroke {
+  color: var(--broadside-rule-tone);
+  stroke-dashoffset: 100;
+  animation: broadsideRuleDraw 1.6s var(--ease-out) .15s forwards;
+}
+
+.broadside-rule__line-stroke--lead {
+  transform-origin: left center;
+}
+
+.broadside-rule__line-stroke--trail {
+  transform-origin: right center;
+  animation-delay: .25s;
+}
+
+@keyframes broadsideRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.broadside-rule__line-bead {
+  opacity: 0;
+  animation: broadsideRuleBead .6s var(--ease-spring) 1.55s forwards;
+}
+
+.broadside-rule__line-bead--end {
+  animation-delay: 1.7s;
+}
+
+@keyframes broadsideRuleBead {
+  to { opacity: 1; }
+}
+
+.broadside-rule__device {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 7vw, 96px);
+  height: clamp(64px, 7vw, 96px);
+  color: var(--broadside-rule-tone);
+}
+
+.broadside-rule__device svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.broadside-rule__device-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: broadsideDeviceSpin 36s linear infinite;
+  opacity: 0;
+  animation: broadsideDeviceSpin 36s linear 1.6s infinite, broadsideHaloIn .8s var(--ease) 1.6s forwards;
+}
+
+@keyframes broadsideDeviceSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes broadsideHaloIn {
+  to { opacity: .5; }
+}
+
+.broadside-rule__device-spark {
+  opacity: 0;
+  animation: broadsideSparkIn .5s var(--ease) forwards;
+}
+
+.broadside-rule__device-spark--a { animation-delay: 1.4s; }
+.broadside-rule__device-spark--b { animation-delay: 1.55s; }
+.broadside-rule__device-spark--c { animation-delay: 1.7s; }
+.broadside-rule__device-spark--d { animation-delay: 1.85s; }
+
+@keyframes broadsideSparkIn {
+  to { opacity: 1; }
+}
+
+.broadside-rule__device-mono {
+  fill: var(--paper);
+  opacity: .9;
+}
+
+.broadside-rule__caption {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(6px, .8vw, 12px);
+  margin: 0;
+  padding: 0;
+  color: var(--paper);
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(14.5px, 1.32vw, 18.5px);
+  line-height: 1.4;
+  letter-spacing: -.005em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.broadside-rule__caption-mark {
+  display: inline-grid;
+  place-items: center;
+  color: var(--broadside-rule-tone);
+  font-family: var(--mono);
+  font-size: clamp(12px, 1.1vw, 14px);
+  font-style: normal;
+  letter-spacing: 0;
+  opacity: .7;
+}
+
+.broadside-rule__caption-line {
+  color: var(--paper);
+}
+
+.broadside-rule__caption-sep {
+  color: color-mix(in srgb, var(--broadside-rule-tone) 65%, var(--paper));
+  font-style: normal;
+  opacity: .75;
+}
+
+.broadside-rule__caption-turn {
+  color: color-mix(in srgb, var(--broadside-rule-tone) 78%, var(--paper));
+  letter-spacing: .01em;
+}
+
+.broadside-rule__footer {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(6px, .8vw, 12px);
+  margin: clamp(2px, .4vw, 6px) 0 0;
+  padding: clamp(8px, 1vw, 12px) clamp(10px, 1.4vw, 18px);
+  border-top: 1px solid color-mix(in srgb, var(--broadside-rule-tone) 24%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--broadside-rule-tone) 24%, transparent);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: clamp(9.5px, .9vw, 11px);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.broadside-rule__footer-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(4px, .5vw, 8px);
+}
+
+.broadside-rule__footer-key {
+  color: color-mix(in srgb, var(--paper) 58%, transparent);
+}
+
+.broadside-rule__footer-value {
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(11px, 1.05vw, 12.5px);
+  letter-spacing: .04em;
+  text-transform: lowercase;
+  color: var(--broadside-rule-tone);
+}
+
+.broadside-rule__footer-bead {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(10px, 1vw, 12px);
+  height: clamp(10px, 1vw, 12px);
+  color: var(--broadside-rule-tone);
+  opacity: .85;
+}
+
+.broadside-rule__footer-bead svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .broadside-rule,
+  .broadside-rule__line-stroke,
+  .broadside-rule__line-bead,
+  .broadside-rule__device-halo,
+  .broadside-rule__device-spark,
+  .broadside-rule__device-mono {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .broadside-rule__device-halo { opacity: .5 !important; }
+  .broadside-rule__device-spark { opacity: 1 !important; }
+  .broadside-rule__device-spark--b,
+  .broadside-rule__device-spark--d { opacity: .55 !important; }
+}
+
+@media (max-width: 720px) {
+  .broadside-rule {
+    padding: clamp(14px, 2.6vw, 22px) 4px clamp(4px, .8vw, 10px);
+    column-gap: clamp(10px, 2.4vw, 18px);
+  }
+  .broadside-rule__device {
+    width: clamp(54px, 9vw, 78px);
+    height: clamp(54px, 9vw, 78px);
+  }
+  .broadside-rule__caption {
+    font-size: 14px;
+    letter-spacing: -.002em;
+  }
+  .broadside-rule__footer {
+    font-size: 9.5px;
+    letter-spacing: .14em;
+    padding: clamp(6px, 1.2vw, 10px) clamp(8px, 1.6vw, 14px);
+  }
+}
+
+@media (max-width: 480px) {
+  .broadside-rule {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(10px, 2.4vw, 16px);
+    text-align: center;
+  }
+  .broadside-rule__line {
+    height: clamp(8px, 1.6vw, 12px);
+  }
+  .broadside-rule__device {
+    margin: 0 auto;
+  }
+  .broadside-rule__footer-bead {
+    display: none;
+  }
+}

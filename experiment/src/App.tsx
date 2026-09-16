@@ -41,6 +41,7 @@ import { ReadingPrologue } from './ReadingPrologue'
 import { PressHandwheel } from './PressHandwheel'
 import { LetterpressCatch } from './LetterpressCatch'
 import { Opening } from './Opening'
+import { BroadsideRule } from './BroadsideRule'
 import { FolioImprint } from './FolioImprint'
 import { ReadingPause } from './ReadingPause'
 import { PageReturn } from './PageReturn'
@@ -729,6 +730,8 @@ export function App() {
               setToday={setToday}
               stamping={leverStamping}
             />
+
+            <BroadsideRule voice={voice} setToday={setToday} />
           </section>
         </Opening>
 
