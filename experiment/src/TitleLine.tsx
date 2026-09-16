@@ -1,4 +1,4 @@
-import { useId, useRef, useState, type CSSProperties, type KeyboardEvent, type MutableRefObject } from 'react'
+import { useId, type CSSProperties, type KeyboardEvent, type MutableRefObject } from 'react'
 import type { VoiceId } from './Press'
 import type { WordId } from './notes'
 
@@ -19,13 +19,12 @@ type Display = {
   fontStyle: 'normal' | 'italic'
   tracking: string
   uppercased: boolean
-  scale: number
 }
 
 const DISPLAY: Record<VoiceId, Display> = {
-  quiet: { fontFamily: "'Iowan Old Style', Georgia, serif", fontWeight: 400, fontStyle: 'italic', tracking: '-0.018em', uppercased: false, scale: 1 },
-  human: { fontFamily: "'Iowan Old Style', Georgia, serif", fontWeight: 500, fontStyle: 'italic', tracking: '-0.014em', uppercased: false, scale: 1.06 },
-  bold: { fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', fontWeight: 800, fontStyle: 'normal', tracking: '-0.045em', uppercased: true, scale: 1.1 },
+  quiet: { fontFamily: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif", fontWeight: 400, fontStyle: 'italic', tracking: '-0.022em', uppercased: false },
+  human: { fontFamily: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif", fontWeight: 500, fontStyle: 'italic', tracking: '-0.018em', uppercased: false },
+  bold: { fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: 800, fontStyle: 'normal', tracking: '-0.05em', uppercased: true },
 }
 
 const VOICE_TONE: Record<VoiceId, string> = {
@@ -37,24 +36,28 @@ const VOICE_TONE: Record<VoiceId, string> = {
 const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 const VOICE_DESCRIPTOR: Record<VoiceId, string> = {
-  quiet: 'serif · close set',
-  human: 'serif · a little warm',
+  quiet: 'serif · italic · close set',
+  human: 'serif · italic · a little warm',
   bold: 'sans · heavy · no apology',
 }
 
-const WORD_LABEL: Record<WordId, string> = { m3: 'Minimax M3', good: 'good at', yet: 'yet' }
-const TOKEN_TEXT: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet?' }
+const WORD_LABEL: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet' }
+const TOKEN_TEXT: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet' }
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
 const WORD_KIND: Record<WordId, string> = { m3: 'let it stand', good: 'make room', yet: 'protect the pause' }
+const WORD_KIND_SHORT: Record<WordId, string> = { m3: 'let stand', good: 'make room', yet: 'protect pause' }
 
 const ORDER: VoiceId[] = ['quiet', 'human', 'bold']
+const WORDS: WordId[] = ['m3', 'good', 'yet']
 
-function ProofMark({ id, tone }: { id: WordId; tone: string }) {
+function ProofGlyph({ id, active, tone }: { id: WordId; active: boolean; tone: string }) {
   const baseId = useId().replace(/:/g, '')
   const grainId = `titleline-proof-grain-${id}-${baseId}`
+  const activeClass = active ? 'is-active' : 'is-quiet'
+
   if (id === 'm3') {
     return (
-      <svg className="titleline__proof-svg" viewBox="0 0 220 36" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <svg className={`titleline__proof-svg titleline__proof-svg--stet ${activeClass}`} viewBox="0 0 80 24" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
         <defs>
           <filter id={grainId} x="-6%" y="-12%" width="112%" height="124%">
             <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="29" stitchTiles="stitch" />
@@ -63,19 +66,18 @@ function ProofMark({ id, tone }: { id: WordId; tone: string }) {
           </filter>
         </defs>
         <g filter={`url(#${grainId})`} style={{ color: tone } as CSSProperties}>
-          <path d="M14 16 L86 16" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" pathLength="100" className="titleline__proof-stet" />
-          <circle cx="14" cy="16" r="1.6" fill="currentColor" className="titleline__proof-bead titleline__proof-bead--lead" />
-          <circle cx="86" cy="16" r="1.6" fill="currentColor" className="titleline__proof-bead titleline__proof-bead--trail" />
-          <path d="M92 9 L98 16 L92 23 L86 16 Z" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" opacity=".85" className="titleline__proof-arrow" />
-          <text x="124" y="20" textAnchor="start" fontFamily="'Iowan Old Style', Georgia, serif" fontStyle="italic" fontSize="13" fill="currentColor">stet</text>
-          <text x="124" y="30" textAnchor="start" fontFamily="ui-monospace, monospace" fontSize="6" letterSpacing="2.2" fill="currentColor" opacity=".55">LET IT STAND</text>
+          <path d="M6 12 L62 12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" pathLength="100" className="titleline__proof-stet-stroke" />
+          <circle cx="6" cy="12" r="1.6" fill="currentColor" className="titleline__proof-bead titleline__proof-bead--lead" />
+          <circle cx="62" cy="12" r="1.6" fill="currentColor" className="titleline__proof-bead titleline__proof-bead--trail" />
+          <path d="M66 7 L72 12 L66 17 L60 12 Z" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" opacity=".85" className="titleline__proof-arrow" />
         </g>
       </svg>
     )
   }
+
   if (id === 'good') {
     return (
-      <svg className="titleline__proof-svg" viewBox="0 0 220 36" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <svg className={`titleline__proof-svg titleline__proof-svg--caret ${activeClass}`} viewBox="0 0 80 24" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
         <defs>
           <filter id={grainId} x="-6%" y="-12%" width="112%" height="124%">
             <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="31" stitchTiles="stitch" />
@@ -84,17 +86,16 @@ function ProofMark({ id, tone }: { id: WordId; tone: string }) {
           </filter>
         </defs>
         <g filter={`url(#${grainId})`} style={{ color: tone } as CSSProperties}>
-          <path d="M14 30 C 30 30, 50 14, 110 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" pathLength="100" className="titleline__proof-caret-curve" />
-          <path d="M104 8 L116 14 L108 22" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" className="titleline__proof-caret-point" />
-          <circle cx="116" cy="14" r="1.6" fill="currentColor" className="titleline__proof-bead titleline__proof-bead--lead" />
-          <text x="138" y="20" textAnchor="start" fontFamily="'Iowan Old Style', Georgia, serif" fontStyle="italic" fontSize="13" fill="currentColor">caret</text>
-          <text x="138" y="30" textAnchor="start" fontFamily="ui-monospace, monospace" fontSize="6" letterSpacing="2.2" fill="currentColor" opacity=".55">MAKE ROOM</text>
+          <path d="M6 22 C 22 22, 36 8, 56 8" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" pathLength="100" className="titleline__proof-caret-curve" />
+          <path d="M50 2 L62 8 L54 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" className="titleline__proof-caret-point" />
+          <circle cx="62" cy="8" r="1.6" fill="currentColor" className="titleline__proof-bead titleline__proof-bead--lead" />
         </g>
       </svg>
     )
   }
+
   return (
-    <svg className="titleline__proof-svg" viewBox="0 0 220 36" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <svg className={`titleline__proof-svg titleline__proof-svg--query ${activeClass}`} viewBox="0 0 80 24" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
       <defs>
         <filter id={grainId} x="-6%" y="-12%" width="112%" height="124%">
           <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="37" stitchTiles="stitch" />
@@ -103,11 +104,9 @@ function ProofMark({ id, tone }: { id: WordId; tone: string }) {
         </filter>
       </defs>
       <g filter={`url(#${grainId})`} style={{ color: tone } as CSSProperties}>
-        <circle cx="40" cy="18" r="14" fill="none" stroke="currentColor" strokeWidth="1.2" className="titleline__proof-query-ring" />
-        <path d="M36 12 C 36 7, 44 7, 44 12 C 44 16, 40 16, 40 21" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" pathLength="100" className="titleline__proof-query-hook" />
-        <circle cx="40" cy="25.5" r="1.4" fill="currentColor" className="titleline__proof-query-dot" />
-        <text x="68" y="20" textAnchor="start" fontFamily="'Iowan Old Style', Georgia, serif" fontStyle="italic" fontSize="13" fill="currentColor">query</text>
-        <text x="68" y="30" textAnchor="start" fontFamily="ui-monospace, monospace" fontSize="6" letterSpacing="2.2" fill="currentColor" opacity=".55">PROTECT THE PAUSE</text>
+        <circle cx="20" cy="11" r="8" fill="none" stroke="currentColor" strokeWidth="1.2" className="titleline__proof-query-ring" />
+        <path d="M18 8 C 18 4, 23 4, 23 8 C 23 11, 20 11, 20 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" pathLength="100" className="titleline__proof-query-hook" />
+        <circle cx="20" cy="17.5" r="1.4" fill="currentColor" className="titleline__proof-query-dot" />
       </g>
     </svg>
   )
@@ -191,24 +190,19 @@ export function TitleLine({
   const style = {
     '--titleline-tone': tone,
     '--titleline-grain': `url(#${grainId})`,
-    '--titleline-scale': String(display.scale),
   } as CSSProperties
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [strikeKey, setStrikeKey] = useState(0)
-
   const voiceIndex = ORDER.indexOf(voice)
 
-  const handleWordKey = (event: KeyboardEvent<HTMLButtonElement | HTMLDivElement>, id: WordId) => {
-    const ids: WordId[] = ['m3', 'good', 'yet']
-    const idx = ids.indexOf(id)
+  const handleWordKey = (event: KeyboardEvent<HTMLElement>, id: WordId) => {
+    const idx = WORDS.indexOf(id)
     if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
       event.preventDefault()
-      const next = ids[(idx + 1) % ids.length]
+      const next = WORDS[(idx + 1) % WORDS.length]
       onWord(next)
       window.requestAnimationFrame(() => tokenRefs.current[next]?.focus())
     } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
       event.preventDefault()
-      const next = ids[(idx - 1 + ids.length) % ids.length]
+      const next = WORDS[(idx - 1 + WORDS.length) % WORDS.length]
       onWord(next)
       window.requestAnimationFrame(() => tokenRefs.current[next]?.focus())
     } else if (event.key === 'Home') {
@@ -229,10 +223,9 @@ export function TitleLine({
 
   return (
     <figure
-      ref={containerRef}
       className={`titleline titleline--${voice} titleline--word-${word}`}
       style={style}
-      aria-label={`The headline: ${WORD_LABEL.m3} ${WORD_LABEL.good} frontend ${WORD_LABEL.yet}?, set in the ${VOICE_NAME[voice]} voice, marked at ${WORD_LABEL[word]} (${WORD_MARK[word]}).`}
+      aria-label={`The headline: is M3 good at frontend yet?, set in the ${VOICE_NAME[voice]} voice, marked at ${WORD_LABEL[word]} (${WORD_MARK[word]}).`}
     >
       <svg className="titleline__defs" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
         <defs>
@@ -244,8 +237,26 @@ export function TitleLine({
         </defs>
       </svg>
 
-      <div
-        className="titleline__stage"
+      <header className="titleline__running" aria-hidden="true">
+        <span className="titleline__running-cell">
+          <span className="titleline__running-mark" />
+          <em>the headline</em>
+        </span>
+        <span className="titleline__running-rule" />
+        <span className="titleline__running-cell titleline__running-cell--voice">
+          <span className={`titleline__running-voice-letter titleline__running-voice-letter--${voice}`}>{VOICE_LETTER[voice]}</span>
+          <span className="titleline__running-voice-name">{VOICE_NAME[voice]}</span>
+        </span>
+        <span className="titleline__running-rule" />
+        <span className="titleline__running-cell">
+          <em className="titleline__running-set">set today</em>
+          <span className="titleline__running-set-sep" aria-hidden="true">·</span>
+          <span className="titleline__running-set-value">{setToday}</span>
+        </span>
+      </header>
+
+      <h2
+        className={`titleline__headline titleline__headline--${voice}`}
         onClick={(event) => {
           if (event.target === event.currentTarget) {
             const next = ORDER[(voiceIndex + 1) % ORDER.length]
@@ -255,125 +266,115 @@ export function TitleLine({
         role="group"
         aria-label={`The headline set in ${VOICE_NAME[voice]}, ${display.fontStyle === 'italic' ? 'italic' : 'upright'} ${display.fontFamily.split(',')[0].replace(/['"]/g, '').trim()}`}
       >
-        <div className="titleline__strike" key={`titleline-strike-${voice}-${strikeKey}`} aria-hidden="true" />
-
-        <div className="titleline__eyebrow" aria-hidden="true">
-          <span className="titleline__eyebrow-mark" />
-          <span className="titleline__eyebrow-rule titleline__eyebrow-rule--lead" />
-          <span className="titleline__eyebrow-cell">
-            <em>the headline</em>
-          </span>
-          <span className="titleline__eyebrow-rule" />
-          <span className="titleline__eyebrow-voice">
-            <span className={`titleline__eyebrow-voice-letter titleline__eyebrow-voice-letter--${voice}`}>{VOICE_LETTER[voice]}</span>
-            <span className="titleline__eyebrow-voice-stack">
-              <em className="titleline__eyebrow-voice-name">{VOICE_NAME[voice]}</em>
-              <span className="titleline__eyebrow-voice-face">{VOICE_DESCRIPTOR[voice]}</span>
-            </span>
-          </span>
-          <span className="titleline__eyebrow-rule titleline__eyebrow-rule--alt" />
-          <span className="titleline__eyebrow-mark titleline__eyebrow-mark--alt" />
-        </div>
-
-        <h2 className={`titleline__headline titleline__headline--${voice}`}>
-          <span className="titleline__headline-fragment titleline__headline-fragment--lead">is</span>
+        <span className="titleline__line titleline__line--a">
+          <span className="titleline__line-lead">is</span>
           <HeadlineWord
             id="m3"
             text={TOKEN_TEXT.m3}
             marked={word === 'm3'}
             hover={hover === 'm3'}
             display={display}
-            onSelect={(id) => {
-              onWord(id)
-              setStrikeKey((k) => k + 1)
-            }}
+            onSelect={(id) => onWord(id)}
             onHover={onHover}
             onLeave={() => onHover(null)}
             tokenRef={(node) => {
               tokenRefs.current.m3 = node
             }}
           />
-          <span className="titleline__headline-sep" aria-hidden="true" />
+        </span>
+        <span className="titleline__line titleline__line--b">
           <HeadlineWord
             id="good"
             text={TOKEN_TEXT.good}
             marked={word === 'good'}
             hover={hover === 'good'}
             display={display}
-            onSelect={(id) => {
-              onWord(id)
-              setStrikeKey((k) => k + 1)
-            }}
+            onSelect={(id) => onWord(id)}
             onHover={onHover}
             onLeave={() => onHover(null)}
             tokenRef={(node) => {
               tokenRefs.current.good = node
             }}
           />
-          <span className="titleline__headline-fragment titleline__headline-fragment--mid">frontend</span>
-          <span className="titleline__headline-sep titleline__headline-sep--alt" aria-hidden="true" />
+          <span className="titleline__line-mid">frontend</span>
+        </span>
+        <span className="titleline__line titleline__line--c">
           <HeadlineWord
             id="yet"
             text={TOKEN_TEXT.yet}
             marked={word === 'yet'}
             hover={hover === 'yet'}
             display={display}
-            onSelect={(id) => {
-              onWord(id)
-              setStrikeKey((k) => k + 1)
-            }}
+            onSelect={(id) => onWord(id)}
             onHover={onHover}
             onLeave={() => onHover(null)}
             tokenRef={(node) => {
               tokenRefs.current.yet = node
             }}
           />
-          <span className="titleline__headline-query" aria-hidden="true">
-            <span className="titleline__headline-query-mark">?</span>
+          <span className="titleline__query" aria-hidden="true">
+            <span className="titleline__query-mark">?</span>
+            <span className="titleline__query-tail">
+              <svg viewBox="0 0 80 12" preserveAspectRatio="none" aria-hidden="true">
+                <path
+                  className="titleline__query-tail-stroke"
+                  d="M2 6c12-5 26 4 40-1s22-4 34 0"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth=".9"
+                  strokeLinecap="round"
+                  pathLength="100"
+                />
+              </svg>
+            </span>
           </span>
-        </h2>
-
-        <span className="titleline__trail" aria-hidden="true">
-          <span className="titleline__trail-rule titleline__trail-rule--lead" />
-          <span className="titleline__trail-bead titleline__trail-bead--lead" />
-          <span className="titleline__trail-tag">
-            <em>set today</em>
-            <span className="titleline__trail-sep" aria-hidden="true">·</span>
-            <span>{setToday}</span>
-          </span>
-          <span className="titleline__trail-bead" />
-          <span className="titleline__trail-rule" />
         </span>
+      </h2>
 
-        <div className="titleline__proof" aria-hidden="true">
-          <span className="titleline__proof-tag">
-            <span className="titleline__proof-tag-dot" />
-            marked at <em>{WORD_LABEL[word]}</em>
-            <span className="titleline__proof-tag-sep">·</span>
-            <span className="titleline__proof-tag-mark">{WORD_MARK[word]}</span>
-            <span className="titleline__proof-tag-dot titleline__proof-tag-dot--alt" />
-          </span>
-          <ProofMark id={word} tone={tone} />
-        </div>
-      </div>
-
-      <span className="titleline__rule" aria-hidden="true">
-        <svg viewBox="0 0 1000 6" preserveAspectRatio="none">
-          <g filter={`url(#${grainId})`}>
-            <path
-              d="M2 3c40-2 80 2 120 0s80-2 120 0 80 2 120 0 80-2 120 0 80 2 120 0 80-2 120 0 80 2 120 0 80-2 120 0 80 2 120 0 36-1 38-1"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth=".9"
-              strokeLinecap="round"
-              pathLength="100"
-              className="titleline__rule-stroke"
-            />
-          </g>
-          <circle cx="2" cy="3" r="1.4" fill="currentColor" className="titleline__rule-bead titleline__rule-bead--lead" />
-          <circle cx="998" cy="3" r="1.4" fill="currentColor" className="titleline__rule-bead titleline__rule-bead--trail" />
-        </svg>
-      </span>
+      <ol className="titleline__proofs" aria-label="Three proof marks beneath the question">
+        {WORDS.map((id) => {
+          const isActive = id === word
+          return (
+            <li
+              key={`titleline-proof-${id}`}
+              className={`titleline__proof titleline__proof--${id} ${isActive ? 'is-active' : ''} ${hover === id ? 'is-hover' : ''}`}
+              onClick={() => onWord(id)}
+              onMouseEnter={() => onHover(id)}
+              onMouseLeave={() => onHover(null)}
+              onFocus={() => onHover(id)}
+              onBlur={() => onHover(null)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  onWord(id)
+                } else {
+                  handleWordKey(event, id)
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-pressed={isActive}
+              aria-label={`Mark the word ${WORD_LABEL[id]} · proof mark ${WORD_MARK[id]} · ${WORD_KIND[id]}.`}
+            >
+              <span className="titleline__proof-key" aria-hidden="true">
+                <span className="titleline__proof-key-letter">{WORDS.indexOf(id) + 1}</span>
+                <span className="titleline__proof-key-mark">{WORD_MARK[id]}</span>
+              </span>
+              <span className="titleline__proof-glyph" aria-hidden="true">
+                <ProofGlyph id={id} active={isActive} tone={tone} />
+              </span>
+              <span className="titleline__proof-meta">
+                <span className="titleline__proof-word">{display.uppercased ? WORD_LABEL[id].toUpperCase() : WORD_LABEL[id]}</span>
+                <span className="titleline__proof-kind">{WORD_KIND_SHORT[id]}</span>
+              </span>
+              <span className="titleline__proof-active" aria-hidden="true">
+                <span className="titleline__proof-active-dot" />
+                {isActive ? 'now' : 'set'}
+              </span>
+            </li>
+          )
+        })}
+      </ol>
 
       <div className="titleline__voices" role="group" aria-label="Cycle the voice of the headline">
         <span className="titleline__voices-tag" aria-hidden="true">
@@ -430,8 +431,29 @@ export function TitleLine({
         </div>
       </div>
 
+      <footer className="titleline__footer" aria-hidden="true">
+        <span className="titleline__footer-cell">
+          <span className="titleline__footer-key">folio</span>
+          <span className="titleline__footer-value">i</span>
+        </span>
+        <span className="titleline__footer-sep" aria-hidden="true">
+          <span className="titleline__footer-sep-bead" />
+        </span>
+        <span className="titleline__footer-cell">
+          <span className="titleline__footer-key">marked at</span>
+          <span className="titleline__footer-value">{display.uppercased ? WORD_LABEL[word].toUpperCase() : WORD_LABEL[word]}</span>
+        </span>
+        <span className="titleline__footer-sep" aria-hidden="true">
+          <span className="titleline__footer-sep-bead" />
+        </span>
+        <span className="titleline__footer-cell">
+          <span className="titleline__footer-key">set today</span>
+          <span className="titleline__footer-value">{setToday}</span>
+        </span>
+      </footer>
+
       <span className="sr-only">
-        Use Tab to move between marked words and the three voice tabs. Use the arrow keys to cycle the voice. Use shift + v to pull a rehearsal.
+        Use Tab to move between the three marked words. Use the arrow keys to step between the proof marks, or shift + v to pull a rehearsal across all three voices.
       </span>
       <span className="sr-only" aria-live="polite">
         {`Marked at ${WORD_LABEL[word]}, ${WORD_MARK[word]}. Set in ${VOICE_NAME[voice]}.`}
