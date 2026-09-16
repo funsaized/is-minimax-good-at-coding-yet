@@ -23,9 +23,9 @@ type Display = {
 }
 
 const DISPLAY: Record<VoiceId, Display> = {
-  quiet: { fontFamily: "'Iowan Old Style', Georgia, serif", fontWeight: 400, fontStyle: 'italic', tracking: '-0.014em', uppercased: false, scale: 1 },
-  human: { fontFamily: "'Iowan Old Style', Georgia, serif", fontWeight: 500, fontStyle: 'italic', tracking: '-0.012em', uppercased: false, scale: 1.06 },
-  bold: { fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', fontWeight: 800, fontStyle: 'normal', tracking: '-0.04em', uppercased: true, scale: 1.1 },
+  quiet: { fontFamily: "'Iowan Old Style', Georgia, serif", fontWeight: 400, fontStyle: 'italic', tracking: '-0.018em', uppercased: false, scale: 1 },
+  human: { fontFamily: "'Iowan Old Style', Georgia, serif", fontWeight: 500, fontStyle: 'italic', tracking: '-0.014em', uppercased: false, scale: 1.06 },
+  bold: { fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif', fontWeight: 800, fontStyle: 'normal', tracking: '-0.045em', uppercased: true, scale: 1.1 },
 }
 
 const VOICE_TONE: Record<VoiceId, string> = {
@@ -43,7 +43,7 @@ const VOICE_DESCRIPTOR: Record<VoiceId, string> = {
 }
 
 const WORD_LABEL: Record<WordId, string> = { m3: 'Minimax M3', good: 'good at', yet: 'yet' }
-const TOKEN_TEXT: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet' }
+const TOKEN_TEXT: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet?' }
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
 const WORD_KIND: Record<WordId, string> = { m3: 'let it stand', good: 'make room', yet: 'protect the pause' }
 
@@ -257,6 +257,24 @@ export function TitleLine({
       >
         <div className="titleline__strike" key={`titleline-strike-${voice}-${strikeKey}`} aria-hidden="true" />
 
+        <div className="titleline__eyebrow" aria-hidden="true">
+          <span className="titleline__eyebrow-mark" />
+          <span className="titleline__eyebrow-rule titleline__eyebrow-rule--lead" />
+          <span className="titleline__eyebrow-cell">
+            <em>the headline</em>
+          </span>
+          <span className="titleline__eyebrow-rule" />
+          <span className="titleline__eyebrow-voice">
+            <span className={`titleline__eyebrow-voice-letter titleline__eyebrow-voice-letter--${voice}`}>{VOICE_LETTER[voice]}</span>
+            <span className="titleline__eyebrow-voice-stack">
+              <em className="titleline__eyebrow-voice-name">{VOICE_NAME[voice]}</em>
+              <span className="titleline__eyebrow-voice-face">{VOICE_DESCRIPTOR[voice]}</span>
+            </span>
+          </span>
+          <span className="titleline__eyebrow-rule titleline__eyebrow-rule--alt" />
+          <span className="titleline__eyebrow-mark titleline__eyebrow-mark--alt" />
+        </div>
+
         <h2 className={`titleline__headline titleline__headline--${voice}`}>
           <span className="titleline__headline-fragment titleline__headline-fragment--lead">is</span>
           <HeadlineWord
@@ -315,6 +333,18 @@ export function TitleLine({
           </span>
         </h2>
 
+        <span className="titleline__trail" aria-hidden="true">
+          <span className="titleline__trail-rule titleline__trail-rule--lead" />
+          <span className="titleline__trail-bead titleline__trail-bead--lead" />
+          <span className="titleline__trail-tag">
+            <em>set today</em>
+            <span className="titleline__trail-sep" aria-hidden="true">·</span>
+            <span>{setToday}</span>
+          </span>
+          <span className="titleline__trail-bead" />
+          <span className="titleline__trail-rule" />
+        </span>
+
         <div className="titleline__proof" aria-hidden="true">
           <span className="titleline__proof-tag">
             <span className="titleline__proof-tag-dot" />
@@ -331,7 +361,7 @@ export function TitleLine({
         <svg viewBox="0 0 1000 6" preserveAspectRatio="none">
           <g filter={`url(#${grainId})`}>
             <path
-              d="M2 3c40-2 80 2 120 0s80-2 120 0 80 2 120 0 80-2 120 0 80 2 120 0 80-2 120 0 80 2 120 0 36-1 38-1"
+              d="M2 3c40-2 80 2 120 0s80-2 120 0 80 2 120 0 80-2 120 0 80 2 120 0 80-2 120 0 80 2 120 0 80-2 120 0 80 2 120 0 36-1 38-1"
               fill="none"
               stroke="currentColor"
               strokeWidth=".9"
