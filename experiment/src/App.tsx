@@ -28,7 +28,7 @@ import { PressSignatureMark } from './PressSignatureMark'
 import { NotesSection } from './NotesSection'
 import { PageFold } from './PageFold'
 import { PressSpine } from './PressSpine'
-import { PressMasthead } from './PressMasthead'
+import { TitlePage } from './TitlePage'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -684,8 +684,8 @@ export function App() {
       <PressSpine activeId={activeSection} voice={voice} />
 
       <div className="page">
-        <section className="hero" id="question" aria-labelledby="page-title">
-          <PressMasthead voice={voice} setToday={setToday} />
+        <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
+          <TitlePage voice={voice} setToday={setToday} />
 
           <div className="hero__spread">
             <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
