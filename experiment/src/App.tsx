@@ -241,7 +241,38 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
                 <span className="answer-reveal__prelude-mark">¶</span>
                 <em>after two readings and three presses, the page exhales —</em>
               </p>
-              <h2 id="answer-title">Yes — when it stops trying to look impressive.</h2>
+              <div className="answer-reveal__answer">
+                <h2 id="answer-title">Yes — when it stops trying to look impressive.</h2>
+                <span className="answer-reveal__answer-exhale" aria-hidden="true">
+                  <svg className="answer-reveal__answer-exhale-svg" viewBox="0 0 320 36" preserveAspectRatio="xMaxYMid meet">
+                    <path
+                      className="answer-reveal__answer-exhale-stroke answer-reveal__answer-exhale-stroke--lead"
+                      d="M2 22c14-10 30 6 56-2s36-8 60-2 40 6 64-2 40-8 60-2 36 6 56-2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.1"
+                      strokeLinecap="round"
+                      pathLength="100"
+                    />
+                    <path
+                      className="answer-reveal__answer-exhale-stroke answer-reveal__answer-exhale-stroke--trail"
+                      d="M40 28c12-4 24 4 44-1s28-4 44 0 28 4 44-1 28-4 44-1 24 6 36-1 24-4 36-1 20 4 28-1"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth=".55"
+                      strokeLinecap="round"
+                      opacity=".55"
+                      pathLength="100"
+                    />
+                    <circle className="answer-reveal__answer-exhale-bead" cx="314" cy="20" r="2.2" fill="currentColor" />
+                    <circle className="answer-reveal__answer-exhale-halo" cx="314" cy="20" r="6" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".8 2" opacity=".7" />
+                  </svg>
+                  <span className="answer-reveal__answer-exhale-tag">
+                    <span className="answer-reveal__answer-exhale-tag-mark" />
+                    <em>the answer, set down</em>
+                  </span>
+                </span>
+              </div>
               <div className="answer-reveal__columns">
                 <p>
                   <span className="answer-reveal__dropcap" aria-hidden="true">

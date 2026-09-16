@@ -9922,6 +9922,197 @@ button {
   transform: translateY(0);
 }
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 311 · ANSWER HEADLINE EXHALE.
+   The title's question mark already exhales a hand-drawn
+   flourish into the right margin. The answer's period now does
+   the same: a single composed gesture — a confident lead line
+   over a softer trail — that grows in confidence when the leaf
+   is opened, and lands on a small bead with a slow halo. The
+   gesture completes the question → answer arc of the page.
+   ──────────────────────────────────────────────────────────── */
+
+.answer-reveal__answer {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: clamp(8px, 1vw, 18px);
+  max-width: 880px;
+  margin: 22px 0 28px;
+}
+
+.answer-reveal__answer h2 {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  max-width: 880px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(2.6rem, 5.4vw, 5.2rem);
+  font-weight: 400;
+  letter-spacing: -.054em;
+  line-height: .94;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .85s var(--ease-out) .45s, transform .95s var(--ease-spring) .45s;
+}
+
+.answer-reveal.is-open .answer-reveal__answer h2 {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.answer-reveal__answer-exhale {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  margin-left: clamp(4px, .8vw, 14px);
+  top: .04em;
+  flex: 1 1 auto;
+  min-width: clamp(120px, 26vw, 320px);
+  color: var(--coral);
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity .9s var(--ease) .55s, transform 1.1s var(--ease-spring) .55s, color .55s var(--ease);
+}
+
+.answer-reveal.is-open .answer-reveal__answer-exhale {
+  opacity: .9;
+  transform: translateY(0);
+}
+
+.app--voice-quiet .answer-reveal__answer-exhale,
+.app--voice-quiet .answer-reveal__answer-exhale-tag { color: var(--blue); }
+.app--voice-human .answer-reveal__answer-exhale,
+.app--voice-human .answer-reveal__answer-exhale-tag { color: var(--coral); }
+.app--voice-bold .answer-reveal__answer-exhale,
+.app--voice-bold .answer-reveal__answer-exhale-tag { color: var(--acid); }
+
+.answer-reveal__answer-exhale-svg {
+  display: block;
+  width: 100%;
+  height: clamp(22px, 2.6vw, 36px);
+  overflow: visible;
+}
+
+.answer-reveal__answer-exhale-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.1s var(--ease-out) .65s;
+}
+
+.answer-reveal.is-open .answer-reveal__answer-exhale-stroke--lead {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1.05s var(--ease-out) .6s;
+}
+
+.answer-reveal.is-open .answer-reveal__answer-exhale-stroke--trail {
+  stroke-dashoffset: 0;
+  opacity: .35;
+  transition: stroke-dashoffset 1.1s var(--ease-out) .75s, opacity .55s var(--ease);
+}
+
+.answer-reveal__answer-exhale-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.4);
+  transition: opacity .45s var(--ease) 1.45s, transform .55s var(--ease-spring) 1.45s;
+}
+
+.answer-reveal.is-open .answer-reveal__answer-exhale-bead {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.answer-reveal__answer-exhale-halo {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity .55s var(--ease) 1.55s;
+}
+
+.answer-reveal.is-open .answer-reveal__answer-exhale-halo {
+  opacity: .5;
+  animation: answerExhalePulse 4.4s var(--ease) infinite 1.95s;
+}
+
+.answer-reveal__answer-exhale-tag {
+  position: absolute;
+  bottom: -22px;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--coral);
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-size: clamp(9.5px, .78vw, 11px);
+  font-style: italic;
+  letter-spacing: .04em;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .55s var(--ease) 1.65s, transform .65s var(--ease-out) 1.65s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.answer-reveal.is-open .answer-reveal__answer-exhale-tag {
+  opacity: .72;
+  transform: translateY(0);
+}
+
+.answer-reveal__answer-exhale-tag-mark {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .7;
+}
+
+@keyframes answerExhalePulse {
+  0% { transform: scale(.85); opacity: .4; }
+  60% { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-reveal__answer-exhale,
+  .answer-reveal__answer-exhale-stroke,
+  .answer-reveal__answer-exhale-bead,
+  .answer-reveal__answer-exhale-halo,
+  .answer-reveal__answer-exhale-tag {
+    transition: none !important;
+    animation: none !important;
+    opacity: .7 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .answer-reveal__answer {
+    margin: 18px 0 24px;
+  }
+
+  .answer-reveal__answer-exhale {
+    min-width: clamp(110px, 38vw, 220px);
+    margin-left: 0;
+    margin-top: clamp(8px, 1.8vw, 14px);
+  }
+
+  .answer-reveal__answer-exhale-svg {
+    height: clamp(18px, 5vw, 26px);
+  }
+
+  .answer-reveal__answer-exhale-tag {
+    bottom: -18px;
+    font-size: 10px;
+  }
+}
+
 .answer-reveal__prelude {
   display: inline-flex;
   align-items: baseline;
