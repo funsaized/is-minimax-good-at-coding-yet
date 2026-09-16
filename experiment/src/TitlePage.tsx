@@ -1,9 +1,11 @@
 import { useId } from 'react'
 import type { CSSProperties } from 'react'
 import type { VoiceId } from './Press'
+import type { WordId } from './notes'
 
 type TitlePageProps = {
   voice: VoiceId
+  word: WordId
   setToday: string
 }
 
@@ -13,17 +15,21 @@ const VOICE_TONE: Record<VoiceId, string> = {
   bold: 'var(--acid)',
 }
 
-const VOICE_GLYPH: Record<VoiceId, string> = {
-  quiet: '·',
-  human: '✦',
-  bold: '■',
-}
-
-const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 const VOICE_NAME: Record<VoiceId, string> = {
   quiet: 'quiet cut',
   human: 'human hand',
   bold: 'bold signal',
+}
+
+const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
+
+const WORD_LABEL: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet' }
+const WORD_GLYPH: Record<WordId, string> = { m3: '⌇', good: '∧', yet: '?' }
+const WORD_KIND: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
+const WORD_KIND_NOTE: Record<WordId, string> = {
+  m3: 'let it stand',
+  good: 'make room',
+  yet: 'protect the pause',
 }
 
 function formatYearSuffix(): string {
@@ -38,14 +44,15 @@ function formatSeason(): string {
   return 'autumn'
 }
 
-export function TitlePage({ voice, setToday }: TitlePageProps) {
+export function TitlePage({ voice, word, setToday }: TitlePageProps) {
   const baseId = useId().replace(/:/g, '')
   const grainId = `title-page-grain-${baseId}`
-  const ruleId = `title-page-rule-${baseId}`
+  const waxGrainId = `title-page-wax-grain-${baseId}`
+  const paperGrainId = `title-page-paper-grain-${baseId}`
   const inkId = `title-page-ink-${baseId}`
+  const ruleId = `title-page-rule-${baseId}`
   const style = {
     '--title-page-tone': VOICE_TONE[voice],
-    '--title-page-glyph': `"${VOICE_GLYPH[voice]}"`,
   } as CSSProperties
   const yearSuffix = formatYearSuffix()
   const season = formatSeason()
@@ -53,12 +60,17 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
 
   return (
     <header
-      className={`title-page title-page--${voice}`}
+      className={`title-page title-page--${voice} title-page--word-${word}`}
       style={style}
-      aria-label={`Title page · m³ press, folio i, set today ${setToday}, in the ${voiceName} voice`}
+      aria-label={`Title page · m³ press, folio i, set today ${setToday}, in the ${voiceName} voice, marked at ${WORD_LABEL[word]}`}
     >
       <svg className="title-page__defs" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
         <defs>
+          <filter id={paperGrainId} x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.86" numOctaves="2" seed="37" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="0 0 0 0 .14  0 0 0 0 .12  0 0 0 0 .19  0 0 0 .075 0" />
+            <feComposite in2="SourceGraphic" operator="in" />
+          </filter>
           <filter id={grainId} x="-2%" y="-2%" width="104%" height="104%">
             <feTurbulence type="fractalNoise" baseFrequency="0.78" numOctaves="2" seed="37" stitchTiles="stitch" />
             <feColorMatrix type="matrix" values="0 0 0 0 .14  0 0 0 0 .12  0 0 0 0 .19  0 0 0 .075 0" />
@@ -76,6 +88,11 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
             <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .46 0" />
             <feComposite in2="SourceGraphic" operator="in" />
           </filter>
+          <filter id={waxGrainId} x="-12%" y="-12%" width="124%" height="124%">
+            <feTurbulence type="fractalNoise" baseFrequency="2.6" numOctaves="2" seed="59" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0" />
+            <feComposite in2="SourceGraphic" operator="in" />
+          </filter>
         </defs>
       </svg>
 
@@ -90,6 +107,41 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
         <span className="title-page__crop title-page__crop--tr" />
         <span className="title-page__crop title-page__crop--bl" />
         <span className="title-page__crop title-page__crop--br" />
+
+        <span className="title-page__paper" aria-hidden="true">
+          <svg viewBox="0 0 1000 600" preserveAspectRatio="none">
+            <rect x="0" y="0" width="1000" height="600" filter={`url(#${paperGrainId})`} opacity=".08" />
+          </svg>
+        </span>
+
+        <span key={`stamp-${voice}`} className="title-page__stamp" aria-hidden="true">
+          <span className="title-page__stamp-ring" />
+          <span className="title-page__stamp-ring title-page__stamp-ring--inner" />
+          <span className="title-page__stamp-mark">
+            <svg viewBox="0 0 96 96" className="title-page__stamp-svg">
+              <g filter={`url(#${waxGrainId})`} opacity=".95">
+                <circle cx="48" cy="48" r="44" fill="none" stroke="currentColor" strokeWidth="1.1" />
+                <circle cx="48" cy="48" r="36" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2.4" />
+                <text x="48" y="28" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="4.4" letterSpacing="2" fill="currentColor">PRESSED</text>
+                <text x="48" y="58" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="22" fill="currentColor">{VOICE_LETTER[voice]}</text>
+                <text x="48" y="74" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.6" letterSpacing="1.6" fill="currentColor">{voiceName.toUpperCase()}</text>
+                <path d="M48 4v8M48 84v8M4 48h8M84 48h8" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+                <circle cx="48" cy="6" r="1.2" fill="currentColor" />
+                <circle cx="48" cy="90" r="1.2" fill="currentColor" />
+                <circle cx="6" cy="48" r="1.2" fill="currentColor" />
+                <circle cx="90" cy="48" r="1.2" fill="currentColor" />
+              </g>
+            </svg>
+          </span>
+          <span className="title-page__stamp-drip" aria-hidden="true">
+            <span className="title-page__stamp-drip-bead" />
+            <span className="title-page__stamp-drip-wisp" />
+          </span>
+          <span className="title-page__stamp-caption" aria-hidden="true">
+            <span>pressed in</span>
+            <em>{voiceName}</em>
+          </span>
+        </span>
 
         <span className="title-page__topline">
           <span className="title-page__topline-row">
@@ -115,34 +167,6 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
           </span>
         </span>
 
-        <div className="title-page__monogram" aria-hidden="true">
-          <span className="title-page__monogram-fleur title-page__monogram-fleur--lead">❦</span>
-          <svg className="title-page__monogram-svg" viewBox="0 0 132 132">
-            <defs>
-              <filter id={`title-page-monogram-grain-${baseId}`} x="-12%" y="-12%" width="124%" height="124%">
-                <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="53" stitchTiles="stitch" />
-                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
-                <feComposite in2="SourceGraphic" operator="in" />
-              </filter>
-            </defs>
-            <g filter={`url(#title-page-monogram-grain-${baseId})`} opacity=".95">
-              <circle cx="66" cy="66" r="60" fill="none" stroke="currentColor" strokeWidth="1.4" />
-              <circle cx="66" cy="66" r="50" fill="none" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 2.4" opacity=".7" />
-              <circle cx="66" cy="66" r="42" fill="none" stroke="currentColor" strokeWidth=".35" opacity=".4" />
-              <text x="66" y="32" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2.4" fill="currentColor">PRESS · MONOGRAM</text>
-              <text x="66" y="78" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="34" fill="currentColor">m³</text>
-              <text x="66" y="98" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="4.4" letterSpacing="2" fill="currentColor">FOLIO · i</text>
-              <text x="66" y="112" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.8" letterSpacing="1.6" fill="currentColor" opacity=".7">TITLE · OPENED</text>
-              <path d="M6 66h6M120 66h6M66 6v6M66 120v6" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
-              <circle cx="66" cy="6" r="1.4" fill="currentColor" />
-              <circle cx="66" cy="120" r="1.4" fill="currentColor" />
-              <circle cx="6" cy="66" r="1.1" fill="currentColor" />
-              <circle cx="120" cy="66" r="1.1" fill="currentColor" />
-            </g>
-          </svg>
-          <span className="title-page__monogram-fleur title-page__monogram-fleur--trail">❦</span>
-        </div>
-
         <div className="title-page__display">
           <span className="title-page__display-row title-page__display-row--top">
             <span className="title-page__display-rule title-page__display-rule--lead" aria-hidden="true" />
@@ -153,21 +177,53 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
             </span>
             <span className="title-page__display-rule" aria-hidden="true" />
           </span>
-          <h2 className="title-page__display-title" aria-hidden="true">
-            <em className="title-page__display-title-em title-page__display-title-em--quiet">is Minimax</em>
-            <span className="title-page__display-title-sep" aria-hidden="true">
-              <span className="title-page__display-title-sep-rule" />
-              <span className="title-page__display-title-sep-bead" />
-              <span className="title-page__display-title-sep-rule title-page__display-title-sep-rule--alt" />
+
+          <div className={`title-page__title title-page__title--${voice}`}>
+            <span className="title-page__title-row title-page__title-row--lead">
+              <span className="title-page__title-italic">is</span>
+              <span className="title-page__title-spacer" />
+              <span className="title-page__title-italic">Minimax</span>
             </span>
-            <em className="title-page__display-title-em title-page__display-title-em--loud">M3</em>
-          </h2>
-          <span className="title-page__display-row title-page__display-row--bot">
-            <span className="title-page__display-sub">
-              <em>good at frontend</em>
-              <span aria-hidden="true">·</span>
-              <em>yet?</em>
+            <span className={`title-page__title-row title-page__title-row--mid ${word === 'm3' ? 'is-marked' : ''}`}>
+              <span className="title-page__title-keyword">M3</span>
+              <span className="title-page__title-mark" aria-hidden="true">
+                <span className="title-page__title-mark-rule" />
+                <span className="title-page__title-mark-glyph">{WORD_GLYPH.m3}</span>
+                <span className="title-page__title-mark-tag">{WORD_KIND.m3}</span>
+              </span>
             </span>
+            <span className="title-page__title-row title-page__title-row--mid-2">
+              <span className={`title-page__title-phrase ${word === 'good' ? 'is-marked' : ''}`}>
+                good at
+                <span className="title-page__title-mark" aria-hidden="true">
+                  <span className="title-page__title-mark-rule" />
+                  <span className="title-page__title-mark-glyph">{WORD_GLYPH.good}</span>
+                  <span className="title-page__title-mark-tag">{WORD_KIND.good}</span>
+                </span>
+              </span>
+              <span className="title-page__title-spacer" />
+              <span className="title-page__title-italic">frontend</span>
+            </span>
+            <span className={`title-page__title-row title-page__title-row--trail ${word === 'yet' ? 'is-marked' : ''}`}>
+              <span className="title-page__title-keyword title-page__title-keyword--yet">yet?</span>
+              <span className="title-page__title-mark" aria-hidden="true">
+                <span className="title-page__title-mark-rule" />
+                <span className="title-page__title-mark-glyph">{WORD_GLYPH.yet}</span>
+                <span className="title-page__title-mark-tag">{WORD_KIND.yet}</span>
+              </span>
+            </span>
+          </div>
+
+          <span className="title-page__display-annotation" aria-hidden="true">
+            <span className="title-page__display-annotation-line" />
+            <span className="title-page__display-annotation-tag">
+              <span className="title-page__display-annotation-dot" />
+              marked at <em>{WORD_LABEL[word]}</em>
+              <span className="title-page__display-annotation-glyph">{WORD_GLYPH[word]}</span>
+              <span className="title-page__display-annotation-note">— {WORD_KIND_NOTE[word]}</span>
+              <span className="title-page__display-annotation-dot" />
+            </span>
+            <span className="title-page__display-annotation-line" />
           </span>
         </div>
 
@@ -189,33 +245,6 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
             <circle className="title-page__flourish-bead title-page__flourish-bead--trail" cx="718" cy="14" r="1.6" fill="currentColor" />
           </svg>
         </span>
-
-        <div className="title-page__cells" aria-hidden="true">
-          <span className="title-page__cell title-page__cell--folio">
-            <span className="title-page__cell-key">folio</span>
-            <span className="title-page__cell-value"><em>i</em></span>
-          </span>
-          <span className="title-page__cell-rule" aria-hidden="true" />
-          <span className="title-page__cell title-page__cell--title">
-            <span className="title-page__cell-key">the title page</span>
-            <span className="title-page__cell-value"><em>set today</em></span>
-          </span>
-          <span className="title-page__cell-rule" aria-hidden="true" />
-          <span className="title-page__cell title-page__cell--voice">
-            <span className="title-page__cell-key">now in</span>
-            <span className="title-page__cell-value">
-              <span className={`title-page__cell-voice-letter title-page__cell-voice-letter--${voice}`}>
-                {VOICE_LETTER[voice]}
-              </span>
-              <em>{voiceName}</em>
-            </span>
-          </span>
-          <span className="title-page__cell-rule" aria-hidden="true" />
-          <span className="title-page__cell title-page__cell--date">
-            <span className="title-page__cell-key">set on</span>
-            <span className="title-page__cell-value"><em>{setToday}</em></span>
-          </span>
-        </div>
 
         <p className="title-page__dedication" aria-hidden="true">
           <span className="title-page__dedication-mark title-page__dedication-mark--lead">※</span>

@@ -630,7 +630,7 @@ export function App() {
           onArm={toggleAnswer}
         />
         <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
-          <TitlePage voice={voice} setToday={setToday} />
+          <TitlePage voice={voice} word={activeWord} setToday={setToday} />
 
           <div className="hero__spread">
             <PressStrikeFlash strikeTick={strikeTick} voice={voice} />

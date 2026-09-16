@@ -1,5 +1,14 @@
 # Changelog
 
-## 282 — Pressings Triptych centerpiece
+## 283 · a hand-set title with a wax stamp, a tighter typesetting case
 
-Replaced the scattered title cluster above the editor's note with a single, dominant three-pressings composition. The new `PressingsTriptych` sits inside the existing `hero__plate` and unifies voice selection, word marking, and the question itself into one moment: the active voice is expanded in the middle, the other two sit as compact ghost cards above and below. Click any pressing to set the voice; click any word inside the active pressing to mark it. Arrow keys cycle, Home/End jump. The previous `MarginalCaret`, `TitleRule`, `TitleSweep`, `MarginaliaStrip`, and inline `TitleToken` were removed from the hero. A visually-hidden `<h1>` still carries the document title for assistive tech.
+Replaced the busy title-page monogram + four-cell strip with a single,
+confident hand-set composition: the line is broken into four rows
+(*is Minimax* / **M3** / *good at frontend* / **yet?**), each marked word
+gets a pencil underline and a small editorial mark that brightens when
+active, and a wax stamp at the top-right corner shows the current voice
+re-stamping on every change. The triptych below became a compact
+typesetting case: three horizontal rows (head / line / set) instead of
+three large stacked sheets, with the inactive rows muted and lifted on
+hover. The per-line reveal, the stamp's spring re-press, and the
+pencil underline's scale-in all honor `prefers-reduced-motion`.

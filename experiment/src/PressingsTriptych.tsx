@@ -25,14 +25,7 @@ const VOICE_LABEL: Record<VoiceId, string> = {
   bold: 'bold signal',
 }
 
-const VOICE_FACE: Record<VoiceId, string> = {
-  quiet: 'serif · italic · close set',
-  human: 'serif · italic · a little warm',
-  bold: 'sans · heavy · no apology',
-}
-
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
-const VOICE_GLYPH: Record<VoiceId, string> = { quiet: '⌇', human: '✦', bold: '■' }
 const VOICE_TAGLINE: Record<VoiceId, string> = {
   quiet: 'gets out of the way',
   human: 'feels like a person',
@@ -48,9 +41,9 @@ type Display = {
 }
 
 const DISPLAY: Record<VoiceId, Display> = {
-  quiet: { fontFamily: 'var(--serif)', fontWeight: 400, fontStyle: 'italic', tracking: '-0.022em', uppercased: false },
-  human: { fontFamily: 'var(--serif)', fontWeight: 500, fontStyle: 'italic', tracking: '-0.018em', uppercased: false },
-  bold: { fontFamily: 'var(--sans)', fontWeight: 850, fontStyle: 'normal', tracking: '-0.06em', uppercased: true },
+  quiet: { fontFamily: 'var(--serif)', fontWeight: 400, fontStyle: 'italic', tracking: '-0.014em', uppercased: false },
+  human: { fontFamily: 'var(--serif)', fontWeight: 500, fontStyle: 'italic', tracking: '-0.012em', uppercased: false },
+  bold: { fontFamily: 'var(--sans)', fontWeight: 800, fontStyle: 'normal', tracking: '-0.05em', uppercased: true },
 }
 
 const TOKEN_TEXT: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet' }
@@ -94,6 +87,7 @@ function PressingToken({
       role="button"
       tabIndex={0}
       aria-pressed={selected}
+      aria-label={`Mark the word ${text} on the title`}
       onClick={(event) => {
         event.stopPropagation()
         onSelect(id)
@@ -126,44 +120,30 @@ function PressingToken({
   )
 }
 
-function PressingSheet({
+function PressingRow({
   pressingVoice,
   isActive,
   word,
   hover,
-  setToday,
-  grainId,
   onVoice,
   onWord,
   onHover,
   onLeave,
   tokenRefs,
-  paperTone,
 }: {
   pressingVoice: VoiceId
   isActive: boolean
   word: WordId
   hover: WordId | null
-  setToday: string
-  grainId: string
   onVoice: (voice: VoiceId) => void
   onWord: (word: WordId, focus?: boolean) => void
   onHover: (word: WordId | null) => void
   onLeave: () => void
   tokenRefs: MutableRefObject<Partial<Record<WordId, HTMLSpanElement | null>>>
-  paperTone: 'cool' | 'warm' | 'coolDeep'
 }) {
   const tone = VOICE_TONE[pressingVoice]
-  const matrix =
-    paperTone === 'warm'
-      ? '0 0 0 0 .14  0 0 0 0 .08  0 0 0 0 .04  0 0 0 .09 0'
-      : paperTone === 'coolDeep'
-      ? '0 0 0 0 .07  0 0 0 0 .09  0 0 0 0 .14  0 0 0 .12 0'
-      : '0 0 0 0 .09  0 0 0 0 .1  0 0 0 0 .16  0 0 0 .1 0'
-
   const style = {
     '--pressing-tone': tone,
-    '--pressing-glyph': `"${VOICE_GLYPH[pressingVoice]}"`,
   } as CSSProperties
 
   const handlePressingKey = (event: KeyboardEvent<HTMLButtonElement>) => {
@@ -205,129 +185,82 @@ function PressingSheet({
       role="tab"
       aria-selected={isActive}
       tabIndex={isActive ? 0 : -1}
-      className={`pressings-sheet pressings-sheet--${pressingVoice} ${isActive ? 'is-active' : ''}`}
+      className={`pressing-row pressing-row--${pressingVoice} ${isActive ? 'is-active' : ''}`}
       style={style}
       onClick={() => onVoice(pressingVoice)}
       onKeyDown={handlePressingKey}
       aria-label={`Pressing ${VOICE_LETTER[pressingVoice]} · ${VOICE_LABEL[pressingVoice]} · ${isActive ? 'currently set' : 'press to set this voice'}`}
     >
-      <span className="pressings-sheet__paper" aria-hidden="true">
-        <svg viewBox="0 0 600 360" preserveAspectRatio="none">
-          <defs>
-            <filter id={grainId} x="0%" y="0%" width="100%" height="100%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.92" numOctaves="2" seed={String(pressingVoice === 'quiet' ? 41 : pressingVoice === 'human' ? 67 : 23)} stitchTiles="stitch" />
-              <feColorMatrix type="matrix" values={matrix} />
-              <feComposite in2="SourceGraphic" operator="in" />
-            </filter>
-          </defs>
-          <rect x="0" y="0" width="600" height="360" filter={`url(#${grainId})`} />
-        </svg>
+      <span className="pressing-row__head" aria-hidden="true">
+        <span className="pressing-row__head-letter">{VOICE_LETTER[pressingVoice]}</span>
+        <span className="pressing-row__head-name">{VOICE_LABEL[pressingVoice]}</span>
+        <span className="pressing-row__head-rule" />
+        <span className="pressing-row__head-tag">{VOICE_TAGLINE[pressingVoice]}</span>
       </span>
 
-      <span className="pressings-sheet__crop pressings-sheet__crop--tl" aria-hidden="true" />
-      <span className="pressings-sheet__crop pressings-sheet__crop--tr" aria-hidden="true" />
-      <span className="pressings-sheet__crop pressings-sheet__crop--bl" aria-hidden="true" />
-      <span className="pressings-sheet__crop pressings-sheet__crop--br" aria-hidden="true" />
-
-      <span className="pressings-sheet__head" aria-hidden="true">
-        <span className="pressings-sheet__head-row">
-          <span className="pressings-sheet__head-letter" aria-hidden="true">{VOICE_LETTER[pressingVoice]}</span>
-          <span className="pressings-sheet__head-name">{VOICE_LABEL[pressingVoice]}</span>
-          <span className="pressings-sheet__head-face">{VOICE_FACE[pressingVoice]}</span>
-        </span>
-        <span className="pressings-sheet__head-rule" aria-hidden="true">
-          <svg viewBox="0 0 600 6" preserveAspectRatio="none">
-            <path d="M2 3c40-3 80 3 120 0s80-3 120 0 80 3 120 0 80-3 120 0 80 3 98 0" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".55" />
-            <circle cx="2" cy="3" r="1" fill="currentColor" />
-            <circle cx="598" cy="3" r="1" fill="currentColor" />
-          </svg>
-        </span>
-      </span>
-
-      <span className="pressings-sheet__body" aria-hidden={!isActive}>
-        <span className={`pressings-sheet__line pressings-sheet__line--lead ${pressingVoice === 'bold' ? 'is-upper' : ''}`}>
+      <span className="pressing-row__line" aria-hidden={!isActive}>
+        <span className={`pressing-row__phrase ${pressingVoice === 'bold' ? 'is-upper' : ''}`}>
           <em>is Minimax</em>
         </span>
-        <span className="pressings-sheet__line pressings-sheet__line--mid">
-          {isActive ? (
-            <>
-              <PressingToken
-                id="m3"
-                text={TOKEN_TEXT.m3}
-                selected={word === 'm3'}
-                hover={hover === 'm3'}
-                display={DISPLAY[pressingVoice]}
-                onSelect={(id) => onWord(id, true)}
-                onHover={onHover}
-                onLeave={onLeave}
-                tokenRef={(node) => {
-                  tokenRefs.current.m3 = node
-                }}
-              />
-              <PressingToken
-                id="good"
-                text={TOKEN_TEXT.good}
-                selected={word === 'good'}
-                hover={hover === 'good'}
-                display={DISPLAY[pressingVoice]}
-                onSelect={(id) => onWord(id, true)}
-                onHover={onHover}
-                onLeave={onLeave}
-                tokenRef={(node) => {
-                  tokenRefs.current.good = node
-                }}
-              />
-            </>
-          ) : (
-            <em>{DISPLAY[pressingVoice].uppercased ? 'M3 GOOD AT' : 'M3 good at'}</em>
-          )}
-        </span>
-        <span className={`pressings-sheet__line pressings-sheet__line--trail ${pressingVoice === 'bold' ? 'is-upper' : ''}`}>
-          {isActive ? (
-            <>
-              <em>frontend</em>
-              <PressingToken
-                id="yet"
-                text={TOKEN_TEXT.yet}
-                selected={word === 'yet'}
-                hover={hover === 'yet'}
-                display={DISPLAY[pressingVoice]}
-                onSelect={(id) => onWord(id, true)}
-                onHover={onHover}
-                onLeave={onLeave}
-                tokenRef={(node) => {
-                  tokenRefs.current.yet = node
-                }}
-              />
-              <span className="pressings-sheet__question" aria-hidden="true">?</span>
-            </>
-          ) : (
-            <>
-              <em>frontend</em>
-              <em>{DISPLAY[pressingVoice].uppercased ? 'YET?' : 'yet?'}</em>
-            </>
-          )}
-        </span>
+        {isActive ? (
+          <>
+            <PressingToken
+              id="m3"
+              text={TOKEN_TEXT.m3}
+              selected={word === 'm3'}
+              hover={hover === 'm3'}
+              display={DISPLAY[pressingVoice]}
+              onSelect={(id) => onWord(id, true)}
+              onHover={onHover}
+              onLeave={onLeave}
+              tokenRef={(node) => {
+                tokenRefs.current.m3 = node
+              }}
+            />
+            <PressingToken
+              id="good"
+              text={TOKEN_TEXT.good}
+              selected={word === 'good'}
+              hover={hover === 'good'}
+              display={DISPLAY[pressingVoice]}
+              onSelect={(id) => onWord(id, true)}
+              onHover={onHover}
+              onLeave={onLeave}
+              tokenRef={(node) => {
+                tokenRefs.current.good = node
+              }}
+            />
+            <em className={`pressing-row__phrase ${pressingVoice === 'bold' ? 'is-upper' : ''}`}>frontend</em>
+            <PressingToken
+              id="yet"
+              text={TOKEN_TEXT.yet}
+              selected={word === 'yet'}
+              hover={hover === 'yet'}
+              display={DISPLAY[pressingVoice]}
+              onSelect={(id) => onWord(id, true)}
+              onHover={onHover}
+              onLeave={onLeave}
+              tokenRef={(node) => {
+                tokenRefs.current.yet = node
+              }}
+            />
+            <span className={`pressing-row__question ${pressingVoice === 'bold' ? 'is-upper' : ''}`} aria-hidden="true">?</span>
+          </>
+        ) : (
+          <span className={`pressing-row__phrase pressing-row__phrase--ghost ${pressingVoice === 'bold' ? 'is-upper' : ''}`}>
+            {pressingVoice === 'bold' ? 'M3 GOOD AT FRONTEND YET?' : 'M3 good at frontend yet?'}
+          </span>
+        )}
       </span>
 
-      <span className="pressings-sheet__foot" aria-hidden="true">
-        <span className="pressings-sheet__foot-row">
-          <span className="pressings-sheet__foot-key">pressing</span>
-          <span className="pressings-sheet__foot-value">{VOICE_LETTER[pressingVoice]} <span aria-hidden="true">·</span> {VOICE_LABEL[pressingVoice]}</span>
-        </span>
-        <span className="pressings-sheet__foot-row">
-          <span className="pressings-sheet__foot-key">motto</span>
-          <span className="pressings-sheet__foot-value pressings-sheet__foot-motto">{VOICE_TAGLINE[pressingVoice]}</span>
-        </span>
-        <span className="pressings-sheet__foot-row">
-          <span className="pressings-sheet__foot-key">set on</span>
-          <span className="pressings-sheet__foot-value">{setToday}</span>
-        </span>
-        {isActive && (
-          <span className="pressings-sheet__now" aria-hidden="true">
-            <span className="pressings-sheet__now-dot" />
-            currently set
-          </span>
+      <span className="pressing-row__now" aria-hidden="true">
+        {isActive ? (
+          <>
+            <span className="pressing-row__now-dot" />
+            <span>set</span>
+          </>
+        ) : (
+          <span className="pressing-row__now-tag">press to set</span>
         )}
       </span>
     </button>
@@ -352,12 +285,6 @@ export function PressingsTriptych({
     '--pressings-rule-grain': `url(#${ruleGrainId})`,
   } as CSSProperties
 
-  const paperTones: Record<VoiceId, 'cool' | 'warm' | 'coolDeep'> = {
-    quiet: 'cool',
-    human: 'warm',
-    bold: 'coolDeep',
-  }
-
   const voices: VoiceId[] = ['quiet', 'human', 'bold']
 
   return (
@@ -381,31 +308,21 @@ export function PressingsTriptych({
 
       <span className="pressings-triptych__caption" aria-hidden="true">
         <span className="pressings-triptych__caption-mark" />
-        the pressings · folio i· · three voices, one question
+        folio i· · a typesetting case
         <span className="pressings-triptych__caption-mark pressings-triptych__caption-mark--alt" />
       </span>
 
       <figcaption className="pressings-triptych__headline">
         <h2 id={headlineId} className="pressings-triptych__headline-text">
-          three pressings <i>one question</i>
+          the line, <i>in three settings.</i>
         </h2>
         <p className="pressings-triptych__headline-lede">
-          The line below is set three ways. Pull any pressing to set the title. Click any word in the active pressing to mark it.
+          The same question, set three ways. Press any row to set the voice above. Mark a word on the active row to read it back. <em>Set on {setToday}</em>.
         </p>
       </figcaption>
 
-      <div className="pressings-triptych__bed" role="tablist" aria-label="Three pressings of the question, one per voice">
-        <span className="pressings-triptych__bed-plate" aria-hidden="true">
-          <span className="pressings-triptych__bed-plate-rule" />
-          <span className="pressings-triptych__bed-plate-tag">
-            <span className="pressings-triptych__bed-plate-dot" />
-            the press bed · folio i·
-            <span className="pressings-triptych__bed-plate-dot" />
-          </span>
-          <span className="pressings-triptych__bed-plate-rule" />
-        </span>
-
-        <span className="pressings-triptych__bed-rule pressings-triptych__bed-rule--top" aria-hidden="true">
+      <div className="pressings-triptych__case" role="tablist" aria-label="Three pressings of the question, one per voice">
+        <span className="pressings-triptych__case-rule pressings-triptych__case-rule--top" aria-hidden="true">
           <svg viewBox="0 0 1200 6" preserveAspectRatio="none">
             <g filter={`url(#${ruleGrainId})`}>
               <path d="M2 3 L1198 3" stroke={`url(#${ruleGradientId})`} strokeWidth=".7" fill="none" strokeLinecap="round" pathLength="100" />
@@ -413,27 +330,24 @@ export function PressingsTriptych({
           </svg>
         </span>
 
-        <span className="pressings-triptych__stack">
+        <span className="pressings-triptych__rows">
           {voices.map((v) => (
-            <PressingSheet
+            <PressingRow
               key={`pressing-${v}`}
               pressingVoice={v}
               isActive={v === voice}
               word={word}
               hover={hover}
-              setToday={setToday}
-              grainId={`pressings-grain-${baseId}-${v}`}
               onVoice={onVoice}
               onWord={onWord}
               onHover={onHover}
               onLeave={() => onHover(null)}
               tokenRefs={tokenRefs}
-              paperTone={paperTones[v]}
             />
           ))}
         </span>
 
-        <span className="pressings-triptych__bed-rule pressings-triptych__bed-rule--bot" aria-hidden="true">
+        <span className="pressings-triptych__case-rule pressings-triptych__case-rule--bot" aria-hidden="true">
           <svg viewBox="0 0 1200 6" preserveAspectRatio="none">
             <g filter={`url(#${ruleGrainId})`}>
               <path d="M2 3 L1198 3" stroke={`url(#${ruleGradientId})`} strokeWidth=".7" fill="none" strokeLinecap="round" pathLength="100" />
@@ -441,10 +355,10 @@ export function PressingsTriptych({
           </svg>
         </span>
 
-        <span className="pressings-triptych__bed-foot" aria-hidden="true">
-          <span className="pressings-triptych__bed-foot-mark" />
-          press any sheet · the title answers with whichever is set · arrow keys cycle, home/end jump
-          <span className="pressings-triptych__bed-foot-mark pressings-triptych__bed-foot-mark--alt" />
+        <span className="pressings-triptych__case-foot" aria-hidden="true">
+          <span className="pressings-triptych__case-foot-mark" />
+          press any row · the title answers with whichever is set · arrow keys cycle, home/end jump
+          <span className="pressings-triptych__case-foot-mark pressings-triptych__case-foot-mark--alt" />
         </span>
       </div>
     </figure>
