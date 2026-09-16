@@ -39878,13 +39878,14 @@ a small act of typesetting.
 
 /* ────────────────────────────────────────────────────────────
    TITLE PAGE · iteration 285 refines the opening composition
-   into a single deliberate plate. The plate carries a small
-   running head, an "an open question" eyebrow, the question
-   itself set in three lines (one per clause), a thin annotation
-   pointing at the marked word, a hand-drawn flourish, a single
-   dedication, and a small voice-and-date footer. The aim is
-   fewer competing voices on first paint, more room for the
-   question, and a quieter, more authored opening.
+   into a single deliberate plate. Iteration 287 adds a small
+   hand-drawn typesetter's mark (fleuron) between the title
+   composition and the flourish, and tightens the gap between
+   the four title rows so they read as one typeset piece. The
+   plate still carries a running head, the question set in four
+   rows, a thin annotation pointing at the marked word, the
+   fleuron, a hand-drawn flourish, a single dedication, and a
+   small voice-and-date footer.
    ──────────────────────────────────────────────────────────── */
 
 .title-page {
@@ -40212,7 +40213,7 @@ a small act of typesetting.
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(6px, .9vw, 14px);
+  gap: clamp(2px, .35vw, 7px);
   margin: 0;
   color: var(--paper);
   font-family: var(--serif);
@@ -40525,6 +40526,140 @@ a small act of typesetting.
   }
 }
 
+/* iteration 287: a hand-drawn typesetter's mark between the title
+   composition and the flourish. Two thin rules flank a small
+   diamond, drawn in just after the four title rows settle so it
+   feels like the typesetter pressed it once the line was set. */
+
+.title-page__fleuron {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: clamp(6px, .7vw, 10px);
+  width: 100%;
+  max-width: 380px;
+  margin: 0;
+  color: var(--title-page-tone, var(--coral));
+  opacity: 0;
+  transform: translateY(4px);
+  animation: titlePageFleuronIn .8s var(--ease-out) 1.05s forwards;
+}
+
+@keyframes titlePageFleuronIn {
+  0% { opacity: 0; transform: translateY(4px) scale(.96); }
+  60% { opacity: 1; }
+  100% { opacity: .85; transform: translateY(0) scale(1); }
+}
+
+.title-page__fleuron-svg {
+  display: block;
+  width: clamp(64px, 7vw, 96px);
+  height: clamp(12px, 1.3vw, 16px);
+  overflow: visible;
+  color: inherit;
+  transition: color .5s var(--ease);
+}
+
+.title-page__fleuron-rule {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: titlePageFleuronRuleDraw .8s var(--ease-out) 1.15s forwards;
+}
+
+.title-page__fleuron-rule--trail { animation-delay: 1.25s; }
+
+@keyframes titlePageFleuronRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.title-page__fleuron-diamond {
+  transform-origin: 48px 8px;
+  transform: scale(.4) rotate(-12deg);
+  opacity: 0;
+  animation: titlePageFleuronDiamondIn .55s var(--ease-spring) 1.2s forwards;
+}
+
+@keyframes titlePageFleuronDiamondIn {
+  0% { transform: scale(.4) rotate(-12deg); opacity: 0; }
+  60% { transform: scale(1.08) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.title-page__fleuron-spine {
+  transform-origin: 48px 8px;
+  transform: scaleY(0);
+  opacity: 0;
+  animation: titlePageFleuronSpineIn .35s var(--ease-out) 1.6s forwards;
+}
+
+@keyframes titlePageFleuronSpineIn {
+  0% { transform: scaleY(0); opacity: 0; }
+  100% { transform: scaleY(1); opacity: .75; }
+}
+
+.title-page__fleuron-bead {
+  opacity: 0;
+  transform-origin: center;
+  animation: titlePageFleuronBeadIn .35s var(--ease-spring) 1.4s forwards;
+}
+
+.title-page__fleuron-bead--trail { animation-delay: 1.45s; }
+
+@keyframes titlePageFleuronBeadIn {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.4); opacity: 1; }
+  100% { transform: scale(1); opacity: .9; }
+}
+
+.title-page__fleuron-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--mist);
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .65vw, 8.5px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: titlePageFleuronTagIn .5s var(--ease-out) 1.65s forwards;
+}
+
+.title-page__fleuron-tag em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, .88vw, 12px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.title-page__fleuron-tag-sep {
+  color: var(--ink-mist);
+  opacity: .55;
+}
+
+@keyframes titlePageFleuronTagIn {
+  to { opacity: .85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-page__fleuron,
+  .title-page__fleuron-rule,
+  .title-page__fleuron-diamond,
+  .title-page__fleuron-spine,
+  .title-page__fleuron-bead,
+  .title-page__fleuron-tag {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .title-page__fleuron { opacity: .85 !important; }
+  .title-page__fleuron-spine { opacity: .75 !important; }
+  .title-page__fleuron-bead { opacity: .9 !important; }
+  .title-page__fleuron-tag { opacity: .85 !important; }
+}
+
 /* iteration 285: removed .title-page__cells* (replaced by .title-page__voice) */
 
 .title-page__dedication {
@@ -40650,6 +40785,9 @@ a small act of typesetting.
   .title-page__display-annotation { grid-template-columns: minmax(0, 1fr); row-gap: 6px; }
   .title-page__display-annotation-line { display: none; }
   .title-page__colophon { font-size: 7.5px; }
+  .title-page__fleuron { gap: 4px; }
+  .title-page__fleuron-svg { width: clamp(56px, 14vw, 80px); }
+  .title-page__fleuron-tag { font-size: 7px; }
 }
 
 @media (max-width: 540px) {
@@ -40657,6 +40795,7 @@ a small act of typesetting.
   .title-page__display-annotation-tag em { font-size: 12px; }
   .title-page__display-annotation-note { display: none; }
   .title-page__display-annotation-glyph { font-size: 14px; }
+  .title-page__fleuron-tag em { font-size: 11px; }
 }
 
 /* The TitlePage hands off to the hero spread below it. Refine the

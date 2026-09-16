@@ -178,6 +178,54 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
           </span>
         </div>
 
+        <span className="title-page__fleuron" aria-hidden="true">
+          <svg viewBox="0 0 96 16" preserveAspectRatio="xMidYMid meet" className="title-page__fleuron-svg">
+            <g filter={`url(#${inkId})`}>
+              <path
+                className="title-page__fleuron-rule title-page__fleuron-rule--lead"
+                d="M2 8 L36 8"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".55"
+                strokeLinecap="round"
+                pathLength="100"
+              />
+              <path
+                className="title-page__fleuron-rule title-page__fleuron-rule--trail"
+                d="M60 8 L94 8"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".55"
+                strokeLinecap="round"
+                pathLength="100"
+              />
+              <circle className="title-page__fleuron-bead title-page__fleuron-bead--lead" cx="40" cy="8" r="1.2" fill="currentColor" />
+              <path
+                className="title-page__fleuron-diamond"
+                d="M48 1.5 L55 8 L48 14.5 L41 8 Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".7"
+                strokeLinejoin="round"
+              />
+              <path
+                className="title-page__fleuron-spine"
+                d="M48 4 L48 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".55"
+                strokeLinecap="round"
+              />
+              <circle className="title-page__fleuron-bead title-page__fleuron-bead--trail" cx="56" cy="8" r="1.2" fill="currentColor" />
+            </g>
+          </svg>
+          <span className="title-page__fleuron-tag" aria-hidden="true">
+            <em>typesetter's mark</em>
+            <span className="title-page__fleuron-tag-sep" aria-hidden="true">·</span>
+            <span>folio i</span>
+          </span>
+        </span>
+
         <span className="title-page__flourish" aria-hidden="true">
           <svg viewBox="0 0 720 12" preserveAspectRatio="none">
             <g filter={`url(#${inkId})`}>
