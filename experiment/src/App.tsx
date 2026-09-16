@@ -29,6 +29,8 @@ import { FolioThumbprint } from './FolioThumbprint'
 import { TitleLine } from './TitleLine'
 import { TitleFold } from './TitleFold'
 import { VoiceTrial } from './VoiceTrial'
+import { BroadsideReveal } from './BroadsideReveal'
+import { BroadsideEdge } from './BroadsideEdge'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -215,6 +217,7 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
               stroke="currentColor"
               strokeWidth="1.2"
               strokeLinecap="round"
+              pathLength="100"
             />
             <circle className="answer-reveal__ink-drip-bead" cx="20" cy="100" r="3" fill="currentColor" />
             <circle className="answer-reveal__ink-drip-splash" cx="12" cy="98" r="1.2" fill="currentColor" />
@@ -670,6 +673,8 @@ export function App() {
 
   return (
     <main className={`app app--voice-${voice} app--word-${activeWord}`}>
+      <BroadsideReveal voice={voice} />
+      <BroadsideEdge />
       <PaperGrain />
       <InkDust />
       <InkTrail />

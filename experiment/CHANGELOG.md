@@ -1,7 +1,9 @@
-Iteration 300 — Composed the broadside's press signature: one word set three ways on a single sheet.
+# Iteration 301
 
-- Added LetterpressCatch, a new composed press-signature section that sits between the pressings and the marginalia. The section shows one word (the rule, "attention") set across the three voices on a single broadside, with the active voice stepping forward, a refined press seal anchoring the composition, and a footer that states the rule the three voices share.
-- Wired the new section into the page navigation (SpreadRibbon trace, MarginThread folios, IntersectionObserver), the section spine, and the section ordering so the signature sits deliberately in the reading order between pressings and marginalia.
-- Tightened the section's typography hierarchy: a refined eyebrow + serif-italic lede pairing, balanced h2 with italic emphasis, and a centered header composition that gives the new section its own voice while keeping it consistent with the page's editorial rhythm.
-- Added a responsive layout for the catch: a three-column strip at desktop, a single stacked column under 900px, with the press seal centered on small screens. Honors prefers-reduced-motion and uses IntersectionObserver-based reveal.
-- Kept the press seal, the dated set-today stamp, the marked word, and the active-voice badge as the section's four fixed points; nothing fabricated.
+## One-composed-broadside page · let the title be the title
+
+- Slimmed the title-page header into a quiet folio plate (m³ press · folio i · the question · set today · voice), removing the redundant mini-broadside that competed with the actual headline.
+- Added `BroadsideReveal`, a one-time opening moment on first mount that composes the page like a sheet being placed down: a small plate draws in, then fades after a single breath.
+- Added `BroadsideEdge`, a fixed pair of paper-edge creases that runs the full page height so the whole experience reads as one continuous sheet.
+- Strengthened the answer reveal's fold-back motion: the leaf now lifts and lands, the seal drops in, the fold-here mark pivots in, and the fresh impression stamps itself on a single composed beat.
+- Kept every existing section, voice, marked word, lever, and folio; only reframed the hero so the title is no longer fighting itself.
