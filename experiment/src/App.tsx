@@ -694,6 +694,14 @@ export function App() {
                     <span className="hero__brief-title-row-sep" aria-hidden="true">·</span>
                     <span>Three voices.</span>
                   </span>
+                  <span className="hero__brief-title-fleuron" aria-hidden="true">
+                    <svg viewBox="0 0 64 10" preserveAspectRatio="none">
+                      <line x1="2" y1="5" x2="22" y2="5" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".6" />
+                      <path d="M30 1.5 L34 5 L30 8.5 L26 5 Z" fill="none" stroke="currentColor" strokeWidth=".55" strokeLinejoin="round" />
+                      <line x1="42" y1="5" x2="62" y2="5" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".6" />
+                      <circle cx="32" cy="5" r="1.1" fill="currentColor" />
+                    </svg>
+                  </span>
                   <span className="hero__brief-title-row hero__brief-title-row--soft">
                     <span>One open question.</span>
                   </span>
@@ -702,8 +710,9 @@ export function App() {
 
               <div className="hero__brief-body">
                 <p className="hero__brief-paragraph hero__brief-paragraph--lead">
+                  <span className="hero__dropcap" aria-hidden="true">T</span>
                   <span className="hero__brief-paragraph-text">
-                    The title page is set to ask whether a machine can build a place that feels like <em>someone was here.</em> Three words earn the marginalia — <em>m³</em>, <em>good at</em>, <em>yet?</em> — and three voices are tried because typography is part of any honest answer.
+                    he title page is set to ask whether a machine can build a place that feels like <em>someone was here.</em> Three words earn the marginalia — <em>m³</em>, <em>good at</em>, <em>yet?</em> — and three voices are tried because typography is part of any honest answer.
                   </span>
                 </p>
 
@@ -715,6 +724,94 @@ export function App() {
                   Pull a voice to set the line above. Mark a word to read it back. The press is bound to both, and the title answers with whichever is set. <em>The page remembers; the question stays open.</em>
                 </p>
               </div>
+
+              <span className="hero__brief-divide" aria-hidden="true">
+                <svg viewBox="0 0 220 10" preserveAspectRatio="none">
+                  <path
+                    d="M2 5c20-3 40 3 60 0s40-3 60 0 40 3 60 0 34-1 36 0"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth=".7"
+                    strokeLinecap="round"
+                    pathLength="100"
+                    className="hero__brief-divide-stroke"
+                  />
+                  <circle cx="110" cy="5" r="1.6" fill="currentColor" className="hero__brief-divide-bead" />
+                </svg>
+              </span>
+
+              <aside className="hero__brief-keymarks" aria-label="The three marked words of the title">
+                <span className="hero__brief-keymarks-eyebrow" aria-hidden="true">
+                  <span className="hero__brief-keymarks-eyebrow-mark" />
+                  the three marked words <em>·</em> a marginalium
+                  <span className="hero__brief-keymarks-eyebrow-mark hero__brief-keymarks-eyebrow-mark--alt" />
+                </span>
+                <ol className="hero__brief-keymarks-list">
+                  {(['m3', 'good', 'yet'] as WordId[]).map(id => {
+                    const note = NOTES.find(item => item.id === id)
+                    const isActive = selectedWord === id
+                    const isHover = hoveredWord === id
+                    return (
+                      <li key={id} className="hero__brief-keymark-cell">
+                        <button
+                          type="button"
+                          className={`hero__brief-keymark hero__brief-keymark--${id} ${isActive ? 'is-active' : ''} ${isHover ? 'is-hover' : ''}`}
+                          onClick={() => selectWord(id)}
+                          onMouseEnter={() => setHoveredWord(id)}
+                          onMouseLeave={() => setHoveredWord(null)}
+                          onFocus={() => setHoveredWord(id)}
+                          onBlur={() => setHoveredWord(null)}
+                          aria-pressed={isActive}
+                          aria-label={`Mark the word ${note?.label ?? id}. ${note?.title ?? ''}`}
+                        >
+                          <span className="hero__brief-keymark-glyph" aria-hidden="true">
+                            <svg viewBox="0 0 18 18">
+                              {id === 'm3' && (
+                                <>
+                                  <line x1="3" y1="5" x2="15" y2="5" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
+                                  <line x1="3" y1="9" x2="15" y2="9" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
+                                  <line x1="3" y1="13" x2="15" y2="13" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
+                                </>
+                              )}
+                              {id === 'good' && (
+                                <path d="M3 14 L9 4 L15 14 M5.5 11 L12.5 11" fill="none" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" strokeLinejoin="round" />
+                              )}
+                              {id === 'yet' && (
+                                <path d="M11 4 Q6 4 6 9 Q6 13 9 13 Q12 13 12 10 M11 4 L11 3 M11 4 L12.5 4 M9 13 L9 15" fill="none" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" strokeLinejoin="round" />
+                              )}
+                            </svg>
+                          </span>
+                          <span className="hero__brief-keymark-stack">
+                            <span className="hero__brief-keymark-word">{note?.label ?? id}</span>
+                            <span className="hero__brief-keymark-kind">
+                              <em>{id === 'm3' ? 'stet' : id === 'good' ? 'caret' : 'query'}</em>
+                              <span aria-hidden="true">·</span>
+                              <span>{id === 'm3' ? 'let it stand' : id === 'good' ? 'make room' : 'protect the pause'}</span>
+                            </span>
+                          </span>
+                          <span className="hero__brief-keymark-caret" aria-hidden="true">
+                            <svg viewBox="0 0 64 8" preserveAspectRatio="none">
+                              <path
+                                d="M2 4c8-3 16 3 24 0s16-3 24 0 12 1 14 0"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth=".7"
+                                strokeLinecap="round"
+                                pathLength="100"
+                                className="hero__brief-keymark-caret-stroke"
+                              />
+                              <circle cx="62" cy="4" r="1.2" fill="currentColor" />
+                            </svg>
+                          </span>
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ol>
+                <span className="hero__brief-keymarks-foot" aria-hidden="true">
+                  one word is always marked <em>·</em> the title answers with whichever is set
+                </span>
+              </aside>
 
               <span className="press-imprint-mount" aria-hidden="false">
                 <span className="press-imprint-mount__rule" aria-hidden="true">

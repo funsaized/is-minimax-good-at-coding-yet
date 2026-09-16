@@ -1,18 +1,12 @@
 # Changelog
 
-## iteration 288
+## Iteration 289 — brief re-authored with a dropcap, a closing rule, and a keymark marginalium
 
-Refined the title page composition and the editor's note so the entry to the page reads as one deliberate printed broadside.
+The editor's note (hero brief) was well-composed but read like a generic editorial card. The pre-existing `.hero__dropcap` class had no element to bind to. The title above names three marked words (m³, good at, yet?); the brief only mentioned them in passing. This pass re-authors the brief as a single hand-set printed object so the entry to the page reads more like an editorial front matter.
 
-- `TitlePage.tsx`
-  - Tightened the seal: a small registration crosshair sits at the four cardinal points of the folio stamp; the inner ring now carries three concentric circles.
-- `src/style.css`
-  - Title rows re-tuned for better rhythm: the lead row softens slightly, the `M3` row grows, and the trailing `yet?` row sits between the two. Tighter spacing (gap: clamp(0px, .2vw, 4px)) makes the four rows read as one composed line.
-  - The `M3` row now carries a thin top-and-bottom rule that tightens into the word when it is the active mark — a typesetter's frame for the centerpiece.
-  - Marks (⌇ ∧ ?) refined: tighter letter-spacing, smaller default size, a longer rule and a slight rotation on the glyph when active. The pencil underline animation eases more gently so the mark breathes rather than pops.
-  - Title plate gains a hairline inner border, a faint horizontal paper-rule wash, and a soft glow that follows the active voice tone behind the title.
-  - The title plate's seal grows from 70–96px to 86–116px, so the folio stamp reads as the page's signature, not as a small icon.
-  - Hero brief typography (the editor's note): bigger, tighter heading, more legible body, the quiet paragraph carries a left rule, the signed paragraph carries a dashed top rule.
-  - Mobile breakpoints re-tuned for all of the above.
-- `CHANGELOG.md`
-  - This entry.
+- Added a hand-set dropcap "T" to the lead paragraph, in the active voice tone, using the pre-existing `.hero__dropcap` class. The class now earns its place; the brief opens as a printed piece.
+- Added a small fleuron divider between the brief title's first row ("Three words. Three voices.") and its soft row ("One open question."). Quiet punctuation between two beats of type; tone shifts with the active voice.
+- Added a hand-drawn closing rule (`hero__brief-divide`) between the body and the keymarks below. A center bead anchors the eye; the stroke draws in once the brief is in view.
+- Added a new `<aside class="hero__brief-keymarks">` marginalium: a compact three-row block that names the three words of the title (m³, good at, yet?), their proof marks (stet, caret, query), and their editorial gloss (let it stand / make room / protect the pause). Each row is a real button — click to mark, hover to light up. The active word is drawn in its voice color (acid / coral / blue) with a hand-drawn caret beneath. The caret stroke draws in on hover or activation.
+- New reduced-motion rules settle the divide stroke, the bead, the keymark caret, and the button transform to a static state.
+- Responsive: on screens ≤ 720px the keymark rows collapse the caret beneath the word stack; on ≤ 540px the keymark and foot typography is tightened.

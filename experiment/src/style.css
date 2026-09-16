@@ -43857,3 +43857,414 @@ a small act of typesetting.
   }
 }
 }
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 289 · A HAND-SET EDITORIAL FOR THE EDITOR'S NOTE
+
+   The brief was well-composed but read like a generic editorial
+   card: a title, three paragraphs, a press imprint. The dropcap
+   class was already defined but unused. The page above the brief
+   (title page, handwheel, triptych) already names three marked
+   words; the brief only mentioned them in passing.
+
+   This pass re-authors the brief as a single printed object:
+
+     · A real hand-set dropcap ("T") on the lead paragraph, in
+       the active voice tone. The class already existed; it now
+       earns its place.
+     · A hand-drawn closing rule between the body and what
+       follows. The bead in its center is the eye's anchor.
+     · A new "keymarks" marginalium: a compact, three-row
+       marginalium that names the three words (m³, good at,
+       yet?), their proof marks (stet, caret, query), and their
+       editorial gloss. The active word is drawn in voice color
+       with a hand-drawn caret beneath. Hover lights the others
+       up; click selects.
+     · A small fleuron between the brief title's first row and
+       its soft row. Quiet punctuation between two beats of type.
+
+   Below: the keymarks collapse to a single column on narrow
+   screens; reduced motion holds the keymark caret static.
+   ──────────────────────────────────────────────────────────── */
+
+.hero__brief-title-fleuron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: clamp(2px, .3vw, 6px) 0;
+  color: var(--coral);
+  opacity: .85;
+  transition: color .5s var(--ease), opacity .5s var(--ease);
+}
+
+.app--voice-quiet .hero__brief-title-fleuron { color: var(--blue); }
+.app--voice-human .hero__brief-title-fleuron { color: var(--coral); }
+.app--voice-bold .hero__brief-title-fleuron { color: var(--acid); }
+
+.hero__brief-title-fleuron svg {
+  width: clamp(56px, 6vw, 76px);
+  height: clamp(8px, .9vw, 11px);
+  display: block;
+}
+
+.hero__brief-divide {
+  display: flex;
+  justify-content: center;
+  width: clamp(200px, 60%, 540px);
+  height: clamp(10px, 1vw, 14px);
+  margin: clamp(2px, .4vw, 6px) 0 0;
+  color: var(--line);
+  align-self: center;
+}
+
+.hero__brief-divide svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  color: var(--coral);
+  transition: color .5s var(--ease);
+}
+
+.app--voice-quiet .hero__brief-divide svg { color: var(--blue); }
+.app--voice-human .hero__brief-divide svg { color: var(--coral); }
+.app--voice-bold .hero__brief-divide svg { color: var(--acid); }
+
+.hero__brief-divide-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: heroBriefDivideDraw 1.4s var(--ease-out) .15s forwards;
+}
+
+.hero__brief-divide-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: heroBriefDivideBead .45s var(--ease-spring) 1.4s forwards;
+}
+
+@keyframes heroBriefDivideDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes heroBriefDivideBead {
+  from { opacity: 0; transform: scale(.4); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.hero__brief-keymarks {
+  position: relative;
+  display: grid;
+  gap: clamp(10px, 1.2vw, 16px);
+  padding: clamp(8px, 1vw, 14px) 0 0;
+  max-width: 64ch;
+}
+
+.hero__brief-keymarks-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: clamp(9px, .75vw, 10.5px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.hero__brief-keymarks-eyebrow em {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: none;
+}
+
+.hero__brief-keymarks-eyebrow-mark {
+  display: inline-block;
+  width: clamp(14px, 1.4vw, 20px);
+  height: 1px;
+  background: currentColor;
+  opacity: .65;
+}
+
+.hero__brief-keymarks-eyebrow-mark--alt {
+  opacity: .85;
+  width: clamp(8px, .8vw, 12px);
+}
+
+.hero__brief-keymarks-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2px, .3vw, 4px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--sans);
+}
+
+.hero__brief-keymark-cell {
+  position: relative;
+  display: block;
+}
+
+.hero__brief-keymark {
+  --key-tone: var(--paper);
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  width: 100%;
+  padding: clamp(8px, 1vw, 12px) clamp(12px, 1.4vw, 18px);
+  border: 1px solid transparent;
+  border-radius: 1px;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  isolation: isolate;
+  transition:
+    border-color .45s var(--ease),
+    background .45s var(--ease),
+    color .45s var(--ease),
+    transform .55s var(--ease-spring);
+}
+
+.hero__brief-keymark--m3 { --key-tone: var(--acid); }
+.hero__brief-keymark--good { --key-tone: var(--coral); }
+.hero__brief-keymark--yet { --key-tone: var(--blue); }
+
+.hero__brief-keymark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 0% 50%, var(--key-tone), transparent 60%);
+  opacity: 0;
+  transition: opacity .5s var(--ease);
+  z-index: -1;
+  mix-blend-mode: screen;
+}
+
+.hero__brief-keymark:hover,
+.hero__brief-keymark:focus-visible {
+  border-color: var(--line);
+  background: rgba(20, 28, 42, .55);
+  outline: none;
+}
+
+.hero__brief-keymark:hover::before,
+.hero__brief-keymark:focus-visible::before {
+  opacity: .08;
+}
+
+.hero__brief-keymark.is-hover::before {
+  opacity: .12;
+}
+
+.hero__brief-keymark.is-active {
+  border-color: color-mix(in srgb, var(--key-tone) 38%, transparent);
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--key-tone) 9%, transparent),
+      color-mix(in srgb, var(--key-tone) 4%, transparent));
+  transform: translateX(2px);
+}
+
+.hero__brief-keymark.is-active::before {
+  opacity: .14;
+}
+
+.hero__brief-keymark-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(28px, 2.4vw, 34px);
+  height: clamp(28px, 2.4vw, 34px);
+  border: 1px solid var(--line-soft);
+  border-radius: 1px;
+  color: var(--muted);
+  background: rgba(14, 20, 32, .4);
+  transition: color .4s var(--ease), border-color .4s var(--ease), background .4s var(--ease);
+}
+
+.hero__brief-keymark-glyph svg {
+  width: 60%;
+  height: 60%;
+  display: block;
+}
+
+.hero__brief-keymark:hover .hero__brief-keymark-glyph,
+.hero__brief-keymark:focus-visible .hero__brief-keymark-glyph,
+.hero__brief-keymark.is-hover .hero__brief-keymark-glyph {
+  color: var(--key-tone);
+  border-color: var(--key-tone);
+}
+
+.hero__brief-keymark.is-active .hero__brief-keymark-glyph {
+  color: var(--key-tone);
+  border-color: var(--key-tone);
+  background: color-mix(in srgb, var(--key-tone) 14%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--key-tone) 12%, transparent);
+}
+
+.hero__brief-keymark-stack {
+  display: grid;
+  gap: clamp(2px, .3vw, 4px);
+  min-width: 0;
+}
+
+.hero__brief-keymark-word {
+  display: block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.25vw, 18px);
+  letter-spacing: -.012em;
+  line-height: 1.1;
+  color: var(--paper);
+  text-transform: lowercase;
+  transition: color .4s var(--ease);
+}
+
+.hero__brief-keymark:hover .hero__brief-keymark-word,
+.hero__brief-keymark:focus-visible .hero__brief-keymark-word,
+.hero__brief-keymark.is-hover .hero__brief-keymark-word {
+  color: var(--key-tone);
+}
+
+.hero__brief-keymark.is-active .hero__brief-keymark-word {
+  color: var(--key-tone);
+}
+
+.hero__brief-keymark-kind {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: clamp(11px, .95vw, 13px);
+  letter-spacing: 0;
+  line-height: 1.2;
+  color: var(--ink-mist);
+}
+
+.hero__brief-keymark-kind em {
+  font-family: var(--mono);
+  font-size: clamp(9px, .75vw, 10.5px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-style: normal;
+}
+
+.hero__brief-keymark-kind span[aria-hidden] {
+  color: var(--muted);
+  opacity: .55;
+}
+
+.hero__brief-keymark.is-active .hero__brief-keymark-kind em {
+  color: var(--key-tone);
+}
+
+.hero__brief-keymark-caret {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(56px, 5.4vw, 80px);
+  height: 8px;
+  color: var(--line);
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity .45s var(--ease), transform .5s var(--ease-spring), color .4s var(--ease);
+}
+
+.hero__brief-keymark-caret svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hero__brief-keymark.is-hover .hero__brief-keymark-caret,
+.hero__brief-keymark.is-active .hero__brief-keymark-caret {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--key-tone);
+}
+
+.hero__brief-keymark-caret-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset .8s var(--ease-out);
+}
+
+.hero__brief-keymark.is-hover .hero__brief-keymark-caret-stroke,
+.hero__brief-keymark.is-active .hero__brief-keymark-caret-stroke {
+  stroke-dashoffset: 0;
+}
+
+.hero__brief-keymarks-foot {
+  display: block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 13.5px);
+  letter-spacing: -.002em;
+  line-height: 1.45;
+  color: var(--mist);
+  padding-left: clamp(2px, .3vw, 4px);
+}
+
+.hero__brief-keymarks-foot em {
+  color: var(--paper);
+  font-style: italic;
+}
+
+@media (max-width: 720px) {
+  .hero__brief-keymark {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 10px;
+    padding: 8px 10px;
+  }
+
+  .hero__brief-keymark-caret {
+    grid-column: 2;
+    width: 100%;
+    margin-top: 2px;
+  }
+
+  .hero__brief-keymarks-eyebrow {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+}
+
+@media (max-width: 540px) {
+  .hero__brief-keymark-word {
+    font-size: 14px;
+  }
+
+  .hero__brief-keymark-kind {
+    font-size: 11px;
+  }
+
+  .hero__brief-keymark-kind em {
+    font-size: 8.5px;
+  }
+
+  .hero__brief-keymarks-foot {
+    font-size: 11.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__brief-divide-stroke,
+  .hero__brief-divide-bead,
+  .hero__brief-keymark-caret-stroke,
+  .hero__brief-keymark {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .hero__brief-divide-stroke { stroke-dashoffset: 0 !important; }
+  .hero__brief-divide-bead { opacity: 1 !important; transform: none !important; }
+  .hero__brief-keymark-caret-stroke { stroke-dashoffset: 0 !important; }
+}
