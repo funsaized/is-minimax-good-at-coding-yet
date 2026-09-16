@@ -43137,4 +43137,456 @@ a small act of typesetting.
   .pressing-row__now {
     grid-column: 1 / -1;
   }
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 286 · A PRESS IMPRINT FOR THE FRONT MATTER
+
+   The hero body was carrying too many competing status surfaces
+   (a now-reading figure + a three-readings aside + a separate
+   folio closing plate). Each earned a place somewhere, but the
+   stack diluted the editorial voice.
+
+   This pass quiets the front matter to a single composition:
+
+     · hero__now is removed. The PressHandwheel is the page's
+       always-on status strip; the duplicate inline figure only
+       restated it.
+     · A new <PressImprint> closes the editor's note in place
+       of that figure. The imprint is the page's signature: a
+       hand-pressed seal with the folio number, the voice, and
+       the date set. It earns its place by being the only mark
+       that names the impression, not just the state.
+     · The imprint animates in once the brief settles, so the
+       eye arrives at a finished page rather than a growing one.
+
+   Below: the typography of the editor's note is also tightened,
+   the readings aside gains a closing rule, and the imprint
+   scales gracefully to mobile.
+   ──────────────────────────────────────────────────────────── */
+
+.press-imprint {
+  --imprint-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(132px, 18vw, 168px) minmax(0, 1fr);
+  gap: clamp(18px, 2.2vw, 28px);
+  align-items: center;
+  margin: clamp(8px, 1vw, 14px) 0 0;
+  padding: clamp(14px, 1.6vw, 22px) clamp(16px, 2vw, 26px);
+  border: 1px solid var(--line);
+  border-radius: 1px;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(255, 255, 255, .025), transparent 56%),
+    linear-gradient(180deg, rgba(20, 26, 38, .35), rgba(12, 16, 26, .55));
+  color: var(--paper);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity .9s var(--ease-out) .1s,
+    transform .9s var(--ease-out) .1s,
+    border-color .5s var(--ease);
+}
+
+.app--voice-quiet .press-imprint { --imprint-tone: var(--blue); }
+.app--voice-human .press-imprint { --imprint-tone: var(--coral); }
+.app--voice-bold .press-imprint { --imprint-tone: var(--acid); }
+
+.hero__body.is-in-view .press-imprint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.press-imprint::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(146, 186, 255, .08);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.press-imprint__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.press-imprint__plate {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  padding: clamp(8px, 1vw, 14px);
+  z-index: 1;
+}
+
+.press-imprint__seal {
+  display: block;
+  width: 100%;
+  max-width: clamp(120px, 12vw, 156px);
+  height: auto;
+  color: var(--imprint-tone);
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, .35));
+  transition: transform .55s var(--ease-spring);
+}
+
+.hero__body.is-in-view .press-imprint__seal {
+  animation: pressImprintStamp .85s var(--ease-spring) .35s backwards;
+}
+
+@keyframes pressImprintStamp {
+  0% { opacity: 0; transform: scale(.92) rotate(-1.5deg); }
+  60% { opacity: 1; transform: scale(1.02) rotate(.4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+.press-imprint__bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.hero__body.is-in-view .press-imprint__bead {
+  animation: pressImprintBeadIn .4s var(--ease-spring) 1.05s forwards;
+}
+
+.press-imprint__bead--halo {
+  animation-delay: 1.2s !important;
+}
+
+@keyframes pressImprintBeadIn {
+  0% { opacity: 0; transform: scale(.3); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.press-imprint__plate-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .65vw, 9.5px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--imprint-tone);
+  opacity: .75;
+}
+
+.press-imprint__plate-mark-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px rgba(146, 186, 255, .07);
+}
+
+.app--voice-quiet .press-imprint__plate-mark-dot { box-shadow: 0 0 0 3px rgba(155, 188, 255, .12); }
+.app--voice-human .press-imprint__plate-mark-dot { box-shadow: 0 0 0 3px rgba(240, 110, 91, .12); }
+.app--voice-bold .press-imprint__plate-mark-dot { box-shadow: 0 0 0 3px rgba(216, 240, 106, .12); }
+
+.press-imprint__plate-mark-letter {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(16px, 1.4vw, 18px);
+  height: clamp(16px, 1.4vw, 18px);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10px, .85vw, 11px);
+  letter-spacing: 0;
+}
+
+.press-imprint__caption {
+  position: relative;
+  display: grid;
+  gap: clamp(4px, .6vw, 8px);
+  margin: 0;
+  z-index: 1;
+}
+
+.press-imprint__caption-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: clamp(6px, .8vw, 12px);
+  color: var(--paper);
+}
+
+.press-imprint__caption-row--lead {
+  margin-bottom: clamp(2px, .3vw, 4px);
+}
+
+.press-imprint__caption-mark {
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: clamp(13px, 1.1vw, 16px);
+  color: var(--imprint-tone);
+  opacity: .75;
+}
+
+.press-imprint__caption-lead {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.25vw, 18px);
+  letter-spacing: -.012em;
+  color: var(--paper);
+  text-transform: lowercase;
+}
+
+.press-imprint__caption-key {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .7vw, 9.5px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.press-imprint__caption-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13.5px, 1.15vw, 16px);
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.press-imprint__caption-value--set {
+  color: var(--mist);
+  font-style: italic;
+}
+
+.press-imprint__caption-value--quiet {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: clamp(6px, .8vw, 10px);
+  color: var(--mist);
+}
+
+.press-imprint__caption-value--quiet em {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.press-imprint__caption-value--quiet > span[aria-hidden] {
+  color: var(--ink-mist);
+  opacity: .55;
+}
+
+/* The imprint sits inside a small mount so it doesn't crowd the
+   brief's last paragraph. A hairline rule above it reads as the
+   pen lifting off the page; a single caption below closes it. */
+
+.press-imprint-mount {
+  position: relative;
+  display: grid;
+  gap: clamp(8px, 1vw, 14px);
+  margin: clamp(22px, 2.6vw, 32px) 0 0;
+  padding-top: clamp(14px, 1.6vw, 20px);
+}
+
+.press-imprint-mount__rule {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 12px;
+  display: block;
+  color: var(--line);
+  opacity: .85;
+}
+
+.press-imprint-mount__rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.press-imprint-mount__rule svg path {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: pressImprintMountRuleDraw 1.4s var(--ease-out) .15s forwards;
+}
+
+.press-imprint-mount__rule svg circle {
+  opacity: 0;
+  animation: pressImprintMountRuleBead .35s var(--ease-spring) 1.45s forwards;
+}
+
+@keyframes pressImprintMountRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pressImprintMountRuleBead {
+  0% { opacity: 0; transform: scale(.4); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.press-imprint-mount__caption {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: clamp(6px, .8vw, 10px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14.5px);
+  letter-spacing: -.002em;
+  color: var(--mist);
+}
+
+.press-imprint-mount__caption em {
+  color: var(--paper);
+  font-style: italic;
+}
+
+.press-imprint-mount__caption-glyph {
+  color: var(--imprint-tone);
+  font-style: normal;
+  font-size: clamp(13px, 1.1vw, 15px);
+  opacity: .75;
+}
+
+/* The editor's note picks up a touch more confidence: the lead
+   paragraph is allowed one extra beat of leading, the eyebrow
+   rule widens, and the brief breathes with a slightly larger
+   top gap before the imprint. */
+
+.hero__brief {
+  padding: clamp(28px, 3.2vw, 44px) clamp(26px, 3.2vw, 46px);
+}
+
+.hero__brief-head {
+  padding-bottom: clamp(10px, 1.2vw, 16px);
+}
+
+.hero__brief-eyebrow-tick {
+  width: clamp(18px, 1.6vw, 24px);
+}
+
+.hero__brief-body {
+  gap: clamp(18px, 1.8vw, 24px);
+}
+
+.hero__brief-paragraph--lead {
+  font-size: clamp(17px, 1.55vw, 20px);
+  line-height: 1.7;
+}
+
+.hero__brief-paragraph--quiet {
+  font-size: clamp(14px, 1.2vw, 16.5px);
+}
+
+.hero__brief-paragraph--signed {
+  padding-top: clamp(14px, 1.4vw, 20px);
+  margin-top: clamp(6px, .8vw, 10px);
+  font-size: clamp(13.5px, 1.2vw, 15.5px);
+}
+
+/* The readings aside (SpecimenTray) gets a single closing rule
+   under its eyebrow so the eyebrow tag earns the same quiet
+   authority as the imprint above it. The aside sits one beat
+   further from the brief now that the imprint closes the
+   editorial. */
+
+.hero__readings {
+  margin-top: clamp(28px, 3.4vw, 44px);
+  padding-top: clamp(20px, 2.4vw, 30px);
+  border-top: 1px solid var(--line-soft);
+}
+
+.hero__readings-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero__readings-eyebrow-mark {
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: currentColor;
+  opacity: .65;
+}
+
+.hero__readings-eyebrow-mark--alt {
+  opacity: .85;
+}
+
+.hero__readings-foot em {
+  color: var(--paper);
+  font-style: italic;
+}
+
+/* The brief-lever sits a touch further from the readings aside
+   so the reading of the front matter follows:
+   brief → imprint → readings → press bed. */
+
+.hero__brief-lever {
+  margin-top: clamp(28px, 3.4vw, 44px);
+}
+
+/* PressImprint on narrow screens collapses to a single column,
+   with the seal sitting above the caption. */
+
+@media (max-width: 720px) {
+  .press-imprint {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(10px, 2vw, 14px);
+    padding: clamp(14px, 2.2vw, 20px);
+  }
+
+  .press-imprint__plate {
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .press-imprint__seal {
+    max-width: 96px;
+  }
+
+  .press-imprint__plate-mark {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 540px) {
+  .press-imprint__caption-value,
+  .press-imprint__caption-value--set,
+  .press-imprint__caption-value--quiet {
+    font-size: 12.5px;
+  }
+
+  .press-imprint__caption-lead {
+    font-size: 13.5px;
+  }
+
+  .hero__brief {
+    padding: 22px 18px;
+  }
+}
+
+/* Reduced motion: stamp, bead, and rule draw all settle to a
+   static state instead of animating. */
+
+@media (prefers-reduced-motion: reduce) {
+  .press-imprint,
+  .press-imprint__seal,
+  .press-imprint__bead,
+  .press-imprint-mount__rule svg path,
+  .press-imprint-mount__rule svg circle {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .press-imprint {
+    transform: none !important;
+  }
+}
 }

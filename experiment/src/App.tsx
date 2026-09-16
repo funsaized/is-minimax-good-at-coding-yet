@@ -35,6 +35,7 @@ import { TitleFolio } from './TitleFolio'
 import { ClosingPlate } from './ClosingPlate'
 import { ReadingPrologue } from './ReadingPrologue'
 import { PressHandwheel } from './PressHandwheel'
+import { PressImprint } from './PressImprint'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -715,35 +716,26 @@ export function App() {
                 </p>
               </div>
 
-              <figure className="hero__now" aria-label="What the title above is reading right now">
-                <figcaption className="hero__now-caption">
-                  <span className="hero__now-caption-mark" aria-hidden="true">※</span>
-                  now reading <em>·</em> the cell the title is set on
-                  <span className="hero__now-caption-mark" aria-hidden="true">※</span>
-                </figcaption>
-
-                <p className="hero__now-line">
-                  <em className="hero__now-em">the title is set in</em>
-                  <span className={`hero__now-voice hero__now-voice--${voice}`}>
-                    <span className="hero__now-voice-letter" aria-hidden="true">{VOICE_LETTER[voice]}</span>
-                    <em>{voice === 'quiet' ? 'quiet cut' : voice === 'human' ? 'human hand' : 'bold signal'}</em>
-                  </span>
-                  <span className="hero__now-sep" aria-hidden="true">·</span>
-                  <em className="hero__now-em">marked at</em>
-                  <span className={`hero__now-word hero__now-word--${activeWord}`}>
-                    <span className="hero__now-word-mark">{activeWord === 'm3' ? 'stet' : activeWord === 'good' ? 'caret' : 'query'}</span>
-                    <em>{activeWord === 'm3' ? 'M3' : activeWord === 'good' ? 'good at' : 'yet?'}</em>
-                  </span>
-                </p>
-
-                <span className="hero__now-foot" aria-hidden="true">
-                  <span className="hero__now-foot-mark" />
-                  <span className="hero__now-foot-tag">
-                    pull a voice, mark a word — the press answers
-                  </span>
-                  <span className="hero__now-foot-mark hero__now-foot-mark--alt" />
+              <span className="press-imprint-mount" aria-hidden="false">
+                <span className="press-imprint-mount__rule" aria-hidden="true">
+                  <svg viewBox="0 0 320 12" preserveAspectRatio="none">
+                    <path
+                      d="M2 6c20-4 40 4 60 0s40-4 60 0 40 4 60 0 40-4 60 0 16-1 18 0"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth=".8"
+                      strokeLinecap="round"
+                    />
+                    <circle cx="2" cy="6" r="1" fill="currentColor" />
+                    <circle cx="318" cy="6" r="1" fill="currentColor" />
+                  </svg>
                 </span>
-              </figure>
+                <PressImprint voice={voice} folio="folio i" setToday={setToday} />
+                <span className="press-imprint-mount__caption">
+                  <span className="press-imprint-mount__caption-glyph" aria-hidden="true">※</span>
+                  the imprint closes the note <em>·</em> the title above remembers the voice
+                </span>
+              </span>
             </article>
 
             <aside className="hero__readings" aria-label="Three readings of the question">
@@ -751,11 +743,12 @@ export function App() {
               <span className="hero__readings-eyebrow" aria-hidden="true">
                 <span className="hero__readings-eyebrow-mark" />
                 the same question, set three ways
+                <span className="hero__readings-eyebrow-mark hero__readings-eyebrow-mark--alt" />
               </span>
               <SpecimenTray active={voice} onSelect={selectVoice} />
               <span className="hero__readings-rule hero__readings-rule--trail" aria-hidden="true" />
               <span className="hero__readings-foot" aria-hidden="true">
-                pull a setting above · the title answers with whichever is active
+                pull a setting above <em>·</em> the title answers with whichever is active
               </span>
             </aside>
 
