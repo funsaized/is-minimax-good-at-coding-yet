@@ -209,6 +209,10 @@ export function ClosingPlate({
             this impression · set and signed
           </span>
 
+          <p className="closing-plate__inscription-prelude" aria-hidden="true">
+            <em>the press marks once, the leaf remembers —</em>
+          </p>
+
           <p className="closing-plate__inscription-line">
             <span className="closing-plate__inscription-piece">
               <em className="closing-plate__inscription-key">set in</em>
@@ -313,6 +317,10 @@ export function ClosingPlate({
             <em className="closing-plate__foot-em">the question stays open · this impression is set and signed</em>
             <span aria-hidden="true">·</span>
             <em className="closing-plate__foot-em closing-plate__foot-em--quiet">m³ press · back matter</em>
+          </p>
+          <p className="closing-plate__foot-farewell" aria-hidden="true">
+            <span className="closing-plate__foot-farewell-mark">※</span>
+            <em>close the book gently — the question deserves another reader.</em>
           </p>
           <a className="closing-plate__foot-back" href="#question" aria-label="Back to the title page">
             <svg viewBox="0 0 24 24" aria-hidden="true">

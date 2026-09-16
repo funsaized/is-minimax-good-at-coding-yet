@@ -44,6 +44,7 @@ import { SpreadRibbon } from './SpreadRibbon'
 import { LetterpressCatch } from './LetterpressCatch'
 import { Opening } from './Opening'
 import { FolioImprint } from './FolioImprint'
+import { ReadingPause } from './ReadingPause'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -241,6 +242,10 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
             </span>
             <div className="answer-reveal__copy">
               <p className="eyebrow eyebrow--dark"><span className="eyebrow__line" />the answer <em>for now</em></p>
+              <p className="answer-reveal__prelude" aria-hidden="true">
+                <span className="answer-reveal__prelude-mark">¶</span>
+                <em>after two readings and three presses, the page exhales —</em>
+              </p>
               <h2 id="answer-title">Yes — when it stops trying to look impressive.</h2>
               <div className="answer-reveal__columns">
                 <p>
@@ -673,6 +678,12 @@ export function App() {
     window.requestAnimationFrame(() => document.getElementById('answer')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
   }
 
+  const openAnswerFromPause = () => {
+    if (!answerOpen) setAnswerOpen(true)
+    setAnnouncement('Answer revealed.')
+    window.requestAnimationFrame(() => document.getElementById('answer')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
+
   return (
     <main className={`app app--voice-${voice} app--word-${activeWord}`}>
       <BroadsideReveal voice={voice} />
@@ -983,6 +994,8 @@ export function App() {
         </section>
 
         <ReadingFloor voice={voice} setToday={setToday} />
+
+        <ReadingPause voice={voice} setToday={setToday} onOpenAnswer={openAnswerFromPause} />
 
         <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} setToday={setToday} />
 

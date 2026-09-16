@@ -1,11 +1,11 @@
 # Changelog
 
-## Iteration 303 — the composed title frontispiece
+## Iteration 304 — composed pause, larger answer, signed farewell
 
-Refined the opening broadside so the headline reads as a single, confident typographic moment instead of one slice among many wrappers.
+Adds a single composed interlude between the readings and the answer, makes the answer's headline larger and more confident, and gives the closing plate a brief prelude and farewell.
 
-- `Opening.tsx`: removed the four corner crops, the inner dashed border, and the leading and trailing horizontal rules; the broadside is now framed only by its slim m³-press plate and the signature vertical crease. The plate header stays a single quiet line.
-- `TitlePage.tsx`: slimmed from a tri-cell banner into a single-row caption line ("the question · folio i · [season] [date] · now in [voice] · [face]"); the rule lines are gone, the redundant "m³ press" duplicate is gone.
-- `TitleFold.tsx`: quieted the paper grain and reduced the seal to a smaller m³ mark; the fold-crease and the closing legend remain as the two anchors of the sheet.
-- `TitleLine.tsx`: removed the redundant eyebrow caption and the bottom hint strip; the proof line is now a single elegant pill ("marked at [word] · [mark]"); the headline keeps its flex-baseline rhythm, but the separators are now a small dot with a hairline, the marked words wear a delicate underline with two terminal beads, and the line's terminal punctuation is a single italicised question mark in the active voice — the page's signature glyph.
-- `style.css`: appended a final block that overrides the four opening/title components for the new composition and adds the new headline typography, word-mark, voice-colour separators, and signature question-mark styles, with responsive sizing for tablet and phone widths.
+- New: a ReadingPause interlude (folio vii) sits between the reading floor and the answer reveal. It restates the question in the active voice at a quieter scale, marks three breaths (inhale, hold, exhale), and offers a single quiet button to pull the leaf open. It carries the voice's tone, an m³ seal at the restate's corner, and reduced-motion fallback.
+- Improved: the answer reveal's headline "Yes — when it stops trying to look impressive." is now larger (clamp 2.6rem → 5.2rem), has a gentle reveal-in transition, and is preceded by a small italic prelude ("after two readings and three presses, the page exhales —").
+- Improved: the closing plate gains a one-line italic prelude ("the press marks once, the leaf remembers —") above the inscription, and a brief farewell ("close the book gently — the question deserves another reader.") below the foot.
+- Edit: src/App.tsx now imports ReadingPause, exposes an `openAnswerFromPause` handler, and places the interlude between ReadingFloor and AnswerReveal.
+- New: src/ReadingPause.tsx + ~360 lines of styling in src/style.css for the pause component (frame, restate plate, breath list, action button, foot, reduced-motion, mobile).
