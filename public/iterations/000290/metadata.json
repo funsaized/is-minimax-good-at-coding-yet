@@ -1,0 +1,19 @@
+{
+  "id": 290,
+  "parentId": 289,
+  "createdAt": "2026-09-16T09:15:49.740Z",
+  "summary": "Added a folio opening plate between the title page and triptych, and an authored thumbprint closing the editor's note.",
+  "path": "/iterations/000290/index.html",
+  "screenshot": "/iterations/000290/desktop.png",
+  "mobileScreenshot": "/iterations/000290/mobile.png",
+  "sourceCommit": "adbc195ebdd6dccd05da9bc4270d4c7fdb56bc6b",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 809,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 137480,
+    "outputTokens": 34034,
+    "steps": 90
+  }
+}
