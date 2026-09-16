@@ -25,9 +25,9 @@ import { NotesSection } from './NotesSection'
 import { FolioFold } from './FolioFold'
 import { PressSpine } from './PressSpine'
 import { TitlePage } from './TitlePage'
-import { PressingsTriptych } from './PressingsTriptych'
 import { FolioOpening } from './FolioOpening'
 import { FolioThumbprint } from './FolioThumbprint'
+import { TitleLine } from './TitleLine'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -650,9 +650,9 @@ export function App() {
             <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
             <PaperWarmth voice={voice} />
 
-            <div className="hero__plate">
-              <h1 className="sr-only" id="page-title">{TITLE}</h1>
-              <PressingsTriptych
+            <h1 className="sr-only" id="page-title">{TITLE}</h1>
+            <div className="hero__headline">
+              <TitleLine
                 voice={voice}
                 word={activeWord}
                 hover={hoveredWord}
