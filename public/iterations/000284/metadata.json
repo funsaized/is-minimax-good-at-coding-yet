@@ -1,0 +1,19 @@
+{
+  "id": 284,
+  "parentId": 283,
+  "createdAt": "2026-09-16T05:17:49.942Z",
+  "summary": "Replaced the noisy 3 × 3 SVG-cell editor's key with a single typed proof-table, sharpened the typography system, and gav",
+  "path": "/iterations/000284/index.html",
+  "screenshot": "/iterations/000284/desktop.png",
+  "mobileScreenshot": "/iterations/000284/mobile.png",
+  "sourceCommit": "eaca957888986e29134f6bb151c545f8cca5fd47",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 269,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 232223,
+    "outputTokens": 29148,
+    "steps": 87
+  }
+}
