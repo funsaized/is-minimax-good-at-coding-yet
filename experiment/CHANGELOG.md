@@ -1,9 +1,7 @@
-# Iteration 316 — the question now descends
+# Changelog
 
-The page gains a single, hand-drawn **thread** beneath the headline: a vertical ink descent that drops from the question mark's reach, crosses the horizontal question line, and lands in a small bead with a halo. The thread is the page's binding signature — the question reaching downward toward its answer.
+## Iteration 317
 
-The headline now reads as one composed editorial moment rather than three stacked lines: the typography is tightened to a 1.0 line-height, the word gaps are slightly widened for clearer separation, and the bold voice inherits the same tighter cadence. A new SVG turbulence filter renders the thread with the same grainy ink quality as the other drawn flourishes on the page.
+A quiet dedication line between the title's running head and the headline, addressed to whoever opens the page.
 
-The thread draws itself on arrival (.7s–1.9s), the bead lands with a small bounce, the wisps scatter around it, and the tag ("the question, descending") rotates in beside it. Reduced-motion users see the settled state. The horizontal question line below the thread receives slightly more breathing room so the bead has somewhere to land.
-
-No new dependencies. No remote assets. No changes to the entry point, build, harness, or surrounding viewer.
+The title section now holds its breath before the question arrives. A single italic dedication line — "a question, set down quietly for whoever opens the page" — sits between the metadata header and the headline, flanked by two small hand-drawn asterisks and underlined by a hand-drawn ink rule that draws itself into place as the page settles. The dedication inherits the active voice's tint, so its underline redraws in the voice's color each time the lever is pulled. The headline now arrives between two quiet gestures: the arrival mark's "for whoever opened it, today" above, and this dedication's address to the reader beside it.

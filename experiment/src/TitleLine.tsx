@@ -262,6 +262,49 @@ export function TitleLine({
         </span>
       </header>
 
+      <p className={`titleline__dedication titleline__dedication--${voice}`} aria-hidden="true">
+        <span className="titleline__dedication-mark" aria-hidden="true">
+          <svg viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet">
+            <g stroke="currentColor" strokeWidth=".95" strokeLinecap="round" fill="none" opacity=".85">
+              <line x1="9" y1="3" x2="9" y2="15" />
+              <line x1="3" y1="9" x2="15" y2="9" />
+              <line x1="5" y1="5" x2="13" y2="13" />
+              <line x1="13" y1="5" x2="5" y2="13" />
+            </g>
+            <circle cx="9" cy="9" r="1.2" fill="currentColor" />
+          </svg>
+        </span>
+        <em className="titleline__dedication-text">
+          a question, set down quietly for whoever opens the page
+        </em>
+        <span className="titleline__dedication-mark titleline__dedication-mark--alt" aria-hidden="true">
+          <svg viewBox="0 0 18 18" preserveAspectRatio="xMidYMid meet">
+            <g stroke="currentColor" strokeWidth=".95" stroke-linecap="round" fill="none" opacity=".85">
+              <line x1="9" y1="3" x2="9" y2="15" />
+              <line x1="3" y1="9" x2="15" y2="9" />
+              <line x1="5" y1="5" x2="13" y2="13" />
+              <line x1="13" y1="5" x2="5" y2="13" />
+            </g>
+            <circle cx="9" cy="9" r="1.2" fill="currentColor" />
+          </svg>
+        </span>
+        <span className="titleline__dedication-rule" aria-hidden="true">
+          <svg viewBox="0 0 360 8" preserveAspectRatio="none">
+            <path
+              className="titleline__dedication-rule-stroke"
+              d="M2 4c24-3 48 3 72 0s48-3 72 0 48 3 72 0 48-3 72 0 48 3 70 0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth=".55"
+              strokeLinecap="round"
+              pathLength="100"
+            />
+            <circle className="titleline__dedication-rule-bead" cx="358" cy="4" r="1.1" fill="currentColor" />
+            <circle className="titleline__dedication-rule-bead titleline__dedication-rule-bead--lead" cx="2" cy="4" r="1.1" fill="currentColor" />
+          </svg>
+        </span>
+      </p>
+
       <h2
         className={`titleline__headline titleline__headline--${voice}`}
         onClick={(event) => {
