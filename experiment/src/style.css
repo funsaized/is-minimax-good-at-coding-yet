@@ -54842,8 +54842,10 @@ a small act of typesetting.
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
   align-items: center;
-  gap: clamp(14px, 1.6vw, 24px);
+  row-gap: clamp(10px, 1.2vw, 16px);
+  column-gap: clamp(14px, 1.6vw, 24px);
   width: min(100%, 920px);
   margin: clamp(18px, 2.6vw, 36px) auto clamp(8px, 1.2vw, 18px);
   padding: 0 clamp(8px, 1.4vw, 22px);
@@ -54875,6 +54877,143 @@ a small act of typesetting.
   width: 0;
   height: 0;
   overflow: hidden;
+}
+
+.arrival-mark__greeting {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, .9vw, 12px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, 1.05vw, 13.5px);
+  letter-spacing: -.005em;
+  color: color-mix(in srgb, var(--paper) 74%, transparent);
+  opacity: 0;
+  transform: translateY(3px);
+  animation: arrivalGreetingIn 1s var(--ease-out) .42s forwards;
+}
+
+.arrival-mark__greeting em {
+  font-style: italic;
+  font-family: var(--serif);
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.arrival-mark__greeting-mark {
+  display: inline-block;
+  width: clamp(14px, 1.8vw, 26px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--arrival-tone) 50%, transparent));
+  transform: translateY(-1px);
+}
+
+.arrival-mark__greeting-mark--alt {
+  background: linear-gradient(to left, transparent, color-mix(in srgb, var(--arrival-tone) 50%, transparent));
+}
+
+@keyframes arrivalGreetingIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.arrival-mark__descent {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: clamp(46px, 5.2vw, 78px);
+  color: var(--arrival-tone);
+  margin-top: clamp(2px, .3vw, 6px);
+}
+
+.arrival-mark__descent-svg {
+  display: block;
+  width: clamp(12px, 1.3vw, 18px);
+  height: 100%;
+  overflow: visible;
+}
+
+.arrival-mark__descent-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  animation: arrivalDescentDraw 1.35s var(--ease-out) 1.95s forwards;
+}
+
+.arrival-mark__descent-stroke--trail {
+  animation: arrivalDescentDraw 1.35s var(--ease-out) 2.15s forwards;
+}
+
+@keyframes arrivalDescentDraw {
+  0% { stroke-dashoffset: 100; opacity: 0; }
+  55% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+.arrival-mark__descent-bead {
+  opacity: 0;
+  transform: scale(.4);
+  transform-origin: 50% 50%;
+  animation: arrivalDescentBeadIn .55s var(--ease-spring) 3.05s forwards;
+}
+
+.arrival-mark__descent-halo {
+  opacity: 0;
+  animation: arrivalDescentHaloIn .7s var(--ease) 3.1s forwards;
+}
+
+@keyframes arrivalDescentBeadIn {
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes arrivalDescentHaloIn {
+  to { opacity: .6; }
+}
+
+.arrival-mark__descent-tag {
+  position: absolute;
+  bottom: calc(100% - 2px);
+  left: 50%;
+  transform: translate(-50%, -4px);
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(5px, .6vw, 8px);
+  padding: 2px clamp(6px, .8vw, 10px);
+  border-radius: 999px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--arrival-tone) 8%, transparent), transparent);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(9.5px, .82vw, 11px);
+  letter-spacing: .04em;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
+  text-transform: lowercase;
+  white-space: nowrap;
+  opacity: 0;
+  animation: arrivalDescentTagIn .7s var(--ease-out) 2.55s forwards;
+}
+
+.arrival-mark__descent-tag em {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.arrival-mark__descent-tag-rule {
+  display: inline-block;
+  width: clamp(8px, 1vw, 14px);
+  height: 1px;
+  background: color-mix(in srgb, var(--arrival-tone) 38%, transparent);
+}
+
+.arrival-mark__descent-tag-rule--alt {
+  opacity: .75;
+}
+
+@keyframes arrivalDescentTagIn {
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 @keyframes arrivalMarkIn {
@@ -55078,7 +55217,13 @@ a small act of typesetting.
   .arrival-mark__rule-bead,
   .arrival-mark__seed-mark,
   .arrival-mark__seed-stack,
-  .arrival-mark__seed-voice-dot {
+  .arrival-mark__seed-voice-dot,
+  .arrival-mark__greeting,
+  .arrival-mark__descent-stroke,
+  .arrival-mark__descent-stroke--trail,
+  .arrival-mark__descent-bead,
+  .arrival-mark__descent-halo,
+  .arrival-mark__descent-tag {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;
@@ -55087,12 +55232,14 @@ a small act of typesetting.
   }
   .arrival-mark__rule-stroke--alt { opacity: .7 !important; }
   .arrival-mark__seed-voice-dot.is-on { transform: scale(1.08) !important; }
+  .arrival-mark__descent-halo { opacity: .6 !important; }
 }
 
 @media (max-width: 720px) {
   .arrival-mark {
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    gap: clamp(10px, 2vw, 16px);
+    row-gap: clamp(8px, 1.4vw, 12px);
+    column-gap: clamp(10px, 2vw, 16px);
     margin: clamp(14px, 3vw, 22px) auto clamp(6px, 1.4vw, 12px);
   }
   .arrival-mark__seed-stack {
@@ -55102,12 +55249,19 @@ a small act of typesetting.
   .arrival-mark__seed-em {
     font-size: 10px;
   }
+  .arrival-mark__greeting {
+    font-size: clamp(11px, 1.4vw, 12.5px);
+  }
+  .arrival-mark__descent {
+    height: clamp(38px, 5.2vw, 56px);
+  }
 }
 
 @media (max-width: 560px) {
   .arrival-mark {
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(6px, 1.6vw, 10px);
+    row-gap: clamp(6px, 1.6vw, 10px);
+    column-gap: clamp(6px, 1.6vw, 10px);
   }
   .arrival-mark__rule { display: none; }
   .arrival-mark__seed {
@@ -55130,10 +55284,20 @@ a small act of typesetting.
     padding-left: 0;
     margin-left: 0;
   }
+  .arrival-mark__greeting {
+    font-size: 11px;
+    letter-spacing: -.002em;
+  }
+  .arrival-mark__descent-tag {
+    font-size: 9px;
+  }
 }
 
 @media (max-width: 380px) {
   .arrival-mark__seed-voice-dots {
+    display: none;
+  }
+  .arrival-mark__descent-tag {
     display: none;
   }
 }

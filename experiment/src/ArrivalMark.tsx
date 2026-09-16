@@ -12,6 +12,7 @@ const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human 
 export function ArrivalMark({ voice, setToday }: ArrivalMarkProps) {
   const baseId = useId().replace(/:/g, '')
   const grainId = `arrival-mark-grain-${baseId}`
+  const descentGrainId = `arrival-mark-descent-grain-${baseId}`
   const seedPath = 'M2 6c20-4 40 4 60 0s40-4 60 0 40 4 60 0 40-4 58-1'
   const toneStyle = { '--arrival-tone': 'var(--titleline-tone, var(--coral))' } as CSSProperties
   return (
@@ -29,6 +30,12 @@ export function ArrivalMark({ voice, setToday }: ArrivalMarkProps) {
           </filter>
         </defs>
       </svg>
+
+      <span className="arrival-mark__greeting" aria-hidden="true">
+        <span className="arrival-mark__greeting-mark" />
+        <em>for whoever opened it, today</em>
+        <span className="arrival-mark__greeting-mark arrival-mark__greeting-mark--alt" />
+      </span>
 
       <span className="arrival-mark__rule arrival-mark__rule--lead" aria-hidden="true">
         <svg viewBox="0 0 240 12" preserveAspectRatio="none">
@@ -109,6 +116,48 @@ export function ArrivalMark({ voice, setToday }: ArrivalMarkProps) {
           </g>
           <circle className="arrival-mark__rule-bead" cx="2" cy="6" r="1.1" fill="currentColor" opacity=".75" />
           <circle className="arrival-mark__rule-bead arrival-mark__rule-bead--end" cx="238" cy="6" r="1.1" fill="currentColor" opacity=".75" />
+        </svg>
+      </span>
+
+      <span className="arrival-mark__descent" aria-hidden="true">
+        <span className="arrival-mark__descent-tag" aria-hidden="true">
+          <span className="arrival-mark__descent-tag-rule" />
+          <em>the arrival, exhaling down</em>
+          <span className="arrival-mark__descent-tag-rule arrival-mark__descent-tag-rule--alt" />
+        </span>
+        <svg className="arrival-mark__descent-svg" viewBox="0 0 20 78" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <filter id={descentGrainId} x="-30%" y="-4%" width="160%" height="108%">
+              <feTurbulence type="fractalNoise" baseFrequency="2.6" numOctaves="2" seed="53" stitchTiles="stitch" />
+              <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
+              <feComposite in2="SourceGraphic" operator="in" />
+            </filter>
+          </defs>
+          <g filter={`url(#${descentGrainId})`}>
+            <path
+              className="arrival-mark__descent-stroke arrival-mark__descent-stroke--lead"
+              d="M10 2c1.2 12-2 24 0 36s-1.6 18 0 32"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.05"
+              strokeLinecap="round"
+              pathLength="100"
+              strokeDasharray="100 100"
+            />
+            <path
+              className="arrival-mark__descent-stroke arrival-mark__descent-stroke--trail"
+              d="M13 4c.6 10-1 18 .2 28s-1 16 .6 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth=".5"
+              strokeLinecap="round"
+              opacity=".5"
+              pathLength="100"
+              strokeDasharray="100 100"
+            />
+          </g>
+          <circle className="arrival-mark__descent-bead" cx="10.2" cy="76" r="2" fill="currentColor" />
+          <circle className="arrival-mark__descent-halo" cx="10.2" cy="76" r="4.6" fill="none" stroke="currentColor" strokeWidth=".3" strokeDasharray=".7 1.6" opacity=".6" />
         </svg>
       </span>
     </div>

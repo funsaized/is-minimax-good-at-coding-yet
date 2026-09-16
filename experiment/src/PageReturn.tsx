@@ -124,7 +124,7 @@ export function PageReturn({ voice, setToday }: PageReturnProps) {
       </span>
 
       <p className="page-return__caption">
-        Three exhalations carried the question out — the title asked, the lever pulled, the answer settled. <em>This curl closes the page's breath.</em>
+        Four exhalations carried the page — the arrival greeted, the title asked, the lever pulled, the answer settled. <em>This curl closes the page's breath.</em>
       </p>
 
       <p className="page-return__caption page-return__caption--quiet">
