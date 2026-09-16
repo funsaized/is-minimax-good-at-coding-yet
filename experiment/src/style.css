@@ -44268,3 +44268,777 @@ a small act of typesetting.
   .hero__brief-divide-bead { opacity: 1 !important; transform: none !important; }
   .hero__brief-keymark-caret-stroke { stroke-dashoffset: 0 !important; }
 }
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 290 · FOLIO OPENING · A THIN, DECISIVE BAND BETWEEN
+   THE TITLE PAGE AND THE PRESSINGS TRIPTYCH.
+
+   The title page and the triptych were two confident elements
+   stacked without a clear connection. This opening band sits
+   between them as a single hand-printed divider: a folio marker,
+   a typesetting ornament, and three voice / word / date cells
+   laid out as one calm sheet. It makes the two pieces above
+   and below it feel like the same spread.
+
+   It arrives quietly (a brief settle) and the rule draws from
+   the center outward. Reduced motion holds it still.
+   ──────────────────────────────────────────────────────────── */
+
+.folio-opening {
+  --opening-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: stretch;
+  gap: clamp(12px, 1.2vw, 18px);
+  width: min(100%, 1080px);
+  margin: clamp(8px, 1vw, 14px) auto clamp(20px, 2.4vw, 36px);
+  padding: clamp(18px, 2vw, 28px) clamp(22px, 3vw, 40px) clamp(18px, 2vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: 1px;
+  background:
+    linear-gradient(180deg, rgba(20, 26, 38, .34), rgba(12, 16, 26, .52));
+  box-shadow:
+    inset 0 0 0 1px rgba(243, 236, 214, .025),
+    0 18px 36px -28px rgba(0, 0, 0, .42);
+  color: var(--paper);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: folioOpeningIn .8s var(--ease-out) .18s forwards;
+}
+
+.folio-opening::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed color-mix(in srgb, var(--opening-tone) 22%, transparent);
+  pointer-events: none;
+  opacity: .55;
+  z-index: -1;
+}
+
+.folio-opening::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, color-mix(in srgb, var(--opening-tone) 7%, transparent), transparent 70%);
+  z-index: -1;
+}
+
+@keyframes folioOpeningIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-opening {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+.folio-opening__crop {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  color: var(--opening-tone);
+  opacity: .75;
+  pointer-events: none;
+}
+
+.folio-opening__crop::before,
+.folio-opening__crop::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  border-radius: .5px;
+}
+
+.folio-opening__crop::before { width: 10px; height: 1px; }
+.folio-opening__crop::after { width: 1px; height: 10px; }
+
+.folio-opening__crop--tl { top: 6px; left: 6px; }
+.folio-opening__crop--tl::before { top: 0; left: 0; }
+.folio-opening__crop--tl::after { top: 0; left: 0; }
+
+.folio-opening__crop--tr { top: 6px; right: 6px; }
+.folio-opening__crop--tr::before { top: 0; right: 0; }
+.folio-opening__crop--tr::after { top: 0; right: 0; }
+
+.folio-opening__crop--bl { bottom: 6px; left: 6px; }
+.folio-opening__crop--bl::before { bottom: 0; left: 0; }
+.folio-opening__crop--bl::after { bottom: 0; left: 0; }
+
+.folio-opening__crop--br { bottom: 6px; right: 6px; }
+.folio-opening__crop--br::before { bottom: 0; right: 0; }
+.folio-opening__crop--br::after { bottom: 0; right: 0; }
+
+.folio-opening__lead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  color: var(--muted);
+}
+
+.folio-opening__lead-rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line));
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: folioOpeningRuleDraw .9s var(--ease-out) .55s forwards;
+}
+
+.folio-opening__lead-rule--b {
+  background: linear-gradient(to left, transparent, var(--line));
+  transform-origin: right center;
+}
+
+@keyframes folioOpeningRuleDraw {
+  to { transform: scaleX(1); }
+}
+
+.folio-opening__lead-tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, .8vw, 12px);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: clamp(9px, .8vw, 10.5px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+
+.folio-opening__lead-tag em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.1vw, 15.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--opening-tone);
+}
+
+.folio-opening__lead-key {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--mist);
+  opacity: .85;
+}
+
+.folio-opening__lead-glyph {
+  font-family: var(--serif);
+  font-size: clamp(13px, 1.05vw, 15px);
+  color: var(--opening-tone);
+  opacity: .8;
+}
+
+.folio-opening__diamond {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: clamp(48px, 5vw, 72px);
+  height: clamp(14px, 1.6vw, 18px);
+  color: var(--opening-tone);
+  opacity: .85;
+  margin: -4px auto -2px;
+}
+
+.folio-opening__diamond svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.folio-opening__plate {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(10px, 1.4vw, 20px);
+  padding: clamp(8px, 1vw, 14px) clamp(4px, .4vw, 8px);
+  color: var(--paper);
+}
+
+.folio-opening__rule--v {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  width: 1px;
+  min-height: 100%;
+  align-self: stretch;
+  color: var(--line);
+  opacity: .7;
+}
+
+.folio-opening__rule--v svg {
+  width: 1px;
+  height: 100%;
+}
+
+.folio-opening__cell {
+  display: grid;
+  gap: clamp(4px, .4vw, 6px);
+  padding: clamp(2px, .2vw, 4px) clamp(2px, .2vw, 6px);
+}
+
+.folio-opening__cell-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .75vw, 10px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.folio-opening__cell-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(8px, .8vw, 12px);
+  color: var(--paper);
+}
+
+.folio-opening__cell-letter {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(20px, 1.8vw, 26px);
+  height: clamp(20px, 1.8vw, 26px);
+  border: 1px solid color-mix(in srgb, var(--opening-tone) 50%, transparent);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: clamp(9px, .8vw, 10.5px);
+  letter-spacing: .12em;
+  color: var(--opening-tone);
+  background:
+    radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--opening-tone) 12%, transparent), transparent 70%);
+  transition: color .45s var(--ease), border-color .45s var(--ease);
+}
+
+.folio-opening__cell-letter--quiet { color: var(--blue); border-color: color-mix(in srgb, var(--blue) 50%, transparent); }
+.folio-opening__cell-letter--human { color: var(--coral); border-color: color-mix(in srgb, var(--coral) 50%, transparent); }
+.folio-opening__cell-letter--bold { color: var(--acid); border-color: color-mix(in srgb, var(--acid) 50%, transparent); }
+
+.folio-opening__cell-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(20px, 1.8vw, 26px);
+  height: clamp(20px, 1.8vw, 26px);
+  border: 1px solid color-mix(in srgb, var(--opening-tone) 50%, transparent);
+  border-radius: 1px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.1vw, 15px);
+  color: var(--opening-tone);
+}
+
+.folio-opening__cell-value {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.25vw, 18px);
+  letter-spacing: -.01em;
+  color: var(--paper);
+}
+
+.folio-opening__cell-value--date {
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  letter-spacing: -.005em;
+}
+
+.folio-opening__cell-face {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, .95vw, 13px);
+  letter-spacing: -.002em;
+  color: var(--mist);
+  opacity: .85;
+}
+
+.folio-opening__cell-face em {
+  font-style: italic;
+  color: var(--paper);
+  text-transform: lowercase;
+  letter-spacing: .04em;
+}
+
+.folio-opening__trail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  color: var(--muted);
+  opacity: .8;
+}
+
+.folio-opening__trail-mark {
+  display: block;
+  height: 1px;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--opening-tone) 30%, transparent));
+  opacity: .65;
+}
+
+.folio-opening__trail-mark--b {
+  background: linear-gradient(to left, transparent, color-mix(in srgb, var(--opening-tone) 30%, transparent));
+}
+
+.folio-opening__trail-tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, .8vw, 10px);
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, .95vw, 13px);
+  letter-spacing: -.002em;
+  text-transform: none;
+}
+
+.folio-opening__trail-tag-glyph {
+  color: var(--opening-tone);
+  font-size: clamp(12.5px, 1vw, 14px);
+  opacity: .8;
+}
+
+@media (max-width: 720px) {
+  .folio-opening {
+    padding: clamp(14px, 1.6vw, 20px) clamp(16px, 2vw, 22px);
+  }
+
+  .folio-opening__plate {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(10px, 1.4vw, 14px);
+  }
+
+  .folio-opening__rule--v {
+    display: none;
+  }
+
+  .folio-opening__trail {
+    grid-template-columns: minmax(0, 1fr);
+    text-align: center;
+  }
+
+  .folio-opening__trail-mark {
+    display: none;
+  }
+
+  .folio-opening__cell-key {
+    justify-content: center;
+  }
+
+  .folio-opening__cell-row {
+    justify-content: center;
+  }
+
+  .folio-opening__cell-face {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 540px) {
+  .folio-opening__lead-tag {
+    flex-wrap: wrap;
+    row-gap: 4px;
+    justify-content: center;
+  }
+
+  .folio-opening__lead-rule {
+    display: none;
+  }
+
+  .folio-opening__lead {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-opening__lead-rule {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 290 · FOLIO THUMBPRINT · A SMALL DISTINCTIVE
+   SIGNATURE AT THE CLOSE OF THE EDITOR'S NOTE.
+
+   The press-imprint-mount used to be a quiet, decorative stamp
+   that read like a generic press emblem. The FolioThumbprint
+   is a hand-written marginalium — a single line that names the
+   voice, the marked word, and the reader (or "the next
+   reader"), set beside a small seal that shows the active
+   voice-tone. It makes the editorial close feel authored, not
+   stamped.
+
+   The seal's rule draws on view; reduced motion holds it.
+   ──────────────────────────────────────────────────────────── */
+
+.folio-thumbprint {
+  --thumbprint-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(8px, .8vw, 12px);
+  margin: clamp(6px, .6vw, 10px) 0 0;
+  padding: clamp(14px, 1.6vw, 22px) clamp(18px, 2.2vw, 30px);
+  border: 1px solid color-mix(in srgb, var(--thumbprint-tone) 30%, var(--line));
+  border-radius: 1px;
+  background:
+    radial-gradient(ellipse 60% 80% at 8% 50%, color-mix(in srgb, var(--thumbprint-tone) 6%, transparent), transparent 70%),
+    linear-gradient(180deg, rgba(20, 26, 38, .32), rgba(12, 16, 26, .5));
+  color: var(--paper);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(4px);
+  animation: folioThumbprintIn .7s var(--ease-out) .25s forwards;
+}
+
+.folio-thumbprint::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed color-mix(in srgb, var(--thumbprint-tone) 22%, transparent);
+  pointer-events: none;
+  opacity: .55;
+  z-index: -1;
+}
+
+@keyframes folioThumbprintIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-thumbprint {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+.folio-thumbprint__rule {
+  position: relative;
+  display: block;
+  height: 12px;
+  color: var(--thumbprint-tone);
+  opacity: .85;
+}
+
+.folio-thumbprint__rule--lead {
+  margin-bottom: clamp(4px, .4vw, 8px);
+}
+
+.folio-thumbprint__rule--trail {
+  margin-top: clamp(4px, .4vw, 8px);
+  opacity: .55;
+}
+
+.folio-thumbprint__rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.folio-thumbprint__rule-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: folioThumbprintRuleDraw 1.3s var(--ease-out) .3s forwards;
+}
+
+@keyframes folioThumbprintRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.folio-thumbprint__rule-bead {
+  opacity: 0;
+  animation: folioThumbprintBeadIn .35s var(--ease-spring) 1.45s forwards;
+}
+
+@keyframes folioThumbprintBeadIn {
+  from { opacity: 0; transform: scale(.4); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.folio-thumbprint__rule-tag {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, .8vw, 10px);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .75vw, 10px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+
+.folio-thumbprint__rule-tag-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, .95vw, 13.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--mist);
+  opacity: .9;
+}
+
+.folio-thumbprint__rule-tag-text em {
+  color: var(--thumbprint-tone);
+  font-style: italic;
+}
+
+.folio-thumbprint__rule-tag-mark {
+  display: inline-block;
+  width: clamp(18px, 2vw, 28px);
+  height: 1px;
+  background: currentColor;
+  opacity: .65;
+}
+
+.folio-thumbprint__rule-tag-mark--alt {
+  background: linear-gradient(to left, transparent, currentColor);
+}
+
+.folio-thumbprint__body {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(14px, 2vw, 22px);
+  padding: clamp(2px, .2vw, 4px) 0;
+}
+
+.folio-thumbprint__seal {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: clamp(78px, 8vw, 104px);
+  height: clamp(78px, 8vw, 104px);
+  color: var(--thumbprint-tone);
+  flex-shrink: 0;
+  transform: rotate(-5deg);
+  transition: transform .55s var(--ease-spring), color .5s var(--ease);
+}
+
+.folio-thumbprint__seal::after {
+  content: '';
+  position: absolute;
+  inset: clamp(4px, .5vw, 8px);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: .35;
+  pointer-events: none;
+}
+
+.folio-thumbprint__seal:hover,
+.folio-thumbprint.is-signed .folio-thumbprint__seal {
+  transform: rotate(-3deg);
+}
+
+.folio-thumbprint__seal svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.folio-thumbprint__seal-glyph {
+  position: absolute;
+  bottom: -6px;
+  right: -8px;
+  display: inline-grid;
+  place-items: center;
+  width: clamp(22px, 2.2vw, 28px);
+  height: clamp(22px, 2.2vw, 28px);
+  border-radius: 999px;
+  background: var(--night);
+  border: 1px solid currentColor;
+  color: var(--thumbprint-tone);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.1vw, 15px);
+  letter-spacing: 0;
+  transform: rotate(8deg);
+  transition: transform .55s var(--ease-spring), color .5s var(--ease);
+}
+
+.folio-thumbprint--word-m3 .folio-thumbprint__seal-glyph { color: var(--acid); }
+.folio-thumbprint--word-good .folio-thumbprint__seal-glyph { color: var(--coral); }
+.folio-thumbprint--word-yet .folio-thumbprint__seal-glyph { color: var(--blue); }
+
+.folio-thumbprint__copy {
+  display: grid;
+  gap: clamp(6px, .6vw, 10px);
+  min-width: 0;
+}
+
+.folio-thumbprint__copy-head {
+  display: flex;
+  align-items: center;
+}
+
+.folio-thumbprint__copy-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .75vw, 10px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+
+.folio-thumbprint__copy-eyebrow em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--thumbprint-tone);
+}
+
+.folio-thumbprint__copy-eyebrow-mark {
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  opacity: .65;
+}
+
+.folio-thumbprint__copy-eyebrow-mark--alt {
+  background: linear-gradient(to left, transparent, currentColor);
+  opacity: .85;
+}
+
+.folio-thumbprint__copy-line {
+  margin: 0;
+  color: var(--lead-2);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.3vw, 18px);
+  line-height: 1.55;
+  letter-spacing: -.005em;
+  text-wrap: pretty;
+}
+
+.folio-thumbprint__copy-line em {
+  font-style: italic;
+  color: var(--paper);
+  letter-spacing: -.005em;
+}
+
+.folio-thumbprint__copy-voice {
+  color: var(--thumbprint-tone);
+}
+
+.folio-thumbprint--word-m3 .folio-thumbprint__copy-word { color: var(--acid); }
+.folio-thumbprint--word-good .folio-thumbprint__copy-word { color: var(--coral); }
+.folio-thumbprint--word-yet .folio-thumbprint__copy-word { color: var(--blue); }
+
+.folio-thumbprint__copy-reader {
+  color: var(--paper);
+  font-feature-settings: 'liga' 1, 'kern' 1;
+}
+
+.folio-thumbprint__copy-open {
+  color: var(--mist);
+}
+
+.folio-thumbprint__copy-date {
+  color: var(--mist);
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  letter-spacing: -.002em;
+}
+
+.folio-thumbprint__copy-foot {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .75vw, 10px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.folio-thumbprint__copy-foot-rule {
+  display: inline-block;
+  width: clamp(10px, 1.4vw, 18px);
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.folio-thumbprint__copy-foot-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .9vw, 12.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--mist);
+  opacity: .85;
+}
+
+@media (max-width: 720px) {
+  .folio-thumbprint {
+    padding: clamp(12px, 1.4vw, 18px) clamp(14px, 1.6vw, 20px);
+  }
+
+  .folio-thumbprint__body {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+    gap: clamp(10px, 1.4vw, 14px);
+  }
+
+  .folio-thumbprint__copy-eyebrow {
+    justify-content: center;
+  }
+
+  .folio-thumbprint__copy-foot {
+    justify-content: center;
+  }
+
+  .folio-thumbprint__rule-tag {
+    position: relative;
+    padding: 2px 0;
+  }
+}
+
+@media (max-width: 540px) {
+  .folio-thumbprint__rule-tag {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .folio-thumbprint__rule-tag-mark {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-thumbprint__rule-stroke,
+  .folio-thumbprint__rule-bead,
+  .folio-thumbprint__seal,
+  .folio-thumbprint__seal-glyph {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+

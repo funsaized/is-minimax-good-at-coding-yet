@@ -26,6 +26,8 @@ import { FolioFold } from './FolioFold'
 import { PressSpine } from './PressSpine'
 import { TitlePage } from './TitlePage'
 import { PressingsTriptych } from './PressingsTriptych'
+import { FolioOpening } from './FolioOpening'
+import { FolioThumbprint } from './FolioThumbprint'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -35,7 +37,6 @@ import { TitleFolio } from './TitleFolio'
 import { ClosingPlate } from './ClosingPlate'
 import { ReadingPrologue } from './ReadingPrologue'
 import { PressHandwheel } from './PressHandwheel'
-import { PressImprint } from './PressImprint'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -634,6 +635,8 @@ export function App() {
         <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
           <TitlePage voice={voice} word={activeWord} setToday={setToday} />
 
+          <FolioOpening voice={voice} word={activeWord} setToday={setToday} />
+
           <div className="hero__spread">
             <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
             <PaperWarmth voice={voice} />
@@ -813,26 +816,7 @@ export function App() {
                 </span>
               </aside>
 
-              <span className="press-imprint-mount" aria-hidden="false">
-                <span className="press-imprint-mount__rule" aria-hidden="true">
-                  <svg viewBox="0 0 320 12" preserveAspectRatio="none">
-                    <path
-                      d="M2 6c20-4 40 4 60 0s40-4 60 0 40 4 60 0 40-4 60 0 16-1 18 0"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth=".8"
-                      strokeLinecap="round"
-                    />
-                    <circle cx="2" cy="6" r="1" fill="currentColor" />
-                    <circle cx="318" cy="6" r="1" fill="currentColor" />
-                  </svg>
-                </span>
-                <PressImprint voice={voice} folio="folio i" setToday={setToday} />
-                <span className="press-imprint-mount__caption">
-                  <span className="press-imprint-mount__caption-glyph" aria-hidden="true">※</span>
-                  the imprint closes the note <em>·</em> the title above remembers the voice
-                </span>
-              </span>
+              <FolioThumbprint voice={voice} word={activeWord} setToday={setToday} readerName={readerName} />
             </article>
 
             <aside className="hero__readings" aria-label="Three readings of the question">
