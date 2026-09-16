@@ -49846,3 +49846,668 @@ a small act of typesetting.
     stroke-dashoffset: 0 !important;
   }
 }
+
+/* ──────────────────────────────────────────────────────────────────
+   ITERATION 302 · THE OPENING BROADSIDE
+   One composed sheet at the top of the page holds the title-page
+   header, the spread ribbon, the voice rehearsal, the title line,
+   the reading prologue, and the press lever as a single folio.
+   The container provides shared paper grain, a single vertical
+   crease (the "fold · here" mark), a small masthead plate at the
+   top, and corner crops so the page reads as one printed thing.
+   ────────────────────────────────────────────────────────────────── */
+
+.opening {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(28px, 3.4vw, 56px);
+  padding: clamp(28px, 3.6vw, 56px) clamp(20px, 3vw, 56px) clamp(40px, 4.4vw, 72px);
+  margin: clamp(8px, 1.2vw, 20px) 0 clamp(28px, 3.6vw, 64px);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--opening-tone) 12%, transparent), transparent 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(155, 188, 255, .04), transparent 60%),
+    linear-gradient(180deg, rgba(20, 26, 38, .36), rgba(12, 16, 26, .56));
+  box-shadow:
+    inset 0 0 0 1px rgba(146, 186, 255, .035),
+    inset 0 1px 0 rgba(243, 236, 214, .04),
+    0 36px 80px -42px rgba(0, 0, 0, .55);
+  isolation: isolate;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+}
+
+.opening.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opening {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.opening::before {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border: 1px dashed rgba(146, 186, 255, .045);
+  border-radius: 1px;
+  pointer-events: none;
+  opacity: .85;
+}
+
+.opening__paper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: var(--opening-tone);
+  opacity: .85;
+  z-index: 0;
+}
+
+.opening__paper svg { width: 100%; height: 100%; display: block; }
+
+.opening__crop {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 1px solid currentColor;
+  opacity: .75;
+  pointer-events: none;
+  z-index: 2;
+  color: var(--opening-tone);
+}
+
+.opening__crop--tl { top: 14px; left: 14px; border-right: 0; border-bottom: 0; }
+.opening__crop--tr { top: 14px; right: 14px; border-left: 0; border-bottom: 0; }
+.opening__crop--bl { bottom: 14px; left: 14px; border-right: 0; border-top: 0; }
+.opening__crop--br { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
+
+.opening__rule {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 4px;
+  color: var(--opening-tone);
+  z-index: 2;
+}
+
+.opening__rule svg { width: 100%; height: 100%; display: block; }
+
+.opening__rule--lead { margin-bottom: clamp(6px, .8vw, 12px); }
+
+.opening__plate {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  align-items: center;
+  column-gap: clamp(8px, 1vw, 16px);
+  row-gap: 4px;
+  padding: clamp(10px, 1.2vw, 18px) clamp(14px, 1.6vw, 24px);
+  margin: 0 0 clamp(18px, 2.2vw, 32px);
+  border: 1px solid var(--line-soft);
+  border-radius: 1px;
+  color: var(--paper);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .02), rgba(255, 255, 255, 0)),
+    color-mix(in srgb, var(--opening-tone) 8%, transparent);
+  font-family: var(--mono);
+  font-size: clamp(9px, .72vw, 10.5px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  transition: color .5s var(--ease), background .55s var(--ease), border-color .55s var(--ease);
+}
+
+.opening__plate-mark {
+  font-family: Georgia, 'Iowan Old Style', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--opening-tone);
+  opacity: .8;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.opening__plate-title {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  row-gap: 0;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: clamp(9px, .72vw, 10.5px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.opening__plate-title em {
+  color: var(--opening-tone);
+  font-style: normal;
+  margin: 0 2px;
+  opacity: .9;
+}
+
+.opening__plate-stamp {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(18px, 1.5vw, 22px);
+  height: clamp(18px, 1.5vw, 22px);
+  color: var(--opening-tone);
+  opacity: .85;
+  transition: color .5s var(--ease);
+}
+
+.opening__plate-stamp svg { width: 100%; height: 100%; display: block; }
+
+.opening__plate-meta {
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .9vw, 13px);
+  letter-spacing: -.005em;
+  text-transform: none;
+}
+
+.opening__plate-meta em {
+  color: var(--paper);
+  font-style: italic;
+}
+
+.opening__crease {
+  position: absolute;
+  top: clamp(80px, 8vw, 120px);
+  bottom: clamp(64px, 6vw, 96px);
+  left: 50%;
+  width: 12px;
+  transform: translateX(-50%);
+  color: var(--opening-tone);
+  pointer-events: none;
+  z-index: 1;
+  opacity: .85;
+}
+
+.opening__crease svg { width: 100%; height: 100%; display: block; }
+
+.opening__crease-tag {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  color: var(--opening-tone);
+  background: linear-gradient(180deg, rgba(20, 26, 38, .85), rgba(12, 16, 26, .95));
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.opening__crease-tag em {
+  color: var(--paper);
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+}
+
+.opening__crease-tag-rule {
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.opening__crease-tag-rule--alt { opacity: .8; }
+
+.opening__stage {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: clamp(28px, 3.4vw, 56px);
+}
+
+.opening__rule--trail { margin-top: clamp(8px, 1vw, 16px); }
+
+@media (max-width: 720px) {
+  .opening {
+    padding: 22px 16px 32px;
+  }
+  .opening__plate {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto auto;
+    column-gap: 8px;
+    row-gap: 4px;
+  }
+  .opening__plate-stamp { grid-column: 1; grid-row: 1; }
+  .opening__plate-title { grid-column: 2; grid-row: 1; }
+  .opening__plate-meta { grid-column: 1 / span 2; grid-row: 2; }
+  .opening__plate-mark:first-of-type { grid-column: 1; grid-row: 3; }
+  .opening__plate-mark:last-of-type { grid-column: 2; grid-row: 3; justify-self: end; }
+  .opening__crease {
+    display: none;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   THE PRESS MOTTO · a small italic line under the press-bed header.
+   It carries the voice in a single hand-set sentence and earns the
+   space between the lede and the spread with personality.
+   ────────────────────────────────────────────────────────────────── */
+
+.press__motto {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  max-width: 58ch;
+  margin: clamp(8px, 1vw, 14px) auto 0;
+  padding: clamp(10px, 1.2vw, 16px) clamp(14px, 1.6vw, 22px);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.25vw, 17.5px);
+  line-height: 1.5;
+  letter-spacing: -.005em;
+  border: 1px solid var(--line-soft);
+  border-radius: 1px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .025), rgba(255, 255, 255, 0)),
+    color-mix(in srgb, var(--press-tone, var(--coral)) 7%, transparent);
+  text-wrap: pretty;
+}
+
+.app--voice-quiet .press__motto { --press-tone: var(--blue); }
+.app--voice-human .press__motto { --press-tone: var(--coral); }
+.app--voice-bold .press__motto { --press-tone: var(--acid); }
+
+.press__motto-line {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--paper);
+  text-shadow: 0 0 .04em rgba(243, 236, 214, .18);
+}
+
+.press__motto-mark {
+  flex: 0 0 auto;
+  width: clamp(18px, 1.6vw, 24px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor, transparent);
+  color: var(--press-tone, var(--coral));
+  opacity: .75;
+}
+
+.press__motto-mark--alt { transform: scaleX(-1); }
+
+/* ──────────────────────────────────────────────────────────────────
+   FOLIO IMPRINT · a small, reusable italic inscription used as a
+   press motto, an inscription, or a sign-off. One short line in
+   serif italic, set between two short rules, signed "m³ press".
+   ────────────────────────────────────────────────────────────────── */
+
+.folio-imprint {
+  --imprint-line: var(--paper);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  padding: clamp(14px, 1.6vw, 22px) clamp(18px, 2.2vw, 32px);
+  margin: clamp(12px, 1.4vw, 22px) auto;
+  max-width: 64ch;
+  color: var(--paper);
+  font-family: var(--serif);
+  isolation: isolate;
+  border: 1px solid var(--line-soft);
+  border-radius: 1px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .025), rgba(255, 255, 255, 0)),
+    color-mix(in srgb, var(--imprint-tone) 6%, transparent);
+  text-align: center;
+}
+
+.folio-imprint--motto { color: var(--paper); }
+.folio-imprint--inscription { color: var(--paper); }
+.folio-imprint--sign-off {
+  color: var(--paper);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, 0)),
+    color-mix(in srgb, var(--imprint-tone) 10%, transparent);
+}
+
+.folio-imprint--quiet { --imprint-tone: var(--blue); }
+.folio-imprint--human { --imprint-tone: var(--coral); }
+.folio-imprint--bold { --imprint-tone: var(--acid); }
+
+.folio-imprint__rule {
+  display: block;
+  width: clamp(160px, 24%, 240px);
+  height: 6px;
+  margin: 0 auto;
+  color: var(--imprint-tone);
+  opacity: .7;
+  transition: color .5s var(--ease);
+}
+
+.folio-imprint__rule svg { width: 100%; height: 100%; display: block; }
+
+.folio-imprint__rule--trail { opacity: .5; }
+
+.folio-imprint__head {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  color: var(--imprint-tone);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .68vw, 10px);
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  transition: color .5s var(--ease);
+}
+
+.folio-imprint__head-eyebrow {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(8.5px, .68vw, 10px);
+  letter-spacing: .32em;
+  text-transform: uppercase;
+}
+
+.folio-imprint__head-glyph {
+  display: inline-block;
+  width: clamp(14px, 1.2vw, 18px);
+  height: 1px;
+  background: currentColor;
+  opacity: .75;
+}
+
+.folio-imprint__head-glyph--alt { transform: scaleX(-1); }
+
+.folio-imprint__head-num {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .92vw, 13px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  opacity: .7;
+}
+
+.folio-imprint__body {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(6px, .8vw, 10px);
+  margin: clamp(4px, .5vw, 8px) 0 clamp(2px, .3vw, 4px);
+  padding: 0;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(17px, 1.45vw, 21px);
+  letter-spacing: -.012em;
+  line-height: 1.45;
+  text-wrap: balance;
+  text-shadow: 0 0 .04em rgba(243, 236, 214, .18);
+}
+
+.folio-imprint__body-text {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.folio-imprint__body-glyph {
+  color: var(--imprint-tone);
+  font-family: Georgia, 'Iowan Old Style', serif;
+  font-style: normal;
+  font-size: 1.4em;
+  line-height: 0;
+  opacity: .55;
+  transform: translateY(.12em);
+  transition: color .5s var(--ease);
+}
+
+.folio-imprint__sign {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(6px, .8vw, 10px);
+  margin: clamp(4px, .5vw, 8px) 0 0;
+  color: var(--mist);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .68vw, 10px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.folio-imprint__sign-mark {
+  color: var(--imprint-tone);
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: .8;
+}
+
+.folio-imprint__sign-name {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .92vw, 13px);
+  letter-spacing: -.005em;
+  text-transform: none;
+}
+
+.folio-imprint__sign-rule {
+  display: inline-block;
+  width: clamp(36px, 4vw, 56px);
+  height: 4px;
+  color: var(--imprint-tone);
+  opacity: .55;
+}
+
+.folio-imprint__sign-rule svg { width: 100%; height: 100%; display: block; }
+
+.folio-imprint__sign-voice {
+  color: var(--mist);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .68vw, 10px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.folio-imprint__sign-voice em {
+  color: var(--imprint-tone);
+  font-style: normal;
+  text-transform: uppercase;
+  transition: color .5s var(--ease);
+}
+
+@media (max-width: 560px) {
+  .folio-imprint {
+    padding: 14px 16px;
+  }
+  .folio-imprint__body {
+    font-size: clamp(15px, 5.4vw, 18px);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   ANCHORED HERO BODY · when the editor's note sits outside the
+   Opening broadside, we slim its leading margin so it reads as the
+   next page rather than a distant one. It still has its own plate
+   header so it earns its rhythm.
+   ────────────────────────────────────────────────────────────────── */
+
+.hero__body--anchored {
+  margin-top: clamp(28px, 3.4vw, 48px);
+}
+
+@media (max-width: 720px) {
+  .hero__body--anchored {
+    margin-top: clamp(20px, 5vw, 32px);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   SIGN-OFF PLINTH · a single small plinth that holds the FolioImprint
+   sign-off beneath the colophon. It breathes; it does not compete.
+   ────────────────────────────────────────────────────────────────── */
+
+.sign-off-plinth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(20px, 2.6vw, 40px) clamp(20px, 3vw, 48px) clamp(36px, 4vw, 64px);
+  margin: clamp(20px, 2.4vw, 36px) 0 0;
+  border-top: 1px dashed var(--line-soft);
+}
+
+.sign-off-plinth .folio-imprint {
+  margin: 0;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   INSIDE THE OPENING · tone down nested cards so they read as
+   one broadside, not as cards inside a card. Strip border + shadow
+   from the spread ribbon, voice trial, reading prologue, and
+   press lever when they sit inside the Opening container.
+   ────────────────────────────────────────────────────────────────── */
+
+.opening .spread-ribbon {
+  margin: 0;
+  padding: clamp(14px, 1.8vw, 22px) clamp(8px, 1vw, 16px);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.opening .spread-ribbon::before,
+.opening .spread-ribbon::after {
+  content: none;
+}
+
+.opening .voice-trial {
+  margin: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.opening .voice-trial__paper {
+  display: none;
+}
+
+.opening .reading-prologue {
+  margin: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.opening .reading-prologue__crop {
+  display: none;
+}
+
+.opening .press-lever {
+  margin: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.opening .press-lever__crop,
+.opening .press-lever__bloom {
+  display: none;
+}
+
+.opening .title-fold {
+  margin: 0;
+}
+
+.opening .title-fold__paper {
+  opacity: .5;
+}
+
+.opening .hero {
+  padding: 0;
+}
+
+.opening .hero__spread {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: clamp(48px, 6vw, 96px) clamp(8px, 1vw, 24px) clamp(32px, 4vw, 64px);
+}
+
+.opening .hero__spread::before,
+.opening .hero__spread::after {
+  content: none;
+}
+
+.opening .title-page {
+  margin: 0 0 clamp(14px, 1.6vw, 22px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.opening .title-page__rule {
+  display: none;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   PRESS SIGN-OFF · a small plinth at the foot of the press bed
+   holding a single FolioImprint motto. It closes the spread.
+   ────────────────────────────────────────────────────────────────── */
+
+.press__sign-off {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(20px, 2.4vw, 32px) 0 clamp(8px, 1vw, 16px);
+  margin-top: clamp(8px, 1vw, 14px);
+  border-top: 1px dashed var(--line-soft);
+}
+
+.press__sign-off .folio-imprint {
+  margin: 0;
+  max-width: 60ch;
+}
+
+/* Hide redundant crops inside the opening — the opening has its own */
+.opening .spread-ribbon__crop {
+  display: none;
+}
+
+.opening .voice-trial__masthead-rule--lead,
+.opening .voice-trial__masthead-rule--trail {
+  display: none;
+}
+
+/* Hide the title-fold's own fold mark when inside the opening; the
+   opening's vertical crease does that job for the whole sheet. */
+.opening .title-fold__crease {
+  display: none;
+}

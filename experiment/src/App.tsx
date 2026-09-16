@@ -42,6 +42,8 @@ import { ReadingPrologue } from './ReadingPrologue'
 import { PressHandwheel } from './PressHandwheel'
 import { SpreadRibbon } from './SpreadRibbon'
 import { LetterpressCatch } from './LetterpressCatch'
+import { Opening } from './Opening'
+import { FolioImprint } from './FolioImprint'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -702,62 +704,65 @@ export function App() {
       <PressSpine activeId={activeSection} voice={voice} />
 
       <div className="page">
-        <SpreadRibbon
-          voice={voice}
-          word={activeWord}
-          setToday={setToday}
-          activeSection={activeSection}
-          totalSections={FOLIO_ORDER.length}
-        />
-
-        <VoiceTrial
-          voice={voice}
-          setToday={setToday}
-          rehearsing={rehearsing}
-          rehearsalCount={rehearsalCount}
-          onVoice={selectVoice}
-          onTrialPull={triggerTrialPull}
-        />
-        <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
-          <TitlePage voice={voice} word={activeWord} setToday={setToday} />
-
-          <div className="hero__spread">
-            <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
-            <PaperWarmth voice={voice} />
-
-            <h1 className="sr-only" id="page-title">{TITLE}</h1>
-            <TitleFold voice={voice} word={activeWord} setToday={setToday} rehearsing={rehearsing}>
-              <TitleLine
-                voice={voice}
-                word={activeWord}
-                hover={hoveredWord}
-                setToday={setToday}
-                onVoice={selectVoice}
-                onWord={(id, focus) => selectWord(id, focus ?? false)}
-                onHover={setHoveredWord}
-                tokenRefs={tokenRefs}
-              />
-            </TitleFold>
-          </div>
-
-          <ReadingPrologue
+        <Opening voice={voice} setToday={setToday}>
+          <SpreadRibbon
             voice={voice}
             word={activeWord}
             setToday={setToday}
-            onWord={id => selectWord(id)}
-            onLeverHint={() => window.requestAnimationFrame(() => answerTriggerRef.current?.focus())}
+            activeSection={activeSection}
+            totalSections={FOLIO_ORDER.length}
           />
 
-          <PressLever
-            ref={answerTriggerRef}
+          <VoiceTrial
             voice={voice}
-            answerOpen={answerOpen}
-            readerName={readerName}
-            onToggleAnswer={toggleAnswer}
             setToday={setToday}
+            rehearsing={rehearsing}
+            rehearsalCount={rehearsalCount}
+            onVoice={selectVoice}
+            onTrialPull={triggerTrialPull}
           />
+          <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
+            <TitlePage voice={voice} word={activeWord} setToday={setToday} />
 
-          <div className={`hero__body ${heroBodyVisible ? 'is-in-view' : ''}`} ref={heroBodyRef}>
+            <div className="hero__spread">
+              <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
+              <PaperWarmth voice={voice} />
+
+              <h1 className="sr-only" id="page-title">{TITLE}</h1>
+              <TitleFold voice={voice} word={activeWord} setToday={setToday} rehearsing={rehearsing}>
+                <TitleLine
+                  voice={voice}
+                  word={activeWord}
+                  hover={hoveredWord}
+                  setToday={setToday}
+                  onVoice={selectVoice}
+                  onWord={(id, focus) => selectWord(id, focus ?? false)}
+                  onHover={setHoveredWord}
+                  tokenRefs={tokenRefs}
+                />
+              </TitleFold>
+            </div>
+
+            <ReadingPrologue
+              voice={voice}
+              word={activeWord}
+              setToday={setToday}
+              onWord={id => selectWord(id)}
+              onLeverHint={() => window.requestAnimationFrame(() => answerTriggerRef.current?.focus())}
+            />
+
+            <PressLever
+              ref={answerTriggerRef}
+              voice={voice}
+              answerOpen={answerOpen}
+              readerName={readerName}
+              onToggleAnswer={toggleAnswer}
+              setToday={setToday}
+            />
+          </section>
+        </Opening>
+
+        <div className={`hero__body hero__body--anchored ${heroBodyVisible ? 'is-in-view' : ''}`} ref={heroBodyRef}>
             <span className="hero__body-plate" aria-hidden="true">
               <span className="hero__body-plate-rule" />
               <span className="hero__body-plate-tag">
@@ -951,7 +956,6 @@ export function App() {
 
             <TitleFolio voice={voice} setToday={setToday} />
           </div>
-        </section>
 
         <FolioFold voice={voice} word={activeWord} setToday={setToday} marks={marks} />
 
@@ -1007,6 +1011,10 @@ export function App() {
         <PressSignature folio="viii" voice={voice} word={activeWord} setToday={setToday} variant="footer" />
 
         <Colophon voice={voice} word={activeWord} setToday={setToday} readerName={readerName} />
+
+        <div className="sign-off-plinth">
+          <FolioImprint voice={voice} variant="sign-off" number="№ viii · 1/1" />
+        </div>
       </div>
 
       <MarginNotes activeId={activeSection} voice={voice} />

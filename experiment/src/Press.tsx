@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { NOTES, type WordId } from './notes'
+import { FolioImprint } from './FolioImprint'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -81,6 +82,17 @@ export function Press({ voice, word, onVoice }: PressProps) {
           <h2 id="press-title">One lever. <i>One line.</i> Three settings.</h2>
           <p className="section__lede">
             A working spread of the press itself: the lever on the left, the composing stick in the middle, the pulled impression on the right. Pull the lever and the line gets set in the next voice.
+          </p>
+          <p className="press__motto">
+            <span className="press__motto-mark" />
+            <em className="press__motto-line">
+              {voice === 'quiet'
+                ? 'a quiet line is a careful line — let the page do less, then less again.'
+                : voice === 'human'
+                ? 'a small wobble makes the machine feel less like a machine.'
+                : 'say the whole thing once, in the loudest voice you can keep honest.'}
+            </em>
+            <span className="press__motto-mark press__motto-mark--alt" />
           </p>
         </header>
 
@@ -252,6 +264,10 @@ export function Press({ voice, word, onVoice }: PressProps) {
           <span aria-hidden="true">※</span>
           The lever is bound to the title above and the type plate that follows. One voice, three readings, one line.
         </p>
+
+        <div className="press__sign-off">
+          <FolioImprint voice={voice} variant="motto" number="№ ii · 1/3" />
+        </div>
       </div>
     </section>
   )
