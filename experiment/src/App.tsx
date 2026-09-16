@@ -37,6 +37,7 @@ import { FolioLedger } from './FolioLedger'
 import { TitleFolio } from './TitleFolio'
 import { ClosingPlate } from './ClosingPlate'
 import { ReadingPrologue } from './ReadingPrologue'
+import { PressHandwheel } from './PressHandwheel'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -684,6 +685,15 @@ export function App() {
       <PressSpine activeId={activeSection} voice={voice} />
 
       <div className="page">
+        <PressHandwheel
+          voice={voice}
+          word={activeWord}
+          marks={marks}
+          setToday={setToday}
+          onVoice={selectVoice}
+          onWord={id => selectWord(id)}
+          onArm={toggleAnswer}
+        />
         <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
           <TitlePage voice={voice} setToday={setToday} />
 

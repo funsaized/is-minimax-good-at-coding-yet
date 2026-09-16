@@ -1,10 +1,11 @@
-# Iteration log
+# Iteration 281
 
-## 280 — Replaced the thin page-fold with a deliberate make-ready spread.
+A live `PressHandwheel` strip lives just under the header — the press room's always-on instrument. A 12-tooth gear slowly turns, rotates a quarter on every voice pull, and shows the live state as `cold · warming · armed · hot`.
 
-Replaced the single-rule `PageFold` that sat between the front matter and the press bed with a substantial `FolioFold` composition. Four tools (lever · stick · chase · counter) are lined up as small plates with corner crops, hairline rules, and SVG glyphs that read the active voice and the active mark. A press-status control arms or rests the press, a session ledger (pulls · marks · voices · set today) keeps the count, and a dashed fold-hinge draws its stroke, drops a wax bead, and smooth-scrolls to folio ii.
-
-- **New** `src/FolioFold.tsx`: full composition (~440 lines). Local SVG defs (grain filter + rule gradient + hinge grain filter), corner crops, plate-tag eyebrow, title + voice-tail, four-tool grid that lifts the active voice's tool with a tone-coloured gradient, animated arm-ring + spring-loaded stamp on each setting change, ledger row, fold hinge with stroke-draw + wax-drop + bead/ring pulse, and a face/mark/voice strip footer. All four SVG glyphs (lever / stick with three coloured sorts / chase with voice glyph / counter with impression number) are drawn inline. ARIA labels, keyboard activation (Enter / Space on arm and hinge), `prefers-reduced-motion` opt-outs, and mobile reflow (2-up at 880px, single column at 540px) are all in place. Props: `voice`, `word`, `setToday`, `marks`.
-- **Edited** `src/App.tsx`: swapped `import { PageFold } from './PageFold'` for `import { FolioFold } from './FolioFold'` and replaced `<PageFold voice={voice} setToday={setToday} />` with `<FolioFold voice={voice} word={activeWord} setToday={setToday} marks={marks} />`. `PageFold.tsx` is no longer referenced (left in place to keep the diff narrow); its CSS still ships but is unused.
-- **Edited** `src/style.css`: appended ~620 lines under `.folio-fold__*` for the new composition — corner crops, plate-tag, title + tail, four-tool grid with per-voice active state, animated arm ring + stamp, ledger, fold hinge with stroke-draw + wax drop + bead/ring pulse, faceprint footer, responsive breakpoints (1180 / 880 / 540), and a `prefers-reduced-motion` block.
-- No new dependencies, no remote assets, no network calls. Title remains `is Minimax M3 good at frontend yet?`. `npm run build` passes (`tsc --noEmit && vite build` → 724 kB CSS / 484 kB JS).
+- A new `PressHandwheel` component (`src/PressHandwheel.tsx`) sits between the header and the hero.
+- Three button cells: the rotating handwheel (cycles voices), the marked-words plate (cycles m³ / good at / yet?), and the lever arm (opens the editor's note on folio viii).
+- Each voice or word change nudges the gear a quarter turn with a spring settle; the wheel's inner ring slowly rotates to keep the press feeling alive.
+- A live `press state` readout ticks through `cold → warming → armed → hot` as the reader engages.
+- Eight tick cells under the marked-words plate fill as marks accumulate; the most-recent ticks a little taller with a glow.
+- Grain filter, corner ticks, focusable controls, arrow-key cycling, and `prefers-reduced-motion` respect are wired in.
+- New CSS appended at the end of `src/style.css` under `.press-handwheel`. The component is rendered inside `.page` so the hero composition is unaffected.
