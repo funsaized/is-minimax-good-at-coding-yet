@@ -39686,9 +39686,23 @@ a small act of typesetting.
   color: var(--paper);
   font-family: var(--serif);
   font-style: italic;
+  font-weight: 400;
   font-size: clamp(22px, 2.4vw, 32px);
-  letter-spacing: -.018em;
-  line-height: 1.12;
+  letter-spacing: -.022em;
+  line-height: 1.1;
+  transition: color .55s var(--ease), letter-spacing .55s var(--ease);
+}
+
+.press-lever--voice-bold .press-lever__action-line {
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -.04em;
+  text-transform: uppercase;
+  font-size: clamp(18px, 1.9vw, 26px);
+}
+
+.press-lever--voice-human .press-lever__action-line {
+  font-weight: 500;
 }
 
 .press-lever__action-button.is-open .press-lever__action-line {
@@ -52387,37 +52401,71 @@ a small act of typesetting.
   display: grid;
   justify-items: center;
   align-content: center;
-  gap: clamp(2px, .4vw, 6px);
-  margin: clamp(8px, 1.4vw, 18px) 0 clamp(2px, .4vw, 6px);
+  gap: clamp(2px, .35vw, 5px);
+  margin: clamp(10px, 1.4vw, 20px) 0 clamp(4px, .6vw, 10px);
   font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
-  font-size: clamp(2.4rem, 9vw, 7.4rem);
+  font-size: clamp(2.4rem, 8.8vw, 7.2rem);
   font-weight: 400;
   font-style: italic;
-  line-height: 1.04;
-  letter-spacing: -.026em;
+  line-height: 1.02;
+  letter-spacing: -.028em;
   text-align: center;
   text-wrap: balance;
   color: var(--paper);
   text-shadow: 0 0 .04em rgba(243, 236, 214, .14);
   cursor: pointer;
   animation: titlelineHeadlineIn .85s var(--ease-out) .35s backwards;
+  position: relative;
 }
 
-.titleline--voice-human .titleline__headline { font-style: italic; font-weight: 500; }
-.titleline--voice-quiet .titleline__headline { font-style: italic; font-weight: 400; }
+.titleline__headline::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: clamp(-8px, -0.6vw, -4px);
+  transform: translateX(-50%);
+  width: clamp(48px, 8vw, 96px);
+  height: 1px;
+  background: var(--titleline-tone);
+  opacity: 0;
+  transition: opacity .55s var(--ease), width .85s var(--ease-out);
+  pointer-events: none;
+}
+
+.titleline--word-yet .titleline__headline::after {
+  opacity: .55;
+  width: clamp(72px, 12vw, 140px);
+}
+
+.titleline--word-m3 .titleline__headline::after,
+.titleline--word-good .titleline__headline::after {
+  opacity: .3;
+}
+
+.titleline--voice-human .titleline__headline {
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -.022em;
+}
+.titleline--voice-quiet .titleline__headline {
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -.028em;
+}
 
 .titleline--voice-bold .titleline__headline {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   font-style: normal;
   font-weight: 850;
-  letter-spacing: -.058em;
+  letter-spacing: -.062em;
   text-transform: uppercase;
+  line-height: 1.04;
 }
 
 @keyframes titlelineHeadlineIn {
-  0% { opacity: 0; transform: translateY(8px); filter: blur(6px); }
-  60% { opacity: 1; filter: blur(0); }
-  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  0%   { opacity: 0; transform: translateY(8px) scale(.985); filter: blur(6px); }
+  55%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -52428,7 +52476,7 @@ a small act of typesetting.
   display: inline-flex;
   align-items: baseline;
   justify-content: center;
-  gap: clamp(4px, .8vw, 12px);
+  gap: clamp(6px, .9vw, 14px);
   width: 100%;
 }
 
@@ -52438,22 +52486,24 @@ a small act of typesetting.
   font-style: inherit;
   font-weight: inherit;
   letter-spacing: inherit;
-  color: var(--mist);
-  opacity: .82;
-  font-size: .92em;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+  opacity: .92;
+  font-size: .86em;
   position: relative;
   top: -.04em;
+  transition: color .55s var(--ease);
 }
 
 .titleline--voice-bold .titleline__line-lead,
 .titleline--voice-bold .titleline__line-mid {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
   font-style: normal;
-  font-weight: 600;
-  letter-spacing: -.04em;
+  font-weight: 700;
+  letter-spacing: -.045em;
   text-transform: uppercase;
-  font-size: .88em;
-  opacity: .9;
+  font-size: .82em;
+  opacity: .85;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
 }
 
 .titleline__line-lead {
@@ -52461,7 +52511,7 @@ a small act of typesetting.
 }
 
 .titleline__line-mid {
-  margin: 0 clamp(2px, .3vw, 4px);
+  margin: 0 clamp(4px, .4vw, 8px);
 }
 
 /* — Question mark · the line's terminal punctuation — */
@@ -52479,43 +52529,44 @@ a small act of typesetting.
   font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
   font-style: italic;
   font-weight: 400;
-  font-size: 1.2em;
-  line-height: 0.85;
+  font-size: 1.22em;
+  line-height: 0.82;
   color: var(--titleline-tone);
-  letter-spacing: -.04em;
+  letter-spacing: -.045em;
   text-shadow: 0 0 .04em rgba(243, 236, 214, .12);
-  transform: translateY(.08em);
+  transform: translateY(.1em);
   transition: color .55s var(--ease), transform .85s var(--ease-spring), text-shadow .85s var(--ease);
 }
 
 .titleline--word-yet .titleline__query-mark {
   text-shadow:
     0 0 .04em rgba(243, 236, 214, .12),
-    0 0 .5em color-mix(in srgb, var(--titleline-tone) 35%, transparent);
+    0 0 .6em color-mix(in srgb, var(--titleline-tone) 38%, transparent);
+  transform: translateY(.12em) scale(1.04);
 }
 
 .titleline--voice-bold .titleline__query-mark {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
   font-style: normal;
   font-weight: 800;
-  font-size: 1.04em;
-  letter-spacing: -.06em;
+  font-size: 1.05em;
+  letter-spacing: -.07em;
 }
 
 .titleline__query-tail {
   position: absolute;
-  left: 14%;
+  left: 12%;
   right: -.2em;
-  bottom: -.18em;
-  height: 10px;
+  bottom: -.2em;
+  height: 12px;
   color: var(--titleline-tone);
-  opacity: 0;
-  transform: translateY(-2px);
+  opacity: .18;
+  transform: translateY(-1px);
   transition: opacity .65s var(--ease) .1s, transform .85s var(--ease-spring) .1s;
 }
 
 .titleline--word-yet .titleline__query-tail {
-  opacity: .55;
+  opacity: .7;
   transform: translateY(0);
 }
 
@@ -52938,9 +52989,18 @@ a small act of typesetting.
     gap: 0;
   }
 
+  .titleline__headline::after {
+    width: clamp(36px, 10vw, 64px);
+    bottom: clamp(-6px, -0.8vw, -3px);
+  }
+
+  .titleline--word-yet .titleline__headline::after {
+    width: clamp(56px, 14vw, 100px);
+  }
+
   .titleline__line-lead,
   .titleline__line-mid {
-    font-size: .88em;
+    font-size: .86em;
   }
 
   .titleline__proofs {

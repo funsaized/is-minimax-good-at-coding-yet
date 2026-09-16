@@ -22,9 +22,9 @@ type Display = {
 }
 
 const DISPLAY: Record<VoiceId, Display> = {
-  quiet: { fontFamily: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif", fontWeight: 400, fontStyle: 'italic', tracking: '-0.022em', uppercased: false },
-  human: { fontFamily: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif", fontWeight: 500, fontStyle: 'italic', tracking: '-0.018em', uppercased: false },
-  bold: { fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: 800, fontStyle: 'normal', tracking: '-0.05em', uppercased: true },
+  quiet: { fontFamily: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif", fontWeight: 400, fontStyle: 'italic', tracking: '-0.028em', uppercased: false },
+  human: { fontFamily: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif", fontWeight: 500, fontStyle: 'italic', tracking: '-0.022em', uppercased: false },
+  bold: { fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif', fontWeight: 850, fontStyle: 'normal', tracking: '-0.062em', uppercased: true },
 }
 
 const VOICE_TONE: Record<VoiceId, string> = {
@@ -315,13 +315,13 @@ export function TitleLine({
           <span className="titleline__query" aria-hidden="true">
             <span className="titleline__query-mark">?</span>
             <span className="titleline__query-tail">
-              <svg viewBox="0 0 80 12" preserveAspectRatio="none" aria-hidden="true">
+              <svg viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true">
                 <path
                   className="titleline__query-tail-stroke"
-                  d="M2 6c12-5 26 4 40-1s22-4 34 0"
+                  d="M2 7c14-6 30 5 46-1s26-4 40 1"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth=".9"
+                  strokeWidth=".95"
                   strokeLinecap="round"
                   pathLength="100"
                 />
