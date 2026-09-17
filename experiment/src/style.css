@@ -54998,11 +54998,11 @@ a small act of typesetting.
 
 .question-monument__pressmark {
   display: block;
-  width: clamp(120px, 14vw, 200px);
-  height: clamp(4px, .5vw, 6px);
-  margin: 0 auto clamp(8px, 1vw, 14px);
+  width: clamp(140px, 16vw, 220px);
+  height: clamp(6px, .8vw, 10px);
+  margin: 0 auto clamp(10px, 1.2vw, 18px);
   color: var(--qm-tone);
-  opacity: .5;
+  opacity: .65;
 }
 
 .question-monument__pressmark svg {
@@ -55011,24 +55011,58 @@ a small act of typesetting.
   height: 100%;
 }
 
+.question-monument__pressmark-stroke {
+  stroke-dasharray: 220 60;
+  stroke-dashoffset: 220;
+  animation: questionMonumentPressmarkDraw 1.4s var(--ease-out) .4s forwards;
+}
+
+@keyframes questionMonumentPressmarkDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.question-monument__pressmark-bead {
+  opacity: 0;
+  transform-origin: 276px 3px;
+  animation: questionMonumentPressmarkBead .6s var(--ease-spring) 1.6s forwards;
+}
+
+@keyframes questionMonumentPressmarkBead {
+  to { opacity: 1; transform: scale(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question-monument__pressmark-stroke {
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+  .question-monument__pressmark-bead {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
 .question-monument__line {
   display: inline-flex;
   align-items: baseline;
   justify-content: center;
   flex-wrap: wrap;
-  gap: clamp(10px, 1.6vw, 22px);
+  column-gap: clamp(10px, 1.6vw, 22px);
+  row-gap: clamp(2px, .4vw, 6px);
   font-size: clamp(2.4rem, 7.4vw, 6.4rem);
-  line-height: 1.02;
+  line-height: 0.98;
   letter-spacing: inherit;
 }
 
 .question-monument__line-lead,
 .question-monument__line-mid {
   display: inline-block;
-  font-size: .86em;
+  font-size: .84em;
   color: var(--paper);
-  opacity: .8;
+  opacity: .82;
   font-style: inherit;
+  letter-spacing: -.01em;
 }
 
 .question-monument__line-lead {
@@ -58719,6 +58753,381 @@ a small act of typesetting.
     animation: none !important;
     transform: none !important;
     stroke-dashoffset: 0 !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   FIRST IMPRESSION · a single, hand-pressed mark that sits at
+   the top of the title plate between the running-head caption
+   and the headline. It replaces the prior TitleSigil + TitleLamp
+   stack with one decisive gesture: a wax-stamped circular seal,
+   a hand-drawn arrow and signature rule, a brief italic line,
+   and a halo. The seal carries the page's own imprint ("FIRST ·
+   IMPRESSION") and the active voice letter; the inscription
+   states what was done. The piece reads as a single composition
+   rather than two stacked ornaments.
+   ──────────────────────────────────────────────────────────── */
+
+.first-impression {
+  --first-impression-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-areas:
+    'rule-lead seal rule-trail'
+    'copy       copy  copy'
+    'signature  signature signature';
+  align-items: center;
+  column-gap: clamp(14px, 2vw, 28px);
+  row-gap: clamp(6px, .8vw, 12px);
+  width: min(100%, 940px);
+  margin: clamp(20px, 2.6vw, 40px) auto clamp(12px, 1.6vw, 22px);
+  padding: clamp(10px, 1.4vw, 18px) clamp(14px, 2vw, 28px) clamp(4px, .6vw, 8px);
+  color: var(--first-impression-tone);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .95s var(--ease-out), transform .95s var(--ease-out);
+}
+
+.first-impression--quiet { --first-impression-tone: var(--blue); }
+.first-impression--human { --first-impression-tone: var(--coral); }
+.first-impression--bold { --first-impression-tone: var(--acid); }
+
+.first-impression.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .first-impression {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .first-impression__rule-stroke,
+  .first-impression__signature-stroke {
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+  .first-impression__seal {
+    opacity: 1 !important;
+    transform: rotate(-4deg) scale(1) !important;
+    animation: none !important;
+  }
+}
+
+.first-impression__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.first-impression__halo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .85;
+  mix-blend-mode: screen;
+}
+
+.first-impression__halo svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* — Rules flanking the seal — */
+
+.first-impression__rule {
+  display: grid;
+  align-items: center;
+  width: 100%;
+  height: clamp(8px, .8vw, 12px);
+  color: var(--first-impression-tone);
+  pointer-events: none;
+}
+
+.first-impression__rule--lead { grid-area: rule-lead; }
+.first-impression__rule--trail { grid-area: rule-trail; }
+
+.first-impression__rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.first-impression__rule-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: firstImpressionRuleDraw 1.2s var(--ease-out) .25s forwards;
+}
+
+.first-impression__rule-stroke--trail {
+  animation: firstImpressionRuleDraw 1.2s var(--ease-out) .4s forwards;
+}
+
+@keyframes firstImpressionRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* — Wax seal in the centre — */
+
+.first-impression__seal {
+  position: relative;
+  grid-area: seal;
+  display: grid;
+  place-items: center;
+  width: clamp(74px, 6.6vw, 96px);
+  height: clamp(74px, 6.6vw, 96px);
+  color: var(--first-impression-tone);
+  pointer-events: none;
+  opacity: 0;
+  transform: rotate(-4deg) scale(.92);
+  animation: firstImpressionSealIn 1.1s var(--ease-spring) .35s forwards;
+}
+
+@keyframes firstImpressionSealIn {
+  0% { opacity: 0; transform: rotate(-9deg) scale(.7); }
+  60% { opacity: 1; transform: rotate(-2deg) scale(1.04); }
+  100% { opacity: 1; transform: rotate(-4deg) scale(1); }
+}
+
+.first-impression__seal-shadow {
+  position: absolute;
+  bottom: -3px;
+  left: 8%;
+  right: 8%;
+  height: clamp(6px, .8vw, 10px);
+  background: radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--first-impression-tone) 22%, transparent), transparent 70%);
+  filter: blur(.5px);
+  opacity: .55;
+}
+
+.first-impression__seal-disc {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 1px 0 color-mix(in srgb, var(--first-impression-tone) 18%, transparent));
+}
+
+.first-impression__seal-disc svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.first-impression__seal-wax {
+  position: absolute;
+  bottom: clamp(-8px, -.6vw, -4px);
+  right: clamp(-6px, -.5vw, -3px);
+  width: clamp(14px, 1.4vw, 20px);
+  height: clamp(14px, 1.4vw, 20px);
+  pointer-events: none;
+}
+
+.first-impression__seal-wax-bead {
+  position: absolute;
+  inset: clamp(2px, .2vw, 4px);
+  border-radius: 50%;
+  background: var(--first-impression-tone);
+  filter: blur(.4px);
+  opacity: .85;
+}
+
+.first-impression__seal-wax-wisp {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed currentColor;
+  border-radius: 50%;
+  opacity: .55;
+}
+
+/* — Inscription line — */
+
+.first-impression__copy {
+  grid-area: copy;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  width: 100%;
+  margin: 0;
+  color: var(--paper);
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(12px, 1.08vw, 14px);
+  letter-spacing: -.005em;
+  line-height: 1.4;
+  text-wrap: balance;
+  opacity: 0;
+  animation: firstImpressionCopyIn .8s var(--ease-out) .7s forwards;
+}
+
+@keyframes firstImpressionCopyIn {
+  to { opacity: .82; }
+}
+
+.first-impression__copy-mark {
+  display: inline-block;
+  color: var(--first-impression-tone);
+  font-style: normal;
+  font-size: clamp(13px, 1.2vw, 15px);
+  opacity: .75;
+}
+
+.first-impression__copy-mark--alt { transform: scaleX(-1); }
+
+.first-impression__copy-line {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.first-impression.is-revealed .first-impression__copy-line {
+  color: var(--first-impression-tone);
+  transition: color .5s var(--ease);
+}
+
+/* — Hand-drawn signature rule + tag — */
+
+.first-impression__signature {
+  grid-area: signature;
+  display: grid;
+  justify-items: center;
+  gap: clamp(4px, .6vw, 8px);
+  width: 100%;
+  margin-top: clamp(2px, .3vw, 4px);
+  color: var(--first-impression-tone);
+  pointer-events: none;
+}
+
+.first-impression__signature svg {
+  display: block;
+  width: clamp(180px, 24vw, 280px);
+  height: clamp(20px, 1.6vw, 28px);
+}
+
+.first-impression__signature-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+}
+
+.first-impression__signature-stroke--lead {
+  animation: firstImpressionSignatureDraw 1.4s var(--ease-out) .85s forwards;
+}
+
+.first-impression__signature-stroke--trail {
+  animation: firstImpressionSignatureDraw 1.4s var(--ease-out) 1.05s forwards;
+}
+
+@keyframes firstImpressionSignatureDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.first-impression__signature-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  color: var(--paper);
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(11px, .96vw, 13px);
+  letter-spacing: -.005em;
+  opacity: 0;
+  animation: firstImpressionCopyIn .8s var(--ease-out) 1.3s forwards;
+}
+
+.first-impression__signature-tag em { font-style: italic; }
+
+.first-impression__signature-tag-mark {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--first-impression-tone);
+  opacity: .8;
+}
+
+/* — Corner crops to frame the seal — */
+
+.first-impression__corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  color: var(--first-impression-tone);
+  opacity: .42;
+}
+
+.first-impression__corner::before,
+.first-impression__corner::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+}
+
+.first-impression__corner::before { width: 10px; height: 1px; }
+.first-impression__corner::after { width: 1px; height: 10px; }
+
+.first-impression__corner--tl { top: 0; left: 0; }
+.first-impression__corner--tl::before { top: 0; left: 0; }
+.first-impression__corner--tl::after { top: 0; left: 0; }
+
+.first-impression__corner--tr { top: 0; right: 0; }
+.first-impression__corner--tr::before { top: 0; right: 0; }
+.first-impression__corner--tr::after { top: 0; right: 0; }
+
+.first-impression__corner--bl { bottom: 0; left: 0; }
+.first-impression__corner--bl::before { bottom: 0; left: 0; }
+.first-impression__corner--bl::after { bottom: 0; left: 0; }
+
+.first-impression__corner--br { bottom: 0; right: 0; }
+.first-impression__corner--br::before { bottom: 0; right: 0; }
+.first-impression__corner--br::after { bottom: 0; right: 0; }
+
+/* — Mobile composition — */
+
+@media (max-width: 720px) {
+  .first-impression {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    row-gap: clamp(8px, 1vw, 12px);
+    padding: clamp(12px, 1.6vw, 18px) clamp(10px, 1.4vw, 18px) clamp(6px, .8vw, 10px);
+  }
+
+  .first-impression__seal {
+    width: clamp(60px, 14vw, 76px);
+    height: clamp(60px, 14vw, 76px);
+  }
+
+  .first-impression__copy {
+    font-size: clamp(11.5px, 3.2vw, 13.5px);
+  }
+
+  .first-impression__signature-tag {
+    font-size: clamp(10.5px, 3vw, 12px);
+  }
+}
+
+@media (max-width: 480px) {
+  .first-impression {
+    grid-template-areas:
+      'seal         seal         seal'
+      'rule-lead    rule-lead    rule-lead'
+      'copy         copy         copy'
+      'rule-trail   rule-trail   rule-trail'
+      'signature    signature    signature';
+    row-gap: clamp(4px, .6vw, 8px);
+  }
+
+  .first-impression__rule--trail { display: none; }
+  .first-impression__rule--lead { display: none; }
+  .first-impression__seal {
+    width: clamp(72px, 22vw, 96px);
+    height: clamp(72px, 22vw, 96px);
   }
 }
 

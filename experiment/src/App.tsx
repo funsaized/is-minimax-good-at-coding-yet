@@ -43,12 +43,11 @@ import { LetterpressCatch } from './LetterpressCatch'
 import { Opening } from './Opening'
 import { BroadsideRule } from './BroadsideRule'
 import { FolioImprint } from './FolioImprint'
-import { TitleLamp } from './TitleLamp'
 import { TitleCoda } from './TitleCoda'
 import { AnswerCoda } from './AnswerCoda'
 import { ReadingPause } from './ReadingPause'
 import { PageReturn } from './PageReturn'
-import { TitleSigil } from './TitleSigil'
+import { FirstImpression } from './FirstImpression'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -701,9 +700,7 @@ export function App() {
             <PressProvenance voice={voice} setToday={setToday} />
             <TitlePage voice={voice} word={activeWord} setToday={setToday} />
 
-            <TitleSigil voice={voice} setToday={setToday} />
-
-            <TitleLamp voice={voice} setToday={setToday} />
+            <FirstImpression voice={voice} setToday={setToday} />
 
             <div className="hero__spread">
               <PressStrikeFlash strikeTick={strikeTick} voice={voice} />

@@ -166,11 +166,6 @@ export function QuestionMonument({
           </span>
           <span className="question-monument__token-mark-rule" />
         </span>
-        <span className="question-monument__token-kind" aria-hidden="true">
-          <em>{WORD_KIND[id]}</em>
-          <span className="question-monument__token-kind-dot" />
-          <span className="question-monument__token-kind-head">{WORD_HEAD[id]}</span>
-        </span>
       </button>
     )
   }
@@ -249,7 +244,8 @@ export function QuestionMonument({
       >
         <span className="question-monument__pressmark" aria-hidden="true">
           <svg viewBox="0 0 280 6" preserveAspectRatio="none">
-            <path d="M2 3c40-3 80 3 120 0s80-3 120 0 36 3 36 0" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+            <path d="M2 3c40-3 80 3 120 0s80-3 120 0 36 3 36 0" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" className="question-monument__pressmark-stroke" />
+            <circle cx="276" cy="3" r="1.1" fill="currentColor" className="question-monument__pressmark-bead" />
           </svg>
         </span>
 
