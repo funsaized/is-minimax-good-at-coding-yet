@@ -57551,6 +57551,283 @@ a small act of typesetting.
 }
 
 /* ────────────────────────────────────────────────────────────
+   TITLE SIGIL · a single, hand-drawn octagonal seal that sits
+   between the press provenance and the title lamp. Anchors
+   the title page as an authored artifact: a confident device
+   with the press mark at its center, eight cardinal petals,
+   a soft tone halo, and a short italic undersong that changes
+   with the active voice. A deliberate, restrained gesture.
+   ──────────────────────────────────────────────────────────── */
+
+.title-sigil {
+  --title-sigil-tone: var(--blue);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(60px, 1fr) auto minmax(160px, 2fr) auto minmax(60px, 1fr);
+  grid-template-areas: 'lead rule copy rule-trail trail';
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 22px);
+  width: min(100%, 880px);
+  margin: clamp(14px, 2.4vw, 28px) auto clamp(10px, 1.6vw, 22px);
+  padding: clamp(6px, 1vw, 12px) clamp(14px, 2vw, 28px);
+  color: var(--title-sigil-tone);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+  isolation: isolate;
+}
+
+.title-sigil.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.app--voice-quiet .title-sigil { --title-sigil-tone: var(--blue); }
+.app--voice-human .title-sigil { --title-sigil-tone: var(--coral); }
+.app--voice-bold .title-sigil  { --title-sigil-tone: var(--acid); }
+
+.title-sigil__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.title-sigil__rule {
+  display: flex;
+  align-items: center;
+  color: currentColor;
+  height: 10px;
+  opacity: .85;
+}
+
+.title-sigil__rule--lead {
+  grid-area: rule;
+}
+
+.title-sigil__rule--trail {
+  grid-area: rule-trail;
+}
+
+.title-sigil__rule svg { width: 100%; height: 100%; display: block; }
+
+.title-sigil__rule-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.6s var(--ease-out) .25s;
+}
+
+.title-sigil.is-revealed .title-sigil__rule-stroke { stroke-dashoffset: 0; }
+
+.title-sigil__rule-bead {
+  opacity: 0;
+  transition: opacity .9s var(--ease-out) 1.4s;
+}
+
+.title-sigil.is-revealed .title-sigil__rule-bead { opacity: 1; }
+
+.title-sigil__device {
+  grid-area: copy;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: clamp(78px, 9.4vw, 124px);
+  height: clamp(78px, 9.4vw, 124px);
+  margin: 0 auto;
+  color: currentColor;
+  isolation: isolate;
+}
+
+.title-sigil__device svg { width: 100%; height: 100%; display: block; }
+
+.title-sigil__halo {
+  opacity: 0;
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: titleSigilHaloIn 1.4s var(--ease-out) .2s forwards;
+}
+
+.title-sigil__octagon {
+  opacity: 0;
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: titleSigilOctagonDraw 1.4s var(--ease-out) .15s forwards;
+}
+
+.title-sigil__octagon-inner {
+  opacity: 0;
+  animation: titleSigilOctagonIn 1.2s var(--ease-out) .65s forwards;
+}
+
+.title-sigil__octagon-ghost {
+  opacity: 0;
+  animation: titleSigilOctagonIn 1.4s var(--ease-out) .95s forwards;
+}
+
+.title-sigil__petal {
+  opacity: 0;
+  transform-origin: 120px 120px;
+  transform-box: view-box;
+  animation: titleSigilPetalIn .9s var(--ease-out) 1.05s forwards;
+}
+
+.title-sigil__petal--0 { animation-delay: 1.05s; }
+.title-sigil__petal--1 { animation-delay: 1.12s; }
+.title-sigil__petal--2 { animation-delay: 1.19s; }
+.title-sigil__petal--3 { animation-delay: 1.26s; }
+.title-sigil__petal--4 { animation-delay: 1.33s; }
+.title-sigil__petal--5 { animation-delay: 1.4s; }
+.title-sigil__petal--6 { animation-delay: 1.47s; }
+.title-sigil__petal--7 { animation-delay: 1.54s; }
+
+.title-sigil__spark {
+  opacity: 0;
+  animation: titleSigilSparkIn .9s var(--ease-out) 1.3s forwards;
+}
+
+.title-sigil__spark--a { animation-delay: 1.3s; }
+.title-sigil__spark--b { animation-delay: 1.4s; }
+.title-sigil__spark--c { animation-delay: 1.5s; }
+.title-sigil__spark--d { animation-delay: 1.6s; }
+
+@keyframes titleSigilHaloIn {
+  0% { opacity: 0; transform: scale(.86); }
+  60% { opacity: 1; }
+  100% { opacity: .55; transform: scale(1); }
+}
+
+@keyframes titleSigilOctagonDraw {
+  0% { opacity: 0; stroke-dashoffset: 100; }
+  20% { opacity: 1; }
+  100% { opacity: 1; stroke-dashoffset: 0; }
+}
+
+@keyframes titleSigilOctagonIn {
+  0% { opacity: 0; }
+  100% { opacity: .42; }
+}
+
+@keyframes titleSigilPetalIn {
+  0% { opacity: 0; transform: scale(.4); }
+  100% { opacity: .7; transform: scale(1); }
+}
+
+@keyframes titleSigilSparkIn {
+  0% { opacity: 0; }
+  100% { opacity: .6; }
+}
+
+.title-sigil__glyph {
+  grid-area: trail;
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10px, 1.05vw, 12px);
+  letter-spacing: -.005em;
+  color: currentColor;
+  opacity: 0;
+  transition: opacity .9s var(--ease-out) 1.6s;
+}
+
+.title-sigil.is-revealed .title-sigil__glyph { opacity: .92; }
+
+.title-sigil__glyph-mark {
+  font-family: var(--serif);
+  font-size: clamp(14px, 1.4vw, 18px);
+  font-style: normal;
+  color: currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(20px, 2vw, 26px);
+  height: clamp(20px, 2vw, 26px);
+}
+
+.title-sigil__glyph-line {
+  width: clamp(14px, 1.6vw, 24px);
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.title-sigil__glyph-name {
+  font-style: italic;
+  letter-spacing: -.005em;
+}
+
+.title-sigil__copy {
+  grid-area: lead;
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, 1.1vw, 13px);
+  line-height: 1.4;
+  letter-spacing: -.005em;
+  color: currentColor;
+  opacity: 0;
+  transition: opacity 1s var(--ease-out) 1.45s;
+}
+
+.title-sigil.is-revealed .title-sigil__copy { opacity: .85; }
+
+.title-sigil__copy-line {
+  display: block;
+  font-style: italic;
+}
+
+@media (max-width: 720px) {
+  .title-sigil {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-areas: 'copy device glyph';
+    gap: clamp(8px, 2vw, 14px);
+    text-align: left;
+  }
+
+  .title-sigil__rule { display: none; }
+
+  .title-sigil__copy {
+    font-size: clamp(10px, 2.6vw, 12px);
+    line-height: 1.35;
+  }
+
+  .title-sigil__glyph {
+    justify-content: flex-end;
+    font-size: clamp(10px, 2.4vw, 12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-sigil,
+  .title-sigil__copy,
+  .title-sigil__glyph {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .title-sigil__rule-stroke {
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+
+  .title-sigil__halo,
+  .title-sigil__octagon,
+  .title-sigil__octagon-inner,
+  .title-sigil__octagon-ghost,
+  .title-sigil__petal,
+  .title-sigil__spark {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
    TITLE CODA · a single, hand-drawn closing flourish for the
    title page. Sits between the press lever and the broadside
    rule, ties the title page composition together, and signs

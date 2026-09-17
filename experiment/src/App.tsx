@@ -49,6 +49,7 @@ import { TitleCoda } from './TitleCoda'
 import { AnswerCoda } from './AnswerCoda'
 import { ReadingPause } from './ReadingPause'
 import { PageReturn } from './PageReturn'
+import { TitleSigil } from './TitleSigil'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -700,6 +701,8 @@ export function App() {
           <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
             <PressProvenance voice={voice} setToday={setToday} />
             <TitlePage voice={voice} word={activeWord} setToday={setToday} />
+
+            <TitleSigil voice={voice} setToday={setToday} />
 
             <TitleLamp voice={voice} setToday={setToday} />
 

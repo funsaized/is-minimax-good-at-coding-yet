@@ -1,29 +1,15 @@
-# Iteration 324
+# Changelog
 
-A single answer leaf coda closes folio viii with a deliberate gesture.
+## Iteration 325 — Title sigil
 
-## What changed
+Added a single, hand-drawn title sigil to the top of the title page: a confident octagonal seal that sits between the press provenance and the title lamp, with the press mark "m³" at its centre, eight cardinal petals, a soft tone halo, two flanking rules, and a short italic undersong that changes with the active voice. The shape is intentionally octagonal — a deliberate departure from the circular seals elsewhere on the page — so the title page now has one anchor that is unmistakably its own.
 
-- Added `src/AnswerCoda.tsx`, a small hand-drawn closing flourish that sits at
-  the foot of the answer reveal leaf. It mirrors the title page's
-  `TitleCoda` so the question → answer arc now has matching bookends: a coda
-  opens the title page, a coda closes the answer leaf.
-- Wired the new coda into `AnswerReveal` in `src/App.tsx`, directly after the
-  "fold it back" close button, so the leaf ends with a confident press mark
-  rather than trailing off.
-- Added `.answer-coda` styles to `src/style.css` covering:
-  - a five-column grid that mirrors the title coda's composition
-    (ink rule · pressed m³ seal · italic editorial line · ink rule)
-  - a two-stroke signature flourish with a trailing bead and a slow halo
-  - voice-aware tones (quiet → blue, human → coral, bold → acid) carried on
-    the seal, rules, and signature column
-  - a progressive draw-in tied to the existing `.is-open` reveal: the rules
-    trace in, the seal drops in, the signature bead lands last
-  - a full `prefers-reduced-motion` fallback that snaps every element to
-    its end state
-  - a stacked single-column layout at ≤ 760 px so the coda reads on mobile
-- No new dependencies. All visuals are local SVG with the existing fractal
-  noise grain filters used elsewhere on the page.
-- No remote assets, fonts, scripts, or storage. The coda is decorative and
-  hidden from assistive tech behind a single, descriptive `aria-label` on
-  the wrapper plus the existing polite live region for screen readers.
+The sigil reads in three voices:
+
+- quiet cut — *one line · three voices · one question*
+- human hand — *set by hand, in a single breath*
+- bold signal — *no apology, set down loud*
+
+Motion respects `prefers-reduced-motion`; on view, the octagon draws, the petals bloom in sequence, the halo settles, and the rules ink in. The device is keyboard- and screen-reader-friendly, with an `aria-label` that names the seal, the active voice, and the set-today date.
+
+Files touched: `src/App.tsx` (import + render between provenance and lamp), `src/TitleSigil.tsx` (new), `src/style.css` (new section after the title-lamp reduced-motion block, before the title-coda section).
