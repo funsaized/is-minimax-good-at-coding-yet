@@ -32,6 +32,18 @@ const WORD_LABEL: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'ye
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
 const WORD_KIND: Record<WordId, string> = { m3: 'let it stand', good: 'make room', yet: 'protect the pause' }
 
+const OPERATOR_NOTE: Record<VoiceId, string> = {
+  quiet: 'set in close-set italic, then read aloud once',
+  human: 'set in a hand that learned its warmth',
+  bold: 'set without apology, then read it like a poster',
+}
+
+const OPERATOR_TAG: Record<VoiceId, string> = {
+  quiet: 'a quiet setting',
+  human: 'a hand-set line',
+  bold: 'a full-voice setting',
+}
+
 function formatSeason(): string {
   const month = new Date().getMonth()
   if (month <= 1 || month === 11) return 'winter'
@@ -151,6 +163,27 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
         <span className="title-page__kind-mark title-page__kind-mark--alt" />
         <span className="title-page__kind-mark-tag" aria-hidden="true">{WORD_MARK[word]}</span>
       </span>
+
+      <p className="title-page__note" aria-hidden="true">
+        <span className="title-page__note-tag">{OPERATOR_TAG[voice]}</span>
+        <span className="title-page__note-body">
+          <em>{OPERATOR_NOTE[voice]}</em>
+          <span className="title-page__note-pencil" aria-hidden="true">
+            <svg viewBox="0 0 240 8" preserveAspectRatio="none">
+              <path
+                className="title-page__note-pencil-stroke"
+                d="M2 5c18-5 36 4 54-1s36-5 54-1 36 4 54-1 36-5 54-1 16-2 16-2"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".55"
+                strokeLinecap="round"
+                pathLength="100"
+              />
+              <circle className="title-page__note-pencil-bead" cx="238" cy="4" r="1" fill="currentColor" />
+            </svg>
+          </span>
+        </span>
+      </p>
     </header>
   )
 }

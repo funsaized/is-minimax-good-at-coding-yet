@@ -1,15 +1,11 @@
 # Changelog
 
-## Iteration 328 — A single, considered title page
+## Iteration 329
 
-Replaced the title page's stacked seal/signature/closing marks with one cohesive composition. The masthead now earns its own plate above the headline; a thin opening bead breathes between masthead and monument; the headline sits on a pressed paper sheet; and the title page closes on a single strengthened coda.
+Consolidated the title page and added a single press operator's note with a hand-drawn pencil line.
 
-- **TitlePage masthead** rewritten as a proper, present plate: a delicate eyebrow (folio i · season · marked word with a drawn rule), a centered plate (set today on the left, a wax-tone medallion with the voice letter at centre, the active voice face on the right, four corner crop marks, dashed inner border), and a small italic kind tag below. The plate's tone tracks the active voice.
-- **FirstImpression** removed — its pre-headline seal and "before the line was set" copy no longer compete with the QuestionMonument.
-- **OpeningBead** added — a single, delicate gesture: two rules meet at a small wax-tone bead that bears the voice letter, with an italic inscription "the page, opened / given breath / set down" sitting beneath. This is the breath between masthead and headline.
-- **BroadsideRule** removed — the title page now closes on the TitleCoda alone.
-- **TitleCoda** strengthened — given its own thin plate with dashed inner shadow so it reads as the deliberate closing gesture of the title page rather than a stray line of metadata.
-- **QuestionMonument** gains a subtle pressed-paper backing: an inner border and a soft ink shadow at the top edge so the headline reads as printed onto a sheet rather than floating on the dark plate.
-- **FirstImpression.tsx and BroadsideRule.tsx** left in place but no longer rendered from App.tsx; the corresponding styles are unused.
-- Reduced-motion preferences still respected across all new animations.
-- TypeScript and the production build both pass cleanly.
+The title page sat between two stacked ornaments — a `PressProvenance` strip above and an `OpeningBead` divider below — both repeating metadata already carried by the site header and the title page plate, and three small dividers broke the rhythm between masthead and headline. Removed both.
+
+In their place, the title page now closes with one editorial gesture: a "press operator's note" — a small mono-uppercase tag paired with a single italic sentence that names how the current voice was actually set, different per voice. A hand-drawn pencil line draws itself underneath the note on entrance (stroke draw + bead spring-in), so the title page ends with a tactile flourish instead of another divider.
+
+Spacing in the hero was tightened: title page bottom margin and question-monument top margin now breathe closer to each other, and the hero-spread top margin was reduced slightly, so masthead and headline read as a single composed broadside rather than two adjacent plates. All entry points, the document title, and the visible headline are unchanged; no remote assets were added.

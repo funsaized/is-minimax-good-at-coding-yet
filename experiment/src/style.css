@@ -43059,11 +43059,11 @@ a small act of typesetting.
    page, not a separate block. */
 
 .hero--title-page {
-  padding-top: clamp(20px, 2.6vw, 36px);
+  padding-top: clamp(14px, 1.8vw, 24px);
 }
 
 .hero--title-page .hero__spread {
-  margin-top: clamp(8px, 1.4vw, 18px);
+  margin-top: clamp(4px, .8vw, 12px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -54806,7 +54806,7 @@ a small act of typesetting.
   justify-items: center;
   row-gap: clamp(18px, 2vw, 28px);
   width: min(100%, 1100px);
-  margin: clamp(28px, 3.4vw, 56px) auto clamp(36px, 4vw, 64px);
+  margin: clamp(22px, 2.8vw, 44px) auto clamp(36px, 4vw, 64px);
   padding: clamp(28px, 3.2vw, 48px) clamp(20px, 3vw, 56px) clamp(20px, 2.6vw, 36px);
   isolation: isolate;
   border: 1px solid color-mix(in srgb, var(--qm-tone) 14%, transparent);
@@ -59876,7 +59876,7 @@ a small act of typesetting.
   justify-items: center;
   row-gap: clamp(14px, 1.8vw, 22px);
   width: min(100%, 980px);
-  margin: clamp(20px, 2.8vw, 36px) auto clamp(20px, 2.6vw, 32px);
+  margin: clamp(20px, 2.8vw, 36px) auto clamp(14px, 1.8vw, 26px);
   padding: 0 var(--gutter);
   color: var(--title-page-tone);
   isolation: isolate;
@@ -60252,6 +60252,101 @@ a small act of typesetting.
   letter-spacing: .04em;
   text-transform: lowercase;
   opacity: .85;
+}
+
+.title-page__note {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: clamp(8px, 1vw, 14px);
+  row-gap: 4px;
+  margin: clamp(2px, .4vw, 6px) 0 0;
+  color: var(--paper);
+  opacity: 0;
+  animation: titlePageNoteIn .85s var(--ease-out) .95s forwards;
+}
+
+@keyframes titlePageNoteIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-page__note {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .title-page__note-pencil-stroke {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+.title-page__note-tag {
+  color: color-mix(in srgb, var(--title-page-tone) 78%, var(--paper));
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(7.5px, .7vw, 9px);
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.title-page__note-body {
+  position: relative;
+  display: inline-block;
+  padding: 0 0 clamp(8px, 1vw, 14px);
+  color: color-mix(in srgb, var(--paper) 88%, transparent);
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(12.5px, 1.12vw, 14.5px);
+  letter-spacing: -.005em;
+  line-height: 1.2;
+}
+
+.title-page__note-body em {
+  font-style: italic;
+}
+
+.title-page__note-pencil {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+  width: 100%;
+  height: clamp(6px, .8vw, 9px);
+  color: color-mix(in srgb, var(--title-page-tone) 78%, transparent);
+  opacity: .8;
+  pointer-events: none;
+}
+
+.title-page__note-pencil svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.title-page__note-pencil-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: titlePageNotePencilDraw 1.4s var(--ease-out) 1.4s forwards;
+}
+
+.title-page__note-pencil-bead {
+  opacity: 0;
+  animation: titlePageNotePencilBead .5s var(--ease-spring) 2.6s forwards;
+}
+
+@keyframes titlePageNotePencilDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes titlePageNotePencilBead {
+  to { opacity: 1; }
 }
 
 @media (max-width: 720px) {

@@ -15,7 +15,6 @@ import { TypePlate } from './TypePlate'
 import { SecondReading } from './SecondReading'
 import { ReadingFloor } from './ReadingFloor'
 import { PressStrikeFlash } from './PressStrikeFlash'
-import { PressProvenance } from './PressProvenance'
 
 import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
@@ -29,7 +28,6 @@ import { FolioThumbprint } from './FolioThumbprint'
 import { QuestionMonument } from './QuestionMonument'
 import { BroadsideReveal } from './BroadsideReveal'
 import { BroadsideEdge } from './BroadsideEdge'
-import { OpeningBead } from './OpeningBead'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -696,10 +694,7 @@ export function App() {
       <div className="page">
         <Opening voice={voice} setToday={setToday}>
           <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
-            <PressProvenance voice={voice} setToday={setToday} />
             <TitlePage voice={voice} word={activeWord} setToday={setToday} />
-
-            <OpeningBead voice={voice} setToday={setToday} />
 
             <div className="hero__spread">
               <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
