@@ -45,6 +45,7 @@ import { Opening } from './Opening'
 import { BroadsideRule } from './BroadsideRule'
 import { FolioImprint } from './FolioImprint'
 import { TitleLamp } from './TitleLamp'
+import { TitleCoda } from './TitleCoda'
 import { ReadingPause } from './ReadingPause'
 import { PageReturn } from './PageReturn'
 
@@ -735,6 +736,8 @@ export function App() {
               setToday={setToday}
               stamping={leverStamping}
             />
+
+            <TitleCoda voice={voice} word={activeWord} setToday={setToday} />
 
             <BroadsideRule voice={voice} setToday={setToday} />
           </section>

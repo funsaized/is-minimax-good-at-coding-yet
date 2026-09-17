@@ -1,11 +1,5 @@
 # Changelog
 
-## Iteration 321
+## Iteration 322 — title page coda
 
-Added a single hand-drawn title lamp between the running head and the headline, giving the title page a deliberate moment of arrival.
-
-- New `src/TitleLamp.tsx` component: a hand-drawn lantern with rays, glass, glow, base, and a flame; flanked by two wide hand-drawn rules; with a small italic line "the press is lit · read it once with the eye, once with the ear" and a rounded "set in [voice]" tag; four corner marks frame the whole plate.
-- New CSS block in `src/style.css`: a 3-column grid (rule · lamp · rule) with the copy paragraph spanning the full width; a soft radial halo behind the lamp; restrained reveal animation — rules draw in, rays fade in, flame gently pulses, glow breathes; respects `prefers-reduced-motion` by disabling animation and showing the final state.
-- `src/App.tsx`: imports `TitleLamp` and renders it once, directly under `TitlePage`, before the hero spread; nothing else changed.
-- Built locally with `npm run build`; no type errors, no runtime warnings; bundle sizes ~571 KB JS / 1.04 MB CSS (gzipped ~126 KB / ~156 KB).
-- Visual character unchanged: dark editorial palette, voice-tinted accents (blue / coral / acid), paper grain, ink-dust background, three voices, three marked words. Document title and visible title preserved.
+Added a single, hand-drawn **title page coda** between the press lever and the broadside rule: a small seal, an italic line of prose, and a gentle signature flourish that closes folio i before the reader turns the leaf. The coda picks up the active voice's tone, marks the active word, and animates its rules in with a quiet stroke-dash. It honours reduced-motion preferences, stacks cleanly on narrow viewports, and remains a single coherent artifact in the same spirit as the lamp, broadside rule, and provenance that came before it.
