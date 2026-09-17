@@ -26,8 +26,7 @@ import { FolioFold } from './FolioFold'
 import { PressSpine } from './PressSpine'
 import { TitlePage } from './TitlePage'
 import { FolioThumbprint } from './FolioThumbprint'
-import { TitleLine } from './TitleLine'
-import { TitleFold } from './TitleFold'
+import { QuestionMonument } from './QuestionMonument'
 import { BroadsideReveal } from './BroadsideReveal'
 import { BroadsideEdge } from './BroadsideEdge'
 
@@ -711,18 +710,16 @@ export function App() {
               <PaperWarmth voice={voice} />
 
               <h1 className="sr-only" id="page-title">{TITLE}</h1>
-              <TitleFold voice={voice} word={activeWord} setToday={setToday}>
-                <TitleLine
-                  voice={voice}
-                  word={activeWord}
-                  hover={hoveredWord}
-                  setToday={setToday}
-                  onVoice={selectVoice}
-                  onWord={(id, focus) => selectWord(id, focus ?? false)}
-                  onHover={setHoveredWord}
-                  tokenRefs={tokenRefs}
-                />
-              </TitleFold>
+              <QuestionMonument
+                voice={voice}
+                word={activeWord}
+                hover={hoveredWord}
+                setToday={setToday}
+                onVoice={selectVoice}
+                onWord={(id, focus) => selectWord(id, focus ?? false)}
+                onHover={setHoveredWord}
+                tokenRefs={tokenRefs}
+              />
             </div>
 
             <ReadingPrologue

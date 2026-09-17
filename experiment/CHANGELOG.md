@@ -1,15 +1,22 @@
-# Changelog
+# 326 · a single confident headline, set down as a broadside
 
-## Iteration 325 — Title sigil
+Replaced the title page's stacked frontmatter headline with a new
+`QuestionMonument` that treats the page's namesake question as the
+centerpiece. The full line — "is Minimax M3 good at frontend yet?" — is
+now set as a single, monumental typographic lockup with the marked word
+given real weight (italic serif colour, italic caret glyph, and a small
+"stet / caret / query" pill beneath it). A consolidated voice strip
+beneath the title replaces the three loose voice chips that used to
+sit alongside the proof marks. A quiet "this impression" footer —
+`marked at · set today · shift + v` — closes the composition. The
+previously-nested `TitleFold` wrapper is gone, so the headline gets the
+whole spread to itself.
 
-Added a single, hand-drawn title sigil to the top of the title page: a confident octagonal seal that sits between the press provenance and the title lamp, with the press mark "m³" at its centre, eight cardinal petals, a soft tone halo, two flanking rules, and a short italic undersong that changes with the active voice. The shape is intentionally octagonal — a deliberate departure from the circular seals elsewhere on the page — so the title page now has one anchor that is unmistakably its own.
+## files touched
 
-The sigil reads in three voices:
-
-- quiet cut — *one line · three voices · one question*
-- human hand — *set by hand, in a single breath*
-- bold signal — *no apology, set down loud*
-
-Motion respects `prefers-reduced-motion`; on view, the octagon draws, the petals bloom in sequence, the halo settles, and the rules ink in. The device is keyboard- and screen-reader-friendly, with an `aria-label` that names the seal, the active voice, and the set-today date.
-
-Files touched: `src/App.tsx` (import + render between provenance and lamp), `src/TitleSigil.tsx` (new), `src/style.css` (new section after the title-lamp reduced-motion block, before the title-coda section).
+- `src/QuestionMonument.tsx` — new monumental title lockup
+- `src/App.tsx` — swap `TitleLine` for `QuestionMonument` in the title
+  page spread; drop the now-redundant `TitleFold` import
+- `src/style.css` — styles for the new component, including a tuned
+  mobile layout (voice strip stacks, token pills hide, seal
+  tightens)
