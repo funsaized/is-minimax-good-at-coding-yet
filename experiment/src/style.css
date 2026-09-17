@@ -59857,3 +59857,705 @@ a small act of typesetting.
     margin-top: 6px;
   }
 }
+
+/* ────────────────────────────────────────────────────────────
+   iteration 328 · TITLE PAGE MASTHEAD · the title page earns
+   its own considered plate above the headline. A delicate
+   eyebrow carries folio, season, and the marked word. A
+   centered plate holds set today, a wax-seal medallion with
+   the voice letter, and the active voice. A single kind tag
+   below names the editorial gesture. The plate's tone tracks
+   the active voice so the masthead reads as the press's own
+   signature on the page.
+   ──────────────────────────────────────────────────────────── */
+
+.title-page {
+  --title-page-tone: var(--coral);
+  position: relative;
+  display: grid;
+  justify-items: center;
+  row-gap: clamp(14px, 1.8vw, 22px);
+  width: min(100%, 980px);
+  margin: clamp(20px, 2.8vw, 36px) auto clamp(20px, 2.6vw, 32px);
+  padding: 0 var(--gutter);
+  color: var(--title-page-tone);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: titlePageIn .9s var(--ease-out) .05s forwards;
+}
+
+.title-page--voice-quiet { --title-page-tone: var(--blue); }
+.title-page--voice-human { --title-page-tone: var(--coral); }
+.title-page--voice-bold { --title-page-tone: var(--acid); }
+
+@keyframes titlePageIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-page,
+  .title-page__eyebrow,
+  .title-page__plate,
+  .title-page__plate-medallion,
+  .title-page__kind {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .title-page__eyebrow-rule-stroke {
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+}
+
+.title-page__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.title-page__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(6px, .8vw, 12px);
+  width: 100%;
+  max-width: 760px;
+  margin: 0;
+  padding: 0;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: clamp(8px, .72vw, 9.5px);
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: titlePageEyebrowIn .7s var(--ease-out) .25s forwards;
+}
+
+@keyframes titlePageEyebrowIn {
+  to { opacity: .82; }
+}
+
+.title-page__eyebrow em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--title-page-tone);
+  transition: color .5s var(--ease);
+}
+
+.title-page__eyebrow-mark {
+  display: inline-block;
+  width: clamp(14px, 1.6vw, 22px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor);
+  opacity: .55;
+}
+
+.title-page__eyebrow-sep {
+  color: var(--ink-mist);
+  opacity: .5;
+}
+
+.title-page__eyebrow-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.title-page__eyebrow-rule {
+  display: block;
+  flex: 1 1 auto;
+  min-width: clamp(40px, 8vw, 120px);
+  max-width: clamp(140px, 22vw, 220px);
+  height: 6px;
+  color: var(--title-page-tone);
+  opacity: .6;
+}
+
+.title-page__eyebrow-rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.title-page__eyebrow-rule-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: titlePageRuleDraw 1.4s var(--ease-out) .55s forwards;
+}
+
+@keyframes titlePageRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.title-page__eyebrow-cell--marked {
+  position: relative;
+  gap: clamp(6px, .7vw, 10px);
+}
+
+.title-page__eyebrow-mark-tag {
+  display: inline-grid;
+  place-items: center;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 4px;
+  border: 1px solid color-mix(in srgb, var(--title-page-tone) 40%, transparent);
+  border-radius: 999px;
+  color: var(--title-page-tone);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 9px;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: .85;
+}
+
+.title-page__plate {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(14px, 2.4vw, 32px);
+  width: 100%;
+  max-width: 880px;
+  padding: clamp(16px, 1.8vw, 24px) clamp(20px, 3vw, 36px);
+  border: 1px solid color-mix(in srgb, var(--title-page-tone) 18%, transparent);
+  border-radius: 2px;
+  background:
+    radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--title-page-tone) 10%, transparent), transparent 64%),
+    linear-gradient(180deg, rgba(20, 28, 42, .42), rgba(12, 16, 26, .6));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--title-page-tone) 6%, transparent),
+    inset 0 1px 0 rgba(243, 236, 214, .04),
+    0 18px 48px -28px rgba(0, 0, 0, .45);
+  opacity: 0;
+  animation: titlePagePlateIn .8s var(--ease-out) .35s forwards;
+}
+
+@keyframes titlePagePlateIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.title-page__plate::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  z-index: 0;
+  border: 1px dashed color-mix(in srgb, var(--title-page-tone) 22%, transparent);
+  border-radius: 1px;
+  pointer-events: none;
+  opacity: .55;
+}
+
+.title-page__plate-cornermark {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  z-index: 2;
+  color: var(--title-page-tone);
+  opacity: .85;
+}
+
+.title-page__plate-cornermark::before,
+.title-page__plate-cornermark::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+}
+
+.title-page__plate-cornermark::before { width: 8px; height: 1px; }
+.title-page__plate-cornermark::after { width: 1px; height: 8px; }
+
+.title-page__plate-cornermark--tl { top: 6px; left: 6px; }
+.title-page__plate-cornermark--tl::before { top: 0; left: 0; }
+.title-page__plate-cornermark--tl::after { top: 0; left: 0; }
+
+.title-page__plate-cornermark--tr { top: 6px; right: 6px; }
+.title-page__plate-cornermark--tr::before { top: 0; right: 0; }
+.title-page__plate-cornermark--tr::after { top: 0; right: 0; }
+
+.title-page__plate-cornermark--bl { bottom: 6px; left: 6px; }
+.title-page__plate-cornermark--bl::before { bottom: 0; left: 0; }
+.title-page__plate-cornermark--bl::after { bottom: 0; left: 0; }
+
+.title-page__plate-cornermark--br { bottom: 6px; right: 6px; }
+.title-page__plate-cornermark--br::before { bottom: 0; right: 0; }
+.title-page__plate-cornermark--br::after { bottom: 0; right: 0; }
+
+.title-page__plate-cell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  row-gap: clamp(2px, .3vw, 4px);
+  min-width: 0;
+}
+
+.title-page__plate-cell--left {
+  justify-items: end;
+  text-align: right;
+}
+
+.title-page__plate-cell--right {
+  justify-items: start;
+  text-align: left;
+}
+
+.title-page__plate-key {
+  color: var(--ink-mist);
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .7vw, 9px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: .82;
+  transition: color .4s var(--ease);
+}
+
+.title-page__plate-value {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(14px, 1.25vw, 17px);
+  letter-spacing: -.005em;
+  color: var(--paper);
+  line-height: 1.1;
+}
+
+.title-page__plate-value--date {
+  font-style: italic;
+  font-feature-settings: 'kern' 1, 'onum' 1;
+}
+
+.title-page__plate-value--voice {
+  color: var(--title-page-tone);
+  font-weight: 500;
+  transition: color .4s var(--ease);
+}
+
+.title-page__plate-sub {
+  color: color-mix(in srgb, var(--paper) 60%, transparent);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .9vw, 12.5px);
+  letter-spacing: -.002em;
+  opacity: .85;
+}
+
+.title-page__plate-medallion {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(74px, 7vw, 96px);
+  height: clamp(74px, 7vw, 96px);
+  color: var(--title-page-tone);
+  opacity: 0;
+  transform: rotate(-4deg) scale(.9);
+  animation: titlePageMedallionIn 1.05s var(--ease-spring) .55s forwards;
+}
+
+@keyframes titlePageMedallionIn {
+  0% { opacity: 0; transform: rotate(-9deg) scale(.65); }
+  60% { opacity: 1; transform: rotate(-2deg) scale(1.04); }
+  100% { opacity: 1; transform: rotate(-3deg) scale(1); }
+}
+
+.title-page__plate-medallion-disc {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 1px 0 color-mix(in srgb, var(--title-page-tone) 18%, transparent));
+}
+
+.title-page__plate-medallion-ring {
+  position: absolute;
+  inset: clamp(-10px, -.8vw, -6px);
+  border: 1px dashed currentColor;
+  border-radius: 50%;
+  opacity: .45;
+  pointer-events: none;
+}
+
+.title-page__plate-medallion-letter {
+  position: absolute;
+  bottom: clamp(-6px, -.4vw, -2px);
+  right: clamp(-6px, -.4vw, -2px);
+  display: inline-grid;
+  place-items: center;
+  width: clamp(22px, 1.8vw, 28px);
+  height: clamp(22px, 1.8vw, 28px);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--title-page-tone) 92%, transparent);
+  color: var(--night);
+  font-family: var(--mono);
+  font-size: clamp(10px, .85vw, 12px);
+  font-weight: 700;
+  letter-spacing: .02em;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--title-page-tone) 38%, transparent);
+}
+
+.title-page__kind {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(6px, .8vw, 12px);
+  color: var(--title-page-tone);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14.5px);
+  letter-spacing: -.005em;
+  opacity: 0;
+  animation: titlePageKindIn .8s var(--ease-out) .7s forwards;
+}
+
+@keyframes titlePageKindIn {
+  to { opacity: .92; }
+}
+
+.title-page__kind-mark {
+  display: inline-block;
+  width: clamp(16px, 2vw, 28px);
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.title-page__kind-mark--alt {
+  background: linear-gradient(to left, transparent, currentColor);
+}
+
+.title-page__kind em {
+  font-style: italic;
+}
+
+.title-page__kind-mark-tag {
+  display: inline-grid;
+  place-items: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 5px;
+  border: 1px solid color-mix(in srgb, var(--title-page-tone) 38%, transparent);
+  border-radius: 999px;
+  color: var(--title-page-tone);
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 8.5px;
+  letter-spacing: .04em;
+  text-transform: lowercase;
+  opacity: .85;
+}
+
+@media (max-width: 720px) {
+  .title-page {
+    row-gap: clamp(10px, 2.4vw, 16px);
+    margin: clamp(14px, 3vw, 24px) auto clamp(14px, 2.6vw, 22px);
+  }
+  .title-page__plate {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    gap: clamp(12px, 3vw, 20px);
+    padding: clamp(14px, 3vw, 22px) clamp(16px, 4vw, 24px);
+  }
+  .title-page__plate-cell--left,
+  .title-page__plate-cell--right {
+    justify-items: center;
+    text-align: center;
+  }
+  .title-page__plate-medallion {
+    order: -1;
+  }
+  .title-page__eyebrow-rule {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .title-page__eyebrow {
+    font-size: 8px;
+    letter-spacing: .22em;
+  }
+  .title-page__plate-value {
+    font-size: 14px;
+  }
+  .title-page__plate-medallion {
+    width: clamp(60px, 18vw, 76px);
+    height: clamp(60px, 18vw, 76px);
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   iteration 328 · OPENING BEAD · a single, delicate gesture
+   between the title masthead and the headline. A thin rule
+   crosses the page and gathers at a small wax-tone bead in
+   the centre. An italic line names the gesture in the active
+   voice. This replaces the previous pre-headline seal with a
+   quieter breath that lets the QuestionMonument remain the
+   unquestioned focal point.
+   ──────────────────────────────────────────────────────────── */
+
+.opening-bead {
+  --opening-bead-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 22px);
+  width: min(100%, 720px);
+  margin: clamp(6px, 1vw, 14px) auto clamp(22px, 2.8vw, 36px);
+  padding: 0 var(--gutter);
+  color: var(--opening-bead-tone);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
+  isolation: isolate;
+}
+
+.opening-bead--voice-quiet { --opening-bead-tone: var(--blue); }
+.opening-bead--voice-human { --opening-bead-tone: var(--coral); }
+.opening-bead--voice-bold { --opening-bead-tone: var(--acid); }
+
+.opening-bead.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opening-bead,
+  .opening-bead__rule-stroke,
+  .opening-bead__bead {
+    transition: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+.opening-bead__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.opening-bead__rule {
+  display: block;
+  width: 100%;
+  height: clamp(8px, .9vw, 12px);
+  color: var(--opening-bead-tone);
+}
+
+.opening-bead__rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.opening-bead__rule--lead {
+  grid-column: 1;
+}
+
+.opening-bead__rule--trail {
+  grid-column: 3;
+}
+
+.opening-bead__rule-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: openingBeadRuleDraw 1.4s var(--ease-out) .25s forwards;
+}
+
+.opening-bead__rule-stroke--trail {
+  animation-delay: .35s;
+}
+
+@keyframes openingBeadRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.opening-bead__rule-bead {
+  opacity: 0;
+  animation: openingBeadBeadIn .6s var(--ease-out) 1.45s forwards;
+}
+
+.opening-bead__rule-bead--end {
+  animation-delay: 1.55s;
+}
+
+@keyframes openingBeadBeadIn {
+  to { opacity: 1; }
+}
+
+.opening-bead__bead {
+  position: relative;
+  grid-column: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(28px, 2.4vw, 36px);
+  height: clamp(28px, 2.4vw, 36px);
+  color: var(--opening-bead-tone);
+  opacity: 0;
+  transform: scale(.7);
+  animation: openingBeadBeadScale .9s var(--ease-spring) 1.05s forwards;
+}
+
+@keyframes openingBeadBeadScale {
+  to { opacity: 1; transform: scale(1); }
+}
+
+.opening-bead__bead-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 1px 0 color-mix(in srgb, var(--opening-bead-tone) 14%, transparent));
+}
+
+.opening-bead__copy {
+  position: absolute;
+  top: calc(100% + clamp(4px, .6vw, 8px));
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .7vw, 10px);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, 1vw, 13.5px);
+  letter-spacing: -.005em;
+  white-space: nowrap;
+  opacity: 0;
+  animation: openingBeadCopyIn .8s var(--ease-out) 1.55s forwards;
+}
+
+@keyframes openingBeadCopyIn {
+  to { opacity: .78; }
+}
+
+.opening-bead__copy::before,
+.opening-bead__copy::after {
+  content: '';
+  width: clamp(8px, 1.2vw, 16px);
+  height: 1px;
+  background: color-mix(in srgb, var(--opening-bead-tone) 50%, transparent);
+  opacity: .55;
+}
+
+.opening-bead__copy-line {
+  font-style: italic;
+}
+
+@media (max-width: 720px) {
+  .opening-bead {
+    gap: clamp(8px, 2vw, 14px);
+  }
+  .opening-bead__copy {
+    position: static;
+    transform: none;
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-top: clamp(2px, .6vw, 4px);
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   iteration 328 · QUESTION MONUMENT · subtle pressed-paper
+   backing. The headline now sits on a faint paper sheet that
+   reads as the page being pressed into the press bed. The
+   sheet has its own soft inner border and a gentle ink
+   shadow at the top edge, so the monument feels printed on
+   something rather than floating on the dark plate.
+   ──────────────────────────────────────────────────────────── */
+
+.question-monument {
+  position: relative;
+  isolation: isolate;
+}
+
+.question-monument::before {
+  content: '';
+  position: absolute;
+  inset: clamp(8px, 1.4vw, 18px);
+  z-index: 0;
+  border-radius: 2px;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--qm-tone) 7%, transparent) 0%, transparent 18%, transparent 82%, color-mix(in srgb, var(--qm-tone) 5%, transparent) 100%),
+    linear-gradient(180deg, rgba(243, 236, 214, .035), rgba(243, 236, 214, .012));
+  border: 1px solid color-mix(in srgb, var(--qm-tone) 14%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--paper) 8%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--qm-tone) 10%, transparent);
+  opacity: .95;
+}
+
+.question-monument::after {
+  content: '';
+  position: absolute;
+  left: clamp(8px, 1.4vw, 18px);
+  right: clamp(8px, 1.4vw, 18px);
+  top: clamp(8px, 1.4vw, 18px);
+  height: clamp(3px, .4vw, 6px);
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--qm-tone) 18%, transparent), transparent);
+  opacity: .55;
+}
+
+@media (max-width: 720px) {
+  .question-monument::before {
+    inset: clamp(6px, 1.6vw, 12px);
+  }
+  .question-monument::after {
+    left: clamp(6px, 1.6vw, 12px);
+    right: clamp(6px, 1.6vw, 12px);
+    top: clamp(6px, 1.6vw, 12px);
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   iteration 328 · TITLE CODA · strengthened to be the single
+   considered closing mark of the title page. The coda now
+   stands alone inside a thin plate, with no overlapping
+   broadside rule behind it. A delicate pressed rule
+   underwrites the gesture so the title page reads as closed.
+   ──────────────────────────────────────────────────────────── */
+
+.title-coda {
+  margin: clamp(20px, 2.6vw, 32px) auto clamp(8px, 1vw, 14px);
+  width: min(100%, 880px);
+  padding: clamp(14px, 1.8vw, 22px) clamp(20px, 3vw, 36px);
+  border: 1px solid color-mix(in srgb, var(--title-coda-tone) 18%, transparent);
+  border-radius: 2px;
+  background:
+    radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--title-coda-tone) 6%, transparent), transparent 70%),
+    linear-gradient(180deg, rgba(20, 28, 42, .36), rgba(12, 16, 26, .5));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--title-coda-tone) 6%, transparent),
+    inset 0 1px 0 rgba(243, 236, 214, .04);
+}
+
+.title-coda__copy {
+  font-size: clamp(13.5px, 1.2vw, 16px);
+  color: var(--paper);
+}
+
+.title-coda__copy-line {
+  font-style: italic;
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.title-coda__signature {
+  margin-top: clamp(8px, 1vw, 14px);
+}
