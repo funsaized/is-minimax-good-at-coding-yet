@@ -88,19 +88,6 @@ export function PressProvenance({ voice, setToday }: PressProvenanceProps) {
       <span className="press-provenance__core">
         <span className="press-provenance__cell press-provenance__cell--press" aria-hidden="true">
           <span className="press-provenance__key">m³ press</span>
-          <span className="press-provenance__press-mark" aria-hidden="true">
-            <svg viewBox="0 0 14 14">
-              <text
-                x="7"
-                y="10"
-                textAnchor="middle"
-                fontFamily="'Iowan Old Style', Georgia, serif"
-                fontStyle="italic"
-                fontSize="10"
-                fill="currentColor"
-              >³</text>
-            </svg>
-          </span>
         </span>
 
         <span className="press-provenance__bead" aria-hidden="true">
@@ -121,9 +108,10 @@ export function PressProvenance({ voice, setToday }: PressProvenanceProps) {
           </svg>
         </span>
 
-        <span className="press-provenance__cell press-provenance__cell--set">
-          <span className="press-provenance__key">set today</span>
-          <em className="press-provenance__em">{setToday}</em>
+        <span className={`press-provenance__cell press-provenance__cell--voice press-provenance__voice--${voice}`}>
+          <span className="press-provenance__voice-letter" aria-hidden="true">{VOICE_LETTER[voice]}</span>
+          <span className="press-provenance__key">in the</span>
+          <em className="press-provenance__em">{VOICE_NAME[voice]}</em>
         </span>
 
         <span className="press-provenance__bead" aria-hidden="true">
@@ -132,10 +120,9 @@ export function PressProvenance({ voice, setToday }: PressProvenanceProps) {
           </svg>
         </span>
 
-        <span className={`press-provenance__cell press-provenance__cell--voice press-provenance__voice--${voice}`}>
-          <span className="press-provenance__key">in the</span>
-          <span className="press-provenance__voice-letter" aria-hidden="true">{VOICE_LETTER[voice]}</span>
-          <em className="press-provenance__em">{VOICE_NAME[voice]}</em>
+        <span className="press-provenance__cell press-provenance__cell--set" aria-label={`Set today ${setToday}`}>
+          <span className="press-provenance__key">set today</span>
+          <em className="press-provenance__em">{setToday}</em>
         </span>
       </span>
 

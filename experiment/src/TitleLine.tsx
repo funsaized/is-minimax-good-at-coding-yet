@@ -1,4 +1,4 @@
-import { useId, type CSSProperties, type KeyboardEvent, type MutableRefObject } from 'react'
+import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type MutableRefObject } from 'react'
 import type { VoiceId } from './Press'
 import type { WordId } from './notes'
 import { QuestionLine } from './QuestionLine'
@@ -194,6 +194,30 @@ export function TitleLine({
     '--titleline-grain': `url(#${grainId})`,
   } as CSSProperties
   const voiceIndex = ORDER.indexOf(voice)
+  const firstVoiceRef = useRef(true)
+  const [impressing, setImpressing] = useState(false)
+  const impressionTimerRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (firstVoiceRef.current) {
+      firstVoiceRef.current = false
+      return
+    }
+    setImpressing(true)
+    if (impressionTimerRef.current !== null) {
+      window.clearTimeout(impressionTimerRef.current)
+    }
+    impressionTimerRef.current = window.setTimeout(() => {
+      setImpressing(false)
+      impressionTimerRef.current = null
+    }, 900)
+    return () => {
+      if (impressionTimerRef.current !== null) {
+        window.clearTimeout(impressionTimerRef.current)
+        impressionTimerRef.current = null
+      }
+    }
+  }, [voice])
 
   const handleWordKey = (event: KeyboardEvent<HTMLElement>, id: WordId) => {
     const idx = WORDS.indexOf(id)
@@ -225,7 +249,7 @@ export function TitleLine({
 
   return (
     <figure
-      className={`titleline titleline--${voice} titleline--word-${word}`}
+      className={`titleline titleline--${voice} titleline--word-${word} ${impressing ? 'is-pressing' : ''}`}
       style={style}
       aria-label={`The headline: is M3 good at frontend yet?, set in the ${VOICE_NAME[voice]} voice, marked at ${WORD_LABEL[word]} (${WORD_MARK[word]}).`}
     >
@@ -316,6 +340,12 @@ export function TitleLine({
         role="group"
         aria-label={`The headline set in ${VOICE_NAME[voice]}, ${display.fontStyle === 'italic' ? 'italic' : 'upright'} ${display.fontFamily.split(',')[0].replace(/['"]/g, '').trim()}`}
       >
+        <span className="titleline__pressmark" aria-hidden="true">
+          <svg viewBox="0 0 280 6" preserveAspectRatio="none">
+            <path d="M2 3c40-3 80 3 120 0s80-3 120 0 36 3 36 0" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+          </svg>
+        </span>
+
         <span className="titleline__line titleline__line--a">
           <span className="titleline__line-lead">is</span>
           <HeadlineWord
@@ -364,44 +394,26 @@ export function TitleLine({
           />
           <span className="titleline__query" aria-hidden="true">
             <span className="titleline__query-mark">?</span>
-            <span className="titleline__query-tail">
-              <svg viewBox="0 0 96 14" preserveAspectRatio="none" aria-hidden="true">
+            <span className="titleline__query-kiss" aria-hidden="true">
+              <span className="titleline__query-kiss-bead" />
+              <span className="titleline__query-kiss-wisp" />
+            </span>
+          </span>
+          <span className="titleline__exhale" aria-hidden="true">
+            <span className="titleline__exhale-rule" aria-hidden="true">
+              <svg className="titleline__exhale-svg" viewBox="0 0 220 8" preserveAspectRatio="none" aria-hidden="true">
                 <path
-                  className="titleline__query-tail-stroke"
-                  d="M2 7c14-6 30 5 46-1s26-4 40 1"
+                  className="titleline__exhale-stroke titleline__exhale-stroke--lead"
+                  d="M2 4c26-3 52 3 78 0s52-3 78 0 52 3 60 0"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth=".95"
+                  strokeWidth=".9"
                   strokeLinecap="round"
                   pathLength="100"
                 />
               </svg>
+              <span className="titleline__exhale-bead" />
             </span>
-          </span>
-          <span className="titleline__exhale" aria-hidden="true">
-            <svg className="titleline__exhale-svg" viewBox="0 0 320 36" preserveAspectRatio="xMaxYMid meet" aria-hidden="true">
-              <path
-                className="titleline__exhale-stroke titleline__exhale-stroke--lead"
-                d="M2 22c14-10 30 6 56-2s36-8 60-2 40 6 64-2 40-8 60-2 36 6 56-2"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.1"
-                strokeLinecap="round"
-                pathLength="100"
-              />
-              <path
-                className="titleline__exhale-stroke titleline__exhale-stroke--trail"
-                d="M40 28c12-4 24 4 44-1s28-4 44 0 28 4 44-1 28-4 44-1 24 6 36-1 24-4 36-1 20 4 28-1"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth=".55"
-                strokeLinecap="round"
-                opacity=".55"
-                pathLength="100"
-              />
-              <circle className="titleline__exhale-bead" cx="314" cy="20" r="2.2" fill="currentColor" />
-              <circle className="titleline__exhale-halo" cx="314" cy="20" r="6" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".8 2" opacity=".7" />
-            </svg>
             <span className="titleline__exhale-tag" aria-hidden="true">
               <span className="titleline__exhale-tag-mark" />
               <em>the question, set down</em>
