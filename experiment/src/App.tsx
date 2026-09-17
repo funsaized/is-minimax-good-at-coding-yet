@@ -44,6 +44,7 @@ import { LetterpressCatch } from './LetterpressCatch'
 import { Opening } from './Opening'
 import { BroadsideRule } from './BroadsideRule'
 import { FolioImprint } from './FolioImprint'
+import { TitleLamp } from './TitleLamp'
 import { ReadingPause } from './ReadingPause'
 import { PageReturn } from './PageReturn'
 
@@ -695,6 +696,8 @@ export function App() {
           <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
             <PressProvenance voice={voice} setToday={setToday} />
             <TitlePage voice={voice} word={activeWord} setToday={setToday} />
+
+            <TitleLamp voice={voice} setToday={setToday} />
 
             <div className="hero__spread">
               <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
