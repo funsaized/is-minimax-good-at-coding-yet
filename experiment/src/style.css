@@ -57895,3 +57895,384 @@ a small act of typesetting.
     margin-top: 6px;
   }
 }
+
+/* ────────────────────────────────────────────────────────────
+   ANSWER CODA · a single, hand-drawn closing flourish for the
+   answer reveal leaf. Sits at the foot of the leaf, mirrors the
+   title page's title coda, and ties the question → answer arc
+   closed. A small pressed m³ seal, a single italic editorial
+   line, a delicate signature rule, and two ink rules that book-
+   end the gesture. The leaf now ends with a deliberate moment
+   instead of trailing off.
+   ──────────────────────────────────────────────────────────── */
+
+.answer-coda {
+  --answer-coda-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(72px, 1fr) auto minmax(220px, 2fr) auto minmax(72px, 1fr);
+  grid-template-areas: 'lead rule copy rule-trail trail';
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 22px);
+  width: min(100%, 980px);
+  margin: clamp(28px, 4vw, 48px) 0 clamp(8px, 1.2vw, 18px);
+  padding: clamp(8px, 1vw, 14px) clamp(14px, 2vw, 28px);
+  color: var(--answer-coda-tone);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
+  isolation: isolate;
+}
+
+.answer-reveal.is-open .answer-coda {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: .65s;
+}
+
+.answer-coda--quiet { --answer-coda-tone: var(--blue); }
+.answer-coda--human { --answer-coda-tone: var(--coral); }
+.answer-coda--bold { --answer-coda-tone: var(--acid); }
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-coda {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+.answer-coda__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.answer-coda__rule {
+  display: flex;
+  align-items: center;
+  color: currentColor;
+  height: 12px;
+}
+
+.answer-coda__rule--lead {
+  grid-area: rule;
+}
+
+.answer-coda__rule--trail {
+  grid-area: rule-trail;
+}
+
+.answer-coda__rule svg {
+  width: 100%;
+  height: 6px;
+  display: block;
+}
+
+.answer-coda__rule-stroke {
+  stroke-dashoffset: 100;
+  animation: answerCodaRuleIn 1.4s var(--ease-out) .35s backwards;
+}
+
+.answer-coda.is-revealed .answer-coda__rule-stroke {
+  animation-name: answerCodaRuleDraw;
+}
+
+.answer-reveal.is-open .answer-coda__rule-stroke {
+  animation: answerCodaRuleDraw 1.4s var(--ease-out) .35s backwards;
+}
+
+.answer-coda__rule-bead {
+  opacity: 0;
+  animation: answerCodaBeadIn .6s var(--ease-out) 1.5s backwards;
+}
+
+.answer-reveal.is-open .answer-coda__rule-bead {
+  animation: answerCodaBeadIn .6s var(--ease-out) 1.5s backwards;
+}
+
+@keyframes answerCodaRuleIn {
+  from { stroke-dashoffset: 100; opacity: 0; }
+  to { stroke-dashoffset: 100; opacity: 1; }
+}
+
+@keyframes answerCodaRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes answerCodaBeadIn {
+  from { opacity: 0; transform: scale(.4); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-coda__rule-stroke {
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+  .answer-coda__rule-bead {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+.answer-coda__seal {
+  grid-area: copy;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  padding: 4px clamp(8px, 1vw, 16px);
+  justify-self: center;
+}
+
+.answer-coda__seal-disc {
+  position: relative;
+  display: inline-flex;
+  width: clamp(46px, 4.4vw, 60px);
+  height: clamp(46px, 4.4vw, 60px);
+  align-items: center;
+  justify-content: center;
+}
+
+.answer-coda__seal-disc svg {
+  width: 100%;
+  height: 100%;
+}
+
+.answer-coda__seal-wax {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+
+.answer-coda__seal-wax-bead {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--answer-coda-tone) 80%, var(--coral));
+  opacity: .85;
+}
+
+.answer-coda__seal-wax-wisp {
+  position: absolute;
+  bottom: -2px;
+  right: 8px;
+  width: 14px;
+  height: 2px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--answer-coda-tone) 60%, transparent);
+  opacity: .5;
+  transform: rotate(-18deg);
+}
+
+.answer-coda__seal-letter {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: #f7f1e0;
+  background: color-mix(in srgb, var(--answer-coda-tone) 88%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--answer-coda-tone) 38%, transparent);
+  opacity: 0;
+  transform: scale(.4);
+  transition: opacity .5s var(--ease-out) 1.55s, transform .6s var(--ease-spring) 1.55s;
+}
+
+.answer-reveal.is-open .answer-coda__seal-letter {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-coda__seal-letter {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+.answer-coda__copy {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, .9vw, 12px);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.15vw, 15.5px);
+  line-height: 1.35;
+  letter-spacing: -.005em;
+  opacity: 0;
+  transition: opacity .7s var(--ease-out) .55s;
+}
+
+.answer-reveal.is-open .answer-coda__copy {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-coda__copy {
+    opacity: 1 !important;
+    transition: none !important;
+  }
+}
+
+.answer-coda__copy-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, currentColor 50%, transparent);
+  color: var(--answer-coda-tone);
+  font-style: normal;
+  font-size: 11px;
+  line-height: 1;
+  flex: 0 0 auto;
+  opacity: .85;
+}
+
+.answer-coda__copy-mark--alt {
+  order: 3;
+}
+
+.answer-coda__copy-line {
+  color: var(--ink);
+  opacity: .92;
+  font-style: italic;
+}
+
+.answer-coda__signature {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: clamp(4px, .6vw, 10px);
+  color: var(--answer-coda-tone);
+}
+
+.answer-coda__signature svg {
+  width: clamp(180px, 24vw, 320px);
+  height: clamp(22px, 2.6vw, 36px);
+  display: block;
+}
+
+.answer-coda__signature-stroke--lead {
+  stroke-dashoffset: 100;
+  animation: answerCodaRuleDraw 1.6s var(--ease-out) .8s backwards;
+}
+
+.answer-coda__signature-stroke--trail {
+  stroke-dashoffset: 100;
+  animation: answerCodaRuleDraw 1.8s var(--ease-out) 1.1s backwards;
+}
+
+.answer-coda__signature-bead {
+  opacity: 0;
+  transform-origin: 214px 18px;
+  animation: answerCodaBeadIn .6s var(--ease-out) 2.6s backwards;
+}
+
+.answer-coda__signature-halo {
+  opacity: 0;
+  transform-origin: 214px 18px;
+  animation: answerCodaHaloIn .8s var(--ease-out) 2.8s backwards;
+}
+
+@keyframes answerCodaHaloIn {
+  from { opacity: 0; transform: scale(.5); }
+  to { opacity: .65; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-coda__signature-stroke--lead,
+  .answer-coda__signature-stroke--trail {
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+  .answer-coda__signature-bead,
+  .answer-coda__signature-halo {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+.answer-coda__signature-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .9vw, 12.5px);
+  opacity: 0;
+  transition: opacity .7s var(--ease-out) 2.95s;
+  letter-spacing: .01em;
+}
+
+.answer-reveal.is-open .answer-coda__signature-tag {
+  opacity: .62;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-coda__signature-tag {
+    opacity: .62 !important;
+    transition: none !important;
+  }
+}
+
+.answer-coda__signature-tag-mark {
+  display: inline-block;
+  width: 8px;
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.answer-coda__signature-tag em {
+  font-style: italic;
+}
+
+@media (max-width: 760px) {
+  .answer-coda {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'rule'
+      'copy'
+      'rule-trail';
+    text-align: center;
+    gap: clamp(10px, 3vw, 18px);
+  }
+  .answer-coda__rule--lead,
+  .answer-coda__rule--trail {
+    max-width: 80%;
+    justify-self: center;
+  }
+  .answer-coda__seal {
+    justify-self: center;
+  }
+  .answer-coda__signature {
+    margin-top: 6px;
+  }
+}

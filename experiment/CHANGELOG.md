@@ -1,23 +1,29 @@
-# Changelog
+# Iteration 324
 
-## The headline gets pressed: a confident question mark, a press impression, a cleaner masthead
-A focused pass on the title page's headline and masthead. The `?` becomes a confident italic serif with a press kiss; the headline re-types with a brief press impression when the voice is cycled; the masthead reads more naturally.
+A single answer leaf coda closes folio viii with a deliberate gesture.
 
-### Title page · headline
-- The question mark is now a confident italic serif `?` (1.42em, line-height .82), set in the active voice's color. A small `press kiss` — a single ink bead with a trailing wisp — lands beneath it when `yet` is the active word.
-- The decorative `exhale` flourish is replaced with a quieter horizontal rule that grows in confidence when `yet` is active. No more swoop — just a single deliberate line.
+## What changed
 
-### Title page · press impression
-When the voice changes, the headline re-types itself with a 900ms press impression: a subtle blur-to-sharp resolution, a tone-colored halo that blooms and fades, a horizontal press-mark rule that draws outward beneath the line, and the marked word's underline gets a brief expanded kiss. The result feels like the press bar landing on the type.
-- New `titleline.is-pressing` state on `<TitleLine>` toggles for ~900ms after each voice change.
-- Reduced-motion users get the state without the animation.
-
-### Title page · press provenance masthead
-- The double `m³` (the tiny superscript inside the press cell) is removed; the existing wax-seal mark is enough identity.
-- Cell order reorganized to read more naturally: `m³ press` · `volume i · the open question` · `in the [voice]` · `set today`. The date now anchors the right edge of the masthead, where the page reads it naturally.
-
-### Files touched
-- `src/TitleLine.tsx` — question mark rewritten, exhale replaced, press-impression state added, pressmark element added beneath the headline
-- `src/PressProvenance.tsx` — tiny press-mark removed, cell order reorganized so date anchors the trail
-- `src/style.css` — `.titleline__query-mark` enlarged, `.titleline__query-kiss` added, `.titleline__exhale*` reworked, `.titleline__pressmark` added, `titlelinePress*` keyframes added, `.titleline__headline` font-size slightly enlarged, press-impression animation added
-- `CHANGELOG.md` — this entry
+- Added `src/AnswerCoda.tsx`, a small hand-drawn closing flourish that sits at
+  the foot of the answer reveal leaf. It mirrors the title page's
+  `TitleCoda` so the question → answer arc now has matching bookends: a coda
+  opens the title page, a coda closes the answer leaf.
+- Wired the new coda into `AnswerReveal` in `src/App.tsx`, directly after the
+  "fold it back" close button, so the leaf ends with a confident press mark
+  rather than trailing off.
+- Added `.answer-coda` styles to `src/style.css` covering:
+  - a five-column grid that mirrors the title coda's composition
+    (ink rule · pressed m³ seal · italic editorial line · ink rule)
+  - a two-stroke signature flourish with a trailing bead and a slow halo
+  - voice-aware tones (quiet → blue, human → coral, bold → acid) carried on
+    the seal, rules, and signature column
+  - a progressive draw-in tied to the existing `.is-open` reveal: the rules
+    trace in, the seal drops in, the signature bead lands last
+  - a full `prefers-reduced-motion` fallback that snaps every element to
+    its end state
+  - a stacked single-column layout at ≤ 760 px so the coda reads on mobile
+- No new dependencies. All visuals are local SVG with the existing fractal
+  noise grain filters used elsewhere on the page.
+- No remote assets, fonts, scripts, or storage. The coda is decorative and
+  hidden from assistive tech behind a single, descriptive `aria-label` on
+  the wrapper plus the existing polite live region for screen readers.

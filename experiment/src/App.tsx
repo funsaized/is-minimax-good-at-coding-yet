@@ -46,6 +46,7 @@ import { BroadsideRule } from './BroadsideRule'
 import { FolioImprint } from './FolioImprint'
 import { TitleLamp } from './TitleLamp'
 import { TitleCoda } from './TitleCoda'
+import { AnswerCoda } from './AnswerCoda'
 import { ReadingPause } from './ReadingPause'
 import { PageReturn } from './PageReturn'
 
@@ -152,11 +153,12 @@ function PencilIcon() {
 
 
 
-function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
+function AnswerReveal({ open, onClose, triggerRef, voice, word, setToday }: {
   open: boolean
   onClose: () => void
   triggerRef: React.MutableRefObject<HTMLButtonElement | null>
   voice: VoiceId
+  word: WordId
   setToday: string
 }) {
   const leafGrainId = useId().replace(/:/g, '')
@@ -327,6 +329,7 @@ function AnswerReveal({ open, onClose, triggerRef, voice, setToday }: {
                 <span>fold it back</span>
                 <ArrowIcon />
               </button>
+              <AnswerCoda voice={voice} word={word} setToday={setToday} />
             </div>
           </div>
           <span className="answer-reveal__keep" aria-hidden="true">
@@ -952,7 +955,7 @@ export function App() {
 
         <ReadingPause voice={voice} setToday={setToday} onOpenAnswer={openAnswerFromPause} />
 
-        <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} setToday={setToday} />
+        <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} word={activeWord} setToday={setToday} />
 
         <MarkedProof selected={selectedWord} onSelect={id => selectWord(id, true)} />
 
