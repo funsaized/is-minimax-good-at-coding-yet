@@ -20,12 +20,6 @@ const VOICE_NAME: Record<VoiceId, string> = {
   bold: 'bold signal',
 }
 
-const VOICE_FACE: Record<VoiceId, string> = {
-  quiet: 'serif · italic · close set',
-  human: 'serif · italic · a little warm',
-  bold: 'sans · heavy · no apology',
-}
-
 const VOICE_GLYPH: Record<VoiceId, string> = { quiet: '·', human: '✦', bold: '■' }
 
 const WORD_LABEL: Record<WordId, string> = { m3: 'M3', good: 'good at', yet: 'yet?' }
@@ -85,14 +79,9 @@ export function TitlePage({ voice, word, setToday }: TitlePageProps) {
           </svg>
         </span>
         <span className="title-page__line-sep" aria-hidden="true">·</span>
-        <span className="title-page__line-cell title-page__line-cell--set">
-          set today <em>{setToday}</em>
-        </span>
-        <span className="title-page__line-sep" aria-hidden="true">·</span>
-        <span className="title-page__line-cell title-page__line-cell--voice">
-          <span className="title-page__line-voice-glyph" aria-hidden="true" />
-          <em>{VOICE_NAME[voice]}</em>
-          <span className="title-page__line-face">{VOICE_FACE[voice]}</span>
+        <span className="title-page__line-cell title-page__line-cell--marked">
+          marked <em>{WORD_LABEL[word]}</em>
+          <span className="title-page__line-mark-tag" aria-hidden="true">{WORD_MARK[word]}</span>
         </span>
       </p>
     </header>

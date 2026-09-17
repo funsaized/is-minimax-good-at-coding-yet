@@ -15,6 +15,7 @@ import { TypePlate } from './TypePlate'
 import { SecondReading } from './SecondReading'
 import { ReadingFloor } from './ReadingFloor'
 import { PressStrikeFlash } from './PressStrikeFlash'
+import { PressProvenance } from './PressProvenance'
 
 import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
@@ -692,6 +693,7 @@ export function App() {
       <div className="page">
         <Opening voice={voice} setToday={setToday}>
           <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
+            <PressProvenance voice={voice} setToday={setToday} />
             <TitlePage voice={voice} word={activeWord} setToday={setToday} />
 
             <div className="hero__spread">
