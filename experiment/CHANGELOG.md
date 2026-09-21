@@ -1,5 +1,17 @@
-# CHANGELOG
+# iteration 336
 
-## Iteration 335 — a single pressed register, set above the page
+A press signal descends between the title broadside and reading prologue, one quiet hand-drawn breath.
 
-A persistent press register sits beneath the site header, holding the page's active state in one composed strip: the voice letter on the left, the marked word glyph on the right, and a continuous thread of pressed marks between them. The register replaces several duplicated state displays scattered across the page, sticks with the masthead as you scroll, and accumulates a small constellation of marks as the reader pulls the lever, marks a word, or sets a voice. The thread has its own reveal animation, a gentle pulse on the leading mark, and respects reduced-motion preferences.
+## What changed
+
+- New `PressSignal` component: a thin descending thread with a small pressed mark at its center and a short italic caption, rendered between the title and the reading prologue.
+- The signal's tone shifts with the active voice (blue / coral / acid), and its thread, beads, mark, and caption animate in sequence on reveal — drawing, dropping, and stamping into place.
+- Reduced-motion fallback keeps the signal fully visible without any motion.
+- Responsive sizing scales the height, mark, and caption down on small screens.
+- Build verified with `npm run build`.
+
+## Files touched
+
+- `src/PressSignal.tsx` (new): the connector component, with `useId`-scoped SVG defs and IntersectionObserver-driven reveal.
+- `src/App.tsx`: imports `PressSignal` and renders it once between `TitleBroadside` and `ReadingPrologue`.
+- `src/style.css`: adds the `.press-signal` block and its keyframes (`pressSignalDraw`, `pressSignalBead`, `pressSignalMarkIn`, `pressSignalHalo`, `pressSignalTagIn`).

@@ -35,6 +35,7 @@ import { TitleFolio } from './TitleFolio'
 import { ReadingPrologue } from './ReadingPrologue'
 import { LetterpressCatch } from './LetterpressCatch'
 import { Opening } from './Opening'
+import { PressSignal } from './PressSignal'
 import { TitleCoda } from './TitleCoda'
 import { AnswerCoda } from './AnswerCoda'
 import { ReadingPause } from './ReadingPause'
@@ -684,6 +685,8 @@ export function App() {
               onHover={setHoveredWord}
               tokenRefs={tokenRefs}
             />
+
+            <PressSignal voice={voice} />
 
             <ReadingPrologue
               voice={voice}
