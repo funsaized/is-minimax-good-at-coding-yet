@@ -10,6 +10,7 @@ import {
 import { NOTES, type WordId } from './notes'
 import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
+import { ComposingRule } from './ComposingRule'
 import { ReadingPocket } from './ReadingPocket'
 import { ReadingLedger } from './ReadingLedger'
 import { Hero } from './Hero'
@@ -53,19 +54,22 @@ function formatSetToday() {
 function BrandMark({ size = 30 }: { size?: number }) {
   return (
     <svg className="brand__mark" width={size} height={size} viewBox="0 0 42 42" aria-hidden="true">
-      <circle cx="21" cy="21" r="18" fill="none" stroke="currentColor" strokeWidth=".9" />
-      <circle cx="21" cy="21" r="13.5" fill="none" stroke="currentColor" strokeWidth=".5" strokeDasharray="1.2 2.4" />
+      <circle cx="21" cy="21" r="18.5" fill="none" stroke="currentColor" strokeWidth=".8" />
+      <circle cx="21" cy="21" r="15.5" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1.4 2.6" opacity=".7" />
+      <circle cx="21" cy="21" r="9.5" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".4" />
       <text
         x="21"
-        y="26"
+        y="25.5"
         textAnchor="middle"
         fontFamily="Georgia, serif"
         fontStyle="italic"
-        fontSize="12"
+        fontSize="11.5"
         fill="currentColor"
       >m³</text>
-      <circle cx="21" cy="4.8" r=".9" fill="currentColor" />
-      <circle cx="21" cy="37.2" r=".9" fill="currentColor" />
+      <circle cx="21" cy="3" r="1.2" fill="currentColor" />
+      <circle cx="21" cy="39" r="1.2" fill="currentColor" />
+      <circle cx="3" cy="21" r="1.2" fill="currentColor" />
+      <circle cx="39" cy="21" r="1.2" fill="currentColor" />
     </svg>
   )
 }
@@ -246,6 +250,10 @@ export function App() {
         setToday={setToday}
         folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
       />
+
+      <div className="composing-rule-wrap" aria-hidden="true">
+        <ComposingRule voice={voice} />
+      </div>
 
       <section className="hero reveal" aria-labelledby="hero-title-label">
         <Hero

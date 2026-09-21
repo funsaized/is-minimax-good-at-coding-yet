@@ -50,7 +50,15 @@ const VOICE: Record<VoiceId, VoiceSpec> = {
   },
 }
 
-const TOKEN_COPY: Record<WordId, { label: string; glyph: string; tone: string }> = {
+type TokenCopy = {
+  label: string
+  glyph: string
+  tone: string
+  lead?: string
+  tail?: string
+}
+
+const TOKEN_COPY: Record<WordId, TokenCopy> = {
   m3: { label: 'm³', glyph: '⌇', tone: 'the maker' },
   good: { label: 'good at', glyph: '∧', tone: 'the verb' },
   yet: { label: 'yet?', glyph: '?', tone: 'the pause' },
@@ -69,13 +77,32 @@ export function Hero({
   onWordKey,
   tokenRefs,
 }: HeroProps) {
+  const tokenIds: WordId[] = ['m3', 'good', 'yet']
+  const spec = VOICE[voice]
+  const toneStyle = { '--hero-tone': `var(--${voice})` } as CSSProperties
+  const isYet = word === 'yet'
+
   return (
     <div className="hero__inner">
-      <div className="hero__plate">
-        <div className="hero__plate-rule hero__plate-rule--top" aria-hidden="true">
-          <span className="hero__plate-rule-line" />
-          <em>folio i · the question</em>
-          <span className="hero__plate-rule-line" />
+      <div className="hero__stage" style={toneStyle}>
+        <header className="hero__stage-head">
+          <span className="hero__stage-eyebrow">
+            <span className="hero__stage-mark" aria-hidden="true">¶</span>
+            <span>folio i · the question</span>
+          </span>
+          <span className="hero__stage-set">
+            set on <em>{setToday}</em>
+          </span>
+        </header>
+
+        <div className="hero__stage-rule hero__stage-rule--top" aria-hidden="true">
+          <span className="hero__stage-rule-tick" />
+          <span className="hero__stage-rule-tick" />
+          <span className="hero__stage-rule-tick" />
+          <span className="hero__stage-rule-line" />
+          <span className="hero__stage-rule-tick" />
+          <span className="hero__stage-rule-tick" />
+          <span className="hero__stage-rule-tick" />
         </div>
 
         <h1
@@ -83,46 +110,133 @@ export function Hero({
           className={`hero__title hero__title--${voice}`}
           aria-label="is Minimax M3 good at frontend yet?"
         >
-          <span aria-hidden="true">is </span>
-          {(['m3', 'good', 'yet'] as WordId[]).map((id, idx) => {
-            const isMarked = word === id
-            const isHover = hover === id
-            const copy = TOKEN_COPY[id]
-            return (
-              <span
-                key={id}
-                className={`ht__word ht__word--${id} ${isMarked ? 'is-marked' : ''} ${isHover ? 'is-hover' : ''}`}
-                aria-hidden="true"
+          <span className="hero__title-row hero__title-row--main">
+            <span className="hero__title-word hero__title-word--plain">is</span>
+            <span className="hero__title-space" aria-hidden="true" />
+
+            <span
+              className={`ht__word ht__word--m3 ${word === 'm3' ? 'is-marked' : ''} ${hover === 'm3' ? 'is-hover' : ''}`}
+              aria-hidden="true"
+            >
+              {word === 'm3' && <span className="ht__glyph">{TOKEN_COPY.m3.glyph}</span>}
+              <button
+                type="button"
+                ref={node => {
+                  tokenRefs.current.m3 = node
+                }}
+                className="ht__token"
+                onClick={() => onWord('m3')}
+                onMouseEnter={() => onHover('m3')}
+                onMouseLeave={() => onHover(null)}
+                onFocus={() => onHover('m3')}
+                onBlur={() => onHover(null)}
+                onKeyDown={event => onWordKey(event, 'm3')}
+                aria-pressed={word === 'm3'}
+                aria-label={`${TOKEN_COPY.m3.label} — ${TOKEN_COPY.m3.tone}`}
               >
-                {isMarked && <span className="ht__glyph">{copy.glyph}</span>}
-                <button
-                  type="button"
-                  ref={node => {
-                    tokenRefs.current[id] = node
-                  }}
-                  className="ht__token"
-                  onClick={() => onWord(id)}
-                  onMouseEnter={() => onHover(id)}
-                  onMouseLeave={() => onHover(null)}
-                  onFocus={() => onHover(id)}
-                  onBlur={() => onHover(null)}
-                  onKeyDown={event => onWordKey(event, id)}
-                  aria-pressed={isMarked}
-                  aria-label={`${copy.label} — ${copy.tone}`}
-                >
-                  {copy.label}
-                </button>
-                {idx < 2 && <span aria-hidden="true"> </span>}
-              </span>
-            )
-          })}
+                {TOKEN_COPY.m3.label}
+              </button>
+            </span>
+
+            <span className="hero__title-space" aria-hidden="true" />
+
+            <span
+              className={`ht__word ht__word--good ${word === 'good' ? 'is-marked' : ''} ${hover === 'good' ? 'is-hover' : ''}`}
+              aria-hidden="true"
+            >
+              {word === 'good' && <span className="ht__glyph">{TOKEN_COPY.good.glyph}</span>}
+              <button
+                type="button"
+                ref={node => {
+                  tokenRefs.current.good = node
+                }}
+                className="ht__token"
+                onClick={() => onWord('good')}
+                onMouseEnter={() => onHover('good')}
+                onMouseLeave={() => onHover(null)}
+                onFocus={() => onHover('good')}
+                onBlur={() => onHover(null)}
+                onKeyDown={event => onWordKey(event, 'good')}
+                aria-pressed={word === 'good'}
+                aria-label={`${TOKEN_COPY.good.label} — ${TOKEN_COPY.good.tone}`}
+              >
+                {TOKEN_COPY.good.label}
+              </button>
+            </span>
+
+            <span className="hero__title-space" aria-hidden="true" />
+            <span className="hero__title-word hero__title-word--plain">frontend</span>
+            <span className="hero__title-space" aria-hidden="true" />
+
+            <span
+              className={`ht__word ht__word--yet ${word === 'yet' ? 'is-marked' : ''} ${hover === 'yet' ? 'is-hover' : ''} ${isYet ? 'ht__word--punct' : ''}`}
+              aria-hidden="true"
+            >
+              {word === 'yet' && <span className="ht__glyph">{TOKEN_COPY.yet.glyph}</span>}
+              <button
+                type="button"
+                ref={node => {
+                  tokenRefs.current.yet = node
+                }}
+                className="ht__token ht__token--yet"
+                onClick={() => onWord('yet')}
+                onMouseEnter={() => onHover('yet')}
+                onMouseLeave={() => onHover(null)}
+                onFocus={() => onHover('yet')}
+                onBlur={() => onHover(null)}
+                onKeyDown={event => onWordKey(event, 'yet')}
+                aria-pressed={word === 'yet'}
+                aria-label={`${TOKEN_COPY.yet.label} — ${TOKEN_COPY.yet.tone}`}
+              >
+                <span className="ht__token-yet">yet</span>
+                <span className="ht__token-punct" aria-hidden="true">?</span>
+              </button>
+            </span>
+          </span>
+
+          <span className="hero__title-row hero__title-row--sub" aria-hidden="true">
+            <span className="hero__title-sub-mark">⌇</span>
+            <em>set in {spec.name.toLowerCase()}</em>
+            <span className="hero__title-sub-rule" />
+            <em>read at hand</em>
+            <span className="hero__title-sub-mark">⌇</span>
+          </span>
         </h1>
 
-        <div className="hero__plate-rule hero__plate-rule--bot" aria-hidden="true">
-          <span className="hero__plate-rule-line" />
-          <em>set on {setToday} · {VOICE[voice].face}</em>
-          <span className="hero__plate-rule-line" />
+        <div className="hero__stage-rule hero__stage-rule--bot" aria-hidden="true">
+          <span className="hero__stage-rule-tick" />
+          <span className="hero__stage-rule-tick" />
+          <span className="hero__stage-rule-tick" />
+          <span className="hero__stage-rule-line" />
+          <span className="hero__stage-rule-tick" />
+          <span className="hero__stage-rule-tick" />
+          <span className="hero__stage-rule-tick" />
         </div>
+
+        <footer className="hero__stage-foot">
+          <span className="hero__stage-foot-cell hero__stage-foot-cell--key">
+            <span className="hero__stage-foot-key">reading</span>
+            <em className="hero__stage-foot-mark">
+              {word === 'm3' && <>⌇ stet</>}
+              {word === 'good' && <>∧ caret</>}
+              {word === 'yet' && <>? query</>}
+            </em>
+          </span>
+          <span className="hero__stage-foot-cell hero__stage-foot-cell--voice">
+            <span className="hero__stage-foot-key">voice</span>
+            <em className="hero__stage-foot-voice">
+              <span className="hero__stage-foot-letter">{spec.letter}</span>
+              {spec.name}
+              <span className="hero__stage-foot-face">· {spec.face}</span>
+            </em>
+          </span>
+          <span className="hero__stage-foot-cell hero__stage-foot-cell--hint">
+            <span className="hero__stage-foot-key">cycle</span>
+            <em className="hero__stage-foot-keys">
+              <kbd>shift</kbd>+<kbd>v</kbd>
+            </em>
+          </span>
+        </footer>
       </div>
 
       <div
@@ -133,14 +247,13 @@ export function Hero({
         <header className="voice-spec__head" aria-hidden="true">
           <span className="voice-spec__key">the line set three ways</span>
           <span className="voice-spec__hint">
-            <kbd>shift</kbd>+<kbd>v</kbd>
-            <em>to cycle</em>
+            <em>click a row to set the page in that voice</em>
           </span>
         </header>
 
         <ol className="voice-spec__list">
           {ORDER.map(v => {
-            const spec = VOICE[v]
+            const row = VOICE[v]
             const isActive = voice === v
             return (
               <li key={v} className="voice-spec__row">
@@ -151,11 +264,10 @@ export function Hero({
                   className={`voice-spec__item voice-spec__item--${v} ${isActive ? 'is-active' : ''}`}
                   onClick={() => onVoice(v)}
                 >
-                  <span className="voice-spec__letter" aria-hidden="true">{spec.letter}</span>
-                  <span className={`voice-spec__sample voice-spec__sample--${v}`}>{spec.sample}</span>
+                  <span className="voice-spec__letter" aria-hidden="true">{row.letter}</span>
+                  <span className={`voice-spec__sample voice-spec__sample--${v}`}>{row.sample}</span>
                   <span className="voice-spec__meta" aria-hidden="true">
-                    <span className="voice-spec__name">{spec.name}</span>
-                    <span className="voice-spec__face">{spec.face}</span>
+                    <span className="voice-spec__name">{row.name}</span>
                   </span>
                   <span className="voice-spec__pip" aria-hidden="true">
                     <span className="voice-spec__pip-bead" />
@@ -165,6 +277,12 @@ export function Hero({
             )
           })}
         </ol>
+
+        <footer className="voice-spec__foot" aria-hidden="true">
+          <span className="voice-spec__foot-rule" />
+          <em>three voices, one line, set on {setToday}</em>
+          <span className="voice-spec__foot-rule" />
+        </footer>
       </div>
     </div>
   )

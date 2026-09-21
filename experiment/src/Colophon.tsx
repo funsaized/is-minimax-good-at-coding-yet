@@ -73,8 +73,12 @@ export function Colophon({ voice, word, setToday }: ColophonProps) {
           <div className="colophon__signoff" aria-label="The page, signed">
             <svg className="colophon__seal" viewBox="0 0 100 100" aria-hidden="true" style={sealStyle}>
               <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth=".9" />
-              <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2" opacity=".55" />
-              <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".35" />
+              <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 2.5" opacity=".5" />
+              <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".3" />
+              <circle cx="50" cy="6" r="1.4" fill="currentColor" opacity=".85" />
+              <circle cx="50" cy="94" r="1.4" fill="currentColor" opacity=".85" />
+              <circle cx="6" cy="50" r="1.4" fill="currentColor" opacity=".85" />
+              <circle cx="94" cy="50" r="1.4" fill="currentColor" opacity=".85" />
               <text x="50" y="22" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="currentColor">
                 {seal.top}
               </text>
@@ -83,7 +87,7 @@ export function Colophon({ voice, word, setToday }: ColophonProps) {
                 y="58"
                 textAnchor="middle"
                 fontFamily="Georgia, serif"
-                fontStyle="italic"
+                fontStyle={voice === 'bold' ? 'normal' : 'italic'}
                 fontSize={voice === 'bold' ? 32 : 38}
                 fontWeight={voice === 'bold' ? 800 : 500}
                 fill="currentColor"

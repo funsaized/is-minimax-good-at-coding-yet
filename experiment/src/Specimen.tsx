@@ -98,7 +98,10 @@ export function Specimen({ active, onSelect }: SpecimenProps) {
                     <span className="specimen__key-name">{row.name}</span>
                   </span>
                   <span className={`specimen__key-col specimen__key-col--sample specimen__key-col--sample-${v}`}>
-                    <span className="specimen__key-sample">{row.sample}</span>
+                    <span className="specimen__key-sample specimen__key-sample--big">{row.sample}</span>
+                    <span className="specimen__key-sample specimen__key-sample--small" aria-hidden="true">
+                      {row.sample}
+                    </span>
                     <span className="specimen__key-face" aria-hidden="true">{row.face}</span>
                   </span>
                   <span className="specimen__key-col specimen__key-col--mark" aria-hidden="true">

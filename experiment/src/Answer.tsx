@@ -81,7 +81,10 @@ export function Answer({ open, onToggle, triggerRef, voice, word, setToday }: An
 
         <div className="answer__copy">
           <p className="answer__line">
-            Yes — when it <em>stops trying to look impressive.</em>
+            <span className="answer__initial" aria-hidden="true">Y</span>
+            <span className="answer__line-rest">
+              es — when it <em>stops trying to look impressive.</em>
+            </span>
           </p>
           <div className="answer__columns">
             <p>
@@ -144,10 +147,12 @@ function PressSeal({ voice }: { voice: VoiceId }) {
   const glyph = voice === 'bold' ? 'M³' : 'm³'
   const style = { color: tone } as CSSProperties
   const l = labels[voice]
+  const isBold = voice === 'bold'
   return (
     <svg className="answer__seal" viewBox="0 0 100 100" aria-hidden="true" style={style}>
       <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth=".9" />
-      <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 2" opacity=".65" />
+      <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 2.5" opacity=".6" />
+      <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".3" />
       <text x="50" y="20" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="currentColor">
         {l.top}
       </text>
@@ -156,9 +161,9 @@ function PressSeal({ voice }: { voice: VoiceId }) {
         y="60"
         textAnchor="middle"
         fontFamily="Georgia, serif"
-        fontStyle="italic"
-        fontSize={voice === 'bold' ? 26 : 30}
-        fontWeight="500"
+        fontStyle={isBold ? 'normal' : 'italic'}
+        fontSize={isBold ? 28 : 32}
+        fontWeight={isBold ? 800 : 500}
         fill="currentColor"
       >
         {glyph}
@@ -166,6 +171,10 @@ function PressSeal({ voice }: { voice: VoiceId }) {
       <text x="50" y="86" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="currentColor">
         {l.bottom}
       </text>
+      <circle cx="50" cy="6" r="1.4" fill="currentColor" />
+      <circle cx="50" cy="94" r="1.4" fill="currentColor" />
+      <circle cx="6" cy="50" r="1.4" fill="currentColor" />
+      <circle cx="94" cy="50" r="1.4" fill="currentColor" />
     </svg>
   )
 }
