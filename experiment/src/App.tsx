@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { NOTES, type WordId } from './notes'
 import { WayfinderSeal } from './WayfinderSeal'
-import { TitleBroadside } from './TitleBroadside'
+import { HeroTitle } from './HeroTitle'
 import { Press, type VoiceId } from './Press'
 import { PressRegister } from './PressRegister'
 import { PaperGrain } from './PaperGrain'
@@ -289,7 +289,6 @@ export function App() {
   }
 
   const activeFolio = FOLIO_LEDGER.findIndex(f => f.id === activeSection)
-  const voiceMeta = VOICE_META[voice]
 
   return (
     <main
@@ -354,50 +353,17 @@ export function App() {
       >
         <h1 className="sr-only" id="page-title">{TITLE}</h1>
 
-        <div className="hero__frame">
-          <span className="hero__frame-corner hero__frame-corner--tl" aria-hidden="true" />
-          <span className="hero__frame-corner hero__frame-corner--tr" aria-hidden="true" />
-          <span className="hero__frame-corner hero__frame-corner--bl" aria-hidden="true" />
-          <span className="hero__frame-corner hero__frame-corner--br" aria-hidden="true" />
-
-          <div className="hero__grain" aria-hidden="true">
-            <svg viewBox="0 0 600 220" preserveAspectRatio="none">
-              <rect x="0" y="0" width="600" height="220" fill={`url(#app-grain-${grainId})`} opacity=".55" />
-            </svg>
-          </div>
-
-          <header className="hero__cap">
-            <span className="hero__cap-rule" aria-hidden="true" />
-            <span className="hero__cap-tag">
-              <span className="hero__cap-mark" aria-hidden="true" />
-              <em>folio i · the question</em>
-              <span className="hero__cap-mark hero__cap-mark--alt" aria-hidden="true" />
-            </span>
-            <span className="hero__cap-rule hero__cap-rule--alt" aria-hidden="true" />
-          </header>
-
-          <div className="hero__title-zone">
-            <TitleBroadside
-              voice={voice}
-              word={activeWord}
-              hover={hoveredWord}
-              setToday={setToday}
-              onVoice={selectVoice}
-              onWord={(id, focus) => selectWord(id, focus ?? false)}
-              onHover={setHoveredWord}
-              tokenRefs={tokenRefs}
-            />
-          </div>
-
-          <footer className="hero__colophon" aria-hidden="true">
-            <span className="hero__colophon-line hero__colophon-line--lead" />
-            <span className="hero__colophon-tag">
-              <span aria-hidden="true">¶</span>
-              set in {voiceMeta.name}
-              <em> · {voiceMeta.face}</em>
-            </span>
-            <span className="hero__colophon-line" />
-          </footer>
+        <div className="hero__title-zone">
+          <HeroTitle
+            voice={voice}
+            word={activeWord}
+            hover={hoveredWord}
+            setToday={setToday}
+            onVoice={selectVoice}
+            onWord={(id, focus) => selectWord(id, focus ?? false)}
+            onHover={setHoveredWord}
+            tokenRefs={tokenRefs}
+          />
         </div>
 
         <div className="hero__rail">
@@ -489,7 +455,7 @@ export function App() {
         <span className="site-foot__rule" aria-hidden="true" />
         <span className="site-foot__copy">
           <span aria-hidden="true">⤳</span>
-          <em>is Minimax M3 good at frontend yet?</em>
+          <em>{TITLE}</em>
           <span aria-hidden="true">·</span>
           <span>composed and set on {setToday}</span>
         </span>
