@@ -322,57 +322,107 @@ export function QuestionMonument({
         </span>
       </span>
 
-      <footer className="question-monument__foot" aria-hidden="true">
-        <div className="question-monument__voices" role="group" aria-label="Cycle the voice of the headline">
-          {VOICE_ORDER.map(v => {
-            const isActive = v === voice
-            return (
-              <button
-                key={`monument-voice-${v}`}
-                type="button"
-                className={`question-monument__voice question-monument__voice--${v} ${isActive ? 'is-active' : ''}`}
-                onClick={() => onVoice(v)}
-                onKeyDown={event => {
-                  const idx = VOICE_ORDER.indexOf(v)
-                  if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-                    event.preventDefault()
-                    onVoice(VOICE_ORDER[(idx + 1) % VOICE_ORDER.length])
-                  } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-                    event.preventDefault()
-                    onVoice(VOICE_ORDER[(idx - 1 + VOICE_ORDER.length) % VOICE_ORDER.length])
-                  } else if (event.key === 'Home') {
-                    event.preventDefault()
-                    onVoice('quiet')
-                  } else if (event.key === 'End') {
-                    event.preventDefault()
-                    onVoice('bold')
-                  }
-                }}
-                aria-pressed={isActive}
-                tabIndex={isActive ? 0 : -1}
-                aria-label={`Set the headline in the ${VOICE_FACE[v].name} voice.`}
-              >
-                <span className="question-monument__voice-letter">{VOICE_FACE[v].letter}</span>
-                <span className="question-monument__voice-stack">
-                  <span className="question-monument__voice-name">{VOICE_FACE[v].name}</span>
-                  <span className="question-monument__voice-face">{VOICE_FACE[v].descriptor}</span>
-                </span>
-                <span className="question-monument__voice-now">
-                  {isActive ? (
-                    <>
-                      <span className="question-monument__voice-now-dot" />
-                      <span>now</span>
-                    </>
-                  ) : (
-                    <span className="question-monument__voice-now-tag">set</span>
-                  )}
-                </span>
-              </button>
-            )
-          })}
+      <footer className="question-monument__foot">
+        <div className="question-monument__plate" role="group" aria-label="Cycle the voice of the headline">
+          <span className="question-monument__plate-eyebrow" aria-hidden="true">
+            <span className="question-monument__plate-eyebrow-mark" />
+            <em>the voice · sets the line above</em>
+            <span className="question-monument__plate-eyebrow-mark question-monument__plate-eyebrow-mark--alt" />
+          </span>
+          <span className="question-monument__plate-rule question-monument__plate-rule--lead" aria-hidden="true">
+            <svg viewBox="0 0 800 8" preserveAspectRatio="none">
+              <g filter={`url(#${ruleGrainId})`}>
+                <path
+                  className="question-monument__plate-rule-stroke"
+                  d="M2 4c40-3 80 3 120 0s80-3 120 0 80 3 120 0 80-3 120 0 80 3 120 0 80-3 76 0"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth=".75"
+                  strokeLinecap="round"
+                  pathLength="100"
+                />
+              </g>
+              <circle cx="2" cy="4" r="1.1" fill="currentColor" />
+            </svg>
+          </span>
+          <div className="question-monument__plate-stations">
+            {VOICE_ORDER.map((v, idx) => {
+              const isActive = v === voice
+              return (
+                <button
+                  key={`monument-voice-${v}`}
+                  type="button"
+                  className={`question-monument__station question-monument__station--${v} ${isActive ? 'is-active' : ''}`}
+                  data-station-index={idx}
+                  onClick={() => onVoice(v)}
+                  onKeyDown={event => {
+                    const i = VOICE_ORDER.indexOf(v)
+                    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+                      event.preventDefault()
+                      onVoice(VOICE_ORDER[(i + 1) % VOICE_ORDER.length])
+                    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                      event.preventDefault()
+                      onVoice(VOICE_ORDER[(i - 1 + VOICE_ORDER.length) % VOICE_ORDER.length])
+                    } else if (event.key === 'Home') {
+                      event.preventDefault()
+                      onVoice('quiet')
+                    } else if (event.key === 'End') {
+                      event.preventDefault()
+                      onVoice('bold')
+                    }
+                  }}
+                  aria-pressed={isActive}
+                  tabIndex={isActive ? 0 : -1}
+                  aria-label={`Set the headline in the ${VOICE_FACE[v].name} voice.`}
+                >
+                  <span className="question-monument__station-pip" aria-hidden="true">
+                    <span className="question-monument__station-pip-ring" />
+                    <span className="question-monument__station-pip-bead" />
+                    <span className="question-monument__station-pip-halo" />
+                  </span>
+                  <span className="question-monument__station-letter">{VOICE_FACE[v].letter}</span>
+                  <span className="question-monument__station-stack">
+                    <span className="question-monument__station-name">{VOICE_FACE[v].name}</span>
+                    <span className="question-monument__station-face">{VOICE_FACE[v].descriptor}</span>
+                  </span>
+                </button>
+              )
+            })}
+            <span
+              className="question-monument__plate-wax is-set"
+              aria-hidden="true"
+              style={{ left: `calc((100% / 3) * (${VOICE_ORDER.indexOf(voice)} + 0.5))` }}
+            >
+              <span className="question-monument__plate-wax-bead" />
+              <span className="question-monument__plate-wax-wisp" />
+            </span>
+          </div>
+          <span className="question-monument__plate-rule question-monument__plate-rule--trail" aria-hidden="true">
+            <svg viewBox="0 0 800 8" preserveAspectRatio="none">
+              <g filter={`url(#${ruleGrainId})`}>
+                <path
+                  d="M2 4c40-3 80 3 120 0s80-3 120 0 80 3 120 0 80-3 120 0 80 3 120 0 80-3 76 0"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth=".5"
+                  strokeLinecap="round"
+                  opacity=".55"
+                />
+                <path
+                  d="M40 6c20-2 36 2 54 0s36-2 54 0 36 2 54 0 36-2 54 0 36 2 54-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth=".32"
+                  strokeLinecap="round"
+                  opacity=".4"
+                />
+              </g>
+              <circle cx="798" cy="4" r=".9" fill="currentColor" opacity=".55" />
+            </svg>
+          </span>
         </div>
 
-        <div className="question-monument__meta">
+        <div className="question-monument__meta" aria-hidden="true">
           <span className="question-monument__meta-cell question-monument__meta-cell--marked">
             <span className="question-monument__meta-key">marked at</span>
             <span className="question-monument__meta-value">

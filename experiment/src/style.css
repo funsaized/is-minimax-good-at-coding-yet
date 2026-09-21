@@ -54996,6 +54996,37 @@ a small act of typesetting.
   transform: translateY(3px);
 }
 
+.question-monument.is-impressing .question-monument__statement::after {
+  content: '';
+  position: absolute;
+  inset: clamp(-8px, -1vw, -12px) clamp(-12px, -2vw, -24px);
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--qm-tone) 18%, transparent) 18%,
+      color-mix(in srgb, var(--qm-tone) 32%, transparent) 50%,
+      color-mix(in srgb, var(--qm-tone) 18%, transparent) 82%,
+      transparent 100%);
+  filter: blur(8px);
+  animation: qmImpressBreath .82s var(--ease-out) forwards;
+  opacity: .85;
+}
+
+@keyframes qmImpressBreath {
+  0% { opacity: 0; transform: translateY(-4px); }
+  35% { opacity: .85; }
+  100% { opacity: 0; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question-monument.is-impressing .question-monument__statement::after {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
+
 .question-monument__pressmark {
   display: block;
   width: clamp(140px, 16vw, 220px);
@@ -55544,6 +55575,327 @@ a small act of typesetting.
   color: var(--muted);
 }
 
+/* — Press plate · the voice settings, recomposed as a single object — */
+
+.question-monument__plate {
+  position: relative;
+  display: grid;
+  row-gap: clamp(6px, .8vw, 12px);
+  width: 100%;
+  padding: clamp(10px, 1.4vw, 18px) clamp(8px, 1.4vw, 18px) clamp(12px, 1.6vw, 22px);
+  border: 1px solid color-mix(in srgb, var(--qm-tone) 18%, transparent);
+  border-radius: 2px;
+  background:
+    radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--qm-tone) 8%, transparent), transparent 70%),
+    linear-gradient(180deg, rgba(14, 20, 32, .55), rgba(10, 14, 22, .65));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--qm-tone) 6%, transparent),
+    inset 0 1px 0 rgba(243, 236, 214, .04);
+  transition: border-color .55s var(--ease), background .55s var(--ease);
+}
+
+.question-monument__plate-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-self: center;
+  gap: clamp(8px, 1vw, 12px);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .7vw, 9px);
+  font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: .78;
+  transition: color .55s var(--ease);
+}
+
+.question-monument__plate-eyebrow em {
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(11.5px, 1vw, 13px);
+  font-weight: 500;
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--qm-tone);
+}
+
+.question-monument__plate-eyebrow-mark {
+  display: inline-block;
+  width: clamp(10px, 1.4vw, 18px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor);
+  opacity: .6;
+}
+
+.question-monument__plate-eyebrow-mark--alt {
+  background: linear-gradient(to left, transparent, currentColor);
+}
+
+.question-monument__plate-rule {
+  display: block;
+  width: 100%;
+  height: clamp(6px, .8vw, 10px);
+  color: var(--qm-tone);
+}
+
+.question-monument__plate-rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.question-monument__plate-rule-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: qmPlateRuleDraw 1.2s var(--ease-out) .35s forwards;
+}
+
+@keyframes qmPlateRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question-monument__plate-rule-stroke {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+.question-monument__plate-rule--trail { color: var(--paper); opacity: .42; }
+
+.question-monument__plate-stations {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  column-gap: clamp(8px, 1.2vw, 18px);
+  width: 100%;
+}
+
+.question-monument__station {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: clamp(6px, .8vw, 10px);
+  padding: clamp(6px, .9vw, 10px) clamp(8px, 1.2vw, 14px) clamp(10px, 1.4vw, 16px);
+  border: 0;
+  border-radius: 1px;
+  background: transparent;
+  color: var(--paper);
+  text-align: center;
+  cursor: pointer;
+  transition: color .35s var(--ease), transform .35s var(--ease-spring);
+}
+
+.question-monument__station::before {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: clamp(2px, .3vw, 4px);
+  height: 1px;
+  background: color-mix(in srgb, var(--paper) 18%, transparent);
+  transition: background .35s var(--ease), height .35s var(--ease);
+}
+
+.question-monument__station:hover,
+.question-monument__station:focus-visible {
+  color: var(--qm-tone);
+}
+
+.question-monument__station:hover::before,
+.question-monument__station:focus-visible::before {
+  background: color-mix(in srgb, var(--qm-tone) 50%, transparent);
+  height: 2px;
+}
+
+.question-monument__station.is-active {
+  color: var(--qm-tone);
+}
+
+.question-monument__station.is-active::before {
+  height: 2px;
+  background: var(--qm-tone);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--qm-tone) 18%, transparent);
+}
+
+.question-monument__station-pip {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: clamp(14px, 1.4vw, 18px);
+  height: clamp(14px, 1.4vw, 18px);
+  flex: 0 0 auto;
+}
+
+.question-monument__station-pip-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+  transition: border-color .35s var(--ease);
+}
+
+.question-monument__station.is-active .question-monument__station-pip-ring {
+  border-color: var(--qm-tone);
+}
+
+.question-monument__station-pip-bead {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--paper) 50%, transparent);
+  transition: background .35s var(--ease), transform .35s var(--ease-spring);
+}
+
+.question-monument__station.is-active .question-monument__station-pip-bead {
+  background: var(--qm-tone);
+  transform: scale(1.4);
+}
+
+.question-monument__station-pip-halo {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px dashed color-mix(in srgb, var(--paper) 20%, transparent);
+  opacity: 0;
+  transition: opacity .35s var(--ease);
+}
+
+.question-monument__station.is-active .question-monument__station-pip-halo {
+  opacity: .55;
+  border-color: var(--qm-tone);
+}
+
+.question-monument__station-letter {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(28px, 2.6vw, 38px);
+  height: clamp(28px, 2.6vw, 38px);
+  border-radius: 50%;
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(13px, 1.2vw, 16px);
+  color: color-mix(in srgb, var(--paper) 88%, transparent);
+  background: rgba(14, 20, 32, .42);
+  transition: background .35s var(--ease), color .35s var(--ease);
+}
+
+.question-monument__station.is-active .question-monument__station-letter {
+  background: var(--qm-tone);
+  color: var(--night);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--qm-tone) 22%, transparent);
+}
+
+.question-monument__station-stack {
+  display: grid;
+  row-gap: clamp(1px, .2vw, 3px);
+  min-width: 0;
+  padding: 0 clamp(2px, .3vw, 4px);
+}
+
+.question-monument__station-name {
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(13px, 1.16vw, 15.5px);
+  letter-spacing: -.005em;
+  color: inherit;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.question-monument__station--bold .question-monument__station-name {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.04em;
+  text-transform: uppercase;
+  font-size: clamp(12px, 1.06vw, 14px);
+}
+
+.question-monument__station-face {
+  font-family: var(--mono);
+  font-size: clamp(7px, .64vw, 8px);
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color .35s var(--ease);
+}
+
+.question-monument__station.is-active .question-monument__station-face {
+  color: color-mix(in srgb, var(--qm-tone) 70%, var(--paper));
+}
+
+/* — Wax drop that rides beneath the active station — */
+
+.question-monument__plate-wax {
+  position: absolute;
+  left: 0;
+  top: calc(100% - clamp(2px, .3vw, 4px));
+  width: clamp(28px, 3vw, 40px);
+  height: clamp(14px, 1.6vw, 22px);
+  pointer-events: none;
+  display: grid;
+  justify-items: center;
+  align-items: start;
+  color: var(--qm-tone);
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: left .55s var(--ease-spring), color .55s var(--ease), opacity .35s var(--ease);
+}
+
+.question-monument__plate-wax.is-set {
+  opacity: 1;
+}
+
+.question-monument__plate-wax-bead {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 1px color-mix(in srgb, currentColor 28%, transparent);
+  transform: translateX(-50%);
+  animation: qmPlateWaxIn .8s var(--ease-spring) forwards;
+}
+
+.question-monument__plate-wax-wisp {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 1.4px;
+  height: clamp(8px, 1vw, 14px);
+  background: linear-gradient(to bottom, currentColor, transparent);
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+
+@keyframes qmPlateWaxIn {
+  0% { opacity: 0; transform: translateX(-50%) scale(.4); }
+  60% { opacity: 1; transform: translateX(-50%) scale(1.15); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .question-monument__plate-wax { transition: color .55s var(--ease), opacity .35s var(--ease) !important; }
+  .question-monument__plate-wax-bead { animation: none !important; }
+}
+
 /* — Meta row beneath the voice strip — */
 
 .question-monument__meta {
@@ -55681,6 +56033,22 @@ a small act of typesetting.
     row-gap: 6px;
   }
 
+  .question-monument__plate {
+    padding: clamp(10px, 1.6vw, 16px) clamp(8px, 1.6vw, 14px) clamp(12px, 2vw, 18px);
+  }
+
+  .question-monument__plate-stations {
+    column-gap: clamp(6px, 1.2vw, 12px);
+  }
+
+  .question-monument__plate-wax { display: none; }
+
+  .question-monument__station-face { display: none; }
+
+  .question-monument__station.is-active .question-monument__station-face {
+    display: block;
+  }
+
   .question-monument__meta {
     justify-content: flex-start;
   }
@@ -55701,6 +56069,22 @@ a small act of typesetting.
 
   .question-monument__voice-now {
     display: none;
+  }
+
+  .question-monument__plate-eyebrow em { font-size: 11.5px; }
+
+  .question-monument__station-letter {
+    width: clamp(24px, 6.4vw, 32px);
+    height: clamp(24px, 6.4vw, 32px);
+    font-size: clamp(11px, 3vw, 14px);
+  }
+
+  .question-monument__station-name {
+    font-size: 12.5px;
+  }
+
+  .question-monument__station.is-active .question-monument__station-face {
+    font-size: 7.5px;
   }
 
   .question-monument__seal {
