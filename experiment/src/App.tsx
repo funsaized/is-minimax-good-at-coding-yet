@@ -45,6 +45,7 @@ import { FolioSpecimen } from './FolioSpecimen'
 import { PressTitleCut } from './PressTitleCut'
 import { PressProofSlip } from './PressProofSlip'
 import { ComposingBed } from './ComposingBed'
+import { FolioSpread } from './FolioSpread'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -688,6 +689,8 @@ export function App() {
         <FolioImprint voice={voice} setToday={setToday} />
 
         <ComposingBed voice={voice} />
+
+        <FolioSpread voice={voice} word={activeWord} setToday={setToday} />
 
         <Opening voice={voice} setToday={setToday}>
           <section className="hero hero--title-page" id="question" aria-labelledby="page-title">

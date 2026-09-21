@@ -1,12 +1,7 @@
-## Iteration 353 — A composing bed sits above the title as a kinetic tray of five type pieces.
+# Changelog
 
-A new `ComposingBed` component opens the front matter between the folio imprint and the title broadside. It shows the question as five physical type pieces — is, Minimax M3, good at, frontend, yet? — set in a press tray with a canvas-drawn registration grid, a slow scan line, and two breathing light orbs. Pieces lift, rotate slightly off-axis, and re-settle when the voice changes; marked pieces pulse softly. A small set-card in the corner names the active voice and reminds the reader of the shift+v cycle. Cursor parallax adds a quiet tactile response; the bed respects reduced motion and falls back to a flat, still composition when motion is disabled.
+## Iteration 354
 
-The composition sits between the existing decorative bands and the title, so the title now reads as the natural endpoint of "five pieces set, one line spoken."
+A single composed opening spread opens the title page between the composing bed and the opening broadside.
 
-Files:
-- `src/ComposingBed.tsx` (new) — kinetic tray, canvas backdrop, piece layout.
-- `src/App.tsx` — imports and mounts `ComposingBed` between folio imprint and opening.
-- `src/style.css` — composing bed styles appended (voice tones, bed frame, piece tiles, animation, responsive rules, reduced-motion fallback).
-
-No other files were changed; no packages were added; no remote assets were introduced.
+The spread is a twin-page composition facing across a pressed spine: the verso carries the headline in the chosen voice with a voice mark, the recto carries the question, a press seal, and three editorial cells (marked at, set on, voice). Cursor parallax lifts each page off the screen; a reveal animation draws the lines in sequence; the seal halo rotates slowly. The voice tone colors every rule and glyph, and the typography follows the chosen voice — italic serif for quiet, italic warm serif for human, heavy display sans for bold. On mobile the spread stacks into a single column with the seal centered above the question. Reduced-motion preference disables parallax and reveal animations.
