@@ -232,6 +232,40 @@ export function ReadingPrologue({ voice, word, setToday, onWord, onLeverHint }: 
             set in <em>{activeReading.line}</em>
           </span>
         </span>
+
+        <span className="reading-prologue__seal" aria-hidden="true">
+          <span className="reading-prologue__seal-disc">
+            <svg viewBox="0 0 56 56">
+              <g filter={`url(#${grainId})`} opacity=".94">
+                <circle cx="28" cy="28" r="22" fill="none" stroke="currentColor" strokeWidth=".7" />
+                <circle cx="28" cy="28" r="16" fill="none" stroke="currentColor" strokeWidth=".3" strokeDasharray=".8 1.4" opacity=".7" />
+                <circle cx="28" cy="28" r="9" fill="none" stroke="currentColor" strokeWidth=".35" opacity=".55" />
+                <path
+                  d="M28 6 L28 10 M28 46 L28 50 M6 28 L10 28 M46 28 L50 28"
+                  stroke="currentColor"
+                  strokeWidth=".4" strokeLinecap="round" opacity=".6"
+                />
+                <text x="28" y="33" textAnchor="middle" fontFamily="'Iowan Old Style', Georgia, serif" fontStyle="italic" fontSize="14" fill="currentColor">m³</text>
+              </g>
+            </svg>
+          </span>
+          <span className="reading-prologue__seal-wax">
+            <span className="reading-prologue__seal-wax-bead" />
+            <span className="reading-prologue__seal-wax-wisp" />
+          </span>
+          <span className="reading-prologue__seal-line" aria-hidden="true">
+            <svg viewBox="0 0 80 6" preserveAspectRatio="none">
+              <g filter={`url(#${grainId})`}>
+                <path d="M2 3c10-2 20 2 30 0s20-2 30 0 16 2 18 0" fill="none" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
+              </g>
+              <circle cx="78" cy="3" r=".95" fill="currentColor" />
+            </svg>
+          </span>
+          <span className="reading-prologue__seal-tag">
+            <em>the page holds its breath</em>
+            <span className="reading-prologue__seal-mark">¶</span>
+          </span>
+        </span>
       </div>
 
       <span className="reading-prologue__thread" aria-hidden="true">

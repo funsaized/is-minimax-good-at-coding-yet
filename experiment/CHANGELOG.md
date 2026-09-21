@@ -1,21 +1,11 @@
 # Changelog
 
-## Iteration 340 — the press breath
-A single composed flourish ties the lever moment to the page; the title-page rhythm tightens.
+## Iteration 341
 
-### Added
-- `PressBreath` — a quiet hairline and small mark that draws across the title-page edge once revealed. Re-pulses with a halo burst the moment the lever is pulled, confirming the press impact.
-- A brief, voice-toned `press-impact` overlay that radiates from the title area during the stamp, fading within ~1.4s.
+A single composed seal closes the reading prologue; the title-page breath absorbs five micro-plates.
 
-### Refined
-- Title-page rhythm — tighter spacing between TitleBroadside, PressSignal, ReadingPrologue, PressLever, and TitleCoda so they read as one composed breath rather than five plates.
-- ReadingPrologue (inside `.opening`) — softer inner chrome, centered lede, hidden vertical thread, tighter reading padding. The two readings remain interactive but feel less boxed.
-- PressLever pull — the shaft tilts further forward (`32deg`), the open state glows softly, the bloom pulses on stamp, and the action line catches a faint tone shadow.
-- TitleBroadside — `text-wrap: balance` on the statement, slightly wider gap on the middle line, a small stamping pulse on voice change.
-- Running header — the set-mark briefly brightens during the lever stamp.
-- Mobile — the lever spread collapses to a single column under 720px; the reading rows stack and the action button tightens.
+The title-page cadence tightened once more. The thin breath plates that used to sit between the title broadside and the press lever — `PressSignal`, `TitleCoda`, `PressBreath` — fold into the `ReadingPrologue`, which now ends in a single hand-pressed seal: a small `m³` disc with a wax bead that settles onto the top-right corner once the prologue reveals. The lever becomes the unmistakable climax of the title page.
 
-### Notes
-- No new packages, no remote assets, no fabricated stats.
-- Reduced-motion preferences honored throughout the new motion.
-- PressBreath sits between TitleCoda and the FolioHinge, semantically the "exhale" that closes folio i.
+Below the title, the hero-front-matter rhythm also tightens. The redundant `hero__brief-lever` and `TitleFolio` close retire; the `FolioHinge` already carries the page-turn, so the readers' note now stands as the only front-matter plate between the title and the press bed.
+
+Title-page rhythm styles in `src/style.css` updated to match the new spacing. Reduced-motion rules preserved for the new wax-settle animation.

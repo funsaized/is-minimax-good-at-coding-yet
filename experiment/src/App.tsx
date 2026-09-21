@@ -31,16 +31,12 @@ import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
 import { FolioLedger } from './FolioLedger'
 import { ReadersNote } from './ReadersNote'
-import { TitleFolio } from './TitleFolio'
 import { ReadingPrologue } from './ReadingPrologue'
 import { LetterpressCatch } from './LetterpressCatch'
 import { Opening } from './Opening'
-import { PressSignal } from './PressSignal'
-import { TitleCoda } from './TitleCoda'
 import { AnswerCoda } from './AnswerCoda'
 import { ExhalationPlate } from './ExhalationPlate'
 import { PageReturn } from './PageReturn'
-import { PressBreath } from './PressBreath'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -688,8 +684,6 @@ export function App() {
               tokenRefs={tokenRefs}
             />
 
-            <PressSignal voice={voice} />
-
             <ReadingPrologue
               voice={voice}
               word={activeWord}
@@ -707,9 +701,6 @@ export function App() {
               setToday={setToday}
               stamping={leverStamping}
             />
-
-            <TitleCoda voice={voice} word={activeWord} setToday={setToday} />
-            <PressBreath voice={voice} active={leverStamping} />
           </section>
         </Opening>
 
@@ -734,38 +725,7 @@ export function App() {
               onHover={setHoveredWord}
             />
 
-            <a className="hero__brief-lever" href="#press" aria-label="Turn the page to the press bed">
-              <span className="hero__brief-lever-tag" aria-hidden="true">
-                <span className="hero__brief-lever-tag-mark" />
-                then <em>·</em> turn the page
-              </span>
-              <span className="hero__brief-lever-row">
-                <span className="hero__brief-lever-line">
-                  <span className="hero__brief-lever-eyebrow">folio ii</span>
-                  <span className="hero__brief-lever-label">the press bed</span>
-                </span>
-                <span className="hero__brief-lever-arrow" aria-hidden="true">
-                  <svg viewBox="0 0 36 36">
-                    <path
-                      className="hero__brief-lever-curve"
-                      d="M6 18h22M22 10l8 8-8 8"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </span>
-              <span className="hero__brief-lever-hint" aria-hidden="true">
-                <span className="hero__brief-lever-hint-mark" />
-                a small fold, a long look
-              </span>
-            </a>
-
-            <TitleFolio voice={voice} setToday={setToday} />
-          </div>
+            </div>
 
         <FolioHinge voice={voice} setToday={setToday} />
 

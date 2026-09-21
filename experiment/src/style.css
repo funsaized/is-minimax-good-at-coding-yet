@@ -41554,6 +41554,178 @@ a small act of typesetting.
   opacity: .85;
 }
 
+.reading-prologue__seal {
+  position: relative;
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: clamp(6px, 1vw, 14px) 0 clamp(2px, .4vw, 6px);
+  padding: clamp(8px, 1.2vw, 14px) clamp(10px, 1.6vw, 18px);
+  border: 1px dashed rgba(243, 236, 214, .14);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(216, 240, 106, .025), rgba(255, 118, 95, .02)),
+    rgba(20, 26, 38, .35);
+  color: var(--paper);
+  transition: border-color .5s var(--ease), background .5s var(--ease);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .8s var(--ease-out) 1.2s, transform .8s var(--ease-out) 1.2s;
+}
+
+.reading-prologue.is-revealed .reading-prologue__seal {
+  opacity: 1;
+  transform: none;
+}
+
+.reading-prologue__seal-disc {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: clamp(48px, 5vw, 64px);
+  height: clamp(48px, 5vw, 64px);
+  color: var(--reading-prologue-tone);
+  flex: 0 0 auto;
+}
+
+.reading-prologue__seal-disc svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.reading-prologue__seal-wax {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 14px;
+  height: 18px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .5s var(--ease) 1.6s, transform .55s var(--ease-spring) 1.6s;
+}
+
+.reading-prologue.is-revealed .reading-prologue__seal-wax {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reading-prologue__seal-wax-bead {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 5px;
+  height: 6px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: var(--reading-prologue-tone);
+  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, .25));
+  transform-origin: 50% 0;
+  animation: sealWaxSettle 1.4s var(--ease-spring) 1.9s backwards;
+}
+
+.reading-prologue__seal-wax-wisp {
+  position: absolute;
+  top: 0;
+  right: 1px;
+  width: 2px;
+  height: 14px;
+  background: linear-gradient(180deg, transparent, currentColor 60%);
+  opacity: .55;
+  transform-origin: 50% 0;
+  animation: sealWispSettle 1.2s var(--ease) 1.9s backwards;
+}
+
+@keyframes sealWaxSettle {
+  0%   { transform: translateY(-6px) scale(.4); }
+  60%  { transform: translateY(1px) scale(1.08); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes sealWispSettle {
+  0%   { transform: scaleY(.3); opacity: 0; }
+  60%  { transform: scaleY(1); opacity: .7; }
+  100% { transform: scaleY(.6); opacity: .55; }
+}
+
+.reading-prologue__seal-line {
+  display: block;
+  width: clamp(56px, 7vw, 96px);
+  height: 8px;
+  color: var(--reading-prologue-tone);
+  flex: 0 0 auto;
+}
+
+.reading-prologue__seal-line svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.reading-prologue__seal-tag {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.18vw, 16px);
+  letter-spacing: -.005em;
+  line-height: 1.3;
+}
+
+.reading-prologue__seal-tag em {
+  font-style: italic;
+  color: var(--paper);
+  text-wrap: balance;
+}
+
+.reading-prologue__seal-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  color: var(--reading-prologue-tone);
+  font-family: Georgia, 'Iowan Old Style', serif;
+  font-size: 14px;
+  font-style: normal;
+  line-height: 1;
+  opacity: .8;
+  transform: translateY(1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-prologue__seal,
+  .reading-prologue__seal-wax {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .reading-prologue__seal-wax-bead,
+  .reading-prologue__seal-wax-wisp {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 540px) {
+  .reading-prologue__seal {
+    padding: 8px 10px;
+    gap: 10px;
+  }
+
+  .reading-prologue__seal-line { display: none; }
+
+  .reading-prologue__seal-tag {
+    font-size: 12.5px;
+  }
+}
+
 .reading-prologue__thread {
   position: relative;
   display: grid;
@@ -65481,17 +65653,13 @@ a small act of typesetting.
    sit inside .opening the outer chrome is already stripped; here
    we tighten the inner composition so they read as one breath. */
 
-.opening .tb + .press-signal {
-  margin-top: clamp(18px, 2.4vw, 32px);
-}
-
-.opening .press-signal + .reading-prologue {
-  margin-top: clamp(18px, 2.4vw, 28px);
+.opening .tb + .reading-prologue {
+  margin-top: clamp(16px, 2.2vw, 28px);
 }
 
 .opening .reading-prologue {
-  padding-top: clamp(12px, 1.6vw, 18px);
-  padding-bottom: clamp(10px, 1.4vw, 16px);
+  padding-top: clamp(14px, 1.8vw, 22px);
+  padding-bottom: clamp(14px, 1.8vw, 26px);
 }
 
 .opening .reading-prologue__head {
@@ -65529,7 +65697,7 @@ a small act of typesetting.
 }
 
 .opening .reading-prologue + .press-lever {
-  margin-top: clamp(14px, 1.8vw, 24px);
+  margin-top: clamp(20px, 2.6vw, 36px);
 }
 
 .opening .press-lever {
@@ -65543,18 +65711,6 @@ a small act of typesetting.
 .opening .press-lever__main {
   gap: clamp(14px, 2vw, 26px);
   padding-top: clamp(8px, 1vw, 14px);
-}
-
-.opening .press-lever + .title-coda {
-  margin-top: clamp(14px, 1.8vw, 24px);
-}
-
-.opening .title-coda {
-  padding-block: clamp(4px, .6vw, 10px);
-}
-
-.opening .title-coda__copy-line {
-  font-size: clamp(12.5px, 1.05vw, 14.5px);
 }
 
 @media (max-width: 720px) {
