@@ -67616,3 +67616,414 @@ a small act of typesetting.
     font-size: 11.5px;
   }
 }
+
+/* ──────────────────────────────────────────────────────────────────
+   ITERATION 348 · "the press receipt" — a single composed impression
+   receipt that closes the reading. Three voices touched, the word
+   marked, and the date set, drawn as one composed horizontal artifact
+   between two grain-soft rules. The receipt sits beneath the colophon
+   and carries the same restrained hand the colophon signs in.
+   ────────────────────────────────────────────────────────────────── */
+
+.press-receipt {
+  --press-receipt-tone: var(--coral);
+  position: relative;
+  display: grid;
+  justify-items: stretch;
+  width: min(100%, 880px);
+  margin: clamp(28px, 4.6vw, 56px) auto clamp(36px, 5vw, 64px);
+  padding: clamp(10px, 1.4vw, 16px) clamp(18px, 3vw, 36px);
+  color: var(--press-receipt-tone);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 1s var(--ease-out),
+    transform 1s var(--ease-out),
+    color .55s var(--ease);
+}
+
+.press-receipt.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+.press-receipt--quiet { --press-receipt-tone: var(--blue); }
+.press-receipt--human { --press-receipt-tone: var(--coral); }
+.press-receipt--bold { --press-receipt-tone: var(--acid); }
+
+.press-receipt__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.press-receipt__rule {
+  display: block;
+  width: 100%;
+  height: clamp(3px, .5vw, 6px);
+  color: currentColor;
+  opacity: 0;
+  transition: opacity .9s var(--ease-out) .15s;
+}
+
+.press-receipt.is-revealed .press-receipt__rule { opacity: 1; }
+
+.press-receipt__rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.press-receipt__rule-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.4s var(--ease-out) .25s;
+}
+
+.press-receipt.is-revealed .press-receipt__rule-stroke { stroke-dashoffset: 0; }
+
+.press-receipt__rule-stroke--trail {
+  transition-delay: .55s;
+  transition-duration: 1.7s;
+}
+
+.press-receipt__rule-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.4);
+  transition: opacity .4s var(--ease), transform .55s var(--ease-spring) 1.5s;
+}
+
+.press-receipt.is-revealed .press-receipt__rule-bead {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.press-receipt__body {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, auto) auto minmax(0, auto) auto minmax(0, auto);
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 28px);
+  width: 100%;
+  padding: clamp(8px, 1.2vw, 14px) 0;
+  text-align: center;
+}
+
+.press-receipt__cell {
+  display: grid;
+  justify-items: center;
+  gap: clamp(3px, .5vw, 6px);
+  min-width: 0;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+}
+
+.press-receipt__cell--word { transition-delay: .25s; }
+.press-receipt__cell--date { transition-delay: .4s; }
+
+.press-receipt.is-revealed .press-receipt__cell {
+  opacity: 1;
+  transform: none;
+}
+
+.press-receipt__cell-key {
+  font-family: var(--mono);
+  font-size: clamp(8px, .72vw, 9.5px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: currentColor;
+  opacity: .65;
+  white-space: nowrap;
+}
+
+.press-receipt__cell-value {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .7vw, 10px);
+  min-width: 0;
+}
+
+.press-receipt__voices {
+  gap: clamp(4px, .5vw, 8px);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(16px, 1.5vw, 20px);
+  color: var(--paper);
+  letter-spacing: -.005em;
+  line-height: 1;
+}
+
+.press-receipt__voice-stack {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(4px, .5vw, 8px);
+}
+
+.press-receipt__voice-letter {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(18px, 1.6vw, 24px);
+  height: clamp(18px, 1.6vw, 24px);
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--paper) 38%, transparent);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .95vw, 13px);
+  letter-spacing: 0;
+  text-transform: none;
+  background: color-mix(in srgb, var(--paper) 4%, transparent);
+  transition: color .45s var(--ease), background .45s var(--ease), border-color .45s var(--ease), transform .55s var(--ease-spring);
+}
+
+.press-receipt__voice-letter--quiet.is-active {
+  color: var(--blue);
+  border-color: color-mix(in srgb, var(--blue) 60%, transparent);
+  background: color-mix(in srgb, var(--blue) 14%, transparent);
+  transform: scale(1.06);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 22%, transparent);
+}
+
+.press-receipt__voice-letter--human.is-active {
+  color: var(--coral);
+  border-color: color-mix(in srgb, var(--coral) 60%, transparent);
+  background: color-mix(in srgb, var(--coral) 14%, transparent);
+  transform: scale(1.06);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 22%, transparent);
+}
+
+.press-receipt__voice-letter--bold.is-active {
+  color: var(--acid);
+  border-color: color-mix(in srgb, var(--acid) 60%, transparent);
+  background: color-mix(in srgb, var(--acid) 14%, transparent);
+  transform: scale(1.06);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acid) 22%, transparent);
+}
+
+.press-receipt__voice-tick {
+  color: currentColor;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 14px);
+  opacity: .55;
+  transform: translateY(-.04em);
+}
+
+.press-receipt__divider {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(10px, 1vw, 14px);
+  height: clamp(20px, 2vw, 28px);
+  color: currentColor;
+  opacity: 0;
+  transition: opacity .55s var(--ease-out) .35s;
+}
+
+.press-receipt.is-revealed .press-receipt__divider { opacity: .85; }
+
+.press-receipt__divider svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.press-receipt__word {
+  gap: clamp(6px, .8vw, 12px);
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--paper);
+  font-size: clamp(15px, 1.4vw, 18px);
+  letter-spacing: -.005em;
+  line-height: 1;
+}
+
+.press-receipt__word-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(20px, 1.8vw, 26px);
+  height: clamp(20px, 1.8vw, 26px);
+  color: var(--press-receipt-tone);
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: clamp(14px, 1.2vw, 16px);
+  line-height: 1;
+  border: 1px solid color-mix(in srgb, var(--press-receipt-tone) 50%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--press-receipt-tone) 10%, transparent);
+  transition: color .45s var(--ease), border-color .45s var(--ease), background .45s var(--ease);
+}
+
+.press-receipt__word-label {
+  font-style: italic;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'onum' 1;
+  color: var(--paper);
+}
+
+.press-receipt__word-mark {
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .65vw, 9px);
+  font-style: normal;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--press-receipt-tone);
+  opacity: .78;
+  padding: 2px clamp(5px, .6vw, 8px);
+  border: 1px solid color-mix(in srgb, var(--press-receipt-tone) 32%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--press-receipt-tone) 5%, transparent);
+  white-space: nowrap;
+  transition: color .45s var(--ease), border-color .45s var(--ease), background .45s var(--ease);
+}
+
+.press-receipt__date {
+  gap: clamp(6px, .7vw, 10px);
+}
+
+.press-receipt__date-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.4vw, 18px);
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.press-receipt__date-mark {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.1vw, 15px);
+  color: var(--press-receipt-tone);
+  opacity: .85;
+  padding-left: clamp(2px, .3vw, 4px);
+  border-left: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+  margin-left: clamp(2px, .3vw, 4px);
+}
+
+.press-receipt__postscript {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, .7vw, 10px);
+  margin: clamp(10px, 1.4vw, 16px) auto 0;
+  max-width: 56ch;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  color: var(--muted);
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity .65s var(--ease-out) .7s, transform .65s var(--ease-out) .7s;
+}
+
+.press-receipt.is-revealed .press-receipt__postscript {
+  opacity: 1;
+  transform: none;
+}
+
+.press-receipt__postscript-mark {
+  color: var(--press-receipt-tone);
+  opacity: .85;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.05em;
+  line-height: 1;
+  transform: translateY(-.04em);
+}
+
+.press-receipt__postscript-text em {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.press-receipt__postscript-text span {
+  color: var(--press-receipt-tone);
+  opacity: .6;
+  font-style: normal;
+  margin: 0 clamp(3px, .3vw, 5px);
+}
+
+@media (max-width: 720px) {
+  .press-receipt {
+    margin-top: clamp(22px, 4vw, 36px);
+    margin-bottom: clamp(28px, 5vw, 44px);
+    padding: clamp(10px, 1.6vw, 14px) clamp(10px, 4vw, 18px);
+  }
+
+  .press-receipt__body {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(10px, 1.6vw, 14px);
+  }
+
+  .press-receipt__divider {
+    width: clamp(20px, 8vw, 40px);
+    height: clamp(10px, 1.6vw, 14px);
+    transform: rotate(90deg);
+  }
+
+  .press-receipt__cell-key {
+    font-size: clamp(7.5px, 2vw, 9px);
+  }
+
+  .press-receipt__postscript {
+    text-align: center;
+  }
+}
+
+@media (max-width: 460px) {
+  .press-receipt {
+    padding: clamp(10px, 3vw, 14px) clamp(8px, 4vw, 14px);
+  }
+
+  .press-receipt__voices {
+    font-size: clamp(14px, 4.2vw, 18px);
+  }
+
+  .press-receipt__voice-letter {
+    width: clamp(16px, 5vw, 22px);
+    height: clamp(16px, 5vw, 22px);
+    font-size: clamp(10px, 3vw, 12px);
+  }
+
+  .press-receipt__word,
+  .press-receipt__date-text {
+    font-size: clamp(13px, 3.6vw, 16px);
+  }
+
+  .press-receipt__postscript {
+    font-size: clamp(11px, 3vw, 13px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-receipt,
+  .press-receipt__cell,
+  .press-receipt__divider,
+  .press-receipt__postscript {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .press-receipt__rule-stroke,
+  .press-receipt__rule-stroke--trail {
+    stroke-dashoffset: 0 !important;
+  }
+
+  .press-receipt__rule-bead {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .press-receipt__voice-letter {
+    transform: none !important;
+  }
+}

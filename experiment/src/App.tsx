@@ -28,6 +28,7 @@ import { BroadsideReveal } from './BroadsideReveal'
 import { BroadsideEdge } from './BroadsideEdge'
 import { FolioImprint } from './FolioImprint'
 import { PressLamp } from './PressLamp'
+import { PressReceipt } from './PressReceipt'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -788,6 +789,8 @@ export function App() {
         <PressSignature folio="viii" voice={voice} word={activeWord} setToday={setToday} variant="footer" />
 
         <Colophon voice={voice} word={activeWord} setToday={setToday} readerName={readerName} />
+
+        <PressReceipt voice={voice} word={activeWord} setToday={setToday} />
       </div>
 
       <MarginNotes activeId={activeSection} voice={voice} />

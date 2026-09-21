@@ -1,11 +1,7 @@
 # Changelog
 
-## Iteration 347
-
-A single composed signoff signs the headline; the title broadside strikes with intent.
-
-- Lifted the headline to a more confident scale (clamp 48 → 112px) and gave each voice its own size scalar — the bold setting now reads larger and tighter, the human setting warmer, the quiet setting more restrained — so the press's three readings are unmistakable at a glance.
-- Added a signature flourish beneath the headline: one hand-drawn curve, an italic "—m³" mark, and a per-voice note. The curve draws on first reveal and re-traces every time the voice changes, so the page visibly re-signs itself when the type is re-pressed.
-- Strengthened the headline's stamp into a real press strike: each line now blurs and shifts in sequence with the voice change, then settles into place like ink meeting paper.
-- Made the press lever tactile — the shaft strikes at the moment of pull, the knob lifts, and the action button compresses and rebounds with a brief settle. The page-wide press-impact pulse expands vertically and lingers a touch longer.
-- Tightened the opening imprint (slightly larger stamp, more legible memo line, quieter corner crops on the title-page wrapper) so the broadside gets the room it earns.
+## Iteration 348 — the press receipt
+- A single composed impression receipt closes the reading beneath the colophon. Three voice glyphs (a · b · c), the marked word in italic, and the set date sit between two grain-soft hairline rules, drawn as one horizontal artifact. The active voice's circle brightens; the postscript line notes the voice and marked word in italic.
+- `src/PressReceipt.tsx`: new self-contained receipt component, accessible, keyboard-friendly, reduced-motion aware.
+- `src/App.tsx`: renders `PressReceipt` after `Colophon` inside the page column so the receipt shares the colophon's breath.
+- `src/style.css`: appended a new `Iteration 348` section (`press-receipt`) with reveal-on-scroll draw-in animation, voice-tone theming, mobile collapse to a single column with rotated dividers, and reduced-motion fallback.
