@@ -1,0 +1,19 @@
+{
+  "id": 346,
+  "parentId": 345,
+  "createdAt": "2026-09-21T10:10:07.798Z",
+  "summary": "A single composed folio band opens the title page; the headline keeps the room.",
+  "path": "/iterations/000346/index.html",
+  "screenshot": "/iterations/000346/desktop.png",
+  "mobileScreenshot": "/iterations/000346/mobile.png",
+  "sourceCommit": "965ab297413aff35eb1a37ac195b6c147630a7e9",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 495,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 203221,
+    "outputTokens": 20041,
+    "steps": 129
+  }
+}
