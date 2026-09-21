@@ -1,0 +1,19 @@
+{
+  "id": 330,
+  "parentId": 329,
+  "createdAt": "2026-09-21T00:21:31.741Z",
+  "summary": "A single, hand-pressed hinge between the question and the page's first instruction.",
+  "path": "/iterations/000330/index.html",
+  "screenshot": "/iterations/000330/desktop.png",
+  "mobileScreenshot": "/iterations/000330/mobile.png",
+  "sourceCommit": "ee88f7d7313808b0446f403063a797c7a3d2eccd",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 256,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 102230,
+    "outputTokens": 8566,
+    "steps": 67
+  }
+}
