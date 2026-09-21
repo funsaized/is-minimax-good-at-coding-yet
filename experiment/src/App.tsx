@@ -11,7 +11,6 @@ import { NOTES, type WordId } from './notes'
 import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
 import { ComposingRule } from './ComposingRule'
-import { ReadingPocket } from './ReadingPocket'
 import { ReadingLedger } from './ReadingLedger'
 import { Hero } from './Hero'
 import { FolioTurn } from './FolioTurn'
@@ -198,6 +197,9 @@ export function App() {
     setAnnouncement(next ? 'Answer unfolded.' : 'Answer folded back.')
   }
 
+  const activeFolio = FOLIOS.find(f => f.id === activeSection) ?? FOLIOS[0]
+  const activeFolioIndex = FOLIOS.findIndex(f => f.id === activeSection) + 1
+
   return (
     <main
       id="question"
@@ -219,6 +221,14 @@ export function App() {
           </span>
         </a>
 
+        <span className="topbar__folio" aria-hidden="true">
+          <span className="topbar__folio-rule" />
+          <em>folio</em>
+          <span className="topbar__folio-num">{activeFolio.index}</span>
+          <em>of v</em>
+          <span className="topbar__folio-rule" />
+        </span>
+
         <div className="status" aria-label="Page status">
           <span className="status__date">{setToday}</span>
           <span className="status__hour" aria-hidden="true">· {setHour}</span>
@@ -231,12 +241,6 @@ export function App() {
         activeId={activeSection}
         voice={voice}
         setToday={setToday}
-      />
-
-      <ReadingPocket
-        voice={voice}
-        setToday={setToday}
-        folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
       />
 
       <div className="composing-rule-wrap" aria-hidden="true">
@@ -301,7 +305,7 @@ export function App() {
       </footer>
 
       <span className="sr-only" aria-live="polite">{announcement}</span>
-      <span className="sr-only">{`Now on folio ${FOLIOS.findIndex(f => f.id === activeSection) + 1} of ${FOLIOS.length} · ${FOLIOS.find(f => f.id === activeSection)?.label ?? ''} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}).`}</span>
+      <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · ${activeFolio.label} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}).`}</span>
     </main>
   )
 }

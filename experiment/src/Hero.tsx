@@ -6,7 +6,6 @@ import {
 } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
-import { PrinterFlourish } from './PrinterFlourish'
 
 type HeroProps = {
   voice: VoiceId
@@ -25,7 +24,6 @@ type VoiceSpec = {
   face: string
   letter: string
   sample: string
-  glyph: string
   gloss: string
 }
 
@@ -35,24 +33,21 @@ const VOICE: Record<VoiceId, VoiceSpec> = {
     face: 'serif · italic · close set',
     letter: 'a',
     sample: 'is m³ good at frontend yet?',
-    glyph: '⌇',
-    gloss: 'the default voice · read low',
+    gloss: 'the default voice',
   },
   human: {
     name: 'human hand',
     face: 'serif · italic · warm',
     letter: 'b',
     sample: 'is M3 good at frontend yet?',
-    glyph: '∧',
-    gloss: 'the middle voice · read at hand',
+    gloss: 'the middle voice',
   },
   bold: {
     name: 'bold signal',
     face: 'sans · heavy · no apology',
     letter: 'c',
     sample: 'IS M3 GOOD AT FRONTEND YET?',
-    glyph: '∴',
-    gloss: 'the loud voice · read once',
+    gloss: 'the loud voice',
   },
 }
 
@@ -89,7 +84,7 @@ export function Hero({
 
   return (
     <div className="hero__inner">
-      <article className="hero__stage" style={toneStyle} aria-labelledby="hero-title-label">
+      <div className="hero__title-block" style={toneStyle}>
         <svg className="hero__defs" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <filter id={grainId} x="-2%" y="-2%" width="104%" height="104%">
@@ -102,25 +97,30 @@ export function Hero({
 
         <span className="hero__stage-grain" aria-hidden="true">
           <svg viewBox="0 0 1200 800" preserveAspectRatio="none">
-            <rect x="0" y="0" width="1200" height="800" filter={`url(#${grainId})`} opacity=".045" />
+            <rect x="0" y="0" width="1200" height="800" filter={`url(#${grainId})`} opacity=".04" />
           </svg>
         </span>
 
-        <header className="hero__stage-head">
-          <span className="hero__stage-eyebrow">
-            <span className="hero__stage-mark" aria-hidden="true">¶</span>
+        <div className="hero__eyebrow-row">
+          <span className="hero__eyebrow">
+            <span className="hero__eyebrow-glyph" aria-hidden="true">¶</span>
             <span>folio i</span>
-            <span className="hero__stage-eyebrow-sep" aria-hidden="true">·</span>
-            <span>the question</span>
+            <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
+            <span className="hero__eyebrow-em">the question</span>
           </span>
-          <span className="hero__stage-set">
+          <span className="hero__set">
             <em>set on</em>
-            <em className="hero__stage-set-date">{setToday}</em>
+            <em className="hero__eyebrow-em">{setToday}</em>
           </span>
-        </header>
+        </div>
 
-        <div className="hero__flourish" aria-hidden="true">
-          <PrinterFlourish voice={voice} />
+        <div className="hero__qmark" aria-hidden="true">
+          <QMarkGlyph voice={voice} />
+          <span className="hero__qmark-cap">
+            <em>punctuation protagonist</em>
+            <span aria-hidden="true">·</span>
+            <em>draws itself</em>
+          </span>
         </div>
 
         <h1
@@ -128,10 +128,7 @@ export function Hero({
           className={`hero__title hero__title--${voice}`}
           aria-label="is Minimax M3 good at frontend yet?"
         >
-          <span className="hero__title-row hero__title-row--line hero__title-row--line-a">
-            <span className="hero__title-word hero__title-word--plain">is</span>
-            <span className="hero__title-space" aria-hidden="true" />
-
+          <span className="hero__title-line hero__title-line-a">
             <span
               className={`ht__word ht__word--m3 ${word === 'm3' ? 'is-marked' : ''} ${hover === 'm3' ? 'is-hover' : ''}`}
               aria-hidden="true"
@@ -156,7 +153,7 @@ export function Hero({
               </button>
             </span>
 
-            <span className="hero__title-space" aria-hidden="true" />
+            <span className="hero__title-space" aria-hidden="true"> </span>
 
             <span
               className={`ht__word ht__word--good ${word === 'good' ? 'is-marked' : ''} ${hover === 'good' ? 'is-hover' : ''}`}
@@ -181,12 +178,13 @@ export function Hero({
                 {TOKEN_COPY.good.label}
               </button>
             </span>
+
+            <span className="hero__title-space" aria-hidden="true"> </span>
+
+            <span className="ht__word ht__word--plain" aria-hidden="true">frontend</span>
           </span>
 
-          <span className="hero__title-row hero__title-row--line hero__title-row--line-b">
-            <span className="hero__title-word hero__title-word--plain">frontend</span>
-            <span className="hero__title-space" aria-hidden="true" />
-
+          <span className="hero__title-line hero__title-line-b">
             <span
               className={`ht__word ht__word--yet ${word === 'yet' ? 'is-marked' : ''} ${hover === 'yet' ? 'is-hover' : ''} ${isYet ? 'ht__word--punct' : ''}`}
               aria-hidden="true"
@@ -197,7 +195,7 @@ export function Hero({
                 ref={node => {
                   tokenRefs.current.yet = node
                 }}
-                className="ht__token ht__token--yet"
+                className="ht__token"
                 onClick={() => onWord('yet')}
                 onMouseEnter={() => onHover('yet')}
                 onMouseLeave={() => onHover(null)}
@@ -208,55 +206,51 @@ export function Hero({
                 aria-label={`${TOKEN_COPY.yet.label} — ${TOKEN_COPY.yet.tone}`}
               >
                 <span className="ht__token-yet">yet</span>
-                <span className={`ht__token-punct ht__token-punct--${voice}`} aria-hidden="true">?</span>
+                <span className={`ht__punct ht__punct--${voice}`} aria-hidden="true">
+                  ?
+                  <span className="ht__punct-ghost ht__punct-ghost--a" aria-hidden="true">?</span>
+                  <span className="ht__punct-ghost ht__punct-ghost--b" aria-hidden="true">?</span>
+                </span>
               </button>
             </span>
           </span>
-
-          <span className="hero__title-row hero__title-row--sub" aria-hidden="true">
-            <span className="hero__title-sub-mark">⌇</span>
-            <em>set in {spec.name.toLowerCase()}</em>
-            <span className="hero__title-sub-rule" />
-            <em>read at hand</em>
-            <span className="hero__title-sub-mark">⌇</span>
-          </span>
         </h1>
 
-        <div className="hero__stage-rule hero__stage-rule--bot" aria-hidden="true">
-          <span className="hero__stage-rule-tick" />
-          <span className="hero__stage-rule-tick" />
-          <span className="hero__stage-rule-tick" />
-          <span className="hero__stage-rule-line" />
-          <span className="hero__stage-rule-tick" />
-          <span className="hero__stage-rule-tick" />
-          <span className="hero__stage-rule-tick" />
-        </div>
+        <span className="hero__sub" aria-hidden="true">
+          <span className="hero__sub-mark">⌇</span>
+          <em>set in {spec.name.toLowerCase()}</em>
+          <span className="hero__sub-rule" />
+          <em>read at hand</em>
+          <span className="hero__sub-mark">⌇</span>
+        </span>
 
-        <footer className="hero__stage-foot">
-          <span className="hero__stage-foot-cell hero__stage-foot-cell--key">
-            <span className="hero__stage-foot-key">reading</span>
-            <em className="hero__stage-foot-mark">
-              {word === 'm3' && <>⌇ stet</>}
-              {word === 'good' && <>∧ caret</>}
-              {word === 'yet' && <>? query</>}
+        <div className="hero__foot">
+          <span className="hero__foot-cell">
+            <span className="hero__foot-key">marked at</span>
+            <em className="hero__foot-val">
+              {word === 'm3' && <span className="hero__sub-mark" aria-hidden="true">⌇</span>}
+              {word === 'good' && <span className="hero__sub-mark" aria-hidden="true">∧</span>}
+              {word === 'yet' && <span className="hero__sub-mark" aria-hidden="true">?</span>}
+              <em>{TOKEN_COPY[word].label}</em>
+              <em className="hero__foot-face">· {TOKEN_COPY[word].tone}</em>
             </em>
           </span>
-          <span className="hero__stage-foot-cell hero__stage-foot-cell--voice">
-            <span className="hero__stage-foot-key">voice</span>
-            <em className="hero__stage-foot-voice">
-              <span className="hero__stage-foot-letter">{spec.letter}</span>
-              {spec.name}
-              <span className="hero__stage-foot-face">· {spec.face}</span>
+          <span className="hero__foot-cell">
+            <span className="hero__foot-key">voice</span>
+            <em className="hero__foot-val">
+              <span className="hero__foot-letter">{spec.letter}</span>
+              <em>{spec.name}</em>
+              <em className="hero__foot-face">· {spec.face}</em>
             </em>
           </span>
-          <span className="hero__stage-foot-cell hero__stage-foot-cell--hint">
-            <span className="hero__stage-foot-key">cycle</span>
-            <em className="hero__stage-foot-keys">
+          <span className="hero__foot-cell">
+            <span className="hero__foot-key">cycle</span>
+            <em className="hero__foot-val hero__foot-keys">
               <kbd>shift</kbd>+<kbd>v</kbd>
             </em>
           </span>
-        </footer>
-      </article>
+        </div>
+      </div>
 
       <aside
         className="voice-spec"
@@ -264,9 +258,9 @@ export function Hero({
         aria-label="Voice specimen · the line set in three voices"
       >
         <header className="voice-spec__head" aria-hidden="true">
-          <span className="voice-spec__key">the line set three ways</span>
+          <span className="voice-spec__key">the line, three ways</span>
           <span className="voice-spec__hint">
-            <em>click a row to set the page in that voice</em>
+            <em>set the page in that voice</em>
           </span>
         </header>
 
@@ -284,13 +278,12 @@ export function Hero({
                   onClick={() => onVoice(v)}
                 >
                   <span className="voice-spec__letter" aria-hidden="true">{row.letter}</span>
-                  <span className={`voice-spec__sample voice-spec__sample--${v}`}>{row.sample}</span>
-                  <span className="voice-spec__meta" aria-hidden="true">
-                    <span className="voice-spec__name">{row.name}</span>
-                    <span className="voice-spec__face">{row.face}</span>
+                  <span className="voice-spec__body">
+                    <span className={`voice-spec__sample voice-spec__sample--${v}`}>{row.sample}</span>
                   </span>
-                  <span className="voice-spec__pip" aria-hidden="true">
-                    <span className="voice-spec__pip-bead" />
+                  <span className="voice-spec__meta" aria-hidden="true">
+                    <span className="voice-spec__meta-name">{row.name}</span>
+                    <span className="voice-spec__meta-face">{row.gloss}</span>
                   </span>
                 </button>
               </li>
@@ -300,10 +293,40 @@ export function Hero({
 
         <footer className="voice-spec__foot" aria-hidden="true">
           <span className="voice-spec__foot-rule" />
-          <em>three voices, one line, set on {setToday}</em>
+          <em>three voices, one line</em>
           <span className="voice-spec__foot-rule" />
         </footer>
       </aside>
     </div>
+  )
+}
+
+function QMarkGlyph({ voice }: { voice: VoiceId }) {
+  const isBold = voice === 'bold'
+  return (
+    <svg className="hero__qmark-svg" viewBox="0 0 240 320" aria-hidden="true">
+      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        {/* main stroke · draws itself on arrival */}
+        <path
+          className="hero__qmark-stroke"
+          d="M55 90 Q55 36 120 36 Q186 36 186 96 Q186 134 156 162 Q120 196 120 224"
+          strokeWidth={isBold ? 14 : 8}
+        />
+        {/* soft inner echo */}
+        <path
+          className="hero__qmark-echo"
+          d="M62 92 Q62 44 120 44 Q178 44 178 96 Q178 130 152 156 Q124 184 124 220"
+          stroke="currentColor"
+          strokeOpacity={isBold ? 0 : .35}
+          strokeWidth="1.4"
+        />
+      </g>
+      {/* bead · pops in after the stroke */}
+      <g className="hero__qmark-bead">
+        <circle cx="120" cy="270" r={isBold ? 13 : 11} fill="currentColor" />
+        <circle cx="120" cy="270" r={isBold ? 20 : 18} fill="none" stroke="currentColor" strokeOpacity=".3" strokeWidth="1.2" />
+        <circle cx="120" cy="270" r={isBold ? 26 : 24} fill="none" stroke="currentColor" strokeOpacity=".18" strokeWidth=".8" strokeDasharray="1.5 2.5" />
+      </g>
+    </svg>
   )
 }
