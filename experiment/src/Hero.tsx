@@ -23,26 +23,30 @@ type VoiceSpec = {
   face: string
   letter: string
   sample: string
+  glyph: string
 }
 
 const VOICE: Record<VoiceId, VoiceSpec> = {
   quiet: {
     name: 'quiet cut',
-    face: 'serif · italic',
+    face: 'serif · italic · close set',
     letter: 'a',
     sample: 'is m³ good at frontend yet?',
+    glyph: '⌇',
   },
   human: {
     name: 'human hand',
     face: 'serif · italic · warm',
     letter: 'b',
     sample: 'is M3 good at frontend yet?',
+    glyph: '∧',
   },
   bold: {
     name: 'bold signal',
     face: 'sans · heavy',
     letter: 'c',
     sample: 'IS M3 GOOD AT FRONTEND YET?',
+    glyph: '∴',
   },
 }
 
@@ -67,10 +71,11 @@ export function Hero({
 }: HeroProps) {
   return (
     <div className="hero__inner">
-      <div className="hero__head">
-        <div className="hero__meta" aria-hidden="true">
-          <span>folio i</span>
-          <em>set today · {setToday}</em>
+      <div className="hero__plate">
+        <div className="hero__plate-rule hero__plate-rule--top" aria-hidden="true">
+          <span className="hero__plate-rule-line" />
+          <em>folio i · the question</em>
+          <span className="hero__plate-rule-line" />
         </div>
 
         <h1
@@ -113,51 +118,53 @@ export function Hero({
           })}
         </h1>
 
-        <span className="hero__composing" aria-hidden="true">
-          <span className="hero__composing-rule">
-            <span className="hero__composing-tick" style={{ left: '10%' }} />
-            <span className="hero__composing-tick" style={{ left: '38%' }} />
-            <span className="hero__composing-tick" style={{ left: '72%' }} />
-          </span>
-          <span className="hero__composing-meta">
-            <em>set</em> 72pt <em>·</em> lead 76pt <em>·</em> track −30
-          </span>
-        </span>
-
-        <p className="hero__under">
-          <span className="hero__under-rule" aria-hidden="true" />
-          A folio of one line, set in <em>three voices</em>. Hover the words to mark one at a time;
-          pick a voice with the buttons on the right, or pull the lever below.
-        </p>
+        <div className="hero__plate-rule hero__plate-rule--bot" aria-hidden="true">
+          <span className="hero__plate-rule-line" />
+          <em>set on {setToday} · {VOICE[voice].face}</em>
+          <span className="hero__plate-rule-line" />
+        </div>
       </div>
 
-      <div className="voice-bar" role="group" aria-label="Voice selector · three settings for the headline">
-        <span className="voice-bar__key" aria-hidden="true">set the line in</span>
-        {ORDER.map(v => {
-          const spec = VOICE[v]
-          const isActive = voice === v
-          return (
-            <button
-              key={v}
-              type="button"
-              className={`voice-bar__item voice-bar__item--${v} ${isActive ? 'is-active' : ''}`}
-              onClick={() => onVoice(v)}
-              aria-pressed={isActive}
-              style={{ color: `var(--${v})` }}
-            >
-              <span className="voice-bar__letter" aria-hidden="true">{spec.letter}</span>
-              <span className="voice-bar__copy">
-                <span className="voice-bar__name">{spec.name}</span>
-                <span className="voice-bar__face" aria-hidden="true">{spec.face}</span>
-              </span>
-              <span className="voice-bar__pip" aria-hidden="true" />
-            </button>
-          )
-        })}
-        <span className="voice-bar__hint" aria-hidden="true">
-          <kbd>shift</kbd>+<kbd>v</kbd>
-          to cycle
-        </span>
+      <div
+        className="voice-spec"
+        role="radiogroup"
+        aria-label="Voice specimen · the line set in three voices"
+      >
+        <header className="voice-spec__head" aria-hidden="true">
+          <span className="voice-spec__key">the line set three ways</span>
+          <span className="voice-spec__hint">
+            <kbd>shift</kbd>+<kbd>v</kbd>
+            <em>to cycle</em>
+          </span>
+        </header>
+
+        <ol className="voice-spec__list">
+          {ORDER.map(v => {
+            const spec = VOICE[v]
+            const isActive = voice === v
+            return (
+              <li key={v} className="voice-spec__row">
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={isActive}
+                  className={`voice-spec__item voice-spec__item--${v} ${isActive ? 'is-active' : ''}`}
+                  onClick={() => onVoice(v)}
+                >
+                  <span className="voice-spec__letter" aria-hidden="true">{spec.letter}</span>
+                  <span className={`voice-spec__sample voice-spec__sample--${v}`}>{spec.sample}</span>
+                  <span className="voice-spec__meta" aria-hidden="true">
+                    <span className="voice-spec__name">{spec.name}</span>
+                    <span className="voice-spec__face">{spec.face}</span>
+                  </span>
+                  <span className="voice-spec__pip" aria-hidden="true">
+                    <span className="voice-spec__pip-bead" />
+                  </span>
+                </button>
+              </li>
+            )
+          })}
+        </ol>
       </div>
     </div>
   )

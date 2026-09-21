@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 
@@ -11,8 +12,23 @@ const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human 
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
+const WORD_NOTE: Record<WordId, string> = {
+  m3: 'keep the fingerprint',
+  good: 'choose one clear thing',
+  yet: 'protect the pause',
+}
+
+const SEAL_TEXT: Record<VoiceId, { top: string; bot: string; glyph: string }> = {
+  quiet: { top: 'PRESS · SET', bot: 'FOLIO · TODAY', glyph: 'm³' },
+  human: { top: 'SET BY HAND', bot: 'FOR NOW', glyph: 'm³' },
+  bold: { top: 'M³ · YES · M³', bot: 'AGAIN', glyph: 'M³' },
+}
 
 export function Colophon({ voice, word, setToday }: ColophonProps) {
+  const tone = voice === 'quiet' ? 'var(--quiet)' : voice === 'human' ? 'var(--human)' : 'var(--bold)'
+  const sealStyle = { color: tone } as CSSProperties
+  const seal = SEAL_TEXT[voice]
+
   return (
     <section className="colophon reveal" id="colophon" aria-labelledby="colophon-title">
       <div className="colophon__inner">
@@ -24,8 +40,8 @@ export function Colophon({ voice, word, setToday }: ColophonProps) {
             and the question left open.
           </h2>
           <p className="section__lede">
-            A colophon is where a book tells you how it was made. This one is a short list of the
-            choices that earned their place on the page — and the ones that didn't.
+            A colophon is where a book tells you how it was made. This one is the short list of choices
+            that earned their place on the page — and the one that didn't.
           </p>
         </header>
 
@@ -48,6 +64,47 @@ export function Colophon({ voice, word, setToday }: ColophonProps) {
               <span className="colophon__cell-key">set on</span>
               <em>{setToday}</em>
             </div>
+            <div className="colophon__cell">
+              <span className="colophon__cell-key">the rule</span>
+              <em>{WORD_NOTE[word]}</em>
+            </div>
+          </div>
+
+          <div className="colophon__signoff" aria-label="The page, signed">
+            <svg className="colophon__seal" viewBox="0 0 100 100" aria-hidden="true" style={sealStyle}>
+              <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth=".9" />
+              <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2" opacity=".55" />
+              <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".35" />
+              <text x="50" y="22" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="currentColor">
+                {seal.top}
+              </text>
+              <text
+                x="50"
+                y="58"
+                textAnchor="middle"
+                fontFamily="Georgia, serif"
+                fontStyle="italic"
+                fontSize={voice === 'bold' ? 32 : 38}
+                fontWeight={voice === 'bold' ? 800 : 500}
+                fill="currentColor"
+              >
+                {seal.glyph}
+              </text>
+              <text x="50" y="86" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="currentColor">
+                {seal.bot}
+              </text>
+            </svg>
+
+            <p className="colophon__signoff-line">
+              a single line, set three ways, marked at <em>{WORD_LABEL[word]}</em> — <em>{WORD_NOTE[word]}</em>.
+            </p>
+
+            <span className="colophon__signoff-set">
+              <span className="colophon__signoff-rule" aria-hidden="true" />
+              composed in {VOICE_NAME[voice]}
+              <em>· {setToday}</em>
+              <span className="colophon__signoff-rule" aria-hidden="true" />
+            </span>
           </div>
         </div>
       </div>

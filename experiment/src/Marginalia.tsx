@@ -22,36 +22,36 @@ type Slip = {
 const SLIPS: Slip[] = [
   {
     id: 'm3',
-    index: '01',
+    index: 'i',
     label: 'stet',
     title: 'Keep the fingerprint.',
     gloss: 'a habit, not a name',
-    body: 'A useful page leaves evidence of a point of view. Not a logo. A small, repeatable act of judgment.',
+    body: 'A useful page leaves evidence of a point of view. Not a logo. A small, repeatable act of judgment that another page can recognize.',
     paper: 'paper',
-    rotation: -1.6,
+    rotation: -1.2,
     pin: 'tack',
   },
   {
     id: 'good',
-    index: '02',
+    index: 'ii',
     label: 'caret',
     title: 'Choose one clear thing.',
     gloss: 'confidence is generous',
-    body: 'The interface gets quieter when it stops presenting every possible answer. A confident choice gives the reader somewhere to stand.',
+    body: 'The interface gets quieter when it stops presenting every possible answer. A confident choice gives the reader somewhere to stand, instead of somewhere to pick from.',
     paper: 'acid',
     keep: true,
-    rotation: 0.7,
+    rotation: 0.4,
     pin: 'clip',
   },
   {
     id: 'yet',
-    index: '03',
+    index: 'iii',
     label: 'query',
     title: 'Protect the pause.',
     gloss: 'the question stays open',
-    body: '"Yet" carries the honest part. The space before an answer is not a gap to decorate; it is where the reader arrives.',
+    body: '"Yet" carries the honest part. The space before an answer is not a gap to decorate; it is where the reader arrives, and the page should leave them there.',
     paper: 'blue',
-    rotation: 1.3,
+    rotation: 0.8,
     pin: 'pin',
   },
 ]
@@ -72,8 +72,8 @@ export function Marginalia({ selected, onSelect }: MarginaliaProps) {
           The page gets better when it <em>pays attention.</em>
         </h2>
         <p className="section__lede">
-          Three slips pinned to the same reading rule. Hover or focus a marked word above and its slip
-          straightens to be read; the others settle back into the row.
+          Three notes pinned to the same reading rule. Hover or focus a marked word above and its slip
+          straightens to be read; the others settle back into the row. One of them is kept.
         </p>
       </header>
 
@@ -138,7 +138,7 @@ export function Marginalia({ selected, onSelect }: MarginaliaProps) {
                   <svg viewBox="0 0 60 60" width="56" height="56">
                     <circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" strokeWidth="1.2" />
                     <circle cx="30" cy="30" r="22" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1.5 1.5" />
-                    <text x="30" y="22" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="4.5" letterSpacing="2" fill="currentColor">KEPT · NO 02</text>
+                    <text x="30" y="22" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="4.5" letterSpacing="2" fill="currentColor">KEPT · NO ii</text>
                     <text x="30" y="38" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="currentColor">caret</text>
                     <text x="30" y="50" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.5" letterSpacing="2" fill="currentColor">FOR THE KEEPING</text>
                   </svg>
@@ -146,7 +146,7 @@ export function Marginalia({ selected, onSelect }: MarginaliaProps) {
               )}
 
               <span className="slip__foot" aria-hidden="true">
-                <span>folio i <em>·</em> pinned</span>
+                <span>folio iii <em>·</em> pinned</span>
                 <span>slip № {slip.index}</span>
               </span>
             </article>

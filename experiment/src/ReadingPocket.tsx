@@ -1,4 +1,4 @@
-import { useId, useRef, type CSSProperties } from 'react'
+import { useId, type CSSProperties } from 'react'
 
 type ReadingPocketProps = {
   voice: 'quiet' | 'human' | 'bold'
@@ -14,24 +14,29 @@ const SEASON = (() => {
   return 'autumn'
 })()
 
+const FIRST_PULL: Record<ReadingPocketProps['voice'], string> = {
+  quiet: 'is m³ good at frontend yet?',
+  human: 'is M3 good at frontend yet?',
+  bold: 'IS M3 GOOD AT FRONTEND YET?',
+}
+
 export function ReadingPocket({ voice, setToday, folios }: ReadingPocketProps) {
   const baseId = useId().replace(/:/g, '')
   const grainId = `rp-grain-${baseId}`
   const threadId = `rp-thread-${baseId}`
-  const rootRef = useRef<HTMLDivElement | null>(null)
   const tone = voice === 'quiet'
     ? 'var(--quiet)'
     : voice === 'human'
     ? 'var(--human)'
     : 'var(--bold)'
   const style = { '--rp-tone': tone } as CSSProperties
+  const sample = FIRST_PULL[voice]
 
   return (
     <section
-      ref={rootRef}
       className={`rp rp--${voice}`}
       style={style}
-      aria-label="The folio's opening pocket · a single composed cover"
+      aria-label="The folio's opening · a single composed cover"
     >
       <svg className="rp__defs" viewBox="0 0 600 60" preserveAspectRatio="none" aria-hidden="true">
         <defs>
@@ -69,7 +74,7 @@ export function ReadingPocket({ voice, setToday, folios }: ReadingPocketProps) {
         <span className="rp__masthead-glyph" aria-hidden="true">¶</span>
         <span className="rp__masthead-rule" aria-hidden="true" />
         <span className="rp__masthead-tag">
-          <em>an opening plate</em>
+          <em>an opening</em>
           <span className="rp__masthead-sep" aria-hidden="true">·</span>
           <span>folio i</span>
           <span className="rp__masthead-sep" aria-hidden="true">·</span>
@@ -86,31 +91,24 @@ export function ReadingPocket({ voice, setToday, folios }: ReadingPocketProps) {
         and <em>bold</em> on demand — for the question that comes with the next reader.
       </p>
 
-      <ol className="rp__index" aria-label="The folio's table of contents">
-        {folios.map((folio, idx) => (
-          <li key={folio.id} className="rp__index-cell">
-            <a className="rp__index-link" href={`#${folio.id}`}>
-              <span className="rp__index-num" aria-hidden="true">{folio.index}</span>
-              <span className="rp__index-stack">
-                <span className="rp__index-label">{folio.label}</span>
-                <span className="rp__index-hint">{folio.hint}</span>
-              </span>
-              <span className="rp__index-arrow" aria-hidden="true">
-                <svg viewBox="0 0 16 8" width="14" height="8">
-                  <path
-                    d="M1 4h13M10 1l4 3-4 3"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-            </a>
-          </li>
+      <div className="rp__pull" aria-label="The line, set today">
+        <span className="rp__pull-key" aria-hidden="true">first pull</span>
+        <span className={`rp__pull-line rp__pull-line--${voice}`}>{sample}</span>
+        <span className="rp__pull-tail" aria-hidden="true">
+          <span className="rp__pull-tail-mark" />
+          the line, set {voice}
+        </span>
+      </div>
+
+      <div className="rp__marks" aria-label="The folio marks">
+        {folios.map(folio => (
+          <a key={folio.id} href={`#${folio.id}`} className="rp__mark">
+            <span className="rp__mark-num" aria-hidden="true">{folio.index}</span>
+            <span className="rp__mark-label">{folio.label}</span>
+            <span className="rp__mark-hint">{folio.hint}</span>
+          </a>
         ))}
-      </ol>
+      </div>
 
       <footer className="rp__foot" aria-hidden="true">
         <span className="rp__foot-bead" />

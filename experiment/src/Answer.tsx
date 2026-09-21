@@ -1,4 +1,4 @@
-import { useEffect, useRef, type RefObject } from 'react'
+import { useEffect, useRef, type CSSProperties, type RefObject } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 
@@ -55,10 +55,13 @@ export function Answer({ open, onToggle, triggerRef, voice, word, setToday }: An
           aria-expanded={open}
           aria-controls="answer-leaf"
         >
-          <svg className="answer__reveal-icon" viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M2 8h12M8 2v12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-          </svg>
-          {open ? 'fold it back' : 'unfold the answer'}
+          <span className="answer__reveal-mark" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="14" height="14">
+              <path d="M2 8h12M8 2v12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+            </svg>
+          </span>
+          <span className="answer__reveal-text">{open ? 'fold it back' : 'unfold the answer'}</span>
+          <span className="answer__reveal-key" aria-hidden="true">↵</span>
         </button>
       </header>
 
@@ -75,6 +78,7 @@ export function Answer({ open, onToggle, triggerRef, voice, word, setToday }: An
           </svg>
           <em>the fold</em>
         </span>
+
         <div className="answer__copy">
           <p className="answer__line">
             Yes — when it <em>stops trying to look impressive.</em>
@@ -112,14 +116,16 @@ export function Answer({ open, onToggle, triggerRef, voice, word, setToday }: An
           <button
             ref={closeRef}
             type="button"
-            className="answer__reveal"
+            className="answer__reveal answer__reveal--mini"
             onClick={onToggle}
             tabIndex={open ? 0 : -1}
             aria-label="Fold the answer back into the page"
           >
-            <svg className="answer__reveal-icon" viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M2 8h12M8 2v12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-            </svg>
+            <span className="answer__reveal-mark" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="12" height="12">
+                <path d="M2 8h12M8 2v12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+              </svg>
+            </span>
             fold it back
           </button>
         </aside>
@@ -136,7 +142,7 @@ function PressSeal({ voice }: { voice: VoiceId }) {
   }
   const tone = voice === 'quiet' ? 'var(--quiet)' : voice === 'human' ? 'var(--human)' : 'var(--bold)'
   const glyph = voice === 'bold' ? 'M³' : 'm³'
-  const style = { color: tone } as React.CSSProperties
+  const style = { color: tone } as CSSProperties
   const l = labels[voice]
   return (
     <svg className="answer__seal" viewBox="0 0 100 100" aria-hidden="true" style={style}>

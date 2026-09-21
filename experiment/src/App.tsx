@@ -19,7 +19,6 @@ import { Marginalia } from './Marginalia'
 import { Specimen } from './Specimen'
 import { Answer } from './Answer'
 import { Colophon } from './Colophon'
-import { Signature } from './Signature'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -37,7 +36,7 @@ export const FOLIOS = [
   { id: 'question', index: 'i', label: 'the question', hint: 'one line, set three ways' },
   { id: 'press', index: 'ii', label: 'the press bed', hint: 'pull the lever, take an impression' },
   { id: 'notes', index: 'iii', label: 'the marginalia', hint: 'three things worth keeping' },
-  { id: 'specimen', index: 'iv', label: 'three pressings', hint: 'the same line, three faces' },
+  { id: 'specimen', index: 'iv', label: 'the notation key', hint: 'how the three voices read' },
   { id: 'answer', index: 'v', label: 'the answer', hint: 'folded once, then folded back' },
 ] as const
 
@@ -230,13 +229,8 @@ export function App() {
         </a>
 
         <div className="status" aria-label="Page status">
-          <StatusLight />
           <span className="status__date">{setToday}</span>
-          <span className="status__voice" aria-hidden="true">
-            <em>voice</em>
-            <strong>{VOICE_LETTER[voice]}</strong>
-            <span>{VOICE_NAME[voice]}</span>
-          </span>
+          <StatusLight />
         </div>
       </header>
 
@@ -254,10 +248,6 @@ export function App() {
       />
 
       <section className="hero reveal" aria-labelledby="hero-title-label">
-        <span className="read-pulse" aria-hidden="true">
-          <span className="read-pulse__beat" />
-          folio i · the question
-        </span>
         <Hero
           voice={voice}
           word={activeWord}
@@ -277,7 +267,7 @@ export function App() {
       <FolioTurn index="iii" title="the marginalia" hint="three things worth keeping" voice={voice} />
       <Marginalia selected={selectedWord} onSelect={id => selectWord(id, true)} />
 
-      <FolioTurn index="iv" title="three pressings" hint="the same line · three faces" voice={voice} />
+      <FolioTurn index="iv" title="the notation key" hint="how the three voices read" voice={voice} />
       <Specimen active={voice} onSelect={selectVoice} />
 
       <FolioTurn index="v" title="the answer" hint="folded once · then folded back" voice={voice} />
@@ -292,8 +282,6 @@ export function App() {
 
       <FolioTurn index="—" title="the colophon" hint="the page, signed off" voice={voice} soft />
       <Colophon voice={voice} word={activeWord} setToday={setToday} />
-
-      <Signature voice={voice} word={activeWord} setToday={setToday} />
 
       <footer className="site-foot" aria-label="The page, in one line">
         <span className="site-foot__copy">
