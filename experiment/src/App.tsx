@@ -40,6 +40,7 @@ import { TitleCoda } from './TitleCoda'
 import { AnswerCoda } from './AnswerCoda'
 import { ExhalationPlate } from './ExhalationPlate'
 import { PageReturn } from './PageReturn'
+import { PressBreath } from './PressBreath'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -641,7 +642,7 @@ export function App() {
   }
 
   return (
-    <main className={`app app--voice-${voice} app--word-${activeWord}`}>
+    <main className={`app app--voice-${voice} app--word-${activeWord} ${leverStamping ? 'is-lever-stamping' : ''}`}>
       <BroadsideReveal voice={voice} />
       <BroadsideEdge />
       <PaperGrain />
@@ -649,6 +650,7 @@ export function App() {
       <InkTrail />
       <div className="app__grain" aria-hidden="true" />
       <div className="app__pencil" aria-hidden="true" />
+      <div className={`press-impact ${leverStamping ? 'is-stamping' : ''}`} aria-hidden="true" />
       <Watermark />
       <header className="site-header site-header--single">
         <div className="site-header__row site-header__row--primary">
@@ -707,6 +709,7 @@ export function App() {
             />
 
             <TitleCoda voice={voice} word={activeWord} setToday={setToday} />
+            <PressBreath voice={voice} active={leverStamping} />
           </section>
         </Opening>
 

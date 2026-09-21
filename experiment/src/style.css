@@ -65220,3 +65220,465 @@ a small act of typesetting.
     font-size: 8px;
   }
 }
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 340 · "the press breath" · a single composed
+   flourish that ties the lever moment to the page. Refines
+   the title-page rhythm, polishes the title broadside, and
+   makes the press-lever pull feel consequential.
+   ──────────────────────────────────────────────────────────── */
+
+/* PRESS BREATH · the page's quiet exhale that draws across the
+   title-page edge once revealed, and re-draws brightly the moment
+   the lever is pulled. Two lines, a small mark, a fading halo. */
+
+.press-breath {
+  --press-breath-tone: var(--coral);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  row-gap: clamp(8px, 1vw, 12px);
+  width: min(100%, 720px);
+  margin: clamp(16px, 2.4vw, 28px) auto clamp(20px, 2.8vw, 36px);
+  color: var(--press-breath-tone);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .9s var(--ease-out) .15s, transform .9s var(--ease-out) .15s;
+}
+
+.press-breath.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+.app--voice-quiet .press-breath { --press-breath-tone: var(--blue); }
+.app--voice-human .press-breath { --press-breath-tone: var(--coral); }
+.app--voice-bold .press-breath { --press-breath-tone: var(--acid); }
+
+@media (prefers-reduced-motion: reduce) {
+  .press-breath { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .press-breath__rule-stroke,
+  .press-breath__rule-bead,
+  .press-breath__rule-halo,
+  .press-breath__mark-line,
+  .press-breath__mark-bead { animation: none !important; transition: none !important; }
+  .press-breath__rule-stroke--lead,
+  .press-breath__rule-stroke--trail { stroke-dashoffset: 0 !important; opacity: .6 !important; }
+  .press-breath__rule-bead--lead,
+  .press-breath__rule-bead--trail,
+  .press-breath__mark-bead { opacity: 1 !important; transform: none !important; }
+  .press-breath__mark-line { opacity: 1 !important; transform: none !important; }
+}
+
+.press-breath__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.press-breath__rule {
+  display: block;
+  width: 100%;
+  height: clamp(4px, .6vw, 8px);
+  color: var(--press-breath-tone);
+  opacity: .85;
+}
+
+.press-breath__rule svg { width: 100%; height: 100%; display: block; }
+
+.press-breath__rule-stroke--lead,
+.press-breath__rule-stroke--trail {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.5s var(--ease-out) .25s, opacity .9s var(--ease);
+}
+
+.press-breath.is-revealed .press-breath__rule-stroke--lead { stroke-dashoffset: 0; }
+.press-breath.is-revealed .press-breath__rule-stroke--trail {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1.7s var(--ease-out) .55s, opacity .9s var(--ease);
+}
+
+.press-breath.is-active .press-breath__rule-stroke--lead {
+  animation: pressBreathRulePulse .6s var(--ease-out);
+}
+
+@keyframes pressBreathRulePulse {
+  0% { opacity: .85; }
+  35% { opacity: 1; }
+  100% { opacity: .85; }
+}
+
+.press-breath__rule-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity .4s var(--ease), transform .55s var(--ease-spring);
+}
+
+.press-breath__rule-bead--lead {
+  transform: scale(.3);
+  transition-delay: .2s;
+}
+
+.press-breath__rule-bead--trail {
+  transform: scale(.5);
+  transition-delay: 1.6s;
+}
+
+.press-breath.is-revealed .press-breath__rule-bead { opacity: 1; transform: scale(1); }
+
+.press-breath__rule-halo {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity .55s var(--ease) 1.85s;
+}
+
+.press-breath.is-revealed .press-breath__rule-halo {
+  opacity: .55;
+}
+
+.press-breath.is-active .press-breath__rule-halo {
+  animation: pressBreathHaloBurst .6s var(--ease-out);
+}
+
+@keyframes pressBreathHaloBurst {
+  0%   { opacity: .55; transform: scale(1); }
+  40%  { opacity: 1;   transform: scale(1.6); }
+  100% { opacity: 0;   transform: scale(2); }
+}
+
+.press-breath__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1vw, 14px);
+  color: var(--press-breath-tone);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .76vw, 10px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity .8s var(--ease-out) 1.95s;
+}
+
+.press-breath.is-revealed .press-breath__mark { opacity: .88; }
+
+.press-breath__mark-rule {
+  flex: 1 1 auto;
+  width: clamp(20px, 5vw, 56px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor);
+  opacity: .55;
+}
+
+.press-breath__mark-rule--alt {
+  background: linear-gradient(to left, transparent, currentColor);
+}
+
+.press-breath__mark-line {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .95vw, 13px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--press-breath-tone);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity .7s var(--ease-out) 2.05s, transform .8s var(--ease-out) 2.05s;
+}
+
+.press-breath.is-revealed .press-breath__mark-line {
+  opacity: 1;
+  transform: none;
+}
+
+.press-breath.is-active .press-breath__mark-line {
+  animation: pressBreathLinePulse .6s var(--ease-out);
+}
+
+@keyframes pressBreathLinePulse {
+  0%   { opacity: 1; }
+  30%  { opacity: .6; }
+  60%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+.press-breath__mark-bead {
+  display: inline-block;
+  width: clamp(5px, .5vw, 7px);
+  height: clamp(5px, .5vw, 7px);
+  border-radius: 50%;
+  background: var(--press-breath-tone);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--press-breath-tone) 22%, transparent);
+  opacity: 0;
+  transform: scale(.3);
+  transition: opacity .5s var(--ease) 2.15s, transform .6s var(--ease-spring) 2.15s;
+}
+
+.press-breath.is-revealed .press-breath__mark-bead { opacity: 1; transform: scale(1); }
+
+@media (max-width: 540px) {
+  .press-breath {
+    margin: clamp(12px, 3vw, 18px) auto clamp(16px, 3.4vw, 24px);
+    row-gap: 6px;
+  }
+  .press-breath__mark-line {
+    font-size: clamp(10.5px, 3.2vw, 12px);
+  }
+}
+
+/* PRESS IMPACT · a brief, page-wide confirmation that the lever
+   pulled. A single radial pulse emanates from the lever's pivot
+   upward across the title page and fades within ~1.4s. Applied
+   on the body via a class set briefly when the lever pulls. */
+
+.press-impact {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(ellipse at 50% 38%, color-mix(in srgb, var(--coral) 10%, transparent), transparent 48%);
+  opacity: 0;
+}
+
+.app--voice-quiet .press-impact {
+  background: radial-gradient(ellipse at 50% 38%, color-mix(in srgb, var(--blue) 10%, transparent), transparent 48%);
+}
+
+.app--voice-human .press-impact {
+  background: radial-gradient(ellipse at 50% 38%, color-mix(in srgb, var(--coral) 10%, transparent), transparent 48%);
+}
+
+.app--voice-bold .press-impact {
+  background: radial-gradient(ellipse at 50% 38%, color-mix(in srgb, var(--acid) 10%, transparent), transparent 48%);
+}
+
+.press-impact.is-stamping {
+  animation: pressImpact .6s var(--ease-out);
+}
+
+@keyframes pressImpact {
+  0%   { opacity: 0; }
+  22%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-impact { display: none !important; }
+}
+
+/* TITLE-PAGE RHYTHM · tighter spacing between the broadside and
+   the prologue, and a quieter prologue presence. When the children
+   sit inside .opening the outer chrome is already stripped; here
+   we tighten the inner composition so they read as one breath. */
+
+.opening .tb + .press-signal {
+  margin-top: clamp(18px, 2.4vw, 32px);
+}
+
+.opening .press-signal + .reading-prologue {
+  margin-top: clamp(18px, 2.4vw, 28px);
+}
+
+.opening .reading-prologue {
+  padding-top: clamp(12px, 1.6vw, 18px);
+  padding-bottom: clamp(10px, 1.4vw, 16px);
+}
+
+.opening .reading-prologue__head {
+  margin-bottom: clamp(8px, 1vw, 12px);
+}
+
+.opening .reading-prologue__lede {
+  font-size: clamp(13.5px, 1.18vw, 16px);
+  line-height: 1.5;
+  max-width: 62ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.opening .reading-prologue__readings {
+  gap: clamp(6px, .7vw, 10px);
+}
+
+.opening .reading-prologue__reading {
+  padding: clamp(8px, .9vw, 11px) clamp(12px, 1.4vw, 18px);
+  background: linear-gradient(180deg, rgba(28, 36, 52, .12), rgba(14, 20, 32, .22));
+}
+
+.opening .reading-prologue__reading-echo {
+  font-size: clamp(11px, .95vw, 12.5px);
+}
+
+.opening .reading-prologue__thread {
+  display: none;
+}
+
+.opening .reading-prologue__foot {
+  margin-top: clamp(6px, .8vw, 10px);
+  padding-top: clamp(6px, .8vw, 10px);
+}
+
+.opening .reading-prologue + .press-lever {
+  margin-top: clamp(14px, 1.8vw, 24px);
+}
+
+.opening .press-lever {
+  padding: clamp(14px, 1.6vw, 20px) clamp(16px, 2vw, 26px) clamp(16px, 1.8vw, 22px);
+}
+
+.opening .press-lever__head {
+  margin-bottom: clamp(6px, .7vw, 10px);
+}
+
+.opening .press-lever__main {
+  gap: clamp(14px, 2vw, 26px);
+  padding-top: clamp(8px, 1vw, 14px);
+}
+
+.opening .press-lever + .title-coda {
+  margin-top: clamp(14px, 1.8vw, 24px);
+}
+
+.opening .title-coda {
+  padding-block: clamp(4px, .6vw, 10px);
+}
+
+.opening .title-coda__copy-line {
+  font-size: clamp(12.5px, 1.05vw, 14.5px);
+}
+
+@media (max-width: 720px) {
+  .opening .reading-prologue__lede {
+    text-align: left;
+    max-width: none;
+  }
+  .opening .press-lever__main {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+/* TITLE BROADSIDE · polish the typography balance and the voice
+   selector affordance. The token marks already carry weight; this
+   sharpens the spacing between headline lines and the breath below. */
+
+.tb__statement-lines {
+  text-wrap: balance;
+}
+
+.tb__statement-lines > .tb__line--b {
+  gap: clamp(10px, 1.2vw, 18px);
+}
+
+.tb__token-mark {
+  letter-spacing: .14em;
+}
+
+.tb.is-stamping .tb__statement-lines {
+  animation: tbStatementPulse .85s var(--ease);
+}
+
+@keyframes tbStatementPulse {
+  0%   { transform: translateY(0); }
+  35%  { transform: translateY(2px) scale(.998); }
+  100% { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tb.is-stamping .tb__statement-lines { animation: none !important; }
+}
+
+/* PRESS LEVER · polish the pull moment. When the lever body
+   carries the .is-pulled class the shaft tilts further forward
+   with a subtle settled position. The bloom softens. The action
+   button settles after a brief press-impact pop. */
+
+.press-lever__lever-shaft-group {
+  transition: transform .65s var(--ease-spring), filter .55s var(--ease);
+}
+
+.press-lever__lever.is-pulled .press-lever__lever-shaft-group {
+  transform: rotate(32deg);
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, .25));
+}
+
+.press-lever.is-open .press-lever__lever {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--press-lever-tone) 16%, transparent),
+    0 0 28px -6px color-mix(in srgb, var(--press-lever-tone) 32%, transparent);
+}
+
+.press-lever.is-open .press-lever__action-line {
+  text-shadow: 0 0 .04em color-mix(in srgb, var(--press-lever-tone) 22%, transparent);
+}
+
+/* When the action button is being stamped, briefly raise the entire
+   .press-lever plate by a fraction of a pixel so the press impact
+   is felt as a small physical pulse. */
+
+.press-lever.is-stamping .press-lever__bloom {
+  animation: pressLeverBloomPulse .6s var(--ease-out);
+}
+
+@keyframes pressLeverBloomPulse {
+  0%   { opacity: 1; transform: scale(1); }
+  40%  { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* READERS NOTE · a subtle inner polish that ties the title page
+   and the frontmatter so the seam doesn't shout. */
+
+.hero__body {
+  padding-top: clamp(28px, 4vw, 44px);
+}
+
+.hero__body .hero__body-plate {
+  margin-bottom: clamp(14px, 1.8vw, 22px);
+}
+
+/* RUNNING HEADER · tie the press register to the lever moment by
+   briefly brightening the voice pip when the lever is pulled. */
+
+.site-header__set-mark {
+  transition: transform .55s var(--ease-spring), background .45s var(--ease), box-shadow .55s var(--ease);
+}
+
+.app.is-lever-stamping .site-header__set-mark {
+  transform: scale(1.4);
+  box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 18%, transparent), 0 0 18px color-mix(in srgb, currentColor 38%, transparent);
+}
+
+/* MOBILE · tighten mobile layout for the title page stack. */
+
+@media (max-width: 720px) {
+  .opening .reading-prologue {
+    padding-left: clamp(8px, 3vw, 14px);
+    padding-right: clamp(8px, 3vw, 14px);
+  }
+  .opening .reading-prologue__reading {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 6px;
+  }
+  .opening .reading-prologue__reading-word {
+    justify-self: start;
+  }
+  .opening .press-lever__head-tag {
+    font-size: 9px;
+    letter-spacing: .2em;
+  }
+  .opening .press-lever__action-button {
+    grid-template-columns: minmax(0, 1fr) clamp(24px, 6vw, 32px);
+  }
+}
