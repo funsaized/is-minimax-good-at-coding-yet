@@ -43066,6 +43066,12 @@ a small act of typesetting.
   margin-top: clamp(4px, .8vw, 12px);
 }
 
+.hero--title-page .press-signal {
+  --press-signal-h: clamp(150px, 18vw, 200px);
+  margin-top: clamp(20px, 2.6vw, 38px);
+  margin-bottom: clamp(20px, 2.6vw, 38px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .title-page,
   .title-page__handed,
@@ -64553,20 +64559,22 @@ a small act of typesetting.
 
 .press-signal {
   --press-signal-tone: var(--coral);
-  --press-signal-h: clamp(120px, 14vw, 168px);
+  --press-signal-h: clamp(150px, 18vw, 200px);
 
   position: relative;
   display: grid;
-  place-items: center;
-  width: min(100%, 720px);
+  grid-template-rows: auto 1fr auto auto;
+  align-items: center;
+  justify-items: center;
+  width: min(100%, 540px);
   height: var(--press-signal-h);
-  margin: clamp(18px, 2.4vw, 36px) auto clamp(14px, 1.8vw, 28px);
+  margin: clamp(22px, 3vw, 44px) auto clamp(18px, 2.4vw, 36px);
   padding: 0 clamp(12px, 2vw, 24px);
   color: var(--press-signal-tone);
   isolation: isolate;
   opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 1s var(--ease-out) .15s, transform 1s var(--ease-out) .15s, color .5s var(--ease);
+  transform: translateY(10px);
+  transition: opacity 1.1s var(--ease-out) .1s, transform 1.1s var(--ease-out) .1s, color .5s var(--ease);
 }
 
 .press-signal.is-revealed {
@@ -64580,13 +64588,11 @@ a small act of typesetting.
 
 @media (prefers-reduced-motion: reduce) {
   .press-signal { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .press-signal__thread-lead,
-  .press-signal__thread-trail,
-  .press-signal__thread-bead,
-  .press-signal__mark,
-  .press-signal__tag { animation: none !important; opacity: 1 !important; }
-  .press-signal__thread-lead,
-  .press-signal__thread-trail { stroke-dashoffset: 0 !important; }
+  .press-signal__rule-stroke,
+  .press-signal__strike,
+  .press-signal__strike-disc,
+  .press-signal__tag,
+  .press-signal__strike-splash-stroke { animation: none !important; opacity: 1 !important; stroke-dashoffset: 0 !important; transform: none !important; }
 }
 
 .press-signal__defs {
@@ -64597,93 +64603,90 @@ a small act of typesetting.
   overflow: hidden;
 }
 
-/* The descending thread. Centered, full height. */
+/* Lead rule — a quiet hand-drawn line above the strike */
 
-.press-signal__thread {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: clamp(34px, 4vw, 60px);
-  height: 100%;
-  transform: translateX(-50%);
+.press-signal__rule {
+  position: relative;
+  display: block;
+  width: min(100%, 360px);
+  height: 4px;
   color: inherit;
-  opacity: .85;
   pointer-events: none;
 }
 
-.press-signal__thread svg {
+.press-signal__rule--lead {
+  margin-bottom: clamp(4px, .8vw, 10px);
+  opacity: 0;
+  animation: pressSignalRuleIn .9s var(--ease-out) .25s forwards;
+}
+
+.press-signal__rule--trail {
+  margin-top: clamp(6px, .8vw, 10px);
+  opacity: 0;
+  animation: pressSignalRuleIn .9s var(--ease-out) 1.85s forwards;
+}
+
+.press-signal__rule svg {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-.press-signal__thread-lead {
+.press-signal__rule-stroke {
   stroke-dasharray: 100 100;
   stroke-dashoffset: 100;
-  animation: pressSignalDraw 1.8s var(--ease-out) .3s forwards;
+  animation: pressSignalDraw 1.2s var(--ease-out) .4s forwards;
 }
 
-.press-signal__thread-trail {
-  stroke-dasharray: 100 100;
-  stroke-dashoffset: 100;
-  animation: pressSignalDraw 1.8s var(--ease-out) .55s forwards;
+.press-signal__rule-stroke--alt {
+  animation-delay: 1.95s;
 }
 
-.press-signal__thread-bead {
-  opacity: 0;
-  animation: pressSignalBead .55s var(--ease-spring) forwards;
-  transform-box: fill-box;
-  transform-origin: center;
+@keyframes pressSignalRuleIn {
+  to { opacity: .85; }
 }
-
-.press-signal__thread-bead--top { animation-delay: .35s; }
-.press-signal__thread-bead--bot { animation-delay: 2.05s; }
 
 @keyframes pressSignalDraw {
   to { stroke-dashoffset: 0; }
 }
 
-@keyframes pressSignalBead {
-  0% { opacity: 0; transform: scale(.4); }
-  60% { opacity: 1; transform: scale(1.2); }
-  100% { opacity: 1; transform: scale(1); }
-}
+/* The strike — a single hand-pressed mark at the center */
 
-/* The pressed mark — sits at the visual center of the thread. */
-
-.press-signal__mark {
+.press-signal__strike {
   position: relative;
   display: grid;
   place-items: center;
-  width: clamp(46px, 5vw, 60px);
-  height: clamp(46px, 5vw, 60px);
+  width: clamp(72px, 7.4vw, 96px);
+  height: clamp(72px, 7.4vw, 96px);
   margin: 0;
   z-index: 1;
   opacity: 0;
-  animation: pressSignalMarkIn .8s var(--ease-spring) 1.05s forwards;
+  animation: pressSignalStrikeIn .95s var(--ease-spring) .75s forwards;
 }
 
-@keyframes pressSignalMarkIn {
-  0% { opacity: 0; transform: scale(.6) rotate(-12deg); }
-  60% { opacity: 1; transform: scale(1.08) rotate(2deg); }
+@keyframes pressSignalStrikeIn {
+  0% { opacity: 0; transform: scale(.55) rotate(-10deg); }
+  55% { opacity: 1; transform: scale(1.12) rotate(3deg); }
   100% { opacity: 1; transform: scale(1) rotate(0); }
 }
 
-.press-signal__mark-halo {
+.press-signal__strike-flash {
   position: absolute;
-  inset: -14px;
+  inset: -32px;
   border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, currentColor 22%, transparent) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, currentColor 28%, transparent) 0%, transparent 62%);
   pointer-events: none;
-  animation: pressSignalHalo 3.4s var(--ease) 1.6s infinite;
+  opacity: 0;
+  animation: pressSignalFlash 1.6s var(--ease-out) .75s forwards;
 }
 
-@keyframes pressSignalHalo {
-  0%, 100% { opacity: .55; transform: scale(.9); }
-  50% { opacity: 1; transform: scale(1.05); }
+@keyframes pressSignalFlash {
+  0% { opacity: 0; transform: scale(.6); }
+  30% { opacity: .9; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.25); }
 }
 
-.press-signal__mark-disc {
+.press-signal__strike-disc {
   position: relative;
   display: block;
   width: 100%;
@@ -64693,78 +64696,98 @@ a small act of typesetting.
   filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .35));
 }
 
-.press-signal__mark-disc svg {
+.press-signal__strike-disc svg {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-.press-signal__mark-wisp {
+.press-signal__strike-wisp {
   position: absolute;
-  top: 88%;
+  top: 92%;
   left: 50%;
-  width: 18px;
-  height: 8px;
+  width: 22px;
+  height: 10px;
   transform: translate(-50%, 0) rotate(-8deg);
-  background: radial-gradient(ellipse, color-mix(in srgb, currentColor 60%, transparent) 0%, transparent 70%);
+  background: radial-gradient(ellipse, color-mix(in srgb, currentColor 65%, transparent) 0%, transparent 70%);
   filter: blur(.5px);
   pointer-events: none;
-  opacity: .7;
+  opacity: .75;
 }
 
-/* The caption — sits below the mark, beneath the thread. */
-
-.press-signal__tag {
+.press-signal__strike-splash {
   position: absolute;
-  bottom: clamp(8px, 1.4vw, 16px);
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(8px, 1.2vw, 14px);
+  top: 100%;
+  left: 50%;
+  width: clamp(140px, 18vw, 220px);
+  height: 32px;
+  transform: translate(-50%, 8px);
   pointer-events: none;
   opacity: 0;
-  animation: pressSignalTagIn .7s var(--ease-out) 1.5s forwards;
+  animation: pressSignalSplashIn .9s var(--ease-out) 1.35s forwards;
 }
 
-@keyframes pressSignalTagIn {
+.press-signal__strike-splash svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.press-signal__strike-splash-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: pressSignalDraw 1s var(--ease-out) 1.45s forwards;
+}
+
+@keyframes pressSignalSplashIn {
   to { opacity: 1; }
 }
 
-.press-signal__tag::before,
-.press-signal__tag::after {
-  content: '';
-  display: block;
-  width: clamp(24px, 6vw, 60px);
-  height: 1px;
-  background: linear-gradient(to right, transparent, color-mix(in srgb, currentColor 70%, transparent));
-  opacity: .65;
+/* The caption — a single line beneath the strike */
+
+.press-signal__tag {
+  margin-top: clamp(10px, 1.6vw, 18px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  animation: pressSignalTagIn .8s var(--ease-out) 1.7s forwards;
 }
 
-.press-signal__tag::after {
-  background: linear-gradient(to left, transparent, color-mix(in srgb, currentColor 70%, transparent));
+@keyframes pressSignalTagIn {
+  to { opacity: .9; }
 }
 
 .press-signal__tag-line {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(11px, 1vw, 13px);
+  font-size: clamp(11px, 1.05vw, 13px);
   color: color-mix(in srgb, currentColor 88%, var(--paper));
   letter-spacing: -.002em;
   white-space: nowrap;
-  opacity: .85;
+  opacity: .92;
+}
+
+.press-signal__tag-sep {
+  display: inline-block;
+  margin: 0 .35em;
+  font-style: normal;
+  opacity: .55;
 }
 
 /* Responsive */
 
 @media (max-width: 720px) {
   .press-signal {
-    --press-signal-h: 100px;
+    --press-signal-h: clamp(140px, 36vw, 180px);
   }
-  .press-signal__mark { width: 38px; height: 38px; }
+  .press-signal__strike { width: 64px; height: 64px; }
+  .press-signal__rule { width: min(100%, 260px); }
 }
 
 @media (max-width: 480px) {
   .press-signal__tag-line { font-size: 10.5px; }
+  .press-signal__strike { width: 56px; height: 56px; }
+  .press-signal__strike-splash { width: 140px; }
 }

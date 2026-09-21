@@ -50,7 +50,7 @@ export function PressSignal({ voice }: PressSignalProps) {
           observer.disconnect()
         }
       },
-      { threshold: 0.18, rootMargin: '0px 0px -8% 0px' },
+      { threshold: 0.2, rootMargin: '0px 0px -8% 0px' },
     )
     observer.observe(node)
     return () => observer.disconnect()
@@ -63,7 +63,7 @@ export function PressSignal({ voice }: PressSignalProps) {
       style={style}
       aria-hidden="true"
     >
-      <svg className="press-signal__defs" viewBox="0 0 400 240" preserveAspectRatio="none" aria-hidden="true">
+      <svg className="press-signal__defs" viewBox="0 0 600 280" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <filter id={grainId} x="-2%" y="-2%" width="104%" height="104%">
             <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="21" stitchTiles="stitch" />
@@ -73,78 +73,111 @@ export function PressSignal({ voice }: PressSignalProps) {
         </defs>
       </svg>
 
-      <span className="press-signal__thread" aria-hidden="true">
-        <svg viewBox="0 0 100 200" preserveAspectRatio="none">
+      <span className="press-signal__rule press-signal__rule--lead" aria-hidden="true">
+        <svg viewBox="0 0 600 4" preserveAspectRatio="none">
           <g filter={`url(#${grainId})`}>
             <path
-              className="press-signal__thread-lead"
-              d="M50 4 C 50 32, 36 56, 50 80 S 64 124, 50 148 S 36 184, 50 196"
+              className="press-signal__rule-stroke"
+              d="M2 2c40-2 80 2 120 0s80-2 120 0 80 2 120 0 80-2 120 0 80 2 116 0"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.1"
+              strokeWidth=".55"
               strokeLinecap="round"
-              pathLength="100"
-            />
-            <path
-              className="press-signal__thread-trail"
-              d="M48 12 C 56 38, 40 62, 52 88 S 66 124, 52 148 S 40 180, 54 196"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth=".5"
-              strokeLinecap="round"
-              opacity=".55"
               pathLength="100"
             />
           </g>
-          <circle className="press-signal__thread-bead press-signal__thread-bead--top" cx="50" cy="4" r="1.6" fill="currentColor" />
-          <circle className="press-signal__thread-bead press-signal__thread-bead--bot" cx="50" cy="196" r="2.4" fill="currentColor" />
+          <circle cx="2" cy="2" r=".9" fill="currentColor" />
         </svg>
       </span>
 
-      <span className="press-signal__mark" aria-hidden="true">
-        <span className="press-signal__mark-halo" />
-        <span className="press-signal__mark-disc">
-          <svg viewBox="0 0 56 56">
+      <span className="press-signal__strike" aria-hidden="true">
+        <span className="press-signal__strike-flash" />
+        <span className="press-signal__strike-disc">
+          <svg viewBox="0 0 96 96">
             <g filter={`url(#${grainId})`} opacity=".94">
-              <circle cx="28" cy="28" r="24" fill="none" stroke="currentColor" strokeWidth=".9" />
-              <circle cx="28" cy="28" r="19" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".7 1.4" opacity=".7" />
+              <circle cx="48" cy="48" r="44" fill="none" stroke="currentColor" strokeWidth="1" />
+              <circle cx="48" cy="48" r="36" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray=".8 1.6" opacity=".7" />
+              <circle cx="48" cy="48" r="26" fill="none" stroke="currentColor" strokeWidth=".5" opacity=".55" />
+              <path
+                d="M48 8 L48 16 M48 80 L48 88 M8 48 L16 48 M80 48 L88 48 M18 18 L24 24 M72 72 L78 78 M18 78 L24 72 M72 24 L78 18"
+                stroke="currentColor"
+                strokeWidth=".55"
+                strokeLinecap="round"
+                opacity=".7"
+              />
               <text
-                x="28"
-                y="21"
+                x="48"
+                y="36"
                 textAnchor="middle"
                 fontFamily="ui-monospace, monospace"
-                fontSize="3.6"
-                letterSpacing="1.4"
+                fontSize="4.6"
+                letterSpacing="1.6"
                 fill="currentColor"
               >FOLIO · I·</text>
               <text
-                x="28"
-                y="34"
+                x="48"
+                y="56"
                 textAnchor="middle"
                 fontFamily="'Iowan Old Style', Georgia, serif"
                 fontStyle="italic"
-                fontSize="13"
+                fontSize="22"
                 fill="currentColor"
               >m³</text>
               <text
-                x="28"
-                y="44"
+                x="48"
+                y="70"
                 textAnchor="middle"
                 fontFamily="ui-monospace, monospace"
-                fontSize="3.2"
-                letterSpacing="1.2"
+                fontSize="4"
+                letterSpacing="1.4"
                 fill="currentColor"
               >PRESS · ON</text>
             </g>
           </svg>
         </span>
-        <span className="press-signal__mark-wisp" aria-hidden="true" />
+        <span className="press-signal__strike-wisp" />
+        <span className="press-signal__strike-splash" aria-hidden="true">
+          <svg viewBox="0 0 220 32" preserveAspectRatio="none">
+            <g filter={`url(#${grainId})`}>
+              <path
+                className="press-signal__strike-splash-stroke"
+                d="M2 16c14-7 28 4 42-1s28-7 42-1 28 4 42-2 28-7 42-1 28 4 28 0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".7"
+                strokeLinecap="round"
+                opacity=".6"
+                pathLength="100"
+              />
+            </g>
+            <circle cx="2" cy="16" r=".8" fill="currentColor" opacity=".7" />
+            <circle cx="218" cy="16" r=".8" fill="currentColor" opacity=".7" />
+          </svg>
+        </span>
       </span>
 
       <span className="press-signal__tag" aria-hidden="true">
         <em className="press-signal__tag-line">
-          {SEASON_LABEL} · a hand at the lever
+          {SEASON_LABEL} <span className="press-signal__tag-sep">·</span> a hand at the lever
         </em>
+      </span>
+
+      <span className="press-signal__rule press-signal__rule--trail" aria-hidden="true">
+        <svg viewBox="0 0 600 4" preserveAspectRatio="none">
+          <g filter={`url(#${grainId})`}>
+            <path
+              className="press-signal__rule-stroke press-signal__rule-stroke--alt"
+              d="M2 2c40-2 80 2 120 0s80-2 120 0 80 2 120 0 80-2 120 0 80 2 116 0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth=".4"
+              strokeLinecap="round"
+              opacity=".6"
+              pathLength="100"
+            />
+          </g>
+          <circle cx="598" cy="2" r=".7" fill="currentColor" opacity=".7" />
+        </svg>
       </span>
     </div>
   )
