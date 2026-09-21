@@ -3,13 +3,15 @@ import { NOTES, type WordId } from './notes'
 import { WayfinderSeal } from './WayfinderSeal'
 import { HeroTitle } from './HeroTitle'
 import { Press, type VoiceId } from './Press'
-import { PressRegister } from './PressRegister'
 import { PaperGrain } from './PaperGrain'
 import { NotesSection } from './NotesSection'
 import { AnswerReveal } from './AnswerReveal'
 import { Colophon } from './Colophon'
 import { TypePlate } from './TypePlate'
 import { ComposeSignature } from './ComposeSignature'
+import { ReadingPocket } from './ReadingPocket'
+import { OpeningLede } from './OpeningLede'
+import { FolioTurn } from './FolioTurn'
 import type { ImpressionMark } from './ImpressionRibbon'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
@@ -20,12 +22,12 @@ const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
-const FOLIO_LEDGER: { id: string; index: string; label: string; tone: VoiceId }[] = [
-  { id: 'question', index: 'i', label: 'the question', tone: 'quiet' },
-  { id: 'press', index: 'ii', label: 'the press bed', tone: 'human' },
-  { id: 'notes', index: 'iii', label: 'marginalia', tone: 'quiet' },
-  { id: 'pressings', index: 'iv', label: 'three pressings', tone: 'bold' },
-  { id: 'answer', index: 'v', label: 'the answer', tone: 'human' },
+const FOLIO_LEDGER: { id: string; index: string; label: string; hint: string; tone: VoiceId }[] = [
+  { id: 'question', index: 'i', label: 'the question', hint: 'one line, set three ways', tone: 'quiet' },
+  { id: 'press', index: 'ii', label: 'the press bed', hint: 'pull a lever, take an impression', tone: 'human' },
+  { id: 'notes', index: 'iii', label: 'the marginalia', hint: 'three things worth keeping', tone: 'quiet' },
+  { id: 'pressings', index: 'iv', label: 'three pressings', hint: 'the same line, three faces', tone: 'bold' },
+  { id: 'answer', index: 'v', label: 'the answer', hint: 'folded once, then folded back', tone: 'human' },
 ]
 
 const VOICE_META: Record<VoiceId, { name: string; letter: string; face: string }> = {
@@ -63,91 +65,6 @@ function ArrowIcon() {
     <svg className="arrow-icon" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
-  )
-}
-
-function PenIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M3 21l4-1 11-11-3-3L4 17l-1 4zM14.5 6.5l3 3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function PullMark() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="reveal-pull__mark">
-      <path d="M4 12c4-6 12-6 16 0M20 12c-4 6-12 6-16 0" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-      <circle cx="12" cy="12" r="1.6" fill="currentColor" />
-    </svg>
-  )
-}
-
-function HeroLedger({ voice, setToday }: { voice: VoiceId; setToday: string }) {
-  return (
-    <aside className="hero-ledger" aria-label="Folio contents">
-      <header className="hero-ledger__head">
-        <span className="hero-ledger__head-rule" aria-hidden="true" />
-        <em className="hero-ledger__head-tag">folio i · the contents of one page</em>
-        <span className="hero-ledger__head-rule hero-ledger__head-rule--alt" aria-hidden="true" />
-      </header>
-      <ol className="hero-ledger__list">
-        {FOLIO_LEDGER.map((folio, idx) => {
-          const isLast = idx === FOLIO_LEDGER.length - 1
-          const tone = `var(--${folio.tone === 'bold' ? 'acid' : folio.tone === 'human' ? 'coral' : 'blue'})`
-          const isActive = folio.id === voice
-          const style = {
-            '--folio-tone': tone,
-          } as CSSProperties
-          return (
-            <li key={folio.id} className={`hero-ledger__item ${isLast ? 'is-last' : ''}`} style={style}>
-              <a
-                className={`hero-ledger__link ${isActive ? 'is-active' : ''}`}
-                href={`#${folio.id === 'specimen' ? 'pressings' : folio.id}`}
-              >
-                <span className="hero-ledger__num">{folio.index}</span>
-                <span className="hero-ledger__label">{folio.label}</span>
-                <span className="hero-ledger__tail" aria-hidden="true" />
-              </a>
-            </li>
-          )
-        })}
-      </ol>
-      <footer className="hero-ledger__foot" aria-hidden="true">
-        <span className="hero-ledger__foot-mark" />
-        <em>composed and set today · {setToday}</em>
-        <span className="hero-ledger__foot-mark hero-ledger__foot-mark--alt" />
-      </footer>
-    </aside>
-  )
-}
-
-function ReadingNote({ setToday }: { setToday: string }) {
-  return (
-    <aside className="hero-reading-note" aria-label="A short reading note from the editor">
-      <header className="hero-reading-note__head">
-        <span className="hero-reading-note__head-mark" aria-hidden="true" />
-        <em>reading note · set today</em>
-        <span className="hero-reading-note__head-date" aria-hidden="true">{setToday}</span>
-      </header>
-      <p className="hero-reading-note__copy">
-        The headline is set three ways for a reason. Pull a voice, mark a word, and the page keeps the rest of the room quiet so you can hear what each reading actually does.
-      </p>
-      <ul className="hero-reading-note__hints" aria-label="Three ways to read the page">
-        <li>
-          <span className="hero-reading-note__hints-key" aria-hidden="true">i.</span>
-          <em>pull</em> a voice on the title
-        </li>
-        <li>
-          <span className="hero-reading-note__hints-key" aria-hidden="true">ii.</span>
-          <em>tap</em> a word to mark it
-        </li>
-        <li>
-          <span className="hero-reading-note__hints-key" aria-hidden="true">iii.</span>
-          <em>unfold</em> the answer, when ready
-        </li>
-      </ul>
-    </aside>
   )
 }
 
@@ -341,9 +258,7 @@ export function App() {
         </span>
       </header>
 
-      <div className="folio-register">
-        <PressRegister voice={voice} word={activeWord} marks={marks} setToday={setToday} />
-      </div>
+      <OpeningLede voice={voice} setToday={setToday} />
 
       <section
         ref={heroRef}
@@ -367,61 +282,42 @@ export function App() {
         </div>
 
         <div className="hero__rail">
-          <button
-            ref={answerTriggerRef}
-            type="button"
-            className={`hero__reveal hero__reveal--first ${answerOpen ? 'is-open' : ''}`}
-            onClick={toggleAnswer}
-            aria-expanded={answerOpen}
-            aria-controls="answer"
-          >
-            <span className="hero__reveal-rule" aria-hidden="true" />
-            <span className="hero__reveal-body">
-              <span className="hero__reveal-eyebrow" aria-hidden="true">
-                <PullMark />
-                <em>{answerOpen ? 'folded open' : 'unfold the answer'}</em>
-                <PullMark />
-              </span>
-              <span className="hero__reveal-headline">
-                <em className="hero__reveal-headline-mark" aria-hidden="true">⤳</em>
-                <span>{answerOpen ? 'fold it back' : 'when you’re ready, see how it lands'}</span>
-                <ArrowIcon />
-              </span>
-              <span className="hero__reveal-tag">
-                <PenIcon />
-                <em>no commitment · the question stays open</em>
-              </span>
-            </span>
-            <span className="hero__reveal-rule hero__reveal-rule--alt" aria-hidden="true" />
-          </button>
-
-          <HeroLedger voice={voice} setToday={setToday} />
-
-          <ReadingNote setToday={setToday} />
+          <ReadingPocket
+            voice={voice}
+            word={activeWord}
+            setToday={setToday}
+            answerOpen={answerOpen}
+            answerTriggerRef={answerTriggerRef}
+            onToggleAnswer={toggleAnswer}
+          />
         </div>
       </section>
 
-      <div className="folio-divider" aria-hidden="true">
-        <span className="folio-divider__line" />
-        <span className="folio-divider__tag">folio ii · the press bed</span>
-        <span className="folio-divider__line" />
-      </div>
+      <FolioTurn
+        index="ii"
+        title="the press bed"
+        hint="pull a lever · take an impression"
+        voice={voice}
+      />
 
       <Press voice={voice} word={activeWord} onVoice={selectVoice} />
 
-      <div className="folio-divider folio-divider--soft" aria-hidden="true">
-        <span className="folio-divider__line" />
-        <span className="folio-divider__tag">folio iii · the marginalia</span>
-        <span className="folio-divider__line" />
-      </div>
+      <FolioTurn
+        index="iii"
+        title="the marginalia"
+        hint="three things worth keeping"
+        voice={voice}
+        soft
+      />
 
       <NotesSection selected={selectedWord} onSelect={id => selectWord(id, true)} />
 
-      <div className="folio-divider" aria-hidden="true">
-        <span className="folio-divider__line" />
-        <span className="folio-divider__tag">folio iv · three pressings</span>
-        <span className="folio-divider__line" />
-      </div>
+      <FolioTurn
+        index="iv"
+        title="three pressings"
+        hint="the same line, three faces"
+        voice={voice}
+      />
 
       <section className="specimen-plate-section section" id="pressings" aria-labelledby="specimen-plate-title">
         <header className="section__header specimen-plate-section__header">
@@ -441,11 +337,12 @@ export function App() {
         setToday={setToday}
       />
 
-      <div className="folio-divider" aria-hidden="true">
-        <span className="folio-divider__line" />
-        <span className="folio-divider__tag">folio v · the colophon</span>
-        <span className="folio-divider__line" />
-      </div>
+      <FolioTurn
+        index="v"
+        title="the colophon"
+        hint="the page, signed off"
+        voice={voice}
+      />
 
       <Colophon voice={voice} word={activeWord} setToday={setToday} readerName="" />
 
