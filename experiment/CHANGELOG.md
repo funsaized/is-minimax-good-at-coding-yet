@@ -1,17 +1,3 @@
-# iteration 336
+Iteration 337 — a single composed exhalation plate absorbs the pre-answer pause into one hand-pressed card.
 
-A press signal descends between the title broadside and reading prologue, one quiet hand-drawn breath.
-
-## What changed
-
-- New `PressSignal` component: a thin descending thread with a small pressed mark at its center and a short italic caption, rendered between the title and the reading prologue.
-- The signal's tone shifts with the active voice (blue / coral / acid), and its thread, beads, mark, and caption animate in sequence on reveal — drawing, dropping, and stamping into place.
-- Reduced-motion fallback keeps the signal fully visible without any motion.
-- Responsive sizing scales the height, mark, and caption down on small screens.
-- Build verified with `npm run build`.
-
-## Files touched
-
-- `src/PressSignal.tsx` (new): the connector component, with `useId`-scoped SVG defs and IntersectionObserver-driven reveal.
-- `src/App.tsx`: imports `PressSignal` and renders it once between `TitleBroadside` and `ReadingPrologue`.
-- `src/style.css`: adds the `.press-signal` block and its keyframes (`pressSignalDraw`, `pressSignalBead`, `pressSignalMarkIn`, `pressSignalHalo`, `pressSignalTagIn`).
+Removed `ReadingPause.tsx` and its CSS block; added `ExhalationPlate.tsx` and a fresh `.exhalation` block in `style.css`. The pause between the readings and the editor's note now sits as one composed card: a top hairline, a centered eyebrow, a single quote that restates the line in the active voice with a small italic mark, three short breaths as a tight three-column typographic block with shared rules, a hand-drawn sign, one decisive button, and a five-cell footer that reads the active voice, marked word, and date. Voice tone, bold weight, and italic carry across the same color and type system already used by the title broadside and the press lever, so the plate reads as the page's last breath before the leaf opens. The component re-types itself when the voice or marked word changes, and respects `prefers-reduced-motion`. Mobile collapses the breaths and footer to a single column and tucks the corner mark inside the card.

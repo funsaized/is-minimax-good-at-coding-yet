@@ -38,7 +38,7 @@ import { Opening } from './Opening'
 import { PressSignal } from './PressSignal'
 import { TitleCoda } from './TitleCoda'
 import { AnswerCoda } from './AnswerCoda'
-import { ReadingPause } from './ReadingPause'
+import { ExhalationPlate } from './ExhalationPlate'
 import { PageReturn } from './PageReturn'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
@@ -791,7 +791,7 @@ export function App() {
 
         <ReadingFloor voice={voice} setToday={setToday} />
 
-        <ReadingPause voice={voice} setToday={setToday} onOpenAnswer={openAnswerFromPause} />
+        <ExhalationPlate voice={voice} word={activeWord} setToday={setToday} onOpenAnswer={openAnswerFromPause} />
 
         <AnswerReveal open={answerOpen} onClose={closeAnswer} triggerRef={answerTriggerRef} voice={voice} word={activeWord} setToday={setToday} />
 
