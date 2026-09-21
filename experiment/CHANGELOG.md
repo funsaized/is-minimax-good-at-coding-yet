@@ -1,15 +1,7 @@
 # Changelog
 
-## Iteration 343
-A single hanging press lamp descends above the opening and washes a soft voice-coloured glow over the folio imprint and title broadside. The lamp tilts, sways, and fades away once the reader moves past the first reading; it is built entirely from local SVG with grain filters and respects reduced motion.
+## Iteration 344
 
-## Recent history
-- Iteration 335: A persistent press register sits beneath the site header, holding the page's active state in one composed strip: the voi
-- Iteration 336: A press signal descends between the title broadside and reading prologue, one quiet hand-drawn breath.
-- Iteration 337: Iteration 337 — a single composed exhalation plate absorbs the pre-answer pause into one hand-pressed card.
-- Iteration 338: The press signal between the title broadside and the reading prologue was a thin thread with a small disc. It was honest
-- Iteration 339: Iteration 339 — FolioFold collapses into a single hand-pressed FolioHinge that does one thing: it folds the page.
-- Iteration 340: A single composed flourish ties the lever moment to the page; the title-page rhythm tightens.
-- Iteration 341: A single composed seal closes the reading prologue; the title-page breath absorbs five micro-plates.
-- Iteration 342: A single composed folio imprint opens the page; the press motto's existing variants stay put.
-- Iteration 343: A single hanging press lamp descends above the opening, washing a soft voice-coloured glow over the folio imprint and title broadside before fading away once the reader moves past the first reading.
+The press lever collapses to one composed mechanism — one shaft, one drop, one drawn underline.
+
+The four drawn flourishes around the shaft fold into a single hand-drawn drop that falls from the pivot the moment the lever is pulled and lands on a small bead with a slow halo. The knob loses its twelve knurls and becomes one ringed disc with a single highlight. The cage loses its right rail; the four corner crops leave the plate. The action button loses its corner brackets and gains a single drawn underline that traces itself on hover and focus. The head loses its two paragraph marks and gains one italic word, one folio tag, one pair of dots. The lever also grows taller, the mobile layout stacks vertically with the drop scaled to fit, and the reduced-motion fallback reveals every animated path at full opacity so the gesture still reads.

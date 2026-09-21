@@ -30,8 +30,9 @@ export const PressLever = forwardRef<HTMLButtonElement, PressLeverProps>(functio
 ) {
   const reader = readerName.trim()
   const tone = VOICE_TONE[voice]
-  const flourishId = useId().replace(/:/g, '')
-  const flourishGrainId = `press-lever-flourish-grain-${flourishId}`
+  const baseId = useId().replace(/:/g, '')
+  const grainId = `press-lever-grain-${baseId}`
+  const dropGrainId = `press-lever-drop-grain-${baseId}`
   const style = { '--press-lever-tone': tone } as CSSProperties
 
   return (
@@ -40,145 +41,117 @@ export const PressLever = forwardRef<HTMLButtonElement, PressLeverProps>(functio
       aria-label="The press lever · opens the editor's note"
       style={style}
     >
-
-      <span className="press-lever__crop press-lever__crop--tl" aria-hidden="true" />
-      <span className="press-lever__crop press-lever__crop--tr" aria-hidden="true" />
-      <span className="press-lever__crop press-lever__crop--bl" aria-hidden="true" />
-      <span className="press-lever__crop press-lever__crop--br" aria-hidden="true" />
+      <svg className="press-lever__defs" viewBox="0 0 400 400" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <filter id={grainId} x="-2%" y="-2%" width="104%" height="104%">
+            <feTurbulence type="fractalNoise" baseFrequency="2.6" numOctaves="2" seed="21" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
+            <feComposite in2="SourceGraphic" operator="in" />
+          </filter>
+          <filter id={dropGrainId} x="-6%" y="-6%" width="112%" height="112%">
+            <feTurbulence type="fractalNoise" baseFrequency="2.2" numOctaves="2" seed="37" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .45 0" />
+            <feComposite in2="SourceGraphic" operator="in" />
+          </filter>
+        </defs>
+      </svg>
 
       <span className="press-lever__bloom" aria-hidden="true" />
 
       <header className="press-lever__head" aria-hidden="true">
         <span className="press-lever__head-rule" />
         <span className="press-lever__head-tag">
-          <span className="press-lever__head-mark">※</span>
-          the press lever
-          <span className="press-lever__head-mark press-lever__head-mark--alt">※</span>
+          <span className="press-lever__head-dot" />
+          <em>the press lever</em>
+          <span className="press-lever__head-key">folio viii</span>
+          <span className="press-lever__head-dot press-lever__head-dot--alt" />
         </span>
-        <span className="press-lever__head-key">folio viii</span>
-        <span className="press-lever__head-rule" />
+        <span className="press-lever__head-rule press-lever__head-rule--alt" />
       </header>
 
       <div className="press-lever__main">
-        <span
-          className={`press-lever__lever ${answerOpen ? 'is-pulled' : ''}`}
-          aria-hidden="true"
-        >
-          <span className="press-lever__lever-rule" />
-          <span className="press-lever__lever-rule press-lever__lever-rule--low" />
-          <svg viewBox="0 0 80 240" className="press-lever__lever-svg" preserveAspectRatio="xMidYMid meet">
-            <g className="press-lever__lever-cage">
-              <path d="M14 6 H66" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" opacity=".6" />
-              <path d="M16 14 H64" stroke="currentColor" strokeWidth=".4" strokeDasharray="1.6 2.4" opacity=".45" />
-              <path d="M14 230 H66" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" opacity=".5" />
-            </g>
-            <g className="press-lever__lever-pivot">
-              <circle cx="40" cy="208" r="6" fill="none" stroke="currentColor" strokeWidth=".7" />
-              <circle cx="40" cy="208" r="2.6" fill="currentColor" />
-            </g>
-            <g className="press-lever__lever-shaft-group">
-              <line
-                className="press-lever__lever-shaft"
-                x1="40" y1="22"
-                x2="40" y2="208"
-                stroke="currentColor"
-                strokeWidth="2.6"
-                strokeLinecap="round"
-              />
-              <line
-                x1="40" y1="40" x2="40" y2="190"
-                stroke="var(--night)"
-                strokeWidth=".6"
-                strokeLinecap="round"
-                opacity=".55"
-              />
-              <g className="press-lever__lever-knob">
-                {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map(angle => {
-                  const rad = (angle * Math.PI) / 180
-                  return (
-                    <line
-                      key={angle}
-                      x1={40 + Math.cos(rad) * 12.5}
-                      y1={34 + Math.sin(rad) * 12.5}
-                      x2={40 + Math.cos(rad) * 16.5}
-                      y2={34 + Math.sin(rad) * 16.5}
-                      stroke="var(--night)"
-                      strokeWidth=".5"
-                      strokeLinecap="round"
-                      opacity=".55"
-                    />
-                  )
-                })}
-                <circle cx="40" cy="34" r="14.5" fill="currentColor" />
-                <circle cx="40" cy="34" r="9.5" fill="var(--night)" />
-                <circle cx="40" cy="34" r="4.2" fill="currentColor" />
-                <circle cx="40" cy="34" r="11.5" fill="none" stroke="var(--night)" strokeWidth=".4" opacity=".45" />
-              </g>
-            </g>
-            <g className="press-lever__lever-base">
-              <rect x="20" y="220" width="40" height="14" rx="2" fill="none" stroke="currentColor" strokeWidth=".7" />
-              <line x1="24" y1="225" x2="56" y2="225" stroke="currentColor" strokeWidth=".35" opacity=".5" />
-              <line x1="24" y1="229" x2="56" y2="229" stroke="currentColor" strokeWidth=".35" opacity=".5" />
-            </g>
-          </svg>
-          <span className="press-lever__lever-tag" aria-hidden="true">
+        <figure className={`press-lever__lever ${answerOpen ? 'is-pulled' : ''}`} aria-hidden="true">
+          <span className="press-lever__lever-tag">
             <span className="press-lever__lever-tag-dot" />
             {answerOpen ? 'pulled' : 'pull'}
           </span>
-          <span className="press-lever__lever-hint" aria-hidden="true">
+
+          <svg className="press-lever__lever-svg" viewBox="0 0 96 240" preserveAspectRatio="xMidYMid meet">
+            <g className="press-lever__lever-cage">
+              <path d="M14 6 H82" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".5" />
+              <path d="M18 12 H78" stroke="currentColor" strokeWidth=".35" strokeDasharray="1.4 2.2" opacity=".4" />
+              <path d="M16 230 H80" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".42" />
+            </g>
+
+            <g className="press-lever__lever-base">
+              <rect x="22" y="218" width="52" height="14" rx="2" fill="none" stroke="currentColor" strokeWidth=".7" />
+              <line x1="26" y1="223" x2="70" y2="223" stroke="currentColor" strokeWidth=".35" opacity=".5" />
+              <line x1="26" y1="227" x2="70" y2="227" stroke="currentColor" strokeWidth=".35" opacity=".5" />
+              <circle cx="48" cy="225" r=".9" fill="currentColor" opacity=".55" />
+            </g>
+
+            <g className="press-lever__lever-pivot">
+              <circle cx="48" cy="208" r="6.5" fill="none" stroke="currentColor" strokeWidth=".7" />
+              <circle cx="48" cy="208" r="2.6" fill="currentColor" />
+            </g>
+
+            <g className="press-lever__lever-shaft-group">
+              <line
+                className="press-lever__lever-shaft"
+                x1="48" y1="22"
+                x2="48" y2="208"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+              <line
+                x1="48" y1="44" x2="48" y2="196"
+                stroke="var(--night)"
+                strokeWidth=".4"
+                strokeLinecap="round"
+                opacity=".5"
+              />
+
+              <g className="press-lever__lever-knob">
+                <circle cx="48" cy="34" r="14.5" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".5" />
+                <circle cx="48" cy="34" r="11" fill="currentColor" />
+                <circle cx="48" cy="34" r="9.5" fill="none" stroke="var(--night)" strokeWidth=".4" opacity=".55" />
+                <circle cx="48" cy="34" r="6" fill="var(--night)" />
+                <circle cx="48" cy="34" r="2.4" fill="currentColor" />
+                <circle cx="46" cy="32" r=".85" fill="var(--paper)" opacity=".65" />
+              </g>
+            </g>
+          </svg>
+
+          <span className="press-lever__lever-drop" aria-hidden="true">
+            <svg viewBox="0 0 64 200" preserveAspectRatio="xMidYMin meet">
+              <g filter={`url(#${dropGrainId})`}>
+                <path
+                  className="press-lever__lever-drop-stroke"
+                  d="M32 4c-1 16 4 28 -2 44s-6 30 1 46 -4 30 1 46 -2 30 1 46"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth=".95"
+                  strokeLinecap="round"
+                  pathLength="100"
+                />
+                <circle className="press-lever__lever-drop-bead" cx="32" cy="194" r="2.4" fill="currentColor" />
+                <circle className="press-lever__lever-drop-halo" cx="32" cy="194" r="6" fill="none" stroke="currentColor" strokeWidth=".3" strokeDasharray=".6 1.6" opacity=".55" />
+              </g>
+            </svg>
+          </span>
+
+          <span className="press-lever__lever-hint">
             <span className="press-lever__lever-hint-mark" />
             rest · pulled · rest
           </span>
-<span className="press-lever__lever-ink" aria-hidden="true">
-            <svg
-              className="press-lever__flourish-svg"
-              viewBox="0 0 220 180"
-              preserveAspectRatio="xMidYMax meet"
-              aria-hidden="true"
-            >
-              <defs>
-                <filter id={flourishGrainId} x="-4%" y="-12%" width="108%" height="124%">
-                  <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="33" stitchTiles="stitch" />
-                  <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
-                  <feComposite in2="SourceGraphic" operator="in" />
-                </filter>
-              </defs>
-              <g filter={`url(#${flourishGrainId})`}>
-                <path
-                  className="press-lever__flourish-lead"
-                  d="M104 132c14-12 36-30 60-44s36-30 52-46"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.15"
-                  strokeLinecap="round"
-                  pathLength="100"
-                />
-                <path
-                  className="press-lever__flourish-trail"
-                  d="M108 138c12-10 32-26 54-38s32-26 54-58"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth=".55"
-                  strokeLinecap="round"
-                  opacity=".5"
-                  pathLength="100"
-                />
-                <circle className="press-lever__flourish-bead" cx="216" cy="42" r="2.1" fill="currentColor" />
-                <circle className="press-lever__flourish-halo" cx="216" cy="42" r="6" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".8 2" opacity=".55" />
-              </g>
-            </svg>
-            <span className="press-lever__flourish-tag" aria-hidden="true">
-              <span className="press-lever__flourish-tag-mark" />
-              <em>the press's exhale</em>
-            </span>
-          </span>
-        </span>
+        </figure>
 
         <div className="press-lever__action">
           <span className="press-lever__action-eyebrow" aria-hidden="true">
             <span className="press-lever__action-eyebrow-rule" />
             <span className="press-lever__action-eyebrow-tag">then · read</span>
-            <span className="press-lever__action-eyebrow-rule" />
+            <span className="press-lever__action-eyebrow-rule press-lever__action-eyebrow-rule--alt" />
           </span>
           <button
             ref={triggerRef}
@@ -188,13 +161,26 @@ export const PressLever = forwardRef<HTMLButtonElement, PressLeverProps>(functio
             aria-expanded={answerOpen}
             aria-controls="answer"
           >
-            <span className="press-lever__action-corner press-lever__action-corner--tl" aria-hidden="true" />
-            <span className="press-lever__action-corner press-lever__action-corner--tr" aria-hidden="true" />
-            <span className="press-lever__action-corner press-lever__action-corner--bl" aria-hidden="true" />
-            <span className="press-lever__action-corner press-lever__action-corner--br" aria-hidden="true" />
             <span className="press-lever__action-folio" aria-hidden="true">folio viii · the editor's note</span>
             <span className="press-lever__action-line">
-              {answerOpen ? 'fold the answer back' : 'open the editor’s note'}
+              <em>{answerOpen ? 'fold the answer back' : 'open the editor’s note'}</em>
+              <span className="press-lever__action-line-underline" aria-hidden="true">
+                <svg viewBox="0 0 220 6" preserveAspectRatio="none">
+                  <g filter={`url(#${grainId})`}>
+                    <path
+                      className="press-lever__action-line-underline-stroke"
+                      d="M2 3c20-2 40 2 60 0s40-2 60 0 40 2 60 0 36-2 36 0"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth=".7"
+                      strokeLinecap="round"
+                      pathLength="100"
+                    />
+                  </g>
+                  <circle cx="2" cy="3" r=".95" fill="currentColor" />
+                  <circle cx="218" cy="3" r=".95" fill="currentColor" />
+                </svg>
+              </span>
             </span>
             <span className="press-lever__action-for" aria-hidden={reader.length === 0}>
               <span className="press-lever__action-for-rule" aria-hidden="true" />
@@ -240,7 +226,7 @@ export const PressLever = forwardRef<HTMLButtonElement, PressLeverProps>(functio
               <kbd>v</kbd>
             </span>
           </span>
-          <span className="press-lever__foot-key-rule" />
+          <span className="press-lever__foot-key-rule press-lever__foot-key-rule--alt" />
         </span>
         <span className="press-lever__foot-date">
           <span className="press-lever__foot-date-mark" aria-hidden="true" />
