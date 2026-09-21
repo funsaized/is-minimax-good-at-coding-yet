@@ -26,7 +26,6 @@ import { PressRegister } from './PressRegister'
 import { TitleBroadside } from './TitleBroadside'
 import { BroadsideReveal } from './BroadsideReveal'
 import { BroadsideEdge } from './BroadsideEdge'
-import { FolioImprint } from './FolioImprint'
 import { PressLamp } from './PressLamp'
 import { PressReceipt } from './PressReceipt'
 
@@ -40,12 +39,8 @@ import { Opening } from './Opening'
 import { AnswerCoda } from './AnswerCoda'
 import { ExhalationPlate } from './ExhalationPlate'
 import { PageReturn } from './PageReturn'
-import { DayMargin } from './DayMargin'
-import { FolioSpecimen } from './FolioSpecimen'
-import { PressTitleCut } from './PressTitleCut'
 import { PressProofSlip } from './PressProofSlip'
-import { ComposingBed } from './ComposingBed'
-import { FolioSpread } from './FolioSpread'
+import { PressOpeningSpread } from './PressOpeningSpread'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -680,17 +675,7 @@ export function App() {
       <PressSpine activeId={activeSection} voice={voice} />
 
       <div className="page">
-        <DayMargin voice={voice} setToday={setToday} />
-
-        <FolioSpecimen voice={voice} setToday={setToday} />
-
-        <PressTitleCut voice={voice} setToday={setToday} />
-
-        <FolioImprint voice={voice} setToday={setToday} />
-
-        <ComposingBed voice={voice} />
-
-        <FolioSpread voice={voice} word={activeWord} setToday={setToday} />
+        <PressOpeningSpread voice={voice} setToday={setToday} />
 
         <Opening voice={voice} setToday={setToday}>
           <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
