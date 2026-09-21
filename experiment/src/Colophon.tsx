@@ -78,21 +78,29 @@ export function Colophon({ voice, word, setToday }: ColophonProps) {
           <div className="colophon__signoff" aria-label="The page, signed">
             <svg className={`colophon__seal colophon__seal--${voice}`} viewBox="0 0 100 100" aria-hidden="true" style={sealStyle}>
               <defs>
-                <radialGradient id={`col-seal-${voice}`} cx="50%" cy="40%" r="60%">
-                  <stop offset="0%" stopColor="currentColor" stopOpacity="0.2" />
+                <radialGradient id={`col-seal-glow-${voice}`} cx="50%" cy="40%" r="60%">
+                  <stop offset="0%" stopColor="currentColor" stopOpacity="0.18" />
                   <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
                 </radialGradient>
+                <radialGradient id={`col-seal-fill-${voice}`} cx="42%" cy="38%" r="62%">
+                  <stop offset="0%" stopColor={voice === 'quiet' ? 'rgba(168, 197, 255, 0.55)' : voice === 'human' ? 'rgba(244, 132, 114, 0.6)' : 'rgba(205, 238, 106, 0.6)'} />
+                  <stop offset="60%" stopColor={voice === 'quiet' ? 'rgba(120, 158, 240, 0.9)' : voice === 'human' ? 'rgba(216, 80, 64, 0.9)' : 'rgba(168, 214, 50, 0.9)'} />
+                  <stop offset="100%" stopColor="rgba(8, 10, 18, 0.85)" />
+                </radialGradient>
               </defs>
-              <circle cx="50" cy="50" r="48" fill={`url(#col-seal-${voice})`} />
-              <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth="1.1" />
+              <circle cx="50" cy="50" r="48" fill={`url(#col-seal-glow-${voice})`} />
+              <circle cx="50" cy="50" r="46" fill={`url(#col-seal-fill-${voice})`} stroke="currentColor" strokeWidth="1.1" strokeOpacity=".75" />
               <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2.5" opacity=".55" />
-              <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".3" />
-              <circle cx="50" cy="6" r="1.4" fill="currentColor" opacity=".85" />
-              <circle cx="50" cy="94" r="1.4" fill="currentColor" opacity=".85" />
-              <circle cx="6" cy="50" r="1.4" fill="currentColor" opacity=".85" />
-              <circle cx="94" cy="50" r="1.4" fill="currentColor" opacity=".85" />
-              <path d="M14 50 Q30 38 50 50 T86 50" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".4" />
-              <text x="50" y="22" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="currentColor">
+              <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255, 255, 255, 0.35)" strokeWidth=".3" />
+              <circle cx="50" cy="50" r="28" fill="none" stroke="rgba(255, 255, 255, 0.18)" strokeWidth=".25" />
+              <circle cx="50" cy="6" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
+              <circle cx="50" cy="94" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
+              <circle cx="6" cy="50" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
+              <circle cx="94" cy="50" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
+              <path d="M28 22 Q36 28 32 36 Q26 46 32 56 Q40 66 36 78" fill="none" stroke="rgba(8, 10, 18, 0.18)" strokeWidth=".55" />
+              <path d="M72 22 Q64 28 68 36 Q74 46 68 56 Q60 66 64 78" fill="none" stroke="rgba(8, 10, 18, 0.18)" strokeWidth=".55" />
+              <path d="M14 50 Q30 38 50 50 T86 50" fill="none" stroke="rgba(255, 255, 255, 0.3)" strokeWidth=".5" />
+              <text x="50" y="22" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="rgba(8, 10, 18, 0.92)">
                 {seal.top}
               </text>
               <text
@@ -103,11 +111,11 @@ export function Colophon({ voice, word, setToday }: ColophonProps) {
                 fontStyle={voice === 'bold' ? 'normal' : 'italic'}
                 fontSize={voice === 'bold' ? 32 : 38}
                 fontWeight={voice === 'bold' ? 800 : 500}
-                fill="currentColor"
+                fill="rgba(8, 10, 18, 0.92)"
               >
                 {seal.glyph}
               </text>
-              <text x="50" y="86" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="currentColor">
+              <text x="50" y="86" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="rgba(8, 10, 18, 0.92)">
                 {seal.bot}
               </text>
             </svg>

@@ -105,7 +105,7 @@ export function Answer({ open, onToggle, triggerRef, voice, word, setToday }: An
         </div>
 
         <aside className="answer__aside">
-          <PressSeal voice={voice} />
+          <WaxSeal voice={voice} broken={open} />
           <div className="answer__aside-cell">
             <span className="answer__aside-key">composed in</span>
             <span>{VOICE_LETTER[voice]} · {VOICE_NAME[voice]}</span>
@@ -139,7 +139,7 @@ export function Answer({ open, onToggle, triggerRef, voice, word, setToday }: An
   )
 }
 
-function PressSeal({ voice }: { voice: VoiceId }) {
+function WaxSeal({ voice, broken }: { voice: VoiceId; broken: boolean }) {
   const labels = {
     quiet: { top: 'PRESS · SET', bottom: 'FOLIO · TODAY' },
     human: { top: 'SET BY HAND', bottom: 'FOR NOW' },
@@ -150,43 +150,129 @@ function PressSeal({ voice }: { voice: VoiceId }) {
   const style = { color: tone } as CSSProperties
   const l = labels[voice]
   const isBold = voice === 'bold'
+
+  const fillTone = voice === 'quiet'
+    ? 'rgba(168, 197, 255, 0.55)'
+    : voice === 'human'
+      ? 'rgba(244, 132, 114, 0.6)'
+      : 'rgba(205, 238, 106, 0.6)'
+
+  const fillDeep = voice === 'quiet'
+    ? 'rgba(120, 158, 240, 0.95)'
+    : voice === 'human'
+      ? 'rgba(216, 80, 64, 0.95)'
+      : 'rgba(168, 214, 50, 0.95)'
+
   return (
-    <svg className={`answer__seal answer__seal--${voice}`} viewBox="0 0 100 100" aria-hidden="true" style={style}>
-      <defs>
-        <radialGradient id={`seal-glow-${voice}`} cx="50%" cy="40%" r="60%">
-          <stop offset="0%" stopColor="currentColor" stopOpacity="0.18" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <circle cx="50" cy="50" r="48" fill={`url(#seal-glow-${voice})`} />
-      <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth="1.1" />
-      <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2.5" opacity=".65" />
-      <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".35" />
-      <circle cx="50" cy="50" r="28" fill="none" stroke="currentColor" strokeWidth=".25" opacity=".2" />
-      <text x="50" y="20" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="currentColor">
-        {l.top}
-      </text>
-      <text
-        x="50"
-        y="60"
-        textAnchor="middle"
-        fontFamily="Georgia, serif"
-        fontStyle={isBold ? 'normal' : 'italic'}
-        fontSize={isBold ? 28 : 32}
-        fontWeight={isBold ? 800 : 500}
-        fill="currentColor"
-      >
-        {glyph}
-      </text>
-      <text x="50" y="86" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="currentColor">
-        {l.bottom}
-      </text>
-      <circle cx="50" cy="6" r="1.4" fill="currentColor" />
-      <circle cx="50" cy="94" r="1.4" fill="currentColor" />
-      <circle cx="6" cy="50" r="1.4" fill="currentColor" />
-      <circle cx="94" cy="50" r="1.4" fill="currentColor" />
-      <path d="M50 14 Q56 22 50 50 Q44 78 50 86" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".25" />
-      <path d="M50 14 Q44 22 50 50 Q56 78 50 86" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".25" />
-    </svg>
+    <div className={`answer__seal-wrap answer__seal-wrap--${voice} ${broken ? 'is-broken' : ''}`} aria-hidden="true">
+      <span className="answer__seal-shadow" />
+      <svg className="answer__seal-shadow-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <ellipse cx="50" cy="86" rx="34" ry="5" fill="currentColor" opacity=".25" />
+      </svg>
+
+      <svg className="answer__seal answer__seal--whole" viewBox="0 0 100 100" style={style}>
+        <defs>
+          <radialGradient id={`seal-fill-${voice}`} cx="42%" cy="38%" r="62%">
+            <stop offset="0%" stopColor={fillTone} />
+            <stop offset="60%" stopColor={fillDeep} />
+            <stop offset="100%" stopColor="rgba(8, 10, 18, 0.85)" />
+          </radialGradient>
+          <radialGradient id={`seal-glow-${voice}`} cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stopColor="currentColor" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="48" fill={`url(#seal-glow-${voice})`} />
+        <circle cx="50" cy="50" r="46" fill={`url(#seal-fill-${voice})`} stroke="currentColor" strokeWidth="1.2" strokeOpacity=".75" />
+        <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2.5" opacity=".55" />
+        <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255, 255, 255, 0.4)" strokeWidth=".3" />
+        <circle cx="50" cy="50" r="28" fill="none" stroke="rgba(255, 255, 255, 0.18)" strokeWidth=".25" />
+        <text x="50" y="20" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="rgba(8, 10, 18, 0.85)" opacity=".95">
+          {l.top}
+        </text>
+        <text
+          x="50"
+          y="60"
+          textAnchor="middle"
+          fontFamily="Georgia, serif"
+          fontStyle={isBold ? 'normal' : 'italic'}
+          fontSize={isBold ? 28 : 32}
+          fontWeight={isBold ? 800 : 500}
+          fill="rgba(8, 10, 18, 0.92)"
+        >
+          {glyph}
+        </text>
+        <text x="50" y="86" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="rgba(8, 10, 18, 0.85)" opacity=".95">
+          {l.bottom}
+        </text>
+        <circle cx="50" cy="6" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
+        <circle cx="50" cy="94" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
+        <circle cx="6" cy="50" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
+        <circle cx="94" cy="50" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
+        <path d="M28 22 Q36 28 32 36 Q26 46 32 56 Q40 66 36 78" fill="none" stroke="rgba(8, 10, 18, 0.18)" strokeWidth=".55" />
+        <path d="M72 22 Q64 28 68 36 Q74 46 68 56 Q60 66 64 78" fill="none" stroke="rgba(8, 10, 18, 0.18)" strokeWidth=".55" />
+        <path d="M20 50 Q34 38 50 50 T80 50" fill="none" stroke="rgba(255, 255, 255, 0.32)" strokeWidth=".55" />
+      </svg>
+
+      <svg className="answer__seal answer__seal--cracked" viewBox="0 0 100 100" style={style}>
+        <g className="answer__seal-piece answer__seal-piece--top">
+          <defs>
+            <radialGradient id={`seal-fill-top-${voice}`} cx="50%" cy="20%" r="80%">
+              <stop offset="0%" stopColor={fillTone} />
+              <stop offset="100%" stopColor={fillDeep} />
+            </radialGradient>
+          </defs>
+          <path
+            d="M50 50 L50 4 A46 46 0 0 1 89.84 73 Z"
+            fill={`url(#seal-fill-top-${voice})`}
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeOpacity=".6"
+            strokeLinejoin="round"
+          />
+          <path d="M50 50 L50 4" fill="none" stroke="rgba(8, 10, 18, 0.45)" strokeWidth=".7" strokeDasharray="1 1.5" />
+        </g>
+        <g className="answer__seal-piece answer__seal-piece--right">
+          <defs>
+            <radialGradient id={`seal-fill-right-${voice}`} cx="65%" cy="55%" r="80%">
+              <stop offset="0%" stopColor={fillTone} />
+              <stop offset="100%" stopColor={fillDeep} />
+            </radialGradient>
+          </defs>
+          <path
+            d="M50 50 L89.84 73 A46 46 0 0 1 10.16 73 Z"
+            fill={`url(#seal-fill-right-${voice})`}
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeOpacity=".6"
+            strokeLinejoin="round"
+          />
+          <path d="M50 50 L89.84 73" fill="none" stroke="rgba(8, 10, 18, 0.45)" strokeWidth=".7" strokeDasharray="1 1.5" />
+        </g>
+        <g className="answer__seal-piece answer__seal-piece--left">
+          <defs>
+            <radialGradient id={`seal-fill-left-${voice}`} cx="35%" cy="55%" r="80%">
+              <stop offset="0%" stopColor={fillTone} />
+              <stop offset="100%" stopColor={fillDeep} />
+            </radialGradient>
+          </defs>
+          <path
+            d="M50 50 L10.16 73 A46 46 0 0 1 50 4 Z"
+            fill={`url(#seal-fill-left-${voice})`}
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeOpacity=".6"
+            strokeLinejoin="round"
+          />
+          <path d="M50 50 L10.16 73" fill="none" stroke="rgba(8, 10, 18, 0.45)" strokeWidth=".7" strokeDasharray="1 1.5" />
+        </g>
+      </svg>
+
+      <span className="answer__seal-cracks" aria-hidden="true">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M48 4 L52 24 L46 40 L54 56 L48 72 L52 92" fill="none" stroke="rgba(8, 10, 18, 0.55)" strokeWidth=".7" strokeLinecap="round" />
+        </svg>
+      </span>
+    </div>
   )
 }

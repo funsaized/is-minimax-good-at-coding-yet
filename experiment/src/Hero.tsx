@@ -127,7 +127,7 @@ export function Hero({
             <span className="hero__eyebrow-glyph" aria-hidden="true">¶</span>
             <span>folio i</span>
             <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
-            <span className="hero__eyebrow-em">the question, set in the chase</span>
+            <span className="hero__eyebrow-em">the question, marked</span>
           </span>
           <span className="hero__set">
             <em>set on</em>
@@ -234,6 +234,7 @@ export function Hero({
           <span className="hero__sub-rule" />
           <em>{spec.gloss}</em>
           <span className="hero__sub-mark" aria-hidden="true">⌇</span>
+          <span className="hero__sub-tail" aria-hidden="true">a question, set three ways · one line · one chase</span>
         </span>
 
         <span className="hero__quoin" aria-hidden="true">
@@ -260,6 +261,12 @@ export function Hero({
               STET
             </text>
           </svg>
+          <span className="hero__quoin-stamp-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 3 L21 12 L12 21 L3 12 Z" fill="currentColor" opacity=".18" />
+              <path d="M12 3 L21 12 L12 21 L3 12 Z" fill="none" stroke="currentColor" strokeWidth=".6" />
+            </svg>
+          </span>
         </span>
 
         <span className="hero__type-high" aria-hidden="true">
@@ -269,6 +276,30 @@ export function Hero({
             <line x1="2" y1="40" x2="6" y2="40" stroke="currentColor" strokeWidth=".5" />
             <line x1="2" y1="60" x2="5" y2="60" stroke="currentColor" strokeWidth=".5" />
             <text x="9" y="42" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="2.6" letterSpacing=".8" fill="currentColor" opacity=".7">23.875</text>
+          </svg>
+        </span>
+
+        <span className="hero__tide" aria-hidden="true">
+          <svg viewBox="0 0 600 40" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id={`tide-${baseId}`} x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
+                <stop offset="50%" stopColor="currentColor" stopOpacity="1" />
+                <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <line x1="0" y1="20" x2="600" y2="20" stroke={`url(#tide-${baseId})`} strokeWidth="0.5" strokeDasharray="0.8 3.4" opacity=".5" />
+            <circle cx="300" cy="20" r="1.4" fill="currentColor" opacity=".55" />
+            <circle cx="120" cy="20" r=".9" fill="currentColor" opacity=".35" />
+            <circle cx="480" cy="20" r=".9" fill="currentColor" opacity=".35" />
+          </svg>
+        </span>
+
+        <span className="hero__tide-mark" aria-hidden="true">
+          <svg viewBox="0 0 80 14" preserveAspectRatio="none">
+            <text x="40" y="9" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="6" letterSpacing="2.6" fill="currentColor" opacity=".55">
+              TIDE · AFTER MIDNIGHT
+            </text>
           </svg>
         </span>
       </ChaseFrame>

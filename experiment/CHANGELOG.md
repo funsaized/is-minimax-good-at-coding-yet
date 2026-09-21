@@ -1,34 +1,39 @@
 # Changelog
 
-## iteration 372 — the question, set in the chase.
+The press, after midnight — the title grows monumental, a wax seal cracks open, the press bed pulls heavier.
 
-The hero title now lives inside a printer's chase with corner registration
-marks, a type-high ruler, and a STET quoin stamp. The three voices move from
-a stacked radio list to a baseline-aligned specimen column on a 32 px
-writing-rule. The press lever has more weight on the pull and the impression
-gets a brief ink-stamp flash when it lands. The answer leaf lifts forward
-in 3D and casts a deeper shadow as it unfolds. Every section wears a quiet
-corner registration bar.
+## Iteration 373
 
-### What changed
+Made the page feel like a real printer's workshop after the day is done. The title gains weight and presence in the chase, a tide mark drifts across the bottom, and the answer arrives behind a wax seal that cracks open.
 
-- **new** `src/ChaseFrame.tsx` — a reusable printer's chase frame with corner
-  registration marks, dashed inner rule, bed grain, and side ticks
-- **hero** wrapped the title in the chase frame; removed the floating
-  question-mark graphic and added a STET quoin stamp at the chase's
-  bottom-right and a 23.875 type-high ruler along its left edge
-- **voice specimen** replaced the old radio list with a baseline-aligned
-  specimen column (`.voice-column`) with three rows on a 32 px writing-rule
-- **press** the lever has a heavier pull (deeper drop, sharper knob tilt) and
-  the bed gets a brief `pressBedThunk`; the impression sheet runs an
-  `impressionStamp` flash so the ink arrives with the paper
-- **answer** the leaf now unfolds with a forward `rotateX` lift and a deeper
-  shadow; the crease shows an ink-bleed bloom as the paper opens
-- **sections** every `.reveal` section now wears a small L-shaped
-  registration mark at its top-left and bottom-right corners; the colophon
-  frame picks up matching corner ticks
-- **style** refined the hero eyebrow, topbar typography, and footer rhythm;
-  added a small `voice-column__cycle` keyboard hint under the specimen
-- **a11y** all new motion is gated behind `prefers-reduced-motion`; the chase
-  frame, quoin, type-high ruler, voice column, press impression, and answer
-  leaf all fall back to their resting state when reduced motion is preferred
+### Hero
+- Title grew more monumental: `clamp(54px, 11vw, 178px)` with balanced line wrapping.
+- The question mark now scales to 2.4× (from 2×) when the `yet` token is marked, with a longer spring.
+- A `tide` mark — a quiet ink-pool line with three beads — drifts in across the bottom of the chase at 2.6s, with a small `TIDE · AFTER MIDNIGHT` caption above it.
+- A second small quoin-stamp mark appears at the upper-right corner of the main quoin (rotated -6°), arriving with its own spring at 1.5s.
+- The chase frame now sits in a soft glow shadow tinted by the active voice, with an inner top highlight for depth.
+- The sub-line now carries a small uppercase tail: `a question, set three ways · one line · one chase`.
+
+### Press
+- The lever pulls further and faster: shaft drops 64px (was 48px) at 12° (was 10°).
+- The impression gets a dashed hairline + center pip below the top stamp, marking the kiss point.
+- The bottom color bar is kept but the rest of the cell stays calm.
+
+### Answer
+- The seal is now a true wax seal with a tinted wax fill (light → deep gradient) and a soft drop shadow.
+- When the leaf opens, the wax seal *cracks* into three pieces (top, left, right wedges of the circle) that drift outward with staggered springs; a thin crack line appears down the middle; the shadow widens.
+- When the leaf folds back, the seal returns whole.
+
+### Marginalia
+- The slips lift higher and cast a longer shadow when active (-12px lift, was -8px).
+- The slip's resting shadow grows deeper at rest, so the active state reads as a real lift.
+
+### Colophon
+- The colophon seal gets the same wax treatment as the answer seal, so the page signs off with the same vocabulary.
+
+### Reduced motion
+- New wax-seal pieces and quoin-stamp mark honor `prefers-reduced-motion: reduce`.
+- Tide mark and stamp mark animations are disabled in reduced-motion mode.
+
+### Build
+- `npm run build` passes. CSS bundle 96 KB (gzip 16.5 KB), JS bundle 257 KB (gzip 75 KB).
