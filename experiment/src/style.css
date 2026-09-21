@@ -63334,3 +63334,776 @@ a small act of typesetting.
   .rn__word-mark { min-width: 32px; height: 26px; font-size: 9px; }
   .rn__lead-title { font-size: 16px; }
 }
+
+/* ────────────────────────────────────────────────────────────
+   iteration 334 · THE COLOPHON AS A HAND-PRESSED DEDICATION
+   The closing plate (ClosingPlate), the sign-off FolioImprint
+   plinth, and the small seal header of the colophon are absorbed
+   into one composed dedication. The plate earns its place as the
+   page's final impression: a slim folio strip at the top, a
+   large central wax seal flanked by a hand-pressed italic
+   dedication, three quiet meta rows (voice, mark, date), the
+   kept-mark signature underneath, and a single back-to-question
+   link. PageReturn remains as the gentle gesture after the
+   dedication — "the page rests".
+   ──────────────────────────────────────────────────────────── */
+
+.colophon.is-signed {
+  --colophon-tone: var(--coral);
+}
+.app--voice-quiet .colophon.is-signed { --colophon-tone: var(--blue); }
+.app--voice-human .colophon.is-signed { --colophon-tone: var(--coral); }
+.app--voice-bold .colophon.is-signed { --colophon-tone: var(--acid); }
+
+.colophon {
+  position: relative;
+  padding: clamp(70px, 9vw, 130px) 0 clamp(40px, 5vw, 70px);
+  margin-top: clamp(80px, 10vw, 140px);
+  border-top: 1px solid var(--line-soft);
+  isolation: isolate;
+}
+
+.colophon::before {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 4px 14px;
+  border: 1px solid var(--line);
+  background: var(--night);
+  color: var(--coral);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  content: 'colophon';
+  z-index: 2;
+}
+
+.app--voice-quiet .colophon::before { color: var(--blue); }
+.app--voice-human .colophon::before { color: var(--coral); }
+.app--voice-bold .colophon::before { color: var(--acid); }
+
+.colophon__plate {
+  position: relative;
+  display: grid;
+  row-gap: clamp(22px, 3vw, 38px);
+  padding: clamp(28px, 4vw, 56px) clamp(24px, 4vw, 56px) clamp(26px, 3.6vw, 44px);
+  border: 1px solid color-mix(in srgb, var(--colophon-tone, var(--coral)) 22%, transparent);
+  background:
+    radial-gradient(ellipse 70% 38% at 50% 0%, color-mix(in srgb, var(--colophon-tone, var(--coral)) 10%, transparent), transparent 64%),
+    radial-gradient(ellipse 60% 30% at 50% 100%, color-mix(in srgb, var(--colophon-tone, var(--coral)) 6%, transparent), transparent 68%),
+    linear-gradient(180deg, rgba(28, 36, 52, .42), rgba(14, 20, 32, .58));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--colophon-tone, var(--coral)) 6%, transparent),
+    inset 0 1px 0 rgba(243, 236, 214, .04),
+    0 30px 80px -40px rgba(0, 0, 0, .55);
+}
+
+.colophon__plate::before {
+  position: absolute;
+  inset: 7px;
+  border: 1px dashed color-mix(in srgb, var(--colophon-tone, var(--coral)) 14%, transparent);
+  pointer-events: none;
+  content: '';
+  z-index: 0;
+}
+
+/* corner crops — printer's registration marks */
+.colophon__corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  color: var(--colophon-tone, var(--coral));
+  pointer-events: none;
+  z-index: 1;
+  opacity: .85;
+  transition: opacity .4s var(--ease), color .4s var(--ease);
+}
+
+.colophon__corner::before,
+.colophon__corner::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+}
+
+.colophon__corner::before { width: 11px; height: 1px; }
+.colophon__corner::after { width: 1px; height: 11px; }
+
+.colophon__corner--tl { top: 12px; left: 12px; }
+.colophon__corner--tl::before { top: 0; left: 0; }
+.colophon__corner--tl::after { top: 0; left: 0; }
+
+.colophon__corner--tr { top: 12px; right: 12px; }
+.colophon__corner--tr::before { top: 0; right: 0; }
+.colophon__corner--tr::after { top: 0; right: 0; }
+
+.colophon__corner--bl { bottom: 12px; left: 12px; }
+.colophon__corner--bl::before { bottom: 0; left: 0; }
+.colophon__corner--bl::after { bottom: 0; left: 0; }
+
+.colophon__corner--br { bottom: 12px; right: 12px; }
+.colophon__corner--br::before { bottom: 0; right: 0; }
+.colophon__corner--br::after { bottom: 0; right: 0; }
+
+@media (max-width: 720px) {
+  .colophon__corner { width: 12px; height: 12px; }
+  .colophon__corner::before { width: 8px; }
+  .colophon__corner::after { height: 8px; }
+}
+
+/* header strip — folio + rule + tag */
+.colophon__strip {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: clamp(12px, 1.6vw, 22px);
+  row-gap: 4px;
+  padding-bottom: clamp(14px, 1.6vw, 22px);
+  border-bottom: 1px solid color-mix(in srgb, var(--colophon-tone, var(--coral)) 18%, transparent);
+  z-index: 1;
+}
+
+.colophon__strip-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  color: var(--colophon-tone, var(--coral));
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .78vw, 10.5px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+
+.colophon__strip-tag em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13px, 1.1vw, 15.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.colophon__strip-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .7;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--colophon-tone, var(--coral)) 14%, transparent);
+}
+
+.colophon__strip-rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--colophon-tone, var(--coral)) 40%, transparent),
+    color-mix(in srgb, var(--colophon-tone, var(--coral)) 10%, transparent)
+  );
+  min-width: clamp(48px, 8vw, 120px);
+}
+
+.colophon__strip-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .7vw, 10px);
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .colophon__strip {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 8px;
+  }
+  .colophon__strip-rule { display: none; }
+  .colophon__strip-meta { justify-self: start; }
+}
+
+/* central scene — seal + dedication */
+.colophon__center {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(28px, 4.4vw, 64px);
+  row-gap: clamp(16px, 2vw, 28px);
+  padding: clamp(20px, 3vw, 36px) clamp(8px, 1.2vw, 22px);
+  z-index: 1;
+}
+
+@media (max-width: 720px) {
+  .colophon__center {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+.colophon__seal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(112px, 13vw, 200px);
+  height: clamp(112px, 13vw, 200px);
+  color: var(--colophon-tone, var(--coral));
+  transform: rotate(-4deg);
+  transition: transform .6s var(--ease-spring), color .4s var(--ease);
+  z-index: 1;
+}
+
+.colophon__seal-halo {
+  position: absolute;
+  inset: clamp(-18px, -1.6vw, -12px);
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--colophon-tone, var(--coral)) 28%, transparent), transparent 64%);
+  opacity: .65;
+  pointer-events: none;
+  animation: colophonSealHalo 4.2s var(--ease-soft) infinite;
+}
+
+@keyframes colophonSealHalo {
+  0%, 100% { transform: scale(1); opacity: .55; }
+  50% { transform: scale(1.06); opacity: .8; }
+}
+
+.colophon__seal-disc {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 3px 0 color-mix(in srgb, var(--colophon-tone, var(--coral)) 18%, transparent));
+}
+
+.colophon__seal-disc svg,
+.colophon__seal-disc > * {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.colophon__seal:hover,
+.colophon__seal:focus-visible {
+  transform: rotate(-2deg) scale(1.02);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .colophon__seal-halo { animation: none !important; }
+}
+
+.colophon__seal-wax {
+  position: absolute;
+  bottom: clamp(-12px, -.8vw, -6px);
+  left: clamp(-10px, -.8vw, -4px);
+  width: 22px;
+  height: 28px;
+  pointer-events: none;
+  color: var(--colophon-tone, var(--coral));
+  opacity: 0;
+  animation: colophonSealWaxIn .9s var(--ease-spring) .4s forwards;
+}
+
+.colophon__seal-wax-bead {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 9px;
+  height: 12px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: currentColor;
+  transform: translate(-50%, 0) scale(.6);
+  transform-origin: 50% 0;
+  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, .25));
+}
+
+.colophon__seal-wax-wisp {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 18px;
+  background: linear-gradient(180deg, transparent, currentColor 65%);
+  transform: translateX(-50%) scaleY(.4);
+  transform-origin: 50% 0;
+  opacity: .55;
+}
+
+@keyframes colophonSealWaxIn {
+  0% { opacity: 0; transform: translateY(-10px); }
+  50% { opacity: 1; transform: translateY(2px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .colophon__seal-wax,
+  .colophon__seal-wax-bead,
+  .colophon__seal-wax-wisp {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* dedication — hand-pressed for {reader} */
+.colophon__dedication {
+  display: grid;
+  row-gap: clamp(6px, .8vw, 12px);
+  min-width: 0;
+  max-width: 36ch;
+  justify-self: start;
+  text-align: left;
+}
+
+@media (max-width: 720px) {
+  .colophon__dedication {
+    justify-self: center;
+    text-align: center;
+    max-width: 32ch;
+  }
+}
+
+.colophon__dedication-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1vw, 12px);
+  color: var(--colophon-tone, var(--coral));
+  font-family: var(--mono);
+  font-size: clamp(9px, .78vw, 10.5px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: colophonDedicationIn .8s var(--ease-out) .15s forwards;
+}
+
+.colophon__dedication-pilcrow {
+  display: inline-block;
+  font-family: var(--serif);
+  font-style: normal;
+  font-size: 1.05em;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: .65;
+  transform: translateY(-1px);
+}
+
+.colophon__dedication-pilcrow--alt { transform: translateY(-1px) scaleX(-1); }
+
+.colophon__dedication-name {
+  display: block;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(32px, 4vw, 52px);
+  letter-spacing: -.018em;
+  line-height: 1.05;
+  word-break: break-word;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: colophonDedicationNameIn .9s var(--ease-out) .3s forwards;
+}
+
+.colophon.is-signed .colophon__dedication-name {
+  color: var(--paper);
+  text-shadow: 0 0 .45em color-mix(in srgb, var(--colophon-tone, var(--coral)) 22%, transparent);
+}
+
+@keyframes colophonDedicationIn {
+  to { opacity: .9; }
+}
+
+@keyframes colophonDedicationNameIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .colophon__dedication-eyebrow,
+  .colophon__dedication-name {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+.colophon__dedication-line {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: 12px;
+  color: var(--colophon-tone, var(--coral));
+  opacity: 0;
+  animation: colophonDedicationLineIn .9s var(--ease-out) .55s forwards;
+}
+
+@keyframes colophonDedicationLineIn {
+  to { opacity: .85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .colophon__dedication-line { animation: none !important; opacity: .85 !important; }
+}
+
+.colophon__dedication-line svg { display: block; width: 100%; height: 100%; }
+
+.colophon__dedication-line-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: colophonDedicationStroke 1.2s var(--ease-out) .75s forwards;
+}
+
+@keyframes colophonDedicationStroke {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .colophon__dedication-line-stroke {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
+.colophon__dedication-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  color: var(--mist);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .72vw, 10px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: colophonDedicationTagIn .8s var(--ease-out) .95s forwards;
+}
+
+.colophon__dedication-tag em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--colophon-tone, var(--coral));
+}
+
+@keyframes colophonDedicationTagIn { to { opacity: .85; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .colophon__dedication-tag { animation: none !important; opacity: .85 !important; }
+}
+
+/* meta rows — composed in / marked at / set on */
+.colophon__meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: clamp(18px, 2.4vw, 38px);
+  row-gap: clamp(12px, 1.6vw, 20px);
+  padding: clamp(14px, 1.8vw, 22px) 0;
+  border-top: 1px solid color-mix(in srgb, var(--colophon-tone, var(--coral)) 16%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--colophon-tone, var(--coral)) 16%, transparent);
+  z-index: 1;
+}
+
+@media (max-width: 720px) {
+  .colophon__meta {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(10px, 1.4vw, 18px);
+  }
+}
+
+.colophon__row {
+  display: grid;
+  row-gap: 6px;
+  min-width: 0;
+  padding-right: clamp(8px, 1vw, 16px);
+  border-right: 1px dashed color-mix(in srgb, var(--colophon-tone, var(--coral)) 14%, transparent);
+}
+
+.colophon__meta .colophon__row:last-child { border-right: 0; padding-right: 0; }
+
+@media (max-width: 720px) {
+  .colophon__row {
+    border-right: 0;
+    border-bottom: 1px dashed color-mix(in srgb, var(--colophon-tone, var(--coral)) 14%, transparent);
+    padding-right: 0;
+    padding-bottom: clamp(10px, 1.4vw, 16px);
+  }
+  .colophon__meta .colophon__row:last-child { border-bottom: 0; padding-bottom: 0; }
+}
+
+.colophon__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--colophon-tone, var(--coral));
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .72vw, 10px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+
+.colophon__label::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .65;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--colophon-tone, var(--coral)) 14%, transparent);
+}
+
+.colophon__value {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: clamp(6px, .8vw, 12px);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.4vw, 19px);
+  letter-spacing: -.01em;
+  line-height: 1.15;
+}
+
+.colophon__value em {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.colophon__row-mark {
+  display: inline-grid;
+  place-items: center;
+  min-width: clamp(20px, 1.6vw, 24px);
+  height: clamp(16px, 1.4vw, 20px);
+  padding: 0 clamp(5px, .5vw, 8px);
+  border: 1px solid color-mix(in srgb, var(--colophon-tone, var(--coral)) 38%, transparent);
+  border-radius: 999px;
+  color: var(--colophon-tone, var(--coral));
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(8px, .65vw, 9.5px);
+  letter-spacing: .04em;
+  text-transform: lowercase;
+}
+
+.colophon__row-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, .9vw, 13px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  opacity: .8;
+}
+
+.colophon__voice-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  flex-wrap: wrap;
+}
+
+.colophon__voice-letter {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(24px, 2vw, 28px);
+  height: clamp(24px, 2vw, 28px);
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  color: var(--colophon-tone, var(--coral));
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 14.5px);
+  letter-spacing: -.01em;
+  background: color-mix(in srgb, var(--colophon-tone, var(--coral)) 10%, transparent);
+  flex: 0 0 auto;
+}
+
+.colophon__voice-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px clamp(5px, .5vw, 8px) 3px;
+  border: 1px solid color-mix(in srgb, var(--colophon-tone, var(--coral)) 32%, transparent);
+  border-radius: 1px;
+  color: var(--colophon-tone, var(--coral));
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(8px, .65vw, 9.5px);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  opacity: .85;
+}
+
+/* signature — kept-mark at larger size */
+.colophon__signature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(8px, 1vw, 14px) 0 0;
+  border-top: 1px dashed color-mix(in srgb, var(--colophon-tone, var(--coral)) 14%, transparent);
+  z-index: 1;
+}
+
+.colophon__signature .kept-mark {
+  --kept-tone: var(--colophon-tone, var(--coral));
+}
+
+.colophon__signature-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 56ch;
+  margin: clamp(20px, 2.4vw, 32px) auto 0;
+  color: var(--muted);
+  font-family: var(--serif);
+  font-size: 13px;
+  font-style: italic;
+  text-align: center;
+  line-height: 1.55;
+}
+
+.colophon__signature-note span[aria-hidden] {
+  color: var(--coral);
+  font-style: normal;
+  font-size: 16px;
+}
+
+.app--voice-quiet .colophon__signature-note span[aria-hidden] { color: var(--blue); }
+.app--voice-human .colophon__signature-note span[aria-hidden] { color: var(--coral); }
+.app--voice-bold .colophon__signature-note span[aria-hidden] { color: var(--acid); }
+
+/* foot — line + back link */
+.colophon__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-top: clamp(14px, 1.8vw, 22px);
+  z-index: 1;
+}
+
+.colophon__line {
+  margin: 0;
+  max-width: 50ch;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: clamp(14.5px, 1.4vw, 18px);
+  font-style: italic;
+  letter-spacing: -.014em;
+  line-height: 1.4;
+}
+
+.colophon__line i {
+  color: var(--mist);
+  font-style: italic;
+}
+
+.colophon__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 11px;
+  border: 1px solid color-mix(in srgb, var(--colophon-tone, var(--coral)) 38%, transparent);
+  color: var(--colophon-tone, var(--coral));
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--colophon-tone, var(--coral)) 6%, transparent);
+  transition:
+    color .3s var(--ease),
+    border-color .3s var(--ease),
+    background .3s var(--ease),
+    transform .35s var(--ease-spring);
+}
+
+.colophon__back .arrow-icon {
+  width: 16px;
+  height: 16px;
+  transform: rotate(90deg);
+  transition: transform .4s var(--ease-out);
+}
+
+.colophon__back:hover,
+.colophon__back:focus-visible {
+  color: var(--night);
+  background: var(--colophon-tone, var(--coral));
+  border-color: var(--colophon-tone, var(--coral));
+  transform: translateY(-1px);
+}
+
+.colophon__back:hover .arrow-icon,
+.colophon__back:focus-visible .arrow-icon {
+  transform: rotate(90deg) translateX(3px);
+}
+
+@media (max-width: 540px) {
+  .colophon__back {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 720px) {
+  .colophon__plate {
+    padding: clamp(20px, 5vw, 32px) clamp(16px, 4vw, 22px) clamp(20px, 4vw, 30px);
+  }
+  .colophon__dedication-name {
+    font-size: clamp(26px, 7vw, 38px);
+  }
+  .colophon__value {
+    font-size: clamp(14px, 4vw, 17px);
+  }
+  .colophon__voice-letter {
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+  }
+}
+
+/* suppress now-unused colophon chrome from earlier passes so
+   nothing leaks into the new composition */
+.colophon__head,
+.colophon__identity,
+.colophon__mark,
+.colophon__title,
+.colophon__press,
+.colophon__date,
+.colophon__date-rule,
+.colophon__date-tag,
+.colophon__date-dot,
+.colophon__crease,
+.colophon__crease--v,
+.colophon__flap,
+.colophon__impression,
+.colophon__impression-tag,
+.colophon__impression-tag-dot,
+.colophon__impression-line,
+.colophon__impression-head,
+.colophon__impression-mark-tag,
+.colophon__impression-meta,
+.colophon__impression-mark,
+.colophon__reader,
+.colophon__reader-name,
+.colophon__reader-rule,
+.colophon__reader-rule-stroke,
+.colophon__reader-rule-bead,
+.colophon__grid,
+.colophon__swatches,
+.colophon__swatch {
+  display: none;
+}

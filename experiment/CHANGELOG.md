@@ -1,17 +1,21 @@
-# Changelog
+Iteration 334 — closing tail absorbed into one hand-pressed dedication; footer plate and sign-off plinth removed.
 
-## Iteration 333 — One composed reader's note absorbs the editor's note, voice specimen, and imprint plate.
+The page's tail (closing plate, sign-off FolioImprint plinth, and the small
+seal-header on the colophon) absorbed into one composed dedication plate.
 
-The frontmatter sprawl beneath the title page collapsed into a single composed section. Three stacked pieces (editor's note + voice specimen + imprint plate) have been replaced by a single `ReadersNote` that holds the page's instruction, three marked words, three voices, and the editor's pull quote in one read.
-
-What changed:
-
-- Added `src/ReadersNote.tsx`, a single composed component that combines the editor's instruction, the three marked words as a marginalium, the three voices as a voice rule, the "attention, not ornament" pull quote, and a three-cell footer. It uses the same plate corner crops, eyebrow rule, and voice wax bead as the surrounding pieces, and shifts tone with the active voice (blue / coral / acid).
-- Removed the inline `<article className="folio-note">`, the `<aside className="folio-readings">` with its `SpecimenTray`, and the `<ImprintPlate>` component from `App.tsx`. The reader now meets the page's instruction in one artifact instead of three stacked panels.
-- The new component mirrors the title's marked-word state: hovering or focusing a word in the title broadside also lights the matching cell in the reader's note. The voice rule shares the same `shift + v` hint and roving focus as the broadside.
-- The body plate tag now reads `the reader's note · front matter` to match the new section.
-- Unused imports (`FolioThumbprint`, `SpecimenTray`, `ImprintPlate`) removed from `App.tsx`. The unused components remain in `src/` but are no longer wired into the page.
-- Added ~620 lines of CSS in `src/style.css` for the new component, including the eyebrow rule draw, the word rule draw on active/hover, the voice wax bead transition, the pull quote rule draw, and responsive breakpoints at 720px and 480px.
-- All motion is disabled under `prefers-reduced-motion: reduce`. Keyboard navigation works through both the words row (arrow keys / Home / End) and the voice row (arrow keys / Home / End).
-
-Build: `npm run build` completes cleanly (`tsc --noEmit && vite build`). Bundle: 513 KB JS / 1157 KB CSS.
+- Removed the closing footer plate, the redundant sign-off FolioImprint plinth
+  beneath the colophon, and their imports from App.tsx. The new Colophon now
+  carries the page's final impression: a slim folio strip at the top, a
+  large central wax seal flanked by a hand-pressed italic dedication
+  ("hand-pressed for {reader name, or the next reader}"), three quiet meta
+  rows (composed in · marked at · set on), the kept-mark signature underneath,
+  and a single back-to-question affordance.
+- PageReturn remains as the gentle "the page rests" gesture after the
+  dedication, with the closing plate removed from the bottom of the page.
+- The colophon composes from a new set of CSS classes; older chrome (head,
+  identity, swatches, impression rows) is suppressed so nothing leaks into
+  the new composition. The seal is voice-tinted via --colophon-tone, with a
+  wax drop and halo, and the dedication name fades and lifts in on reveal.
+- Honouring iteration 333's pattern: the frontmatter sprawl beneath the title
+  page collapsed into one read; the closing tail collapses into one
+  hand-pressed dedication.

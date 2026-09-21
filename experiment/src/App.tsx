@@ -31,11 +31,9 @@ import { PressLever } from './PressLever'
 import { FolioLedger } from './FolioLedger'
 import { ReadersNote } from './ReadersNote'
 import { TitleFolio } from './TitleFolio'
-import { ClosingPlate } from './ClosingPlate'
 import { ReadingPrologue } from './ReadingPrologue'
 import { LetterpressCatch } from './LetterpressCatch'
 import { Opening } from './Opening'
-import { FolioImprint } from './FolioImprint'
 import { TitleCoda } from './TitleCoda'
 import { AnswerCoda } from './AnswerCoda'
 import { ReadingPause } from './ReadingPause'
@@ -364,109 +362,106 @@ function Colophon({ voice, word, setToday, readerName }: { voice: VoiceId; word:
   const signedLine = signedReader
     ? `impressed for ${signedReader}`
     : 'impressed for the next reader'
+
   return (
-    <footer className={`colophon ${signedReader ? 'is-signed' : ''}`} aria-label="Colophon">
+    <footer className={`colophon ${signedReader ? 'is-signed' : ''}`} aria-label="Colophon — hand-pressed dedication">
       <div className="colophon__plate">
-        <span className="colophon__date" aria-hidden="true">
-          <span className="colophon__date-rule" />
-          <span className="colophon__date-tag">
-            <span className="colophon__date-dot" />
-            set today · {setToday}
+        <span className="colophon__corner colophon__corner--tl" aria-hidden="true" />
+        <span className="colophon__corner colophon__corner--tr" aria-hidden="true" />
+        <span className="colophon__corner colophon__corner--bl" aria-hidden="true" />
+        <span className="colophon__corner colophon__corner--br" aria-hidden="true" />
+
+        <header className="colophon__strip" aria-hidden="true">
+          <span className="colophon__strip-tag">
+            <span className="colophon__strip-dot" />
+            <em>folio viii</em>
+            <span aria-hidden="true">·</span>
+            the colophon closes
+            <span className="colophon__strip-dot" />
           </span>
-          <span className="colophon__date-rule" />
-        </span>
-        <span className="colophon__crease" aria-hidden="true" />
-        <span className="colophon__crease colophon__crease--v" aria-hidden="true" />
-        <span className="colophon__flap" aria-hidden="true">
-          <svg viewBox="0 0 100 60" preserveAspectRatio="none">
-            <path d="M2 2L50 38L98 2" fill="none" stroke="currentColor" strokeWidth=".7" strokeDasharray="2 2.4" opacity=".55" />
-            <circle cx="50" cy="38" r="1.6" fill="currentColor" opacity=".65" />
-          </svg>
-        </span>
-        <div className="colophon__head">
-          <div className="colophon__identity">
-            <span className="colophon__mark">
-              <LogoMark size={34} accent="var(--coral)" />
+          <span className="colophon__strip-rule" />
+          <span className="colophon__strip-meta">
+            m<sup>3</sup> press <span aria-hidden="true">·</span> imprint of this impression
+          </span>
+        </header>
+
+        <div className="colophon__center">
+          <span className="colophon__seal" aria-hidden="true">
+            <span className="colophon__seal-halo" />
+            <span className="colophon__seal-disc">
+              <PressStamp voice={voice} size={188} />
             </span>
-            <div className="colophon__title">
-              <span className="colophon__press">m³ press</span>
-              <em>a single-page editorial experiment</em>
-            </div>
-          </div>
-          <div className="colophon__seal" aria-hidden="true">
-            <PressStamp voice={voice} size={68} />
-            <span className="colophon__seal-wax" aria-hidden="true">
+            <span className="colophon__seal-wax">
               <span className="colophon__seal-wax-bead" />
               <span className="colophon__seal-wax-wisp" />
             </span>
-          </div>
-        </div>
-        <div className="colophon__grid">
-          <div className="colophon__row">
-            <span className="colophon__label">composed</span>
-            <span className="colophon__value">by hand, folded once</span>
-          </div>
-          <div className="colophon__row">
-            <span className="colophon__label">voice</span>
-            <span className="colophon__value">{tag}</span>
-          </div>
-          <div className="colophon__row">
-            <span className="colophon__label">impressed for</span>
-            <span className={`colophon__value colophon__reader ${signedReader ? 'is-set' : ''}`}>
-              <em className="colophon__reader-name">{signedReader || 'the next reader'}</em>
-              <span className="colophon__reader-rule" aria-hidden="true">
-                <svg viewBox="0 0 120 8" preserveAspectRatio="none">
-                  <path
-                    d="M2 4c12-4 26 4 42-1s28-5 42-1 24 6 32-1"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth=".8"
-                    strokeLinecap="round"
-                    className="colophon__reader-rule-stroke"
-                  />
-                  <circle className="colophon__reader-rule-bead" cx="118" cy="4" r="1" fill="currentColor" />
-                </svg>
-              </span>
+          </span>
+
+          <div className="colophon__dedication">
+            <span className="colophon__dedication-eyebrow">
+              <span className="colophon__dedication-pilcrow" aria-hidden="true">¶</span>
+              hand-pressed for
+              <span className="colophon__dedication-pilcrow colophon__dedication-pilcrow--alt" aria-hidden="true">¶</span>
             </span>
-          </div>
-          <div className="colophon__row">
-            <span className="colophon__label">palette</span>
-            <span className="colophon__swatches" aria-hidden="true">
-              <span className="colophon__swatch" style={{ background: 'var(--acid)' }} title="acid" />
-              <span className="colophon__swatch" style={{ background: 'var(--coral)' }} title="coral" />
-              <span className="colophon__swatch" style={{ background: 'var(--blue)' }} title="blue" />
-              <span className="colophon__swatch" style={{ background: 'var(--paper)' }} title="paper" />
+            <em className="colophon__dedication-name">{signedReader || 'the next reader'}</em>
+            <span className="colophon__dedication-line" aria-hidden="true">
+              <svg viewBox="0 0 360 14" preserveAspectRatio="none">
+                <path
+                  d="M2 7c24-6 48 6 72-2s48-7 72-1 48 5 72-2 48-7 72-1 48 5 50-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth=".85"
+                  strokeLinecap="round"
+                  pathLength="100"
+                  className="colophon__dedication-line-stroke"
+                />
+                <circle cx="356" cy="6" r="1.4" fill="currentColor" />
+              </svg>
+            </span>
+            <span className="colophon__dedication-tag">
+              <em>a single line · three readings · one breath</em>
             </span>
           </div>
         </div>
+
+        <div className="colophon__meta">
+          <div className="colophon__row">
+            <span className="colophon__label">composed in</span>
+            <span className="colophon__value colophon__voice-cell">
+              <span className={`colophon__voice-letter colophon__voice-letter--${voice}`}>{VOICE_LETTER[voice]}</span>
+              <em>{voiceName}</em>
+              <span className="colophon__voice-tag">{tag}</span>
+            </span>
+          </div>
+          <div className="colophon__row">
+            <span className="colophon__label">marked at</span>
+            <span className="colophon__value">
+              <em>{label}</em>
+              <span className="colophon__row-mark">{mark}</span>
+            </span>
+          </div>
+          <div className="colophon__row">
+            <span className="colophon__label">set on</span>
+            <span className="colophon__value">
+              <em>{setToday}</em>
+              <span className="colophon__row-sub">folio viii · the colophon</span>
+            </span>
+          </div>
+        </div>
+
+        <div className="colophon__signature" aria-hidden="true">
+          <KeptMark voice={voice} variant="colophon" size={144} caption={`composed by m³ · ${signedLine} · ${setToday}`} />
+        </div>
+
         <div className="colophon__foot">
           <p className="colophon__line">the question remains useful <i>because the answer can change</i></p>
-          <a className="colophon__back" href="#question">back to the question <ArrowIcon /></a>
-        </div>
-        <div className="colophon__impression">
-          <span className="colophon__impression-tag">
-            <span className="colophon__impression-tag-dot" aria-hidden="true" />
-            this impression
-          </span>
-          <span className="colophon__impression-line">
-            <span className="colophon__impression-head">
-              pulled in <em>{voiceName}</em> · the active mark is <em>{label}</em> <span className="colophon__impression-mark-tag" aria-hidden="true">({mark})</span> · <em>{signedLine}</em>
-            </span>
-            <span className="colophon__impression-meta">
-              folio viii <span aria-hidden="true">·</span> press <em>·</em> m³ bay <span aria-hidden="true">·</span> shift + v to cycle
-            </span>
-          </span>
-          <span className="colophon__impression-mark" aria-hidden="true">
-            <svg viewBox="0 0 56 18">
-              <path d="M2 11c6-8 14 4 22-3s8-6 14-1 12 4 16-1" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-              <circle cx="54" cy="9" r="1.6" fill="currentColor" />
-            </svg>
-          </span>
-        </div>
-        <div className="colophon__signature" aria-hidden="true">
-          <KeptMark voice={voice} variant="colophon" size={120} caption={`composed by m³ · ${signedLine} · ${setToday}`} />
+          <a className="colophon__back" href="#question" aria-label="Back to the question">
+            back to the question
+            <ArrowIcon />
+          </a>
         </div>
       </div>
+
       <p className="colophon__signature-note">
         <span aria-hidden="true">※</span>
         a quiet piece of an ongoing conversation about what good front-end work actually is.
@@ -820,23 +815,10 @@ export function App() {
         <PressSignature folio="viii" voice={voice} word={activeWord} setToday={setToday} variant="footer" />
 
         <Colophon voice={voice} word={activeWord} setToday={setToday} readerName={readerName} />
-
-        <div className="sign-off-plinth">
-          <FolioImprint voice={voice} variant="sign-off" number="№ viii · 1/1" />
-        </div>
       </div>
 
       <MarginNotes activeId={activeSection} voice={voice} />
 
-      <ClosingPlate
-        voice={voice}
-        word={activeWord}
-        readerName={readerName}
-        marks={marks}
-        setToday={setToday}
-        activeFolioIndex={READING_SECTIONS.find(item => item.id === activeSection)?.index ?? 'viii'}
-        activeFolioLabel={READING_SECTIONS.find(item => item.id === activeSection)?.label ?? 'the answer'}
-      />
       <PageReturn voice={voice} setToday={setToday} />
       <span className="sr-only" aria-live="polite">{announcement}</span>
     </main>
