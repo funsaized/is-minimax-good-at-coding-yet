@@ -1,0 +1,19 @@
+{
+  "id": 373,
+  "parentId": 372,
+  "createdAt": "2026-09-21T23:55:01.802Z",
+  "summary": "The press, after midnight — the title grows monumental, a wax seal cracks open, the press bed pulls heavier.",
+  "path": "/iterations/000373/index.html",
+  "screenshot": "/iterations/000373/desktop.png",
+  "mobileScreenshot": "/iterations/000373/mobile.png",
+  "sourceCommit": "8fb52be4d7007b05c2dc55096061bb83cd7ac5b0",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 232,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 118997,
+    "outputTokens": 45030,
+    "steps": 101
+  }
+}
