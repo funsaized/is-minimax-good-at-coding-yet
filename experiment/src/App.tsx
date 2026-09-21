@@ -45,6 +45,7 @@ import { TitleCoda } from './TitleCoda'
 import { AnswerCoda } from './AnswerCoda'
 import { ReadingPause } from './ReadingPause'
 import { PageReturn } from './PageReturn'
+import { ReadingHinge } from './ReadingHinge'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -712,6 +713,8 @@ export function App() {
                 tokenRefs={tokenRefs}
               />
             </div>
+
+            <ReadingHinge voice={voice} setToday={setToday} />
 
             <ReadingPrologue
               voice={voice}
