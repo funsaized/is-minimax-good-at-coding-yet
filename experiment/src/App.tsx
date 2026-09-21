@@ -44,6 +44,7 @@ import { DayMargin } from './DayMargin'
 import { FolioSpecimen } from './FolioSpecimen'
 import { PressTitleCut } from './PressTitleCut'
 import { PressProofSlip } from './PressProofSlip'
+import { ComposingBed } from './ComposingBed'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -685,6 +686,8 @@ export function App() {
         <PressTitleCut voice={voice} setToday={setToday} />
 
         <FolioImprint voice={voice} setToday={setToday} />
+
+        <ComposingBed voice={voice} />
 
         <Opening voice={voice} setToday={setToday}>
           <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
