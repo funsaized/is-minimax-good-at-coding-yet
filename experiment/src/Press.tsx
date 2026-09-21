@@ -152,6 +152,11 @@ export function Press({ voice, word, onVoice, setToday }: PressProps) {
                 <span className="press-impression__sig-rule" aria-hidden="true" />
                 <span className="press-impression__sig-label">{VOICE_NAME[voice]}</span>
               </div>
+              <span className="press-impression__color-bar" aria-hidden="true">
+                <span className="press-impression__color-swatch" />
+                <span className="press-impression__color-swatch" />
+                <span className="press-impression__color-swatch" />
+              </span>
               <span className="press-impression__corner" aria-hidden="true" />
             </div>
           </div>

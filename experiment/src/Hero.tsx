@@ -6,7 +6,6 @@ import {
 } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
-import { QuestionMark } from './QuestionMark'
 
 type HeroProps = {
   voice: VoiceId
@@ -65,7 +64,7 @@ type TokenCopy = {
 const TOKEN_COPY: Record<WordId, TokenCopy> = {
   m3: { label: 'm³', glyph: '⌇', tone: 'the maker' },
   good: { label: 'good at', glyph: '∧', tone: 'the verb' },
-  yet: { label: 'yet?', glyph: '?', tone: 'the pause' },
+  yet: { label: 'yet', glyph: '?', tone: 'the pause' },
 }
 
 const ORDER: VoiceId[] = ['quiet', 'human', 'bold']
@@ -113,7 +112,24 @@ export function Hero({
           </svg>
         </span>
 
-        <QuestionMark voice={voice} word={word} />
+        <span className="hero__corners" aria-hidden="true">
+          <svg className="h-tl" viewBox="0 0 22 22">
+            <path d="M2 8V2h6M2 4c2 2 4 2 6 0" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
+            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
+          </svg>
+          <svg className="h-tr" viewBox="0 0 22 22">
+            <path d="M2 8V2h6M2 4c2 2 4 2 6 0" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
+            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
+          </svg>
+          <svg className="h-bl" viewBox="0 0 22 22">
+            <path d="M2 8V2h6M2 4c2 2 4 2 6 0" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
+            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
+          </svg>
+          <svg className="h-br" viewBox="0 0 22 22">
+            <path d="M2 8V2h6M2 4c2 2 4 2 6 0" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
+            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
+          </svg>
+        </span>
 
         <header className="hero__stage-head">
           <span className="hero__stage-eyebrow">
@@ -222,7 +238,7 @@ export function Hero({
                 aria-label={`${TOKEN_COPY.yet.label} — ${TOKEN_COPY.yet.tone}`}
               >
                 <span className="ht__token-yet">yet</span>
-                <span className="ht__token-punct" aria-hidden="true">?</span>
+                <span className={`ht__token-punct ht__token-punct--${voice}`} aria-hidden="true">?</span>
               </button>
             </span>
           </span>

@@ -1,13 +1,10 @@
-# Changelog
+# Iteration 369
 
-## 368 · a question mark protagonist, set
+The question mark, integrated; the page, recomposed with quieter ornaments and a printer's voice.
 
-A giant question mark now lives on the title plate as a true punctuation protagonist. The specimen becomes three plates of the same line.
-
-- Question mark drawn as a custom SVG with three voice-specific forms (thin serif italic, warm serif, heavy sans), reacting to which word is marked.
-- Question mark sits at the bottom-right of the title plate, with a gentle breath animation that turns into a pulse when the question word (`yet?`) is marked.
-- Hero stage gains paper grain via inline SVG filter, and the title plate makes room for the protagonist without crowding the headline.
-- Specimen section rebuilt as three side-by-side plates: each plate shows the line set in its own voice, large sample text, mark glyph, and a small caption — and still doubles as a voice picker.
-- Specimen plates have hairline rules, distinct borders, and a "sub" chip in the corner that names the reading posture (read low, read at hand, read once).
-- Marginalia active slip lifts further with a brighter paper-fresh highlight on top of the existing paper-tilt gesture.
-- Press impression animation extended to 1.2s with a brighter ink-strike moment and a paper-grain ripple during the pull.
+- Hero · the question mark is now a true integrated protagonist. The `?` of "yet?" rises with ghost echoes — blurred copies at top-left and bottom-right — and scales dramatically when the word is marked. Four small printer's fleurs sit in the corners of the title plate.
+- Marginalia · slips gain a subtle deckle edge along the right and more dimensional pins (highlight + shadow). The kept stamp now responds when the slip is hovered or active.
+- Press · the pulled impression gains a printer's color bar at its foot — three voice swatches set between hairline rules — and a softer, more paper-like surface.
+- Colophon · the seal floats with a slight rotation, a tone-tinted drop shadow, and a touch more presence.
+- Specimen · the three notation plates gain four small printer's fleurs that surface on hover or when active.
+- FolioTurn · each section divider now opens with a small vertical hairline before its number.
