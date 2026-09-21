@@ -1,35 +1,27 @@
-## Iteration 358
+# Changelog
 
-A composing stand sets the headline word by word before the title cut at folio i. Plays once on intersection; voice change quietly re-marks the type in place. No new dependencies.
+## iteration 359 — folio
 
-## Iteration 357
+**A single, composed folio replaces the multi-screen press chase.** Header, hero, ledger, press bed, marginalia, specimen plate, answer leaf, and colophon now read as five numbered folios on one page.
 
-A held-breath mark now sits between the press cadence and folio i; clicking it pulls the page down to the title. Plays a quiet pulse while held. No new dependencies.
+### added
+- A `folio-header` row with brand mark, an inline folio ledger nav, and a heartbeat-timed set-today stamp (replaces the prior 3-row register bar at top of page).
+- A `hero-ledger` sidebar that names the page's five folios and tracks the active section in the voice tone.
+- A `hero__voice-keys` typographic trio on the hero rail — three buttons (a / b / c) for the three voices, with the active voice tinted, the letter lifted and lit, and the tail ruling into the page.
+- A `hero-marginalia` editor's note inline-aside on the hero rail (numbered i. ii. iii.), styled like a left-rule marginal pencil note.
+- A `hero__reveal` button that replaces the prior lever trigger: pulls no mechanism, just unfolds the answer leaf, animated subtly when becoming `is-open`.
+- A `folio-divider` between every folio, reading "folio ii · the press bed" etc., to give the page a clear sidenote rhythm.
+- A `site-foot` footer that closes the page with the title repeated and a quiet `back to the question` link.
+- New CSS in `style.css` under a `FOLIO OVERLAY` banner that re-colors the chrome (calmer paper/lead palette), brings the meta-glow tones to the right place, and adds responsive behavior.
 
-## Iteration 356
+### changed
+- `App.tsx` rebuilt as a single composition: hero (with `TitleBroadside`) → press (`Press`) → marginalia (`NotesSection`) → specimen plate (`TypePlate`) → answer leaf (`AnswerReveal`) → colophon (`Colophon`). Each is used once, in order, with folio dividers between.
+- The "answer unfolded" sound/stamping ring (`.is-lever-stamping` + `.press-impact`) is no longer driven from the reveal — the reveal and the lever are now separate moments.
+- Voice keys now live in three places (header heartbeat dot, hero rail trio, specimen plate rows) instead of four, all tied to the same `voice` state.
 
-A press cadence sits between the opening spread and the title folio; three voice stations share one staff rule and a pulse follows the active voice. No new dependencies.
+### removed
+- The 30+ transition/leverage/log/sigils/reading-floors that accumulated from iterations 350–358 are no longer wired into `App.tsx` (their files remain in `src/` so other iterations stay intact, but they don't render). This includes: `PressCadence`, `ReadingPulse`, `SetType`, `PressOpeningSpread`, `PressProofSlip`, `PressSignature`, `PressSpine`, `PressLever`, `PressLog`, `PressLamp`, `PressReceipt`, `FolioLedger`, `FolioHinge`, `LetterToReader`, `LetterpressCatch`, `ReadersNote`, `ReaderPlate`, `Opening`, `ReadingPrologue`, `ReadingFloor`, `SecondReading`, `ExhalationPlate`, `MarkedProof`, `Almanac`, `MarginNotes`, `WayfinderSeal` rendered chrome, `Watermark`, `PaperGrain` cinematic overlay, `InkDust`, `InkTrail`, `BroadsideReveal`, `BroadsideEdge`, `PageReturn`, `TitleFold`, `SetType`, `CompositionSpecimen`, and the prior long inline `AnswerReveal`/`Colophon` definitions (now in `src/AnswerReveal.tsx` and `src/Colophon.tsx`).
+- The `marks`/pull-tally chrome that ran across prior pages is preserved only inside the slim `PressRegister` row under the header (kept one row, no separate log).
 
-## Iteration 355
-
-A press opening spread consolidates the front matter folios into a single arrival; sets three previews of the question and a folio index on one rule, with a press signature on the side. No new dependencies.
-
-## Iteration 354
-
-A title page is composed between the composing bed and the opening broadside; folds one piece of paper and arranges the title-cut across the front. No new dependencies.
-
-## Iteration 353
-
-A composing bed opens the front matter between the folio imprint and the title broadside; a quiet stage where the day's plate is prepared before the headline. No new dependencies.
-
-## Iteration 352
-
-A press proof slip closes the title page between the reader's note and the folio hinge; a single soft slip tucked between the paragraphs. No new dependencies.
-
-## Iteration 351
-
-A press title cut opens the front matter between the press specimen sheet and the folio imprint; the headline takes its first form before the imprint proper. No new dependencies.
-
-## Iteration 350
-
-A press specimen sheet opens the page between the day margin and the folio imprint; a quiet editorial plate that sets today's record before folio 0 begins. No new dependencies.
+### retained
+- The three voice mechanics, the `shift+v` keyboard cycle, the marginal `NOTES` data, the answer leaf's drop-cap and pull-quote, the colophon's seal, the impression marks buffer (kept for `PressRegister`), the `<h1 class="sr-only">` carrying the document title, and the existing CSS variables in `:root` — all untouched.
