@@ -14,7 +14,6 @@ import { Watermark } from './Watermark'
 import { TypePlate } from './TypePlate'
 import { SecondReading } from './SecondReading'
 import { ReadingFloor } from './ReadingFloor'
-import { PressStrikeFlash } from './PressStrikeFlash'
 
 import { PaperGrain } from './PaperGrain'
 import { KeptMark } from './KeptMark'
@@ -23,9 +22,8 @@ import { WayfinderSeal } from './WayfinderSeal'
 import { NotesSection } from './NotesSection'
 import { FolioFold } from './FolioFold'
 import { PressSpine } from './PressSpine'
-import { TitlePage } from './TitlePage'
+import { TitleBroadside } from './TitleBroadside'
 import { FolioThumbprint } from './FolioThumbprint'
-import { QuestionMonument } from './QuestionMonument'
 import { BroadsideReveal } from './BroadsideReveal'
 import { BroadsideEdge } from './BroadsideEdge'
 
@@ -37,7 +35,6 @@ import { FolioLedger } from './FolioLedger'
 import { TitleFolio } from './TitleFolio'
 import { ClosingPlate } from './ClosingPlate'
 import { ReadingPrologue } from './ReadingPrologue'
-import { PressHandwheel } from './PressHandwheel'
 import { LetterpressCatch } from './LetterpressCatch'
 import { Opening } from './Opening'
 import { FolioImprint } from './FolioImprint'
@@ -45,7 +42,6 @@ import { TitleCoda } from './TitleCoda'
 import { AnswerCoda } from './AnswerCoda'
 import { ReadingPause } from './ReadingPause'
 import { PageReturn } from './PageReturn'
-import { ReadingHinge } from './ReadingHinge'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -123,10 +119,6 @@ function LogoMark({ size = 38, accent = 'var(--acid)' }: { size?: number; accent
       <circle cx="36.6" cy="21" r=".65" fill="currentColor" opacity=".55" />
     </svg>
   )
-}
-
-function PaperWarmth({ voice }: { voice: VoiceId }) {
-  return <span className={`paper-warmth paper-warmth--${voice}`} aria-hidden="true" />
 }
 
 function ArrowIcon() {
@@ -497,7 +489,6 @@ export function App() {
   const [announcement, setAnnouncement] = useState('')
   const [marks, setMarks] = useState<ImpressionMark[]>([])
   const [setToday] = useState(() => formatSetToday())
-  const [strikeTick, setStrikeTick] = useState(0)
   const [heroBodyVisible, setHeroBodyVisible] = useState(false)
   const [readerName, setReaderName] = useState('')
   const [leverStamping, setLeverStamping] = useState(false)
@@ -600,14 +591,6 @@ export function App() {
   }, [voice, pushMark])
 
   useEffect(() => {
-    if (firstVoiceRef.current) {
-      firstVoiceRef.current = false
-      return
-    }
-    setStrikeTick(tick => tick + 1)
-  }, [voice])
-
-  useEffect(() => {
     return () => {
       if (leverStampTimerRef.current !== null) {
         window.clearTimeout(leverStampTimerRef.current)
@@ -695,26 +678,17 @@ export function App() {
       <div className="page">
         <Opening voice={voice} setToday={setToday}>
           <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
-            <TitlePage voice={voice} word={activeWord} setToday={setToday} />
-
-            <div className="hero__spread">
-              <PressStrikeFlash strikeTick={strikeTick} voice={voice} />
-              <PaperWarmth voice={voice} />
-
-              <h1 className="sr-only" id="page-title">{TITLE}</h1>
-              <QuestionMonument
-                voice={voice}
-                word={activeWord}
-                hover={hoveredWord}
-                setToday={setToday}
-                onVoice={selectVoice}
-                onWord={(id, focus) => selectWord(id, focus ?? false)}
-                onHover={setHoveredWord}
-                tokenRefs={tokenRefs}
-              />
-            </div>
-
-            <ReadingHinge voice={voice} setToday={setToday} />
+            <h1 className="sr-only" id="page-title">{TITLE}</h1>
+            <TitleBroadside
+              voice={voice}
+              word={activeWord}
+              hover={hoveredWord}
+              setToday={setToday}
+              onVoice={selectVoice}
+              onWord={(id, focus) => selectWord(id, focus ?? false)}
+              onHover={setHoveredWord}
+              tokenRefs={tokenRefs}
+            />
 
             <ReadingPrologue
               voice={voice}
