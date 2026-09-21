@@ -10692,6 +10692,54 @@ button {
   transition: opacity .85s var(--ease-out) .45s, transform .95s var(--ease-spring) .45s;
 }
 
+/* ITERATION 357 · the answer headline carries the page. Give the
+   line confidence with feature-settings, a subtle drop-shadow when
+   revealed, and a hand-drawn rule that traces in beneath the type
+   as the answer sets. */
+
+.answer-reveal__answer h2 {
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'ss01' 1;
+  position: relative;
+}
+
+.answer-reveal.is-open .answer-reveal__answer h2 {
+  opacity: 1;
+  transform: translateY(0);
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--paper-2) 60%, transparent);
+}
+
+.answer-reveal__answer h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: clamp(48px, 6vw, 96px);
+  bottom: -.34em;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--ink) 38%, transparent),
+    color-mix(in srgb, var(--ink) 18%, transparent) 60%,
+    transparent
+  );
+  opacity: 0;
+  transform: scaleX(.4);
+  transform-origin: left center;
+  transition: opacity .9s var(--ease-out) 1.05s, transform 1.15s var(--ease-out) 1.05s;
+}
+
+.answer-reveal.is-open .answer-reveal__answer h2::after {
+  opacity: .85;
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer-reveal__answer h2::after {
+    transition: none !important;
+    transform: none !important;
+    opacity: .85 !important;
+  }
+}
+
 .answer-reveal.is-open .answer-reveal__answer h2 {
   opacity: 1;
   transform: translateY(0);
@@ -61953,6 +62001,75 @@ a small act of typesetting.
   text-wrap: balance;
 }
 
+/* ITERATION 357 · confident title rhythm. The question runs as a
+   single balanced block; the line-height drops a hair, the gap
+   narrows, and a single italic em-dash ornament frames the
+   statement so the read feels intentional rather than stacked. */
+
+.tb__statement {
+  position: relative;
+  padding: clamp(8px, 1.4vw, 20px) clamp(4px, 1vw, 16px) clamp(12px, 1.6vw, 22px);
+}
+
+.tb__statement::before,
+.tb__statement::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: clamp(36px, 7vw, 72px);
+  height: 1px;
+  background: color-mix(in srgb, var(--tb-tone) 56%, transparent);
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity .85s var(--ease-out) .3s, width 1.1s var(--ease-out) .3s;
+}
+
+.tb__statement::before { top: 0; }
+.tb__statement::after { bottom: 0; }
+
+.tb.is-revealed .tb__statement::before,
+.tb.is-revealed .tb__statement::after {
+  opacity: .85;
+  width: clamp(72px, 14vw, 168px);
+}
+
+.tb__statement-lines > .tb__line {
+  line-height: .94;
+  letter-spacing: inherit;
+}
+
+.tb__statement-lines {
+  line-height: .98;
+}
+
+.tb__statement-lines > .tb__line--a,
+.tb__statement-lines > .tb__line--b,
+.tb__statement-lines > .tb__line--c {
+  position: relative;
+  isolation: isolate;
+}
+
+/* A delicate em-dash ornament bookending the question — drawn as a
+   thin hand-rule on either side of the statement. Lives beneath the
+   type so it never interferes with token focus rings. */
+
+.tb__statement-lines::before,
+.tb__statement-lines::after {
+  content: '';
+  display: block;
+  width: clamp(80px, 14vw, 168px);
+  height: 1px;
+  margin: clamp(8px, 1.2vw, 16px) auto;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--tb-tone) 56%, transparent) 30%,
+    color-mix(in srgb, var(--tb-tone) 56%, transparent) 70%,
+    transparent
+  );
+  opacity: .35;
+}
+
 .tb__statement-static {
   font-size: inherit;
   line-height: inherit;
@@ -73614,6 +73731,323 @@ a small act of typesetting.
 
   .press-cadence__pulse {
     transition: none !important;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────
+   READING PULSE · iteration 357 · a single composed mark that
+   sits in the wake of the press cadence and opens the title
+   page on press. The lead and trail rules trace inward; a
+   heart-shaped pulse beats once at the centre with the voice
+   colour. A working button — the pulse — opens folio i.
+   ──────────────────────────────────────────────────────────── */
+
+.reading-pulse {
+  --reading-pulse-tone: var(--coral);
+  --reading-pulse-tone-quiet: var(--blue);
+  --reading-pulse-tone-human: var(--coral);
+  --reading-pulse-tone-bold: var(--acid);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 22px);
+  width: min(100%, 1080px);
+  margin: clamp(4px, .8vw, 14px) auto clamp(18px, 2.4vw, 36px);
+  padding: 0 clamp(8px, 2vw, 22px);
+  color: var(--reading-pulse-tone);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity .9s var(--ease-out) .05s,
+    transform .9s var(--ease-out) .05s,
+    color .55s var(--ease);
+  isolation: isolate;
+}
+
+.reading-pulse.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reading-pulse--quiet { --reading-pulse-tone: var(--blue); }
+.reading-pulse--human { --reading-pulse-tone: var(--coral); }
+.reading-pulse--bold { --reading-pulse-tone: var(--acid); }
+
+.reading-pulse__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.reading-pulse__rule {
+  position: relative;
+  display: block;
+  height: 8px;
+  color: currentColor;
+  opacity: .85;
+}
+
+.reading-pulse__rule svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.reading-pulse__rule-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition:
+    stroke-dashoffset .9s var(--ease-out) .25s,
+    color .55s var(--ease);
+}
+
+.reading-pulse.is-revealed .reading-pulse__rule-stroke--lead {
+  stroke-dashoffset: 0;
+}
+
+.reading-pulse.is-revealed .reading-pulse__rule-stroke--trail {
+  stroke-dashoffset: 0;
+  transition-delay: .4s;
+}
+
+.reading-pulse__rule-mark {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  transition: opacity .4s var(--ease) .8s, transform .4s var(--ease-spring) .8s;
+}
+
+.reading-pulse.is-revealed .reading-pulse__rule-mark--lead,
+.reading-pulse.is-revealed .reading-pulse__rule-mark--trail {
+  opacity: .85;
+  transform: scale(1);
+}
+
+.reading-pulse__button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(72px, 7vw, 96px);
+  height: clamp(72px, 7vw, 96px);
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  color: currentColor;
+  background: transparent;
+  transition:
+    transform .55s var(--ease-spring),
+    color .55s var(--ease);
+}
+
+.reading-pulse__button:hover,
+.reading-pulse__button:focus-visible {
+  transform: scale(1.05);
+}
+
+.reading-pulse__button:active {
+  transform: scale(.97);
+}
+
+.reading-pulse__halo {
+  position: absolute;
+  inset: 0;
+  color: currentColor;
+  opacity: .55;
+  transition: opacity .55s var(--ease), transform 1.4s var(--ease-out);
+  pointer-events: none;
+}
+
+.reading-pulse__halo svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.reading-pulse.is-held .reading-pulse__halo,
+.reading-pulse__button:hover .reading-pulse__halo,
+.reading-pulse__button:focus-visible .reading-pulse__halo {
+  opacity: .95;
+  transform: rotate(30deg);
+}
+
+.reading-pulse__heart {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(40px, 3.6vw, 48px);
+  height: clamp(40px, 3.6vw, 48px);
+  color: currentColor;
+  pointer-events: none;
+  transform-origin: center;
+  animation: readingPulseBeat 2.6s var(--ease) infinite;
+}
+
+.reading-pulse__heart svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.reading-pulse__heart-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  transform: scale(.6);
+  animation: readingPulseRing 2.6s var(--ease-out) infinite;
+}
+
+.reading-pulse__heart-inner {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  transform: scale(.6);
+  animation: readingPulseRing 2.6s var(--ease-out) .35s infinite;
+}
+
+.reading-pulse__heart-glyph {
+  font-family: 'Iowan Old Style', Georgia, serif;
+  font-style: italic;
+  fill: currentColor;
+}
+
+.reading-pulse.is-held .reading-pulse__heart,
+.reading-pulse__button:hover .reading-pulse__heart,
+.reading-pulse__button:focus-visible .reading-pulse__heart {
+  animation-duration: 1.4s;
+}
+
+.reading-pulse__caption {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  flex-wrap: wrap;
+  margin-top: clamp(6px, .8vw, 10px);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .7vw, 10px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity .7s var(--ease-out) .45s, transform .7s var(--ease-out) .45s;
+}
+
+.reading-pulse.is-revealed .reading-pulse__caption {
+  opacity: .9;
+  transform: translateY(0);
+}
+
+.reading-pulse__caption-key {
+  color: currentColor;
+  font-weight: 600;
+  font-size: clamp(9px, .75vw, 10.5px);
+}
+
+.reading-pulse__caption-rule {
+  display: inline-block;
+  width: clamp(40px, 8vw, 120px);
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, currentColor 50%, transparent) 20%,
+    currentColor 50%,
+    color-mix(in srgb, currentColor 50%, transparent) 80%,
+    transparent
+  );
+  opacity: .7;
+}
+
+.reading-pulse__caption-line {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12.5px, 1vw, 14px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+  opacity: .85;
+}
+
+@keyframes readingPulseBeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.07); }
+  28% { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes readingPulseRing {
+  0% { opacity: 0; transform: scale(.55); }
+  20% { opacity: .9; }
+  100% { opacity: 0; transform: scale(1.45); }
+}
+
+@media (max-width: 720px) {
+  .reading-pulse {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: clamp(6px, 2vw, 14px);
+  }
+
+  .reading-pulse__button {
+    width: clamp(56px, 16vw, 72px);
+    height: clamp(56px, 16vw, 72px);
+  }
+
+  .reading-pulse__heart {
+    width: 36px;
+    height: 36px;
+  }
+
+  .reading-pulse__rule {
+    height: 6px;
+  }
+
+  .reading-pulse__caption-rule {
+    width: clamp(16px, 6vw, 50px);
+  }
+}
+
+@media (max-width: 460px) {
+  .reading-pulse {
+    margin: 4px 6px 22px;
+    padding: 0 4px;
+  }
+
+  .reading-pulse__caption-rule {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-pulse,
+  .reading-pulse__caption,
+  .reading-pulse__halo {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .reading-pulse__heart,
+  .reading-pulse__heart-ring,
+  .reading-pulse__heart-inner {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .reading-pulse__rule-stroke {
+    transition: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .reading-pulse__rule-mark {
+    transition: none !important;
+    transform: none !important;
+    opacity: .85 !important;
   }
 }
 

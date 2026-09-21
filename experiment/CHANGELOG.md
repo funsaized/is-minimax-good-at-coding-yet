@@ -1,22 +1,18 @@
-# Changelog
+# Iteration 357
 
-## Iteration 356 — press cadence
+**A single composed reading pulse now sits between the press cadence and the title broadside.** It is a working button that opens folio i, with a beating heart-mark drawn in the active voice colour, framed by hand-traced lead and trail rules that animate in as the pulse enters view, and a small "held breath" caption naming what comes next. The title and answer headline received matching typographic refinements — the question is now framed by an italic em-dash ornament that grows in length as the broadside reveals, and the revealed answer line carries a hand-drawn rule beneath it that traces in as the leaf settles.
 
-A single composed press cadence now bridges folio 0 and folio i. It is a quiet
-horizontal staff that draws itself when scrolled into view, with three voice
-stations (a · b · c) sitting along the rule; the active voice glows, a thin
-pulse rides the staff beneath the current beat, and a small caption reads
-*three readings · one line · one breath*. The element is restrained by design
-and is the page's only moment of typographic breathing between the dense front
-matter and the title broadside.
+## What changed
 
-The component is keyboard-accessible (arrow keys cycle the beats, roving
-tabindex), respects `prefers-reduced-motion`, and is mobile-responsive
-(edges collapse, beat spacing adjusts). It uses the existing voice/word/day
-system and is composed of local SVG, CSS, and the installed React stack.
+- **New `src/ReadingPulse.tsx`** — single composed beat between folio 0 and folio i that pulses with the active voice and opens the title on press; refines reduced-motion behaviour and mobile rhythm.
+- **`src/App.tsx`** — wired the new pulse between `PressCadence` and `Opening`; no other markup moved.
+- **`src/style.css`** — added `.reading-pulse*` styles; tightened title statement rhythm with a top/bottom hairline ornament that frames the question; added a confident italic-drop-shadow and a trace-in rule beneath the answer headline; respected `prefers-reduced-motion`.
+- **`CHANGELOG.md`** — this entry.
 
-- `src/PressCadence.tsx` — new composed element with IntersectionObserver
-  reveal, hover/focus beats, and pulse driven by the active voice.
-- `src/App.tsx` — wired between `PressOpeningSpread` and `Opening`.
-- `src/style.css` — new `.press-cadence*` ruleset with reduced-motion and
-  mobile breakpoints.
+## What stayed
+
+- Document title and visible title remain `is Minimax M3 good at frontend yet?`.
+- Existing components (PressCadence, Opening, TitleBroadside, ReadingPrologue, PressLever, AnswerReveal) kept their markup, props, and behaviour.
+- The press cadence's three-voice staff, the opening fold line, and the answer reveal's seal and wax drop all remain unchanged.
+- No new dependencies, fonts, scripts, images, or remote resources.
+- No fabricated iteration counts, live status, model scores, or deployment stats.

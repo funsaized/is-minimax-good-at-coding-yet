@@ -42,6 +42,7 @@ import { PageReturn } from './PageReturn'
 import { PressProofSlip } from './PressProofSlip'
 import { PressOpeningSpread } from './PressOpeningSpread'
 import { PressCadence } from './PressCadence'
+import { ReadingPulse } from './ReadingPulse'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -679,6 +680,8 @@ export function App() {
         <PressOpeningSpread voice={voice} setToday={setToday} />
 
         <PressCadence voice={voice} setToday={setToday} />
+
+        <ReadingPulse voice={voice} setToday={setToday} />
 
         <Opening voice={voice} setToday={setToday}>
           <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
