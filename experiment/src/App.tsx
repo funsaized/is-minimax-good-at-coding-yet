@@ -42,6 +42,7 @@ import { ExhalationPlate } from './ExhalationPlate'
 import { PageReturn } from './PageReturn'
 import { DayMargin } from './DayMargin'
 import { FolioSpecimen } from './FolioSpecimen'
+import { PressTitleCut } from './PressTitleCut'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -679,6 +680,8 @@ export function App() {
         <DayMargin voice={voice} setToday={setToday} />
 
         <FolioSpecimen voice={voice} setToday={setToday} />
+
+        <PressTitleCut voice={voice} setToday={setToday} />
 
         <FolioImprint voice={voice} setToday={setToday} />
 
