@@ -1,12 +1,10 @@
-# Changelog
+Iteration 339 — FolioFold collapses into a single hand-pressed FolioHinge that does one thing: it folds the page.
 
-## Iteration 338 — a single, confident press strike replaces the descending thread
+The new plate sits where the four-tools section used to live, between the title-page front matter and the press bed. It runs a thin hand-drawn seam out of a pressed m³ seal, names the next folio in italic, and scrolls the reader to #press in a single confident motion. The press register above and the press bed below already carry the rest of the work — previewing tools, counting impressions, and showing the pulled line were all duplicate work that the hinge no longer has to repeat.
 
-The press signal between the title broadside and the reading prologue was a thin thread with a small disc. It was honest but quiet — more footnote than strike. Iteration 338 absorbs that thread into a single composed mark: a hand-pressed disc at the center, a quiet rule above it and a softer rule below it, a splash of ink below the disc, and one italic caption. The disc now bears the press's own stamp — `FOLIO · I· / m³ / PRESS · ON` — set in three rules, monospace and serif together, so the mark reads as a signature and not as a flourish. The strike comes in with a spring scale, the rules draw in from the edges, the splash stroke draws after the disc lands, and a soft radial flash fades out behind it. The whole composition breathes once, then settles. All motion is suppressed under `prefers-reduced-motion: reduce`.
-
-What changed:
-
-- `src/PressSignal.tsx` rewritten. The descending thread (`__thread`, `__thread-lead`, `__thread-trail`, `__thread-bead`), the small inner mark (`__mark`, `__mark-halo`, `__mark-disc`, `__mark-wisp`), and the centred caption are replaced by a single composed strike: a lead rule, a stamped disc with three concentric rings and a compass of tick marks, a wisp beneath it, a draw-in splash, the italic caption, and a trail rule. The strike now reads as one moment, not a chain of small ornaments.
-- `src/style.css` updated. New `.press-signal__rule`, `.press-signal__rule--lead`, `.press-signal__rule--trail`, `.press-signal__strike`, `.press-signal__strike-flash`, `.press-signal__strike-disc`, `.press-signal__strike-wisp`, `.press-signal__strike-splash`, `.press-signal__tag`, `.press-signal__tag-line`, `.press-signal__tag-sep`. New keyframes `pressSignalStrikeIn`, `pressSignalFlash`, `pressSignalSplashIn`, `pressSignalRuleIn`. The vertical height grows slightly so the strike has room to land. Mobile sizes tightened in the existing responsive blocks.
-- `.hero--title-page .press-signal` receives its own margin so the new composition sits a little further from the title broadside and the reading prologue, giving the strike room to breathe.
-- `App.tsx` is unchanged. The signal is still mounted in the same place between `TitleBroadside` and `ReadingPrologue`, with the same `voice` prop.
+Details:
+- Added src/FolioHinge.tsx — a single composed plate (eyebrow, rule, seal, rule, caption, hint, arrow) that replaces FolioFold in App.tsx.
+- Added ~360 lines of CSS for the FolioHinge in src/style.css: voice-tinted seams (blue / coral / acid), stroke-dashoffset rule draw-on, spring-loaded seal press, hover and focus-visible treatments, full prefers-reduced-motion overrides, and tightened 720px / 480px responsive breakpoints.
+- Removed the FolioFold import and usage from src/App.tsx so the new hinge is the sole transition between the front matter and the press section. The old FolioFold.tsx file is left in place but no longer rendered or bundled.
+- Iteration is keyboard-accessible (the plate is a single <button>), mobile-friendly (the seal and arrow collapse gracefully at 480px), and respects reduced-motion preferences (all entrance animations have explicit overrides).
+- Title "is Minimax M3 good at frontend yet?" preserved verbatim in index.html and document.title.

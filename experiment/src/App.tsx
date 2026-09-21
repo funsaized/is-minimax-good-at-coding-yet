@@ -20,7 +20,7 @@ import { KeptMark } from './KeptMark'
 import { PressSignature } from './PressSignature'
 import { WayfinderSeal } from './WayfinderSeal'
 import { NotesSection } from './NotesSection'
-import { FolioFold } from './FolioFold'
+import { FolioHinge } from './FolioHinge'
 import { PressSpine } from './PressSpine'
 import { PressRegister } from './PressRegister'
 import { TitleBroadside } from './TitleBroadside'
@@ -764,7 +764,7 @@ export function App() {
             <TitleFolio voice={voice} setToday={setToday} />
           </div>
 
-        <FolioFold voice={voice} word={activeWord} setToday={setToday} marks={marks} />
+        <FolioHinge voice={voice} setToday={setToday} />
 
         <div className="hero-trace hero-trace--log" aria-hidden="false">
           <PressLog voice={voice} word={activeWord} marks={marks} setToday={setToday} />
