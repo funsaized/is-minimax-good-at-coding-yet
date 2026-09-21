@@ -1,0 +1,19 @@
+{
+  "id": 362,
+  "parentId": 361,
+  "createdAt": "2026-09-21T18:25:17.957Z",
+  "summary": "A single composed opening: Reading Pocket, Opening Lede, and Folio Turn dividers replace the busy register.",
+  "path": "/iterations/000362/index.html",
+  "screenshot": "/iterations/000362/desktop.png",
+  "mobileScreenshot": "/iterations/000362/mobile.png",
+  "sourceCommit": "cda7cb0bc576bf3160bc195805e4640bffa2606a",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 735,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 140231,
+    "outputTokens": 28502,
+    "steps": 74
+  }
+}
