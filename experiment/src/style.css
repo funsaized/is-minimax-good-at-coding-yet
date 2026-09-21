@@ -65838,3 +65838,610 @@ a small act of typesetting.
     grid-template-columns: minmax(0, 1fr) clamp(24px, 6vw, 32px);
   }
 }
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 342 · FOLIO IMPRINT — a single composed opening
+   dedication. One plate, three breaths: the lead flourish,
+   the centered memo, the trail flourish, all set between
+   a small press seal and a thread that descends toward
+   the title broadside below. Replaces nothing; gives the
+   page a hand-pressed opening it earns on arrival.
+   ──────────────────────────────────────────────────────────── */
+
+.folio-imprint {
+  --imprint-tone: var(--coral);
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: min(100%, 1080px);
+  margin: clamp(36px, 5vw, 64px) auto clamp(28px, 3.6vw, 48px);
+  padding: 0 clamp(14px, 2.4vw, 28px);
+  color: var(--imprint-tone);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 1.1s var(--ease-out) .15s,
+    transform 1.1s var(--ease-out) .15s,
+    color .55s var(--ease);
+}
+
+.folio-imprint.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.folio-imprint--quiet { --imprint-tone: var(--blue); }
+.folio-imprint--human { --imprint-tone: var(--coral); }
+.folio-imprint--bold { --imprint-tone: var(--acid); }
+
+.folio-imprint__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.folio-imprint__wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--imprint-tone) 6%, transparent), transparent 64%);
+  opacity: 0;
+  animation: folioImprintWashIn 1.4s var(--ease-out) .25s forwards;
+}
+
+@keyframes folioImprintWashIn {
+  to { opacity: 1; }
+}
+
+.folio-imprint__plate {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 22px);
+  width: 100%;
+  padding: clamp(14px, 2vw, 22px) clamp(6px, 1.2vw, 14px);
+  background: transparent;
+  border: 0;
+  cursor: default;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.folio-imprint__plate:focus-visible {
+  outline: 1px dashed color-mix(in srgb, var(--imprint-tone) 50%, transparent);
+  outline-offset: 6px;
+}
+
+.folio-imprint__flourish {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 12px);
+  min-width: 0;
+  color: currentColor;
+  opacity: 0;
+  transition: opacity .9s var(--ease-out) .35s, transform .9s var(--ease-out) .35s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__flourish {
+  opacity: 1;
+}
+
+.folio-imprint__flourish--lead {
+  justify-content: flex-end;
+  transform: translateX(-4px);
+}
+
+.folio-imprint.is-revealed .folio-imprint__flourish--lead {
+  transform: translateX(0);
+}
+
+.folio-imprint__flourish--trail {
+  justify-content: flex-start;
+  transform: translateX(4px);
+}
+
+.folio-imprint.is-revealed .folio-imprint__flourish--trail {
+  transform: translateX(0);
+}
+
+.folio-imprint__flourish svg {
+  display: block;
+  width: clamp(80px, 14vw, 180px);
+  height: clamp(20px, 2.6vw, 32px);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.folio-imprint__flourish-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.4s var(--ease-out) .5s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__flourish-stroke {
+  stroke-dashoffset: 0;
+}
+
+.folio-imprint__flourish-stroke--trail {
+  transition-delay: .75s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__flourish-stroke--mirror {
+  transition-delay: .6s;
+}
+
+.folio-imprint__flourish-bead,
+.folio-imprint__flourish-halo {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity .55s var(--ease) 1.55s, transform .65s var(--ease-spring) 1.55s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__flourish-bead,
+.folio-imprint.is-revealed .folio-imprint__flourish-halo {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.folio-imprint__flourish-pip {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(20px, 2vw, 26px);
+  height: clamp(20px, 2vw, 26px);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: currentColor;
+  flex: 0 0 auto;
+  opacity: 0;
+  transform: scale(.6);
+  transition: opacity .55s var(--ease) 1.6s, transform .65s var(--ease-spring) 1.6s, color .35s var(--ease);
+}
+
+.folio-imprint.is-revealed .folio-imprint__flourish-pip {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.folio-imprint__flourish-pip--alt {
+  order: -1;
+}
+
+.folio-imprint__flourish-pip-ring {
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed currentColor;
+  border-radius: 50%;
+  opacity: .5;
+}
+
+.folio-imprint__flourish-pip-bead {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.folio-imprint.is-hover .folio-imprint__flourish-pip {
+  transform: scale(1.12);
+}
+
+.folio-imprint__core {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(12px, 1.8vw, 24px);
+  min-width: 0;
+  padding: clamp(2px, .4vw, 6px) clamp(8px, 1.4vw, 18px);
+}
+
+.folio-imprint__stamp {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: clamp(54px, 5.6vw, 72px);
+  height: clamp(54px, 5.6vw, 72px);
+  color: currentColor;
+  flex: 0 0 auto;
+  opacity: 0;
+  transform: scale(.7) rotate(-6deg);
+  transform-origin: center;
+  transition:
+    opacity .75s var(--ease) .35s,
+    transform .9s var(--ease-spring) .35s,
+    color .35s var(--ease);
+}
+
+.folio-imprint.is-revealed .folio-imprint__stamp {
+  opacity: 1;
+  transform: scale(1) rotate(-3deg);
+}
+
+.folio-imprint__stamp-halo {
+  position: absolute;
+  inset: -8px;
+  border: 1px dashed color-mix(in srgb, var(--imprint-tone) 28%, transparent);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(.85);
+  transition: opacity .65s var(--ease) 1s, transform .9s var(--ease-spring) 1s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__stamp-halo {
+  opacity: .55;
+  transform: scale(1);
+}
+
+.folio-imprint.is-hover .folio-imprint__stamp {
+  transform: scale(1.04) rotate(-1deg);
+}
+
+.folio-imprint__memo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(6px, .7vw, 10px);
+  min-width: 0;
+}
+
+.folio-imprint__memo-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1vw, 14px);
+  color: currentColor;
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .8vw, 10.5px);
+  font-weight: 500;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity .65s var(--ease-out) .45s, transform .65s var(--ease-out) .45s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__memo-eyebrow {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.folio-imprint__memo-rule {
+  display: inline-block;
+  width: clamp(14px, 2vw, 28px);
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+  flex: 0 0 auto;
+}
+
+.folio-imprint__memo-eyebrow-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .7vw, 10px);
+  white-space: nowrap;
+}
+
+.folio-imprint__memo-mark {
+  display: inline-grid;
+  place-items: center;
+  font-family: Georgia, 'Iowan Old Style', serif;
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0;
+  color: currentColor;
+  opacity: .8;
+}
+
+.folio-imprint__memo-mark--alt {
+  transform: scaleX(-1);
+}
+
+.folio-imprint__memo-line {
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 1.45vw, 19px);
+  letter-spacing: -.012em;
+  line-height: 1.35;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .85s var(--ease-out) .6s, transform .85s var(--ease-out) .6s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__memo-line {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.folio-imprint__memo-line em {
+  font-style: italic;
+  color: currentColor;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'dlig' 1, 'onum' 1;
+  text-shadow: 0 0 .04em color-mix(in srgb, currentColor 16%, transparent);
+}
+
+.folio-imprint__memo-line em:nth-of-type(2) {
+  color: var(--paper);
+  text-shadow: none;
+}
+
+.folio-imprint__memo-meta {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: clamp(8px, 1vw, 14px);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .76vw, 9.5px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity .7s var(--ease-out) .95s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__memo-meta {
+  opacity: 1;
+}
+
+.folio-imprint__memo-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, .7vw, 10px);
+}
+
+.folio-imprint__memo-key {
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.folio-imprint__memo-voice {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  color: currentColor;
+  font-family: var(--mono);
+}
+
+.folio-imprint__memo-voice em {
+  color: var(--paper);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: -.005em;
+  text-transform: none;
+}
+
+.folio-imprint__memo-voice-letter {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: currentColor;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 10px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.folio-imprint__memo-date {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.folio-imprint__memo-season {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.folio-imprint__memo-season em {
+  color: currentColor;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.folio-imprint__memo-sep {
+  color: var(--ink-mist);
+  opacity: .55;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+/* thread — a small descent between the imprint and the title */
+.folio-imprint__thread {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  margin-top: clamp(6px, .8vw, 12px);
+  color: currentColor;
+  opacity: 0;
+  transition: opacity .85s var(--ease-out) 1.2s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__thread {
+  opacity: 1;
+}
+
+.folio-imprint__thread svg {
+  display: block;
+  width: clamp(18px, 2vw, 24px);
+  height: clamp(36px, 4.4vw, 56px);
+}
+
+.folio-imprint__thread-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.1s var(--ease-out) 1.3s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__thread-stroke {
+  stroke-dashoffset: 0;
+}
+
+.folio-imprint__thread-bead {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.3);
+  transition: opacity .45s var(--ease) 2.2s, transform .55s var(--ease-spring) 2.2s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__thread-bead {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.folio-imprint__thread-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: currentColor;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, 1vw, 13px);
+  letter-spacing: -.005em;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity .6s var(--ease-out) 1.8s, transform .6s var(--ease-out) 1.8s;
+}
+
+.folio-imprint.is-revealed .folio-imprint__thread-tag {
+  opacity: .85;
+  transform: translateY(0);
+}
+
+.folio-imprint__thread-tag-rule {
+  display: inline-block;
+  width: clamp(14px, 1.6vw, 22px);
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.folio-imprint__thread-tag-mark {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0;
+  color: currentColor;
+  animation: folioImprintThreadMarkPulse 2.6s var(--ease) 2.6s infinite;
+}
+
+@keyframes folioImprintThreadMarkPulse {
+  0%, 100% { transform: translateY(0); opacity: .85; }
+  50% { transform: translateY(2px); opacity: 1; }
+}
+
+@media (max-width: 720px) {
+  .folio-imprint {
+    margin-top: clamp(28px, 5vw, 44px);
+    margin-bottom: clamp(20px, 4vw, 32px);
+  }
+
+  .folio-imprint__plate {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(10px, 2vw, 16px);
+  }
+
+  .folio-imprint__flourish {
+    justify-content: center;
+  }
+
+  .folio-imprint__flourish svg {
+    width: clamp(60px, 20vw, 100px);
+    height: clamp(16px, 4vw, 22px);
+  }
+
+  .folio-imprint__flourish--lead {
+    transform: none;
+  }
+
+  .folio-imprint__flourish--trail {
+    transform: none;
+  }
+
+  .folio-imprint__flourish-pip--alt {
+    order: 2;
+  }
+
+  .folio-imprint__core {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+    gap: clamp(10px, 2vw, 14px);
+    padding: 0;
+  }
+
+  .folio-imprint__memo {
+    align-items: center;
+    text-align: center;
+  }
+
+  .folio-imprint__memo-line {
+    text-align: center;
+  }
+
+  .folio-imprint__memo-meta {
+    justify-content: center;
+  }
+
+  .folio-imprint__thread svg {
+    width: 14px;
+    height: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-imprint,
+  .folio-imprint__flourish,
+  .folio-imprint__stamp,
+  .folio-imprint__stamp-halo,
+  .folio-imprint__memo-eyebrow,
+  .folio-imprint__memo-line,
+  .folio-imprint__memo-meta,
+  .folio-imprint__thread,
+  .folio-imprint__thread-tag,
+  .folio-imprint__thread-bead,
+  .folio-imprint__flourish-pip,
+  .folio-imprint__flourish-bead,
+  .folio-imprint__flourish-halo {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .folio-imprint__thread-tag-mark {
+    animation: none !important;
+  }
+
+  .folio-imprint__wash {
+    animation: none !important;
+    opacity: 1;
+  }
+}

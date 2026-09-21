@@ -26,6 +26,7 @@ import { PressRegister } from './PressRegister'
 import { TitleBroadside } from './TitleBroadside'
 import { BroadsideReveal } from './BroadsideReveal'
 import { BroadsideEdge } from './BroadsideEdge'
+import { FolioImprint } from './FolioImprint'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -670,6 +671,8 @@ export function App() {
       <PressSpine activeId={activeSection} voice={voice} />
 
       <div className="page">
+        <FolioImprint voice={voice} setToday={setToday} />
+
         <Opening voice={voice} setToday={setToday}>
           <section className="hero hero--title-page" id="question" aria-labelledby="page-title">
             <h1 className="sr-only" id="page-title">{TITLE}</h1>
