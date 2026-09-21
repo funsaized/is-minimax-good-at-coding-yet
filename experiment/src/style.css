@@ -73125,3 +73125,495 @@ a small act of typesetting.
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+   PRESS CADENCE · a quiet horizontal staff that bridges folio 0
+   and folio i. The line draws itself left-to-right when it
+   enters view. Three voice stations sit on the line; the active
+   voice glows softly and a thin pulse rides the staff beneath
+   the current beat. The element is restrained by design — it is
+   the page's only moment of typographic breathing between the
+   front matter and the title.
+   ──────────────────────────────────────────────────────────── */
+
+.press-cadence {
+  --pc-tone: var(--coral);
+  --pc-tone-quiet: var(--blue);
+  --pc-tone-human: var(--coral);
+  --pc-tone-bold: var(--acid);
+  --beat-fraction: .5;
+  --pulse-fraction: .5;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "lead   caption   trail"
+    "lead   staff     trail"
+    "lead   foot      trail";
+  align-items: center;
+  column-gap: clamp(10px, 1.4vw, 22px);
+  row-gap: clamp(8px, 1vw, 14px);
+  width: min(100%, 1080px);
+  margin: clamp(14px, 1.6vw, 22px) auto clamp(28px, 3.6vw, 48px);
+  padding: clamp(14px, 1.6vw, 22px) clamp(14px, 1.6vw, 26px);
+  color: var(--pc-tone);
+  border-top: 1px solid color-mix(in srgb, var(--pc-tone) 24%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--pc-tone) 24%, transparent);
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--pc-tone) 4%, transparent), transparent 65%),
+    linear-gradient(180deg, rgba(14, 20, 32, .12), rgba(8, 12, 22, .18));
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity .9s var(--ease-out) .05s,
+    transform .9s var(--ease-out) .05s,
+    color .55s var(--ease);
+  isolation: isolate;
+}
+
+.press-cadence.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.press-cadence--quiet { --pc-tone: var(--blue); }
+.press-cadence--human { --pc-tone: var(--coral); }
+.press-cadence--bold { --pc-tone: var(--acid); }
+
+.press-cadence__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.press-cadence__paper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .55;
+}
+
+.press-cadence__paper svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.press-cadence__edge {
+  display: grid;
+  place-items: center;
+  width: clamp(28px, 3vw, 36px);
+  height: clamp(28px, 3vw, 36px);
+  color: currentColor;
+  opacity: .7;
+  transition: opacity .5s var(--ease), color .55s var(--ease);
+}
+
+.press-cadence__edge--lead { grid-area: lead; }
+.press-cadence__edge--trail { grid-area: trail; }
+
+.press-cadence__edge svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.press-cadence:hover .press-cadence__edge,
+.press-cadence:focus-within .press-cadence__edge {
+  opacity: 1;
+}
+
+/* ── CAPTION ──────────────────────────────────────────────── */
+
+.press-cadence__caption {
+  grid-area: caption;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  flex-wrap: wrap;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .7vw, 10px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity .8s var(--ease-out) .25s, transform .8s var(--ease-out) .25s;
+}
+
+.press-cadence.is-revealed .press-cadence__caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.press-cadence__caption-key {
+  color: currentColor;
+  letter-spacing: .32em;
+}
+
+.press-cadence__caption-rule {
+  display: inline-block;
+  width: clamp(24px, 4vw, 64px);
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.press-cadence__caption-line {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12.5px, 1vw, 14.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+}
+
+/* ── STAFF ────────────────────────────────────────────────── */
+
+.press-cadence__staff {
+  grid-area: staff;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(54px, 5vw, 76px);
+  padding: 0 clamp(2px, .4vw, 8px);
+}
+
+.press-cadence__staff-rule {
+  position: absolute;
+  inset: 50% 0 auto 0;
+  width: 100%;
+  height: 60px;
+  transform: translateY(-50%);
+  color: currentColor;
+  display: block;
+  pointer-events: none;
+  opacity: .85;
+}
+
+.press-cadence__staff-path {
+  transition: stroke-dashoffset 2.4s var(--ease-out) .35s;
+}
+
+.press-cadence.is-revealed .press-cadence__staff-path {
+  stroke-dashoffset: 0;
+}
+
+.press-cadence__beat {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--beat-fraction, .5) * 100%);
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+  gap: 4px;
+  width: clamp(86px, 9vw, 124px);
+  padding: 6px 0;
+  color: var(--paper);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition:
+    color .45s var(--ease),
+    transform .55s var(--ease-spring);
+}
+
+.press-cadence__beat:hover,
+.press-cadence__beat:focus-visible {
+  outline: none;
+  color: var(--pc-tone);
+}
+
+.press-cadence__beat-line {
+  display: block;
+  width: 12px;
+  height: 14px;
+  color: currentColor;
+  opacity: .35;
+  transition: opacity .45s var(--ease), height .45s var(--ease);
+}
+
+.press-cadence__beat-line svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.press-cadence__beat-disc {
+  display: grid;
+  place-items: center;
+  width: clamp(28px, 2.6vw, 36px);
+  height: clamp(28px, 2.6vw, 36px);
+  color: var(--muted);
+  transition: color .5s var(--ease), transform .55s var(--ease-spring);
+}
+
+.press-cadence__beat-disc svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.press-cadence__beat-letter {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0;
+  color: var(--muted);
+  background: rgba(12, 16, 24, .92);
+  opacity: 0;
+  transform: scale(.7);
+  transition: opacity .4s var(--ease), transform .45s var(--ease-spring), color .45s var(--ease);
+}
+
+.press-cadence__beat.is-active .press-cadence__beat-letter,
+.press-cadence__beat:hover .press-cadence__beat-letter,
+.press-cadence__beat:focus-visible .press-cadence__beat-letter {
+  opacity: 1;
+  transform: scale(1);
+  color: var(--pc-tone);
+}
+
+.press-cadence__beat-name {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, .85vw, 12px);
+  letter-spacing: -.005em;
+  color: var(--muted);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .45s var(--ease), color .45s var(--ease), transform .5s var(--ease-spring);
+}
+
+.press-cadence__beat.is-active .press-cadence__beat-name,
+.press-cadence__beat:hover .press-cadence__beat-name,
+.press-cadence__beat:focus-visible .press-cadence__beat-name {
+  opacity: 1;
+  color: var(--pc-tone);
+  transform: translateX(-50%) translateY(0);
+}
+
+.press-cadence__beat.is-active .press-cadence__beat-disc {
+  color: var(--pc-tone);
+  transform: scale(1.06);
+}
+
+.press-cadence__beat.is-active .press-cadence__beat-line {
+  opacity: .7;
+  height: 18px;
+}
+
+.press-cadence__beat.is-voice .press-cadence__beat-disc {
+  color: var(--pc-tone);
+}
+
+.press-cadence__beat.is-voice .press-cadence__beat-letter {
+  color: var(--pc-tone);
+  opacity: 1;
+  transform: scale(1);
+}
+
+.press-cadence__beat.is-voice .press-cadence__beat-name {
+  opacity: .85;
+  color: var(--pc-tone);
+}
+
+.press-cadence__beat-quiet.is-active { --pc-tone: var(--blue); }
+.press-cadence__beat-human.is-active { --pc-tone: var(--coral); }
+.press-cadence__beat-bold.is-active { --pc-tone: var(--acid); }
+
+/* The traveling pulse — a thin vertical tick that rides along the
+   staff beneath the active voice. Its horizontal position is driven
+   by --pulse-fraction, which the JS keeps in sync with the active beat. */
+
+.press-cadence__pulse {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--pulse-fraction, .5) * 100%);
+  width: 12px;
+  height: 60px;
+  transform: translate(-50%, -50%);
+  color: currentColor;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    left .55s var(--ease-spring),
+    opacity .8s var(--ease-out) .9s,
+    color .55s var(--ease);
+}
+
+.press-cadence.is-revealed .press-cadence__pulse {
+  opacity: .85;
+}
+
+.press-cadence__pulse svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── FOOT ─────────────────────────────────────────────────── */
+
+.press-cadence__foot {
+  grid-area: foot;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, .8vw, 12px);
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: clamp(8.5px, .7vw, 10px);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 60%, transparent);
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity .8s var(--ease-out) .55s, transform .8s var(--ease-out) .55s;
+}
+
+.press-cadence.is-revealed .press-cadence__foot {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.press-cadence__foot-key {
+  color: currentColor;
+  letter-spacing: .32em;
+}
+
+.press-cadence__foot-rule {
+  display: inline-block;
+  width: clamp(18px, 2.4vw, 38px);
+  height: 1px;
+  background: currentColor;
+  opacity: .5;
+}
+
+.press-cadence__foot-rule--alt {
+  background: var(--paper);
+  opacity: .25;
+}
+
+.press-cadence__foot-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.press-cadence__foot-stack em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(12.5px, 1vw, 14.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.press-cadence__foot-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, .85vw, 12px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: color-mix(in srgb, var(--paper) 60%, transparent);
+}
+
+.press-cadence__foot-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(20px, 1.8vw, 24px);
+  height: clamp(20px, 1.8vw, 24px);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: currentColor;
+  transition: color .5s var(--ease);
+}
+
+.press-cadence__foot-glyph em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .9vw, 13px);
+  line-height: 1;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+
+@media (max-width: 880px) {
+  .press-cadence {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "caption"
+      "staff"
+      "foot";
+    column-gap: 0;
+    row-gap: clamp(10px, 1.6vw, 16px);
+  }
+
+  .press-cadence__edge {
+    display: none;
+  }
+
+  .press-cadence__staff {
+    height: clamp(64px, 12vw, 88px);
+  }
+}
+
+@media (max-width: 540px) {
+  .press-cadence {
+    margin: clamp(10px, 1.2vw, 16px) clamp(8px, 1.6vw, 14px) clamp(20px, 2.8vw, 32px);
+    padding: clamp(10px, 1.4vw, 16px) clamp(10px, 1.6vw, 14px);
+  }
+
+  .press-cadence__caption-line {
+    font-size: 12px;
+  }
+
+  .press-cadence__beat {
+    width: clamp(72px, 22vw, 110px);
+  }
+
+  .press-cadence__beat-name {
+    font-size: 11px;
+  }
+}
+
+/* ── REDUCED MOTION ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .press-cadence,
+  .press-cadence__caption,
+  .press-cadence__foot {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .press-cadence__staff-path {
+    transition: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .press-cadence__pulse {
+    transition: none !important;
+  }
+}
+
