@@ -9,6 +9,7 @@ import { NotesSection } from './NotesSection'
 import { AnswerReveal } from './AnswerReveal'
 import { Colophon } from './Colophon'
 import { TypePlate } from './TypePlate'
+import { ComposeSignature } from './ComposeSignature'
 import type { ImpressionMark } from './ImpressionRibbon'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
@@ -23,7 +24,7 @@ const FOLIO_LEDGER: { id: string; index: string; label: string; tone: VoiceId }[
   { id: 'question', index: 'i', label: 'the question', tone: 'quiet' },
   { id: 'press', index: 'ii', label: 'the press bed', tone: 'human' },
   { id: 'notes', index: 'iii', label: 'marginalia', tone: 'quiet' },
-  { id: 'specimen', index: 'iv', label: 'three pressings', tone: 'bold' },
+  { id: 'pressings', index: 'iv', label: 'three pressings', tone: 'bold' },
   { id: 'answer', index: 'v', label: 'the answer', tone: 'human' },
 ]
 
@@ -121,26 +122,31 @@ function HeroLedger({ voice, setToday }: { voice: VoiceId; setToday: string }) {
   )
 }
 
-function MarginaliaAside() {
+function ReadingNote({ setToday }: { setToday: string }) {
   return (
-    <aside className="hero-marginalia" aria-label="Editor’s marginalia">
-      <header className="hero-marginalia__head">
-        <span className="hero-marginalia__head-mark" aria-hidden="true" />
-        <em>editor’s note · in the margin</em>
+    <aside className="hero-reading-note" aria-label="A short reading note from the editor">
+      <header className="hero-reading-note__head">
+        <span className="hero-reading-note__head-mark" aria-hidden="true" />
+        <em>reading note · set today</em>
+        <span className="hero-reading-note__head-date" aria-hidden="true">{setToday}</span>
       </header>
-      <p className="hero-marginalia__copy">
-        The question is short enough to read three times. The first time answers with type.
-        The second answers with rhythm. The third answers with whatever the page gave you room to notice.
+      <p className="hero-reading-note__copy">
+        The headline is set three ways for a reason. Pull a voice, mark a word, and the page keeps the rest of the room quiet so you can hear what each reading actually does.
       </p>
-      <ul className="hero-marginalia__bullets">
-        <li><span aria-hidden="true">i.</span><em>pull</em> a voice, anywhere on the page</li>
-        <li><span aria-hidden="true">ii.</span><em>tap</em> a word above to mark it for the colophon</li>
-        <li><span aria-hidden="true">iii.</span><em>unfold</em> the answer at the end, when you’re ready</li>
+      <ul className="hero-reading-note__hints" aria-label="Three ways to read the page">
+        <li>
+          <span className="hero-reading-note__hints-key" aria-hidden="true">i.</span>
+          <em>pull</em> a voice on the title
+        </li>
+        <li>
+          <span className="hero-reading-note__hints-key" aria-hidden="true">ii.</span>
+          <em>tap</em> a word to mark it
+        </li>
+        <li>
+          <span className="hero-reading-note__hints-key" aria-hidden="true">iii.</span>
+          <em>unfold</em> the answer, when ready
+        </li>
       </ul>
-      <footer className="hero-marginalia__foot">
-        <em>↳</em>
-        <span>nothing here interrupts the reading on purpose</span>
-      </footer>
     </aside>
   )
 }
@@ -312,7 +318,7 @@ export function App() {
         <nav className="folio-header__nav" aria-label="Folio ledger">
           <ol className="folio-header__nav-list">
             {FOLIO_LEDGER.map((folio, idx) => {
-              const isActive = activeSection === folio.id || (folio.id === 'question' && activeSection === 'question')
+              const isActive = activeSection === folio.id
               return (
                 <li key={folio.id} className={`folio-header__nav-item ${isActive ? 'is-active' : ''}`}>
                   <a className="folio-header__nav-link" href={`#${folio.id === 'specimen' ? 'pressings' : folio.id}`}>
@@ -395,50 +401,10 @@ export function App() {
         </div>
 
         <div className="hero__rail">
-          <HeroLedger voice={voice} setToday={setToday} />
-
-          <div className="hero__voice-keys" role="group" aria-label="Set the voice of the headline">
-            <span className="hero__voice-keys-tag" aria-hidden="true">
-              <span className="hero__voice-keys-mark" />
-              <em>pull a voice · try each</em>
-              <span className="hero__voice-keys-mark hero__voice-keys-mark--alt" />
-            </span>
-            {(['quiet', 'human', 'bold'] as VoiceId[]).map((id) => {
-              const meta = VOICE_META[id]
-              const isActive = voice === id
-              const tone = id === 'quiet' ? 'var(--blue)' : id === 'human' ? 'var(--coral)' : 'var(--acid)'
-              const faceFamily =
-                id === 'bold'
-                  ? 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif'
-                  : "'Iowan Old Style', 'Palatino Linotype', Georgia, serif"
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  className={`hero__voice-key hero__voice-key--${id} ${isActive ? 'is-active' : ''}`}
-                  onClick={() => selectVoice(id)}
-                  onKeyDown={(event) => onVoiceKey(event, id)}
-                  aria-pressed={isActive}
-                  aria-label={`Set the headline in the ${meta.name} voice. ${meta.face}.`}
-                  style={{ '--voice-tone': tone, '--voice-face': faceFamily } as CSSProperties}
-                >
-                  <span className="hero__voice-key-letter">{meta.letter}</span>
-                  <span className="hero__voice-key-name">
-                    <em>{meta.name}</em>
-                    <span className="hero__voice-key-face">{meta.face}</span>
-                  </span>
-                  <span className="hero__voice-key-tail" aria-hidden="true" />
-                </button>
-              )
-            })}
-          </div>
-
-          <MarginaliaAside />
-
           <button
             ref={answerTriggerRef}
             type="button"
-            className={`hero__reveal ${answerOpen ? 'is-open' : ''}`}
+            className={`hero__reveal hero__reveal--first ${answerOpen ? 'is-open' : ''}`}
             onClick={toggleAnswer}
             aria-expanded={answerOpen}
             aria-controls="answer"
@@ -462,6 +428,10 @@ export function App() {
             </span>
             <span className="hero__reveal-rule hero__reveal-rule--alt" aria-hidden="true" />
           </button>
+
+          <HeroLedger voice={voice} setToday={setToday} />
+
+          <ReadingNote setToday={setToday} />
         </div>
       </section>
 
@@ -512,6 +482,8 @@ export function App() {
       </div>
 
       <Colophon voice={voice} word={activeWord} setToday={setToday} readerName="" />
+
+      <ComposeSignature voice={voice} word={activeWord} setToday={setToday} />
 
       <footer className="site-foot" aria-label="The page, in one line">
         <span className="site-foot__rule" aria-hidden="true" />

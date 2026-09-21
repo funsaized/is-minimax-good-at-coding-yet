@@ -12,13 +12,9 @@ type WayfinderFolio = {
 const FOLIOS: WayfinderFolio[] = [
   { id: 'question', index: 'i', label: 'the question', hint: 'a folio of one line, set three ways' },
   { id: 'press', index: 'ii', label: 'the press bed', hint: 'a lever, a stick, a pulled impression' },
-  { id: 'contents', index: 'iii', label: 'this page, listed', hint: 'the press log · folio contents' },
-  { id: 'day', index: 'iii·', label: 'the day sheet', hint: 'the hour, the week, the day’s record' },
-  { id: 'note', index: '·', label: 'a folded slip', hint: 'a short letter to the reader' },
-  { id: 'proof', index: 'iv', label: 'the second proof', hint: 'marks on the words worth keeping' },
-  { id: 'pressings', index: 'v', label: 'three pressings', hint: 'the question set three ways' },
-  { id: 'notes', index: 'vi', label: 'the marginalia', hint: 'three things worth keeping' },
-  { id: 'answer', index: 'viii', label: 'the answer', hint: 'folded once, then folded back' },
+  { id: 'notes', index: 'iii', label: 'the marginalia', hint: 'three things worth keeping' },
+  { id: 'pressings', index: 'iv', label: 'three pressings', hint: 'the question set three ways' },
+  { id: 'answer', index: 'v', label: 'the answer', hint: 'folded once, then folded back' },
 ]
 
 const VOICE_TONE: Record<VoiceId, string> = {
@@ -189,7 +185,7 @@ export function WayfinderSeal({ activeId, voice, setToday }: WayfinderSealProps)
         </ol>
         <footer className="wayfinder__panel-foot" aria-hidden="true">
           <span className="wayfinder__panel-foot-mark" />
-          <span>nine folios · one question · the press is open</span>
+          <span>five folios · one question · the press is open</span>
           <span className="wayfinder__panel-foot-mark" />
         </footer>
         <button type="button" className="wayfinder__close" onClick={close} aria-label="Close the folio index" tabIndex={open ? 0 : -1}>

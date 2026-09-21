@@ -76085,4 +76085,511 @@ a small act of typesetting.
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 360 · refinement pass
+
+   The hero rail has been re-ordered so the answer reveal is the
+   first thing the reader meets. A composed press signature closes
+   the page, mirroring the title broadside's monogram with a single
+   breath. The reading note replaces the busier marginalia aside.
+
+   ──────────────────────────────────────────────────────────── */
+
+/* ── HERO REVEAL · lead position in the rail ───────────────────── */
+
+  .hero__reveal--first {
+    margin-bottom: 2px;
+    padding: clamp(18px, 2.4vw, 24px) clamp(18px, 2vw, 24px);
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--acid) 14%, transparent), color-mix(in srgb, var(--acid) 4%, transparent)),
+      rgba(20, 26, 38, .32);
+    border-color: color-mix(in srgb, var(--acid) 40%, transparent);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--acid) 18%, transparent) inset;
+  }
+
+  .app--voice-quiet .hero__reveal--first {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--blue) 14%, transparent), color-mix(in srgb, var(--blue) 4%, transparent)),
+      rgba(20, 26, 38, .32);
+    border-color: color-mix(in srgb, var(--blue) 40%, transparent);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--blue) 18%, transparent) inset;
+  }
+
+  .app--voice-human .hero__reveal--first {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--coral) 14%, transparent), color-mix(in srgb, var(--coral) 4%, transparent)),
+      rgba(20, 26, 38, .32);
+    border-color: color-mix(in srgb, var(--coral) 40%, transparent);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--coral) 18%, transparent) inset;
+  }
+
+  .app--voice-bold .hero__reveal--first {
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--acid) 16%, transparent), color-mix(in srgb, var(--acid) 5%, transparent)),
+      rgba(20, 26, 38, .32);
+    border-color: color-mix(in srgb, var(--acid) 46%, transparent);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--acid) 22%, transparent) inset;
+  }
+
+  .hero__reveal--first .hero__reveal-headline {
+    font-size: clamp(17px, 1.6vw, 21px);
+  }
+
+  .hero__reveal--first .hero__reveal-headline-mark {
+    font-size: 19px;
+  }
+
+  .hero__reveal--first .hero__reveal-eyebrow em {
+    font-size: 13.5px;
+  }
+
+  .hero__reveal--first::after {
+    content: '';
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
+    opacity: .25;
+    pointer-events: none;
+  }
+
+  .hero__reveal--first:hover::after,
+  .hero__reveal--first:focus-visible::after {
+    opacity: .55;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__reveal--first { box-shadow: none; }
+  }
+
+/* ── HERO READING NOTE · replaces the busy marginalia aside ───── */
+
+  .hero-reading-note {
+    position: relative;
+    display: block;
+    padding: clamp(16px, 2vw, 20px) clamp(16px, 2vw, 22px) clamp(18px, 2.2vw, 22px);
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+    background:
+      linear-gradient(180deg, rgba(243, 236, 214, .022) 0%, rgba(243, 236, 214, .008) 100%);
+    border-radius: 1px;
+  }
+
+  .hero-reading-note__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 9px;
+    margin-bottom: 10px;
+    color: var(--ink-mist);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .14em;
+    text-transform: lowercase;
+  }
+
+  .hero-reading-note__head-mark {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--coral);
+    transform: rotate(45deg);
+    border-radius: 1px;
+    transition: background .45s var(--ease);
+  }
+
+  .app--voice-quiet .hero-reading-note__head-mark { background: var(--blue); }
+  .app--voice-human .hero-reading-note__head-mark { background: var(--coral); }
+  .app--voice-bold .hero-reading-note__head-mark { background: var(--acid); }
+
+  .hero-reading-note__head em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    text-transform: none;
+    letter-spacing: -.005em;
+    color: var(--paper);
+  }
+
+  .hero-reading-note__head-date {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    color: var(--ink-mist);
+    opacity: .75;
+  }
+
+  .hero-reading-note__copy {
+    margin: 0 0 14px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--paper);
+    letter-spacing: -.003em;
+  }
+
+  .hero-reading-note__hints {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--lead-2);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .04em;
+  }
+
+  .hero-reading-note__hints li {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .hero-reading-note__hints-key {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--coral);
+    opacity: .85;
+    transition: color .45s var(--ease);
+  }
+
+  .app--voice-quiet .hero-reading-note__hints-key { color: var(--blue); }
+  .app--voice-human .hero-reading-note__hints-key { color: var(--coral); }
+  .app--voice-bold .hero-reading-note__hints-key { color: var(--acid); }
+
+  .hero-reading-note__hints em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--ink-mist);
+    margin-right: 4px;
+    text-transform: lowercase;
+  }
+
+  @media (max-width: 720px) {
+    .hero-reading-note__copy { font-size: 14px; }
+    .hero-reading-note { padding: 14px 14px 16px; }
+  }
+
+/* ── COMPOSE SIGNATURE · the page, signed off ─────────────────── */
+
+  .compose-signature {
+    --sig-tone: var(--coral);
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-areas:
+      'rule-lead rule-lead rule-lead'
+      'monogram crown crown'
+      'monogram sentence sentence'
+      'monogram note note'
+      'rule-trail rule-trail rule-trail'
+      'set set set';
+    column-gap: clamp(14px, 2vw, 24px);
+    row-gap: clamp(8px, 1.2vw, 14px);
+    align-items: center;
+    width: min(100%, 760px);
+    margin: clamp(28px, 4vw, 48px) auto clamp(20px, 3vw, 36px);
+    padding: clamp(20px, 3vw, 30px) clamp(18px, 2.4vw, 32px) clamp(14px, 1.8vw, 22px);
+    color: var(--sig-tone);
+    border: 1px solid color-mix(in srgb, var(--sig-tone) 28%, transparent);
+    background:
+      radial-gradient(ellipse 70% 100% at 50% 50%, color-mix(in srgb, var(--sig-tone) 8%, transparent), transparent 70%),
+      linear-gradient(180deg, rgba(20, 26, 38, .42), rgba(14, 18, 28, .55));
+    border-radius: 2px;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--sig-tone) 18%, transparent),
+      0 18px 38px -28px rgba(0, 0, 0, .55);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: composeSignatureIn 1.1s var(--ease-out) .15s forwards;
+  }
+
+  @keyframes composeSignatureIn {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .compose-signature {
+      animation: none !important;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .app--voice-quiet .compose-signature { --sig-tone: var(--blue); }
+  .app--voice-human .compose-signature { --sig-tone: var(--coral); }
+  .app--voice-bold .compose-signature { --sig-tone: var(--acid); }
+
+  .compose-signature__defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .compose-signature__rule {
+    grid-column: 1 / -1;
+    display: block;
+    height: 6px;
+    color: color-mix(in srgb, var(--sig-tone) 55%, transparent);
+  }
+
+  .compose-signature__rule--lead { grid-area: rule-lead; }
+  .compose-signature__rule--trail { grid-area: rule-trail; }
+
+  .compose-signature__rule svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .compose-signature__rule-stroke {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: composeSignatureRuleDraw 1.4s var(--ease-out) .3s forwards;
+  }
+
+  .compose-signature__rule-stroke--trail {
+    animation-delay: .55s;
+  }
+
+  @keyframes composeSignatureRuleDraw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .compose-signature__rule-stroke {
+      animation: none !important;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .compose-signature__monogram {
+    grid-area: monogram;
+    display: inline-grid;
+    place-items: center;
+    width: clamp(84px, 10vw, 120px);
+    height: clamp(84px, 10vw, 120px);
+    flex-shrink: 0;
+    color: color-mix(in srgb, var(--sig-tone) 85%, transparent);
+    animation: composeSignatureMonogram 1.4s var(--ease-out) .25s backwards;
+  }
+
+  @keyframes composeSignatureMonogram {
+    0% { opacity: 0; transform: scale(.82) rotate(-6deg); }
+    60% { opacity: 1; transform: scale(1.04) rotate(2deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .compose-signature__monogram {
+      animation: none !important;
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  .compose-signature__crown {
+    grid-area: crown;
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-self: end;
+    color: var(--paper);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(15px, 1.4vw, 19px);
+    letter-spacing: -.012em;
+    line-height: 1.1;
+  }
+
+  .compose-signature__crown-tag {
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: 10.5px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--sig-tone) 70%, var(--paper) 30%);
+    margin-right: 2px;
+  }
+
+  .compose-signature__crown-voice {
+    color: var(--paper);
+    font-style: italic;
+  }
+
+  .compose-signature__crown-letter {
+    display: inline-grid;
+    place-items: center;
+    width: clamp(22px, 2vw, 26px);
+    height: clamp(22px, 2vw, 26px);
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    color: var(--sig-tone);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(13px, 1.2vw, 15px);
+    line-height: 1;
+    text-transform: lowercase;
+    margin-left: 4px;
+  }
+
+  .compose-signature__sentence {
+    grid-area: sentence;
+    margin: 0;
+    color: var(--paper);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(15px, 1.5vw, 21px);
+    letter-spacing: -.012em;
+    line-height: 1.32;
+    max-width: 38ch;
+  }
+
+  .compose-signature__sentence em {
+    font-style: italic;
+    color: color-mix(in srgb, var(--sig-tone) 80%, var(--paper) 20%);
+  }
+
+  .compose-signature__sentence-mark {
+    display: inline-grid;
+    place-items: center;
+    width: 1.4em;
+    height: 1.4em;
+    margin-left: 4px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    color: var(--sig-tone);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: .85em;
+    line-height: 1;
+    vertical-align: -2px;
+  }
+
+  .compose-signature__note {
+    grid-area: note;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    color: var(--ink-mist);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .compose-signature__note-mark {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--sig-tone);
+    text-transform: none;
+    letter-spacing: 0;
+    opacity: .8;
+  }
+
+  .compose-signature__note em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(12.5px, 1.1vw, 14px);
+    text-transform: none;
+    letter-spacing: -.005em;
+    color: var(--lead-2);
+  }
+
+  .compose-signature__set {
+    grid-area: set;
+    display: inline-flex;
+    align-self: center;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    padding-top: clamp(8px, 1.2vw, 12px);
+    border-top: 1px dashed color-mix(in srgb, var(--sig-tone) 22%, transparent);
+    color: var(--ink-mist);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .compose-signature__set-key {
+    color: color-mix(in srgb, var(--sig-tone) 70%, var(--paper) 30%);
+  }
+
+  .compose-signature__set-date {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(12.5px, 1.05vw, 14px);
+    text-transform: none;
+    letter-spacing: -.005em;
+    color: var(--paper);
+  }
+
+  .compose-signature__set-sep {
+    color: var(--ink-mist);
+    opacity: .65;
+  }
+
+  .compose-signature__set-season {
+    color: var(--lead-2);
+    text-transform: lowercase;
+    letter-spacing: .22em;
+  }
+
+  @media (max-width: 720px) {
+    .compose-signature {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        'rule-lead'
+        'monogram'
+        'crown'
+        'sentence'
+        'note'
+        'rule-trail'
+        'set';
+      width: calc(100% - 32px);
+      padding: 18px 16px 16px;
+      row-gap: 10px;
+      text-align: left;
+    }
+
+    .compose-signature__monogram {
+      margin: 0 auto;
+    }
+
+    .compose-signature__crown,
+    .compose-signature__sentence,
+    .compose-signature__note,
+    .compose-signature__set {
+      justify-self: start;
+      text-align: left;
+    }
+
+    .compose-signature__set {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .compose-signature__monogram {
+      width: 78px;
+      height: 78px;
+    }
+
+    .compose-signature__sentence {
+      font-size: 15px;
+    }
+  }
+
 
