@@ -1,7 +1,5 @@
 # Changelog
 
-## Iteration 344
+## Iteration 345 — A composed, confident broadside
 
-The press lever collapses to one composed mechanism — one shaft, one drop, one drawn underline.
-
-The four drawn flourishes around the shaft fold into a single hand-drawn drop that falls from the pivot the moment the lever is pulled and lands on a small bead with a slow halo. The knob loses its twelve knurls and becomes one ringed disc with a single highlight. The cage loses its right rail; the four corner crops leave the plate. The action button loses its corner brackets and gains a single drawn underline that traces itself on hover and focus. The head loses its two paragraph marks and gains one italic word, one folio tag, one pair of dots. The lever also grows taller, the mobile layout stacks vertically with the drop scaled to fit, and the reduced-motion fallback reveals every animated path at full opacity so the gesture still reads.
+The title page gains a refined running signature at the top right corner: a small italic m³ monogram paired with a three-line stack of "m³ press · set today · <date>". A new hand-set title rule with a small center mark now sits between the headline and the operator's note. The title plate corners carry a folio strip that reads "folio i · set today". Title typography tightens: the headline breathes slightly tighter in italic serif and the bold voice gets a more poster-like, even more condensed setting. The operator's note loses the duplicated pilcrow and reads as a quieter subtitle. Press signature, rule, plate folio, and seal-calibration styles are gated on `prefers-reduced-motion`. Voice selector and seal remain untouched in placement; seal is slightly smaller so the headline can dominate.

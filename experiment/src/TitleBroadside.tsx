@@ -254,11 +254,76 @@ export function TitleBroadside({
         </p>
       </header>
 
+      <span className="tb__signature" aria-hidden="true">
+        <span className="tb__signature-monogram">
+          <svg viewBox="0 0 84 84" preserveAspectRatio="xMidYMid meet">
+            <g filter={`url(#${sealGrainId})`} opacity=".94">
+              <circle cx="42" cy="42" r="36" fill="none" stroke="currentColor" strokeWidth=".75" />
+              <circle cx="42" cy="42" r="29" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".9 1.8" opacity=".75" />
+              <circle cx="42" cy="42" r="20" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".55" />
+              <path
+                d="M42 8 L42 14 M42 70 L42 76 M8 42 L14 42 M70 42 L76 42"
+                stroke="currentColor"
+                strokeWidth=".5"
+                strokeLinecap="round"
+                opacity=".55"
+              />
+              <text
+                x="42"
+                y="51"
+                textAnchor="middle"
+                fontFamily="'Iowan Old Style', Georgia, serif"
+                fontStyle="italic"
+                fontSize="28"
+                letterSpacing="-.06em"
+                fill="currentColor"
+              >m³</text>
+            </g>
+          </svg>
+        </span>
+        <span className="tb__signature-stack">
+          <span className="tb__signature-line tb__signature-line--top">
+            <span className="tb__signature-bead" />
+            <em>m³ press</em>
+          </span>
+          <span className="tb__signature-line tb__signature-line--mid">
+            <span className="tb__signature-rule tb__signature-rule--lead" />
+            <em>set</em>
+            <span className="tb__signature-rule" />
+            <em>today</em>
+            <span className="tb__signature-rule tb__signature-rule--trail" />
+          </span>
+          <span className="tb__signature-line tb__signature-line--date">
+            <span className="tb__signature-date">{setToday}</span>
+            <span className="tb__signature-meta" aria-hidden="true">
+              <span className="tb__signature-meta-dot" />
+              {SEASON}
+              <span className="tb__signature-meta-dot tb__signature-meta-dot--alt" />
+            </span>
+          </span>
+        </span>
+      </span>
+
       <div className="tb__plate" aria-hidden="true">
         <span className="tb__plate-corner tb__plate-corner--tl" />
         <span className="tb__plate-corner tb__plate-corner--tr" />
         <span className="tb__plate-corner tb__plate-corner--bl" />
         <span className="tb__plate-corner tb__plate-corner--br" />
+        <span className="tb__plate-folio" aria-hidden="true">
+          <svg viewBox="0 0 84 14" preserveAspectRatio="xMidYMid meet">
+            <g filter={`url(#${ruleGrainId})`}>
+              <path d="M2 7c12-2 24 2 36 0s24-2 36 0 8 2 8 0" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" />
+            </g>
+            <circle cx="42" cy="7" r="1.2" fill="currentColor" />
+            <circle cx="2" cy="7" r=".9" fill="currentColor" opacity=".7" />
+            <circle cx="82" cy="7" r=".9" fill="currentColor" opacity=".7" />
+          </svg>
+          <span className="tb__plate-folio-tag">
+            <em>folio i</em>
+            <span aria-hidden="true">·</span>
+            <span>set today</span>
+          </span>
+        </span>
       </div>
 
       <div className="tb__seal" aria-hidden="true">
@@ -288,10 +353,26 @@ export function TitleBroadside({
         </h3>
       </div>
 
+      <span className="tb__rule" aria-hidden="true">
+        <svg viewBox="0 0 460 6" preserveAspectRatio="none">
+          <g filter={`url(#${ruleGrainId})`}>
+            <path
+              className="tb__rule-lead"
+              d="M2 3c30-2 60 2 90 0s60-2 90 0 60 2 90 0 60-2 90 0 30 2 50 0 30-2 48 0"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth=".7"
+              strokeLinecap="round"
+              pathLength="100"
+            />
+          </g>
+          <circle className="tb__rule-mark" cx="230" cy="3" r="2.2" fill="currentColor" />
+        </svg>
+      </span>
+
       <p className="tb__operator" aria-label={`Operator's note · ${OPERATOR_NOTE[voice]}`}>
         <span className="tb__operator-mark" aria-hidden="true">¶</span>
         <em className="tb__operator-line">{OPERATOR_NOTE[voice]}</em>
-        <span className="tb__operator-mark tb__operator-mark--alt" aria-hidden="true">¶</span>
       </p>
 
       <span className="tb__exhale" aria-hidden="true">

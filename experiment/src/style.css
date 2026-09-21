@@ -66698,3 +66698,545 @@ a small act of typesetting.
   }
   .press-lamp__cast { opacity: .7; }
 }
+
+/* ──────────────────────────────────────────────────────────────────
+   ITERATION 345 · "A composed, confident broadside"
+   The title plate gains a refined running signature at the top
+   right corner. Typography tightens; the operator's note moves
+   closer to the headline and reads as a quiet subtitle; the title
+   rule carries a hand-set center mark. Voice selector stays put.
+   ────────────────────────────────────────────────────────────────── */
+
+.tb__signature {
+  position: absolute;
+  top: clamp(20px, 3vw, 38px);
+  right: clamp(16px, 3vw, 44px);
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  padding: clamp(6px, .9vw, 10px) clamp(10px, 1.3vw, 16px) clamp(6px, .9vw, 10px) clamp(8px, 1vw, 12px);
+  border: 1px solid color-mix(in srgb, var(--tb-tone) 22%, transparent);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--tb-tone) 8%, transparent), transparent 76%),
+    linear-gradient(180deg, rgba(20, 26, 38, .32), rgba(12, 16, 26, .52));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--tb-tone) 5%, transparent),
+    inset 0 1px 0 rgba(243, 236, 214, .04);
+  color: var(--tb-tone);
+  opacity: 0;
+  transform: translate(6px, -6px) rotate(2deg);
+  animation: tbSignatureIn 1.05s var(--ease-spring) .55s forwards;
+  pointer-events: none;
+  max-width: clamp(180px, 28vw, 280px);
+  transition: color .5s var(--ease), border-color .5s var(--ease);
+}
+
+.tb__signature::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  pointer-events: none;
+  border-radius: 2px;
+  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--tb-tone) 22%, transparent), transparent 60%);
+  opacity: .35;
+  z-index: -1;
+}
+
+.tb__signature::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tb-tone);
+  transform: translate(-50%, -50%) scale(.4);
+  opacity: 0;
+  animation: tbSignaturePin 1.1s var(--ease-spring) 1.55s forwards;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tb-tone) 18%, transparent);
+}
+
+.tb__signature-monogram {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(40px, 4vw, 56px);
+  height: clamp(40px, 4vw, 56px);
+  flex: 0 0 auto;
+  color: currentColor;
+  transform: rotate(-4deg);
+  transition: transform .55s var(--ease-spring);
+}
+
+.tb__signature:hover { pointer-events: auto; }
+.tb__signature:hover .tb__signature-monogram { transform: rotate(2deg); }
+
+.tb__signature-monogram svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tb__signature-stack {
+  display: grid;
+  row-gap: clamp(2px, .3vw, 4px);
+  min-width: 0;
+  color: var(--tb-ink);
+}
+
+.tb__signature-line {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, .5vw, 8px);
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .65vw, 9px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tb__signature-line--top { color: var(--tb-ink-mist); }
+.tb__signature-line--top em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, 1vw, 13.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--tb-tone);
+}
+
+.tb__signature-bead {
+  display: inline-block;
+  width: clamp(6px, .55vw, 8px);
+  height: clamp(6px, .55vw, 8px);
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.tb__signature-line--mid {
+  color: var(--tb-ink-soft);
+  letter-spacing: .2em;
+}
+
+.tb__signature-line--mid em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, .9vw, 12px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--tb-ink);
+}
+
+.tb__signature-rule {
+  flex: 1 1 auto;
+  min-width: 8px;
+  height: 1px;
+  background: currentColor;
+  opacity: .4;
+}
+
+.tb__signature-rule--lead { background: linear-gradient(to right, transparent, currentColor); }
+.tb__signature-rule--trail { background: linear-gradient(to left, transparent, currentColor); }
+
+.tb__signature-line--date {
+  color: var(--tb-tone);
+}
+
+.tb__signature-date {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11.5px, 1vw, 13px);
+  letter-spacing: -.005em;
+  text-transform: none;
+}
+
+.tb__signature-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, .4vw, 6px);
+  color: var(--tb-ink-mist);
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .65vw, 9px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.tb__signature-meta-dot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .65;
+}
+
+.tb__signature-meta-dot--alt { transform: scale(1.6); opacity: .9; }
+
+@keyframes tbSignatureIn {
+  0% { opacity: 0; transform: translate(8px, -10px) rotate(4deg); }
+  60% { opacity: 1; transform: translate(-2px, 2px) rotate(0deg); }
+  100% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes tbSignaturePin {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.4); }
+  70% { opacity: 1; transform: translate(-50%, -50%) scale(1.25); }
+  100% { opacity: .85; transform: translate(-50%, -50%) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tb__signature,
+  .tb__signature::after,
+  .tb__signature-monogram {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* mobile: signature becomes a centered chip below the eyebrow */
+@media (max-width: 720px) {
+  .tb__signature {
+    position: static;
+    margin: clamp(8px, 1.6vw, 12px) auto 0;
+    transform: none;
+    max-width: min(100%, 360px);
+    justify-self: center;
+  }
+
+  .tb__signature::after { display: none; }
+}
+
+/* on very small screens, fold the signature into a single-line strip */
+@media (max-width: 480px) {
+  .tb__signature {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .tb__signature-monogram {
+    width: 32px;
+    height: 32px;
+  }
+
+  .tb__signature-line--mid em,
+  .tb__signature-date {
+    font-size: 11px;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   TITLE TYPOGRAPHY REFINEMENT · a tighter, more confident headline.
+   The headline reads slightly tighter in italic serif and breathes
+   more room vertically between lines.
+   ────────────────────────────────────────────────────────────────── */
+
+.tb__statement-lines {
+  letter-spacing: -.012em;
+}
+
+.tb__statement-lines .tb__line {
+  position: relative;
+}
+
+.tb__statement-lines .tb__line + .tb__line {
+  margin-top: clamp(-2px, -.2vw, 0px);
+}
+
+.tb__statement-lead {
+  margin-right: clamp(6px, .8vw, 14px);
+  letter-spacing: -.005em;
+}
+
+.tb__statement-static {
+  letter-spacing: -.012em;
+  margin-left: clamp(8px, 1vw, 16px);
+}
+
+.tb.tb--voice-bold .tb__statement-lines {
+  letter-spacing: -.05em;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'ss01' 1;
+}
+
+.tb.tb--voice-bold .tb__statement-lead {
+  letter-spacing: -.024em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.tb.tb--voice-bold .tb__statement-static {
+  letter-spacing: -.04em;
+}
+
+/* tighter under the headline — a hand-set center mark that
+   sits in the rule and pulls attention to the operator's note */
+
+.tb__rule {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  max-width: 460px;
+  height: clamp(14px, 1.6vw, 22px);
+  margin: clamp(2px, .3vw, 6px) 0 clamp(8px, 1.2vw, 14px);
+  color: var(--tb-rule);
+  opacity: 0;
+  animation: tbRuleIn .85s var(--ease-out) 1.25s forwards;
+  z-index: 2;
+}
+
+.tb__rule svg {
+  display: block;
+  width: 100%;
+  height: 6px;
+}
+
+.tb__rule-lead {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: tbRuleDraw 1.5s var(--ease-out) 1.45s forwards;
+}
+
+.tb__rule-mark {
+  fill: currentColor;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.5);
+  animation: tbRuleMarkIn .55s var(--ease-spring) 2.95s forwards;
+}
+
+@keyframes tbRuleIn {
+  to { opacity: 1; }
+}
+
+@keyframes tbRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes tbRuleMarkIn {
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tb__rule,
+  .tb__rule-lead,
+  .tb__rule-mark {
+    animation: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
+    transform: none !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   OPERATOR'S NOTE REFINEMENT · reads as a quieter subtitle, sits
+   closer to the headline, and loses the duplicated pilcrow clutter.
+   ────────────────────────────────────────────────────────────────── */
+
+.tb__operator {
+  position: relative;
+  margin-top: clamp(-2px, -.2vw, 4px);
+  color: var(--tb-ink-mist);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(13.5px, 1.2vw, 16px);
+  letter-spacing: -.008em;
+  line-height: 1.4;
+  max-width: 38ch;
+  text-wrap: balance;
+}
+
+.tb__operator em {
+  font-style: italic;
+  color: var(--tb-ink-soft);
+}
+
+.tb__operator-mark {
+  display: inline-block;
+  margin-right: clamp(6px, .8vw, 10px);
+  color: var(--tb-tone);
+  font-family: var(--serif);
+  font-size: 1.05em;
+  line-height: 1;
+  transform: translateY(-.06em);
+  opacity: .75;
+}
+
+.tb__operator-mark--alt { display: none; }
+
+@media (max-width: 720px) {
+  .tb__operator {
+    font-size: clamp(13px, 3.6vw, 16px);
+    max-width: none;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   VOICE FOOTER · refinement · the printed footer that closes the
+   title now has a hairline center mark that splits "marked at" and
+   "in voice" with a small bead.
+   ────────────────────────────────────────────────────────────────── */
+
+.tb__foot-bead--center {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(20px, 1.8vw, 28px);
+  height: clamp(20px, 1.8vw, 28px);
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--tb-tone) 32%, transparent);
+  background: color-mix(in srgb, var(--tb-tone) 6%, transparent);
+  position: relative;
+}
+
+.tb__foot-bead--center::before,
+.tb__foot-bead--center::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 1px;
+  background: var(--tb-tone);
+  opacity: .65;
+}
+
+.tb__foot-bead--center::before { left: -8px; }
+.tb__foot-bead--center::after { right: -8px; }
+
+.tb__foot-bead--center span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--tb-tone);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   TITLE PLATE FOLIO · a small printed strip below the corner
+   marks that reads "folio i · set today" — the printer's
+   identification band that makes the broadside feel signed.
+   ────────────────────────────────────────────────────────────────── */
+
+.tb__plate-folio {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(-14px, -1.4vw, -10px);
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  width: clamp(160px, 24vw, 220px);
+  transform: translateX(-50%);
+  color: var(--tb-tone);
+  opacity: 0;
+  animation: tbPlateFolioIn .9s var(--ease-out) 1.65s forwards;
+  pointer-events: none;
+}
+
+.tb__plate-folio svg {
+  display: block;
+  width: 100%;
+  height: 14px;
+}
+
+.tb__plate-folio-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, .5vw, 7px);
+  color: var(--tb-ink-mist);
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .65vw, 9px);
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tb__plate-folio-tag em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(10.5px, .9vw, 12px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--tb-tone);
+}
+
+@keyframes tbPlateFolioIn {
+  0% { opacity: 0; transform: translate(-50%, -4px); }
+  100% { opacity: .85; transform: translate(-50%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tb__plate-folio {
+    animation: none !important;
+    opacity: .85;
+    transform: translateX(-50%);
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   VOICE SELECTOR REFINEMENT · the three settings sit a bit closer
+   to the headline and feel more integral; subtle background tint
+   keeps them grouped without a heavy box around them.
+   ────────────────────────────────────────────────────────────────── */
+
+.tb__voices {
+  margin-top: clamp(-4px, -.4vw, -2px);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--tb-tone) 6%, transparent), transparent 88%),
+    linear-gradient(180deg, rgba(20, 26, 38, .24), rgba(12, 16, 26, .4));
+}
+
+.tb__voices-stations {
+  gap: clamp(8px, 1vw, 14px);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   SEAL CALIBRATION · slightly more contained so the headline can
+   dominate. The voice-letter tag gets a small refined underline
+   that ties it to the seal.
+   ────────────────────────────────────────────────────────────────── */
+
+.tb__seal {
+  width: clamp(86px, 7.4vw, 108px);
+  height: clamp(86px, 7.4vw, 108px);
+  margin-bottom: clamp(2px, .2vw, 6px);
+}
+
+.tb__seal-disc svg {
+  filter: drop-shadow(0 1px 0 color-mix(in srgb, var(--tb-tone) 22%, transparent));
+}
+
+.tb__seal-tag {
+  bottom: clamp(-8px, -.4vw, -4px);
+  right: clamp(-12px, -.6vw, -6px);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   HEADLINE SLIGHT WIDOW CONTROL · keep the marked tokens from
+   breaking onto their own line on small viewports.
+   ────────────────────────────────────────────────────────────────── */
+
+.tb__line {
+  flex-wrap: nowrap;
+}
+
+@media (max-width: 720px) {
+  .tb__line {
+    flex-wrap: wrap;
+  }
+
+  .tb__statement-static {
+    margin-left: clamp(2px, .6vw, 6px);
+  }
+}
+
+@media (max-width: 460px) {
+  .tb__signature-line--top em {
+    font-size: 11.5px;
+  }
+}
