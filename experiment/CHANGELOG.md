@@ -1,37 +1,17 @@
-# Iteration 332
+# Changelog
 
-A single, confident title broadside absorbs the title page, headline, and voice selector into one composed frontispiece.
+## Iteration 333 — One composed reader's note absorbs the editor's note, voice specimen, and imprint plate.
 
-## Change
+The frontmatter sprawl beneath the title page collapsed into a single composed section. Three stacked pieces (editor's note + voice specimen + imprint plate) have been replaced by a single `ReadersNote` that holds the page's instruction, three marked words, three voices, and the editor's pull quote in one read.
 
-The title page area was a stack of six small widgets (TitlePage, QuestionMonument, ReadingHinge, ReadingPrologue, PressLever, TitleCoda). The first three read as separate dashboards fighting for the same attention.
+What changed:
 
-Iteration 332 folds the title page, the headline monument, the running head, the press seal, and the voice selector into one composition: a `TitleBroadside` that opens the page as a single broadside.
+- Added `src/ReadersNote.tsx`, a single composed component that combines the editor's instruction, the three marked words as a marginalium, the three voices as a voice rule, the "attention, not ornament" pull quote, and a three-cell footer. It uses the same plate corner crops, eyebrow rule, and voice wax bead as the surrounding pieces, and shifts tone with the active voice (blue / coral / acid).
+- Removed the inline `<article className="folio-note">`, the `<aside className="folio-readings">` with its `SpecimenTray`, and the `<ImprintPlate>` component from `App.tsx`. The reader now meets the page's instruction in one artifact instead of three stacked panels.
+- The new component mirrors the title's marked-word state: hovering or focusing a word in the title broadside also lights the matching cell in the reader's note. The voice rule shares the same `shift + v` hint and roving focus as the broadside.
+- The body plate tag now reads `the reader's note · front matter` to match the new section.
+- Unused imports (`FolioThumbprint`, `SpecimenTray`, `ImprintPlate`) removed from `App.tsx`. The unused components remain in `src/` but are no longer wired into the page.
+- Added ~620 lines of CSS in `src/style.css` for the new component, including the eyebrow rule draw, the word rule draw on active/hover, the voice wax bead transition, the pull quote rule draw, and responsive breakpoints at 720px and 480px.
+- All motion is disabled under `prefers-reduced-motion: reduce`. Keyboard navigation works through both the words row (arrow keys / Home / End) and the voice row (arrow keys / Home / End).
 
-## What replaces what
-
-- `TitlePage` + `QuestionMonument` + `ReadingHinge` → one new `TitleBroadside` component.
-- Title-page plate cell layout (date / medallion / voice) and the headline's separate seal, voice selector, and metadata footer collapse into one centered composition with a single running head, a single press seal, the question typeset large in the active voice, an italic operator's note, an exhale pencil line, the three voice stations reading like a single set of press plates, and a small metadata row.
-
-## What earns its place
-
-- A confident eyebrow with a rule that draws in.
-- One press seal with a soft animated halo (replacing the title-page's medallion disc and the question monument's smaller seal).
-- The headline dominates the page, typeset large in the active voice.
-- Marked words (M3, good, yet) reveal a small mark tag below them and a voice-tinted underline on mark.
-- A wax pip glides between the three voice stations as the voice changes.
-- A seal-stamp animation lands when the voice shifts.
-- Reading prologue, press lever, and title coda remain, so the rest of the page is untouched.
-
-## What was removed
-
-- `ReadingHinge`, `TitlePage`, `QuestionMonument` are no longer rendered.
-- Unused state (`strikeTick`, `PaperWarmth`, `PressStrikeFlash`) and the `PressHandwheel` import were cleaned from `App.tsx`.
-
-## Constraints kept
-
-- Document title unchanged: "is Minimax M3 good at frontend yet?"
-- All assets self-contained; CSS, local SVG, no remote fonts, no network dependencies.
-- Reduced-motion preferences respected: lines, seals, halos, and rules animate only when motion is allowed.
-- Keyboard support preserved: shift+v cycles voice; arrow keys navigate marked words; Home/End jump to first/last mark.
-- No fabricated iteration counts, live status, model scores, or deployment statistics.
+Build: `npm run build` completes cleanly (`tsc --noEmit && vite build`). Bundle: 513 KB JS / 1157 KB CSS.

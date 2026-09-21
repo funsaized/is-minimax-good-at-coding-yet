@@ -23,15 +23,13 @@ import { NotesSection } from './NotesSection'
 import { FolioFold } from './FolioFold'
 import { PressSpine } from './PressSpine'
 import { TitleBroadside } from './TitleBroadside'
-import { FolioThumbprint } from './FolioThumbprint'
 import { BroadsideReveal } from './BroadsideReveal'
 import { BroadsideEdge } from './BroadsideEdge'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
-import { SpecimenTray } from './SpecimenTray'
-import { ImprintPlate } from './ImprintPlate'
 import { FolioLedger } from './FolioLedger'
+import { ReadersNote } from './ReadersNote'
 import { TitleFolio } from './TitleFolio'
 import { ClosingPlate } from './ClosingPlate'
 import { ReadingPrologue } from './ReadingPrologue'
@@ -717,146 +715,20 @@ export function App() {
               <span className="hero__body-plate-rule" />
               <span className="hero__body-plate-tag">
                 <span className="hero__body-plate-dot" />
-                the editor's note <em>·</em> <em>front matter</em>
+                the reader's note <em>·</em> <em>front matter</em>
                 <span className="hero__body-plate-dot" />
               </span>
               <span className="hero__body-plate-rule" />
             </span>
 
-            <article className="folio-note" aria-labelledby="folio-note-title">
-              <header className="folio-note__head">
-                <p className="folio-note__eyebrow" aria-hidden="true">
-                  <span className="folio-note__eyebrow-mark" />
-                  <em>how to read this page</em>
-                  <span className="folio-note__eyebrow-mark folio-note__eyebrow-mark--alt" />
-                </p>
-                <h2 id="folio-note-title" className="folio-note__title">
-                  <em className="folio-note__title-em">A page that answers</em>
-                  <span className="folio-note__title-row">
-                    <span>with whichever voice</span>
-                    <em className="folio-note__title-em folio-note__title-em--alt">you pull.</em>
-                  </span>
-                </h2>
-              </header>
-
-              <div className="folio-note__copy">
-                <p className="folio-note__lead">
-                  <span className="folio-note__dropcap" aria-hidden="true">T</span>
-                  <span className="folio-note__lead-body">
-                    he title page is set to ask whether a machine can build a place that feels like <em>someone was here.</em> Three words earn the marginalia, three voices try them on, and the page answers with whichever is set.
-                  </span>
-                </p>
-
-                <p className="folio-note__signed">
-                  Pull a voice to set the line above. Mark a word to read it back. The press is bound to both — <em>and the question stays open.</em>
-                </p>
-              </div>
-
-              <aside className="folio-note__tokens" aria-label="The three marked words of the title">
-                <span className="folio-note__tokens-eyebrow" aria-hidden="true">
-                  <span className="folio-note__tokens-eyebrow-mark" />
-                  the three marked words <em>·</em> a marginalium
-                  <span className="folio-note__tokens-eyebrow-mark folio-note__tokens-eyebrow-mark--alt" />
-                </span>
-                <ol className="folio-note__tokens-row">
-                  {(['m3', 'good', 'yet'] as WordId[]).map((id, idx) => {
-                    const note = NOTES.find(item => item.id === id)
-                    const isActive = selectedWord === id
-                    const isHover = hoveredWord === id
-                    const markWord = id === 'm3' ? 'stet' : id === 'good' ? 'caret' : 'query'
-                    const kindWord = id === 'm3' ? 'let it stand' : id === 'good' ? 'make room' : 'protect the pause'
-                    return (
-                      <li key={id} className={`folio-note__token-cell folio-note__token-cell--${id}`}>
-                        <button
-                          type="button"
-                          className={`folio-note__token ${isActive ? 'is-active' : ''} ${isHover ? 'is-hover' : ''}`}
-                          onClick={() => selectWord(id)}
-                          onMouseEnter={() => setHoveredWord(id)}
-                          onMouseLeave={() => setHoveredWord(null)}
-                          onFocus={() => setHoveredWord(id)}
-                          onBlur={() => setHoveredWord(null)}
-                          aria-pressed={isActive}
-                          aria-label={`Mark the word ${note?.label ?? id}. ${note?.title ?? ''}`}
-                        >
-                          <span className="folio-note__token-mark" aria-hidden="true">{markWord}</span>
-                          <span className="folio-note__token-word">{note?.label ?? id}</span>
-                          <span className="folio-note__token-kind">{kindWord}</span>
-                          <span className="folio-note__token-glyph" aria-hidden="true">
-                            <svg viewBox="0 0 18 18">
-                              {id === 'm3' && (
-                                <>
-                                  <line x1="3" y1="5" x2="15" y2="5" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
-                                  <line x1="3" y1="9" x2="15" y2="9" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
-                                  <line x1="3" y1="13" x2="15" y2="13" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
-                                </>
-                              )}
-                              {id === 'good' && (
-                                <path d="M3 14 L9 4 L15 14 M5.5 11 L12.5 11" fill="none" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" strokeLinejoin="round" />
-                              )}
-                              {id === 'yet' && (
-                                <path d="M11 4 Q6 4 6 9 Q6 13 9 13 Q12 13 12 10 M11 4 L11 3 M11 4 L12.5 4 M9 13 L9 15" fill="none" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" strokeLinejoin="round" />
-                              )}
-                            </svg>
-                          </span>
-                          <span className="folio-note__token-rule" aria-hidden="true">
-                            <svg viewBox="0 0 64 8" preserveAspectRatio="none">
-                              <path
-                                d="M2 4c8-3 16 3 24 0s16-3 24 0 12 1 14 0"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth=".7"
-                                strokeLinecap="round"
-                                pathLength="100"
-                                className="folio-note__token-rule-stroke"
-                              />
-                              <circle cx="62" cy="4" r="1.2" fill="currentColor" />
-                            </svg>
-                          </span>
-                          {idx < 2 && <span className="folio-note__token-sep" aria-hidden="true">·</span>}
-                        </button>
-                      </li>
-                    )
-                  })}
-                </ol>
-              </aside>
-
-              <figure className="folio-note__pull" aria-label="A pull quote from the editor">
-                <span className="folio-note__pull-rule folio-note__pull-rule--lead" aria-hidden="true" />
-                <blockquote className="folio-note__pull-body">
-                  <span className="folio-note__pull-quote" aria-hidden="true">“</span>
-                  <em>attention, not ornament.</em>
-                </blockquote>
-                <figcaption className="folio-note__pull-note">
-                  <span aria-hidden="true">※</span>
-                  the rest is decoration with a job to do
-                </figcaption>
-                <span className="folio-note__pull-rule folio-note__pull-rule--trail" aria-hidden="true" />
-              </figure>
-
-              <FolioThumbprint voice={voice} word={activeWord} setToday={setToday} readerName={readerName} />
-            </article>
-
-            <aside className="folio-readings" aria-label="Three readings of the question">
-              <header className="folio-readings__head" aria-hidden="true">
-                <span className="folio-readings__rule folio-readings__rule--lead" />
-                <span className="folio-readings__head-tag">
-                  <span className="folio-readings__head-mark" />
-                  <em>the same question, set three ways</em>
-                  <span className="folio-readings__head-mark folio-readings__head-mark--alt" />
-                </span>
-                <span className="folio-readings__rule folio-readings__rule--trail" />
-              </header>
-              <SpecimenTray active={voice} onSelect={selectVoice} />
-              <p className="folio-readings__foot" aria-hidden="true">
-                pull a setting above <em>·</em> the title answers with whichever is active
-              </p>
-            </aside>
-
-            <ImprintPlate
+            <ReadersNote
               voice={voice}
               word={activeWord}
+              hover={hoveredWord}
               setToday={setToday}
-              readerName={readerName}
+              onVoice={selectVoice}
+              onWord={(id, focus) => selectWord(id, focus ?? false)}
+              onHover={setHoveredWord}
             />
 
             <a className="hero__brief-lever" href="#press" aria-label="Turn the page to the press bed">
