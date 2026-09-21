@@ -40,6 +40,7 @@ import { Opening } from './Opening'
 import { AnswerCoda } from './AnswerCoda'
 import { ExhalationPlate } from './ExhalationPlate'
 import { PageReturn } from './PageReturn'
+import { DayMargin } from './DayMargin'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -674,6 +675,8 @@ export function App() {
       <PressSpine activeId={activeSection} voice={voice} />
 
       <div className="page">
+        <DayMargin voice={voice} setToday={setToday} />
+
         <FolioImprint voice={voice} setToday={setToday} />
 
         <Opening voice={voice} setToday={setToday}>
