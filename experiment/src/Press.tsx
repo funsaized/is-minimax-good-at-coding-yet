@@ -41,7 +41,7 @@ const PROOF: Record<WordId, { label: string; sub: string }> = {
   yet: { label: 'query', sub: 'protect the pause' },
 }
 
-const PRESS_DURATION = 800
+const PRESS_DURATION = 900
 const MOTTO: Record<VoiceId, string> = {
   quiet: 'a quiet line is a careful line — let the page do less, then less again.',
   human: 'a small wobble makes the machine feel less like a machine.',
@@ -50,12 +50,15 @@ const MOTTO: Record<VoiceId, string> = {
 
 export function Press({ voice, word, onVoice, setToday }: PressProps) {
   const [pulling, setPulling] = useState(false)
+  const [pullCount, setPullCount] = useState(0)
   const lockRef = useRef(false)
+  const bleedRef = useRef<HTMLSpanElement | null>(null)
 
   const pull = () => {
     if (lockRef.current) return
     lockRef.current = true
     setPulling(true)
+    setPullCount(c => c + 1)
     onVoice(NEXT_VOICE[voice])
     window.setTimeout(() => {
       setPulling(false)
@@ -97,12 +100,21 @@ export function Press({ voice, word, onVoice, setToday }: PressProps) {
             <span className="press-lever__shaft" aria-hidden="true">
               <span className="press-lever__knob" aria-hidden="true" />
             </span>
+            <span
+              ref={bleedRef}
+              className={`press-lever__bleed press-lever__bleed--${voice} ${pulling ? 'is-active' : ''}`}
+              aria-hidden="true"
+              key={pullCount}
+            />
             <span className="press-lever__label" aria-hidden="true">
               <em>pull</em>
               <span>{VOICE_LETTER[voice]}</span>
             </span>
             <span className="press-lever__hint" aria-hidden="true">
               <kbd>shift</kbd>+<kbd>v</kbd>
+            </span>
+            <span className="press-lever__rail" aria-hidden="true">
+              <span className={`press-lever__rail-fill press-lever__rail-fill--${voice}`} />
             </span>
           </button>
 
@@ -125,13 +137,20 @@ export function Press({ voice, word, onVoice, setToday }: PressProps) {
                 <em>· {PROOF[word].sub}</em>
               </em>
             </div>
+            <div className="press-state__row press-state__row--count">
+              <span className="press-state__key">pulls</span>
+              <em className="press-state__count">
+                {String(pullCount).padStart(3, '0')}
+                <span className="press-state__count-tail"> · impressions on the day</span>
+              </em>
+            </div>
           </div>
         </div>
 
         <div className="press__cell press__cell--impression">
           <span className="press__cell-key">the impression</span>
           <div className="press__cell-body">
-            <div className="press-impression">
+            <div className={`press-impression press-impression--${voice} ${pulling ? 'is-pulled' : ''}`}>
               <div className="press-impression__stamp" aria-hidden="true">
                 <span>pulled · folio ii</span>
                 <span>voice {VOICE_LETTER[voice]}</span>
@@ -158,6 +177,7 @@ export function Press({ voice, word, onVoice, setToday }: PressProps) {
                 <span className="press-impression__color-swatch" />
               </span>
               <span className="press-impression__corner" aria-hidden="true" />
+              <span className={`press-impression__bleed press-impression__bleed--${voice} ${pulling ? 'is-active' : ''}`} aria-hidden="true" key={`ib-${pullCount}`} />
             </div>
           </div>
         </div>

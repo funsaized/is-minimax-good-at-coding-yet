@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
+import { PrinterFlourish } from './PrinterFlourish'
 
 type ColophonProps = {
   voice: VoiceId
@@ -70,15 +71,27 @@ export function Colophon({ voice, word, setToday }: ColophonProps) {
             </div>
           </div>
 
+          <div className="colophon__flourish" aria-hidden="true">
+            <PrinterFlourish voice={voice} />
+          </div>
+
           <div className="colophon__signoff" aria-label="The page, signed">
-            <svg className="colophon__seal" viewBox="0 0 100 100" aria-hidden="true" style={sealStyle}>
-              <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth=".9" />
-              <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 2.5" opacity=".5" />
+            <svg className={`colophon__seal colophon__seal--${voice}`} viewBox="0 0 100 100" aria-hidden="true" style={sealStyle}>
+              <defs>
+                <radialGradient id={`col-seal-${voice}`} cx="50%" cy="40%" r="60%">
+                  <stop offset="0%" stopColor="currentColor" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              <circle cx="50" cy="50" r="48" fill={`url(#col-seal-${voice})`} />
+              <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth="1.1" />
+              <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2.5" opacity=".55" />
               <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".3" />
               <circle cx="50" cy="6" r="1.4" fill="currentColor" opacity=".85" />
               <circle cx="50" cy="94" r="1.4" fill="currentColor" opacity=".85" />
               <circle cx="6" cy="50" r="1.4" fill="currentColor" opacity=".85" />
               <circle cx="94" cy="50" r="1.4" fill="currentColor" opacity=".85" />
+              <path d="M14 50 Q30 38 50 50 T86 50" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".4" />
               <text x="50" y="22" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="currentColor">
                 {seal.top}
               </text>

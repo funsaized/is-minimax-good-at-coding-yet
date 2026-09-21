@@ -1,4 +1,5 @@
 import { useId, type CSSProperties } from 'react'
+import { PrinterFlourish } from './PrinterFlourish'
 
 type ReadingPocketProps = {
   voice: 'quiet' | 'human' | 'bold'
@@ -23,7 +24,6 @@ const FIRST_PULL: Record<ReadingPocketProps['voice'], string> = {
 export function ReadingPocket({ voice, setToday, folios }: ReadingPocketProps) {
   const baseId = useId().replace(/:/g, '')
   const grainId = `rp-grain-${baseId}`
-  const threadId = `rp-thread-${baseId}`
   const tone = voice === 'quiet'
     ? 'var(--quiet)'
     : voice === 'human'
@@ -45,30 +45,8 @@ export function ReadingPocket({ voice, setToday, folios }: ReadingPocketProps) {
             <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 0" />
             <feComposite in2="SourceGraphic" operator="in" />
           </filter>
-          <filter id={threadId} x="-2%" y="-2%" width="104%" height="104%">
-            <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="31" stitchTiles="stitch" />
-            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
-            <feComposite in2="SourceGraphic" operator="in" />
-          </filter>
         </defs>
       </svg>
-
-      <span className="rp__rule rp__rule--lead" aria-hidden="true">
-        <svg viewBox="0 0 600 6" preserveAspectRatio="none">
-          <g filter={`url(#${grainId})`}>
-            <path
-              d="M2 3c40-3 80 3 120 0s80-3 120 0 80 3 120 0 80-3 120 0 36-3 38 0"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth=".7"
-              strokeLinecap="round"
-              pathLength="100"
-            />
-          </g>
-          <circle cx="2" cy="3" r="1.1" fill="currentColor" />
-          <circle cx="598" cy="3" r="1.1" fill="currentColor" />
-        </svg>
-      </span>
 
       <div className="rp__masthead" aria-hidden="false">
         <span className="rp__masthead-glyph" aria-hidden="true">¶</span>
@@ -82,6 +60,10 @@ export function ReadingPocket({ voice, setToday, folios }: ReadingPocketProps) {
         </span>
         <span className="rp__masthead-rule" aria-hidden="true" />
         <span className="rp__masthead-glyph rp__masthead-glyph--alt" aria-hidden="true">¶</span>
+      </div>
+
+      <div className="rp__flourish" aria-hidden="true">
+        <PrinterFlourish voice={voice} />
       </div>
 
       <p className="rp__premise">
@@ -117,26 +99,6 @@ export function ReadingPocket({ voice, setToday, folios }: ReadingPocketProps) {
         </span>
         <span className="rp__foot-bead rp__foot-bead--alt" />
       </footer>
-
-      <span className="rp__thread" aria-hidden="true">
-        <svg viewBox="0 0 24 56" preserveAspectRatio="none">
-          <g filter={`url(#${threadId})`} opacity=".85">
-            <path
-              d="M12 2 C 12 14, 4 22, 12 32 S 12 50, 12 54"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth=".85"
-              strokeLinecap="round"
-              pathLength="100"
-            />
-          </g>
-          <circle cx="12" cy="54" r="1.6" fill="currentColor" />
-        </svg>
-        <span className="rp__thread-tag" aria-hidden="true">
-          <em>then · read</em>
-          <span className="rp__thread-tag-mark" aria-hidden="true">↓</span>
-        </span>
-      </span>
     </section>
   )
 }

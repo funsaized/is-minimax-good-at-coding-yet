@@ -28,7 +28,7 @@ const SLIPS: Slip[] = [
     gloss: 'a habit, not a name',
     body: 'A useful page leaves evidence of a point of view. Not a logo. A small, repeatable act of judgment that another page can recognize.',
     paper: 'paper',
-    rotation: -1.2,
+    rotation: -0.9,
     pin: 'tack',
   },
   {
@@ -40,7 +40,7 @@ const SLIPS: Slip[] = [
     body: 'The interface gets quieter when it stops presenting every possible answer. A confident choice gives the reader somewhere to stand, instead of somewhere to pick from.',
     paper: 'acid',
     keep: true,
-    rotation: 0.4,
+    rotation: 0.3,
     pin: 'clip',
   },
   {
@@ -51,7 +51,7 @@ const SLIPS: Slip[] = [
     gloss: 'the question stays open',
     body: '"Yet" carries the honest part. The space before an answer is not a gap to decorate; it is where the reader arrives, and the page should leave them there.',
     paper: 'blue',
-    rotation: 0.8,
+    rotation: 0.6,
     pin: 'pin',
   },
 ]
@@ -104,16 +104,22 @@ export function Marginalia({ selected, onSelect }: MarginaliaProps) {
                   {slip.pin === 'tack' && (
                     <>
                       <circle cx="12" cy="12" r="3" fill="currentColor" />
-                      <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth=".6" />
+                      <circle cx="12" cy="12" r="5.5" fill="none" stroke="currentColor" strokeWidth=".6" />
+                      <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 1.5" opacity=".5" />
                     </>
                   )}
                   {slip.pin === 'clip' && (
-                    <path d="M9 3v18h2V5h7V3M11 11h7" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                    <g>
+                      <path d="M9 3v18h2V5h7V3M11 11h7" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                      <path d="M11 14h5" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".55" />
+                    </g>
                   )}
                   {slip.pin === 'pin' && (
                     <>
                       <circle cx="12" cy="6" r="3" fill="currentColor" />
+                      <circle cx="12" cy="6" r="4.5" fill="none" stroke="currentColor" strokeWidth=".5" opacity=".6" />
                       <path d="M12 9v12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                      <path d="M11.4 17l.6-3 .6 3" fill="none" stroke="currentColor" strokeWidth=".7" opacity=".5" />
                     </>
                   )}
                 </svg>
@@ -138,6 +144,7 @@ export function Marginalia({ selected, onSelect }: MarginaliaProps) {
                   <svg viewBox="0 0 60 60" width="56" height="56">
                     <circle cx="30" cy="30" r="27" fill="none" stroke="currentColor" strokeWidth="1.2" />
                     <circle cx="30" cy="30" r="22" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1.5 1.5" />
+                    <circle cx="30" cy="30" r="17" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".4" />
                     <text x="30" y="22" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="4.5" letterSpacing="2" fill="currentColor">KEPT · NO ii</text>
                     <text x="30" y="38" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="currentColor">caret</text>
                     <text x="30" y="50" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.5" letterSpacing="2" fill="currentColor">FOR THE KEEPING</text>

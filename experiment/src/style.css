@@ -1,6 +1,7 @@
 /* ────────────────────────────────────────────────────────────
-   m³ press · iteration 369
-   the question mark, fully integrated; a single composed plate.
+   m³ press · iteration 370
+   the question mark as author · the title set on two lines,
+   a single printer's flourish above and below, quieter stage.
    ──────────────────────────────────────────────────────────── */
 
 :root {
@@ -23,6 +24,12 @@
   --human-soft:   rgba(240, 125, 106, .18);
   --bold:         #d6f06a;
   --bold-soft:    rgba(214, 240, 106, .20);
+
+  /* — accents — */
+  --warm-rose:    #f0a497;
+  --parchment:    #efe7cc;
+  --ink-violet:   #2a2540;
+  --wax:          #b14436;
 
   /* — lines + tints — */
   --line:         rgba(243, 236, 214, .14);
@@ -96,6 +103,50 @@ a { color: inherit; text-decoration: none; }
   padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0,0,0,0);
   white-space: nowrap; border: 0;
+}
+
+/* ────────────────────────────────────────────────────────────
+   PRINTER MARK · a small seal used in the topbar and signoffs
+   ──────────────────────────────────────────────────────────── */
+
+.printer-mark {
+  color: var(--mark-tone, var(--quiet));
+  flex-shrink: 0;
+  display: block;
+  transition: transform .6s var(--ease-spring), color .35s var(--ease);
+}
+
+.brand:hover .printer-mark { transform: rotate(15deg); }
+
+.printer-mark--quiet { color: var(--quiet); }
+.printer-mark--human { color: var(--human); }
+.printer-mark--bold { color: var(--bold); }
+
+/* ────────────────────────────────────────────────────────────
+   PRINTER FLOURISH · a quiet, asymmetric signature line
+   ──────────────────────────────────────────────────────────── */
+
+.printer-flourish {
+  display: block;
+  width: min(100%, 360px);
+  height: clamp(20px, 2.6vw, 28px);
+  color: var(--flourish-tone, var(--quiet));
+  margin: 0 auto;
+  opacity: .9;
+  animation: flourishDraw 1.6s var(--ease-out) both;
+}
+
+.printer-flourish--quiet { color: var(--quiet); }
+.printer-flourish--human { color: var(--human); }
+.printer-flourish--bold { color: var(--bold); }
+
+@keyframes flourishDraw {
+  0% { opacity: 0; transform: scaleX(.96); }
+  100% { opacity: .9; transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .printer-flourish { animation: none; opacity: .9; }
 }
 
 kbd {
@@ -272,6 +323,7 @@ em { font-style: italic; }
 }
 
 .brand:hover .brand__mark { transform: rotate(15deg); }
+.brand:hover .printer-mark { transform: rotate(15deg); }
 
 .brand__copy {
   display: flex;
@@ -313,6 +365,19 @@ em { font-style: italic; }
   letter-spacing: -.005em;
   color: var(--paper);
   font-feature-settings: 'tnum' 1;
+}
+
+.status__hour {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: lowercase;
+  color: var(--muted);
+  font-feature-settings: 'tnum' 1;
+}
+
+@media (max-width: 540px) {
+  .status__hour { display: none; }
 }
 
 .status__dot {
@@ -416,6 +481,13 @@ em { font-style: italic; }
 .rp__rule--lead {
   width: min(100%, 720px);
   margin: 0 auto;
+}
+
+.rp__flourish {
+  display: block;
+  margin: 8px auto 6px;
+  width: min(100%, 360px);
+  color: var(--rp-tone, var(--quiet));
 }
 
 .app--voice-quiet .rp__rule--lead { color: var(--quiet); }
@@ -767,16 +839,27 @@ em { font-style: italic; }
   position: relative;
   display: grid;
   align-content: center;
-  gap: clamp(20px, 2.4vw, 32px);
-  padding: clamp(40px, 5vw, 72px) clamp(28px, 3.4vw, 56px);
+  gap: clamp(18px, 2vw, 28px);
+  padding: clamp(36px, 4.6vw, 64px) clamp(28px, 3.4vw, 56px);
   border: 1px solid var(--line);
   border-radius: 6px;
   background:
-    radial-gradient(ellipse 70% 60% at 50% 0%, rgba(243, 236, 214, .018), transparent 60%),
-    radial-gradient(ellipse 80% 70% at 50% 100%, color-mix(in srgb, var(--hero-tone, var(--quiet)) 8%, transparent), transparent 70%),
-    linear-gradient(180deg, rgba(243, 236, 214, .012), transparent 80%);
+    radial-gradient(ellipse 70% 60% at 50% 0%, rgba(243, 236, 214, .022), transparent 60%),
+    radial-gradient(ellipse 80% 70% at 50% 100%, color-mix(in srgb, var(--hero-tone, var(--quiet)) 10%, transparent), transparent 70%),
+    linear-gradient(180deg, rgba(243, 236, 214, .014), transparent 80%);
   isolation: isolate;
   overflow: hidden;
+}
+
+.hero__flourish {
+  display: block;
+  width: min(100%, 320px);
+  height: clamp(22px, 2.8vw, 28px);
+  margin: 4px auto 0;
+  color: var(--hero-tone, var(--quiet));
+  position: relative;
+  z-index: 1;
+  opacity: .85;
 }
 
 /* corner ornaments · four small printer's fleurs */
@@ -1163,8 +1246,8 @@ em { font-style: italic; }
 .hero__title {
   font-family: var(--display);
   font-style: italic;
-  font-size: clamp(40px, 9.6vw, 144px);
-  line-height: 1.02;
+  font-size: clamp(36px, 9vw, 136px);
+  line-height: 1.04;
   letter-spacing: -.028em;
   margin: 0;
   color: var(--paper);
@@ -1185,6 +1268,25 @@ em { font-style: italic; }
 .hero__title-row {
   display: block;
   position: relative;
+}
+
+.hero__title-row--line {
+  display: block;
+}
+
+.hero__title-row--line-a {
+  margin-bottom: clamp(6px, 0.6vw, 10px);
+  opacity: .82;
+}
+
+.hero__title-row--line-b {
+  margin-top: 0;
+  margin-bottom: clamp(14px, 1.6vw, 22px);
+}
+
+@media (max-width: 540px) {
+  .hero__title { line-height: 1.06; }
+  .hero__title-row--line-a { opacity: .9; }
 }
 
 .hero__title-row--sub {
@@ -1334,15 +1436,22 @@ em { font-style: italic; }
   font-weight: 500;
   color: inherit;
   margin-left: -.04em;
-  transform: translateY(.04em) scale(1.22);
+  transform: translateY(.04em) scale(1.32);
   transform-origin: 50% 0;
-  transition: transform .5s var(--ease-spring), color .35s var(--ease);
+  transition: transform .55s var(--ease-spring), color .35s var(--ease);
   position: relative;
   font-feature-settings: 'kern', 'liga' 1;
 }
 
 .ht__word--yet.is-marked .ht__token-punct {
-  transform: translateY(.06em) scale(1.7);
+  transform: translateY(.08em) scale(2);
+  animation: punctArrive .65s var(--ease-spring);
+}
+
+@keyframes punctArrive {
+  0% { transform: translateY(.18em) scale(.78); opacity: .65; }
+  60% { transform: translateY(-.02em) scale(2.05); opacity: 1; }
+  100% { transform: translateY(.08em) scale(2); opacity: 1; }
 }
 
 /* ghost echo behind the question mark — a quiet punctuation protagonist */
@@ -1358,40 +1467,40 @@ em { font-style: italic; }
   pointer-events: none;
   color: var(--hero-tone, var(--quiet));
   transform-origin: 50% 0;
-  transition: opacity .5s var(--ease), transform .5s var(--ease);
+  transition: opacity .55s var(--ease), transform .55s var(--ease);
 }
 
 .ht__token-punct::before {
   opacity: 0;
-  transform: translate(-.06em, -.06em) scale(1.22);
-  filter: blur(2px);
+  transform: translate(-.06em, -.06em) scale(1.32);
+  filter: blur(2.5px);
 }
 
 .ht__token-punct::after {
   opacity: 0;
-  transform: translate(.06em, .06em) scale(1.22);
-  filter: blur(2px);
+  transform: translate(.06em, .06em) scale(1.32);
+  filter: blur(2.5px);
 }
 
 .ht__word--yet.is-marked .ht__token-punct::before {
-  opacity: .35;
-  transform: translate(-.1em, -.08em) scale(1.7);
+  opacity: .4;
+  transform: translate(-.12em, -.1em) scale(2);
 }
 
 .ht__word--yet.is-marked .ht__token-punct::after {
-  opacity: .25;
-  transform: translate(.1em, .1em) scale(1.7);
+  opacity: .28;
+  transform: translate(.12em, .12em) scale(2);
 }
 
 .hero__title--bold .ht__token-punct {
   font-style: normal;
   font-weight: 800;
-  transform: translateY(.04em) scale(1.34);
+  transform: translateY(.04em) scale(1.45);
   letter-spacing: -.04em;
 }
 
 .hero__title--bold .ht__word--yet.is-marked .ht__token-punct {
-  transform: translateY(.06em) scale(1.85);
+  transform: translateY(.08em) scale(2.15);
   letter-spacing: -.05em;
 }
 
@@ -2118,6 +2227,70 @@ em { font-style: italic; }
   100% { opacity: 0; }
 }
 
+/* — Lever ink-bleed — a brief splash of color around the knob when pulled — */
+
+.press-lever__bleed {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  transform: translate(-50%, -20%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(28px);
+  z-index: 0;
+}
+
+.press-lever__bleed--quiet { background: radial-gradient(circle, var(--quiet), transparent 65%); }
+.press-lever__bleed--human { background: radial-gradient(circle, var(--human), transparent 65%); }
+.press-lever__bleed--bold { background: radial-gradient(circle, var(--bold), transparent 65%); }
+
+.press-lever__bleed.is-active {
+  animation: leverBleed 1.1s var(--ease) both;
+}
+
+@keyframes leverBleed {
+  0% { opacity: 0; transform: translate(-50%, -20%) scale(.4); }
+  35% { opacity: .55; transform: translate(-50%, -16%) scale(1.05); }
+  100% { opacity: 0; transform: translate(-50%, 18%) scale(1.4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-lever__bleed { display: none; }
+}
+
+/* — Lever rail · a thin bead-line that shows progress of pulls on the lever — */
+
+.press-lever__rail {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  opacity: .7;
+}
+
+.press-lever__rail-fill {
+  display: block;
+  width: 2px;
+  flex: 1;
+  border-radius: 1px;
+  background: linear-gradient(to bottom, transparent, var(--quiet));
+  opacity: .35;
+}
+
+.press-lever__rail-fill--quiet { background: linear-gradient(to bottom, transparent, var(--quiet)); }
+.press-lever__rail-fill--human { background: linear-gradient(to bottom, transparent, var(--human)); }
+.press-lever__rail-fill--bold { background: linear-gradient(to bottom, transparent, var(--bold)); }
+
+.press-lever:hover .press-lever__rail { opacity: 1; }
+
 /* — Pulling readout — a small ledger next to the lever */
 
 .press-state {
@@ -2220,6 +2393,28 @@ em { font-style: italic; }
 .app--voice-human .press-state__mark-glyph { color: var(--human); }
 .app--voice-bold .press-state__mark-glyph { color: var(--bold); }
 
+/* — Pull counter — a small session tally of impressions pulled today — */
+
+.press-state__count {
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: .04em;
+  color: var(--paper);
+  font-feature-settings: 'tnum' 1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.press-state__count-tail {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper-soft);
+}
+
 /* — Impression — a sheet pulled from the press */
 
 .press-impression {
@@ -2297,9 +2492,13 @@ em { font-style: italic; }
   right: 0;
   width: 32px;
   height: 32px;
-  background: linear-gradient(225deg, rgba(255, 255, 255, .18) 0%, rgba(255, 255, 255, .18) 50%, transparent 50%);
+  background:
+    linear-gradient(225deg, rgba(255, 255, 255, .22) 0%, rgba(255, 255, 255, .22) 50%, transparent 50%),
+    linear-gradient(225deg, transparent 49%, rgba(160, 130, 95, .14) 50%, rgba(160, 130, 95, .04) 100%);
   pointer-events: none;
   z-index: 1;
+  border-bottom-left-radius: 2px;
+  filter: drop-shadow(-1px 1px 1px rgba(0, 0, 0, .08));
 }
 
 .press-impression__corner::before {
@@ -2309,7 +2508,7 @@ em { font-style: italic; }
   right: 0;
   width: 1px;
   height: 32px;
-  background: linear-gradient(to bottom, rgba(0,0,0,.12), transparent);
+  background: linear-gradient(to bottom, rgba(0,0,0,.18), transparent);
 }
 
 .press-impression__corner::after {
@@ -2319,7 +2518,7 @@ em { font-style: italic; }
   right: 0;
   width: 32px;
   height: 1px;
-  background: linear-gradient(to left, rgba(0,0,0,.12), transparent);
+  background: linear-gradient(to left, rgba(0,0,0,.18), transparent);
 }
 
 .press-impression__stamp {
@@ -2440,6 +2639,46 @@ em { font-style: italic; }
   40% { opacity: .95; transform: translateX(0); }
   100% { opacity: .5; transform: translateX(0); }
 }
+
+/* — Impression ink-bleed · a brief splash of color into the paper when pulled — */
+
+.press-impression__bleed {
+  position: absolute;
+  left: 30%;
+  top: 20%;
+  width: 40%;
+  height: 60%;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(40px);
+  z-index: 0;
+  mix-blend-mode: multiply;
+}
+
+.press-impression__bleed--quiet { background: radial-gradient(circle, rgba(155, 188, 255, .6), transparent 70%); }
+.press-impression__bleed--human { background: radial-gradient(circle, rgba(240, 125, 106, .6), transparent 70%); }
+.press-impression__bleed--bold { background: radial-gradient(circle, rgba(214, 240, 106, .6), transparent 70%); }
+
+.press-impression__bleed.is-active {
+  animation: impressionBleed 1.4s var(--ease) both;
+}
+
+@keyframes impressionBleed {
+  0% { opacity: 0; transform: scale(.4); }
+  35% { opacity: .85; transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-impression__bleed { display: none; }
+}
+
+/* — Press impression corner ornaments — quiet, voice-toned — */
+
+.press-impression--quiet { box-shadow: 0 18px 36px -22px rgba(0, 0, 0, .55), 0 1px 0 rgba(0, 0, 0, .08), inset 0 0 80px rgba(155, 188, 255, .04); }
+.press-impression--human { box-shadow: 0 18px 36px -22px rgba(0, 0, 0, .55), 0 1px 0 rgba(0, 0, 0, .08), inset 0 0 80px rgba(240, 125, 106, .05); }
+.press-impression--bold { box-shadow: 0 18px 36px -22px rgba(0, 0, 0, .55), 0 1px 0 rgba(0, 0, 0, .08), inset 0 0 80px rgba(214, 240, 106, .05); }
 
 /* ────────────────────────────────────────────────────────────
    MARGINALIA · three notes pinned on a rule
@@ -3172,6 +3411,29 @@ em { font-style: italic; }
   background: color-mix(in srgb, var(--plate-tone, var(--quiet)) 30%, transparent);
 }
 
+.plate__caption-line {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 13px);
+  letter-spacing: -.005em;
+  color: var(--muted);
+  margin: 0;
+  text-align: center;
+  opacity: .85;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+
+.plate__caption-line--quiet { font-style: italic; font-weight: 400; }
+.plate__caption-line--human { font-style: italic; font-weight: 500; }
+.plate__caption-line--bold {
+  font-family: Inter, system-ui, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  font-size: 10px;
+}
+
 .plate__sub {
   position: absolute;
   bottom: -10px;
@@ -3351,11 +3613,12 @@ em { font-style: italic; }
   opacity: .18;
   max-height: 240px;
   overflow: hidden;
-  transform: translateY(-6px);
-  transition: opacity .6s var(--ease), transform .6s var(--ease), max-height .8s var(--ease);
+  transform: translateY(-6px) scaleY(.94);
+  transform-origin: 50% 0;
+  transition: opacity .7s var(--ease), transform .8s var(--ease-spring), max-height .9s var(--ease);
 }
 
-.answer__fold {
+.answer__crease {
   position: absolute;
   top: 14px;
   bottom: 14px;
@@ -3371,13 +3634,13 @@ em { font-style: italic; }
   z-index: 2;
 }
 
-.app--voice-quiet .answer__fold { color: var(--quiet); }
-.app--voice-human .answer__fold { color: var(--human); }
-.app--voice-bold .answer__fold { color: var(--bold); }
+.app--voice-quiet .answer__crease { color: var(--quiet); }
+.app--voice-human .answer__crease { color: var(--human); }
+.app--voice-bold .answer__crease { color: var(--bold); }
 
-.answer__fold svg { width: 100%; height: 100%; }
+.answer__crease svg { width: 100%; height: 100%; }
 
-.answer__fold em {
+.answer__crease em {
   position: absolute;
   top: -2px;
   left: 50%;
@@ -3387,22 +3650,40 @@ em { font-style: italic; }
   letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--muted);
-  white-space: nowrap;
   background: rgba(13, 16, 24, .92);
   padding: 1px 5px;
   border-radius: 2px;
 }
 
-@media (max-width: 720px) { .answer__fold { display: none; } }
+@media (max-width: 720px) { .answer__crease { display: none; } }
 
-.answer__leaf.is-open .answer__fold {
-  opacity: .55;
+.answer__leaf.is-open .answer__crease {
+  opacity: .6;
+}
+
+.answer__shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, .14) 49%, transparent 50%, rgba(0, 0, 0, .14) 51%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .05) 50%, transparent 100%);
+  transition: opacity .9s var(--ease) .2s;
+}
+
+.answer__leaf.is-open .answer__shadow { opacity: 1; }
+
+@media (max-width: 720px) {
+  .answer__shadow { display: none; }
 }
 
 .answer__leaf.is-open {
   opacity: 1;
   max-height: 1200px;
-  transform: translateY(0);
+  transform: translateY(0) scaleY(1);
 }
 
 @media (max-width: 720px) {
@@ -3417,6 +3698,8 @@ em { font-style: italic; }
   display: grid;
   gap: 22px;
   align-content: start;
+  position: relative;
+  z-index: 1;
 }
 
 .answer__line {
@@ -3498,6 +3781,8 @@ em { font-style: italic; }
   align-content: start;
   border-left: 1px dashed var(--line-soft);
   padding-left: 22px;
+  position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 720px) {
@@ -3513,11 +3798,27 @@ em { font-style: italic; }
   width: 96px;
   height: 96px;
   color: var(--quiet);
+  filter: drop-shadow(0 4px 12px color-mix(in srgb, currentColor 18%, transparent));
+  animation: sealFloat 6s ease-in-out infinite;
+  transition: filter .4s var(--ease);
 }
 
 .app--voice-quiet .answer__seal { color: var(--quiet); }
 .app--voice-human .answer__seal { color: var(--human); }
 .app--voice-bold .answer__seal { color: var(--bold); }
+
+.answer__seal--quiet { filter: drop-shadow(0 4px 12px rgba(155, 188, 255, .25)); }
+.answer__seal--human { filter: drop-shadow(0 4px 12px rgba(240, 125, 106, .28)); }
+.answer__seal--bold { filter: drop-shadow(0 4px 12px rgba(214, 240, 106, .28)); }
+
+@keyframes sealFloat {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-3px) rotate(1deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer__seal { animation: none; }
+}
 
 .answer__aside-cell {
   display: grid;
@@ -3666,7 +3967,12 @@ em { font-style: italic; }
   color: var(--quiet);
   animation: signatureFloat 6s ease-in-out infinite;
   filter: drop-shadow(0 6px 14px color-mix(in srgb, currentColor 18%, transparent));
+  transition: filter .35s var(--ease);
 }
+
+.colophon__seal--quiet { filter: drop-shadow(0 6px 14px rgba(155, 188, 255, .28)); }
+.colophon__seal--human { filter: drop-shadow(0 6px 14px rgba(240, 125, 106, .32)); }
+.colophon__seal--bold { filter: drop-shadow(0 6px 14px rgba(214, 240, 106, .32)); }
 
 @keyframes signatureFloat {
   0%, 100% { transform: translateY(0) rotate(-1.5deg); }
@@ -3676,6 +3982,26 @@ em { font-style: italic; }
 .app--voice-quiet .colophon__seal { color: var(--quiet); }
 .app--voice-human .colophon__seal { color: var(--human); }
 .app--voice-bold .colophon__seal { color: var(--bold); }
+
+@media (prefers-reduced-motion: reduce) {
+  .colophon__seal { animation: none; }
+}
+
+/* — colophon flourish — a quiet signature line between meta and signoff — */
+
+.colophon__flourish {
+  display: block;
+  margin: 6px auto;
+  width: min(100%, 320px);
+  height: clamp(20px, 2.4vw, 28px);
+  color: var(--quiet);
+  opacity: .75;
+}
+
+.colophon__flourish { color: var(--quiet); }
+.app--voice-quiet .colophon__flourish { color: var(--quiet); }
+.app--voice-human .colophon__flourish { color: var(--human); }
+.app--voice-bold .colophon__flourish { color: var(--bold); }
 
 .colophon__signoff-line {
   font-family: var(--display);
@@ -4308,13 +4634,17 @@ em { font-style: italic; }
   .slip,
   .plate,
   .qmark,
-  .answer__fold {
+  .answer__crease {
     animation: none !important;
     transition: none !important;
   }
   .slip { transform: rotate(0) !important; }
   .hero__title .ht__word::after,
   .hero__title .ht__word .ht__glyph { transition: none !important; }
+  .printer-flourish { animation: none !important; }
+  .answer__leaf { transform: none !important; }
+  .answer__seal,
+  .colophon__seal { animation: none !important; }
   .qmark--quiet .qmark__stroke,
   .qmark--human .qmark__stroke,
   .qmark--bold .qmark__stroke { stroke-dashoffset: 0; }

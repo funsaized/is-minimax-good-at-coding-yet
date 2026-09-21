@@ -111,7 +111,7 @@ export function Specimen({ active, onSelect }: SpecimenProps) {
 
               <div className="plate__specimen" aria-hidden="true">
                 <p className={`plate__sample plate__sample--${v}`}>{row.sample}</p>
-                <p className={`plate__sample plate__sample--${v} plate__sample--small`}>{row.sample}</p>
+                <p className={`plate__caption-line plate__caption-line--${v}`}>— {row.caption} —</p>
               </div>
 
               <footer className="plate__foot">

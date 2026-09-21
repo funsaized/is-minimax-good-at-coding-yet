@@ -6,6 +6,7 @@ import {
 } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
+import { PrinterFlourish } from './PrinterFlourish'
 
 type HeroProps = {
   voice: VoiceId
@@ -82,8 +83,6 @@ export function Hero({
 }: HeroProps) {
   const baseId = useId().replace(/:/g, '')
   const grainId = `hero-grain-${baseId}`
-  const threadId = `hero-thread-${baseId}`
-  const tokenIds: WordId[] = ['m3', 'good', 'yet']
   const spec = VOICE[voice]
   const toneStyle = { '--hero-tone': `var(--${voice})` } as CSSProperties
   const isYet = word === 'yet'
@@ -98,36 +97,12 @@ export function Hero({
               <feColorMatrix type="matrix" values="0 0 0 0 .14  0 0 0 0 .12  0 0 0 0 .19  0 0 0 .04 0" />
               <feComposite in2="SourceGraphic" operator="in" />
             </filter>
-            <filter id={threadId} x="-2%" y="-50%" width="104%" height="200%">
-              <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="53" stitchTiles="stitch" />
-              <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .45 0" />
-              <feComposite in2="SourceGraphic" operator="in" />
-            </filter>
           </defs>
         </svg>
 
         <span className="hero__stage-grain" aria-hidden="true">
           <svg viewBox="0 0 1200 800" preserveAspectRatio="none">
             <rect x="0" y="0" width="1200" height="800" filter={`url(#${grainId})`} opacity=".045" />
-          </svg>
-        </span>
-
-        <span className="hero__corners" aria-hidden="true">
-          <svg className="h-tl" viewBox="0 0 22 22">
-            <path d="M2 8V2h6M2 4c2 2 4 2 6 0" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
-            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
-          </svg>
-          <svg className="h-tr" viewBox="0 0 22 22">
-            <path d="M2 8V2h6M2 4c2 2 4 2 6 0" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
-            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
-          </svg>
-          <svg className="h-bl" viewBox="0 0 22 22">
-            <path d="M2 8V2h6M2 4c2 2 4 2 6 0" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
-            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
-          </svg>
-          <svg className="h-br" viewBox="0 0 22 22">
-            <path d="M2 8V2h6M2 4c2 2 4 2 6 0" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
-            <circle cx="2" cy="2" r="1.2" fill="currentColor" />
           </svg>
         </span>
 
@@ -144,14 +119,8 @@ export function Hero({
           </span>
         </header>
 
-        <div className="hero__stage-rule hero__stage-rule--top" aria-hidden="true">
-          <span className="hero__stage-rule-tick" />
-          <span className="hero__stage-rule-tick" />
-          <span className="hero__stage-rule-tick" />
-          <span className="hero__stage-rule-line" />
-          <span className="hero__stage-rule-tick" />
-          <span className="hero__stage-rule-tick" />
-          <span className="hero__stage-rule-tick" />
+        <div className="hero__flourish" aria-hidden="true">
+          <PrinterFlourish voice={voice} />
         </div>
 
         <h1
@@ -159,7 +128,7 @@ export function Hero({
           className={`hero__title hero__title--${voice}`}
           aria-label="is Minimax M3 good at frontend yet?"
         >
-          <span className="hero__title-row hero__title-row--main">
+          <span className="hero__title-row hero__title-row--line hero__title-row--line-a">
             <span className="hero__title-word hero__title-word--plain">is</span>
             <span className="hero__title-space" aria-hidden="true" />
 
@@ -212,8 +181,9 @@ export function Hero({
                 {TOKEN_COPY.good.label}
               </button>
             </span>
+          </span>
 
-            <span className="hero__title-space" aria-hidden="true" />
+          <span className="hero__title-row hero__title-row--line hero__title-row--line-b">
             <span className="hero__title-word hero__title-word--plain">frontend</span>
             <span className="hero__title-space" aria-hidden="true" />
 

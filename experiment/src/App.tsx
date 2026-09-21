@@ -20,6 +20,7 @@ import { Marginalia } from './Marginalia'
 import { Specimen } from './Specimen'
 import { Answer } from './Answer'
 import { Colophon } from './Colophon'
+import { PrinterMark } from './PrinterMark'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -51,33 +52,18 @@ function formatSetToday() {
   return `${month} ${day}, ${year}`
 }
 
-function BrandMark({ size = 30 }: { size?: number }) {
-  return (
-    <svg className="brand__mark" width={size} height={size} viewBox="0 0 42 42" aria-hidden="true">
-      <circle cx="21" cy="21" r="18.5" fill="none" stroke="currentColor" strokeWidth=".8" />
-      <circle cx="21" cy="21" r="15.5" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1.4 2.6" opacity=".7" />
-      <circle cx="21" cy="21" r="9.5" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".4" />
-      <text
-        x="21"
-        y="25.5"
-        textAnchor="middle"
-        fontFamily="Georgia, serif"
-        fontStyle="italic"
-        fontSize="11.5"
-        fill="currentColor"
-      >m³</text>
-      <circle cx="21" cy="3" r="1.2" fill="currentColor" />
-      <circle cx="21" cy="39" r="1.2" fill="currentColor" />
-      <circle cx="3" cy="21" r="1.2" fill="currentColor" />
-      <circle cx="39" cy="21" r="1.2" fill="currentColor" />
-    </svg>
-  )
+function formatHour() {
+  const now = new Date()
+  let h = now.getHours()
+  const m = now.getMinutes()
+  const ampm = h >= 12 ? 'pm' : 'am'
+  h = h % 12
+  if (h === 0) h = 12
+  return `${h}:${m.toString().padStart(2, '0')} ${ampm}`
 }
 
 function StatusLight() {
-  return (
-    <span className="status__dot" aria-hidden="true" />
-  )
+  return <span className="status__dot" aria-hidden="true" />
 }
 
 export function App() {
@@ -88,6 +74,7 @@ export function App() {
   const [answerOpen, setAnswerOpen] = useState(false)
   const [announcement, setAnnouncement] = useState('')
   const [setToday] = useState(() => formatSetToday())
+  const [setHour] = useState(() => formatHour())
   const tokenRefs = useRef<Partial<Record<WordId, HTMLButtonElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement | null>(null)
 
@@ -225,7 +212,7 @@ export function App() {
 
       <header className="topbar" role="banner">
         <a className="brand" href="#question" aria-label="Return to the question">
-          <BrandMark size={32} />
+          <PrinterMark size={32} voice={voice} />
           <span className="brand__copy">
             <strong>m³ press</strong>
             <em>an open question, set today</em>
@@ -234,6 +221,7 @@ export function App() {
 
         <div className="status" aria-label="Page status">
           <span className="status__date">{setToday}</span>
+          <span className="status__hour" aria-hidden="true">· {setHour}</span>
           <StatusLight />
         </div>
       </header>
