@@ -22,6 +22,7 @@ import { WayfinderSeal } from './WayfinderSeal'
 import { NotesSection } from './NotesSection'
 import { FolioFold } from './FolioFold'
 import { PressSpine } from './PressSpine'
+import { PressRegister } from './PressRegister'
 import { TitleBroadside } from './TitleBroadside'
 import { BroadsideReveal } from './BroadsideReveal'
 import { BroadsideEdge } from './BroadsideEdge'
@@ -664,6 +665,7 @@ export function App() {
           </span>
           <WayfinderSeal activeId={activeSection} voice={voice} setToday={setToday} />
         </div>
+        <PressRegister voice={voice} word={activeWord} marks={marks} setToday={setToday} />
       </header>
 
       <PressSpine activeId={activeSection} voice={voice} />
