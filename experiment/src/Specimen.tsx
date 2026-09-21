@@ -15,7 +15,8 @@ type KeyRow = {
   glyph: string
   mark: string
   reading: string
-  tone: 'quiet' | 'human' | 'bold'
+  sub: string
+  caption: string
 }
 
 const ROWS: KeyRow[] = [
@@ -27,8 +28,9 @@ const ROWS: KeyRow[] = [
     sample: 'is m³ good at frontend yet?',
     glyph: '⌇',
     mark: 'stet',
-    reading: 'the default · read low',
-    tone: 'quiet',
+    reading: 'the default voice',
+    sub: 'read low, read close',
+    caption: 'the line said quietly',
   },
   {
     voice: 'human',
@@ -38,8 +40,9 @@ const ROWS: KeyRow[] = [
     sample: 'is M3 good at frontend yet?',
     glyph: '∧',
     mark: 'caret',
-    reading: 'the middle voice · read at hand',
-    tone: 'human',
+    reading: 'the middle voice',
+    sub: 'read at hand',
+    caption: 'the line as a hand might write it',
   },
   {
     voice: 'bold',
@@ -49,8 +52,9 @@ const ROWS: KeyRow[] = [
     sample: 'IS M3 GOOD AT FRONTEND YET?',
     glyph: '∴',
     mark: 'query',
-    reading: 'the loud face · read once',
-    tone: 'bold',
+    reading: 'the loud face',
+    sub: 'read once',
+    caption: 'the line, shouted honestly',
   },
 ]
 
@@ -65,67 +69,82 @@ export function Specimen({ active, onSelect }: SpecimenProps) {
           How the <em>three voices</em> read.
         </h2>
         <p className="section__lede">
-          Three swatches, one key. Each row holds the line in its voice, the mark it answers to, and a
-          short reading note. Click a row to set the page in that voice.
+          Three plates of the same line — set in their own voice, against their own field. Click a plate
+          to set the page in that voice.
         </p>
       </header>
 
-      <div className="specimen__key" role="radiogroup" aria-label="The notation key">
-        <header className="specimen__key-head" aria-hidden="true">
-          <span className="specimen__key-col specimen__key-col--letter">letter</span>
-          <span className="specimen__key-col specimen__key-col--sample">the line, set</span>
-          <span className="specimen__key-col specimen__key-col--mark">mark</span>
-          <span className="specimen__key-col specimen__key-col--note">a reading note</span>
-        </header>
+      <div className="specimen__plates">
+        {ORDER.map(v => {
+          const row = ROWS.find(r => r.voice === v)!
+          const isActive = active === v
+          const style = { '--plate-tone': `var(--${row.voice})` } as CSSProperties
+          return (
+            <button
+              key={v}
+              type="button"
+              role="radio"
+              aria-checked={isActive}
+              className={`plate plate--${v} ${isActive ? 'is-active' : ''}`}
+              style={style}
+              onClick={() => onSelect(v)}
+            >
+              <span className="plate__hairline" aria-hidden="true">
+                <svg viewBox="0 0 280 6" preserveAspectRatio="none">
+                  <path d="M2 3c40-3 80 3 120 0s80-3 120 0 36-3 36 0" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+                  <circle cx="2" cy="3" r="1" fill="currentColor" />
+                  <circle cx="278" cy="3" r="1" fill="currentColor" />
+                </svg>
+              </span>
 
-        <ol className="specimen__key-list">
-          {ORDER.map(v => {
-            const row = ROWS.find(r => r.voice === v)!
-            const isActive = active === v
-            const style = { '--paper-ink': `var(--${row.tone})` } as CSSProperties
-            return (
-              <li key={v} className="specimen__key-row-wrap">
-                <button
-                  type="button"
-                  role="radio"
-                  aria-checked={isActive}
-                  className={`specimen__key-row specimen__key-row--${v} ${isActive ? 'is-active' : ''}`}
-                  style={style}
-                  onClick={() => onSelect(v)}
-                >
-                  <span className="specimen__key-col specimen__key-col--letter" aria-hidden="true">
-                    <span className="specimen__key-letter">{row.letter}</span>
-                    <span className="specimen__key-name">{row.name}</span>
-                  </span>
-                  <span className={`specimen__key-col specimen__key-col--sample specimen__key-col--sample-${v}`}>
-                    <span className="specimen__key-sample specimen__key-sample--big">{row.sample}</span>
-                    <span className="specimen__key-sample specimen__key-sample--small" aria-hidden="true">
-                      {row.sample}
-                    </span>
-                    <span className="specimen__key-face" aria-hidden="true">{row.face}</span>
-                  </span>
-                  <span className="specimen__key-col specimen__key-col--mark" aria-hidden="true">
-                    <span className="specimen__key-mark-glyph">{row.glyph}</span>
-                    <span className="specimen__key-mark-label">{row.mark}</span>
-                  </span>
-                  <span className="specimen__key-col specimen__key-col--note" aria-hidden="true">
-                    {row.reading}
-                  </span>
-                  <span className="specimen__key-pip" aria-hidden="true">
-                    <span className="specimen__key-pip-bead" />
-                  </span>
-                </button>
-              </li>
-            )
-          })}
-        </ol>
+              <header className="plate__head">
+                <span className="plate__head-letter" aria-hidden="true">{row.letter}</span>
+                <span className="plate__head-stack">
+                  <span className="plate__head-name">{row.name}</span>
+                  <span className="plate__head-face">{row.face}</span>
+                </span>
+                <span className="plate__head-pip" aria-hidden="true">
+                  <span className="plate__head-pip-ring" />
+                  <span className="plate__head-pip-bead" />
+                </span>
+              </header>
 
-        <footer className="specimen__key-foot" aria-hidden="true">
-          <span className="specimen__key-foot-rule" />
-          <em>three voices · one line · read as set</em>
-          <span className="specimen__key-foot-rule" />
-        </footer>
+              <div className="plate__specimen" aria-hidden="true">
+                <p className={`plate__sample plate__sample--${v}`}>{row.sample}</p>
+                <p className={`plate__sample plate__sample--${v} plate__sample--small`}>{row.sample}</p>
+              </div>
+
+              <footer className="plate__foot">
+                <span className="plate__foot-cell">
+                  <span className="plate__foot-key">mark</span>
+                  <span className="plate__foot-mark">
+                    <span className="plate__foot-glyph" aria-hidden="true">{row.glyph}</span>
+                    <em>{row.mark}</em>
+                  </span>
+                </span>
+                <span className="plate__foot-cell">
+                  <span className="plate__foot-key">read as</span>
+                  <span className="plate__foot-val">{row.reading}</span>
+                </span>
+              </footer>
+
+              <span className="plate__caption" aria-hidden="true">
+                <span className="plate__caption-rule" />
+                <em>{row.caption}</em>
+                <span className="plate__caption-rule" />
+              </span>
+
+              <span className="plate__sub" aria-hidden="true">{row.sub}</span>
+            </button>
+          )
+        })}
       </div>
+
+      <footer className="specimen__foot">
+        <span className="specimen__foot-rule" />
+        <em>three plates · one line · set in the voice</em>
+        <span className="specimen__foot-rule" />
+      </footer>
     </section>
   )
 }

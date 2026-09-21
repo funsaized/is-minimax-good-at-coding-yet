@@ -1,10 +1,12 @@
-import type {
-  MutableRefObject,
-  KeyboardEvent as ReactKeyboardEvent,
-  CSSProperties,
+import {
+  useId,
+  type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type MutableRefObject,
 } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
+import { QuestionMark } from './QuestionMark'
 
 type HeroProps = {
   voice: VoiceId
@@ -24,6 +26,7 @@ type VoiceSpec = {
   letter: string
   sample: string
   glyph: string
+  gloss: string
 }
 
 const VOICE: Record<VoiceId, VoiceSpec> = {
@@ -33,6 +36,7 @@ const VOICE: Record<VoiceId, VoiceSpec> = {
     letter: 'a',
     sample: 'is m³ good at frontend yet?',
     glyph: '⌇',
+    gloss: 'the default voice · read low',
   },
   human: {
     name: 'human hand',
@@ -40,13 +44,15 @@ const VOICE: Record<VoiceId, VoiceSpec> = {
     letter: 'b',
     sample: 'is M3 good at frontend yet?',
     glyph: '∧',
+    gloss: 'the middle voice · read at hand',
   },
   bold: {
     name: 'bold signal',
-    face: 'sans · heavy',
+    face: 'sans · heavy · no apology',
     letter: 'c',
     sample: 'IS M3 GOOD AT FRONTEND YET?',
     glyph: '∴',
+    gloss: 'the loud voice · read once',
   },
 }
 
@@ -54,8 +60,6 @@ type TokenCopy = {
   label: string
   glyph: string
   tone: string
-  lead?: string
-  tail?: string
 }
 
 const TOKEN_COPY: Record<WordId, TokenCopy> = {
@@ -77,6 +81,9 @@ export function Hero({
   onWordKey,
   tokenRefs,
 }: HeroProps) {
+  const baseId = useId().replace(/:/g, '')
+  const grainId = `hero-grain-${baseId}`
+  const threadId = `hero-thread-${baseId}`
   const tokenIds: WordId[] = ['m3', 'good', 'yet']
   const spec = VOICE[voice]
   const toneStyle = { '--hero-tone': `var(--${voice})` } as CSSProperties
@@ -84,14 +91,40 @@ export function Hero({
 
   return (
     <div className="hero__inner">
-      <div className="hero__stage" style={toneStyle}>
+      <article className="hero__stage" style={toneStyle} aria-labelledby="hero-title-label">
+        <svg className="hero__defs" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <filter id={grainId} x="-2%" y="-2%" width="104%" height="104%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="23" stitchTiles="stitch" />
+              <feColorMatrix type="matrix" values="0 0 0 0 .14  0 0 0 0 .12  0 0 0 0 .19  0 0 0 .04 0" />
+              <feComposite in2="SourceGraphic" operator="in" />
+            </filter>
+            <filter id={threadId} x="-2%" y="-50%" width="104%" height="200%">
+              <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="53" stitchTiles="stitch" />
+              <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .45 0" />
+              <feComposite in2="SourceGraphic" operator="in" />
+            </filter>
+          </defs>
+        </svg>
+
+        <span className="hero__stage-grain" aria-hidden="true">
+          <svg viewBox="0 0 1200 800" preserveAspectRatio="none">
+            <rect x="0" y="0" width="1200" height="800" filter={`url(#${grainId})`} opacity=".045" />
+          </svg>
+        </span>
+
+        <QuestionMark voice={voice} word={word} />
+
         <header className="hero__stage-head">
           <span className="hero__stage-eyebrow">
             <span className="hero__stage-mark" aria-hidden="true">¶</span>
-            <span>folio i · the question</span>
+            <span>folio i</span>
+            <span className="hero__stage-eyebrow-sep" aria-hidden="true">·</span>
+            <span>the question</span>
           </span>
           <span className="hero__stage-set">
-            set on <em>{setToday}</em>
+            <em>set on</em>
+            <em className="hero__stage-set-date">{setToday}</em>
           </span>
         </header>
 
@@ -237,9 +270,9 @@ export function Hero({
             </em>
           </span>
         </footer>
-      </div>
+      </article>
 
-      <div
+      <aside
         className="voice-spec"
         role="radiogroup"
         aria-label="Voice specimen · the line set in three voices"
@@ -268,6 +301,7 @@ export function Hero({
                   <span className={`voice-spec__sample voice-spec__sample--${v}`}>{row.sample}</span>
                   <span className="voice-spec__meta" aria-hidden="true">
                     <span className="voice-spec__name">{row.name}</span>
+                    <span className="voice-spec__face">{row.face}</span>
                   </span>
                   <span className="voice-spec__pip" aria-hidden="true">
                     <span className="voice-spec__pip-bead" />
@@ -283,7 +317,7 @@ export function Hero({
           <em>three voices, one line, set on {setToday}</em>
           <span className="voice-spec__foot-rule" />
         </footer>
-      </div>
+      </aside>
     </div>
   )
 }
