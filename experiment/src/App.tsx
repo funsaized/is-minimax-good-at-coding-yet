@@ -43,6 +43,7 @@ import { PageReturn } from './PageReturn'
 import { DayMargin } from './DayMargin'
 import { FolioSpecimen } from './FolioSpecimen'
 import { PressTitleCut } from './PressTitleCut'
+import { PressProofSlip } from './PressProofSlip'
 
 const VOICE_CYCLE: Record<VoiceId, VoiceId> = {
   quiet: 'human',
@@ -720,15 +721,6 @@ export function App() {
         </Opening>
 
         <div className={`hero__body hero__body--anchored ${heroBodyVisible ? 'is-in-view' : ''}`} ref={heroBodyRef}>
-            <span className="hero__body-plate" aria-hidden="true">
-              <span className="hero__body-plate-rule" />
-              <span className="hero__body-plate-tag">
-                <span className="hero__body-plate-dot" />
-                the reader's note <em>·</em> <em>front matter</em>
-                <span className="hero__body-plate-dot" />
-              </span>
-              <span className="hero__body-plate-rule" />
-            </span>
 
             <ReadersNote
               voice={voice}
@@ -741,6 +733,8 @@ export function App() {
             />
 
             </div>
+
+        <PressProofSlip voice={voice} word={activeWord} setToday={setToday} />
 
         <FolioHinge voice={voice} setToday={setToday} />
 
