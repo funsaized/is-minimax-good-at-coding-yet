@@ -27,6 +27,7 @@ import { TitleBroadside } from './TitleBroadside'
 import { BroadsideReveal } from './BroadsideReveal'
 import { BroadsideEdge } from './BroadsideEdge'
 import { FolioImprint } from './FolioImprint'
+import { PressLamp } from './PressLamp'
 
 import { ReaderPlate } from './ReaderPlate'
 import { PressLever } from './PressLever'
@@ -649,6 +650,7 @@ export function App() {
       <div className="app__pencil" aria-hidden="true" />
       <div className={`press-impact ${leverStamping ? 'is-stamping' : ''}`} aria-hidden="true" />
       <Watermark />
+      <PressLamp voice={voice} />
       <header className="site-header site-header--single">
         <div className="site-header__row site-header__row--primary">
           <a className="brand" href="#question" aria-label="Return to the question">

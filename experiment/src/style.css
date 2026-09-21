@@ -66445,3 +66445,286 @@ a small act of typesetting.
     opacity: 1;
   }
 }
+
+/* ────────────────────────────────────────────────────────────
+   PRESS LAMP · a single hanging reading lamp that floats above
+   the opening. The cord descends from the top, the pendant holds
+   a glowing bulb, and a soft warm cone washes over the title.
+   The lamp tilts gently with the page and its color follows the
+   active voice. Reduced-motion users get the lamp without the
+   flicker and without the glow pulse.
+   ──────────────────────────────────────────────────────────── */
+
+.press-lamp {
+  --press-lamp-tone: var(--paper);
+  --press-lamp-glow: rgba(243, 236, 214, .14);
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  width: clamp(160px, 24vw, 320px);
+  height: clamp(280px, 36vw, 460px);
+  transform: translate(-50%, -54px) rotate(-2.2deg);
+  transform-origin: 50% 0;
+  color: var(--press-lamp-tone);
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    color .8s var(--ease),
+    opacity 1.2s var(--ease-out),
+    transform 1.2s var(--ease-out);
+  will-change: opacity, transform;
+}
+
+.press-lamp.is-active {
+  opacity: 1;
+  transform: translate(-50%, -28px) rotate(-1.2deg);
+}
+
+.press-lamp.is-faded {
+  opacity: 0;
+  transform: translate(-50%, -68px) rotate(-2deg);
+  transition:
+    color .8s var(--ease),
+    opacity 1.4s var(--ease-out),
+    transform 1.4s var(--ease-out);
+}
+
+.press-lamp--quiet {
+  --press-lamp-tone: var(--blue);
+  --press-lamp-glow: rgba(146, 186, 255, .16);
+}
+
+.press-lamp--human {
+  --press-lamp-tone: var(--coral);
+  --press-lamp-glow: rgba(255, 138, 110, .18);
+}
+
+.press-lamp--bold {
+  --press-lamp-tone: var(--acid);
+  --press-lamp-glow: rgba(216, 255, 106, .22);
+}
+
+.press-lamp__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.press-lamp__cord {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: clamp(140px, 18vw, 220px);
+  transform: translateX(-50%);
+  opacity: .7;
+}
+
+.press-lamp__cord svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.press-lamp__hood {
+  position: absolute;
+  top: clamp(140px, 18vw, 220px);
+  left: 50%;
+  width: clamp(56px, 8vw, 80px);
+  height: 8px;
+  transform: translateX(-50%);
+  opacity: .85;
+}
+
+.press-lamp__hood svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.press-lamp__shade {
+  position: absolute;
+  top: clamp(150px, 19.5vw, 240px);
+  left: 50%;
+  width: clamp(48px, 6.5vw, 72px);
+  height: clamp(48px, 6.5vw, 72px);
+  transform: translateX(-50%);
+  filter: drop-shadow(0 0 16px var(--press-lamp-glow));
+  animation: pressLampSway 9s var(--ease) infinite;
+}
+
+.press-lamp__shade-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes pressLampSway {
+  0%, 100% { transform: translateX(-50%) rotate(-1deg); }
+  50% { transform: translateX(-50%) rotate(1deg); }
+}
+
+.press-lamp__filament {
+  position: absolute;
+  top: clamp(170px, 22vw, 264px);
+  left: 50%;
+  width: clamp(20px, 2.6vw, 32px);
+  height: clamp(14px, 1.8vw, 22px);
+  transform: translateX(-50%);
+  opacity: .85;
+  animation: pressLampFilamentPulse 5.5s var(--ease) 1.4s infinite;
+}
+
+.press-lamp__filament svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes pressLampFilamentPulse {
+  0%, 100% { opacity: .65; }
+  50% { opacity: 1; }
+}
+
+.press-lamp__bulb {
+  position: absolute;
+  top: clamp(186px, 24vw, 286px);
+  left: 50%;
+  width: clamp(34px, 4.4vw, 52px);
+  height: clamp(34px, 4.4vw, 52px);
+  transform: translateX(-50%);
+  animation: pressLampBulb 6.2s var(--ease) 1.6s infinite;
+}
+
+.press-lamp__bulb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes pressLampBulb {
+  0%, 100% { filter: brightness(1); }
+  48% { filter: brightness(1.18); }
+  52% { filter: brightness(.96); }
+}
+
+.press-lamp__cast {
+  position: absolute;
+  top: clamp(190px, 24vw, 290px);
+  left: 50%;
+  width: clamp(180px, 26vw, 320px);
+  height: clamp(220px, 30vw, 360px);
+  transform: translateX(-50%);
+  opacity: .9;
+  mix-blend-mode: screen;
+  animation: pressLampCast 8s var(--ease) infinite;
+  pointer-events: none;
+}
+
+.press-lamp__cast svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes pressLampCast {
+  0%, 100% { opacity: .85; transform: translateX(-50%) scale(1); }
+  50% { opacity: .65; transform: translateX(-50%) scale(1.04); }
+}
+
+.press-lamp__stem {
+  position: absolute;
+  top: clamp(228px, 29vw, 348px);
+  left: 50%;
+  width: 12px;
+  height: 28px;
+  transform: translateX(-50%);
+  opacity: .78;
+}
+
+.press-lamp__stem svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.press-lamp__pull {
+  position: absolute;
+  top: clamp(252px, 32vw, 376px);
+  left: 50%;
+  width: 16px;
+  height: 44px;
+  transform: translateX(-50%);
+  opacity: .65;
+  animation: pressLampPull 6.4s var(--ease) 2.2s infinite;
+}
+
+.press-lamp__pull svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes pressLampPull {
+  0%, 88%, 100% { transform: translateX(-50%) translateY(0); opacity: .55; }
+  92% { transform: translateX(-50%) translateY(4px); opacity: .85; }
+}
+
+@media (max-width: 1180px) {
+  .press-lamp {
+    transform: translate(-30%, -28px) rotate(-1.6deg);
+    width: clamp(140px, 26vw, 260px);
+  }
+  .press-lamp__cord { height: clamp(120px, 16vw, 200px); }
+  .press-lamp__hood { top: clamp(120px, 16vw, 200px); }
+  .press-lamp__shade { top: clamp(130px, 17.5vw, 220px); }
+  .press-lamp__filament { top: clamp(150px, 19.5vw, 244px); }
+  .press-lamp__bulb { top: clamp(166px, 21.5vw, 266px); }
+  .press-lamp__cast { top: clamp(170px, 21.5vw, 270px); }
+  .press-lamp__stem { top: clamp(208px, 26.5vw, 328px); }
+  .press-lamp__pull { top: clamp(232px, 29.5vw, 356px); }
+}
+
+@media (max-width: 720px) {
+  .press-lamp {
+    transform: translate(-22%, -22px) rotate(-1.8deg);
+    width: clamp(120px, 36vw, 200px);
+    height: clamp(220px, 60vw, 320px);
+    opacity: .85;
+  }
+  .press-lamp__cord { height: clamp(100px, 28vw, 180px); }
+  .press-lamp__hood { top: clamp(100px, 28vw, 180px); width: clamp(44px, 12vw, 64px); }
+  .press-lamp__shade { top: clamp(108px, 30vw, 196px); width: clamp(36px, 10vw, 52px); height: clamp(36px, 10vw, 52px); }
+  .press-lamp__filament { top: clamp(124px, 34vw, 222px); }
+  .press-lamp__bulb { top: clamp(140px, 38vw, 246px); width: clamp(28px, 7vw, 42px); height: clamp(28px, 7vw, 42px); }
+  .press-lamp__cast { top: clamp(144px, 38vw, 250px); width: clamp(150px, 42vw, 240px); height: clamp(180px, 50vw, 280px); }
+  .press-lamp__stem { top: clamp(176px, 46vw, 296px); }
+  .press-lamp__pull { top: clamp(196px, 52vw, 320px); }
+}
+
+@media (max-width: 460px) {
+  .press-lamp {
+    transform: translate(-18%, -16px) rotate(-2deg);
+    opacity: .7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-lamp,
+  .press-lamp__shade,
+  .press-lamp__filament,
+  .press-lamp__bulb,
+  .press-lamp__cast,
+  .press-lamp__pull {
+    animation: none !important;
+    transition: none !important;
+  }
+  .press-lamp {
+    opacity: 1;
+    transform: translate(-50%, -28px) rotate(-1.2deg);
+  }
+  .press-lamp__cast { opacity: .7; }
+}
