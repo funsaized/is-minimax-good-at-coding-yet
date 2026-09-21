@@ -24,12 +24,50 @@ type VoiceFace = {
   tracking: string
   uppercased: boolean
   lineHeight: number
+  sizeScalar: number
+  inkHint: string
 }
 
 const VOICE_FACE: Record<VoiceId, VoiceFace> = {
-  quiet: { letter: 'A', name: 'quiet cut', descriptor: 'serif · italic · close set', family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif", weight: 400, style: 'italic', tracking: '-.028em', uppercased: false, lineHeight: 1.04 },
-  human: { letter: 'B', name: 'human hand', descriptor: 'serif · italic · a little warm', family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif", weight: 500, style: 'italic', tracking: '-.018em', uppercased: false, lineHeight: 1.06 },
-  bold: { letter: 'C', name: 'bold signal', descriptor: 'sans · heavy · no apology', family: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif', weight: 850, style: 'normal', tracking: '-.046em', uppercased: true, lineHeight: 1.02 },
+  quiet: {
+    letter: 'A',
+    name: 'quiet cut',
+    descriptor: 'serif · italic · close set',
+    family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
+    weight: 400,
+    style: 'italic',
+    tracking: '-.03em',
+    uppercased: false,
+    lineHeight: 1.04,
+    sizeScalar: 0.92,
+    inkHint: 'the page holds its breath',
+  },
+  human: {
+    letter: 'B',
+    name: 'human hand',
+    descriptor: 'serif · italic · a little warm',
+    family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
+    weight: 500,
+    style: 'italic',
+    tracking: '-.02em',
+    uppercased: false,
+    lineHeight: 1.04,
+    sizeScalar: 1.02,
+    inkHint: 'set by hand, then read aloud',
+  },
+  bold: {
+    letter: 'C',
+    name: 'bold signal',
+    descriptor: 'sans · heavy · no apology',
+    family: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+    weight: 900,
+    style: 'normal',
+    tracking: '-.055em',
+    uppercased: true,
+    lineHeight: 0.98,
+    sizeScalar: 1.18,
+    inkHint: 'set without apology, then read it once',
+  },
 }
 
 const VOICE_ORDER: VoiceId[] = ['quiet', 'human', 'bold']
@@ -44,6 +82,12 @@ const OPERATOR_NOTE: Record<VoiceId, string> = {
   quiet: 'set in close-set italic, then read it once aloud',
   human: 'set in a hand that learned its warmth',
   bold: 'set without apology, then read it like a poster',
+}
+
+const SIGN_OFF: Record<VoiceId, { mark: string; note: string }> = {
+  quiet: { mark: '—m³', note: 'composed once · read twice' },
+  human: { mark: '—m³', note: 'a hand, learning its warmth' },
+  bold: { mark: '—M³', note: 'set without apology' },
 }
 
 const SEASON = (() => {
@@ -83,6 +127,16 @@ export function TitleBroadside({
     fontStyle: face.style,
     letterSpacing: face.tracking,
     lineHeight: face.lineHeight,
+    fontSize: `calc(clamp(48px, 8.4vw, 112px) * ${face.sizeScalar})`,
+  }
+
+  const staticStyle: CSSProperties = {
+    fontFamily: face.family,
+    fontWeight: face.weight,
+    fontStyle: face.style,
+    letterSpacing: face.tracking,
+    lineHeight: face.lineHeight,
+    fontSize: `calc(clamp(48px, 8.4vw, 112px) * ${face.sizeScalar})`,
   }
 
   const toneStyle: Record<string, string> = {
@@ -186,7 +240,7 @@ export function TitleBroadside({
         aria-pressed={isMarked}
         aria-label={`Mark the word ${WORD_LABEL[id]} · ${WORD_KIND[id]} · ${WORD_GLOSS[id]}.`}
       >
-        <span className="tb__token-text" style={headlineStyle}>{label}</span>
+        <span className="tb__token-text" style={staticStyle}>{label}</span>
         <span className="tb__token-mark" aria-hidden="true">
           <span className="tb__token-mark-rule" />
           <span className="tb__token-mark-tag">
@@ -370,12 +424,33 @@ export function TitleBroadside({
           </span>
           <span className="tb__line tb__line--b">
             {renderToken('good')}
-            <span className="tb__statement-static" style={headlineStyle}>{face.uppercased ? 'FRONTEND' : 'frontend'}</span>
+            <span className="tb__statement-static" style={staticStyle}>{face.uppercased ? 'FRONTEND' : 'frontend'}</span>
           </span>
           <span className="tb__line tb__line--c">
             {renderToken('yet')}
           </span>
         </h3>
+
+        <span className="tb__signoff" aria-hidden="true">
+          <span className="tb__signoff-curve">
+            <svg viewBox="0 0 200 14" preserveAspectRatio="none">
+              <g filter={`url(#${ruleGrainId})`}>
+                <path
+                  className="tb__signoff-curve-stroke"
+                  d="M2 8c18-6 36 4 54 0s36-4 54 0 36 4 54 0 18-4 36 0"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth=".9"
+                  strokeLinecap="round"
+                  pathLength="100"
+                />
+              </g>
+              <circle className="tb__signoff-curve-bead" cx="198" cy="7" r="1.2" fill="currentColor" />
+            </svg>
+          </span>
+          <span className="tb__signoff-mark">{SIGN_OFF[voice].mark}</span>
+          <span className="tb__signoff-note">{SIGN_OFF[voice].note}</span>
+        </span>
       </div>
 
       <span className="tb__rule" aria-hidden="true">

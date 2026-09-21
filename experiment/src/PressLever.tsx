@@ -70,7 +70,7 @@ export const PressLever = forwardRef<HTMLButtonElement, PressLeverProps>(functio
       </header>
 
       <div className="press-lever__main">
-        <figure className={`press-lever__lever ${answerOpen ? 'is-pulled' : ''}`} aria-hidden="true">
+        <figure className={`press-lever__lever ${answerOpen ? 'is-pulled' : ''} ${stamping ? 'is-stamping' : ''}`} aria-hidden="true">
           <span className="press-lever__lever-tag">
             <span className="press-lever__lever-tag-dot" />
             {answerOpen ? 'pulled' : 'pull'}
