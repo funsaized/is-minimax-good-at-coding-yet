@@ -231,28 +231,68 @@ export function TitleBroadside({
         </svg>
       </span>
 
-      <header className="tb__head" aria-hidden="false">
+      <div className="tb__band" aria-hidden="false">
         <h2 className="sr-only">{`is Minimax M3 good at frontend yet? — folio i — the question`}</h2>
-        <p className="tb__eyebrow" aria-label={`Title page eyebrow · folio i · the question · set today ${setToday} · ${SEASON}.`}>
-          <span className="tb__eyebrow-mark" />
-          <span className="tb__eyebrow-key">folio <em>i</em></span>
-          <span className="tb__eyebrow-sep">·</span>
-          <span className="tb__eyebrow-key">the question</span>
-          <span className="tb__eyebrow-sep">·</span>
-          <span className="tb__eyebrow-key">{SEASON}</span>
-          <span className="tb__eyebrow-rule">
-            <svg viewBox="0 0 240 4" preserveAspectRatio="none">
-              <g filter={`url(#${ruleGrainId})`}>
-                <path d="M2 2c30-2 60 2 90 0s60-2 90 0 58 2 58 0" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" pathLength="100" className="tb__eyebrow-rule-stroke" />
-              </g>
-              <circle cx="238" cy="2" r=".9" fill="currentColor" />
-            </svg>
+        <span className="tb__band-mark tb__band-mark--lead" aria-hidden="true">
+          <svg viewBox="0 0 80 12" preserveAspectRatio="none">
+            <g filter={`url(#${ruleGrainId})`}>
+              <path
+                className="tb__band-mark-stroke tb__band-mark-stroke--lead"
+                d="M2 6c12-2 24 2 36 0s24-2 36 0 6 2 6 0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".55"
+                strokeLinecap="round"
+                pathLength="100"
+              />
+            </g>
+            <circle cx="2" cy="6" r=".9" fill="currentColor" opacity=".8" />
+            <circle cx="78" cy="6" r=".9" fill="currentColor" opacity=".8" />
+          </svg>
+        </span>
+        <span className="tb__band-folio" aria-hidden="false">
+          <span className="tb__band-folio-key">folio</span>
+          <em className="tb__band-folio-num">i</em>
+          <span className="tb__band-folio-sep" aria-hidden="true">·</span>
+          <span className="tb__band-folio-line">the question</span>
+        </span>
+        <span className="tb__band-pivot" aria-hidden="true">
+          <span className="tb__band-pivot-rule tb__band-pivot-rule--lead" />
+          <span className="tb__band-pivot-bead" />
+          <span className="tb__band-pivot-glyph" aria-hidden="true">{face.uppercased ? '◆' : '✦'}</span>
+          <span className="tb__band-pivot-bead tb__band-pivot-bead--alt" />
+          <span className="tb__band-pivot-rule tb__band-pivot-rule--trail" />
+        </span>
+        <span className="tb__band-set" aria-hidden="false">
+          <span className="tb__band-set-key">set</span>
+          <em className="tb__band-set-today">today</em>
+          <span className="tb__band-set-sep" aria-hidden="true">·</span>
+          <span className="tb__band-set-date">{setToday}</span>
+          <span className="tb__band-set-meta" aria-hidden="true">
+            <span className="tb__band-set-meta-dot" />
+            <em>{SEASON}</em>
+            <span className="tb__band-set-meta-dot tb__band-set-meta-dot--alt" />
           </span>
-          <span className="tb__eyebrow-key tb__eyebrow-key--set">set <em>today</em></span>
-          <span className="tb__eyebrow-date">{setToday}</span>
-          <span className="tb__eyebrow-mark" />
-        </p>
-      </header>
+        </span>
+        <span className="tb__band-mark tb__band-mark--trail" aria-hidden="true">
+          <svg viewBox="0 0 80 12" preserveAspectRatio="none">
+            <g filter={`url(#${ruleGrainId})`}>
+              <path
+                className="tb__band-mark-stroke tb__band-mark-stroke--trail"
+                d="M2 6c6-2 14 2 24 0s18-2 24 0 22 2 24 0"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".55"
+                strokeLinecap="round"
+                opacity=".7"
+                pathLength="100"
+              />
+            </g>
+            <circle cx="2" cy="6" r=".9" fill="currentColor" opacity=".6" />
+            <circle cx="78" cy="6" r=".9" fill="currentColor" opacity=".6" />
+          </svg>
+        </span>
+      </div>
 
       <span className="tb__signature" aria-hidden="true">
         <span className="tb__signature-monogram">
@@ -288,9 +328,9 @@ export function TitleBroadside({
           </span>
           <span className="tb__signature-line tb__signature-line--mid">
             <span className="tb__signature-rule tb__signature-rule--lead" />
-            <em>set</em>
+            <em>folio i</em>
             <span className="tb__signature-rule" />
-            <em>today</em>
+            <em>the question</em>
             <span className="tb__signature-rule tb__signature-rule--trail" />
           </span>
           <span className="tb__signature-line tb__signature-line--date">
@@ -304,27 +344,12 @@ export function TitleBroadside({
         </span>
       </span>
 
-      <div className="tb__plate" aria-hidden="true">
+      <span className="tb__plate" aria-hidden="true">
         <span className="tb__plate-corner tb__plate-corner--tl" />
         <span className="tb__plate-corner tb__plate-corner--tr" />
         <span className="tb__plate-corner tb__plate-corner--bl" />
         <span className="tb__plate-corner tb__plate-corner--br" />
-        <span className="tb__plate-folio" aria-hidden="true">
-          <svg viewBox="0 0 84 14" preserveAspectRatio="xMidYMid meet">
-            <g filter={`url(#${ruleGrainId})`}>
-              <path d="M2 7c12-2 24 2 36 0s24-2 36 0 8 2 8 0" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" />
-            </g>
-            <circle cx="42" cy="7" r="1.2" fill="currentColor" />
-            <circle cx="2" cy="7" r=".9" fill="currentColor" opacity=".7" />
-            <circle cx="82" cy="7" r=".9" fill="currentColor" opacity=".7" />
-          </svg>
-          <span className="tb__plate-folio-tag">
-            <em>folio i</em>
-            <span aria-hidden="true">·</span>
-            <span>set today</span>
-          </span>
-        </span>
-      </div>
+      </span>
 
       <div className="tb__seal" aria-hidden="true">
         <span className="tb__seal-halo" />

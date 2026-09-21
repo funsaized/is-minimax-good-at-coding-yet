@@ -61414,99 +61414,359 @@ a small act of typesetting.
 .tb__plate-corner--br::before { bottom: 0; right: 0; }
 .tb__plate-corner--br::after { bottom: 0; right: 0; }
 
-/* eyebrow / running head */
-.tb__head {
-  display: flex;
-  flex-direction: column;
+/* ────────────────────────────────────
+   TITLE FOLIO BAND · the composed
+   editorial band that runs across the
+   top of the broadside. One line, three
+   press identifications: the folio mark
+   on the left, a small pivoted glyph in
+   the centre, the set-today mark on the
+   right. The band reads as a single
+   printed header and replaces the old
+   scattered eyebrow + folio tag.
+   ──────────────────────────────────── */
+
+.tb__band {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: clamp(8px, 1vw, 14px);
-  width: 100%;
+  column-gap: clamp(6px, .8vw, 14px);
+  row-gap: 4px;
+  width: min(100%, 920px);
+  padding: clamp(6px, .8vw, 12px) clamp(10px, 1.4vw, 22px);
+  color: var(--tb-tone);
   z-index: 2;
-}
-
-.tb__eyebrow {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: clamp(6px, .7vw, 10px);
-  width: 100%;
-  max-width: 760px;
-  margin: 0;
-  padding: 0;
-  color: var(--paper);
-  font-family: var(--mono);
-  font-size: clamp(8.5px, .78vw, 10px);
-  letter-spacing: .28em;
-  text-transform: uppercase;
   opacity: 0;
-  animation: tbEyebrowIn .7s var(--ease-out) .25s forwards;
+  animation: tbBandIn .8s var(--ease-out) .25s forwards;
 }
 
-.tb__eyebrow em {
+.tb__band-mark--lead { grid-column: 1; justify-self: end; }
+.tb__band-folio { grid-column: 2; justify-self: end; }
+.tb__band-pivot { grid-column: 3; justify-self: center; }
+.tb__band-set { grid-column: 4; justify-self: start; }
+.tb__band-mark--trail { grid-column: 5; justify-self: start; }
+
+@keyframes tbBandIn {
+  0% { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.tb__band-mark {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(48px, 8vw, 96px);
+  height: 14px;
+  flex: 0 0 auto;
+  color: var(--tb-rule);
+}
+
+.tb__band-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tb__band-mark--lead {
+  color: var(--tb-tone);
+}
+
+.tb__band-mark--trail {
+}
+
+.tb__band-mark-stroke {
+  stroke-dasharray: 100 100;
+  stroke-dashoffset: 100;
+  animation: tbBandRuleDraw 1.3s var(--ease-out) .55s forwards;
+}
+
+.tb__band-mark-stroke--trail {
+  animation-delay: .65s;
+}
+
+@keyframes tbBandRuleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.tb__band-folio {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  justify-self: end;
+  gap: clamp(5px, .55vw, 9px);
+  color: var(--tb-ink);
+  white-space: nowrap;
+}
+
+.tb__band-folio-key {
+  font-family: var(--mono);
+  font-size: clamp(8px, .72vw, 9.5px);
+  font-weight: 500;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--tb-ink-mist);
+  transition: color .4s var(--ease);
+}
+
+.tb__band-folio-num {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(12px, 1.05vw, 14px);
+  font-size: clamp(15px, 1.35vw, 19px);
+  font-weight: 500;
+  letter-spacing: -.02em;
+  text-transform: none;
+  color: var(--tb-tone);
+  transition: color .5s var(--ease);
+}
+
+.tb__band-folio-sep {
+  color: var(--tb-ink-mist);
+  opacity: .45;
+  font-style: normal;
+}
+
+.tb__band-folio-line {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13.5px, 1.18vw, 16px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+  transition: color .4s var(--ease);
+}
+
+.tb__band-pivot {
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: clamp(5px, .55vw, 9px);
+  flex: 0 0 auto;
+  justify-self: center;
+  color: var(--tb-tone);
+  padding: 0 clamp(2px, .4vw, 6px);
+}
+
+.tb__band-pivot-rule {
+  display: block;
+  width: clamp(14px, 2vw, 32px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor);
+  opacity: .55;
+}
+
+.tb__band-pivot-rule--trail {
+  background: linear-gradient(to left, transparent, currentColor);
+}
+
+.tb__band-pivot-bead {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .65;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 16%, transparent);
+}
+
+.tb__band-pivot-bead--alt {
+  width: 3px;
+  height: 3px;
+  box-shadow: none;
+  opacity: .45;
+}
+
+.tb__band-pivot-glyph {
+  font-family: var(--serif);
+  font-size: clamp(13px, 1.1vw, 15px);
+  line-height: 1;
+  color: currentColor;
+  opacity: .85;
+  transition: opacity .5s var(--ease);
+}
+
+@keyframes tbBandPivotBead {
+  0%, 100% { opacity: .55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.18); }
+}
+
+.tb__band-set {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  justify-self: start;
+  gap: clamp(5px, .55vw, 9px);
+  color: var(--tb-ink);
+  white-space: nowrap;
+}
+
+.tb__band-set-key {
+  font-family: var(--mono);
+  font-size: clamp(8px, .72vw, 9.5px);
+  font-weight: 500;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--tb-ink-mist);
+  transition: color .4s var(--ease);
+}
+
+.tb__band-set-today {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13.5px, 1.18vw, 16px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+  transition: color .4s var(--ease);
+}
+
+.tb__band-set-sep {
+  color: var(--tb-ink-mist);
+  opacity: .45;
+  font-style: normal;
+}
+
+.tb__band-set-date {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(13.5px, 1.18vw, 16px);
   letter-spacing: -.005em;
   text-transform: none;
   color: var(--tb-tone);
   transition: color .5s var(--ease);
 }
 
-.tb__eyebrow-key {
+.tb__band-set-meta {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  opacity: .82;
-  transition: color .4s var(--ease);
+  gap: clamp(4px, .4vw, 6px);
+  margin-left: clamp(4px, .5vw, 8px);
+  font-family: var(--mono);
+  font-size: clamp(7.5px, .65vw, 9px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--tb-ink-mist);
 }
 
-.tb__eyebrow-key--set {
-  margin-left: clamp(2px, .4vw, 6px);
-}
-
-.tb__eyebrow-sep {
-  color: var(--ink-mist);
-  opacity: .5;
-}
-
-.tb__eyebrow-mark {
-  display: inline-block;
-  width: clamp(16px, 1.6vw, 24px);
-  height: 1px;
-  background: linear-gradient(to right, transparent, currentColor);
-  opacity: .55;
+.tb__band-set-meta em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(11px, .95vw, 12.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
   color: var(--tb-tone);
 }
 
-.tb__eyebrow-rule {
-  display: block;
-  flex: 1 1 auto;
-  min-width: clamp(48px, 8vw, 120px);
-  max-width: clamp(120px, 18vw, 200px);
-  height: 4px;
-  color: var(--tb-rule);
+.tb__band-set-meta-dot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .65;
 }
 
-.tb__eyebrow-rule svg {
-  display: block;
-  width: 100%;
-  height: 100%;
+.tb__band-set-meta-dot--alt { transform: scale(1.6); opacity: .9; }
+
+@media (max-width: 720px) {
+  .tb__band {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: clamp(6px, 1.4vw, 10px);
+    padding: 6px 12px;
+  }
+
+  .tb__band-mark {
+    width: clamp(28px, 8vw, 56px);
+  }
+
+  .tb__band-folio-line,
+  .tb__band-set-today,
+  .tb__band-set-date {
+    font-size: 12.5px;
+  }
+
+  .tb__band-folio-num {
+    font-size: 14px;
+  }
+
+  .tb__band-set-meta {
+    display: none;
+  }
 }
 
-.tb__eyebrow-rule-stroke {
-  stroke-dasharray: 100 100;
-  stroke-dashoffset: 100;
-  animation: tbRuleDraw 1.5s var(--ease-out) .55s forwards;
+@media (max-width: 460px) {
+  .tb__band {
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    row-gap: 6px;
+    column-gap: 10px;
+  }
+
+  .tb__band-mark {
+    display: none;
+  }
+
+  .tb__band-mark--lead { grid-column: 1 / span 1; }
+  .tb__band-mark--trail { grid-column: 2 / span 1; }
+  .tb__band-folio { grid-column: 1 / span 1; justify-self: start; flex-wrap: wrap; }
+  .tb__band-set { grid-column: 2 / span 1; justify-self: end; font-size: 12px; flex-wrap: wrap; }
+
+  .tb__band-pivot {
+    display: none;
+  }
+
+  .tb__band-set-key {
+    font-size: 7.5px;
+  }
+
+  .tb__band-folio-key {
+    font-size: 7.5px;
+  }
 }
 
-.tb__eyebrow-date {
-  color: var(--tb-ink);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(11.5px, 1vw, 13px);
+/* bold voice tightens the band into a heavier display line */
+.tb.tb--voice-bold .tb__band-folio-num {
+  font-family: var(--sans);
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+
+.tb.tb--voice-bold .tb__band-folio-line,
+.tb.tb--voice-bold .tb__band-set-today,
+.tb.tb--voice-bold .tb__band-set-date {
+  font-family: var(--sans);
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
+.tb.tb--voice-bold .tb__band-set-meta em {
+  font-family: var(--sans);
+  font-style: normal;
+  font-weight: 700;
   letter-spacing: -.005em;
-  text-transform: none;
+}
+
+.tb.tb--voice-bold .tb__band-pivot-glyph {
+  font-size: clamp(14px, 1.18vw, 16px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tb__band { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .tb__band-mark-stroke { animation: none !important; stroke-dashoffset: 0 !important; }
+  .tb__band-pivot-bead { animation: none !important; transform: none !important; }
+}
+
+/* eyebrow / running head (legacy · folded into the band above) */
+.tb__head,
+.tb__eyebrow,
+.tb__eyebrow-key,
+.tb__eyebrow-key--set,
+.tb__eyebrow-sep,
+.tb__eyebrow-mark,
+.tb__eyebrow-rule,
+.tb__eyebrow-rule-stroke,
+.tb__eyebrow-date {
+  display: none;
 }
 
 @keyframes tbEyebrowIn {
@@ -61515,11 +61775,6 @@ a small act of typesetting.
 
 @keyframes tbRuleDraw {
   to { stroke-dashoffset: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tb__eyebrow { animation: none !important; opacity: 1 !important; }
-  .tb__eyebrow-rule-stroke { animation: none !important; stroke-dashoffset: 0 !important; }
 }
 
 /* seal */
@@ -62359,17 +62614,6 @@ a small act of typesetting.
   .tb__seal {
     width: clamp(80px, 22vw, 100px);
     height: clamp(80px, 22vw, 100px);
-  }
-  .tb__eyebrow {
-    gap: clamp(4px, 1.4vw, 8px);
-    font-size: clamp(8px, 2vw, 9px);
-    letter-spacing: .22em;
-  }
-  .tb__eyebrow-rule {
-    display: none;
-  }
-  .tb__eyebrow-date {
-    font-size: clamp(11px, 2.6vw, 13px);
   }
   .tb__token-mark {
     height: 18px;
@@ -66709,7 +66953,7 @@ a small act of typesetting.
 
 .tb__signature {
   position: absolute;
-  top: clamp(20px, 3vw, 38px);
+  top: clamp(96px, 8vw, 132px);
   right: clamp(16px, 3vw, 44px);
   z-index: 3;
   display: grid;
@@ -66730,7 +66974,7 @@ a small act of typesetting.
   transform: translate(6px, -6px) rotate(2deg);
   animation: tbSignatureIn 1.05s var(--ease-spring) .55s forwards;
   pointer-events: none;
-  max-width: clamp(180px, 28vw, 280px);
+  max-width: clamp(180px, 26vw, 248px);
   transition: color .5s var(--ease), border-color .5s var(--ease);
 }
 
@@ -66901,7 +67145,7 @@ a small act of typesetting.
   }
 }
 
-/* mobile: signature becomes a centered chip below the eyebrow */
+/* mobile: signature becomes a centered chip below the folio band */
 @media (max-width: 720px) {
   .tb__signature {
     position: static;
@@ -67118,64 +67362,21 @@ a small act of typesetting.
 }
 
 /* ──────────────────────────────────────────────────────────────────
-   TITLE PLATE FOLIO · a small printed strip below the corner
-   marks that reads "folio i · set today" — the printer's
-   identification band that makes the broadside feel signed.
+   TITLE PLATE FOLIO · folded into the band above. The folio mark
+   now lives inside the composed header band; the redundant printed
+   strip is hidden to keep the broadside's top region single-voiced.
    ────────────────────────────────────────────────────────────────── */
 
-.tb__plate-folio {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(-14px, -1.4vw, -10px);
-  display: grid;
-  justify-items: center;
-  gap: 4px;
-  width: clamp(160px, 24vw, 220px);
-  transform: translateX(-50%);
-  color: var(--tb-tone);
-  opacity: 0;
-  animation: tbPlateFolioIn .9s var(--ease-out) 1.65s forwards;
-  pointer-events: none;
-}
-
-.tb__plate-folio svg {
-  display: block;
-  width: 100%;
-  height: 14px;
-}
-
-.tb__plate-folio-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(4px, .5vw, 7px);
-  color: var(--tb-ink-mist);
-  font-family: var(--mono);
-  font-size: clamp(7.5px, .65vw, 9px);
-  letter-spacing: .24em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
+.tb__plate-folio,
+.tb__plate-folio svg,
+.tb__plate-folio-tag,
 .tb__plate-folio-tag em {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(10.5px, .9vw, 12px);
-  letter-spacing: -.005em;
-  text-transform: none;
-  color: var(--tb-tone);
+  display: none;
 }
 
 @keyframes tbPlateFolioIn {
   0% { opacity: 0; transform: translate(-50%, -4px); }
   100% { opacity: .85; transform: translate(-50%, 0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tb__plate-folio {
-    animation: none !important;
-    opacity: .85;
-    transform: translateX(-50%);
-  }
 }
 
 /* ──────────────────────────────────────────────────────────────────
