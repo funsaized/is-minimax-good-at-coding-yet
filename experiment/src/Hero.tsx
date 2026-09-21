@@ -113,6 +113,17 @@ export function Hero({
           })}
         </h1>
 
+        <span className="hero__composing" aria-hidden="true">
+          <span className="hero__composing-rule">
+            <span className="hero__composing-tick" style={{ left: '10%' }} />
+            <span className="hero__composing-tick" style={{ left: '38%' }} />
+            <span className="hero__composing-tick" style={{ left: '72%' }} />
+          </span>
+          <span className="hero__composing-meta">
+            <em>set</em> 72pt <em>·</em> lead 76pt <em>·</em> track −30
+          </span>
+        </span>
+
         <p className="hero__under">
           <span className="hero__under-rule" aria-hidden="true" />
           A folio of one line, set in <em>three voices</em>. Hover the words to mark one at a time;

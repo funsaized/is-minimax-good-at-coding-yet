@@ -68,6 +68,13 @@ export function Answer({ open, onToggle, triggerRef, voice, word, setToday }: An
         className={`answer__leaf ${open ? 'is-open' : ''}`}
         aria-hidden={!open}
       >
+        <span className="answer__fold" aria-hidden="true">
+          <svg viewBox="0 0 4 80" preserveAspectRatio="none">
+            <path d="M2 0c-1.5 13 1.5 27 0 40s1.5 27 0 40" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
+            <circle cx="2" cy="40" r="1.4" fill="currentColor" />
+          </svg>
+          <em>the fold</em>
+        </span>
         <div className="answer__copy">
           <p className="answer__line">
             Yes — when it <em>stops trying to look impressive.</em>

@@ -1,18 +1,10 @@
 # Changelog
 
-## Iteration 363
+## folio iv becomes a real specimen plate; folio iii becomes pinned slips on a cord
 
-Replaced the ornament-heavy folio workshop with a quieter editorial reading.
-
-- `src/style.css` rewritten from scratch (~2,500 lines, down from ~78,000): dark editorial tokens, refined typography, fluid spacing, voice tones (quiet / human / bold), reduced-motion respect, mobile-first responsive.
-- `src/App.tsx` rewritten for clean composition: topbar with brand + folio ticker + status + wayfinder, lede, hero, three folio turns, press, marginalia, specimen, answer, colophon, signature, footer.
-- `src/Hero.tsx` (new) — the question as one typographic statement with three voice pills on the right.
-- `src/Press.tsx` rewritten — a single tactile lever, a composing stick with marked pieces, and a pulled paper impression.
-- `src/Marginalia.tsx` (new), `src/Specimen.tsx` (new) — three notes / three voices, each as a clean set of rows or cards.
-- `src/Answer.tsx` rewritten — a folded sheet that breathes open with a real close button; Escape folds it back.
-- `src/Colophon.tsx`, `src/Signature.tsx` rewritten — concise sign-off with a single animated seal.
-- `src/Lede.tsx`, `src/FolioTurn.tsx`, `src/Wayfinder.tsx` (new), `src/FolioTicker.tsx` (new), `src/ProgressRail.tsx` (new), `src/CursorGlow.tsx` (new) — small reusable pieces that replace heavier predecessors.
-- `src/WayfinderSeal.tsx`, `src/HeroTitle.tsx`, `src/ReadingPocket.tsx`, `src/NotesSection.tsx`, `src/TypePlate.tsx`, `src/AnswerReveal.tsx`, `src/OpeningLede.tsx`, `src/ComposeSignature.tsx`, and many other prior-iteration files are now unused but left in place for the publisher's reference.
-- `src/notes.ts` and `src/PaperGrain.tsx` kept as-is.
-- Keyboard: shift + v cycles voice; arrows + Home/End move between marks; Escape folds the answer; focus rings visible on every interactive element.
-- Bundle shrank from ~1.4 MB CSS + ~300 KB JS to ~45 KB CSS + ~228 KB JS.
+- **folio iv · the specimen plate** is now a single bordered plate holding three paper sheets, each with a paper-stock tag, real type measurements (set · lead · track in monospace), a baseline rule with tick marks, the sample set in its voice's typeface, and a "lifted / in case" status pip. The active sheet lifts on its box-shadow ring in the current voice colour; the others sit flat. A press stamp seals the plate foot.
+- **folio iii · the marginalia** is now three pinned slips of different paper stock (cream / acid / blue laid), each tilted slightly and pinned with its own mark (round tack, paper clip, head-pin). Hover or focus straightens a slip to read it; the kept slip carries a small circular "KEPT · NO 02" stamp in the margin.
+- **folio i · the hero** gains a composing rule under the headline: a hairline baseline with three word ticks and a "set 72pt · lead 76pt · track −30" type-measurement readout, so the title now reads as composed type rather than just a heading.
+- **folio v · the answer** leaf shows a small "the fold" crease mark down the centre once unfolded, so the reveal reads as a paper being opened instead of a panel growing.
+- Reduced-motion users now see all new lift / rotation transitions suppressed and the slips fall to flat.
+- CSS reset for the old `note-card` and `specimen__row` classes has been replaced by resets for `.slip` and `.specimen__paper`.
