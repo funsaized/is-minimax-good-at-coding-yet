@@ -6440,6 +6440,25 @@
         "outputTokens": 21164,
         "steps": 69
       }
+    },
+    {
+      "id": 339,
+      "parentId": 338,
+      "createdAt": "2026-09-21T05:42:46.833Z",
+      "summary": "Iteration 339 — FolioFold collapses into a single hand-pressed FolioHinge that does one thing: it folds the page.",
+      "path": "/iterations/000339/index.html",
+      "screenshot": "/iterations/000339/desktop.png",
+      "mobileScreenshot": "/iterations/000339/mobile.png",
+      "sourceCommit": "9cef8445fed6a26ad8c5a46bf9fb0c169f68ee43",
+      "model": "minimax-coding-plan/MiniMax-M3",
+      "durationSeconds": 369,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": {
+        "estimatedCostUsd": 0,
+        "inputTokens": 134599,
+        "outputTokens": 24409,
+        "steps": 59
+      }
     }
   ]
 }
