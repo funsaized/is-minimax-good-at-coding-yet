@@ -8,11 +8,10 @@ import {
   type RefObject,
 } from 'react'
 import { NOTES, type WordId } from './notes'
-import { Wayfinder } from './Wayfinder'
 import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
-import { FolioTicker } from './FolioTicker'
-import { Lede } from './Lede'
+import { ReadingPocket } from './ReadingPocket'
+import { ReadingLedger } from './ReadingLedger'
 import { Hero } from './Hero'
 import { FolioTurn } from './FolioTurn'
 import { Press } from './Press'
@@ -21,7 +20,6 @@ import { Specimen } from './Specimen'
 import { Answer } from './Answer'
 import { Colophon } from './Colophon'
 import { Signature } from './Signature'
-import { ProgressRail } from './ProgressRail'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -36,11 +34,11 @@ const VOICE_FACE: Record<VoiceId, string> = {
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 
 export const FOLIOS = [
-  { id: 'question', index: 'i', label: 'the question', hint: 'folio i · one line, set three ways' },
-  { id: 'press', index: 'ii', label: 'the press bed', hint: 'folio ii · pull a lever, take an impression' },
-  { id: 'notes', index: 'iii', label: 'the marginalia', hint: 'folio iii · three things worth keeping' },
-  { id: 'specimen', index: 'iv', label: 'three pressings', hint: 'folio iv · the same line, three faces' },
-  { id: 'answer', index: 'v', label: 'the answer', hint: 'folio v · folded once, then folded back' },
+  { id: 'question', index: 'i', label: 'the question', hint: 'one line, set three ways' },
+  { id: 'press', index: 'ii', label: 'the press bed', hint: 'pull the lever, take an impression' },
+  { id: 'notes', index: 'iii', label: 'the marginalia', hint: 'three things worth keeping' },
+  { id: 'specimen', index: 'iv', label: 'three pressings', hint: 'the same line, three faces' },
+  { id: 'answer', index: 'v', label: 'the answer', hint: 'folded once, then folded back' },
 ] as const
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
@@ -231,18 +229,29 @@ export function App() {
           </span>
         </a>
 
-        <FolioTicker folios={FOLIOS as unknown as { id: string; index: string; label: string }[]} activeId={activeSection} />
-
         <div className="status" aria-label="Page status">
           <StatusLight />
           <span className="status__date">{setToday}</span>
-          <Wayfinder folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]} activeId={activeSection} voice={voice} setToday={setToday} />
+          <span className="status__voice" aria-hidden="true">
+            <em>voice</em>
+            <strong>{VOICE_LETTER[voice]}</strong>
+            <span>{VOICE_NAME[voice]}</span>
+          </span>
         </div>
       </header>
 
-      <ProgressRail folios={FOLIOS.map(f => ({ id: f.id, index: f.index, label: f.label }))} activeId={activeSection} />
+      <ReadingLedger
+        folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
+        activeId={activeSection}
+        voice={voice}
+        setToday={setToday}
+      />
 
-      <Lede voice={voice} setToday={setToday} />
+      <ReadingPocket
+        voice={voice}
+        setToday={setToday}
+        folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
+      />
 
       <section className="hero reveal" aria-labelledby="hero-title-label">
         <span className="read-pulse" aria-hidden="true">

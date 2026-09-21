@@ -1,193 +1,144 @@
-import type { CSSProperties } from 'react'
-import type { KeyboardEvent as ReactKeyboardEvent } from 'react'
-import type { VoiceId } from './Press'
-import { NOTES, type WordId } from './notes'
+import { useId, useRef, type CSSProperties } from 'react'
 
 type ReadingPocketProps = {
-  voice: VoiceId
-  word: WordId
+  voice: 'quiet' | 'human' | 'bold'
   setToday: string
-  answerOpen: boolean
-  answerTriggerRef: React.RefObject<HTMLButtonElement | null>
-  onToggleAnswer: () => void
+  folios: { id: string; index: string; label: string; hint: string }[]
 }
 
-const VOICE_META: Record<VoiceId, { name: string; letter: string; face: string }> = {
-  quiet: { name: 'quiet cut', letter: 'A', face: 'serif · italic · close set' },
-  human: { name: 'human hand', letter: 'B', face: 'serif · italic · warm' },
-  bold: { name: 'bold signal', letter: 'C', face: 'sans · heavy · no apology' },
-}
+const SEASON = (() => {
+  const month = new Date().getMonth()
+  if (month <= 1 || month === 11) return 'winter'
+  if (month <= 4) return 'spring'
+  if (month <= 7) return 'summer'
+  return 'autumn'
+})()
 
-const POCKET_FOLIOS: { id: string; index: string; label: string; hint: string; tone: VoiceId }[] = [
-  { id: 'question', index: 'i', label: 'the question', hint: 'one line, set three ways', tone: 'quiet' },
-  { id: 'press', index: 'ii', label: 'the press bed', hint: 'pull a lever, take an impression', tone: 'human' },
-  { id: 'notes', index: 'iii', label: 'the marginalia', hint: 'three things worth keeping', tone: 'quiet' },
-  { id: 'pressings', index: 'iv', label: 'three pressings', hint: 'the same line, three faces', tone: 'bold' },
-  { id: 'answer', index: 'v', label: 'the answer', hint: 'folded once, then folded back', tone: 'human' },
-]
+export function ReadingPocket({ voice, setToday, folios }: ReadingPocketProps) {
+  const baseId = useId().replace(/:/g, '')
+  const grainId = `rp-grain-${baseId}`
+  const threadId = `rp-thread-${baseId}`
+  const rootRef = useRef<HTMLDivElement | null>(null)
+  const tone = voice === 'quiet'
+    ? 'var(--quiet)'
+    : voice === 'human'
+    ? 'var(--human)'
+    : 'var(--bold)'
+  const style = { '--rp-tone': tone } as CSSProperties
 
-function PenIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        d="M3 21l4-1 11-11-3-3L4 17l-1 4zM14.5 6.5l3 3"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function PocketArrow({ open }: { open: boolean }) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={`pocket__arrow ${open ? 'is-open' : ''}`}>
-      <path
-        d="M4 12h15M13 6l6 6-6 6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function PocketFleur({ side }: { side: 'lead' | 'trail' }) {
-  return (
-    <svg viewBox="0 0 24 12" aria-hidden="true" className={`pocket__fleur pocket__fleur--${side}`}>
-      <path
-        d="M2 6h6m0 0L5 3m3 3l-3 3m14-3h6m-6 0l3-3m-3 3l3 3"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth=".85"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="12" cy="6" r="1.4" fill="currentColor" />
-    </svg>
-  )
-}
-
-function PocketMark({ tone }: { tone: VoiceId }) {
-  const color = tone === 'bold' ? 'var(--acid)' : tone === 'human' ? 'var(--coral)' : 'var(--blue)'
-  return (
-    <span className="pocket__folio-mark" aria-hidden="true">
-      <svg viewBox="0 0 14 14">
-        <circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" strokeWidth=".7" style={{ color }} />
-        <circle cx="7" cy="7" r="2.4" fill="currentColor" style={{ color }} />
+    <section
+      ref={rootRef}
+      className={`rp rp--${voice}`}
+      style={style}
+      aria-label="The folio's opening pocket · a single composed cover"
+    >
+      <svg className="rp__defs" viewBox="0 0 600 60" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <filter id={grainId} x="-2%" y="-30%" width="104%" height="160%">
+            <feTurbulence type="fractalNoise" baseFrequency="2.6" numOctaves="2" seed="19" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 0" />
+            <feComposite in2="SourceGraphic" operator="in" />
+          </filter>
+          <filter id={threadId} x="-2%" y="-2%" width="104%" height="104%">
+            <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" seed="31" stitchTiles="stitch" />
+            <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
+            <feComposite in2="SourceGraphic" operator="in" />
+          </filter>
+        </defs>
       </svg>
-    </span>
-  )
-}
 
-export function ReadingPocket({
-  voice,
-  word,
-  setToday,
-  answerOpen,
-  answerTriggerRef,
-  onToggleAnswer,
-}: ReadingPocketProps) {
-  const activeNote = NOTES.find(item => item.id === word) ?? NOTES[0]
-
-  const onAnswerKey = (event: ReactKeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      onToggleAnswer()
-    }
-  }
-
-  const style = { '--pocket-tone': 'var(--paper)' } as CSSProperties
-
-  return (
-    <aside className={`pocket pocket--voice-${voice} ${answerOpen ? 'is-answer-open' : ''}`} aria-label="Reading pocket" style={style}>
-      <div className="pocket__plate">
-        <span className="pocket__corner pocket__corner--tl" aria-hidden="true" />
-        <span className="pocket__corner pocket__corner--tr" aria-hidden="true" />
-        <span className="pocket__corner pocket__corner--bl" aria-hidden="true" />
-        <span className="pocket__corner pocket__corner--br" aria-hidden="true" />
-
-        <header className="pocket__head">
-          <PocketFleur side="lead" />
-          <span className="pocket__head-stack">
-            <em className="pocket__head-eyebrow">the reading pocket</em>
-            <span className="pocket__head-title">
-              five folios <span aria-hidden="true">·</span> one question
-            </span>
-          </span>
-          <PocketFleur side="trail" />
-        </header>
-
-        <ol className="pocket__list" aria-label="Folios in reading order">
-          {POCKET_FOLIOS.map((folio, idx) => {
-            const isLast = idx === POCKET_FOLIOS.length - 1
-            return (
-              <li key={folio.id} className={`pocket__item ${isLast ? 'is-last' : ''}`}>
-                <a className="pocket__link" href={`#${folio.id}`}>
-                  <PocketMark tone={folio.tone} />
-                  <span className="pocket__link-num" aria-hidden="true">{folio.index}</span>
-                  <span className="pocket__link-copy">
-                    <span className="pocket__link-label">{folio.label}</span>
-                    <span className="pocket__link-hint">{folio.hint}</span>
-                  </span>
-                  <span className="pocket__link-tick" aria-hidden="true" />
-                </a>
-              </li>
-            )
-          })}
-        </ol>
-
-        <span className="pocket__rule" aria-hidden="true">
-          <svg viewBox="0 0 200 6" preserveAspectRatio="none">
+      <span className="rp__rule rp__rule--lead" aria-hidden="true">
+        <svg viewBox="0 0 600 6" preserveAspectRatio="none">
+          <g filter={`url(#${grainId})`}>
             <path
-              d="M2 3c12-2 24 2 36 0s24-2 36 0 24 2 36 0 24-2 36 0 24 2 36 0 12-2 16 0"
+              d="M2 3c40-3 80 3 120 0s80-3 120 0 80 3 120 0 80-3 120 0 36-3 38 0"
               fill="none"
               stroke="currentColor"
-              strokeWidth=".6"
+              strokeWidth=".7"
               strokeLinecap="round"
+              pathLength="100"
             />
-            <circle cx="100" cy="3" r="1.4" fill="currentColor" />
-          </svg>
+          </g>
+          <circle cx="2" cy="3" r="1.1" fill="currentColor" />
+          <circle cx="598" cy="3" r="1.1" fill="currentColor" />
+        </svg>
+      </span>
+
+      <div className="rp__masthead" aria-hidden="false">
+        <span className="rp__masthead-glyph" aria-hidden="true">¶</span>
+        <span className="rp__masthead-rule" aria-hidden="true" />
+        <span className="rp__masthead-tag">
+          <em>an opening plate</em>
+          <span className="rp__masthead-sep" aria-hidden="true">·</span>
+          <span>folio i</span>
+          <span className="rp__masthead-sep" aria-hidden="true">·</span>
+          <span>the question</span>
         </span>
-
-        <button
-          ref={answerTriggerRef}
-          type="button"
-          className={`pocket__reveal ${answerOpen ? 'is-open' : ''}`}
-          onClick={onToggleAnswer}
-          onKeyDown={onAnswerKey}
-          aria-expanded={answerOpen}
-          aria-controls="answer"
-        >
-          <span className="pocket__reveal-stack">
-            <span className="pocket__reveal-eyebrow">
-              <span className="pocket__reveal-eyebrow-mark" aria-hidden="true" />
-              <em>{answerOpen ? 'folded open · see how it lands' : 'unfold the answer, when ready'}</em>
-            </span>
-            <span className="pocket__reveal-line">
-              <PenIcon />
-              <em>{answerOpen ? 'fold it back into the page' : 'no commitment · the question stays open'}</em>
-            </span>
-          </span>
-          <PocketArrow open={answerOpen} />
-        </button>
-
-        <footer className="pocket__foot" aria-hidden="true">
-          <span className="pocket__foot-mark" />
-          <em className="pocket__foot-line">
-            set today <span aria-hidden="true">·</span> {setToday}
-          </em>
-          <span className="pocket__foot-mark pocket__foot-mark--alt" />
-        </footer>
+        <span className="rp__masthead-rule" aria-hidden="true" />
+        <span className="rp__masthead-glyph rp__masthead-glyph--alt" aria-hidden="true">¶</span>
       </div>
 
-      <span className="sr-only" aria-live="polite">
-        {`Reading pocket · ${VOICE_META[voice].name} · marked at ${activeNote.label}, ${activeNote.title}.`}
+      <p className="rp__premise">
+        One page, set in three voices —{' '}
+        <em>quiet</em> by default, <em>human</em> in the middle,
+        <br />
+        and <em>bold</em> on demand — for the question that comes with the next reader.
+      </p>
+
+      <ol className="rp__index" aria-label="The folio's table of contents">
+        {folios.map((folio, idx) => (
+          <li key={folio.id} className="rp__index-cell">
+            <a className="rp__index-link" href={`#${folio.id}`}>
+              <span className="rp__index-num" aria-hidden="true">{folio.index}</span>
+              <span className="rp__index-stack">
+                <span className="rp__index-label">{folio.label}</span>
+                <span className="rp__index-hint">{folio.hint}</span>
+              </span>
+              <span className="rp__index-arrow" aria-hidden="true">
+                <svg viewBox="0 0 16 8" width="14" height="8">
+                  <path
+                    d="M1 4h13M10 1l4 3-4 3"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+
+      <footer className="rp__foot" aria-hidden="true">
+        <span className="rp__foot-bead" />
+        <span className="rp__foot-meta">
+          composed for the next reader <em>·</em> set on <em>{setToday}</em> <em>·</em> {SEASON}
+        </span>
+        <span className="rp__foot-bead rp__foot-bead--alt" />
+      </footer>
+
+      <span className="rp__thread" aria-hidden="true">
+        <svg viewBox="0 0 24 56" preserveAspectRatio="none">
+          <g filter={`url(#${threadId})`} opacity=".85">
+            <path
+              d="M12 2 C 12 14, 4 22, 12 32 S 12 50, 12 54"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth=".85"
+              strokeLinecap="round"
+              pathLength="100"
+            />
+          </g>
+          <circle cx="12" cy="54" r="1.6" fill="currentColor" />
+        </svg>
+        <span className="rp__thread-tag" aria-hidden="true">
+          <em>then · read</em>
+          <span className="rp__thread-tag-mark" aria-hidden="true">↓</span>
+        </span>
       </span>
-    </aside>
+    </section>
   )
 }
