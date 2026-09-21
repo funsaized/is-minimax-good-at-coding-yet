@@ -1,11 +1,34 @@
-# Iteration 371
+# Changelog
 
-The question, marked. The question mark, drawn. Three voices as a typesetter's column.
+## iteration 372 — the question, set in the chase.
 
-- Removed the redundant ReadingPocket opener; the hero now opens the page directly. Topbar gains a centred current-folio indicator.
-- Made the question mark a true protagonist: it arrives with a stroke-dasharray draw animation, the bead pops in once the stroke is set, and a small caption fades under it. While "yet" is marked, the in-title "?" scales 2× with two ghost echoes that breathe with the voice tone.
-- Reworked the hero composition into a single dramatic two-line title with a small typographic eyebrow, a quiet sub-line, and a foot of mark/voice/cycle.
-- Three voices now appear as a typesetter's reference column on the right, with distinct per-voice treatments (lower-case m³ vs uppercase M3, italic vs heavy sans, close-set vs open uppercase) and larger, more readable specimens. Rows stagger in.
-- Refined typography: 17px base, tighter letter-spacing on the display sizes, deeper voice tones (quiet #a8c5ff, human #f48472, bold #cdee6a) against a warmer paper (#f5eed8) on a deeper night (#080a12).
-- Right-edge reading ledger narrowed; hidden below 980px. Cursor glow hidden on touch devices. Reduced-motion path preserved for every new animation.
-- Misc CSS tightening: removed orphan ReadingPocket rules, consolidated hero keyframes, restored focus rings for the new hero/voice selectors.
+The hero title now lives inside a printer's chase with corner registration
+marks, a type-high ruler, and a STET quoin stamp. The three voices move from
+a stacked radio list to a baseline-aligned specimen column on a 32 px
+writing-rule. The press lever has more weight on the pull and the impression
+gets a brief ink-stamp flash when it lands. The answer leaf lifts forward
+in 3D and casts a deeper shadow as it unfolds. Every section wears a quiet
+corner registration bar.
+
+### What changed
+
+- **new** `src/ChaseFrame.tsx` — a reusable printer's chase frame with corner
+  registration marks, dashed inner rule, bed grain, and side ticks
+- **hero** wrapped the title in the chase frame; removed the floating
+  question-mark graphic and added a STET quoin stamp at the chase's
+  bottom-right and a 23.875 type-high ruler along its left edge
+- **voice specimen** replaced the old radio list with a baseline-aligned
+  specimen column (`.voice-column`) with three rows on a 32 px writing-rule
+- **press** the lever has a heavier pull (deeper drop, sharper knob tilt) and
+  the bed gets a brief `pressBedThunk`; the impression sheet runs an
+  `impressionStamp` flash so the ink arrives with the paper
+- **answer** the leaf now unfolds with a forward `rotateX` lift and a deeper
+  shadow; the crease shows an ink-bleed bloom as the paper opens
+- **sections** every `.reveal` section now wears a small L-shaped
+  registration mark at its top-left and bottom-right corners; the colophon
+  frame picks up matching corner ticks
+- **style** refined the hero eyebrow, topbar typography, and footer rhythm;
+  added a small `voice-column__cycle` keyboard hint under the specimen
+- **a11y** all new motion is gated behind `prefers-reduced-motion`; the chase
+  frame, quoin, type-high ruler, voice column, press impression, and answer
+  leaf all fall back to their resting state when reduced motion is preferred

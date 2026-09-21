@@ -6,6 +6,7 @@ import {
 } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
+import { ChaseFrame } from './ChaseFrame'
 
 type HeroProps = {
   voice: VoiceId
@@ -20,34 +21,54 @@ type HeroProps = {
 }
 
 type VoiceSpec = {
+  letter: string
   name: string
   face: string
-  letter: string
   sample: string
   gloss: string
+  family: string
+  weight: number
+  style: 'italic' | 'normal'
+  tracking: string
+  uppercased: boolean
 }
 
 const VOICE: Record<VoiceId, VoiceSpec> = {
   quiet: {
+    letter: 'A',
     name: 'quiet cut',
     face: 'serif · italic · close set',
-    letter: 'a',
     sample: 'is m³ good at frontend yet?',
     gloss: 'the default voice',
+    family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
+    weight: 400,
+    style: 'italic',
+    tracking: '-.018em',
+    uppercased: false,
   },
   human: {
+    letter: 'B',
     name: 'human hand',
     face: 'serif · italic · warm',
-    letter: 'b',
     sample: 'is M3 good at frontend yet?',
     gloss: 'the middle voice',
+    family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
+    weight: 500,
+    style: 'italic',
+    tracking: '-.014em',
+    uppercased: false,
   },
   bold: {
+    letter: 'C',
     name: 'bold signal',
     face: 'sans · heavy · no apology',
-    letter: 'c',
     sample: 'IS M3 GOOD AT FRONTEND YET?',
     gloss: 'the loud voice',
+    family: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+    weight: 800,
+    style: 'normal',
+    tracking: '-.04em',
+    uppercased: true,
   },
 }
 
@@ -55,12 +76,13 @@ type TokenCopy = {
   label: string
   glyph: string
   tone: string
+  mark: string
 }
 
 const TOKEN_COPY: Record<WordId, TokenCopy> = {
-  m3: { label: 'm³', glyph: '⌇', tone: 'the maker' },
-  good: { label: 'good at', glyph: '∧', tone: 'the verb' },
-  yet: { label: 'yet', glyph: '?', tone: 'the pause' },
+  m3: { label: 'm³', glyph: '⌇', tone: 'the maker', mark: 'stet' },
+  good: { label: 'good at', glyph: '∧', tone: 'the verb', mark: 'caret' },
+  yet: { label: 'yet?', glyph: '?', tone: 'the pause', mark: 'query' },
 }
 
 const ORDER: VoiceId[] = ['quiet', 'human', 'bold']
@@ -80,11 +102,10 @@ export function Hero({
   const grainId = `hero-grain-${baseId}`
   const spec = VOICE[voice]
   const toneStyle = { '--hero-tone': `var(--${voice})` } as CSSProperties
-  const isYet = word === 'yet'
 
   return (
-    <div className="hero__inner">
-      <div className="hero__title-block" style={toneStyle}>
+    <div className="hero__inner" style={toneStyle}>
+      <ChaseFrame tone={`var(--hero-tone, var(--quiet))`} className="hero__chase" intensity="full">
         <svg className="hero__defs" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <filter id={grainId} x="-2%" y="-2%" width="104%" height="104%">
@@ -106,20 +127,11 @@ export function Hero({
             <span className="hero__eyebrow-glyph" aria-hidden="true">¶</span>
             <span>folio i</span>
             <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
-            <span className="hero__eyebrow-em">the question</span>
+            <span className="hero__eyebrow-em">the question, set in the chase</span>
           </span>
           <span className="hero__set">
             <em>set on</em>
             <em className="hero__eyebrow-em">{setToday}</em>
-          </span>
-        </div>
-
-        <div className="hero__qmark" aria-hidden="true">
-          <QMarkGlyph voice={voice} />
-          <span className="hero__qmark-cap">
-            <em>punctuation protagonist</em>
-            <span aria-hidden="true">·</span>
-            <em>draws itself</em>
           </span>
         </div>
 
@@ -147,7 +159,7 @@ export function Hero({
                 onBlur={() => onHover(null)}
                 onKeyDown={event => onWordKey(event, 'm3')}
                 aria-pressed={word === 'm3'}
-                aria-label={`${TOKEN_COPY.m3.label} — ${TOKEN_COPY.m3.tone}`}
+                aria-label={`${TOKEN_COPY.m3.label} — ${TOKEN_COPY.m3.tone} (mark: ${TOKEN_COPY.m3.mark})`}
               >
                 {TOKEN_COPY.m3.label}
               </button>
@@ -173,7 +185,7 @@ export function Hero({
                 onBlur={() => onHover(null)}
                 onKeyDown={event => onWordKey(event, 'good')}
                 aria-pressed={word === 'good'}
-                aria-label={`${TOKEN_COPY.good.label} — ${TOKEN_COPY.good.tone}`}
+                aria-label={`${TOKEN_COPY.good.label} — ${TOKEN_COPY.good.tone} (mark: ${TOKEN_COPY.good.mark})`}
               >
                 {TOKEN_COPY.good.label}
               </button>
@@ -186,7 +198,7 @@ export function Hero({
 
           <span className="hero__title-line hero__title-line-b">
             <span
-              className={`ht__word ht__word--yet ${word === 'yet' ? 'is-marked' : ''} ${hover === 'yet' ? 'is-hover' : ''} ${isYet ? 'ht__word--punct' : ''}`}
+              className={`ht__word ht__word--yet ${word === 'yet' ? 'is-marked' : ''} ${hover === 'yet' ? 'is-hover' : ''}`}
               aria-hidden="true"
             >
               {word === 'yet' && <span className="ht__glyph">{TOKEN_COPY.yet.glyph}</span>}
@@ -203,7 +215,7 @@ export function Hero({
                 onBlur={() => onHover(null)}
                 onKeyDown={event => onWordKey(event, 'yet')}
                 aria-pressed={word === 'yet'}
-                aria-label={`${TOKEN_COPY.yet.label} — ${TOKEN_COPY.yet.tone}`}
+                aria-label={`${TOKEN_COPY.yet.label} — ${TOKEN_COPY.yet.tone} (mark: ${TOKEN_COPY.yet.mark})`}
               >
                 <span className="ht__token-yet">yet</span>
                 <span className={`ht__punct ht__punct--${voice}`} aria-hidden="true">
@@ -217,73 +229,90 @@ export function Hero({
         </h1>
 
         <span className="hero__sub" aria-hidden="true">
-          <span className="hero__sub-mark">⌇</span>
+          <span className="hero__sub-mark" aria-hidden="true">⌇</span>
           <em>set in {spec.name.toLowerCase()}</em>
           <span className="hero__sub-rule" />
-          <em>read at hand</em>
-          <span className="hero__sub-mark">⌇</span>
+          <em>{spec.gloss}</em>
+          <span className="hero__sub-mark" aria-hidden="true">⌇</span>
         </span>
 
-        <div className="hero__foot">
-          <span className="hero__foot-cell">
-            <span className="hero__foot-key">marked at</span>
-            <em className="hero__foot-val">
-              {word === 'm3' && <span className="hero__sub-mark" aria-hidden="true">⌇</span>}
-              {word === 'good' && <span className="hero__sub-mark" aria-hidden="true">∧</span>}
-              {word === 'yet' && <span className="hero__sub-mark" aria-hidden="true">?</span>}
-              <em>{TOKEN_COPY[word].label}</em>
-              <em className="hero__foot-face">· {TOKEN_COPY[word].tone}</em>
-            </em>
-          </span>
-          <span className="hero__foot-cell">
-            <span className="hero__foot-key">voice</span>
-            <em className="hero__foot-val">
-              <span className="hero__foot-letter">{spec.letter}</span>
-              <em>{spec.name}</em>
-              <em className="hero__foot-face">· {spec.face}</em>
-            </em>
-          </span>
-          <span className="hero__foot-cell">
-            <span className="hero__foot-key">cycle</span>
-            <em className="hero__foot-val hero__foot-keys">
-              <kbd>shift</kbd>+<kbd>v</kbd>
-            </em>
-          </span>
-        </div>
-      </div>
+        <span className="hero__quoin" aria-hidden="true">
+          <svg viewBox="0 0 60 60">
+            <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+              <path
+                className="hero__quoin-stamp"
+                d="M8 44 L52 16 L48 38 L12 50 Z"
+                strokeWidth="1.1"
+              />
+              <path d="M14 42 L48 22" strokeWidth=".45" opacity=".55" />
+              <path d="M22 38 L42 24" strokeWidth=".45" opacity=".4" />
+              <circle cx="14" cy="44" r="1.6" fill="currentColor" />
+            </g>
+            <text
+              x="30"
+              y="32"
+              textAnchor="middle"
+              fontFamily="ui-monospace, 'SFMono-Regular', Menlo, monospace"
+              fontSize="5.5"
+              letterSpacing="1.4"
+              fill="currentColor"
+            >
+              STET
+            </text>
+          </svg>
+        </span>
+
+        <span className="hero__type-high" aria-hidden="true">
+          <svg viewBox="0 0 16 80" preserveAspectRatio="none">
+            <line x1="2" y1="0" x2="2" y2="80" stroke="currentColor" strokeWidth=".4" strokeDasharray="1.5 2" opacity=".55" />
+            <line x1="2" y1="20" x2="5" y2="20" stroke="currentColor" strokeWidth=".5" />
+            <line x1="2" y1="40" x2="6" y2="40" stroke="currentColor" strokeWidth=".5" />
+            <line x1="2" y1="60" x2="5" y2="60" stroke="currentColor" strokeWidth=".5" />
+            <text x="9" y="42" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="2.6" letterSpacing=".8" fill="currentColor" opacity=".7">23.875</text>
+          </svg>
+        </span>
+      </ChaseFrame>
 
       <aside
-        className="voice-spec"
+        className="voice-column"
         role="radiogroup"
         aria-label="Voice specimen · the line set in three voices"
       >
-        <header className="voice-spec__head" aria-hidden="true">
-          <span className="voice-spec__key">the line, three ways</span>
-          <span className="voice-spec__hint">
-            <em>set the page in that voice</em>
+        <header className="voice-column__head" aria-hidden="true">
+          <span className="voice-column__eyebrow">specimen · the line, three ways</span>
+          <span className="voice-column__hint">
+            <em>click a line · set the page in that voice</em>
           </span>
         </header>
 
-        <ol className="voice-spec__list">
+        <ol className="voice-column__list">
           {ORDER.map(v => {
             const row = VOICE[v]
             const isActive = voice === v
+            const rowStyle = {
+              fontFamily: row.family,
+              fontWeight: row.weight,
+              fontStyle: row.style,
+              letterSpacing: row.tracking,
+              textTransform: row.uppercased ? ('uppercase' as const) : ('none' as const),
+              '--line-tone': `var(--${v})`,
+            } as CSSProperties
             return (
-              <li key={v} className="voice-spec__row">
+              <li key={v} className={`voice-column__row ${isActive ? 'is-active' : ''}`}>
                 <button
                   type="button"
                   role="radio"
                   aria-checked={isActive}
-                  className={`voice-spec__item voice-spec__item--${v} ${isActive ? 'is-active' : ''}`}
+                  className={`voice-column__item voice-column__item--${v}`}
                   onClick={() => onVoice(v)}
                 >
-                  <span className="voice-spec__letter" aria-hidden="true">{row.letter}</span>
-                  <span className="voice-spec__body">
-                    <span className={`voice-spec__sample voice-spec__sample--${v}`}>{row.sample}</span>
+                  <span className="voice-column__num" aria-hidden="true">{row.letter}</span>
+                  <span className="voice-column__sample" style={rowStyle} aria-hidden="true">
+                    {row.sample}
                   </span>
-                  <span className="voice-spec__meta" aria-hidden="true">
-                    <span className="voice-spec__meta-name">{row.name}</span>
-                    <span className="voice-spec__meta-face">{row.gloss}</span>
+                  <span className="voice-column__meta" aria-hidden="true">
+                    <em>{row.name}</em>
+                    <span>{row.face}</span>
                   </span>
                 </button>
               </li>
@@ -291,42 +320,21 @@ export function Hero({
           })}
         </ol>
 
-        <footer className="voice-spec__foot" aria-hidden="true">
-          <span className="voice-spec__foot-rule" />
-          <em>three voices, one line</em>
-          <span className="voice-spec__foot-rule" />
+        <footer className="voice-column__foot" aria-hidden="true">
+          <span className="voice-column__foot-rule" />
+          <span className="voice-column__foot-bead" />
+          <em>three voices · one line · one chase</em>
+          <span className="voice-column__foot-bead" />
+          <span className="voice-column__foot-rule" />
         </footer>
+
+        <span className="voice-column__cycle" aria-hidden="true">
+          <em>cycle</em>
+          <kbd>shift</kbd>
+          <span>+</span>
+          <kbd>v</kbd>
+        </span>
       </aside>
     </div>
-  )
-}
-
-function QMarkGlyph({ voice }: { voice: VoiceId }) {
-  const isBold = voice === 'bold'
-  return (
-    <svg className="hero__qmark-svg" viewBox="0 0 240 320" aria-hidden="true">
-      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-        {/* main stroke · draws itself on arrival */}
-        <path
-          className="hero__qmark-stroke"
-          d="M55 90 Q55 36 120 36 Q186 36 186 96 Q186 134 156 162 Q120 196 120 224"
-          strokeWidth={isBold ? 14 : 8}
-        />
-        {/* soft inner echo */}
-        <path
-          className="hero__qmark-echo"
-          d="M62 92 Q62 44 120 44 Q178 44 178 96 Q178 130 152 156 Q124 184 124 220"
-          stroke="currentColor"
-          strokeOpacity={isBold ? 0 : .35}
-          strokeWidth="1.4"
-        />
-      </g>
-      {/* bead · pops in after the stroke */}
-      <g className="hero__qmark-bead">
-        <circle cx="120" cy="270" r={isBold ? 13 : 11} fill="currentColor" />
-        <circle cx="120" cy="270" r={isBold ? 20 : 18} fill="none" stroke="currentColor" strokeOpacity=".3" strokeWidth="1.2" />
-        <circle cx="120" cy="270" r={isBold ? 26 : 24} fill="none" stroke="currentColor" strokeOpacity=".18" strokeWidth=".8" strokeDasharray="1.5 2.5" />
-      </g>
-    </svg>
   )
 }

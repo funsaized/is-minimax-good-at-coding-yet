@@ -3937,3 +3937,779 @@ button.voice-spec__item {
   width: 1px !important;
   overflow: hidden;
 }
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 372 — the question, set in the chase
+   a printer's chase frames the title; voices sit in a specimen column
+   ──────────────────────────────────────────────────────────── */
+
+/* — hero gains a quiet chase frame around the title — */
+
+.hero__chase {
+  --chase-tone: var(--hero-tone, var(--quiet));
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: clamp(16px, 1.8vw, 22px);
+  padding: clamp(28px, 3.6vw, 52px) clamp(28px, 3.4vw, 48px) clamp(32px, 3.8vw, 56px);
+  border-radius: 4px;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 0%, rgba(245, 238, 216, .014), transparent 65%),
+    linear-gradient(180deg, rgba(245, 238, 216, .012), transparent 70%);
+  isolation: isolate;
+}
+
+.hero__chase .chase-frame__rule--outer,
+.hero__chase .chase-frame__rule--inner {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: border-color .5s var(--ease);
+}
+
+.hero__chase .chase-frame__rule--outer {
+  border: 1px solid color-mix(in srgb, var(--chase-tone) 38%, var(--line));
+  opacity: .9;
+}
+
+.hero__chase .chase-frame__rule--inner {
+  inset: 6px;
+  border: 1px dashed color-mix(in srgb, var(--chase-tone) 28%, var(--line-soft));
+  opacity: .65;
+}
+
+.hero__chase .chase-frame__bed {
+  position: absolute;
+  inset: 14px;
+  border-radius: 2px;
+  background:
+    repeating-linear-gradient(0deg,
+      transparent 0,
+      transparent 23px,
+      color-mix(in srgb, var(--chase-tone) 5%, transparent) 23px,
+      color-mix(in srgb, var(--chase-tone) 5%, transparent) 24px),
+    radial-gradient(circle at 20% 22%, color-mix(in srgb, var(--chase-tone) 7%, transparent), transparent 50%);
+  pointer-events: none;
+  opacity: .55;
+  z-index: 0;
+}
+
+.hero__chase .chase-frame__grain {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: repeating-radial-gradient(circle at 0 0, color-mix(in srgb, var(--chase-tone) 4%, transparent) 0 1px, transparent 1px 5px);
+  opacity: .35;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.hero__chase .chase-frame__corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  color: var(--chase-tone);
+  pointer-events: none;
+  z-index: 3;
+  opacity: .85;
+  transition: opacity .4s var(--ease), transform .5s var(--ease-spring);
+}
+
+.hero__chase .chase-frame__corner--tl { top: 6px; left: 6px; }
+.hero__chase .chase-frame__corner--tr { top: 6px; right: 6px; transform: scaleX(-1); }
+.hero__chase .chase-frame__corner--bl { bottom: 6px; left: 6px; transform: scaleY(-1); }
+.hero__chase .chase-frame__corner--br { bottom: 6px; right: 6px; transform: scale(-1, -1); }
+
+.hero__chase .chase-frame__ticks {
+  position: absolute;
+  inset: 14px;
+  pointer-events: none;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 8px 1fr 8px;
+  grid-template-rows: 8px 1fr 8px;
+  color: color-mix(in srgb, var(--chase-tone) 50%, transparent);
+  opacity: .65;
+}
+
+.hero__chase .chase-frame__tick { display: block; }
+
+.hero__chase .chase-frame__tick--top { grid-column: 2; grid-row: 1; align-self: start; justify-self: stretch; }
+.hero__chase .chase-frame__tick--bottom { grid-column: 2; grid-row: 3; align-self: end; justify-self: stretch; }
+.hero__chase .chase-frame__tick--left { grid-column: 1; grid-row: 2; align-self: stretch; justify-self: start; }
+.hero__chase .chase-frame__tick--right { grid-column: 3; grid-row: 2; align-self: stretch; justify-self: end; }
+
+.hero__chase:hover .chase-frame__corner { opacity: 1; }
+.hero__chase:hover .chase-frame__corner--tr { transform: scaleX(-1) translate(1px, -1px); }
+.hero__chase:hover .chase-frame__corner--br { transform: scale(-1, -1) translate(1px, 1px); }
+
+.hero__chase .chase-frame__inner {
+  position: relative;
+  display: grid;
+  gap: clamp(14px, 1.6vw, 22px);
+  z-index: 2;
+}
+
+/* — the title inside the chase — slightly different proportions — */
+
+.hero__chase .hero__title {
+  margin: clamp(6px, 1vw, 14px) 0;
+}
+
+.hero__chase .hero__sub {
+  border-top: 1px dashed var(--line-soft);
+  padding-top: clamp(12px, 1.4vw, 18px);
+}
+
+/* — the type-high guide · a quiet ruler inside the chase's left padding — */
+
+.hero__type-high {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 80px;
+  color: var(--hero-tone, var(--quiet));
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+  animation: typeHighIn 1.4s var(--ease-out) 2.2s both;
+}
+
+.hero__type-high svg { width: 100%; height: 100%; }
+
+@keyframes typeHighIn {
+  0% { opacity: 0; transform: translate(-4px, -50%); }
+  100% { opacity: .5; transform: translateY(-50%); }
+}
+
+@media (max-width: 720px) {
+  .hero__type-high { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__type-high { animation: none; opacity: .5; }
+}
+
+/* — the quoin (locking wedge) at the chase's bottom-right — */
+
+.hero__quoin {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 56px;
+  height: 56px;
+  color: var(--hero-tone, var(--quiet));
+  opacity: .85;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .35));
+  pointer-events: none;
+  z-index: 4;
+  animation: quoinStamp 2.4s var(--ease-out) .9s both, quoinWobble 9s ease-in-out 3.3s infinite;
+  transform-origin: 50% 50%;
+  transition: color .5s var(--ease);
+}
+
+.hero__quoin svg { width: 100%; height: 100%; }
+
+@keyframes quoinStamp {
+  0% { opacity: 0; transform: scale(.6) rotate(-14deg) translateY(-6px); }
+  60% { opacity: 1; transform: scale(1.08) rotate(-2deg) translateY(1px); }
+  100% { opacity: .85; transform: scale(1) rotate(0) translateY(0); }
+}
+
+@keyframes quoinWobble {
+  0%, 100% { transform: rotate(0) translateY(0); }
+  50% { transform: rotate(.6deg) translateY(-1px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__quoin { animation: none; opacity: .85; transform: none; }
+}
+
+/* — when 'yet' is marked, the quoin rings — */
+
+.app--word-yet .hero__quoin {
+  animation: quoinStamp 2.4s var(--ease-out) .9s both, quoinWobble 9s ease-in-out 3.3s infinite, quoinPulse 4s ease-in-out 3.3s infinite;
+}
+
+@keyframes quoinPulse {
+  0%, 80%, 100% { filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .35)); }
+  90% { filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .35)) drop-shadow(0 0 8px color-mix(in srgb, var(--hero-tone, var(--quiet)) 50%, transparent)); }
+}
+
+/* — the title punctuation still draws itself, but now sits in the chase — */
+
+.hero__chase .hero__title .ht__punct {
+  color: var(--chase-tone);
+}
+
+.hero__chase .hero__title .ht__word.is-marked { color: var(--chase-tone); }
+
+/* — voice specimen column, replacing the old voice-spec — */
+
+.voice-column {
+  position: relative;
+  display: grid;
+  align-content: end;
+  gap: clamp(14px, 1.4vw, 20px);
+  padding: clamp(22px, 2.4vw, 32px) clamp(20px, 2.2vw, 28px);
+  border: 1px solid var(--line-soft);
+  border-radius: 4px;
+  background:
+    repeating-linear-gradient(180deg,
+      transparent 0,
+      transparent 31px,
+      color-mix(in srgb, var(--quiet) 5%, transparent) 31px,
+      color-mix(in srgb, var(--quiet) 5%, transparent) 32px),
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245, 238, 216, .018), transparent 70%);
+  isolation: isolate;
+}
+
+.voice-column::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 14px;
+  bottom: 14px;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--line-strong) 18%, var(--line-strong) 82%, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.voice-column__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding-left: 16px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  position: relative;
+  z-index: 1;
+}
+
+.voice-column__eyebrow {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.voice-column__eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transform: translateY(1px);
+}
+
+.voice-column__hint em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12px;
+  color: var(--paper-soft);
+}
+
+.voice-column__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.voice-column__row {
+  border-top: 1px solid var(--line-soft);
+}
+
+.voice-column__row:last-child {
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.voice-column__item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 18px);
+  width: 100%;
+  padding: clamp(14px, 1.6vw, 20px) 8px clamp(14px, 1.6vw, 20px) clamp(20px, 1.8vw, 28px);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background .25s var(--ease),
+    color .35s var(--ease);
+  position: relative;
+}
+
+.voice-column__item::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  transform: translateY(-50%);
+  transition: background .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+
+.voice-column__item:hover,
+.voice-column__item:focus-visible {
+  background: rgba(255, 255, 255, .025);
+}
+
+.voice-column__item.is-active::before {
+  background: var(--line-tone, var(--quiet));
+  border-color: var(--line-tone, var(--quiet));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--line-tone, var(--quiet)) 25%, transparent);
+}
+
+.voice-column__item:hover::before,
+.voice-column__item:focus-visible::before {
+  border-color: var(--line-tone, var(--quiet));
+}
+
+.voice-column__num {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--paper-soft);
+  font-feature-settings: 'lnum' 1;
+  text-transform: lowercase;
+  transition: color .35s var(--ease);
+}
+
+.voice-column__row.is-active .voice-column__num {
+  color: var(--line-tone, var(--quiet));
+}
+
+.voice-column__sample {
+  display: block;
+  line-height: 1.05;
+  font-size: clamp(18px, 1.9vw, 24px);
+  letter-spacing: -.018em;
+  color: var(--paper-soft);
+  word-break: break-word;
+  transition: color .35s var(--ease);
+}
+
+.voice-column__row.is-active .voice-column__sample { color: var(--line-tone, var(--quiet)); }
+.voice-column__item:hover .voice-column__sample,
+.voice-column__item:focus-visible .voice-column__sample { color: var(--paper); }
+
+.voice-column__meta {
+  display: grid;
+  gap: 2px;
+  text-align: right;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper-soft);
+  min-width: 7ch;
+}
+
+.voice-column__meta em {
+  font-style: italic;
+  font-family: var(--display);
+  font-size: 13px;
+  color: var(--paper);
+}
+
+.voice-column__meta span {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (max-width: 540px) {
+  .voice-column__meta { display: none; }
+  .voice-column__item { grid-template-columns: auto 1fr; }
+}
+
+.voice-column__foot {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 16px;
+  padding-top: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  position: relative;
+  z-index: 1;
+}
+
+.voice-column__foot em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12px;
+  color: var(--paper-soft);
+}
+
+.voice-column__foot-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line-soft), transparent);
+}
+
+.voice-column__foot-bead {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--quiet);
+  opacity: .55;
+}
+
+.voice-column__item:focus-visible {
+  outline: 1px solid var(--paper-soft);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.voice-column__cycle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 16px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  position: relative;
+  z-index: 1;
+}
+
+.voice-column__cycle em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12px;
+  color: var(--paper-soft);
+  margin-right: 4px;
+}
+
+.voice-column__cycle kbd {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .04em;
+  padding: 2px 5px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--paper-soft);
+  background: rgba(255, 255, 255, .02);
+}
+
+.voice-column__cycle span {
+  font-family: var(--mono);
+  color: var(--muted);
+  opacity: .7;
+}
+
+/* — voice column inherits the voice tone — */
+
+.voice-column__row:nth-child(1) { --line-tone: var(--quiet); }
+.voice-column__row:nth-child(2) { --line-tone: var(--human); }
+.voice-column__row:nth-child(3) { --line-tone: var(--bold); }
+
+.app--voice-quiet .voice-column__row:nth-child(1) .voice-column__num,
+.app--voice-quiet .voice-column__row:nth-child(1).is-active .voice-column__sample { color: var(--quiet); }
+.app--voice-human .voice-column__row:nth-child(2) .voice-column__num,
+.app--voice-human .voice-column__row:nth-child(2).is-active .voice-column__sample { color: var(--human); }
+.app--voice-bold .voice-column__row:nth-child(3) .voice-column__num,
+.app--voice-bold .voice-column__row:nth-child(3).is-active .voice-column__sample { color: var(--bold); }
+
+/* — section heads pick up a quiet register bar at the corner — */
+
+.reveal {
+  position: relative;
+}
+
+section.reveal::before,
+section.reveal::after {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  z-index: 1;
+  background-image:
+    linear-gradient(currentColor 1px, transparent 1px),
+    linear-gradient(90deg, currentColor 1px, transparent 1px);
+  background-size: 100% 1px, 1px 100%;
+  background-position: top left, top left;
+  background-repeat: no-repeat;
+  opacity: .35;
+}
+
+section.reveal::before { top: 14px; left: 14px; }
+section.reveal::after { bottom: 14px; right: 14px; transform: rotate(180deg); }
+
+/* hide the register bars on the hero and reading ledger */
+section.hero.reveal::before,
+section.hero.reveal::after { display: none; }
+.rl::before, .rl::after { display: none; }
+
+/* — press lever gets a heavier pull and a sharper ink-stamp flash — */
+
+.press-lever.is-pulled .press-lever__shaft {
+  transform: translateY(58px) rotate(12deg);
+  box-shadow: 0 0 0 1px var(--line), 0 1px 0 rgba(0, 0, 0, .35);
+}
+
+.press-lever.is-pulled .press-lever__knob {
+  transform: translateX(-50%) translateY(124px) rotate(28deg);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, .55),
+    inset 0 3px 6px rgba(255, 255, 255, .28);
+}
+
+/* ink stamp flash — an ink-soaked ring spreads when the lever drops */
+
+.press__table.is-pulling {
+  animation: pressBedThunk .9s var(--ease);
+}
+
+@keyframes pressBedThunk {
+  0%, 100% { transform: none; }
+  10% { transform: translateY(2px) scale(1.002); filter: brightness(.96); }
+  35% { transform: translateY(-1px) scale(1.005); filter: brightness(1.04); }
+}
+
+.press-impression.is-pulled::after {
+  content: '';
+  position: absolute;
+  inset: 8% 18%;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    color-mix(in srgb, currentColor 0%, transparent) 0%,
+    color-mix(in srgb, currentColor 0%, transparent) 100%);
+  filter: blur(28px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.press__table--quiet .press-impression.is-pulled::after { background: radial-gradient(circle, rgba(168, 197, 255, .55), transparent 65%); }
+.press__table--human .press-impression.is-pulled::after { background: radial-gradient(circle, rgba(244, 132, 114, .55), transparent 65%); }
+.press__table--bold .press-impression.is-pulled::after { background: radial-gradient(circle, rgba(205, 238, 106, .55), transparent 65%); }
+
+.press-impression.is-pulled {
+  animation: impressionStamp 1.05s var(--ease) both;
+}
+
+@keyframes impressionStamp {
+  0% { filter: brightness(.55) contrast(.85) saturate(.7); transform: translateY(6px); }
+  18% { filter: brightness(1.25) contrast(1.08) saturate(1.15); transform: translateY(-2px); }
+  60% { filter: brightness(1.02) saturate(1.02); transform: translateY(0); }
+  100% { filter: brightness(1) saturate(1); transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press__table.is-pulling { animation: none; }
+  .press-impression.is-pulled { animation: none; }
+  .press-impression.is-pulled::after { display: none; }
+}
+
+/* — answer leaf now lifts forward (3D) and casts a real shadow — */
+
+.answer__leaf {
+  transform: translateY(-6px) scaleY(.94) rotateX(8deg);
+  transform-origin: 50% 0;
+  perspective: 1200px;
+}
+
+.answer__leaf.is-open {
+  transform: translateY(0) scaleY(1) rotateX(0);
+  box-shadow:
+    0 32px 64px -28px rgba(0, 0, 0, .65),
+    0 1px 0 rgba(0, 0, 0, .08),
+    inset 0 0 80px rgba(0, 0, 0, .04);
+}
+
+.answer__leaf .answer__copy,
+.answer__leaf .answer__aside {
+  transform: translateZ(0);
+  transition: transform .8s var(--ease-spring) .2s;
+}
+
+.answer__leaf.is-open .answer__copy,
+.answer__leaf.is-open .answer__aside {
+  transform: translateZ(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer__leaf { transform: none !important; perspective: none; }
+  .answer__leaf.is-open .answer__copy,
+  .answer__leaf.is-open .answer__aside { transform: none; }
+}
+
+/* ink bloom that runs along the crease as the leaf opens */
+
+.answer__crease {
+  position: absolute;
+  top: 14px;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  display: grid;
+  place-items: center;
+  color: var(--quiet);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .8s var(--ease) .25s;
+  z-index: 2;
+}
+
+.app--voice-quiet .answer__crease { color: var(--quiet); }
+.app--voice-human .answer__crease { color: var(--human); }
+.app--voice-bold .answer__crease { color: var(--bold); }
+
+.answer__crease svg { width: 100%; height: 100%; }
+
+.answer__leaf.is-open .answer__crease {
+  animation: creaseInkBleed 2.2s var(--ease) .35s both;
+}
+
+@keyframes creaseInkBleed {
+  0% { opacity: 0; }
+  20% { opacity: .85; }
+  100% { opacity: .55; }
+}
+
+/* — tighten the hero title spacing so it sits cleanly in the chase — */
+
+.hero__chase .hero__title-line {
+  letter-spacing: inherit;
+}
+
+.hero__chase .hero__title-line-a { margin-bottom: clamp(2px, .4vw, 6px); }
+
+/* — section heads now align their number to the new register bar — */
+
+.folio-turn__num {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--quiet);
+  font-feature-settings: 'lnum' 1;
+  line-height: 1;
+  position: relative;
+  padding-left: 14px;
+  letter-spacing: -.01em;
+}
+
+/* — section H2s take on a refined underline tick under the emphasis — */
+
+section.reveal h2 em {
+  position: relative;
+}
+
+section.reveal h2 em::after {
+  content: '';
+  position: absolute;
+  left: -.02em;
+  right: -.02em;
+  bottom: -.12em;
+  height: 1px;
+  background: currentColor;
+  opacity: .45;
+  transform-origin: left;
+  transform: scaleX(1);
+}
+
+/* — make the brand & status read as one quiet header unit — */
+
+.topbar {
+  letter-spacing: .12em;
+  font-size: 10.5px;
+}
+
+.brand__copy strong {
+  letter-spacing: -.018em;
+}
+
+/* — the footer tightens — */
+
+.site-foot {
+  padding: 22px var(--gutter);
+  font-size: 10.5px;
+}
+
+/* — specimen plate gains a small "specimen stamp" at the top — */
+
+.plate {
+  position: relative;
+  overflow: hidden;
+}
+
+.plate::after {
+  background-image:
+    radial-gradient(circle at 0 0, var(--plate-tone, var(--quiet)) 0 1px, transparent 1.2px),
+    radial-gradient(circle at 100% 0, var(--plate-tone, var(--quiet)) 0 1px, transparent 1.2px),
+    radial-gradient(circle at 0 100%, var(--plate-tone, var(--quiet)) 0 1px, transparent 1.2px),
+    radial-gradient(circle at 100% 100%, var(--plate-tone, var(--quiet)) 0 1px, transparent 1.2px);
+}
+
+/* — colophon gets a small register tick on its frame — */
+
+.colophon__inner {
+  position: relative;
+}
+
+.colophon__inner::before,
+.colophon__inner::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 1px solid currentColor;
+  pointer-events: none;
+  opacity: .35;
+}
+
+.colophon__inner::before { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+.colophon__inner::after { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+/* — small touches — */
+
+.app__backdrop {
+  background-image:
+    linear-gradient(rgba(245, 238, 216, .025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 238, 216, .025) 1px, transparent 1px);
+  background-size: 96px 96px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chase-frame__corner,
+  .voice-column__item::before,
+  .hero__quoin,
+  .press-impression.is-pulled { animation: none !important; transition: none !important; }
+}
