@@ -1,0 +1,19 @@
+{
+  "id": 387,
+  "parentId": 386,
+  "createdAt": "2026-09-22T07:11:56.106Z",
+  "summary": "A type bed beneath the title sets the three marked words as composable sorts on a single rail.",
+  "path": "/iterations/000387/index.html",
+  "screenshot": "/iterations/000387/desktop.png",
+  "mobileScreenshot": "/iterations/000387/mobile.png",
+  "sourceCommit": "bc789298ca6a84c8eead21833c77b043e957e0fd",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 355,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 96450,
+    "outputTokens": 15275,
+    "steps": 56
+  }
+}
