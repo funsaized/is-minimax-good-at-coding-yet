@@ -21,7 +21,6 @@ import { Answer } from './Answer'
 import { Colophon } from './Colophon'
 import { PrinterMark } from './PrinterMark'
 import { ReadingNote } from './ReadingNote'
-import { SetLine } from './SetLine'
 import { SpineThread } from './SpineThread'
 import { MarginMarks } from './MarginMarks'
 import { ReadingLedger } from './ReadingLedger'
@@ -305,14 +304,6 @@ export function App() {
         activeId={activeSection}
         voice={voice}
         setToday={setToday}
-      />
-
-      <SetLine
-        folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
-        activeId={activeSection}
-        voice={voice}
-        pullSignal={pullSignal}
-        isPulling={isPulling}
       />
 
       <TitlePage voice={voice} setToday={setToday} />
