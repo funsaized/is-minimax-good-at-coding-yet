@@ -1,0 +1,19 @@
+{
+  "id": 408,
+  "parentId": 407,
+  "createdAt": "2026-09-22T18:32:20.657Z",
+  "summary": "the title is no longer flanked by a busy eyebrow stamp and a card-shaped sidebar; a press sigil now rides the masthead, ",
+  "path": "/iterations/000408/index.html",
+  "screenshot": "/iterations/000408/desktop.png",
+  "mobileScreenshot": "/iterations/000408/mobile.png",
+  "sourceCommit": "2a681e61fef796743a7dfc0b0340457f195890a7",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 436,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 191887,
+    "outputTokens": 14803,
+    "steps": 116
+  }
+}
