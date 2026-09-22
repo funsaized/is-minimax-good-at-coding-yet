@@ -1,34 +1,38 @@
 # Changelog
 
-## Iteration 377 — the press runs the page
-A coherent direction: the press bed becomes the page's mechanical heart, with a clockwork pull-dial that advances on every lever pull, a horizontal typographic rule above the press table, and a platen sweep that rolls across the impression like real ink. Marginalia slips gain a quiet chase frame that echoes the hero's corner registration, and a sympathetic vibration runs through the impression's signature on each pull.
+## 378 — the set line and the proof line
 
-### Press becomes a real instrument
-- A clockwork `PullDial` (12-tick clock face with numerals, rotating hand, count in the center) replaces the previous text count in the lever cell; the hand snaps forward with a spring easing on every pull.
-- A typographic `press__rule` now sits above the press table: a horizontal rule with quoin marks at each end and the copy "the lever pulls · the line answers · the page remembers", plus a counter that ticks up with each pull.
-- The impression gains a typesetter's register target (small SVG cross + circle) in the bottom-right, plus a stamp reading "reg · ii · [pull number]" in the lower right.
-- A `press-impression__platen` rolls across the impression on every pull — an ink-darkened band translates left-to-right with a voice-tinted gradient that fades in and out.
-- A voice-specific `press__pull-coda` ("pull once · the line settles · the page listens" etc.) echoes the press's motto beneath the impression.
-- The impression's signature row gets a sympathetic vibration (sigTap) on each pull.
+A typographer's thread pinned just below the topbar — a thin
+hairline that fills in the active voice as you scroll, tick-marked at
+every folio, with a small cursor that follows the reader. And the
+marginalia slips become a proof line: three working proof cards pinned
+on the same cord, each showing the question set in its own voice,
+each marked at its own word. Tap a card and the page sets both the
+voice and the mark — so the proof line becomes a real control surface
+for the press, not just decoration.
 
-### Marginalia gains corner registration
-- Each slip picks up four corner registration marks that echo the hero chase frame; the inner border becomes solid and full-strength when the slip is active.
+What changed:
+- New `src/SetLine.tsx`: a fixed typographer's guide below the topbar,
+  voiced in the current pull, ticking through all five folios with a
+  cursor that follows scroll position.
+- New `src/ProofLine.tsx`: three proof cards (quiet / human / bold),
+  each rendering `is m³ good at frontend yet?` in its own typography
+  with the card's marked word highlighted in the card's voice tone.
+  Cards tilt subtly when at rest, the active card straightens, all
+  three wobble gently on each lever pull.
+- `src/App.tsx`: replaced the marginalia import with proof line;
+  wired proof cards to update both `voice` and `selectedWord` in a
+  single tap; threaded the `voice` state into `SetLine`.
+- `src/style.css`: added a coherent set of styles for the set line
+  (hairline, fill, ticks, cursor, end caps) and for the proof line
+  (board, cord with knot caps, card frame, corner registration, pin,
+  head row with letter/mark, line with marked segment, foot rule,
+  datum). All wired to the existing voice-tone CSS variables and
+  responsive at < 880 px / < 720 px.
+- FOLIOS label for folio iii updated to "the proof line" so the
+  index and the section agree.
 
-### Subtle wire-up
-- Marginalia cord gains two small voice-tinted beads at the slip hang points.
-- Specimen plates get a subtle horizontal baseline rule at the bottom of the grid.
-- The answer leaf now opens with a soft vertical breath, not just a scaleY transform.
-
-### Notes
-- Title preserved exactly: `is Minimax M3 good at frontend yet?`
-- Document title preserved exactly.
-- Voice cycling (Shift+V), word selection (Arrow keys, click), and the open-answer interaction (Enter, Escape) are unchanged.
-- All new motion respects `prefers-reduced-motion: reduce`; the dial, platen sweep, and rule counter all disable under reduced-motion.
-- Keyboard focus, mobile stacking, and the existing ARIA tree are preserved.
-- No new dependencies, network calls, or storage.
-
-### Files touched
-- `src/Press.tsx` — added `PressRule` and `PullDial` inline components, the platen sweep span, register mark and stamp, pull coda, and the press rule above the table.
-- `src/Marginalia.tsx` — added four slip corner registration spans.
-- `src/style.css` — appended the iteration 377 section: press rule, dial, platen, register, coda, slip corners, cord beads, specimen baseline, leaf breathe; trimmed two orphaned styles for the removed text counter.
-- `CHANGELOG.md` — this entry.
+The hero chase, the press lever and impression, the wax-seal answer,
+the colophon, and the existing reading ledger are unchanged. The
+slide / marginalia styles remain in the CSS file as dead code for the
+moment; no runtime impact.

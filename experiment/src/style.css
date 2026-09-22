@@ -6402,3 +6402,840 @@ section.reveal h2 em::after {
 @media (prefers-reduced-motion: reduce) {
   .answer__leaf.is-open { animation: none; }
 }
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 378 — the set line and the proof line
+   a typographer's thread pinned just below the topbar, voiced
+   in the current pull, and a proof line that lets each voice
+   show the question set its own way · one line, three proofs.
+   ──────────────────────────────────────────────────────────── */
+
+/* — the set line · a horizontal guide pinned below the topbar — */
+
+.set-line {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  z-index: 22;
+  display: grid;
+  place-items: center;
+  height: 28px;
+  padding: 0 var(--gutter);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background:
+    linear-gradient(180deg, rgba(6, 8, 16, .55) 0%, rgba(6, 8, 16, 0) 100%);
+  pointer-events: none;
+  animation: setLineIn 1.1s var(--ease-out) .35s both;
+}
+
+@keyframes setLineIn {
+  0% { opacity: 0; transform: translateY(-6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .set-line { animation: none; opacity: 1; transform: none; }
+}
+
+.set-line__rail {
+  position: relative;
+  width: 100%;
+  max-width: 1320px;
+  height: 16px;
+  isolation: isolate;
+}
+
+.set-line__hairline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    var(--line-soft) 6%,
+    var(--line-soft) 94%,
+    transparent 100%);
+  transform: translateY(-50%);
+}
+
+.set-line__fill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right,
+    color-mix(in srgb, var(--set-tone, var(--quiet)) 75%, transparent) 0%,
+    var(--set-tone, var(--quiet)) 24%,
+    var(--set-tone, var(--quiet)) 100%);
+  transform-origin: left;
+  transform: translateY(-50%) scaleX(0);
+  transition: transform .25s var(--ease-out), background .45s var(--ease);
+  opacity: .9;
+}
+
+.set-line.is-pulling .set-line__fill {
+  transition: transform .14s var(--ease-out), background .25s var(--ease);
+  filter: brightness(1.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .set-line__fill { transition: background .45s var(--ease); }
+  .set-line.is-pulling .set-line__fill { transition: background .25s var(--ease); filter: none; }
+}
+
+.set-line__ticks {
+  position: absolute;
+  inset: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.set-line__tick {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+}
+
+.set-line__tick-mark {
+  display: block;
+  width: 1px;
+  height: 7px;
+  background: var(--line-strong);
+  opacity: .55;
+  transition: height .35s var(--ease-spring), background .35s var(--ease), opacity .35s var(--ease);
+}
+
+.set-line__tick.is-past .set-line__tick-mark {
+  background: var(--set-tone, var(--line-strong));
+  opacity: .85;
+}
+
+.set-line__tick.is-active .set-line__tick-mark {
+  height: 13px;
+  background: var(--set-tone, var(--quiet));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--set-tone, var(--quiet)) 22%, transparent);
+  opacity: 1;
+}
+
+.set-line__tick-num {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
+  font-feature-settings: 'lnum' 1;
+  color: var(--muted);
+  transition: color .35s var(--ease);
+  white-space: nowrap;
+}
+
+.set-line__tick.is-active .set-line__tick-num { color: var(--set-tone, var(--quiet)); }
+.set-line__tick.is-past .set-line__tick-num { color: var(--paper-soft); }
+
+.set-line__tick-label {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 10px;
+  text-transform: none;
+  letter-spacing: -.005em;
+  color: var(--muted);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -2px);
+  transition: opacity .35s var(--ease), color .35s var(--ease), transform .35s var(--ease);
+}
+
+.set-line__tick.is-active .set-line__tick-label {
+  opacity: 1;
+  color: var(--paper-soft);
+  transform: translate(-50%, 0);
+}
+
+.set-line__cursor {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  transition: left .18s var(--ease-out);
+}
+
+.set-line__cursor-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--set-tone, var(--quiet));
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--set-tone, var(--quiet)) 22%, transparent);
+  transition: background .35s var(--ease), box-shadow .35s var(--ease);
+}
+
+.set-line__cursor-beam {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22px;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    color-mix(in srgb, var(--set-tone, var(--quiet)) 65%, transparent) 100%);
+  transform: translate(-100%, -50%);
+  opacity: .65;
+  transition: background .35s var(--ease);
+}
+
+.set-line.is-pulling .set-line__cursor-dot {
+  animation: setLineCursorTap .85s var(--ease-out) both;
+}
+
+@keyframes setLineCursorTap {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.55); box-shadow: 0 0 0 7px color-mix(in srgb, var(--set-tone, var(--quiet)) 35%, transparent); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .set-line__cursor { transition: left 0s; }
+  .set-line__cursor-dot { transition: background .35s var(--ease); animation: none !important; }
+  .set-line.is-pulling .set-line__cursor-dot { animation: none !important; }
+}
+
+.set-line__end {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.set-line__end--l { left: -6px; }
+.set-line__end--r { right: -6px; }
+
+.set-line__end-cap {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--line-strong);
+  opacity: .65;
+  transition: opacity .35s var(--ease);
+}
+
+@media (max-width: 880px) {
+  .set-line { display: none; }
+}
+
+/* — the proof line · three proof cards pinned on the same cord — */
+
+.proof-line {
+  position: relative;
+  padding: 0 var(--gutter) var(--rule);
+  max-width: 1180px;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+.proof-line__header {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 32px;
+  max-width: 64ch;
+}
+
+.proof-line__title {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(34px, 5vw, 54px);
+  line-height: 1.05;
+  letter-spacing: -.022em;
+  font-weight: 400;
+  margin: 6px 0 0;
+}
+
+.proof-line__title em {
+  font-style: italic;
+  color: var(--quiet);
+  transition: color .4s var(--ease);
+}
+
+.app--voice-quiet .proof-line__title em { color: var(--quiet); }
+.app--voice-human .proof-line__title em { color: var(--human); }
+.app--voice-bold .proof-line__title em { color: var(--bold); font-style: normal; }
+
+.proof-line__board {
+  position: relative;
+  padding: 56px 0 36px;
+  isolation: isolate;
+}
+
+.proof-line__cord {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 22px;
+  height: 8px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.proof-line__cord-line {
+  flex: 1;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    color-mix(in srgb, var(--cord-tone, var(--quiet)) 30%, transparent) 8%,
+    var(--cord-tone, var(--quiet)) 18%,
+    var(--cord-tone, var(--quiet)) 82%,
+    color-mix(in srgb, var(--cord-tone, var(--quiet)) 30%, transparent) 92%,
+    transparent 100%);
+  transition: background .35s var(--ease);
+}
+
+.proof-line__board--quiet { --cord-tone: var(--quiet); }
+.proof-line__board--human { --cord-tone: var(--human); }
+.proof-line__board--bold  { --cord-tone: var(--bold); }
+
+.proof-line__cord-knot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--night);
+  border: 1px solid var(--cord-tone, var(--quiet));
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color .35s var(--ease);
+}
+
+.proof-line__cord-knot::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--cord-tone, var(--quiet));
+  box-shadow: 0 0 0 2px rgba(8, 10, 18, .55);
+  transition: background .35s var(--ease);
+}
+
+.proof-line__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 2.2vw, 36px);
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 880px) {
+  .proof-line__list {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .proof-line__board { padding: 36px 0 24px; }
+  .proof-line__cord { top: 18px; }
+}
+
+.proof-card-wrap { display: block; }
+
+.proof-card {
+  position: relative;
+  display: grid;
+  gap: clamp(10px, 1.2vw, 16px);
+  width: 100%;
+  padding: 30px 22px 22px;
+  border-radius: 3px;
+  border: 1px solid color-mix(in srgb, var(--card-tone, var(--quiet)) 22%, var(--line));
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+  color: var(--ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  transform: rotate(var(--card-rotate, 0deg));
+  transition:
+    transform .55s var(--ease-spring),
+    box-shadow .4s var(--ease),
+    border-color .35s var(--ease),
+    background-color .35s var(--ease);
+  box-shadow:
+    0 12px 24px -14px rgba(0, 0, 0, .5),
+    0 1px 0 rgba(0, 0, 0, .08),
+    inset 0 0 80px rgba(0, 0, 0, .04);
+  isolation: isolate;
+}
+
+.proof-card::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed color-mix(in srgb, var(--card-tone, var(--quiet)) 25%, transparent);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .55;
+  transition: opacity .35s var(--ease), border-color .35s var(--ease);
+}
+
+.proof-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(160, 130, 95, .045) 0 1px, transparent 1px 6px),
+    radial-gradient(circle at 22% 32%, rgba(0, 0, 0, .03), transparent 40%),
+    radial-gradient(circle at 78% 74%, rgba(0, 0, 0, .018), transparent 50%);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.proof-card > * { position: relative; z-index: 1; }
+
+.proof-card:hover,
+.proof-card:focus-visible {
+  transform: rotate(0deg) translateY(-4px);
+  border-color: color-mix(in srgb, var(--card-tone, var(--quiet)) 50%, var(--line));
+  box-shadow:
+    0 22px 42px -16px rgba(0, 0, 0, .65),
+    0 1px 0 rgba(0, 0, 0, .08),
+    inset 0 0 80px rgba(0, 0, 0, .04);
+}
+
+.proof-card:focus-visible {
+  outline: 1px solid var(--card-tone, var(--quiet));
+  outline-offset: 4px;
+}
+
+.proof-card.is-active {
+  transform: rotate(0deg) translateY(-10px);
+  border-color: var(--card-tone, var(--quiet));
+  background: linear-gradient(180deg, var(--paper) 0%, color-mix(in srgb, var(--card-tone, var(--quiet)) 6%, var(--paper-2)) 100%);
+  box-shadow:
+    0 32px 60px -22px rgba(0, 0, 0, .75),
+    0 0 0 1px color-mix(in srgb, var(--card-tone, var(--quiet)) 55%, transparent),
+    inset 0 0 80px rgba(0, 0, 0, .03);
+}
+
+.proof-card.is-active::before {
+  opacity: .85;
+  border-color: color-mix(in srgb, var(--card-tone, var(--quiet)) 45%, transparent);
+}
+
+.app--pulling .proof-card {
+  animation: proofCardWobble .85s var(--ease-spring) both;
+  animation-delay: var(--card-delay, 0ms);
+}
+
+@keyframes proofCardWobble {
+  0%   { transform: rotate(var(--card-rotate, 0deg)) translateY(0); }
+  20%  { transform: rotate(calc(var(--card-rotate, 0deg) - 1.2deg)) translateY(-3px); }
+  45%  { transform: rotate(calc(var(--card-rotate, 0deg) + .8deg)) translateY(2px); }
+  70%  { transform: rotate(calc(var(--card-rotate, 0deg) - .4deg)) translateY(-1px); }
+  100% { transform: rotate(var(--card-rotate, 0deg)) translateY(0); }
+}
+
+.app--pulling .proof-card.is-active {
+  animation-name: proofCardWobbleActive;
+}
+
+@keyframes proofCardWobbleActive {
+  0%   { transform: rotate(0deg) translateY(-10px); }
+  20%  { transform: rotate(-1.2deg) translateY(-13px); }
+  45%  { transform: rotate(.8deg) translateY(-8px); }
+  70%  { transform: rotate(-.4deg) translateY(-11px); }
+  100% { transform: rotate(0deg) translateY(-10px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .proof-card { animation: none; }
+  .proof-card { transform: rotate(0) !important; transition: border-color .35s var(--ease), background .35s var(--ease); }
+}
+
+/* — the corner registration marks (subtle, like the slips) — */
+
+.proof-card__corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: 3;
+  opacity: .55;
+  transition: opacity .35s var(--ease);
+  color: var(--card-tone, var(--quiet));
+}
+
+.proof-card__corner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid currentColor;
+  border-right: none;
+  border-bottom: none;
+}
+
+.proof-card__corner--tl { top: 6px; left: 6px; }
+.proof-card__corner--tr { top: 6px; right: 6px; transform: scaleX(-1); }
+.proof-card__corner--bl { bottom: 6px; left: 6px; transform: scaleY(-1); }
+.proof-card__corner--br { bottom: 6px; right: 6px; transform: scale(-1, -1); }
+
+.proof-card:hover .proof-card__corner,
+.proof-card:focus-visible .proof-card__corner,
+.proof-card.is-active .proof-card__corner { opacity: 1; }
+
+/* — the pin that tethers the card to the cord — */
+
+.proof-card__pin-wrap {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  pointer-events: none;
+  z-index: 5;
+  color: var(--card-tone, var(--quiet));
+  transition: transform .35s var(--ease-spring);
+}
+
+.proof-card:hover .proof-card__pin-wrap,
+.proof-card:focus-visible .proof-card__pin-wrap {
+  transform: translateX(-50%) translateY(1px);
+}
+
+.proof-card.is-active .proof-card__pin-wrap {
+  transform: translateX(-50%) translateY(2px);
+}
+
+.proof-card__pin {
+  display: block;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .35));
+}
+
+.proof-card__pin-spike {
+  display: block;
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 12px;
+  background: linear-gradient(to bottom, var(--card-tone, var(--quiet)), transparent);
+  opacity: .65;
+}
+
+/* — the head row, with the card number, voice, and proof mark — */
+
+.proof-card__head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed rgba(22, 21, 28, .18);
+}
+
+.proof-card__index {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.proof-card__voice {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: center;
+}
+
+.proof-card__letter {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  font-feature-settings: 'lnum' 1;
+  text-transform: lowercase;
+  border: 1px solid var(--card-tone, var(--quiet));
+  color: var(--card-tone, var(--quiet));
+}
+
+.proof-card--bold .proof-card__letter {
+  font-style: normal;
+  font-weight: 800;
+}
+
+.proof-card__voice-copy {
+  display: grid;
+  gap: 1px;
+  text-align: left;
+}
+
+.proof-card__voice-copy em {
+  font-style: italic;
+  font-family: var(--display);
+  font-size: 14px;
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.proof-card--bold .proof-card__voice-copy em {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-style: normal;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -.02em;
+}
+
+.proof-card__voice-copy span {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* — the proof mark in the corner — */
+
+.proof-card__mark {
+  display: inline-grid;
+  grid-template-columns: 22px auto;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.proof-card__mark-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--proof-tone, rgba(22, 21, 28, .65));
+  transition: color .35s var(--ease), border-color .35s var(--ease), background .35s var(--ease);
+}
+
+.proof-card__mark--m3   { --proof-tone: rgba(120, 158, 240, .85); }
+.proof-card__mark--good { --proof-tone: rgba(216, 80, 64, .85); }
+.proof-card__mark--yet  { --proof-tone: rgba(168, 214, 50, .9); }
+
+.proof-card.is-active .proof-card__mark-glyph {
+  background: color-mix(in srgb, var(--proof-tone) 14%, transparent);
+  border-color: var(--proof-tone);
+  color: var(--proof-tone);
+}
+
+/* — the question line, rendered in the card's own typography — */
+
+.proof-card__line {
+  font-family: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  font-size: clamp(20px, 2.6vw, 32px);
+  line-height: 1.06;
+  margin: 0;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.proof-card__seg {
+  display: inline;
+  transition: color .35s var(--ease), font-weight .35s var(--ease);
+}
+
+.proof-card__seg--marked {
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+  color: var(--card-tone, var(--quiet));
+  isolation: isolate;
+}
+
+.proof-card--quiet .proof-card__seg--marked { font-style: italic; font-weight: 600; }
+.proof-card--human .proof-card__seg--marked { font-style: italic; font-weight: 600; }
+.proof-card--bold  .proof-card__seg--marked {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.04em;
+  text-transform: uppercase;
+}
+
+.proof-card.is-active .proof-card__seg--marked {
+  color: color-mix(in srgb, var(--card-tone, var(--quiet)) 85%, var(--ink));
+}
+
+.proof-card.is-stamping .proof-card__seg--marked {
+  animation: proofMarkStamp .9s var(--ease-spring) both;
+}
+
+@keyframes proofMarkStamp {
+  0%   { transform: translateY(2px) scale(1); }
+  35%  { transform: translateY(-1px) scale(1.04); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.proof-card__seg-mark {
+  position: absolute;
+  bottom: -.04em;
+  right: -.18em;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-style: normal;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--card-tone, var(--quiet));
+  opacity: .85;
+  pointer-events: none;
+  font-weight: 400;
+}
+
+.proof-card.is-stamping .proof-card__seg-mark {
+  animation: proofMarkGlyph .9s var(--ease-spring) both;
+}
+
+@keyframes proofMarkGlyph {
+  0%   { opacity: 0; transform: translate(2px, -2px) scale(.6); }
+  35%  { opacity: 1; transform: translate(0, 0) scale(1.1); }
+  100% { opacity: .85; transform: translate(0, 0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .proof-card,
+  .proof-card.is-stamping .proof-card__seg--marked,
+  .proof-card.is-stamping .proof-card__seg-mark { animation: none !important; }
+}
+
+/* — the foot caption — */
+
+.proof-card__foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(22, 21, 28, .18);
+}
+
+.proof-card__foot-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(22, 21, 28, .18), transparent);
+}
+
+.proof-card__foot-caption {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 12.5px;
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+/* — the datum corner · a tiny printed detail in the bottom — */
+
+.proof-card__datum {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 4px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* — the small rail caption under the proof line — */
+
+.proof-line__rail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.proof-line__rail em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12px;
+  color: var(--paper-soft);
+}
+
+.proof-line__rail-bead {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--quiet);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--quiet) 22%, transparent);
+  opacity: .7;
+}
+
+.app--voice-quiet .proof-line__rail-bead { background: var(--quiet); box-shadow: 0 0 0 3px color-mix(in srgb, var(--quiet) 22%, transparent); }
+.app--voice-human .proof-line__rail-bead { background: var(--human); box-shadow: 0 0 0 3px color-mix(in srgb, var(--human) 22%, transparent); }
+.app--voice-bold  .proof-line__rail-bead { background: var(--bold);  box-shadow: 0 0 0 3px color-mix(in srgb, var(--bold) 22%, transparent); }
+
+@media (max-width: 720px) {
+  .proof-card__head { grid-template-columns: auto 1fr; }
+  .proof-card__mark { grid-column: 1 / -1; justify-self: start; }
+  .proof-card__datum { font-size: 8px; }
+}

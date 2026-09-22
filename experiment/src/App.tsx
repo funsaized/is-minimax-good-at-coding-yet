@@ -16,11 +16,12 @@ import { ReadingLedger } from './ReadingLedger'
 import { Hero } from './Hero'
 import { FolioTurn } from './FolioTurn'
 import { Press } from './Press'
-import { Marginalia } from './Marginalia'
+import { ProofLine } from './ProofLine'
 import { Specimen } from './Specimen'
 import { Answer } from './Answer'
 import { Colophon } from './Colophon'
 import { PrinterMark } from './PrinterMark'
+import { SetLine } from './SetLine'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -37,7 +38,7 @@ const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C
 export const FOLIOS = [
   { id: 'question', index: 'i', label: 'the question', hint: 'one line, set three ways' },
   { id: 'press', index: 'ii', label: 'the press bed', hint: 'pull the lever, take an impression' },
-  { id: 'notes', index: 'iii', label: 'the marginalia', hint: 'three things worth keeping' },
+  { id: 'notes', index: 'iii', label: 'the proof line', hint: 'three voices on the same cord' },
   { id: 'specimen', index: 'iv', label: 'the notation key', hint: 'how the three voices read' },
   { id: 'answer', index: 'v', label: 'the answer', hint: 'folded once, then folded back' },
 ] as const
@@ -111,6 +112,19 @@ export function App() {
       return next
     })
   }, [])
+
+  const handleProofSelect = useCallback((id: WordId, mode: 'word' | 'voice') => {
+    if (mode === 'voice') {
+      const target = id === 'm3' ? 'quiet' : id === 'good' ? 'human' : 'bold'
+      setVoice(prev => {
+        if (prev === target) return prev
+        setAnnouncement(`Voice set in ${VOICE_NAME[target]}.`)
+        return target
+      })
+    } else {
+      selectWord(id, true)
+    }
+  }, [selectWord])
 
   const pullLever = useCallback(() => {
     if (pullLockRef.current) return
@@ -278,6 +292,14 @@ export function App() {
         setToday={setToday}
       />
 
+      <SetLine
+        folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
+        activeId={activeSection}
+        voice={voice}
+        pullSignal={pullSignal}
+        isPulling={isPulling}
+      />
+
       <div className="composing-rule-wrap" aria-hidden="true">
         <ComposingRule voice={voice} />
       </div>
@@ -308,8 +330,13 @@ export function App() {
         setToday={setToday}
       />
 
-      <FolioTurn index="iii" title="the marginalia" hint="three things worth keeping" voice={voice} />
-      <Marginalia selected={selectedWord} pullSignal={pullSignal} onSelect={id => selectWord(id, true)} />
+      <FolioTurn index="iii" title="the proof line" hint="three voices, set on the same cord" voice={voice} />
+      <ProofLine
+        voice={voice}
+        selected={selectedWord}
+        pullSignal={pullSignal}
+        onSelect={handleProofSelect}
+      />
 
       <FolioTurn index="iv" title="the notation key" hint="how the three voices read" voice={voice} />
       <Specimen active={voice} onSelect={selectVoice} />
