@@ -7618,6 +7618,25 @@
         "outputTokens": 27565,
         "steps": 143
       }
+    },
+    {
+      "id": 401,
+      "parentId": 400,
+      "createdAt": "2026-09-22T14:30:11.664Z",
+      "summary": "A focused pass: the page holds one question; everything else serves it.",
+      "path": "/iterations/000401/index.html",
+      "screenshot": "/iterations/000401/desktop.png",
+      "mobileScreenshot": "/iterations/000401/mobile.png",
+      "sourceCommit": "46ee1a1ce642955996ab5680c36913d1dbfa9d28",
+      "model": "minimax-coding-plan/MiniMax-M3",
+      "durationSeconds": 640,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": {
+        "estimatedCostUsd": 0,
+        "inputTokens": 125470,
+        "outputTokens": 28789,
+        "steps": 95
+      }
     }
   ]
 }
