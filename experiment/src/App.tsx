@@ -22,6 +22,7 @@ import { Answer } from './Answer'
 import { Colophon } from './Colophon'
 import { PrinterMark } from './PrinterMark'
 import { SetLine } from './SetLine'
+import { SpineThread } from './SpineThread'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -297,6 +298,13 @@ export function App() {
       <span className="app__ink-wash" aria-hidden="true" key={`ink-${pullSignal}`} />
       <FirstLight />
       <CursorGlow />
+      <SpineThread
+        folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
+        activeId={activeSection}
+        voice={voice}
+        pullSignal={pullSignal}
+        isPulling={isPulling}
+      />
 
       <header className="topbar" role="banner">
         <a className="brand" href="#question" aria-label="Return to the question">
@@ -412,6 +420,12 @@ export function App() {
           <em>{TITLE}</em>
           <span aria-hidden="true">·</span>
           <span>composed and set on {setToday}, at first light</span>
+        </span>
+        <span className="site-foot__sig" aria-hidden="true">
+          <span className="site-foot__sig-rule" />
+          <em>m³ press</em>
+          <span className="site-foot__sig-mark" />
+          <span className="site-foot__sig-rule" />
         </span>
         <a className="site-foot__back" href="#question">
           back to the question

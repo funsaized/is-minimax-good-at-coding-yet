@@ -8701,3 +8701,392 @@ section.reveal h2 em::after {
   .colophon__ledger { padding: 18px 16px; }
   .colophon__ledger-head { font-size: 9px; }
 }
+/* ────────────────────────────────────────────────────────────
+   ITERATION 384 · THE SPINE THREAD
+   a single drawn line that runs from the topbar set-line
+   through every folio's bind, and ties off beneath the
+   colophon. pulls tight with the lever; lights up at the
+   active folio in the current voice.
+   ──────────────────────────────────────────────────────────── */
+
+.spine-thread {
+  position: fixed;
+  top: 64px;
+  bottom: 0;
+  right: clamp(72px, 9vw, 130px);
+  width: 22px;
+  pointer-events: none;
+  z-index: 6;
+  color: var(--spine-tone, var(--quiet));
+  opacity: .78;
+  transition: opacity .5s var(--ease), color .45s var(--ease);
+}
+
+@media (max-width: 1180px) {
+  .spine-thread { right: clamp(46px, 6vw, 80px); }
+}
+
+@media (max-width: 880px) {
+  .spine-thread { display: none; }
+}
+
+.spine-thread.is-pulling { opacity: 1; }
+
+.spine-thread__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.spine-thread__line,
+.spine-thread__dash {
+  vector-effect: non-scaling-stroke;
+}
+
+.spine-thread.is-pulling .spine-thread__line {
+  animation: spineTighten .9s var(--ease-spring) both;
+}
+
+@keyframes spineTighten {
+  0%   { stroke-dashoffset: 0; opacity: .55; }
+  35%  { opacity: 1; }
+  100% { opacity: 1; stroke-dashoffset: 0; }
+}
+
+.spine-thread__knot { transition: opacity .35s var(--ease), color .45s var(--ease); }
+
+.spine-thread__knot-ring,
+.spine-thread__knot-arc,
+.spine-thread__knot-bead,
+.spine-thread__knot-eye {
+  transition: opacity .45s var(--ease), fill .45s var(--ease), stroke .45s var(--ease), transform .55s var(--ease-spring);
+  transform-origin: 32px 0;
+}
+
+.spine-thread__knot-bead {
+  fill: currentColor;
+}
+
+.spine-thread__knot.is-active .spine-thread__knot-ring {
+  opacity: .85;
+  stroke-width: .55;
+}
+
+.spine-thread__knot.is-active .spine-thread__knot-arc {
+  stroke-width: .95;
+  opacity: 1;
+}
+
+.spine-thread__knot.is-active .spine-thread__knot-bead {
+  transform: scale(1.4);
+  fill: currentColor;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+.spine-thread__knot.is-past .spine-thread__knot-bead {
+  opacity: .55;
+}
+
+.spine-thread__knot.is-active .spine-thread__knot-eye {
+  opacity: .55;
+}
+
+.spine-thread__knot-num {
+  pointer-events: none;
+  transition: fill .45s var(--ease), opacity .35s var(--ease);
+}
+
+.spine-thread__knot.is-active .spine-thread__knot-num {
+  opacity: 1;
+  fill: var(--paper);
+}
+
+.spine-thread__tied {
+  transition: opacity .4s var(--ease), color .45s var(--ease);
+}
+
+.spine-thread__tug {
+  opacity: 0;
+  transition: opacity .25s var(--ease);
+}
+
+.spine-thread.is-pulling .spine-thread__tug {
+  opacity: 1;
+  animation: spineBeadTug .9s var(--ease-spring) both;
+}
+
+@keyframes spineBeadTug {
+  0%   { opacity: 0; transform: translate(32px, 0) scale(.6); }
+  20%  { opacity: 1; transform: translate(32px, -2px) scale(1.25); }
+  100% { opacity: 0; transform: translate(32px, 0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spine-thread.is-pulling .spine-thread__line,
+  .spine-thread.is-pulling .spine-thread__tug { animation: none; }
+  .spine-thread__knot * { transition: none !important; }
+}
+
+.spine-thread__caption {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -10px) rotate(180deg);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: .75;
+}
+
+.spine-thread__caption em { font-style: normal; }
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 384 · INK-TIP CURSOR
+   a small voice-tinted ink-dot, with a brief fading trail,
+   replaces the previous soft glow.
+   ──────────────────────────────────────────────────────────── */
+
+.ink-tip__layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  overflow: hidden;
+}
+
+.ink-tip__head {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(245, 238, 216, .35);
+  box-shadow:
+    0 0 0 1px rgba(245, 238, 216, .12),
+    0 4px 14px -6px rgba(245, 238, 216, .18);
+  opacity: 0;
+  transition: opacity .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+  will-change: transform;
+}
+
+.ink-tip__dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: opacity, transform;
+  transform: translate3d(-50%, -50%, 0);
+  box-shadow: 0 0 0 1px rgba(8, 10, 18, .45);
+}
+
+@media (max-width: 880px), (hover: none) {
+  .ink-tip__layer,
+  .ink-tip__head { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ink-tip__layer,
+  .ink-tip__head { display: none; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 384 · COLOPHON CLOSING PRESS
+   when the colophon is fully read, a single drawn underline
+   traces beneath "set today" — the page's own signature.
+   ──────────────────────────────────────────────────────────── */
+
+.colophon__signoff.is-closing .colophon__signoff-rule--trace {
+  transform: scaleX(1);
+}
+
+.colophon__signoff-rule--trace {
+  display: block;
+  height: 1px;
+  width: 100%;
+  margin-top: 14px;
+  background: linear-gradient(to right,
+    transparent,
+    rgba(168, 197, 255, .55) 24%,
+    rgba(168, 197, 255, .75) 70%,
+    transparent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.6s var(--ease-out) .1s;
+}
+
+.app--voice-quiet .colophon__signoff-rule--trace {
+  background: linear-gradient(to right, transparent, rgba(168, 197, 255, .75) 24%, rgba(168, 197, 255, .9) 70%, transparent);
+}
+
+.app--voice-human .colophon__signoff-rule--trace {
+  background: linear-gradient(to right, transparent, rgba(244, 132, 114, .75) 24%, rgba(244, 132, 114, .9) 70%, transparent);
+}
+
+.app--voice-bold .colophon__signoff-rule--trace {
+  background: linear-gradient(to right, transparent, rgba(205, 238, 106, .75) 24%, rgba(205, 238, 106, .9) 70%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .colophon__signoff-rule--trace { transition: none; transform: scaleX(1); }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 384 · FOOTER POLISH
+   the page-foot gets a small signature line and a more
+   composed mark.
+   ──────────────────────────────────────────────────────────── */
+
+.site-foot__sig {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+.site-foot__sig-mark {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--quiet) 50%, var(--line-strong));
+  position: relative;
+  transition: border-color .35s var(--ease);
+}
+
+.app--voice-quiet .site-foot__sig-mark { border-color: rgba(168, 197, 255, .55); }
+.app--voice-human .site-foot__sig-mark { border-color: rgba(244, 132, 114, .55); }
+.app--voice-bold .site-foot__sig-mark { border-color: rgba(205, 238, 106, .55); }
+
+.site-foot__sig-mark::before {
+  content: 'm³';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 9px;
+  color: var(--quiet);
+  letter-spacing: -.02em;
+}
+
+.app--voice-human .site-foot__sig-mark::before { color: var(--human); }
+.app--voice-bold .site-foot__sig-mark::before {
+  color: var(--bold);
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+
+.site-foot__sig em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.01em;
+  font-size: 14px;
+  color: var(--paper);
+}
+
+.site-foot__sig-rule {
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.site-foot .arrow-icon { transition: transform .25s var(--ease); }
+
+.site-foot a:hover .arrow-icon {
+  transform: translateX(2px);
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 384 · COLOPHON "TIE-OFF" KNOT
+   a small finishing mark below the colophon seal that the
+   spine-thread visually ties off into.
+   ──────────────────────────────────────────────────────────── */
+
+.colophon__tieoff {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: clamp(20px, 2.6vw, 30px);
+  padding: clamp(18px, 2.2vw, 26px) 0 0;
+  border-top: 1px dashed var(--line-soft);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.colophon__tieoff svg {
+  display: block;
+  width: 48px;
+  height: 24px;
+  color: var(--quiet);
+  transition: color .35s var(--ease);
+}
+
+.app--voice-quiet .colophon__tieoff svg { color: var(--quiet); }
+.app--voice-human .colophon__tieoff svg { color: var(--human); }
+.app--voice-bold .colophon__tieoff svg { color: var(--bold); }
+
+.colophon__tieoff em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 13px;
+  color: var(--paper-soft);
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 384 · PRESS-IMPRESSION FOOTNOTE
+   a small printed detail beneath the impression that reads
+   the voice that just pressed.
+   ──────────────────────────────────────────────────────────── */
+
+.press-impression__rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.press-impression__rule-rule {
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--line);
+}
+
+.press-impression__rule em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 540px) {
+  .press-impression__rule { font-size: 8.5px; letter-spacing: .18em; }
+}

@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { useEffect, useRef, type CSSProperties } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 import { PrinterFlourish } from './PrinterFlourish'
@@ -55,6 +55,31 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday }: Colop
   const tone = voice === 'quiet' ? 'var(--quiet)' : voice === 'human' ? 'var(--human)' : 'var(--bold)'
   const sealStyle = { color: tone } as CSSProperties
   const seal = SEAL_TEXT[voice]
+  const signoffRef = useRef<HTMLDivElement | null>(null)
+  const lastSignal = useRef(0)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!('IntersectionObserver' in window)) return
+    const node = signoffRef.current
+    if (!node) return
+    const observer = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+            const sig = ++lastSignal.current
+            window.setTimeout(() => {
+              if (lastSignal.current === sig) node.classList.add('is-closing')
+            }, 250)
+            observer.disconnect()
+          }
+        }
+      },
+      { threshold: [0.6, 0.85], rootMargin: '0px 0px -20% 0px' },
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <section className="colophon reveal" id="colophon" aria-labelledby="colophon-title">
@@ -150,7 +175,7 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday }: Colop
             </figcaption>
           </figure>
 
-          <div className="colophon__signoff" aria-label="The page, signed">
+          <div className="colophon__signoff" aria-label="The page, signed" ref={signoffRef}>
             <svg className={`colophon__seal colophon__seal--${voice}`} viewBox="0 0 100 100" aria-hidden="true" style={sealStyle}>
               <defs>
                 <radialGradient id={`col-seal-glow-${voice}`} cx="50%" cy="40%" r="60%">
@@ -214,6 +239,26 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday }: Colop
               <span className="colophon__signoff-impressions-rule" />
               <span className="colophon__signoff-impressions-key">impressions on the day</span>
             </span>
+
+            <span className="colophon__signoff-rule--trace" aria-hidden="true" />
+          </div>
+
+          <div className="colophon__tieoff" aria-hidden="true">
+            <svg viewBox="0 0 48 24">
+              <path d="M2 22 q10 -16 22 -10 q4 2 8 -2 q6 -6 14 -8"
+                fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".7" />
+              <circle cx="2" cy="22" r="1.1" fill="currentColor" />
+              <circle cx="46" cy="2" r="1.1" fill="currentColor" />
+              <path d="M40 8 q3 4 4 0" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".7" />
+            </svg>
+            <em>tied off at the colophon</em>
+            <svg viewBox="0 0 48 24">
+              <path d="M46 22 q-10 -16 -22 -10 q-4 2 -8 -2 q-6 -6 -14 -8"
+                fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".7" />
+              <circle cx="46" cy="22" r="1.1" fill="currentColor" />
+              <circle cx="2" cy="2" r="1.1" fill="currentColor" />
+              <path d="M8 8 q-3 4 -4 0" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".7" />
+            </svg>
           </div>
         </div>
       </div>

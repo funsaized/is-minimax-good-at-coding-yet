@@ -192,6 +192,12 @@ export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, s
             <p className="press__pull-coda" aria-hidden="true">
               <em>{LONG_MOTTO[voice]}</em>
             </p>
+
+            <div className="press-impression__rule" aria-hidden="true">
+              <span className="press-impression__rule-rule" />
+              <em>printed in {VOICE_NAME[voice]}</em>
+              <span className="press-impression__rule-rule" />
+            </div>
           </div>
         </div>
       </div>
