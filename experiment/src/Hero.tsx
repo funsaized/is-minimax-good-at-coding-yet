@@ -12,6 +12,7 @@ import type { WordId } from './notes'
 import { ChaseFrame } from './ChaseFrame'
 import { VoicePlate } from './VoicePlate'
 import { TypeBed } from './TypeBed'
+import { HeroOverscore } from './HeroOverscore'
 
 type HeroProps = {
   voice: VoiceId
@@ -100,8 +101,10 @@ const TITLE_SEGMENTS: Array<{ id: WordId | 'plain' | 'space'; text: string; mark
   { id: 'space', text: ' ' },
   { id: 'good', text: 'good at', mark: true },
   { id: 'space', text: ' ' },
-  { id: 'plain', text: 'frontend' },
+  { id: 'plain', text: 'frontend' }
 ]
+
+const TITLE = 'is Minimax M3 good at frontend yet?'
 
 const SET_DURATION_MS = 1500
 const STEP_MS = 70
@@ -221,6 +224,8 @@ export function Hero({
           </span>
         </div>
 
+        <HeroOverscore title={TITLE} eyebrow="registered · for the reader · at first light" />
+
         <h1
           id="hero-title-label"
           className={`hero__title hero__title--${voice}`}
@@ -317,6 +322,23 @@ export function Hero({
           <span className="hero__read-witness-rule" />
           <span className="hero__read-witness-rule" />
           <em>read it three times · let one voice hold</em>
+        </span>
+
+        <span className="hero__set-mark" aria-hidden="true">
+          <span className="hero__set-mark-rule" />
+          <span className="hero__set-mark-center">
+            <svg className="hero__set-mark-glyph" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth=".6" />
+              <circle cx="12" cy="12" r="6.4" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray=".9 1.6" opacity=".55" />
+              <line x1="12" y1="4" x2="12" y2="9" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" />
+              <line x1="12" y1="15" x2="12" y2="20" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" />
+              <line x1="4" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" />
+              <line x1="15" y1="12" x2="20" y2="12" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" />
+              <circle cx="12" cy="12" r="1.6" fill="currentColor" />
+            </svg>
+            <em>set &amp; registered</em>
+          </span>
+          <span className="hero__set-mark-rule" />
         </span>
       </ChaseFrame>
 

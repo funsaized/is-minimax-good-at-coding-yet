@@ -1111,6 +1111,113 @@ em { font-style: italic; }
 }
 
 /* ────────────────────────────────────────────────────────────
+   HERO OVERSCORE · a hand-drawn stroke above the title
+   The ornament is set as a single curve with caps and beads.
+   It colors with the voice tone and animates on first arrival.
+   ──────────────────────────────────────────────────────────── */
+
+.hero-overscore {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: clamp(18px, 2.4vw, 32px) 0 clamp(8px, 1vw, 16px);
+  color: var(--hero-tone, var(--quiet));
+  opacity: 0;
+  transform: translateY(-6px);
+  animation: heroOverscoreIn 1.2s var(--ease-out) .55s both;
+}
+
+.hero-overscore.is-static { animation: none; opacity: 1; transform: none; }
+
+.hero-overscore__svg {
+  display: block;
+  width: 100%;
+  height: clamp(56px, 5.4vw, 78px);
+  overflow: visible;
+}
+
+.hero-overscore__ghost {
+  opacity: 0;
+  animation: heroOverscoreGhost .9s var(--ease-out) .55s both;
+}
+
+.hero-overscore.is-static .hero-overscore__ghost { opacity: 1; }
+
+.hero-overscore__stroke {
+  stroke-dasharray: 1380;
+  stroke-dashoffset: 1380;
+  animation: heroOverscoreDraw 1.6s var(--ease-out) .55s both;
+}
+
+.hero-overscore.is-static .hero-overscore__stroke {
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+}
+
+.hero-overscore__cap {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: heroOverscoreCap .55s var(--ease-spring) 1.95s both;
+}
+
+.hero-overscore.is-static .hero-overscore__cap { opacity: 1; transform: none; }
+
+.hero-overscore__beads {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: heroOverscoreBeads .65s var(--ease-spring) 1.7s both;
+}
+
+.hero-overscore.is-static .hero-overscore__beads { opacity: 1; transform: none; }
+
+.hero-overscore__label {
+  opacity: 0;
+  transform: translateY(4px);
+  animation: heroOverscoreLabel .65s var(--ease-out) 2.15s both;
+}
+
+.hero-overscore.is-static .hero-overscore__label { opacity: 1; transform: none; }
+
+@keyframes heroOverscoreIn {
+  0%   { opacity: 0; transform: translateY(-6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroOverscoreGhost {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes heroOverscoreDraw {
+  0%   { stroke-dashoffset: 1380; }
+  60%  { stroke-dashoffset: 380; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes heroOverscoreCap {
+  0%   { opacity: 0; transform: scale(.2); }
+  60%  { opacity: 1; transform: scale(1.18); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes heroOverscoreBeads {
+  0%   { opacity: 0; transform: scale(.3); }
+  60%  { opacity: 1; transform: scale(1.15); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes heroOverscoreLabel {
+  0%   { opacity: 0; transform: translateY(4px); }
+  100% { opacity: .9; transform: translateY(0); }
+}
+
+@media (max-width: 720px) {
+  .hero-overscore__label text { letter-spacing: 2.5px; }
+}
+
+/* ────────────────────────────────────────────────────────────
    HERO · the question, drawn
    ──────────────────────────────────────────────────────────── */
 
@@ -1421,6 +1528,64 @@ em { font-style: italic; }
 @media (max-width: 720px) {
   .hero__read-witness { gap: 8px; }
   .hero__read-witness-rule:first-child { display: none; }
+}
+
+/* — a small "set & registered" tail-piece closing the broadside — */
+.hero__set-mark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: clamp(20px, 2.4vw, 32px);
+  max-width: 56ch;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+  opacity: 0;
+  animation: heroSubIn .85s var(--ease-out) 1.95s both;
+}
+
+.hero__set-mark-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--hero-tone, var(--quiet)) 50%, transparent) 92%);
+  opacity: .45;
+}
+
+.hero__set-mark-center {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.hero__set-mark-glyph {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: var(--hero-tone, var(--quiet));
+  opacity: .85;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--hero-tone, var(--quiet)) 22%, transparent));
+}
+
+.hero__set-mark em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.01em;
+  font-size: 12.5px;
+  color: var(--paper-soft);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__set-mark { animation: none; opacity: 1; }
+}
+
+@media (max-width: 720px) {
+  .hero__set-mark { font-size: 9px; letter-spacing: .22em; gap: 10px; }
+  .hero__set-mark em { font-size: 11.5px; }
 }
 
 .hero__sub-tail {
