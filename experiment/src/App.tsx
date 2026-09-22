@@ -29,6 +29,7 @@ import { LastLight } from './LastLight'
 import { QuestionHeld } from './QuestionHeld'
 import { PressMotto } from './PressMotto'
 import { TypeCase } from './TypeCase'
+import { ThreeVoiceSpecimen } from './ThreeVoiceSpecimen'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -361,6 +362,8 @@ export function App() {
         onWord={(id, focus) => selectWord(id, focus ?? false)}
         onHover={setHoveredWord}
       />
+
+      <ThreeVoiceSpecimen voice={voice} onVoice={selectVoice} />
 
       <section className="hero reveal" aria-labelledby="hero-title-label">
         <Hero
