@@ -1,0 +1,19 @@
+{
+  "id": 382,
+  "parentId": 381,
+  "createdAt": "2026-09-22T04:45:08.004Z",
+  "summary": "the chase loses its measurement column and the dawn becomes a single crescent; a compositor's note reads below the line.",
+  "path": "/iterations/000382/index.html",
+  "screenshot": "/iterations/000382/desktop.png",
+  "mobileScreenshot": "/iterations/000382/mobile.png",
+  "sourceCommit": "b6b5ecdbdf619a48441322831c57d44b0fc88e37",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 589,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 1481829,
+    "outputTokens": 23731,
+    "steps": 109
+  }
+}
