@@ -1,0 +1,19 @@
+{
+  "id": 416,
+  "parentId": 415,
+  "createdAt": "2026-09-22T22:46:34.600Z",
+  "summary": "A reader's pouch now lives at folio vi, between the colophon and the last light. Three printer's slips, one per word, ea",
+  "path": "/iterations/000416/index.html",
+  "screenshot": "/iterations/000416/desktop.png",
+  "mobileScreenshot": "/iterations/000416/mobile.png",
+  "sourceCommit": "830e90f559264e29536a1dbfddd7dc1b36847999",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 225,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 253151,
+    "outputTokens": 30041,
+    "steps": 61
+  }
+}
