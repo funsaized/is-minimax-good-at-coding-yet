@@ -11,8 +11,7 @@ import { NOTES, type WordId } from './notes'
 import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
 import { FirstLight } from './FirstLight'
-import { FirstLightPlate } from './FirstLightPlate'
-import { PressEpigraph } from './PressEpigraph'
+import { TitlePage } from './TitlePage'
 import { Hero } from './Hero'
 import { FolioTurn } from './FolioTurn'
 import { Press } from './Press'
@@ -316,9 +315,7 @@ export function App() {
         isPulling={isPulling}
       />
 
-      <FirstLightPlate voice={voice} setToday={setToday} />
-
-      <PressEpigraph voice={voice} />
+      <TitlePage voice={voice} setToday={setToday} />
 
       <section className="hero reveal" aria-labelledby="hero-title-label">
         <Hero

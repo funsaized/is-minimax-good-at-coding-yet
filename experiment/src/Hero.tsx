@@ -10,7 +10,6 @@ import {
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 import { ChaseFrame } from './ChaseFrame'
-import { VoicePlate } from './VoicePlate'
 import { TypeBed } from './TypeBed'
 import { HeroOverscore } from './HeroOverscore'
 import { PressProofStamp } from './PressProofStamp'
@@ -190,28 +189,10 @@ export function Hero({
           </svg>
         </span>
 
-        <span className="hero__trim hero__trim--tl" aria-hidden="true">
+        <span className="hero__trim" aria-hidden="true">
           <svg viewBox="0 0 24 24">
             <path d="M0 6 L24 6 M6 0 L6 24" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
             <circle cx="6" cy="6" r="1.4" fill="none" stroke="currentColor" strokeWidth=".4" />
-          </svg>
-        </span>
-        <span className="hero__trim hero__trim--tr" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M0 6 L24 6 M18 0 L18 24" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
-            <circle cx="18" cy="6" r="1.4" fill="none" stroke="currentColor" strokeWidth=".4" />
-          </svg>
-        </span>
-        <span className="hero__trim hero__trim--bl" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M0 18 L24 18 M6 0 L6 24" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
-            <circle cx="6" cy="18" r="1.4" fill="none" stroke="currentColor" strokeWidth=".4" />
-          </svg>
-        </span>
-        <span className="hero__trim hero__trim--br" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M0 18 L24 18 M18 0 L18 24" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
-            <circle cx="18" cy="18" r="1.4" fill="none" stroke="currentColor" strokeWidth=".4" />
           </svg>
         </span>
 
@@ -313,6 +294,7 @@ export function Hero({
         <span className="hero__coda" aria-hidden="true">
           <span className="hero__coda-rule" />
           <em className="hero__coda-line">
+            <span className="hero__coda-glyph" aria-hidden="true">§</span>
             {spec.gloss}
             <span className="hero__coda-dot" aria-hidden="true">·</span>
             set in <em className="hero__coda-voice">{spec.name.toLowerCase()}</em>
@@ -330,7 +312,7 @@ export function Hero({
         />
       </ChaseFrame>
 
-      <VoicePlate voice={voice} pullSignal={pullSignal} onSelect={onVoice} />
+      <HeroVoices voice={voice} pullSignal={pullSignal} onSelect={onVoice} />
     </div>
   )
 }
@@ -431,4 +413,162 @@ function renderTitleSegments({
 
 function segIndex(id: WordId | 'plain' | 'space' | 'punct'): number {
   return TITLE_SEGMENTS.findIndex(s => s.id === id)
+}
+
+type HeroVoicesProps = {
+  voice: VoiceId
+  pullSignal: number
+  onSelect: (voice: VoiceId) => void
+}
+
+type VoiceChip = {
+  voice: VoiceId
+  letter: string
+  name: string
+  face: string
+  caption: string
+  family: string
+  weight: number
+  style: 'italic' | 'normal'
+  tracking: string
+  uppercased: boolean
+  sample: string
+}
+
+const HERO_VOICES: Record<VoiceId, VoiceChip> = {
+  quiet: {
+    voice: 'quiet',
+    letter: 'A',
+    name: 'quiet cut',
+    face: 'serif · italic · close set',
+    caption: 'the line, set softly',
+    family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
+    weight: 400,
+    style: 'italic',
+    tracking: '-.018em',
+    uppercased: false,
+    sample: 'is m³ good at frontend yet?',
+  },
+  human: {
+    voice: 'human',
+    letter: 'B',
+    name: 'human hand',
+    face: 'serif · italic · warm',
+    caption: 'the line, set by hand',
+    family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
+    weight: 500,
+    style: 'italic',
+    tracking: '-.014em',
+    uppercased: false,
+    sample: 'is M3 good at frontend yet?',
+  },
+  bold: {
+    voice: 'bold',
+    letter: 'C',
+    name: 'bold signal',
+    face: 'sans · heavy',
+    caption: 'the line, set at full height',
+    family: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+    weight: 800,
+    style: 'normal',
+    tracking: '-.04em',
+    uppercased: true,
+    sample: 'IS M3 GOOD AT FRONTEND YET?',
+  },
+}
+
+const HERO_VOICE_ORDER: VoiceId[] = ['quiet', 'human', 'bold']
+
+function HeroVoices({ voice, pullSignal, onSelect }: HeroVoicesProps) {
+  const active = HERO_VOICES[voice]
+  const activeSampleStyle = {
+    fontFamily: active.family,
+    fontWeight: active.weight,
+    fontStyle: active.style,
+    letterSpacing: active.tracking,
+    textTransform: active.uppercased ? ('uppercase' as const) : ('none' as const),
+  } as CSSProperties
+
+  const onChipKey = (event: ReactKeyboardEvent<HTMLButtonElement>, target: VoiceId) => {
+    const index = HERO_VOICE_ORDER.indexOf(target)
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault()
+      onSelect(HERO_VOICE_ORDER[(index + 1) % HERO_VOICE_ORDER.length])
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault()
+      onSelect(HERO_VOICE_ORDER[(index - 1 + HERO_VOICE_ORDER.length) % HERO_VOICE_ORDER.length])
+    } else if (event.key === 'Home') {
+      event.preventDefault()
+      onSelect(HERO_VOICE_ORDER[0])
+    } else if (event.key === 'End') {
+      event.preventDefault()
+      onSelect(HERO_VOICE_ORDER[HERO_VOICE_ORDER.length - 1])
+    }
+  }
+
+  return (
+    <aside className={`hero-voices hero-voices--${voice}`} aria-label="The three voices, set beside the title">
+      <header className="hero-voices__head" aria-hidden="true">
+        <span className="hero-voices__head-key">
+          <span className="hero-voices__head-line" />
+          <em>three voices</em>
+        </span>
+        <span className="hero-voices__head-meta">
+          <span className="hero-voices__head-dot" />
+          <em>set in</em>
+          <span className="hero-voices__head-name">{active.name}</span>
+        </span>
+      </header>
+
+      <p
+        className={`hero-voices__sample hero-voices__sample--${voice}`}
+        style={activeSampleStyle}
+        key={`sample-${voice}-${pullSignal}`}
+      >
+        {active.sample}
+      </p>
+
+      <p className="hero-voices__caption" aria-hidden="true">
+        <em>{active.caption}</em>
+        <span className="hero-voices__caption-dot" aria-hidden="true">·</span>
+        <em className="hero-voices__caption-face">{active.face}</em>
+      </p>
+
+      <div className="hero-voices__chips" role="radiogroup" aria-label="Switch the voice · A quiet, B human, C bold">
+        {HERO_VOICE_ORDER.map(v => {
+          const row = HERO_VOICES[v]
+          const isActive = voice === v
+          return (
+            <button
+              key={v}
+              type="button"
+              role="radio"
+              aria-checked={isActive}
+              className={`hero-voices__chip hero-voices__chip--${v} ${isActive ? 'is-active' : ''}`}
+              onClick={() => onSelect(v)}
+              onKeyDown={event => onChipKey(event, v)}
+              aria-label={`${row.letter} · ${row.name} · ${row.face}`}
+            >
+              <span className="hero-voices__chip-letter" aria-hidden="true">{row.letter}</span>
+              <span className="hero-voices__chip-stack">
+                <em className="hero-voices__chip-name">{row.name}</em>
+                <span className="hero-voices__chip-face">{row.face}</span>
+              </span>
+              <span className="hero-voices__chip-pip" aria-hidden="true" />
+            </button>
+          )
+        })}
+      </div>
+
+      <footer className="hero-voices__foot" aria-hidden="true">
+        <span className="hero-voices__foot-rule" />
+        <em className="hero-voices__foot-line">
+          cycle <kbd>shift</kbd>+<kbd>v</kbd>
+          <span className="hero-voices__foot-dot" aria-hidden="true">·</span>
+          or click a chip
+        </em>
+        <span className="hero-voices__foot-rule" />
+      </footer>
+    </aside>
+  )
 }

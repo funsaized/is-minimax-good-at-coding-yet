@@ -1,37 +1,14 @@
 # Changelog
 
-## iteration 396 — one held breath · the question, set on a single thread
+## Iteration 397
+The page holds one question; everything else serves it.
 
-The page reads as one composed moment around the question. The title is the protagonist;
-a new reading cord sits directly beneath it, holding the three marks (stet, caret, query)
-on a single thread. The reader can press any mark to focus on the corresponding word
-in the title. Atmospheric noise is calmer; the title's typography is given more room
-to breathe; the first-light dawn and the last-light twilight now feel like the open
-and close of a single held breath. Mobile layout collapses cleanly.
-
-### What changed
-
-- **new `ReadingCord`** — a horizontal thread that runs beneath the title, with three
-  interactive beads (⌇ stet, ∧ caret, ? query). The active bead glows in the active
-  voice's tone; the cord itself is drawn with a voice-tinted gradient. Clicking or
-  keyboard-arrowing between marks focuses the matching word in the title.
-- **`App.tsx`** — placed `ReadingCord` directly under the hero, between the title
-  block and the compositor's note. Removed the redundant `app__ink-wash` overlay and
-  the no-longer-used `ComposingRule`/`KeptTally` imports so the canvas breathes less.
-- **`style.css`** — softened the backdrop grid and added a top-anchored glow to
-  `.app__void` so the dawn above and the twilight below feel like the same horizon.
-  Reduced hero top/bottom padding so the title sits closer to the first light.
-  Added full responsive styles for the reading cord (caption hides on phones, beads
-  shrink, rules shorten, foot wraps).
-- **first-light / last-light pairing** — already share the same horizon vocabulary
-  from iteration 395; iteration 396 keeps them as bookends and adds the reading
-  cord as the visible spine of the question itself.
-
-### Kept intact
-
-- Document title and visible title remain `is Minimax M3 good at frontend yet?`.
-- Three voices (quiet cut · human hand · bold signal) unchanged.
-- All existing components (Hero, Press, ProofLine, Specimen, Answer, Colophon,
-  FirstLight, LastLight, MarginMarks, SpineThread, ReadingLedger, CursorGlow,
-  PaperGrain, FolioTurn, ReadingNote, etc.) preserved.
-- `npm run build` passes with no errors or warnings.
+- Replaced the heavy `FirstLightPlate` and `PressEpigraph` above the title with a slim publication masthead (`TitlePage`) — a single row of `date | m³ press | folio`, framed by thin bead rules. The title now opens the page.
+- Integrated the three-voice specimen directly into the hero as `HeroVoices` (replacing the separate `VoicePlate`) — the line in its current voice, three letter chips beside the title, all in one composed unit. Removed the four decorative chase-frame trims.
+- Made the title bigger (`clamp(58px, 11.6vw, 188px)`), tightened its letter-spacing, and enabled old-style figures + stylistic set 1 for a more refined italic.
+- Sharpened the chase-frame: dropped the heavy outer shadow, softened the grain, faded the inner rule ticks.
+- Lightened the `LastLight` bookend — the closing sky is shorter and the section padding is calmer, so the day closes without competing with the colophon.
+- Refined typography across every section heading (`press`, `proof-line`, `specimen`, `answer`, `colophon`): italic display faces stepped up to `clamp(40px, 6vw, 66px)`.
+- Refined the press impression body, the three specimen plates, and the three answer-column headlines — larger, more confident italic; the bold voice now reads in its own colour tone.
+- A small typographic glyph (`§`) now opens the hero's coda line, a tiny printer's flourish where the voice-led footnote meets the head.
+- Mobile responsive: the masthead stacks, the hero-voice chips collapse to a single column, the press lever and impression stack vertically.
