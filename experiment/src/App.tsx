@@ -11,6 +11,7 @@ import { NOTES, type WordId } from './notes'
 import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
 import { ComposingRule } from './ComposingRule'
+import { FirstLight } from './FirstLight'
 import { ReadingLedger } from './ReadingLedger'
 import { Hero } from './Hero'
 import { FolioTurn } from './FolioTurn'
@@ -210,6 +211,7 @@ export function App() {
       <span className="app__bg-grain" aria-hidden="true" />
       <span className="app__void" aria-hidden="true" />
       <span className="app__backdrop" aria-hidden="true" />
+      <FirstLight />
       <CursorGlow />
 
       <header className="topbar" role="banner">

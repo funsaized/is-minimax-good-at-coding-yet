@@ -152,7 +152,7 @@ export function Press({ voice, word, onVoice, setToday }: PressProps) {
           <div className="press__cell-body">
             <div className={`press-impression press-impression--${voice} ${pulling ? 'is-pulled' : ''}`}>
               <div className="press-impression__stamp" aria-hidden="true">
-                <span>pulled · folio ii</span>
+                <span>pulled · folio ii · at first light</span>
                 <span>voice {VOICE_LETTER[voice]}</span>
               </div>
               <div className="press-impression__body">

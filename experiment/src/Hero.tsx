@@ -10,6 +10,7 @@ import {
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 import { ChaseFrame } from './ChaseFrame'
+import { TypeBed } from './TypeBed'
 
 type HeroProps = {
   voice: VoiceId
@@ -90,11 +91,6 @@ const TOKEN_COPY: Record<WordId, TokenCopy> = {
 
 const ORDER: VoiceId[] = ['quiet', 'human', 'bold']
 
-// The question, broken into the visible segments that will typeset themselves
-// in sequence on first arrival. The title sets across two lines: line a lays
-// out "m³ good at frontend", line b follows with "yet?" — the punctuation
-// arriving as the period's own protagonist. The literal "is" and "Minimax M3"
-// that complete the question live only in the aria-label.
 const TITLE_SEGMENTS: Array<{ id: WordId | 'plain' | 'space'; text: string; mark?: boolean }> = [
   { id: 'm3', text: 'm³', mark: true },
   { id: 'space', text: ' ' },
@@ -123,7 +119,6 @@ export function Hero({
   const spec = VOICE[voice]
   const toneStyle = { '--hero-tone': `var(--${voice})` } as CSSProperties
 
-  // Letter-by-letter typeset animation, fires once on first arrival
   const [setProgress, setSetProgress] = useState(() => segmentOffsets(0))
   const [reduceMotion, setReduceMotion] = useState(false)
   const cleanupRef = useRef<(() => void) | null>(null)
@@ -184,7 +179,9 @@ export function Hero({
           </svg>
         </span>
 
-        <DawnCrescent />
+        <DawnBreak />
+
+        <TypeBed tone={`var(--hero-tone, var(--quiet))`} />
 
         <div className="hero__eyebrow-row">
           <span className="hero__eyebrow">
@@ -205,6 +202,7 @@ export function Hero({
           aria-label="is Minimax M3 good at frontend yet?"
         >
           <span className="hero__title-line hero__title-line-a">
+            <span className="hero__title-baseline" aria-hidden="true" />
             {renderTitleSegments({
               lineId: 'a',
               progress: setProgress,
@@ -216,7 +214,13 @@ export function Hero({
               tokenRefs,
             })}
           </span>
+          <span className="hero__title-lead" aria-hidden="true">
+            <em>·</em>
+            <em>·</em>
+            <em>·</em>
+          </span>
           <span className="hero__title-line hero__title-line-b">
+            <span className="hero__title-baseline" aria-hidden="true" />
             <span
               className={`ht__word ht__word--yet ${word === 'yet' ? 'is-marked' : ''} ${hover === 'yet' ? 'is-hover' : ''}`}
               aria-hidden="true"
@@ -236,11 +240,31 @@ export function Hero({
                 aria-pressed={word === 'yet'}
                 aria-label={`${TOKEN_COPY.yet.label} — ${TOKEN_COPY.yet.tone} (mark: ${TOKEN_COPY.yet.mark})`}
               >
+                <span className="ht__kern ht__kern--before" aria-hidden="true">
+                  <svg viewBox="0 0 8 12" preserveAspectRatio="none">
+                    <path d="M1 0 L8 6 L1 12" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
                 <span className="ht__token-yet">yet</span>
                 <span className={`ht__punct ht__punct--${voice}`} aria-hidden="true">
-                  ?
+                  <span className="ht__punct-kern ht__punct-kern--before" aria-hidden="true">
+                    <svg viewBox="0 0 6 10" preserveAspectRatio="none">
+                      <path d="M1 0 L6 5 L1 10" fill="none" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                  <span className="ht__punct-mark">?</span>
+                  <span className="ht__punct-kern ht__punct-kern--after" aria-hidden="true">
+                    <svg viewBox="0 0 6 10" preserveAspectRatio="none">
+                      <path d="M5 0 L0 5 L5 10" fill="none" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
                   <span className="ht__punct-ghost ht__punct-ghost--a" aria-hidden="true">?</span>
                   <span className="ht__punct-ghost ht__punct-ghost--b" aria-hidden="true">?</span>
+                </span>
+                <span className="ht__kern ht__kern--after" aria-hidden="true">
+                  <svg viewBox="0 0 8 12" preserveAspectRatio="none">
+                    <path d="M7 0 L0 6 L7 12" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </span>
               </button>
             </span>
@@ -384,7 +408,6 @@ function renderTitleSegments({
   onWordKey,
   tokenRefs,
 }: RenderArgs) {
-  // 'yet' lives on line b; only line-a segments are rendered here.
   const segs = TITLE_SEGMENTS
   return segs.map((seg, idx) => {
     const p = progress[segIndex(seg.id)] ?? 0
@@ -458,83 +481,114 @@ function segIndex(id: WordId | 'plain' | 'space' | 'punct'): number {
   return TITLE_SEGMENTS.findIndex(s => s.id === id)
 }
 
-function DawnCrescent() {
+function DawnBreak() {
   const id = useId().replace(/:/g, '')
-  const tideId = `dawn-tide-${id}`
   const orbId = `dawn-orb-${id}`
+  const tideId = `dawn-tide-${id}`
+  const rayId = `dawn-rays-${id}`
+  const moteId = `dawn-mote-${id}`
+
   return (
     <span className="hero__dawn" aria-hidden="true">
       <svg viewBox="0 0 600 360" preserveAspectRatio="xMidYMid slice">
         <defs>
-          <radialGradient id={orbId} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(255, 230, 196, .35)" />
-            <stop offset="35%" stopColor="rgba(242, 178, 138, .18)" />
-            <stop offset="70%" stopColor="rgba(168, 197, 255, .08)" />
+          <radialGradient id={orbId} cx="50%" cy="55%" r="56%">
+            <stop offset="0%" stopColor="rgba(255, 232, 198, .46)" />
+            <stop offset="32%" stopColor="rgba(244, 188, 150, .24)" />
+            <stop offset="68%" stopColor="rgba(168, 197, 255, .1)" />
             <stop offset="100%" stopColor="rgba(168, 197, 255, 0)" />
           </radialGradient>
+
           <linearGradient id={tideId} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="rgba(245, 238, 216, 0)" />
-            <stop offset="40%" stopColor="rgba(245, 238, 216, .14)" />
-            <stop offset="60%" stopColor="rgba(245, 238, 216, .14)" />
-            <stop offset="100%" stopColor="rgba(245, 238, 216, 0)" />
+            <stop offset="0%" stopColor="rgba(255, 226, 184, 0)" />
+            <stop offset="22%" stopColor="rgba(255, 226, 184, .14)" />
+            <stop offset="48%" stopColor="rgba(255, 234, 200, .26)" />
+            <stop offset="68%" stopColor="rgba(255, 226, 184, .14)" />
+            <stop offset="100%" stopColor="rgba(255, 226, 184, 0)" />
           </linearGradient>
+
+          <linearGradient id={rayId} x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor="rgba(255, 226, 184, .18)" />
+            <stop offset="55%" stopColor="rgba(255, 226, 184, .06)" />
+            <stop offset="100%" stopColor="rgba(255, 226, 184, 0)" />
+          </linearGradient>
+
+          <radialGradient id={moteId} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 232, 198, .9)" />
+            <stop offset="100%" stopColor="rgba(255, 232, 198, 0)" />
+          </radialGradient>
         </defs>
 
-        {/* the orb — a quiet first light behind the title */}
-        <circle className="hero__dawn-orb" cx="300" cy="180" r="160" fill={`url(#${orbId})`} />
+        <rect x="0" y="148" width="600" height="212" fill={`url(#${rayId})`} className="hero__dawn-rays" />
 
-        {/* a thin horizon line that anchors the orb to a press-bed silhouette */}
+        <circle className="hero__dawn-orb" cx="300" cy="222" r="156" fill={`url(#${orbId})`} />
+
         <g className="hero__dawn-horizon">
-          <path
-            d="M40 232 L162 232 L172 226 L208 226 L218 232 L298 232 L312 218 L334 218 L348 232 L420 232 L432 224 L478 224 L490 232 L568 232"
-            fill="none"
-            stroke={`url(#${tideId})`}
-            strokeWidth=".6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity=".6"
+          <rect
+            className="hero__dawn-horizon-line"
+            x="0"
+            y="222"
+            width="600"
+            height="1.1"
+            fill={`url(#${tideId})`}
+            opacity=".9"
           />
           <path
-            d="M40 240 L120 240 L130 234 L160 234 L172 240 L256 240 L268 226 L288 226 L302 240 L380 240 L390 232 L432 232 L444 240 L568 240"
+            d="M40 224 L162 224 L172 218 L208 240 L218 224 L298 224 L312 210 L334 210 L348 224 L420 224 L432 216 L478 216 L490 224 L568 224"
             fill="none"
-            stroke="rgba(245, 238, 216, .16)"
-            strokeWidth=".4"
+            stroke={`url(#${tideId})`}
+            strokeWidth=".5"
             strokeLinecap="round"
             strokeLinejoin="round"
             opacity=".55"
           />
-        </g>
-
-        {/* the crescent — a hand-drawn arc that opens toward the title */}
-        <g className="hero__dawn-arc">
           <path
-            d="M188 168 Q300 50 412 168"
+            d="M40 232 L120 232 L130 226 L160 226 L172 232 L256 232 L268 218 L288 218 L302 232 L380 232 L390 224 L432 224 L444 232 L568 232"
             fill="none"
-            stroke="rgba(245, 238, 216, .28)"
-            strokeWidth=".55"
+            stroke="rgba(255, 226, 184, .14)"
+            strokeWidth=".35"
             strokeLinecap="round"
-            strokeDasharray="0.8 3.2"
-            opacity=".7"
+            strokeLinejoin="round"
+            opacity=".5"
           />
         </g>
 
-        {/* tick marks along the arc — quiet register points */}
-        <g className="hero__dawn-ticks" fill="rgba(245, 238, 216, .35)">
-          <circle cx="194" cy="160" r=".9" />
-          <circle cx="226" cy="124" r=".7" />
-          <circle cx="266" cy="86" r="1.1" />
-          <circle cx="300" cy="74" r="1.4" />
-          <circle cx="334" cy="86" r="1.1" />
-          <circle cx="374" cy="124" r=".7" />
-          <circle cx="406" cy="160" r=".9" />
+        <g className="hero__dawn-arc">
+          <path
+            d="M168 148 Q300 24 432 148"
+            fill="none"
+            stroke="rgba(245, 238, 216, .34)"
+            strokeWidth=".55"
+            strokeLinecap="round"
+            strokeDasharray="0.8 3.2"
+            opacity=".85"
+          />
         </g>
 
-        {/* a small star or two to anchor the sky */}
+        <g className="hero__dawn-ticks" fill="rgba(245, 238, 216, .42)">
+          <circle cx="178" cy="138" r=".9" />
+          <circle cx="216" cy="98" r=".7" />
+          <circle cx="258" cy="58" r="1.1" />
+          <circle cx="300" cy="34" r="1.4" />
+          <circle cx="342" cy="58" r="1.1" />
+          <circle cx="384" cy="98" r=".7" />
+          <circle cx="422" cy="138" r=".9" />
+        </g>
+
+        <g className="hero__dawn-motes">
+          <circle cx="78" cy="190" r="6" fill={`url(#${moteId})`} className="hero__dawn-mote" />
+          <circle cx="502" cy="174" r="7" fill={`url(#${moteId})`} className="hero__dawn-mote hero__dawn-mote--b" />
+          <circle cx="222" cy="232" r="4" fill={`url(#${moteId})`} className="hero__dawn-mote hero__dawn-mote--c" />
+          <circle cx="406" cy="206" r="5" fill={`url(#${moteId})`} className="hero__dawn-mote hero__dawn-mote--d" />
+          <circle cx="148" cy="160" r="3" fill={`url(#${moteId})`} className="hero__dawn-mote hero__dawn-mote--e" />
+          <circle cx="478" cy="142" r="3.5" fill={`url(#${moteId})`} className="hero__dawn-mote hero__dawn-mote--f" />
+        </g>
+
         <g className="hero__dawn-stars" fill="rgba(245, 238, 216, .55)">
-          <circle cx="120" cy="80" r="1" />
-          <circle cx="486" cy="68" r="1.2" />
-          <circle cx="92" cy="142" r=".7" />
-          <circle cx="520" cy="120" r=".8" />
+          <circle cx="74" cy="58" r="1" />
+          <circle cx="528" cy="46" r="1.2" />
+          <circle cx="48" cy="114" r=".7" />
+          <circle cx="562" cy="100" r=".8" />
         </g>
       </svg>
     </span>
