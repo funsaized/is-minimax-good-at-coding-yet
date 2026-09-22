@@ -12,21 +12,13 @@ type CornerProps = { tone: string }
 function Corner({ tone }: CornerProps) {
   return (
     <svg viewBox="0 0 18 18" aria-hidden="true" className="chase-frame__corner">
-      <g fill="none" stroke={tone} strokeWidth=".7" strokeLinecap="square">
-        <path d="M.5 .5h17" />
-        <path d="M.5 .5v17" />
-        <path d="M.5 .5h17M.5 .5v17" strokeWidth=".25" strokeDasharray="1.4 1.6" opacity=".6" />
+      <g fill="none" stroke={tone} strokeLinecap="square">
+        <path d="M.5 .5h17" strokeWidth=".7" />
+        <path d="M.5 .5v17" strokeWidth=".7" />
+        <path d="M4.5 .5v4M.5 4.5h4" strokeWidth=".4" opacity=".7" />
       </g>
-      <circle cx="2.4" cy="2.4" r="1.2" fill="none" stroke={tone} strokeWidth=".5" />
-      <circle cx="2.4" cy="2.4" r=".6" fill={tone} />
-      <path
-        d="M5.5 .5v5M.5 5.5h5"
-        fill="none"
-        stroke={tone}
-        strokeWidth=".25"
-        strokeDasharray="1 1.2"
-        opacity=".55"
-      />
+      <circle cx="2.4" cy="2.4" r="1.2" fill="none" stroke={tone} strokeWidth=".4" />
+      <circle cx="2.4" cy="2.4" r=".5" fill={tone} />
     </svg>
   )
 }

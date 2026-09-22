@@ -73,32 +73,34 @@ function FolioStitch({ index, tone, soft = false }: { index: string; tone: Voice
       className={`folio-stitch folio-stitch--${tone} ${soft ? 'folio-stitch--soft' : ''}`}
       aria-hidden="true"
     >
-      <svg className="folio-stitch__svg" viewBox="0 0 80 24" preserveAspectRatio="none">
+      <svg className="folio-stitch__svg" viewBox="0 0 120 32" preserveAspectRatio="none">
         <line
           x1="0"
-          y1="12"
-          x2="80"
-          y2="12"
+          y1="16"
+          x2="120"
+          y2="16"
           stroke="currentColor"
-          strokeWidth=".6"
-          strokeDasharray="1.4 2.8"
-          opacity=".55"
+          strokeWidth=".5"
+          strokeDasharray="1.6 3"
+          opacity=".5"
         />
-        <circle cx="6" cy="12" r="2" fill="currentColor" opacity=".85" />
-        <circle cx="40" cy="12" r="1.2" fill="currentColor" opacity=".55" />
-        <circle cx="74" cy="12" r="2" fill="currentColor" opacity=".85" />
+        <circle cx="6" cy="16" r="2.2" fill="currentColor" opacity=".85" />
+        <circle cx="6" cy="16" r="3.2" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".4" />
+        <circle cx="60" cy="16" r="1.4" fill="currentColor" opacity=".55" />
+        <circle cx="114" cy="16" r="2.2" fill="currentColor" opacity=".85" />
+        <circle cx="114" cy="16" r="3.2" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".4" />
         <path
-          d="M5 12 L9 17 M8 7 L12 12"
+          d="M5 16 L9 21 M8 11 L12 16"
           stroke="currentColor"
-          strokeWidth=".9"
+          strokeWidth=".8"
           strokeLinecap="round"
           opacity=".7"
           fill="none"
         />
         <path
-          d="M75 12 L71 17 M72 7 L68 12"
+          d="M115 16 L111 21 M112 11 L108 16"
           stroke="currentColor"
-          strokeWidth=".9"
+          strokeWidth=".8"
           strokeLinecap="round"
           opacity=".7"
           fill="none"

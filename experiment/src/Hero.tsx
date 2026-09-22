@@ -358,6 +358,7 @@ export function Hero({
                   </span>
                   <span className="voice-column__meta" aria-hidden="true">
                     <em>{row.name}</em>
+                    <span className="voice-column__meta-sep" aria-hidden="true" />
                     <span>{row.face}</span>
                   </span>
                 </button>
