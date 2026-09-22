@@ -67,10 +67,6 @@ function formatHour() {
   return `${h}:${m.toString().padStart(2, '0')} ${ampm}`
 }
 
-function StatusLight() {
-  return <span className="status__dot" aria-hidden="true" />
-}
-
 export function App() {
   const [selectedWord, setSelectedWord] = useState<WordId>('good')
   const [hoveredWord, setHoveredWord] = useState<WordId | null>(null)
@@ -277,12 +273,12 @@ export function App() {
         onHover={setHoveredWord}
       />
 
-      <header className="topbar" role="banner">
+<header className="topbar" role="banner">
         <a className="brand" href="#question" aria-label="Return to the question">
-          <PrinterMark size={32} voice={voice} />
+          <PrinterMark size={34} voice={voice} />
           <span className="brand__copy">
-            <strong>m³ press</strong>
-            <em>an open question, set at first light</em>
+            <strong>m<sup>3</sup> press</strong>
+            <em>a single question, set three ways</em>
           </span>
         </a>
 
@@ -290,24 +286,17 @@ export function App() {
           <span className="topbar__folio-rule" />
           <em>folio</em>
           <span className="topbar__folio-num">{activeFolio.index}</span>
-          <em>of v</em>
+          <em>· {activeFolio.label}</em>
           <span className="topbar__folio-rule" />
         </span>
 
         <div className="status" aria-label="Page status">
           <span className="status__date">{setToday}</span>
           <span className="status__hour" aria-hidden="true">· {setHour}</span>
-          <span
-            className={`status__press ${isPulling ? 'is-pulling' : ''}`}
-            aria-hidden="true"
-          >
-            <span className="status__press-key">pulls</span>
-            <span className="status__press-num">{String(pullCount).padStart(3, '0')}</span>
-            <span className={`status__press-mark status__press-mark--${voice}`}>
-              {VOICE_LETTER[voice]}
-            </span>
+          <span className={`status__voice status__voice--${voice}`} aria-hidden="true">
+            <span className="status__voice-glyph">{VOICE_LETTER[voice]}</span>
+            <em>{VOICE_NAME[voice]}</em>
           </span>
-          <StatusLight />
         </div>
       </header>
 
@@ -398,7 +387,7 @@ export function App() {
         </span>
         <span className="site-foot__sig" aria-hidden="true">
           <span className="site-foot__sig-rule" />
-          <em>m³ press</em>
+          <em>m<sup>3</sup> press</em>
           <span className="site-foot__sig-mark" />
           <span className="site-foot__sig-rule" />
         </span>

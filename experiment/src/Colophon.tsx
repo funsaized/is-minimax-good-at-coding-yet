@@ -245,6 +245,24 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday, keptCou
             </span>
 
             <span className="colophon__signoff-rule--trace" aria-hidden="true" />
+
+            <span className="colophon__stop-press" aria-hidden="true">
+              <span className="colophon__stop-press-mark">
+                <svg viewBox="0 0 64 24" preserveAspectRatio="none">
+                  <path d="M2 18 L18 6 L34 18 L46 6 L62 18" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="2" cy="18" r="1.2" fill="currentColor" />
+                  <circle cx="62" cy="18" r="1.2" fill="currentColor" />
+                </svg>
+              </span>
+              <em>stop press · let the answer stand</em>
+              <span className="colophon__stop-press-mark">
+                <svg viewBox="0 0 64 24" preserveAspectRatio="none">
+                  <path d="M62 18 L46 6 L30 18 L18 6 L2 18" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="62" cy="18" r="1.2" fill="currentColor" />
+                  <circle cx="2" cy="18" r="1.2" fill="currentColor" />
+                </svg>
+              </span>
+            </span>
           </div>
 
           <div className="colophon__tieoff" aria-hidden="true">

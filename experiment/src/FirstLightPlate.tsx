@@ -232,8 +232,14 @@ export function FirstLightPlate({ voice, setToday }: FirstLightPlateProps) {
         </p>
 
         <p className="first-light-plate__sub-line">
-          <span>— a single line, set three ways, asked once.</span>
+          <span>— a single line, set three ways, asked once · a question that earns its pause.</span>
         </p>
+
+        <div className="first-light-plate__prompt" aria-hidden="true">
+          <span className="first-light-plate__prompt-rule" />
+          <em>read three times · let one voice hold</em>
+          <span className="first-light-plate__prompt-rule" />
+        </div>
       </div>
 
       <footer className="first-light-plate__foot" aria-hidden="true">
