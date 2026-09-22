@@ -1,13 +1,15 @@
-# Changelog
+# Iteration 399
 
-## Iteration 398 — one composed broadside
-Refined typography and visual hierarchy so the question holds the centre of the page.
+## Summary
+The hero opens with a hand-drawn illuminated initial "Q" above the title and a small set & registered seal at the eyebrow.
 
-- retuned the hero title (slightly calmer scale, tighter line-height) and added a soft hand-drawn baseline rule beneath it, visible only on closer inspection
-- strengthened the question mark when "yet" is marked — the punctuation gains a brief ink-bleed, a slightly larger scale, and a focused glow
-- softened the first-light wash and tightened the title-page masthead with a dawn-catching gradient that ties the opening together
-- removed the redundant set-line progress bar; the spine thread and reading ledger already carry the folio navigation
-- refined the colophon title with a small set-and-registered rule beneath it, and added a subtle baseline trace to the closing line
-- tightened the hero overscore proportions, the type-bed spacing, and the active-bead glow on the reading cord
+## Changes
 
-The page now reads as one composed moment: the dawn at the opening, the question in the middle, the same line held open at the close.
+- Added a hand-drawn illuminated "Q" initial above-left of the title (`hero__title-initial`). It draws itself in on arrival, with three beads popping in along its strokes.
+- Added a small `set & registered` seal in the top-right of the hero eyebrow row. The seal slowly rotates, marks the folio, and tints with the active voice.
+- Added a horizontal rule beneath the title with three bead markers, one per word. Each bead wears its own color (stet · caret · query) and lifts when its word is marked.
+- Added a small pulsing seal at the right edge of the hero coda, in the active voice tone.
+- Tightened the title typography: letter-spacing `-.034em → -.038em`, line-height `.94 → .92`, line-b spacing tightened so `yet?` sits closer to the line above.
+- Added a subtle drop-shadow glow to the `?` punctuation even when not marked, so the question mark reads as a hero element of the composition.
+- Each title-rule bead now reflects its word's natural color (m³ → blue, good at → coral, yet? → green), giving the rule a small chromatic thread beneath the title.
+- All new animations are gated behind `prefers-reduced-motion: reduce`.

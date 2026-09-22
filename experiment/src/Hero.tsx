@@ -203,6 +203,44 @@ export function Hero({
             <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
             <span className="hero__eyebrow-em">the question, set three ways</span>
           </span>
+          <span className="hero__register" aria-hidden="true">
+            <svg viewBox="0 0 60 60" className="hero__register-glyph">
+              <defs>
+                <radialGradient id={`reg-fade-${baseId}`} cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="currentColor" stopOpacity=".22" />
+                  <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              <circle cx="30" cy="30" r="29" fill="none" stroke="currentColor" strokeWidth=".5" opacity=".4" strokeDasharray="1.2 2.6" />
+              <circle cx="30" cy="30" r="22" fill="none" stroke="currentColor" strokeWidth=".7" opacity=".55" />
+              <circle cx="30" cy="30" r="22" fill={`url(#reg-fade-${baseId})`} />
+              <circle cx="30" cy="30" r="18" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".6 1.4" opacity=".4" />
+              <circle cx="30" cy="30" r="14" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".35" />
+              <path
+                d="M30 19 a11 11 0 1 1 -7 19"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".9"
+                strokeLinecap="round"
+                opacity=".85"
+              />
+              <path d="M22 36 l4 4 l-1 -6 z" fill="currentColor" opacity=".85" />
+              <text x="30" y="11" textAnchor="middle" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" fontSize="3.2" letterSpacing="1.2" fill="currentColor" opacity=".8">
+                REGISTERED
+              </text>
+              <text x="30" y="54" textAnchor="middle" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" fontSize="3.2" letterSpacing="1.2" fill="currentColor" opacity=".8">
+                FOLIO · I
+              </text>
+              <circle cx="6" cy="30" r="1.1" fill="currentColor" opacity=".6" />
+              <circle cx="54" cy="30" r="1.1" fill="currentColor" opacity=".6" />
+              <circle cx="30" cy="6" r="1.1" fill="currentColor" opacity=".6" />
+              <circle cx="30" cy="54" r="1.1" fill="currentColor" opacity=".6" />
+            </svg>
+            <span className="hero__register-stack">
+              <em>set &amp; registered</em>
+              <span className="hero__register-folio">folio i · at first light</span>
+            </span>
+          </span>
         </div>
 
         <HeroOverscore title={TITLE} eyebrow="registered · for the reader · at first light" />
@@ -212,6 +250,35 @@ export function Hero({
           className={`hero__title hero__title--${voice}`}
           aria-label="is Minimax M3 good at frontend yet?"
         >
+          <span className="hero__title-initial" aria-hidden="true">
+            <svg viewBox="0 0 100 120" className="hero__title-initial-svg">
+              <defs>
+                <linearGradient id={`initial-grad-${baseId}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="currentColor" stopOpacity=".18" />
+                  <stop offset="60%" stopColor="currentColor" stopOpacity=".06" />
+                  <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M62 18 C 30 22, 16 50, 22 78 C 26 96, 42 108, 62 104 C 76 102, 86 90, 86 76 C 86 64, 76 56, 64 58 C 54 60, 48 70, 50 80 C 52 86, 58 90, 64 86"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="hero__title-initial-stroke"
+              />
+              <path
+                d="M62 18 C 30 22, 16 50, 22 78 C 26 96, 42 108, 62 104 C 76 102, 86 90, 86 76 C 86 64, 76 56, 64 58 C 54 60, 48 70, 50 80 C 52 86, 58 90, 64 86"
+                fill={`url(#initial-grad-${baseId})`}
+                stroke="none"
+                opacity=".4"
+              />
+              <circle cx="22" cy="78" r="2.4" fill="currentColor" className="hero__title-initial-bead" />
+              <circle cx="62" cy="104" r="2" fill="currentColor" className="hero__title-initial-bead" />
+              <path d="M64 86 l8 6 l-3 4 z" fill="currentColor" className="hero__title-initial-tail" />
+            </svg>
+          </span>
           <span className="hero__title-line hero__title-line-a">
             <span className="hero__title-baseline" aria-hidden="true" />
             {renderTitleSegments({
@@ -282,6 +349,64 @@ export function Hero({
           </span>
         </h1>
 
+        <span className="hero__title-rule" aria-hidden="true">
+          <svg viewBox="0 0 1200 18" preserveAspectRatio="none" className="hero__title-rule-svg">
+            <line
+              x1="2"
+              y1="9"
+              x2="1198"
+              y2="9"
+              stroke="currentColor"
+              strokeWidth=".5"
+              strokeDasharray="1 4"
+              opacity=".5"
+            />
+            <line
+              x1="2"
+              y1="9"
+              x2="1198"
+              y2="9"
+              stroke="currentColor"
+              strokeWidth=".8"
+              opacity=".25"
+              className="hero__title-rule-line"
+            />
+          </svg>
+          <span
+            className={`hero__title-bead hero__title-bead--m3 ${word === 'm3' ? 'is-marked' : ''}`}
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 14 14">
+              <circle cx="7" cy="7" r="5.4" fill="var(--night)" stroke="currentColor" strokeWidth=".55" />
+              <circle cx="7" cy="7" r="2.6" fill="currentColor" opacity=".85" />
+              <circle cx="7" cy="7" r=".8" fill="var(--night)" />
+            </svg>
+            <em className="hero__title-bead-mark">⌇</em>
+          </span>
+          <span
+            className={`hero__title-bead hero__title-bead--good ${word === 'good' ? 'is-marked' : ''}`}
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 14 14">
+              <circle cx="7" cy="7" r="5.4" fill="var(--night)" stroke="currentColor" strokeWidth=".55" />
+              <circle cx="7" cy="7" r="2.6" fill="currentColor" opacity=".85" />
+              <circle cx="7" cy="7" r=".8" fill="var(--night)" />
+            </svg>
+            <em className="hero__title-bead-mark">∧</em>
+          </span>
+          <span
+            className={`hero__title-bead hero__title-bead--yet ${word === 'yet' ? 'is-marked' : ''}`}
+            aria-hidden="true"
+          >
+            <svg viewBox="0 0 14 14">
+              <circle cx="7" cy="7" r="5.4" fill="var(--night)" stroke="currentColor" strokeWidth=".55" />
+              <circle cx="7" cy="7" r="2.6" fill="currentColor" opacity=".85" />
+              <circle cx="7" cy="7" r=".8" fill="var(--night)" />
+            </svg>
+            <em className="hero__title-bead-mark">?</em>
+          </span>
+        </span>
+
         <TypeBed
           voice={voice}
           word={word}
@@ -302,6 +427,13 @@ export function Hero({
             read it three times, let one voice hold
           </em>
           <span className="hero__coda-rule" />
+          <span className="hero__coda-pin" aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" strokeWidth=".55" />
+              <circle cx="8" cy="8" r="3.4" fill="currentColor" opacity=".4" />
+              <circle cx="8" cy="8" r="1" fill="var(--night)" />
+            </svg>
+          </span>
         </span>
 
         <PressProofStamp
