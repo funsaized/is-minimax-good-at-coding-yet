@@ -105,6 +105,10 @@ export function Marginalia({ selected, pullSignal, onSelect }: MarginaliaProps) 
               style={style}
               role="listitem"
             >
+              <span className="slip__corner slip__corner--tl" aria-hidden="true" />
+              <span className="slip__corner slip__corner--tr" aria-hidden="true" />
+              <span className="slip__corner slip__corner--bl" aria-hidden="true" />
+              <span className="slip__corner slip__corner--br" aria-hidden="true" />
               <span className={`slip__pin slip__pin--${slip.pin}`} aria-hidden="true">
                 <svg viewBox="0 0 24 24" width="14" height="14">
                   {slip.pin === 'tack' && (

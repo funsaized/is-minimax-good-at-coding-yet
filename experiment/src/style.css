@@ -2005,28 +2005,6 @@ em { font-style: italic; }
 .app--voice-human .press-state__mark-glyph { color: var(--human); }
 .app--voice-bold .press-state__mark-glyph { color: var(--bold); }
 
-/* — Pull counter — */
-
-.press-state__count {
-  font-family: var(--mono);
-  font-size: 14px;
-  letter-spacing: .04em;
-  color: var(--paper);
-  font-feature-settings: 'tnum' 1;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 4px;
-}
-
-.press-state__count-tail {
-  font-family: var(--display);
-  font-style: italic;
-  font-size: 12px;
-  letter-spacing: -.005em;
-  text-transform: none;
-  color: var(--paper-soft);
-}
-
 /* — Impression — a sheet pulled from the press */
 
 .press-impression {
@@ -5811,4 +5789,616 @@ section.reveal h2 em::after {
   .press-impression.is-pulled,
   .answer__seal-piece,
   .answer__seal--whole { animation: none !important; transition: none !important; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 377 — the press runs the page
+   a clockwork pull-dial and a platen sweep give the lever
+   a real, tactile consequence; the press earns a typographic
+   rule above the table; the impression gains a register mark.
+   ──────────────────────────────────────────────────────────── */
+
+/* — the press rule · a horizontal typographic rule above the table — */
+
+.press__rule {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 22px);
+  max-width: 1180px;
+  margin: 0 auto clamp(18px, 2.4vw, 30px);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  isolation: isolate;
+}
+
+.press__rule-line {
+  display: block;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line) 22%, var(--line) 78%, transparent);
+  transition: background .45s var(--ease);
+}
+
+.press__rule-line--l { grid-column: 1; }
+.press__rule-line--r { grid-column: 3; }
+
+.press__rule.is-pulling .press__rule-line {
+  background: linear-gradient(to right, transparent, var(--pull-tone, var(--quiet)) 22%, var(--pull-tone, var(--quiet)) 78%, transparent);
+}
+
+.press__rule-middle {
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1vw, 14px);
+}
+
+.press__rule-quoin {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  color: var(--quiet);
+  transition: color .35s var(--ease), transform .5s var(--ease-spring);
+  flex-shrink: 0;
+}
+
+.press__rule-quoin svg { width: 100%; height: 100%; display: block; }
+
+.app--voice-quiet .press__rule-quoin { color: var(--quiet); }
+.app--voice-human .press__rule-quoin { color: var(--human); }
+.app--voice-bold .press__rule-quoin { color: var(--bold); }
+
+.press__rule.is-pulling .press__rule-quoin--l { transform: translateX(-1px) rotate(-3deg); }
+.press__rule.is-pulling .press__rule-quoin--r { transform: translateX(1px) rotate(3deg); }
+
+.press__rule-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1.1vw, 14px);
+  font-family: var(--display);
+  font-size: clamp(13px, 1.2vw, 15px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper-soft);
+  white-space: nowrap;
+  transition: color .35s var(--ease);
+}
+
+.press__rule-copy em {
+  font-style: italic;
+  color: var(--paper);
+  font-feature-settings: 'kern' 1, 'liga' 1;
+}
+
+.press__rule.is-pulling .press__rule-copy em { color: var(--paper); }
+
+.press__rule-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--line-strong);
+  opacity: .7;
+  transition: background .35s var(--ease), opacity .35s var(--ease), transform .35s var(--ease);
+}
+
+.press__rule.is-pulling .press__rule-dot {
+  background: var(--pull-tone, var(--quiet));
+  opacity: 1;
+  transform: scale(1.4);
+}
+
+.press__rule-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: clamp(6px, 1vw, 14px);
+  padding-left: clamp(10px, 1.2vw, 16px);
+  border-left: 1px dashed var(--line-soft);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.press__rule-counter-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(15px, 1.5vw, 19px);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--quiet);
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  transition: color .35s var(--ease), transform .5s var(--ease-spring);
+  display: inline-block;
+}
+
+.press__rule.is-pulling .press__rule-counter-num {
+  color: var(--pull-tone, var(--quiet));
+  transform: scale(1.06);
+}
+
+.app--voice-quiet .press__rule-counter-num { color: var(--quiet); }
+.app--voice-human .press__rule-counter-num { color: var(--human); }
+.app--voice-bold .press__rule-counter-num { color: var(--bold); }
+
+.press__rule-counter-rule {
+  display: inline-block;
+  width: 12px;
+  height: 1px;
+  background: var(--line);
+}
+
+.press__rule-marks {
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  transform: translateX(-50%);
+  width: clamp(180px, 20vw, 240px);
+  height: 6px;
+  pointer-events: none;
+  opacity: .65;
+  transition: opacity .35s var(--ease);
+}
+
+.press__rule.is-pulling .press__rule-marks { opacity: 1; }
+.press__rule-marks svg { width: 100%; height: 100%; display: block; }
+
+.press__rule-stamp {
+  position: absolute;
+  right: var(--gutter);
+  top: -10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--night);
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  z-index: 2;
+  transition: border-color .35s var(--ease), color .35s var(--ease);
+}
+
+.press__rule.is-pulling .press__rule-stamp {
+  border-color: var(--pull-tone, var(--quiet));
+  color: var(--paper-soft);
+}
+
+.press__rule-stamp-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--quiet);
+  box-shadow: 0 0 0 3px var(--quiet-soft);
+  animation: statusPulse 3s var(--ease) infinite;
+}
+
+.press__rule-stamp-dot--quiet { background: var(--quiet); box-shadow: 0 0 0 3px var(--quiet-soft); }
+.press__rule-stamp-dot--human { background: var(--human); box-shadow: 0 0 0 3px var(--human-soft); }
+.press__rule-stamp-dot--bold  { background: var(--bold);  box-shadow: 0 0 0 3px var(--bold-soft); }
+
+@media (max-width: 720px) {
+  .press__rule { gap: 10px; }
+  .press__rule-middle { gap: 8px; }
+  .press__rule-copy em:nth-of-type(2) { display: none; }
+  .press__rule-copy em:nth-of-type(3) { display: none; }
+  .press__rule-copy .press__rule-dot:nth-of-type(2) { display: none; }
+  .press__rule-counter { display: none; }
+}
+
+@media (max-width: 540px) {
+  .press__rule-stamp { display: none; }
+}
+
+/* — the pull dial · a clockwork register in the lever cell — */
+
+.press-dial {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px 12px 12px;
+  margin-top: 4px;
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(245,238,216,.025), transparent 70%),
+    rgba(255,255,255,.012);
+  position: relative;
+  isolation: isolate;
+}
+
+.press-dial::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed var(--line-soft);
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: .35;
+  transition: opacity .35s var(--ease);
+}
+
+.press-dial.is-pulling::before { opacity: .55; }
+
+.press-dial__face {
+  display: block;
+  width: 64px;
+  height: 64px;
+  color: var(--quiet);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.45));
+  transition: color .35s var(--ease), filter .35s var(--ease);
+}
+
+.app--voice-quiet .press-dial__face { color: var(--quiet); }
+.app--voice-human .press-dial__face { color: var(--human); }
+.app--voice-bold .press-dial__face { color: var(--bold); }
+
+.press-dial.is-pulling .press-dial__face {
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.45)) drop-shadow(0 0 12px color-mix(in srgb, var(--pull-tone, var(--quiet)) 50%, transparent));
+}
+
+.press-dial__hand {
+  transition: transform .65s cubic-bezier(.34, 1.42, .52, 1);
+  transform-origin: 32px 32px;
+  transform-box: view-box;
+}
+
+.press-dial.is-pulling .press-dial__hand {
+  transition: transform .8s cubic-bezier(.22, 1.1, .34, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-dial__hand { transition: none; }
+}
+
+.press-dial__legend {
+  display: grid;
+  gap: 4px;
+  align-content: center;
+  min-width: 0;
+}
+
+.press-dial__legend-key {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.press-dial__legend-rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(to right, var(--line), transparent);
+}
+
+.press-dial__legend-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.3vw, 15px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.press-dial__legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.press-dial__legend-dot--quiet { background: var(--quiet); box-shadow: 0 0 0 3px var(--quiet-soft); }
+.press-dial__legend-dot--human { background: var(--human); box-shadow: 0 0 0 3px var(--human-soft); }
+.press-dial__legend-dot--bold  { background: var(--bold);  box-shadow: 0 0 0 3px var(--bold-soft); }
+
+@media (max-width: 540px) {
+  .press-dial { padding: 10px 12px; gap: 12px; }
+  .press-dial__face { width: 56px; height: 56px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-dial__hand { transition: none; }
+  .press-dial.is-pulling .press-dial__face { filter: drop-shadow(0 4px 8px rgba(0,0,0,.45)); }
+}
+
+/* — the platen sweep · an ink-darkened band rolls across the impression on each pull — */
+
+.press-impression__platen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -22%;
+  width: 18%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(22,21,28,.12) 32%,
+    rgba(22,21,28,.32) 50%,
+    rgba(22,21,28,.12) 68%,
+    transparent 100%
+  );
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transform: translateX(0);
+  z-index: 3;
+}
+
+.press-impression__platen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(245,238,216,.06) 50%,
+    transparent 100%
+  );
+}
+
+.press__table--quiet .press-impression.is-pulled .press-impression__platen { background: linear-gradient(90deg, transparent 0%, rgba(168,197,255,.18) 32%, rgba(120,158,240,.42) 50%, rgba(168,197,255,.18) 68%, transparent 100%); }
+.press__table--human .press-impression.is-pulled .press-impression__platen { background: linear-gradient(90deg, transparent 0%, rgba(244,132,114,.18) 32%, rgba(216,80,64,.42) 50%, rgba(244,132,114,.18) 68%, transparent 100%); }
+.press__table--bold .press-impression.is-pulled .press-impression__platen { background: linear-gradient(90deg, transparent 0%, rgba(205,238,106,.18) 32%, rgba(168,214,50,.42) 50%, rgba(205,238,106,.18) 68%, transparent 100%); }
+
+.press-impression.is-pulled .press-impression__platen {
+  animation: platenSweep 1s cubic-bezier(.22, .8, .24, 1) both;
+}
+
+@keyframes platenSweep {
+  0%   { transform: translateX(0);     opacity: 0; }
+  18%  { opacity: 1; }
+  82%  { opacity: 1; }
+  100% { transform: translateX(640%);  opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-impression__platen { display: none; }
+}
+
+/* — the impression's register mark · a small typesetter's target — */
+
+.press-impression__register {
+  position: absolute;
+  bottom: clamp(28px, 3vw, 42px);
+  right: clamp(8px, 1vw, 12px);
+  width: clamp(22px, 2.2vw, 28px);
+  height: clamp(22px, 2.2vw, 28px);
+  color: var(--ink-soft);
+  opacity: .35;
+  z-index: 3;
+  transition: opacity .35s var(--ease), color .35s var(--ease);
+  pointer-events: none;
+}
+
+.press-impression:hover .press-impression__register,
+.press-impression:focus-within .press-impression__register { opacity: .55; }
+
+.press__table--quiet .press-impression__register { color: rgba(120,158,240,.7); }
+.press__table--human .press-impression__register { color: rgba(216,80,64,.7); }
+.press__table--bold  .press-impression__register { color: rgba(168,214,50,.75); }
+
+.press-impression__register svg { width: 100%; height: 100%; display: block; }
+
+.press-impression__register-stamp {
+  position: absolute;
+  bottom: clamp(10px, 1.2vw, 14px);
+  right: clamp(10px, 1.2vw, 14px);
+  display: grid;
+  justify-items: end;
+  gap: 1px;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(22,21,28,.55);
+  z-index: 3;
+  pointer-events: none;
+  transition: color .35s var(--ease), transform .35s var(--ease);
+}
+
+.press-impression__register-stamp span:last-child {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgba(22,21,28,.85);
+  font-feature-settings: 'tnum' 1;
+}
+
+.press__table--quiet .press-impression__register-stamp span:last-child { color: rgba(120,158,240,.85); }
+.press__table--human .press-impression__register-stamp span:last-child { color: rgba(216,80,64,.85); }
+.press__table--bold  .press-impression__register-stamp span:last-child { color: rgba(168,214,50,.85); }
+
+.press__table.is-pulling .press-impression__register-stamp {
+  transform: translateX(-1px);
+}
+
+@media (max-width: 540px) {
+  .press-impression__register { display: none; }
+  .press-impression__register-stamp { display: none; }
+}
+
+/* — a small coda under the impression that echoes the press's motto — */
+
+.press__pull-coda {
+  margin: 14px 4px 0;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(22,21,28,.18);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.2vw, 15px);
+  letter-spacing: -.005em;
+  color: rgba(22,21,28,.65);
+  text-align: center;
+  text-transform: none;
+}
+
+.press__pull-coda em {
+  font-style: italic;
+  color: rgba(22,21,28,.85);
+}
+
+@media (max-width: 720px) {
+  .press__pull-coda { margin-top: 10px; padding-top: 10px; }
+}
+
+/* — a thin sympathetic vibration for the impression's footer on each pull — */
+
+.press__table.is-pulling .press-impression__sig {
+  animation: sigTap .9s var(--ease-out) both;
+}
+
+@keyframes sigTap {
+  0% { transform: translateX(0); filter: brightness(1); }
+  18% { transform: translateX(-2px); filter: brightness(1.12); }
+  45% { transform: translateX(1.5px); filter: brightness(1.04); }
+  100% { transform: translateX(0); filter: brightness(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press__table.is-pulling .press-impression__sig { animation: none; }
+}
+
+/* — the marginalia slips gain a quiet inner chase frame, echoing the hero — */
+
+.slip {
+  position: relative;
+}
+
+.slip::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed color-mix(in srgb, var(--slip-ink, var(--quiet)) 35%, transparent);
+  border-radius: 2px;
+  pointer-events: none;
+  opacity: .35;
+  z-index: 2;
+  transition: opacity .4s var(--ease);
+}
+
+.slip:hover::before,
+.slip:focus-within::before { opacity: .65; }
+
+.slip.is-active::before {
+  opacity: .85;
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--slip-ink, var(--quiet));
+}
+
+.slip__corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 3;
+  opacity: .6;
+  transition: opacity .35s var(--ease);
+  color: var(--slip-ink, var(--quiet));
+}
+
+.slip__corner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid currentColor;
+  border-right: none;
+  border-bottom: none;
+  opacity: .85;
+}
+
+.slip__corner--tl { top: 6px; left: 6px; }
+.slip__corner--tr { top: 6px; right: 6px; transform: scaleX(-1); }
+.slip__corner--bl { bottom: 6px; left: 6px; transform: scaleY(-1); }
+.slip__corner--br { bottom: 6px; right: 6px; transform: scale(-1, -1); }
+
+.slip.is-active .slip__corner,
+.slip:hover .slip__corner,
+.slip:focus-within .slip__corner { opacity: 1; }
+
+@media (max-width: 540px) {
+  .slip::before { inset: 5px; }
+  .slip__corner { display: none; }
+}
+
+/* — the marginalia cord gains subtle voice-tinted beads where each slip hangs — */
+
+.marginalia__board-cord::before,
+.marginalia__board-cord::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--line-strong);
+  opacity: .5;
+  transition: background .4s var(--ease), opacity .4s var(--ease);
+}
+
+.marginalia__board-cord::before { left: calc(50% - 130px); }
+.marginalia__board-cord::after { right: calc(50% - 130px); }
+
+@media (max-width: 880px) {
+  .marginalia__board-cord::before { left: 20px; }
+  .marginalia__board-cord::after { right: 20px; }
+}
+
+.app--voice-quiet .marginalia__board-cord::before,
+.app--voice-quiet .marginalia__board-cord::after { background: rgba(168,197,255,.45); }
+.app--voice-human .marginalia__board-cord::before,
+.app--voice-human .marginalia__board-cord::after { background: rgba(244,132,114,.45); }
+.app--voice-bold .marginalia__board-cord::before,
+.app--voice-bold .marginalia__board-cord::after { background: rgba(205,238,106,.45); }
+
+/* — the specimen plates earn a small "set type" sub-stamp at the bottom edge — */
+
+.specimen__plates {
+  position: relative;
+}
+
+.specimen__plates::before {
+  content: '';
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: -22px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line-strong), transparent);
+  opacity: .35;
+  pointer-events: none;
+}
+
+/* — the answer leaf now opens with a quieter vertical breath and a smaller ink swell — */
+
+.answer__leaf.is-open {
+  animation: leafBreathe .9s var(--ease-out) both;
+}
+
+@keyframes leafBreathe {
+  0% { transform: translateY(0) scaleY(1) rotateX(0) scale(.985); }
+  60% { transform: translateY(-2px) scaleY(1.005) rotateX(0) scale(1.003); }
+  100% { transform: translateY(0) scaleY(1) rotateX(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer__leaf.is-open { animation: none; }
 }
