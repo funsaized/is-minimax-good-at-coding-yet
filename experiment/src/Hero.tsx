@@ -11,7 +11,6 @@ import type { VoiceId } from './App'
 import type { WordId } from './notes'
 import { ChaseFrame } from './ChaseFrame'
 import { TypeBed } from './TypeBed'
-import { HeroOverscore } from './HeroOverscore'
 import { PressProofStamp } from './PressProofStamp'
 
 type HeroProps = {
@@ -201,84 +200,15 @@ export function Hero({
             <span className="hero__eyebrow-glyph" aria-hidden="true">¶</span>
             <span>folio i</span>
             <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
-            <span className="hero__eyebrow-em">the question, set three ways</span>
-          </span>
-          <span className="hero__register" aria-hidden="true">
-            <svg viewBox="0 0 60 60" className="hero__register-glyph">
-              <defs>
-                <radialGradient id={`reg-fade-${baseId}`} cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="currentColor" stopOpacity=".22" />
-                  <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-              <circle cx="30" cy="30" r="29" fill="none" stroke="currentColor" strokeWidth=".5" opacity=".4" strokeDasharray="1.2 2.6" />
-              <circle cx="30" cy="30" r="22" fill="none" stroke="currentColor" strokeWidth=".7" opacity=".55" />
-              <circle cx="30" cy="30" r="22" fill={`url(#reg-fade-${baseId})`} />
-              <circle cx="30" cy="30" r="18" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".6 1.4" opacity=".4" />
-              <circle cx="30" cy="30" r="14" fill="none" stroke="currentColor" strokeWidth=".3" opacity=".35" />
-              <path
-                d="M30 19 a11 11 0 1 1 -7 19"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth=".9"
-                strokeLinecap="round"
-                opacity=".85"
-              />
-              <path d="M22 36 l4 4 l-1 -6 z" fill="currentColor" opacity=".85" />
-              <text x="30" y="11" textAnchor="middle" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" fontSize="3.2" letterSpacing="1.2" fill="currentColor" opacity=".8">
-                REGISTERED
-              </text>
-              <text x="30" y="54" textAnchor="middle" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" fontSize="3.2" letterSpacing="1.2" fill="currentColor" opacity=".8">
-                FOLIO · I
-              </text>
-              <circle cx="6" cy="30" r="1.1" fill="currentColor" opacity=".6" />
-              <circle cx="54" cy="30" r="1.1" fill="currentColor" opacity=".6" />
-              <circle cx="30" cy="6" r="1.1" fill="currentColor" opacity=".6" />
-              <circle cx="30" cy="54" r="1.1" fill="currentColor" opacity=".6" />
-            </svg>
-            <span className="hero__register-stack">
-              <em>set &amp; registered</em>
-              <span className="hero__register-folio">folio i · at first light</span>
-            </span>
+            <span className="hero__eyebrow-em">set the line · mark a word</span>
           </span>
         </div>
-
-        <HeroOverscore title={TITLE} eyebrow="registered · for the reader · at first light" />
 
         <h1
           id="hero-title-label"
           className={`hero__title hero__title--${voice}`}
           aria-label="is Minimax M3 good at frontend yet?"
         >
-          <span className="hero__title-initial" aria-hidden="true">
-            <svg viewBox="0 0 100 120" className="hero__title-initial-svg">
-              <defs>
-                <linearGradient id={`initial-grad-${baseId}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="currentColor" stopOpacity=".18" />
-                  <stop offset="60%" stopColor="currentColor" stopOpacity=".06" />
-                  <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M64 14 C 36 16, 18 44, 22 76 C 26 100, 50 114, 70 108 C 84 104, 92 92, 90 78 C 88 64, 76 56, 66 60 C 56 64, 52 74, 56 82 C 60 88, 68 88, 70 82"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="hero__title-initial-stroke"
-              />
-              <path
-                d="M64 14 C 36 16, 18 44, 22 76 C 26 100, 50 114, 70 108 C 84 104, 92 92, 90 78 C 88 64, 76 56, 66 60 C 56 64, 52 74, 56 82 C 60 88, 68 88, 70 82"
-                fill={`url(#initial-grad-${baseId})`}
-                stroke="none"
-                opacity=".4"
-              />
-              <circle cx="22" cy="76" r="2.4" fill="currentColor" className="hero__title-initial-bead" />
-              <circle cx="70" cy="108" r="2" fill="currentColor" className="hero__title-initial-bead" />
-              <path d="M70 82 l8 6 l-3 4 z" fill="currentColor" className="hero__title-initial-tail" />
-            </svg>
-          </span>
           <span className="hero__title-line hero__title-line-a">
             <span className="hero__title-baseline" aria-hidden="true" />
             {renderTitleSegments({

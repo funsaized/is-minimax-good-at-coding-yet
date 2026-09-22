@@ -27,6 +27,7 @@ import { MarginMarks } from './MarginMarks'
 import { ReadingCord } from './ReadingCord'
 import { LastLight } from './LastLight'
 import { QuestionHeld } from './QuestionHeld'
+import { BreathPlate } from './BreathPlate'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -350,21 +351,9 @@ export function App() {
         </ReadingNote>
       </div>
 
-      <span className="page-breath" aria-hidden="true">
-        <svg viewBox="0 0 240 24" preserveAspectRatio="none">
-          <path
-            d="M2 12 Q60 4 120 12 T238 12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth=".5"
-            strokeDasharray="1.4 3.4"
-            opacity=".55"
-          />
-          <circle cx="120" cy="12" r="1.4" fill="currentColor" opacity=".85" />
-          <circle cx="60" cy="8" r=".9" fill="currentColor" opacity=".55" />
-          <circle cx="180" cy="16" r=".9" fill="currentColor" opacity=".55" />
-        </svg>
-      </span>
+      <div className="page-breath-wrap">
+        <BreathPlate voice={voice} caption="one breath" aside="set the line · read the page" />
+      </div>
 
       <span className="page-asterism-wrap" aria-hidden="true">
         <Asterism tone="voice" size="md" />
