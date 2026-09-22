@@ -12099,3 +12099,267 @@ section.reveal h2 em::after {
 @media (max-width: 480px) {
   .hero__title { font-size: clamp(40px, 12vw, 70px); line-height: 1; }
 }
+
+/* ────────────────────────────────────────────────────────────
+   READING NOTE · a small italic inscription, set three ways
+   appears at the page's openings, at the colophon closing,
+   and at the foot · the same hand, the same quiet line.
+   ──────────────────────────────────────────────────────────── */
+
+.reading-note {
+  --note-tone: var(--quiet);
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  gap: clamp(8px, 1.4vw, 14px);
+  margin: 0;
+  padding: 0;
+  max-width: 56ch;
+  width: 100%;
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
+}
+
+.reading-note.is-shown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-note { transition: none; }
+  .reading-note, .reading-note.is-shown { opacity: 1; transform: none; }
+}
+
+.reading-note--left { justify-items: start; text-align: left; }
+.reading-note--center { justify-items: center; text-align: center; }
+.reading-note--right { justify-items: end; text-align: right; }
+
+.reading-note--tone-paper { --note-tone: var(--paper); }
+.reading-note--tone-voice { --note-tone: var(--quiet); }
+.app--voice-quiet .reading-note--tone-voice { --note-tone: var(--quiet); }
+.app--voice-human .reading-note--tone-voice { --note-tone: var(--human); }
+.app--voice-bold .reading-note--tone-voice { --note-tone: var(--bold); }
+
+.reading-note--sm { gap: 8px; }
+.reading-note--sm .reading-note__line { font-size: clamp(13px, 1.15vw, 15px); }
+
+.reading-note--md { gap: 12px; }
+.reading-note--md .reading-note__line { font-size: clamp(15px, 1.35vw, 18px); }
+
+.reading-note--lg { gap: clamp(12px, 1.6vw, 18px); }
+.reading-note--lg .reading-note__line {
+  font-size: clamp(20px, 2.2vw, 28px);
+  letter-spacing: -.012em;
+}
+
+.reading-note__line {
+  display: block;
+  margin: 0;
+  padding: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -.008em;
+  color: var(--note-tone);
+  text-wrap: balance;
+  position: relative;
+  transition: color .35s var(--ease);
+}
+
+.reading-note__line-inner {
+  display: inline;
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 78%,
+    color-mix(in srgb, var(--note-tone) 18%, transparent) 92%,
+    transparent 100%
+  );
+  padding: 0 .04em;
+}
+
+.app--pulling .reading-note__line-inner {
+  transition: filter .25s var(--ease);
+}
+
+.reading-note__ornament {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(48px, 7vw, 84px);
+  height: 8px;
+  color: var(--note-tone);
+  opacity: .85;
+  transition: color .35s var(--ease), opacity .35s var(--ease);
+}
+
+.reading-note__ornament svg { width: 100%; height: 100%; }
+
+.reading-note--sm .reading-note__ornament { width: 42px; height: 6px; }
+.reading-note--lg .reading-note__ornament { width: clamp(72px, 9vw, 120px); height: 10px; }
+
+.reading-note__rule {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: min(220px, 60%);
+  height: 8px;
+  color: var(--note-tone);
+  opacity: 0;
+  transform: scaleX(.6);
+  transform-origin: center;
+  transition: opacity .9s var(--ease-out) .15s, transform .9s var(--ease-out) .15s;
+}
+
+.reading-note.is-shown .reading-note__rule {
+  opacity: .55;
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-note__rule { transition: none; opacity: .55; transform: scaleX(1); }
+}
+
+.reading-note__rule-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor, transparent);
+  opacity: .7;
+}
+
+.reading-note__rule-bead {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+.reading-note__caption {
+  margin: clamp(4px, .8vw, 8px) 0 0;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  opacity: 0;
+  transition: opacity .9s var(--ease-out) .35s;
+}
+
+.reading-note.is-shown .reading-note__caption { opacity: .85; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-note__caption { transition: none; opacity: .85; }
+}
+
+.reading-note--sm .reading-note__caption { font-size: 9px; letter-spacing: .22em; }
+.reading-note--lg .reading-note__caption {
+  font-size: 10px;
+  letter-spacing: .26em;
+  margin-top: clamp(6px, 1vw, 10px);
+}
+
+/* the page inscription — appears once between the title and the press */
+.page-inscription-wrap {
+  position: relative;
+  max-width: 920px;
+  margin: clamp(24px, 3.4vw, 48px) auto clamp(36px, 5vw, 72px);
+  padding: clamp(20px, 3vw, 36px) var(--gutter) clamp(20px, 3vw, 36px);
+  display: grid;
+  place-items: center;
+  z-index: 2;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 50%, color-mix(in srgb, var(--quiet) 4%, transparent), transparent 72%);
+}
+
+.app--voice-quiet .page-inscription-wrap {
+  background: radial-gradient(ellipse 60% 80% at 50% 50%, color-mix(in srgb, var(--quiet) 5%, transparent), transparent 72%);
+}
+
+.app--voice-human .page-inscription-wrap {
+  background: radial-gradient(ellipse 60% 80% at 50% 50%, color-mix(in srgb, var(--human) 4%, transparent), transparent 72%);
+}
+
+.app--voice-bold .page-inscription-wrap {
+  background: radial-gradient(ellipse 60% 80% at 50% 50%, color-mix(in srgb, var(--bold) 4%, transparent), transparent 72%);
+}
+
+.page-inscription-wrap::before,
+.page-inscription-wrap::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: clamp(48px, 8vw, 120px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line-strong) 50%, transparent);
+  transform: translateX(-50%);
+  opacity: .7;
+}
+
+.page-inscription-wrap::before { top: 0; }
+.page-inscription-wrap::after { bottom: 0; }
+
+.page-inscription-wrap .reading-note {
+  position: relative;
+  z-index: 1;
+}
+
+/* a small voice-tinted bead at the center of each rule, picking up the title's tone */
+.page-inscription-wrap::before,
+.page-inscription-wrap::after {
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--quiet) 35%, var(--line-strong)) 50%, transparent);
+}
+
+.app--voice-quiet .page-inscription-wrap::before,
+.app--voice-quiet .page-inscription-wrap::after {
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--quiet) 55%, var(--line-strong)) 50%, transparent);
+}
+
+.app--voice-human .page-inscription-wrap::before,
+.app--voice-human .page-inscription-wrap::after {
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--human) 55%, var(--line-strong)) 50%, transparent);
+}
+
+.app--voice-bold .page-inscription-wrap::before,
+.app--voice-bold .page-inscription-wrap::after {
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--bold) 55%, var(--line-strong)) 50%, transparent);
+}
+
+/* the site-foot reading note — sits above the existing footer copy */
+.site-foot .reading-note {
+  margin-bottom: clamp(18px, 2.4vw, 28px);
+  max-width: 64ch;
+}
+
+/* ────────────────────────────────────────────────────────────
+   FIRST-LIGHT PLATE · calmer dawn
+   ──────────────────────────────────────────────────────────── */
+
+.first-light-plate__stars circle:nth-child(odd) { fill-opacity: .85; }
+.first-light-plate__stars circle:nth-child(even) { fill-opacity: .55; }
+
+.first-light-plate__moon { transform-origin: 400px 120px; }
+
+/* ────────────────────────────────────────────────────────────
+   MOBILE · tighter, more deliberate small-screen composition
+   ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 720px) {
+  .reading-note--lg .reading-note__line { font-size: clamp(17px, 5vw, 22px); }
+  .reading-note--md .reading-note__line { font-size: clamp(14px, 4vw, 17px); }
+  .page-inscription-wrap { margin: clamp(14px, 4vw, 24px) auto clamp(20px, 5vw, 36px); }
+  .reading-note__rule { width: min(180px, 70%); }
+}
+
+@media (max-width: 480px) {
+  .reading-note__ornament { width: 36px; }
+  .reading-note__caption { letter-spacing: .2em; }
+  .site-foot .reading-note { margin-bottom: 14px; }
+}
+

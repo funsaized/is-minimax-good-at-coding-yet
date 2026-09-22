@@ -23,6 +23,7 @@ import { Answer } from './Answer'
 import { Colophon } from './Colophon'
 import { KeptTally } from './KeptTally'
 import { PrinterMark } from './PrinterMark'
+import { ReadingNote } from './ReadingNote'
 import { SetLine } from './SetLine'
 import { SpineThread } from './SpineThread'
 import { MarginMarks } from './MarginMarks'
@@ -339,6 +340,19 @@ export function App() {
         />
       </section>
 
+      <div className="page-inscription-wrap">
+        <ReadingNote
+          voice={voice}
+          align="center"
+          ornament="dots"
+          size="md"
+          tone="voice"
+          caption="A note from the compositor, set beneath the title"
+        >
+          the question, held open — for the reader who arrived in the dark.
+        </ReadingNote>
+      </div>
+
       <FolioTurn index="ii" title="the press bed" hint="pull a lever · take an impression" voice={voice} />
       <Press
         voice={voice}
@@ -383,6 +397,17 @@ export function App() {
       />
 
       <footer className="site-foot" aria-label="The page, in one line">
+        <ReadingNote
+          voice={voice}
+          align="center"
+          ornament="rule"
+          size="md"
+          tone="paper"
+          caption="A final note, set at the foot of the page"
+        >
+          set at first light · read in the dark — {TITLE}
+        </ReadingNote>
+
         <span className="site-foot__copy">
           <em>{TITLE}</em>
           <span aria-hidden="true">·</span>

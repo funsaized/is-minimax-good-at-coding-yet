@@ -78,18 +78,11 @@ export function FirstLightPlate({ voice, setToday }: FirstLightPlateProps) {
   } as CSSProperties
 
   const stars: Array<{ cx: number; cy: number; r: number; d: number }> = [
-    { cx: 92, cy: 64, r: 0.7, d: 0.2 },
-    { cx: 144, cy: 38, r: 0.5, d: 0.8 },
-    { cx: 196, cy: 86, r: 0.9, d: 1.3 },
-    { cx: 248, cy: 48, r: 0.6, d: 0.5 },
-    { cx: 308, cy: 30, r: 0.8, d: 1.6 },
-    { cx: 360, cy: 78, r: 0.5, d: 0.3 },
-    { cx: 420, cy: 52, r: 0.7, d: 1.0 },
-    { cx: 472, cy: 32, r: 0.5, d: 1.7 },
-    { cx: 528, cy: 78, r: 0.8, d: 0.4 },
-    { cx: 580, cy: 52, r: 0.6, d: 1.2 },
-    { cx: 632, cy: 30, r: 0.7, d: 0.6 },
-    { cx: 690, cy: 60, r: 0.5, d: 1.4 },
+    { cx: 132, cy: 58, r: 0.9, d: 0.3 },
+    { cx: 226, cy: 36, r: 0.7, d: 1.1 },
+    { cx: 582, cy: 34, r: 0.8, d: 0.7 },
+    { cx: 668, cy: 64, r: 0.6, d: 1.5 },
+    { cx: 312, cy: 78, r: 0.55, d: 0.5 },
   ]
 
   return (
@@ -150,50 +143,32 @@ export function FirstLightPlate({ voice, setToday }: FirstLightPlateProps) {
             ))}
           </g>
 
-          <path
-            className="first-light-plate__star-link"
-            d="M144 38 L248 48 L308 30 L528 78 L632 30"
-            fill="none"
-            stroke="rgba(255, 240, 214, .14)"
-            strokeWidth=".3"
-            strokeLinecap="round"
-            strokeDasharray="2 4"
-          />
+          <ellipse cx="400" cy="200" rx="320" ry="62" fill={`url(#${rayGrad})`} className="first-light-plate__rays" />
 
-          <ellipse cx="400" cy="200" rx="380" ry="80" fill={`url(#${rayGrad})`} className="first-light-plate__rays" />
-
-          <circle className="first-light-plate__orb" cx="400" cy="120" r="84" fill={`url(#${haloGrad})`} />
-          <circle className="first-light-plate__halo" cx="400" cy="120" r="68" fill={`url(#${rimGrad})`} />
+          <circle className="first-light-plate__orb" cx="400" cy="120" r="92" fill={`url(#${haloGrad})`} />
+          <circle className="first-light-plate__halo" cx="400" cy="120" r="70" fill={`url(#${rimGrad})`} />
 
           <g className="first-light-plate__moon">
-            <circle cx="400" cy="120" r="50" fill={`url(#${moonGrad})`} />
-            <circle cx="416" cy="114" r="46" fill="#080a12" />
-            <path
-              d="M400 70 A50 50 0 0 1 416 70 A46 46 0 0 0 400 70 Z"
-              fill={`url(#${moonGrad})`}
-              opacity=".55"
-            />
+            <circle cx="400" cy="120" r="52" fill={`url(#${moonGrad})`} />
+            <circle cx="416" cy="114" r="48" fill="#080a12" />
+            <circle cx="400" cy="120" r="52" fill="none" stroke="rgba(255, 240, 214, .35)" strokeWidth=".35" />
           </g>
 
           <line
             className="first-light-plate__horizon"
-            x1="80"
-            y1="180"
-            x2="720"
-            y2="180"
-            stroke="rgba(255, 226, 184, .16)"
+            x1="120"
+            y1="182"
+            x2="680"
+            y2="182"
+            stroke="rgba(255, 226, 184, .18)"
             strokeWidth=".4"
             strokeLinecap="round"
             strokeDasharray="1.5 4"
           />
 
-          <g className="first-light-plate__ticks" fill="rgba(255, 226, 184, .35)">
-            <circle cx="120" cy="180" r=".8" />
-            <circle cx="220" cy="180" r=".8" />
-            <circle cx="340" cy="180" r=".8" />
-            <circle cx="460" cy="180" r=".8" />
-            <circle cx="580" cy="180" r=".8" />
-            <circle cx="680" cy="180" r=".8" />
+          <g className="first-light-plate__ticks" fill="rgba(255, 226, 184, .4)">
+            <circle cx="200" cy="182" r=".7" />
+            <circle cx="600" cy="182" r=".7" />
           </g>
         </svg>
       </div>

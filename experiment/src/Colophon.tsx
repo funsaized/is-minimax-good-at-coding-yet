@@ -4,6 +4,7 @@ import type { WordId } from './notes'
 import { PrinterFlourish } from './PrinterFlourish'
 import { KeptTally } from './KeptTally'
 import { PressSignature } from './PressSignature'
+import { ReadingNote } from './ReadingNote'
 
 type ColophonProps = {
   voice: VoiceId
@@ -285,6 +286,17 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday, keptCou
               <path d="M8 8 q-3 4 -4 0" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" opacity=".7" />
             </svg>
           </div>
+
+          <ReadingNote
+            voice={voice}
+            align="center"
+            ornament="bead"
+            size="lg"
+            tone="voice"
+            caption="A compositor's note, set at the colophon"
+          >
+            this page is yours — until you ask for another.
+          </ReadingNote>
         </div>
       </div>
     </section>
