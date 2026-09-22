@@ -28,6 +28,7 @@ import { SetLine } from './SetLine'
 import { SpineThread } from './SpineThread'
 import { MarginMarks } from './MarginMarks'
 import { ReadingLedger } from './ReadingLedger'
+import { LastLight } from './LastLight'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -395,6 +396,8 @@ export function App() {
         setToday={setToday}
         keptCounts={keptCounts}
       />
+
+      <LastLight voice={voice} setToday={setToday} pullCount={pullCount} />
 
       <footer className="site-foot" aria-label="The page, in one line">
         <ReadingNote
