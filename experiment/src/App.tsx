@@ -67,6 +67,51 @@ function StatusLight() {
   return <span className="status__dot" aria-hidden="true" />
 }
 
+function FolioStitch({ index, tone, soft = false }: { index: string; tone: VoiceId; soft?: boolean }) {
+  return (
+    <span
+      className={`folio-stitch folio-stitch--${tone} ${soft ? 'folio-stitch--soft' : ''}`}
+      aria-hidden="true"
+    >
+      <svg className="folio-stitch__svg" viewBox="0 0 80 24" preserveAspectRatio="none">
+        <line
+          x1="0"
+          y1="12"
+          x2="80"
+          y2="12"
+          stroke="currentColor"
+          strokeWidth=".6"
+          strokeDasharray="1.4 2.8"
+          opacity=".55"
+        />
+        <circle cx="6" cy="12" r="2" fill="currentColor" opacity=".85" />
+        <circle cx="40" cy="12" r="1.2" fill="currentColor" opacity=".55" />
+        <circle cx="74" cy="12" r="2" fill="currentColor" opacity=".85" />
+        <path
+          d="M5 12 L9 17 M8 7 L12 12"
+          stroke="currentColor"
+          strokeWidth=".9"
+          strokeLinecap="round"
+          opacity=".7"
+          fill="none"
+        />
+        <path
+          d="M75 12 L71 17 M72 7 L68 12"
+          stroke="currentColor"
+          strokeWidth=".9"
+          strokeLinecap="round"
+          opacity=".7"
+          fill="none"
+        />
+      </svg>
+      <span className="folio-stitch__bead">
+        <span className="folio-stitch__bead-eye" />
+      </span>
+      <span className="folio-stitch__num">{index}</span>
+    </span>
+  )
+}
+
 export function App() {
   const [selectedWord, setSelectedWord] = useState<WordId>('good')
   const [hoveredWord, setHoveredWord] = useState<WordId | null>(null)
@@ -320,6 +365,7 @@ export function App() {
       </section>
 
       <FolioTurn index="ii" title="the press bed" hint="pull a lever · take an impression" voice={voice} />
+      <FolioStitch index="ii" tone={voice} />
       <Press
         voice={voice}
         word={activeWord}
@@ -331,6 +377,7 @@ export function App() {
       />
 
       <FolioTurn index="iii" title="the proof line" hint="three voices, set on the same cord" voice={voice} />
+      <FolioStitch index="iii" tone={voice} />
       <ProofLine
         voice={voice}
         selected={selectedWord}
@@ -339,9 +386,11 @@ export function App() {
       />
 
       <FolioTurn index="iv" title="the notation key" hint="how the three voices read" voice={voice} />
+      <FolioStitch index="iv" tone={voice} />
       <Specimen active={voice} onSelect={selectVoice} />
 
       <FolioTurn index="v" title="the answer" hint="folded once · then folded back" voice={voice} />
+      <FolioStitch index="v" tone={voice} />
       <Answer
         open={answerOpen}
         onToggle={toggleAnswer}
@@ -353,6 +402,7 @@ export function App() {
       />
 
       <FolioTurn index="—" title="the colophon" hint="the page, signed off" voice={voice} soft />
+      <FolioStitch index="—" tone={voice} soft />
       <Colophon voice={voice} word={activeWord} pullSignal={pullSignal} pullCount={pullCount} setToday={setToday} />
 
       <footer className="site-foot" aria-label="The page, in one line">

@@ -15,13 +15,24 @@ export function FolioTurn({ index, title, hint, voice, soft }: FolioTurnProps) {
       role="separator"
       aria-label={`Page turn · folio ${index} · ${title}`}
     >
-      <span className="folio-turn__rule" aria-hidden="true" />
+      <span className="folio-turn__rule folio-turn__rule--l" aria-hidden="true" />
       <span className="folio-turn__core">
-        <span className="folio-turn__num" aria-hidden="true">{index}</span>
-        <span>{title}</span>
+        <span className="folio-turn__num-wrap" aria-hidden="true">
+          <span className="folio-turn__num-stitch" />
+          <span className="folio-turn__num">{index}</span>
+        </span>
+        <span className="folio-turn__title">{title}</span>
         {hint && <em>· {hint}</em>}
       </span>
-      <span className="folio-turn__rule" aria-hidden="true" />
+      <span className="folio-turn__rule folio-turn__rule--r" aria-hidden="true" />
+      <span className="folio-turn__stitch" aria-hidden="true">
+        <svg viewBox="0 0 120 12" preserveAspectRatio="none">
+          <line x1="0" y1="6" x2="120" y2="6" stroke="currentColor" strokeWidth=".6" strokeDasharray="1.4 2.8" opacity=".55" />
+          <circle cx="14" cy="6" r="1.4" fill="currentColor" opacity=".7" />
+          <circle cx="60" cy="6" r="1" fill="currentColor" opacity=".55" />
+          <circle cx="106" cy="6" r="1.4" fill="currentColor" opacity=".7" />
+        </svg>
+      </span>
     </div>
   )
 }

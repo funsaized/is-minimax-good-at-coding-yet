@@ -1,38 +1,21 @@
-# Changelog
+# iteration 379
 
-## 378 — the set line and the proof line
+the thread, stitched through the page: a tactile, woven line that visibly sews every folio to the spine.
 
-A typographer's thread pinned just below the topbar — a thin
-hairline that fills in the active voice as you scroll, tick-marked at
-every folio, with a small cursor that follows the reader. And the
-marginalia slips become a proof line: three working proof cards pinned
-on the same cord, each showing the question set in its own voice,
-each marked at its own word. Tap a card and the page sets both the
-voice and the mark — so the proof line becomes a real control surface
-for the press, not just decoration.
+## changes
 
-What changed:
-- New `src/SetLine.tsx`: a fixed typographer's guide below the topbar,
-  voiced in the current pull, ticking through all five folios with a
-  cursor that follows scroll position.
-- New `src/ProofLine.tsx`: three proof cards (quiet / human / bold),
-  each rendering `is m³ good at frontend yet?` in its own typography
-  with the card's marked word highlighted in the card's voice tone.
-  Cards tilt subtly when at rest, the active card straightens, all
-  three wobble gently on each lever pull.
-- `src/App.tsx`: replaced the marginalia import with proof line;
-  wired proof cards to update both `voice` and `selectedWord` in a
-  single tap; threaded the `voice` state into `SetLine`.
-- `src/style.css`: added a coherent set of styles for the set line
-  (hairline, fill, ticks, cursor, end caps) and for the proof line
-  (board, cord with knot caps, card frame, corner registration, pin,
-  head row with letter/mark, line with marked segment, foot rule,
-  datum). All wired to the existing voice-tone CSS variables and
-  responsive at < 880 px / < 720 px.
-- FOLIOS label for folio iii updated to "the proof line" so the
-  index and the section agree.
+- `src/SetLine.tsx` — rewrote the set line as a real thread: an SVG weave pattern replaces the flat hairline, a colored fill tracks reading progress along the thread, and each folio gets a knot bead with crossed stem-stitches.
+- `src/SetLine.tsx` — replaced the small cursor dot with a pin-and-thread (a bead head with an eye and a short tail) so the reading cursor reads as a literal pin riding the thread.
+- `src/SetLine.tsx` — added tied-off ends with short fray strands so the line feels cut and knotted rather than infinite.
+- `src/style.css` — extended the `.set-line` block: taller rail, woven texture, knot ticks, pin cursor, end tied marks, and motion-respecting pulls; the `.set-line` is now hidden under 540px and condensed under 880px.
+- `src/FolioTurn.tsx` & `src/style.css` — added a small stitched-line ornament under each folio divider so each page turn reads as a sewn binding; the title now sits beside a small num pad for a more typeset feel; voice-tinted rules bleed into the margins.
+- `src/App.tsx` — introduced a small `FolioStitch` component placed below each `FolioTurn` divider; it is a cross-stitch + bead motif that visibly sews each section to the thread above; the colophon's stitch is rendered softly to match its quieter divider.
+- `src/style.css` — `.folio-stitch` styles, including pull-driven tugging animation on the bead when the lever is pulled; respects `prefers-reduced-motion`.
+- `src/style.css` — `.set-line` text in the page header at the top updated to "the set line and the proof line · iteration 379".
 
-The hero chase, the press lever and impression, the wax-seal answer,
-the colophon, and the existing reading ledger are unchanged. The
-slide / marginalia styles remain in the CSS file as dead code for the
-moment; no runtime impact.
+## preserved
+
+- title: `is Minimax M3 good at frontend yet?`
+- entry point (`src/main.tsx`), framework, `package.json`, `vite.config.ts`, `tsconfig.json`
+- all existing components and their public props
+- reduced-motion and keyboard-accessibility behavior
