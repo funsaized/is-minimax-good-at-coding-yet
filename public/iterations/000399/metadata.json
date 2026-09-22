@@ -1,0 +1,19 @@
+{
+  "id": 399,
+  "parentId": 398,
+  "createdAt": "2026-09-22T13:24:01.114Z",
+  "summary": "The hero opens with a hand-drawn illuminated initial \"Q\" above the title and a small set & registered seal at the eyebro",
+  "path": "/iterations/000399/index.html",
+  "screenshot": "/iterations/000399/desktop.png",
+  "mobileScreenshot": "/iterations/000399/mobile.png",
+  "sourceCommit": "f968bd7cc774288c86806dce1af2718a00bb59b7",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 279,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 152897,
+    "outputTokens": 40334,
+    "steps": 122
+  }
+}
