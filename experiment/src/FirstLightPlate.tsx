@@ -237,7 +237,7 @@ export function FirstLightPlate({ voice, setToday }: FirstLightPlateProps) {
 
         <div className="first-light-plate__prompt" aria-hidden="true">
           <span className="first-light-plate__prompt-rule" />
-          <em>read three times · let one voice hold</em>
+          <em>set at first light · read in the dark</em>
           <span className="first-light-plate__prompt-rule" />
         </div>
       </div>

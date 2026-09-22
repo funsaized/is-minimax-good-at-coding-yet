@@ -13,7 +13,7 @@ import { PaperGrain } from './PaperGrain'
 import { ComposingRule } from './ComposingRule'
 import { FirstLight } from './FirstLight'
 import { FirstLightPlate } from './FirstLightPlate'
-import { ReadingLedger } from './ReadingLedger'
+import { PressEpigraph } from './PressEpigraph'
 import { Hero } from './Hero'
 import { FolioTurn } from './FolioTurn'
 import { Press } from './Press'
@@ -26,6 +26,7 @@ import { PrinterMark } from './PrinterMark'
 import { SetLine } from './SetLine'
 import { SpineThread } from './SpineThread'
 import { MarginMarks } from './MarginMarks'
+import { ReadingLedger } from './ReadingLedger'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -320,6 +321,8 @@ export function App() {
       </div>
 
       <FirstLightPlate voice={voice} setToday={setToday} />
+
+      <PressEpigraph voice={voice} />
 
       <section className="hero reveal" aria-labelledby="hero-title-label">
         <Hero
