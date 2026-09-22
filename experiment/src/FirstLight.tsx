@@ -7,60 +7,114 @@ export function FirstLight() {
   const haloId = `fl-halo-${id}`
   const horizonId = `fl-horizon-${id}`
   const washId = `fl-wash-${id}`
+  const rayGradId = `fl-ray-${id}`
+  const orbGradId = `fl-orb-${id}`
+  const orbAuraId = `fl-orb-aura-${id}`
 
   return (
     <div className="first-light" aria-hidden="true">
       <svg
         className="first-light__svg"
-        viewBox="0 0 1400 360"
+        viewBox="0 0 1400 380"
         preserveAspectRatio="none"
         aria-hidden="true"
       >
         <defs>
           <linearGradient id={skyId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(255, 226, 188, .14)" />
-            <stop offset="22%" stopColor="rgba(255, 220, 180, .075)" />
-            <stop offset="58%" stopColor="rgba(255, 220, 178, .02)" />
+            <stop offset="0%" stopColor="rgba(255, 226, 188, .18)" />
+            <stop offset="22%" stopColor="rgba(255, 220, 180, .1)" />
+            <stop offset="58%" stopColor="rgba(255, 220, 178, .025)" />
             <stop offset="100%" stopColor="rgba(255, 220, 178, 0)" />
           </linearGradient>
           <radialGradient id={arcId} cx="50%" cy="100%" r="62%">
-            <stop offset="0%" stopColor="rgba(255, 232, 196, .75)" />
-            <stop offset="48%" stopColor="rgba(255, 222, 180, .18)" />
+            <stop offset="0%" stopColor="rgba(255, 234, 198, .85)" />
+            <stop offset="48%" stopColor="rgba(255, 222, 180, .22)" />
             <stop offset="100%" stopColor="rgba(255, 218, 176, 0)" />
           </radialGradient>
-          <radialGradient id={haloId} cx="50%" cy="100%" r="58%">
-            <stop offset="0%" stopColor="rgba(255, 240, 214, .26)" />
-            <stop offset="60%" stopColor="rgba(255, 222, 184, .06)" />
+          <radialGradient id={haloId} cx="50%" cy="100%" r="62%">
+            <stop offset="0%" stopColor="rgba(255, 240, 214, .36)" />
+            <stop offset="38%" stopColor="rgba(255, 226, 188, .14)" />
+            <stop offset="74%" stopColor="rgba(255, 220, 178, .04)" />
             <stop offset="100%" stopColor="rgba(255, 218, 178, 0)" />
           </radialGradient>
           <linearGradient id={horizonId} x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="rgba(255, 220, 178, 0)" />
-            <stop offset="14%" stopColor="rgba(255, 220, 178, .24)" />
-            <stop offset="50%" stopColor="rgba(255, 226, 192, .5)" />
-            <stop offset="86%" stopColor="rgba(255, 220, 178, .24)" />
+            <stop offset="14%" stopColor="rgba(255, 220, 178, .28)" />
+            <stop offset="50%" stopColor="rgba(255, 226, 192, .6)" />
+            <stop offset="86%" stopColor="rgba(255, 220, 178, .28)" />
             <stop offset="100%" stopColor="rgba(255, 220, 178, 0)" />
           </linearGradient>
           <linearGradient id={washId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="rgba(255, 220, 180, 0)" />
-            <stop offset="60%" stopColor="rgba(255, 220, 180, .04)" />
-            <stop offset="100%" stopColor="rgba(255, 220, 180, .085)" />
+            <stop offset="50%" stopColor="rgba(255, 220, 180, .05)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 180, .1)" />
           </linearGradient>
+          <linearGradient id={rayGradId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(255, 232, 196, 0)" />
+            <stop offset="20%" stopColor="rgba(255, 232, 196, .14)" />
+            <stop offset="60%" stopColor="rgba(255, 220, 178, .06)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 178, 0)" />
+          </linearGradient>
+          <radialGradient id={orbGradId} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 246, 220, .95)" />
+            <stop offset="48%" stopColor="rgba(255, 226, 188, .7)" />
+            <stop offset="82%" stopColor="rgba(244, 198, 152, .18)" />
+            <stop offset="100%" stopColor="rgba(244, 198, 152, 0)" />
+          </radialGradient>
+          <radialGradient id={orbAuraId} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 240, 214, .35)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 178, 0)" />
+          </radialGradient>
         </defs>
 
-        <rect x="0" y="0" width="1400" height="360" fill={`url(#${skyId})`} />
+        <rect x="0" y="0" width="1400" height="380" fill={`url(#${skyId})`} />
 
-        {/* — a soft wash that bleeds into the title page below — */}
-        <rect className="first-light__wash" x="0" y="200" width="1400" height="160" fill={`url(#${washId})`} />
+        <rect className="first-light__wash" x="0" y="220" width="1400" height="160" fill={`url(#${washId})`} />
+
+        {/* — the dawn orb itself, resting on the horizon — */}
+        <g className="first-light__orb-group">
+          <circle className="first-light__orb-aura" cx="700" cy="276" r="140" fill={`url(#${orbAuraId})`} />
+          <circle className="first-light__orb" cx="700" cy="276" r="78" fill={`url(#${orbGradId})`} />
+          <circle cx="700" cy="276" r="78" fill="none" stroke="rgba(255, 240, 214, .55)" strokeWidth=".6" />
+          <circle cx="700" cy="276" r="64" fill="none" stroke="rgba(255, 240, 214, .22)" strokeWidth=".4" strokeDasharray="1 4" />
+        </g>
 
         {/* — the dawn halo — a soft glow rising above the horizon — */}
         <ellipse
           className="first-light__halo"
           cx="700"
           cy="280"
-          rx="660"
-          ry="240"
+          rx="720"
+          ry="260"
           fill={`url(#${haloId})`}
         />
+
+        {/* — light rays, drawn in hand-spaced spokes from the rising sun — */}
+        <g className="first-light__rays" stroke={`url(#${rayGradId})`} strokeLinecap="round" fill="none">
+          {[
+            { x1: 700, y1: 276, x2: 180, y2: 8, w: 1.4, op: .85 },
+            { x1: 700, y1: 276, x2: 260, y2: 4, w: .9, op: .55 },
+            { x1: 700, y1: 276, x2: 360, y2: 0, w: 1.1, op: .7 },
+            { x1: 700, y1: 276, x2: 460, y2: 8, w: .7, op: .45 },
+            { x1: 700, y1: 276, x2: 580, y2: 12, w: .9, op: .55 },
+            { x1: 700, y1: 276, x2: 820, y2: 12, w: .9, op: .55 },
+            { x1: 700, y1: 276, x2: 940, y2: 8, w: .7, op: .45 },
+            { x1: 700, y1: 276, x2: 1040, y2: 0, w: 1.1, op: .7 },
+            { x1: 700, y1: 276, x2: 1140, y2: 4, w: .9, op: .55 },
+            { x1: 700, y1: 276, x2: 1220, y2: 8, w: 1.4, op: .85 },
+          ].map((ray, i) => (
+            <line
+              key={`ray-${i}`}
+              className={`first-light__ray first-light__ray--${i}`}
+              x1={ray.x1}
+              y1={ray.y1}
+              x2={ray.x2}
+              y2={ray.y2}
+              strokeWidth={ray.w}
+              opacity={ray.op}
+            />
+          ))}
+        </g>
 
         {/* — the sun's first arc — a single thin curve catching the light — */}
         <path

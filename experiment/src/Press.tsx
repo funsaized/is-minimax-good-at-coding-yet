@@ -207,6 +207,13 @@ export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, s
               <span className={`press-impression__bleed press-impression__bleed--${voice} ${pulling ? 'is-active' : ''}`} aria-hidden="true" key={`ib-${pullSignal}`} />
               <span className={`press-impression__ring press-impression__ring--${voice} ${pulling ? 'is-active' : ''}`} aria-hidden="true" key={`ir1-${pullSignal}`} />
               <span className={`press-impression__ring press-impression__ring--second press-impression__ring--${voice} ${pulling ? 'is-active' : ''}`} aria-hidden="true" key={`ir2-${pullSignal}`} />
+
+              <span className={`press-strike press-strike--${voice} ${pulling ? 'is-active' : ''}`} aria-hidden="true" key={`strike-${pullSignal}`}>
+                <span className="press-strike__flash" />
+                <span className="press-strike__shock" />
+                <span className="press-strike__shock press-strike__shock--late" />
+                <span className="press-strike__shock press-strike__shock--third" />
+              </span>
             </div>
             <p className="press__pull-coda" aria-hidden="true">
               <em>{LONG_MOTTO[voice]}</em>
