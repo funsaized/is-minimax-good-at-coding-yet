@@ -20,6 +20,7 @@ export function FolioTurn({ index, title, hint, voice, soft }: FolioTurnProps) {
         <span className="folio-turn__num-wrap" aria-hidden="true">
           <span className="folio-turn__num-stitch" />
           <span className="folio-turn__num">{index}</span>
+          <span className="folio-turn__num-stitch folio-turn__num-stitch--r" />
         </span>
         <span className="folio-turn__title">{title}</span>
         {hint && <em>· {hint}</em>}
@@ -31,6 +32,21 @@ export function FolioTurn({ index, title, hint, voice, soft }: FolioTurnProps) {
           <circle cx="14" cy="6" r="1.4" fill="currentColor" opacity=".7" />
           <circle cx="60" cy="6" r="1" fill="currentColor" opacity=".55" />
           <circle cx="106" cy="6" r="1.4" fill="currentColor" opacity=".7" />
+        </svg>
+      </span>
+      <span className="folio-turn__fold" aria-hidden="true">
+        <svg viewBox="0 0 60 18" preserveAspectRatio="none">
+          <path
+            d="M2 14 L12 4 L22 14 L32 4 L42 14 L52 4 L58 14"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth=".55"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity=".7"
+          />
+          <circle cx="2" cy="14" r="1" fill="currentColor" opacity=".7" />
+          <circle cx="58" cy="14" r="1" fill="currentColor" opacity=".7" />
         </svg>
       </span>
     </div>
