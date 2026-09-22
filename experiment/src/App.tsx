@@ -23,6 +23,7 @@ import { PrinterMark, PressSigil } from './PrinterMark'
 import { ReadingNote } from './ReadingNote'
 import { SpineThread } from './SpineThread'
 import { ReadingPouch } from './ReadingPouch'
+import { ComposingBreath } from './ComposingBreath'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -358,6 +359,7 @@ export function App() {
         setToday={setToday}
       />
 
+      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="ii" title="the press bed" hint="pull a lever · take an impression" voice={voice} />
       <Press
         voice={voice}
@@ -369,6 +371,7 @@ export function App() {
         setToday={setToday}
       />
 
+      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="iii" title="the proof line" hint="three voices, set on the same cord" voice={voice} />
       <ProofLine
         voice={voice}
@@ -377,9 +380,11 @@ export function App() {
         onSelect={handleProofSelect}
       />
 
+      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="iv" title="the notation key" hint="how the three voices read" voice={voice} />
       <Specimen active={voice} onSelect={selectVoice} />
 
+      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="v" title="the answer" hint="folded once · then folded back" voice={voice} />
       <Answer
         open={answerOpen}
@@ -391,6 +396,7 @@ export function App() {
         setToday={setToday}
       />
 
+      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="—" title="the colophon" hint="the page, signed off" voice={voice} soft />
       <Colophon
         voice={voice}
@@ -401,6 +407,7 @@ export function App() {
         keptCounts={keptCounts}
       />
 
+      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="vi" title="the reader’s pouch" hint="three slips · kept close" voice={voice} />
       <ReadingPouch voice={voice} active={activeWord} setToday={setToday} />
 

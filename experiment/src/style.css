@@ -390,6 +390,181 @@ em { font-style: italic; }
   .composing-rule-wrap { display: none; }
 }
 
+/* ── composing breath · a thin animated ink-line between every folio,
+     set into the section flow so the page reads as one continuous
+     composition. pins on each end, hairlines fading into a canvas wave
+     that shifts to the active voice ─────────────────────────────── */
+
+.composing-breath {
+  --cb-tone: var(--quiet);
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr clamp(140px, 22vw, 300px) 1fr auto;
+  align-items: center;
+  gap: clamp(8px, 1vw, 14px);
+  max-width: 1180px;
+  margin: clamp(2px, .6vw, 8px) auto clamp(4px, .8vw, 12px);
+  padding: 0 clamp(20px, 4.4vw, 56px);
+  height: clamp(34px, 3.4vw, 46px);
+  color: var(--cb-tone);
+  isolation: isolate;
+  opacity: .55;
+  transition:
+    opacity .85s var(--ease-out),
+    color .35s var(--ease);
+}
+
+.composing-breath.is-active {
+  opacity: 1;
+}
+
+.composing-breath.is-active .composing-breath__rule,
+.composing-breath.is-active .composing-breath__pin {
+  filter: saturate(1.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .composing-breath { opacity: 1; transition: none; }
+}
+
+.composing-breath--quiet { --cb-tone: var(--quiet); }
+.composing-breath--human { --cb-tone: var(--human); }
+.composing-breath--bold  { --cb-tone: var(--bold);  }
+
+.composing-breath::before {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1px;
+  background:
+    linear-gradient(90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--cb-tone) 22%, transparent) 28%,
+      color-mix(in srgb, var(--cb-tone) 32%, transparent) 50%,
+      color-mix(in srgb, var(--cb-tone) 22%, transparent) 72%,
+      transparent 100%);
+  transform: translateY(-.5px);
+  opacity: .9;
+  pointer-events: none;
+}
+
+.composing-breath__pin,
+.composing-breath__pin {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  color: var(--cb-tone);
+  opacity: .9;
+  transition: transform .45s var(--ease-spring), opacity .35s var(--ease);
+}
+
+.composing-breath__pin svg { width: 100%; height: 100%; display: block; }
+
+.composing-breath__pin--l { justify-self: end; }
+.composing-breath__pin--r { justify-self: start; }
+
+.composing-breath__rule {
+  display: block;
+  height: 1px;
+  background:
+    linear-gradient(90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--cb-tone) 38%, transparent) 100%);
+}
+
+.composing-breath__rule--r {
+  background:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--cb-tone) 38%, transparent) 0%,
+      transparent 100%);
+}
+
+.composing-breath__line {
+  position: relative;
+  display: block;
+  height: clamp(24px, 2.4vw, 36px);
+  border-radius: 1px;
+  isolation: isolate;
+}
+
+.composing-breath__line::before,
+.composing-breath__line::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 1px;
+  background: color-mix(in srgb, var(--cb-tone) 28%, transparent);
+  transform: translateY(-.5px);
+  pointer-events: none;
+}
+
+.composing-breath__line::before { left: -10px; }
+.composing-breath__line::after  { right: -10px; }
+
+.composing-breath__line canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  opacity: .85;
+  mask-image: radial-gradient(ellipse 60% 80% at 50% 50%, black 60%, transparent 96%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 80% at 50% 50%, black 60%, transparent 96%);
+}
+
+.composing-breath__line-stub {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--cb-tone) 38%, transparent) 50%,
+      transparent 100%);
+  opacity: .55;
+}
+
+.app--pulling .composing-breath {
+  animation: composingBreathTug .9s var(--ease-out) both;
+}
+
+.app--pulling .composing-breath__line canvas {
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--cb-tone) 32%, transparent));
+}
+
+@keyframes composingBreathTug {
+  0%   { transform: scaleY(.96); opacity: .65; }
+  35%  { transform: scaleY(1.06); opacity: 1; }
+  100% { transform: scaleY(1);    opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .composing-breath { animation: none; transform: none; }
+}
+
+@media (max-width: 880px) {
+  .composing-breath {
+    grid-template-columns: auto 1fr clamp(120px, 36vw, 200px) 1fr auto;
+    height: clamp(30px, 5vw, 38px);
+    margin: 2px auto 4px;
+  }
+  .composing-breath__pin { width: 12px; height: 12px; }
+  .composing-breath__line { height: clamp(20px, 4vw, 28px); }
+}
+
+@media (max-width: 540px) {
+  .composing-breath {
+    grid-template-columns: auto 1fr auto;
+    gap: 6px;
+    padding: 0 var(--gutter-tight);
+  }
+  .composing-breath__rule { display: none; }
+  .composing-breath__line::before,
+  .composing-breath__line::after { display: none; }
+}
+
 .app__cursor-glow {
   display: none;
 }
