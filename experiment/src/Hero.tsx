@@ -13,6 +13,7 @@ import { ChaseFrame } from './ChaseFrame'
 import { VoicePlate } from './VoicePlate'
 import { TypeBed } from './TypeBed'
 import { HeroOverscore } from './HeroOverscore'
+import { PressProofStamp } from './PressProofStamp'
 
 type HeroProps = {
   voice: VoiceId
@@ -131,7 +132,6 @@ export function Hero({
 
   const [setProgress, setSetProgress] = useState(() => segmentOffsets(0))
   const [reduceMotion, setReduceMotion] = useState(false)
-  const [hour, setHour] = useState(() => formatHeroHour())
   const cleanupRef = useRef<(() => void) | null>(null)
 
   useEffect(() => {
@@ -310,51 +310,29 @@ export function Hero({
           onWordKey={onWordKey}
         />
 
-        <span className="hero__sub" aria-hidden="true">
-          <span className="hero__sub-mark" aria-hidden="true">⌇</span>
-          <em>{spec.gloss}</em>
-          <span className="hero__sub-rule" />
-          <em className="hero__sub-set">set in {spec.name.toLowerCase()}</em>
-          <span className="hero__sub-mark" aria-hidden="true">⌇</span>
+        <span className="hero__coda" aria-hidden="true">
+          <span className="hero__coda-rule" />
+          <em className="hero__coda-line">
+            {spec.gloss}
+            <span className="hero__coda-dot" aria-hidden="true">·</span>
+            set in <em className="hero__coda-voice">{spec.name.toLowerCase()}</em>
+            <span className="hero__coda-dot" aria-hidden="true">·</span>
+            read it three times, let one voice hold
+          </em>
+          <span className="hero__coda-rule" />
         </span>
 
-        <span className="hero__read-witness" aria-hidden="true">
-          <span className="hero__read-witness-rule" />
-          <span className="hero__read-witness-rule" />
-          <em>read it three times · let one voice hold</em>
-        </span>
-
-        <span className="hero__set-mark" aria-hidden="true">
-          <span className="hero__set-mark-rule" />
-          <span className="hero__set-mark-center">
-            <svg className="hero__set-mark-glyph" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth=".6" />
-              <circle cx="12" cy="12" r="6.4" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray=".9 1.6" opacity=".55" />
-              <line x1="12" y1="4" x2="12" y2="9" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" />
-              <line x1="12" y1="15" x2="12" y2="20" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" />
-              <line x1="4" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" />
-              <line x1="15" y1="12" x2="20" y2="12" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" />
-              <circle cx="12" cy="12" r="1.6" fill="currentColor" />
-            </svg>
-            <em>set &amp; registered</em>
-          </span>
-          <span className="hero__set-mark-rule" />
-        </span>
+        <PressProofStamp
+          voice={voice}
+          word={word}
+          setToday={setToday}
+          pullSignal={pullSignal}
+        />
       </ChaseFrame>
 
       <VoicePlate voice={voice} pullSignal={pullSignal} onSelect={onVoice} />
     </div>
   )
-}
-
-function formatHeroHour() {
-  const now = new Date()
-  let h = now.getHours()
-  const m = now.getMinutes()
-  const ampm = h >= 12 ? 'pm' : 'am'
-  h = h % 12
-  if (h === 0) h = 12
-  return `${h}:${m.toString().padStart(2, '0')} ${ampm}`
 }
 
 function segmentOffsets(reached: number): number[] {

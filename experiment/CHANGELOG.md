@@ -1,23 +1,7 @@
-# Iteration log
+# CHANGELOG
 
-## 392 — compositor's epigraph · one quiet prose block that bridges the open
-A compositor's note is set between the first-light opening and the title; a
-single prose block that names the season of the read and bridges the page
-to the press bed.
+## Iteration 393
 
-### What changed
-- A new `PressEpigraph` component sits between the first-light plate and the
-  hero. It reads as a single hand-set prose block: an italic line that names
-  the methodology, a coda, and a small mono caption that names the season of
-  the current voice. A top hairline with a small bead anchors it; a quiet
-  arrival animation lifts it gently into place.
-- The voice (quiet / human / bold) shifts the bead, the inline emphasis, and
-  the season note, so the page reads as one composed broadside across voices.
-- The epigraph is intentionally unframed — it sits as a typographic pause,
-  not another plate — so it does not compete with the dawn seal above or
-  the title below.
-- The first-light plate's prompt is re-keyed ("set at first light · read in
-  the dark") so it complements rather than echoes the epigraph's coda.
-- Mobile collapses the head into a single row and lets the prose breathe to
-  the edges; reduced-motion users see the epigraph already in place.
-- A pre-existing missing `ReadingLedger` import is restored.
+A wax-seal proof mark closes the title — three marks held in one stamp.
+
+The hero's three trailing decorations (the gloss sub-line, the read-witness rule, and the small "set & registered" mark) consolidated into a single composed **Press Proof Stamp** — a circular wax-seal proof mark that engraves the current voice letter, the marked word's mark glyph, the folio reference, and the date around its rim. The stamp tilts subtly to the cursor, animates in after the title sets, and pulses with the lever. A single italic coda line now holds the gloss, voice name, and reading prompt. Orphaned styles left over from previous iterations (the `.hero__compositor`, `.hero__sub`, `.hero__read-witness`, `.hero__set-mark`, `.hero__sub-tail` blocks) were removed from the stylesheet.
