@@ -13,8 +13,59 @@ type AnswerProps = {
 }
 
 const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
+const VOICE_FACE: Record<VoiceId, string> = {
+  quiet: 'serif · italic · close-set',
+  human: 'serif · italic · warm',
+  bold: 'sans · heavy · no apology',
+}
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
+
+type VoiceColumn = {
+  voice: VoiceId
+  letter: string
+  head: string
+  lede: string
+  body: string
+  rule: string
+  signature: string
+}
+
+const VOICE_COLUMNS: VoiceColumn[] = [
+  {
+    voice: 'quiet',
+    letter: 'A',
+    head: 'Yes — when it stops trying to look impressive.',
+    lede:
+      'The good part is not the gradient, the flourish, or the clever little mechanism. It is the moment the page gives you room to notice one small thing, then another.',
+    body:
+      'A quiet line is a confident line. It does less, then less again, and asks the reader to lean in instead of being asked to keep up.',
+    rule: 'set with room around it',
+    signature: 'quiet cut · iowan old style · italic · close set',
+  },
+  {
+    voice: 'human',
+    letter: 'B',
+    head: 'Yes — when it remembers who is on the other side.',
+    lede:
+      'The good part is not the polish. It is the small ways a page makes you feel seen — a careful word, a held pause, a line that knows when to stop.',
+    body:
+      'A small wobble makes the machine feel less like a machine. The page warms; the page answers back; the reader is no longer alone with the screen.',
+    rule: 'set by hand · felt warm',
+    signature: 'human hand · iowan old style · italic · warm',
+  },
+  {
+    voice: 'bold',
+    letter: 'C',
+    head: 'YES. AND NOT YET.',
+    lede:
+      'The good part is not subtle. It is the kind of front-end that holds your attention, takes a real risk, and earns the page it sets on.',
+    body:
+      'Three voices. One line. Read it again. The loud version is honest only because the quiet version is honest first.',
+    rule: 'set at full height',
+    signature: 'bold signal · inter · heavy · no apology',
+  },
+]
 
 export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, setToday }: AnswerProps) {
   const leafRef = useRef<HTMLDivElement | null>(null)
@@ -46,7 +97,8 @@ export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, se
           Folded once, <em>then folded back.</em>
         </h2>
         <p className="section__lede">
-          The page holds the question open until you ask for the answer. Press the seal to unfold.
+          The page holds the question open until you ask for the answer. Press the seal to unfold a
+          three-voice reading — quiet, human, bold — set on the same plate.
         </p>
         <button
           ref={triggerRef}
@@ -72,7 +124,7 @@ export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, se
         className={`answer__leaf ${open ? 'is-open' : ''}`}
         aria-hidden={!open}
       >
-        <span className="answer__crease" aria-hidden="true">
+        <span className="answer__crease answer__crease--main" aria-hidden="true">
           <svg viewBox="0 0 4 80" preserveAspectRatio="none">
             <path d="M2 0c-1.5 13 1.5 27 0 40s1.5 27 0 40" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
             <circle cx="2" cy="40" r="1.4" fill="currentColor" />
@@ -80,30 +132,81 @@ export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, se
           <em>the crease</em>
         </span>
 
+        <span className="answer__crease answer__crease--l" aria-hidden="true">
+          <svg viewBox="0 0 4 80" preserveAspectRatio="none">
+            <path d="M2 0c-1.5 13 1.5 27 0 40s1.5 27 0 40" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
+          </svg>
+        </span>
+
+        <span className="answer__crease answer__crease--r" aria-hidden="true">
+          <svg viewBox="0 0 4 80" preserveAspectRatio="none">
+            <path d="M2 0c-1.5 13 1.5 27 0 40s1.5 27 0 40" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />
+          </svg>
+        </span>
+
         <span className="answer__shadow" aria-hidden="true" />
 
-        <div className="answer__copy">
-          <p className="answer__line">
-            <span className="answer__initial" aria-hidden="true">Y</span>
-            <span className="answer__line-rest">
-              es — when it <em>stops trying to look impressive.</em>
-            </span>
-          </p>
-          <div className="answer__columns">
-            <p>
-              The good part is not the gradient, the flourish, or the clever little mechanism. It is
-              the moment the page gives you room to notice <em>one thing</em>. Then another.
-            </p>
-            <p>
-              So this is a qualified yes: good at front-end means attentive to the person on the other
-              side of the glass. The rest is decoration with a job to do.
-            </p>
-          </div>
-          <p className="answer__pull">
-            <span className="answer__pull-rule" aria-hidden="true" />
-            attention, not ornament
-          </p>
+        <header className="answer__band" aria-hidden="true">
+          <span className="answer__band-eyebrow">the answer · set three ways</span>
+          <span className="answer__band-rule" />
+          <span className="answer__band-meta">
+            <em>three readings</em>
+            <span className="answer__band-meta-dot" aria-hidden="true">·</span>
+            <em>one line</em>
+            <span className="answer__band-meta-dot" aria-hidden="true">·</span>
+            <em>one page</em>
+          </span>
+        </header>
+
+        <div className="answer__broadside">
+          {VOICE_COLUMNS.map(col => (
+            <article key={col.voice} className={`answer__col answer__col--${col.voice}`}>
+              <header className="answer__col-head">
+                <span className="answer__col-letter" aria-hidden="true">{col.letter}</span>
+                <span className="answer__col-stack">
+                  <span className="answer__col-name">{VOICE_NAME[col.voice]}</span>
+                  <span className="answer__col-face">{VOICE_FACE[col.voice]}</span>
+                </span>
+              </header>
+
+              <p className="answer__col-headline">
+                <span className="answer__col-headline-mark" aria-hidden="true" />
+                <span className="answer__col-headline-text">{col.head}</span>
+              </p>
+
+              <p className="answer__col-lede">{col.lede}</p>
+
+              <p className="answer__col-body">{col.body}</p>
+
+              <footer className="answer__col-foot">
+                <span className="answer__col-rule">{col.rule}</span>
+                <span className="answer__col-sig">{col.signature}</span>
+              </footer>
+            </article>
+          ))}
         </div>
+
+        <p className="answer__consensus" aria-label="The three voices, converged">
+          <span className="answer__consensus-mark answer__consensus-mark--quiet" aria-hidden="true">A</span>
+          <span className="answer__consensus-stitch" aria-hidden="true">
+            <svg viewBox="0 0 60 8" preserveAspectRatio="none">
+              <line x1="0" y1="4" x2="60" y2="4" stroke="currentColor" strokeWidth=".6" strokeDasharray="1.4 2.8" opacity=".55" />
+              <circle cx="30" cy="4" r="1" fill="currentColor" opacity=".7" />
+            </svg>
+          </span>
+          <span className="answer__consensus-mark answer__consensus-mark--human" aria-hidden="true">B</span>
+          <span className="answer__consensus-stitch" aria-hidden="true">
+            <svg viewBox="0 0 60 8" preserveAspectRatio="none">
+              <line x1="0" y1="4" x2="60" y2="4" stroke="currentColor" strokeWidth=".6" strokeDasharray="1.4 2.8" opacity=".55" />
+              <circle cx="30" cy="4" r="1" fill="currentColor" opacity=".7" />
+            </svg>
+          </span>
+          <span className="answer__consensus-mark answer__consensus-mark--bold" aria-hidden="true">C</span>
+          <span className="answer__consensus-rule" aria-hidden="true" />
+          <span className="answer__consensus-line">
+            <em>yes</em> — but only when it earns the pause.
+          </span>
+        </p>
 
         <aside className="answer__aside">
           <WaxSeal voice={voice} broken={open} pullSignal={pullSignal} />

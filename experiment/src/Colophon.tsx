@@ -53,6 +53,8 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday }: Colop
           <p className="colophon__line">
             Composed in three voices for the same line, this page is a small drawing of an
             honest process — <em>quiet by default, bold on demand, and human in the middle.</em>
+            The answer, when it unfolds, is set the same way: three readings on the same plate,
+            converging on a single line at the foot of the broadside.
           </p>
 
           <div className="colophon__meta">

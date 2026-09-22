@@ -1,21 +1,34 @@
-# iteration 379
+# Iteration 380
 
-the thread, stitched through the page: a tactile, woven line that visibly sews every folio to the spine.
+## The answer, set three ways — a three-voice broadside that unfolds on the same plate.
 
-## changes
+The answer folio is now a real broadside. When the wax seal cracks, three columns open —
+one per voice (quiet cut, human hand, bold signal) — each set in its own face and reading
+the answer in its own register. The three voices converge on a single line at the foot of
+the broadside. The page is read three times, and one answer earns its place.
 
-- `src/SetLine.tsx` — rewrote the set line as a real thread: an SVG weave pattern replaces the flat hairline, a colored fill tracks reading progress along the thread, and each folio gets a knot bead with crossed stem-stitches.
-- `src/SetLine.tsx` — replaced the small cursor dot with a pin-and-thread (a bead head with an eye and a short tail) so the reading cursor reads as a literal pin riding the thread.
-- `src/SetLine.tsx` — added tied-off ends with short fray strands so the line feels cut and knotted rather than infinite.
-- `src/style.css` — extended the `.set-line` block: taller rail, woven texture, knot ticks, pin cursor, end tied marks, and motion-respecting pulls; the `.set-line` is now hidden under 540px and condensed under 880px.
-- `src/FolioTurn.tsx` & `src/style.css` — added a small stitched-line ornament under each folio divider so each page turn reads as a sewn binding; the title now sits beside a small num pad for a more typeset feel; voice-tinted rules bleed into the margins.
-- `src/App.tsx` — introduced a small `FolioStitch` component placed below each `FolioTurn` divider; it is a cross-stitch + bead motif that visibly sews each section to the thread above; the colophon's stitch is rendered softly to match its quieter divider.
-- `src/style.css` — `.folio-stitch` styles, including pull-driven tugging animation on the bead when the lever is pulled; respects `prefers-reduced-motion`.
-- `src/style.css` — `.set-line` text in the page header at the top updated to "the set line and the proof line · iteration 379".
+## Changes
+- **Answer.tsx** — replaced the two-column body with a three-voice broadside. Each column
+  has a folio-style label (letter + voice name + face), a headline set in its voice's
+  typography, a lede, a body paragraph, and a typographer's signature. A header band
+  reads "the answer · set three ways · three readings · one line · one page." A consensus
+  line at the foot stitches A · B · C and resolves the three readings into one. The wax
+  seal and metadata aside are preserved. Three creases (one main + two faint at thirds)
+  suggest a broadside folded for press. The reveal staggers: band first, then columns
+  left-to-right, then consensus. Mobile collapses to two columns at 880px and one at
+  600px.
+- **style.css** — added a new broadside layout (`.answer__broadside`), voice-distinct
+  column typography (`.answer__col--quiet`, `.answer__col--human`, `.answer__col--bold`),
+  the header band (`.answer__band`), the consensus line (`.answer__consensus`), the
+  connecting stitches between voice marks, and a fade-in cascade with reduced-motion
+  guard. The leaf grid restructured into three named areas (band / broad / consensus).
+- **Colophon.tsx** — one-line addition acknowledging that the answer is set three ways.
 
-## preserved
-
-- title: `is Minimax M3 good at frontend yet?`
-- entry point (`src/main.tsx`), framework, `package.json`, `vite.config.ts`, `tsconfig.json`
-- all existing components and their public props
-- reduced-motion and keyboard-accessibility behavior
+## Constraints kept
+- Visible title and document title unchanged: "is Minimax M3 good at frontend yet?"
+- No remote fonts, scripts, images, APIs, packages, or network features.
+- No invented iteration counts, live status, model scores, or deployment stats.
+- Keyboard-accessible: focus styles preserved, answer trigger button keeps its ref, the
+  reveal/fold can be triggered with Enter, and Escape closes the answer.
+- Responsive at 600 / 720 / 880 / 1180 breakpoints.
+- Self-contained CSS, local SVG, and existing dependencies only.
