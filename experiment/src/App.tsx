@@ -12,6 +12,7 @@ import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
 import { FirstLight } from './FirstLight'
 import { TitlePage } from './TitlePage'
+import { Asterism } from './Asterism'
 import { Hero } from './Hero'
 import { FolioTurn } from './FolioTurn'
 import { Press } from './Press'
@@ -365,6 +366,10 @@ export function App() {
         </svg>
       </span>
 
+      <span className="page-asterism-wrap" aria-hidden="true">
+        <Asterism tone="voice" size="md" />
+      </span>
+
       <FolioTurn index="ii" title="the press bed" hint="pull a lever · take an impression" voice={voice} />
       <Press
         voice={voice}
@@ -409,6 +414,10 @@ export function App() {
       />
 
       <LastLight voice={voice} setToday={setToday} pullCount={pullCount} />
+
+      <span className="page-asterism-wrap page-asterism-wrap--closing" aria-hidden="true">
+        <Asterism tone="voice" size="md" />
+      </span>
 
       <QuestionHeld voice={voice} word={activeWord} />
 

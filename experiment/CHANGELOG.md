@@ -1,37 +1,37 @@
-# Iteration 403
+# Changelog
 
-The dawn, the press, and the answer now arrive as one breath — refined end to end.
+## iteration 404 — one composed breath, an opening plate, a signature mark
 
-## What changed
+the title now arrives in two scales. a hand-drawn illuminated initial sits
+above the line in the opening plate; the question itself is set in a
+refined italic with three weights — a soft m³ in the voice tone, a clean
+sans for *frontend*, and an italic *yet* with a quietly breathing
+question mark. a small *set & registered* seal closes the corner of the
+plate and spins slowly with the page.
 
-The opening was tightened into a single composed breath. The FirstLight now
-arrives with a softer secondary arc and a quiet horizon trail that bleeds
-into the TitlePage masthead below; the masthead gained a one-line preface
-("the line is set this morning · read it three times, let one voice hold")
-that ties the publication to the question. The Hero title now breathes
-slightly differently in each voice — quieter voices sit a little looser,
-bolder voices a little tighter — and its eyebrow glyph and coda pin have
-small, slow breaths that make the centerpiece feel alive.
+a new typographic signature mark — the asterism (∗⁂∗) — appears at two
+breath points in the page: once between the inscription and the press
+bed, once between the last light and the question held one more time.
+it carries the current voice tone so the page reads as one composition.
 
-A scroll-driven atmospheric wash now warms the page from the dawn at the
-top to the dusk at the bottom, so the page reads like one continuous
-breath from first light to last light. The Answer leaf unfolds with a
-touch more theater; its headline settles into place, and the wax seal
-shadows pulse once on the break. The LastLight gains a thin closing rule
-that ties it to the QuestionHeld that follows.
+the opening plate is its own composed moment: a folio eyebrow, the date
+and brand masthead, the illuminated initial with hand-drawn tail, the
+question line, a quiet motto, and a register mark. it sets in on load,
+the initial draws itself stroke by stroke, the question mark breathes
+once it has arrived.
 
-## Why
+the title's mobile typography tightens below 480px so the line reads
+clean on a phone without breaking across the page.
 
-Iteration 402 had the page holding one composed breath; this iteration
-deepens that into one breath all the way through, from the dawn to the
-close. The refinements are small and authored — none of them add controls
-or new surfaces, they just make the existing ones feel more deliberate.
+### files
 
-## Files touched
+- `src/TitlePage.tsx` — rewritten as the opening plate
+- `src/Asterism.tsx` — new signature mark component
+- `src/App.tsx` — two asterisms placed at breath points
+- `src/style.css` — opening plate, asterism, mobile refinements
 
-- `src/App.tsx` — added scroll-driven `--page-prog` custom property
-- `src/FirstLight.tsx` — refined dawn with secondary arc, trail, and wash
-- `src/TitlePage.tsx` — added a one-line preface between masthead rows
-- `src/style.css` — added voice-specific Hero refinements, atmospheric
-  wash, answer unfold, seal pulse, headline settle, last-light rule,
-  and small breaths on the eyebrow glyph, coda pin, and proof cards
+### notes
+
+no fabricated metrics, no iteration counts, no fake testimonials.
+the page is still one question, set three ways, against a plate that
+breathes.
