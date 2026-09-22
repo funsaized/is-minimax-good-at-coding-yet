@@ -1,0 +1,19 @@
+{
+  "id": 377,
+  "parentId": 376,
+  "createdAt": "2026-09-22T02:07:16.302Z",
+  "summary": "A coherent direction: the press bed becomes the page's mechanical heart, with a clockwork pull-dial that advances on eve",
+  "path": "/iterations/000377/index.html",
+  "screenshot": "/iterations/000377/desktop.png",
+  "mobileScreenshot": "/iterations/000377/mobile.png",
+  "sourceCommit": "b6c0abf37a67e1a8fa8faff49fcb38d5a0c210e4",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 662,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 582557,
+    "outputTokens": 22752,
+    "steps": 69
+  }
+}
