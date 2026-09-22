@@ -31,6 +31,7 @@ import { QuestionHeld } from './QuestionHeld'
 import { PressMotto } from './PressMotto'
 import { TypeCase } from './TypeCase'
 import { ThreeVoiceSpecimen } from './ThreeVoiceSpecimen'
+import { ReadingPouch } from './ReadingPouch'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -50,6 +51,7 @@ export const FOLIOS = [
   { id: 'notes', index: 'iii', label: 'the proof line', hint: 'three voices on the same cord' },
   { id: 'specimen', index: 'iv', label: 'the notation key', hint: 'how the three voices read' },
   { id: 'answer', index: 'v', label: 'the answer', hint: 'folded once, then folded back' },
+  { id: 'pouch', index: 'vi', label: 'the reader’s pouch', hint: 'three slips, kept close' },
 ] as const
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
@@ -440,26 +442,14 @@ export function App() {
         keptCounts={keptCounts}
       />
 
-      <LastLight voice={voice} setToday={setToday} pullCount={pullCount} />
+      <FolioTurn index="vi" title="the reader’s pouch" hint="three slips · kept close" voice={voice} />
+      <ReadingPouch voice={voice} active={activeWord} setToday={setToday} />
 
-      <span className="page-asterism-wrap page-asterism-wrap--closing" aria-hidden="true">
-        <Asterism tone="voice" size="md" />
-      </span>
+      <LastLight voice={voice} setToday={setToday} pullCount={pullCount} />
 
       <QuestionHeld voice={voice} word={activeWord} />
 
       <footer className="site-foot" aria-label="The page, in one line">
-        <ReadingNote
-          voice={voice}
-          align="center"
-          ornament="rule"
-          size="md"
-          tone="paper"
-          caption="A final note, set at the foot of the page"
-        >
-          set at first light · read in the dark — {TITLE}
-        </ReadingNote>
-
         <span className="site-foot__copy">
           <em>{TITLE}</em>
           <span aria-hidden="true">·</span>
@@ -471,19 +461,16 @@ export function App() {
           <span className="site-foot__sig-mark" />
           <span className="site-foot__sig-rule" />
         </span>
-        <a className="site-foot__back" href="#question">
-          back to the question
-          <svg className="arrow-icon" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M4 12h15M13 6l6 6-6 6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </a>
+        <ReadingNote
+          voice={voice}
+          align="center"
+          ornament="rule"
+          size="md"
+          tone="paper"
+          caption="A final note, set at the foot of the page"
+        >
+          set at first light · read in the dark — {TITLE}
+        </ReadingNote>
       </footer>
 
       <span className="sr-only" aria-live="polite">{announcement}</span>

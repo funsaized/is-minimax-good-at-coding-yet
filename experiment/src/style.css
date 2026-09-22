@@ -18761,3 +18761,897 @@ section.reveal h2 em::after {
   }
 }
 
+/* ────────────────────────────────────────────────────────────
+   READING POUCH · folio vi
+   a folded pocket at the foot of the page; three slips, one per
+   word. each slip is a printer's note that opens when asked —
+   the editorial copy the title rests on, kept quiet in the seam.
+   ──────────────────────────────────────────────────────────── */
+
+.reading-pouch {
+  --rp-tone: var(--quiet);
+  --rp-voice: var(--quiet);
+  position: relative;
+  max-width: 1180px;
+  margin: clamp(48px, 7vw, 96px) auto clamp(40px, 5.4vw, 72px);
+  padding: clamp(28px, 4vw, 56px) clamp(22px, 4vw, 60px) clamp(36px, 5vw, 64px);
+  z-index: 2;
+  isolation: isolate;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(ellipse 80rem 32rem at 50% 0%, rgba(168, 197, 255, .06), transparent 64%),
+    radial-gradient(ellipse 60rem 24rem at 50% 100%, rgba(244, 132, 114, .035), transparent 64%),
+    linear-gradient(180deg, rgba(8, 10, 18, .32), rgba(8, 10, 18, .12));
+  border-radius: clamp(8px, 1.6vw, 18px);
+  box-shadow:
+    inset 0 1px 0 rgba(245, 238, 216, .04),
+    inset 0 -1px 0 rgba(245, 238, 216, .04),
+    0 24px 60px -36px rgba(0, 0, 0, .55);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 1.1s var(--ease-out), transform 1.1s var(--ease-out);
+}
+
+.reading-pouch.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-pouch {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.reading-pouch--quiet { --rp-tone: var(--quiet); }
+.reading-pouch--human { --rp-tone: var(--human); }
+.reading-pouch--bold  { --rp-tone: var(--bold); }
+
+.reading-pouch__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.reading-pouch__void {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: repeating-linear-gradient(0deg, rgba(245, 238, 216, .018) 0 1px, transparent 1px 4px);
+  mix-blend-mode: screen;
+  opacity: .55;
+  border-radius: inherit;
+}
+
+.reading-pouch__head {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  max-width: 64ch;
+  margin: 0 auto clamp(14px, 2vw, 22px);
+  padding-bottom: clamp(14px, 2vw, 22px);
+  border-bottom: 1px solid var(--line);
+}
+
+.reading-pouch__folio {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 14px);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.reading-pouch__folio em {
+  font-family: var(--display);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: clamp(13px, 1.1vw, 15px);
+  color: var(--paper-soft);
+}
+
+.reading-pouch__folio em:first-of-type {
+  color: var(--rp-tone);
+  font-feature-settings: 'lnum' 1;
+}
+
+.reading-pouch__folio-dot {
+  color: var(--line-strong);
+}
+
+.reading-pouch__folio-rule {
+  display: inline-block;
+  width: clamp(12px, 2.4vw, 36px);
+  height: 1px;
+  background: var(--line);
+}
+
+.reading-pouch__title {
+  margin: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(28px, 3.6vw, 44px);
+  line-height: 1.1;
+  letter-spacing: -.024em;
+  color: var(--paper);
+  text-wrap: balance;
+}
+
+.reading-pouch__title em {
+  color: var(--rp-tone);
+  font-style: italic;
+}
+
+.reading-pouch__lede {
+  margin: 0;
+  text-align: center;
+  max-width: 56ch;
+  color: var(--paper-soft);
+}
+
+.reading-pouch__meta {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: clamp(12px, 1.6vw, 22px);
+  justify-content: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  color: var(--paper-soft);
+  letter-spacing: -.005em;
+}
+
+.reading-pouch__meta-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.reading-pouch__meta-cell em {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--muted);
+}
+
+.reading-pouch__meta-cell span {
+  color: var(--paper);
+  white-space: nowrap;
+}
+
+.app--voice-quiet .reading-pouch__meta-cell em { color: var(--quiet); }
+.app--voice-human .reading-pouch__meta-cell em { color: var(--human); }
+.app--voice-bold  .reading-pouch__meta-cell em { color: var(--bold); }
+
+.reading-pouch__ledge {
+  max-width: 320px;
+  margin: 0 auto clamp(20px, 2.6vw, 36px);
+  color: var(--rp-voice);
+  opacity: .7;
+}
+
+.reading-pouch__ledge svg {
+  display: block;
+  width: 100%;
+  height: 12px;
+}
+
+/* — the three pockets — laid out as a printer's slip-pile — */
+
+.reading-pouch__pockets {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 28px);
+  padding: 0;
+}
+
+@media (max-width: 880px) {
+  .reading-pouch__pockets {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(14px, 2vw, 22px);
+  }
+}
+
+.reading-pouch__pockets-rule {
+  display: block;
+  max-width: 320px;
+  margin: clamp(20px, 2.6vw, 36px) auto clamp(18px, 2.6vw, 30px);
+  color: var(--rp-voice);
+  opacity: .6;
+}
+
+.reading-pouch__pockets-rule svg {
+  display: block;
+  width: 100%;
+  height: 8px;
+}
+
+/* — the slip itself — sits like a folded printer's slip in a row — */
+
+.rp-slip {
+  --rp-slip-tone: var(--rp-tone);
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto;
+  isolation: isolate;
+  transition: transform .6s var(--ease-spring);
+}
+
+.rp-slip__shadow {
+  position: absolute;
+  inset: 14px -8px -16px -8px;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0, 0, 0, .35), transparent 70%);
+  filter: blur(2px);
+  opacity: .55;
+  transition: opacity .35s var(--ease);
+}
+
+.rp-slip:hover .rp-slip__shadow,
+.rp-slip.is-open .rp-slip__shadow { opacity: .8; }
+
+.rp-slip.is-active .rp-slip__shadow {
+  opacity: 1;
+  background:
+    radial-gradient(ellipse 60% 60% at 50% 50%, color-mix(in srgb, var(--rp-slip-tone) 14%, transparent), transparent 70%);
+}
+
+/* — the slip-tab, an angled corner that catches the eye — */
+
+.rp-slip__tab {
+  position: absolute;
+  top: -10px;
+  left: 16px;
+  width: 56px;
+  height: 12px;
+  z-index: 3;
+  pointer-events: none;
+  color: var(--rp-slip-tone);
+  opacity: .9;
+  transition: transform .5s var(--ease);
+}
+
+.rp-slip__tab svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.rp-slip__tab-num {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-bottom: 3px;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .18em;
+  color: currentColor;
+  text-transform: uppercase;
+}
+
+/* — the cover itself — the slip while folded — */
+
+.rp-slip__cover {
+  --rp-slip-cover-tone: var(--rp-slip-tone);
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: clamp(8px, 1.2vw, 14px);
+  padding: clamp(20px, 2.4vw, 30px) clamp(16px, 2vw, 24px) clamp(16px, 2vw, 22px);
+  background:
+    linear-gradient(180deg, rgba(245, 238, 216, .035), rgba(245, 238, 216, .012)),
+    linear-gradient(180deg, rgba(8, 10, 18, .68), rgba(8, 10, 18, .42));
+  border: 1px solid color-mix(in srgb, var(--rp-slip-cover-tone) 30%, var(--line));
+  border-radius: clamp(8px, 1.4vw, 14px);
+  text-align: left;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(245, 238, 216, .06),
+    0 12px 22px -18px rgba(0, 0, 0, .5);
+  transition: transform .55s var(--ease-spring), border-color .35s var(--ease), background .45s var(--ease);
+  overflow: hidden;
+  font: inherit;
+  color: inherit;
+}
+
+.rp-slip__cover-texture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .55;
+  mix-blend-mode: screen;
+}
+
+.rp-slip__cover-texture svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.rp-slip__cover:hover {
+  border-color: color-mix(in srgb, var(--rp-slip-cover-tone) 60%, var(--line));
+  transform: translateY(-3px);
+}
+
+.rp-slip.is-active .rp-slip__cover {
+  border-color: color-mix(in srgb, var(--rp-slip-cover-tone) 70%, var(--line));
+  box-shadow:
+    inset 0 1px 0 rgba(245, 238, 216, .08),
+    0 18px 36px -22px color-mix(in srgb, var(--rp-slip-cover-tone) 35%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--rp-slip-cover-tone) 30%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rp-slip__cover { transition: none; }
+  .rp-slip__cover:hover { transform: none; }
+}
+
+.rp-slip__cover-head {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 14px);
+  color: var(--rp-slip-cover-tone);
+  transition: color .35s var(--ease);
+}
+
+.rp-slip__cover-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: currentColor;
+}
+
+.rp-slip__cover-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.rp-slip__cover-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 16px;
+  color: currentColor;
+  transition: border-color .35s var(--ease), background .35s var(--ease);
+}
+
+.rp-slip:hover .rp-slip__cover-glyph {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.rp-slip__cover-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+  min-width: 0;
+}
+
+.rp-slip__cover-mark-label {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(15px, 1.2vw, 17px);
+  color: currentColor;
+  letter-spacing: -.005em;
+  text-transform: lowercase;
+}
+
+.rp-slip__cover-mark-sub {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.rp-slip__cover-title {
+  margin: clamp(4px, .6vw, 8px) 0 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(20px, 1.7vw, 25px);
+  line-height: 1.18;
+  letter-spacing: -.018em;
+  color: var(--paper);
+  text-wrap: balance;
+}
+
+.rp-slip__cover-gloss {
+  margin: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13.5px, 1.1vw, 15.5px);
+  line-height: 1.5;
+  color: var(--paper-soft);
+  letter-spacing: -.005em;
+  text-wrap: pretty;
+}
+
+.rp-slip__cover-cue {
+  display: grid;
+  grid-template-columns: auto minmax(0, auto) auto auto auto;
+  align-items: center;
+  gap: 8px;
+  margin-top: clamp(8px, 1.2vw, 12px);
+  padding-top: clamp(10px, 1.2vw, 14px);
+  border-top: 1px solid var(--line-soft);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color .35s var(--ease), border-color .35s var(--ease);
+}
+
+.rp-slip.is-open .rp-slip__cover-cue {
+  color: var(--rp-slip-tone);
+  border-top-color: color-mix(in srgb, var(--rp-slip-tone) 32%, var(--line));
+}
+
+.rp-slip__cover-cue em {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 13px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper-soft);
+  white-space: nowrap;
+}
+
+.rp-slip.is-open .rp-slip__cover-cue em {
+  color: var(--rp-slip-tone);
+}
+
+.rp-slip__cover-cue em.rp-slip__cover-cue-key {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-style: normal;
+  color: currentColor;
+  letter-spacing: 0;
+}
+
+.rp-slip__cover-rule {
+  display: inline-block;
+  width: clamp(8px, 1.6vw, 22px);
+  height: 1px;
+  background: currentColor;
+  opacity: .5;
+}
+
+.rp-slip__cover-cord {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 4px;
+  color: currentColor;
+}
+
+.rp-slip__cover-cord svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* — the body of the slip, opened — */
+
+.rp-slip__body {
+  position: relative;
+  margin: clamp(12px, 1.6vw, 18px) 0 0;
+  padding: clamp(16px, 2vw, 22px) clamp(16px, 2vw, 24px) clamp(16px, 2vw, 24px);
+  border: 1px dashed color-mix(in srgb, var(--rp-slip-tone) 36%, var(--line));
+  border-radius: clamp(8px, 1.4vw, 12px);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--rp-slip-tone) .05, transparent), transparent 60%),
+    rgba(8, 10, 18, .58);
+  display: grid;
+  gap: clamp(10px, 1.3vw, 16px);
+  opacity: 0;
+  transform: translateY(-6px) scale(.985);
+  transform-origin: 50% 0%;
+  transition: opacity .5s var(--ease-out), transform .55s var(--ease-spring);
+}
+
+.rp-slip.is-open .rp-slip__body {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.rp-slip__body[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rp-slip__body { opacity: 1; transform: none; transition: none; }
+}
+
+.rp-slip__body-edge {
+  position: absolute;
+  top: -1px;
+  left: 14px;
+  right: 14px;
+  height: 4px;
+  color: var(--rp-slip-tone);
+  opacity: .85;
+}
+
+.rp-slip__body-edge svg {
+  width: 100%;
+  height: 100%;
+}
+
+.rp-slip__sample-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(8px, 1vw, 14px);
+}
+
+.rp-slip__sample-key {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.1;
+}
+
+.rp-slip__sample-key em {
+  color: var(--rp-slip-tone);
+  font-style: normal;
+}
+
+.rp-slip__sample-key span {
+  color: var(--paper-soft);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(11.5px, 1vw, 13px);
+  text-transform: none;
+  letter-spacing: -.005em;
+}
+
+.rp-slip__sample {
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  font-style: italic;
+  letter-spacing: -.018em;
+  color: var(--paper);
+  font-size: clamp(15px, 1.4vw, 18px);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 4px 8px;
+  border-top: 1px dashed color-mix(in srgb, var(--rp-slip-tone) 22%, var(--line));
+  border-bottom: 1px dashed color-mix(in srgb, var(--rp-slip-tone) 22%, var(--line));
+}
+
+.rp-slip__sample--bold {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.045em;
+  text-transform: uppercase;
+}
+
+.rp-slip__sample--human {
+  font-weight: 500;
+}
+
+.rp-slip__sample-rule {
+  display: inline-block;
+  width: clamp(8px, 1.4vw, 18px);
+  height: 1px;
+  background: var(--line);
+}
+
+.rp-slip__body-text {
+  margin: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(14.5px, 1.18vw, 16.5px);
+  line-height: 1.55;
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+  text-wrap: pretty;
+}
+
+.rp-slip__body-text::first-letter {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.05em;
+  color: var(--rp-slip-tone);
+  padding-right: .04em;
+}
+
+.rp-slip__body-prompt {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding-top: clamp(8px, 1vw, 12px);
+  border-top: 1px solid var(--line);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.05vw, 14.5px);
+  color: var(--paper);
+}
+
+.rp-slip__body-prompt em {
+  color: var(--rp-slip-tone);
+  font-style: italic;
+}
+
+.rp-slip__body-prompt-key {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--rp-slip-tone);
+  padding: 2px 7px;
+  border: 1px solid color-mix(in srgb, var(--rp-slip-tone) 35%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--rp-slip-tone) 12%, transparent);
+}
+
+.rp-slip__body-prompt-dot {
+  color: var(--line-strong);
+}
+
+.rp-slip__body-prompt-face {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--muted);
+}
+
+.rp-slip__body-corner {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  color: var(--rp-slip-tone);
+  opacity: .85;
+}
+
+.rp-slip__body-corner svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* — the bulk controls: open every slip / close every slip — */
+
+.reading-pouch__controls {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 12px);
+  margin: clamp(8px, 1.6vw, 18px) auto clamp(20px, 3vw, 36px);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.reading-pouch__control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--paper-soft);
+  background: linear-gradient(180deg, rgba(245, 238, 216, .024), rgba(245, 238, 216, .006));
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  transition: color .35s var(--ease), border-color .35s var(--ease), background .35s var(--ease);
+}
+
+.reading-pouch__control:hover {
+  color: var(--paper);
+  border-color: color-mix(in srgb, var(--rp-voice) 50%, var(--line));
+  background: color-mix(in srgb, var(--rp-voice) 10%, transparent);
+}
+
+.reading-pouch__control-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  color: currentColor;
+  opacity: .85;
+}
+
+.reading-pouch__control-mark svg { width: 100%; height: 100%; }
+
+.reading-pouch__controls-dot {
+  color: var(--line-strong);
+}
+
+/* — the foot: a final note, the back-to-top, a printer's mark — */
+
+.reading-pouch__foot {
+  display: grid;
+  gap: clamp(10px, 1.4vw, 18px);
+  justify-items: center;
+  text-align: center;
+  padding-top: clamp(18px, 2.4vw, 28px);
+  border-top: 1px solid var(--line);
+}
+
+.reading-pouch__foot-rule {
+  display: inline-block;
+  width: clamp(36px, 5vw, 96px);
+  height: 1px;
+  background: var(--line);
+}
+
+.reading-pouch__foot-line {
+  margin: 0;
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.1vw, 15px);
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+}
+
+.reading-pouch__foot-line em {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.reading-pouch__foot-line > span {
+  color: var(--line-strong);
+}
+
+.reading-pouch__return {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid color-mix(in srgb, var(--rp-voice) 40%, var(--line));
+  border-radius: 999px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--rp-voice) 14%, transparent), color-mix(in srgb, var(--rp-voice) 4%, transparent));
+  color: var(--paper);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.1vw, 15px);
+  letter-spacing: -.005em;
+  transition: transform .35s var(--ease-spring), color .35s var(--ease), border-color .35s var(--ease), background .35s var(--ease);
+}
+
+.reading-pouch__return:hover {
+  transform: translateY(-2px);
+  color: var(--rp-voice);
+  border-color: color-mix(in srgb, var(--rp-voice) 80%, transparent);
+  background: color-mix(in srgb, var(--rp-voice) 22%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-pouch__return:hover { transform: none; }
+}
+
+.reading-pouch__return-glyph {
+  display: inline-grid;
+  place-items: center;
+  color: currentColor;
+}
+
+.reading-pouch__foot-sig {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--muted);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.reading-pouch__foot-sig em {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 13.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper-soft);
+}
+
+.reading-pouch__foot-sig em:first-of-type {
+  color: var(--rp-voice);
+  font-weight: 500;
+}
+
+.reading-pouch__foot-sig svg {
+  display: inline-block;
+  width: 64px;
+  height: 14px;
+  color: var(--rp-voice);
+  opacity: .7;
+}
+
+.reading-pouch__foot-sig > span {
+  color: var(--line-strong);
+}
+
+/* — refined mobile layout — the pouch breathes tighter on small screens — */
+
+@media (max-width: 720px) {
+  .reading-pouch {
+    padding: clamp(22px, 4vw, 36px) clamp(18px, 3vw, 26px) clamp(28px, 4vw, 40px);
+    margin: clamp(36px, 6vw, 56px) var(--gutter-tight) clamp(28px, 4vw, 48px);
+  }
+  .reading-pouch__title {
+    font-size: clamp(24px, 7vw, 36px);
+  }
+  .reading-pouch__sample-row {
+    grid-template-columns: minmax(0, 1fr);
+    text-align: center;
+  }
+  .reading-pouch__sample-key { justify-self: center; align-items: center; }
+  .reading-pouch__sample-rule { display: none; }
+  .rp-slip__sample {
+    font-size: clamp(14px, 4vw, 17px);
+    white-space: normal;
+    line-height: 1.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rp-slip__shadow,
+  .rp-slip__tab,
+  .rp-slip__cover,
+  .rp-slip__body,
+  .reading-pouch__control,
+  .reading-pouch__return { transition: none; }
+}
