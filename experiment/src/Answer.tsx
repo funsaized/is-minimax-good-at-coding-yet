@@ -146,10 +146,9 @@ function WaxSeal({ voice, broken }: { voice: VoiceId; broken: boolean }) {
     bold: { top: 'M³ · YES · M³', bottom: 'AGAIN' },
   }
   const tone = voice === 'quiet' ? 'var(--quiet)' : voice === 'human' ? 'var(--human)' : 'var(--bold)'
-  const glyph = voice === 'bold' ? 'M³' : 'm³'
+  const glyph = voice === 'bold' ? 'M³ · FOLIO V' : 'm³ · folio v'
   const style = { color: tone } as CSSProperties
   const l = labels[voice]
-  const isBold = voice === 'bold'
 
   const fillTone = voice === 'quiet'
     ? 'rgba(168, 197, 255, 0.55)'
@@ -187,22 +186,30 @@ function WaxSeal({ voice, broken }: { voice: VoiceId; broken: boolean }) {
         <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2.5" opacity=".55" />
         <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255, 255, 255, 0.4)" strokeWidth=".3" />
         <circle cx="50" cy="50" r="28" fill="none" stroke="rgba(255, 255, 255, 0.18)" strokeWidth=".25" />
+
+        {/* the engraving — a small press-and-dawn emblem */}
+        <g className="answer__seal-engraving">
+          {/* the dawn orb */}
+          <circle cx="50" cy="46" r="9" fill="rgba(8, 10, 18, 0.92)" />
+          <circle cx="50" cy="46" r="9" fill="none" stroke="rgba(245, 238, 216, .35)" strokeWidth=".35" strokeDasharray=".6 1.4" />
+          {/* the crescent — the bite out of the orb */}
+          <circle cx="54" cy="44" r="8" fill={`url(#seal-fill-${voice})`} />
+          {/* horizon line — the press bed */}
+          <line x1="32" y1="56" x2="68" y2="56" stroke="rgba(8, 10, 18, 0.92)" strokeWidth=".7" strokeLinecap="round" />
+          {/* the lever pin */}
+          <circle cx="40" cy="56" r="1.2" fill="rgba(8, 10, 18, 0.92)" />
+          <circle cx="60" cy="56" r="1.2" fill="rgba(8, 10, 18, 0.92)" />
+          {/* a type-high tick rising above the orb */}
+          <line x1="50" y1="32" x2="50" y2="38" stroke="rgba(8, 10, 18, 0.92)" strokeWidth=".45" strokeLinecap="round" />
+        </g>
+
         <text x="50" y="20" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="rgba(8, 10, 18, 0.85)" opacity=".95">
           {l.top}
         </text>
-        <text
-          x="50"
-          y="60"
-          textAnchor="middle"
-          fontFamily="Georgia, serif"
-          fontStyle={isBold ? 'normal' : 'italic'}
-          fontSize={isBold ? 28 : 32}
-          fontWeight={isBold ? 800 : 500}
-          fill="rgba(8, 10, 18, 0.92)"
-        >
+        <text x="50" y="74" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.6" letterSpacing="1.4" fill="rgba(8, 10, 18, 0.85)" opacity=".95">
           {glyph}
         </text>
-        <text x="50" y="86" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="rgba(8, 10, 18, 0.85)" opacity=".95">
+        <text x="50" y="84" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="rgba(8, 10, 18, 0.85)" opacity=".95">
           {l.bottom}
         </text>
         <circle cx="50" cy="6" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
@@ -211,7 +218,6 @@ function WaxSeal({ voice, broken }: { voice: VoiceId; broken: boolean }) {
         <circle cx="94" cy="50" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
         <path d="M28 22 Q36 28 32 36 Q26 46 32 56 Q40 66 36 78" fill="none" stroke="rgba(8, 10, 18, 0.18)" strokeWidth=".55" />
         <path d="M72 22 Q64 28 68 36 Q74 46 68 56 Q60 66 64 78" fill="none" stroke="rgba(8, 10, 18, 0.18)" strokeWidth=".55" />
-        <path d="M20 50 Q34 38 50 50 T80 50" fill="none" stroke="rgba(255, 255, 255, 0.32)" strokeWidth=".55" />
       </svg>
 
       <svg className="answer__seal answer__seal--cracked" viewBox="0 0 100 100" style={style}>

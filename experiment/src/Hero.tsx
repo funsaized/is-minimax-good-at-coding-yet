@@ -1,5 +1,8 @@
 import {
+  useEffect,
   useId,
+  useRef,
+  useState,
   type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
   type MutableRefObject,
@@ -87,6 +90,23 @@ const TOKEN_COPY: Record<WordId, TokenCopy> = {
 
 const ORDER: VoiceId[] = ['quiet', 'human', 'bold']
 
+// The question, broken into the visible segments that will typeset themselves
+// in sequence on first arrival. The title sets across two lines: line a lays
+// out "m³ good at frontend", line b follows with "yet?" — the punctuation
+// arriving as the period's own protagonist. The literal "is" and "Minimax M3"
+// that complete the question live only in the aria-label.
+const TITLE_SEGMENTS: Array<{ id: WordId | 'plain' | 'space'; text: string; mark?: boolean }> = [
+  { id: 'm3', text: 'm³', mark: true },
+  { id: 'space', text: ' ' },
+  { id: 'good', text: 'good at', mark: true },
+  { id: 'space', text: ' ' },
+  { id: 'plain', text: 'frontend' },
+]
+
+const SET_DURATION_MS = 1500
+const STEP_MS = 70
+const SET_BASE_DELAY_MS = 700
+
 export function Hero({
   voice,
   word,
@@ -102,6 +122,48 @@ export function Hero({
   const grainId = `hero-grain-${baseId}`
   const spec = VOICE[voice]
   const toneStyle = { '--hero-tone': `var(--${voice})` } as CSSProperties
+
+  // Letter-by-letter typeset animation, fires once on first arrival
+  const [setProgress, setSetProgress] = useState(() => segmentOffsets(0))
+  const [reduceMotion, setReduceMotion] = useState(false)
+  const cleanupRef = useRef<(() => void) | null>(null)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReduceMotion(mq.matches)
+    const onChange = () => setReduceMotion(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setSetProgress(segmentOffsets(TITLE_SEGMENTS.length))
+      return
+    }
+    let i = 0
+    const total = TITLE_SEGMENTS.length
+    setSetProgress(segmentOffsets(0))
+    const startId = window.setTimeout(() => {
+      const id = window.setInterval(() => {
+        i += 1
+        setSetProgress(segmentOffsets(Math.min(i, total)))
+        if (i >= total) {
+          window.clearInterval(id)
+        }
+      }, STEP_MS)
+      cleanupRef.current = () => window.clearInterval(id)
+    }, SET_BASE_DELAY_MS)
+    const totalId = window.setTimeout(() => {
+      if (cleanupRef.current) cleanupRef.current()
+    }, SET_DURATION_MS + SET_BASE_DELAY_MS + 200)
+    return () => {
+      window.clearTimeout(startId)
+      window.clearTimeout(totalId)
+      if (cleanupRef.current) cleanupRef.current()
+    }
+  }, [reduceMotion])
 
   return (
     <div className="hero__inner" style={toneStyle}>
@@ -122,12 +184,14 @@ export function Hero({
           </svg>
         </span>
 
+        <DawnCrescent />
+
         <div className="hero__eyebrow-row">
           <span className="hero__eyebrow">
             <span className="hero__eyebrow-glyph" aria-hidden="true">¶</span>
             <span>folio i</span>
             <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
-            <span className="hero__eyebrow-em">the question, marked</span>
+            <span className="hero__eyebrow-em">the question, set at first light</span>
           </span>
           <span className="hero__set">
             <em>set on</em>
@@ -141,73 +205,28 @@ export function Hero({
           aria-label="is Minimax M3 good at frontend yet?"
         >
           <span className="hero__title-line hero__title-line-a">
-            <span
-              className={`ht__word ht__word--m3 ${word === 'm3' ? 'is-marked' : ''} ${hover === 'm3' ? 'is-hover' : ''}`}
-              aria-hidden="true"
-            >
-              {word === 'm3' && <span className="ht__glyph">{TOKEN_COPY.m3.glyph}</span>}
-              <button
-                type="button"
-                ref={node => {
-                  tokenRefs.current.m3 = node
-                }}
-                className="ht__token"
-                onClick={() => onWord('m3')}
-                onMouseEnter={() => onHover('m3')}
-                onMouseLeave={() => onHover(null)}
-                onFocus={() => onHover('m3')}
-                onBlur={() => onHover(null)}
-                onKeyDown={event => onWordKey(event, 'm3')}
-                aria-pressed={word === 'm3'}
-                aria-label={`${TOKEN_COPY.m3.label} — ${TOKEN_COPY.m3.tone} (mark: ${TOKEN_COPY.m3.mark})`}
-              >
-                {TOKEN_COPY.m3.label}
-              </button>
-            </span>
-
-            <span className="hero__title-space" aria-hidden="true"> </span>
-
-            <span
-              className={`ht__word ht__word--good ${word === 'good' ? 'is-marked' : ''} ${hover === 'good' ? 'is-hover' : ''}`}
-              aria-hidden="true"
-            >
-              {word === 'good' && <span className="ht__glyph">{TOKEN_COPY.good.glyph}</span>}
-              <button
-                type="button"
-                ref={node => {
-                  tokenRefs.current.good = node
-                }}
-                className="ht__token"
-                onClick={() => onWord('good')}
-                onMouseEnter={() => onHover('good')}
-                onMouseLeave={() => onHover(null)}
-                onFocus={() => onHover('good')}
-                onBlur={() => onHover(null)}
-                onKeyDown={event => onWordKey(event, 'good')}
-                aria-pressed={word === 'good'}
-                aria-label={`${TOKEN_COPY.good.label} — ${TOKEN_COPY.good.tone} (mark: ${TOKEN_COPY.good.mark})`}
-              >
-                {TOKEN_COPY.good.label}
-              </button>
-            </span>
-
-            <span className="hero__title-space" aria-hidden="true"> </span>
-
-            <span className="ht__word ht__word--plain" aria-hidden="true">frontend</span>
+            {renderTitleSegments({
+              lineId: 'a',
+              progress: setProgress,
+              word,
+              hover,
+              onWord,
+              onHover,
+              onWordKey,
+              tokenRefs,
+            })}
           </span>
-
           <span className="hero__title-line hero__title-line-b">
             <span
               className={`ht__word ht__word--yet ${word === 'yet' ? 'is-marked' : ''} ${hover === 'yet' ? 'is-hover' : ''}`}
               aria-hidden="true"
             >
-              {word === 'yet' && <span className="ht__glyph">{TOKEN_COPY.yet.glyph}</span>}
               <button
                 type="button"
                 ref={node => {
                   tokenRefs.current.yet = node
                 }}
-                className="ht__token"
+                className="ht__token ht__token--yet"
                 onClick={() => onWord('yet')}
                 onMouseEnter={() => onHover('yet')}
                 onMouseLeave={() => onHover(null)}
@@ -261,12 +280,6 @@ export function Hero({
               STET
             </text>
           </svg>
-          <span className="hero__quoin-stamp-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 3 L21 12 L12 21 L3 12 Z" fill="currentColor" opacity=".18" />
-              <path d="M12 3 L21 12 L12 21 L3 12 Z" fill="none" stroke="currentColor" strokeWidth=".6" />
-            </svg>
-          </span>
         </span>
 
         <span className="hero__type-high" aria-hidden="true">
@@ -276,30 +289,6 @@ export function Hero({
             <line x1="2" y1="40" x2="6" y2="40" stroke="currentColor" strokeWidth=".5" />
             <line x1="2" y1="60" x2="5" y2="60" stroke="currentColor" strokeWidth=".5" />
             <text x="9" y="42" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="2.6" letterSpacing=".8" fill="currentColor" opacity=".7">23.875</text>
-          </svg>
-        </span>
-
-        <span className="hero__tide" aria-hidden="true">
-          <svg viewBox="0 0 600 40" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id={`tide-${baseId}`} x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
-                <stop offset="50%" stopColor="currentColor" stopOpacity="1" />
-                <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            <line x1="0" y1="20" x2="600" y2="20" stroke={`url(#tide-${baseId})`} strokeWidth="0.5" strokeDasharray="0.8 3.4" opacity=".5" />
-            <circle cx="300" cy="20" r="1.4" fill="currentColor" opacity=".55" />
-            <circle cx="120" cy="20" r=".9" fill="currentColor" opacity=".35" />
-            <circle cx="480" cy="20" r=".9" fill="currentColor" opacity=".35" />
-          </svg>
-        </span>
-
-        <span className="hero__tide-mark" aria-hidden="true">
-          <svg viewBox="0 0 80 14" preserveAspectRatio="none">
-            <text x="40" y="9" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="6" letterSpacing="2.6" fill="currentColor" opacity=".55">
-              TIDE · AFTER MIDNIGHT
-            </text>
           </svg>
         </span>
       </ChaseFrame>
@@ -367,5 +356,187 @@ export function Hero({
         </span>
       </aside>
     </div>
+  )
+}
+
+function segmentOffsets(reached: number): number[] {
+  return TITLE_SEGMENTS.map((_, idx) => (idx < reached ? 1 : 0))
+}
+
+type RenderArgs = {
+  lineId: 'a' | 'b'
+  progress: number[]
+  word: WordId
+  hover: WordId | null
+  onWord: (word: WordId, focus?: boolean) => void
+  onHover: (word: WordId | null) => void
+  onWordKey: (event: ReactKeyboardEvent<HTMLButtonElement>, id: WordId) => void
+  tokenRefs: MutableRefObject<Partial<Record<WordId, HTMLButtonElement | null>>>
+}
+
+function renderTitleSegments({
+  lineId,
+  progress,
+  word,
+  hover,
+  onWord,
+  onHover,
+  onWordKey,
+  tokenRefs,
+}: RenderArgs) {
+  // 'yet' lives on line b; only line-a segments are rendered here.
+  const segs = TITLE_SEGMENTS
+  return segs.map((seg, idx) => {
+    const p = progress[segIndex(seg.id)] ?? 0
+    const visible = p >= 1
+    const setStyle = {
+      '--set-idx': String(TITLE_SEGMENTS.indexOf(seg)),
+      '--set-progress': String(p),
+    } as CSSProperties
+    if (seg.id === 'space') {
+      return (
+        <span
+          key={`${lineId}-space-${idx}`}
+          className="hero__title-space"
+          aria-hidden="true"
+          style={setStyle}
+          data-set={visible ? 'in' : 'pending'}
+        >
+          {' '}
+        </span>
+      )
+    }
+    if (seg.id === 'plain') {
+      return (
+        <span
+          key={`${lineId}-plain-${idx}`}
+          className="ht__word ht__word--plain"
+          aria-hidden="true"
+          style={setStyle}
+          data-set={visible ? 'in' : 'pending'}
+        >
+          {seg.text}
+        </span>
+      )
+    }
+    const id = seg.id as WordId
+    const copy = TOKEN_COPY[id]
+    const isMarked = word === id
+    const isHover = hover === id
+    return (
+      <span
+        key={`${lineId}-${id}`}
+        className={`ht__word ht__word--${id} ${isMarked ? 'is-marked' : ''} ${isHover ? 'is-hover' : ''}`}
+        aria-hidden="true"
+        style={setStyle}
+        data-set={visible ? 'in' : 'pending'}
+      >
+        {isMarked && <span className="ht__glyph">{copy.glyph}</span>}
+        <button
+          type="button"
+          ref={node => {
+            tokenRefs.current[id] = node
+          }}
+          className="ht__token"
+          onClick={() => onWord(id)}
+          onMouseEnter={() => onHover(id)}
+          onMouseLeave={() => onHover(null)}
+          onFocus={() => onHover(id)}
+          onBlur={() => onHover(null)}
+          onKeyDown={event => onWordKey(event, id)}
+          aria-pressed={word === id}
+          aria-label={`${copy.label} — ${copy.tone} (mark: ${copy.mark})`}
+        >
+          {copy.label}
+        </button>
+      </span>
+    )
+  })
+}
+
+function segIndex(id: WordId | 'plain' | 'space' | 'punct'): number {
+  return TITLE_SEGMENTS.findIndex(s => s.id === id)
+}
+
+function DawnCrescent() {
+  const id = useId().replace(/:/g, '')
+  const tideId = `dawn-tide-${id}`
+  const orbId = `dawn-orb-${id}`
+  return (
+    <span className="hero__dawn" aria-hidden="true">
+      <svg viewBox="0 0 600 360" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id={orbId} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 230, 196, .35)" />
+            <stop offset="35%" stopColor="rgba(242, 178, 138, .18)" />
+            <stop offset="70%" stopColor="rgba(168, 197, 255, .08)" />
+            <stop offset="100%" stopColor="rgba(168, 197, 255, 0)" />
+          </radialGradient>
+          <linearGradient id={tideId} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="rgba(245, 238, 216, 0)" />
+            <stop offset="40%" stopColor="rgba(245, 238, 216, .14)" />
+            <stop offset="60%" stopColor="rgba(245, 238, 216, .14)" />
+            <stop offset="100%" stopColor="rgba(245, 238, 216, 0)" />
+          </linearGradient>
+        </defs>
+
+        {/* the orb — a quiet first light behind the title */}
+        <circle className="hero__dawn-orb" cx="300" cy="180" r="160" fill={`url(#${orbId})`} />
+
+        {/* a thin horizon line that anchors the orb to a press-bed silhouette */}
+        <g className="hero__dawn-horizon">
+          <path
+            d="M40 232 L162 232 L172 226 L208 226 L218 232 L298 232 L312 218 L334 218 L348 232 L420 232 L432 224 L478 224 L490 232 L568 232"
+            fill="none"
+            stroke={`url(#${tideId})`}
+            strokeWidth=".6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity=".6"
+          />
+          <path
+            d="M40 240 L120 240 L130 234 L160 234 L172 240 L256 240 L268 226 L288 226 L302 240 L380 240 L390 232 L432 232 L444 240 L568 240"
+            fill="none"
+            stroke="rgba(245, 238, 216, .16)"
+            strokeWidth=".4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity=".55"
+          />
+        </g>
+
+        {/* the crescent — a hand-drawn arc that opens toward the title */}
+        <g className="hero__dawn-arc">
+          <path
+            d="M188 168 Q300 50 412 168"
+            fill="none"
+            stroke="rgba(245, 238, 216, .28)"
+            strokeWidth=".55"
+            strokeLinecap="round"
+            strokeDasharray="0.8 3.2"
+            opacity=".7"
+          />
+        </g>
+
+        {/* tick marks along the arc — quiet register points */}
+        <g className="hero__dawn-ticks" fill="rgba(245, 238, 216, .35)">
+          <circle cx="194" cy="160" r=".9" />
+          <circle cx="226" cy="124" r=".7" />
+          <circle cx="266" cy="86" r="1.1" />
+          <circle cx="300" cy="74" r="1.4" />
+          <circle cx="334" cy="86" r="1.1" />
+          <circle cx="374" cy="124" r=".7" />
+          <circle cx="406" cy="160" r=".9" />
+        </g>
+
+        {/* a small star or two to anchor the sky */}
+        <g className="hero__dawn-stars" fill="rgba(245, 238, 216, .55)">
+          <circle cx="120" cy="80" r="1" />
+          <circle cx="486" cy="68" r="1.2" />
+          <circle cx="92" cy="142" r=".7" />
+          <circle cx="520" cy="120" r=".8" />
+        </g>
+      </svg>
+    </span>
   )
 }

@@ -20,9 +20,9 @@ const WORD_NOTE: Record<WordId, string> = {
 }
 
 const SEAL_TEXT: Record<VoiceId, { top: string; bot: string; glyph: string }> = {
-  quiet: { top: 'PRESS · SET', bot: 'FOLIO · TODAY', glyph: 'm³' },
-  human: { top: 'SET BY HAND', bot: 'FOR NOW', glyph: 'm³' },
-  bold: { top: 'M³ · YES · M³', bot: 'AGAIN', glyph: 'M³' },
+  quiet: { top: 'PRESS · SET', bot: 'FOLIO · TODAY', glyph: 'm³ · folio v' },
+  human: { top: 'SET BY HAND', bot: 'FOR NOW', glyph: 'm³ · folio v' },
+  bold: { top: 'M³ · YES · M³', bot: 'AGAIN', glyph: 'M³ · FOLIO V' },
 }
 
 export function Colophon({ voice, word, setToday }: ColophonProps) {
@@ -42,7 +42,8 @@ export function Colophon({ voice, word, setToday }: ColophonProps) {
           </h2>
           <p className="section__lede">
             A colophon is where a book tells you how it was made. This one is the short list of choices
-            that earned their place on the page — and the one that didn't.
+            that earned their place on the page — and the one that didn't. Set at first light, for the
+            reader who arrived in the dark.
           </p>
         </header>
 
@@ -93,26 +94,29 @@ export function Colophon({ voice, word, setToday }: ColophonProps) {
               <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth=".4" strokeDasharray="1 2.5" opacity=".55" />
               <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255, 255, 255, 0.35)" strokeWidth=".3" />
               <circle cx="50" cy="50" r="28" fill="none" stroke="rgba(255, 255, 255, 0.18)" strokeWidth=".25" />
+
+              {/* the engraving — a small press-and-dawn emblem, matching the answer seal */}
+              <g className="colophon__seal-engraving">
+                <circle cx="50" cy="46" r="9" fill="rgba(8, 10, 18, 0.92)" />
+                <circle cx="50" cy="46" r="9" fill="none" stroke="rgba(245, 238, 216, .35)" strokeWidth=".35" strokeDasharray=".6 1.4" />
+                <circle cx="54" cy="44" r="8" fill={`url(#col-seal-fill-${voice})`} />
+                <line x1="32" y1="56" x2="68" y2="56" stroke="rgba(8, 10, 18, 0.92)" strokeWidth=".7" strokeLinecap="round" />
+                <circle cx="40" cy="56" r="1.2" fill="rgba(8, 10, 18, 0.92)" />
+                <circle cx="60" cy="56" r="1.2" fill="rgba(8, 10, 18, 0.92)" />
+                <line x1="50" y1="32" x2="50" y2="38" stroke="rgba(8, 10, 18, 0.92)" strokeWidth=".45" strokeLinecap="round" />
+              </g>
+
               <circle cx="50" cy="6" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
               <circle cx="50" cy="94" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
               <circle cx="6" cy="50" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
               <circle cx="94" cy="50" r="1.4" fill="rgba(8, 10, 18, 0.85)" />
               <path d="M28 22 Q36 28 32 36 Q26 46 32 56 Q40 66 36 78" fill="none" stroke="rgba(8, 10, 18, 0.18)" strokeWidth=".55" />
               <path d="M72 22 Q64 28 68 36 Q74 46 68 56 Q60 66 64 78" fill="none" stroke="rgba(8, 10, 18, 0.18)" strokeWidth=".55" />
-              <path d="M14 50 Q30 38 50 50 T86 50" fill="none" stroke="rgba(255, 255, 255, 0.3)" strokeWidth=".5" />
+
               <text x="50" y="22" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="rgba(8, 10, 18, 0.92)">
                 {seal.top}
               </text>
-              <text
-                x="50"
-                y="58"
-                textAnchor="middle"
-                fontFamily="Georgia, serif"
-                fontStyle={voice === 'bold' ? 'normal' : 'italic'}
-                fontSize={voice === 'bold' ? 32 : 38}
-                fontWeight={voice === 'bold' ? 800 : 500}
-                fill="rgba(8, 10, 18, 0.92)"
-              >
+              <text x="50" y="74" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.6" letterSpacing="1.4" fill="rgba(8, 10, 18, 0.92)">
                 {seal.glyph}
               </text>
               <text x="50" y="86" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="5" letterSpacing="2" fill="rgba(8, 10, 18, 0.92)">

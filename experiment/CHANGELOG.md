@@ -1,39 +1,13 @@
 # Changelog
 
-The press, after midnight — the title grows monumental, a wax seal cracks open, the press bed pulls heavier.
+## 374 — the press, at first light
 
-## Iteration 373
+A single dawn crescent now sits behind the title as the hero's centerpiece — a quiet first light replacing the after-midnight atmosphere of the previous iterations. The title typesets itself, segment by segment, on first arrival, with each word and space landing as a small act of composition. The wax seals in the answer and colophon now carry a small press-and-dawn engraving in place of the lone glyph, tying the engraving vocabulary to the page's overall theme. Subtle first-light warmth has been added to the page atmosphere via the void gradient, and the brand and footer now speak of the page as set "at first light".
 
-Made the page feel like a real printer's workshop after the day is done. The title gains weight and presence in the chase, a tide mark drifts across the bottom, and the answer arrives behind a wax seal that cracks open.
+Changes of note:
 
-### Hero
-- Title grew more monumental: `clamp(54px, 11vw, 178px)` with balanced line wrapping.
-- The question mark now scales to 2.4× (from 2×) when the `yet` token is marked, with a longer spring.
-- A `tide` mark — a quiet ink-pool line with three beads — drifts in across the bottom of the chase at 2.6s, with a small `TIDE · AFTER MIDNIGHT` caption above it.
-- A second small quoin-stamp mark appears at the upper-right corner of the main quoin (rotated -6°), arriving with its own spring at 1.5s.
-- The chase frame now sits in a soft glow shadow tinted by the active voice, with an inner top highlight for depth.
-- The sub-line now carries a small uppercase tail: `a question, set three ways · one line · one chase`.
-
-### Press
-- The lever pulls further and faster: shaft drops 64px (was 48px) at 12° (was 10°).
-- The impression gets a dashed hairline + center pip below the top stamp, marking the kiss point.
-- The bottom color bar is kept but the rest of the cell stays calm.
-
-### Answer
-- The seal is now a true wax seal with a tinted wax fill (light → deep gradient) and a soft drop shadow.
-- When the leaf opens, the wax seal *cracks* into three pieces (top, left, right wedges of the circle) that drift outward with staggered springs; a thin crack line appears down the middle; the shadow widens.
-- When the leaf folds back, the seal returns whole.
-
-### Marginalia
-- The slips lift higher and cast a longer shadow when active (-12px lift, was -8px).
-- The slip's resting shadow grows deeper at rest, so the active state reads as a real lift.
-
-### Colophon
-- The colophon seal gets the same wax treatment as the answer seal, so the page signs off with the same vocabulary.
-
-### Reduced motion
-- New wax-seal pieces and quoin-stamp mark honor `prefers-reduced-motion: reduce`.
-- Tide mark and stamp mark animations are disabled in reduced-motion mode.
-
-### Build
-- `npm run build` passes. CSS bundle 96 KB (gzip 16.5 KB), JS bundle 257 KB (gzip 75 KB).
+- **Hero**. Added a new `DawnCrescent` component (in `src/Hero.tsx`) that renders a quiet dawn orb with a horizon line, an arc of register ticks, and a few stars — positioned behind the title and animated to fade in over the first few seconds. Replaced the previous tide marks and ghost text.
+- **Title typeset**. The hero title is now split into a list of segments (`m³`, space, `good at`, space, `frontend`) and each segment reveals in sequence on first arrival with a small compose animation. Respects `prefers-reduced-motion`.
+- **Seal engravings**. The wax seal in `src/Answer.tsx` and the seal in `src/Colophon.tsx` now share a small engraving — a dark orb with a crescent bite, sitting on a horizon line between two lever pins, with a type-high tick rising above.
+- **Atmosphere**. `src/style.css` adds a subtle warm gradient to the `.app__void` element so the page reads as catching the first light from a high window. The hero chase now clips its overflow so the dawn crescent stays contained.
+- **Copy**. The hero eyebrow now reads "the question, set at first light"; the topbar brand subtitle reads "an open question, set at first light"; the colophon lede mentions "set at first light, for the reader who arrived in the dark"; the site footer says "composed and set on {date}, at first light".

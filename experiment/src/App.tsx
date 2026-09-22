@@ -217,7 +217,7 @@ export function App() {
           <PrinterMark size={32} voice={voice} />
           <span className="brand__copy">
             <strong>m³ press</strong>
-            <em>an open question, set today</em>
+            <em>an open question, set at first light</em>
           </span>
         </a>
 
@@ -287,7 +287,7 @@ export function App() {
         <span className="site-foot__copy">
           <em>{TITLE}</em>
           <span aria-hidden="true">·</span>
-          <span>composed and set on {setToday}</span>
+          <span>composed and set on {setToday}, at first light</span>
         </span>
         <a className="site-foot__back" href="#question">
           back to the question
