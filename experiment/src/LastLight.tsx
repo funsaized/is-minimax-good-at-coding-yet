@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, type CSSProperties } from 'react'
+import { useId, type CSSProperties } from 'react'
 import type { VoiceId } from './App'
 
 type LastLightProps = {
@@ -20,36 +20,6 @@ const MARKS: Array<{
   { id: 'yet', glyph: '?', label: 'query', sub: 'protect the pause', tone: 'bold', ink: '205, 238, 106' },
 ]
 
-const NIGHT_NAME: Record<number, string> = {
-  0: 'sunday',
-  1: 'monday',
-  2: 'tuesday',
-  3: 'wednesday',
-  4: 'thursday',
-  5: 'friday',
-  6: 'saturday',
-}
-
-function nightHour() {
-  const now = new Date()
-  let h = now.getHours()
-  const m = now.getMinutes()
-  const ampm = h >= 12 ? 'pm' : 'am'
-  h = h % 12
-  if (h === 0) h = 12
-  return `${h}:${m.toString().padStart(2, '0')} ${ampm}`
-}
-
-function lastLightName(hour: number) {
-  if (hour < 5) return 'the small hours'
-  if (hour < 8) return 'before first light'
-  if (hour < 11) return 'at first light'
-  if (hour < 14) return 'mid-morning'
-  if (hour < 18) return 'mid-afternoon'
-  if (hour < 21) return 'as the light softens'
-  return 'in the late still'
-}
-
 function dateTokens(setToday: string) {
   const [month, day, year] = setToday.split(' ')
   const dayNum = parseInt(day, 10)
@@ -66,27 +36,10 @@ export function LastLight({ voice, setToday, pullCount }: LastLightProps) {
   const moonGrad = `last-light-moon-${baseId}`
   const haloGrad = `last-light-halo-${baseId}`
 
-  const [hour, setHour] = useState(() => nightHour())
-  const [dayName, setDayName] = useState<string>(() => {
-    const d = new Date().getDay()
-    return NIGHT_NAME[d] ?? ''
-  })
-
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      setHour(nightHour())
-      const d = new Date().getDay()
-      setDayName(NIGHT_NAME[d] ?? '')
-    }, 30_000)
-    return () => window.clearInterval(id)
-  }, [])
-
   const toneStyle = {
     '--last-tone': `var(--${voice})`,
   } as CSSProperties
 
-  const currentHour = new Date().getHours()
-  const lightName = lastLightName(currentHour)
   const tokens = dateTokens(setToday)
 
   const stars: Array<{ cx: number; cy: number; r: number; d: number }> = [
@@ -296,15 +249,11 @@ export function LastLight({ voice, setToday, pullCount }: LastLightProps) {
       </footer>
 
       <span className="last-light__day" aria-hidden="true">
-        <em>{dayName}</em>
+        <em>{tokens.month}</em>
         <span className="last-light__day-sep" aria-hidden="true">·</span>
         <em>{tokens.day}</em>
         <span className="last-light__day-sep" aria-hidden="true">·</span>
-        <em>{tokens.month}</em>
-        <span className="last-light__day-sep" aria-hidden="true">·</span>
         <em>{tokens.year}</em>
-        <span className="last-light__day-sep" aria-hidden="true">·</span>
-        <em className="last-light__day-hour">{hour}</em>
       </span>
 
       <span className="last-light__stitch" aria-hidden="true">

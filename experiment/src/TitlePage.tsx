@@ -1,29 +1,9 @@
-import { useEffect, useId, useState, type CSSProperties } from 'react'
+import { useId, type CSSProperties } from 'react'
 import type { VoiceId } from './App'
 
 type TitlePageProps = {
   voice: VoiceId
   setToday: string
-}
-
-const DAY_NAME: Record<number, string> = {
-  0: 'sunday',
-  1: 'monday',
-  2: 'tuesday',
-  3: 'wednesday',
-  4: 'thursday',
-  5: 'friday',
-  6: 'saturday',
-}
-
-function plateHour() {
-  const now = new Date()
-  let h = now.getHours()
-  const m = now.getMinutes()
-  const ampm = h >= 12 ? 'pm' : 'am'
-  h = h % 12
-  if (h === 0) h = 12
-  return `${h}:${m.toString().padStart(2, '0')} ${ampm}`
 }
 
 function plateDateTokens(setToday: string) {
@@ -40,29 +20,15 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
   const baseId = useId().replace(/:/g, '')
   const washId = `title-page-wash-${baseId}`
 
-  const [hour, setHour] = useState(() => plateHour())
-  const [dayName, setDayName] = useState<string>(() => {
-    const d = new Date().getDay()
-    return DAY_NAME[d] ?? ''
-  })
-
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      setHour(plateHour())
-      const d = new Date().getDay()
-      setDayName(DAY_NAME[d] ?? '')
-    }, 30_000)
-    return () => window.clearInterval(id)
-  }, [])
-
   const tokens = plateDateTokens(setToday)
   const style = { '--tp-tone': `var(--${voice})` } as CSSProperties
+  const fullDate = `${tokens.month} ${tokens.day}, ${tokens.year}`
 
   return (
     <section
       className="title-page"
       style={style}
-      aria-label="The publication masthead · the page opened at first light"
+      aria-label={`The publication masthead · set ${fullDate} at first light.`}
     >
       <svg
         className="title-page__defs"
@@ -97,8 +63,6 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
         <span className="title-page__cell title-page__cell--left">
           <span className="title-page__cell-key">set on</span>
           <span className="title-page__cell-val">
-            <em className="title-page__day">{dayName}</em>
-            <span aria-hidden="true">·</span>
             <em className="title-page__date">{tokens.day}</em>
             <span aria-hidden="true">·</span>
             <em className="title-page__month">{tokens.month}</em>
@@ -142,8 +106,7 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
             <em className="title-page__folio-name">the question</em>
           </span>
           <span className="title-page__cell-divider" aria-hidden="true" />
-          <span className="title-page__cell-key">at</span>
-          <span className="title-page__cell-val title-page__cell-val--hour">{hour}</span>
+          <span className="title-page__cell-key">at first light</span>
         </span>
       </header>
 

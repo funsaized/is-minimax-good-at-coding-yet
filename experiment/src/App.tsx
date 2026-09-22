@@ -23,9 +23,9 @@ import { PrinterMark } from './PrinterMark'
 import { ReadingNote } from './ReadingNote'
 import { SpineThread } from './SpineThread'
 import { MarginMarks } from './MarginMarks'
-import { ReadingLedger } from './ReadingLedger'
 import { ReadingCord } from './ReadingCord'
 import { LastLight } from './LastLight'
+import { QuestionHeld } from './QuestionHeld'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -57,16 +57,6 @@ function formatSetToday() {
   return `${month} ${day}, ${year}`
 }
 
-function formatHour() {
-  const now = new Date()
-  let h = now.getHours()
-  const m = now.getMinutes()
-  const ampm = h >= 12 ? 'pm' : 'am'
-  h = h % 12
-  if (h === 0) h = 12
-  return `${h}:${m.toString().padStart(2, '0')} ${ampm}`
-}
-
 export function App() {
   const [selectedWord, setSelectedWord] = useState<WordId>('good')
   const [hoveredWord, setHoveredWord] = useState<WordId | null>(null)
@@ -75,7 +65,6 @@ export function App() {
   const [answerOpen, setAnswerOpen] = useState(false)
   const [announcement, setAnnouncement] = useState('')
   const [setToday] = useState(() => formatSetToday())
-  const [setHour] = useState(() => formatHour())
   const [pullCount, setPullCount] = useState(0)
   const [pullSignal, setPullSignal] = useState(0)
   const [isPulling, setIsPulling] = useState(false)
@@ -281,30 +270,20 @@ export function App() {
           </span>
         </a>
 
-        <span className="topbar__folio" aria-hidden="true">
-          <span className="topbar__folio-rule" />
+        <span className="topbar__folio" aria-label={`Now on folio ${activeFolio.index} · ${activeFolio.label}`}>
+          <span className="topbar__folio-rule" aria-hidden="true" />
           <em>folio</em>
-          <span className="topbar__folio-num">{activeFolio.index}</span>
-          <em>· {activeFolio.label}</em>
-          <span className="topbar__folio-rule" />
+          <span className="topbar__folio-num" aria-hidden="true">{activeFolio.index}</span>
+          <span className="topbar__folio-label" aria-hidden="true">· {activeFolio.label}</span>
+          <span className="topbar__folio-rule" aria-hidden="true" />
         </span>
 
-        <div className="status" aria-label="Page status">
-          <span className="status__date">{setToday}</span>
-          <span className="status__hour" aria-hidden="true">· {setHour}</span>
-          <span className={`status__voice status__voice--${voice}`} aria-hidden="true">
-            <span className="status__voice-glyph">{VOICE_LETTER[voice]}</span>
-            <em>{VOICE_NAME[voice]}</em>
-          </span>
-        </div>
+        <span className={`status__voice status__voice--${voice}`} aria-label={`Voice: ${VOICE_NAME[voice]} (${VOICE_LETTER[voice]})`}>
+          <span className="status__voice-glyph" aria-hidden="true">{VOICE_LETTER[voice]}</span>
+          <em className="status__voice-name">{VOICE_NAME[voice]}</em>
+        </span>
       </header>
 
-      <ReadingLedger
-        folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
-        activeId={activeSection}
-        voice={voice}
-        setToday={setToday}
-      />
 
       <TitlePage voice={voice} setToday={setToday} />
 
@@ -404,6 +383,8 @@ export function App() {
       />
 
       <LastLight voice={voice} setToday={setToday} pullCount={pullCount} />
+
+      <QuestionHeld voice={voice} word={activeWord} />
 
       <footer className="site-foot" aria-label="The page, in one line">
         <ReadingNote
