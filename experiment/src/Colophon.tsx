@@ -3,6 +3,7 @@ import type { VoiceId } from './App'
 import type { WordId } from './notes'
 import { PrinterFlourish } from './PrinterFlourish'
 import { KeptTally } from './KeptTally'
+import { PressSignature } from './PressSignature'
 
 type ColophonProps = {
   voice: VoiceId
@@ -264,6 +265,8 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday, keptCou
               </span>
             </span>
           </div>
+
+          <PressSignature voice={voice} word={word} setToday={setToday} />
 
           <div className="colophon__tieoff" aria-hidden="true">
             <svg viewBox="0 0 48 24">

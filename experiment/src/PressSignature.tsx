@@ -1,86 +1,163 @@
-import { useId } from 'react'
-import type { CSSProperties } from 'react'
-import type { VoiceId } from './Press'
+import { useId, type CSSProperties } from 'react'
+import type { VoiceId } from './App'
 import type { WordId } from './notes'
 
 type PressSignatureProps = {
-  folio: string
   voice: VoiceId
   word: WordId
   setToday: string
-  variant?: string
 }
 
-const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
-const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
-const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
-const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
+type MarkCell = {
+  id: WordId
+  glyph: string
+  mark: string
+  markVerb: string
+  word: string
+  wordSub: string
+  testimony: string
+  ink: 'quiet' | 'human' | 'bold'
+}
 
-export function PressSignature({ folio, voice, word, setToday, variant }: PressSignatureProps) {
+const CELLS: MarkCell[] = [
+  {
+    id: 'm3',
+    glyph: '⌇',
+    mark: 'stet',
+    markVerb: 'let it stand',
+    word: 'm³',
+    wordSub: 'the maker',
+    testimony: 'a fingerprint, kept by the page',
+    ink: 'quiet',
+  },
+  {
+    id: 'good',
+    glyph: '∧',
+    mark: 'caret',
+    markVerb: 'make room',
+    word: 'good at',
+    wordSub: 'the verb',
+    testimony: 'one clear thing, held in present tense',
+    ink: 'human',
+  },
+  {
+    id: 'yet',
+    glyph: '?',
+    mark: 'query',
+    markVerb: 'protect the pause',
+    word: 'yet?',
+    wordSub: 'the question',
+    testimony: 'the pause before any answer',
+    ink: 'bold',
+  },
+]
+
+const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
+const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'a', human: 'b', bold: 'c' }
+
+export function PressSignature({ voice, word, setToday }: PressSignatureProps) {
   const baseId = useId().replace(/:/g, '')
-  const style = { '--sig-voice': voice === 'quiet' ? 'var(--sig-quiet)' : voice === 'human' ? 'var(--sig-human)' : 'var(--sig-bold)' } as CSSProperties
-  const isFooter = variant === 'footer'
+  const gradId = `press-sig-grad-${baseId}`
+
+  const style = {
+    '--press-sig-tone': `var(--${voice})`,
+  } as CSSProperties
+
   return (
-    <aside
-      className={`press-signature press-signature--${voice} ${isFooter ? 'press-signature--footer' : ''}`}
-      style={style}
-      aria-label={`Press signature for folio ${folio}, set in ${VOICE_NAME[voice]} voice`}
-    >
-      <span className="press-signature__rule" aria-hidden="true" />
-      <div className="press-signature__core">
-        <span className="press-signature__seal" aria-hidden="true">
-          <svg viewBox="0 0 56 56">
-            <defs>
-              <filter id={`sig-press-grain-${baseId}`} x="-10%" y="-10%" width="120%" height="120%">
-                <feTurbulence type="fractalNoise" baseFrequency="2.6" numOctaves="2" seed="3" stitchTiles="stitch" />
-                <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0" />
-                <feComposite in2="SourceGraphic" operator="in" />
-              </filter>
-            </defs>
-            <g filter={`url(#sig-press-grain-${baseId})`} opacity="0.95">
-              <circle cx="28" cy="28" r="25" fill="none" stroke="currentColor" strokeWidth="1.1" />
-              <circle cx="28" cy="28" r="20" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray="1 2" opacity=".6" />
-              <text x="28" y="20" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.4" letterSpacing="1.4" fill="currentColor">FOLIO {folio}</text>
-              <text x="28" y="36" textAnchor="middle" fontFamily="Georgia, serif" fontStyle="italic" fontSize="14" fill="currentColor">m³</text>
-              <text x="28" y="46" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="3.2" letterSpacing="1.2" fill="currentColor">PRESS · SIGNED</text>
-            </g>
-          </svg>
-        </span>
-        <span className="press-signature__text">
-          <span className="press-signature__row press-signature__row--head">
-            <span className="press-signature__mark">M³ PRESS</span>
-            <span className="press-signature__dot" aria-hidden="true">·</span>
-            <span className="press-signature__folio">FOLIO {folio}</span>
-            <span className="press-signature__dot" aria-hidden="true">·</span>
-            <span className="press-signature__title">the question, set</span>
-          </span>
-          <span className="press-signature__row press-signature__row--sub">
-            <span className="press-signature__voice">
-              <span className="press-signature__voice-letter">{VOICE_LETTER[voice]}</span>
-              <span className="press-signature__voice-name">{VOICE_NAME[voice]}</span>
-            </span>
-            <span className="press-signature__dot" aria-hidden="true">·</span>
-            <span className="press-signature__word">
-              <span className="press-signature__word-mark">{WORD_MARK[word]}</span>
-              <span className="press-signature__word-name">{WORD_LABEL[word]}</span>
-            </span>
-            <span className="press-signature__dot" aria-hidden="true">·</span>
-            <span className="press-signature__date">set on {setToday}</span>
-          </span>
-        </span>
-      </div>
-      <span className="press-signature__rule press-signature__rule--right" aria-hidden="true" />
-      <svg className="press-signature__sweep" viewBox="0 0 360 22" preserveAspectRatio="none" aria-hidden="true">
-        <path
-          d="M2 12c30-9 60 9 90 0s60-9 90 0 60 9 90 0 60-9 88-1"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth=".9"
-          strokeLinecap="round"
-          className="press-signature__sweep-stroke"
-        />
-        <circle cx="358" cy="11" r="1.4" fill="currentColor" className="press-signature__sweep-dot" />
+    <figure className="press-signature" style={style} aria-label="The three marks of the day, composed as the page's signature">
+      <svg
+        className="press-signature__defs"
+        viewBox="0 0 600 24"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id={gradId} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="var(--press-sig-tone)" stopOpacity="0" />
+            <stop offset="50%" stopColor="var(--press-sig-tone)" stopOpacity=".85" />
+            <stop offset="100%" stopColor="var(--press-sig-tone)" stopOpacity="0" />
+          </linearGradient>
+        </defs>
       </svg>
-    </aside>
+
+      <header className="press-signature__head" aria-hidden="true">
+        <span className="press-signature__eyebrow">three marks · the page's signature</span>
+        <span className="press-signature__head-rule" />
+        <em className="press-signature__head-meta">
+          composed in <span className="press-signature__head-voice">{VOICE_LETTER[voice]}</span> · {VOICE_NAME[voice]}
+        </em>
+      </header>
+
+      <ol className="press-signature__row">
+        {CELLS.map((cell, idx) => {
+          const isMarked = cell.id === word
+          const cellStyle = {
+            '--press-sig-ink': `var(--${cell.ink})`,
+          } as CSSProperties
+          return (
+            <li
+              key={cell.id}
+              className={`press-signature__cell press-signature__cell--${cell.ink} ${isMarked ? 'is-marked' : ''}`}
+              style={cellStyle}
+            >
+              <span className="press-signature__cell-rule" aria-hidden="true">
+                <svg viewBox="0 0 100 6" preserveAspectRatio="none">
+                  <line
+                    x1="0"
+                    y1="3"
+                    x2="100"
+                    y2="3"
+                    stroke={`url(#${gradId})`}
+                    strokeWidth=".7"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
+
+              <span className="press-signature__cell-cap" aria-hidden="true">
+                <span className="press-signature__cell-cap-glyph">{cell.glyph}</span>
+                <span className="press-signature__cell-cap-mark">{cell.mark}</span>
+              </span>
+
+              <span className="press-signature__cell-word">{cell.word}</span>
+              <span className="press-signature__cell-sub">{cell.wordSub}</span>
+
+              <span className="press-signature__cell-testimony">
+                <span className="press-signature__cell-testimony-line">{cell.testimony}</span>
+                <em className="press-signature__cell-testimony-verb">— {cell.markVerb}</em>
+              </span>
+
+              <span className="press-signature__cell-bead" aria-hidden="true">
+                <svg viewBox="0 0 14 14">
+                  <circle cx="7" cy="7" r="6" fill="var(--night)" stroke="currentColor" strokeWidth=".6" />
+                  <circle cx="7" cy="7" r="3.4" fill="none" stroke="currentColor" strokeWidth=".3" strokeDasharray=".8 1.4" opacity=".7" />
+                  <circle cx="7" cy="7" r="1.1" fill="currentColor" />
+                </svg>
+              </span>
+
+              {idx < CELLS.length - 1 && (
+                <span className="press-signature__cell-divider" aria-hidden="true">
+                  <svg viewBox="0 0 8 36" preserveAspectRatio="none">
+                    <line x1="4" y1="0" x2="4" y2="36" stroke="currentColor" strokeWidth=".5" strokeDasharray=".9 2" opacity=".55" />
+                    <circle cx="4" cy="6" r=".9" fill="currentColor" opacity=".65" />
+                    <circle cx="4" cy="30" r=".9" fill="currentColor" opacity=".65" />
+                  </svg>
+                </span>
+              )}
+            </li>
+          )
+        })}
+      </ol>
+
+      <footer className="press-signature__foot" aria-hidden="true">
+        <span className="press-signature__foot-rule" />
+        <em className="press-signature__foot-line">
+          composed and set on <span className="press-signature__foot-date">{setToday}</span>
+          <span className="press-signature__foot-dot">·</span>
+          the press of <span className="press-signature__foot-press">m³</span>
+        </em>
+        <span className="press-signature__foot-rule" />
+      </footer>
+    </figure>
   )
 }

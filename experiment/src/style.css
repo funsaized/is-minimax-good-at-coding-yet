@@ -11461,3 +11461,348 @@ section.reveal h2 em::after {
 @media (min-width: 1180px) {
   .hero { padding-left: clamp(220px, 19vw, 300px); }
 }
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 391 · PRESS SIGNATURE
+   the colophon closes with a single composed signature: the
+   three marks of the day (stet · caret · query) set side by
+   side, each with its word, its testimony, and the bead that
+   ties it to the spine. one plate, one signature, three
+   readings.
+   ──────────────────────────────────────────────────────────── */
+
+.press-signature {
+  position: relative;
+  display: block;
+  margin: clamp(28px, 3.4vw, 48px) auto clamp(18px, 2vw, 28px);
+  padding: clamp(22px, 2.6vw, 36px) clamp(20px, 4vw, 56px) clamp(20px, 2.4vw, 32px);
+  max-width: 920px;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  background:
+    radial-gradient(ellipse 70% 90% at 50% 50%, color-mix(in srgb, var(--press-sig-tone, var(--quiet)) 6%, transparent), transparent 70%),
+    transparent;
+}
+
+.press-signature__defs {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.press-signature__head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.6vw, 16px);
+  margin-bottom: clamp(18px, 2.4vw, 30px);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.press-signature__eyebrow {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 13px;
+  color: var(--paper-soft);
+}
+
+.press-signature__head-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+  max-width: 120px;
+}
+
+.press-signature__head-meta em {
+  font-style: normal;
+}
+
+.press-signature__head-meta {
+  color: var(--paper-soft);
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12.5px;
+}
+
+.press-signature__head-voice {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-style: normal;
+  padding: 1px 5px;
+  border-radius: 2px;
+  border: 1px solid var(--line-strong);
+  color: color-mix(in srgb, var(--press-sig-tone, var(--quiet)) 75%, var(--paper));
+  vertical-align: 1px;
+  margin-right: 4px;
+}
+
+.press-signature__row {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: stretch;
+  gap: 0;
+}
+
+.press-signature__cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(14px, 1.8vw, 24px) clamp(14px, 1.6vw, 22px);
+  gap: 10px;
+  color: var(--press-sig-ink, var(--paper-soft));
+  transition: transform .35s var(--ease);
+}
+
+.press-signature__cell.is-marked {
+  transform: translateY(-1px);
+}
+
+.press-signature__cell.is-marked .press-signature__cell-word {
+  color: var(--press-sig-ink, var(--paper));
+  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--press-sig-ink) 35%, transparent));
+}
+
+.press-signature__cell-rule {
+  display: block;
+  width: 100%;
+  max-width: 160px;
+  height: 6px;
+  opacity: .65;
+  margin-bottom: 4px;
+}
+
+.press-signature__cell-rule svg { display: block; width: 100%; height: 100%; }
+
+.press-signature__cell-cap {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--display);
+}
+
+.press-signature__cell-cap-glyph {
+  font-size: clamp(28px, 3.6vw, 42px);
+  line-height: 1;
+  color: var(--press-sig-ink, var(--paper));
+  font-feature-settings: 'liga' 0;
+  transition: transform .5s var(--ease-spring);
+}
+
+.press-signature__cell.is-marked .press-signature__cell-cap-glyph {
+  transform: scale(1.08);
+}
+
+.press-signature__cell-cap-mark {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.press-signature__cell-word {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(22px, 2.6vw, 30px);
+  letter-spacing: -.018em;
+  color: var(--paper);
+  line-height: 1;
+  transition: color .35s var(--ease);
+}
+
+.press-signature__cell--bold .press-signature__cell-word {
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.045em;
+  text-transform: uppercase;
+  font-size: clamp(18px, 2.1vw, 24px);
+}
+
+.press-signature__cell-sub {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.press-signature__cell-testimony {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  max-width: 22ch;
+}
+
+.press-signature__cell-testimony-line {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.3vw, 15px);
+  line-height: 1.45;
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+}
+
+.press-signature__cell-testimony-verb {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--muted);
+}
+
+.press-signature__cell-bead {
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin-top: 4px;
+  color: var(--press-sig-ink, var(--paper));
+  opacity: .85;
+  transition: opacity .35s var(--ease), transform .35s var(--ease);
+}
+
+.press-signature__cell.is-marked .press-signature__cell-bead {
+  opacity: 1;
+  transform: scale(1.18);
+}
+
+.press-signature__cell-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(20px, 2.6vw, 36px);
+  align-self: stretch;
+  padding: clamp(8px, 1.4vw, 18px) 0;
+  color: var(--line-strong);
+}
+
+.press-signature__cell-divider svg {
+  width: 8px;
+  height: 100%;
+  max-height: 80px;
+}
+
+.press-signature__foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: clamp(18px, 2.4vw, 28px);
+  padding-top: clamp(14px, 1.6vw, 22px);
+  border-top: 1px dashed var(--line-soft);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.3vw, 16px);
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+}
+
+.press-signature__foot-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+  max-width: 90px;
+}
+
+.press-signature__foot-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-style: italic;
+  color: var(--paper);
+}
+
+.press-signature__foot-date {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--paper-soft);
+}
+
+.press-signature__foot-dot {
+  color: var(--muted);
+  font-style: normal;
+  margin: 0 4px;
+}
+
+.press-signature__foot-press {
+  font-style: italic;
+  color: color-mix(in srgb, var(--press-sig-tone, var(--quiet)) 75%, var(--paper));
+}
+
+.press-signature__foot-press sup {
+  font-size: .6em;
+  vertical-align: .32em;
+  letter-spacing: 0;
+  margin-left: .02em;
+  font-weight: 400;
+}
+
+/* — on mobile, the row collapses into a stacked triptych — */
+
+@media (max-width: 760px) {
+  .press-signature {
+    padding: clamp(18px, 4vw, 26px) var(--gutter-tight);
+  }
+  .press-signature__row {
+    grid-template-columns: 1fr;
+    gap: clamp(4px, 1vw, 8px);
+  }
+  .press-signature__cell-divider {
+    display: none;
+  }
+  .press-signature__cell {
+    padding: clamp(10px, 2.2vw, 16px) clamp(8px, 2vw, 14px);
+    border-bottom: 1px dashed var(--line-soft);
+  }
+  .press-signature__cell:last-child { border-bottom: 0; }
+  .press-signature__cell-testimony { max-width: 36ch; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-signature__cell,
+  .press-signature__cell-cap-glyph,
+  .press-signature__cell-bead,
+  .press-signature__cell-word { transition: none; }
+  .press-signature__cell.is-marked { transform: none; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 391 · COLOPHON RHYTHM
+   the colophon gains a touch more breathing space above the
+   new press-signature plate, so the signature closes the
+   page rather than crowds the closing flourish.
+   ──────────────────────────────────────────────────────────── */
+
+.colophon__stop-press {
+  margin-bottom: clamp(20px, 2.6vw, 30px);
+}
+
+.colophon__signoff + .press-signature {
+  margin-top: clamp(36px, 4vw, 54px);
+}
