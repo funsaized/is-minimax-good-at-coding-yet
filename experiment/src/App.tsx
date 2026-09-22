@@ -205,6 +205,32 @@ export function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [cycleVoice, answerOpen])
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const root = document.documentElement
+    let raf = 0
+    const compute = () => {
+      const doc = document.documentElement
+      const scrolled = window.scrollY
+      const total = Math.max(1, doc.scrollHeight - window.innerHeight)
+      const ratio = Math.max(0, Math.min(1, scrolled / total))
+      root.style.setProperty('--page-prog', ratio.toFixed(3))
+      raf = 0
+    }
+    const onScroll = () => {
+      if (raf) return
+      raf = window.requestAnimationFrame(compute)
+    }
+    compute()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) window.cancelAnimationFrame(raf)
+    }
+  }, [])
+
   const onWordKey = (event: ReactKeyboardEvent<HTMLButtonElement>, id: WordId) => {
     const order: WordId[] = ['m3', 'good', 'yet']
     const index = order.indexOf(id)

@@ -1,30 +1,37 @@
-# Iteration 402
+# Iteration 403
 
-A focused pass: the dawn, the press, and the answer now arrive as one composed breath.
+The dawn, the press, and the answer now arrive as one breath — refined end to end.
 
 ## What changed
 
-- **FirstLight** — replaced the busy particles and rays with a single
-  hand-drawn dawn: one rising sun arc, a confident horizon rule, and a
-  handful of stars placed by hand. The dawn now feels like a moment,
-  not a decoration.
-- **LastLight** — enlarged the moon (46 → 62) and trimmed the star
-  field from six to five, each placed by hand. The horizon is wider and
-  carries three quiet registration ticks.
-- **TitlePage** — removed the trailing "at first light" cell so the
-  masthead reads as three composed beats (date · mark · folio) instead
-  of four.
-- **Hero** — refined the hand-drawn illuminated Q with a cleaner path;
-  the bowl now leads the eye and the tail bead is more deliberate.
-- **Press lever** — added a small ink-dust burst of five grains that
-  flies out of the press bed when the lever is pulled. The lever also
-  reads more cleanly on mobile (smaller knob and shorter shaft).
-- **Answer reveal** — when the seal cracks, an ink burst of eight
-  lines and beads now flies out, and a thin gilt edge draws across the
-  top of the leaf as the answer unfolds.
-- **Compositor's note** — the note is now held back until the first
-  pull. Before that, it reads "pull the lever once, and i will tell you
-  what the press has learned." After, it reveals the existing voice-
-  specific note with a small fade-in.
-- **Reduced motion** — every new motion respects `prefers-reduced-
-  motion: reduce` and the burst/dust effects are hidden in that mode.
+The opening was tightened into a single composed breath. The FirstLight now
+arrives with a softer secondary arc and a quiet horizon trail that bleeds
+into the TitlePage masthead below; the masthead gained a one-line preface
+("the line is set this morning · read it three times, let one voice hold")
+that ties the publication to the question. The Hero title now breathes
+slightly differently in each voice — quieter voices sit a little looser,
+bolder voices a little tighter — and its eyebrow glyph and coda pin have
+small, slow breaths that make the centerpiece feel alive.
+
+A scroll-driven atmospheric wash now warms the page from the dawn at the
+top to the dusk at the bottom, so the page reads like one continuous
+breath from first light to last light. The Answer leaf unfolds with a
+touch more theater; its headline settles into place, and the wax seal
+shadows pulse once on the break. The LastLight gains a thin closing rule
+that ties it to the QuestionHeld that follows.
+
+## Why
+
+Iteration 402 had the page holding one composed breath; this iteration
+deepens that into one breath all the way through, from the dawn to the
+close. The refinements are small and authored — none of them add controls
+or new surfaces, they just make the existing ones feel more deliberate.
+
+## Files touched
+
+- `src/App.tsx` — added scroll-driven `--page-prog` custom property
+- `src/FirstLight.tsx` — refined dawn with secondary arc, trail, and wash
+- `src/TitlePage.tsx` — added a one-line preface between masthead rows
+- `src/style.css` — added voice-specific Hero refinements, atmospheric
+  wash, answer unfold, seal pulse, headline settle, last-light rule,
+  and small breaths on the eyebrow glyph, coda pin, and proof cards

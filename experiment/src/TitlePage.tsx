@@ -108,6 +108,14 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
         </span>
       </header>
 
+      <p className="title-page__preface" aria-hidden="true">
+        <span className="title-page__preface-rule" />
+        <em className="title-page__preface-line">
+          the line is set this morning · read it three times, let one voice hold
+        </em>
+        <span className="title-page__preface-rule" />
+      </p>
+
       <span className="title-page__rule title-page__rule--bot" aria-hidden="true">
         <span className="title-page__rule-line title-page__rule-line--faint" />
         <span className="title-page__rule-glyph">

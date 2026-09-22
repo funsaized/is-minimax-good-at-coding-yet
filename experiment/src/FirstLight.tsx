@@ -6,73 +6,106 @@ export function FirstLight() {
   const arcId = `fl-arc-${id}`
   const haloId = `fl-halo-${id}`
   const horizonId = `fl-horizon-${id}`
+  const washId = `fl-wash-${id}`
 
   return (
     <div className="first-light" aria-hidden="true">
       <svg
         className="first-light__svg"
-        viewBox="0 0 1400 320"
+        viewBox="0 0 1400 360"
         preserveAspectRatio="none"
         aria-hidden="true"
       >
         <defs>
           <linearGradient id={skyId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(255, 226, 188, .16)" />
-            <stop offset="22%" stopColor="rgba(255, 220, 180, .085)" />
-            <stop offset="58%" stopColor="rgba(255, 220, 178, .025)" />
+            <stop offset="0%" stopColor="rgba(255, 226, 188, .14)" />
+            <stop offset="22%" stopColor="rgba(255, 220, 180, .075)" />
+            <stop offset="58%" stopColor="rgba(255, 220, 178, .02)" />
             <stop offset="100%" stopColor="rgba(255, 220, 178, 0)" />
           </linearGradient>
           <radialGradient id={arcId} cx="50%" cy="100%" r="62%">
-            <stop offset="0%" stopColor="rgba(255, 224, 188, .65)" />
-            <stop offset="48%" stopColor="rgba(255, 218, 176, .16)" />
+            <stop offset="0%" stopColor="rgba(255, 232, 196, .75)" />
+            <stop offset="48%" stopColor="rgba(255, 222, 180, .18)" />
             <stop offset="100%" stopColor="rgba(255, 218, 176, 0)" />
           </radialGradient>
           <radialGradient id={haloId} cx="50%" cy="100%" r="58%">
-            <stop offset="0%" stopColor="rgba(255, 236, 208, .22)" />
-            <stop offset="60%" stopColor="rgba(255, 218, 178, .05)" />
+            <stop offset="0%" stopColor="rgba(255, 240, 214, .26)" />
+            <stop offset="60%" stopColor="rgba(255, 222, 184, .06)" />
             <stop offset="100%" stopColor="rgba(255, 218, 178, 0)" />
           </radialGradient>
           <linearGradient id={horizonId} x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stopColor="rgba(255, 220, 178, 0)" />
-            <stop offset="14%" stopColor="rgba(255, 220, 178, .22)" />
-            <stop offset="50%" stopColor="rgba(255, 222, 184, .42)" />
-            <stop offset="86%" stopColor="rgba(255, 220, 178, .22)" />
+            <stop offset="14%" stopColor="rgba(255, 220, 178, .24)" />
+            <stop offset="50%" stopColor="rgba(255, 226, 192, .5)" />
+            <stop offset="86%" stopColor="rgba(255, 220, 178, .24)" />
             <stop offset="100%" stopColor="rgba(255, 220, 178, 0)" />
+          </linearGradient>
+          <linearGradient id={washId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(255, 220, 180, 0)" />
+            <stop offset="60%" stopColor="rgba(255, 220, 180, .04)" />
+            <stop offset="100%" stopColor="rgba(255, 220, 180, .085)" />
           </linearGradient>
         </defs>
 
-        <rect x="0" y="0" width="1400" height="320" fill={`url(#${skyId})`} />
+        <rect x="0" y="0" width="1400" height="360" fill={`url(#${skyId})`} />
+
+        {/* — a soft wash that bleeds into the title page below — */}
+        <rect className="first-light__wash" x="0" y="200" width="1400" height="160" fill={`url(#${washId})`} />
 
         {/* — the dawn halo — a soft glow rising above the horizon — */}
         <ellipse
           className="first-light__halo"
           cx="700"
-          cy="260"
-          rx="640"
-          ry="220"
+          cy="280"
+          rx="660"
+          ry="240"
           fill={`url(#${haloId})`}
         />
 
         {/* — the sun's first arc — a single thin curve catching the light — */}
         <path
           className="first-light__arc"
-          d="M 460 250 A 240 240 0 0 1 940 250"
+          d="M 440 272 A 260 260 0 0 1 960 272"
           fill="none"
           stroke={`url(#${arcId})`}
-          strokeWidth="1.2"
+          strokeWidth="1.4"
           strokeLinecap="round"
+        />
+
+        {/* — a soft secondary arc, half a hand lower — */}
+        <path
+          className="first-light__arc first-light__arc--second"
+          d="M 480 300 A 220 220 0 0 1 920 300"
+          fill="none"
+          stroke={`url(#${arcId})`}
+          strokeWidth=".8"
+          strokeLinecap="round"
+          opacity=".5"
         />
 
         {/* — the horizon — a single confident rule the dawn rises from — */}
         <line
           className="first-light__horizon"
           x1="0"
-          y1="252"
+          y1="276"
           x2="1400"
-          y2="252"
+          y2="276"
           stroke={`url(#${horizonId})`}
           strokeWidth="1.4"
           strokeLinecap="round"
+        />
+
+        {/* — a thinner trail just below, drifting into the page — */}
+        <line
+          className="first-light__horizon first-light__horizon--trail"
+          x1="120"
+          y1="284"
+          x2="1280"
+          y2="284"
+          stroke={`url(#${horizonId})`}
+          strokeWidth=".4"
+          strokeLinecap="round"
+          opacity=".5"
         />
 
         {/* — a handful of stars — placed by hand, not by algorithm — */}
@@ -94,9 +127,9 @@ export function FirstLight() {
           stroke="rgba(255, 220, 178, .42)"
           strokeLinecap="round"
         >
-          <line x1="500" y1="246" x2="500" y2="258" strokeWidth=".5" />
-          <line x1="700" y1="244" x2="700" y2="260" strokeWidth=".55" />
-          <line x1="900" y1="246" x2="900" y2="258" strokeWidth=".5" />
+          <line x1="500" y1="270" x2="500" y2="282" strokeWidth=".5" />
+          <line x1="700" y1="268" x2="700" y2="284" strokeWidth=".55" />
+          <line x1="900" y1="270" x2="900" y2="282" strokeWidth=".5" />
         </g>
       </svg>
     </div>
