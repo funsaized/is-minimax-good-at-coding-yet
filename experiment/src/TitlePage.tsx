@@ -140,56 +140,6 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
       </header>
 
       <div className="title-page__stage">
-        <span className="title-page__initial" aria-hidden="true">
-          <svg viewBox="0 0 100 124" className="title-page__initial-svg">
-            <defs>
-              <linearGradient id={`tp-initial-grad-${baseId}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="currentColor" stopOpacity=".28" />
-                <stop offset="55%" stopColor="currentColor" stopOpacity=".08" />
-                <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-              </linearGradient>
-              <linearGradient id={`tp-initial-wash-${baseId}`} x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="var(--tp-tone)" stopOpacity=".18" />
-                <stop offset="100%" stopColor="var(--tp-tone)" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            <rect x="0" y="0" width="100" height="124" fill={`url(#${grainId})`} opacity=".06" />
-            <path
-              d="M14 18 Q12 8 24 6 L80 6 Q92 6 90 16 L88 30 Q88 38 80 38 L34 38 Q26 38 26 46 L26 78 Q26 96 44 104 Q66 112 78 96 Q86 86 82 76"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="title-page__initial-stroke"
-            />
-            <path
-              d="M14 18 Q12 8 24 6 L80 6 Q92 6 90 16 L88 30 Q88 38 80 38 L34 38 Q26 38 26 46 L26 78 Q26 96 44 104 Q66 112 78 96 Q86 86 82 76"
-              fill={`url(#tp-initial-grad-${baseId})`}
-              stroke="none"
-              opacity=".55"
-            />
-            <path
-              d="M82 76 Q94 82 92 96 Q88 110 72 110"
-              fill={`url(#tp-initial-wash-${baseId})`}
-              stroke="none"
-              opacity=".7"
-            />
-            <path
-              d="M82 76 Q94 82 92 96 Q88 110 72 110"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              className="title-page__initial-tail"
-            />
-            <circle cx="14" cy="18" r="2.2" fill="currentColor" className="title-page__initial-bead" />
-            <circle cx="78" cy="96" r="2" fill="currentColor" className="title-page__initial-bead" />
-            <circle cx="72" cy="110" r="1.4" fill="currentColor" className="title-page__initial-bead" opacity=".8" />
-            <path d="M82 76 l-3 4 l5 1 l-1 -5 z" fill="currentColor" opacity=".85" className="title-page__initial-spark" />
-          </svg>
-        </span>
-
         <span className="title-page__eyebrow" aria-hidden="true">
           <em className="title-page__eyebrow-mark">¶</em>
           <em>folio</em>
@@ -197,17 +147,6 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
           <span className="title-page__eyebrow-line" aria-hidden="true" />
           <em className="title-page__eyebrow-tag">the opening plate</em>
         </span>
-
-        <p className="title-page__line" aria-label="is Minimax M3 good at frontend yet?">
-          <span className="title-page__chip title-page__chip--m3">m³</span>
-          <span className="title-page__lead">&nbsp;good at&nbsp;</span>
-          <span className="title-page__chip title-page__chip--plain">frontend</span>
-          <span className="title-page__lead">&nbsp;</span>
-          <span className="title-page__chip title-page__chip--yet">
-            <span>yet</span>
-            <span className="title-page__punct">?</span>
-          </span>
-        </p>
 
         <p className="title-page__motto" aria-hidden="true">
           <em>{glyph.motto}</em>

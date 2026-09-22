@@ -1,17 +1,18 @@
-# Changelog
+# Iteration 407
 
-## Iteration 406 — the dawn arrives, the press strikes, the question holds
-The dawn visibly rises above the title page; the press bed's lever pull sends a visible shockwave of light across the impression; the question mark at the heart of the title lands with more weight. The opening is brighter, the press feels more mechanical, the closing punctuation breathes.
+A confident, monumental title — set on a single breath. Removed the awkward three-dot separator between the two title lines; the question now reads as one composition (line A "m³ good at", line B "frontend yet?"). The opening plate was de-duplicated: the illuminated initial and duplicate question text moved out of the title page, letting the hero own the question with the type-high scale it deserves. The dawn's first light was softened and a new eyebrow stamp ("first impression") was added to the hero's ledger row.
 
-### Key changes
-- **FirstLight** — a hand-drawn dawn orb rises above the horizon, ten rays fan outward in slow waves, and the halo above the sun is warmer and larger. The component now opens with a true "arrival" rather than a faint wash.
-- **Press bed strike** — pulling the lever now produces a flash of light plus three expanding shockwaves (one solid, one slow, one dashed) that radiate from the impression. The strike rings through the press bed.
-- **Title hero** — the question is set slightly larger and gains a soft voice-tinted glow; the title-page initial is larger; the question mark punctuation now arrives at a deeper scale with a stronger drop-shadow.
-- **Title page wash** — the dawn-wash above the masthead is taller and warmer, so the first light now visibly carries into the title page below.
-- **Colophon seal** — slightly larger so it reads as a true finishing seal.
-- All animations honour `prefers-reduced-motion: reduce`.
+## what shifted
+- hero title: single scale, two natural lines; removed the lead-dot separator, simplified the question-mark punctuation (no more elaborate kern ticks)
+- title page: dropped the duplicate "m³ good at frontend yet?" text and the redundant illuminated Q — the page is now a quiet folio opener (masthead, motto, register, preface)
+- first light: softer sky and orb aura; the dawn reads as breath rather than headline
+- hero eyebrow: a "first impression · register mark" stamp balances the folio-i note on the row
 
-### Files touched
-- `src/FirstLight.tsx` — dawn orb, rays, halo
-- `src/Press.tsx` — strike flash + shockwaves on impression
-- `src/style.css` — `first-light` dawn arrival, `press-strike` effect, refined hero, title page wash, colophon seal, punct arrival
+## what was preserved
+- three voices (quiet / human / bold) and the lever-press mechanic
+- press bed, proof line, notation key, answer leaf, colophon — all unchanged
+- ARIA roles, keyboard nav (shift+v cycles voice, arrow keys move the marked word)
+- reduced-motion fallbacks throughout
+
+## what didn't move
+- iteration counts, model scores, deployment stats — those live with the viewer

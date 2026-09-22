@@ -51,7 +51,7 @@ const VOICE: Record<VoiceId, VoiceSpec> = {
     family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
     weight: 400,
     style: 'italic',
-    tracking: '-.018em',
+    tracking: '-.022em',
     uppercased: false,
   },
   human: {
@@ -64,7 +64,7 @@ const VOICE: Record<VoiceId, VoiceSpec> = {
     family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
     weight: 500,
     style: 'italic',
-    tracking: '-.014em',
+    tracking: '-.016em',
     uppercased: false,
   },
   bold: {
@@ -95,21 +95,29 @@ const TOKEN_COPY: Record<WordId, TokenCopy> = {
   yet: { label: 'yet?', glyph: '?', tone: 'the pause', mark: 'query' },
 }
 
-const TITLE_SEGMENTS: Array<{ id: WordId | 'plain' | 'space'; text: string; mark?: boolean }> = [
-  { id: 'm3', text: 'm³', mark: true },
-  { id: 'space', text: ' ' },
-  { id: 'good', text: 'good at', mark: true },
-  { id: 'space', text: ' ' },
-  { id: 'plain', text: 'frontend' }
+type SegmentId = WordId | 'plain' | 'space'
+
+type Segment = {
+  id: SegmentId
+  text: string
+  mark?: boolean
+  line: 'a' | 'b'
+}
+
+const TITLE_SEGMENTS: Segment[] = [
+  { id: 'm3', text: 'm³', mark: true, line: 'a' },
+  { id: 'space', text: ' ', line: 'a' },
+  { id: 'good', text: 'good at', mark: true, line: 'a' },
+  { id: 'plain', text: 'frontend', line: 'b' },
+  { id: 'space', text: ' ', line: 'b' },
+  { id: 'yet', text: 'yet', mark: true, line: 'b' },
 ]
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
 const SET_DURATION_MS = 1500
-const STEP_MS = 70
+const STEP_MS = 90
 const SET_BASE_DELAY_MS = 700
-
-const PROOF_NUMBER = String(Math.floor(Math.random() * 800) + 1200).padStart(4, '0')
 
 export function Hero({
   voice,
@@ -202,80 +210,56 @@ export function Hero({
             <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
             <span className="hero__eyebrow-em">set the line · mark a word</span>
           </span>
+
+          <span className="hero__eyebrow-stamp" aria-hidden="true">
+            <span className="hero__eyebrow-stamp-rule" />
+            <em>first impression</em>
+            <span className="hero__eyebrow-stamp-glyph">
+              <svg viewBox="0 0 16 16">
+                <circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" strokeWidth=".55" />
+                <circle cx="8" cy="8" r="3" fill="currentColor" opacity=".55" />
+                <circle cx="8" cy="8" r=".9" fill="var(--night)" />
+              </svg>
+            </span>
+          </span>
         </div>
 
         <h1
           id="hero-title-label"
-          className={`hero__title hero__title--${voice}`}
+          className={`hero__title hero__title--${voice} hero__title--arrange`}
           aria-label="is Minimax M3 good at frontend yet?"
         >
-          <span className="hero__title-line hero__title-line-a">
+          <span className="hero__title-row hero__title-row--a">
             <span className="hero__title-baseline" aria-hidden="true" />
-            {renderTitleSegments({
+            {renderLineSegments({
               lineId: 'a',
+              segments: TITLE_SEGMENTS.filter(s => s.line === 'a'),
+              offset: 0,
               progress: setProgress,
               word,
               hover,
+              voice,
               onWord,
               onHover,
               onWordKey,
               tokenRefs,
             })}
           </span>
-          <span className="hero__title-lead" aria-hidden="true">
-            <em>·</em>
-            <em>·</em>
-            <em>·</em>
-          </span>
-          <span className="hero__title-line hero__title-line-b">
+          <span className="hero__title-row hero__title-row--b">
             <span className="hero__title-baseline" aria-hidden="true" />
-            <span
-              className={`ht__word ht__word--yet ${word === 'yet' ? 'is-marked' : ''} ${hover === 'yet' ? 'is-hover' : ''}`}
-              aria-hidden="true"
-            >
-              <button
-                type="button"
-                ref={node => {
-                  tokenRefs.current.yet = node
-                }}
-                className="ht__token ht__token--yet"
-                onClick={() => onWord('yet')}
-                onMouseEnter={() => onHover('yet')}
-                onMouseLeave={() => onHover(null)}
-                onFocus={() => onHover('yet')}
-                onBlur={() => onHover(null)}
-                onKeyDown={event => onWordKey(event, 'yet')}
-                aria-pressed={word === 'yet'}
-                aria-label={`${TOKEN_COPY.yet.label} — ${TOKEN_COPY.yet.tone} (mark: ${TOKEN_COPY.yet.mark})`}
-              >
-                <span className="ht__kern ht__kern--before" aria-hidden="true">
-                  <svg viewBox="0 0 8 12" preserveAspectRatio="none">
-                    <path d="M1 0 L8 6 L1 12" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-                <span className="ht__token-yet">yet</span>
-                <span className={`ht__punct ht__punct--${voice}`} aria-hidden="true">
-                  <span className="ht__punct-kern ht__punct-kern--before" aria-hidden="true">
-                    <svg viewBox="0 0 6 10" preserveAspectRatio="none">
-                      <path d="M1 0 L6 5 L1 10" fill="none" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </span>
-                  <span className="ht__punct-mark">?</span>
-                  <span className="ht__punct-kern ht__punct-kern--after" aria-hidden="true">
-                    <svg viewBox="0 0 6 10" preserveAspectRatio="none">
-                      <path d="M5 0 L0 5 L5 10" fill="none" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </span>
-                  <span className="ht__punct-ghost ht__punct-ghost--a" aria-hidden="true">?</span>
-                  <span className="ht__punct-ghost ht__punct-ghost--b" aria-hidden="true">?</span>
-                </span>
-                <span className="ht__kern ht__kern--after" aria-hidden="true">
-                  <svg viewBox="0 0 8 12" preserveAspectRatio="none">
-                    <path d="M7 0 L0 6 L7 12" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </button>
-            </span>
+            {renderLineSegments({
+              lineId: 'b',
+              segments: TITLE_SEGMENTS.filter(s => s.line === 'b'),
+              offset: TITLE_SEGMENTS.filter(s => s.line === 'a').length,
+              progress: setProgress,
+              word,
+              hover,
+              voice,
+              onWord,
+              onHover,
+              onWordKey,
+              tokenRefs,
+            })}
           </span>
         </h1>
 
@@ -385,31 +369,37 @@ function segmentOffsets(reached: number): number[] {
 
 type RenderArgs = {
   lineId: 'a' | 'b'
+  segments: Segment[]
+  offset: number
   progress: number[]
   word: WordId
   hover: WordId | null
+  voice: VoiceId
   onWord: (word: WordId, focus?: boolean) => void
   onHover: (word: WordId | null) => void
   onWordKey: (event: ReactKeyboardEvent<HTMLButtonElement>, id: WordId) => void
   tokenRefs: MutableRefObject<Partial<Record<WordId, HTMLButtonElement | null>>>
 }
 
-function renderTitleSegments({
+function renderLineSegments({
   lineId,
+  segments,
+  offset,
   progress,
   word,
   hover,
+  voice,
   onWord,
   onHover,
   onWordKey,
   tokenRefs,
 }: RenderArgs) {
-  const segs = TITLE_SEGMENTS
-  return segs.map((seg, idx) => {
-    const p = progress[segIndex(seg.id)] ?? 0
+  return segments.map((seg, idx) => {
+    const realIdx = offset + idx
+    const p = progress[realIdx] ?? 0
     const visible = p >= 1
     const setStyle = {
-      '--set-idx': String(TITLE_SEGMENTS.indexOf(seg)),
+      '--set-idx': String(realIdx),
       '--set-progress': String(p),
     } as CSSProperties
     if (seg.id === 'space') {
@@ -442,6 +432,39 @@ function renderTitleSegments({
     const copy = TOKEN_COPY[id]
     const isMarked = word === id
     const isHover = hover === id
+    if (id === 'yet') {
+      return (
+        <span
+          key={`${lineId}-${id}`}
+          className={`ht__word ht__word--yet ${isMarked ? 'is-marked' : ''} ${isHover ? 'is-hover' : ''}`}
+          aria-hidden="true"
+          style={setStyle}
+          data-set={visible ? 'in' : 'pending'}
+        >
+          {isMarked && <span className="ht__glyph">{copy.glyph}</span>}
+          <button
+            type="button"
+            ref={node => {
+              tokenRefs.current.yet = node
+            }}
+            className="ht__token ht__token--yet"
+            onClick={() => onWord('yet')}
+            onMouseEnter={() => onHover('yet')}
+            onMouseLeave={() => onHover(null)}
+            onFocus={() => onHover('yet')}
+            onBlur={() => onHover(null)}
+            onKeyDown={event => onWordKey(event, 'yet')}
+            aria-pressed={word === 'yet'}
+            aria-label={`${copy.label} — ${copy.tone} (mark: ${copy.mark})`}
+          >
+            <span className="ht__token-yet">yet</span>
+            <span className={`ht__punct ht__punct--${voice}`} aria-hidden="true">
+              <span className="ht__punct-mark">?</span>
+            </span>
+          </button>
+        </span>
+      )
+    }
     return (
       <span
         key={`${lineId}-${id}`}
@@ -471,10 +494,6 @@ function renderTitleSegments({
       </span>
     )
   })
-}
-
-function segIndex(id: WordId | 'plain' | 'space' | 'punct'): number {
-  return TITLE_SEGMENTS.findIndex(s => s.id === id)
 }
 
 type HeroVoicesProps = {
@@ -507,7 +526,7 @@ const HERO_VOICES: Record<VoiceId, VoiceChip> = {
     family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
     weight: 400,
     style: 'italic',
-    tracking: '-.018em',
+    tracking: '-.022em',
     uppercased: false,
     sample: 'is m³ good at frontend yet?',
   },
@@ -520,7 +539,7 @@ const HERO_VOICES: Record<VoiceId, VoiceChip> = {
     family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
     weight: 500,
     style: 'italic',
-    tracking: '-.014em',
+    tracking: '-.016em',
     uppercased: false,
     sample: 'is M3 good at frontend yet?',
   },
