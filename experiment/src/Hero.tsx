@@ -11,6 +11,7 @@ import type { VoiceId } from './App'
 import type { WordId } from './notes'
 import { ChaseFrame } from './ChaseFrame'
 import { VoicePlate } from './VoicePlate'
+import { TypeBed } from './TypeBed'
 
 type HeroProps = {
   voice: VoiceId
@@ -322,6 +323,15 @@ export function Hero({
             </span>
           </span>
         </h1>
+
+        <TypeBed
+          voice={voice}
+          word={word}
+          hover={hover}
+          onWord={onWord}
+          onHover={onHover}
+          onWordKey={onWordKey}
+        />
 
         <span className="hero__sub" aria-hidden="true">
           <span className="hero__sub-mark" aria-hidden="true">⌇</span>
