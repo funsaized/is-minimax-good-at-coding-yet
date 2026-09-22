@@ -10,7 +10,6 @@ import {
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 import { ChaseFrame } from './ChaseFrame'
-import { TypeBed } from './TypeBed'
 
 type HeroProps = {
   voice: VoiceId
@@ -31,6 +30,7 @@ type VoiceSpec = {
   face: string
   sample: string
   gloss: string
+  note: string
   family: string
   weight: number
   style: 'italic' | 'normal'
@@ -45,6 +45,7 @@ const VOICE: Record<VoiceId, VoiceSpec> = {
     face: 'serif · italic · close set',
     sample: 'is m³ good at frontend yet?',
     gloss: 'the default voice',
+    note: 'set the line softly, that the reader may hear themselves in it.',
     family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
     weight: 400,
     style: 'italic',
@@ -57,6 +58,7 @@ const VOICE: Record<VoiceId, VoiceSpec> = {
     face: 'serif · italic · warm',
     sample: 'is M3 good at frontend yet?',
     gloss: 'the middle voice',
+    note: 'set the line by hand, that the page may feel less like a page.',
     family: "'Iowan Old Style', 'Palatino Linotype', Georgia, serif",
     weight: 500,
     style: 'italic',
@@ -69,6 +71,7 @@ const VOICE: Record<VoiceId, VoiceSpec> = {
     face: 'sans · heavy · no apology',
     sample: 'IS M3 GOOD AT FRONTEND YET?',
     gloss: 'the loud voice',
+    note: 'set the line at full height, that the question may be heard once and clearly.',
     family: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
     weight: 800,
     style: 'normal',
@@ -181,9 +184,7 @@ export function Hero({
           </svg>
         </span>
 
-        <DawnBreak key={`dawn-${pullSignal}`} />
-
-        <TypeBed tone={`var(--hero-tone, var(--quiet))`} />
+        <DawnCrescent key={`dawn-${pullSignal}`} />
 
         <div className="hero__eyebrow-row">
           <span className="hero__eyebrow">
@@ -282,41 +283,24 @@ export function Hero({
           <span className="hero__sub-tail" aria-hidden="true">a question, set three ways · one line · one chase</span>
         </span>
 
-        <span className="hero__quoin" aria-hidden="true">
-          <svg viewBox="0 0 60 60">
-            <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-              <path
-                className="hero__quoin-stamp"
-                d="M8 44 L52 16 L48 38 L12 50 Z"
-                strokeWidth="1.1"
-              />
-              <path d="M14 42 L48 22" strokeWidth=".45" opacity=".55" />
-              <path d="M22 38 L42 24" strokeWidth=".45" opacity=".4" />
-              <circle cx="14" cy="44" r="1.6" fill="currentColor" />
-            </g>
-            <text
-              x="30"
-              y="32"
-              textAnchor="middle"
-              fontFamily="ui-monospace, 'SFMono-Regular', Menlo, monospace"
-              fontSize="5.5"
-              letterSpacing="1.4"
-              fill="currentColor"
-            >
-              STET
-            </text>
+        <figure className="hero__compositor" aria-label="A note from the compositor">
+          <svg className="hero__compositor-mark" viewBox="0 0 64 18" aria-hidden="true">
+            <line x1="0" y1="9" x2="20" y2="9" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".5" />
+            <line x1="44" y1="9" x2="64" y2="9" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".5" />
+            <path d="M22 9 Q26 2 30 9 Q26 16 22 9" fill="currentColor" opacity=".35" />
+            <path d="M22 9 Q26 2 30 9" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".65" />
+            <path d="M34 9 Q38 2 42 9 Q38 16 34 9" fill="currentColor" opacity=".35" />
+            <path d="M34 9 Q38 2 42 9" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".65" />
+            <circle cx="32" cy="9" r="2.6" fill="currentColor" />
+            <circle cx="32" cy="9" r="1" fill="#080a12" />
+            <circle cx="6" cy="9" r=".8" fill="currentColor" opacity=".7" />
+            <circle cx="58" cy="9" r=".8" fill="currentColor" opacity=".7" />
           </svg>
-        </span>
-
-        <span className="hero__type-high" aria-hidden="true">
-          <svg viewBox="0 0 16 80" preserveAspectRatio="none">
-            <line x1="2" y1="0" x2="2" y2="80" stroke="currentColor" strokeWidth=".4" strokeDasharray="1.5 2" opacity=".55" />
-            <line x1="2" y1="20" x2="5" y2="20" stroke="currentColor" strokeWidth=".5" />
-            <line x1="2" y1="40" x2="6" y2="40" stroke="currentColor" strokeWidth=".5" />
-            <line x1="2" y1="60" x2="5" y2="60" stroke="currentColor" strokeWidth=".5" />
-            <text x="9" y="42" textAnchor="middle" fontFamily="ui-monospace, monospace" fontSize="2.6" letterSpacing=".8" fill="currentColor" opacity=".7">23.875</text>
-          </svg>
-        </span>
+          <figcaption>
+            <em>a note from the compositor —</em>
+            <span>{spec.note}</span>
+          </figcaption>
+        </figure>
       </ChaseFrame>
 
       <aside
@@ -484,115 +468,95 @@ function segIndex(id: WordId | 'plain' | 'space' | 'punct'): number {
   return TITLE_SEGMENTS.findIndex(s => s.id === id)
 }
 
-function DawnBreak() {
+function DawnCrescent() {
   const id = useId().replace(/:/g, '')
   const orbId = `dawn-orb-${id}`
-  const tideId = `dawn-tide-${id}`
-  const rayId = `dawn-rays-${id}`
-  const moteId = `dawn-mote-${id}`
+  const washId = `dawn-wash-${id}`
+  const beamId = `dawn-beam-${id}`
+  const moonId = `dawn-moon-${id}`
+  const rimId = `dawn-rim-${id}`
 
   return (
     <span className="hero__dawn" aria-hidden="true">
-      <svg viewBox="0 0 600 360" preserveAspectRatio="xMidYMid slice">
+      <svg viewBox="0 0 600 320" preserveAspectRatio="xMidYMid meet">
         <defs>
-          <radialGradient id={orbId} cx="50%" cy="55%" r="56%">
-            <stop offset="0%" stopColor="rgba(255, 232, 198, .46)" />
-            <stop offset="32%" stopColor="rgba(244, 188, 150, .24)" />
-            <stop offset="68%" stopColor="rgba(168, 197, 255, .1)" />
+          <radialGradient id={orbId} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 232, 198, .42)" />
+            <stop offset="40%" stopColor="rgba(244, 188, 150, .18)" />
+            <stop offset="78%" stopColor="rgba(168, 197, 255, .08)" />
             <stop offset="100%" stopColor="rgba(168, 197, 255, 0)" />
           </radialGradient>
 
-          <linearGradient id={tideId} x1="0" y1="0" x2="1" y2="0">
+          <radialGradient id={washId} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255, 234, 200, .14)" />
+            <stop offset="100%" stopColor="rgba(255, 234, 200, 0)" />
+          </radialGradient>
+
+          <linearGradient id={beamId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="rgba(255, 226, 184, 0)" />
-            <stop offset="22%" stopColor="rgba(255, 226, 184, .14)" />
-            <stop offset="48%" stopColor="rgba(255, 234, 200, .26)" />
-            <stop offset="68%" stopColor="rgba(255, 226, 184, .14)" />
-            <stop offset="100%" stopColor="rgba(255, 226, 184, 0)" />
+            <stop offset="60%" stopColor="rgba(255, 226, 184, .07)" />
+            <stop offset="100%" stopColor="rgba(255, 226, 184, .14)" />
           </linearGradient>
 
-          <linearGradient id={rayId} x1="0" y1="1" x2="0" y2="0">
-            <stop offset="0%" stopColor="rgba(255, 226, 184, .18)" />
-            <stop offset="55%" stopColor="rgba(255, 226, 184, .06)" />
-            <stop offset="100%" stopColor="rgba(255, 226, 184, 0)" />
-          </linearGradient>
+          <radialGradient id={moonId} cx="40%" cy="38%" r="64%">
+            <stop offset="0%" stopColor="rgba(255, 240, 214, .92)" />
+            <stop offset="58%" stopColor="rgba(244, 218, 178, .78)" />
+            <stop offset="100%" stopColor="rgba(196, 168, 130, .55)" />
+          </radialGradient>
 
-          <radialGradient id={moteId} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(255, 232, 198, .9)" />
-            <stop offset="100%" stopColor="rgba(255, 232, 198, 0)" />
+          <radialGradient id={rimId} cx="50%" cy="50%" r="50%">
+            <stop offset="60%" stopColor="rgba(255, 226, 184, 0)" />
+            <stop offset="80%" stopColor="rgba(255, 226, 184, .35)" />
+            <stop offset="100%" stopColor="rgba(255, 226, 184, 0)" />
           </radialGradient>
         </defs>
 
-        <rect x="0" y="148" width="600" height="212" fill={`url(#${rayId})`} className="hero__dawn-rays" />
+        {/* the wash — a faint band of light behind the title */}
+        <rect x="0" y="120" width="600" height="200" fill={`url(#${beamId})`} className="hero__dawn-beam" />
 
-        <circle className="hero__dawn-orb" cx="300" cy="222" r="156" fill={`url(#${orbId})`} />
+        {/* the orb — the moon's soft glow */}
+        <circle className="hero__dawn-orb" cx="300" cy="160" r="92" fill={`url(#${orbId})`} />
 
-        <g className="hero__dawn-horizon">
-          <rect
-            className="hero__dawn-horizon-line"
-            x="0"
-            y="222"
-            width="600"
-            height="1.1"
-            fill={`url(#${tideId})`}
-            opacity=".9"
-          />
+        {/* the rim — a soft ring that catches the air around the moon */}
+        <circle className="hero__dawn-halo" cx="300" cy="160" r="78" fill={`url(#${rimId})`} />
+
+        {/* the moon — a waxing crescent made by subtracting a dark circle from the lit disc */}
+        <g className="hero__dawn-moon">
+          {/* the lit disc */}
+          <circle cx="300" cy="160" r="62" fill={`url(#${moonId})`} />
+          {/* the bite — same colour as the night sky, offset to the upper-right */}
+          <circle cx="320" cy="152" r="58" fill="#080a12" />
+          {/* a thin lit sliver where the two circles overlap */}
           <path
-            d="M40 224 L162 224 L172 218 L208 240 L218 224 L298 224 L312 210 L334 210 L348 224 L420 224 L432 216 L478 216 L490 224 L568 224"
-            fill="none"
-            stroke={`url(#${tideId})`}
-            strokeWidth=".5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            d="M300 98 A62 62 0 0 1 320 98 A58 58 0 0 0 300 98 Z"
+            fill={`url(#${moonId})`}
             opacity=".55"
           />
-          <path
-            d="M40 232 L120 232 L130 226 L160 226 L172 232 L256 232 L268 218 L288 218 L302 232 L380 232 L390 224 L432 224 L444 232 L568 232"
-            fill="none"
-            stroke="rgba(255, 226, 184, .14)"
-            strokeWidth=".35"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity=".5"
-          />
         </g>
 
-        <g className="hero__dawn-arc">
-          <path
-            d="M168 148 Q300 24 432 148"
-            fill="none"
-            stroke="rgba(245, 238, 216, .34)"
-            strokeWidth=".55"
-            strokeLinecap="round"
-            strokeDasharray="0.8 3.2"
-            opacity=".85"
-          />
+        {/* a faint horizon — a single line that suggests 'just above the press bed' */}
+        <line
+          className="hero__dawn-horizon"
+          x1="60"
+          y1="244"
+          x2="540"
+          y2="244"
+          stroke="rgba(255, 226, 184, .14)"
+          strokeWidth=".4"
+          strokeLinecap="round"
+          strokeDasharray="1.5 4"
+        />
+
+        {/* a few quiet ticks — typesetter's marks at the horizon */}
+        <g className="hero__dawn-ticks" fill="rgba(255, 226, 184, .35)">
+          <circle cx="100" cy="244" r=".9" />
+          <circle cx="200" cy="244" r=".9" />
+          <circle cx="400" cy="244" r=".9" />
+          <circle cx="500" cy="244" r=".9" />
         </g>
 
-        <g className="hero__dawn-ticks" fill="rgba(245, 238, 216, .42)">
-          <circle cx="178" cy="138" r=".9" />
-          <circle cx="216" cy="98" r=".7" />
-          <circle cx="258" cy="58" r="1.1" />
-          <circle cx="300" cy="34" r="1.4" />
-          <circle cx="342" cy="58" r="1.1" />
-          <circle cx="384" cy="98" r=".7" />
-          <circle cx="422" cy="138" r=".9" />
-        </g>
-
-        <g className="hero__dawn-motes">
-          <circle cx="78" cy="190" r="6" fill={`url(#${moteId})`} className="hero__dawn-mote" />
-          <circle cx="502" cy="174" r="7" fill={`url(#${moteId})`} className="hero__dawn-mote hero__dawn-mote--b" />
-          <circle cx="222" cy="232" r="4" fill={`url(#${moteId})`} className="hero__dawn-mote hero__dawn-mote--c" />
-          <circle cx="406" cy="206" r="5" fill={`url(#${moteId})`} className="hero__dawn-mote hero__dawn-mote--d" />
-          <circle cx="148" cy="160" r="3" fill={`url(#${moteId})`} className="hero__dawn-mote hero__dawn-mote--e" />
-          <circle cx="478" cy="142" r="3.5" fill={`url(#${moteId})`} className="hero__dawn-mote hero__dawn-mote--f" />
-        </g>
-
-        <g className="hero__dawn-stars" fill="rgba(245, 238, 216, .55)">
-          <circle cx="74" cy="58" r="1" />
-          <circle cx="528" cy="46" r="1.2" />
-          <circle cx="48" cy="114" r=".7" />
-          <circle cx="562" cy="100" r=".8" />
-        </g>
+        {/* a soft outer wash that softens the corners */}
+        <circle cx="300" cy="160" r="200" fill={`url(#${washId})`} className="hero__dawn-soft" />
       </svg>
     </span>
   )

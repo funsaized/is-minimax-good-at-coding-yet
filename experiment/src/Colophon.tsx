@@ -27,6 +27,12 @@ const SEAL_TEXT: Record<VoiceId, { top: string; bot: string; glyph: string }> = 
   bold: { top: 'M³ · YES · M³', bot: 'AGAIN', glyph: 'M³ · FOLIO V' },
 }
 
+const SIGN_OFF_NOTE: Record<VoiceId, string> = {
+  quiet: 'the quiet cut says it as softly as it can',
+  human: 'the human hand sets it by hand, in warmth',
+  bold: 'the bold signal says it once, at full height',
+}
+
 export function Colophon({ voice, word, pullSignal, pullCount, setToday }: ColophonProps) {
   const tone = voice === 'quiet' ? 'var(--quiet)' : voice === 'human' ? 'var(--human)' : 'var(--bold)'
   const sealStyle = { color: tone } as CSSProperties
@@ -79,6 +85,25 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday }: Colop
           <div className="colophon__flourish" aria-hidden="true">
             <PrinterFlourish voice={voice} />
           </div>
+
+          <figure className="colophon__compositor" aria-label="The compositor, signing off">
+            <svg className="colophon__compositor-mark" viewBox="0 0 64 18" aria-hidden="true">
+              <line x1="0" y1="9" x2="20" y2="9" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".5" />
+              <line x1="44" y1="9" x2="64" y2="9" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".5" />
+              <path d="M22 9 Q26 2 30 9 Q26 16 22 9" fill="currentColor" opacity=".35" />
+              <path d="M22 9 Q26 2 30 9" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".65" />
+              <path d="M34 9 Q38 2 42 9 Q38 16 34 9" fill="currentColor" opacity=".35" />
+              <path d="M34 9 Q38 2 42 9" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".65" />
+              <circle cx="32" cy="9" r="2.6" fill="currentColor" />
+              <circle cx="32" cy="9" r="1" fill="#080a12" />
+              <circle cx="6" cy="9" r=".8" fill="currentColor" opacity=".7" />
+              <circle cx="58" cy="9" r=".8" fill="currentColor" opacity=".7" />
+            </svg>
+            <figcaption>
+              <em>signing off —</em>
+              <span>{SIGN_OFF_NOTE[voice]}.</span>
+            </figcaption>
+          </figure>
 
           <div className="colophon__signoff" aria-label="The page, signed">
             <svg className={`colophon__seal colophon__seal--${voice}`} viewBox="0 0 100 100" aria-hidden="true" style={sealStyle}>
