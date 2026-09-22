@@ -241,11 +241,7 @@ export function Hero({
             <span className="hero__eyebrow-glyph" aria-hidden="true">¶</span>
             <span>folio i</span>
             <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
-            <span className="hero__eyebrow-em">the question, set at first light</span>
-          </span>
-          <span className="hero__set">
-            <em>set on</em>
-            <em className="hero__eyebrow-em">{setToday}</em>
+            <span className="hero__eyebrow-em">the question, set three ways</span>
           </span>
         </div>
 

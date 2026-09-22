@@ -2,6 +2,7 @@ import { useEffect, useRef, type CSSProperties } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 import { PrinterFlourish } from './PrinterFlourish'
+import { KeptTally } from './KeptTally'
 
 type ColophonProps = {
   voice: VoiceId
@@ -9,6 +10,7 @@ type ColophonProps = {
   pullSignal: number
   pullCount: number
   setToday: string
+  keptCounts?: Record<WordId, number>
 }
 
 const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
@@ -51,7 +53,7 @@ const LEDGER_NOTE: Record<VoiceId, string> = {
   bold:  'the line, set at full height so it can be heard once.',
 }
 
-export function Colophon({ voice, word, pullSignal, pullCount, setToday }: ColophonProps) {
+export function Colophon({ voice, word, pullSignal, pullCount, setToday, keptCounts }: ColophonProps) {
   const tone = voice === 'quiet' ? 'var(--quiet)' : voice === 'human' ? 'var(--human)' : 'var(--bold)'
   const sealStyle = { color: tone } as CSSProperties
   const seal = SEAL_TEXT[voice]
@@ -124,6 +126,8 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday }: Colop
               <em>{WORD_NOTE[word]}</em>
             </div>
           </div>
+
+          {keptCounts && <KeptTally voice={voice} counts={keptCounts} marked={word} />}
 
           <div className="colophon__ledger" aria-label="The three voices, kept today">
             <span className="colophon__ledger-head">

@@ -12,6 +12,7 @@ import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
 import { ComposingRule } from './ComposingRule'
 import { FirstLight } from './FirstLight'
+import { FirstLightPlate } from './FirstLightPlate'
 import { ReadingLedger } from './ReadingLedger'
 import { Hero } from './Hero'
 import { FolioTurn } from './FolioTurn'
@@ -20,6 +21,7 @@ import { ProofLine } from './ProofLine'
 import { Specimen } from './Specimen'
 import { Answer } from './Answer'
 import { Colophon } from './Colophon'
+import { KeptTally } from './KeptTally'
 import { PrinterMark } from './PrinterMark'
 import { SetLine } from './SetLine'
 import { SpineThread } from './SpineThread'
@@ -81,6 +83,7 @@ export function App() {
   const [pullCount, setPullCount] = useState(0)
   const [pullSignal, setPullSignal] = useState(0)
   const [isPulling, setIsPulling] = useState(false)
+  const [keptCounts, setKeptCounts] = useState<Record<WordId, number>>({ m3: 0, good: 0, yet: 0 })
   const tokenRefs = useRef<Partial<Record<WordId, HTMLButtonElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement | null>(null)
   const pullLockRef = useRef(false)
@@ -89,7 +92,12 @@ export function App() {
 
   const selectWord = useCallback((id: WordId, focus = false) => {
     const note = NOTES.find(item => item.id === id)
-    setSelectedWord(id)
+    setSelectedWord(prev => {
+      if (prev !== id) {
+        setKeptCounts(c => ({ ...c, [id]: (c[id] ?? 0) + 1 }))
+      }
+      return id
+    })
     if (note) {
       setAnnouncement(`${note.title}. ${note.gloss}.`)
     }
@@ -322,6 +330,8 @@ export function App() {
         <ComposingRule voice={voice} />
       </div>
 
+      <FirstLightPlate voice={voice} setToday={setToday} />
+
       <section className="hero reveal" aria-labelledby="hero-title-label">
         <Hero
           voice={voice}
@@ -371,7 +381,14 @@ export function App() {
       />
 
       <FolioTurn index="—" title="the colophon" hint="the page, signed off" voice={voice} soft />
-      <Colophon voice={voice} word={activeWord} pullSignal={pullSignal} pullCount={pullCount} setToday={setToday} />
+      <Colophon
+        voice={voice}
+        word={activeWord}
+        pullSignal={pullSignal}
+        pullCount={pullCount}
+        setToday={setToday}
+        keptCounts={keptCounts}
+      />
 
       <footer className="site-foot" aria-label="The page, in one line">
         <span className="site-foot__copy">
