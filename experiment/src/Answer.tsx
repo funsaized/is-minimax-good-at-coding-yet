@@ -277,6 +277,31 @@ function WaxSeal({ voice, broken, pullSignal }: { voice: VoiceId; broken: boolea
         <ellipse cx="50" cy="86" rx="34" ry="5" fill="currentColor" opacity=".25" />
       </svg>
 
+      <span className="answer__seal-burst" aria-hidden="true">
+        <svg viewBox="0 0 200 200" preserveAspectRatio="none">
+          <g stroke="currentColor" strokeLinecap="round" fill="none">
+            <line x1="100" y1="100" x2="64" y2="48" strokeWidth=".7" />
+            <line x1="100" y1="100" x2="138" y2="50" strokeWidth=".6" />
+            <line x1="100" y1="100" x2="48" y2="88" strokeWidth=".55" />
+            <line x1="100" y1="100" x2="152" y2="92" strokeWidth=".65" />
+            <line x1="100" y1="100" x2="80" y2="148" strokeWidth=".55" />
+            <line x1="100" y1="100" x2="124" y2="148" strokeWidth=".7" />
+            <line x1="100" y1="100" x2="100" y2="44" strokeWidth=".5" />
+            <line x1="100" y1="100" x2="100" y2="156" strokeWidth=".55" />
+          </g>
+          <g fill="currentColor">
+            <circle cx="64" cy="48" r="1.6" />
+            <circle cx="138" cy="50" r="1.4" />
+            <circle cx="48" cy="88" r="1.2" />
+            <circle cx="152" cy="92" r="1.6" />
+            <circle cx="80" cy="148" r="1.2" />
+            <circle cx="124" cy="148" r="1.4" />
+            <circle cx="100" cy="44" r="1" />
+            <circle cx="100" cy="156" r="1.2" />
+          </g>
+        </svg>
+      </span>
+
       <svg className="answer__seal answer__seal--whole" viewBox="0 0 100 100" style={style}>
         <defs>
           <radialGradient id={`seal-fill-${voice}`} cx="42%" cy="38%" r="62%">

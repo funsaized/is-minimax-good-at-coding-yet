@@ -260,7 +260,7 @@ export function Hero({
                 </linearGradient>
               </defs>
               <path
-                d="M62 18 C 30 22, 16 50, 22 78 C 26 96, 42 108, 62 104 C 76 102, 86 90, 86 76 C 86 64, 76 56, 64 58 C 54 60, 48 70, 50 80 C 52 86, 58 90, 64 86"
+                d="M64 14 C 36 16, 18 44, 22 76 C 26 100, 50 114, 70 108 C 84 104, 92 92, 90 78 C 88 64, 76 56, 66 60 C 56 64, 52 74, 56 82 C 60 88, 68 88, 70 82"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2.6"
@@ -269,14 +269,14 @@ export function Hero({
                 className="hero__title-initial-stroke"
               />
               <path
-                d="M62 18 C 30 22, 16 50, 22 78 C 26 96, 42 108, 62 104 C 76 102, 86 90, 86 76 C 86 64, 76 56, 64 58 C 54 60, 48 70, 50 80 C 52 86, 58 90, 64 86"
+                d="M64 14 C 36 16, 18 44, 22 76 C 26 100, 50 114, 70 108 C 84 104, 92 92, 90 78 C 88 64, 76 56, 66 60 C 56 64, 52 74, 56 82 C 60 88, 68 88, 70 82"
                 fill={`url(#initial-grad-${baseId})`}
                 stroke="none"
                 opacity=".4"
               />
-              <circle cx="22" cy="78" r="2.4" fill="currentColor" className="hero__title-initial-bead" />
-              <circle cx="62" cy="104" r="2" fill="currentColor" className="hero__title-initial-bead" />
-              <path d="M64 86 l8 6 l-3 4 z" fill="currentColor" className="hero__title-initial-tail" />
+              <circle cx="22" cy="76" r="2.4" fill="currentColor" className="hero__title-initial-bead" />
+              <circle cx="70" cy="108" r="2" fill="currentColor" className="hero__title-initial-bead" />
+              <path d="M70 82 l8 6 l-3 4 z" fill="currentColor" className="hero__title-initial-tail" />
             </svg>
           </span>
           <span className="hero__title-line hero__title-line-a">

@@ -105,8 +105,6 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
             <span aria-hidden="true">·</span>
             <em className="title-page__folio-name">the question</em>
           </span>
-          <span className="title-page__cell-divider" aria-hidden="true" />
-          <span className="title-page__cell-key">at first light</span>
         </span>
       </header>
 

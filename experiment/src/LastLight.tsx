@@ -43,12 +43,11 @@ export function LastLight({ voice, setToday, pullCount }: LastLightProps) {
   const tokens = dateTokens(setToday)
 
   const stars: Array<{ cx: number; cy: number; r: number; d: number }> = [
-    { cx: 96, cy: 64, r: 0.85, d: 0.2 },
-    { cx: 184, cy: 38, r: 0.6, d: 0.9 },
-    { cx: 268, cy: 92, r: 0.55, d: 1.4 },
-    { cx: 552, cy: 56, r: 0.75, d: 0.6 },
-    { cx: 624, cy: 88, r: 0.6, d: 1.1 },
-    { cx: 712, cy: 42, r: 0.55, d: 0.4 },
+    { cx: 116, cy: 56, r: 0.95, d: 0.2 },
+    { cx: 212, cy: 86, r: 0.65, d: 1.1 },
+    { cx: 308, cy: 36, r: 0.55, d: 1.8 },
+    { cx: 540, cy: 72, r: 0.85, d: 0.6 },
+    { cx: 700, cy: 38, r: 0.65, d: 1.4 },
   ]
 
   const threadBeads = [
@@ -93,7 +92,7 @@ export function LastLight({ voice, setToday, pullCount }: LastLightProps) {
         <svg viewBox="0 0 800 280" preserveAspectRatio="none">
           <rect x="0" y="0" width="800" height="280" fill={`url(#${skyGrad})`} />
 
-          <g className="last-light__stars" fill="rgba(255, 240, 214, .55)">
+          <g className="last-light__stars" fill="rgba(255, 240, 214, .65)">
             {stars.map((s, i) => (
               <circle
                 key={`last-star-${i}`}
@@ -108,33 +107,35 @@ export function LastLight({ voice, setToday, pullCount }: LastLightProps) {
           <ellipse
             className="last-light__moon-halo"
             cx="400"
-            cy="118"
-            rx="190"
-            ry="78"
+            cy="116"
+            rx="230"
+            ry="92"
             fill={`url(#${haloGrad})`}
           />
 
           <g className="last-light__moon">
-            <circle cx="400" cy="118" r="46" fill={`url(#${moonGrad})`} />
-            <circle cx="412" cy="112" r="42" fill="#0c0f18" />
-            <circle cx="400" cy="118" r="46" fill="none" stroke="rgba(255, 240, 214, .28)" strokeWidth=".4" />
+            <circle cx="400" cy="116" r="62" fill={`url(#${moonGrad})`} />
+            <circle cx="416" cy="108" r="56" fill="#0c0f18" />
+            <circle cx="400" cy="116" r="62" fill="none" stroke="rgba(255, 240, 214, .32)" strokeWidth=".4" />
+            <circle cx="400" cy="116" r="56" fill="none" stroke="rgba(255, 240, 214, .16)" strokeWidth=".3" strokeDasharray=".8 2.4" />
           </g>
 
           <line
             className="last-light__horizon"
-            x1="100"
+            x1="60"
             y1="226"
-            x2="700"
+            x2="740"
             y2="226"
-            stroke="rgba(168, 197, 255, .2)"
-            strokeWidth=".4"
+            stroke="rgba(168, 197, 255, .28)"
+            strokeWidth=".5"
             strokeLinecap="round"
-            strokeDasharray="1.5 4"
+            strokeDasharray="1.6 5"
           />
 
-          <g className="last-light__ticks" fill="rgba(168, 197, 255, .35)">
-            <circle cx="180" cy="226" r=".7" />
-            <circle cx="620" cy="226" r=".7" />
+          <g className="last-light__ticks" fill="rgba(168, 197, 255, .42)">
+            <circle cx="180" cy="226" r=".8" />
+            <circle cx="400" cy="226" r="1.1" />
+            <circle cx="620" cy="226" r=".8" />
           </g>
         </svg>
       </span>

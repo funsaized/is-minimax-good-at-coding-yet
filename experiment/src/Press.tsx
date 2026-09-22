@@ -62,6 +62,12 @@ const COMPOSITOR_NOTE: Record<VoiceId, string> = {
   bold: 'every pull stands the line a little taller — the press prefers the loudest pull at first light.',
 }
 
+const COMPOSITOR_NOTE_HELD: Record<VoiceId, string> = {
+  quiet: 'pull the lever once, and i will tell you what the press has learned.',
+  human: 'pull the lever once, and i will tell you what the press has learned.',
+  bold: 'pull the lever once, and i will tell you what the press has learned.',
+}
+
 export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, setToday }: PressProps) {
   const bleedRef = useRef<HTMLSpanElement | null>(null)
 
@@ -108,6 +114,17 @@ export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, s
               aria-hidden="true"
               key={`bleed-${pullSignal}`}
             />
+            <span
+              className={`press-lever__dust press-lever__dust--${voice} ${pulling ? 'is-active' : ''}`}
+              aria-hidden="true"
+              key={`dust-${pullSignal}`}
+            >
+              <span className="press-lever__dust-grain press-lever__dust-grain--a" />
+              <span className="press-lever__dust-grain press-lever__dust-grain--b" />
+              <span className="press-lever__dust-grain press-lever__dust-grain--c" />
+              <span className="press-lever__dust-grain press-lever__dust-grain--d" />
+              <span className="press-lever__dust-grain press-lever__dust-grain--e" />
+            </span>
             <span className="press-lever__label" aria-hidden="true">
               <em>pull</em>
               <span>{VOICE_LETTER[voice]}</span>
@@ -202,7 +219,7 @@ export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, s
         </div>
       </div>
 
-      <figure className="press__compositor" aria-label="A note from the compositor">
+      <figure className={`press__compositor ${pullCount > 0 ? 'is-revealed' : ''}`} aria-label="A note from the compositor">
         <svg className="press__compositor-mark" viewBox="0 0 64 18" aria-hidden="true">
           <line x1="0" y1="9" x2="20" y2="9" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".5" />
           <line x1="44" y1="9" x2="64" y2="9" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".5" />
@@ -216,8 +233,8 @@ export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, s
           <circle cx="58" cy="9" r=".8" fill="currentColor" opacity=".7" />
         </svg>
         <figcaption>
-          <em>a note from the compositor —</em>
-          <span>{COMPOSITOR_NOTE[voice]}</span>
+          <em>{pullCount > 0 ? 'a note from the compositor —' : 'a note held by the compositor —'}</em>
+          <span>{pullCount > 0 ? COMPOSITOR_NOTE[voice] : COMPOSITOR_NOTE_HELD[voice]}</span>
         </figcaption>
       </figure>
     </section>
