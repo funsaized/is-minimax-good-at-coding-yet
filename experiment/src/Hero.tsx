@@ -10,7 +10,7 @@ import {
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 import { ChaseFrame } from './ChaseFrame'
-import { TypeBed } from './TypeBed'
+import { HeroComposition } from './HeroComposition'
 import { PressProofStamp } from './PressProofStamp'
 
 type HeroProps = {
@@ -309,14 +309,7 @@ export function Hero({
           </span>
         </span>
 
-        <TypeBed
-          voice={voice}
-          word={word}
-          hover={hover}
-          onWord={onWord}
-          onHover={onHover}
-          onWordKey={onWordKey}
-        />
+        <HeroComposition voice={voice} word={word} hover={hover} />
 
         <span className="hero__coda" aria-hidden="true">
           <span className="hero__coda-rule" />

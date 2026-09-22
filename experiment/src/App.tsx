@@ -27,6 +27,7 @@ import { MarginMarks } from './MarginMarks'
 import { ReadingCord } from './ReadingCord'
 import { LastLight } from './LastLight'
 import { QuestionHeld } from './QuestionHeld'
+import { PressMotto } from './PressMotto'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -365,19 +366,7 @@ export function App() {
         />
       </section>
 
-      <aside className="page-edge" aria-label="The page, set between the title and the press">
-        <span className="page-edge__sigil" aria-hidden="true">
-          <PressSigil voice={voice} size={22} />
-        </span>
-        <span className="page-edge__rule" aria-hidden="true" />
-        <em className="page-edge__line">
-          <span className="page-edge__mark">{`{ set in ${VOICE_NAME[voice]} · marked at ${activeWord === 'm3' ? 'm³' : activeWord === 'good' ? 'good at' : 'yet?'} }`}</span>
-          <span aria-hidden="true">·</span>
-          <span>read in the dark — the page is set, the question held open</span>
-        </em>
-        <span className="page-edge__rule" aria-hidden="true" />
-        <span className="page-edge__date" aria-hidden="true">{setToday}</span>
-      </aside>
+      <PressMotto voice={voice} />
 
       <div className="reading-cord-wrap">
         <ReadingCord

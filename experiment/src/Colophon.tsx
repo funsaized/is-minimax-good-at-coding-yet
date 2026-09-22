@@ -131,7 +131,7 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday, keptCou
 
           {keptCounts && <KeptTally voice={voice} counts={keptCounts} marked={word} />}
 
-          <div className="colophon__ledger" aria-label="The three voices, kept today">
+          <div className="colophon__ledger colophon__ledger--tucked" aria-label="The three voices, kept today">
             <span className="colophon__ledger-head">
               <em className="colophon__ledger-eyebrow">the three readings</em>
               <span className="colophon__ledger-rule" aria-hidden="true" />

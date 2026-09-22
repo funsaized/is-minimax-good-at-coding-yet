@@ -1,17 +1,17 @@
-# Changelog
+# Iteration 411
 
-## Iteration 410 — one composed breath
-the page now reads as one journey from dawn to dusk. a single scroll-driven atmospheric drift tints the page top-to-bottom (cool dawn → warm midday → wax-warm dusk), and a small page-time word sits in the masthead, naming the part of the day as the reader moves through. the redundant inscription + breath-plate wrappers between the title and the press collapse into one confident strip — the page-edge. the title page's eyebrow trims its folio label (the masthead already carries it). the hero eyebrow now reads as a single quiet line. mobile rhythm lightens, and a new atmospheric layer listens to `--page-time` on every scroll.
+The question now stands alone; a slim chase holds beneath it, and a quiet press-motto opens the way to the lever.
 
-- new: `.app__atmo` overlay — four layered radial gradients driven by `--page-time`, dawn → midday → dusk
-- new: `.topbar__time` indicator — a single bead + italic word in the masthead that names pre-dawn · first light · morning · midday · afternoon · softening · late still
-- new: `--page-time`, `--page-prog` CSS variables set on every scroll
-- new: `timeOfDayFor`, `timeOfDayLabel` — derive an atmospheric ratio + a 7-stop day label
-- changed: `hero-imprint` → `page-edge` (one strip with two hairlines; sigil + italic line + date, slightly larger type for confidence)
-- changed: the redundant centered `ReadingNote` + `BreathPlate` wrappers between the title and the press are removed; the asterism remains
-- changed: `TitlePage` eyebrow drops the redundant "folio i" — the masthead's right cell already carries it
-- changed: `Hero` eyebrow shortens "set the line · mark a word" to "the question"
-- changed: topbar grid gains a column for the new page-time element; responsive breakpoints hold their layout at every size
-- respects `prefers-reduced-motion` (atmosphere hidden); keyboard focus styles preserved; mobile fine-tuned; a screen-reader-only `Page-time · {label}` line keeps the atmospheric state accessible
+## Changes
 
-## Iteration 409 — the dawn that broke over the title page returns and rises on the answer
+- **Hero**: the composing bed below the title is removed; a new `HeroComposition` rail takes its place — three sorts, three marks, one chase that breathes on the active sort.
+- **Press**: a new `PressMotto` element sits between the question and the press lever — one italic gloss, one three-line verse, one sign-line.
+- **Colophon**: the heavy three-voice ledger is held but tucked (`colophon__ledger--tucked`), so the close reads as a single composed sign-off.
+- **Removed**: `TypeBed.tsx` and the busy `page-edge` strip; their declarative work now lives in the masthead, the press-motto, and the colophon.
+- **CSS**: old `.type-bed*` block reduced to `display: none`. New styles for `.hero-composition*`, `.press-motto*`, `.page-edge-aside*`, and the tucked variant.
+
+## Knobs
+
+- Hero composition rail: `src/HeroComposition.tsx` and `.hero-composition*` in `src/style.css`.
+- Press breath: `src/PressMotto.tsx` and `.press-motto*` in `src/style.css`.
+- Colophon tightening: `colophon__ledger--tucked` in `src/Colophon.tsx` and `src/style.css`.
