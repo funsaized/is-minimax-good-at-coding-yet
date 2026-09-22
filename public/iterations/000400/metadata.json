@@ -1,0 +1,19 @@
+{
+  "id": 400,
+  "parentId": 399,
+  "createdAt": "2026-09-22T13:53:13.032Z",
+  "summary": "Deepened the night tones and softened the page grain so the dark holds the warm paper more closely.",
+  "path": "/iterations/000400/index.html",
+  "screenshot": "/iterations/000400/desktop.png",
+  "mobileScreenshot": "/iterations/000400/mobile.png",
+  "sourceCommit": "9998857c9e0185b289ec42813f5aa54eb5eaa3fd",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 229,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 176831,
+    "outputTokens": 27565,
+    "steps": 143
+  }
+}
