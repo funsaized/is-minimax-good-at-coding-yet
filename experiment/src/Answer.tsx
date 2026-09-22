@@ -1,4 +1,4 @@
-import { useEffect, useRef, type CSSProperties, type RefObject } from 'react'
+import { useEffect, useId, useRef, type CSSProperties, type RefObject } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 
@@ -70,6 +70,11 @@ const VOICE_COLUMNS: VoiceColumn[] = [
 export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, setToday }: AnswerProps) {
   const leafRef = useRef<HTMLDivElement | null>(null)
   const closeRef = useRef<HTMLButtonElement | null>(null)
+  const baseId = useId().replace(/:/g, '')
+  const dawnArcId = `answer-dawn-arc-${baseId}`
+  const dawnOrbId = `answer-dawn-orb-${baseId}`
+  const dawnHaloId = `answer-dawn-halo-${baseId}`
+  const dawnRiseId = `answer-dawn-rise-${baseId}`
 
   useEffect(() => {
     if (open && typeof window !== 'undefined') {
@@ -124,6 +129,107 @@ export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, se
         className={`answer__leaf ${open ? 'is-open' : ''}`}
         aria-hidden={!open}
       >
+        <span className="answer__dawn" aria-hidden="true">
+          <svg
+            className="answer__dawn-svg"
+            viewBox="0 0 1000 760"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <radialGradient id={dawnHaloId} cx="50%" cy="100%" r="64%">
+                <stop offset="0%" stopColor="rgba(255, 240, 214, .55)" />
+                <stop offset="38%" stopColor="rgba(255, 226, 188, .18)" />
+                <stop offset="78%" stopColor="rgba(255, 220, 178, .04)" />
+                <stop offset="100%" stopColor="rgba(255, 220, 178, 0)" />
+              </radialGradient>
+              <radialGradient id={dawnOrbId} cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="rgba(255, 246, 220, .9)" />
+                <stop offset="48%" stopColor="rgba(255, 226, 188, .55)" />
+                <stop offset="82%" stopColor="rgba(244, 198, 152, .12)" />
+                <stop offset="100%" stopColor="rgba(244, 198, 152, 0)" />
+              </radialGradient>
+              <linearGradient id={dawnArcId} x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stopColor="rgba(255, 234, 198, .92)" />
+                <stop offset="60%" stopColor="rgba(255, 234, 198, .32)" />
+                <stop offset="100%" stopColor="rgba(255, 234, 198, 0)" />
+              </linearGradient>
+              <linearGradient id={dawnRiseId} x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stopColor="rgba(255, 232, 196, .12)" />
+                <stop offset="38%" stopColor="rgba(255, 232, 196, .05)" />
+                <stop offset="100%" stopColor="rgba(255, 232, 196, 0)" />
+              </linearGradient>
+            </defs>
+
+            {/* the soft halo that warms the page-bottom */}
+            <ellipse
+              className="answer__dawn-halo"
+              cx="500"
+              cy="640"
+              rx="640"
+              ry="280"
+              fill={`url(#${dawnHaloId})`}
+            />
+
+            {/* the dawn arc — a single rising curve, sweeping across the broadside */}
+            <path
+              className="answer__dawn-arc answer__dawn-arc--main"
+              d="M 180 660 A 360 360 0 0 1 820 660"
+              fill="none"
+              stroke={`url(#${dawnArcId})`}
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+            <path
+              className="answer__dawn-arc answer__dawn-arc--second"
+              d="M 240 680 A 300 300 0 0 1 760 680"
+              fill="none"
+              stroke={`url(#${dawnArcId})`}
+              strokeWidth=".8"
+              strokeLinecap="round"
+              opacity=".45"
+            />
+
+            {/* the orb that rises with the arc — seated at the seal's column, beneath the broadside */}
+            <g className="answer__dawn-orb-group">
+              <circle className="answer__dawn-orb-aura" cx="860" cy="660" r="110" fill={`url(#${dawnHaloId})`} />
+              <circle className="answer__dawn-orb" cx="860" cy="660" r="42" fill={`url(#${dawnOrbId})`} />
+              <circle className="answer__dawn-orb-ring" cx="860" cy="660" r="42" fill="none" stroke="rgba(255, 240, 214, .42)" strokeWidth=".55" />
+            </g>
+
+            {/* a thin wash that drifts upward through the columns */}
+            <rect
+              className="answer__dawn-wash"
+              x="0"
+              y="0"
+              width="1000"
+              height="760"
+              fill={`url(#${dawnRiseId})`}
+            />
+
+            {/* a few thin rays that catch the eye — sparse, hand-placed, fanning from the seal-side orb */}
+            <g className="answer__dawn-rays" stroke={`url(#${dawnArcId})`} strokeLinecap="round" fill="none">
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="160" y2="380" strokeWidth=".8" opacity=".55" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="320" y2="300" strokeWidth=".7" opacity=".45" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="500" y2="240" strokeWidth=".55" opacity=".35" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="660" y2="220" strokeWidth=".5" opacity=".28" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="820" y2="240" strokeWidth=".45" opacity=".22" />
+            </g>
+
+            {/* a single horizon rule, the page the dawn rises from */}
+            <line
+              className="answer__dawn-horizon"
+              x1="60"
+              y1="660"
+              x2="940"
+              y2="660"
+              stroke={`url(#${dawnArcId})`}
+              strokeWidth="1"
+              strokeLinecap="round"
+            />
+          </svg>
+        </span>
+
         <span className="answer__crease answer__crease--main" aria-hidden="true">
           <svg viewBox="0 0 4 80" preserveAspectRatio="none">
             <path d="M2 0c-1.5 13 1.5 27 0 40s1.5 27 0 40" fill="none" stroke="currentColor" strokeWidth=".8" strokeLinecap="round" />

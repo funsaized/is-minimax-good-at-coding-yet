@@ -5066,6 +5066,17 @@ em { font-style: italic; }
   margin-top: 6px;
   text-wrap: balance;
   font-feature-settings: 'kern', 'liga', 'dlig' 1, 'onum' 1;
+  transition: filter .55s var(--ease);
+}
+
+.press__table.is-pulling .press-impression__body {
+  animation: impressionInkSettle 1.4s var(--ease-out) both;
+}
+
+@keyframes impressionInkSettle {
+  0%   { filter: blur(1.2px) contrast(.94) brightness(.92); transform: translateY(3px); }
+  40%  { filter: blur(0) contrast(1.08) brightness(1.04); transform: translateY(-1px); }
+  100% { filter: blur(0) contrast(1) brightness(1);     transform: translateY(0); }
 }
 
 .press-impression__line {
@@ -5199,6 +5210,7 @@ em { font-style: italic; }
 
 @media (prefers-reduced-motion: reduce) {
   .press-impression__bleed { display: none; }
+  .press__table.is-pulling .press-impression__body { animation: none; filter: none; transform: none; }
 }
 
 .press-impression--quiet { box-shadow: 0 18px 36px -22px rgba(0, 0, 0, .55), 0 1px 0 rgba(0, 0, 0, .08), inset 0 0 80px rgba(182, 206, 242, .04); }
@@ -6130,6 +6142,168 @@ em { font-style: italic; }
   padding: 8px 12px 8px 10px;
   font-size: 10px;
   margin-top: 0;
+}
+
+/* ── answer · dawn rises on the plate ──
+   the dawn that broke over the title page returns,
+   rising from the seal as the leaf unfolds.                */
+
+.answer__dawn {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity .9s var(--ease);
+}
+
+.answer__leaf.is-open .answer__dawn { opacity: 1; }
+
+.answer__dawn-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.answer__dawn-halo {
+  transform-origin: 86% 100%;
+  transform: scale(.92);
+  opacity: 0;
+  transition: opacity 1.4s var(--ease) .15s, transform 1.6s var(--ease-out) .15s;
+}
+
+.answer__leaf.is-open .answer__dawn-halo {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.answer__dawn-arc {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  opacity: 0;
+}
+
+.answer__leaf.is-open .answer__dawn-arc--main {
+  animation: answerDawnArcDraw 2.4s var(--ease-out) .2s forwards, answerDawnArcSettle 9s ease-in-out 2.6s infinite;
+}
+
+.answer__leaf.is-open .answer__dawn-arc--second {
+  animation: answerDawnArcDraw 2.8s var(--ease-out) .35s forwards, answerDawnArcSettle 11s ease-in-out 2.8s infinite;
+}
+
+@keyframes answerDawnArcDraw {
+  0%   { stroke-dashoffset: 1000; opacity: 0; }
+  55%  { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: .85; }
+}
+
+@keyframes answerDawnArcSettle {
+  0%, 100% { opacity: .82; }
+  50%      { opacity: 1; }
+}
+
+.answer__dawn-orb-group {
+  transform: translateY(38px) scale(.84);
+  opacity: 0;
+  transform-origin: 860px 660px;
+  transition: opacity 1.4s var(--ease) .55s, transform 1.7s var(--ease-out) .55s;
+}
+
+.answer__leaf.is-open .answer__dawn-orb-group {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.answer__dawn-orb {
+  transform-origin: center;
+  animation: answerDawnOrbPulse 6.5s ease-in-out 2.2s infinite;
+}
+
+@keyframes answerDawnOrbPulse {
+  0%, 100% { opacity: .9; }
+  50%      { opacity: 1; }
+}
+
+.answer__dawn-orb-ring {
+  transform-origin: center;
+  animation: answerDawnOrbRingPulse 6.5s ease-in-out 2.2s infinite;
+}
+
+@keyframes answerDawnOrbRingPulse {
+  0%, 100% { opacity: .42; stroke-width: .55; }
+  50%      { opacity: .8;  stroke-width: .7; }
+}
+
+.answer__dawn-rays { opacity: 0; }
+
+.answer__leaf.is-open .answer__dawn-rays { opacity: 1; }
+
+.answer__dawn-ray {
+  stroke-dasharray: 360;
+  stroke-dashoffset: 360;
+  opacity: 0;
+}
+
+.answer__leaf.is-open .answer__dawn-ray {
+  animation: answerDawnRayDraw 1.6s var(--ease-out) forwards;
+}
+
+.answer__leaf.is-open .answer__dawn-ray:nth-child(1) { animation-delay: .7s; }
+.answer__leaf.is-open .answer__dawn-ray:nth-child(2) { animation-delay: .8s; }
+.answer__leaf.is-open .answer__dawn-ray:nth-child(3) { animation-delay: .9s; }
+.answer__leaf.is-open .answer__dawn-ray:nth-child(4) { animation-delay: 1s; }
+.answer__leaf.is-open .answer__dawn-ray:nth-child(5) { animation-delay: 1.1s; }
+
+@keyframes answerDawnRayDraw {
+  0%   { stroke-dashoffset: 360; opacity: 0; }
+  35%  { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: .55; }
+}
+
+.answer__dawn-horizon {
+  stroke-dasharray: 880;
+  stroke-dashoffset: 880;
+  opacity: 0;
+}
+
+.answer__leaf.is-open .answer__dawn-horizon {
+  animation: answerDawnHorizonDraw 1.6s var(--ease-out) .15s forwards;
+}
+
+@keyframes answerDawnHorizonDraw {
+  0%   { stroke-dashoffset: 880; opacity: 0; }
+  60%  { opacity: .8; }
+  100% { stroke-dashoffset: 0; opacity: .55; }
+}
+
+.answer__dawn-wash {
+  transform-origin: 50% 100%;
+  transform: scaleY(.65);
+  opacity: 0;
+  transition: opacity 1.1s var(--ease) .35s, transform 1.5s var(--ease-out) .35s;
+}
+
+.answer__leaf.is-open .answer__dawn-wash {
+  transform: scaleY(1);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer__leaf.is-open .answer__dawn-arc--main,
+  .answer__leaf.is-open .answer__dawn-arc--second,
+  .answer__leaf.is-open .answer__dawn-orb,
+  .answer__leaf.is-open .answer__dawn-orb-ring,
+  .answer__leaf.is-open .answer__dawn-ray,
+  .answer__leaf.is-open .answer__dawn-horizon { animation: none; stroke-dashoffset: 0; opacity: .9; }
+  .answer__dawn-halo,
+  .answer__dawn-orb-group,
+  .answer__dawn-wash { transform: none; opacity: 1; transition: none; }
+  .answer__dawn-rays { opacity: 1; }
 }
 
 .answer__leaf {
@@ -16303,16 +16477,21 @@ section.reveal h2 em::after {
   .answer__seal-wrap.is-broken .answer__seal-shadow { animation: none; }
 }
 
-/* — a small emphasis on the answer's headline · a quiet, decisive breath — */
+/* — a small emphasis on the answer's headline · a quiet, decisive breath,
+   caught briefly by the dawn as the arc passes each column.                */
 
 .answer__leaf.is-open .answer__col-headline-text {
-  animation: answerHeadlineSettle 1.2s var(--ease-out) both;
-  animation-delay: .35s;
+  animation: answerHeadlineSettle 1.1s var(--ease-out) both;
 }
 
+.answer__leaf.is-open .answer__col--quiet .answer__col-headline-text { animation-delay: .55s; }
+.answer__leaf.is-open .answer__col--human .answer__col-headline-text { animation-delay: .85s; }
+.answer__leaf.is-open .answer__col--bold  .answer__col-headline-text { animation-delay: 1.15s; }
+
 @keyframes answerHeadlineSettle {
-  0%   { opacity: 0; transform: translateY(6px); filter: blur(1.5px); }
-  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  0%   { opacity: 0; transform: translateY(6px); filter: blur(1.6px); }
+  55%  { opacity: 1; transform: translateY(0);    filter: blur(0) brightness(1.18); }
+  100% { opacity: 1; transform: translateY(0);    filter: blur(0) brightness(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
