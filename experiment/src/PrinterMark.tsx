@@ -56,3 +56,40 @@ export function PrinterMark({ voice, size = 36, glyph = 'm³' }: PrinterMarkProp
     </svg>
   )
 }
+
+export function PressSigil({ voice, size = 24 }: { voice: VoiceId; size?: number }) {
+  const baseId = useId().replace(/:/g, '')
+  const style = { '--sigil-tone': `var(--${voice})`, width: `${size}px`, height: `${size}px` } as CSSProperties
+  return (
+    <svg
+      className={`press-sigil press-sigil--${voice}`}
+      viewBox="0 0 32 32"
+      style={style}
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id={`ps-fade-${baseId}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="currentColor" stopOpacity=".85" />
+          <stop offset="50%" stopColor="currentColor" stopOpacity=".55" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity=".85" />
+        </linearGradient>
+      </defs>
+      {/* the rope arc — a single hand-drawn curve */}
+      <path
+        d="M6 21 Q16 4 26 21"
+        fill="none"
+        stroke={`url(#ps-fade-${baseId})`}
+        strokeWidth="1.1"
+        strokeLinecap="round"
+      />
+      {/* the small tick at the apex */}
+      <circle cx="16" cy="6" r="1.1" fill="currentColor" opacity=".85" />
+      {/* the three beads — the press's three marks */}
+      <circle cx="9" cy="22.5" r="1.5" fill="currentColor" opacity=".7" />
+      <circle cx="16" cy="24.5" r="1.9" fill="currentColor" />
+      <circle cx="23" cy="22.5" r="1.5" fill="currentColor" opacity=".7" />
+      {/* the press bed — a single rule */}
+      <line x1="4" y1="28" x2="28" y2="28" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".55" />
+    </svg>
+  )
+}

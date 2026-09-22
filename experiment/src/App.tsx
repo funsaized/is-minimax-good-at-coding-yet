@@ -20,7 +20,7 @@ import { ProofLine } from './ProofLine'
 import { Specimen } from './Specimen'
 import { Answer } from './Answer'
 import { Colophon } from './Colophon'
-import { PrinterMark } from './PrinterMark'
+import { PrinterMark, PressSigil } from './PrinterMark'
 import { ReadingNote } from './ReadingNote'
 import { SpineThread } from './SpineThread'
 import { MarginMarks } from './MarginMarks'
@@ -306,6 +306,10 @@ export function App() {
           <span className="topbar__folio-rule" aria-hidden="true" />
         </span>
 
+        <span className="topbar__sigil" aria-hidden="true">
+          <PressSigil voice={voice} size={28} />
+        </span>
+
         <span className={`status__voice status__voice--${voice}`} aria-label={`Voice: ${VOICE_NAME[voice]} (${VOICE_LETTER[voice]})`}>
           <span className="status__voice-glyph" aria-hidden="true">{VOICE_LETTER[voice]}</span>
           <em className="status__voice-name">{VOICE_NAME[voice]}</em>
@@ -329,6 +333,20 @@ export function App() {
           tokenRefs={tokenRefs}
         />
       </section>
+
+      <aside className="hero-imprint" aria-label="The press signature, set beneath the title">
+        <span className="hero-imprint__sigil" aria-hidden="true">
+          <PressSigil voice={voice} size={26} />
+        </span>
+        <span className="hero-imprint__rule" aria-hidden="true" />
+        <em className="hero-imprint__line">
+          <span className="hero-imprint__mark">{`{ set in ${VOICE_NAME[voice]} · marked at ${activeWord === 'm3' ? 'm³' : activeWord === 'good' ? 'good at' : 'yet?'} }`}</span>
+          <span aria-hidden="true">·</span>
+          <span>read in the dark — the page is set, the question held open</span>
+        </em>
+        <span className="hero-imprint__rule" aria-hidden="true" />
+        <span className="hero-imprint__date" aria-hidden="true">{setToday}</span>
+      </aside>
 
       <div className="reading-cord-wrap">
         <ReadingCord

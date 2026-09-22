@@ -367,7 +367,7 @@ em { font-style: italic; }
   right: 0;
   z-index: 30;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: var(--gutter-tight);
   padding: 16px var(--gutter) 13px;
@@ -380,6 +380,31 @@ em { font-style: italic; }
   backdrop-filter: blur(14px) saturate(140%);
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   border-bottom: 1px solid var(--line-soft);
+}
+
+.topbar__sigil {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mark-tone, var(--quiet));
+  opacity: .85;
+  transition: transform .6s var(--ease-spring), color .35s var(--ease), opacity .35s var(--ease);
+  animation: sigilArrival .9s var(--ease-out) .4s both;
+}
+
+.topbar__sigil:hover {
+  transform: rotate(-6deg);
+  opacity: 1;
+}
+
+@keyframes sigilArrival {
+  0% { opacity: 0; transform: translateY(-3px) rotate(-4deg); }
+  100% { opacity: .85; transform: translateY(0) rotate(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topbar__sigil { animation: none; opacity: .85; transform: none; }
+  .topbar__sigil:hover { transform: none; }
 }
 
 .brand {
@@ -498,6 +523,11 @@ em { font-style: italic; }
   .topbar__folio-rule { display: none; }
   .topbar__folio em,
   .topbar__folio-label { display: none; }
+}
+
+@media (max-width: 880px) {
+  .topbar__sigil { display: none; }
+  .topbar { grid-template-columns: auto 1fr auto; }
 }
 
 .status {
@@ -3609,8 +3639,133 @@ em { font-style: italic; }
 }
 
 /* ────────────────────────────────────────────────────────────
+   HERO IMPRINT · a small press signature set beneath the title
+   the press sigil + a single italic line of metadata, flanked
+   by hairlines, tying the hero to the rest of the page.
+   ──────────────────────────────────────────────────────────── */
+
+.hero-imprint {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(14px, 1.6vw, 22px);
+  max-width: 1320px;
+  margin: clamp(-12px, -1vw, -4px) auto clamp(20px, 2.4vw, 32px);
+  padding: clamp(14px, 1.8vw, 22px) var(--gutter);
+  color: var(--paper-soft);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13.5px, 1.15vw, 15.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  isolation: isolate;
+  opacity: 0;
+  animation: heroImprintIn 1.2s var(--ease-out) 1.5s both;
+}
+
+.hero-imprint__sigil {
+  display: inline-grid;
+  place-items: center;
+  color: var(--mark-tone, var(--quiet));
+  animation: heroImprintIn 1.1s var(--ease-out) 1.6s both;
+}
+
+.hero-imprint__rule {
+  display: inline-block;
+  height: 1px;
+  width: clamp(28px, 4vw, 64px);
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+  position: relative;
+}
+
+.hero-imprint__rule::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--mark-tone, var(--quiet));
+  transform: translate(-50%, -50%);
+  opacity: .55;
+}
+
+.hero-imprint__line {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: var(--paper-soft);
+  min-width: 0;
+  font-style: italic;
+}
+
+.hero-imprint__line span[aria-hidden="true"] {
+  color: var(--line-strong);
+  font-style: normal;
+}
+
+.hero-imprint__mark {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: var(--mark-tone, var(--quiet));
+  text-transform: lowercase;
+  padding: 2px 8px;
+  border: 1px solid color-mix(in srgb, var(--mark-tone, var(--quiet)) 30%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--mark-tone, var(--quiet)) 5%, transparent);
+}
+
+.hero-imprint__date {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  opacity: .85;
+}
+
+@keyframes heroImprintIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-imprint { animation: none; opacity: 1; transform: none; }
+  .hero-imprint__sigil { animation: none; opacity: 1; transform: none; }
+}
+
+@media (max-width: 720px) {
+  .hero-imprint {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "sigil line date"
+      "rule rule rule";
+    gap: 10px 14px;
+    text-align: center;
+  }
+  .hero-imprint__sigil { grid-area: sigil; }
+  .hero-imprint__line { grid-area: line; justify-content: center; }
+  .hero-imprint__date { grid-area: date; }
+  .hero-imprint__rule { grid-area: rule; width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .hero-imprint__date { display: none; }
+  .hero-imprint { grid-template-columns: auto 1fr; }
+  .hero-imprint__line { font-size: 12.5px; }
+}
+
+/* ────────────────────────────────────────────────────────────
    HERO VOICES · the three-voice specimen that lives beside
    the title. A single line of italic, three chips below.
+   Refined · reads as a marginalium, not a card.
    ──────────────────────────────────────────────────────────── */
 
 .hero-voices {
@@ -3618,50 +3773,46 @@ em { font-style: italic; }
   position: relative;
   display: grid;
   align-content: start;
-  gap: clamp(18px, 2.2vw, 28px);
-  padding: clamp(28px, 3.4vw, 44px) clamp(24px, 2.8vw, 36px) clamp(32px, 3.8vw, 48px);
-  border: 1px solid var(--line-soft);
-  border-radius: 4px;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--hv-tone) 8%, transparent), transparent 65%),
-    linear-gradient(180deg, rgba(245, 238, 216, .012), transparent 80%);
+  gap: clamp(16px, 2vw, 24px);
+  padding: clamp(22px, 2.8vw, 32px) clamp(2px, .6vw, 8px) clamp(28px, 3.2vw, 36px) clamp(20px, 2.4vw, 28px);
+  border-left: 1px solid color-mix(in srgb, var(--hv-tone) 30%, transparent);
+  background: transparent;
   isolation: isolate;
   z-index: 2;
-  transition: border-color .45s var(--ease), background .45s var(--ease);
+  transition: border-color .45s var(--ease);
 }
 
 .hero-voices::before {
   content: '';
   position: absolute;
-  inset: 8px;
-  border: 1px dashed var(--line-soft);
-  border-radius: 2px;
+  left: -1px;
+  top: 0;
+  width: 1px;
+  height: 28%;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--hv-tone) 50%, transparent) 0%,
+    transparent 100%);
   pointer-events: none;
-  opacity: .35;
-  transition: opacity .45s var(--ease);
 }
 
 .hero-voices::after {
   content: '';
   position: absolute;
   left: 18px;
-  top: 18px;
-  width: 18px;
-  height: 18px;
+  top: 12px;
+  width: 14px;
+  height: 14px;
   background-image:
-    radial-gradient(circle at 0 0, currentColor 0 1px, transparent 1.2px),
-    radial-gradient(circle at 100% 0, currentColor 0 1px, transparent 1.2px),
-    radial-gradient(circle at 0 100%, currentColor 0 1px, transparent 1.2px),
-    radial-gradient(circle at 100% 100%, currentColor 0 1px, transparent 1.2px);
+    radial-gradient(circle at 50% 50%, currentColor 0 1.4px, transparent 1.6px);
   color: var(--hv-tone);
-  opacity: .5;
+  opacity: .55;
   transition: opacity .35s var(--ease);
   pointer-events: none;
 }
 
-.hero-voices--quiet { --hv-tone: var(--quiet); border-color: color-mix(in srgb, var(--quiet) 18%, var(--line-soft)); }
-.hero-voices--human { --hv-tone: var(--human); border-color: color-mix(in srgb, var(--human) 18%, var(--line-soft)); }
-.hero-voices--bold  { --hv-tone: var(--bold);  border-color: color-mix(in srgb, var(--bold)  22%, var(--line-soft)); }
+.hero-voices--quiet { --hv-tone: var(--quiet); }
+.hero-voices--human { --hv-tone: var(--human); }
+.hero-voices--bold  { --hv-tone: var(--bold);  }
 
 .hero-voices__head {
   display: flex;
@@ -13874,9 +14025,9 @@ section.reveal h2 em::after {
   display: flex;
   align-items: center;
   gap: clamp(14px, 1.6vw, 20px);
-  margin-top: clamp(10px, 1.4vw, 18px);
-  padding-top: clamp(10px, 1.2vw, 14px);
-  border-top: 1px dashed var(--line-soft);
+  margin-top: clamp(14px, 1.8vw, 22px);
+  padding-top: clamp(14px, 1.6vw, 18px);
+  border-top: 1px solid color-mix(in srgb, var(--hero-tone, var(--quiet)) 18%, transparent);
   font-family: var(--display);
   font-style: italic;
   font-size: clamp(13.5px, 1.15vw, 15.5px);
@@ -13885,6 +14036,30 @@ section.reveal h2 em::after {
   text-transform: none;
   opacity: 0;
   animation: heroCodaIn .9s var(--ease-out) 1.1s both;
+}
+
+.hero__coda::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: clamp(40px, 5vw, 72px);
+  height: 1px;
+  background: var(--hero-tone, var(--quiet));
+  opacity: .85;
+}
+
+.hero__coda::after {
+  content: '';
+  position: absolute;
+  left: clamp(36px, 4.6vw, 66px);
+  top: -3px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--hero-tone, var(--quiet));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--hero-tone, var(--quiet)) 24%, transparent);
+  opacity: .9;
 }
 
 .hero__coda-rule {

@@ -179,7 +179,7 @@ export function Hero({
 
   return (
     <div className="hero__inner" style={toneStyle}>
-      <ChaseFrame tone={`var(--hero-tone, var(--quiet))`} className="hero__chase" intensity="full">
+<ChaseFrame tone={`var(--hero-tone, var(--quiet))`} className="hero__chase" intensity="full">
         <svg className="hero__defs" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <filter id={grainId} x="-2%" y="-2%" width="104%" height="104%">
@@ -198,7 +198,7 @@ export function Hero({
 
         <span className="hero__trim" aria-hidden="true">
           <svg viewBox="0 0 24 24">
-            <path d="M0 6 L24 6 M6 0 L6 24" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+            <path d="M0 6 L24 6 6 0 L6 24" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
             <circle cx="6" cy="6" r="1.4" fill="none" stroke="currentColor" strokeWidth=".4" />
           </svg>
         </span>
@@ -209,18 +209,6 @@ export function Hero({
             <span>folio i</span>
             <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
             <span className="hero__eyebrow-em">set the line · mark a word</span>
-          </span>
-
-          <span className="hero__eyebrow-stamp" aria-hidden="true">
-            <span className="hero__eyebrow-stamp-rule" />
-            <em>first impression</em>
-            <span className="hero__eyebrow-stamp-glyph">
-              <svg viewBox="0 0 16 16">
-                <circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" strokeWidth=".55" />
-                <circle cx="8" cy="8" r="3" fill="currentColor" opacity=".55" />
-                <circle cx="8" cy="8" r=".9" fill="var(--night)" />
-              </svg>
-            </span>
           </span>
         </div>
 
