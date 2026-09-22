@@ -70,6 +70,7 @@ const COMPOSITOR_NOTE_HELD: Record<VoiceId, string> = {
 
 export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, setToday }: PressProps) {
   const bleedRef = useRef<HTMLSpanElement | null>(null)
+  const baseId = useId().replace(/:/g, '')
 
   const next = NEXT_VOICE[voice]
   const pulling = isPulling
@@ -93,6 +94,57 @@ export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, s
       <PressRule voice={voice} count={pullCount} pulling={pulling} />
 
       <div className={`press__table press__table--${voice} ${pulling ? 'is-pulling' : ''}`}>
+        <span
+          className={`press__wash press__wash--${voice} ${pulling ? 'is-active' : ''}`}
+          aria-hidden="true"
+          key={`wash-${pullSignal}`}
+        />
+        <svg
+          className={`press__arm press__arm--${voice} ${pulling ? 'is-pulling' : ''}`}
+          viewBox="0 0 1000 120"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+          key={`arm-${pullSignal}`}
+        >
+          <defs>
+            <linearGradient id={`arm-grad-${baseId}`} x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
+              <stop offset="14%" stopColor="currentColor" stopOpacity=".55" />
+              <stop offset="44%" stopColor="currentColor" stopOpacity=".85" />
+              <stop offset="62%" stopColor="currentColor" stopOpacity=".45" />
+              <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path
+            className="press__arm-shaft"
+            d="M 16 44 Q 80 30 220 56 T 360 60"
+            fill="none"
+            stroke={`url(#arm-grad-${baseId})`}
+            strokeWidth="1.4"
+            strokeLinecap="round"
+          />
+          <path
+            className="press__arm-glow"
+            d="M 16 44 Q 80 30 220 56 T 360 60"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3.2"
+            strokeLinecap="round"
+            opacity=".35"
+          />
+          <g className="press__arm-pulses" stroke="currentColor" strokeLinecap="round" fill="none">
+            <circle cx="120" cy="48" r="3" className="press__arm-pulse press__arm-pulse--a" />
+            <circle cx="220" cy="56" r="2.4" className="press__arm-pulse press__arm-pulse--b" />
+            <circle cx="300" cy="60" r="2.6" className="press__arm-pulse press__arm-pulse--c" />
+          </g>
+          <g className="press__arm-pin">
+            <circle cx="16" cy="44" r="3.4" fill="currentColor" />
+            <circle cx="16" cy="44" r="1.4" fill="var(--night)" />
+          </g>
+          <g className="press__arm-tip">
+            <path d="M 358 52 L 376 60 L 358 68" fill="currentColor" opacity=".9" />
+          </g>
+        </svg>
         <div className="press__cell press__cell--lever">
           <button
             type="button"
@@ -165,11 +217,44 @@ export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, s
           <span className="press__cell-key">the impression</span>
           <div className="press__cell-body">
             <div className={`press-impression press-impression--${voice} ${pulling ? 'is-pulled' : ''}`}>
-              <div className="press-impression__stamp" aria-hidden="true">
-                <span>impression № {String(pullCount).padStart(3, '0')} · folio ii · at first light</span>
-                <span>voice {VOICE_LETTER[voice]}</span>
+              <div className="press-impression__stamp" aria-hidden="true" key={`stamp-${pullSignal}`}>
+                <span className="press-impression__stamp-cell">
+                  <em className="press-impression__stamp-num">{String(pullCount).padStart(3, '0')}</em>
+                  <span className="press-impression__stamp-key">impression · folio ii · at first light</span>
+                </span>
+                <span className="press-impression__stamp-voice">
+                  <em className="press-impression__stamp-letter">{VOICE_LETTER[voice]}</em>
+                  <span className="press-impression__stamp-voicename">{VOICE_NAME[voice]}</span>
+                </span>
               </div>
               <div className="press-impression__body">
+                <svg
+                  className={`press-impression__landing press-impression__landing--${voice} ${pulling ? 'is-pulled' : ''}`}
+                  viewBox="0 0 600 80"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                  key={`land-${pullSignal}`}
+                >
+                  <defs>
+                    <linearGradient id={`land-grad-${baseId}`} x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
+                      <stop offset="10%" stopColor="currentColor" stopOpacity=".85" />
+                      <stop offset="50%" stopColor="currentColor" stopOpacity=".6" />
+                      <stop offset="92%" stopColor="currentColor" stopOpacity=".75" />
+                      <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M 4 38 Q 200 30 596 38"
+                    fill="none"
+                    stroke={`url(#land-grad-${baseId})`}
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="120" cy="36" r="2" fill="currentColor" />
+                  <circle cx="320" cy="40" r="2" fill="currentColor" />
+                  <circle cx="480" cy="34" r="2" fill="currentColor" />
+                </svg>
                 {PIECES.map(piece => (
                   <span
                     key={piece.id}
