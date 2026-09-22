@@ -56,6 +56,12 @@ const LONG_MOTTO: Record<VoiceId, string> = {
   bold: 'pull once · the line stands up · the page says so',
 }
 
+const COMPOSITOR_NOTE: Record<VoiceId, string> = {
+  quiet: 'every pull sets the line a little softer — the page keeps the quietest pull on top.',
+  human: 'every pull warms the same letterforms a little — the machine carries the heat in the type.',
+  bold: 'every pull stands the line a little taller — the press prefers the loudest pull at first light.',
+}
+
 export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, setToday }: PressProps) {
   const bleedRef = useRef<HTMLSpanElement | null>(null)
 
@@ -189,6 +195,25 @@ export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, s
           </div>
         </div>
       </div>
+
+      <figure className="press__compositor" aria-label="A note from the compositor">
+        <svg className="press__compositor-mark" viewBox="0 0 64 18" aria-hidden="true">
+          <line x1="0" y1="9" x2="20" y2="9" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".5" />
+          <line x1="44" y1="9" x2="64" y2="9" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".5" />
+          <path d="M22 9 Q26 2 30 9 Q26 16 22 9" fill="currentColor" opacity=".35" />
+          <path d="M22 9 Q26 2 30 9" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".65" />
+          <path d="M34 9 Q38 2 42 9 Q38 16 34 9" fill="currentColor" opacity=".35" />
+          <path d="M34 9 Q38 2 42 9" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".65" />
+          <circle cx="32" cy="9" r="2.6" fill="currentColor" />
+          <circle cx="32" cy="9" r="1" fill="#080a12" />
+          <circle cx="6" cy="9" r=".8" fill="currentColor" opacity=".7" />
+          <circle cx="58" cy="9" r=".8" fill="currentColor" opacity=".7" />
+        </svg>
+        <figcaption>
+          <em>a note from the compositor —</em>
+          <span>{COMPOSITOR_NOTE[voice]}</span>
+        </figcaption>
+      </figure>
     </section>
   )
 }

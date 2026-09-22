@@ -13,6 +13,16 @@ type ColophonProps = {
 
 const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
+const VOICE_FACE: Record<VoiceId, string> = {
+  quiet: 'serif · italic · close set',
+  human: 'serif · italic · warm',
+  bold: 'sans · heavy · no apology',
+}
+const VOICE_MARK: Record<VoiceId, { glyph: string; label: string; sub: string }> = {
+  quiet: { glyph: '⌇', label: 'stet', sub: 'let it stand' },
+  human: { glyph: '∧', label: 'caret', sub: 'make room' },
+  bold:  { glyph: '∴', label: 'query', sub: 'protect the pause' },
+}
 const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
 const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
 const WORD_NOTE: Record<WordId, string> = {
@@ -20,6 +30,8 @@ const WORD_NOTE: Record<WordId, string> = {
   good: 'choose one clear thing',
   yet: 'protect the pause',
 }
+
+const VOICE_ORDER: VoiceId[] = ['quiet', 'human', 'bold']
 
 const SEAL_TEXT: Record<VoiceId, { top: string; bot: string; glyph: string }> = {
   quiet: { top: 'PRESS · SET', bot: 'FOLIO · TODAY', glyph: 'm³ · folio v' },
@@ -31,6 +43,12 @@ const SIGN_OFF_NOTE: Record<VoiceId, string> = {
   quiet: 'the quiet cut says it as softly as it can',
   human: 'the human hand sets it by hand, in warmth',
   bold: 'the bold signal says it once, at full height',
+}
+
+const LEDGER_NOTE: Record<VoiceId, string> = {
+  quiet: 'the line, set so the reader hears themselves in it.',
+  human: 'the line, set by hand so the page warms.',
+  bold:  'the line, set at full height so it can be heard once.',
 }
 
 export function Colophon({ voice, word, pullSignal, pullCount, setToday }: ColophonProps) {
@@ -79,6 +97,33 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday }: Colop
             <div className="colophon__cell">
               <span className="colophon__cell-key">the rule</span>
               <em>{WORD_NOTE[word]}</em>
+            </div>
+          </div>
+
+          <div className="colophon__ledger" aria-label="The three voices, kept today">
+            <span className="colophon__ledger-head">
+              <em className="colophon__ledger-eyebrow">the three readings</em>
+              <span className="colophon__ledger-rule" aria-hidden="true" />
+              <em className="colophon__ledger-meta">set today, kept here</em>
+            </span>
+            <div className="colophon__ledger-board">
+              <span className="colophon__ledger-cord" aria-hidden="true">
+                <span className="colophon__ledger-knot colophon__ledger-knot--l" />
+                <span className="colophon__ledger-line" />
+                <span className="colophon__ledger-knot colophon__ledger-knot--r" />
+              </span>
+              <ol className="colophon__ledger-list">
+                {VOICE_ORDER.map(v => (
+                  <ColophonSlip key={v} voice={v} active={voice === v} />
+                ))}
+              </ol>
+              <span className="colophon__ledger-tail" aria-hidden="true">
+                <em>three readings</em>
+                <span>·</span>
+                <em>one page</em>
+                <span>·</span>
+                <em>kept today</em>
+              </span>
             </div>
           </div>
 
@@ -173,5 +218,40 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday }: Colop
         </div>
       </div>
     </section>
+  )
+}
+
+function ColophonSlip({ voice, active }: { voice: VoiceId; active: boolean }) {
+  const mark = VOICE_MARK[voice]
+  return (
+    <li className={`colophon-slip colophon-slip--${voice} ${active ? 'is-active' : ''}`}>
+      <span className="colophon-slip__pin" aria-hidden="true">
+        <svg viewBox="0 0 18 18">
+          <circle cx="9" cy="8" r="5" fill="currentColor" opacity=".85" />
+          <circle cx="9" cy="8" r="5" fill="none" stroke="var(--night)" strokeWidth=".4" opacity=".55" />
+          <circle cx="9" cy="8" r="1.6" fill="var(--night)" />
+          <line x1="9" y1="11" x2="9" y2="17" stroke="currentColor" strokeWidth=".9" strokeLinecap="round" opacity=".75" />
+        </svg>
+      </span>
+      <header className="colophon-slip__head">
+        <span className="colophon-slip__letter">{VOICE_LETTER[voice]}</span>
+        <span className="colophon-slip__stack">
+          <em className="colophon-slip__name">{VOICE_NAME[voice]}</em>
+          <span className="colophon-slip__face">{VOICE_FACE[voice]}</span>
+        </span>
+      </header>
+      <p className="colophon-slip__line">{LEDGER_NOTE[voice]}</p>
+      <footer className="colophon-slip__foot">
+        <span className="colophon-slip__rule" />
+        <span className="colophon-slip__mark">
+          <span className="colophon-slip__mark-glyph">{mark.glyph}</span>
+          <em>{mark.label}</em>
+          <span className="colophon-slip__mark-sub">· {mark.sub}</span>
+        </span>
+      </footer>
+      <span className="colophon-slip__kept" aria-hidden="true">
+        <em>{active ? 'kept · on the page' : 'kept · in the press'}</em>
+      </span>
+    </li>
   )
 }

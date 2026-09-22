@@ -4092,9 +4092,8 @@ em { font-style: italic; }
 
 .colophon__inner {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-  gap: clamp(28px, 4vw, 60px);
-  padding: clamp(36px, 5vw, 56px);
+  gap: clamp(28px, 4vw, 52px);
+  padding: clamp(40px, 5.4vw, 64px) clamp(28px, 4vw, 56px) clamp(48px, 5.8vw, 72px);
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   background:
@@ -4103,8 +4102,21 @@ em { font-style: italic; }
     linear-gradient(180deg, rgba(245, 238, 216, .015), transparent 80%);
 }
 
-@media (max-width: 880px) {
-  .colophon__inner { grid-template-columns: 1fr; }
+.colophon__head {
+  display: grid;
+  gap: clamp(10px, 1.2vw, 14px);
+  max-width: 56ch;
+  margin: 0 auto;
+  text-align: center;
+  justify-items: center;
+}
+
+.colophon__head .colophon__eyebrow {
+  letter-spacing: .26em;
+}
+
+.colophon__head .section__lede {
+  margin: 0;
 }
 
 .colophon__head { display: grid; gap: 8px; }
@@ -4146,6 +4158,9 @@ em { font-style: italic; }
   display: grid;
   gap: 22px;
   align-content: start;
+  max-width: 920px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .colophon__line {
@@ -4155,7 +4170,9 @@ em { font-style: italic; }
   line-height: 1.42;
   letter-spacing: -.014em;
   color: var(--paper);
-  margin: 0;
+  margin: 0 auto;
+  text-align: center;
+  max-width: 56ch;
   text-wrap: pretty;
 }
 
@@ -4166,14 +4183,20 @@ em { font-style: italic; }
 
 .colophon__meta {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px 22px;
   padding: 18px 0;
   border-top: 1px dashed var(--line-soft);
   border-bottom: 1px dashed var(--line-soft);
+  max-width: 64ch;
+  margin: 0 auto;
 }
 
 @media (max-width: 640px) {
+  .colophon__meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 440px) {
   .colophon__meta { grid-template-columns: 1fr; }
 }
 
@@ -8077,4 +8100,604 @@ section.reveal h2 em::after {
   .proof-card__head { grid-template-columns: auto 1fr; }
   .proof-card__mark { grid-column: 1 / -1; justify-self: start; }
   .proof-card__datum { font-size: 8px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 383 — every folio earns a compositor's note
+   the press gains a matching beat (the lever's quiet
+   memory); the colophon closes with a tying-cord ledger
+   that keeps all three readings, not just the one in use.
+   ──────────────────────────────────────────────────────────── */
+
+/* — the press's compositor note · echoes the hero's beat — */
+
+.press__compositor {
+  margin: clamp(20px, 2.6vw, 32px) auto 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: clamp(14px, 1.8vw, 22px);
+  max-width: 64ch;
+  padding: clamp(14px, 1.6vw, 20px) clamp(18px, 2vw, 26px);
+  border-top: 1px dashed var(--line);
+  border-bottom: 1px dashed var(--line-soft);
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--paper-soft);
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: compositorBeatIn 1s var(--ease-out) both;
+  animation-delay: .35s;
+}
+
+.press__compositor::before,
+.press__compositor::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  transform: translateX(-50%);
+  opacity: 0;
+  animation: compositorPipIn .8s var(--ease-spring) .8s both;
+  pointer-events: none;
+}
+
+.press__compositor::before { top: -4px; }
+.press__compositor::after { bottom: -4px; }
+
+@keyframes compositorBeatIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes compositorPipIn {
+  0% { opacity: 0; transform: translate(-50%, 4px) scale(.6); }
+  60% { opacity: .85; transform: translate(-50%, 0) scale(1.1); }
+  100% { opacity: .55; transform: translate(-50%, 0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press__compositor,
+  .press__compositor::before,
+  .press__compositor::after {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .press__compositor::before,
+  .press__compositor::after { opacity: .55; }
+}
+
+.press__compositor-mark {
+  display: block;
+  width: clamp(48px, 5.4vw, 68px);
+  height: auto;
+  color: var(--pull-tone, var(--quiet));
+  flex-shrink: 0;
+  opacity: .92;
+  transition: color .35s var(--ease), opacity .35s var(--ease);
+}
+
+.app--pulling .press__compositor-mark {
+  animation: compositorMarkPulse .9s var(--ease-out) both;
+}
+
+@keyframes compositorMarkPulse {
+  0% { transform: scale(1); opacity: .9; }
+  35% { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1); opacity: .9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .press__compositor-mark { animation: none; }
+}
+
+.press__compositor figcaption {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: baseline;
+  font-size: clamp(13.5px, 1.35vw, 16px);
+  line-height: 1.55;
+  letter-spacing: -.005em;
+  text-wrap: pretty;
+  margin: 0;
+}
+
+.press__compositor figcaption em {
+  font-family: var(--mono);
+  font-size: .85em;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  font-style: normal;
+}
+
+.press__compositor figcaption span {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.app--voice-bold .press__compositor figcaption span {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  font-size: .92em;
+}
+
+@media (max-width: 540px) {
+  .press__compositor { grid-template-columns: 1fr; gap: 8px; padding-left: 16px; padding-right: 16px; }
+  .press__compositor-mark { width: 32px; }
+}
+
+/* — the colophon's three-reading ledger · a tying cord with three slips — */
+
+.colophon__ledger {
+  display: grid;
+  gap: clamp(16px, 1.8vw, 22px);
+  margin: 6px 0;
+  padding: clamp(20px, 2.4vw, 28px) clamp(18px, 2.2vw, 26px);
+  border-top: 1px dashed var(--line);
+  border-bottom: 1px dashed var(--line-soft);
+  position: relative;
+  isolation: isolate;
+}
+
+.colophon__ledger-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.colophon__ledger-eyebrow {
+  font-family: var(--mono);
+  font-style: normal;
+  letter-spacing: .26em;
+  color: var(--quiet);
+  text-transform: uppercase;
+}
+
+.app--voice-quiet .colophon__ledger-eyebrow { color: var(--quiet); }
+.app--voice-human .colophon__ledger-eyebrow { color: var(--human); }
+.app--voice-bold  .colophon__ledger-eyebrow { color: var(--bold); }
+
+.colophon__ledger-meta {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12.5px;
+  color: var(--paper-soft);
+}
+
+.colophon__ledger-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line), transparent);
+  opacity: .7;
+}
+
+.colophon__ledger-board {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  padding-top: 28px;
+  padding-bottom: 8px;
+  isolation: isolate;
+}
+
+.colophon__ledger-cord {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 10px;
+  height: 10px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.colophon__ledger-line {
+  flex: 1;
+  height: 2px;
+  border-radius: 2px;
+  background:
+    linear-gradient(to right,
+      transparent 0%,
+      color-mix(in srgb, var(--quiet) 25%, transparent) 8%,
+      color-mix(in srgb, var(--quiet) 38%, var(--human)) 22%,
+      color-mix(in srgb, var(--human) 38%, var(--bold)) 50%,
+      color-mix(in srgb, var(--bold) 38%, var(--human)) 78%,
+      color-mix(in srgb, var(--bold) 25%, transparent) 92%,
+      transparent 100%);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .25);
+}
+
+.app--voice-human .colophon__ledger-line {
+  background:
+    linear-gradient(to right,
+      transparent 0%,
+      rgba(244, 132, 114, .25) 8%,
+      rgba(244, 132, 114, .42) 22%,
+      rgba(244, 132, 114, .62) 50%,
+      rgba(244, 132, 114, .42) 78%,
+      rgba(244, 132, 114, .25) 92%,
+      transparent 100%);
+}
+
+.app--voice-bold .colophon__ledger-line {
+  background:
+    linear-gradient(to right,
+      transparent 0%,
+      rgba(205, 238, 106, .25) 8%,
+      rgba(205, 238, 106, .42) 22%,
+      rgba(205, 238, 106, .62) 50%,
+      rgba(205, 238, 106, .42) 78%,
+      rgba(205, 238, 106, .25) 92%,
+      transparent 100%);
+}
+
+.colophon__ledger-knot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--night);
+  border: 1px solid rgba(245, 238, 216, .35);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .35);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.colophon__ledger-knot::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: rgba(245, 238, 216, .35);
+}
+
+.colophon__ledger-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 28px);
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 720px) {
+  .colophon__ledger-list { grid-template-columns: 1fr; gap: 18px; }
+  .colophon__ledger-cord { top: 12px; left: 6%; right: 6%; }
+}
+
+/* — each slip — a small pinned card, kept from the press's run */
+
+.colophon-slip {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  padding: 22px 14px 14px;
+  border-radius: 2px;
+  border: 1px solid color-mix(in srgb, var(--slip-tone, var(--quiet)) 22%, var(--line));
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--slip-tone, var(--quiet)) 10%, transparent), transparent 70%),
+    linear-gradient(180deg, rgba(245, 238, 216, .024), transparent 80%);
+  color: var(--paper);
+  isolation: isolate;
+  transition:
+    border-color .4s var(--ease),
+    background .4s var(--ease),
+    transform .5s var(--ease-spring),
+    box-shadow .4s var(--ease);
+}
+
+.colophon-slip::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed color-mix(in srgb, var(--slip-tone, var(--quiet)) 22%, transparent);
+  border-radius: 1px;
+  pointer-events: none;
+  opacity: .55;
+  transition: opacity .35s var(--ease);
+}
+
+.colophon-slip.is-active {
+  border-color: var(--slip-tone, var(--quiet));
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in srgb, var(--slip-tone, var(--quiet)) 16%, transparent), transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--slip-tone, var(--quiet)) 6%, rgba(245, 238, 216, .024)), transparent 80%);
+  box-shadow:
+    0 8px 18px -12px rgba(0, 0, 0, .45),
+    0 0 0 1px color-mix(in srgb, var(--slip-tone, var(--quiet)) 36%, transparent);
+  transform: translateY(-2px);
+}
+
+.colophon-slip.is-active::before {
+  opacity: .9;
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--slip-tone, var(--quiet)) 38%, transparent);
+}
+
+.colophon-slip:hover {
+  border-color: color-mix(in srgb, var(--slip-tone, var(--quiet)) 50%, var(--line));
+  transform: translateY(-3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .colophon-slip,
+  .colophon-slip.is-active,
+  .colophon-slip:hover {
+    transform: none !important;
+    transition: border-color .35s var(--ease), background .35s var(--ease);
+  }
+}
+
+.colophon-slip__pin {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--slip-tone, var(--quiet));
+  pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .35));
+  z-index: 2;
+  transition: transform .35s var(--ease-spring);
+}
+
+.colophon-slip__pin svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.colophon-slip.is-active .colophon-slip__pin { transform: translateX(-50%) translateY(1px); }
+
+.colophon-slip__head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--line-soft);
+}
+
+.colophon-slip__letter {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--slip-tone, var(--quiet));
+  font-feature-settings: 'lnum' 1;
+  text-transform: lowercase;
+  transition: color .35s var(--ease);
+}
+
+.colophon-slip--bold .colophon-slip__letter {
+  font-style: normal;
+  font-weight: 800;
+}
+
+.colophon-slip__stack {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.colophon-slip__name {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: -.008em;
+  color: var(--paper);
+  text-transform: none;
+}
+
+.colophon-slip--bold .colophon-slip__name {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-style: normal;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -.02em;
+  font-size: 12px;
+}
+
+.colophon-slip__face {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.colophon-slip__line {
+  margin: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.45;
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+  text-wrap: pretty;
+  padding: 2px 0;
+}
+
+.colophon-slip--bold .colophon-slip__line {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  text-transform: lowercase;
+  letter-spacing: -.012em;
+  font-size: 12.5px;
+}
+
+.colophon-slip__foot {
+  display: grid;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line-soft);
+}
+
+.colophon-slip__rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line-soft), transparent);
+}
+
+.colophon-slip__mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.colophon-slip__mark-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--slip-tone, var(--quiet));
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--slip-tone, var(--quiet));
+  background: color-mix(in srgb, var(--slip-tone, var(--quiet)) 12%, transparent);
+}
+
+.colophon-slip--bold .colophon-slip__mark-glyph {
+  font-style: normal;
+  font-weight: 800;
+}
+
+.colophon-slip__mark em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12.5px;
+  color: var(--paper);
+}
+
+.colophon-slip--bold .colophon-slip__mark em {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -.018em;
+  font-size: 11.5px;
+}
+
+.colophon-slip__mark-sub {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 11px;
+  letter-spacing: -.003em;
+  color: var(--paper-soft);
+}
+
+.colophon-slip__kept {
+  position: absolute;
+  bottom: -8px;
+  right: 12px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  background: var(--night);
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  color: var(--muted);
+  white-space: nowrap;
+  z-index: 3;
+  transition: color .35s var(--ease), border-color .35s var(--ease);
+}
+
+.colophon-slip.is-active .colophon-slip__kept {
+  color: var(--slip-tone, var(--quiet));
+  border-color: color-mix(in srgb, var(--slip-tone, var(--quiet)) 45%, var(--line-soft));
+}
+
+.colophon-slip__kept em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 11px;
+}
+
+@media (max-width: 720px) {
+  .colophon-slip__kept { display: none; }
+}
+
+/* color-tone bindings for the three slips */
+
+.colophon-slip--quiet { --slip-tone: var(--quiet); }
+.colophon-slip--human { --slip-tone: var(--human); }
+.colophon-slip--bold  { --slip-tone: var(--bold); }
+
+.colophon__ledger-tail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 6px;
+}
+
+.colophon__ledger-tail em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12px;
+  color: var(--paper-soft);
+}
+
+.colophon__ledger-tail span {
+  opacity: .55;
+  font-style: normal;
+}
+
+@media (max-width: 720px) {
+  .colophon__ledger { padding: 18px 16px; }
+  .colophon__ledger-head { font-size: 9px; }
 }
