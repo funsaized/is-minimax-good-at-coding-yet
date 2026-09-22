@@ -1,10 +1,10 @@
 # Changelog
 
-## 414 — three voices, set on one plate
-- Added a single, deliberate **three-voice specimen plate** between the type case and the title. The question is now set three ways on one plate — quiet, human, bold — with the active voice caught by the eye and the others held beside it. Click a row, or use the existing shift+v cycle.
-- Tightened the **hero's typography** so the title sits a half-step higher above the page: the question mark carries the line, and the coda sits a hair closer to the rule beneath it.
-- Strengthened the **press moment**: the strike flash now peaks higher and lingers a beat longer at full brightness; the bed takes a longer, more deliberate breath; the page catches the lever's drop.
-- Consolidated the **closing**: the last light and the held question now read as one signature, with tighter space between them and a slightly larger, more confident closing line.
-- Reduced decorative chrome inside the chase so the question stands alone above the press.
+## 2026-09-22 · iteration 415
+A press frontispiece stands between TitlePage and TypeCase — bench, chase, platen, arm, day breaking across the top.
 
-Files touched: `src/ThreeVoiceSpecimen.tsx` (new), `src/App.tsx`, `src/style.css`, `CHANGELOG.md`.
+- New `Frontispiece` component (src/Frontispiece.tsx) — a single SVG engraving with overlaid HTML type that holds legibility at every viewport.
+- Added `FRONTISPIECE` block in src/style.css — aspect-ratio plate, voice-tinted dawn wash, hand-set caption, chase-line type-in animation, tray caption strip, responsive aspect for mobile/very-narrow viewports, full reduced-motion fallback.
+- Imported the frontispiece in src/App.tsx and rendered it immediately after `TitlePage`, before `TypeCase` — i.e. between the masthead and the composing case at folio i.
+- Title and document title preserved (`is Minimax M3 good at frontend yet?`).
+- Build verified with `npm run build`: 46 modules, gzipped CSS 58.64 kB, JS 97.96 kB.

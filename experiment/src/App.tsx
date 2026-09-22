@@ -12,6 +12,7 @@ import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
 import { FirstLight } from './FirstLight'
 import { TitlePage } from './TitlePage'
+import { Frontispiece } from './Frontispiece'
 import { Asterism } from './Asterism'
 import { Hero } from './Hero'
 import { FolioTurn } from './FolioTurn'
@@ -352,6 +353,8 @@ export function App() {
 
 
       <TitlePage voice={voice} setToday={setToday} />
+
+      <Frontispiece voice={voice} setToday={setToday} />
 
       <TypeCase
         voice={voice}
