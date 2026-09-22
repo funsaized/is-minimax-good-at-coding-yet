@@ -1,0 +1,19 @@
+{
+  "id": 412,
+  "parentId": 411,
+  "createdAt": "2026-09-22T20:38:32.145Z",
+  "summary": "the composing case · between the title and the press bed, three type sorts sit locked in a printer's chase. one is lifte",
+  "path": "/iterations/000412/index.html",
+  "screenshot": "/iterations/000412/desktop.png",
+  "mobileScreenshot": "/iterations/000412/mobile.png",
+  "sourceCommit": "ea6b4cdae532be70bf48cf1eb5ac76d795426ad0",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 297,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 136966,
+    "outputTokens": 16877,
+    "steps": 81
+  }
+}
