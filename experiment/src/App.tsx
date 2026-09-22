@@ -75,8 +75,12 @@ export function App() {
   const [announcement, setAnnouncement] = useState('')
   const [setToday] = useState(() => formatSetToday())
   const [setHour] = useState(() => formatHour())
+  const [pullCount, setPullCount] = useState(0)
+  const [pullSignal, setPullSignal] = useState(0)
+  const [isPulling, setIsPulling] = useState(false)
   const tokenRefs = useRef<Partial<Record<WordId, HTMLButtonElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement | null>(null)
+  const pullLockRef = useRef(false)
 
   const activeWord = hoveredWord ?? selectedWord
 
@@ -106,6 +110,23 @@ export function App() {
       setAnnouncement(`Voice set in ${VOICE_NAME[next]}.`)
       return next
     })
+  }, [])
+
+  const pullLever = useCallback(() => {
+    if (pullLockRef.current) return
+    pullLockRef.current = true
+    setIsPulling(true)
+    setPullCount(c => c + 1)
+    setPullSignal(s => s + 1)
+    setVoice(prev => {
+      const next = NEXT_VOICE[prev]
+      setAnnouncement(`Voice set in ${VOICE_NAME[next]}.`)
+      return next
+    })
+    window.setTimeout(() => {
+      setIsPulling(false)
+      pullLockRef.current = false
+    }, 900)
   }, [])
 
   useEffect(() => {
@@ -190,6 +211,7 @@ export function App() {
 
   const style = {
     '--set-type-tone': 'var(--quiet)',
+    '--pull-tone': `var(--${voice})`,
   } as CSSProperties
 
   const toggleAnswer = () => {
@@ -204,13 +226,14 @@ export function App() {
   return (
     <main
       id="question"
-      className={`app app--voice-${voice} app--word-${activeWord}`}
+      className={`app app--voice-${voice} app--word-${activeWord} ${isPulling ? 'app--pulling' : ''}`}
       style={style}
     >
       <PaperGrain />
       <span className="app__bg-grain" aria-hidden="true" />
       <span className="app__void" aria-hidden="true" />
       <span className="app__backdrop" aria-hidden="true" />
+      <span className="app__ink-wash" aria-hidden="true" key={`ink-${pullSignal}`} />
       <FirstLight />
       <CursorGlow />
 
@@ -234,6 +257,16 @@ export function App() {
         <div className="status" aria-label="Page status">
           <span className="status__date">{setToday}</span>
           <span className="status__hour" aria-hidden="true">· {setHour}</span>
+          <span
+            className={`status__press ${isPulling ? 'is-pulling' : ''}`}
+            aria-hidden="true"
+          >
+            <span className="status__press-key">pulls</span>
+            <span className="status__press-num">{String(pullCount).padStart(3, '0')}</span>
+            <span className={`status__press-mark status__press-mark--${voice}`}>
+              {VOICE_LETTER[voice]}
+            </span>
+          </span>
           <StatusLight />
         </div>
       </header>
@@ -255,6 +288,7 @@ export function App() {
           word={activeWord}
           hover={hoveredWord}
           setToday={setToday}
+          pullSignal={pullSignal}
           onVoice={selectVoice}
           onWord={(id, focus) => selectWord(id, focus ?? false)}
           onHover={setHoveredWord}
@@ -264,10 +298,18 @@ export function App() {
       </section>
 
       <FolioTurn index="ii" title="the press bed" hint="pull a lever · take an impression" voice={voice} />
-      <Press voice={voice} word={activeWord} onVoice={selectVoice} setToday={setToday} />
+      <Press
+        voice={voice}
+        word={activeWord}
+        pullSignal={pullSignal}
+        isPulling={isPulling}
+        pullCount={pullCount}
+        onPull={pullLever}
+        setToday={setToday}
+      />
 
       <FolioTurn index="iii" title="the marginalia" hint="three things worth keeping" voice={voice} />
-      <Marginalia selected={selectedWord} onSelect={id => selectWord(id, true)} />
+      <Marginalia selected={selectedWord} pullSignal={pullSignal} onSelect={id => selectWord(id, true)} />
 
       <FolioTurn index="iv" title="the notation key" hint="how the three voices read" voice={voice} />
       <Specimen active={voice} onSelect={selectVoice} />
@@ -279,11 +321,12 @@ export function App() {
         triggerRef={answerTriggerRef as RefObject<HTMLButtonElement>}
         voice={voice}
         word={activeWord}
+        pullSignal={pullSignal}
         setToday={setToday}
       />
 
       <FolioTurn index="—" title="the colophon" hint="the page, signed off" voice={voice} soft />
-      <Colophon voice={voice} word={activeWord} setToday={setToday} />
+      <Colophon voice={voice} word={activeWord} pullSignal={pullSignal} pullCount={pullCount} setToday={setToday} />
 
       <footer className="site-foot" aria-label="The page, in one line">
         <span className="site-foot__copy">
@@ -307,7 +350,7 @@ export function App() {
       </footer>
 
       <span className="sr-only" aria-live="polite">{announcement}</span>
-      <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · ${activeFolio.label} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}).`}</span>
+      <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · ${activeFolio.label} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}) · ${pullCount} impressions on the day.`}</span>
     </main>
   )
 }

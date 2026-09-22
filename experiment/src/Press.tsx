@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import type { VoiceId } from './App'
 export type { VoiceId } from './App'
 import type { WordId } from './notes'
@@ -6,7 +6,10 @@ import type { WordId } from './notes'
 type PressProps = {
   voice: VoiceId
   word: WordId
-  onVoice: (voice: VoiceId) => void
+  pullSignal: number
+  isPulling: boolean
+  pullCount: number
+  onPull: () => void
   setToday: string
 }
 
@@ -41,32 +44,17 @@ const PROOF: Record<WordId, { label: string; sub: string }> = {
   yet: { label: 'query', sub: 'protect the pause' },
 }
 
-const PRESS_DURATION = 900
 const MOTTO: Record<VoiceId, string> = {
   quiet: 'a quiet line is a careful line — let the page do less, then less again.',
   human: 'a small wobble makes the machine feel less like a machine.',
   bold: 'say the whole thing once, in the loudest voice you can keep honest.',
 }
 
-export function Press({ voice, word, onVoice, setToday }: PressProps) {
-  const [pulling, setPulling] = useState(false)
-  const [pullCount, setPullCount] = useState(0)
-  const lockRef = useRef(false)
+export function Press({ voice, word, pullSignal, isPulling, pullCount, onPull, setToday }: PressProps) {
   const bleedRef = useRef<HTMLSpanElement | null>(null)
 
-  const pull = () => {
-    if (lockRef.current) return
-    lockRef.current = true
-    setPulling(true)
-    setPullCount(c => c + 1)
-    onVoice(NEXT_VOICE[voice])
-    window.setTimeout(() => {
-      setPulling(false)
-      lockRef.current = false
-    }, PRESS_DURATION)
-  }
-
   const next = NEXT_VOICE[voice]
+  const pulling = isPulling
 
   return (
     <section className="press reveal" id="press" aria-labelledby="press-title">
@@ -89,7 +77,7 @@ export function Press({ voice, word, onVoice, setToday }: PressProps) {
           <button
             type="button"
             className={`press-lever press-lever--${voice} ${pulling ? 'is-pulled' : ''}`}
-            onClick={pull}
+            onClick={onPull}
             aria-label={`Pull the composing lever. Current voice is ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}); next pull will set the line in ${VOICE_NAME[next]}.`}
           >
             <span className="press-lever__cage" aria-hidden="true">
@@ -104,7 +92,7 @@ export function Press({ voice, word, onVoice, setToday }: PressProps) {
               ref={bleedRef}
               className={`press-lever__bleed press-lever__bleed--${voice} ${pulling ? 'is-active' : ''}`}
               aria-hidden="true"
-              key={pullCount}
+              key={`bleed-${pullSignal}`}
             />
             <span className="press-lever__label" aria-hidden="true">
               <em>pull</em>
@@ -152,7 +140,7 @@ export function Press({ voice, word, onVoice, setToday }: PressProps) {
           <div className="press__cell-body">
             <div className={`press-impression press-impression--${voice} ${pulling ? 'is-pulled' : ''}`}>
               <div className="press-impression__stamp" aria-hidden="true">
-                <span>pulled · folio ii · at first light</span>
+                <span>impression № {String(pullCount).padStart(3, '0')} · folio ii · at first light</span>
                 <span>voice {VOICE_LETTER[voice]}</span>
               </div>
               <div className="press-impression__body">
@@ -177,7 +165,7 @@ export function Press({ voice, word, onVoice, setToday }: PressProps) {
                 <span className="press-impression__color-swatch" />
               </span>
               <span className="press-impression__corner" aria-hidden="true" />
-              <span className={`press-impression__bleed press-impression__bleed--${voice} ${pulling ? 'is-active' : ''}`} aria-hidden="true" key={`ib-${pullCount}`} />
+              <span className={`press-impression__bleed press-impression__bleed--${voice} ${pulling ? 'is-active' : ''}`} aria-hidden="true" key={`ib-${pullSignal}`} />
             </div>
           </div>
         </div>

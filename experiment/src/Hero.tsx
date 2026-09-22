@@ -17,6 +17,7 @@ type HeroProps = {
   word: WordId
   hover: WordId | null
   setToday: string
+  pullSignal: number
   onVoice: (voice: VoiceId) => void
   onWord: (word: WordId, focus?: boolean) => void
   onHover: (word: WordId | null) => void
@@ -108,6 +109,7 @@ export function Hero({
   word,
   hover,
   setToday,
+  pullSignal,
   onVoice,
   onWord,
   onHover,
@@ -179,7 +181,7 @@ export function Hero({
           </svg>
         </span>
 
-        <DawnBreak />
+        <DawnBreak key={`dawn-${pullSignal}`} />
 
         <TypeBed tone={`var(--hero-tone, var(--quiet))`} />
 

@@ -8,6 +8,7 @@ type AnswerProps = {
   triggerRef: RefObject<HTMLButtonElement | null>
   voice: VoiceId
   word: WordId
+  pullSignal: number
   setToday: string
 }
 
@@ -15,7 +16,7 @@ const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human 
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 const WORD_LABEL: Record<WordId, string> = { m3: 'm³', good: 'good at', yet: 'yet?' }
 
-export function Answer({ open, onToggle, triggerRef, voice, word, setToday }: AnswerProps) {
+export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, setToday }: AnswerProps) {
   const leafRef = useRef<HTMLDivElement | null>(null)
   const closeRef = useRef<HTMLButtonElement | null>(null)
 
@@ -105,7 +106,7 @@ export function Answer({ open, onToggle, triggerRef, voice, word, setToday }: An
         </div>
 
         <aside className="answer__aside">
-          <WaxSeal voice={voice} broken={open} />
+          <WaxSeal voice={voice} broken={open} pullSignal={pullSignal} />
           <div className="answer__aside-cell">
             <span className="answer__aside-key">composed in</span>
             <span>{VOICE_LETTER[voice]} · {VOICE_NAME[voice]}</span>
@@ -139,7 +140,7 @@ export function Answer({ open, onToggle, triggerRef, voice, word, setToday }: An
   )
 }
 
-function WaxSeal({ voice, broken }: { voice: VoiceId; broken: boolean }) {
+function WaxSeal({ voice, broken, pullSignal }: { voice: VoiceId; broken: boolean; pullSignal: number }) {
   const labels = {
     quiet: { top: 'PRESS · SET', bottom: 'FOLIO · TODAY' },
     human: { top: 'SET BY HAND', bottom: 'FOR NOW' },
@@ -163,7 +164,11 @@ function WaxSeal({ voice, broken }: { voice: VoiceId; broken: boolean }) {
       : 'rgba(168, 214, 50, 0.95)'
 
   return (
-    <div className={`answer__seal-wrap answer__seal-wrap--${voice} ${broken ? 'is-broken' : ''}`} aria-hidden="true">
+    <div
+      className={`answer__seal-wrap answer__seal-wrap--${voice} ${broken ? 'is-broken' : ''}`}
+      aria-hidden="true"
+      key={`seal-${pullSignal}`}
+    >
       <span className="answer__seal-shadow" />
       <svg className="answer__seal-shadow-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
         <ellipse cx="50" cy="86" rx="34" ry="5" fill="currentColor" opacity=".25" />

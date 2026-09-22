@@ -3,6 +3,7 @@ import type { WordId } from './notes'
 
 type MarginaliaProps = {
   selected: WordId
+  pullSignal: number
   onSelect: (id: WordId) => void
 }
 
@@ -63,7 +64,7 @@ const SLIP_INK: Record<Slip['paper'], string> = {
   blue: 'var(--quiet)',
 }
 
-export function Marginalia({ selected, onSelect }: MarginaliaProps) {
+export function Marginalia({ selected, pullSignal, onSelect }: MarginaliaProps) {
   return (
     <section className="marginalia reveal" id="notes" aria-labelledby="marginalia-title">
       <header className="marginalia__header">
@@ -83,14 +84,19 @@ export function Marginalia({ selected, onSelect }: MarginaliaProps) {
         <span className="marginalia__rule-line" />
       </div>
 
-      <div className="marginalia__board" role="list">
+      <div
+        className="marginalia__board"
+        role="list"
+        data-pull={pullSignal}
+      >
         <span className="marginalia__board-cord" aria-hidden="true" />
         <span className="marginalia__board-cord marginalia__board-cord--lower" aria-hidden="true" />
-        {SLIPS.map(slip => {
+        {SLIPS.map((slip, idx) => {
           const isActive = selected === slip.id
           const style = {
             '--slip-tilt': `${slip.rotation}deg`,
             '--slip-ink': SLIP_INK[slip.paper],
+            '--slip-delay': `${idx * 60}ms`,
           } as CSSProperties
           return (
             <article

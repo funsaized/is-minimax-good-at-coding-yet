@@ -6,6 +6,8 @@ import { PrinterFlourish } from './PrinterFlourish'
 type ColophonProps = {
   voice: VoiceId
   word: WordId
+  pullSignal: number
+  pullCount: number
   setToday: string
 }
 
@@ -25,7 +27,7 @@ const SEAL_TEXT: Record<VoiceId, { top: string; bot: string; glyph: string }> = 
   bold: { top: 'M³ · YES · M³', bot: 'AGAIN', glyph: 'M³ · FOLIO V' },
 }
 
-export function Colophon({ voice, word, setToday }: ColophonProps) {
+export function Colophon({ voice, word, pullSignal, pullCount, setToday }: ColophonProps) {
   const tone = voice === 'quiet' ? 'var(--quiet)' : voice === 'human' ? 'var(--human)' : 'var(--bold)'
   const sealStyle = { color: tone } as CSSProperties
   const seal = SEAL_TEXT[voice]
@@ -133,6 +135,12 @@ export function Colophon({ voice, word, setToday }: ColophonProps) {
               composed in {VOICE_NAME[voice]}
               <em>· {setToday}</em>
               <span className="colophon__signoff-rule" aria-hidden="true" />
+            </span>
+
+            <span className="colophon__signoff-impressions" aria-hidden="true">
+              <em>{String(pullCount).padStart(3, '0')}</em>
+              <span className="colophon__signoff-impressions-rule" />
+              <span className="colophon__signoff-impressions-key">impressions on the day</span>
             </span>
           </div>
         </div>

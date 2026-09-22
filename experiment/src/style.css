@@ -235,6 +235,47 @@ em { font-style: italic; }
     radial-gradient(ellipse 22rem 12rem at 90% 80%, rgba(205, 238, 106, .06), transparent 70%);
 }
 
+/* — a global ink-wash that ripples across the page on each lever pull — */
+
+.app__ink-wash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse 70rem 30rem at 50% 100%, color-mix(in srgb, var(--pull-tone, var(--quiet)) 16%, transparent), transparent 70%),
+    radial-gradient(ellipse 22rem 14rem at 50% 50%, color-mix(in srgb, var(--pull-tone, var(--quiet)) 8%, transparent), transparent 70%);
+  mix-blend-mode: screen;
+  animation: inkWash .9s var(--ease-out) both;
+}
+
+@keyframes inkWash {
+  0% { opacity: 0; transform: translateY(8px) scale(1.02); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app__ink-wash { display: none; }
+}
+
+/* — when the lever is pulled, the whole page gets a brief brightness lift — */
+
+.app--pulling .hero__title,
+.app--pulling .voice-column__sample,
+.app--pulling .slip__title button,
+.app--pulling .plate__sample {
+  transition: color .25s var(--ease), filter .25s var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .hero__title,
+  .app--pulling .voice-column__sample,
+  .app--pulling .slip__title button,
+  .app--pulling .plate__sample { transition: none; }
+}
+
 .app__bg-grain {
   position: fixed;
   inset: 0;
@@ -416,7 +457,7 @@ em { font-style: italic; }
 .status {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: clamp(8px, 1.2vw, 14px);
   justify-self: end;
   color: var(--paper-soft);
 }
@@ -460,6 +501,124 @@ em { font-style: italic; }
 @keyframes statusPulse {
   0%, 100% { opacity: .4; transform: scale(.85); }
   50% { opacity: 1; transform: scale(1); }
+}
+
+/* — a small "press proof slip" set in the status — */
+
+.status__press {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 8px;
+  margin-left: 4px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+  background:
+    linear-gradient(180deg, rgba(245, 238, 216, .025), rgba(245, 238, 216, .008));
+  position: relative;
+  transition: border-color .35s var(--ease), background .35s var(--ease);
+}
+
+.status__press::before,
+.status__press::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  opacity: .55;
+  transition: border-color .35s var(--ease), opacity .35s var(--ease);
+}
+
+.status__press::before { top: -2.5px; left: -2.5px; border-right: none; border-bottom: none; }
+.status__press::after { bottom: -2.5px; right: -2.5px; border-left: none; border-top: none; }
+
+.status__press.is-pulling {
+  border-color: var(--pull-tone, var(--quiet));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--pull-tone, var(--quiet)) 14%, transparent), transparent 80%);
+  animation: pressSlipTap .9s var(--ease) both;
+}
+
+.status__press.is-pulling::before,
+.status__press.is-pulling::after { opacity: 0; }
+
+.status__press-key {
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: .22em;
+  color: var(--muted);
+}
+
+.status__press-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  font-feature-settings: 'tnum' 1;
+  color: var(--paper);
+  min-width: 2.4ch;
+  text-align: right;
+  position: relative;
+  padding-right: 10px;
+}
+
+.status__press-num::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 12px;
+  background: var(--line);
+}
+
+.status__press-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 10px;
+  font-weight: 500;
+  font-feature-settings: 'lnum' 1;
+  text-transform: lowercase;
+  border: 1px solid currentColor;
+  transition: color .35s var(--ease), border-color .35s var(--ease);
+}
+
+.status__press-mark--quiet { color: var(--quiet); }
+.status__press-mark--human { color: var(--human); }
+.status__press-mark--bold { color: var(--bold); font-style: normal; font-weight: 800; }
+
+@media (max-width: 720px) {
+  .status__press-key { display: none; }
+  .status__press { padding: 3px 7px; gap: 6px; }
+}
+
+@media (max-width: 540px) {
+  .status__press { display: none; }
+}
+
+@keyframes pressSlipTap {
+  0% { transform: translateY(0) scale(1); }
+  18% { transform: translateY(1px) scale(.985); }
+  60% { transform: translateY(-1px) scale(1.012); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status__press.is-pulling { animation: none; }
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -744,6 +903,21 @@ em { font-style: italic; }
   opacity: 0;
   animation: heroTitleIn 1.4s var(--ease-out) .4s both;
   text-wrap: balance;
+}
+
+.app--pulling .hero__title {
+  animation: heroTitleIn 1.4s var(--ease-out) .4s both, titlePullPulse .9s var(--ease-out) both;
+}
+
+@keyframes titlePullPulse {
+  0% { filter: brightness(1); }
+  20% { filter: brightness(1.18) drop-shadow(0 0 14px color-mix(in srgb, var(--hero-tone, var(--quiet)) 25%, transparent)); }
+  60% { filter: brightness(1.05); }
+  100% { filter: brightness(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .hero__title { animation: heroTitleIn 1.4s var(--ease-out) .4s both; }
 }
 
 @keyframes heroTitleIn {
@@ -2310,6 +2484,37 @@ em { font-style: italic; }
   z-index: 4;
 }
 
+/* — when the lever is pulled, every slip wobbles briefly on the cord — */
+
+.app--pulling .slip {
+  animation: slipWobble .85s var(--ease-spring) both;
+  animation-delay: var(--slip-delay, 0ms);
+}
+
+@keyframes slipWobble {
+  0% { transform: rotate(var(--slip-tilt, 0deg)) translateY(0); }
+  20% { transform: rotate(calc(var(--slip-tilt, 0deg) - 1.4deg)) translateY(-3px); }
+  45% { transform: rotate(calc(var(--slip-tilt, 0deg) + 1.2deg)) translateY(2px); }
+  70% { transform: rotate(calc(var(--slip-tilt, 0deg) - .5deg)) translateY(-1px); }
+  100% { transform: rotate(var(--slip-tilt, 0deg)) translateY(0); }
+}
+
+.app--pulling .slip.is-active {
+  animation-name: slipWobbleActive;
+}
+
+@keyframes slipWobbleActive {
+  0% { transform: rotate(0deg) translateY(-12px); }
+  20% { transform: rotate(-1.4deg) translateY(-15px); }
+  45% { transform: rotate(1.2deg) translateY(-10px); }
+  70% { transform: rotate(-.5deg) translateY(-13px); }
+  100% { transform: rotate(0deg) translateY(-12px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .slip { animation: none; }
+}
+
 .slip.is-active::after {
   content: '';
   position: absolute;
@@ -3310,6 +3515,23 @@ em { font-style: italic; }
   transform: scale(1.18);
 }
 
+/* — when the lever is pulled, the unbroken seal vibrates softly — */
+
+.app--pulling .answer__seal-wrap:not(.is-broken) .answer__seal--whole {
+  animation: sealFloat 6s ease-in-out infinite, sealTap .85s var(--ease-out) both;
+}
+
+@keyframes sealTap {
+  0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .45)) drop-shadow(0 0 0 transparent); }
+  25% { transform: scale(.985) rotate(-.8deg); filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .45)) drop-shadow(0 0 16px color-mix(in srgb, currentColor 35%, transparent)); }
+  55% { transform: scale(1.018) rotate(.5deg); filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .45)) drop-shadow(0 0 22px color-mix(in srgb, currentColor 45%, transparent)); }
+  100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .45)) drop-shadow(0 0 0 transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .answer__seal-wrap:not(.is-broken) .answer__seal--whole { animation: sealFloat 6s ease-in-out infinite; }
+}
+
 @keyframes sealCrack {
   0% { opacity: 1; transform: scale(1) rotate(0deg); }
   35% { opacity: 1; transform: scale(1.04) rotate(-1.5deg); }
@@ -3475,6 +3697,21 @@ em { font-style: italic; }
   transition: filter .35s var(--ease);
 }
 
+.app--pulling .colophon__seal {
+  animation: signatureFloat 6s ease-in-out infinite, colophonSealTap .85s var(--ease-out) both;
+}
+
+@keyframes colophonSealTap {
+  0% { transform: translateY(0) rotate(-1.5deg) scale(1); }
+  25% { transform: translateY(-1px) rotate(-2.2deg) scale(.99); }
+  55% { transform: translateY(-3px) rotate(-.9deg) scale(1.012); }
+  100% { transform: translateY(0) rotate(-1.5deg) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .colophon__seal { animation: signatureFloat 6s ease-in-out infinite; }
+}
+
 .colophon__seal--quiet { filter: drop-shadow(0 6px 14px rgba(168, 197, 255, .28)); }
 .colophon__seal--human { filter: drop-shadow(0 6px 14px rgba(244, 132, 114, .32)); }
 .colophon__seal--bold { filter: drop-shadow(0 6px 14px rgba(205, 238, 106, .32)); }
@@ -3543,6 +3780,50 @@ em { font-style: italic; }
   width: 24px;
   height: 1px;
   background: var(--line);
+}
+
+.colophon__signoff-impressions {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+  position: relative;
+}
+
+.colophon__signoff-impressions em {
+  font-style: italic;
+  font-family: var(--display);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 22px;
+  line-height: 1;
+  font-feature-settings: 'tnum' 1;
+  color: var(--quiet);
+  transition: color .35s var(--ease);
+}
+
+.app--voice-quiet .colophon__signoff-impressions em { color: var(--quiet); }
+.app--voice-human .colophon__signoff-impressions em { color: var(--human); }
+.app--voice-bold .colophon__signoff-impressions em { color: var(--bold); font-style: normal; font-weight: 800; }
+
+.colophon__signoff-impressions-rule {
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(to right, var(--line-strong), transparent);
+  transform: translateY(-3px);
+}
+
+.colophon__signoff-impressions-key {
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  color: var(--muted);
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -4168,6 +4449,35 @@ button.voice-spec__item {
 .hero__dawn-orb {
   transform-origin: 50% 50%;
   animation: dawnOrbBreathe 12s ease-in-out infinite;
+}
+
+/* — when the lever is pulled, the dawn orb brightens briefly — */
+
+.app--pulling .hero__dawn-orb {
+  animation: dawnOrbBreathe 12s ease-in-out infinite, dawnOrbPulse .9s var(--ease-out) both;
+  filter: brightness(1.08);
+}
+
+@keyframes dawnOrbPulse {
+  0% { transform: scale(1); opacity: .85; }
+  20% { transform: scale(1.06); opacity: 1; }
+  60% { transform: scale(1.02); opacity: .95; }
+  100% { transform: scale(1); opacity: .85; }
+}
+
+.app--pulling .hero__dawn-rays {
+  animation: dawnRaysBreathe 16s ease-in-out infinite, dawnRaysPulse .9s var(--ease-out) both;
+}
+
+@keyframes dawnRaysPulse {
+  0% { opacity: .85; }
+  20% { opacity: 1; }
+  100% { opacity: .85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .hero__dawn-orb,
+  .app--pulling .hero__dawn-rays { animation: none; filter: none; }
 }
 
 .hero__dawn-arc {
