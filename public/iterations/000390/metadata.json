@@ -1,0 +1,19 @@
+{
+  "id": 390,
+  "parentId": 389,
+  "createdAt": "2026-09-22T08:56:46.640Z",
+  "summary": "The title gains a hand-drawn overscore above and a printer's \"set & registered\" mark below — one composed broadside.",
+  "path": "/iterations/000390/index.html",
+  "screenshot": "/iterations/000390/desktop.png",
+  "mobileScreenshot": "/iterations/000390/mobile.png",
+  "sourceCommit": "ffa0a676ba7a300e4b56ce4342880831c86f47a0",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 535,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 192536,
+    "outputTokens": 28161,
+    "steps": 131
+  }
+}
