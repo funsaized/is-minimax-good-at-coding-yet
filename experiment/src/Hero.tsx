@@ -107,6 +107,8 @@ const SET_DURATION_MS = 1500
 const STEP_MS = 70
 const SET_BASE_DELAY_MS = 700
 
+const PROOF_NUMBER = String(Math.floor(Math.random() * 800) + 1200).padStart(4, '0')
+
 export function Hero({
   voice,
   word,
@@ -126,6 +128,7 @@ export function Hero({
 
   const [setProgress, setSetProgress] = useState(() => segmentOffsets(0))
   const [reduceMotion, setReduceMotion] = useState(false)
+  const [hour, setHour] = useState(() => formatHeroHour())
   const cleanupRef = useRef<(() => void) | null>(null)
 
   useEffect(() => {
@@ -185,6 +188,53 @@ export function Hero({
         </span>
 
         <DawnCrescent key={`dawn-${pullSignal}`} />
+
+        <span className="hero__trim hero__trim--tl" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M0 6 L24 6 M6 0 L6 24" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+            <circle cx="6" cy="6" r="1.4" fill="none" stroke="currentColor" strokeWidth=".4" />
+          </svg>
+        </span>
+        <span className="hero__trim hero__trim--tr" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M0 6 L24 6 M18 0 L18 24" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+            <circle cx="18" cy="6" r="1.4" fill="none" stroke="currentColor" strokeWidth=".4" />
+          </svg>
+        </span>
+        <span className="hero__trim hero__trim--bl" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M0 18 L24 18 M6 0 L6 24" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+            <circle cx="6" cy="18" r="1.4" fill="none" stroke="currentColor" strokeWidth=".4" />
+          </svg>
+        </span>
+        <span className="hero__trim hero__trim--br" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M0 18 L24 18 M18 0 L18 24" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
+            <circle cx="18" cy="18" r="1.4" fill="none" stroke="currentColor" strokeWidth=".4" />
+          </svg>
+        </span>
+
+        <header className="hero__slip" aria-hidden="true">
+          <span className="hero__slip-side hero__slip-side--l">
+            <span className="hero__slip-key">proof</span>
+            <span className="hero__slip-num">{PROOF_NUMBER}</span>
+            <span className="hero__slip-rule" />
+            <span className="hero__slip-key">plate</span>
+            <span className="hero__slip-num">i</span>
+          </span>
+          <span className="hero__slip-mid">
+            <span className="hero__slip-bead hero__slip-bead--l" />
+            <span className="hero__slip-bead hero__slip-bead--c" />
+            <span className="hero__slip-bead hero__slip-bead--r" />
+          </span>
+          <span className="hero__slip-side hero__slip-side--r">
+            <span className="hero__slip-key">at</span>
+            <span className="hero__slip-num">{hour}</span>
+            <span className="hero__slip-rule" />
+            <span className="hero__slip-key">voice</span>
+            <span className="hero__slip-num">{spec.letter}</span>
+          </span>
+        </header>
 
         <div className="hero__eyebrow-row">
           <span className="hero__eyebrow">
@@ -283,6 +333,31 @@ export function Hero({
           <span className="hero__sub-tail" aria-hidden="true">a question, set three ways · one line · one chase</span>
         </span>
 
+        <span className="hero__fold" aria-hidden="true">
+          <svg viewBox="0 0 4 600" preserveAspectRatio="none">
+            <path
+              d="M2 0c-1.5 80 1.5 160 0 240s1.5 240 0 320"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth=".6"
+              strokeLinecap="round"
+              opacity=".55"
+              strokeDasharray="1.2 3.6"
+            />
+            <circle cx="2" cy="300" r="1.2" fill="currentColor" opacity=".7" />
+          </svg>
+        </span>
+
+        <span className="hero__register" aria-hidden="true">
+          <svg viewBox="0 0 28 28">
+            <circle cx="14" cy="14" r="11" fill="none" stroke="currentColor" strokeWidth=".7" opacity=".6" />
+            <line x1="14" y1="0" x2="14" y2="28" stroke="currentColor" strokeWidth=".5" opacity=".55" />
+            <line x1="0" y1="14" x2="28" y2="14" stroke="currentColor" strokeWidth=".5" opacity=".55" />
+            <circle cx="14" cy="14" r="1.4" fill="currentColor" />
+          </svg>
+          <em>register</em>
+        </span>
+
         <figure className="hero__compositor" aria-label="A note from the compositor">
           <svg className="hero__compositor-mark" viewBox="0 0 64 18" aria-hidden="true">
             <line x1="0" y1="9" x2="20" y2="9" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".5" />
@@ -368,6 +443,16 @@ export function Hero({
       </aside>
     </div>
   )
+}
+
+function formatHeroHour() {
+  const now = new Date()
+  let h = now.getHours()
+  const m = now.getMinutes()
+  const ampm = h >= 12 ? 'pm' : 'am'
+  h = h % 12
+  if (h === 0) h = 12
+  return `${h}:${m.toString().padStart(2, '0')} ${ampm}`
 }
 
 function segmentOffsets(reached: number): number[] {

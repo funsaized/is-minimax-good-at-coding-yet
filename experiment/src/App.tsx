@@ -23,6 +23,7 @@ import { Colophon } from './Colophon'
 import { PrinterMark } from './PrinterMark'
 import { SetLine } from './SetLine'
 import { SpineThread } from './SpineThread'
+import { MarginMarks } from './MarginMarks'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -66,53 +67,6 @@ function formatHour() {
 
 function StatusLight() {
   return <span className="status__dot" aria-hidden="true" />
-}
-
-function FolioStitch({ index, tone, soft = false }: { index: string; tone: VoiceId; soft?: boolean }) {
-  return (
-    <span
-      className={`folio-stitch folio-stitch--${tone} ${soft ? 'folio-stitch--soft' : ''}`}
-      aria-hidden="true"
-    >
-      <svg className="folio-stitch__svg" viewBox="0 0 120 32" preserveAspectRatio="none">
-        <line
-          x1="0"
-          y1="16"
-          x2="120"
-          y2="16"
-          stroke="currentColor"
-          strokeWidth=".5"
-          strokeDasharray="1.6 3"
-          opacity=".5"
-        />
-        <circle cx="6" cy="16" r="2.2" fill="currentColor" opacity=".85" />
-        <circle cx="6" cy="16" r="3.2" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".4" />
-        <circle cx="60" cy="16" r="1.4" fill="currentColor" opacity=".55" />
-        <circle cx="114" cy="16" r="2.2" fill="currentColor" opacity=".85" />
-        <circle cx="114" cy="16" r="3.2" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".4" />
-        <path
-          d="M5 16 L9 21 M8 11 L12 16"
-          stroke="currentColor"
-          strokeWidth=".8"
-          strokeLinecap="round"
-          opacity=".7"
-          fill="none"
-        />
-        <path
-          d="M115 16 L111 21 M112 11 L108 16"
-          stroke="currentColor"
-          strokeWidth=".8"
-          strokeLinecap="round"
-          opacity=".7"
-          fill="none"
-        />
-      </svg>
-      <span className="folio-stitch__bead">
-        <span className="folio-stitch__bead-eye" />
-      </span>
-      <span className="folio-stitch__num">{index}</span>
-    </span>
-  )
 }
 
 export function App() {
@@ -306,6 +260,15 @@ export function App() {
         isPulling={isPulling}
       />
 
+      <MarginMarks
+        active={selectedWord}
+        hover={hoveredWord}
+        voice={voice}
+        pullSignal={pullSignal}
+        onSelect={id => selectWord(id, true)}
+        onHover={setHoveredWord}
+      />
+
       <header className="topbar" role="banner">
         <a className="brand" href="#question" aria-label="Return to the question">
           <PrinterMark size={32} voice={voice} />
@@ -375,7 +338,6 @@ export function App() {
       </section>
 
       <FolioTurn index="ii" title="the press bed" hint="pull a lever · take an impression" voice={voice} />
-      <FolioStitch index="ii" tone={voice} />
       <Press
         voice={voice}
         word={activeWord}
@@ -387,7 +349,6 @@ export function App() {
       />
 
       <FolioTurn index="iii" title="the proof line" hint="three voices, set on the same cord" voice={voice} />
-      <FolioStitch index="iii" tone={voice} />
       <ProofLine
         voice={voice}
         selected={selectedWord}
@@ -396,11 +357,9 @@ export function App() {
       />
 
       <FolioTurn index="iv" title="the notation key" hint="how the three voices read" voice={voice} />
-      <FolioStitch index="iv" tone={voice} />
       <Specimen active={voice} onSelect={selectVoice} />
 
       <FolioTurn index="v" title="the answer" hint="folded once · then folded back" voice={voice} />
-      <FolioStitch index="v" tone={voice} />
       <Answer
         open={answerOpen}
         onToggle={toggleAnswer}
@@ -412,7 +371,6 @@ export function App() {
       />
 
       <FolioTurn index="—" title="the colophon" hint="the page, signed off" voice={voice} soft />
-      <FolioStitch index="—" tone={voice} soft />
       <Colophon voice={voice} word={activeWord} pullSignal={pullSignal} pullCount={pullCount} setToday={setToday} />
 
       <footer className="site-foot" aria-label="The page, in one line">
