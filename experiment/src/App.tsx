@@ -10,7 +10,6 @@ import {
 import { NOTES, type WordId } from './notes'
 import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
-import { ComposingRule } from './ComposingRule'
 import { FirstLight } from './FirstLight'
 import { FirstLightPlate } from './FirstLightPlate'
 import { PressEpigraph } from './PressEpigraph'
@@ -21,13 +20,13 @@ import { ProofLine } from './ProofLine'
 import { Specimen } from './Specimen'
 import { Answer } from './Answer'
 import { Colophon } from './Colophon'
-import { KeptTally } from './KeptTally'
 import { PrinterMark } from './PrinterMark'
 import { ReadingNote } from './ReadingNote'
 import { SetLine } from './SetLine'
 import { SpineThread } from './SpineThread'
 import { MarginMarks } from './MarginMarks'
 import { ReadingLedger } from './ReadingLedger'
+import { ReadingCord } from './ReadingCord'
 import { LastLight } from './LastLight'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
@@ -256,7 +255,6 @@ export function App() {
       <span className="app__bg-grain" aria-hidden="true" />
       <span className="app__void" aria-hidden="true" />
       <span className="app__backdrop" aria-hidden="true" />
-      <span className="app__ink-wash" aria-hidden="true" key={`ink-${pullSignal}`} />
       <FirstLight />
       <CursorGlow />
       <SpineThread
@@ -276,7 +274,7 @@ export function App() {
         onHover={setHoveredWord}
       />
 
-<header className="topbar" role="banner">
+      <header className="topbar" role="banner">
         <a className="brand" href="#question" aria-label="Return to the question">
           <PrinterMark size={34} voice={voice} />
           <span className="brand__copy">
@@ -318,10 +316,6 @@ export function App() {
         isPulling={isPulling}
       />
 
-      <div className="composing-rule-wrap" aria-hidden="true">
-        <ComposingRule voice={voice} />
-      </div>
-
       <FirstLightPlate voice={voice} setToday={setToday} />
 
       <PressEpigraph voice={voice} />
@@ -340,6 +334,14 @@ export function App() {
           tokenRefs={tokenRefs}
         />
       </section>
+
+      <div className="reading-cord-wrap">
+        <ReadingCord
+          voice={voice}
+          active={activeWord}
+          onSelect={id => selectWord(id, true)}
+        />
+      </div>
 
       <div className="page-inscription-wrap">
         <ReadingNote
