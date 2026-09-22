@@ -1,17 +1,14 @@
-# Iteration 411
+# Changelog
 
-The question now stands alone; a slim chase holds beneath it, and a quiet press-motto opens the way to the lever.
+## iteration 412
+the composing case · between the title and the press bed, three type sorts sit locked in a printer's chase. one is lifted — the mark the page reads in. the chase tightens when the lever is pulled; a small shock travels the rule.
+- new: `src/TypeCase.tsx` — a horizontal composing case with three sort blocks (m³, good at, yet?), supporting keyboard nav (arrows / home / end) and reduced-motion.
+- `src/App.tsx`: the composing case now sits between the title page and the hero, sharing the same word selection.
+- `src/style.css`: new `.type-case` system (sort cells, compartments, glyph, marks, foot); subtle shock animation on the chase rule when the lever fires.
+- `src/style.css`: softened the title-page closing hairline so the composing case can take over the visual lead.
 
-## Changes
+## iteration 411 (kept)
+the question stands alone; a slim chase holds beneath it, and a quiet press-motto opens the way to the lever.
 
-- **Hero**: the composing bed below the title is removed; a new `HeroComposition` rail takes its place — three sorts, three marks, one chase that breathes on the active sort.
-- **Press**: a new `PressMotto` element sits between the question and the press lever — one italic gloss, one three-line verse, one sign-line.
-- **Colophon**: the heavy three-voice ledger is held but tucked (`colophon__ledger--tucked`), so the close reads as a single composed sign-off.
-- **Removed**: `TypeBed.tsx` and the busy `page-edge` strip; their declarative work now lives in the masthead, the press-motto, and the colophon.
-- **CSS**: old `.type-bed*` block reduced to `display: none`. New styles for `.hero-composition*`, `.press-motto*`, `.page-edge-aside*`, and the tucked variant.
-
-## Knobs
-
-- Hero composition rail: `src/HeroComposition.tsx` and `.hero-composition*` in `src/style.css`.
-- Press breath: `src/PressMotto.tsx` and `.press-motto*` in `src/style.css`.
-- Colophon tightening: `colophon__ledger--tucked` in `src/Colophon.tsx` and `src/style.css`.
+## iteration 410 (kept)
+the page now reads as one journey from dawn to dusk — a single scroll-driven atmospheric drift tints the page top-to-bottom.

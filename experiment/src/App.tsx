@@ -28,6 +28,7 @@ import { ReadingCord } from './ReadingCord'
 import { LastLight } from './LastLight'
 import { QuestionHeld } from './QuestionHeld'
 import { PressMotto } from './PressMotto'
+import { TypeCase } from './TypeCase'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -350,6 +351,16 @@ export function App() {
 
 
       <TitlePage voice={voice} setToday={setToday} />
+
+      <TypeCase
+        voice={voice}
+        word={activeWord}
+        hover={hoveredWord}
+        pullSignal={pullSignal}
+        isPulling={isPulling}
+        onWord={(id, focus) => selectWord(id, focus ?? false)}
+        onHover={setHoveredWord}
+      />
 
       <section className="hero reveal" aria-labelledby="hero-title-label">
         <Hero
