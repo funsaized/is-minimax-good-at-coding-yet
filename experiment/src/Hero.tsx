@@ -10,6 +10,7 @@ import {
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 import { ChaseFrame } from './ChaseFrame'
+import { VoicePlate } from './VoicePlate'
 
 type HeroProps = {
   voice: VoiceId
@@ -92,8 +93,6 @@ const TOKEN_COPY: Record<WordId, TokenCopy> = {
   good: { label: 'good at', glyph: '∧', tone: 'the verb', mark: 'caret' },
   yet: { label: 'yet?', glyph: '?', tone: 'the pause', mark: 'query' },
 }
-
-const ORDER: VoiceId[] = ['quiet', 'human', 'bold']
 
 const TITLE_SEGMENTS: Array<{ id: WordId | 'plain' | 'space'; text: string; mark?: boolean }> = [
   { id: 'm3', text: 'm³', mark: true },
@@ -326,9 +325,9 @@ export function Hero({
 
         <span className="hero__sub" aria-hidden="true">
           <span className="hero__sub-mark" aria-hidden="true">⌇</span>
-          <em>set in {spec.name.toLowerCase()}</em>
-          <span className="hero__sub-rule" />
           <em>{spec.gloss}</em>
+          <span className="hero__sub-rule" />
+          <em className="hero__sub-set">set in {spec.name.toLowerCase()}</em>
           <span className="hero__sub-mark" aria-hidden="true">⌇</span>
           <span className="hero__sub-tail" aria-hidden="true">a question, set three ways · one line · one chase</span>
         </span>
@@ -378,69 +377,7 @@ export function Hero({
         </figure>
       </ChaseFrame>
 
-      <aside
-        className="voice-column"
-        role="radiogroup"
-        aria-label="Voice specimen · the line set in three voices"
-      >
-        <header className="voice-column__head" aria-hidden="true">
-          <span className="voice-column__eyebrow">specimen · the line, three ways</span>
-          <span className="voice-column__hint">
-            <em>click a line · set the page in that voice</em>
-          </span>
-        </header>
-
-        <ol className="voice-column__list">
-          {ORDER.map(v => {
-            const row = VOICE[v]
-            const isActive = voice === v
-            const rowStyle = {
-              fontFamily: row.family,
-              fontWeight: row.weight,
-              fontStyle: row.style,
-              letterSpacing: row.tracking,
-              textTransform: row.uppercased ? ('uppercase' as const) : ('none' as const),
-              '--line-tone': `var(--${v})`,
-            } as CSSProperties
-            return (
-              <li key={v} className={`voice-column__row ${isActive ? 'is-active' : ''}`}>
-                <button
-                  type="button"
-                  role="radio"
-                  aria-checked={isActive}
-                  className={`voice-column__item voice-column__item--${v}`}
-                  onClick={() => onVoice(v)}
-                >
-                  <span className="voice-column__num" aria-hidden="true">{row.letter}</span>
-                  <span className="voice-column__sample" style={rowStyle} aria-hidden="true">
-                    {row.sample}
-                  </span>
-                  <span className="voice-column__meta" aria-hidden="true">
-                    <em>{row.name}</em>
-                    <span className="voice-column__meta-sep" aria-hidden="true" />
-                    <span>{row.face}</span>
-                  </span>
-                </button>
-              </li>
-            )
-          })}
-        </ol>
-
-        <footer className="voice-column__foot" aria-hidden="true">
-          <span className="voice-column__foot-rule" />
-          <span className="voice-column__foot-bead" />
-          <em>three voices · one line · one chase</em>
-          <span className="voice-column__foot-bead" />
-          <span className="voice-column__foot-rule" />
-        </footer>
-
-        <span className="voice-column__cycle" aria-hidden="true">
-          <em>cycle</em>
-          <kbd>shift</kbd>
-          <span>+</span>
-          <kbd>v</kbd>
-        </span>
-      </aside>
+      <VoicePlate voice={voice} pullSignal={pullSignal} onSelect={onVoice} />
     </div>
   )
 }
@@ -560,6 +497,25 @@ function DawnCrescent() {
   const beamId = `dawn-beam-${id}`
   const moonId = `dawn-moon-${id}`
   const rimId = `dawn-rim-${id}`
+  const rayId = `dawn-ray-${id}`
+
+  const stars: Array<{ cx: number; cy: number; r: number; d: number }> = [
+    { cx: 60, cy: 80, r: 0.7, d: 0 },
+    { cx: 110, cy: 50, r: 0.5, d: 0.6 },
+    { cx: 150, cy: 110, r: 0.9, d: 1.1 },
+    { cx: 200, cy: 60, r: 0.6, d: 0.4 },
+    { cx: 245, cy: 35, r: 0.8, d: 1.6 },
+    { cx: 290, cy: 90, r: 0.5, d: 0.2 },
+    { cx: 360, cy: 50, r: 0.7, d: 1.3 },
+    { cx: 420, cy: 110, r: 0.6, d: 0.9 },
+    { cx: 470, cy: 70, r: 0.9, d: 0.5 },
+    { cx: 520, cy: 35, r: 0.5, d: 1.7 },
+    { cx: 555, cy: 95, r: 0.8, d: 0.3 },
+    { cx: 80, cy: 140, r: 0.5, d: 1.0 },
+    { cx: 530, cy: 150, r: 0.6, d: 0.8 },
+    { cx: 175, cy: 200, r: 0.5, d: 1.4 },
+    { cx: 460, cy: 210, r: 0.5, d: 0.6 },
+  ]
 
   return (
     <span className="hero__dawn" aria-hidden="true">
@@ -594,10 +550,43 @@ function DawnCrescent() {
             <stop offset="80%" stopColor="rgba(255, 226, 184, .35)" />
             <stop offset="100%" stopColor="rgba(255, 226, 184, 0)" />
           </radialGradient>
+
+          <radialGradient id={rayId} cx="50%" cy="100%" r="80%">
+            <stop offset="0%" stopColor="rgba(255, 226, 184, .22)" />
+            <stop offset="40%" stopColor="rgba(255, 226, 184, .08)" />
+            <stop offset="100%" stopColor="rgba(255, 226, 184, 0)" />
+          </radialGradient>
         </defs>
 
         {/* the wash — a faint band of light behind the title */}
         <rect x="0" y="120" width="600" height="200" fill={`url(#${beamId})`} className="hero__dawn-beam" />
+
+        {/* a faint constellation, like typesetter's marks across the sky */}
+        <g className="hero__dawn-stars" fill="rgba(255, 240, 214, .7)">
+          {stars.map((s, i) => (
+            <circle
+              key={`star-${i}`}
+              cx={s.cx}
+              cy={s.cy}
+              r={s.r}
+              style={{ animationDelay: `${s.d}s` } as CSSProperties}
+            />
+          ))}
+        </g>
+
+        {/* a single hairline that links three quiet stars — a typesetter's alignment mark */}
+        <path
+          className="hero__dawn-link"
+          d="M150 110 L245 35 L360 50 L470 70"
+          fill="none"
+          stroke="rgba(255, 240, 214, .14)"
+          strokeWidth=".3"
+          strokeLinecap="round"
+          strokeDasharray="2 4"
+        />
+
+        {/* a soft horizon glow rising from the press bed */}
+        <ellipse cx="300" cy="280" rx="320" ry="100" fill={`url(#${rayId})`} className="hero__dawn-rays" />
 
         {/* the orb — the moon's soft glow */}
         <circle className="hero__dawn-orb" cx="300" cy="160" r="92" fill={`url(#${orbId})`} />

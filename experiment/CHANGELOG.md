@@ -1,14 +1,11 @@
 # Changelog
 
-## iteration 385 · the press proof
+## Iteration 386 — the chase gets a specimen plate
 
-a new left-side reader's marginalia column ("margin marks") sits beside the title and ties each of the three words to a thread-marked annotation; the chase frame is dressed as a real press proof with trim marks, a press slip, a center fold, and a register crosshair. folio-stitch rows between folios are removed in favour of the deeper marginalia. the title shifts right on wide viewports to make room for the column; on mobile the column drops below the hero as a quiet block.
+A focused type-specimen card replaces the voice column beside the title; the dawn gains a faint constellation.
 
-changes:
-
-- new component `src/MarginMarks.tsx` — left-side fixed column with three thread-tied cards for `m³`, `good at`, and `yet?`, each holding a mark, gloss, and aside.
-- `src/Hero.tsx` — chase frame gains trim marks (four corners), a press-proof slip across the top (proof number, plate, hour), a soft dashed center fold, and a register crosshair in the upper right.
-- `src/App.tsx` — mounts `MarginMarks`; removes the now-redundant inline `FolioStitch` rows from between folios.
-- `src/style.css` — adds press-proof chrome (trim/slip/fold/register) and the full `margin-marks` styles, with responsive collapse on narrow viewports.
-
-preserved: title, framework, build, entry point, package files, harness, tests.
+- **VoicePlate replaces the right-side voice column.** The hero previously showed all three voices stacked beside the title, duplicating the Specimen folio (iv). Now a single, considered paper card shows the question set in the *current* voice, with point size, leading, and measure in the footer — like a type-foundry specimen. Three small letter chips (A · B · C) below let you cycle.
+- **Dawn gains atmosphere.** The crescent moon behind the title is now accompanied by a faint constellation of fifteen typesetter's marks, a hairline that aligns four of them, and a soft horizon glow rising from the press bed. The composition feels less like a single ornament and more like the sky at first light.
+- **Hero composition rebalanced.** The chase frame and the new specimen plate now align to the start of the row, and the right column widens slightly (1fr / 0.86fr) so the paper card can breathe. The voice-name in the sub-line moves to a small mono caption so the gloss ("the default voice" / "the middle voice" / "the loud voice") carries the line.
+- **Voice switcher stays in the chase.** The specimen plate, the press lever (folio ii), the proof cards (folio iii), and the specimen plates (folio iv) all remain — the new plate is the closest, the others are the deeper readings. Shift+V still cycles.
+- **Cleanup.** Removed the now-unused `.voice-column` styles from `style.css`. The `FirstImpression` orphan file in `src/` is left alone.
