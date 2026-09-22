@@ -1,0 +1,19 @@
+{
+  "id": 405,
+  "parentId": 404,
+  "createdAt": "2026-09-22T17:07:29.593Z",
+  "summary": "the press now breathes — a quiet moment opens the way to the press bed, and the impression strikes with a deeper ring",
+  "path": "/iterations/000405/index.html",
+  "screenshot": "/iterations/000405/desktop.png",
+  "mobileScreenshot": "/iterations/000405/mobile.png",
+  "sourceCommit": "d11a43c619b2d8f0d9c6a502842c40a721b32c5e",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 785,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 1185053,
+    "outputTokens": 16836,
+    "steps": 104
+  }
+}
