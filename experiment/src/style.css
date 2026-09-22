@@ -68,6 +68,20 @@
   --glow-quiet:     0 0 0 1px rgba(182, 206, 242, .22), 0 12px 26px -16px rgba(182, 206, 242, .35);
   --glow-human:     0 0 0 1px rgba(239, 138, 120, .22), 0 12px 26px -16px rgba(239, 138, 120, .35);
   --glow-bold:      0 0 0 1px rgba(212, 238, 122, .25), 0 12px 26px -16px rgba(212, 238, 122, .35);
+
+  /* — atmosphere · a single day stretches across the page, set by scroll — */
+  --page-prog:     0;
+  --page-time:     0;
+  /* dawn · warm-cool light lifting off the page */
+  --atmo-dawn:     rgba(168, 197, 255, .12);
+  /* midday · the day at full height, paper-warm */
+  --atmo-midday:   rgba(255, 234, 196, .05);
+  /* twilight · the light lowering, wax-warm */
+  --atmo-dusk:     rgba(244, 132, 114, .07);
+  --atmo-deep-dusk: rgba(212, 238, 122, .04);
+  /* dynamic atmosphere blend, updated by scroll */
+  --atmo-top:      var(--atmo-dawn);
+  --atmo-bot:      var(--atmo-dawn);
 }
 
 * { box-sizing: border-box; }
@@ -196,6 +210,49 @@ em { font-style: italic; }
   mask-image: radial-gradient(ellipse 60rem 38rem at 50% 6%, black, transparent 80%);
   -webkit-mask-image: radial-gradient(ellipse 60rem 38rem at 50% 6%, black, transparent 80%);
   opacity: .85;
+}
+
+/* — the page atmosphere · a single day, dawn → midday → dusk, set by scroll — */
+
+/* — the page atmosphere · a single day, dawn → midday → dusk, set by scroll — */
+
+.app__atmo {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: .9;
+  mix-blend-mode: screen;
+  /* Layer 1 — top half: dawn blue fades as the day advances */
+  background:
+    radial-gradient(ellipse 80rem 32rem at 50% -8%,
+      color-mix(in srgb, var(--atmo-dawn) calc(clamp(0, 1, (1 - var(--page-time))) * 100%), transparent) 0%,
+      transparent 72%),
+    /* Layer 2 — middle: a quiet midday warmth, peaks near 0.5 */
+    radial-gradient(ellipse 60rem 24rem at 50% 50%,
+      color-mix(in srgb, var(--atmo-midday) calc(clamp(0, 1, (1 - abs(var(--page-time) - 0.5) * 1.8)) * 80%), transparent) 0%,
+      transparent 75%),
+    /* Layer 3 — bottom half: wax-warm dusk rises with scroll */
+    radial-gradient(ellipse 80rem 36rem at 50% calc(100% + 8%),
+      color-mix(in srgb, var(--atmo-dusk) calc(clamp(0, 1, var(--page-time)) * 100%), transparent) 0%,
+      transparent 72%),
+    /* Layer 4 — a deeper wax shadow that opens up at the end of the day */
+    radial-gradient(ellipse 60rem 28rem at 50% calc(100% + 4%),
+      color-mix(in srgb, var(--atmo-deep-dusk) calc(clamp(0, 1, var(--page-time)) * 70%), transparent) 0%,
+      transparent 75%);
+  transition: opacity .6s var(--ease);
+}
+
+@supports not (color: color-mix(in srgb, red 50%, blue)) {
+  .app__atmo { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app__atmo { display: none; }
+}
+
+@media (max-width: 720px) {
+  .app__atmo { opacity: .55; }
 }
 
 .app__void {
@@ -367,7 +424,7 @@ em { font-style: italic; }
   right: 0;
   z-index: 30;
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto auto auto;
   align-items: center;
   gap: var(--gutter-tight);
   padding: 16px var(--gutter) 13px;
@@ -395,6 +452,93 @@ em { font-style: italic; }
 .topbar__sigil:hover {
   transform: rotate(-6deg);
   opacity: 1;
+}
+
+/* — the page-time · a single quiet word that names the part of the day,
+     shifting as the reader scrolls through the broadside. sits between
+     the folio rule and the press sigil so the masthead reads left →
+     atmosphere → folio → sigil → voice. */
+
+.topbar__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(11px, 0.95vw, 13px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  color: var(--paper-soft);
+  justify-self: center;
+  white-space: nowrap;
+  opacity: 0;
+  animation: topbarTimeIn 1.2s var(--ease-out) 1.0s both;
+}
+
+.topbar__time-glyph {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--quiet) 80%, var(--paper-soft));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--quiet) 22%, transparent);
+  transition: background .55s var(--ease), box-shadow .55s var(--ease);
+  animation: topbarTimePulse 8s ease-in-out infinite;
+}
+
+.app--voice-quiet .topbar__time-glyph {
+  background: var(--quiet);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--quiet) 24%, transparent);
+}
+.app--voice-human .topbar__time-glyph {
+  background: var(--human);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--human) 24%, transparent);
+}
+.app--voice-bold  .topbar__time-glyph {
+  background: var(--bold);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--bold) 26%, transparent);
+}
+
+.topbar__time-word {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.topbar__time::before {
+  content: '';
+  display: inline-block;
+  width: clamp(10px, 2vw, 22px);
+  height: 1px;
+  background: var(--line);
+  margin-right: 4px;
+}
+
+@keyframes topbarTimeIn {
+  0% { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: .85; transform: translateY(0); }
+}
+
+@keyframes topbarTimePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.18); opacity: .85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topbar__time { animation: none; opacity: .85; transform: none; }
+  .topbar__time-glyph { animation: none; }
+}
+
+@media (max-width: 1080px) {
+  .topbar__time::before { display: none; }
+}
+
+@media (max-width: 880px) {
+  .topbar__time-word { display: none; }
+  .topbar__time { gap: 0; }
+}
+
+@media (max-width: 720px) {
+  .topbar__time { display: none; }
 }
 
 @keyframes sigilArrival {
@@ -527,6 +671,7 @@ em { font-style: italic; }
 
 @media (max-width: 880px) {
   .topbar__sigil { display: none; }
+  .topbar__time { display: none; }
   .topbar { grid-template-columns: auto 1fr auto; }
 }
 
@@ -3639,60 +3784,60 @@ em { font-style: italic; }
 }
 
 /* ────────────────────────────────────────────────────────────
-   HERO IMPRINT · a small press signature set beneath the title
-   the press sigil + a single italic line of metadata, flanked
-   by hairlines, tying the hero to the rest of the page.
+   PAGE EDGE · a single, composed strip set between the title and
+   the press. The press sigil + a confident italic line, flanked
+   by hairlines, carries the page's tone down to the press bed.
    ──────────────────────────────────────────────────────────── */
 
-.hero-imprint {
+.page-edge {
   position: relative;
   display: grid;
-  grid-template-columns: auto auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: clamp(14px, 1.6vw, 22px);
+  gap: clamp(14px, 1.8vw, 26px);
   max-width: 1320px;
-  margin: clamp(-12px, -1vw, -4px) auto clamp(20px, 2.4vw, 32px);
-  padding: clamp(14px, 1.8vw, 22px) var(--gutter);
+  margin: clamp(28px, 3.6vw, 56px) auto clamp(32px, 4vw, 56px);
+  padding: clamp(18px, 2.2vw, 30px) var(--gutter);
   color: var(--paper-soft);
   font-family: var(--display);
   font-style: italic;
-  font-size: clamp(13.5px, 1.15vw, 15.5px);
-  letter-spacing: -.005em;
+  font-size: clamp(15px, 1.32vw, 18.5px);
+  line-height: 1.42;
+  letter-spacing: -.01em;
   text-transform: none;
   isolation: isolate;
   opacity: 0;
-  animation: heroImprintIn 1.2s var(--ease-out) 1.5s both;
+  animation: pageEdgeIn 1.2s var(--ease-out) 1.5s both;
 }
 
-.hero-imprint__sigil {
+.page-edge::before,
+.page-edge::after {
+  content: '';
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong) 50%, transparent);
+  pointer-events: none;
+}
+
+.page-edge::before { top: 0; opacity: .55; }
+.page-edge::after { bottom: 0; opacity: .35; }
+
+.page-edge__sigil {
   display: inline-grid;
   place-items: center;
   color: var(--mark-tone, var(--quiet));
-  animation: heroImprintIn 1.1s var(--ease-out) 1.6s both;
+  width: clamp(32px, 3vw, 42px);
+  height: clamp(32px, 3vw, 42px);
+  animation: pageEdgeIn 1.2s var(--ease-out) 1.6s both;
 }
 
-.hero-imprint__rule {
-  display: inline-block;
-  height: 1px;
-  width: clamp(28px, 4vw, 64px);
-  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
-  position: relative;
+.page-edge__rule {
+  display: none;
 }
 
-.hero-imprint__rule::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--mark-tone, var(--quiet));
-  transform: translate(-50%, -50%);
-  opacity: .55;
-}
-
-.hero-imprint__line {
+.page-edge__line {
   display: inline-flex;
   align-items: baseline;
   gap: 8px;
@@ -3702,25 +3847,30 @@ em { font-style: italic; }
   font-style: italic;
 }
 
-.hero-imprint__line span[aria-hidden="true"] {
+.page-edge__line span[aria-hidden="true"] {
   color: var(--line-strong);
   font-style: normal;
 }
 
-.hero-imprint__mark {
+.page-edge__mark {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-style: normal;
   font-size: 11px;
   letter-spacing: .06em;
   color: var(--mark-tone, var(--quiet));
   text-transform: lowercase;
-  padding: 2px 8px;
+  padding: 3px 9px;
   border: 1px solid color-mix(in srgb, var(--mark-tone, var(--quiet)) 30%, transparent);
   border-radius: 2px;
   background: color-mix(in srgb, var(--mark-tone, var(--quiet)) 5%, transparent);
+  transition: color .35s var(--ease), border-color .35s var(--ease), background .35s var(--ease);
 }
 
-.hero-imprint__date {
+.app--voice-quiet .page-edge__mark { color: var(--quiet); }
+.app--voice-human .page-edge__mark { color: var(--human); }
+.app--voice-bold  .page-edge__mark { color: var(--bold); font-weight: 600; }
+
+.page-edge__date {
   font-family: var(--mono);
   font-style: normal;
   font-size: 10px;
@@ -3731,14 +3881,32 @@ em { font-style: italic; }
   opacity: .85;
 }
 
-@keyframes heroImprintIn {
+@keyframes pageEdgeIn {
   0% { opacity: 0; transform: translateY(6px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-imprint { animation: none; opacity: 1; transform: none; }
-  .hero-imprint__sigil { animation: none; opacity: 1; transform: none; }
+  .page-edge { animation: none; opacity: 1; transform: none; }
+  .page-edge__sigil { animation: none; opacity: 1; transform: none; }
+}
+
+@media (max-width: 720px) {
+  .page-edge {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "sigil line"
+      "date  date";
+    gap: 10px 14px;
+    text-align: left;
+  }
+  .page-edge__sigil { grid-area: sigil; }
+  .page-edge__line { grid-area: line; justify-content: flex-start; }
+  .page-edge__date { grid-area: date; }
+}
+
+@media (max-width: 480px) {
+  .page-edge { font-size: 13px; }
 }
 
 @media (max-width: 720px) {

@@ -208,7 +208,7 @@ export function Hero({
             <span className="hero__eyebrow-glyph" aria-hidden="true">¶</span>
             <span>folio i</span>
             <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
-            <span className="hero__eyebrow-em">set the line · mark a word</span>
+            <span className="hero__eyebrow-em">the question</span>
           </span>
         </div>
 

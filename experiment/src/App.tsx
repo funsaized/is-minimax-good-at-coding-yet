@@ -27,7 +27,6 @@ import { MarginMarks } from './MarginMarks'
 import { ReadingCord } from './ReadingCord'
 import { LastLight } from './LastLight'
 import { QuestionHeld } from './QuestionHeld'
-import { BreathPlate } from './BreathPlate'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -51,6 +50,28 @@ export const FOLIOS = [
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
+const TIME_OF_DAY_FOLIOS = ['pre-dawn', 'first light', 'morning', 'midday', 'afternoon', 'softening', 'late still'] as const
+
+function timeOfDayFor(ratio: number) {
+  const r = Math.max(0, Math.min(1, ratio))
+  if (r < 0.06) return 0
+  if (r < 0.22) return r / 0.22 * 0.18
+  if (r < 0.55) return 0.18 + ((r - 0.22) / 0.33) * 0.34
+  if (r < 0.85) return 0.52 + ((r - 0.55) / 0.30) * 0.32
+  return Math.min(1, 0.84 + (r - 0.85) / 0.15 * 0.16)
+}
+
+function timeOfDayLabel(ratio: number) {
+  const r = Math.max(0, Math.min(1, ratio))
+  if (r < 0.14) return TIME_OF_DAY_FOLIOS[0]
+  if (r < 0.30) return TIME_OF_DAY_FOLIOS[1]
+  if (r < 0.46) return TIME_OF_DAY_FOLIOS[2]
+  if (r < 0.62) return TIME_OF_DAY_FOLIOS[3]
+  if (r < 0.78) return TIME_OF_DAY_FOLIOS[4]
+  if (r < 0.92) return TIME_OF_DAY_FOLIOS[5]
+  return TIME_OF_DAY_FOLIOS[6]
+}
+
 function formatSetToday() {
   const now = new Date()
   const month = now.toLocaleString('en-US', { month: 'long' }).toLowerCase()
@@ -71,6 +92,7 @@ export function App() {
   const [pullSignal, setPullSignal] = useState(0)
   const [isPulling, setIsPulling] = useState(false)
   const [keptCounts, setKeptCounts] = useState<Record<WordId, number>>({ m3: 0, good: 0, yet: 0 })
+  const [timeOfDay, setTimeOfDay] = useState<string>(TIME_OF_DAY_FOLIOS[1])
   const tokenRefs = useRef<Partial<Record<WordId, HTMLButtonElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement | null>(null)
   const pullLockRef = useRef(false)
@@ -217,6 +239,9 @@ export function App() {
       const total = Math.max(1, doc.scrollHeight - window.innerHeight)
       const ratio = Math.max(0, Math.min(1, scrolled / total))
       root.style.setProperty('--page-prog', ratio.toFixed(3))
+      const time = timeOfDayFor(ratio)
+      root.style.setProperty('--page-time', time.toFixed(3))
+      setTimeOfDay(timeOfDayLabel(ratio))
       raf = 0
     }
     const onScroll = () => {
@@ -270,6 +295,7 @@ export function App() {
       <span className="app__bg-grain" aria-hidden="true" />
       <span className="app__void" aria-hidden="true" />
       <span className="app__backdrop" aria-hidden="true" />
+      <span className="app__atmo" aria-hidden="true" />
       <FirstLight />
       <CursorGlow />
       <SpineThread
@@ -306,6 +332,11 @@ export function App() {
           <span className="topbar__folio-rule" aria-hidden="true" />
         </span>
 
+        <span className="topbar__time" aria-hidden="true">
+          <span className="topbar__time-glyph" />
+          <em className="topbar__time-word">{timeOfDay}</em>
+        </span>
+
         <span className="topbar__sigil" aria-hidden="true">
           <PressSigil voice={voice} size={28} />
         </span>
@@ -334,18 +365,18 @@ export function App() {
         />
       </section>
 
-      <aside className="hero-imprint" aria-label="The press signature, set beneath the title">
-        <span className="hero-imprint__sigil" aria-hidden="true">
-          <PressSigil voice={voice} size={26} />
+      <aside className="page-edge" aria-label="The page, set between the title and the press">
+        <span className="page-edge__sigil" aria-hidden="true">
+          <PressSigil voice={voice} size={22} />
         </span>
-        <span className="hero-imprint__rule" aria-hidden="true" />
-        <em className="hero-imprint__line">
-          <span className="hero-imprint__mark">{`{ set in ${VOICE_NAME[voice]} · marked at ${activeWord === 'm3' ? 'm³' : activeWord === 'good' ? 'good at' : 'yet?'} }`}</span>
+        <span className="page-edge__rule" aria-hidden="true" />
+        <em className="page-edge__line">
+          <span className="page-edge__mark">{`{ set in ${VOICE_NAME[voice]} · marked at ${activeWord === 'm3' ? 'm³' : activeWord === 'good' ? 'good at' : 'yet?'} }`}</span>
           <span aria-hidden="true">·</span>
           <span>read in the dark — the page is set, the question held open</span>
         </em>
-        <span className="hero-imprint__rule" aria-hidden="true" />
-        <span className="hero-imprint__date" aria-hidden="true">{setToday}</span>
+        <span className="page-edge__rule" aria-hidden="true" />
+        <span className="page-edge__date" aria-hidden="true">{setToday}</span>
       </aside>
 
       <div className="reading-cord-wrap">
@@ -354,23 +385,6 @@ export function App() {
           active={activeWord}
           onSelect={id => selectWord(id, true)}
         />
-      </div>
-
-      <div className="page-inscription-wrap">
-        <ReadingNote
-          voice={voice}
-          align="center"
-          ornament="dots"
-          size="md"
-          tone="voice"
-          caption="A note from the compositor, set beneath the title"
-        >
-          the question, held open — for the reader who arrived in the dark.
-        </ReadingNote>
-      </div>
-
-      <div className="page-breath-wrap">
-        <BreathPlate voice={voice} caption="one breath" aside="set the line · read the page" />
       </div>
 
       <span className="page-asterism-wrap" aria-hidden="true">
@@ -468,6 +482,7 @@ export function App() {
 
       <span className="sr-only" aria-live="polite">{announcement}</span>
       <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · ${activeFolio.label} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}) · ${pullCount} impressions on the day.`}</span>
+      <span className="sr-only" aria-live="off">{`Page-time · ${timeOfDay}`}</span>
     </main>
   )
 }

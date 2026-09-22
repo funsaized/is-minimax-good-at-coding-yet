@@ -142,8 +142,6 @@ export function TitlePage({ voice, setToday }: TitlePageProps) {
       <div className="title-page__stage">
         <span className="title-page__eyebrow" aria-hidden="true">
           <em className="title-page__eyebrow-mark">¶</em>
-          <em>folio</em>
-          <span className="title-page__eyebrow-num">i</span>
           <span className="title-page__eyebrow-line" aria-hidden="true" />
           <em className="title-page__eyebrow-tag">the opening plate</em>
         </span>
