@@ -196,13 +196,6 @@ export function Hero({
           </svg>
         </span>
 
-        <span className="hero__trim" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M0 6 L24 6 6 0 L6 24" fill="none" stroke="currentColor" strokeWidth=".7" strokeLinecap="round" />
-            <circle cx="6" cy="6" r="1.4" fill="none" stroke="currentColor" strokeWidth=".4" />
-          </svg>
-        </span>
-
         <div className="hero__eyebrow-row">
           <span className="hero__eyebrow">
             <span className="hero__eyebrow-glyph" aria-hidden="true">¶</span>
@@ -219,6 +212,8 @@ export function Hero({
         >
           <span className="hero__title-row hero__title-row--a">
             <span className="hero__title-baseline" aria-hidden="true" />
+            <span className="hero__title-lead" aria-hidden="true">is</span>
+            <span className="hero__title-lead-space" aria-hidden="true"> </span>
             {renderLineSegments({
               lineId: 'a',
               segments: TITLE_SEGMENTS.filter(s => s.line === 'a'),

@@ -11,10 +11,8 @@ import { NOTES, type WordId } from './notes'
 import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
 import { FirstLight } from './FirstLight'
-import { TitlePage } from './TitlePage'
-import { Frontispiece } from './Frontispiece'
-import { Asterism } from './Asterism'
 import { Hero } from './Hero'
+import { FolioAtlas } from './FolioAtlas'
 import { FolioTurn } from './FolioTurn'
 import { Press } from './Press'
 import { ProofLine } from './ProofLine'
@@ -24,13 +22,6 @@ import { Colophon } from './Colophon'
 import { PrinterMark, PressSigil } from './PrinterMark'
 import { ReadingNote } from './ReadingNote'
 import { SpineThread } from './SpineThread'
-import { MarginMarks } from './MarginMarks'
-import { ReadingCord } from './ReadingCord'
-import { LastLight } from './LastLight'
-import { QuestionHeld } from './QuestionHeld'
-import { PressMotto } from './PressMotto'
-import { TypeCase } from './TypeCase'
-import { ThreeVoiceSpecimen } from './ThreeVoiceSpecimen'
 import { ReadingPouch } from './ReadingPouch'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
@@ -312,15 +303,6 @@ export function App() {
         isPulling={isPulling}
       />
 
-      <MarginMarks
-        active={selectedWord}
-        hover={hoveredWord}
-        voice={voice}
-        pullSignal={pullSignal}
-        onSelect={id => selectWord(id, true)}
-        onHover={setHoveredWord}
-      />
-
       <header className="topbar" role="banner">
         <a className="brand" href="#question" aria-label="Return to the question">
           <PrinterMark size={34} voice={voice} />
@@ -354,22 +336,6 @@ export function App() {
       </header>
 
 
-      <TitlePage voice={voice} setToday={setToday} />
-
-      <Frontispiece voice={voice} setToday={setToday} />
-
-      <TypeCase
-        voice={voice}
-        word={activeWord}
-        hover={hoveredWord}
-        pullSignal={pullSignal}
-        isPulling={isPulling}
-        onWord={(id, focus) => selectWord(id, focus ?? false)}
-        onHover={setHoveredWord}
-      />
-
-      <ThreeVoiceSpecimen voice={voice} onVoice={selectVoice} />
-
       <section className="hero reveal" aria-labelledby="hero-title-label">
         <Hero
           voice={voice}
@@ -385,19 +351,12 @@ export function App() {
         />
       </section>
 
-      <PressMotto voice={voice} />
-
-      <div className="reading-cord-wrap">
-        <ReadingCord
-          voice={voice}
-          active={activeWord}
-          onSelect={id => selectWord(id, true)}
-        />
-      </div>
-
-      <span className="page-asterism-wrap" aria-hidden="true">
-        <Asterism tone="voice" size="md" />
-      </span>
+      <FolioAtlas
+        folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
+        activeId={activeSection}
+        voice={voice}
+        setToday={setToday}
+      />
 
       <FolioTurn index="ii" title="the press bed" hint="pull a lever · take an impression" voice={voice} />
       <Press
@@ -444,10 +403,6 @@ export function App() {
 
       <FolioTurn index="vi" title="the reader’s pouch" hint="three slips · kept close" voice={voice} />
       <ReadingPouch voice={voice} active={activeWord} setToday={setToday} />
-
-      <LastLight voice={voice} setToday={setToday} pullCount={pullCount} />
-
-      <QuestionHeld voice={voice} word={activeWord} />
 
       <footer className="site-foot" aria-label="The page, in one line">
         <span className="site-foot__copy">
