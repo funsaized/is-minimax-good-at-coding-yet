@@ -1,11 +1,24 @@
 # Changelog
 
-## Iteration 433 — one held reading
-A new folio (iv½ · the held reading) sits between the notation key and the answer: a single proof plate
-where the line is set three ways on one sheet, with the active voice brought forward and the others
-ghosted through. Replaces the page's missing held moment — until now the question appeared in three
-voices across separate exhibits; now it is held in all three at once. The folio index "iv½" threads
-through the spine thread, the printer's atlas, the composing register, and the folio turn. Click any
-voice to bring it forward; hover a ghost to bring it to attention. A single consensus line closes the
-plate. Reveal animation respects reduced-motion preferences; the layout collapses to a single column
-under 880px. No remote assets, no new dependencies.
+## 434 · folio zero — the opening plate
+
+A new folio sits at the very top of the broadside, before the question.
+A short, dawn-lit plate introduces the page: brand, folio index, the
+day and hour, the active voice, and a single line that sets the tone
+("i set the page [greeting], for the reader who arrived in the dark").
+
+- **FirstLightPlate** restored as `folio 0 · the opening` between the
+  topbar and the question. The plate carries the day-name, hour, and
+  voice provenance so the reader knows how the page was set.
+- The folio index now begins at `0` (the opening) and steps through
+  the seven existing folios. The default active section, the
+  CompositionRegister, and the PrinterAtlas all read the new entry.
+- The opening plate's stack now settles in sequence (head, body,
+  foot, stitch) with a soft wash of its own that keeps the page's
+  ambient dawn from bleeding into its corners.
+- The question folio's id moves off `<main>` and onto the hero
+  section, so any "back to the question" link lands on the title
+  rather than the very top of the page.
+- Mobile breakpoints tuned: the plate trims its top breathing room,
+  scales the seal, and lets the line drop a step in size without
+  losing the italic rhythm.

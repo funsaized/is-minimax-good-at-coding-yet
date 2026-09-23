@@ -4,6 +4,7 @@ import type { VoiceId } from './App'
 type FirstLightPlateProps = {
   voice: VoiceId
   setToday: string
+  id?: string
 }
 
 const DAY_NAME: Record<number, string> = {
@@ -47,7 +48,7 @@ function plateDateTokens(setToday: string) {
   }
 }
 
-export function FirstLightPlate({ voice, setToday }: FirstLightPlateProps) {
+export function FirstLightPlate({ voice, setToday, id }: FirstLightPlateProps) {
   const baseId = useId().replace(/:/g, '')
   const haloGrad = `first-light-plate-halo-${baseId}`
   const skyGrad = `first-light-plate-sky-${baseId}`
@@ -87,7 +88,8 @@ export function FirstLightPlate({ voice, setToday }: FirstLightPlateProps) {
 
   return (
     <section
-      className="first-light-plate"
+      {...(id ? { id } : {})}
+      className={`first-light-plate first-light-plate--${voice}`}
       style={plateStyle}
       aria-label="The first light plate · how the page was set at first light"
     >

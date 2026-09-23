@@ -28,6 +28,7 @@ import { ComposingBreath } from './ComposingBreath'
 import { LastLamp } from './LastLamp'
 import { Imprint } from './Imprint'
 import { Constellation } from './Constellation'
+import { FirstLightPlate } from './FirstLightPlate'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -41,6 +42,7 @@ const VOICE_FACE: Record<VoiceId, string> = {
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 
 export const FOLIOS = [
+  { id: 'opening', index: '0', label: 'the opening', hint: 'set the type · take the plate' },
   { id: 'question', index: 'i', label: 'the question', hint: 'one line, set three ways' },
   { id: 'press', index: 'ii', label: 'the press bed', hint: 'pull the lever, take an impression' },
   { id: 'notes', index: 'iii', label: 'the proof line', hint: 'three voices on the same cord' },
@@ -86,7 +88,7 @@ export function App() {
   const [selectedWord, setSelectedWord] = useState<WordId>('good')
   const [hoveredWord, setHoveredWord] = useState<WordId | null>(null)
   const [voice, setVoice] = useState<VoiceId>('quiet')
-  const [activeSection, setActiveSection] = useState<string>('question')
+  const [activeSection, setActiveSection] = useState<string>('opening')
   const [answerOpen, setAnswerOpen] = useState(false)
   const [announcement, setAnnouncement] = useState('')
   const [setToday] = useState(() => formatSetToday())
@@ -306,7 +308,6 @@ export function App() {
 
   return (
     <main
-      id="question"
       className={`app app--voice-${voice} app--word-${activeWord} ${isPulling ? 'app--pulling' : ''}`}
       style={style}
     >
@@ -348,7 +349,9 @@ export function App() {
       </header>
 
 
-      <section className="hero reveal" aria-labelledby="hero-title-label">
+      <FirstLightPlate id="opening" voice={voice} setToday={setToday} />
+
+      <section id="question" className="hero reveal" aria-labelledby="hero-title-label">
         <Hero
           voice={voice}
           word={activeWord}
