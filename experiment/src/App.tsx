@@ -34,7 +34,7 @@ import { Imprint } from './Imprint'
 import { Constellation } from './Constellation'
 import { MarginalCaret } from './MarginalCaret'
 import { WordHoverNote } from './WordHoverNote'
-import { QuestionHinge } from './QuestionHinge'
+import { SettingSeal } from './SettingSeal'
 import { SignaturePlate } from './SignaturePlate'
 import { PageSpine } from './PageSpine'
 import { ArrivalPlate } from './ArrivalPlate'
@@ -390,7 +390,7 @@ export function App() {
         offset={120}
       />
 
-      <QuestionHinge voice={voice} word={activeWord} setToday={setToday} />
+      <SettingSeal voice={voice} word={activeWord} setToday={setToday} />
 
       <section id="question" className="hero reveal" aria-labelledby="hero-title-label">
         <Hero

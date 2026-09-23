@@ -33874,3 +33874,683 @@ section.reveal h2 em::after {
   .type-case__piece.is-focus .type-case__piece-block { transform: rotate(0); }
 }
 
+/* ═════════════════════════════════════════════════════════════════
+   SETTING-SEAL · folio i · the iconic engraved wax-seal plate
+   that sits between the type case and the hero title. three
+   concentric voice rings encircle a central medallion with the
+   question mark, all pressed into a single warm-wax body with
+   hand-drawn drips, hairlines, and an outer inscription arc.
+   ────────────────────────────────────────────────────────────── */
+
+.setting-seal {
+  --seal-tone: var(--quiet);
+  --seal-focus: var(--quiet);
+  --seal-tone-deep: var(--quiet-deep);
+  --seal-warm: var(--wax);
+  position: relative;
+  isolation: isolate;
+  max-width: 1180px;
+  margin: clamp(28px, 4vw, 56px) auto clamp(36px, 5vw, 72px);
+  padding: clamp(20px, 3vw, 36px) clamp(20px, 3.6vw, 56px) clamp(24px, 3vw, 40px);
+  display: grid;
+  gap: clamp(18px, 2.4vw, 28px);
+  color: var(--seal-tone);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 1s var(--ease-out), transform 1s var(--ease-out), color .35s var(--ease);
+}
+
+.setting-seal.is-revealed { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .setting-seal { opacity: 1; transform: none; transition: none; }
+}
+
+.setting-seal__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.setting-seal__aura {
+  position: absolute;
+  inset: -6% -4% -6% -4%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: .85;
+  filter: blur(18px);
+}
+
+.setting-seal__aura svg { width: 100%; height: 100%; display: block; }
+
+/* — the crest row, opening the seal — */
+
+.setting-seal__crest {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 22px);
+  color: var(--seal-focus);
+}
+
+.setting-seal__crest-rule { display: block; opacity: .85; }
+.setting-seal__crest-rule svg { display: block; width: 100%; height: 8px; }
+
+.setting-seal__crest-stack {
+  display: inline-grid;
+  gap: 4px;
+  text-align: center;
+  justify-items: center;
+}
+
+.setting-seal__crest-key {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--seal-focus);
+  opacity: .9;
+}
+
+.setting-seal__crest-line {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.2vw, 16px);
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.setting-seal__crest-line em { font-style: italic; }
+
+@media (max-width: 720px) {
+  .setting-seal__crest { grid-template-columns: 1fr; gap: 10px; }
+  .setting-seal__crest-rule { display: none; }
+}
+
+/* — the stage: plate on the left, legend on the right — */
+
+.setting-seal__stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(260px, 36%) 1fr;
+  gap: clamp(20px, 4vw, 64px);
+  align-items: center;
+}
+
+@media (max-width: 880px) {
+  .setting-seal__stage { grid-template-columns: 1fr; gap: clamp(18px, 3vw, 28px); }
+}
+
+/* — the wax-seal plate itself — */
+
+.setting-seal__plate {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+  width: clamp(220px, 30vw, 340px);
+  aspect-ratio: 1 / 1;
+  isolation: isolate;
+  transform: rotate(-1.4deg);
+  animation: settingSealPress 1.6s var(--ease-spring) both;
+}
+
+@keyframes settingSealPress {
+  0%   { opacity: 0; transform: rotate(-1.4deg) scale(.86) translateY(-6px); filter: blur(1.2px); }
+  60%  { opacity: .92; filter: blur(0); }
+  100% { opacity: 1; transform: rotate(-1.4deg) scale(1) translateY(0); filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setting-seal__plate { animation: none; transform: rotate(0); }
+}
+
+.setting-seal__plate::before {
+  content: '';
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 50%,
+      color-mix(in srgb, var(--seal-warm) 18%, transparent),
+      transparent 70%);
+  filter: blur(12px);
+  z-index: -1;
+  opacity: .7;
+}
+
+.setting-seal__plate-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter:
+    drop-shadow(0 6px 18px rgba(0, 0, 0, .55))
+    drop-shadow(0 0 8px color-mix(in srgb, var(--seal-warm) 24%, transparent));
+}
+
+.setting-seal.is-revealed .setting-seal__plate {
+  animation: settingSealPress 1.6s var(--ease-spring) both, settingSealBreath 8s ease-in-out 2s infinite;
+}
+
+@keyframes settingSealBreath {
+  0%, 100% { transform: rotate(-1.4deg) scale(1); }
+  50%      { transform: rotate(-.6deg) scale(1.012); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setting-seal.is-revealed .setting-seal__plate { animation: none; }
+}
+
+/* the four cardinal ticks — small printer's marks at the plate's compass points */
+.setting-seal__plate-tick {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  display: grid;
+  place-items: center;
+  color: var(--seal-focus);
+  opacity: .85;
+  z-index: 3;
+  pointer-events: none;
+}
+.setting-seal__plate-tick::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: .7;
+}
+.setting-seal__plate-tick::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.setting-seal__plate-tick--n { top: -2%; left: 50%; transform: translate(-50%, 0); }
+.setting-seal__plate-tick--e { top: 50%; right: -2%; transform: translate(0, -50%); }
+.setting-seal__plate-tick--s { bottom: -2%; left: 50%; transform: translate(-50%, 0); }
+.setting-seal__plate-tick--w { top: 50%; left: -2%; transform: translate(0, -50%); }
+
+@media (max-width: 540px) {
+  .setting-seal__plate-tick { width: 10px; height: 10px; }
+  .setting-seal__plate-tick::before { width: 6px; height: 6px; }
+}
+
+/* — wax body reveal — */
+
+.setting-seal__body-fill {
+  transform-origin: 200px 200px;
+  transform-box: fill-box;
+  opacity: 0;
+  animation: settingSealWaxIn 1.2s var(--ease-out) .2s both;
+}
+
+@keyframes settingSealWaxIn {
+  0%   { opacity: 0; transform: scale(.92); }
+  60%  { opacity: 1; transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setting-seal__body-fill { animation: none; opacity: 1; transform: none; }
+}
+
+.setting-seal__body-edge {
+  stroke-dasharray: 940;
+  stroke-dashoffset: 940;
+  animation: settingSealEdgeDraw 2.4s var(--ease-out) .4s both;
+}
+
+@keyframes settingSealEdgeDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setting-seal__body-edge { animation: none; stroke-dashoffset: 0; }
+}
+
+/* — the three voice rings light up sequentially as the seal presses in — */
+
+.setting-seal__voice-ring {
+  transition: stroke-opacity .55s var(--ease), stroke-width .55s var(--ease);
+  opacity: 0;
+  animation: settingSealRingIn .9s var(--ease-out) both;
+}
+
+.setting-seal__voice-ring--quiet { animation-delay: .9s; }
+.setting-seal__voice-ring--human { animation-delay: 1.15s; }
+.setting-seal__voice-ring--bold  { animation-delay: 1.4s; }
+
+@keyframes settingSealRingIn {
+  0%   { opacity: 0; stroke-dasharray: 220; stroke-dashoffset: 220; }
+  60%  { opacity: .85; stroke-dashoffset: 0; }
+  100% { opacity: .85; stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setting-seal__voice-ring { animation: none; opacity: .85; stroke-dasharray: 0; stroke-dashoffset: 0; }
+}
+
+.app--voice-quiet .setting-seal__voice-ring--quiet { stroke-width: 2.4; stroke-opacity: .95; }
+.app--voice-human .setting-seal__voice-ring--human { stroke-width: 2.4; stroke-opacity: .95; }
+.app--voice-bold  .setting-seal__voice-ring--bold  { stroke-width: 2.4; stroke-opacity: .95; }
+
+/* the central medallion — engraved press-mark area */
+
+.setting-seal__medallion {
+  opacity: 0;
+  animation: settingSealMedallionIn 1s var(--ease-out) 1.4s both;
+}
+
+@keyframes settingSealMedallionIn {
+  0%   { opacity: 0; transform: scale(.88); }
+  60%  { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setting-seal__medallion { animation: none; opacity: 1; transform: none; }
+}
+
+/* the inscription — the press mark + arc text — drawn in last */
+
+.setting-seal__inscription {
+  opacity: 0;
+  animation: settingSealInscriptionIn 1.2s var(--ease-out) 1.7s both;
+}
+
+@keyframes settingSealInscriptionIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setting-seal__inscription { animation: none; opacity: 1; }
+}
+
+/* the press mark in the upper-left */
+
+.setting-seal__press-mark {
+  opacity: .8;
+}
+
+/* the hairline press crack — catches the press light */
+
+.setting-seal__hairline {
+  opacity: 0;
+  animation: settingSealHairIn .9s var(--ease-out) 2.1s both;
+}
+
+@keyframes settingSealHairIn {
+  0%   { opacity: 0; }
+  100% { opacity: .55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setting-seal__hairline { animation: none; opacity: .55; }
+}
+
+/* — the wax drips — they are the plate's most expressive detail — */
+
+.setting-seal__drips path {
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.setting-seal__drips path:nth-child(2) {
+  animation: settingSealDrip 6s ease-in-out 2.4s infinite;
+}
+
+.setting-seal__drips path:nth-child(4) {
+  animation: settingSealDrip 7s ease-in-out 3s infinite reverse;
+}
+
+@keyframes settingSealDrip {
+  0%, 100% { transform: translateY(0); opacity: var(--drip-op, .8); }
+  50%      { transform: translateY(1.5px); opacity: calc(var(--drip-op, .8) - .15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setting-seal__drips path { animation: none; }
+}
+
+/* — the legend, set to the right of the plate — */
+
+.setting-seal__legend {
+  display: grid;
+  gap: clamp(10px, 1.4vw, 16px);
+  align-content: center;
+  max-width: 56ch;
+}
+
+.setting-seal__legend-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--seal-focus);
+}
+
+.setting-seal__legend-key em { font-style: italic; }
+
+.setting-seal__legend-key-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--seal-focus) 36%, transparent) 0%,
+    transparent 100%);
+}
+
+.setting-seal__legend-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(22px, 2.4vw, 32px);
+  line-height: 1.12;
+  letter-spacing: -.018em;
+  color: var(--paper);
+  display: grid;
+  gap: clamp(2px, .4vw, 6px);
+}
+
+.setting-seal__legend-title em { font-style: italic; }
+
+.setting-seal__legend-lead {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(10px, 1vw, 12px);
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+  opacity: .8;
+}
+
+.setting-seal__legend-line {
+  font-size: 1.04em;
+  color: var(--seal-focus);
+  font-weight: 500;
+}
+
+.setting-seal__legend-tail {
+  color: var(--paper);
+  font-size: .92em;
+}
+
+.app--voice-bold .setting-seal__legend-title { font-style: normal; }
+.app--voice-bold .setting-seal__legend-title em { font-style: normal; font-weight: 700; letter-spacing: -.03em; }
+
+.setting-seal__legend-copy {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.2vw, 15px);
+  line-height: 1.55;
+  color: var(--paper-soft);
+  max-width: 48ch;
+}
+
+.setting-seal__legend-copy em { font-style: italic; }
+
+.setting-seal__legend-quote {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 14px;
+  color: var(--seal-focus);
+  flex-shrink: 0;
+}
+
+.setting-seal__legend-quote svg { width: 100%; height: 100%; display: block; }
+
+/* — the three voice readings — one row, each with its own ring dot — */
+
+.setting-seal__legend-voices {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 720px) {
+  .setting-seal__legend-voices { grid-template-columns: 1fr; }
+}
+
+.setting-seal__legend-voice {
+  --legend-tone: var(--quiet);
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(8px, 1vw, 14px);
+  padding: clamp(8px, 1.2vw, 14px) clamp(10px, 1.4vw, 16px);
+  border: 1px solid color-mix(in srgb, var(--legend-tone) 14%, transparent);
+  border-right-width: 0;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--legend-tone) 4%, transparent) 0%,
+    transparent 100%);
+  transition: border-color .35s var(--ease), background .35s var(--ease);
+  color: var(--legend-tone);
+}
+
+.setting-seal__legend-voice:last-child { border-right-width: 1px; }
+
+.setting-seal__legend-voice.is-active {
+  border-color: color-mix(in srgb, var(--legend-tone) 42%, transparent);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--legend-tone) 14%, transparent) 0%,
+    color-mix(in srgb, var(--legend-tone) 5%, transparent) 100%);
+}
+
+.setting-seal__legend-voice-letter {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(16px, 1.4vw, 22px);
+  letter-spacing: 0;
+  text-transform: none;
+  font-feature-settings: 'lnum' 1;
+  color: currentColor;
+}
+
+.setting-seal__legend-voice-stack {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.1;
+  min-width: 0;
+}
+
+.setting-seal__legend-voice-name {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12.5px, 1.05vw, 14.5px);
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.setting-seal__legend-voice-face {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.setting-seal__legend-voice-ring {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(20px, 2vw, 28px);
+  height: clamp(20px, 2vw, 28px);
+  color: var(--legend-tone);
+}
+
+.setting-seal__legend-voice-ring svg { width: 100%; height: 100%; display: block; }
+
+.setting-seal__legend-voice-cord {
+  position: absolute;
+  top: 50%;
+  right: clamp(-6px, -.5vw, -3px);
+  width: clamp(14px, 1.6vw, 22px);
+  height: 6px;
+  color: var(--seal-focus);
+  opacity: .55;
+  transform: translate(50%, -50%);
+  pointer-events: none;
+}
+
+.setting-seal__legend-voice-cord svg { width: 100%; height: 100%; display: block; }
+
+@media (max-width: 720px) {
+  .setting-seal__legend-voice { border-right-width: 1px; border-bottom-width: 0; }
+  .setting-seal__legend-voice:last-child { border-bottom-width: 1px; }
+  .setting-seal__legend-voice-cord { display: none; }
+}
+
+/* — the foot ledger: when · for · the note — */
+
+.setting-seal__legend-foot {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: clamp(14px, 2vw, 26px);
+  align-items: baseline;
+  padding-top: clamp(8px, 1.2vw, 14px);
+  border-top: 1px solid color-mix(in srgb, var(--seal-focus) 18%, transparent);
+}
+
+@media (max-width: 720px) {
+  .setting-seal__legend-foot { grid-template-columns: 1fr; }
+}
+
+.setting-seal__legend-foot-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.setting-seal__legend-foot-key {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--seal-focus);
+  opacity: .85;
+}
+
+.setting-seal__legend-foot-val {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+}
+
+.app--voice-bold .setting-seal__legend-foot-val { font-style: normal; }
+
+/* — the closing foot: a small hand-off to the hero — */
+
+.setting-seal__foot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: 0 auto;
+  width: fit-content;
+  max-width: 100%;
+  color: var(--seal-focus);
+}
+
+.setting-seal__foot-rule {
+  display: block;
+  width: clamp(48px, 6vw, 100px);
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--seal-focus) 36%, transparent) 60%,
+    transparent 100%);
+}
+
+.setting-seal__foot-rule--r {
+  background: linear-gradient(270deg,
+    transparent 0%,
+    color-mix(in srgb, var(--seal-focus) 36%, transparent) 60%,
+    transparent 100%);
+}
+
+.setting-seal__foot-stack {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1.1vw, 14px);
+  color: var(--paper);
+}
+
+.setting-seal__foot-stack em { font-style: italic; }
+
+.setting-seal__foot-pip {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  color: var(--seal-focus);
+}
+
+.setting-seal__foot-pip svg { width: 100%; height: 100%; display: block; }
+
+.setting-seal__foot-arrow {
+  display: inline-block;
+  width: clamp(22px, 2.4vw, 32px);
+  height: 8px;
+  color: var(--seal-focus);
+}
+
+.setting-seal__foot-arrow svg { width: 100%; height: 100%; display: block; }
+
+/* — responsive tightenings — */
+
+@media (max-width: 720px) {
+  .setting-seal { padding: 24px 16px 28px; margin: 16px auto 24px; }
+  .setting-seal__stage { grid-template-columns: 1fr; }
+  .setting-seal__plate { width: clamp(180px, 60vw, 260px); }
+  .setting-seal__legend-foot { grid-template-columns: 1fr; gap: 6px; }
+  .setting-seal__legend-foot-cell { justify-content: flex-start; }
+}
+
+@media (max-width: 540px) {
+  .setting-seal__legend-title { font-size: clamp(20px, 6vw, 26px); }
+  .setting-seal__plate { width: clamp(170px, 70vw, 220px); }
+}
+
+/* — the pulling state: the seal presses deeper — */
+
+.app--pulling .setting-seal__plate {
+  animation: settingSealPress 1.6s var(--ease-spring) both, settingSealBreath 8s ease-in-out 2s infinite, settingSealPull .85s var(--ease-out) both;
+}
+
+@keyframes settingSealPull {
+  0%   { transform: rotate(-1.4deg) scale(1); filter: brightness(1); }
+  25%  { transform: rotate(-2.4deg) scale(.99); filter: brightness(1.18); }
+  60%  { transform: rotate(-1deg) scale(1.018); filter: brightness(1.05); }
+  100% { transform: rotate(-1.4deg) scale(1); filter: brightness(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .setting-seal__plate { animation: none; }
+}
+

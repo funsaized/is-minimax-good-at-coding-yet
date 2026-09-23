@@ -1,20 +1,5 @@
 # Changelog
 
-## Iteration 451 — type case · the three tokens, set in their own wood
+## Iteration 452
 
-Added a **Type Case** specimen that sits between the Arrival folio and the
-question: the three words (m³, good at, yet?) shown as physical wooden type
-blocks on a low wooden plate, with a small centre pin, a typed-face for each
-piece, and a voice row underneath. The case is fully keyboard-accessible,
-respects reduced-motion, and interacts with the existing voice/word state —
-hovering a piece lifts it; clicking marks the word across the page. The three
-pieces are sized, shaped, and tilted slightly differently to feel like a real
-case rather than three identical cards.
-
-Files changed:
-- `src/TypeCase.tsx` — new specimen component (sections, buttons, voice row,
-  ledger, SVG ink gradients).
-- `src/style.css` — appended the `.type-case` system at the foot of the
-  stylesheet (board, pieces, ink, voice row, ledger, responsive).
-- `src/App.tsx` — imported `TypeCase`, mounted it after `<ArrivalPlate>`,
-  wired `selectWord` so the pieces are real controls.
+A single iconic **Setting Seal** now sits before the hero title at folio i, replacing the previous text-bridged QuestionHinge. The seal is a hand-engraved wax plate that previews the question as a sealed object: three concentric voice rings (quiet / human / bold) encircle a central medallion bearing the question mark, all pressed into a warm-wax body with hand-drawn drips, hairlines, an outer inscription arc, and four cardinal printer's marks. The wax breathes slowly with the page-time, the active voice ring lights up, and the legend beside the plate names what was sealed, when, and for whom. The seal mirrors the colophon seal at the foot of the page, so the page now opens and closes with the same press-mark — the same wax, the same three readings, the same held pause.
