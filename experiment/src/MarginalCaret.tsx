@@ -1,102 +1,119 @@
-import { useEffect, useRef, useState } from 'react'
-import type { CSSProperties } from 'react'
-import type { WordId } from './notes'
+import { useEffect, useState, type CSSProperties } from 'react'
+import type { VoiceId } from './App'
 
 type MarginalCaretProps = {
-  active: WordId
-  tokenRefs: { current: Partial<Record<WordId, HTMLSpanElement | null>> }
+  side?: 'left' | 'right'
+  voice: VoiceId
+  glyph?: string
+  eyebrow: string
+  note: string
+  attribution?: string
+  tone?: 'voice' | 'paper'
+  offset?: number
 }
 
-const TOKEN_INK: Record<WordId, string> = {
-  m3: 'var(--acid)',
-  good: 'var(--coral)',
-  yet: 'var(--blue)',
-}
-
-const TOKEN_GLYPH: Record<WordId, 'stet' | 'caret' | 'query'> = {
-  m3: 'stet',
-  good: 'caret',
-  yet: 'query',
-}
-
-export function MarginalCaret({ active, tokenRefs }: MarginalCaretProps) {
-  const caretRef = useRef<HTMLSpanElement>(null)
-  const [pos, setPos] = useState<{ top: number; left: number; height: number } | null>(null)
-  const [ready, setReady] = useState(false)
+/**
+ * MarginalCaret — a small editorial note that hangs in the outer margin
+ * of a folio. A single thin connector rule links the note to the folio
+ * body; the note itself is set in italic with a small compositor glyph
+ * (⌇ ∧ ? ∴ etc.) above. Fades in as the folio scrolls into view.
+ */
+export function MarginalCaret({
+  side = 'right',
+  voice,
+  glyph = '∧',
+  eyebrow,
+  note,
+  attribution,
+  tone = 'voice',
+  offset = 0,
+}: MarginalCaretProps) {
+  const [shown, setShown] = useState(false)
+  const [reduceMotion, setReduceMotion] = useState(false)
 
   useEffect(() => {
-    const measure = () => {
-      const node = tokenRefs.current[active]
-      if (!node) {
-        setPos(null)
-        return
-      }
-      const rect = node.getBoundingClientRect()
-      const plate = node.closest('.hero__plate') as HTMLElement | null
-      if (!plate) {
-        setPos(null)
-        return
-      }
-      const plateRect = plate.getBoundingClientRect()
-      const top = rect.top - plateRect.top + rect.height * 0.55
-      const left = rect.left - plateRect.left - 36
-      setPos({ top, left, height: rect.height })
-    }
-    measure()
-    const id = window.requestAnimationFrame(() => {
-      measure()
-      setReady(true)
-    })
-    window.addEventListener('resize', measure)
-    window.addEventListener('scroll', measure, { passive: true })
-    const observer = new ResizeObserver(measure)
-    if (tokenRefs.current[active]) observer.observe(tokenRefs.current[active]!)
-    const fonts = (document as Document & { fonts?: { ready?: Promise<unknown> } }).fonts
-    const readyPromise = fonts?.ready ?? Promise.resolve()
-    readyPromise.then(measure)
-    return () => {
-      window.cancelAnimationFrame(id)
-      window.removeEventListener('resize', measure)
-      window.removeEventListener('scroll', measure)
-      observer.disconnect()
-    }
-  }, [active, tokenRefs])
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReduceMotion(mq.matches)
+    const onChange = () => setReduceMotion(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
-  if (!pos) return null
-  const ink = TOKEN_INK[active]
-  const glyph = TOKEN_GLYPH[active]
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      setShown(true)
+      return
+    }
+    const node = document.getElementById(`marginal-${eyebrow.replace(/\s+/g, '-').toLowerCase()}`)
+    if (!node) {
+      setShown(true)
+      return
+    }
+    const obs = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setShown(true)
+            obs.unobserve(entry.target)
+          }
+        }
+      },
+      { threshold: 0.05, rootMargin: '0px 0px -8% 0px' },
+    )
+    obs.observe(node)
+    return () => obs.disconnect()
+  }, [eyebrow])
+
   const style = {
-    transform: `translate(${pos.left}px, ${pos.top}px)`,
-    color: ink,
-    height: `${pos.height}px`,
+    '--caret-tone': tone === 'paper' ? 'var(--paper-soft)' : `var(--${voice})`,
+    '--caret-offset': `${offset}px`,
   } as CSSProperties
+  void style
 
   return (
-    <span
-      ref={caretRef}
-      className={`marginal-caret marginal-caret--${glyph} ${ready ? 'is-ready' : ''}`}
+    <aside
+      id={`marginal-${eyebrow.replace(/\s+/g, '-').toLowerCase()}`}
+      className={`marginal-caret marginal-caret--${side} marginal-caret--tone-${tone} ${
+        shown ? 'is-shown' : ''
+      } ${reduceMotion ? 'is-quiet' : ''}`}
       style={style}
       aria-hidden="true"
     >
-      <svg className="marginal-caret__line" viewBox="0 0 30 100" preserveAspectRatio="none">
-        <path
-          d="M2 4 C 8 22, 22 38, 8 56 S 18 78, 4 96"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.2"
-          strokeLinecap="round"
-          className="marginal-caret__stroke"
-        />
-      </svg>
-      <span className="marginal-caret__knot" aria-hidden="true">
-        <svg viewBox="0 0 14 14">
-          <circle cx="7" cy="7" r="3.2" fill="currentColor" opacity="0.85" />
-          <circle cx="7" cy="7" r="5.6" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.5" />
+      <span className="marginal-caret__rule">
+        <svg viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true">
+          <line
+            x1={side === 'right' ? 0 : 100}
+            y1="0.5"
+            x2={side === 'right' ? 100 : 0}
+            y2="0.5"
+            stroke="currentColor"
+            strokeWidth=".5"
+            strokeDasharray="1 2.4"
+            vectorEffect="non-scaling-stroke"
+            opacity=".7"
+          />
         </svg>
       </span>
-      <span className="marginal-caret__glyph" aria-hidden="true">
-        {glyph === 'stet' ? '⌇' : glyph === 'caret' ? '∧' : '?'}
+
+      <span className="marginal-caret__body">
+        <span className="marginal-caret__pin" aria-hidden="true">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <circle cx="8" cy="8" r="5.4" fill="none" stroke="currentColor" strokeWidth=".5" opacity=".75" />
+            <circle cx="8" cy="8" r="2.2" fill="currentColor" opacity=".9" />
+            <circle cx="8" cy="8" r=".8" fill="var(--night)" />
+          </svg>
+        </span>
+
+        <span className="marginal-caret__head" aria-hidden="true">
+          <em className="marginal-caret__glyph">{glyph}</em>
+          <span className="marginal-caret__eyebrow">{eyebrow}</span>
+        </span>
+
+        <em className="marginal-caret__note">{note}</em>
+
+        {attribution && <span className="marginal-caret__attr">— {attribution}</span>}
       </span>
-    </span>
+    </aside>
   )
 }

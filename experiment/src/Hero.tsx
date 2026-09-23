@@ -242,12 +242,12 @@ export function Hero({
         </h1>
 
         <span className="hero__title-rule" aria-hidden="true">
-          <svg viewBox="0 0 1200 18" preserveAspectRatio="none" className="hero__title-rule-svg">
+          <svg viewBox="0 0 1200 14" preserveAspectRatio="none" className="hero__title-rule-svg">
             <line
               x1="2"
-              y1="9"
+              y1="7"
               x2="1198"
-              y2="9"
+              y2="7"
               stroke="currentColor"
               strokeWidth=".5"
               strokeDasharray="1 4"
@@ -255,48 +255,15 @@ export function Hero({
             />
             <line
               x1="2"
-              y1="9"
+              y1="7"
               x2="1198"
-              y2="9"
+              y2="7"
               stroke="currentColor"
               strokeWidth=".8"
               opacity=".25"
               className="hero__title-rule-line"
             />
           </svg>
-          <span
-            className={`hero__title-bead hero__title-bead--m3 ${word === 'm3' ? 'is-marked' : ''}`}
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 14 14">
-              <circle cx="7" cy="7" r="5.4" fill="var(--night)" stroke="currentColor" strokeWidth=".55" />
-              <circle cx="7" cy="7" r="2.6" fill="currentColor" opacity=".85" />
-              <circle cx="7" cy="7" r=".8" fill="var(--night)" />
-            </svg>
-            <em className="hero__title-bead-mark">⌇</em>
-          </span>
-          <span
-            className={`hero__title-bead hero__title-bead--good ${word === 'good' ? 'is-marked' : ''}`}
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 14 14">
-              <circle cx="7" cy="7" r="5.4" fill="var(--night)" stroke="currentColor" strokeWidth=".55" />
-              <circle cx="7" cy="7" r="2.6" fill="currentColor" opacity=".85" />
-              <circle cx="7" cy="7" r=".8" fill="var(--night)" />
-            </svg>
-            <em className="hero__title-bead-mark">∧</em>
-          </span>
-          <span
-            className={`hero__title-bead hero__title-bead--yet ${word === 'yet' ? 'is-marked' : ''}`}
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 14 14">
-              <circle cx="7" cy="7" r="5.4" fill="var(--night)" stroke="currentColor" strokeWidth=".55" />
-              <circle cx="7" cy="7" r="2.6" fill="currentColor" opacity=".85" />
-              <circle cx="7" cy="7" r=".8" fill="var(--night)" />
-            </svg>
-            <em className="hero__title-bead-mark">?</em>
-          </span>
         </span>
 
         <SpecimenSheet
@@ -413,6 +380,7 @@ function renderLineSegments({
               tokenRefs.current.yet = node
             }}
             className="ht__token ht__token--yet"
+            data-word-token="yet"
             onClick={() => onWord('yet')}
             onMouseEnter={() => onHover('yet')}
             onMouseLeave={() => onHover(null)}
@@ -445,6 +413,7 @@ function renderLineSegments({
             tokenRefs.current[id] = node
           }}
           className="ht__token"
+          data-word-token={id}
           onClick={() => onWord(id)}
           onMouseEnter={() => onHover(id)}
           onMouseLeave={() => onHover(null)}

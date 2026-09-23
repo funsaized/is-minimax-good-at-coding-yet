@@ -29,6 +29,8 @@ import { LastLamp } from './LastLamp'
 import { Imprint } from './Imprint'
 import { Constellation } from './Constellation'
 import { FirstLightPlate } from './FirstLightPlate'
+import { MarginalCaret } from './MarginalCaret'
+import { WordHoverNote } from './WordHoverNote'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -351,6 +353,16 @@ export function App() {
 
       <FirstLightPlate id="opening" voice={voice} setToday={setToday} />
 
+      <MarginalCaret
+        side="right"
+        voice={voice}
+        glyph="⌇"
+        eyebrow="folio zero · the open"
+        note="the page is set before the question is asked — the reader arrives in the dark."
+        attribution="m³ · first light"
+        offset={120}
+      />
+
       <section id="question" className="hero reveal" aria-labelledby="hero-title-label">
         <Hero
           voice={voice}
@@ -366,6 +378,17 @@ export function App() {
         />
       </section>
 
+      <MarginalCaret
+        side="left"
+        voice={voice}
+        glyph="∧"
+        eyebrow="folio i · the question"
+        note="set the line softly — three words carry the whole weight of the page."
+        attribution="the question, kept open"
+      />
+
+      <WordHoverNote active={selectedWord} hover={hoveredWord} voice={voice} />
+
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="ii" title="the press bed" hint="pull a lever · take an impression" voice={voice} />
       <Press
@@ -378,6 +401,16 @@ export function App() {
         setToday={setToday}
       />
 
+      <MarginalCaret
+        side="right"
+        voice={voice}
+        glyph="∴"
+        eyebrow="folio ii · the press bed"
+        note="pull once and the line answers in a new face — the page remembers the lever."
+        attribution="compositor, on the bed"
+        offset={60}
+      />
+
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="iii" title="the proof line" hint="three voices, set on the same cord" voice={voice} />
       <ProofLine
@@ -387,13 +420,41 @@ export function App() {
         onSelect={handleProofSelect}
       />
 
+      <MarginalCaret
+        side="left"
+        voice={voice}
+        glyph="∧"
+        eyebrow="folio iii · the proof line"
+        note="three proofs pinned to the same cord — each one a face the line can wear."
+        attribution="three proofs, one cord"
+      />
+
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="iv" title="the notation key" hint="how the three voices read" voice={voice} />
       <Specimen active={voice} onSelect={selectVoice} />
 
+      <MarginalCaret
+        side="right"
+        voice={voice}
+        glyph="⌇"
+        eyebrow="folio iv · the notation key"
+        note="the loud face and the quiet face read the same line — only the room changes."
+        attribution="the notation, kept close"
+        offset={140}
+      />
+
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="iv½" title="the held reading" hint="one line · three proofs · one plate" voice={voice} soft />
       <HeldReading voice={voice} setToday={setToday} onVoice={selectVoice} />
+
+      <MarginalCaret
+        side="left"
+        voice={voice}
+        glyph="?"
+        eyebrow="folio iv½ · the held reading"
+        note="the three voices on one plate — let the reader decide which one carries the line."
+        attribution="held three ways"
+      />
 
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="v" title="the answer" hint="folded once · then folded back" voice={voice} />
@@ -407,6 +468,16 @@ export function App() {
         setToday={setToday}
       />
 
+      <MarginalCaret
+        side="right"
+        voice={voice}
+        glyph="∴"
+        eyebrow="folio v · the answer"
+        note="yes — but only when it earns the pause. the page holds the question open until you ask."
+        attribution="three readings, one line"
+        offset={80}
+      />
+
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="—" title="the colophon" hint="the page, signed off" voice={voice} soft />
       <Colophon
@@ -418,11 +489,39 @@ export function App() {
         keptCounts={keptCounts}
       />
 
+      <MarginalCaret
+        side="left"
+        voice={voice}
+        glyph="∧"
+        eyebrow="folio · the colophon"
+        note="the compositor signs off — the reader keeps the question."
+        attribution="signed at the colophon"
+      />
+
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="vi" title="the reader’s pouch" hint="three slips · kept close" voice={voice} />
       <ReadingPouch voice={voice} active={activeWord} setToday={setToday} />
 
+      <MarginalCaret
+        side="right"
+        voice={voice}
+        glyph="⌇"
+        eyebrow="folio vi · the reader’s pouch"
+        note="three slips remain — kept by the reader, after the page is set down."
+        attribution="kept close"
+        offset={100}
+      />
+
       <LastLamp voice={voice} setToday={setToday} />
+
+      <MarginalCaret
+        side="left"
+        voice={voice}
+        glyph="?"
+        eyebrow="the lamp · after dark"
+        note="read the page once more, in the dark. the question is the same."
+        attribution="compositor, at the lamp"
+      />
 
       <Imprint voice={voice} setToday={setToday} />
 

@@ -1,24 +1,8 @@
-# Changelog
+# Iteration 435 — the margin reads
 
-## 434 · folio zero — the opening plate
+The page now holds a thin editorial voice in its outer margin, and the question's marks speak when the reader rests on a word.
 
-A new folio sits at the very top of the broadside, before the question.
-A short, dawn-lit plate introduces the page: brand, folio index, the
-day and hour, the active voice, and a single line that sets the tone
-("i set the page [greeting], for the reader who arrived in the dark").
-
-- **FirstLightPlate** restored as `folio 0 · the opening` between the
-  topbar and the question. The plate carries the day-name, hour, and
-  voice provenance so the reader knows how the page was set.
-- The folio index now begins at `0` (the opening) and steps through
-  the seven existing folios. The default active section, the
-  CompositionRegister, and the PrinterAtlas all read the new entry.
-- The opening plate's stack now settles in sequence (head, body,
-  foot, stitch) with a soft wash of its own that keeps the page's
-  ambient dawn from bleeding into its corners.
-- The question folio's id moves off `<main>` and onto the hero
-  section, so any "back to the question" link lands on the title
-  rather than the very top of the page.
-- Mobile breakpoints tuned: the plate trims its top breathing room,
-  scales the seal, and lets the line drop a step in size without
-  losing the italic rhythm.
+- A small editorial note (MarginalCaret) hangs in the outer margin beside each folio, set in italic with a thin connector rule and a compositor's glyph. It fades in as the folio scrolls into view; on mobile where the margin disappears, it is held back.
+- A compositor's note (WordHoverNote) follows the active word in the hero — its mark glyph and short title set in a small panel above the word, with a thin ink-cord trailing down to the line. Hidden on touch and at narrow widths where the margin is closed.
+- The FirstLightPlate's three redundant rule rows were thinned to a single sub-line; the foot holds its own metadata.
+- The hero's title-rule is now a single composed hairline (the prior three-bead row was redundant with the folio rule above the title).

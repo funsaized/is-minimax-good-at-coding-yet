@@ -211,12 +211,6 @@ export function FirstLightPlate({ voice, setToday, id }: FirstLightPlateProps) {
         <p className="first-light-plate__sub-line">
           <span>— a single line, set three ways, asked once · a question that earns its pause.</span>
         </p>
-
-        <div className="first-light-plate__prompt" aria-hidden="true">
-          <span className="first-light-plate__prompt-rule" />
-          <em>set at first light · read in the dark</em>
-          <span className="first-light-plate__prompt-rule" />
-        </div>
       </div>
 
       <footer className="first-light-plate__foot" aria-hidden="true">

@@ -3526,16 +3526,15 @@ em { font-style: italic; }
   .hero__title-initial { display: none; }
 }
 
-/* — the title rule · a hairline with bead markers below the title — */
+/* — the title rule · a quiet hairline below the title,
+     now held as one composed rule without the prior three beads
+     (the active word is shown in the marginal caret and folio rule) — */
 
 .hero__title-rule {
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 0;
+  display: block;
   margin: clamp(6px, 1vw, 14px) 0 clamp(18px, 2.4vw, 32px);
-  height: 20px;
+  height: 14px;
   color: var(--hero-tone, var(--quiet));
   opacity: 0;
   animation: heroTitleRuleIn 1.2s var(--ease-out) 1.6s both;
@@ -3552,10 +3551,9 @@ em { font-style: italic; }
 }
 
 .hero__title-rule-svg {
-  grid-column: 1 / -1;
-  grid-row: 1;
+  display: block;
   width: 100%;
-  height: 20px;
+  height: 14px;
   pointer-events: none;
 }
 
@@ -3573,60 +3571,14 @@ em { font-style: italic; }
   .hero__title-rule-line { animation: none; opacity: .32; transform: none; }
 }
 
-.hero__title-bead {
-  grid-row: 1;
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 8px;
-  height: 8px;
-  color: var(--bead-tone, var(--hero-tone, var(--quiet)));
-  opacity: .5;
-  transition: opacity .35s var(--ease), transform .35s var(--ease-spring);
-}
-
-.hero__title-bead--m3   { --bead-tone: var(--quiet); }
-.hero__title-bead--good { --bead-tone: var(--human); }
-.hero__title-bead--yet  { --bead-tone: var(--bold); }
-
-.hero__title-bead:nth-of-type(1) { grid-column: 1; justify-self: start; }
-.hero__title-bead:nth-of-type(2) { grid-column: 2; justify-self: center; }
-.hero__title-bead:nth-of-type(3) { grid-column: 3; justify-self: end; }
-
-.hero__title-bead svg {
-  width: 8px;
-  height: 8px;
-}
-
-.hero__title-bead-mark {
-  display: none;
-}
-
-.hero__title-bead:hover,
-.hero__title-bead.is-marked {
-  opacity: 1;
-  transform: translateY(-1px) scale(1.25);
-}
-
-.hero__title-bead.is-marked::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 1px solid currentColor;
-  opacity: .35;
-  transition: opacity .35s var(--ease);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero__title-bead:hover,
-  .hero__title-bead.is-marked { transform: none; }
-  .hero__title-bead.is-marked::after { transition: none; }
-}
+/* legacy class kept inert for the rare referrer */
+.hero__title-bead { display: none; }
+.hero__title-bead--m3,
+.hero__title-bead--good,
+.hero__title-bead--yet { display: none; }
 
 @media (max-width: 720px) {
-  .hero__title-rule { height: 14px; margin: 4px 0 14px; }
-  .hero__title-bead-mark { display: none; }
+  .hero__title-rule { height: 12px; margin: 4px 0 14px; }
 }
 
 /* — the coda pin · a small seal where the coda settles — */
@@ -26290,3 +26242,347 @@ section.reveal h2 em::after {
 }
 
 
+
+/* ────────────────────────────────────────────────────────────
+   MARGINAL CARET · a small editorial note that hangs in the
+   outer margin of a folio. A connector rule links the note to
+   the folio body. Fades in on scroll-in, hides on small viewports
+   where the margin disappears. Each caret is tinted by the
+   active voice and carries a small compositor glyph above.
+   ──────────────────────────────────────────────────────────── */
+
+.marginal-caret {
+  --caret-tone: var(--paper-soft);
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: clamp(8px, 1vw, 14px);
+  max-width: 1180px;
+  margin: clamp(6px, .8vw, 14px) auto;
+  padding: 0 clamp(20px, 4.4vw, 80px);
+  color: var(--caret-tone);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .85s var(--ease-out), transform .85s var(--ease-out), color .35s var(--ease);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.marginal-caret.is-shown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.marginal-caret.is-quiet {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+.marginal-caret--right {
+  flex-direction: row;
+}
+
+.marginal-caret--right .marginal-caret__rule {
+  flex: 1 1 auto;
+}
+
+.marginal-caret--right .marginal-caret__body {
+  flex: 0 0 auto;
+  text-align: left;
+}
+
+.marginal-caret--left {
+  flex-direction: row-reverse;
+}
+
+.marginal-caret--left .marginal-caret__rule {
+  flex: 1 1 auto;
+}
+
+.marginal-caret--left .marginal-caret__body {
+  flex: 0 0 auto;
+  text-align: right;
+}
+
+.marginal-caret__rule {
+  display: block;
+  width: clamp(36px, 4vw, 64px);
+  height: 14px;
+  margin-top: 6px;
+  flex-shrink: 0;
+  color: var(--caret-tone);
+}
+
+.marginal-caret__rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.marginal-caret__body {
+  display: grid;
+  gap: 4px;
+  max-width: clamp(180px, 22vw, 240px);
+  min-width: 0;
+}
+
+.marginal-caret__pin {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-top: 4px;
+  color: var(--caret-tone);
+  opacity: .85;
+  animation: marginalCaretPinPulse 5.5s ease-in-out infinite;
+}
+
+.marginal-caret__pin svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes marginalCaretPinPulse {
+  0%, 100% { transform: scale(1); opacity: .85; }
+  50%      { transform: scale(1.08); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marginal-caret__pin { animation: none; }
+}
+
+.marginal-caret__head {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--caret-tone);
+  opacity: .8;
+}
+
+.marginal-caret__glyph {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--caret-tone);
+}
+
+.marginal-caret__eyebrow {
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.marginal-caret__note {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.15vw, 14.5px);
+  line-height: 1.42;
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+  text-wrap: pretty;
+}
+
+.marginal-caret__attr {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: .7;
+}
+
+.marginal-caret--tone-paper { --caret-tone: var(--paper-soft); }
+
+.app--voice-quiet .marginal-caret--tone-voice { --caret-tone: var(--quiet); }
+.app--voice-human .marginal-caret--tone-voice { --caret-tone: var(--human); }
+.app--voice-bold  .marginal-caret--tone-voice { --caret-tone: var(--bold);  }
+
+@media (max-width: 1100px) {
+  .marginal-caret { display: none; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   WORD HOVER NOTE · a small compositor's note that floats
+   above the active word in the hero. Surfaces the editorial
+   copy behind each marked word. Hidden on touch devices.
+   The note follows the active word's button position with a
+   thin ink-cord trailing upward; the glyph (⌇ ∧ ?) recolors
+   to the marked word's voice.
+   ──────────────────────────────────────────────────────────── */
+
+.word-hover-note {
+  --note-voice-tone: var(--quiet);
+  --note-word-tone: var(--quiet);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 18;
+  display: grid;
+  gap: 6px;
+  width: clamp(196px, 20vw, 232px);
+  padding: clamp(12px, 1.2vw, 16px) clamp(14px, 1.4vw, 18px) clamp(10px, 1vw, 14px);
+  color: var(--paper);
+  background: linear-gradient(180deg, rgba(20, 24, 36, .96), rgba(10, 13, 22, .96));
+  border: 1px solid color-mix(in srgb, var(--note-word-tone) 35%, rgba(245, 238, 216, .14));
+  border-radius: 2px;
+  box-shadow:
+    0 24px 48px -28px rgba(0, 0, 0, .55),
+    0 0 0 1px color-mix(in srgb, var(--note-word-tone) 12%, transparent),
+    0 8px 22px -14px color-mix(in srgb, var(--note-word-tone) 22%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, calc(-100% - 22px)) scale(.96);
+  transition: opacity .35s var(--ease), transform .35s var(--ease-out);
+  font-family: var(--display);
+  isolation: isolate;
+}
+
+.word-hover-note.is-shown {
+  opacity: 1;
+  transform: translate(-50%, calc(-100% - 18px)) scale(1);
+}
+
+.word-hover-note.is-quiet {
+  transition: none;
+}
+
+.word-hover-note::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 0%,
+      color-mix(in srgb, var(--note-word-tone) 14%, transparent), transparent 70%);
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.word-hover-note__cord {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  width: 12px;
+  height: 24px;
+  transform: translateX(-50%);
+  color: var(--note-word-tone);
+  opacity: .8;
+}
+
+.word-hover-note__cord svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.word-hover-note__head {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--note-word-tone);
+  padding-bottom: 6px;
+  border-bottom: 1px solid color-mix(in srgb, var(--note-word-tone) 28%, rgba(245, 238, 216, .12));
+}
+
+.word-hover-note__glyph {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--note-word-tone);
+}
+
+.word-hover-note__mark {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--note-word-tone);
+}
+
+.word-hover-note__title {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(13px, 1.05vw, 14.5px);
+  line-height: 1.2;
+  letter-spacing: -.005em;
+  color: var(--paper);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.word-hover-note__gloss {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 13px);
+  line-height: 1.42;
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+  text-wrap: pretty;
+}
+
+.word-hover-note__rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  color: color-mix(in srgb, var(--note-word-tone) 38%, transparent);
+}
+
+.word-hover-note__rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.word-hover-note__extra {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.word-hover-note__extra em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 11px;
+  color: var(--paper-soft);
+}
+
+.word-hover-note__extra-dot {
+  color: color-mix(in srgb, var(--note-word-tone) 60%, var(--line-strong));
+}
+
+.word-hover-note--hover .word-hover-note__glyph,
+.word-hover-note--hover .word-hover-note__mark {
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--note-word-tone) 38%, transparent));
+}
+
+@media (max-width: 1100px) {
+  .word-hover-note { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word-hover-note.is-shown {
+    transform: translate(-50%, calc(-100% - 18px)) scale(1);
+  }
+}
