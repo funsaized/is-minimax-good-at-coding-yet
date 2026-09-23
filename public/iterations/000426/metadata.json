@@ -1,0 +1,19 @@
+{
+  "id": 426,
+  "parentId": 425,
+  "createdAt": "2026-09-23T04:35:15.566Z",
+  "summary": "A persistent set line now sits above the hero, carrying three sorts — one per marked word of the question. The active so",
+  "path": "/iterations/000426/index.html",
+  "screenshot": "/iterations/000426/desktop.png",
+  "mobileScreenshot": "/iterations/000426/mobile.png",
+  "sourceCommit": "cecb37e3602773406e726d11ddfb871f903516b4",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 204,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 162849,
+    "outputTokens": 21849,
+    "steps": 107
+  }
+}
