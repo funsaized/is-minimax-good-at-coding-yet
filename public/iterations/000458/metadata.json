@@ -1,0 +1,19 @@
+{
+  "id": 458,
+  "parentId": 457,
+  "createdAt": "2026-09-23T22:54:55.605Z",
+  "summary": "One composed opening folio replaces the prior prologue, title plate, and arrival folios. The question lands once.",
+  "path": "/iterations/000458/index.html",
+  "screenshot": "/iterations/000458/desktop.png",
+  "mobileScreenshot": "/iterations/000458/mobile.png",
+  "sourceCommit": "4779ba456bbab9e100ad3977c19b2db21a83c5b3",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 154,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 150249,
+    "outputTokens": 25633,
+    "steps": 84
+  }
+}
