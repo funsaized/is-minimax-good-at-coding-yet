@@ -24,6 +24,7 @@ import { PrinterAtlas } from './PrinterAtlas'
 import { ReadingNote } from './ReadingNote'
 import { SpineThread } from './SpineThread'
 import { ReadingPouch } from './ReadingPouch'
+import { TheBookMark } from './TheBookMark'
 import { ComposingBreath } from './ComposingBreath'
 import { LastLamp } from './LastLamp'
 import { Imprint } from './Imprint'
@@ -489,6 +490,9 @@ export function App() {
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="vi" title="the reader’s pouch" hint="three slips · kept close" voice={voice} />
       <ReadingPouch voice={voice} active={activeWord} setToday={setToday} />
+
+      <FolioTurn index="vi½" title="the bookmark" hint="one line · kept after the broadside is set down" voice={voice} soft />
+      <TheBookMark voice={voice} setToday={setToday} />
 
       <LastLamp voice={voice} setToday={setToday} />
 
