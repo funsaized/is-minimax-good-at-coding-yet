@@ -20,6 +20,7 @@ import { Specimen } from './Specimen'
 import { Answer } from './Answer'
 import { Colophon } from './Colophon'
 import { PrinterMark } from './PrinterMark'
+import { PrinterAtlas } from './PrinterAtlas'
 import { ReadingNote } from './ReadingNote'
 import { SpineThread } from './SpineThread'
 import { ReadingPouch } from './ReadingPouch'
@@ -305,6 +306,13 @@ export function App() {
         isPulling={isPulling}
       />
 
+      <PrinterAtlas
+        folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
+        activeId={activeSection}
+        voice={voice}
+        timeOfDay={timeOfDay}
+      />
+
       <header className="topbar" role="banner">
         <a className="brand" href="#question" aria-label="Return to the question">
           <PrinterMark size={32} voice={voice} />
@@ -404,17 +412,47 @@ export function App() {
       <ReadingPouch voice={voice} active={activeWord} setToday={setToday} />
 
       <footer className="site-foot" aria-label="The page, in one line">
+        <span className="site-foot__rule site-foot__rule--top" aria-hidden="true">
+          <svg viewBox="0 0 1200 6" preserveAspectRatio="none">
+            <line x1="0" y1="3" x2="1200" y2="3" stroke="currentColor" strokeWidth=".55" strokeDasharray="1.4 4" opacity=".5" />
+            <circle cx="600" cy="3" r="2" fill="currentColor" opacity=".85" />
+            <circle cx="600" cy="3" r="4.4" fill="none" stroke="currentColor" strokeWidth=".35" opacity=".45" />
+            <circle cx="0" cy="3" r="1.2" fill="currentColor" opacity=".7" />
+            <circle cx="1200" cy="3" r="1.2" fill="currentColor" opacity=".7" />
+          </svg>
+        </span>
+
+        <span className="site-foot__motto" aria-hidden="true">
+          <em>set at first light</em>
+          <span className="site-foot__motto-dot" aria-hidden="true">·</span>
+          <em>read in the dark</em>
+          <span className="site-foot__motto-dot" aria-hidden="true">·</span>
+          <em>kept close</em>
+        </span>
+
+        <span className="site-foot__signature" aria-hidden="true">
+          <span className="site-foot__signature-mark">
+            <svg viewBox="0 0 32 32">
+              <circle cx="16" cy="16" r="13.6" fill="none" stroke="currentColor" strokeWidth=".55" />
+              <circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".6 1.4" opacity=".55" />
+              <path d="M9 16 A7 7 0 0 1 23 16" fill="none" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
+              <circle cx="16" cy="16" r="2.6" fill="currentColor" />
+              <circle cx="16" cy="16" r=".9" fill="var(--night)" />
+            </svg>
+          </span>
+          <em className="site-foot__signature-name">m<sup>3</sup> press</em>
+          <span className="site-foot__signature-rule" />
+          <em className="site-foot__signature-set">{setToday}</em>
+          <span className="site-foot__signature-rule" />
+          <em className="site-foot__signature-voice">{VOICE_NAME[voice]}</em>
+        </span>
+
         <span className="site-foot__copy">
-          <em>{TITLE}</em>
+          <em className="site-foot__copy-title">{TITLE}</em>
           <span aria-hidden="true">·</span>
           <span>composed and set on {setToday}, at first light</span>
         </span>
-        <span className="site-foot__sig" aria-hidden="true">
-          <span className="site-foot__sig-rule" />
-          <em>m<sup>3</sup> press</em>
-          <span className="site-foot__sig-mark" />
-          <span className="site-foot__sig-rule" />
-        </span>
+
         <ReadingNote
           voice={voice}
           align="center"

@@ -20309,3 +20309,447 @@ section.reveal h2 em::after {
   .folio-atlas__node-stem { transition: none; }
 }
 
+/* ────────────────────────────────────────────────────────────
+   PRINTER'S ATLAS · iteration 420
+   a fixed reading apparatus on the left margin. balanced against
+   the SpineThread on the right, it carries the live folio index,
+   a typesetter's catchword, a small time-of-day, and a printer's
+   seal. visible on wide screens, quiet on tablet/mobile.
+   ──────────────────────────────────────────────────────────── */
+
+.printer-atlas {
+  --pa-tone: var(--quiet);
+  position: fixed;
+  top: 50%;
+  left: clamp(4px, .4vw, 8px);
+  transform: translateY(-50%);
+  z-index: 22;
+  display: grid;
+  grid-template-rows: auto auto auto auto auto auto;
+  justify-items: center;
+  gap: clamp(4px, .5vw, 7px);
+  width: clamp(46px, 4vw, 52px);
+  color: var(--pa-tone);
+  pointer-events: auto;
+  isolation: isolate;
+  opacity: 0;
+  animation: printerAtlasIn 1.1s var(--ease-out) .5s both;
+  transition: color .35s var(--ease);
+}
+
+@keyframes printerAtlasIn {
+  0%   { opacity: 0; transform: translateY(calc(-50% + 8px)); }
+  100% { opacity: 1; transform: translateY(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .printer-atlas { animation: none; opacity: 1; transform: translateY(-50%); }
+  .printer-atlas.is-quiet { transform: translateY(-50%); }
+}
+
+.printer-atlas--quiet { --pa-tone: var(--quiet); }
+.printer-atlas--human { --pa-tone: var(--human); }
+.printer-atlas--bold  { --pa-tone: var(--bold); }
+
+.printer-atlas__seal {
+  display: grid;
+  place-items: center;
+  width: clamp(30px, 3vw, 38px);
+  height: clamp(30px, 3vw, 38px);
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--pa-tone) 35%, var(--line-strong));
+  color: var(--pa-tone);
+  position: relative;
+  transition: transform .6s var(--ease-spring), color .35s var(--ease), border-color .35s var(--ease);
+  animation: sealOrbit 32s linear infinite;
+}
+
+.printer-atlas__seal:hover { transform: rotate(12deg); }
+
+@keyframes sealOrbit {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .printer-atlas__seal { animation: none; }
+  .printer-atlas__seal:hover { transform: rotate(8deg); }
+}
+
+.printer-atlas__seal svg { width: 100%; height: 100%; display: block; }
+
+.printer-atlas__seal-mark {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(10px, .9vw, 12px);
+  letter-spacing: -.02em;
+  color: var(--pa-tone);
+  text-shadow:
+    0 0 2px var(--night),
+    0 0 5px var(--night),
+    0 0 8px var(--night),
+    0 0 4px color-mix(in srgb, var(--pa-tone) 60%, transparent);
+  animation: sealMarkCounter 32s linear infinite;
+}
+
+@keyframes sealMarkCounter {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .printer-atlas__seal-mark { animation: none; }
+}
+
+.printer-atlas--bold .printer-atlas__seal-mark {
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+
+.printer-atlas__rule {
+  display: block;
+  width: 10px;
+  height: clamp(140px, 18vh, 200px);
+  color: color-mix(in srgb, var(--pa-tone) 75%, var(--line-strong));
+  position: relative;
+}
+
+.printer-atlas__rule svg { width: 100%; height: 100%; display: block; }
+
+.printer-atlas__rule::before,
+.printer-atlas__rule::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: clamp(16px, 1.6vw, 22px);
+  height: 1px;
+  background: color-mix(in srgb, var(--pa-tone) 45%, transparent);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.printer-atlas__rule::before { top: -6px; }
+.printer-atlas__rule::after  { bottom: -6px; }
+
+.printer-atlas__folio {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: clamp(2px, .3vw, 4px);
+  padding: clamp(8px, 1vw, 12px) 4px;
+  border-top: 1px solid color-mix(in srgb, var(--pa-tone) 35%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--pa-tone) 35%, transparent);
+  width: 100%;
+  transition: color .35s var(--ease);
+}
+
+.printer-atlas__folio-idx {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--pa-tone);
+  font-feature-settings: 'lnum' 1;
+  transition: transform .25s var(--ease-spring);
+}
+
+.printer-atlas--bold .printer-atlas__folio-idx {
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.04em;
+  text-transform: lowercase;
+}
+
+.printer-atlas__folio-label {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(9.5px, .82vw, 11px);
+  line-height: 1.15;
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+  max-width: 8ch;
+  text-wrap: balance;
+}
+
+.printer-atlas__catch {
+  display: grid;
+  justify-items: center;
+  gap: clamp(1px, .2vw, 2px);
+  text-align: center;
+  width: 100%;
+}
+
+.printer-atlas__catch-key {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.printer-atlas__catch-glyph {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--pa-tone);
+  opacity: .85;
+  line-height: 1;
+}
+
+.printer-atlas__catch-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(9.5px, .82vw, 11px);
+  line-height: 1.18;
+  letter-spacing: -.005em;
+  color: var(--paper);
+  text-wrap: balance;
+  max-width: 10ch;
+}
+
+.printer-atlas__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(9px, .78vw, 10.5px);
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+}
+
+.printer-atlas__time-glyph {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--pa-tone);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--pa-tone) 24%, transparent);
+  animation: paTimePulse 6s ease-in-out infinite;
+}
+
+@keyframes paTimePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.16); opacity: .85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .printer-atlas__time-glyph { animation: none; }
+}
+
+.printer-atlas__time-word {
+  font-style: italic;
+  color: var(--paper);
+  text-transform: lowercase;
+  font-size: clamp(9px, .78vw, 10.5px);
+  letter-spacing: -.005em;
+}
+
+.printer-atlas__sig {
+  display: grid;
+  place-items: center;
+  width: clamp(20px, 2vw, 26px);
+  height: clamp(20px, 2vw, 26px);
+  color: var(--pa-tone);
+  opacity: .7;
+}
+
+.printer-atlas__sig svg { width: 100%; height: 100%; display: block; }
+
+/* the atlas hides on tablet portrait and below */
+@media (max-width: 1180px) {
+  .printer-atlas { display: none; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   SITE FOOT · iteration 420
+   the colophon folds into a tighter signature line — a printed
+   rule, a small motto, the printer's mark, and the byline — so
+   the foot of the page reads as one composed signature.
+   ──────────────────────────────────────────────────────────── */
+
+.site-foot__rule--top {
+  display: block;
+  margin: 0 auto clamp(20px, 2.6vw, 32px);
+  max-width: 720px;
+  width: min(100%, 720px);
+  height: 6px;
+  color: var(--line-strong);
+}
+
+.site-foot__rule--top svg { width: 100%; height: 100%; display: block; }
+
+.app--voice-quiet .site-foot__rule--top { color: color-mix(in srgb, var(--quiet) 55%, var(--line-strong)); }
+.app--voice-human .site-foot__rule--top { color: color-mix(in srgb, var(--human) 55%, var(--line-strong)); }
+.app--voice-bold  .site-foot__rule--top { color: color-mix(in srgb, var(--bold) 65%, var(--line-strong)); }
+
+.site-foot__motto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(8px, 1vw, 14px);
+  margin: 0 auto clamp(14px, 1.6vw, 22px);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(14px, 1.4vw, 18px);
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.site-foot__motto em { font-style: italic; }
+.site-foot__motto em:nth-child(1) { color: var(--paper); }
+.site-foot__motto em:nth-child(3) { color: var(--quiet); }
+.site-foot__motto em:nth-child(5) { color: var(--human); }
+
+.app--voice-human .site-foot__motto em:nth-child(3) { color: var(--paper); }
+.app--voice-human .site-foot__motto em:nth-child(5) { color: var(--human); }
+.app--voice-bold  .site-foot__motto em:nth-child(3) { color: var(--bold); }
+.app--voice-bold  .site-foot__motto em:nth-child(5) { color: var(--paper); }
+
+.app--voice-bold .site-foot__motto em { font-style: normal; font-weight: 700; letter-spacing: -.025em; }
+
+.site-foot__motto-dot {
+  display: inline-block;
+  color: var(--muted);
+  font-style: normal;
+}
+
+.site-foot__signature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: 0 auto clamp(8px, 1vw, 14px);
+  padding: clamp(8px, 1vw, 12px) 0;
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--paper);
+}
+
+.site-foot__signature-mark {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(28px, 3vw, 36px);
+  height: clamp(28px, 3vw, 36px);
+  color: var(--quiet);
+  transition: color .35s var(--ease);
+}
+
+.app--voice-quiet .site-foot__signature-mark { color: var(--quiet); }
+.app--voice-human .site-foot__signature-mark { color: var(--human); }
+.app--voice-bold  .site-foot__signature-mark { color: var(--bold); }
+
+.site-foot__signature-mark svg { width: 100%; height: 100%; display: block; }
+
+.site-foot__signature-name {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(17px, 1.5vw, 22px);
+  letter-spacing: -.018em;
+  color: var(--paper);
+}
+
+.site-foot__signature-name sup {
+  font-size: .58em;
+  vertical-align: .32em;
+  letter-spacing: 0;
+  margin-left: .04em;
+  font-weight: 400;
+}
+
+.app--voice-bold .site-foot__signature-name {
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.035em;
+  text-transform: lowercase;
+}
+
+.site-foot__signature-rule {
+  display: inline-block;
+  width: clamp(14px, 1.6vw, 28px);
+  height: 1px;
+  background: var(--line-strong);
+  flex-shrink: 0;
+}
+
+.site-foot__signature-set {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+}
+
+.site-foot__signature-voice {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(9.5px, .85vw, 11px);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.app--voice-quiet .site-foot__signature-voice { color: var(--quiet); }
+.app--voice-human .site-foot__signature-voice { color: var(--human); }
+.app--voice-bold  .site-foot__signature-voice {
+  color: var(--bold);
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.site-foot__copy {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(8px, 1vw, 12px);
+  margin: 0 auto clamp(16px, 2vw, 24px);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.site-foot__copy em.site-foot__copy-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 13.5px);
+  letter-spacing: -.005em;
+  color: var(--paper);
+  text-transform: none;
+  font-feature-settings: 'kern', 'liga', 'onum' 1;
+  max-width: 48ch;
+  text-wrap: balance;
+}
+
+.app--voice-bold .site-foot__copy em.site-foot__copy-title {
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -.025em;
+}
+
+.site-foot__copy span {
+  color: var(--muted);
+}
+
+@media (max-width: 720px) {
+  .site-foot__motto { gap: 8px; font-size: clamp(13px, 3.6vw, 16px); }
+  .site-foot__signature { gap: 12px; }
+  .site-foot__signature-rule { display: none; }
+  .site-foot__signature-name sup { font-size: .52em; }
+  .site-foot__copy { gap: 6px; font-size: 9.5px; }
+  .site-foot__copy em.site-foot__copy-title { font-size: 11.5px; }
+}
+
