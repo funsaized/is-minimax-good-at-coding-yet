@@ -1,13 +1,14 @@
-# iteration 426 · the marked line
+# Iteration 427
 
-A persistent set line now sits above the hero, carrying three sorts — one per marked word of the question. The active sort brightens to its native voice tone, and a thin pulse runs along the line on each lever pull.
+The hero now carries a reader's marginalia — three handwritten notes set beside the line.
 
-## what changed
+A new `ReaderMarginalia` sits between the title rule and the type bed. Each
+note pairs a marked word (m³, good at, yet?) with its editor's title and gloss
+from `notes.ts`, set in the word's own voice tone (quiet / human / bold). The
+active word's note is raised and bears a soft glow; on each lever pull the
+active note stamps itself with a brief aura.
 
-- Added `MarkedLine.tsx` — a hairline under the topbar that holds three sorts (m³, good at, yet?), each in its native voice tone. The marked sort glows; a brief pulse animates left-to-right on each pull.
-- Added `Constellation.tsx` — a faint background curve that ties the three words across the page, with three small star nodes where the words live. Fades in past the question folio and out before the imprint.
-- Refined the three Specimen plates — each now carries a distinct physical fold character: quiet = a clean single fold with a bead at centre; human = a half-fold with a thumb crease above and below; bold = a turned corner in the top-right that lifts on hover.
-- Reduced the hero's top padding so the MarkedLine sits as the visible top of the broadside, just under the topbar.
-- The voice tone of each sort is now its native voice (m³ = quiet, good = human, yet = bold), regardless of the active page voice.
-- Added reduced-motion fallbacks for every new animation, including the sort arrival, the marked aura, the line pulse, the specimen fold breath, and the constellation stars.
-- Mobile layout: the MarkedLine collapses to a single column under 720px, hides its hairline under 420px, and the Constellation hides under 720px.
+The marginalia gives the marked words a place to land — a visible reading for
+each mark — without disturbing the type bed, ledger, voice strip, or proof
+stamp beneath. The three columns stack on narrow screens. The element
+respects `prefers-reduced-motion` for entry and pull animations.

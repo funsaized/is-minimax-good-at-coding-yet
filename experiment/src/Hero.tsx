@@ -12,6 +12,7 @@ import type { WordId } from './notes'
 import { ChaseFrame } from './ChaseFrame'
 import { HeroComposition } from './HeroComposition'
 import { PressProofStamp } from './PressProofStamp'
+import { ReaderMarginalia } from './ReaderMarginalia'
 
 type HeroProps = {
   voice: VoiceId
@@ -308,6 +309,8 @@ export function Hero({
             <em className="hero__title-bead-mark">?</em>
           </span>
         </span>
+
+        <ReaderMarginalia word={word} hover={hover} voice={voice} pullSignal={pullSignal} />
 
         <HeroComposition voice={voice} word={word} hover={hover} />
 
