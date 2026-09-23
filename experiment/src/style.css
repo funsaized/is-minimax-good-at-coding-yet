@@ -2436,7 +2436,7 @@ em { font-style: italic; }
 
 .hero {
   position: relative;
-  padding: clamp(120px, 14vh, 220px) var(--gutter) clamp(56px, 7vw, 96px);
+  padding: clamp(36px, 5vh, 84px) var(--gutter) clamp(56px, 7vw, 96px);
   max-width: 1320px;
   margin: 0 auto;
   z-index: 2;
@@ -7588,6 +7588,111 @@ em { font-style: italic; }
 .plate:hover .plate__hairline { opacity: 1; }
 
 .plate__hairline svg { display: block; width: 100%; height: 6px; }
+
+/* — the fold breathes with the active state. iteration 426. — */
+
+.plate--quiet.is-active .plate__fold--quiet { opacity: .85; }
+.plate--quiet.is-active .plate__fold--quiet circle { animation: plateFoldPulse 2.6s ease-in-out infinite; }
+
+.plate--human.is-active .plate__fold--human { opacity: .85; }
+.plate--human.is-active .plate__fold--human svg path:nth-of-type(3),
+.plate--human.is-active .plate__fold--human svg path:nth-of-type(4) {
+  animation: plateCreaseBreath 2.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.plate--bold.is-active .plate__fold--bold {
+  opacity: 1;
+  animation: plateCornerFold 3.4s ease-in-out infinite;
+}
+
+@keyframes plateFoldPulse {
+  0%, 100% { opacity: .85; r: 1.6; }
+  50% { opacity: 1; r: 2; }
+}
+
+@keyframes plateCreaseBreath {
+  0%, 100% { opacity: .5; }
+  50% { opacity: .85; }
+}
+
+@keyframes plateCornerFold {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(-1.4deg) scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plate.is-active .plate__fold--quiet circle,
+  .plate.is-active .plate__fold--human svg path:nth-of-type(3),
+  .plate.is-active .plate__fold--human svg path:nth-of-type(4),
+  .plate.is-active .plate__fold--bold { animation: none; }
+}
+
+/* — each plate carries its own physical fold character.
+     quiet: a single clean fold across the bottom;
+     human: a half-fold with a thumb crease;
+     bold: a turned corner, like a quick flip. iteration 426. — */
+
+.plate__fold {
+  display: block;
+  color: var(--plate-tone, var(--quiet));
+  position: relative;
+  margin: 0;
+}
+
+.plate__fold svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.plate__fold--quiet {
+  height: 8px;
+  opacity: .55;
+  margin-top: 2px;
+}
+
+.plate__fold--quiet svg { opacity: .9; }
+
+.plate__fold--human {
+  height: 22px;
+  width: 36%;
+  margin-top: 4px;
+  margin-bottom: -4px;
+  opacity: .6;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+}
+
+.plate__fold--human svg { height: 100%; width: 100%; max-width: 60px; }
+
+.plate__fold--bold {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  opacity: .85;
+  pointer-events: none;
+  z-index: 2;
+  transition: transform .55s var(--ease-spring), opacity .35s var(--ease);
+}
+
+.plate:hover .plate__fold--bold,
+.plate:focus-visible .plate__fold--bold,
+.plate.is-active .plate__fold--bold {
+  transform: rotate(-2deg) scale(1.08);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plate:hover .plate__fold--bold,
+  .plate:focus-visible .plate__fold--bold,
+  .plate.is-active .plate__fold--bold {
+    transform: none;
+  }
+}
 
 .plate__head {
   display: grid;
@@ -22980,6 +23085,461 @@ section.reveal h2 em::after {
 
 @media (max-width: 480px) {
   .imprint__return-tail { display: none; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   MARKED LINE · a single persistent thread under the topbar,
+   holding three sorts — one per marked word of the question.
+   the active sort brightens to the current voice tone;
+   the line keeps the eye on the three words as the reader
+   moves through the page. iteration 426.
+   ──────────────────────────────────────────────────────────── */
+
+.marked-line {
+  --ml-tone: var(--quiet);
+  position: relative;
+  max-width: 1320px;
+  margin: clamp(16px, 2.6vw, 28px) auto clamp(clamp(36px, 5vh, 64px) - 24px, 5vh, 40px);
+  padding: 0 var(--gutter) clamp(8px, 1.4vw, 16px);
+  display: grid;
+  gap: clamp(6px, .8vw, 10px);
+  color: var(--paper-soft);
+  font-family: var(--display);
+  z-index: 4;
+  opacity: 0;
+  animation: markedLineIn 1.4s var(--ease-out) .55s both;
+}
+
+@keyframes markedLineIn {
+  0% { opacity: 0; transform: translateY(-6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marked-line { animation: none; opacity: 1; transform: none; }
+}
+
+.marked-line__svg {
+  display: block;
+  width: 100%;
+  height: clamp(28px, 3vw, 56px);
+  pointer-events: none;
+  color: var(--ml-tone);
+  transition: color .5s var(--ease);
+}
+
+.marked-line__ticks {
+  transition: transform .6s var(--ease);
+}
+
+.marked-line__pulse {
+  opacity: 0;
+  animation: markedLinePulse .85s var(--ease-out) both;
+}
+
+@keyframes markedLinePulse {
+  0% { opacity: 0; transform: translateX(-30%); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(30%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marked-line__pulse { animation: none; opacity: 0; }
+}
+
+.marked-line__anchors {
+  color: var(--ml-tone);
+  transition: color .45s var(--ease);
+}
+
+.marked-line__anchors circle {
+  transition: opacity .35s var(--ease), transform .45s var(--ease-spring);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.marked-line__anchors circle:nth-of-type(2),
+.marked-line__anchors circle:nth-of-type(5) {
+  animation: mlAnchorBreath 4s ease-in-out infinite;
+}
+
+.marked-line__anchors circle:nth-of-type(3),
+.marked-line__anchors circle:nth-of-type(6) {
+  animation: mlAnchorRing 5.4s ease-in-out infinite;
+}
+
+@keyframes mlAnchorBreath {
+  0%, 100% { opacity: .75; }
+  50% { opacity: 1; }
+}
+
+@keyframes mlAnchorRing {
+  0%, 100% { opacity: .35; transform: scale(1); }
+  50% { opacity: .55; transform: scale(1.18); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marked-line__anchors circle { animation: none; }
+}
+
+.marked-line__sorts {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 32px);
+  align-items: end;
+}
+
+@media (max-width: 720px) {
+  .marked-line__sorts {
+    grid-template-columns: 1fr;
+    gap: clamp(10px, 1.6vw, 14px);
+  }
+}
+
+.ml-sort {
+  --ml-cell-tone: var(--quiet);
+  position: relative;
+  display: grid;
+  gap: clamp(4px, .6vw, 8px);
+  justify-items: center;
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: mlSortIn .9s var(--ease-out) calc(.8s + var(--ml-cell-delay, 0ms)) both;
+}
+
+@keyframes mlSortIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ml-sort { animation: none; opacity: 1; transform: none; }
+}
+
+.ml-sort__cap {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .6vw, 8px);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.ml-sort__cap-rule {
+  display: inline-block;
+  width: clamp(10px, 1.6vw, 18px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--ml-cell-tone) 42%, transparent));
+}
+
+.ml-sort__cap-rule--r {
+  background: linear-gradient(to left, transparent, color-mix(in srgb, var(--ml-cell-tone) 42%, transparent));
+}
+
+.ml-sort__cap-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 11.5px;
+  letter-spacing: -.005em;
+  color: color-mix(in srgb, var(--ml-cell-tone) 70%, var(--paper-soft));
+  text-transform: none;
+}
+
+.ml-sort__piece {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  padding: clamp(6px, .8vw, 9px) clamp(10px, 1.4vw, 16px);
+  border: 1px solid color-mix(in srgb, var(--ml-cell-tone) 22%, var(--line-soft));
+  border-radius: 3px;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--ml-cell-tone) 6%, transparent) 0%,
+      color-mix(in srgb, var(--ml-cell-tone) 2%, transparent) 100%);
+  color: var(--paper-soft);
+  transition:
+    color .45s var(--ease),
+    border-color .5s var(--ease),
+    background .6s var(--ease),
+    box-shadow .6s var(--ease),
+    transform .5s var(--ease-spring);
+}
+
+.ml-sort__piece-rule {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: color-mix(in srgb, var(--ml-cell-tone) 24%, transparent);
+  opacity: .45;
+  pointer-events: none;
+}
+
+.ml-sort__piece-rule--top { top: 2px; }
+.ml-sort__piece-rule--bot { bottom: 2px; }
+
+.ml-sort__piece-edge {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 1px;
+  background: color-mix(in srgb, var(--ml-cell-tone) 32%, transparent);
+  pointer-events: none;
+}
+
+.ml-sort__piece-edge--l { left: -1px; }
+.ml-sort__piece-edge--r { right: -1px; }
+
+.ml-sort__piece-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(18px, 1.6vw, 22px);
+  height: clamp(18px, 1.6vw, 22px);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.2vw, 16px);
+  color: color-mix(in srgb, var(--ml-cell-tone) 70%, var(--paper-soft));
+  transition: color .45s var(--ease), transform .5s var(--ease-spring);
+}
+
+.ml-sort__piece-word {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(15px, 1.3vw, 19px);
+  letter-spacing: -.012em;
+  color: var(--paper);
+  transition: color .45s var(--ease), font-style .35s var(--ease), letter-spacing .35s var(--ease);
+}
+
+.ml-sort__note {
+  display: inline-block;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(11px, .95vw, 13px);
+  letter-spacing: -.005em;
+  color: var(--muted);
+  text-align: center;
+  transition: color .45s var(--ease), opacity .45s var(--ease);
+  opacity: .75;
+}
+
+.ml-sort__note em { font-style: italic; }
+
+/* — the marked sort lights up — */
+
+.ml-sort.is-marked .ml-sort__piece {
+  border-color: color-mix(in srgb, var(--ml-cell-tone) 60%, var(--line-strong));
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--ml-cell-tone) 14%, transparent) 0%,
+      color-mix(in srgb, var(--ml-cell-tone) 5%, transparent) 100%);
+  color: var(--paper);
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--ml-cell-tone) 35%, transparent),
+    0 6px 18px -10px color-mix(in srgb, var(--ml-cell-tone) 50%, transparent),
+    0 0 22px -8px color-mix(in srgb, var(--ml-cell-tone) 60%, transparent);
+}
+
+.ml-sort.is-marked .ml-sort__piece-rule {
+  opacity: .85;
+}
+
+.ml-sort.is-marked .ml-sort__piece-glyph {
+  color: var(--ml-cell-tone);
+  transform: scale(1.12);
+  text-shadow: 0 0 16px color-mix(in srgb, var(--ml-cell-tone) 55%, transparent);
+}
+
+.ml-sort.is-marked .ml-sort__piece-word {
+  color: var(--ml-cell-tone);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--ml-cell-tone) 28%, transparent);
+}
+
+.ml-sort.is-marked .ml-sort__note {
+  color: color-mix(in srgb, var(--ml-cell-tone) 75%, var(--paper-soft));
+  opacity: 1;
+}
+
+/* — each sort carries its native voice tone · the page voice tints the line and the active glow. — */
+
+.ml-sort--m3   { --ml-cell-tone: var(--quiet); }
+.ml-sort--good { --ml-cell-tone: var(--human); }
+.ml-sort--yet  { --ml-cell-tone: var(--bold);  }
+
+/* — an aura that breathes on the marked sort, brief on each pull — */
+
+.ml-sort__aura {
+  position: absolute;
+  inset: -8px -8px -8px -8px;
+  pointer-events: none;
+  border-radius: 6px;
+  z-index: -1;
+  background: radial-gradient(ellipse 60% 100% at 50% 50%,
+    color-mix(in srgb, var(--ml-cell-tone) 36%, transparent) 0%,
+    transparent 65%);
+  opacity: 0;
+  animation: mlSortAura .9s var(--ease-out) both;
+}
+
+@keyframes mlSortAura {
+  0%   { opacity: 0; transform: scale(.92); }
+  35%  { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 0; transform: scale(1.02); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ml-sort__aura { display: none; }
+}
+
+/* — the legend line beneath the sorts — */
+
+.marked-line__legend {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 14px);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: clamp(4px, .8vw, 10px);
+  flex-wrap: wrap;
+}
+
+.marked-line__legend-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--line), transparent);
+}
+
+.marked-line__legend-key {
+  font-style: normal;
+  letter-spacing: .22em;
+}
+
+.marked-line__legend-date {
+  font-family: var(--display);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: clamp(12px, 1.05vw, 14px);
+  color: var(--paper-soft);
+}
+
+.marked-line__legend-tail {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: clamp(12px, 1.05vw, 14px);
+  color: var(--paper-soft);
+}
+
+@media (max-width: 720px) {
+  .marked-line__legend-rule { display: none; }
+  .marked-line__legend { gap: 8px; justify-content: center; text-align: center; }
+  .marked-line { margin-top: clamp(56px, 7vh, 76px); margin-bottom: clamp(28px, 4vh, 40px); }
+  .marked-line__svg { height: 22px; }
+  .ml-sort__note { font-size: 11px; }
+}
+
+@media (max-width: 540px) {
+  .marked-line__legend-tail { display: none; }
+  .ml-sort__piece-word { font-size: 14px; }
+  .ml-sort__cap-rule { display: none; }
+}
+
+@media (max-width: 420px) {
+  .marked-line__svg { display: none; }
+  .marked-line__legend { gap: 6px; }
+}
+
+/* — the bold sort speaks in sans when the bold voice is on — */
+
+.marked-line--voice-bold .ml-sort__piece-word {
+  font-family: var(--sans);
+  font-style: normal;
+  letter-spacing: -.04em;
+  font-weight: 700;
+}
+
+.marked-line--voice-bold .ml-sort.is-marked .ml-sort__piece-word {
+  letter-spacing: -.045em;
+  font-weight: 800;
+}
+
+.marked-line--voice-bold .ml-sort__piece-glyph {
+  font-style: normal;
+  font-weight: 600;
+}
+
+.marked-line--voice-bold .ml-sort__note {
+  font-style: normal;
+  letter-spacing: -.01em;
+}
+
+/* ────────────────────────────────────────────────────────────
+   CONSTELLATION · a faint background curve that ties the
+   three marks across the page, visible only as the reader
+   scrolls past certain folios. iteration 426.
+   ──────────────────────────────────────────────────────────── */
+
+.constellation {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity .8s var(--ease);
+  mix-blend-mode: screen;
+}
+
+.constellation.is-revealed {
+  opacity: 1;
+}
+
+.constellation__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.constellation__path {
+  fill: none;
+  stroke: var(--constellation-tone, var(--quiet));
+  stroke-width: .6;
+  stroke-linecap: round;
+  stroke-dasharray: 1.6 4;
+  opacity: .55;
+  transition: stroke .6s var(--ease);
+}
+
+.constellation__star {
+  fill: var(--constellation-tone, var(--quiet));
+  opacity: .65;
+  transition: fill .5s var(--ease), opacity .5s var(--ease);
+}
+
+.constellation--voice-quiet { --constellation-tone: var(--quiet); }
+.constellation--voice-human { --constellation-tone: var(--human); }
+.constellation--voice-bold  { --constellation-tone: var(--bold);  }
+
+@media (prefers-reduced-motion: reduce) {
+  .constellation { transition: opacity .4s ease; }
+}
+
+@media (max-width: 720px) {
+  .constellation { display: none; }
 }
 
 

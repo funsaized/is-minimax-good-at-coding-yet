@@ -27,6 +27,8 @@ import { ComposingBreath } from './ComposingBreath'
 import { LastLamp } from './LastLamp'
 import { ReadingCompass } from './ReadingCompass'
 import { Imprint } from './Imprint'
+import { MarkedLine } from './MarkedLine'
+import { Constellation } from './Constellation'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -300,6 +302,7 @@ export function App() {
       <span className="app__backdrop" aria-hidden="true" />
       <span className="app__atmo" aria-hidden="true" />
       <FirstLight />
+      <Constellation voice={voice} pullSignal={pullSignal} />
       <span className="app__flash" aria-hidden="true" key={`flash-${flashKey}`} />
       <CursorGlow />
       <SpineThread
@@ -355,6 +358,13 @@ export function App() {
         </span>
       </header>
 
+
+      <MarkedLine
+        word={activeWord}
+        voice={voice}
+        pullSignal={pullSignal}
+        setToday={setToday}
+      />
 
       <section className="hero reveal" aria-labelledby="hero-title-label">
         <Hero

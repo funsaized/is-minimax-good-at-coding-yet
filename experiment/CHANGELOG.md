@@ -1,18 +1,13 @@
-# iteration 425
+# iteration 426 · the marked line
 
-The topbar gains a reading compass, and the page foot folds into a real printer's imprint.
+A persistent set line now sits above the hero, carrying three sorts — one per marked word of the question. The active sort brightens to its native voice tone, and a thin pulse runs along the line on each lever pull.
 
-The previous site-foot was a generic signature line. Iteration 425 replaces it with a composed closing plate: a tone-gradient rule, the title set in italic display with a paper-to-tone gradient, a small wax seal, a composed signature (press · voice · face), and a "back to the question" return. The topbar's right side now holds a new reading compass — a tight 56px circular marginalia with an hour-tick ring, a page-time sweep that walks with scroll, the active voice letter at the centre, and the active word glyph in the voice's tone below it. A small "now" cap and a meta line (voice · marked word) sit beside and below the compass.
+## what changed
 
-The page bookends now read as a real letterpress broadside: a confident masthead on top, a signed-off imprint at the foot. Both new elements respect reduced-motion preferences, hide gracefully on small screens, and use only inline SVG and CSS — no remote assets, no new dependencies.
-
-## files
-
-- `src/App.tsx` — adds `pageTime` state, replaces the right-side voice pill with `<ReadingCompass>` plus a small meta line, and replaces the old `<footer className="site-foot">` with `<Imprint>`.
-- `src/ReadingCompass.tsx` *(new)* — the new topbar compass: 24 hour-tick marks, a sweep that rotates with `--page-time`, voice letter A/B/C, active word glyph (⌇ ∧ ?), three cardinal beads for the three voices, and a "now" cap.
-- `src/Imprint.tsx` *(new)* — the printer's imprint at the foot of the page: top rule with bead, eyebrow with date, title in italic display with paper-to-tone gradient, wax seal (m³ · press / letter · imprint / folio · vi), motto, signature line, return link, signoff, bottom rule.
-- `src/style.css` — adds `.reading-compass`, `.topbar__compass-slot`, and `.imprint` styles at the foot. Responsive breakpoints at 1080px, 720px, 540px, and 480px. Reduced-motion paths handled.
-
-## build
-
-`npm run build` passes. Bundle: `dist/assets/index-pSrEoF4_.js` (376.55 kB) and `dist/assets/index-BKKvGOLE.css` (457.98 kB).
+- Added `MarkedLine.tsx` — a hairline under the topbar that holds three sorts (m³, good at, yet?), each in its native voice tone. The marked sort glows; a brief pulse animates left-to-right on each pull.
+- Added `Constellation.tsx` — a faint background curve that ties the three words across the page, with three small star nodes where the words live. Fades in past the question folio and out before the imprint.
+- Refined the three Specimen plates — each now carries a distinct physical fold character: quiet = a clean single fold with a bead at centre; human = a half-fold with a thumb crease above and below; bold = a turned corner in the top-right that lifts on hover.
+- Reduced the hero's top padding so the MarkedLine sits as the visible top of the broadside, just under the topbar.
+- The voice tone of each sort is now its native voice (m³ = quiet, good = human, yet = bold), regardless of the active page voice.
+- Added reduced-motion fallbacks for every new animation, including the sort arrival, the marked aura, the line pulse, the specimen fold breath, and the constellation stars.
+- Mobile layout: the MarkedLine collapses to a single column under 720px, hides its hairline under 420px, and the Constellation hides under 720px.

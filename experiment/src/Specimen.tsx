@@ -97,6 +97,36 @@ export function Specimen({ active, onSelect }: SpecimenProps) {
                 </svg>
               </span>
 
+              {row.voice === 'quiet' && (
+                <span className="plate__fold plate__fold--quiet" aria-hidden="true">
+                  <svg viewBox="0 0 280 6" preserveAspectRatio="none">
+                    <line x1="0" y1="3" x2="280" y2="3" stroke="currentColor" strokeWidth=".45" strokeDasharray="1.2 3" opacity=".55" />
+                    <circle cx="140" cy="3" r="1.6" fill="currentColor" opacity=".7" />
+                    <circle cx="140" cy="3" r="3.2" fill="none" stroke="currentColor" strokeWidth=".4" opacity=".45" />
+                  </svg>
+                </span>
+              )}
+              {row.voice === 'human' && (
+                <span className="plate__fold plate__fold--human" aria-hidden="true">
+                  <svg viewBox="0 0 60 28" preserveAspectRatio="none">
+                    <path d="M2 2 L58 2 L58 14 L52 14 L52 22 L8 22 L8 14 L2 14 Z" fill="none" stroke="currentColor" strokeWidth=".45" opacity=".65" />
+                    <path d="M30 4 L30 22" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" opacity=".55" />
+                    <path d="M22 11 q4 -3 8 0" fill="none" stroke="currentColor" strokeWidth=".45" opacity=".5" />
+                    <path d="M22 17 q4 3 8 0" fill="none" stroke="currentColor" strokeWidth=".45" opacity=".5" />
+                  </svg>
+                </span>
+              )}
+              {row.voice === 'bold' && (
+                <span className="plate__fold plate__fold--bold" aria-hidden="true">
+                  <svg viewBox="0 0 28 28" preserveAspectRatio="none">
+                    <path d="M2 2 L26 2 L26 18 L18 26 L2 26 Z" fill="currentColor" opacity=".1" />
+                    <path d="M2 2 L26 2 L26 18 L18 26 L2 26 Z" fill="none" stroke="currentColor" strokeWidth=".5" opacity=".7" />
+                    <path d="M18 26 L26 18 L18 18 Z" fill="currentColor" opacity=".55" />
+                    <path d="M18 26 L26 18" stroke="currentColor" strokeWidth=".4" opacity=".7" />
+                  </svg>
+                </span>
+              )}
+
               <header className="plate__head">
                 <span className="plate__head-letter" aria-hidden="true">{row.letter}</span>
                 <span className="plate__head-stack">
