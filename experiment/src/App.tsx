@@ -25,6 +25,8 @@ import { SpineThread } from './SpineThread'
 import { ReadingPouch } from './ReadingPouch'
 import { ComposingBreath } from './ComposingBreath'
 import { LastLamp } from './LastLamp'
+import { ReadingCompass } from './ReadingCompass'
+import { Imprint } from './Imprint'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -92,6 +94,7 @@ export function App() {
   const [flashKey, setFlashKey] = useState(0)
   const [keptCounts, setKeptCounts] = useState<Record<WordId, number>>({ m3: 0, good: 0, yet: 0 })
   const [timeOfDay, setTimeOfDay] = useState<string>(TIME_OF_DAY_FOLIOS[1])
+  const [pageTime, setPageTime] = useState(0)
   const tokenRefs = useRef<Partial<Record<WordId, HTMLButtonElement | null>>>({})
   const answerTriggerRef = useRef<HTMLButtonElement | null>(null)
   const pullLockRef = useRef(false)
@@ -241,6 +244,7 @@ export function App() {
       root.style.setProperty('--page-prog', ratio.toFixed(3))
       const time = timeOfDayFor(ratio)
       root.style.setProperty('--page-time', time.toFixed(3))
+      setPageTime(time)
       setTimeOfDay(timeOfDayLabel(ratio))
       raf = 0
     }
@@ -335,13 +339,19 @@ export function App() {
           <span className="topbar__center-rule topbar__center-rule--r" />
         </span>
 
-        <span
-          className={`status__voice status__voice--${voice}`}
-          aria-label={`Voice: ${VOICE_NAME[voice]} (${VOICE_LETTER[voice]})`}
-        >
-          <span className="status__voice-glyph" aria-hidden="true">{VOICE_LETTER[voice]}</span>
-          <em className="status__voice-name">{VOICE_NAME[voice]}</em>
-          <span className="status__voice-rule" aria-hidden="true" />
+        <span className="topbar__compass-slot" aria-hidden="false">
+          <ReadingCompass
+            voice={voice}
+            word={activeWord}
+            pageTime={pageTime}
+            setToday={setToday}
+            pullSignal={pullSignal}
+          />
+          <span className="topbar__compass-meta">
+            <em className="topbar__compass-meta-voice">{VOICE_NAME[voice]}</em>
+            <span className="topbar__compass-meta-dot">·</span>
+            <em className="topbar__compass-meta-word">{activeWord === 'm3' ? 'm³' : activeWord === 'good' ? 'good at' : 'yet?'}</em>
+          </span>
         </span>
       </header>
 
@@ -415,59 +425,7 @@ export function App() {
 
       <LastLamp voice={voice} setToday={setToday} />
 
-      <footer className="site-foot" aria-label="The page, in one line">
-        <span className="site-foot__rule site-foot__rule--top" aria-hidden="true">
-          <svg viewBox="0 0 1200 6" preserveAspectRatio="none">
-            <line x1="0" y1="3" x2="1200" y2="3" stroke="currentColor" strokeWidth=".55" strokeDasharray="1.4 4" opacity=".5" />
-            <circle cx="600" cy="3" r="2" fill="currentColor" opacity=".85" />
-            <circle cx="600" cy="3" r="4.4" fill="none" stroke="currentColor" strokeWidth=".35" opacity=".45" />
-            <circle cx="0" cy="3" r="1.2" fill="currentColor" opacity=".7" />
-            <circle cx="1200" cy="3" r="1.2" fill="currentColor" opacity=".7" />
-          </svg>
-        </span>
-
-        <span className="site-foot__motto" aria-hidden="true">
-          <em>set at first light</em>
-          <span className="site-foot__motto-dot" aria-hidden="true">·</span>
-          <em>read in the dark</em>
-          <span className="site-foot__motto-dot" aria-hidden="true">·</span>
-          <em>kept close</em>
-        </span>
-
-        <span className="site-foot__signature" aria-hidden="true">
-          <span className="site-foot__signature-mark">
-            <svg viewBox="0 0 32 32">
-              <circle cx="16" cy="16" r="13.6" fill="none" stroke="currentColor" strokeWidth=".55" />
-              <circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".6 1.4" opacity=".55" />
-              <path d="M9 16 A7 7 0 0 1 23 16" fill="none" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
-              <circle cx="16" cy="16" r="2.6" fill="currentColor" />
-              <circle cx="16" cy="16" r=".9" fill="var(--night)" />
-            </svg>
-          </span>
-          <em className="site-foot__signature-name">m<sup>3</sup> press</em>
-          <span className="site-foot__signature-rule" />
-          <em className="site-foot__signature-set">{setToday}</em>
-          <span className="site-foot__signature-rule" />
-          <em className="site-foot__signature-voice">{VOICE_NAME[voice]}</em>
-        </span>
-
-        <span className="site-foot__copy">
-          <em className="site-foot__copy-title">{TITLE}</em>
-          <span aria-hidden="true">·</span>
-          <span>composed and set on {setToday}, at first light</span>
-        </span>
-
-        <ReadingNote
-          voice={voice}
-          align="center"
-          ornament="rule"
-          size="md"
-          tone="paper"
-          caption="A final note, set at the foot of the page"
-        >
-          set at first light · read in the dark — {TITLE}
-        </ReadingNote>
-      </footer>
+      <Imprint voice={voice} setToday={setToday} />
 
       <span className="sr-only" aria-live="polite">{announcement}</span>
       <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}) · ${pullCount} impressions on the day.`}</span>

@@ -22524,3 +22524,462 @@ section.reveal h2 em::after {
   .last-lamp.is-lit .last-lamp__foot { opacity: 1; transform: none; }
 }
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 425 · READING COMPASS & PRINTER'S IMPRINT
+   ──────────────────────────────────────────────────────────── */
+
+/* — the compass slot in the topbar —
+   sits in the right column, holds the compass + a small meta line below. */
+
+.topbar__compass-slot {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  justify-self: end;
+  color: var(--paper-soft);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(11px, 1vw, 13px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  animation: compassSlotIn 1s var(--ease-out) 1.1s both;
+}
+
+.topbar__compass-meta {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+  font-feature-settings: 'kern', 'liga', 'onum' 1;
+}
+
+.topbar__compass-meta-voice { color: var(--paper); font-weight: 500; }
+.topbar__compass-meta-dot { color: var(--muted); font-style: normal; }
+.topbar__compass-meta-word { color: var(--paper-soft); }
+
+.app--voice-quiet .topbar__compass-meta-voice { color: var(--quiet); }
+.app--voice-human .topbar__compass-meta-voice { color: var(--human); }
+.app--voice-bold  .topbar__compass-meta-voice { color: var(--bold); font-style: normal; font-weight: 700; }
+
+.app--word-m3  .topbar__compass-meta-word { color: var(--quiet); }
+.app--word-good .topbar__compass-meta-word { color: var(--human); }
+.app--word-yet .topbar__compass-meta-word { color: var(--bold); }
+
+@keyframes compassSlotIn {
+  0% { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topbar__compass-slot { animation: none; opacity: 1; transform: none; }
+}
+
+@media (max-width: 1080px) {
+  .topbar__compass-meta { display: none; }
+}
+
+/* — the compass itself — a tight circular marginalia,
+   ~64px square, with hour-tick ring, page-time sweep,
+   voice letter at the centre, active word glyph below it. */
+
+.reading-compass {
+  --rc-tone: var(--quiet);
+  --rc-active: var(--quiet);
+  --rc-time-angle: 0deg;
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: clamp(8px, 1vw, 14px);
+  color: var(--rc-tone);
+  transition: color .35s var(--ease);
+}
+
+.reading-compass__svg {
+  display: block;
+  width: clamp(44px, 4.4vw, 56px);
+  height: clamp(44px, 4.4vw, 56px);
+  overflow: visible;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--rc-tone) 22%, transparent));
+  transition: filter .55s var(--ease);
+}
+
+.reading-compass__sweep {
+  transform-origin: 32px 32px;
+  transition: transform .25s linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-compass__sweep { transition: none; }
+}
+
+.reading-compass__cap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-style: normal;
+}
+
+.reading-compass__cap-key {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: -.005em;
+  color: var(--paper);
+  text-transform: none;
+}
+
+.reading-compass__cap-rule {
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  opacity: .45;
+}
+
+.reading-compass__cap-rule--l {
+  background: linear-gradient(to right, transparent, currentColor 60%);
+}
+
+.reading-compass__cap-rule--r {
+  background: linear-gradient(to left, transparent, currentColor 60%);
+}
+
+.app--voice-quiet .reading-compass { color: var(--quiet); }
+.app--voice-human .reading-compass { color: var(--human); }
+.app--voice-bold  .reading-compass { color: var(--bold); }
+
+.reading-compass:hover .reading-compass__svg {
+  filter: drop-shadow(0 0 16px color-mix(in srgb, var(--rc-tone) 38%, transparent));
+}
+
+@media (max-width: 540px) {
+  .reading-compass__cap { display: none; }
+  .reading-compass { grid-template-columns: auto; }
+}
+
+/* — a brief tap animation on each lever pull — */
+
+.reading-compass[data-pull] .reading-compass__svg {
+  animation: compassPullTap .85s var(--ease-spring) both;
+}
+
+@keyframes compassPullTap {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.06) rotate(-2deg); }
+  70%  { transform: scale(.985) rotate(.6deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-compass[data-pull] .reading-compass__svg { animation: none; }
+}
+
+/* — the printer's imprint · the closing plate at the foot of the page.
+   replaces the old generic site-foot: one composed signature line,
+   the title set in italic display, a small wax seal, the printer's
+   signoff, and a "back to the question" return link. — */
+
+.imprint {
+  --im-tone: var(--quiet);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  max-width: 1180px;
+  margin: clamp(36px, 4.6vw, 72px) auto clamp(28px, 3.6vw, 56px);
+  padding: 0 clamp(20px, 4.4vw, 80px);
+  text-align: center;
+  font-family: var(--display);
+  color: var(--paper);
+  animation: imprintIn 1.1s var(--ease-out) both;
+}
+
+.imprint--quiet { --im-tone: var(--quiet); }
+.imprint--human { --im-tone: var(--human); }
+.imprint--bold  { --im-tone: var(--bold);  }
+
+@keyframes imprintIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imprint { animation: none; opacity: 1; transform: none; }
+}
+
+.imprint__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.imprint__rule {
+  display: block;
+  width: min(100%, 880px);
+  height: 12px;
+  color: var(--im-tone);
+}
+
+.imprint__rule--top { margin-bottom: clamp(8px, 1.2vw, 14px); }
+.imprint__rule--bottom { margin-top: clamp(8px, 1.2vw, 14px); height: 6px; }
+
+.imprint__rule svg { width: 100%; height: 100%; display: block; }
+
+.imprint__key {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-style: normal;
+}
+
+.imprint__key em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12.5px;
+  color: var(--paper-soft);
+}
+
+.imprint__key em:first-child { color: var(--im-tone); }
+
+.imprint__key-rule {
+  display: inline-block;
+  width: clamp(18px, 2.4vw, 36px);
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.imprint__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  line-height: 1.1;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(28px, 4.2vw, 56px);
+  letter-spacing: -.022em;
+  color: var(--paper);
+  font-feature-settings: 'kern', 'liga', 'onum' 1, 'dlig' 1;
+  text-wrap: balance;
+}
+
+.imprint__title-lead {
+  font-size: clamp(13px, 1.2vw, 15px);
+  letter-spacing: .22em;
+  font-family: var(--mono);
+  font-style: normal;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 400;
+  margin-bottom: clamp(6px, .8vw, 10px);
+}
+
+.imprint__title-main {
+  display: inline-block;
+  font-style: italic;
+  background: linear-gradient(180deg,
+    var(--paper) 0%,
+    color-mix(in srgb, var(--paper) 80%, var(--im-tone)) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.app--voice-bold .imprint__title-main {
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.035em;
+  text-transform: lowercase;
+}
+
+.imprint__seal {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(72px, 7.4vw, 100px);
+  height: clamp(72px, 7.4vw, 100px);
+  margin: clamp(4px, .8vw, 10px) 0;
+  color: var(--im-tone);
+  filter: drop-shadow(0 8px 18px color-mix(in srgb, var(--im-tone) 22%, transparent));
+}
+
+.imprint__seal svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.imprint__motto {
+  margin: 0;
+  max-width: 56ch;
+  font-style: italic;
+  font-size: clamp(14px, 1.4vw, 17px);
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+  line-height: 1.5;
+}
+
+.app--voice-bold .imprint__motto {
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -.015em;
+  text-transform: uppercase;
+  font-size: clamp(12.5px, 1.2vw, 14px);
+}
+
+.imprint__signature {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(6px, .8vw, 12px);
+  font-style: italic;
+  font-size: clamp(13px, 1.2vw, 15px);
+  color: var(--paper);
+  letter-spacing: -.005em;
+}
+
+.imprint__signature-name {
+  font-weight: 500;
+}
+
+.imprint__signature-name sup {
+  font-size: .58em;
+  vertical-align: .32em;
+  letter-spacing: 0;
+  margin-left: .04em;
+  font-weight: 400;
+}
+
+.app--voice-bold .imprint__signature-name {
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.025em;
+  text-transform: lowercase;
+}
+
+.imprint__signature-voice { color: var(--im-tone); font-weight: 500; }
+.app--voice-bold .imprint__signature-voice { font-style: normal; font-weight: 800; }
+
+.imprint__signature-face {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: clamp(9.5px, .8vw, 11px);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.imprint__signature-dot { color: var(--muted); font-style: normal; }
+.imprint__signature-rule {
+  display: inline-block;
+  width: clamp(14px, 1.6vw, 28px);
+  height: 1px;
+  background: var(--line-strong);
+  flex-shrink: 0;
+}
+
+.imprint__return {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  padding: clamp(8px, 1vw, 12px) clamp(14px, 1.8vw, 22px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--paper);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12.5px, 1.1vw, 14.5px);
+  letter-spacing: -.005em;
+  text-transform: none;
+  background: rgba(245, 238, 216, .025);
+  transition: border-color .35s var(--ease), background .35s var(--ease), color .35s var(--ease), transform .35s var(--ease-spring);
+}
+
+.imprint__return:hover {
+  border-color: color-mix(in srgb, var(--im-tone) 55%, var(--line));
+  background: color-mix(in srgb, var(--im-tone) 10%, transparent);
+  color: var(--im-tone);
+  transform: translateY(-1px);
+}
+
+.imprint__return-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  color: currentColor;
+}
+
+.imprint__return-glyph svg { width: 100%; height: 100%; display: block; }
+
+.imprint__return-tail {
+  display: inline-block;
+  width: 22px;
+  height: 6px;
+  color: var(--muted);
+}
+
+.imprint__return-tail svg { width: 100%; height: 100%; display: block; }
+
+.imprint__return:hover .imprint__return-tail {
+  color: var(--im-tone);
+  animation: imprintReturnTail 1.1s var(--ease-out) infinite;
+}
+
+@keyframes imprintReturnTail {
+  0%   { transform: translateX(-2px); opacity: .7; }
+  60%  { transform: translateX(2px);  opacity: 1; }
+  100% { transform: translateX(-2px); opacity: .7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imprint__return:hover .imprint__return-tail { animation: none; transform: none; }
+}
+
+.imprint__signoff {
+  margin: 0;
+  font-style: italic;
+  font-size: clamp(11.5px, 1vw, 13px);
+  letter-spacing: -.005em;
+  color: var(--muted);
+  font-feature-settings: 'kern', 'liga', 'onum' 1;
+}
+
+.imprint__signoff em {
+  font-style: italic;
+  color: var(--paper-soft);
+}
+
+@media (max-width: 720px) {
+  .imprint__key { flex-direction: column; gap: 4px; }
+  .imprint__key-rule { display: none; }
+  .imprint__signature { gap: 6px; }
+  .imprint__signature-face { display: none; }
+  .imprint__signature-rule { display: none; }
+  .imprint__title-main { font-size: clamp(22px, 6.4vw, 36px); }
+}
+
+@media (max-width: 480px) {
+  .imprint__return-tail { display: none; }
+}
+
+
