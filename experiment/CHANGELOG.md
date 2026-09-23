@@ -1,19 +1,47 @@
-# Changelog
+# Iteration 455
 
-## 454 — A new "Title Plate" opens the page
+A new composed half-title folio now opens the page, before the existing title plate.
 
-A single composed frontispiece now sits before the existing arrival folio. It
-announces the broadside: a refined typographic statement of the question set
-in three voices, an m³ press crest, an edition seal in the corner, and three
-interactive voice buttons that read the line in quiet cut, human hand, and
-bold signal. The plate fades up on first reveal and reads as the page's
-considered opener, with the arrival folio now serving as the warm handoff into
-the question rather than the opening itself.
+The page now begins with a single, calm card — a "half-title" in the broadside
+tradition — that sits between the topbar and the title folio. It carries just
+the question in small italic serif, a small m³ seal, a single hairline rule,
+an opening note, and the set date. No voice picker, no press ledger — that
+work belongs to the broadside that follows. The reveal is restrained: the seal
+settles, the hairline draws across, the title and note fade in last, and a
+small arrow pulses toward the broadside ahead.
 
-- Added `src/TitlePlate.tsx` — the frontispiece folio.
-- Added `.title-plate` styles to `src/style.css`.
-- Wired the plate into `src/App.tsx` directly above `<ArrivalPlate>`.
-- The voice buttons share state with the existing voice cycle (Shift+V and the
-  topbar's cycle button) so the plate's interactive voices stay in lockstep
-  with the rest of the page.
-- Title and document title are unchanged.
+## What changed
+
+- **New folio: `HalfTitle`** (`src/HalfTitle.tsx`). A single composed half-title
+  card. Three pieces of the question sit on two lines, each marked in the
+  voice's tone with a thin underline or rule. A small `m³ · half-title` seal
+  floats above; a single hairline with a centre bead separates title from note;
+  a three-cell ledger reads `set on · at first light · the broadside`; a small
+  handoff arrow points down toward folio 0.
+- **Wired into `src/App.tsx`** between the page spine and the title plate, so
+  the reader now meets the half-title before any of the press chrome.
+- **New CSS in `src/style.css`** for `.half-title` and its descendants. The
+  card centres on a paper-warm surface with two faint inner hairlines, a
+  radial halo, and ink dust. The reveal sequence uses a single `is-revealed`
+  / `is-drawn` toggle, then staggers the eyebrow, title, rule, note, ledger,
+  and handoff across ~1s of motion. The query-mark wiggles gently; the
+  handoff arrow drifts forward and back. Every motion is wrapped in
+  `@media (prefers-reduced-motion: reduce)` and falls back to a static state.
+- **Responsive**: card, seal, and ledger tighten on screens under 720px; the
+  handoff arrow and trailing rule drop under 540px.
+
+## Why
+
+The page had been opening straight into the broadside — a heavy folio with a
+seal, voice picker, ledger, and handoff. The reader had no quiet moment
+before that density. The half-title adds that breath: one composed card, one
+question, one small mark. It borrows the design language of the existing
+seals, hairlines, and ledger cells so it reads as part of the same broadside,
+not a separate page.
+
+## Accessibility
+
+- The folio carries an `aria-label` with the question, date, and time; a
+  visually-hidden paragraph repeats the same information for screen readers.
+- All motion respects `prefers-reduced-motion: reduce`.
+- No new keyboard interactions; the half-title is a passive opening folio.

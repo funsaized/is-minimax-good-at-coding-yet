@@ -41,6 +41,7 @@ import { PageSpine } from './PageSpine'
 import { ArrivalPlate } from './ArrivalPlate'
 import { TypeCase } from './TypeCase'
 import { TitlePlate } from './TitlePlate'
+import { HalfTitle } from './HalfTitle'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -377,6 +378,8 @@ export function App() {
         progress={pageTime}
         onJump={jumpToFolio}
       />
+
+      <HalfTitle voice={voice} setToday={setToday} />
 
       <TitlePlate voice={voice} setToday={setToday} onVoice={selectVoice} />
 
