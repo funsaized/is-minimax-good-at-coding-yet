@@ -1,13 +1,5 @@
 # Changelog
 
-## iteration 448 — the half-title opens the broadside
+## Iteration 449 — the reading compass · a small dial in the lower margin
 
-A new opening sheet, the **title folio**, now sits before the frontispiece: a single composed card framed by a hand-drawn illuminated "M" (top-left) and a small press chop (top-right). The question is set once, as a clean italic headline with a hand-drawn "?", and a quiet foot of `set on [date] · voice [chip] · a half-title · folio i · the question` closes the plate. The illumin­ated letter and chop animate on first view; the chop slowly rotates; the "?" breathes; the headline shifts between italic-soft, italic-warm, and upright-heavy as the voice changes.
-
-- added `src/TitleFolio.tsx` — half-title component with illuminated initial, headline, motto, foot, chop, and reveal/reduced-motion handling
-- added `.title-folio*` styles in `src/style.css` — composition, typography, hand-drawn ornaments, voice-tone variants, mobile stack, reduced-motion fallback
-- mounted `<TitleFolio>` in `src/App.tsx` between the page spine and the frontispiece, so the reader now arrives at a single composed half-title before the three-voice specimen
-
-The folio numbers now read in a natural order: half-title → frontispiece (3 voices) → folio 0 (opening) → folio i (the question, with mark and hinge) → folio ii (press). The redundant repeat of the title in the first-light plate is left in place, as it serves a different role (the compositor's note at first light) than the new half-title (the formal arrival).
-
-Build verified with `npm run build` — `tsc --noEmit` clean, vite bundle clean.
+A single persistent **reading compass** now lives at the bottom-left of the page. It uses the long-prepared `.reading-compass` styles that had been waiting for a component, and pairs a 24-tick hour dial with a single tapered sweep hand that turns with the page-time. The voice letter sits in a thin inner ring at the centre; the active word's marker glyph rests below it. A short caption (maker / verb / pause) sits to the right of the dial on desktop, and collapses on phones. The compass reacts to each lever pull with a brief tap, glows with the voice, and breathes at its four cardinal points so the dial feels alive even when the page is still. The four corner pins of the broadside are now subtly differentiated — a small arc at the top-left, a seal-mark at the top-right, a memory hairline at the bottom-left, and a return-glyph at the bottom-right — so the broadside reads as an authored plate rather than four copies of the same mark. Reduced-motion is respected throughout.

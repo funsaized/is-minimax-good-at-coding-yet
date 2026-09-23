@@ -25,6 +25,7 @@ import { Colophon } from './Colophon'
 import { PrinterAtlas } from './PrinterAtlas'
 import { ReadingNote } from './ReadingNote'
 import { SpineThread } from './SpineThread'
+import { ReadingCompass } from './ReadingCompass'
 import { ReadingPouch } from './ReadingPouch'
 import { TheBookMark } from './TheBookMark'
 import { ComposingBreath } from './ComposingBreath'
@@ -344,6 +345,15 @@ export function App() {
         activeId={activeSection}
         voice={voice}
         timeOfDay={timeOfDay}
+      />
+
+      <ReadingCompass
+        voice={voice}
+        word={activeWord}
+        pageTime={pageTime}
+        pullSignal={pullSignal}
+        isPulling={isPulling}
+        setToday={setToday}
       />
 
       <header className="topbar" role="banner" aria-label="The page's composing register">

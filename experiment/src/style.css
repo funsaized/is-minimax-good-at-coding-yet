@@ -23960,19 +23960,51 @@ section.reveal h2 em::after {
 
 /* — the compass itself — a tight circular marginalia,
    ~64px square, with hour-tick ring, page-time sweep,
-   voice letter at the centre, active word glyph below it. */
+   voice letter at the centre, active word glyph below it.
+   lives at the bottom-left of the viewport on desktop, fold-
+   ing up under the page's left margin where it can be seen
+   without crowding the spine or the printer's atlas. */
 
 .reading-compass {
   --rc-tone: var(--quiet);
   --rc-active: var(--quiet);
   --rc-time-angle: 0deg;
-  position: relative;
+  position: fixed;
+  left: clamp(14px, 2vw, 28px);
+  bottom: clamp(16px, 2.4vw, 32px);
+  z-index: 8;
   display: inline-grid;
   grid-template-columns: auto auto;
   align-items: center;
   gap: clamp(8px, 1vw, 14px);
+  padding: 4px 6px 4px 4px;
+  border-radius: 6px;
   color: var(--rc-tone);
+  pointer-events: none;
+  opacity: 0;
+  animation: readingCompassArrive 1.2s var(--ease-out) 1.4s both;
   transition: color .35s var(--ease);
+}
+
+@keyframes readingCompassArrive {
+  0%   { opacity: 0; transform: translate(-6px, 4px); }
+  100% { opacity: 1; transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-compass { animation: none; opacity: 1; transform: none; }
+}
+
+.reading-compass::before {
+  content: '';
+  position: absolute;
+  inset: -4px -8px -4px -4px;
+  border-radius: 10px;
+  background: radial-gradient(ellipse 60% 70% at 28% 50%,
+    color-mix(in srgb, var(--rc-tone) 14%, transparent) 0%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .reading-compass__svg {
@@ -24058,6 +24090,53 @@ section.reveal h2 em::after {
 
 @media (prefers-reduced-motion: reduce) {
   .reading-compass[data-pull] .reading-compass__svg { animation: none; }
+}
+
+/* — the word's marker changes are subtle but readable — */
+
+.reading-compass[data-word="m3"]   .reading-compass__cap-key { color: var(--rc-tone); }
+.reading-compass[data-word="good"] .reading-compass__cap-key { color: var(--rc-tone); }
+.reading-compass[data-word="yet"]  .reading-compass__cap-key { color: var(--rc-tone); font-style: italic; }
+
+/* — the dial's sweep eases to its target so the day reads smoothly — */
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-compass__sweep { transition: none; }
+}
+
+/* — the four cardinal pricks breathe gently, like a clock that's still
+     alive even when the page isn't moving — */
+
+.reading-compass__cardinals circle {
+  animation: compassCardinalPulse 7.4s ease-in-out infinite;
+}
+.reading-compass__cardinals circle:nth-of-type(2) { animation-delay: 1.85s; }
+.reading-compass__cardinals circle:nth-of-type(3) { animation-delay: 3.7s; }
+.reading-compass__cardinals circle:nth-of-type(4) { animation-delay: 5.55s; }
+
+@keyframes compassCardinalPulse {
+  0%, 100% { opacity: .55; }
+  50%      { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reading-compass__cardinals circle { animation: none; opacity: .78; }
+}
+
+/* — responsive behaviour · the caption collapses to the dial alone on small screens,
+     and the whole compass tucks into a more compact footprint on tablets — */
+
+@media (max-width: 1180px) {
+  .reading-compass { left: clamp(10px, 1.6vw, 18px); }
+}
+
+@media (max-width: 880px) {
+  .reading-compass { bottom: clamp(12px, 2vw, 18px); }
+  .reading-compass__svg { width: clamp(38px, 6vw, 46px); height: clamp(38px, 6vw, 46px); }
+}
+
+@media (max-width: 540px) {
+  .reading-compass { left: 10px; bottom: 10px; gap: 6px; }
 }
 
 /* — the printer's imprint · the closing plate at the foot of the page.

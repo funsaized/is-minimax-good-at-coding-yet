@@ -191,6 +191,7 @@ export function Hero({
             <circle cx="13" cy="13" r="6" fill="none" stroke="currentColor" strokeWidth=".32" strokeDasharray=".7 1.6" opacity=".55" />
             <circle cx="13" cy="13" r="1.4" fill="currentColor" />
             <circle cx="13" cy="13" r=".5" fill="var(--night)" />
+            <path d="M 6 8 Q 9 5.5 12 8" fill="none" stroke="currentColor" strokeWidth=".4" strokeLinecap="round" opacity=".6" />
           </svg>
         </span>
         <span className="hero__broadside-pin hero__broadside-pin--tr" aria-hidden="true">
@@ -199,6 +200,8 @@ export function Hero({
             <circle cx="13" cy="13" r="6" fill="none" stroke="currentColor" strokeWidth=".32" strokeDasharray=".7 1.6" opacity=".55" />
             <circle cx="13" cy="13" r="1.4" fill="currentColor" />
             <circle cx="13" cy="13" r=".5" fill="var(--night)" />
+            <line x1="17" y1="6" x2="20" y2="6" stroke="currentColor" strokeWidth=".4" strokeLinecap="round" opacity=".6" />
+            <circle cx="22" cy="6" r=".8" fill="currentColor" opacity=".7" />
           </svg>
         </span>
         <span className="hero__broadside-pin hero__broadside-pin--bl" aria-hidden="true">
@@ -207,6 +210,7 @@ export function Hero({
             <circle cx="13" cy="13" r="6" fill="none" stroke="currentColor" strokeWidth=".32" strokeDasharray=".7 1.6" opacity=".55" />
             <circle cx="13" cy="13" r="1.4" fill="currentColor" />
             <circle cx="13" cy="13" r=".5" fill="var(--night)" />
+            <line x1="4" y1="20" x2="9" y2="20" stroke="currentColor" strokeWidth=".35" strokeLinecap="round" strokeDasharray=".5 1" opacity=".55" />
           </svg>
         </span>
         <span className="hero__broadside-pin hero__broadside-pin--br" aria-hidden="true">
@@ -215,6 +219,7 @@ export function Hero({
             <circle cx="13" cy="13" r="6" fill="none" stroke="currentColor" strokeWidth=".32" strokeDasharray=".7 1.6" opacity=".55" />
             <circle cx="13" cy="13" r="1.4" fill="currentColor" />
             <circle cx="13" cy="13" r=".5" fill="var(--night)" />
+            <path d="M 17 20 L 20 18 L 21 20" fill="none" stroke="currentColor" strokeWidth=".4" strokeLinecap="round" strokeLinejoin="round" opacity=".6" />
           </svg>
         </span>
 
