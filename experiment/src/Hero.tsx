@@ -13,6 +13,7 @@ import { ReadThreeTimes } from './ReadThreeTimes'
 import { PressProofStamp } from './PressProofStamp'
 import { FolioRule } from './FolioRule'
 import { TitleSignature } from './TitleSignature'
+import { CompositorInk } from './CompositorInk'
 
 type HeroProps = {
   voice: VoiceId
@@ -254,6 +255,8 @@ export function Hero({
             })}
           </span>
         </h1>
+
+        <CompositorInk voice={voice} word={word} />
 
         <TitleSignature voice={voice} />
       </div>

@@ -147,7 +147,7 @@ export function TitleSignature({ voice }: TitleSignatureProps) {
       </span>
 
       <span className="title-signature__legend" aria-hidden="true">
-        <em className="title-signature__legend-key">the page set in</em>
+        <em className="title-signature__legend-key">in voice</em>
         <span className="title-signature__legend-voice">
           <span className="title-signature__legend-letter">{VOICE_LETTER[voice]}</span>
           <span className="title-signature__legend-rule" />
