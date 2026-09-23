@@ -221,26 +221,67 @@ em { font-style: italic; }
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: .9;
+  opacity: 1;
   mix-blend-mode: screen;
   /* Layer 1 — top half: dawn blue fades as the day advances */
   background:
-    radial-gradient(ellipse 80rem 32rem at 50% -8%,
+    radial-gradient(ellipse 90rem 36rem at 50% -10%,
       color-mix(in srgb, var(--atmo-dawn) calc(clamp(0, 1, (1 - var(--page-time))) * 100%), transparent) 0%,
       transparent 72%),
     /* Layer 2 — middle: a quiet midday warmth, peaks near 0.5 */
-    radial-gradient(ellipse 60rem 24rem at 50% 50%,
+    radial-gradient(ellipse 70rem 28rem at 50% 50%,
       color-mix(in srgb, var(--atmo-midday) calc(clamp(0, 1, (1 - abs(var(--page-time) - 0.5) * 1.8)) * 80%), transparent) 0%,
       transparent 75%),
     /* Layer 3 — bottom half: wax-warm dusk rises with scroll */
-    radial-gradient(ellipse 80rem 36rem at 50% calc(100% + 8%),
+    radial-gradient(ellipse 90rem 40rem at 50% calc(100% + 10%),
       color-mix(in srgb, var(--atmo-dusk) calc(clamp(0, 1, var(--page-time)) * 100%), transparent) 0%,
       transparent 72%),
     /* Layer 4 — a deeper wax shadow that opens up at the end of the day */
-    radial-gradient(ellipse 60rem 28rem at 50% calc(100% + 4%),
+    radial-gradient(ellipse 70rem 32rem at 50% calc(100% + 4%),
       color-mix(in srgb, var(--atmo-deep-dusk) calc(clamp(0, 1, var(--page-time)) * 70%), transparent) 0%,
       transparent 75%);
   transition: opacity .6s var(--ease);
+}
+
+/* — a faint horizon line that drifts across the page as time-of-day moves.
+   a single hairline, slightly stronger at midday, fading into dusk.
+   sits as an additional layer behind the broadside to give the reader a
+   sense of the day moving across the page. — */
+
+.app__horizon {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: calc(18% + var(--page-time) * 64%);
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--paper-soft) calc((1 - abs(var(--page-time) - 0.5) * 1.6) * 12%), transparent) 22%,
+    color-mix(in srgb, var(--paper-soft) calc((1 - abs(var(--page-time) - 0.5) * 1.6) * 18%), transparent) 50%,
+    color-mix(in srgb, var(--paper-soft) calc((1 - abs(var(--page-time) - 0.5) * 1.6) * 12%), transparent) 78%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+  opacity: .9;
+  transition: top .35s var(--ease-out);
+}
+
+.app__horizon::before,
+.app__horizon::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--paper-soft) calc((1 - abs(var(--page-time) - 0.5) * 1.6) * 28%), transparent);
+}
+
+.app__horizon::before { left: 22%; }
+.app__horizon::after { right: 22%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .app__horizon { display: none; }
 }
 
 @supports not (color: color-mix(in srgb, red 50%, blue)) {
@@ -2790,6 +2831,126 @@ em { font-style: italic; }
   justify-content: space-between;
   gap: 18px;
   flex-wrap: wrap;
+}
+
+/* ── the reading direction · a small compositor's marginal line
+   that names the six folios of this broadside. sits between the
+   eyebrow row and the title, set in mono caps with a roman step
+   for the current folio. ── */
+
+.hero__reading-direction {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 22px);
+  padding: clamp(8px, 1vw, 14px) 0 clamp(6px, .8vw, 10px);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  margin-top: clamp(8px, 1.2vw, 14px);
+  opacity: 0;
+  animation: readingDirectionIn .9s var(--ease-out) .85s both;
+}
+
+@keyframes readingDirectionIn {
+  0% { opacity: 0; transform: translateY(-3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__reading-direction { animation: none; opacity: 1; transform: none; }
+}
+
+.hero__reading-direction-rule {
+  width: clamp(28px, 3.4vw, 64px);
+  height: 6px;
+  flex-shrink: 0;
+  color: color-mix(in srgb, var(--hero-tone, var(--quiet)) 80%, var(--line-strong));
+  opacity: .7;
+}
+
+.hero__reading-direction-key {
+  font-style: italic;
+  font-family: var(--display);
+  font-size: clamp(11px, 1.05vw, 13px);
+  text-transform: none;
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+  white-space: nowrap;
+}
+
+.hero__reading-direction-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(8px, .8vw, 14px);
+  justify-content: flex-end;
+}
+
+.hero__reading-direction-step {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--muted);
+  transition: color .35s var(--ease);
+}
+
+.hero__reading-direction-step--now {
+  color: var(--hero-tone, var(--quiet));
+}
+
+.hero__reading-direction-step--now .hero__reading-direction-label {
+  color: var(--paper);
+}
+
+.hero__reading-direction-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1vw, 14px);
+  letter-spacing: 0;
+  text-transform: lowercase;
+  font-feature-settings: 'lnum' 1;
+}
+
+.hero__reading-direction-step--now .hero__reading-direction-num {
+  color: inherit;
+}
+
+.hero__reading-direction-glyph {
+  font-style: normal;
+  color: currentColor;
+  opacity: .8;
+  transform: translateY(-.05em);
+}
+
+.hero__reading-direction-label {
+  font-style: italic;
+  font-family: var(--display);
+  font-size: clamp(11px, .95vw, 13px);
+  text-transform: none;
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+}
+
+@media (max-width: 980px) {
+  .hero__reading-direction { grid-template-columns: auto 1fr; }
+  .hero__reading-direction-rule--r { display: none; }
+  .hero__reading-direction-key { grid-column: 1 / -1; }
+  .hero__reading-direction-list { justify-content: flex-start; }
+}
+
+@media (max-width: 720px) {
+  .hero__reading-direction-rule--l { display: none; }
+  .hero__reading-direction-list { gap: 6px; }
+  .hero__reading-direction-step { gap: 4px; }
 }
 
 .hero__eyebrow-stamp {
@@ -5711,10 +5872,70 @@ em { font-style: italic; }
 .folio-turn--soft .folio-turn__stitch { opacity: .35; }
 .folio-turn--soft .folio-turn__fold { opacity: .35; }
 
+/* ── the note that follows the folio marker ──
+   a small compositor's marginal line, set in italic display
+   beneath the core — names what the next folio holds. */
+
+.folio-turn__hint {
+  color: var(--paper-soft);
+  opacity: .85;
+}
+
+.folio-turn__note {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  margin-top: clamp(8px, 1vw, 14px);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 15px);
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+  opacity: 0;
+  animation: folioTurnNoteIn .9s var(--ease-out) .25s both;
+}
+
+.folio-turn__note em {
+  font-style: italic;
+  color: var(--paper);
+  text-wrap: balance;
+  max-width: 56ch;
+}
+
+.folio-turn__note-mark {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  color: currentColor;
+  opacity: .9;
+}
+
+.folio-turn__note-tail {
+  width: clamp(20px, 3vw, 36px);
+  height: 4px;
+  flex-shrink: 0;
+  color: currentColor;
+  opacity: .55;
+}
+
+.folio-turn--soft .folio-turn__note { opacity: .55; }
+
+@keyframes folioTurnNoteIn {
+  0%   { opacity: 0; transform: translateY(3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-turn__note { animation: none; opacity: 1; transform: none; }
+}
+
 @media (max-width: 720px) {
   .folio-turn__stitch { width: 140px; bottom: 6px; }
   .folio-turn__fold { width: 40px; top: 6px; }
   .folio-turn__title { display: none; }
+  .folio-turn__note { font-size: 12px; }
 }
 
 /* ── folio stitch · a small thread cross-stitch that visibly ties
@@ -8212,11 +8433,86 @@ em { font-style: italic; }
 .answer__leaf.is-open .answer__dawn-ray:nth-child(3) { animation-delay: .9s; }
 .answer__leaf.is-open .answer__dawn-ray:nth-child(4) { animation-delay: 1s; }
 .answer__leaf.is-open .answer__dawn-ray:nth-child(5) { animation-delay: 1.1s; }
+.answer__leaf.is-open .answer__dawn-ray:nth-child(6) { animation-delay: 1.18s; }
+.answer__leaf.is-open .answer__dawn-ray:nth-child(7) { animation-delay: 1.25s; }
+.answer__leaf.is-open .answer__dawn-ray:nth-child(8) { animation-delay: 1.32s; }
 
 @keyframes answerDawnRayDraw {
   0%   { stroke-dashoffset: 360; opacity: 0; }
   35%  { opacity: 1; }
   100% { stroke-dashoffset: 0; opacity: .55; }
+}
+
+/* ── the third dawn arc · a quieter third pass that lifts as the orb arrives ── */
+
+.answer__dawn-arc--third {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  opacity: 0;
+}
+
+.answer__leaf.is-open .answer__dawn-arc--third {
+  animation: answerDawnArcDraw 1.8s var(--ease-out) 1.4s forwards;
+}
+
+/* ── the orb's core · a small bright centre that settles after the halo arrives ── */
+
+.answer__dawn-orb-core {
+  transform-origin: 50% 50%;
+  transform: scale(.4);
+  opacity: 0;
+  transition: opacity .9s var(--ease) 1.1s, transform 1.4s var(--ease-spring) 1.1s;
+}
+
+.answer__leaf.is-open .answer__dawn-orb-core {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* ── the outer aura · the orb's farthest reach, breathes slowly after opening ── */
+
+.answer__dawn-orb-aura--outer {
+  opacity: 0;
+  transform-origin: 50% 50%;
+  transform: scale(.6);
+  transition: opacity 1.2s var(--ease) .8s, transform 1.8s var(--ease-spring) .8s;
+}
+
+.answer__leaf.is-open .answer__dawn-orb-aura--outer {
+  opacity: .55;
+  transform: scale(1);
+  animation: orbAuraBreath 7s ease-in-out 2.6s infinite;
+}
+
+@keyframes orbAuraBreath {
+  0%, 100% { opacity: .42; transform: scale(1); }
+  50%      { opacity: .65; transform: scale(1.08); }
+}
+
+/* ── the motes · warm dust catching the orb's light, drifting upward
+   in seven steps. they enter in sequence after the orb has settled. ── */
+
+.answer__dawn-mote {
+  opacity: 0;
+  transform-origin: 50% 100%;
+}
+
+.answer__leaf.is-open .answer__dawn-mote {
+  animation: moteArrive 1.6s var(--ease-out) forwards;
+}
+
+.answer__leaf.is-open .answer__dawn-mote--a { animation-delay: 1.45s; }
+.answer__leaf.is-open .answer__dawn-mote--b { animation-delay: 1.55s; }
+.answer__leaf.is-open .answer__dawn-mote--c { animation-delay: 1.65s; }
+.answer__leaf.is-open .answer__dawn-mote--d { animation-delay: 1.75s; }
+.answer__leaf.is-open .answer__dawn-mote--e { animation-delay: 1.85s; }
+.answer__leaf.is-open .answer__dawn-mote--f { animation-delay: 1.95s; }
+.answer__leaf.is-open .answer__dawn-mote--g { animation-delay: 2.05s; }
+
+@keyframes moteArrive {
+  0%   { opacity: 0; transform: translateY(8px) scale(.4); }
+  60%  { opacity: .9; transform: translateY(-2px) scale(1.05); }
+  100% { opacity: .55; transform: translateY(-8px) scale(.95); }
 }
 
 .answer__dawn-horizon {
@@ -8250,14 +8546,18 @@ em { font-style: italic; }
 @media (prefers-reduced-motion: reduce) {
   .answer__leaf.is-open .answer__dawn-arc--main,
   .answer__leaf.is-open .answer__dawn-arc--second,
+  .answer__leaf.is-open .answer__dawn-arc--third,
   .answer__leaf.is-open .answer__dawn-orb,
+  .answer__leaf.is-open .answer__dawn-orb-core,
   .answer__leaf.is-open .answer__dawn-orb-ring,
   .answer__leaf.is-open .answer__dawn-ray,
   .answer__leaf.is-open .answer__dawn-horizon { animation: none; stroke-dashoffset: 0; opacity: .9; }
   .answer__dawn-halo,
   .answer__dawn-orb-group,
+  .answer__dawn-orb-aura--outer,
   .answer__dawn-wash { transform: none; opacity: 1; transition: none; }
   .answer__dawn-rays { opacity: 1; }
+  .answer__dawn-mote { opacity: .55; transform: none; animation: none; }
 }
 
 .answer__leaf {

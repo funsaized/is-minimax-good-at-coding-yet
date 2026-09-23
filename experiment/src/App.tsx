@@ -296,11 +296,12 @@ export function App() {
       className={`app app--voice-${voice} app--word-${activeWord} ${isPulling ? 'app--pulling' : ''}`}
       style={style}
     >
-      <PaperGrain />
-      <span className="app__bg-grain" aria-hidden="true" />
+<PaperGrain />
+      <span className="app__bg-grid" aria-hidden="true" />
       <span className="app__void" aria-hidden="true" />
       <span className="app__backdrop" aria-hidden="true" />
       <span className="app__atmo" aria-hidden="true" />
+      <span className="app__horizon" aria-hidden="true" />
       <FirstLight />
       <Constellation voice={voice} pullSignal={pullSignal} />
       <span className="app__flash" aria-hidden="true" key={`flash-${flashKey}`} />

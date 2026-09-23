@@ -210,6 +210,45 @@ export function Hero({
           </span>
         </div>
 
+        <span className="hero__reading-direction" aria-label="The printer's reading direction · the six folios of this broadside">
+          <svg className="hero__reading-direction-rule hero__reading-direction-rule--l" viewBox="0 0 60 6" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="0" y1="3" x2="60" y2="3" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 3" opacity=".5" />
+            <circle cx="0" cy="3" r="1" fill="currentColor" opacity=".7" />
+          </svg>
+          <em className="hero__reading-direction-key">compositor&apos;s direction</em>
+          <ol className="hero__reading-direction-list">
+            <li className="hero__reading-direction-step hero__reading-direction-step--now">
+              <span className="hero__reading-direction-num">i</span>
+              <span className="hero__reading-direction-glyph" aria-hidden="true">↳</span>
+              <span className="hero__reading-direction-label">the question</span>
+            </li>
+            <li className="hero__reading-direction-step">
+              <span className="hero__reading-direction-num">ii</span>
+              <span className="hero__reading-direction-label">the press bed</span>
+            </li>
+            <li className="hero__reading-direction-step">
+              <span className="hero__reading-direction-num">iii</span>
+              <span className="hero__reading-direction-label">the proof line</span>
+            </li>
+            <li className="hero__reading-direction-step">
+              <span className="hero__reading-direction-num">iv</span>
+              <span className="hero__reading-direction-label">the notation key</span>
+            </li>
+            <li className="hero__reading-direction-step">
+              <span className="hero__reading-direction-num">v</span>
+              <span className="hero__reading-direction-label">the answer</span>
+            </li>
+            <li className="hero__reading-direction-step">
+              <span className="hero__reading-direction-num">vi</span>
+              <span className="hero__reading-direction-label">the reader&apos;s pouch</span>
+            </li>
+          </ol>
+          <svg className="hero__reading-direction-rule hero__reading-direction-rule--r" viewBox="0 0 60 6" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="0" y1="3" x2="60" y2="3" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 3" opacity=".5" />
+            <circle cx="60" cy="3" r="1" fill="currentColor" opacity=".7" />
+          </svg>
+        </span>
+
         <h1
           id="hero-title-label"
           className={`hero__title hero__title--${voice} hero__title--arrange`}

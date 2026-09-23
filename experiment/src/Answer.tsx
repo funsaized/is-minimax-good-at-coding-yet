@@ -137,26 +137,31 @@ export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, se
             aria-hidden="true"
           >
             <defs>
-              <radialGradient id={dawnHaloId} cx="50%" cy="100%" r="64%">
-                <stop offset="0%" stopColor="rgba(255, 240, 214, .55)" />
-                <stop offset="38%" stopColor="rgba(255, 226, 188, .18)" />
-                <stop offset="78%" stopColor="rgba(255, 220, 178, .04)" />
+              <radialGradient id={dawnHaloId} cx="50%" cy="100%" r="72%">
+                <stop offset="0%" stopColor="rgba(255, 240, 214, .62)" />
+                <stop offset="38%" stopColor="rgba(255, 226, 188, .22)" />
+                <stop offset="78%" stopColor="rgba(255, 220, 178, .05)" />
                 <stop offset="100%" stopColor="rgba(255, 220, 178, 0)" />
               </radialGradient>
               <radialGradient id={dawnOrbId} cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="rgba(255, 246, 220, .9)" />
-                <stop offset="48%" stopColor="rgba(255, 226, 188, .55)" />
-                <stop offset="82%" stopColor="rgba(244, 198, 152, .12)" />
+                <stop offset="0%" stopColor="rgba(255, 250, 232, .98)" />
+                <stop offset="40%" stopColor="rgba(255, 234, 196, .72)" />
+                <stop offset="78%" stopColor="rgba(244, 198, 152, .18)" />
                 <stop offset="100%" stopColor="rgba(244, 198, 152, 0)" />
               </radialGradient>
+              <radialGradient id={`${dawnOrbId}-core`} cx="50%" cy="50%" r="38%">
+                <stop offset="0%" stopColor="rgba(255, 255, 248, 1)" />
+                <stop offset="60%" stopColor="rgba(255, 246, 220, .82)" />
+                <stop offset="100%" stopColor="rgba(255, 232, 192, 0)" />
+              </radialGradient>
               <linearGradient id={dawnArcId} x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0%" stopColor="rgba(255, 234, 198, .92)" />
-                <stop offset="60%" stopColor="rgba(255, 234, 198, .32)" />
+                <stop offset="0%" stopColor="rgba(255, 234, 198, .95)" />
+                <stop offset="60%" stopColor="rgba(255, 234, 198, .36)" />
                 <stop offset="100%" stopColor="rgba(255, 234, 198, 0)" />
               </linearGradient>
               <linearGradient id={dawnRiseId} x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0%" stopColor="rgba(255, 232, 196, .12)" />
-                <stop offset="38%" stopColor="rgba(255, 232, 196, .05)" />
+                <stop offset="0%" stopColor="rgba(255, 232, 196, .16)" />
+                <stop offset="38%" stopColor="rgba(255, 232, 196, .06)" />
                 <stop offset="100%" stopColor="rgba(255, 232, 196, 0)" />
               </linearGradient>
             </defs>
@@ -166,8 +171,8 @@ export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, se
               className="answer__dawn-halo"
               cx="500"
               cy="640"
-              rx="640"
-              ry="280"
+              rx="680"
+              ry="320"
               fill={`url(#${dawnHaloId})`}
             />
 
@@ -177,7 +182,7 @@ export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, se
               d="M 180 660 A 360 360 0 0 1 820 660"
               fill="none"
               stroke={`url(#${dawnArcId})`}
-              strokeWidth="1.6"
+              strokeWidth="1.8"
               strokeLinecap="round"
             />
             <path
@@ -185,16 +190,28 @@ export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, se
               d="M 240 680 A 300 300 0 0 1 760 680"
               fill="none"
               stroke={`url(#${dawnArcId})`}
-              strokeWidth=".8"
+              strokeWidth=".9"
               strokeLinecap="round"
-              opacity=".45"
+              opacity=".55"
+            />
+            <path
+              className="answer__dawn-arc answer__dawn-arc--third"
+              d="M 320 696 A 220 220 0 0 1 680 696"
+              fill="none"
+              stroke={`url(#${dawnArcId})`}
+              strokeWidth=".55"
+              strokeLinecap="round"
+              opacity=".32"
             />
 
             {/* the orb that rises with the arc — seated at the seal's column, beneath the broadside */}
             <g className="answer__dawn-orb-group">
+              <circle className="answer__dawn-orb-aura answer__dawn-orb-aura--outer" cx="860" cy="660" r="148" fill={`url(#${dawnHaloId})`} opacity=".55" />
               <circle className="answer__dawn-orb-aura" cx="860" cy="660" r="110" fill={`url(#${dawnHaloId})`} />
-              <circle className="answer__dawn-orb" cx="860" cy="660" r="42" fill={`url(#${dawnOrbId})`} />
-              <circle className="answer__dawn-orb-ring" cx="860" cy="660" r="42" fill="none" stroke="rgba(255, 240, 214, .42)" strokeWidth=".55" />
+              <circle className="answer__dawn-orb" cx="860" cy="660" r="46" fill={`url(#${dawnOrbId})`} />
+              <circle className="answer__dawn-orb-core" cx="860" cy="660" r="22" fill={`url(#${dawnOrbId}-core)`} />
+              <circle className="answer__dawn-orb-ring" cx="860" cy="660" r="46" fill="none" stroke="rgba(255, 240, 214, .55)" strokeWidth=".6" />
+              <circle cx="860" cy="660" r="38" fill="none" stroke="rgba(255, 240, 214, .32)" strokeWidth=".4" strokeDasharray="1 2" />
             </g>
 
             {/* a thin wash that drifts upward through the columns */}
@@ -209,11 +226,14 @@ export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, se
 
             {/* a few thin rays that catch the eye — sparse, hand-placed, fanning from the seal-side orb */}
             <g className="answer__dawn-rays" stroke={`url(#${dawnArcId})`} strokeLinecap="round" fill="none">
-              <line className="answer__dawn-ray" x1="860" y1="660" x2="160" y2="380" strokeWidth=".8" opacity=".55" />
-              <line className="answer__dawn-ray" x1="860" y1="660" x2="320" y2="300" strokeWidth=".7" opacity=".45" />
-              <line className="answer__dawn-ray" x1="860" y1="660" x2="500" y2="240" strokeWidth=".55" opacity=".35" />
-              <line className="answer__dawn-ray" x1="860" y1="660" x2="660" y2="220" strokeWidth=".5" opacity=".28" />
-              <line className="answer__dawn-ray" x1="860" y1="660" x2="820" y2="240" strokeWidth=".45" opacity=".22" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="60" y2="420" strokeWidth=".8" opacity=".55" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="180" y2="320" strokeWidth=".7" opacity=".5" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="320" y2="260" strokeWidth=".65" opacity=".42" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="480" y2="200" strokeWidth=".55" opacity=".35" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="640" y2="180" strokeWidth=".5" opacity=".3" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="780" y2="200" strokeWidth=".5" opacity=".28" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="900" y2="260" strokeWidth=".5" opacity=".25" />
+              <line className="answer__dawn-ray" x1="860" y1="660" x2="940" y2="380" strokeWidth=".45" opacity=".22" />
             </g>
 
             {/* a single horizon rule, the page the dawn rises from */}
@@ -227,6 +247,17 @@ export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, se
               strokeWidth="1"
               strokeLinecap="round"
             />
+
+            {/* a few warm motes catching the orb's light — drifting upward like dust at first light */}
+            <g className="answer__dawn-motes" fill="rgba(255, 240, 214, .85)">
+              <circle className="answer__dawn-mote answer__dawn-mote--a" cx="780" cy="430" r="1.1" />
+              <circle className="answer__dawn-mote answer__dawn-mote--b" cx="720" cy="380" r=".9" />
+              <circle className="answer__dawn-mote answer__dawn-mote--c" cx="660" cy="320" r="1.2" />
+              <circle className="answer__dawn-mote answer__dawn-mote--d" cx="800" cy="320" r=".7" />
+              <circle className="answer__dawn-mote answer__dawn-mote--e" cx="880" cy="380" r=".8" />
+              <circle className="answer__dawn-mote answer__dawn-mote--f" cx="600" cy="380" r=".6" />
+              <circle className="answer__dawn-mote answer__dawn-mote--g" cx="940" cy="430" r=".7" />
+            </g>
           </svg>
         </span>
 
