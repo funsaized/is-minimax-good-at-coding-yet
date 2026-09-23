@@ -1,16 +1,11 @@
-# Changelog
+# Iteration 459
 
-## Iteration 458 — The Daybreak, Composed
+A single composed folio now holds the question once on one plate at folio iv½.
 
-One composed opening folio replaces the prior prologue, title plate, and arrival folios. The question lands once.
+## Changes
 
-### Changes
-- New `src/Daybreak.tsx` — one folio that opens the page: a dawn scene, a masthead, the question in three voices, the three-voice selector, a press seal, a ledger, and a handoff to the broadside.
-- `src/App.tsx` — the prior `ReadingPrologue`, `TitlePlate`, and `ArrivalPlate` are no longer rendered. `Daybreak` now owns folio `prologue` (00). The redundant `opening` folio entry is removed from the navigation. Default active section is `prologue`.
-- `src/style.css` — appended ~900 lines of `daybreak__*` styles. The dawn scene rises on intersect, the three voice lines fade in one after the other, the voice strip animates in below, the press seal turns in from a tilt. Reduced-motion and small-screen fallbacks are honoured. The `bold` voice lifts when the lever strikes.
-
-### Behavior
-- Voice selection now has one clear home: the voice strip at the foot of the daybreak. The same selector remains available throughout the page (Specimen, ReadThreeTimes, etc.).
-- The active voice tints the matching line in the daybreak title; the other two read at a slightly lower opacity.
-- Keyboard: `Tab` moves through the voice buttons; arrow keys cycle the voice.
-- Folio navigation: the page now reads as prologue → question → press bed → proof line → notation key → held reading → answer → page holds → reader's pouch.
+- Added a new composed folio, **The Held Question** (`src/HeldQuestion.tsx`), that sits between the notation key and the answer. The question is set once in the active voice on a single plate with corner brackets, a register mark, a held-line caption ("the page holds the question — let it land before you answer"), a three-voice specimen key (quiet / human / bold), a watermark, and a small wax seal.
+- Wired the new folio into `src/App.tsx` in place of the previous HeldReading, and updated the surrounding marginal caret text to match ("folio iv½ · the held question").
+- Added matching CSS at the end of `src/style.css` for `.held-question` and its children: a single-plate composition with corner brackets, a held-line caption, three-voice specimen grid, seal, watermark, register mark, ledger foot, and a small plate-rule top and bottom. The plate warms with the active voice, the title animates in on reveal, the pull animation lifts the title briefly when the lever strikes. Reduced-motion fallbacks and mobile breakpoints (880/720/540/480px) included.
+- Kept the document title and visible title as `is Minimax M3 good at frontend yet?`.
+- No external assets, fonts, scripts, or packages added. Build passes via `npm run build`.

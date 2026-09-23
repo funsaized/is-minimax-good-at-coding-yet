@@ -17,7 +17,7 @@ import { FolioTurn } from './FolioTurn'
 import { Press } from './Press'
 import { ProofLine } from './ProofLine'
 import { Specimen } from './Specimen'
-import { HeldReading } from './HeldReading'
+import { HeldQuestion } from './HeldQuestion'
 import { Answer } from './Answer'
 import { PageHolds } from './PageHolds'
 import { HeldSilence } from './HeldSilence'
@@ -456,16 +456,16 @@ export function App() {
       <Specimen active={voice} onSelect={selectVoice} />
 
       <ComposingBreath voice={voice} count={FOLIOS.length} />
-      <FolioTurn index="iv½" title="the held reading" hint="one line · three proofs · one plate" voice={voice} soft />
-      <HeldReading voice={voice} setToday={setToday} onVoice={selectVoice} />
+      <FolioTurn index="iv½" title="the held question" hint="one plate · one line · three faces" voice={voice} soft />
+      <HeldQuestion voice={voice} setToday={setToday} onVoice={selectVoice} />
 
       <MarginalCaret
         side="left"
         voice={voice}
         glyph="?"
-        eyebrow="folio iv½ · the held reading"
-        note="the three voices on one plate — let the reader decide which one carries the line."
-        attribution="held three ways"
+        eyebrow="folio iv½ · the held question"
+        note="the question, set once on a single plate — three voices ready, the page holds them all."
+        attribution="held once, three ways"
       />
 
       <ComposingBreath voice={voice} count={FOLIOS.length} />
