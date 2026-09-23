@@ -1,0 +1,19 @@
+{
+  "id": 460,
+  "parentId": 459,
+  "createdAt": "2026-09-23T23:59:32.965Z",
+  "summary": "A single composed folio now lifts the question mark to the heart of the broadside.",
+  "path": "/iterations/000460/index.html",
+  "screenshot": "/iterations/000460/desktop.png",
+  "mobileScreenshot": "/iterations/000460/mobile.png",
+  "sourceCommit": "cc99412f32ddcc7837a5006c44cd201f4eec3aa5",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 410,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 178672,
+    "outputTokens": 18797,
+    "steps": 111
+  }
+}
