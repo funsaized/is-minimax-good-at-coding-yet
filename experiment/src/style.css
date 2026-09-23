@@ -18354,6 +18354,534 @@ section.reveal h2 em::after {
   .title-page__preface { animation: none; opacity: 1; transform: none; }
 }
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 439 · FRONTISPIECE
+   a composed half-title opens the page above folio 0.
+   three voices of the question set as one plate — the same
+   line, stacked one above the other, each on its own family,
+   so the page reads as a published quarto rather than a stack
+   of ornaments. reader can click any voice to set it; the
+   active voice lifts into its tone, the others ghost softly.
+   ──────────────────────────────────────────────────────────── */
+
+.frontispiece {
+  --fp-tone: var(--quiet);
+  --fp-focus: var(--quiet);
+  --fp-active-tone: var(--quiet);
+  position: relative;
+  z-index: 3;
+  max-width: 920px;
+  margin: clamp(32px, 4.4vw, 64px) auto clamp(28px, 4vw, 56px);
+  padding: clamp(28px, 4vw, 56px) clamp(28px, 5.4vw, 72px) clamp(30px, 4.2vw, 60px);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto auto auto auto;
+  column-gap: clamp(20px, 2.4vw, 36px);
+  row-gap: clamp(16px, 2vw, 28px);
+  isolation: isolate;
+  color: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--fp-tone) 24%, var(--line));
+  border-radius: 2px;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 0%,
+      color-mix(in srgb, var(--fp-focus) 12%, transparent), transparent 70%),
+    radial-gradient(ellipse 80% 90% at 50% 100%,
+      color-mix(in srgb, var(--fp-tone) 6%, transparent), transparent 70%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--fp-tone) 6%, rgba(8, 10, 18, .55)) 0%,
+      rgba(8, 10, 18, .42) 100%);
+  box-shadow:
+    0 32px 60px -28px rgba(0, 0, 0, .65),
+    inset 0 0 0 1px color-mix(in srgb, var(--fp-tone) 6%, transparent);
+  opacity: 0;
+  transform: translateY(-8px);
+  animation: frontispieceIn 1.2s var(--ease-out) .08s both;
+}
+
+.frontispiece::before,
+.frontispiece::after {
+  content: '';
+  position: absolute;
+  left: clamp(20px, 3vw, 40px);
+  right: clamp(20px, 3vw, 40px);
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--fp-tone) 40%, transparent) 50%,
+    transparent 100%);
+  opacity: .55;
+}
+
+.frontispiece::before { top: clamp(10px, 1.4vw, 16px); }
+.frontispiece::after  { bottom: clamp(10px, 1.4vw, 16px); }
+
+@keyframes frontispieceIn {
+  0%   { opacity: 0; transform: translateY(-8px) scale(.99); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frontispiece { animation: none; opacity: 1; transform: none; }
+}
+
+.frontispiece--quiet { --fp-tone: var(--quiet); }
+.frontispiece--human { --fp-tone: var(--human); }
+.frontispiece--bold  { --fp-tone: var(--bold); }
+
+@media (max-width: 720px) {
+  .frontispiece {
+    margin: clamp(20px, 4vw, 36px) var(--gutter-tight);
+    padding: clamp(20px, 4vw, 36px) clamp(16px, 4vw, 28px);
+  }
+}
+
+/* — top & bottom rules (small SVG) — */
+
+.frontispiece__rule {
+  grid-column: 1 / -1;
+  display: block;
+  height: 10px;
+  color: var(--fp-tone);
+  opacity: .85;
+}
+
+.frontispiece__rule svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.frontispiece__rule--top {
+  margin-top: clamp(2px, .4vw, 6px);
+}
+
+/* — masthead · one composed row of small italic tags — */
+
+.frontispiece__head {
+  grid-column: 1 / -1;
+  display: grid;
+  place-items: center;
+}
+
+.frontispiece__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1vw, 14px);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+  text-transform: lowercase;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.frontispiece__eyebrow-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  color: var(--fp-tone);
+  opacity: .95;
+}
+
+.frontispiece__eyebrow-mark svg { width: 100%; height: 100%; display: block; }
+
+.frontispiece__eyebrow-tag {
+  color: var(--paper);
+  letter-spacing: -.012em;
+}
+
+.frontispiece__eyebrow-sub {
+  color: var(--paper-soft);
+  font-style: italic;
+}
+
+.frontispiece__eyebrow-date {
+  color: var(--paper-soft);
+  letter-spacing: -.002em;
+}
+
+.frontispiece__eyebrow-rule {
+  display: inline-block;
+  width: clamp(18px, 2vw, 36px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+  opacity: .8;
+}
+
+@media (max-width: 540px) {
+  .frontispiece__eyebrow-rule { display: none; }
+  .frontispiece__eyebrow { gap: 8px; }
+}
+
+/* — the verses · the question set three ways, stacked — */
+
+.frontispiece__verses {
+  grid-column: 1 / span 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(10px, 1.2vw, 18px);
+}
+
+.frontispiece__verse {
+  display: block;
+  position: relative;
+  opacity: .55;
+  transform: translateY(-2px);
+  transition:
+    opacity .45s var(--ease),
+    transform .55s var(--ease-out);
+}
+
+.frontispiece__verse.is-active,
+.frontispiece__verse.is-hover {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.frontispiece__verse.is-muted {
+  opacity: .42;
+}
+
+.frontispiece__verse--quiet.is-active,
+.frontispiece__verse--quiet.is-hover { color: var(--quiet); }
+
+.frontispiece__verse--human.is-active,
+.frontispiece__verse--human.is-hover { color: var(--human); }
+
+.frontispiece__verse--bold.is-active,
+.frontispiece__verse--bold.is-hover { color: var(--bold); }
+
+.frontispiece__verse-btn {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: clamp(12px, 1.6vw, 22px);
+  width: 100%;
+  padding: clamp(8px, 1vw, 14px) clamp(4px, .8vw, 12px);
+  text-align: left;
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+  transition:
+    color .35s var(--ease),
+    background-color .35s var(--ease);
+}
+
+.frontispiece__verse-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in srgb, currentColor 8%, transparent) 50%,
+    transparent 100%);
+  opacity: 0;
+  transition: opacity .45s var(--ease);
+  pointer-events: none;
+}
+
+.frontispiece__verse.is-hover .frontispiece__verse-btn::before,
+.frontispiece__verse.is-active .frontispiece__verse-btn::before {
+  opacity: .85;
+}
+
+.frontispiece__verse-btn:hover { color: var(--paper); }
+
+.frontispiece__verse.is-active .frontispiece__verse-btn,
+.frontispiece__verse.is-hover .frontispiece__verse-btn {
+  color: currentColor;
+}
+
+/* — letter bead (A / B / C) — */
+
+.frontispiece__verse-letter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.frontispiece__verse-letter-circle {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  color: currentColor;
+  transition: transform .35s var(--ease-spring), color .35s var(--ease);
+}
+
+.frontispiece__verse.is-hover .frontispiece__verse-letter-circle,
+.frontispiece__verse.is-active .frontispiece__verse-letter-circle {
+  transform: rotate(45deg);
+}
+
+.frontispiece__verse-letter-circle svg { width: 100%; height: 100%; }
+
+.frontispiece__verse-letter-glyph {
+  margin-left: -16px;
+  position: relative;
+  z-index: 1;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--paper);
+}
+
+.frontispiece__verse.is-active .frontispiece__verse-letter-glyph,
+.frontispiece__verse.is-hover .frontispiece__verse-letter-glyph {
+  color: currentColor;
+}
+
+/* — the question line — */
+
+.frontispiece__verse-line {
+  display: block;
+  text-align: center;
+  font-feature-settings: 'kern', 'liga', 'onum';
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: transform .5s var(--ease-out), text-shadow .55s var(--ease);
+}
+
+.frontispiece__verse.is-active .frontispiece__verse-line,
+.frontispiece__verse.is-hover .frontispiece__verse-line {
+  text-shadow: 0 0 28px color-mix(in srgb, currentColor 30%, transparent);
+}
+
+.frontispiece__verse--quiet .frontispiece__verse-line { font-size: clamp(22px, 2.7vw, 34px); line-height: 1.05; }
+.frontispiece__verse--human .frontispiece__verse-line { font-size: clamp(22px, 2.7vw, 34px); line-height: 1.05; }
+.frontispiece__verse--bold  .frontispiece__verse-line { font-size: clamp(20px, 2.4vw, 30px); line-height: 1.04; letter-spacing: -.04em; }
+
+@media (max-width: 540px) {
+  .frontispiece__verse-btn {
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+  }
+  .frontispiece__verse-cue { display: none; }
+  .frontispiece__verse--quiet .frontispiece__verse-line,
+  .frontispiece__verse--human .frontispiece__verse-line,
+  .frontispiece__verse--bold .frontispiece__verse-line {
+    font-size: clamp(18px, 5.6vw, 26px);
+  }
+}
+
+/* — the small cue · "· set" / "· bring forward" — */
+
+.frontispiece__verse-cue {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity .35s var(--ease);
+}
+
+.frontispiece__verse.is-active .frontispiece__verse-cue,
+.frontispiece__verse.is-hover .frontispiece__verse-cue {
+  opacity: 1;
+  color: currentColor;
+}
+
+/* — the voice face · "quiet cut · serif · italic · close set" — */
+
+.frontispiece__verse-face {
+  display: block;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 2px 0 0 clamp(34px, 3.6vw, 50px);
+  opacity: .8;
+  transition: color .35s var(--ease), opacity .35s var(--ease);
+}
+
+.frontispiece__verse.is-active .frontispiece__verse-face {
+  color: color-mix(in srgb, currentColor 70%, var(--muted));
+  opacity: 1;
+}
+
+@media (max-width: 540px) {
+  .frontispiece__verse-face { margin-left: clamp(28px, 6vw, 36px); font-size: 9.5px; }
+}
+
+/* — chop signature in the upper-right corner — */
+
+.frontispiece__chop {
+  grid-column: 2 / -1;
+  grid-row: 1 / span 2;
+  align-self: start;
+  justify-self: end;
+  display: block;
+  width: clamp(54px, 6vw, 78px);
+  height: clamp(54px, 6vw, 78px);
+  color: var(--fp-tone);
+  opacity: .9;
+  margin-top: clamp(-40px, -4vw, -20px);
+  margin-right: clamp(-12px, -1vw, -4px);
+  pointer-events: none;
+  filter: drop-shadow(0 0 16px color-mix(in srgb, var(--fp-tone) 28%, transparent));
+}
+
+.frontispiece__chop svg { display: block; width: 100%; height: 100%; }
+
+.frontispiece.is-revealed .frontispiece__chop {
+  animation: frontispieceChopIn .9s var(--ease-spring) .85s both;
+}
+
+@keyframes frontispieceChopIn {
+  0%   { opacity: 0; transform: scale(.4) rotate(-22deg); }
+  60%  { opacity: 1; transform: scale(1.1) rotate(6deg); }
+  100% { opacity: .9; transform: scale(1) rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frontispiece.is-revealed .frontispiece__chop { animation: none; opacity: .9; transform: none; }
+}
+
+@media (max-width: 720px) {
+  .frontispiece__chop { display: none; }
+}
+
+/* — foot · "set in three voices · cycle · begins at folio 0" — */
+
+.frontispiece__foot {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  flex-wrap: wrap;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12px, 1.05vw, 14px);
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+  margin-top: clamp(2px, .4vw, 8px);
+}
+
+.frontispiece__foot-rule {
+  display: inline-block;
+  flex: 1;
+  max-width: clamp(40px, 6vw, 84px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--fp-tone) 38%, transparent), transparent);
+  opacity: .75;
+}
+
+.frontispiece__foot-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.frontispiece__foot-line {
+  font-style: italic;
+  color: var(--paper-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.frontispiece__foot-line kbd {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  padding: 1px 5px;
+  border: 1px solid color-mix(in srgb, var(--fp-tone) 38%, var(--line));
+  border-radius: 3px;
+  color: var(--paper);
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, .04);
+}
+
+.frontispiece__foot-dot {
+  opacity: .5;
+}
+
+@media (max-width: 540px) {
+  .frontispiece__foot { font-size: 11.5px; }
+}
+
+/* — final stitch · a small three-bead ribbon that closes the plate — */
+
+.frontispiece__stitch {
+  grid-column: 1 / -1;
+  display: block;
+  width: clamp(140px, 22vw, 220px);
+  height: 6px;
+  margin: clamp(2px, .4vw, 6px) auto 0;
+  color: var(--fp-tone);
+  opacity: .8;
+}
+
+.frontispiece__stitch svg { display: block; width: 100%; height: 100%; }
+
+.frontispiece__verses,
+.frontispiece__foot,
+.frontispiece__stitch,
+.frontispiece__head,
+.frontispiece__chop { animation-fill-mode: both; }
+
+.frontispiece.is-revealed .frontispiece__verse {
+  animation: frontispieceVerseIn .8s var(--ease-out) both;
+}
+
+.frontispiece.is-revealed .frontispiece__verse:nth-child(1) { animation-delay: .4s; }
+.frontispiece.is-revealed .frontispiece__verse:nth-child(2) { animation-delay: .55s; }
+.frontispiece.is-revealed .frontispiece__verse:nth-child(3) { animation-delay: .7s; }
+
+@keyframes frontispieceVerseIn {
+  0%   { opacity: 0; transform: translateY(4px); }
+  100% { opacity: .55; transform: translateY(0); }
+}
+
+.frontispiece.is-revealed .frontispiece__verse.is-active {
+  animation: frontispieceVerseActiveIn .8s var(--ease-out) both;
+}
+
+@keyframes frontispieceVerseActiveIn {
+  0%   { opacity: 0; transform: translateY(4px) scale(.96); }
+  60%  { opacity: 1; transform: translateY(-1px) scale(1.01); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frontispiece.is-revealed .frontispiece__verse,
+  .frontispiece.is-revealed .frontispiece__verse.is-active {
+    animation: none;
+    opacity: .55;
+    transform: none;
+  }
+  .frontispiece.is-revealed .frontispiece__verse.is-active { opacity: 1; }
+}
+
+/* — direct voice-tone adjustment — */
+
+.app--voice-quiet .frontispiece__verse--quiet.is-muted .frontispiece__verse-line { color: var(--quiet-deep); }
+.app--voice-human .frontispiece__verse--human.is-muted .frontispiece__verse-line { color: var(--human-deep); }
+.app--voice-bold  .frontispiece__verse--bold.is-muted  .frontispiece__verse-line { color: var(--bold-deep); }
+
 /* — the second arc — a quiet echo of the dawn arc, half a hand lower — */
 
 .first-light__arc--second {

@@ -29,6 +29,7 @@ import { LastLamp } from './LastLamp'
 import { Imprint } from './Imprint'
 import { Constellation } from './Constellation'
 import { FirstLightPlate } from './FirstLightPlate'
+import { Frontispiece } from './Frontispiece'
 import { MarginalCaret } from './MarginalCaret'
 import { WordHoverNote } from './WordHoverNote'
 import { QuestionHinge } from './QuestionHinge'
@@ -361,6 +362,7 @@ export function App() {
         onJump={jumpToFolio}
       />
 
+      <Frontispiece voice={voice} setToday={setToday} onVoice={selectVoice} />
 
       <FirstLightPlate id="opening" voice={voice} setToday={setToday} />
 

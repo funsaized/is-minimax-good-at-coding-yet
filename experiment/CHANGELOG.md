@@ -1,12 +1,10 @@
-# Changelog
-
-## Iteration 438
-
-A bound folio, tightened — the question holds the centre; a single architectural thread binds the page.
-
-- **PageSpine (new).** A single vertical hairline on the left edge of the broadside with one stitch per folio. The line fills with the reader as scroll progresses, the active folio lifts into focus, and each mark is a real focusable button (Arrow / Home / End / click) so the page can be thumbed like a bound book. Hidden on screens under 1100px; respects reduced-motion.
-- **Opening pacing.** Five redundant MarginalCarets removed (folio iii · the proof line; folio iv · the notation key; the colophon; folio vi · the reader's pouch; the lamp · after dark). Kept the five that mark the page's turning points — folio 0, i, ii, iv½, v — so the question arrives with more weight and the new spine can breathe.
-- **Hero land.** The hero title's entrance tightens: a small lift, a one-step scale, a brief blur → crisp settle. The line lands like ink hitting paper, not like a slide.
-- **Tone plumbing.** PageSpine is wired to `pageTime` (the existing dawn → midday → dusk value) so the spine fills at the same rate the page warms and cools.
-
-Every addition keeps the page client-only, self-contained, keyboard-navigable, and reduced-motion-safe. No remote fonts, scripts, or assets; no fabricated metrics or live status.
+# iteration 439
+A composed half-title opens the page above folio 0 — three voices of the question set as one plate.
+The new frontispiece sits between the folio register and the FirstLightPlate: a single rectangular
+plate with an italic masthead (`m³ press · a half-title · set on (date)`), three stacked verses
+of the question (A quiet / B human / C bold), an interactive voice selector (click any verse to set
+it across the page), and a composed footnote (`set in three voices · ⇧v to cycle · begins at folio 0`).
+A small circular chop in the corner carries the m³ mark and the current voice tone; it lands with a
+soft spring on reveal. Each verse takes on its voice's family, weight, and tracking — the active
+verse lifts in its tone and the muted ones ghost back. Sits behind the existing FolioTick / topbar;
+opening now reads as a published quarto rather than a stack of ornaments.
