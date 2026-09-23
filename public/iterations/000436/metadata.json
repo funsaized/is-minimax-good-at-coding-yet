@@ -1,0 +1,19 @@
+{
+  "id": 436,
+  "parentId": 435,
+  "createdAt": "2026-09-23T10:21:29.519Z",
+  "summary": "A new composed plate now opens folio i — the question. It sits between the first-light plate (folio 0) and the hero, giv",
+  "path": "/iterations/000436/index.html",
+  "screenshot": "/iterations/000436/desktop.png",
+  "mobileScreenshot": "/iterations/000436/mobile.png",
+  "sourceCommit": "1ad83d09ce530d11ed05c34c5a8764e053d98aac",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 373,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 328998,
+    "outputTokens": 11989,
+    "steps": 74
+  }
+}
