@@ -38,6 +38,7 @@ import { WordHoverNote } from './WordHoverNote'
 import { QuestionHinge } from './QuestionHinge'
 import { SignaturePlate } from './SignaturePlate'
 import { PageSpine } from './PageSpine'
+import { TitleFolio } from './TitleFolio'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -365,6 +366,8 @@ export function App() {
         progress={pageTime}
         onJump={jumpToFolio}
       />
+
+      <TitleFolio voice={voice} setToday={setToday} />
 
       <Frontispiece voice={voice} setToday={setToday} onVoice={selectVoice} />
 
