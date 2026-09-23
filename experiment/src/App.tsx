@@ -33,6 +33,7 @@ import { MarginalCaret } from './MarginalCaret'
 import { WordHoverNote } from './WordHoverNote'
 import { QuestionHinge } from './QuestionHinge'
 import { SignaturePlate } from './SignaturePlate'
+import { PageSpine } from './PageSpine'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -352,6 +353,14 @@ export function App() {
         />
       </header>
 
+      <PageSpine
+        folios={FOLIOS as unknown as { id: string; index: string; label: string }[]}
+        activeId={activeSection}
+        voice={voice}
+        progress={pageTime}
+        onJump={jumpToFolio}
+      />
+
 
       <FirstLightPlate id="opening" voice={voice} setToday={setToday} />
 
@@ -425,28 +434,9 @@ export function App() {
         onSelect={handleProofSelect}
       />
 
-      <MarginalCaret
-        side="left"
-        voice={voice}
-        glyph="∧"
-        eyebrow="folio iii · the proof line"
-        note="three proofs pinned to the same cord — each one a face the line can wear."
-        attribution="three proofs, one cord"
-      />
-
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="iv" title="the notation key" hint="how the three voices read" voice={voice} />
       <Specimen active={voice} onSelect={selectVoice} />
-
-      <MarginalCaret
-        side="right"
-        voice={voice}
-        glyph="⌇"
-        eyebrow="folio iv · the notation key"
-        note="the loud face and the quiet face read the same line — only the room changes."
-        attribution="the notation, kept close"
-        offset={140}
-      />
 
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="iv½" title="the held reading" hint="one line · three proofs · one plate" voice={voice} soft />
@@ -494,39 +484,11 @@ export function App() {
         keptCounts={keptCounts}
       />
 
-      <MarginalCaret
-        side="left"
-        voice={voice}
-        glyph="∧"
-        eyebrow="folio · the colophon"
-        note="the compositor signs off — the reader keeps the question."
-        attribution="signed at the colophon"
-      />
-
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="vi" title="the reader’s pouch" hint="three slips · kept close" voice={voice} />
       <ReadingPouch voice={voice} active={activeWord} setToday={setToday} />
 
-      <MarginalCaret
-        side="right"
-        voice={voice}
-        glyph="⌇"
-        eyebrow="folio vi · the reader’s pouch"
-        note="three slips remain — kept by the reader, after the page is set down."
-        attribution="kept close"
-        offset={100}
-      />
-
       <LastLamp voice={voice} setToday={setToday} />
-
-      <MarginalCaret
-        side="left"
-        voice={voice}
-        glyph="?"
-        eyebrow="the lamp · after dark"
-        note="read the page once more, in the dark. the question is the same."
-        attribution="compositor, at the lamp"
-      />
 
       <Imprint voice={voice} setToday={setToday} />
 
