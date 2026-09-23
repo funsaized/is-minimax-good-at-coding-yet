@@ -331,6 +331,46 @@ export function Hero({
           </span>
 
           <HeroVoices voice={voice} pullSignal={pullSignal} onSelect={onVoice} compact />
+
+          <span className="hero__signature" aria-hidden="true">
+            <span className="hero__signature-rule" />
+            <span className="hero__signature-mark">
+              <svg viewBox="0 0 28 28">
+                <defs>
+                  <linearGradient id={`hero-sig-${baseId}`} x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="currentColor" stopOpacity=".95" />
+                    <stop offset="100%" stopColor="currentColor" stopOpacity=".45" />
+                  </linearGradient>
+                </defs>
+                <circle cx="14" cy="14" r="12.4" fill="none" stroke={`url(#hero-sig-${baseId})`} strokeWidth=".55" />
+                <circle cx="14" cy="14" r="9" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".6 1.4" opacity=".55" />
+                <path d="M5.4 14 A 8.6 8.6 0 0 1 22.6 14" fill="none" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
+                <path d="M14 6 L14 22" fill="none" stroke="currentColor" strokeWidth=".35" opacity=".55" />
+                <circle cx="14" cy="14" r="1.4" fill="currentColor" />
+                <circle cx="14" cy="14" r=".6" fill="var(--night)" />
+                <circle cx="2.4" cy="14" r=".7" fill="currentColor" opacity=".7" />
+                <circle cx="25.6" cy="14" r=".7" fill="currentColor" opacity=".7" />
+              </svg>
+            </span>
+            <em className="hero__signature-name">
+              m<sup>3</sup> press
+            </em>
+            <span className="hero__signature-bead" aria-hidden="true">
+              <svg viewBox="0 0 8 8">
+                <circle cx="4" cy="4" r="3" fill="currentColor" opacity=".85" />
+                <circle cx="4" cy="4" r="1" fill="var(--night)" />
+              </svg>
+            </span>
+            <em className="hero__signature-set">set on {setToday}</em>
+            <span className="hero__signature-bead" aria-hidden="true">
+              <svg viewBox="0 0 8 8">
+                <circle cx="4" cy="4" r="3" fill="currentColor" opacity=".85" />
+                <circle cx="4" cy="4" r="1" fill="var(--night)" />
+              </svg>
+            </span>
+            <em className="hero__signature-voice">{VOICE[voice].name}</em>
+            <span className="hero__signature-rule" />
+          </span>
         </div>
 
         <PressProofStamp
@@ -595,52 +635,50 @@ function HeroVoices({ voice, pullSignal, onSelect, compact }: HeroVoicesProps) {
             <em>three voices · set on the same line</em>
             <span className="hero-voices__marginalia-rule" />
           </span>
-          <span className="hero-voices__marginalia-row">
-            {HERO_VOICE_ORDER.map((v, idx) => {
-              const row = HERO_VOICES[v]
-              const isActive = voice === v
-              const sampleStyle = {
-                fontFamily: row.family,
-                fontWeight: row.weight,
-                fontStyle: row.style,
-                letterSpacing: row.tracking,
-                textTransform: row.uppercased ? ('uppercase' as const) : ('none' as const),
-              } as CSSProperties
-              return (
-                <span key={v} className="hero-voices__marginalia-cell">
-                  <button
-                    type="button"
-                    role="radio"
-                    aria-checked={isActive}
-                    className={`hero-voices__marginalia-chip hero-voices__marginalia-chip--${v} ${isActive ? 'is-active' : ''}`}
-                    onClick={() => onSelect(v)}
-                    onKeyDown={event => onChipKey(event, v)}
-                    aria-label={`${row.letter} · ${row.name} · ${row.face}`}
-                  >
-                    <span className="hero-voices__marginalia-letter" aria-hidden="true">{row.letter}</span>
-                    <span className="hero-voices__marginalia-stack">
-                      <em className="hero-voices__marginalia-name">{row.name}</em>
-                      <span
-                        className={`hero-voices__marginalia-sample hero-voices__marginalia-sample--${v}`}
-                        style={sampleStyle}
-                        aria-hidden="true"
-                      >
-                        {isActive ? active.sample : null}
+          <div className="hero-voices__marginalia-cord">
+            <span className="hero-voices__marginalia-note">
+              <em className="hero-voices__marginalia-note-label">compositor&apos;s note</em>
+              <span className="hero-voices__marginalia-note-line" aria-hidden="true">
+                <span className="hero-voices__marginalia-note-rule" />
+                <em className="hero-voices__marginalia-note-glyph">¶</em>
+                <em className="hero-voices__marginalia-note-copy">
+                  the page reads best in <strong>{active.name.toLowerCase()}</strong> — but the other two voices are kept close.
+                </em>
+                <span className="hero-voices__marginalia-note-rule" />
+              </span>
+            </span>
+            <ol className="hero-voices__marginalia-row">
+              {HERO_VOICE_ORDER.map(v => {
+                const row = HERO_VOICES[v]
+                const isActive = voice === v
+                return (
+                  <li key={v} className="hero-voices__marginalia-cell">
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={isActive}
+                      className={`hero-voices__marginalia-chip hero-voices__marginalia-chip--${v} ${isActive ? 'is-active' : ''}`}
+                      onClick={() => onSelect(v)}
+                      onKeyDown={event => onChipKey(event, v)}
+                      aria-label={`${row.letter} · ${row.name} · ${row.face}`}
+                    >
+                      <span className="hero-voices__marginalia-letter" aria-hidden="true">{row.letter}</span>
+                      <span className="hero-voices__marginalia-stack">
+                        <em className="hero-voices__marginalia-name">{row.name}</em>
+                        <span className="hero-voices__marginalia-face">{row.face}</span>
                       </span>
-                    </span>
-                  </button>
-                  {idx < HERO_VOICE_ORDER.length - 1 && (
-                    <span className="hero-voices__marginalia-stitch" aria-hidden="true">
-                      <svg viewBox="0 0 24 12" preserveAspectRatio="none">
-                        <line x1="0" y1="6" x2="24" y2="6" stroke="currentColor" strokeWidth=".55" strokeDasharray="1.2 2.2" />
-                        <circle cx="12" cy="6" r="1.1" fill="currentColor" />
-                      </svg>
-                    </span>
-                  )}
-                </span>
-              )
-            })}
-          </span>
+                      <span className="hero-voices__marginalia-marker" aria-hidden="true">
+                        <svg viewBox="0 0 12 12">
+                          <line x1="2" y1="6" x2="10" y2="6" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
+                          <circle cx="6" cy="6" r="1" fill="currentColor" />
+                        </svg>
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
         </div>
       ) : (
         <>
