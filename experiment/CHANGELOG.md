@@ -1,19 +1,12 @@
-# Changelog
+Iteration 443 — the title now holds an open broadside, signed by a hand-set rule and a small chop beneath.
 
-## Iteration 442 · a held silence between the answer and the page that holds
+The hero no longer wraps the question in a chase-frame box. The page opens onto an open broadside — four corner pins framing the type, no border between the reader and the line. The marked words (m³ · good at · yet?) now carry a small SVG caret beneath them, drawn from the voice's own tone, so the reader can feel the mark settle into the page when they choose a word.
 
-A single, composed folio now sits between folio v (the answer) and folio v½ (the page that holds): folio v¼ — the held silence. The page is set in three voices on a single cord, then let one breathe.
+Beneath the question sits a new title signature: a hand-drawn rule that draws itself across the page, two pin-point dots at the ends with a tiny eye in each, and a small m³ compositor's chop at the centre (a thin press-set seal rotated into place). A small italic legend floats above the rule — "the page set in A · quiet cut · serif · italic · close set" — naming the voice without crowding the line. The signature is animated on first arrival (draws, pins settle, chop rotates in) and respects `prefers-reduced-motion`.
 
-### Added
-- `src/HeldSilence.tsx` — a new folio composed of a delicate eyebrow (v¼), a quiet italic line that breathes with the active voice, an asterism (· · ·), three voice cues set on a single row (stet · caret · query), a signature line and a small italic chop.
-- The folio is wired between folio v and folio v½ in `src/App.tsx` as `v¼ · the held silence`, with its own `FolioTurn`, `ComposingBreath`, and a thin `MarginalCaret` to mark the moment.
-- New styles for `.held-silence*` in `src/style.css`, using the existing palette (quiet · human · bold), atmosphere variables (`--hs-tone`), and motion tokens. The folio fades in on intersection, has a slow breath on the inner halo, and animates its underline on first view. All motion respects `prefers-reduced-motion`.
+The chase-frame wrap is removed entirely; its classes are silenced for any legacy referrer. The old `::after` underline on marked words is replaced by the new SVG caret, so the title reads as one composed plate rather than a labelled chase.
 
-### Behavior
-- The folio's italic line shifts with the active voice (quiet / human / bold), so the same breath reads differently in each face.
-- Each lever pull increments an internal pulse that briefly re-illuminates the asterism.
-- The folio responds to keyboard focus through the existing `Shift+V` voice cycle and the word-selection arrows.
-
-### Honored
-- Title preserved: `is Minimax M3 good at frontend yet?`.
-- No fabricated metrics, iteration counts, deployment stats, or live status. The page remains a single, client-only React experiment.
+Files touched:
+- src/Hero.tsx — broadside wrap, four corner pins, SVG caret on marked words, TitleSignature mount, grain layer removed
+- src/TitleSignature.tsx — new: hand-set rule + compositor's chop + voice legend
+- src/style.css — added ~300 lines for `.hero__broadside`, `.hero__broadside-pin`, `.ht__word-mark`, `.title-signature*`, plus silenced `.hero__chase`

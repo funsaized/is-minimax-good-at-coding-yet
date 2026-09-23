@@ -1,6 +1,5 @@
 import {
   useEffect,
-  useId,
   useRef,
   useState,
   type CSSProperties,
@@ -9,11 +8,11 @@ import {
 } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
-import { ChaseFrame } from './ChaseFrame'
 import { SpecimenSheet } from './SpecimenSheet'
 import { ReadThreeTimes } from './ReadThreeTimes'
 import { PressProofStamp } from './PressProofStamp'
 import { FolioRule } from './FolioRule'
+import { TitleSignature } from './TitleSignature'
 
 type HeroProps = {
   voice: VoiceId
@@ -133,8 +132,6 @@ export function Hero({
   onWordKey,
   tokenRefs,
 }: HeroProps) {
-  const baseId = useId().replace(/:/g, '')
-  const grainId = `hero-grain-${baseId}`
   const spec = VOICE[voice]
   const toneStyle = { '--hero-tone': `var(--${voice})` } as CSSProperties
 
@@ -181,24 +178,41 @@ export function Hero({
 
   return (
     <div className="hero__inner" style={toneStyle}>
-<ChaseFrame tone={`var(--hero-tone, var(--quiet))`} className="hero__chase" intensity="full">
-        <svg className="hero__defs" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <filter id={grainId} x="-2%" y="-2%" width="104%" height="104%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="23" stitchTiles="stitch" />
-              <feColorMatrix type="matrix" values="0 0 0 0 .14  0 0 0 0 .12  0 0 0 0 .19  0 0 0 .04 0" />
-              <feComposite in2="SourceGraphic" operator="in" />
-            </filter>
-          </defs>
-        </svg>
+      <FolioRule word={word} voice={voice} pullSignal={pullSignal} setToday={setToday} />
 
-        <span className="hero__stage-grain" aria-hidden="true">
-          <svg viewBox="0 0 1200 800" preserveAspectRatio="none">
-            <rect x="0" y="0" width="1200" height="800" filter={`url(#${grainId})`} opacity=".04" />
+      <div className="hero__broadside">
+        <span className="hero__broadside-pin hero__broadside-pin--tl" aria-hidden="true">
+          <svg viewBox="0 0 26 26">
+            <circle cx="13" cy="13" r="11" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".75" />
+            <circle cx="13" cy="13" r="6" fill="none" stroke="currentColor" strokeWidth=".32" strokeDasharray=".7 1.6" opacity=".55" />
+            <circle cx="13" cy="13" r="1.4" fill="currentColor" />
+            <circle cx="13" cy="13" r=".5" fill="var(--night)" />
           </svg>
         </span>
-
-        <FolioRule word={word} voice={voice} pullSignal={pullSignal} setToday={setToday} />
+        <span className="hero__broadside-pin hero__broadside-pin--tr" aria-hidden="true">
+          <svg viewBox="0 0 26 26">
+            <circle cx="13" cy="13" r="11" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".75" />
+            <circle cx="13" cy="13" r="6" fill="none" stroke="currentColor" strokeWidth=".32" strokeDasharray=".7 1.6" opacity=".55" />
+            <circle cx="13" cy="13" r="1.4" fill="currentColor" />
+            <circle cx="13" cy="13" r=".5" fill="var(--night)" />
+          </svg>
+        </span>
+        <span className="hero__broadside-pin hero__broadside-pin--bl" aria-hidden="true">
+          <svg viewBox="0 0 26 26">
+            <circle cx="13" cy="13" r="11" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".75" />
+            <circle cx="13" cy="13" r="6" fill="none" stroke="currentColor" strokeWidth=".32" strokeDasharray=".7 1.6" opacity=".55" />
+            <circle cx="13" cy="13" r="1.4" fill="currentColor" />
+            <circle cx="13" cy="13" r=".5" fill="var(--night)" />
+          </svg>
+        </span>
+        <span className="hero__broadside-pin hero__broadside-pin--br" aria-hidden="true">
+          <svg viewBox="0 0 26 26">
+            <circle cx="13" cy="13" r="11" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".75" />
+            <circle cx="13" cy="13" r="6" fill="none" stroke="currentColor" strokeWidth=".32" strokeDasharray=".7 1.6" opacity=".55" />
+            <circle cx="13" cy="13" r="1.4" fill="currentColor" />
+            <circle cx="13" cy="13" r=".5" fill="var(--night)" />
+          </svg>
+        </span>
 
         <h1
           id="hero-title-label"
@@ -241,56 +255,33 @@ export function Hero({
           </span>
         </h1>
 
-        <span className="hero__title-rule" aria-hidden="true">
-          <svg viewBox="0 0 1200 14" preserveAspectRatio="none" className="hero__title-rule-svg">
-            <line
-              x1="2"
-              y1="7"
-              x2="1198"
-              y2="7"
-              stroke="currentColor"
-              strokeWidth=".5"
-              strokeDasharray="1 4"
-              opacity=".5"
-            />
-            <line
-              x1="2"
-              y1="7"
-              x2="1198"
-              y2="7"
-              stroke="currentColor"
-              strokeWidth=".8"
-              opacity=".25"
-              className="hero__title-rule-line"
-            />
-          </svg>
-        </span>
+        <TitleSignature voice={voice} />
+      </div>
 
-        <SpecimenSheet
-          voice={voice}
-          word={word}
-          hover={hover}
-          pullSignal={pullSignal}
-          setToday={setToday}
-          onSelect={onVoice}
-        />
+      <SpecimenSheet
+        voice={voice}
+        word={word}
+        hover={hover}
+        pullSignal={pullSignal}
+        setToday={setToday}
+        onSelect={onVoice}
+      />
 
-        <footer className="hero__ledger" aria-label="A trial proof · the question set three ways">
-          <ReadThreeTimes
-            voice={voice}
-            word={word}
-            setToday={setToday}
-            onVoice={onVoice}
-          />
-        </footer>
-
-        <PressProofStamp
+      <footer className="hero__ledger" aria-label="A trial proof · the question set three ways">
+        <ReadThreeTimes
           voice={voice}
           word={word}
           setToday={setToday}
-          pullSignal={pullSignal}
+          onVoice={onVoice}
         />
-      </ChaseFrame>
+      </footer>
+
+      <PressProofStamp
+        voice={voice}
+        word={word}
+        setToday={setToday}
+        pullSignal={pullSignal}
+      />
     </div>
   )
 }
@@ -373,6 +364,13 @@ function renderLineSegments({
           style={setStyle}
           data-set={visible ? 'in' : 'pending'}
         >
+          <span className="ht__word-mark" aria-hidden="true">
+            <svg viewBox="0 0 80 8" preserveAspectRatio="none" className="ht__word-mark-svg">
+              <line x1="2" y1="6" x2="78" y2="6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+              <circle cx="2" cy="6" r="1.6" fill="currentColor" />
+              <circle cx="78" cy="6" r="1.6" fill="currentColor" />
+            </svg>
+          </span>
           {isMarked && <span className="ht__glyph">{copy.glyph}</span>}
           <button
             type="button"
@@ -406,6 +404,13 @@ function renderLineSegments({
         style={setStyle}
         data-set={visible ? 'in' : 'pending'}
       >
+        <span className="ht__word-mark" aria-hidden="true">
+          <svg viewBox="0 0 80 8" preserveAspectRatio="none" className="ht__word-mark-svg">
+            <line x1="2" y1="6" x2="78" y2="6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            <circle cx="2" cy="6" r="1.6" fill="currentColor" />
+            <circle cx="78" cy="6" r="1.6" fill="currentColor" />
+          </svg>
+        </span>
         {isMarked && <span className="ht__glyph">{copy.glyph}</span>}
         <button
           type="button"

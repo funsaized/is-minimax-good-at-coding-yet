@@ -30185,3 +30185,405 @@ section.reveal h2 em::after {
   .held-silence__feet-row { justify-content: center; }
 }
 
+/* ────────────────────────────────────────────────────────────
+   ITERATION 443 · HERO REFINEMENT
+   The title now holds the line on an open broadside, framed
+   by four corner pins and a hand-set title signature beneath.
+   The marked words carry an SVG caret rather than a thin rule,
+   so the page reads as one composed plate instead of a chase.
+   ──────────────────────────────────────────────────────────── */
+
+/* — the open broadside that wraps the question — */
+
+.hero__broadside {
+  --bs-tone: var(--hero-tone, var(--quiet));
+  position: relative;
+  display: block;
+  margin: clamp(10px, 1.6vw, 22px) 0 clamp(8px, 1.2vw, 18px);
+  padding: clamp(34px, 4.6vw, 76px) clamp(20px, 3vw, 56px) clamp(30px, 4vw, 64px);
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in srgb, var(--bs-tone) 6%, transparent), transparent 72%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, color-mix(in srgb, var(--bs-tone) 4%, transparent), transparent 74%);
+  opacity: 0;
+  animation: heroBroadsideIn 1.4s var(--ease-out) .55s both;
+}
+
+@keyframes heroBroadsideIn {
+  0%   { opacity: 0; transform: translateY(10px); filter: blur(.8px); }
+  60%  { opacity: .9; filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__broadside { animation: none; opacity: 1; transform: none; }
+}
+
+/* — four small compositional pins at the corners — */
+
+.hero__broadside-pin {
+  position: absolute;
+  width: clamp(18px, 2vw, 26px);
+  height: clamp(18px, 2vw, 26px);
+  color: var(--bs-tone);
+  pointer-events: none;
+  opacity: 0;
+  animation: heroBroadsidePinIn .55s var(--ease-spring) 1.4s both;
+}
+
+.hero__broadside-pin--tl { top: clamp(-10px, -1vw, -4px); left: clamp(-10px, -1vw, -4px); }
+.hero__broadside-pin--tr { top: clamp(-10px, -1vw, -4px); right: clamp(-10px, -1vw, -4px); transform: scaleX(-1); }
+.hero__broadside-pin--bl { bottom: clamp(-10px, -1vw, -4px); left: clamp(-10px, -1vw, -4px); transform: scaleY(-1); }
+.hero__broadside-pin--br { bottom: clamp(-10px, -1vw, -4px); right: clamp(-10px, -1vw, -4px); transform: scale(-1, -1); }
+
+.hero__broadside-pin svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes heroBroadsidePinIn {
+  0%   { opacity: 0; transform: scale(.6); }
+  60%  { opacity: 1; transform: scale(1.18); }
+  100% { opacity: .8; transform: scale(1); }
+}
+
+.hero__broadside-pin--tr { animation-name: heroBroadsidePinInR; }
+.hero__broadside-pin--bl { animation-name: heroBroadsidePinInB; }
+.hero__broadside-pin--br { animation-name: heroBroadsidePinInBR; }
+
+@keyframes heroBroadsidePinInR {
+  0%   { opacity: 0; transform: scaleX(-1) scale(.6); }
+  60%  { opacity: 1; transform: scaleX(-1) scale(1.18); }
+  100% { opacity: .8; transform: scaleX(-1) scale(1); }
+}
+
+@keyframes heroBroadsidePinInB {
+  0%   { opacity: 0; transform: scaleY(-1) scale(.6); }
+  60%  { opacity: 1; transform: scaleY(-1) scale(1.18); }
+  100% { opacity: .8; transform: scaleY(-1) scale(1); }
+}
+
+@keyframes heroBroadsidePinInBR {
+  0%   { opacity: 0; transform: scale(-1, -1) scale(.6); }
+  60%  { opacity: 1; transform: scale(-1, -1) scale(1.18); }
+  100% { opacity: .8; transform: scale(-1, -1) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__broadside-pin { animation: none; opacity: .8; }
+}
+
+@media (max-width: 720px) {
+  .hero__broadside {
+    padding: clamp(28px, 4vw, 40px) clamp(14px, 3vw, 22px) clamp(24px, 3.4vw, 36px);
+  }
+  .hero__broadside-pin { display: none; }
+}
+
+/* — when the lever pulls, the broadside takes a quiet breath — */
+
+.app--pulling .hero__broadside {
+  animation: chaseBreath .9s var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .hero__broadside { animation: none; }
+}
+
+/* — the marked-word mark: a small SVG caret that anchors
+   the chosen word to the line instead of a thin rule — */
+
+.hero__title .ht__word-mark {
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: -.04em;
+  height: 8px;
+  pointer-events: none;
+  color: currentColor;
+  opacity: 0;
+  transform: scaleX(.6);
+  transform-origin: center;
+  transition: opacity .35s var(--ease), transform .5s var(--ease-spring);
+}
+
+.hero__title .ht__word-mark-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero__title .ht__word:hover .ht__word-mark,
+.hero__title .ht__word:focus-within .ht__word-mark {
+  opacity: .42;
+  transform: scaleX(1);
+}
+
+.hero__title .ht__word.is-marked .ht__word-mark {
+  opacity: 1;
+  transform: scaleX(1);
+  animation: heroWordMarkSettle .65s var(--ease-spring) both;
+}
+
+.hero__title .ht__word.is-hover .ht__word-mark {
+  opacity: .65;
+  transform: scaleX(1);
+}
+
+@keyframes heroWordMarkSettle {
+  0%   { opacity: 0; transform: scaleX(.3); }
+  55%  { opacity: 1; transform: scaleX(1.08); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title .ht__word-mark { transition: none; transform: none; opacity: 0; }
+  .hero__title .ht__word.is-marked .ht__word-mark { opacity: 1; transform: none; animation: none; }
+}
+
+/* — hide the old ::after rule now that the SVG mark owns the feedback — */
+
+.hero__title .ht__word::after { display: none; }
+
+/* ── the title signature · a hand-drawn rule with two pins
+   and a small compositor chop beneath — the signature of
+   iteration 443 — */
+
+.title-signature {
+  --ts-tone: var(--hero-tone, var(--quiet));
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr clamp(70px, 8vw, 96px) 1fr;
+  align-items: center;
+  gap: clamp(8px, 1.4vw, 18px);
+  margin: clamp(8px, 1.2vw, 16px) clamp(8px, 1.4vw, 18px) clamp(2px, .4vw, 6px);
+  color: var(--ts-tone);
+  opacity: 0;
+  animation: titleSignatureIn 1.2s var(--ease-out) 1.55s both;
+}
+
+.title-signature__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.title-signature__rule {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(20px, 2.4vw, 26px);
+  pointer-events: none;
+}
+
+.title-signature__rule-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.title-signature__rule-lead {
+  stroke-dasharray: 1196;
+  stroke-dashoffset: 1196;
+  animation: titleSignatureDraw 1.6s var(--ease-out) 1.7s both;
+}
+
+.title-signature__rule-hair {
+  opacity: .5;
+}
+
+.title-signature__pin,
+.title-signature__pin-eye,
+.title-signature__cap {
+  opacity: 0;
+  animation: titleSignaturePinIn .55s var(--ease-spring) 2.5s both;
+}
+
+@keyframes titleSignatureDraw {
+  0%   { stroke-dashoffset: 1196; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes titleSignaturePinIn {
+  0%   { opacity: 0; transform: scale(.4); transform-box: fill-box; transform-origin: center; }
+  60%  { opacity: 1; transform: scale(1.18); transform-box: fill-box; transform-origin: center; }
+  100% { opacity: 1; transform: scale(1); transform-box: fill-box; transform-origin: center; }
+}
+
+.title-signature__cap {
+  transform-box: fill-box;
+}
+
+.title-signature__chop {
+  position: relative;
+  display: block;
+  width: clamp(56px, 6.4vw, 76px);
+  height: clamp(56px, 6.4vw, 76px);
+  margin: 0 auto;
+  opacity: 0;
+  animation: titleSignatureChopIn .8s var(--ease-spring) 2.8s both;
+}
+
+.title-signature__chop svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes titleSignatureChopIn {
+  0%   { opacity: 0; transform: scale(.5) rotate(-6deg); }
+  60%  { opacity: 1; transform: scale(1.08) rotate(2deg); }
+  100% { opacity: .95; transform: scale(1) rotate(0deg); }
+}
+
+.title-signature__legend {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + clamp(2px, .4vw, 6px));
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, .8vw, 10px);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(11px, .94vw, 13px);
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+  opacity: 0;
+  animation: titleSignatureLegendIn .9s var(--ease-out) 3.2s both;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.title-signature__legend-key {
+  font-style: italic;
+  color: var(--muted);
+}
+
+.title-signature__legend-voice {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-style: normal;
+  color: var(--ts-tone);
+}
+
+.title-signature__legend-letter {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.08em;
+  letter-spacing: -.01em;
+  color: var(--ts-tone);
+}
+
+.title-signature__legend-rule {
+  display: inline-block;
+  width: 8px;
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.title-signature__legend-name {
+  font-family: var(--display);
+  font-style: italic;
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.title-signature__legend-face {
+  font-style: italic;
+  font-size: clamp(10px, .8vw, 11.5px);
+  letter-spacing: -.005em;
+  color: var(--muted);
+  text-transform: lowercase;
+}
+
+@keyframes titleSignatureLegendIn {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  100% { opacity: .92; transform: translateX(-50%) translateY(0); }
+}
+
+.app--voice-quiet .title-signature { --ts-tone: var(--quiet); }
+.app--voice-human .title-signature { --ts-tone: var(--human); }
+.app--voice-bold  .title-signature { --ts-tone: var(--bold);  }
+
+@media (prefers-reduced-motion: reduce) {
+  .title-signature,
+  .title-signature__rule-lead,
+  .title-signature__pin,
+  .title-signature__pin-eye,
+  .title-signature__cap,
+  .title-signature__chop,
+  .title-signature__legend {
+    animation: none; opacity: 1; transform: none;
+  }
+  .title-signature__rule-hair { opacity: .5; }
+}
+
+@media (max-width: 720px) {
+  .title-signature {
+    grid-template-columns: 1fr clamp(54px, 14vw, 70px) 1fr;
+    gap: clamp(6px, 1.4vw, 12px);
+    margin: clamp(6px, 1vw, 12px) clamp(2px, .8vw, 10px) 0;
+  }
+  .title-signature__legend {
+    gap: 6px;
+    font-size: clamp(10px, 2.6vw, 12px);
+    white-space: normal;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  .title-signature__legend-face { display: none; }
+}
+
+@media (max-width: 540px) {
+  .title-signature { grid-template-columns: 1fr clamp(48px, 14vw, 60px) 1fr; }
+  .title-signature__chop { width: clamp(44px, 12vw, 56px); height: clamp(44px, 12vw, 56px); }
+}
+
+/* — silence the unused chase-frame classes used only by the
+   old hero wrap — still in the DOM via the .hero__chase class
+   on inner elements, but no longer bound to a wrap. — */
+
+.hero__chase { display: contents; }
+.hero__chase .chase-frame__rule--outer,
+.hero__chase .chase-frame__rule--inner,
+.hero__chase .chase-frame__bed,
+.hero__chase .chase-frame__grain,
+.hero__chase .chase-frame__corner,
+.hero__chase .chase-frame__ticks,
+.hero__chase .chase-frame__inner { display: none; }
+
+/* — the grain layer that sits behind the broadside —
+   kept in the DOM via Hero.tsx; absolute so it never
+   takes grid space. — */
+
+.hero__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero__stage-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .55;
+  z-index: 0;
+}
+
+.hero__stage-grain svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
