@@ -293,21 +293,23 @@ export function Answer({ open, onToggle, triggerRef, voice, word, pullSignal, se
         </div>
 
         <p className="answer__consensus" aria-label="The three voices, converged">
-          <span className="answer__consensus-mark answer__consensus-mark--quiet" aria-hidden="true">A</span>
-          <span className="answer__consensus-stitch" aria-hidden="true">
-            <svg viewBox="0 0 60 8" preserveAspectRatio="none">
-              <line x1="0" y1="4" x2="60" y2="4" stroke="currentColor" strokeWidth=".6" strokeDasharray="1.4 2.8" opacity=".55" />
-              <circle cx="30" cy="4" r="1" fill="currentColor" opacity=".7" />
-            </svg>
+          <span className="answer__consensus-marks" aria-hidden="true">
+            <span className="answer__consensus-mark answer__consensus-mark--quiet">A</span>
+            <span className="answer__consensus-stitch">
+              <svg viewBox="0 0 60 8" preserveAspectRatio="none">
+                <line x1="0" y1="4" x2="60" y2="4" stroke="currentColor" strokeWidth=".6" strokeDasharray="1.4 2.8" opacity=".55" />
+                <circle cx="30" cy="4" r="1" fill="currentColor" opacity=".7" />
+              </svg>
+            </span>
+            <span className="answer__consensus-mark answer__consensus-mark--human">B</span>
+            <span className="answer__consensus-stitch">
+              <svg viewBox="0 0 60 8" preserveAspectRatio="none">
+                <line x1="0" y1="4" x2="60" y2="4" stroke="currentColor" strokeWidth=".6" strokeDasharray="1.4 2.8" opacity=".55" />
+                <circle cx="30" cy="4" r="1" fill="currentColor" opacity=".7" />
+              </svg>
+            </span>
+            <span className="answer__consensus-mark answer__consensus-mark--bold">C</span>
           </span>
-          <span className="answer__consensus-mark answer__consensus-mark--human" aria-hidden="true">B</span>
-          <span className="answer__consensus-stitch" aria-hidden="true">
-            <svg viewBox="0 0 60 8" preserveAspectRatio="none">
-              <line x1="0" y1="4" x2="60" y2="4" stroke="currentColor" strokeWidth=".6" strokeDasharray="1.4 2.8" opacity=".55" />
-              <circle cx="30" cy="4" r="1" fill="currentColor" opacity=".7" />
-            </svg>
-          </span>
-          <span className="answer__consensus-mark answer__consensus-mark--bold" aria-hidden="true">C</span>
           <span className="answer__consensus-rule" aria-hidden="true" />
           <span className="answer__consensus-line">
             <em>yes</em> — but only when it earns the pause.

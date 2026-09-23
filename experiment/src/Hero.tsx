@@ -203,6 +203,11 @@ export function Hero({
             <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
             <span className="hero__eyebrow-em">the question</span>
           </span>
+          <span className="hero__eyebrow-date" aria-hidden="true">
+            <span className="hero__eyebrow-date-rule" />
+            <em>set today</em>
+            <span className="hero__eyebrow-date-tag">{setToday}</span>
+          </span>
         </div>
 
         <h1
@@ -306,25 +311,27 @@ export function Hero({
 
         <HeroComposition voice={voice} word={word} hover={hover} />
 
-        <span className="hero__coda" aria-hidden="true">
-          <span className="hero__coda-rule" />
-          <em className="hero__coda-line">
-            <span className="hero__coda-glyph" aria-hidden="true">§</span>
-            {spec.gloss}
-            <span className="hero__coda-dot" aria-hidden="true">·</span>
-            set in <em className="hero__coda-voice">{spec.name.toLowerCase()}</em>
-            <span className="hero__coda-dot" aria-hidden="true">·</span>
-            read it three times, let one voice hold
-          </em>
-          <span className="hero__coda-rule" />
-          <span className="hero__coda-pin" aria-hidden="true">
-            <svg viewBox="0 0 16 16">
-              <circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" strokeWidth=".55" />
-              <circle cx="8" cy="8" r="3.4" fill="currentColor" opacity=".4" />
-              <circle cx="8" cy="8" r="1" fill="var(--night)" />
-            </svg>
+        <div className="hero__coda-wrap">
+          <span className="hero__coda" aria-hidden="true">
+            <span className="hero__coda-rule" />
+            <em className="hero__coda-line">
+              <span className="hero__coda-glyph" aria-hidden="true">§</span>
+              read it three times
+              <span className="hero__coda-dot" aria-hidden="true">·</span>
+              let one voice hold
+            </em>
+            <span className="hero__coda-rule" />
+            <span className="hero__coda-pin" aria-hidden="true">
+              <svg viewBox="0 0 16 16">
+                <circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" strokeWidth=".55" />
+                <circle cx="8" cy="8" r="3.4" fill="currentColor" opacity=".4" />
+                <circle cx="8" cy="8" r="1" fill="var(--night)" />
+              </svg>
+            </span>
           </span>
-        </span>
+
+          <HeroVoices voice={voice} pullSignal={pullSignal} onSelect={onVoice} compact />
+        </div>
 
         <PressProofStamp
           voice={voice}
@@ -333,8 +340,6 @@ export function Hero({
           pullSignal={pullSignal}
         />
       </ChaseFrame>
-
-      <HeroVoices voice={voice} pullSignal={pullSignal} onSelect={onVoice} />
     </div>
   )
 }
@@ -476,6 +481,7 @@ type HeroVoicesProps = {
   voice: VoiceId
   pullSignal: number
   onSelect: (voice: VoiceId) => void
+  compact?: boolean
 }
 
 type VoiceChip = {
@@ -536,7 +542,7 @@ const HERO_VOICES: Record<VoiceId, VoiceChip> = {
 
 const HERO_VOICE_ORDER: VoiceId[] = ['quiet', 'human', 'bold']
 
-function HeroVoices({ voice, pullSignal, onSelect }: HeroVoicesProps) {
+function HeroVoices({ voice, pullSignal, onSelect, compact }: HeroVoicesProps) {
   const active = HERO_VOICES[voice]
   const activeSampleStyle = {
     fontFamily: active.family,
@@ -564,68 +570,131 @@ function HeroVoices({ voice, pullSignal, onSelect }: HeroVoicesProps) {
   }
 
   return (
-    <aside className={`hero-voices hero-voices--${voice}`} aria-label="The three voices, set beside the title">
-      <header className="hero-voices__head" aria-hidden="true">
-        <span className="hero-voices__head-key">
-          <span className="hero-voices__head-line" />
-          <em>three voices</em>
-        </span>
-        <span className="hero-voices__head-meta">
-          <span className="hero-voices__head-dot" />
-          <em>set in</em>
-          <span className="hero-voices__head-name">{active.name}</span>
-        </span>
-      </header>
+    <aside
+      className={`hero-voices hero-voices--${voice} ${compact ? 'hero-voices--compact' : ''}`}
+      aria-label="The three voices, set on the same line"
+    >
+      {!compact && (
+        <header className="hero-voices__head" aria-hidden="true">
+          <span className="hero-voices__head-key">
+            <span className="hero-voices__head-line" />
+            <em>three voices</em>
+          </span>
+          <span className="hero-voices__head-meta">
+            <span className="hero-voices__head-dot" />
+            <em>set in</em>
+            <span className="hero-voices__head-name">{active.name}</span>
+          </span>
+        </header>
+      )}
 
-      <p
-        className={`hero-voices__sample hero-voices__sample--${voice}`}
-        style={activeSampleStyle}
-        key={`sample-${voice}-${pullSignal}`}
-      >
-        {active.sample}
-      </p>
+      {compact ? (
+        <div className="hero-voices__marginalia" role="radiogroup" aria-label="Switch the voice · A quiet, B human, C bold">
+          <span className="hero-voices__marginalia-key" aria-hidden="true">
+            <span className="hero-voices__marginalia-rule" />
+            <em>three voices · set on the same line</em>
+            <span className="hero-voices__marginalia-rule" />
+          </span>
+          <span className="hero-voices__marginalia-row">
+            {HERO_VOICE_ORDER.map((v, idx) => {
+              const row = HERO_VOICES[v]
+              const isActive = voice === v
+              const sampleStyle = {
+                fontFamily: row.family,
+                fontWeight: row.weight,
+                fontStyle: row.style,
+                letterSpacing: row.tracking,
+                textTransform: row.uppercased ? ('uppercase' as const) : ('none' as const),
+              } as CSSProperties
+              return (
+                <span key={v} className="hero-voices__marginalia-cell">
+                  <button
+                    type="button"
+                    role="radio"
+                    aria-checked={isActive}
+                    className={`hero-voices__marginalia-chip hero-voices__marginalia-chip--${v} ${isActive ? 'is-active' : ''}`}
+                    onClick={() => onSelect(v)}
+                    onKeyDown={event => onChipKey(event, v)}
+                    aria-label={`${row.letter} · ${row.name} · ${row.face}`}
+                  >
+                    <span className="hero-voices__marginalia-letter" aria-hidden="true">{row.letter}</span>
+                    <span className="hero-voices__marginalia-stack">
+                      <em className="hero-voices__marginalia-name">{row.name}</em>
+                      <span
+                        className={`hero-voices__marginalia-sample hero-voices__marginalia-sample--${v}`}
+                        style={sampleStyle}
+                        aria-hidden="true"
+                      >
+                        {isActive ? active.sample : null}
+                      </span>
+                    </span>
+                  </button>
+                  {idx < HERO_VOICE_ORDER.length - 1 && (
+                    <span className="hero-voices__marginalia-stitch" aria-hidden="true">
+                      <svg viewBox="0 0 24 12" preserveAspectRatio="none">
+                        <line x1="0" y1="6" x2="24" y2="6" stroke="currentColor" strokeWidth=".55" strokeDasharray="1.2 2.2" />
+                        <circle cx="12" cy="6" r="1.1" fill="currentColor" />
+                      </svg>
+                    </span>
+                  )}
+                </span>
+              )
+            })}
+          </span>
+        </div>
+      ) : (
+        <>
+          <p
+            className={`hero-voices__sample hero-voices__sample--${voice}`}
+            style={activeSampleStyle}
+            key={`sample-${voice}-${pullSignal}`}
+          >
+            {active.sample}
+          </p>
 
-      <p className="hero-voices__caption" aria-hidden="true">
-        <em>{active.caption}</em>
-        <span className="hero-voices__caption-dot" aria-hidden="true">·</span>
-        <em className="hero-voices__caption-face">{active.face}</em>
-      </p>
+          <p className="hero-voices__caption" aria-hidden="true">
+            <em>{active.caption}</em>
+            <span className="hero-voices__caption-dot" aria-hidden="true">·</span>
+            <em className="hero-voices__caption-face">{active.face}</em>
+          </p>
 
-      <div className="hero-voices__chips" role="radiogroup" aria-label="Switch the voice · A quiet, B human, C bold">
-        {HERO_VOICE_ORDER.map(v => {
-          const row = HERO_VOICES[v]
-          const isActive = voice === v
-          return (
-            <button
-              key={v}
-              type="button"
-              role="radio"
-              aria-checked={isActive}
-              className={`hero-voices__chip hero-voices__chip--${v} ${isActive ? 'is-active' : ''}`}
-              onClick={() => onSelect(v)}
-              onKeyDown={event => onChipKey(event, v)}
-              aria-label={`${row.letter} · ${row.name} · ${row.face}`}
-            >
-              <span className="hero-voices__chip-letter" aria-hidden="true">{row.letter}</span>
-              <span className="hero-voices__chip-stack">
-                <em className="hero-voices__chip-name">{row.name}</em>
-                <span className="hero-voices__chip-face">{row.face}</span>
-              </span>
-              <span className="hero-voices__chip-pip" aria-hidden="true" />
-            </button>
-          )
-        })}
-      </div>
+          <div className="hero-voices__chips" role="radiogroup" aria-label="Switch the voice · A quiet, B human, C bold">
+            {HERO_VOICE_ORDER.map(v => {
+              const row = HERO_VOICES[v]
+              const isActive = voice === v
+              return (
+                <button
+                  key={v}
+                  type="button"
+                  role="radio"
+                  aria-checked={isActive}
+                  className={`hero-voices__chip hero-voices__chip--${v} ${isActive ? 'is-active' : ''}`}
+                  onClick={() => onSelect(v)}
+                  onKeyDown={event => onChipKey(event, v)}
+                  aria-label={`${row.letter} · ${row.name} · ${row.face}`}
+                >
+                  <span className="hero-voices__chip-letter" aria-hidden="true">{row.letter}</span>
+                  <span className="hero-voices__chip-stack">
+                    <em className="hero-voices__chip-name">{row.name}</em>
+                    <span className="hero-voices__chip-face">{row.face}</span>
+                  </span>
+                  <span className="hero-voices__chip-pip" aria-hidden="true" />
+                </button>
+              )
+            })}
+          </div>
 
-      <footer className="hero-voices__foot" aria-hidden="true">
-        <span className="hero-voices__foot-rule" />
-        <em className="hero-voices__foot-line">
-          cycle <kbd>shift</kbd>+<kbd>v</kbd>
-          <span className="hero-voices__foot-dot" aria-hidden="true">·</span>
-          or click a chip
-        </em>
-        <span className="hero-voices__foot-rule" />
-      </footer>
+          <footer className="hero-voices__foot" aria-hidden="true">
+            <span className="hero-voices__foot-rule" />
+            <em className="hero-voices__foot-line">
+              cycle <kbd>shift</kbd>+<kbd>v</kbd>
+              <span className="hero-voices__foot-dot" aria-hidden="true">·</span>
+              or click a chip
+            </em>
+            <span className="hero-voices__foot-rule" />
+          </footer>
+        </>
+      )}
     </aside>
   )
 }
