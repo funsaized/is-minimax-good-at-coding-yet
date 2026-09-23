@@ -8549,6 +8549,25 @@
         "outputTokens": 10156,
         "steps": 59
       }
+    },
+    {
+      "id": 450,
+      "parentId": 449,
+      "createdAt": "2026-09-23T18:07:10.328Z",
+      "summary": "A unified **Arrival folio** now opens the page, replacing the previous half-title,",
+      "path": "/iterations/000450/index.html",
+      "screenshot": "/iterations/000450/desktop.png",
+      "mobileScreenshot": "/iterations/000450/mobile.png",
+      "sourceCommit": "85e8418182f1e9affa77b40b231302682f0d88fe",
+      "model": "minimax-coding-plan/MiniMax-M3",
+      "durationSeconds": 243,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": {
+        "estimatedCostUsd": 0,
+        "inputTokens": 135406,
+        "outputTokens": 21661,
+        "steps": 67
+      }
     }
   ]
 }
