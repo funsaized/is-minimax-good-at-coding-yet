@@ -311,67 +311,32 @@ export function Hero({
 
         <HeroComposition voice={voice} word={word} hover={hover} />
 
-        <div className="hero__coda-wrap">
-          <span className="hero__coda" aria-hidden="true">
-            <span className="hero__coda-rule" />
-            <em className="hero__coda-line">
-              <span className="hero__coda-glyph" aria-hidden="true">§</span>
-              read it three times
-              <span className="hero__coda-dot" aria-hidden="true">·</span>
-              let one voice hold
-            </em>
-            <span className="hero__coda-rule" />
-            <span className="hero__coda-pin" aria-hidden="true">
-              <svg viewBox="0 0 16 16">
-                <circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" strokeWidth=".55" />
-                <circle cx="8" cy="8" r="3.4" fill="currentColor" opacity=".4" />
-                <circle cx="8" cy="8" r="1" fill="var(--night)" />
-              </svg>
+        <footer className="hero__ledger" aria-label="The composer&rsquo;s ledger at the foot of the folio">
+          <div className="hero__ledger-row">
+            <span className="hero__ledger-rule hero__ledger-rule--l" aria-hidden="true" />
+            <span className="hero__ledger-core">
+              <em className="hero__ledger-mark" aria-hidden="true">
+                <svg viewBox="0 0 16 16">
+                  <circle cx="8" cy="8" r="6.4" fill="none" stroke="currentColor" strokeWidth=".55" />
+                  <circle cx="8" cy="8" r="3.4" fill="currentColor" opacity=".4" />
+                  <circle cx="8" cy="8" r="1" fill="var(--night)" />
+                </svg>
+              </em>
+              <em className="hero__ledger-line">
+                <span className="hero__ledger-verb">read it three times</span>
+                <span className="hero__ledger-dot" aria-hidden="true">·</span>
+                <span className="hero__ledger-let">let one voice hold</span>
+              </em>
             </span>
-          </span>
-
+            <span className="hero__ledger-set" aria-hidden="true">
+              <span className="hero__ledger-set-rule" />
+              <em>set on {setToday}</em>
+              <span className="hero__ledger-set-rule" />
+            </span>
+            <span className="hero__ledger-rule hero__ledger-rule--r" aria-hidden="true" />
+          </div>
           <HeroVoices voice={voice} pullSignal={pullSignal} onSelect={onVoice} compact />
-
-          <span className="hero__signature" aria-hidden="true">
-            <span className="hero__signature-rule" />
-            <span className="hero__signature-mark">
-              <svg viewBox="0 0 28 28">
-                <defs>
-                  <linearGradient id={`hero-sig-${baseId}`} x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="currentColor" stopOpacity=".95" />
-                    <stop offset="100%" stopColor="currentColor" stopOpacity=".45" />
-                  </linearGradient>
-                </defs>
-                <circle cx="14" cy="14" r="12.4" fill="none" stroke={`url(#hero-sig-${baseId})`} strokeWidth=".55" />
-                <circle cx="14" cy="14" r="9" fill="none" stroke="currentColor" strokeWidth=".35" strokeDasharray=".6 1.4" opacity=".55" />
-                <path d="M5.4 14 A 8.6 8.6 0 0 1 22.6 14" fill="none" stroke="currentColor" strokeWidth=".55" strokeLinecap="round" />
-                <path d="M14 6 L14 22" fill="none" stroke="currentColor" strokeWidth=".35" opacity=".55" />
-                <circle cx="14" cy="14" r="1.4" fill="currentColor" />
-                <circle cx="14" cy="14" r=".6" fill="var(--night)" />
-                <circle cx="2.4" cy="14" r=".7" fill="currentColor" opacity=".7" />
-                <circle cx="25.6" cy="14" r=".7" fill="currentColor" opacity=".7" />
-              </svg>
-            </span>
-            <em className="hero__signature-name">
-              m<sup>3</sup> press
-            </em>
-            <span className="hero__signature-bead" aria-hidden="true">
-              <svg viewBox="0 0 8 8">
-                <circle cx="4" cy="4" r="3" fill="currentColor" opacity=".85" />
-                <circle cx="4" cy="4" r="1" fill="var(--night)" />
-              </svg>
-            </span>
-            <em className="hero__signature-set">set on {setToday}</em>
-            <span className="hero__signature-bead" aria-hidden="true">
-              <svg viewBox="0 0 8 8">
-                <circle cx="4" cy="4" r="3" fill="currentColor" opacity=".85" />
-                <circle cx="4" cy="4" r="1" fill="var(--night)" />
-              </svg>
-            </span>
-            <em className="hero__signature-voice">{VOICE[voice].name}</em>
-            <span className="hero__signature-rule" />
-          </span>
-        </div>
+        </footer>
 
         <PressProofStamp
           voice={voice}

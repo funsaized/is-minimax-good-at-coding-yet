@@ -12,7 +12,6 @@ import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
 import { FirstLight } from './FirstLight'
 import { Hero } from './Hero'
-import { FolioAtlas } from './FolioAtlas'
 import { FolioTurn } from './FolioTurn'
 import { Press } from './Press'
 import { ProofLine } from './ProofLine'
@@ -322,9 +321,17 @@ export function App() {
           </span>
         </a>
 
-        <span className="topbar__time" aria-hidden="true">
-          <span className="topbar__time-glyph" />
-          <em className="topbar__time-word">{timeOfDay}</em>
+        <span className="topbar__center" aria-hidden="true">
+          <span className="topbar__center-rule topbar__center-rule--l" />
+          <span className="topbar__time">
+            <span className="topbar__time-glyph" />
+            <em className="topbar__time-word">{timeOfDay}</em>
+          </span>
+          <span className="topbar__center-sep" aria-hidden="true">
+            <em>set on</em>
+            <span className="topbar__center-date">{setToday}</span>
+          </span>
+          <span className="topbar__center-rule topbar__center-rule--r" />
         </span>
 
         <span
@@ -333,6 +340,7 @@ export function App() {
         >
           <span className="status__voice-glyph" aria-hidden="true">{VOICE_LETTER[voice]}</span>
           <em className="status__voice-name">{VOICE_NAME[voice]}</em>
+          <span className="status__voice-rule" aria-hidden="true" />
         </span>
       </header>
 
@@ -351,13 +359,6 @@ export function App() {
           tokenRefs={tokenRefs}
         />
       </section>
-
-      <FolioAtlas
-        folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
-        activeId={activeSection}
-        voice={voice}
-        setToday={setToday}
-      />
 
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="ii" title="the press bed" hint="pull a lever · take an impression" voice={voice} />
