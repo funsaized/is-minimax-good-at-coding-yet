@@ -19,7 +19,7 @@ import { ProofLine } from './ProofLine'
 import { Specimen } from './Specimen'
 import { Answer } from './Answer'
 import { Colophon } from './Colophon'
-import { PrinterMark, PressSigil } from './PrinterMark'
+import { PrinterMark } from './PrinterMark'
 import { ReadingNote } from './ReadingNote'
 import { SpineThread } from './SpineThread'
 import { ReadingPouch } from './ReadingPouch'
@@ -27,7 +27,6 @@ import { ComposingBreath } from './ComposingBreath'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
-const VOICE_ORDER: VoiceId[] = ['quiet', 'human', 'bold']
 const NEXT_VOICE: Record<VoiceId, VoiceId> = { quiet: 'human', human: 'bold', bold: 'quiet' }
 const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
 const VOICE_FACE: Record<VoiceId, string> = {
@@ -89,6 +88,7 @@ export function App() {
   const [pullCount, setPullCount] = useState(0)
   const [pullSignal, setPullSignal] = useState(0)
   const [isPulling, setIsPulling] = useState(false)
+  const [flashKey, setFlashKey] = useState(0)
   const [keptCounts, setKeptCounts] = useState<Record<WordId, number>>({ m3: 0, good: 0, yet: 0 })
   const [timeOfDay, setTimeOfDay] = useState<string>(TIME_OF_DAY_FOLIOS[1])
   const tokenRefs = useRef<Partial<Record<WordId, HTMLButtonElement | null>>>({})
@@ -149,6 +149,7 @@ export function App() {
     setIsPulling(true)
     setPullCount(c => c + 1)
     setPullSignal(s => s + 1)
+    setFlashKey(k => k + 1)
     setVoice(prev => {
       const next = NEXT_VOICE[prev]
       setAnnouncement(`Voice set in ${VOICE_NAME[next]}.`)
@@ -280,7 +281,6 @@ export function App() {
     setAnnouncement(next ? 'Answer unfolded.' : 'Answer folded back.')
   }
 
-  const activeFolio = FOLIOS.find(f => f.id === activeSection) ?? FOLIOS[0]
   const activeFolioIndex = FOLIOS.findIndex(f => f.id === activeSection) + 1
 
   return (
@@ -295,6 +295,7 @@ export function App() {
       <span className="app__backdrop" aria-hidden="true" />
       <span className="app__atmo" aria-hidden="true" />
       <FirstLight />
+      <span className="app__flash" aria-hidden="true" key={`flash-${flashKey}`} />
       <CursorGlow />
       <SpineThread
         folios={FOLIOS as unknown as { id: string; index: string; label: string; hint: string }[]}
@@ -306,31 +307,22 @@ export function App() {
 
       <header className="topbar" role="banner">
         <a className="brand" href="#question" aria-label="Return to the question">
-          <PrinterMark size={34} voice={voice} />
+          <PrinterMark size={32} voice={voice} />
           <span className="brand__copy">
             <strong>m<sup>3</sup> press</strong>
-            <em>a single question, set three ways</em>
+            <em>one question, set three ways</em>
           </span>
         </a>
-
-        <span className="topbar__folio" aria-label={`Now on folio ${activeFolio.index} · ${activeFolio.label}`}>
-          <span className="topbar__folio-rule" aria-hidden="true" />
-          <em>folio</em>
-          <span className="topbar__folio-num" aria-hidden="true">{activeFolio.index}</span>
-          <span className="topbar__folio-label" aria-hidden="true">· {activeFolio.label}</span>
-          <span className="topbar__folio-rule" aria-hidden="true" />
-        </span>
 
         <span className="topbar__time" aria-hidden="true">
           <span className="topbar__time-glyph" />
           <em className="topbar__time-word">{timeOfDay}</em>
         </span>
 
-        <span className="topbar__sigil" aria-hidden="true">
-          <PressSigil voice={voice} size={28} />
-        </span>
-
-        <span className={`status__voice status__voice--${voice}`} aria-label={`Voice: ${VOICE_NAME[voice]} (${VOICE_LETTER[voice]})`}>
+        <span
+          className={`status__voice status__voice--${voice}`}
+          aria-label={`Voice: ${VOICE_NAME[voice]} (${VOICE_LETTER[voice]})`}
+        >
           <span className="status__voice-glyph" aria-hidden="true">{VOICE_LETTER[voice]}</span>
           <em className="status__voice-name">{VOICE_NAME[voice]}</em>
         </span>
@@ -436,7 +428,7 @@ export function App() {
       </footer>
 
       <span className="sr-only" aria-live="polite">{announcement}</span>
-      <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · ${activeFolio.label} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}) · ${pullCount} impressions on the day.`}</span>
+      <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}) · ${pullCount} impressions on the day.`}</span>
       <span className="sr-only" aria-live="off">{`Page-time · ${timeOfDay}`}</span>
     </main>
   )

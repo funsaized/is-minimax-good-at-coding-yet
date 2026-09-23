@@ -1,7 +1,6 @@
 import { useEffect, useRef, type CSSProperties } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
-import { PrinterFlourish } from './PrinterFlourish'
 import { KeptTally } from './KeptTally'
 import { PressSignature } from './PressSignature'
 import { ReadingNote } from './ReadingNote'
@@ -156,10 +155,6 @@ export function Colophon({ voice, word, pullSignal, pullCount, setToday, keptCou
                 <em>kept today</em>
               </span>
             </div>
-          </div>
-
-          <div className="colophon__flourish" aria-hidden="true">
-            <PrinterFlourish voice={voice} />
           </div>
 
           <figure className="colophon__compositor" aria-label="The compositor, signing off">
