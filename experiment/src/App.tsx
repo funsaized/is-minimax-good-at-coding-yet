@@ -20,6 +20,7 @@ import { Specimen } from './Specimen'
 import { HeldReading } from './HeldReading'
 import { Answer } from './Answer'
 import { PageHolds } from './PageHolds'
+import { HeldSilence } from './HeldSilence'
 import { Colophon } from './Colophon'
 import { PrinterAtlas } from './PrinterAtlas'
 import { ReadingNote } from './ReadingNote'
@@ -476,6 +477,25 @@ export function App() {
         note="yes — but only when it earns the pause. the page holds the question open until you ask."
         attribution="three readings, one line"
         offset={80}
+      />
+
+      <ComposingBreath voice={voice} count={FOLIOS.length} />
+      <FolioTurn index="v¼" title="the held silence" hint="a single breath, between the answer and the page" voice={voice} soft />
+      <HeldSilence
+        voice={voice}
+        setToday={setToday}
+        timeOfDay={timeOfDay}
+        pullSignal={pullSignal}
+      />
+
+      <MarginalCaret
+        side="left"
+        voice={voice}
+        glyph="·"
+        eyebrow="folio v¼ · the held silence"
+        note="between the answer and the cord that follows — a single breath, then the page holds the line."
+        attribution="the page, between two breaths"
+        offset={20}
       />
 
       <ComposingBreath voice={voice} count={FOLIOS.length} />
