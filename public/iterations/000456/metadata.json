@@ -1,0 +1,19 @@
+{
+  "id": 456,
+  "parentId": 455,
+  "createdAt": "2026-09-23T21:54:19.109Z",
+  "summary": "A single composed opening replaces the previous small half-title. The",
+  "path": "/iterations/000456/index.html",
+  "screenshot": "/iterations/000456/desktop.png",
+  "mobileScreenshot": "/iterations/000456/mobile.png",
+  "sourceCommit": "8401224e8a44b5dc4003387b35deb13f23809389",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 138,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 117628,
+    "outputTokens": 22348,
+    "steps": 70
+  }
+}
