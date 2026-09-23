@@ -12,6 +12,7 @@ import type { WordId } from './notes'
 import { ChaseFrame } from './ChaseFrame'
 import { SpecimenSheet } from './SpecimenSheet'
 import { PressProofStamp } from './PressProofStamp'
+import { FolioRule } from './FolioRule'
 
 type HeroProps = {
   voice: VoiceId
@@ -196,58 +197,7 @@ export function Hero({
           </svg>
         </span>
 
-        <div className="hero__eyebrow-row">
-          <span className="hero__eyebrow">
-            <span className="hero__eyebrow-glyph" aria-hidden="true">¶</span>
-            <span>folio i</span>
-            <span className="hero__eyebrow-sep" aria-hidden="true">·</span>
-            <span className="hero__eyebrow-em">the question</span>
-          </span>
-          <span className="hero__eyebrow-date" aria-hidden="true">
-            <span className="hero__eyebrow-date-rule" />
-            <em>set today</em>
-            <span className="hero__eyebrow-date-tag">{setToday}</span>
-          </span>
-        </div>
-
-        <span className="hero__reading-direction" aria-label="The printer's reading direction · the six folios of this broadside">
-          <svg className="hero__reading-direction-rule hero__reading-direction-rule--l" viewBox="0 0 60 6" preserveAspectRatio="none" aria-hidden="true">
-            <line x1="0" y1="3" x2="60" y2="3" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 3" opacity=".5" />
-            <circle cx="0" cy="3" r="1" fill="currentColor" opacity=".7" />
-          </svg>
-          <em className="hero__reading-direction-key">compositor&apos;s direction</em>
-          <ol className="hero__reading-direction-list">
-            <li className="hero__reading-direction-step hero__reading-direction-step--now">
-              <span className="hero__reading-direction-num">i</span>
-              <span className="hero__reading-direction-glyph" aria-hidden="true">↳</span>
-              <span className="hero__reading-direction-label">the question</span>
-            </li>
-            <li className="hero__reading-direction-step">
-              <span className="hero__reading-direction-num">ii</span>
-              <span className="hero__reading-direction-label">the press bed</span>
-            </li>
-            <li className="hero__reading-direction-step">
-              <span className="hero__reading-direction-num">iii</span>
-              <span className="hero__reading-direction-label">the proof line</span>
-            </li>
-            <li className="hero__reading-direction-step">
-              <span className="hero__reading-direction-num">iv</span>
-              <span className="hero__reading-direction-label">the notation key</span>
-            </li>
-            <li className="hero__reading-direction-step">
-              <span className="hero__reading-direction-num">v</span>
-              <span className="hero__reading-direction-label">the answer</span>
-            </li>
-            <li className="hero__reading-direction-step">
-              <span className="hero__reading-direction-num">vi</span>
-              <span className="hero__reading-direction-label">the reader&apos;s pouch</span>
-            </li>
-          </ol>
-          <svg className="hero__reading-direction-rule hero__reading-direction-rule--r" viewBox="0 0 60 6" preserveAspectRatio="none" aria-hidden="true">
-            <line x1="0" y1="3" x2="60" y2="3" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 3" opacity=".5" />
-            <circle cx="60" cy="3" r="1" fill="currentColor" opacity=".7" />
-          </svg>
-        </span>
+        <FolioRule word={word} voice={voice} pullSignal={pullSignal} setToday={setToday} />
 
         <h1
           id="hero-title-label"

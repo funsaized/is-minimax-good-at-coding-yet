@@ -658,7 +658,7 @@ em { font-style: italic; }
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--gutter-tight);
-  padding: 14px var(--gutter) 13px;
+  padding: clamp(10px, 1.4vh, 16px) var(--gutter) clamp(9px, 1.2vh, 14px);
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: .14em;
@@ -2486,7 +2486,7 @@ em { font-style: italic; }
 .hero__inner {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: clamp(28px, 3.4vw, 48px);
+  gap: clamp(22px, 2.6vw, 38px);
   align-items: start;
   max-width: 1180px;
   margin: 0 auto;
@@ -3603,6 +3603,7 @@ em { font-style: italic; }
   .hero__title-lead {
     font-size: clamp(22px, 8vw, 42px);
   }
+  .hero__title { line-height: .98; }
 }
 
 @media (max-width: 540px) {
@@ -22936,52 +22937,89 @@ section.reveal h2 em::after {
 /* — the compass slot in the topbar —
    sits in the right column, holds the compass + a small meta line below. */
 
-.topbar__compass-slot {
+.topbar__voice-pill {
   display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
+  flex-direction: row;
+  align-items: center;
   justify-self: end;
+  gap: 0;
   color: var(--paper-soft);
   font-family: var(--display);
   font-style: italic;
   font-size: clamp(11px, 1vw, 13px);
   letter-spacing: -.005em;
   text-transform: none;
-  animation: compassSlotIn 1s var(--ease-out) 1.1s both;
+  padding: clamp(5px, .7vw, 8px) clamp(10px, 1.2vw, 14px);
+  border: 1px solid color-mix(in srgb, var(--quiet) 28%, var(--line));
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--quiet) 4%, transparent) 0%,
+      transparent 100%);
+  transition:
+    border-color .45s var(--ease),
+    color .35s var(--ease);
+  animation: voicePillIn 1s var(--ease-out) 1.1s both;
 }
 
-.topbar__compass-meta {
+.app--voice-human .topbar__voice-pill {
+  border-color: color-mix(in srgb, var(--human) 28%, var(--line));
+}
+.app--voice-bold .topbar__voice-pill {
+  border-color: color-mix(in srgb, var(--bold) 32%, var(--line));
+}
+
+.topbar__voice-meta {
   display: inline-flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 8px;
   white-space: nowrap;
   font-feature-settings: 'kern', 'liga', 'onum' 1;
 }
 
-.topbar__compass-meta-voice { color: var(--paper); font-weight: 500; }
-.topbar__compass-meta-dot { color: var(--muted); font-style: normal; }
-.topbar__compass-meta-word { color: var(--paper-soft); }
+.topbar__voice-meta-voice { color: var(--paper); font-weight: 500; }
+.topbar__voice-meta-dot {
+  color: var(--muted);
+  font-style: normal;
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  align-self: center;
+  opacity: .55;
+}
+.topbar__voice-meta-word { color: var(--paper-soft); }
 
-.app--voice-quiet .topbar__compass-meta-voice { color: var(--quiet); }
-.app--voice-human .topbar__compass-meta-voice { color: var(--human); }
-.app--voice-bold  .topbar__compass-meta-voice { color: var(--bold); font-style: normal; font-weight: 700; }
+.app--voice-quiet .topbar__voice-meta-voice { color: var(--quiet); }
+.app--voice-human .topbar__voice-meta-voice { color: var(--human); }
+.app--voice-bold  .topbar__voice-meta-voice { color: var(--bold); font-style: normal; font-weight: 700; }
 
-.app--word-m3  .topbar__compass-meta-word { color: var(--quiet); }
-.app--word-good .topbar__compass-meta-word { color: var(--human); }
-.app--word-yet .topbar__compass-meta-word { color: var(--bold); }
+.app--word-m3  .topbar__voice-meta-word { color: var(--quiet); }
+.app--word-good .topbar__voice-meta-word { color: var(--human); }
+.app--word-yet .topbar__voice-meta-word { color: var(--bold); }
 
-@keyframes compassSlotIn {
+@keyframes voicePillIn {
   0% { opacity: 0; transform: translateY(-4px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .topbar__compass-slot { animation: none; opacity: 1; transform: none; }
+  .topbar__voice-pill { animation: none; opacity: 1; transform: none; }
 }
 
 @media (max-width: 1080px) {
-  .topbar__compass-meta { display: none; }
+  .topbar__voice-meta { font-size: 11px; gap: 6px; }
+}
+
+@media (max-width: 880px) {
+  .topbar__voice-pill { padding: 4px 10px; }
+}
+
+@media (max-width: 540px) {
+  .topbar__voice-meta-word { display: none; }
+  .topbar__voice-meta-dot { display: none; }
+  .topbar__voice-pill { padding: 4px 8px; }
 }
 
 /* — the compass itself — a tight circular marginalia,
@@ -23840,6 +23878,404 @@ section.reveal h2 em::after {
 
 @media (max-width: 720px) {
   .constellation { display: none; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   FOLIO RULE · the binding rule above the question.
+   one composed strip with a folio key, a set line, and three
+   sorts — one per marked word. replaces the redundant eyebrow
+   row + the standalone marked line. iteration 430.
+   ──────────────────────────────────────────────────────────── */
+
+.folio-rule {
+  --fr-tone: var(--quiet);
+  position: relative;
+  display: grid;
+  gap: clamp(6px, .8vw, 10px);
+  max-width: 1180px;
+  margin: 0 auto clamp(16px, 2.4vw, 28px);
+  color: var(--fr-tone);
+  font-family: var(--display);
+  z-index: 4;
+  opacity: 0;
+  animation: folioRuleIn 1.4s var(--ease-out) .55s both;
+}
+
+@keyframes folioRuleIn {
+  0% { opacity: 0; transform: translateY(-6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-rule { animation: none; opacity: 1; transform: none; }
+}
+
+/* — the head · a quiet folio key on the left, set-on date on the right — */
+
+.folio-rule__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(14px, 2vw, 24px);
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.folio-rule__head-key {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(8px, 1vw, 12px);
+}
+
+.folio-rule__head-mark {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--fr-tone);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fr-tone) 22%, transparent);
+  margin-right: clamp(2px, .4vw, 6px);
+  align-self: center;
+  transition: background .45s var(--ease), box-shadow .45s var(--ease);
+}
+
+.folio-rule__head-key em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12.5px;
+  color: var(--paper-soft);
+}
+
+.folio-rule__head-dot {
+  color: var(--line-strong);
+  font-style: normal;
+}
+
+.folio-rule__head-set {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+}
+
+.folio-rule__head-set em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12.5px;
+  color: var(--paper-soft);
+}
+
+.folio-rule__head-set-date {
+  font-family: var(--display);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: clamp(13px, 1.1vw, 15px);
+  color: var(--paper);
+  font-feature-settings: 'tnum' 1;
+}
+
+.folio-rule__head-set-rule {
+  display: inline-block;
+  width: clamp(14px, 2.2vw, 28px);
+  height: 1px;
+  background: currentColor;
+  opacity: .35;
+}
+
+/* — the rail · a single quiet line on which the sorts sit — */
+
+.folio-rule__rail {
+  position: relative;
+  width: 100%;
+  height: 14px;
+  pointer-events: none;
+}
+
+.folio-rule__rail-svg {
+  display: block;
+  width: 100%;
+  height: 14px;
+  color: var(--fr-tone);
+  transition: color .5s var(--ease);
+}
+
+.folio-rule__pulse {
+  animation: folioRulePulse .9s var(--ease-out) both;
+  transform-origin: center;
+}
+
+@keyframes folioRulePulse {
+  0% { opacity: 0; transform: translateX(-32%); }
+  18% { opacity: .85; }
+  100% { opacity: 0; transform: translateX(32%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folio-rule__pulse { animation: none; opacity: 0; }
+}
+
+/* — the sorts · three word-marks spaced evenly along the rule — */
+
+.folio-rule__sorts {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 32px);
+  align-items: end;
+}
+
+@media (max-width: 720px) {
+  .folio-rule__sorts {
+    grid-template-columns: 1fr;
+    gap: clamp(10px, 1.6vw, 14px);
+  }
+}
+
+.fr-sort {
+  --fr-cell-tone: var(--quiet);
+  position: relative;
+  display: grid;
+  gap: clamp(4px, .6vw, 8px);
+  justify-items: center;
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: frSortIn .9s var(--ease-out) calc(.8s + var(--fr-cell-delay, 0ms)) both;
+}
+
+@keyframes frSortIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fr-sort { animation: none; opacity: 1; transform: none; }
+}
+
+.fr-sort__cap {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .6vw, 8px);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.fr-sort__cap-rule {
+  display: inline-block;
+  width: clamp(10px, 1.6vw, 18px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--fr-cell-tone) 42%, transparent));
+}
+
+.fr-sort__cap-rule--r {
+  background: linear-gradient(to left, transparent, color-mix(in srgb, var(--fr-cell-tone) 42%, transparent));
+}
+
+.fr-sort__cap-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 11.5px;
+  letter-spacing: -.005em;
+  color: color-mix(in srgb, var(--fr-cell-tone) 70%, var(--paper-soft));
+  text-transform: none;
+}
+
+.fr-sort__piece {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .8vw, 10px);
+  padding: clamp(6px, .8vw, 9px) clamp(10px, 1.4vw, 16px);
+  border: 1px solid color-mix(in srgb, var(--fr-cell-tone) 22%, var(--line-soft));
+  border-radius: 3px;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--fr-cell-tone) 6%, transparent) 0%,
+      color-mix(in srgb, var(--fr-cell-tone) 2%, transparent) 100%);
+  color: var(--paper-soft);
+  transition:
+    color .45s var(--ease),
+    border-color .5s var(--ease),
+    background .6s var(--ease),
+    box-shadow .6s var(--ease),
+    transform .5s var(--ease-spring);
+}
+
+.fr-sort__piece-rule {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: color-mix(in srgb, var(--fr-cell-tone) 24%, transparent);
+  opacity: .45;
+  pointer-events: none;
+}
+
+.fr-sort__piece-rule--top { top: 2px; }
+.fr-sort__piece-rule--bot { bottom: 2px; }
+
+.fr-sort__piece-edge {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 1px;
+  background: color-mix(in srgb, var(--fr-cell-tone) 32%, transparent);
+  pointer-events: none;
+}
+
+.fr-sort__piece-edge--l { left: -1px; }
+.fr-sort__piece-edge--r { right: -1px; }
+
+.fr-sort__piece-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(18px, 1.6vw, 22px);
+  height: clamp(18px, 1.6vw, 22px);
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13px, 1.2vw, 16px);
+  color: color-mix(in srgb, var(--fr-cell-tone) 70%, var(--paper-soft));
+  transition: color .45s var(--ease), transform .5s var(--ease-spring);
+}
+
+.fr-sort__piece-word {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(15px, 1.3vw, 19px);
+  letter-spacing: -.012em;
+  color: var(--paper);
+  transition: color .45s var(--ease), font-style .35s var(--ease), letter-spacing .35s var(--ease);
+}
+
+.fr-sort__note {
+  display: inline-block;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(11px, .95vw, 13px);
+  letter-spacing: -.005em;
+  color: var(--muted);
+  text-align: center;
+  transition: color .45s var(--ease), opacity .45s var(--ease);
+  opacity: .75;
+}
+
+.fr-sort__note em { font-style: italic; }
+
+/* — the marked sort lights up — */
+
+.fr-sort.is-marked .fr-sort__piece {
+  border-color: color-mix(in srgb, var(--fr-cell-tone) 60%, var(--line-strong));
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--fr-cell-tone) 14%, transparent) 0%,
+      color-mix(in srgb, var(--fr-cell-tone) 5%, transparent) 100%);
+  color: var(--paper);
+  transform: translateY(-3px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--fr-cell-tone) 35%, transparent),
+    0 6px 18px -10px color-mix(in srgb, var(--fr-cell-tone) 50%, transparent),
+    0 0 22px -8px color-mix(in srgb, var(--fr-cell-tone) 60%, transparent);
+}
+
+.fr-sort.is-marked .fr-sort__piece-rule {
+  opacity: .85;
+}
+
+.fr-sort.is-marked .fr-sort__piece-glyph {
+  color: var(--fr-cell-tone);
+  transform: scale(1.12);
+  text-shadow: 0 0 16px color-mix(in srgb, var(--fr-cell-tone) 55%, transparent);
+}
+
+.fr-sort.is-marked .fr-sort__piece-word {
+  color: var(--fr-cell-tone);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--fr-cell-tone) 28%, transparent);
+}
+
+.fr-sort.is-marked .fr-sort__note {
+  color: color-mix(in srgb, var(--fr-cell-tone) 75%, var(--paper-soft));
+  opacity: 1;
+}
+
+/* — each sort carries its native voice tone · the page voice tints the line and the active glow. — */
+
+.fr-sort--m3   { --fr-cell-tone: var(--quiet); }
+.fr-sort--good { --fr-cell-tone: var(--human); }
+.fr-sort--yet  { --fr-cell-tone: var(--bold);  }
+
+/* — an aura that breathes on the marked sort, brief on each pull — */
+
+.fr-sort__aura {
+  position: absolute;
+  inset: -8px -8px -8px -8px;
+  pointer-events: none;
+  border-radius: 6px;
+  z-index: -1;
+  background: radial-gradient(ellipse 60% 100% at 50% 50%,
+    color-mix(in srgb, var(--fr-cell-tone) 36%, transparent) 0%,
+    transparent 65%);
+  opacity: 0;
+  animation: frSortAura .9s var(--ease-out) both;
+}
+
+@keyframes frSortAura {
+  0%   { opacity: 0; transform: scale(.92); }
+  35%  { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 0; transform: scale(1.02); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fr-sort__aura { display: none; }
+}
+
+/* — the bold sort speaks in sans when the bold voice is on — */
+
+.folio-rule--voice-bold .fr-sort__piece-word {
+  font-family: var(--sans);
+  font-style: normal;
+  letter-spacing: -.04em;
+  font-weight: 700;
+}
+
+.folio-rule--voice-bold .fr-sort.is-marked .fr-sort__piece-word {
+  letter-spacing: -.045em;
+  font-weight: 800;
+}
+
+.folio-rule--voice-bold .fr-sort__piece-glyph {
+  font-style: normal;
+  font-weight: 600;
+}
+
+.folio-rule--voice-bold .fr-sort__note {
+  font-style: normal;
+  letter-spacing: -.01em;
+}
+
+@media (max-width: 720px) {
+  .folio-rule { margin-top: clamp(28px, 4vh, 48px); margin-bottom: clamp(18px, 2.6vw, 24px); }
+  .folio-rule__head-set em { display: none; }
+}
+
+@media (max-width: 540px) {
+  .folio-rule__head-set-rule { display: none; }
+  .fr-sort__piece-word { font-size: 14px; }
+  .fr-sort__cap-rule { display: none; }
 }
 
 /* ────────────────────────────────────────────────────────────

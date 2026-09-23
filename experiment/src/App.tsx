@@ -25,9 +25,7 @@ import { SpineThread } from './SpineThread'
 import { ReadingPouch } from './ReadingPouch'
 import { ComposingBreath } from './ComposingBreath'
 import { LastLamp } from './LastLamp'
-import { ReadingCompass } from './ReadingCompass'
 import { Imprint } from './Imprint'
-import { MarkedLine } from './MarkedLine'
 import { Constellation } from './Constellation'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
@@ -297,7 +295,6 @@ export function App() {
       style={style}
     >
 <PaperGrain />
-      <span className="app__bg-grid" aria-hidden="true" />
       <span className="app__void" aria-hidden="true" />
       <span className="app__backdrop" aria-hidden="true" />
       <span className="app__atmo" aria-hidden="true" />
@@ -343,29 +340,15 @@ export function App() {
           <span className="topbar__center-rule topbar__center-rule--r" />
         </span>
 
-        <span className="topbar__compass-slot" aria-hidden="false">
-          <ReadingCompass
-            voice={voice}
-            word={activeWord}
-            pageTime={pageTime}
-            setToday={setToday}
-            pullSignal={pullSignal}
-          />
-          <span className="topbar__compass-meta">
-            <em className="topbar__compass-meta-voice">{VOICE_NAME[voice]}</em>
-            <span className="topbar__compass-meta-dot">·</span>
-            <em className="topbar__compass-meta-word">{activeWord === 'm3' ? 'm³' : activeWord === 'good' ? 'good at' : 'yet?'}</em>
+        <span className="topbar__voice-pill" aria-hidden="false">
+          <span className="topbar__voice-meta">
+            <em className="topbar__voice-meta-voice">{VOICE_NAME[voice]}</em>
+            <span className="topbar__voice-meta-dot">·</span>
+            <em className="topbar__voice-meta-word">{activeWord === 'm3' ? 'm³' : activeWord === 'good' ? 'good at' : 'yet?'}</em>
           </span>
         </span>
       </header>
 
-
-      <MarkedLine
-        word={activeWord}
-        voice={voice}
-        pullSignal={pullSignal}
-        setToday={setToday}
-      />
 
       <section className="hero reveal" aria-labelledby="hero-title-label">
         <Hero
