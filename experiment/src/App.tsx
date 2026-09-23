@@ -32,14 +32,12 @@ import { ComposingBreath } from './ComposingBreath'
 import { LastLamp } from './LastLamp'
 import { Imprint } from './Imprint'
 import { Constellation } from './Constellation'
-import { FirstLightPlate } from './FirstLightPlate'
-import { Frontispiece } from './Frontispiece'
 import { MarginalCaret } from './MarginalCaret'
 import { WordHoverNote } from './WordHoverNote'
 import { QuestionHinge } from './QuestionHinge'
 import { SignaturePlate } from './SignaturePlate'
 import { PageSpine } from './PageSpine'
-import { TitleFolio } from './TitleFolio'
+import { ArrivalPlate } from './ArrivalPlate'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -377,11 +375,7 @@ export function App() {
         onJump={jumpToFolio}
       />
 
-      <TitleFolio voice={voice} setToday={setToday} />
-
-      <Frontispiece voice={voice} setToday={setToday} onVoice={selectVoice} />
-
-      <FirstLightPlate id="opening" voice={voice} setToday={setToday} />
+      <ArrivalPlate voice={voice} setToday={setToday} />
 
       <MarginalCaret
         side="right"
