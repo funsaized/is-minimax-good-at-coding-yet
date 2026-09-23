@@ -1,0 +1,19 @@
+{
+  "id": 422,
+  "parentId": 421,
+  "createdAt": "2026-09-23T01:50:09.886Z",
+  "summary": "the hero's centrepiece is now a real typesetter's specimen plate, the marginalia reads as a compositor's note, and the t",
+  "path": "/iterations/000422/index.html",
+  "screenshot": "/iterations/000422/desktop.png",
+  "mobileScreenshot": "/iterations/000422/mobile.png",
+  "sourceCommit": "bd6225a7ba2aa293a99d3b14244cf6ab0627954e",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 411,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 180515,
+    "outputTokens": 26188,
+    "steps": 108
+  }
+}
