@@ -11,6 +11,7 @@ import { NOTES, type WordId } from './notes'
 import { CursorGlow } from './CursorGlow'
 import { PaperGrain } from './PaperGrain'
 import { FirstLight } from './FirstLight'
+import { CompositionRegister } from './CompositionRegister'
 import { Hero } from './Hero'
 import { FolioTurn } from './FolioTurn'
 import { Press } from './Press'
@@ -18,7 +19,6 @@ import { ProofLine } from './ProofLine'
 import { Specimen } from './Specimen'
 import { Answer } from './Answer'
 import { Colophon } from './Colophon'
-import { PrinterMark } from './PrinterMark'
 import { PrinterAtlas } from './PrinterAtlas'
 import { ReadingNote } from './ReadingNote'
 import { SpineThread } from './SpineThread'
@@ -286,6 +286,20 @@ export function App() {
     setAnnouncement(next ? 'Answer unfolded.' : 'Answer folded back.')
   }
 
+  const jumpToFolio = useCallback((id: string) => {
+    if (typeof window === 'undefined') return
+    const node = document.getElementById(id)
+    if (!node) return
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    node.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' })
+    const link = node.querySelector<HTMLAnchorElement | HTMLButtonElement>('a[href], button')
+    window.requestAnimationFrame(() => link?.focus({ preventScroll: true }))
+    const folio = FOLIOS.find(f => f.id === id)
+    if (folio) {
+      setAnnouncement(`Now on folio ${folio.index} · ${folio.label}.`)
+    }
+  }, [])
+
   const activeFolioIndex = FOLIOS.findIndex(f => f.id === activeSection) + 1
 
   return (
@@ -318,35 +332,17 @@ export function App() {
         timeOfDay={timeOfDay}
       />
 
-      <header className="topbar" role="banner">
-        <a className="brand" href="#question" aria-label="Return to the question">
-          <PrinterMark size={32} voice={voice} />
-          <span className="brand__copy">
-            <strong>m<sup>3</sup> press</strong>
-            <em>one question, set three ways</em>
-          </span>
-        </a>
-
-        <span className="topbar__center" aria-hidden="true">
-          <span className="topbar__center-rule topbar__center-rule--l" />
-          <span className="topbar__time">
-            <span className="topbar__time-glyph" />
-            <em className="topbar__time-word">{timeOfDay}</em>
-          </span>
-          <span className="topbar__center-sep" aria-hidden="true">
-            <em>set on</em>
-            <span className="topbar__center-date">{setToday}</span>
-          </span>
-          <span className="topbar__center-rule topbar__center-rule--r" />
-        </span>
-
-        <span className="topbar__voice-pill" aria-hidden="false">
-          <span className="topbar__voice-meta">
-            <em className="topbar__voice-meta-voice">{VOICE_NAME[voice]}</em>
-            <span className="topbar__voice-meta-dot">·</span>
-            <em className="topbar__voice-meta-word">{activeWord === 'm3' ? 'm³' : activeWord === 'good' ? 'good at' : 'yet?'}</em>
-          </span>
-        </span>
+      <header className="topbar" role="banner" aria-label="The page's composing register">
+        <a className="skip-link" href="#hero-title-label">Skip to the question</a>
+        <CompositionRegister
+          folios={FOLIOS as unknown as { id: string; index: string; label: string }[]}
+          activeId={activeSection}
+          voice={voice}
+          setToday={setToday}
+          timeOfDay={timeOfDay}
+          onCycleVoice={cycleVoice}
+          onJump={jumpToFolio}
+        />
       </header>
 
 
