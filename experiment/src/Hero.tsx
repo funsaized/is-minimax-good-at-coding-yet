@@ -10,9 +10,8 @@ import {
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 import { ChaseFrame } from './ChaseFrame'
-import { HeroComposition } from './HeroComposition'
+import { SpecimenSheet } from './SpecimenSheet'
 import { PressProofStamp } from './PressProofStamp'
-import { ReaderMarginalia } from './ReaderMarginalia'
 
 type HeroProps = {
   voice: VoiceId
@@ -310,9 +309,14 @@ export function Hero({
           </span>
         </span>
 
-        <ReaderMarginalia word={word} hover={hover} voice={voice} pullSignal={pullSignal} />
-
-        <HeroComposition voice={voice} word={word} hover={hover} />
+        <SpecimenSheet
+          voice={voice}
+          word={word}
+          hover={hover}
+          pullSignal={pullSignal}
+          setToday={setToday}
+          onSelect={onVoice}
+        />
 
         <footer className="hero__ledger" aria-label="The composer&rsquo;s ledger at the foot of the folio">
           <div className="hero__ledger-row">
