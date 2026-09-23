@@ -1,19 +1,16 @@
 # Changelog
 
-## Iteration 457 — A reading prologue opens the page
+## Iteration 458 — The Daybreak, Composed
 
-A single composed folio now sits before the existing front matter, setting the question "is Minimax M3 good at frontend yet?" as the immediate anchor of the page. The prologue folds the masthead, the title set in two rows, a small ink-flick flourish, the three interactive voices, a wax press seal, and the day's ledger into one composed moment — so the reader meets the question first, then the broader front matter that frames it. The redundant `HalfTitle` has been retired in favour of this stronger opening.
+One composed opening folio replaces the prior prologue, title plate, and arrival folios. The question lands once.
 
-Highlights:
-- New `ReadingPrologue` component (`src/ReadingPrologue.tsx`) at folio `00`, id `#prologue`.
-- Press sigil masthead at top with date, hour, and folio index.
-- Question title set in two composed rows in the active voice; per-voice font, weight, italic, and tracking applied directly so each voice retypes the line.
-- Animated ink-flick flourish beneath the title (reduced-motion safe), with two breathing beads at either end.
-- Wax press seal in the upper-right corner with a slow spin.
-- Interactive three-voice strip — same voice selector as the rest of the page, fully keyboard accessible with arrow / Home / End keys.
-- Day ledger (set on · at first light · read in) and a quiet handoff to folio i.
-- Atmosphere wash, ink dust, and pulling-lever strike animation on the question mark.
-- `FOLIOS` in `src/App.tsx` now includes the prologue so the page-spine and folio register track it.
-- `HalfTitle` removed; its CSS retained but unused.
-- New CSS section appended to `src/style.css`, responsive down to mobile.
-- Build verified with `npm run build`.
+### Changes
+- New `src/Daybreak.tsx` — one folio that opens the page: a dawn scene, a masthead, the question in three voices, the three-voice selector, a press seal, a ledger, and a handoff to the broadside.
+- `src/App.tsx` — the prior `ReadingPrologue`, `TitlePlate`, and `ArrivalPlate` are no longer rendered. `Daybreak` now owns folio `prologue` (00). The redundant `opening` folio entry is removed from the navigation. Default active section is `prologue`.
+- `src/style.css` — appended ~900 lines of `daybreak__*` styles. The dawn scene rises on intersect, the three voice lines fade in one after the other, the voice strip animates in below, the press seal turns in from a tilt. Reduced-motion and small-screen fallbacks are honoured. The `bold` voice lifts when the lever strikes.
+
+### Behavior
+- Voice selection now has one clear home: the voice strip at the foot of the daybreak. The same selector remains available throughout the page (Specimen, ReadThreeTimes, etc.).
+- The active voice tints the matching line in the daybreak title; the other two read at a slightly lower opacity.
+- Keyboard: `Tab` moves through the voice buttons; arrow keys cycle the voice.
+- Folio navigation: the page now reads as prologue → question → press bed → proof line → notation key → held reading → answer → page holds → reader's pouch.

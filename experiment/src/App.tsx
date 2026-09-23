@@ -38,10 +38,8 @@ import { SettingSeal } from './SettingSeal'
 import { SignaturePlate } from './SignaturePlate'
 import { OverprintProof } from './OverprintProof'
 import { PageSpine } from './PageSpine'
-import { ArrivalPlate } from './ArrivalPlate'
 import { TypeCase } from './TypeCase'
-import { TitlePlate } from './TitlePlate'
-import { ReadingPrologue } from './ReadingPrologue'
+import { Daybreak } from './Daybreak'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -55,8 +53,7 @@ const VOICE_FACE: Record<VoiceId, string> = {
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 
 export const FOLIOS = [
-  { id: 'prologue', index: '00', label: 'the prologue', hint: 'the question, composed once' },
-  { id: 'opening', index: '0', label: 'the opening', hint: 'set the type · take the plate' },
+  { id: 'prologue', index: '00', label: 'the prologue', hint: 'a single line, set three ways' },
   { id: 'question', index: 'i', label: 'the question', hint: 'one line, set three ways' },
   { id: 'press', index: 'ii', label: 'the press bed', hint: 'pull the lever, take an impression' },
   { id: 'notes', index: 'iii', label: 'the proof line', hint: 'three voices on the same cord' },
@@ -103,7 +100,7 @@ export function App() {
   const [selectedWord, setSelectedWord] = useState<WordId>('good')
   const [hoveredWord, setHoveredWord] = useState<WordId | null>(null)
   const [voice, setVoice] = useState<VoiceId>('quiet')
-  const [activeSection, setActiveSection] = useState<string>('opening')
+  const [activeSection, setActiveSection] = useState<string>('prologue')
   const [answerOpen, setAnswerOpen] = useState(false)
   const [announcement, setAnnouncement] = useState('')
   const [setToday] = useState(() => formatSetToday())
@@ -380,11 +377,7 @@ export function App() {
         onJump={jumpToFolio}
       />
 
-      <ReadingPrologue voice={voice} setToday={setToday} onVoice={selectVoice} />
-
-      <TitlePlate voice={voice} setToday={setToday} onVoice={selectVoice} />
-
-      <ArrivalPlate voice={voice} setToday={setToday} />
+      <Daybreak voice={voice} setToday={setToday} onVoice={selectVoice} />
 
       <TypeCase voice={voice} word={activeWord} setToday={setToday} onWord={(id, focus) => selectWord(id, focus ?? false)} />
 
@@ -392,7 +385,7 @@ export function App() {
         side="right"
         voice={voice}
         glyph="⌇"
-        eyebrow="folio zero · the open"
+        eyebrow="folio 00 · the prologue"
         note="the page is set before the question is asked — the reader arrives in the dark."
         attribution="m³ · first light"
         offset={120}

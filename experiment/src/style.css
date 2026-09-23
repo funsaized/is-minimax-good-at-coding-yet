@@ -37417,3 +37417,904 @@ section.reveal h2 em::after {
   .app--pulling .prologue__title-row { transition: none; }
   .app--pulling .prologue__title-punct { animation: none; }
 }
+
+/* ────────────────────────────────────────────────────────────
+   DAYBREAK · a single composed opening folio
+   replaces the prior stack of prologue / title plate / arrival
+   folios. one plate, three voices, set at first light, with a
+   sunrise scene rising over a ruled horizon. the question is
+   the protagonist; everything else earns its place.
+   ──────────────────────────────────────────────────────────── */
+
+.daybreak {
+  --day-tone: var(--quiet);
+  position: relative;
+  z-index: 3;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: clamp(28px, 4vw, 56px) var(--gutter) clamp(40px, 5.6vw, 88px);
+  display: grid;
+  gap: clamp(18px, 2vw, 28px);
+  isolation: isolate;
+  animation: daybreakIn 1.2s var(--ease-out) both;
+}
+
+.daybreak::before {
+  content: '';
+  position: absolute;
+  inset: -1px 0 auto 0;
+  height: clamp(200px, 24vw, 320px);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 100% at 50% 0%, color-mix(in srgb, var(--day-tone) 14%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 70% at 78% 0%, rgba(255, 222, 184, .08), transparent 70%),
+    radial-gradient(ellipse 60% 60% at 22% 0%, rgba(255, 222, 184, .06), transparent 72%);
+  opacity: 0;
+  animation: daybreakWashIn 1.6s var(--ease-out) .1s both;
+  z-index: -1;
+}
+
+@keyframes daybreakIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes daybreakWashIn {
+  0% { opacity: 0; transform: translateY(-6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak { animation: none; opacity: 1; transform: none; }
+  .daybreak::before { animation: none; opacity: 1; transform: none; }
+}
+
+.daybreak__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* — sky · a thin dawn with a few quiet stars — */
+
+.daybreak__sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: clamp(140px, 18vw, 220px);
+  pointer-events: none;
+  color: var(--day-tone);
+  z-index: -1;
+  opacity: 0;
+  animation: daybreakSkyIn 1.6s var(--ease-out) .3s both;
+  mask-image: linear-gradient(180deg, black 0%, black 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, black 0%, black 50%, transparent 100%);
+}
+
+.daybreak__sky-svg { display: block; width: 100%; height: 100%; opacity: .9; }
+
+.daybreak__sky-stars circle {
+  animation: dayStarTwinkle 5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.daybreak__sky-stars circle:nth-child(3n) { animation-delay: 1.6s; }
+.daybreak__sky-stars circle:nth-child(5n) { animation-delay: 3.1s; }
+
+@keyframes dayStarTwinkle {
+  0%, 100% { opacity: .25; }
+  50% { opacity: .85; }
+}
+
+@keyframes daybreakSkyIn {
+  0% { opacity: 0; }
+  100% { opacity: .55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__sky { animation: none; opacity: .55; }
+  .daybreak__sky-stars circle { animation: none; opacity: .55; }
+}
+
+/* — the rising orb · a half-circle sun rising over a ruled horizon — */
+
+.daybreak__orb-stage {
+  position: relative;
+  margin: clamp(-12px, -1vw, -4px) auto clamp(8px, 1.2vw, 18px);
+  width: clamp(280px, 36vw, 460px);
+  height: clamp(110px, 14vw, 180px);
+  pointer-events: none;
+  color: var(--day-tone);
+  opacity: 0;
+  animation: daybreakOrbStageIn 1.8s var(--ease-out) .4s both;
+}
+
+.daybreak__orb-svg { display: block; width: 100%; height: 100%; }
+
+.daybreak__orb-half {
+  transform-origin: 300px 200px;
+  transform: translateY(64px) scale(.86);
+  transition: transform 1.6s var(--ease-out);
+}
+
+.daybreak.is-rise .daybreak__orb-half {
+  transform: translateY(0) scale(1);
+}
+
+.daybreak__orb-half--halo {
+  opacity: .85;
+  animation: daybreakOrbBreath 8s ease-in-out infinite;
+  animation-delay: 1.6s;
+}
+
+@keyframes daybreakOrbStageIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes daybreakOrbBreath {
+  0%, 100% { opacity: .7; transform: translateY(0) scale(1); }
+  50% { opacity: 1; transform: translateY(-2px) scale(1.06); }
+}
+
+.daybreak__rays {
+  transform-origin: 300px 200px;
+  transform: translateY(64px) scale(.86);
+  opacity: .85;
+  transition: transform 1.6s var(--ease-out);
+}
+
+.daybreak.is-rise .daybreak__rays {
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__orb-stage { animation: none; opacity: 1; transform: none; }
+  .daybreak__orb-half { transition: none; transform: none; }
+  .daybreak.is-rise .daybreak__orb-half { transform: none; }
+  .daybreak__rays { transition: none; transform: none; }
+  .daybreak.is-rise .daybreak__rays { transform: none; }
+  .daybreak__orb-half--halo { animation: none; }
+}
+
+/* — masthead · press name, folio zero, day, hour — */
+
+.daybreak__masthead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(14px, 2vw, 32px);
+  padding: clamp(8px, 1vw, 14px) 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  color: var(--day-tone);
+  opacity: 0;
+  animation: daybreakHeadIn 1s var(--ease-out) .35s both;
+}
+
+.daybreak__masthead-rule { display: block; opacity: .85; }
+.daybreak__masthead-rule svg { display: block; width: 100%; height: 10px; }
+
+.daybreak__masthead-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.daybreak__masthead-press {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.daybreak__masthead-mark { display: inline-grid; place-items: center; width: 22px; height: 22px; }
+
+.daybreak__masthead-mark svg { width: 100%; height: 100%; }
+
+.daybreak__masthead-name {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(18px, 1.6vw, 22px);
+  letter-spacing: -.02em;
+  color: var(--paper);
+  font-weight: 500;
+}
+
+.daybreak__masthead-meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.daybreak__masthead-meta em { font-style: italic; }
+
+@keyframes daybreakHeadIn {
+  0% { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__masthead { animation: none; opacity: 1; transform: none; }
+}
+
+@media (max-width: 880px) {
+  .daybreak__masthead { grid-template-columns: 1fr; gap: 6px; padding: 12px 0; }
+  .daybreak__masthead-rule { display: none; }
+}
+
+/* — eyebrow row · a short, useful caption above the title — */
+
+.daybreak__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+  margin: 0 auto;
+  opacity: 0;
+  animation: daybreakEyebrowIn 1s var(--ease-out) .55s both;
+}
+
+.daybreak__eyebrow em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12.5px;
+  color: var(--paper);
+}
+
+.daybreak__eyebrow-pip {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  color: var(--day-tone);
+}
+
+.daybreak__eyebrow-pip--end {
+  transform: rotate(180deg);
+}
+
+.daybreak__eyebrow-pip svg { width: 100%; height: 100%; }
+
+@keyframes daybreakEyebrowIn {
+  0% { opacity: 0; transform: translateY(-3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__eyebrow { animation: none; opacity: 1; transform: none; }
+}
+
+@media (max-width: 720px) {
+  .daybreak__eyebrow em { font-size: 11.5px; }
+}
+
+/* — the title · the question, set three ways, one row per voice — */
+
+.daybreak__title {
+  display: grid;
+  gap: clamp(10px, 1.2vw, 18px);
+  margin: 0;
+  padding: clamp(14px, 1.8vw, 24px) 0 clamp(8px, 1vw, 14px);
+  position: relative;
+}
+
+.daybreak__title-row {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  opacity: 0;
+  animation: daybreakTitleRowIn 1.2s var(--ease-out) forwards;
+}
+
+.daybreak__title-row--a { animation-delay: .85s; }
+.daybreak__title-row--b { animation-delay: 1.15s; }
+.daybreak__title-row--c { animation-delay: 1.45s; }
+
+@keyframes daybreakTitleRowIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__title-row { animation: none; opacity: 1; transform: none; }
+}
+
+.daybreak__line {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(10px, 1vw, 16px);
+  font-size: clamp(22px, 3.4vw, 42px);
+  line-height: 1.12;
+  letter-spacing: -.018em;
+  color: var(--paper);
+  text-wrap: balance;
+  text-align: center;
+  font-feature-settings: 'kern', 'liga', 'dlig', 'onum';
+  position: relative;
+  transition: color .35s var(--ease), opacity .35s var(--ease), filter .45s var(--ease);
+}
+
+.daybreak__line--quiet { opacity: .92; }
+.daybreak__line--human { opacity: .96; }
+.daybreak__line--bold  { opacity: 1; }
+
+.daybreak--voice-quiet .daybreak__line--quiet { color: var(--day-tone); }
+.daybreak--voice-human .daybreak__line--human { color: var(--day-tone); }
+.daybreak--voice-bold .daybreak__line--bold { color: var(--day-tone); }
+
+.daybreak__line:hover {
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--day-tone) 22%, transparent));
+}
+
+.daybreak__line-pip {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(16px, 1.4vw, 22px);
+  height: clamp(16px, 1.4vw, 22px);
+  flex-shrink: 0;
+  color: var(--day-tone);
+  opacity: .85;
+  transform: translateY(-.04em);
+}
+
+.daybreak__line-pip svg { width: 100%; height: 100%; }
+
+@media (max-width: 720px) {
+  .daybreak__line { font-size: clamp(18px, 5.6vw, 28px); gap: 8px; }
+}
+
+@media (max-width: 480px) {
+  .daybreak__line { font-size: clamp(16px, 4.6vw, 22px); gap: 6px; }
+}
+
+/* — a quiet hairline that sits beneath the three lines — */
+
+.daybreak__rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: clamp(2px, .4vw, 8px) auto 0;
+  color: var(--day-tone);
+  opacity: 0;
+  animation: daybreakRuleIn 1s var(--ease-out) 1.6s both;
+}
+
+.daybreak__rule-line {
+  display: block;
+  flex: 0 1 clamp(36px, 6vw, 96px);
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.daybreak__rule-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 8px;
+}
+
+.daybreak__rule-mark svg { width: 100%; height: 100%; display: block; }
+
+@keyframes daybreakRuleIn {
+  0% { opacity: 0; transform: scaleX(.86); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__rule { animation: none; opacity: 1; transform: none; }
+}
+
+/* — the voice strip · three buttons on a cord, with sample lines — */
+
+.daybreak__voices {
+  display: grid;
+  gap: 0;
+  margin: clamp(8px, 1.2vw, 18px) auto 0;
+  max-width: 980px;
+  padding: 0;
+  list-style: none;
+}
+
+.daybreak__voice {
+  --row-tone: var(--quiet);
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(28px, 3vw, 38px) minmax(0, 1fr) minmax(0, 1.4fr) clamp(60px, 6vw, 90px);
+  align-items: center;
+  gap: clamp(12px, 1.4vw, 22px);
+  padding: clamp(14px, 1.6vw, 22px) clamp(12px, 1.4vw, 22px);
+  background: transparent;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--row-tone) 14%, var(--line));
+  cursor: pointer;
+  text-align: left;
+  color: var(--paper-soft);
+  font: inherit;
+  width: 100%;
+  opacity: 0;
+  animation: daybreakVoiceIn .9s var(--ease-out) forwards;
+}
+
+.daybreak__voice:first-of-type { border-top: 0; }
+
+.daybreak__voice:nth-of-type(1) { animation-delay: 1.8s; }
+.daybreak__voice:nth-of-type(2) { animation-delay: 1.95s; }
+.daybreak__voice:nth-of-type(3) { animation-delay: 2.1s; }
+
+.daybreak__voice:last-of-type { border-bottom: 1px solid color-mix(in srgb, var(--row-tone) 14%, var(--line)); }
+
+@keyframes daybreakVoiceIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__voice { animation: none; opacity: 1; transform: none; }
+}
+
+.daybreak__voice-letter {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(28px, 3vw, 38px);
+  height: clamp(28px, 3vw, 38px);
+  color: var(--row-tone);
+  transition: transform .45s var(--ease-spring), filter .35s var(--ease);
+}
+
+.daybreak__voice-letter svg { width: 100%; height: 100%; display: block; }
+
+.daybreak__voice-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  line-height: 1.18;
+}
+
+.daybreak__voice-name {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(15px, 1.2vw, 17px);
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.daybreak__voice-face {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.daybreak__voice-note {
+  display: none;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--paper-soft);
+  margin-top: 2px;
+}
+
+@media (min-width: 1080px) {
+  .daybreak__voice-note { display: inline; }
+}
+
+.daybreak__voice-line {
+  display: inline-block;
+  min-width: 0;
+  text-align: left;
+  color: var(--paper-soft);
+  font-size: clamp(13px, 1.05vw, 15px);
+  line-height: 1.25;
+  letter-spacing: -.012em;
+  font-feature-settings: 'kern', 'liga', 'onum';
+  opacity: .9;
+  transition: color .35s var(--ease), opacity .35s var(--ease);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.daybreak__voice-line--quiet { font-style: italic; font-weight: 400; letter-spacing: -.022em; }
+.daybreak__voice-line--human { font-style: italic; font-weight: 500; letter-spacing: -.014em; }
+.daybreak__voice-line--bold {
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.045em;
+  text-transform: uppercase;
+}
+
+.daybreak__voice-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: end;
+  color: var(--row-tone);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.daybreak__voice-mark em { font-style: italic; }
+
+.daybreak__voice-mark-glyph {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--row-tone);
+}
+
+.daybreak__voice-cord { display: none; }
+
+.daybreak__voice:hover,
+.daybreak__voice:focus-visible {
+  background: color-mix(in srgb, var(--row-tone) 7%, transparent);
+  color: var(--paper);
+  outline: none;
+}
+
+.daybreak__voice:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--row-tone);
+}
+
+.daybreak__voice:hover .daybreak__voice-line,
+.daybreak__voice:focus-visible .daybreak__voice-line { color: var(--paper); }
+
+.daybreak__voice:hover .daybreak__voice-letter,
+.daybreak__voice:focus-visible .daybreak__voice-letter {
+  transform: scale(1.06) rotate(-3deg);
+}
+
+.daybreak__voice.is-active {
+  background: color-mix(in srgb, var(--row-tone) 9%, transparent);
+  color: var(--paper);
+}
+
+.daybreak__voice.is-active .daybreak__voice-line { color: var(--paper); opacity: 1; }
+
+.daybreak__voice.is-active .daybreak__voice-letter {
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--row-tone) 35%, transparent));
+}
+
+.daybreak__voice.is-active::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--row-tone);
+  opacity: .85;
+  animation: daybreakVoiceMarkIn .55s var(--ease-out);
+}
+
+@keyframes daybreakVoiceMarkIn {
+  0% { transform: scaleY(0); opacity: 0; }
+  35% { opacity: 1; }
+  100% { transform: scaleY(1); opacity: .85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__voice.is-active::before { animation: none; }
+}
+
+@media (max-width: 720px) {
+  .daybreak__voice {
+    grid-template-columns: clamp(26px, 6vw, 32px) minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 12px 10px;
+  }
+  .daybreak__voice-line { display: none; }
+  .daybreak__voice-mark em { display: none; }
+  .daybreak__voice-mark { gap: 4px; }
+}
+
+@media (max-width: 480px) {
+  .daybreak__voice-mark-glyph { width: 16px; height: 16px; font-size: 12px; }
+}
+
+/* — a faint wax rule beneath the voice strip — */
+
+.daybreak__set-rule {
+  display: block;
+  max-width: 720px;
+  height: 6px;
+  margin: clamp(6px, 1vw, 14px) auto 0;
+  color: var(--day-tone);
+  opacity: 0;
+  animation: daybreakSetRuleIn 1s var(--ease-out) 2.2s both;
+}
+
+.daybreak__set-rule-svg { width: 100%; height: 100%; display: block; }
+
+@keyframes daybreakSetRuleIn {
+  0% { opacity: 0; transform: scaleX(.82); }
+  100% { opacity: .85; transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__set-rule { animation: none; opacity: .85; transform: none; }
+}
+
+/* — the press seal · a small circular mark — */
+
+.daybreak__seal {
+  position: absolute;
+  right: clamp(16px, 2vw, 28px);
+  top: clamp(80px, 9vw, 130px);
+  width: clamp(64px, 6.4vw, 92px);
+  height: clamp(64px, 6.4vw, 92px);
+  pointer-events: none;
+  color: var(--day-tone);
+  opacity: 0;
+  animation: daybreakSealIn 1.2s var(--ease-out) 1.4s both;
+  filter: drop-shadow(0 0 16px color-mix(in srgb, var(--day-tone) 18%, transparent));
+}
+
+.daybreak__seal svg { width: 100%; height: 100%; display: block; }
+
+@keyframes daybreakSealIn {
+  0% { opacity: 0; transform: rotate(-12deg) scale(.7); }
+  60% { opacity: 1; transform: rotate(2deg) scale(1.05); }
+  100% { opacity: 1; transform: rotate(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__seal { animation: none; opacity: 1; transform: none; }
+}
+
+@media (max-width: 880px) {
+  .daybreak__seal { right: clamp(8px, 2vw, 14px); top: clamp(64px, 8vw, 96px); width: 56px; height: 56px; }
+}
+
+@media (max-width: 540px) {
+  .daybreak__seal { width: 44px; height: 44px; top: clamp(48px, 8vw, 72px); }
+}
+
+/* — the ledger · set on · at first light · read in — */
+
+.daybreak__ledger {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(16px, 2vw, 36px);
+  padding: clamp(12px, 1.4vw, 18px) 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0;
+  animation: daybreakLedgerIn 1s var(--ease-out) 2.3s both;
+}
+
+@keyframes daybreakLedgerIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__ledger { animation: none; opacity: 1; transform: none; }
+}
+
+.daybreak__ledger-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.daybreak__ledger-cell--now {
+  justify-self: center;
+  text-align: center;
+}
+
+.daybreak__ledger-cell:last-child { justify-self: end; }
+
+.daybreak__ledger-key { color: var(--paper-soft); }
+
+.daybreak__ledger-val {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  color: var(--paper);
+  font-family: var(--display);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: clamp(13px, 1.1vw, 15px);
+}
+
+.daybreak__ledger-val em { font-style: italic; }
+
+.daybreak__ledger-hour { color: var(--day-tone); font-feature-settings: 'tnum' 1; }
+
+@media (max-width: 880px) {
+  .daybreak__ledger { grid-template-columns: 1fr; gap: 8px; justify-items: start; text-align: left; }
+  .daybreak__ledger-cell--now, .daybreak__ledger-cell:last-child { justify-self: start; }
+}
+
+/* — handoff · the page is set; the broadside follows — */
+
+.daybreak__handoff {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1vw, 14px);
+  max-width: 720px;
+  margin: clamp(10px, 1.6vw, 22px) auto 0;
+  color: var(--day-tone);
+  opacity: 0;
+  animation: daybreakHandoffIn 1s var(--ease-out) 2.45s both;
+}
+
+@keyframes daybreakHandoffIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__handoff { animation: none; opacity: 1; transform: none; }
+}
+
+.daybreak__handoff-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, currentColor 50%, transparent);
+  opacity: .55;
+}
+
+.daybreak__handoff-stack {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.daybreak__handoff-stack em { font-style: italic; }
+
+.daybreak__handoff-pip {
+  display: inline-grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+}
+
+.daybreak__handoff-pip svg { width: 100%; height: 100%; }
+
+.daybreak__handoff-key {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-style: normal;
+}
+
+.daybreak__handoff-arrow {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 8px;
+}
+
+.daybreak__handoff-arrow svg { width: 100%; height: 100%; display: block; }
+
+@media (max-width: 540px) {
+  .daybreak__handoff-arrow { display: none; }
+  .daybreak__handoff-rule--r { display: none; }
+  .daybreak__handoff { max-width: 320px; }
+}
+
+/* — dust · quiet ink grains across the folio — */
+
+.daybreak__dust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  color: var(--day-tone);
+  opacity: 0;
+  animation: daybreakDustIn 1.6s var(--ease-out) 1.6s both;
+}
+
+.daybreak__dust-svg { width: 100%; height: 100%; display: block; }
+
+.daybreak__dust-grains circle {
+  animation: daybreakDustDrift 7s ease-in-out infinite;
+}
+
+.daybreak__dust-grains circle:nth-child(odd) { animation-delay: 1.4s; }
+.daybreak__dust-grains circle:nth-child(3n) { animation-delay: 2.8s; }
+.daybreak__dust-grains circle:nth-child(5n) { animation-delay: 4.2s; }
+
+@keyframes daybreakDustIn {
+  0% { opacity: 0; }
+  100% { opacity: .3; }
+}
+
+@keyframes daybreakDustDrift {
+  0%, 100% { transform: translateY(0); opacity: .42; }
+  50% { transform: translateY(-2px); opacity: .7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__dust { animation: none; opacity: .3; }
+  .daybreak__dust-grains circle { animation: none; }
+}
+
+/* — paper · a quiet wash behind the folio so the night doesn't bleed through — */
+
+.daybreak__paper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%,
+      color-mix(in srgb, var(--day-tone) 4%, transparent),
+      transparent 60%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--day-tone) 3%, transparent) 0%,
+      transparent 32%,
+      transparent 68%,
+      color-mix(in srgb, var(--day-tone) 2%, transparent) 100%);
+  opacity: .85;
+}
+
+/* — pull animation · when the lever strikes, the title lifts — */
+
+.app--pulling .daybreak__line { transition: color .25s var(--ease), filter .25s var(--ease); }
+.app--pulling .daybreak__line--bold {
+  animation: daybreakBoldPull .85s var(--ease-out) both;
+}
+
+@keyframes daybreakBoldPull {
+  0%   { transform: translateY(0); }
+  30%  { transform: translateY(-4px) scale(1.04); filter: drop-shadow(0 0 22px currentColor); }
+  100% { transform: translateY(0); filter: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .daybreak__line { transition: none; }
+  .app--pulling .daybreak__line--bold { animation: none; }
+}
