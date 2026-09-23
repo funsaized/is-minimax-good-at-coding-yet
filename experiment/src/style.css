@@ -31025,3 +31025,333 @@ section.reveal h2 em::after {
 }
 
 
+
+
+/* ────────────────────────────────────────────────────────────
+   ITERATION 446 — the held broadside
+   four printer's marks added to the hero title:
+   · an italic opening swash before "is"
+   · a proof-reader's underline beneath "frontend"
+   · a small query-seal hanging beneath the question mark
+   · a held-breath rule with a printer's key between the
+     title and the compositor's note
+   ──────────────────────────────────────────────────────────── */
+
+/* — the opening swash · an italic ornament that hangs at the
+   start of the line, set beside the lead word "is". it reads as
+   the printer's mark that says "the line begins here." — */
+
+.hero__title-lead-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(2px, .35vw, 5px);
+  vertical-align: baseline;
+  position: relative;
+}
+
+.hero__title-swash {
+  display: inline-block;
+  position: relative;
+  width: clamp(14px, 1.6vw, 22px);
+  height: clamp(34px, 4.4vw, 58px);
+  color: var(--hero-tone, var(--paper-soft));
+  opacity: 0;
+  transform: translateY(.06em) scale(.96);
+  transform-origin: 100% 50%;
+  animation: heroSwashIn 1.1s var(--ease-spring) .55s both;
+  pointer-events: none;
+}
+
+.hero__title-swash svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero__title-swash-stroke {
+  stroke-dasharray: 64;
+  stroke-dashoffset: 64;
+  animation: heroSwashDraw 1.1s var(--ease-out) .7s both;
+}
+
+.hero__title-swash-bead {
+  opacity: 0;
+  animation: heroSwashBeadIn .5s var(--ease-spring) 1.55s both;
+}
+
+.hero__title-swash-bead--top {
+  animation-delay: 1.75s;
+}
+
+@keyframes heroSwashIn {
+  0%   { opacity: 0; transform: translateY(.1em) scale(.9); }
+  100% { opacity: .92; transform: translateY(.06em) scale(1); }
+}
+
+@keyframes heroSwashDraw {
+  0%   { stroke-dashoffset: 64; opacity: .55; }
+  100% { stroke-dashoffset: 0; opacity: .75; }
+}
+
+@keyframes heroSwashBeadIn {
+  0%   { opacity: 0; transform: scale(.4); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title-swash,
+  .hero__title-swash-stroke,
+  .hero__title-swash-bead {
+    animation: none !important;
+    opacity: .9;
+    stroke-dashoffset: 0;
+    transform: none;
+  }
+}
+
+.app--voice-bold .hero__title-swash {
+  opacity: .75;
+}
+
+/* — the proof-reader's underline · a thin dashed rule with a
+   small caret at its end sits beneath "frontend", the one word
+   that is not marked. it says "this is what the question is
+   about" — a quiet printer's proof mark. — */
+
+.ht__under {
+  position: absolute;
+  left: -.08em;
+  right: -.08em;
+  bottom: -.04em;
+  height: clamp(8px, 1vw, 12px);
+  pointer-events: none;
+  color: var(--paper-soft);
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity .5s var(--ease), transform .5s var(--ease);
+}
+
+.ht__under-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero__title .ht__word--plain .ht__under {
+  opacity: .7;
+}
+
+.hero__title .ht__word--plain:hover .ht__under,
+.hero__title .ht__word--plain:focus-within .ht__under {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero__title .ht__word--plain .ht__under-svg line {
+  transition: stroke-dashoffset .6s var(--ease);
+}
+
+.app--pulling .ht__under {
+  animation: htUnderStrike .9s var(--ease-out) both;
+}
+
+@keyframes htUnderStrike {
+  0%   { opacity: .7; transform: translateY(2px); }
+  35%  { opacity: 1; transform: translateY(-1px); }
+  100% { opacity: .85; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ht__under {
+    animation: none !important;
+    opacity: .8;
+    transform: none;
+    transition: none;
+  }
+  .app--pulling .ht__under { animation: none; }
+}
+
+/* — the query seal · a small printer's chop that hangs beneath
+   the question mark like the seal at the foot of a broadside.
+   it carries the question's mark and signals "the question is
+   held here" — only visible when the word is marked, in hover,
+   or on focus. — */
+
+.ht__query-seal {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: clamp(22px, 2.6vw, 32px);
+  height: clamp(22px, 2.6vw, 32px);
+  margin-top: clamp(4px, .55vw, 7px);
+  color: var(--hero-tone, var(--quiet));
+  opacity: 0;
+  transform: translate(-50%, -2px) scale(.7);
+  pointer-events: none;
+  transition: opacity .55s var(--ease), transform .65s var(--ease-spring);
+  z-index: 2;
+}
+
+.ht__query-seal-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero__title .ht__word--yet.is-marked .ht__query-seal,
+.hero__title .ht__word--yet:hover .ht__query-seal,
+.hero__title .ht__word--yet:focus-within .ht__query-seal {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+  animation: querySealIn .85s var(--ease-spring) both;
+}
+
+.app--pulling .ht__word--yet .ht__query-seal {
+  animation: querySealStrike .95s var(--ease-spring) both;
+}
+
+@keyframes querySealIn {
+  0%   { opacity: 0; transform: translate(-50%, -6px) scale(.55); }
+  55%  { opacity: 1; transform: translate(-50%, 1px) scale(1.08); }
+  100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@keyframes querySealStrike {
+  0%   { opacity: 0; transform: translate(-50%, -8px) scale(.5); }
+  40%  { opacity: 1; transform: translate(-50%, 2px) scale(1.15); }
+  100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ht__query-seal,
+  .app--pulling .ht__query-seal {
+    animation: none !important;
+    transform: translate(-50%, 0) scale(1);
+    transition: none;
+  }
+  .hero__title .ht__word--yet.is-marked .ht__query-seal,
+  .hero__title .ht__word--yet:hover .ht__query-seal,
+  .hero__title .ht__word--yet:focus-within .ht__query-seal {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+/* — the held-breath rule · sits between the broadside and the
+   compositor's note. a thin dotted line with a printer's key
+   in its centre, signalling that the question has been set and
+   the page now holds the line. — */
+
+.hero__held-breath {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 1vw, 14px);
+  max-width: 520px;
+  margin: clamp(10px, 1.6vw, 18px) auto clamp(6px, 1vw, 12px);
+  padding: 0 clamp(12px, 2vw, 24px);
+  color: color-mix(in srgb, var(--paper-soft) 80%, var(--hero-tone, var(--quiet)) 20%);
+  opacity: 0;
+  transform: translateY(4px);
+  animation: heldBreathIn 1.0s var(--ease-out) 1.85s both;
+}
+
+.hero__held-breath-rule {
+  flex: 1 1 auto;
+  height: 1px;
+  background:
+    linear-gradient(90deg,
+      transparent 0%,
+      currentColor 18%,
+      currentColor 82%,
+      transparent 100%);
+  opacity: .55;
+}
+
+.hero__held-breath-mark {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: clamp(22px, 2.6vw, 32px);
+  height: clamp(10px, 1.2vw, 14px);
+  color: currentColor;
+}
+
+.hero__held-breath-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero__held-breath-key {
+  font-family: var(--mono);
+  font-size: clamp(9px, 1vw, 11px);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+  opacity: .85;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  transition: color .35s var(--ease);
+}
+
+.hero__held-breath-mark--end {
+  opacity: .72;
+}
+
+@keyframes heldBreathIn {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.app--pulling .hero__held-breath {
+  animation: heldBreathStrike .95s var(--ease-out) both;
+}
+
+@keyframes heldBreathStrike {
+  0%   { opacity: 1; transform: translateY(0); }
+  30%  { opacity: 1; transform: translateY(-1px) scale(1.005); filter: brightness(1.12); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: brightness(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__held-breath,
+  .app--pulling .hero__held-breath {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero__held-breath {
+    gap: clamp(4px, 1.6vw, 8px);
+    padding: 0 clamp(8px, 3vw, 16px);
+  }
+  .hero__held-breath-key {
+    font-size: clamp(8.5px, 2.4vw, 10px);
+    letter-spacing: .1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero__title-swash {
+    width: clamp(11px, 3.6vw, 16px);
+    height: clamp(26px, 8vw, 40px);
+  }
+  .ht__query-seal {
+    width: clamp(18px, 5.6vw, 24px);
+    height: clamp(18px, 5.6vw, 24px);
+    margin-top: 3px;
+  }
+  .hero__held-breath-key {
+    font-size: clamp(8px, 2.6vw, 9.5px);
+  }
+}

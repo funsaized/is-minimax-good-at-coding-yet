@@ -1,21 +1,12 @@
 # Changelog
 
-## Iteration 445 — Compositor's ink joins the broadside
+## Iteration 446 — a held broadside
 
-A single italic hand-note now sits between the question and its title signature: the broadside reads as title → compositor's note → title signature, with a thin hand-drawn ink-stroke and a small m³ INK seal keeping the editorial hand visible. The title signature's floating legend is tightened to "in voice" so the two notes don't speak the same word twice.
+The hero title now reads as a printed broadside: four small printer's marks are added to the question, so the type itself carries the editorial logic. The page earns its held pause by adding visible proof to the line.
 
-### What changed
+- Opening swash before the lead word "is" — a small italic ornament with a drawn stroke and two beads, drawn in on load, signals "the line begins here."
+- Proof-reader's underline beneath the unmarked word "frontend" — a thin dashed rule with a tiny caret at its end, indicating "this is what the question is about." It lifts on hover/focus and strikes when the lever is pulled.
+- A query seal hangs beneath the question mark — a small printer's chop with concentric rules and a centred italic "?", arriving with a soft spring when "yet" is marked or hovered. It strikes when the lever is pulled.
+- A held-breath rule sits between the broadside and the compositor's note — a dotted line with two printer's marks flanking the small mono key "the page holds." It arrives 1.85s in and tints subtly with the active voice's tone.
 
-- New `src/CompositorInk.tsx` — a centered editorial note set inside the broadside, between `<h1>` and `<TitleSignature />`. Voice-specific italic copy, a hand-drawn underline drawn on scroll-in, a small `m³ INK` seal color-shifted to the marked word, and a tiny "marked at ∧ good at" bead pinned to the gloss row.
-- `src/Hero.tsx` — mounts `<CompositorInk voice={voice} word={word} />` between the title and the title signature.
-- `src/TitleSignature.tsx` — legend key simplified from "the page set in" to "in voice", so the Compositor's italic note owns the "set" voice and the signature owns the formal specification.
-- `src/style.css` — new `.compositor-ink*` block (~360 lines) at the foot of the stylesheet. Three-col grid (caret / note stack / seal), entrance animations timed after the title and ahead of the title signature, prefers-reduced-motion fallbacks at every step, and three responsive breakpoints that fold the right seal above the note on mobile.
-
-### Behavior and constraints preserved
-
-- Title and `<title>` element unchanged: "is Minimax M3 good at frontend yet?".
-- Same React/TS/Vite stack, same entry point, no new packages.
-- No remote fonts, scripts, images, or APIs.
-- All motion gated by `prefers-reduced-motion: reduce`.
-- Keyboard-focus paths unchanged (broadside is decorative; the marked tokens keep `Arrow* / Home / End` cycling and `aria-pressed`).
-- No iteration count, score, status, or deployment statistic was invented.
+All marks respect `prefers-reduced-motion`. Mobile widths scale the swash, seal, and key down so the broadside stays balanced on small screens. Title and document title preserved as required.

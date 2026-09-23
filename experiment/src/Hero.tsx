@@ -222,7 +222,25 @@ export function Hero({
         >
           <span className="hero__title-row hero__title-row--a">
             <span className="hero__title-baseline" aria-hidden="true" />
-            <span className="hero__title-lead" aria-hidden="true">is</span>
+            <span className="hero__title-lead-wrap" aria-hidden="true">
+              <span className="hero__title-swash" aria-hidden="true">
+                <svg viewBox="0 0 28 36" preserveAspectRatio="none">
+                  <path
+                    className="hero__title-swash-stroke"
+                    d="M3 30 C7 24, 9 18, 8 12 C7.4 6, 12 4, 18 6 C24 8, 26 14, 24 20"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth=".7"
+                    strokeLinecap="round"
+                    opacity=".75"
+                  />
+                  <circle className="hero__title-swash-bead" cx="3" cy="30" r="1.1" fill="currentColor" opacity=".85" />
+                  <circle className="hero__title-swash-bead hero__title-swash-bead--top" cx="24" cy="20" r="1.4" fill="currentColor" opacity=".95" />
+                  <circle cx="24" cy="20" r=".5" fill="var(--night)" />
+                </svg>
+              </span>
+              <span className="hero__title-lead">is</span>
+            </span>
             <span className="hero__title-lead-space" aria-hidden="true"> </span>
             {renderLineSegments({
               lineId: 'a',
@@ -255,6 +273,30 @@ export function Hero({
             })}
           </span>
         </h1>
+
+        <span className="hero__held-breath" aria-hidden="true">
+          <span className="hero__held-breath-rule" />
+          <span className="hero__held-breath-mark">
+            <svg viewBox="0 0 36 14" preserveAspectRatio="none">
+              <line x1="2" y1="7" x2="14" y2="7" stroke="currentColor" strokeWidth=".4" strokeDasharray=".6 2" opacity=".55" />
+              <circle cx="18" cy="7" r="2.2" fill="currentColor" opacity=".78" />
+              <circle cx="18" cy="7" r=".7" fill="var(--night)" />
+              <line x1="22" y1="7" x2="34" y2="7" stroke="currentColor" strokeWidth=".4" strokeDasharray=".6 2" opacity=".55" />
+            </svg>
+          </span>
+          <span className="hero__held-breath-rule" />
+          <em className="hero__held-breath-key">the page holds</em>
+          <span className="hero__held-breath-rule" />
+          <span className="hero__held-breath-mark hero__held-breath-mark--end">
+            <svg viewBox="0 0 36 14" preserveAspectRatio="none">
+              <line x1="2" y1="7" x2="14" y2="7" stroke="currentColor" strokeWidth=".4" strokeDasharray=".6 2" opacity=".55" />
+              <circle cx="18" cy="7" r="1.2" fill="currentColor" opacity=".78" />
+              <circle cx="18" cy="7" r=".4" fill="var(--night)" />
+              <line x1="22" y1="7" x2="34" y2="7" stroke="currentColor" strokeWidth=".4" strokeDasharray=".6 2" opacity=".55" />
+            </svg>
+          </span>
+          <span className="hero__held-breath-rule" />
+        </span>
 
         <CompositorInk voice={voice} word={word} />
 
@@ -350,6 +392,31 @@ function renderLineSegments({
           style={setStyle}
           data-set={visible ? 'in' : 'pending'}
         >
+          <span className="ht__under" aria-hidden="true">
+            <svg viewBox="0 0 200 6" preserveAspectRatio="none" className="ht__under-svg">
+              <line
+                x1="2"
+                y1="3.4"
+                x2="190"
+                y2="3.4"
+                stroke="currentColor"
+                strokeWidth=".45"
+                strokeDasharray="1.1 1.6"
+                strokeLinecap="round"
+                opacity=".55"
+              />
+              <circle cx="2" cy="3.4" r=".9" fill="currentColor" opacity=".75" />
+              <path
+                d="M184 1 L192 3.4 L184 5.8"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth=".5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity=".75"
+              />
+            </svg>
+          </span>
           {seg.text}
         </span>
       )
@@ -395,6 +462,37 @@ function renderLineSegments({
             <span className={`ht__punct ht__punct--${voice}`} aria-hidden="true">
               <span className="ht__punct-halo" aria-hidden="true" />
               <span className="ht__punct-mark">?</span>
+              <span className="ht__query-seal" aria-hidden="true">
+                <svg viewBox="0 0 36 36" className="ht__query-seal-svg">
+                  <line
+                    x1="18"
+                    y1="0"
+                    x2="18"
+                    y2="6"
+                    stroke="currentColor"
+                    strokeWidth=".55"
+                    strokeLinecap="round"
+                    opacity=".6"
+                  />
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="currentColor" strokeWidth=".5" strokeDasharray=".7 1.6" opacity=".65" />
+                  <circle cx="18" cy="18" r="11.6" fill="none" stroke="currentColor" strokeWidth=".35" opacity=".45" />
+                  <circle cx="18" cy="18" r="9.2" fill="none" stroke="currentColor" strokeWidth=".28" strokeDasharray=".4 1.2" opacity=".4" />
+                  <text
+                    x="18"
+                    y="21.5"
+                    textAnchor="middle"
+                    fontFamily="'Iowan Old Style', 'Palatino Linotype', Georgia, serif"
+                    fontStyle="italic"
+                    fontSize="11"
+                    fill="currentColor"
+                    opacity=".95"
+                  >
+                    ?
+                  </text>
+                  <circle cx="18" cy="6" r=".6" fill="currentColor" opacity=".7" />
+                  <circle cx="18" cy="30" r=".6" fill="currentColor" opacity=".7" />
+                </svg>
+              </span>
             </span>
           </button>
         </span>
