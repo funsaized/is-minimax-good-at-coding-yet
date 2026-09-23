@@ -17,6 +17,7 @@ import { FolioTurn } from './FolioTurn'
 import { Press } from './Press'
 import { ProofLine } from './ProofLine'
 import { Specimen } from './Specimen'
+import { HeldReading } from './HeldReading'
 import { Answer } from './Answer'
 import { Colophon } from './Colophon'
 import { PrinterAtlas } from './PrinterAtlas'
@@ -44,6 +45,7 @@ export const FOLIOS = [
   { id: 'press', index: 'ii', label: 'the press bed', hint: 'pull the lever, take an impression' },
   { id: 'notes', index: 'iii', label: 'the proof line', hint: 'three voices on the same cord' },
   { id: 'specimen', index: 'iv', label: 'the notation key', hint: 'how the three voices read' },
+  { id: 'held', index: 'iv½', label: 'the held reading', hint: 'one line, three proofs, one plate' },
   { id: 'answer', index: 'v', label: 'the answer', hint: 'folded once, then folded back' },
   { id: 'pouch', index: 'vi', label: 'the reader’s pouch', hint: 'three slips, kept close' },
 ] as const
@@ -385,6 +387,10 @@ export function App() {
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="iv" title="the notation key" hint="how the three voices read" voice={voice} />
       <Specimen active={voice} onSelect={selectVoice} />
+
+      <ComposingBreath voice={voice} count={FOLIOS.length} />
+      <FolioTurn index="iv½" title="the held reading" hint="one line · three proofs · one plate" voice={voice} soft />
+      <HeldReading voice={voice} setToday={setToday} onVoice={selectVoice} />
 
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="v" title="the answer" hint="folded once · then folded back" voice={voice} />
