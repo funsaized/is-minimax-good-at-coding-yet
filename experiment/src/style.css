@@ -1191,9 +1191,9 @@ em { font-style: italic; }
 .section__lede {
   font-family: var(--display);
   font-style: italic;
-  font-size: clamp(18px, 1.75vw, 22px);
-  line-height: 1.56;
-  letter-spacing: -.01em;
+  font-size: clamp(18px, 1.85vw, 23px);
+  line-height: 1.5;
+  letter-spacing: -.012em;
   color: var(--paper-soft);
   max-width: 62ch;
   margin: 0;
@@ -2587,7 +2587,7 @@ em { font-style: italic; }
 
 .hero {
   position: relative;
-  padding: clamp(36px, 5vh, 84px) var(--gutter) clamp(56px, 7vw, 96px);
+  padding: clamp(40px, 5.6vh, 92px) var(--gutter) clamp(64px, 8vw, 112px);
   max-width: 1320px;
   margin: 0 auto;
   z-index: 2;
@@ -2596,7 +2596,7 @@ em { font-style: italic; }
 .hero__inner {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: clamp(22px, 2.6vw, 38px);
+  gap: clamp(26px, 3vw, 44px);
   align-items: start;
   max-width: 1180px;
   margin: 0 auto;
@@ -3730,9 +3730,9 @@ em { font-style: italic; }
 .hero__title {
   font-family: var(--display);
   font-style: italic;
-  font-size: clamp(56px, 10.6vw, 168px);
+  font-size: clamp(58px, 11.4vw, 184px);
   line-height: 1.02;
-  letter-spacing: -.032em;
+  letter-spacing: -.034em;
   margin: 0 auto;
   color: var(--paper);
   position: relative;
@@ -3745,7 +3745,7 @@ em { font-style: italic; }
   font-variant-numeric: oldstyle-nums;
   text-shadow: 0 0 36px color-mix(in srgb, var(--hero-tone, var(--quiet)) 14%, transparent);
   transition: text-shadow .8s var(--ease), filter .8s var(--ease);
-  max-width: 16ch;
+  max-width: 15ch;
 }
 
 .hero__title--arrange {
@@ -3884,11 +3884,11 @@ em { font-style: italic; }
 
 .hero__title-row--a {
   margin-bottom: 0;
-  padding-bottom: clamp(2px, .3vw, 6px);
+  padding-bottom: clamp(2px, .3vw, 8px);
 }
 
 .hero__title-row--b {
-  margin-top: 0;
+  margin-top: -.04em;
   padding-bottom: clamp(2px, .3vw, 6px);
 }
 
@@ -3901,11 +3901,11 @@ em { font-style: italic; }
   font-family: var(--display);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(26px, 5vw, 74px);
+  font-size: clamp(24px, 4.4vw, 64px);
   letter-spacing: -.018em;
   color: var(--paper-soft);
   vertical-align: baseline;
-  margin-right: .12em;
+  margin-right: .14em;
   transition: color .35s var(--ease);
   text-shadow: 0 0 22px color-mix(in srgb, var(--hero-tone, var(--quiet)) 12%, transparent);
 }
@@ -5719,7 +5719,7 @@ em { font-style: italic; }
 
 .press__header {
   display: grid;
-  gap: 14px;
+  gap: 16px;
   margin-bottom: clamp(28px, 4vw, 48px);
   max-width: 68ch;
 }
@@ -5727,9 +5727,9 @@ em { font-style: italic; }
 .press__header h2 {
   font-family: var(--display);
   font-style: italic;
-  font-size: clamp(40px, 6vw, 66px);
+  font-size: clamp(42px, 6.4vw, 72px);
   line-height: 1.02;
-  letter-spacing: -.028em;
+  letter-spacing: -.03em;
   font-weight: 400;
   margin: 8px 0 0;
   text-wrap: balance;
@@ -10082,9 +10082,9 @@ em { font-style: italic; }
 .colophon__title {
   font-family: var(--display);
   font-style: italic;
-  font-size: clamp(32px, 4.4vw, 50px);
-  line-height: 1.08;
-  letter-spacing: -.022em;
+  font-size: clamp(34px, 4.8vw, 56px);
+  line-height: 1.06;
+  letter-spacing: -.024em;
   font-weight: 400;
   color: var(--paper);
   margin: 0;
@@ -14045,9 +14045,9 @@ section.reveal h2 em::after {
 .proof-line__title {
   font-family: var(--display);
   font-style: italic;
-  font-size: clamp(40px, 6vw, 66px);
+  font-size: clamp(42px, 6.4vw, 72px);
   line-height: 1.02;
-  letter-spacing: -.028em;
+  letter-spacing: -.03em;
   font-weight: 400;
   margin: 8px 0 0;
   text-wrap: balance;
@@ -34552,5 +34552,715 @@ section.reveal h2 em::after {
 
 @media (prefers-reduced-motion: reduce) {
   .app--pulling .setting-seal__plate { animation: none; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   OVERPRINT PROOF · the composed overprint, folio vi
+   a hand-marked proof sheet where the question is set in all
+   three voices at once, each held against the others with a
+   small offset — like a letterpress overprint misregistration.
+   the active voice reads on top; the others stay visible.
+   closes the page after the bookmark, before the lamp.
+   ──────────────────────────────────────────────────────────── */
+
+.overprint-proof {
+  --op-tone: var(--quiet);
+  position: relative;
+  max-width: 1240px;
+  margin: clamp(56px, 7vw, 96px) auto clamp(72px, 9vw, 128px);
+  padding: 0 var(--gutter);
+  display: grid;
+  justify-items: center;
+  gap: clamp(18px, 2.2vw, 30px);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+}
+
+.overprint-proof.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overprint-proof { opacity: 1; transform: none; transition: none; }
+}
+
+.overprint-proof__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* — the crest · folio key + three voices, one plate — */
+
+.overprint-proof__crest {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(12px, 1.4vw, 22px);
+  width: 100%;
+  justify-content: center;
+  color: var(--op-tone);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: overprintProofCrestIn 1.2s var(--ease-out) .1s both;
+}
+
+.overprint-proof.is-revealed .overprint-proof__crest { opacity: 1; }
+
+@keyframes overprintProofCrestIn {
+  0% { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.overprint-proof__crest-rule {
+  flex: 0 1 clamp(60px, 12vw, 180px);
+  height: 8px;
+  color: var(--op-tone);
+}
+
+.overprint-proof__crest-rule svg { display: block; width: 100%; height: 100%; }
+
+.overprint-proof__crest-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.overprint-proof__crest-key {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+}
+
+.overprint-proof__crest-line {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(14px, 1.3vw, 17px);
+  text-transform: none;
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+.overprint-proof__crest-line em {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.overprint-proof__crest-line span {
+  color: var(--line-strong);
+  font-style: normal;
+}
+
+/* — the lede · a single short sentence — */
+
+.overprint-proof__lede {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.5;
+  letter-spacing: -.012em;
+  color: var(--paper-soft);
+  max-width: 46ch;
+  margin: 0;
+  text-align: center;
+  text-wrap: pretty;
+  font-feature-settings: 'kern', 'liga', 'onum' 1, 'dlig' 1;
+  opacity: 0;
+  animation: overprintProofLedeIn 1.2s var(--ease-out) .35s both;
+}
+
+.overprint-proof__lede em {
+  font-style: italic;
+  color: var(--paper);
+}
+
+@keyframes overprintProofLedeIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overprint-proof__lede { animation: none; opacity: 1; transform: none; }
+}
+
+/* — the plate itself — the moment the three voices share — */
+
+.overprint-proof__plate {
+  --op-plate-pad: clamp(28px, 4.4vw, 56px);
+  position: relative;
+  width: min(100%, 920px);
+  padding: var(--op-plate-pad) clamp(20px, 3vw, 40px);
+  margin: clamp(4px, .8vw, 12px) 0 0;
+  display: grid;
+  justify-items: center;
+  isolation: isolate;
+  background:
+    linear-gradient(180deg,
+      rgba(245, 238, 216, .014),
+      rgba(245, 238, 216, .006) 50%,
+      rgba(245, 238, 216, .018));
+  border: 1px solid color-mix(in srgb, var(--op-tone) 22%, var(--line));
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--night-2, var(--night)) 60%, transparent),
+    0 30px 60px -28px rgba(0, 0, 0, .55),
+    0 12px 26px -20px color-mix(in srgb, var(--op-tone) 18%, transparent);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 1.2s var(--ease-out) .55s, transform 1.2s var(--ease-out) .55s;
+}
+
+.overprint-proof.is-revealed .overprint-proof__plate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overprint-proof__plate { opacity: 1; transform: none; transition: none; }
+}
+
+.overprint-proof__plate::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  pointer-events: none;
+  border: 1px dashed color-mix(in srgb, var(--op-tone) 18%, transparent);
+  border-radius: 2px;
+  opacity: .8;
+}
+
+.overprint-proof__plate::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: clamp(8px, 1.4vw, 14px);
+  bottom: clamp(8px, 1.4vw, 14px);
+  width: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg,
+    transparent,
+    color-mix(in srgb, var(--op-tone) 18%, transparent) 18%,
+    color-mix(in srgb, var(--op-tone) 18%, transparent) 82%,
+    transparent);
+  pointer-events: none;
+  opacity: .65;
+}
+
+.overprint-proof__plate-halo,
+.overprint-proof__plate-shadow,
+.overprint-proof__plate-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.overprint-proof__plate-halo { z-index: 0; opacity: .9; }
+.overprint-proof__plate-halo svg { width: 100%; height: 100%; display: block; }
+
+.overprint-proof__plate-shadow { z-index: -1; mix-blend-mode: multiply; opacity: .55; }
+.overprint-proof__plate-shadow svg { width: 100%; height: 100%; display: block; }
+
+.overprint-proof__plate-grain { z-index: 1; mix-blend-mode: screen; opacity: .35; pointer-events: none; }
+.overprint-proof__plate-grain svg { width: 100%; height: 100%; display: block; }
+
+/* — the four corner brackets — small printer's marks at the plate corners — */
+
+.overprint-proof__plate-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  color: var(--op-tone);
+  opacity: .65;
+  transition: opacity .35s var(--ease);
+}
+
+.overprint-proof__plate-corner::before,
+.overprint-proof__plate-corner::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  opacity: .8;
+}
+
+.overprint-proof__plate-corner--tl { top: 8px; left: 8px; }
+.overprint-proof__plate-corner--tl::before { top: 0; left: 0; width: 14px; height: 1px; }
+.overprint-proof__plate-corner--tl::after  { top: 0; left: 0; width: 1px; height: 14px; }
+
+.overprint-proof__plate-corner--tr { top: 8px; right: 8px; }
+.overprint-proof__plate-corner--tr::before { top: 0; right: 0; width: 14px; height: 1px; }
+.overprint-proof__plate-corner--tr::after  { top: 0; right: 0; width: 1px; height: 14px; }
+
+.overprint-proof__plate-corner--bl { bottom: 8px; left: 8px; }
+.overprint-proof__plate-corner--bl::before { bottom: 0; left: 0; width: 14px; height: 1px; }
+.overprint-proof__plate-corner--bl::after  { bottom: 0; left: 0; width: 1px; height: 14px; }
+
+.overprint-proof__plate-corner--br { bottom: 8px; right: 8px; }
+.overprint-proof__plate-corner--br::before { bottom: 0; right: 0; width: 14px; height: 1px; }
+.overprint-proof__plate-corner--br::after  { bottom: 0; right: 0; width: 1px; height: 14px; }
+
+/* — the four registration ticks on the outer edge — */
+
+.overprint-proof__plate-tick {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--op-tone);
+  opacity: .7;
+  pointer-events: none;
+}
+
+.overprint-proof__plate-tick--n { top: -3px; left: 50%; transform: translateX(-50%); }
+.overprint-proof__plate-tick--s { bottom: -3px; left: 50%; transform: translateX(-50%); }
+.overprint-proof__plate-tick--e { top: 50%; right: -3px; transform: translateY(-50%); }
+.overprint-proof__plate-tick--w { top: 50%; left: -3px; transform: translateY(-50%); }
+
+/* — the stage where the three lines sit — */
+
+.overprint-proof__stage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  min-height: clamp(96px, 11vw, 132px);
+  isolation: isolate;
+  z-index: 2;
+}
+
+/* — each of the three voice lines — */
+
+.overprint-proof__line {
+  --op-line-x: 0px;
+  --op-line-y: 0px;
+  --op-line-order: 1;
+  --op-line-blend: multiply;
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  white-space: nowrap;
+  transform: translate(var(--op-line-x), var(--op-line-y));
+  transform-origin: center;
+  transition: transform .9s var(--ease-spring), opacity .55s var(--ease), color .55s var(--ease);
+  mix-blend-mode: var(--op-line-blend);
+  text-align: center;
+  position: relative;
+}
+
+.overprint-proof__line--quiet {
+  color: var(--op-quiet);
+  opacity: .85;
+  z-index: 1;
+}
+
+.overprint-proof__line--human {
+  color: var(--op-human);
+  opacity: .82;
+  z-index: 2;
+}
+
+.overprint-proof__line--bold {
+  color: var(--op-bold);
+  opacity: .92;
+  z-index: 3;
+}
+
+.overprint-proof.is-revealed .overprint-proof__line--quiet {
+  animation: overprintProofQuietIn 1.6s var(--ease-out) .85s both;
+}
+
+.overprint-proof.is-revealed .overprint-proof__line--human {
+  animation: overprintProofHumanIn 1.6s var(--ease-out) 1.05s both;
+}
+
+.overprint-proof.is-revealed .overprint-proof__line--bold {
+  animation: overprintProofBoldIn 1.6s var(--ease-out) 1.25s both;
+}
+
+@keyframes overprintProofQuietIn {
+  0% { opacity: 0; transform: translate(calc(var(--op-line-x) - 8px), calc(var(--op-line-y) - 4px)); filter: blur(2px); }
+  60% { opacity: .85; filter: blur(0); }
+  100% { opacity: .85; transform: translate(var(--op-line-x), var(--op-line-y)); filter: blur(0); }
+}
+
+@keyframes overprintProofHumanIn {
+  0% { opacity: 0; transform: translate(calc(var(--op-line-x) + 8px), calc(var(--op-line-y) + 4px)); filter: blur(2px); }
+  60% { opacity: .82; filter: blur(0); }
+  100% { opacity: .82; transform: translate(var(--op-line-x), var(--op-line-y)); filter: blur(0); }
+}
+
+@keyframes overprintProofBoldIn {
+  0% { opacity: 0; transform: translate(var(--op-line-x), calc(var(--op-line-y) - 6px)) scale(.96); filter: blur(1px); }
+  60% { opacity: .92; filter: blur(0); }
+  100% { opacity: .92; transform: translate(var(--op-line-x), var(--op-line-y)) scale(1); filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overprint-proof.is-revealed .overprint-proof__line--quiet,
+  .overprint-proof.is-revealed .overprint-proof__line--human,
+  .overprint-proof.is-revealed .overprint-proof__line--bold {
+    animation: none;
+    opacity: 1;
+    transform: translate(var(--op-line-x), var(--op-line-y));
+    filter: none;
+  }
+  .overprint-proof__line--quiet { opacity: .85; }
+  .overprint-proof__line--human { opacity: .82; }
+}
+
+.overprint-proof__line-piece {
+  display: inline-block;
+}
+
+.overprint-proof__line-piece.is-space {
+  display: inline-block;
+  width: .28em;
+}
+
+/* — the two register crosshairs on the plate — */
+
+.overprint-proof__plate-register {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  color: var(--op-tone);
+  opacity: .55;
+  pointer-events: none;
+}
+
+.overprint-proof__plate-register svg { width: 100%; height: 100%; display: block; }
+
+.overprint-proof__plate-register--n {
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.overprint-proof__plate-register--s {
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* — the legend: a small list of three voices + offsets + foot — */
+
+.overprint-proof__legend {
+  display: grid;
+  gap: clamp(14px, 1.8vw, 22px);
+  width: 100%;
+  max-width: 760px;
+  opacity: 0;
+  animation: overprintProofLegendIn 1.2s var(--ease-out) 1.4s both;
+}
+
+.overprint-proof.is-revealed .overprint-proof__legend { opacity: 1; }
+
+@keyframes overprintProofLegendIn {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overprint-proof__legend { animation: none; opacity: 1; transform: none; }
+}
+
+.overprint-proof__legend-voices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.6vw, 22px);
+  padding-top: clamp(8px, 1.2vw, 14px);
+  border-top: 1px solid var(--line-soft);
+}
+
+@media (max-width: 720px) {
+  .overprint-proof__legend-voices {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.overprint-proof__legend-voice {
+  --op-legend-tone: var(--op-quiet);
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: baseline;
+  gap: clamp(8px, 1vw, 14px);
+  padding: clamp(8px, 1vw, 12px) 0;
+  border-bottom: 1px dashed color-mix(in srgb, var(--line) 50%, transparent);
+  position: relative;
+  transition: color .45s var(--ease);
+}
+
+.overprint-proof__legend-voice::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  bottom: -1px;
+  width: 8px;
+  height: 1px;
+  background: var(--op-legend-tone);
+  opacity: 0;
+  transition: opacity .35s var(--ease), width .35s var(--ease);
+}
+
+.overprint-proof__legend-voice.is-active::after {
+  opacity: .9;
+  width: 22px;
+}
+
+.overprint-proof__legend-voice--quiet { --op-legend-tone: var(--op-quiet); }
+.overprint-proof__legend-voice--human { --op-legend-tone: var(--op-human); }
+.overprint-proof__legend-voice--bold  { --op-legend-tone: var(--op-bold);  }
+
+.overprint-proof__legend-voice.is-active {
+  color: var(--op-legend-tone);
+}
+
+.overprint-proof__legend-voice-letter {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--op-legend-tone);
+  opacity: .85;
+  letter-spacing: 0;
+  font-feature-settings: 'lnum' 1;
+  text-transform: lowercase;
+  line-height: 1;
+}
+
+.overprint-proof__legend-voice.is-active .overprint-proof__legend-voice-letter {
+  background: var(--op-legend-tone);
+  color: var(--night);
+  opacity: 1;
+}
+
+.overprint-proof__legend-voice-stack {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.overprint-proof__legend-voice-name {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13.5px, 1.15vw, 15px);
+  letter-spacing: -.005em;
+  color: var(--paper);
+  text-transform: none;
+}
+
+.overprint-proof__legend-voice.is-active .overprint-proof__legend-voice-name {
+  color: var(--paper);
+}
+
+.overprint-proof__legend-voice-face {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.overprint-proof__legend-voice-offset {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--op-legend-tone);
+  opacity: .85;
+  white-space: nowrap;
+}
+
+.overprint-proof__legend-voice-offset span {
+  color: var(--line-strong);
+  font-style: normal;
+}
+
+.overprint-proof__legend-voice-cord {
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 6px;
+  color: var(--line-strong);
+  opacity: .65;
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .overprint-proof__legend-voice-cord { display: none; }
+}
+
+/* — the foot · the composed date / hour / reading voice — */
+
+.overprint-proof__legend-foot {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 20px);
+  padding-top: clamp(10px, 1.4vw, 16px);
+  border-top: 1px solid var(--line-soft);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@media (max-width: 720px) {
+  .overprint-proof__legend-foot {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.overprint-proof__legend-foot-cell {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.overprint-proof__legend-foot-key {
+  font-style: normal;
+  color: var(--muted);
+}
+
+.overprint-proof__legend-foot-val {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(12.5px, 1.1vw, 14.5px);
+  text-transform: none;
+  letter-spacing: -.005em;
+  color: var(--paper-soft);
+}
+
+.app--voice-bold .overprint-proof__legend-foot-val { font-style: normal; }
+
+/* — the dedication quote — a single italic line at the foot of the legend — */
+
+.overprint-proof__legend-dedication {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 auto;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13.5px, 1.15vw, 15.5px);
+  letter-spacing: -.005em;
+  color: var(--paper);
+  text-align: center;
+  max-width: 56ch;
+}
+
+.overprint-proof__legend-dedication em {
+  font-style: italic;
+  color: var(--paper);
+}
+
+.overprint-proof__legend-quote {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 14px;
+  color: var(--op-tone);
+  opacity: .55;
+}
+
+.overprint-proof__legend-quote svg { width: 100%; height: 100%; }
+
+/* — responsive tightenings — */
+
+@media (max-width: 880px) {
+  .overprint-proof { padding: 0 var(--gutter-tight); gap: clamp(16px, 3vw, 24px); }
+  .overprint-proof__plate { padding: clamp(20px, 5vw, 32px) clamp(14px, 4vw, 24px); }
+  .overprint-proof__crest-rule { flex-basis: clamp(40px, 12vw, 80px); }
+}
+
+@media (max-width: 640px) {
+  .overprint-proof__plate { padding: clamp(18px, 5vw, 28px) clamp(10px, 4vw, 18px); }
+  .overprint-proof__plate-corner { width: 14px; height: 14px; }
+  .overprint-proof__plate-corner--tl::before,
+  .overprint-proof__plate-corner--tr::before { width: 10px; }
+  .overprint-proof__plate-corner--tl::after,
+  .overprint-proof__plate-corner--tr::after { height: 10px; }
+  .overprint-proof__plate-corner--bl::before,
+  .overprint-proof__plate-corner--br::before { width: 10px; }
+  .overprint-proof__plate-corner--bl::after,
+  .overprint-proof__plate-corner--br::after { height: 10px; }
+  .overprint-proof__line { white-space: normal; }
+  .overprint-proof__line-piece { font-size: .82em; }
+}
+
+@media (max-width: 480px) {
+  .overprint-proof__crest { flex-wrap: wrap; gap: 8px; }
+  .overprint-proof__crest-rule { display: none; }
+  .overprint-proof__legend-voice {
+    grid-template-columns: 26px 1fr;
+  }
+  .overprint-proof__legend-voice-offset {
+    grid-column: 1 / -1;
+    margin-left: 38px;
+    margin-top: -4px;
+    opacity: .65;
+  }
+}
+
+/* — pulling state · a brief flash across the three voice lines — */
+
+.app--pulling .overprint-proof__plate {
+  animation: overprintProofPress 1.2s var(--ease-spring) both;
+}
+
+@keyframes overprintProofPress {
+  0%   { box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--night-2, var(--night)) 60%, transparent),
+    0 30px 60px -28px rgba(0, 0, 0, .55),
+    0 12px 26px -20px color-mix(in srgb, var(--op-tone) 18%, transparent); }
+  35%  { box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--op-tone) 40%, transparent),
+    0 36px 70px -28px rgba(0, 0, 0, .55),
+    0 18px 36px -22px color-mix(in srgb, var(--op-tone) 38%, transparent); }
+  100% { box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--night-2, var(--night)) 60%, transparent),
+    0 30px 60px -28px rgba(0, 0, 0, .55),
+    0 12px 26px -20px color-mix(in srgb, var(--op-tone) 18%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .overprint-proof__plate { animation: none; }
 }
 

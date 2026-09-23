@@ -36,6 +36,7 @@ import { MarginalCaret } from './MarginalCaret'
 import { WordHoverNote } from './WordHoverNote'
 import { SettingSeal } from './SettingSeal'
 import { SignaturePlate } from './SignaturePlate'
+import { OverprintProof } from './OverprintProof'
 import { PageSpine } from './PageSpine'
 import { ArrivalPlate } from './ArrivalPlate'
 import { TypeCase } from './TypeCase'
@@ -538,6 +539,8 @@ export function App() {
 
       <FolioTurn index="vi½" title="the bookmark" hint="one line · kept after the broadside is set down" voice={voice} soft />
       <TheBookMark voice={voice} setToday={setToday} />
+
+      <OverprintProof voice={voice} setToday={setToday} />
 
       <LastLamp voice={voice} setToday={setToday} />
 
