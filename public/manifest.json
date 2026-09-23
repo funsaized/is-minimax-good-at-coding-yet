@@ -8568,6 +8568,25 @@
         "outputTokens": 21661,
         "steps": 67
       }
+    },
+    {
+      "id": 451,
+      "parentId": 450,
+      "createdAt": "2026-09-23T18:42:55.285Z",
+      "summary": "Added a **Type Case** specimen that sits between the Arrival folio and the",
+      "path": "/iterations/000451/index.html",
+      "screenshot": "/iterations/000451/desktop.png",
+      "mobileScreenshot": "/iterations/000451/mobile.png",
+      "sourceCommit": "dfeb1e6dbdaa91a87f433efbe0899e08c1d075ba",
+      "model": "minimax-coding-plan/MiniMax-M3",
+      "durationSeconds": 574,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": {
+        "estimatedCostUsd": 0,
+        "inputTokens": 399775,
+        "outputTokens": 14962,
+        "steps": 61
+      }
     }
   ]
 }
