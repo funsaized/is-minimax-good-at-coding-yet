@@ -30382,6 +30382,314 @@ section.reveal h2 em::after {
   .app--pulling .hero__broadside { animation: none; }
 }
 
+/* ────────────────────────────────────────────────────────────
+   broadside-inscription · the set-up line that opens the plate
+   above the question. Two drawn rules flank a small mono-cap
+   line that names the press, the date, the voice, and the folio.
+   The voice chip animates when the voice changes; the rules
+   draw in from the centre, then settle into a quiet steady line.
+   ──────────────────────────────────────────────────────────── */
+
+.broadside-inscription {
+  --bi-tone: var(--hero-tone, var(--quiet));
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.6vw, 22px);
+  margin: clamp(-22px, -2.4vw, -10px) auto clamp(10px, 1.6vw, 22px);
+  padding: 0 clamp(28px, 4.4vw, 64px);
+  max-width: 760px;
+  color: var(--bi-tone);
+  font-family: var(--mono);
+  font-size: clamp(9px, .92vw, 11px);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: broadsideInscriptionIn 1.1s var(--ease-out) .85s both;
+}
+
+.broadside-inscription__defs {
+  position: absolute;
+  width: 0; height: 0;
+  overflow: hidden;
+}
+
+.broadside-inscription__lead,
+.broadside-inscription__trail {
+  position: relative;
+  flex: 1 1 auto;
+  display: block;
+  height: clamp(10px, 1.1vw, 14px);
+  min-width: clamp(60px, 8vw, 110px);
+  color: var(--bi-tone);
+}
+
+.broadside-inscription__lead svg,
+.broadside-inscription__trail svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.broadside-inscription__lead-line,
+.broadside-inscription__trail-line {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  animation: broadsideInscriptionDraw 1.0s var(--ease-out) 1.05s both;
+}
+
+.broadside-inscription__trail-line {
+  animation-delay: 1.15s;
+}
+
+.broadside-inscription__lead-hair,
+.broadside-inscription__trail-hair {
+  opacity: 0;
+  animation: broadsideInscriptionHairIn .9s var(--ease) 1.25s both;
+}
+
+.broadside-inscription__trail-hair { animation-delay: 1.35s; }
+
+.broadside-inscription__lead-bead,
+.broadside-inscription__trail-bead {
+  opacity: 0;
+  animation: broadsideInscriptionBeadIn .55s var(--ease-spring) 1.45s both;
+}
+
+.broadside-inscription__trail-bead { animation-delay: 1.55s; }
+
+.broadside-inscription__lead-eye,
+.broadside-inscription__trail-eye {
+  opacity: 0;
+  animation: broadsideInscriptionBeadIn .55s var(--ease-spring) 1.55s both;
+}
+
+.broadside-inscription__trail-eye { animation-delay: 1.65s; }
+
+.broadside-inscription__lead-cap,
+.broadside-inscription__trail-cap {
+  opacity: 0;
+  animation: broadsideInscriptionBeadIn .55s var(--ease-spring) 1.6s both;
+}
+
+.broadside-inscription__trail-cap { animation-delay: 1.7s; }
+
+.broadside-inscription__text {
+  position: relative;
+  flex: 0 1 auto;
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: clamp(6px, .8vw, 10px);
+  row-gap: 2px;
+  color: color-mix(in srgb, var(--paper) 70%, var(--bi-tone) 30%);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(2px);
+  animation: broadsideInscriptionTextIn .9s var(--ease-out) 1.05s both;
+}
+
+.broadside-inscription__press {
+  font-style: italic;
+  letter-spacing: .12em;
+  color: color-mix(in srgb, var(--paper) 86%, var(--bi-tone) 14%);
+}
+
+.broadside-inscription__verb {
+  font-style: normal;
+  color: color-mix(in srgb, var(--paper-soft) 78%, transparent);
+  letter-spacing: .18em;
+}
+
+.broadside-inscription__date {
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--paper) 78%, var(--bi-tone) 22%);
+  letter-spacing: .12em;
+}
+
+.broadside-inscription__dot {
+  display: inline-block;
+  font-style: normal;
+  color: color-mix(in srgb, var(--bi-tone) 78%, transparent);
+  transform: translateY(-.04em);
+  opacity: .85;
+}
+
+.broadside-inscription__voice {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, .5vw, 7px);
+  padding: 1px clamp(5px, .6vw, 8px) 1px clamp(4px, .5vw, 6px);
+  border: 1px solid color-mix(in srgb, var(--bi-tone) 36%, transparent);
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse 80% 100% at 50% 0%, color-mix(in srgb, var(--bi-tone) 16%, transparent), transparent 70%),
+    color-mix(in srgb, var(--bi-tone) 6%, transparent);
+  transition: border-color .35s var(--ease), background-color .35s var(--ease), transform .55s var(--ease-spring);
+}
+
+.broadside-inscription--quiet .broadside-inscription__voice {
+  border-color: color-mix(in srgb, var(--quiet) 40%, transparent);
+  background-color: color-mix(in srgb, var(--quiet) 6%, transparent);
+}
+
+.broadside-inscription--human .broadside-inscription__voice {
+  border-color: color-mix(in srgb, var(--human) 40%, transparent);
+  background-color: color-mix(in srgb, var(--human) 6%, transparent);
+}
+
+.broadside-inscription--bold .broadside-inscription__voice {
+  border-color: color-mix(in srgb, var(--bold) 40%, transparent);
+  background-color: color-mix(in srgb, var(--bold) 6%, transparent);
+}
+
+.app--pulling .broadside-inscription__voice {
+  animation: broadsideInscriptionVoicePulse .9s var(--ease-spring) both;
+}
+
+.broadside-inscription__voice-letter {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(10px, 1vw, 12px);
+  color: var(--bi-tone);
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(12px, 1.2vw, 14px);
+  height: clamp(12px, 1.2vw, 14px);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--bi-tone) 36%, transparent), color-mix(in srgb, var(--bi-tone) 8%, transparent) 70%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bi-tone) 40%, transparent);
+}
+
+.broadside-inscription__voice-rule {
+  display: inline-block;
+  width: 1px;
+  height: .85em;
+  background: color-mix(in srgb, var(--bi-tone) 38%, transparent);
+  opacity: .8;
+}
+
+.broadside-inscription__voice-name {
+  letter-spacing: .14em;
+  color: color-mix(in srgb, var(--paper) 80%, var(--bi-tone) 20%);
+  text-transform: lowercase;
+}
+
+.broadside-inscription__folio {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(3px, .4vw, 5px);
+  letter-spacing: .14em;
+  color: color-mix(in srgb, var(--paper-soft) 78%, transparent);
+}
+
+.broadside-inscription__folio-key {
+  letter-spacing: .2em;
+  font-style: normal;
+}
+
+.broadside-inscription__folio-num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.05em;
+  font-weight: 500;
+  color: var(--bi-tone);
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 0 .12em;
+}
+
+@keyframes broadsideInscriptionIn {
+  0%   { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes broadsideInscriptionTextIn {
+  0%   { opacity: 0; transform: translateY(3px); filter: blur(.4px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes broadsideInscriptionDraw {
+  0%   { stroke-dashoffset: 220; opacity: .9; }
+  100% { stroke-dashoffset: 0;   opacity: 1; }
+}
+
+@keyframes broadsideInscriptionHairIn {
+  0%   { opacity: 0; }
+  100% { opacity: .55; }
+}
+
+@keyframes broadsideInscriptionBeadIn {
+  0%   { opacity: 0; transform: scale(.4); transform-box: fill-box; transform-origin: center; }
+  60%  { opacity: 1; transform: scale(1.18); transform-box: fill-box; transform-origin: center; }
+  100% { opacity: 1; transform: scale(1); transform-box: fill-box; transform-origin: center; }
+}
+
+@keyframes broadsideInscriptionVoicePulse {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.07); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .broadside-inscription { animation: none !important; opacity: 1; }
+  .broadside-inscription__lead-line,
+  .broadside-inscription__trail-line,
+  .broadside-inscription__lead-hair,
+  .broadside-inscription__trail-hair,
+  .broadside-inscription__lead-bead,
+  .broadside-inscription__trail-bead,
+  .broadside-inscription__lead-eye,
+  .broadside-inscription__trail-eye,
+  .broadside-inscription__lead-cap,
+  .broadside-inscription__trail-cap,
+  .broadside-inscription__text { animation: none !important; opacity: 1; transform: none; filter: none; }
+  .app--pulling .broadside-inscription__voice { animation: none; }
+}
+
+@media (max-width: 720px) {
+  .broadside-inscription {
+    gap: clamp(6px, 2vw, 12px);
+    padding: 0 clamp(20px, 4vw, 32px);
+    font-size: clamp(8.4px, 2.4vw, 10px);
+    letter-spacing: .12em;
+  }
+  .broadside-inscription__lead,
+  .broadside-inscription__trail {
+    min-width: clamp(28px, 8vw, 56px);
+  }
+  .broadside-inscription__text {
+    column-gap: clamp(4px, 1.4vw, 7px);
+  }
+  .broadside-inscription__voice-name {
+    display: none;
+  }
+  .broadside-inscription__voice-rule { display: none; }
+}
+
+@media (max-width: 480px) {
+  .broadside-inscription {
+    gap: clamp(4px, 2vw, 8px);
+    padding: 0 clamp(14px, 4vw, 22px);
+    font-size: clamp(7.6px, 2.4vw, 9px);
+    letter-spacing: .1em;
+  }
+  .broadside-inscription__verb { display: none; }
+  .broadside-inscription__date { letter-spacing: .08em; }
+}
+
 /* — the marked-word mark: a small SVG caret that anchors
    the chosen word to the line instead of a thin rule — */
 

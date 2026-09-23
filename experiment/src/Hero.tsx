@@ -14,6 +14,7 @@ import { PressProofStamp } from './PressProofStamp'
 import { FolioRule } from './FolioRule'
 import { TitleSignature } from './TitleSignature'
 import { CompositorInk } from './CompositorInk'
+import { BroadsideInscription } from './BroadsideInscription'
 
 type HeroProps = {
   voice: VoiceId
@@ -182,6 +183,8 @@ export function Hero({
       <FolioRule word={word} voice={voice} pullSignal={pullSignal} setToday={setToday} />
 
       <div className="hero__broadside">
+        <BroadsideInscription voice={voice} setToday={setToday} />
+
         <span className="hero__broadside-pin hero__broadside-pin--tl" aria-hidden="true">
           <svg viewBox="0 0 26 26">
             <circle cx="13" cy="13" r="11" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".75" />
