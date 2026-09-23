@@ -24,6 +24,7 @@ import { ReadingNote } from './ReadingNote'
 import { SpineThread } from './SpineThread'
 import { ReadingPouch } from './ReadingPouch'
 import { ComposingBreath } from './ComposingBreath'
+import { LastLamp } from './LastLamp'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -411,6 +412,8 @@ export function App() {
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="vi" title="the reader’s pouch" hint="three slips · kept close" voice={voice} />
       <ReadingPouch voice={voice} active={activeWord} setToday={setToday} />
+
+      <LastLamp voice={voice} setToday={setToday} />
 
       <footer className="site-foot" aria-label="The page, in one line">
         <span className="site-foot__rule site-foot__rule--top" aria-hidden="true">
