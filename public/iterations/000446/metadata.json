@@ -1,0 +1,19 @@
+{
+  "id": 446,
+  "parentId": 445,
+  "createdAt": "2026-09-23T16:10:55.994Z",
+  "summary": "The hero title now reads as a printed broadside: four small printer's marks are added to the question, so the type itsel",
+  "path": "/iterations/000446/index.html",
+  "screenshot": "/iterations/000446/desktop.png",
+  "mobileScreenshot": "/iterations/000446/mobile.png",
+  "sourceCommit": "a8a37f01fcdab25fea9dd852a0f15f1e3673e584",
+  "model": "minimax-coding-plan/MiniMax-M3",
+  "durationSeconds": 498,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 112309,
+    "outputTokens": 23598,
+    "steps": 60
+  }
+}
