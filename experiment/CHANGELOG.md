@@ -1,12 +1,40 @@
-Iteration 443 — the title now holds an open broadside, signed by a hand-set rule and a small chop beneath.
+# Changelog
 
-The hero no longer wraps the question in a chase-frame box. The page opens onto an open broadside — four corner pins framing the type, no border between the reader and the line. The marked words (m³ · good at · yet?) now carry a small SVG caret beneath them, drawn from the voice's own tone, so the reader can feel the mark settle into the page when they choose a word.
+## iteration 444 — the question now holds the centre of the page
 
-Beneath the question sits a new title signature: a hand-drawn rule that draws itself across the page, two pin-point dots at the ends with a tiny eye in each, and a small m³ compositor's chop at the centre (a thin press-set seal rotated into place). A small italic legend floats above the rule — "the page set in A · quiet cut · serif · italic · close set" — naming the voice without crowding the line. The signature is animated on first arrival (draws, pins settle, chop rotates in) and respects `prefers-reduced-motion`.
+The hero title is now centered on its broadside and framed by a quiet
+hairline border, so the question reads as one composed plate instead
+of a left-leaning chase. The question mark sits at the visual core of
+the line, breathing behind a soft radial halo that responds to the
+page's voice. Between-folio dividers tightened slightly so the read
+through the page settles into a calmer rhythm.
 
-The chase-frame wrap is removed entirely; its classes are silenced for any legacy referrer. The old `::after` underline on marked words is replaced by the new SVG caret, so the title reads as one composed plate rather than a labelled chase.
+### What changed
+- The hero title `.hero__title` now renders centered (`text-align:
+  center`) with a measured `max-width: 16ch`, a calmer `line-height:
+  1.02`, and tighter `font-size` ceiling (`clamp(56px, 10.6vw,
+  168px)`); per-row left padding offsets removed.
+- A soft voice-toned aura sits behind the title (`.hero__title::after`)
+  and a centered hairline baseline (`.hero__title::before`) runs
+  beneath it.
+- The question mark now wears a permanent `.ht__punct-halo` — a radial
+  glow that breathes on the page, strikes under `app--pulling`, and is
+  suppressed under `prefers-reduced-motion`.
+- `.hero__broadside` carries a thin top/bottom border so the title
+  plate reads as one composed broadside with the `TitleSignature`
+  beneath it.
+- `.folio-turn` dividers tightened (`clamp(24px, 3.2vw, 48px)` /
+  `clamp(18px, 2.4vw, 36px)`) so the page doesn't exhale between
+  every folio.
 
-Files touched:
-- src/Hero.tsx — broadside wrap, four corner pins, SVG caret on marked words, TitleSignature mount, grain layer removed
-- src/TitleSignature.tsx — new: hand-set rule + compositor's chop + voice legend
-- src/style.css — added ~300 lines for `.hero__broadside`, `.hero__broadside-pin`, `.ht__word-mark`, `.title-signature*`, plus silenced `.hero__chase`
+### What was kept
+- The title remains the exact same characters in the same voices
+  (`is Minimax M3 good at frontend yet?`).
+- The three marked tokens (`m³`, `good at`, `yet`) and their caret /
+  word-mark vocabulary are unchanged.
+- The `<FolioRule />` header sits above the title as before.
+- The `TitleSignature` chop · rule · legend beneath the title is
+  untouched and now sits inside a more readable bordered plate.
+- All voice mechanics, lever pulls, ink washes, and atmosphere
+  transitions remain as they were.
+- No new components were introduced; existing pieces were tuned.

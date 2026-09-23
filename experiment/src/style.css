@@ -3730,13 +3730,13 @@ em { font-style: italic; }
 .hero__title {
   font-family: var(--display);
   font-style: italic;
-  font-size: clamp(58px, 11.4vw, 184px);
-  line-height: .94;
+  font-size: clamp(56px, 10.6vw, 168px);
+  line-height: 1.02;
   letter-spacing: -.032em;
-  margin: 0;
+  margin: 0 auto;
   color: var(--paper);
   position: relative;
-  text-align: left;
+  text-align: center;
   z-index: 2;
   font-feature-settings: 'kern', 'liga', 'dlig' 1, 'onum' 1, 'ss01' 1;
   opacity: 0;
@@ -3744,32 +3744,70 @@ em { font-style: italic; }
   text-wrap: balance;
   font-variant-numeric: oldstyle-nums;
   text-shadow: 0 0 36px color-mix(in srgb, var(--hero-tone, var(--quiet)) 14%, transparent);
-  transition: text-shadow .8s var(--ease);
+  transition: text-shadow .8s var(--ease), filter .8s var(--ease);
+  max-width: 16ch;
 }
 
-.hero__title--arrange { display: grid; gap: clamp(2px, .3vw, 6px); }
+.hero__title--arrange {
+  display: grid;
+  gap: clamp(8px, .8vw, 16px);
+  justify-items: center;
+}
 
-/* — a fine hand-drawn baseline that runs beneath the line, visible up close — */
+/* — a fine hand-drawn baseline that runs beneath the line, visible up close —
+   centered on the title now, so its gradient peaks at the centre under the
+   question mark. */
 
 .hero__title::before {
   content: '';
   position: absolute;
-  left: 2%;
-  right: 2%;
-  bottom: clamp(-14px, -1.4vw, -8px);
+  left: 14%;
+  right: 14%;
+  bottom: clamp(-18px, -1.8vw, -10px);
   height: 1px;
   background:
     linear-gradient(90deg,
       transparent 0%,
-      color-mix(in srgb, var(--paper) 16%, transparent) 8%,
-      color-mix(in srgb, var(--paper) 28%, transparent) 28%,
-      color-mix(in srgb, var(--paper) 36%, transparent) 50%,
-      color-mix(in srgb, var(--paper) 28%, transparent) 72%,
-      color-mix(in srgb, var(--paper) 16%, transparent) 92%,
+      color-mix(in srgb, var(--paper) 14%, transparent) 12%,
+      color-mix(in srgb, var(--paper) 26%, transparent) 32%,
+      color-mix(in srgb, var(--paper) 38%, transparent) 50%,
+      color-mix(in srgb, var(--paper) 26%, transparent) 68%,
+      color-mix(in srgb, var(--paper) 14%, transparent) 88%,
       transparent 100%);
   pointer-events: none;
   opacity: 0;
   animation: heroBaselineIn 1.4s var(--ease-out) 1.4s both;
+}
+
+/* — a soft held breath · the page atmosphere lifts slightly under the question —
+   sits behind the title so the breathing reads like the page is listening. */
+
+.hero__title::after {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 12%;
+  bottom: 4%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 60%,
+      color-mix(in srgb, var(--hero-tone, var(--quiet)) 18%, transparent) 0%,
+      color-mix(in srgb, var(--hero-tone, var(--quiet)) 9%, transparent) 38%,
+      transparent 72%);
+  opacity: 0;
+  animation: heroTitleAura 2.6s var(--ease-out) 1.5s both;
+  z-index: -1;
+}
+
+@keyframes heroTitleAura {
+  0%   { opacity: 0; transform: scale(.94); }
+  60%  { opacity: .55; }
+  100% { opacity: .38; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title::after { animation: none; opacity: .35; transform: none; }
 }
 
 @keyframes heroBaselineIn {
@@ -3841,39 +3879,40 @@ em { font-style: italic; }
 .hero__title-row {
   display: block;
   position: relative;
-  padding-left: clamp(0px, 1vw, 18px);
+  text-align: center;
 }
 
 .hero__title-row--a {
-  margin-bottom: clamp(-12px, -1vw, -4px);
-  padding-bottom: clamp(4px, .4vw, 10px);
+  margin-bottom: 0;
+  padding-bottom: clamp(2px, .3vw, 6px);
 }
 
 .hero__title-row--b {
   margin-top: 0;
-  padding-bottom: clamp(4px, .4vw, 10px);
-  padding-left: clamp(0px, 1vw, 18px);
+  padding-bottom: clamp(2px, .3vw, 6px);
 }
 
 .hero__title-row .ht__word--yet { margin-left: -.02em; }
 
-/* — the lead word "is" sits smaller and softer, so the marked tokens own the line — */
+/* — the lead word "is" sits smaller and softer, so the marked tokens own the line —
+   tuned for centered reading: the lead now hangs at a calmer ratio than the body. */
 
 .hero__title-lead {
   font-family: var(--display);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(28px, 5.6vw, 84px);
+  font-size: clamp(26px, 5vw, 74px);
   letter-spacing: -.018em;
   color: var(--paper-soft);
   vertical-align: baseline;
-  margin-right: .04em;
+  margin-right: .12em;
   transition: color .35s var(--ease);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--hero-tone, var(--quiet)) 12%, transparent);
 }
 
 .hero__title-lead-space {
   display: inline-block;
-  width: .26em;
+  width: .18em;
 }
 
 .app--voice-bold .hero__title-lead {
@@ -3890,13 +3929,13 @@ em { font-style: italic; }
   .hero__title-lead {
     font-size: clamp(22px, 8vw, 42px);
   }
-  .hero__title { line-height: .98; }
+  .hero__title { line-height: 1.05; max-width: 13ch; }
 }
 
 @media (max-width: 540px) {
-  .hero__title { line-height: 1.02; }
-  .hero__title-row--a { margin-bottom: clamp(-6px, -.6vw, -2px); }
-  .hero__title-lead { font-size: clamp(20px, 7vw, 32px); }
+  .hero__title { line-height: 1.08; max-width: 11ch; font-size: clamp(48px, 14.4vw, 80px); }
+  .hero__title-row--a { padding-bottom: clamp(2px, .8vw, 4px); }
+  .hero__title-lead { font-size: clamp(20px, 7vw, 32px); margin-right: .08em; }
 }
 
 /* — tokens · the words you can mark — */
@@ -4007,6 +4046,40 @@ em { font-style: italic; }
   transform-origin: 50% 0;
   transition: transform .6s var(--ease-spring), filter .6s var(--ease);
   filter: drop-shadow(0 0 8px color-mix(in srgb, var(--hero-tone, var(--quiet)) 18%, transparent));
+  position: relative;
+}
+
+/* — a held halo · a soft radial glow that sits behind the question mark and
+   breathes with the page; its presence makes the punctuation read as the
+   quiet centre of the line. the halo only lifts the eye; it never competes
+   with the type. */
+
+.ht__punct-halo {
+  position: absolute;
+  inset: -55% -55% -55% -55%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 60%,
+      color-mix(in srgb, var(--hero-tone, var(--quiet)) 38%, transparent) 0%,
+      color-mix(in srgb, var(--hero-tone, var(--quiet)) 18%, transparent) 28%,
+      transparent 62%);
+  opacity: 0;
+  transition: opacity .8s var(--ease);
+  animation: punctHaloBreath 4.4s ease-in-out 1.8s infinite;
+  z-index: -1;
+}
+
+.hero__title .ht__word--yet .ht__punct-halo { opacity: .9; }
+
+.hero__title .ht__word--yet.is-marked .ht__punct-halo { opacity: 1; }
+
+@keyframes punctHaloBreath {
+  0%, 100% { transform: scale(.94); opacity: .85; }
+  50%      { transform: scale(1.06); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ht__punct-halo { animation: none; opacity: .85; transform: none; }
 }
 
 .hero__title .ht__word--yet.is-marked .ht__punct {
@@ -4030,6 +4103,22 @@ em { font-style: italic; }
   40%  { transform: translateY(-.06em) scale(2.2); opacity: 1; filter: blur(0); }
   70%  { transform: translateY(.02em) scale(2.05); opacity: 1; }
   100% { transform: translateY(.08em) scale(2.1); opacity: 1; }
+}
+
+/* — when the lever pulls, the punctuation takes the page's breath — */
+
+.app--pulling .ht__punct-halo {
+  animation: punctHaloStrike .9s var(--ease-out) both;
+}
+
+@keyframes punctHaloStrike {
+  0%   { transform: scale(.94); opacity: .85; }
+  30%  { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); opacity: .9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--pulling .ht__punct-halo { animation: none; transform: none; opacity: .9; }
 }
 
 .hero__title .ht__punct-ghost {
@@ -5277,7 +5366,7 @@ em { font-style: italic; }
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 24px;
-  padding: clamp(32px, 4.4vw, 64px) var(--gutter) clamp(24px, 3.2vw, 44px);
+  padding: clamp(24px, 3.2vw, 48px) var(--gutter) clamp(18px, 2.4vw, 36px);
   max-width: 1180px;
   margin: 0 auto;
   z-index: 2;
@@ -30199,14 +30288,16 @@ section.reveal h2 em::after {
   --bs-tone: var(--hero-tone, var(--quiet));
   position: relative;
   display: block;
-  margin: clamp(10px, 1.6vw, 22px) 0 clamp(8px, 1.2vw, 18px);
-  padding: clamp(34px, 4.6vw, 76px) clamp(20px, 3vw, 56px) clamp(30px, 4vw, 64px);
+  margin: clamp(14px, 1.8vw, 26px) auto clamp(10px, 1.4vw, 22px);
+  padding: clamp(38px, 5vw, 84px) clamp(22px, 3.2vw, 64px) clamp(34px, 4.4vw, 72px);
   isolation: isolate;
   background:
     radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in srgb, var(--bs-tone) 6%, transparent), transparent 72%),
     radial-gradient(ellipse 60% 40% at 50% 100%, color-mix(in srgb, var(--bs-tone) 4%, transparent), transparent 74%);
   opacity: 0;
   animation: heroBroadsideIn 1.4s var(--ease-out) .55s both;
+  border-top: 1px solid color-mix(in srgb, var(--bs-tone) 18%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--bs-tone) 14%, transparent);
 }
 
 @keyframes heroBroadsideIn {

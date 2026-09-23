@@ -390,6 +390,7 @@ function renderLineSegments({
           >
             <span className="ht__token-yet">yet</span>
             <span className={`ht__punct ht__punct--${voice}`} aria-hidden="true">
+              <span className="ht__punct-halo" aria-hidden="true" />
               <span className="ht__punct-mark">?</span>
             </span>
           </button>
