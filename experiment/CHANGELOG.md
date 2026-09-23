@@ -1,8 +1,11 @@
-# Iteration 435 — the margin reads
+# Changelog
 
-The page now holds a thin editorial voice in its outer margin, and the question's marks speak when the reader rests on a word.
+## iteration 436 · the question's hinge
 
-- A small editorial note (MarginalCaret) hangs in the outer margin beside each folio, set in italic with a thin connector rule and a compositor's glyph. It fades in as the folio scrolls into view; on mobile where the margin disappears, it is held back.
-- A compositor's note (WordHoverNote) follows the active word in the hero — its mark glyph and short title set in a small panel above the word, with a thin ink-cord trailing down to the line. Hidden on touch and at narrow widths where the margin is closed.
-- The FirstLightPlate's three redundant rule rows were thinned to a single sub-line; the foot holds its own metadata.
-- The hero's title-rule is now a single composed hairline (the prior three-bead row was redundant with the folio rule above the title).
+A new composed plate now opens folio i — the question. It sits between the first-light plate (folio 0) and the hero, giving the page's opening sequence a single, deliberate hinge where dawn plate becomes the question. The hinge reuses the previously orphaned `QuestionMark` glyph as its sigil, drawn in on scroll with a quiet stroke and bead-pop. A short editorial line names the page's last mark, three voice beads mark the active voice, and the foot names the face and date. Approach and depart rules connect the hinge to the folios above and below. The plate respects reduced-motion (no stroke draw, bead, or pulse); on phones it collapses to a single column with the rules tucked.
+
+### files
+
+- `src/QuestionHinge.tsx` — new component composing the orphan `QuestionMark` into a hinged plate with eyebrow, editorial line, voice beads, and a foot. Scroll-revealed, voice-tinted, reduced-motion-aware.
+- `src/App.tsx` — imports and renders `QuestionHinge` between the first-light plate and the hero.
+- `src/style.css` — adds the `question-hinge` block (approach rule, plate with corner ticks, mark, copy column, voice beads, foot), the responsive collapses at 880 / 640 / 380 px, and a small `qmark` block that gives the previously unstyled orphan glyph a usable baseline.

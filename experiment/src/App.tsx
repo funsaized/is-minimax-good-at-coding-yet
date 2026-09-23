@@ -31,6 +31,7 @@ import { Constellation } from './Constellation'
 import { FirstLightPlate } from './FirstLightPlate'
 import { MarginalCaret } from './MarginalCaret'
 import { WordHoverNote } from './WordHoverNote'
+import { QuestionHinge } from './QuestionHinge'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -362,6 +363,8 @@ export function App() {
         attribution="m³ · first light"
         offset={120}
       />
+
+      <QuestionHinge voice={voice} word={activeWord} setToday={setToday} />
 
       <section id="question" className="hero reveal" aria-labelledby="hero-title-label">
         <Hero
