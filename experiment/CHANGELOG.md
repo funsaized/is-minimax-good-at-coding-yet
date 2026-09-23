@@ -1,11 +1,10 @@
 # Changelog
 
-## iteration 436 · the question's hinge
+## Iteration 437 — the question, signed in three voices
+A new `<SignaturePlate />` chop frames the question twice so the page reads as one signed line.
 
-A new composed plate now opens folio i — the question. It sits between the first-light plate (folio 0) and the hero, giving the page's opening sequence a single, deliberate hinge where dawn plate becomes the question. The hinge reuses the previously orphaned `QuestionMark` glyph as its sigil, drawn in on scroll with a quiet stroke and bead-pop. A short editorial line names the page's last mark, three voice beads mark the active voice, and the foot names the face and date. Approach and depart rules connect the hinge to the folios above and below. The plate respects reduced-motion (no stroke draw, bead, or pulse); on phones it collapses to a single column with the rules tucked.
-
-### files
-
-- `src/QuestionHinge.tsx` — new component composing the orphan `QuestionMark` into a hinged plate with eyebrow, editorial line, voice beads, and a foot. Scroll-revealed, voice-tinted, reduced-motion-aware.
-- `src/App.tsx` — imports and renders `QuestionHinge` between the first-light plate and the hero.
-- `src/style.css` — adds the `question-hinge` block (approach rule, plate with corner ticks, mark, copy column, voice beads, foot), the responsive collapses at 880 / 640 / 380 px, and a small `qmark` block that gives the previously unstyled orphan glyph a usable baseline.
+- Added `src/SignaturePlate.tsx`: an inscribed m³ chop with two witnesses flanking the active voice, a slowly orbiting inner ring, and a glyph trail that fades across the three voices.
+- Wired twice in `src/App.tsx` (`placement="mid"` after the hero, `placement="closing"` after the imprint) so the plate opens the way down and closes the way out.
+- Tuned `.signature-plate` typography rhythm and added a `720px` marginal-caret stack, plus `880px` / `540px` plate breakpoints so the chop settles cleanly on mobile.
+- Body text now asks for discretionary ligatures, oldstyle + proportional numerals, and `hanging-punctuation: first last` so the printed-page feel is consistent.
+- Reduced-motion honoured: orbiting ring still, glyph trail absent, inscriptions appear whole.

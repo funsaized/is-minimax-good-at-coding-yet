@@ -32,6 +32,7 @@ import { FirstLightPlate } from './FirstLightPlate'
 import { MarginalCaret } from './MarginalCaret'
 import { WordHoverNote } from './WordHoverNote'
 import { QuestionHinge } from './QuestionHinge'
+import { SignaturePlate } from './SignaturePlate'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -392,6 +393,7 @@ export function App() {
 
       <WordHoverNote active={selectedWord} hover={hoveredWord} voice={voice} />
 
+      <SignaturePlate voice={voice} setToday={setToday} placement="mid" />
       <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="ii" title="the press bed" hint="pull a lever · take an impression" voice={voice} />
       <Press
@@ -527,6 +529,8 @@ export function App() {
       />
 
       <Imprint voice={voice} setToday={setToday} />
+
+      <SignaturePlate voice={voice} setToday={setToday} placement="closing" size="compact" />
 
       <span className="sr-only" aria-live="polite">{announcement}</span>
       <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}) · ${pullCount} impressions on the day.`}</span>
