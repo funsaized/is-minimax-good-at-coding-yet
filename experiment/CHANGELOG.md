@@ -1,47 +1,31 @@
-# Iteration 455
+# Changelog
 
-A new composed half-title folio now opens the page, before the existing title plate.
+## 456 — a daybreak opening, larger and set in three voices
 
-The page now begins with a single, calm card — a "half-title" in the broadside
-tradition — that sits between the topbar and the title folio. It carries just
-the question in small italic serif, a small m³ seal, a single hairline rule,
-an opening note, and the set date. No voice picker, no press ledger — that
-work belongs to the broadside that follows. The reveal is restrained: the seal
-settles, the hairline draws across, the title and note fade in last, and a
-small arrow pulses toward the broadside ahead.
+A single composed opening replaces the previous small half-title. The
+new folio sets the title at its largest scale on the page and gives the
+reader a clear way to choose a voice before reaching the broadside.
 
-## What changed
-
-- **New folio: `HalfTitle`** (`src/HalfTitle.tsx`). A single composed half-title
-  card. Three pieces of the question sit on two lines, each marked in the
-  voice's tone with a thin underline or rule. A small `m³ · half-title` seal
-  floats above; a single hairline with a centre bead separates title from note;
-  a three-cell ledger reads `set on · at first light · the broadside`; a small
-  handoff arrow points down toward folio 0.
-- **Wired into `src/App.tsx`** between the page spine and the title plate, so
-  the reader now meets the half-title before any of the press chrome.
-- **New CSS in `src/style.css`** for `.half-title` and its descendants. The
-  card centres on a paper-warm surface with two faint inner hairlines, a
-  radial halo, and ink dust. The reveal sequence uses a single `is-revealed`
-  / `is-drawn` toggle, then staggers the eyebrow, title, rule, note, ledger,
-  and handoff across ~1s of motion. The query-mark wiggles gently; the
-  handoff arrow drifts forward and back. Every motion is wrapped in
-  `@media (prefers-reduced-motion: reduce)` and falls back to a static state.
-- **Responsive**: card, seal, and ledger tighten on screens under 720px; the
-  handoff arrow and trailing rule drop under 540px.
-
-## Why
-
-The page had been opening straight into the broadside — a heavy folio with a
-seal, voice picker, ledger, and handoff. The reader had no quiet moment
-before that density. The half-title adds that breath: one composed card, one
-question, one small mark. It borrows the design language of the existing
-seals, hairlines, and ledger cells so it reads as part of the same broadside,
-not a separate page.
-
-## Accessibility
-
-- The folio carries an `aria-label` with the question, date, and time; a
-  visually-hidden paragraph repeats the same information for screen readers.
-- All motion respects `prefers-reduced-motion: reduce`.
-- No new keyboard interactions; the half-title is a passive opening folio.
+- Added a signature daybreak illustration: a half-orb rising over a
+  horizon line, twelve radial rays, a small compass tag marked
+  "first light", and a band of drifting ink dust above the plate.
+- Raised the half-title type to a single dramatic three-line setting
+  ("is Minimax M³ / good at frontend / yet?"), with the question mark
+  carried by the existing animated glyph.
+- Added three interactive voice chips (quiet cut / human hand / bold
+  signal), each showing the letter mark, name, face, sample line, and
+  glyph. The reader can pick a voice at the top of the page and the
+  choice carries into the broadside and the question.
+- Replaced the previous circular seal with the wider daybreak plate:
+  sky tint, horizon glow line, dashed sub-horizon, and a row of small
+  ruler notches under the orb.
+- Animation tied to intersection: the orb rises from below the horizon,
+  the rays fade in, the dust and notches settle last. Everything
+  resolves instantly under `prefers-reduced-motion: reduce`.
+- Re-styled the surrounding card to be wider (up to 820px), with a
+  softer paper inset and a single hairline above and below.
+- Responsive behaviour: the voice chips collapse to a single column
+  below 720px, the stage shrinks to its smallest comfortable width,
+  and the compass tag drops its label on very narrow screens.
+- App.tsx wires `onVoice` into the half-title so the three chips set
+  the page's voice immediately.

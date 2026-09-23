@@ -379,7 +379,7 @@ export function App() {
         onJump={jumpToFolio}
       />
 
-      <HalfTitle voice={voice} setToday={setToday} />
+      <HalfTitle voice={voice} setToday={setToday} onVoice={selectVoice} />
 
       <TitlePlate voice={voice} setToday={setToday} onVoice={selectVoice} />
 
