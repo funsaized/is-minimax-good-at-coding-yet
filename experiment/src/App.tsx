@@ -19,6 +19,7 @@ import { ProofLine } from './ProofLine'
 import { Specimen } from './Specimen'
 import { HeldReading } from './HeldReading'
 import { Answer } from './Answer'
+import { PageHolds } from './PageHolds'
 import { Colophon } from './Colophon'
 import { PrinterAtlas } from './PrinterAtlas'
 import { ReadingNote } from './ReadingNote'
@@ -56,6 +57,7 @@ export const FOLIOS = [
   { id: 'specimen', index: 'iv', label: 'the notation key', hint: 'how the three voices read' },
   { id: 'held', index: 'iv½', label: 'the held reading', hint: 'one line, three proofs, one plate' },
   { id: 'answer', index: 'v', label: 'the answer', hint: 'folded once, then folded back' },
+  { id: 'pageholds', index: 'v½', label: 'the page holds', hint: 'one breath, after the answer' },
   { id: 'pouch', index: 'vi', label: 'the reader’s pouch', hint: 'three slips, kept close' },
 ] as const
 
@@ -474,6 +476,19 @@ export function App() {
         note="yes — but only when it earns the pause. the page holds the question open until you ask."
         attribution="three readings, one line"
         offset={80}
+      />
+
+      <ComposingBreath voice={voice} count={FOLIOS.length} />
+      <FolioTurn index="v½" title="the page holds" hint="one breath, after the answer" voice={voice} soft />
+      <PageHolds voice={voice} setToday={setToday} />
+
+      <MarginalCaret
+        side="left"
+        voice={voice}
+        glyph="⌇"
+        eyebrow="folio v½ · the page holds"
+        note="the answer is read once — then the page itself rests for a breath, and the three readings stay held on the cord."
+        attribution="a quiet reading, between"
       />
 
       <ComposingBreath voice={voice} count={FOLIOS.length} />
