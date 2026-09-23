@@ -1,33 +1,20 @@
 # Changelog
 
-## 450 — A single composed arrival
+## Iteration 451 — type case · the three tokens, set in their own wood
 
-A unified **Arrival folio** now opens the page, replacing the previous half-title,
-frontispiece, and first-light plate trio. One composed prologue — masthead,
-hand-drawn initial, opening statement, three-voice notation strip, set-ledger,
-and a hand-off rule to the question — replaces three stacked panels that each
-said the same thing.
+Added a **Type Case** specimen that sits between the Arrival folio and the
+question: the three words (m³, good at, yet?) shown as physical wooden type
+blocks on a low wooden plate, with a small centre pin, a typed-face for each
+piece, and a voice row underneath. The case is fully keyboard-accessible,
+respects reduced-motion, and interacts with the existing voice/word state —
+hovering a piece lifts it; clicking marks the word across the page. The three
+pieces are sized, shaped, and tilted slightly differently to feel like a real
+case rather than three identical cards.
 
-The **Reading compass** now carries the day's sun-arc (with a moon-arc below),
-five time-of-day beats (first light, morning, midday, softening, late still),
-and a small "the day" poet caption that names where the reader is in the
-reading. The dial reads as a true sundial whose sweep lifts a sun toward
-midday and trails a moon after.
-
-Everything else stays. The press, the held reading, the answer, the colophon,
-the pouch, the bookmark, and the imprint are unchanged.
-
-### Changed
-
-- `src/App.tsx` — `<ArrivalPlate>` replaces `<TitleFolio>`, `<Frontispiece>`,
-  and `<FirstLightPlate id="opening" …>`. Their imports are dropped.
-- `src/ArrivalPlate.tsx` — new component, one composed opening folio.
-- `src/ReadingCompass.tsx` — sun-arc + moon-arc + five beats + poet caption.
-- `src/style.css` — `.arrival*` styles added; `.reading-compass__*` extended.
-
-### Notes
-
-- The Arrival folio owns `id="opening"` (folio zero); the folio register and
-  `jumpToFolio` continue to point at it.
-- `setToday` and the local clock drive the masthead, ledger, and hour stamp.
-- The poet caption hides under 540px so the compass remains compact on phones.
+Files changed:
+- `src/TypeCase.tsx` — new specimen component (sections, buttons, voice row,
+  ledger, SVG ink gradients).
+- `src/style.css` — appended the `.type-case` system at the foot of the
+  stylesheet (board, pieces, ink, voice row, ledger, responsive).
+- `src/App.tsx` — imported `TypeCase`, mounted it after `<ArrivalPlate>`,
+  wired `selectWord` so the pieces are real controls.

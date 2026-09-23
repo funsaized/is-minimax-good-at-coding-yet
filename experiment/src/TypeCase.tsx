@@ -1,251 +1,299 @@
-import {
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type CSSProperties,
-  type KeyboardEvent as ReactKeyboardEvent,
-} from 'react'
+import { useId, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import type { VoiceId } from './App'
 import type { WordId } from './notes'
 
 type TypeCaseProps = {
   voice: VoiceId
   word: WordId
-  hover: WordId | null
-  pullSignal: number
-  isPulling: boolean
-  onWord: (word: WordId, focus?: boolean) => void
-  onHover: (word: WordId | null) => void
+  setToday: string
+  onWord?: (id: WordId, focus?: boolean) => void
 }
 
-type Sort = {
+const VOICE_NAME: Record<VoiceId, string> = {
+  quiet: 'quiet cut',
+  human: 'human hand',
+  bold: 'bold signal',
+}
+const VOICE_FACE: Record<VoiceId, string> = {
+  quiet: 'serif · italic · close set',
+  human: 'serif · italic · warm',
+  bold: 'sans · heavy · no apology',
+}
+const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
+
+const WORD_GLYPH: Record<WordId, string> = { m3: '⌇', good: '∧', yet: '?' }
+const WORD_NAME: Record<WordId, string> = { m3: 'the maker', good: 'the verb', yet: 'the pause' }
+const WORD_MARK: Record<WordId, string> = { m3: 'stet', good: 'caret', yet: 'query' }
+
+type TypePiece = {
   id: WordId
-  index: string
+  letter: string
   glyph: string
-  mark: string
-  markLabel: string
-  word: string
-  face: string
-  typeNote: string
-  tone: 'blue' | 'coral' | 'acid'
+  size: 'sm' | 'md' | 'lg'
+  tilt: number
+  inkDepth: number
+  shape: 'round' | 'square' | 'tall'
+  setLine: { quiet: string; human: string; bold: string }
 }
 
-const SORTS: Sort[] = [
+const PIECES: TypePiece[] = [
   {
     id: 'm3',
-    index: '01',
+    letter: 'A',
     glyph: '⌇',
-    mark: 'stet',
-    markLabel: 'let it stand',
-    word: 'm³',
-    face: 'small figure',
-    typeNote: 'A · ascender sort',
-    tone: 'blue',
+    size: 'md',
+    tilt: -1.6,
+    inkDepth: 0.92,
+    shape: 'square',
+    setLine: { quiet: 'm³', human: 'M3', bold: 'M3' },
   },
   {
     id: 'good',
-    index: '02',
+    letter: 'B',
     glyph: '∧',
-    mark: 'caret',
-    markLabel: 'make room',
-    word: 'good at',
-    face: 'x-height sort',
-    typeNote: 'B · caret sort',
-    tone: 'coral',
+    size: 'lg',
+    tilt: 0.7,
+    inkDepth: 0.86,
+    shape: 'tall',
+    setLine: { quiet: 'good at', human: 'good at', bold: 'good at' },
   },
   {
     id: 'yet',
-    index: '03',
+    letter: 'C',
     glyph: '?',
-    mark: 'query',
-    markLabel: 'protect the pause',
-    word: 'yet?',
-    face: 'descender sort',
-    typeNote: 'C · query sort',
-    tone: 'acid',
+    size: 'sm',
+    tilt: -0.4,
+    inkDepth: 0.95,
+    shape: 'round',
+    setLine: { quiet: 'yet?', human: 'yet?', bold: 'yet?' },
   },
 ]
 
-const ORDER: WordId[] = ['m3', 'good', 'yet']
+const ORDER: VoiceId[] = ['quiet', 'human', 'bold']
 
-export function TypeCase({
-  voice,
-  word,
-  hover,
-  pullSignal,
-  isPulling,
-  onWord,
-  onHover,
-}: TypeCaseProps) {
+function handlePieceKey(
+  event: ReactKeyboardEvent<HTMLButtonElement>,
+  id: WordId,
+  pieces: TypePiece[],
+) {
+  if (event.defaultPrevented) return
+  const idx = pieces.findIndex(p => p.id === id)
+  if (idx < 0) return
+  let next = idx
+  if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (idx + 1) % pieces.length
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (idx - 1 + pieces.length) % pieces.length
+  if (event.key === 'Home') next = 0
+  if (event.key === 'End') next = pieces.length - 1
+  if (next === idx) return
+  event.preventDefault()
+  const target = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('button')[next]
+  target?.focus()
+}
+
+export function TypeCase({ voice, word, setToday, onWord }: TypeCaseProps) {
   const baseId = useId().replace(/:/g, '')
-  const washId = `tc-wash-${baseId}`
-  const lastPull = useRef(pullSignal)
-  const [tighten, setTighten] = useState(0)
-  const [reduceMotion, setReduceMotion] = useState(false)
+  const inkId = `tc-ink-${baseId}`
+  const stainId = `tc-stain-${baseId}`
+  const cornerId = `tc-corner-${baseId}`
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setReduceMotion(mq.matches)
-    const onChange = () => setReduceMotion(mq.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
+  const [hovered, setHovered] = useState<WordId | null>(null)
+  const [hoveredVoice, setHoveredVoice] = useState<VoiceId | null>(null)
+  const focus = hovered ?? word
+  const voiceFocus = hoveredVoice ?? voice
 
-  useEffect(() => {
-    if (lastPull.current === pullSignal) return
-    lastPull.current = pullSignal
-    if (reduceMotion) return
-    setTighten(t => t + 1)
-    const id = window.setTimeout(() => setTighten(t => t), 850)
-    return () => window.clearTimeout(id)
-  }, [pullSignal, reduceMotion])
-
-  const display = hover ?? word
   const style = {
-    '--tc-voice': `var(--${voice})`,
-    '--tc-tone': `var(--${display === 'm3' ? 'quiet' : display === 'good' ? 'human' : 'bold'})`,
+    '--tc-tone': `var(--${voice})`,
+    '--tc-piece-tone': `var(--${voice})`,
+    '--tc-voice-tone': `var(--${voiceFocus})`,
   } as CSSProperties
 
-  const onKey = (event: ReactKeyboardEvent<HTMLButtonElement>, id: WordId) => {
-    const idx = ORDER.indexOf(id)
-    let next = idx
-    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (idx + 1) % ORDER.length
-    else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (idx - 1 + ORDER.length) % ORDER.length
-    else if (event.key === 'Home') next = 0
-    else if (event.key === 'End') next = ORDER.length - 1
-    if (next === idx) return
-    event.preventDefault()
-    onWord(ORDER[next], true)
-  }
-
   return (
-    <figure
-      className={`type-case type-case--${voice} ${isPulling ? 'is-pulling' : ''} ${tighten > 0 ? 'is-tightening' : ''}`}
-      style={style}
-      aria-label="The composing case · three type pieces set on one chase, awaiting the lever"
-    >
-      <svg className="type-case__defs" viewBox="0 0 1200 240" preserveAspectRatio="none" aria-hidden="true">
+    <section className="type-case type-case--reveal" aria-label="The three words, set as physical type">
+      <svg className="type-case__defs" aria-hidden="true" focusable="false">
         <defs>
-          <linearGradient id={washId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--tc-tone)" stopOpacity="0" />
-            <stop offset="50%" stopColor="var(--tc-tone)" stopOpacity=".18" />
-            <stop offset="100%" stopColor="var(--tc-tone)" stopOpacity="0" />
+          <linearGradient id={inkId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="currentColor" stopOpacity=".04" />
+            <stop offset="42%" stopColor="currentColor" stopOpacity=".10" />
+            <stop offset="100%" stopColor="currentColor" stopOpacity=".22" />
+          </linearGradient>
+          <radialGradient id={stainId} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="currentColor" stopOpacity=".32" />
+            <stop offset="60%" stopColor="currentColor" stopOpacity=".08" />
+            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id={cornerId} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="currentColor" stopOpacity=".6" />
+            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
           </linearGradient>
         </defs>
       </svg>
 
-      <span className="type-case__wash" aria-hidden="true">
-        <svg viewBox="0 0 1200 240" preserveAspectRatio="none">
-          <rect x="0" y="0" width="1200" height="240" fill={`url(#${washId})`} />
-        </svg>
-      </span>
-
-      <header className="type-case__head" aria-hidden="true">
-        <span className="type-case__head-key">
-          <span className="type-case__head-line" />
-          <em>the composing case</em>
+      <header className="type-case__crest" aria-hidden="true">
+        <span className="type-case__crest-rule type-case__crest-rule--l">
+          <svg viewBox="0 0 160 6" preserveAspectRatio="none">
+            <line x1="0" y1="3" x2="160" y2="3" stroke="currentColor" strokeWidth=".45" strokeDasharray=".4 2.4" opacity=".6" />
+            <circle cx="0" cy="3" r="1.1" fill="currentColor" />
+            <circle cx="160" cy="3" r="1.1" fill="currentColor" />
+          </svg>
         </span>
-        <span className="type-case__head-meta">
-          <em>three sorts</em>
-          <span className="type-case__head-dot" aria-hidden="true">·</span>
-          <em>one chase</em>
-          <span className="type-case__head-dot" aria-hidden="true">·</span>
-          <em>awaiting the lever</em>
+        <span className="type-case__crest-stack">
+          <em className="type-case__crest-key">the three tokens</em>
+          <span className="type-case__crest-line">
+            <em>set in their own wood</em>
+            <span aria-hidden="true">·</span>
+            <em>touched by the voice</em>
+          </span>
         </span>
-        <span className="type-case__head-key type-case__head-key--right">
-          <em>folio i ↦ ii</em>
-          <span className="type-case__head-line" />
+        <span className="type-case__crest-rule type-case__crest-rule--r">
+          <svg viewBox="0 0 160 6" preserveAspectRatio="none">
+            <line x1="0" y1="3" x2="160" y2="3" stroke="currentColor" strokeWidth=".45" strokeDasharray=".4 2.4" opacity=".6" />
+            <circle cx="0" cy="3" r="1.1" fill="currentColor" />
+            <circle cx="160" cy="3" r="1.1" fill="currentColor" />
+          </svg>
         </span>
       </header>
 
-      <span className="type-case__rule type-case__rule--top" aria-hidden="true">
-        <svg viewBox="0 0 1200 12" preserveAspectRatio="none">
-          <line x1="0" y1="6" x2="1200" y2="6" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 4" opacity=".5" />
-        </svg>
-        <span className="type-case__rule-pin type-case__rule-pin--l" />
-        <span className="type-case__rule-pin type-case__rule-pin--r" />
-      </span>
+      <div className="type-case__board" style={style}>
+        <span className="type-case__board-grain" aria-hidden="true" />
+        <span className="type-case__board-edge" aria-hidden="true" />
 
-      <ol className="type-case__sorts" role="list">
-        {SORTS.map((sort, idx) => {
-          const isActive = display === sort.id
-          const sortStyle = {
-            '--tc-sort-tone': `var(--${sort.tone})`,
-            '--tc-sort-key': String(idx + 1),
-            '--tc-sort-delay': `${idx * 80}ms`,
-          } as CSSProperties
-          return (
-            <li
-              key={sort.id}
-              className={`type-case__cell type-case__cell--${sort.tone} ${isActive ? 'is-active' : ''}`}
-              style={sortStyle}
-            >
+        <div className="type-case__pieces" aria-label="The three words as physical type · click to mark">
+          {PIECES.map((piece, idx) => {
+            const isFocus = focus === piece.id
+            const tone = isFocus ? 'var(--tc-voice-tone)' : 'var(--paper-soft)'
+            const pieceStyle = {
+              '--piece-tilt': `${piece.tilt}deg`,
+              '--piece-ink': piece.inkDepth.toString(),
+              '--piece-tone': tone,
+            } as CSSProperties
+            return (
               <button
+                key={piece.id}
                 type="button"
-                className={`type-case__sort type-case__sort--${sort.tone} ${isActive ? 'is-active' : ''}`}
-                style={sortStyle}
-                onClick={() => onWord(sort.id)}
-                onMouseEnter={() => onHover(sort.id)}
-                onMouseLeave={() => onHover(null)}
-                onFocus={() => onHover(sort.id)}
-                onBlur={() => onHover(null)}
-                onKeyDown={event => onKey(event, sort.id)}
-                aria-pressed={isActive}
-                aria-label={`Sort ${sort.index} · ${sort.word} · ${sort.mark} — ${sort.markLabel}. Tap to set the page on this word.`}
+                className={`type-case__piece type-case__piece--${piece.id} type-case__piece--${piece.size} type-case__piece--${piece.shape} ${isFocus ? 'is-focus' : ''}`}
+                style={pieceStyle}
+                aria-pressed={word === piece.id}
+                aria-label={`Mark ${piece.id} — ${WORD_NAME[piece.id]} (mark: ${WORD_MARK[piece.id]}). Voice ${VOICE_LETTER[voice]} reads it as "${piece.setLine[voice]}".`}
+                onMouseEnter={() => setHovered(piece.id)}
+                onMouseLeave={() => setHovered(prev => (prev === piece.id ? null : prev))}
+                onFocus={() => setHovered(piece.id)}
+                onBlur={() => setHovered(prev => (prev === piece.id ? null : prev))}
+                onClick={() => onWord?.(piece.id)}
+                onKeyDown={(event) => handlePieceKey(event, piece.id, PIECES)}
               >
-                <span className="type-case__sort-compartment" aria-hidden="true">
-                  <span className="type-case__sort-bed" />
-                  <span className="type-case__sort-shadow" />
-                  <span className="type-case__sort-cord" />
-                </span>
-
-                <span className="type-case__sort-meta" aria-hidden="true">
-                  <span className="type-case__sort-key-num">{sort.index}</span>
-                  <span className="type-case__sort-type-note">{sort.typeNote}</span>
-                </span>
-
-                <span className="type-case__sort-block" aria-hidden="true">
-                  <span className="type-case__sort-block-face">{sort.face}</span>
-                  <span className="type-case__sort-glyph">{sort.glyph}</span>
-                  <span className="type-case__sort-mark-row">
-                    <span className="type-case__sort-mark">{sort.mark}</span>
-                    <span className="type-case__sort-mark-dot" aria-hidden="true">·</span>
-                    <span className="type-case__sort-mark-sub">{sort.markLabel}</span>
+                <span className="type-case__piece-shadow" aria-hidden="true" />
+                <span className="type-case__piece-block">
+                  <span className="type-case__piece-edge" aria-hidden="true" />
+                  <span className="type-case__piece-face">
+                    <span className="type-case__piece-ink" aria-hidden="true" />
+                    <span className="type-case__piece-type" aria-hidden="true">
+                      {piece.setLine[voice]}
+                    </span>
+                    <span className="type-case__piece-mark" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" preserveAspectRatio="none">
+                        <path
+                          d="M2 12 Q8 4 14 12 Q20 20 22 12"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth=".7"
+                          strokeLinecap="round"
+                          opacity=".55"
+                        />
+                        <circle cx="2" cy="12" r=".9" fill="currentColor" opacity=".7" />
+                        <circle cx="22" cy="12" r=".9" fill="currentColor" opacity=".7" />
+                      </svg>
+                    </span>
+                    <span className="type-case__piece-nail" aria-hidden="true">
+                      <svg viewBox="0 0 8 8">
+                        <circle cx="4" cy="4" r="2.4" fill="currentColor" opacity=".5" />
+                        <circle cx="4" cy="4" r="1" fill="var(--night)" />
+                      </svg>
+                    </span>
+                  </span>
+                  <span className="type-case__piece-base" aria-hidden="true">
+                    <svg viewBox="0 0 100 12" preserveAspectRatio="none">
+                      <line x1="2" y1="6" x2="98" y2="6" stroke="currentColor" strokeWidth=".4" strokeDasharray=".4 1.2" opacity=".4" />
+                    </svg>
                   </span>
                 </span>
-
-                <span className="type-case__sort-word" aria-hidden="true">{sort.word}</span>
-
-                <span className="type-case__sort-tug" aria-hidden="true">
-                  <svg viewBox="0 0 18 18">
-                    <path d="M3 4 L9 9 L15 4" fill="none" stroke="currentColor" strokeWidth=".6" strokeLinecap="round" />
-                    <circle cx="9" cy="9" r="1.2" fill="currentColor" />
-                    <path d="M9 9 L9 15" fill="none" stroke="currentColor" strokeWidth=".5" strokeLinecap="round" opacity=".6" />
-                  </svg>
+                <span className="type-case__piece-label" aria-hidden="true">
+                  <em className="type-case__piece-letter">{piece.letter}</em>
+                  <span className="type-case__piece-glyph">{piece.glyph}</span>
+                  <span className="type-case__piece-markname">{WORD_MARK[piece.id]}</span>
                 </span>
               </button>
-            </li>
-          )
-        })}
-      </ol>
+            )
+          })}
+        </div>
 
-      <span className="type-case__rule type-case__rule--bot" aria-hidden="true">
-        <svg viewBox="0 0 1200 12" preserveAspectRatio="none">
-          <line x1="0" y1="6" x2="1200" y2="6" stroke="currentColor" strokeWidth=".5" strokeDasharray="1 4" opacity=".5" />
-        </svg>
-        <span className="type-case__rule-pin type-case__rule-pin--l" />
-        <span className="type-case__rule-pin type-case__rule-pin--r" />
-      </span>
+        <span className="type-case__center-pin" aria-hidden="true">
+          <svg viewBox="0 0 60 60">
+            <circle cx="30" cy="30" r="22" fill="none" stroke="currentColor" strokeWidth=".5" opacity=".35" />
+            <circle cx="30" cy="30" r="14" fill="none" stroke="currentColor" strokeWidth=".32" strokeDasharray=".4 1.4" opacity=".55" />
+            <circle cx="30" cy="30" r="6" fill="currentColor" opacity=".78" />
+            <circle cx="30" cy="30" r="2" fill="var(--night)" />
+            <line x1="30" y1="6" x2="30" y2="14" stroke="currentColor" strokeWidth=".4" strokeLinecap="round" opacity=".55" />
+            <line x1="30" y1="46" x2="30" y2="54" stroke="currentColor" strokeWidth=".4" strokeLinecap="round" opacity=".55" />
+            <line x1="6" y1="30" x2="14" y2="30" stroke="currentColor" strokeWidth=".4" strokeLinecap="round" opacity=".55" />
+            <line x1="46" y1="30" x2="54" y2="30" stroke="currentColor" strokeWidth=".4" strokeLinecap="round" opacity=".55" />
+          </svg>
+        </span>
+      </div>
 
-      <footer className="type-case__foot" aria-hidden="true">
-        <span className="type-case__foot-rule" />
-        <em className="type-case__foot-line">
-          click a sort <span className="type-case__foot-dot">·</span> set the word <span className="type-case__foot-dot">·</span> the chase tightens with the lever
-        </em>
-        <span className="type-case__foot-rule" />
+      <div className="type-case__voice-row" role="group" aria-label="The three voices, cycled on the type">
+        <span className="type-case__voice-key" aria-hidden="true">
+          <em>voice</em>
+          <span className="type-case__voice-key-rule" />
+          <em>{VOICE_LETTER[voice]}</em>
+        </span>
+        <ol className="type-case__voice-list">
+          {ORDER.map((v, i) => {
+            const isActive = voiceFocus === v
+            const rowStyle = { '--voice-row-tone': `var(--${v})` } as CSSProperties
+            const sample = PIECES[1].setLine[v]
+            return (
+              <li
+                key={v}
+                className={`type-case__voice-cell type-case__voice-cell--${v} ${isActive ? 'is-active' : ''}`}
+                style={rowStyle}
+                onMouseEnter={() => setHoveredVoice(v)}
+                onMouseLeave={() => setHoveredVoice(prev => (prev === v ? null : prev))}
+              >
+                <span className="type-case__voice-cell-letter" aria-hidden="true">{VOICE_LETTER[v]}</span>
+                <span className="type-case__voice-cell-stack">
+                  <em className="type-case__voice-cell-name">{VOICE_NAME[v]}</em>
+                  <span className="type-case__voice-cell-face">{VOICE_FACE[v]}</span>
+                </span>
+                <span className={`type-case__voice-cell-sample type-case__voice-cell-sample--${v}`} aria-hidden="true">
+                  {sample}
+                </span>
+                {i < ORDER.length - 1 && (
+                  <span className="type-case__voice-cell-stitch" aria-hidden="true">
+                    <svg viewBox="0 0 24 6" preserveAspectRatio="none">
+                      <line x1="0" y1="3" x2="24" y2="3" stroke="currentColor" strokeWidth=".4" strokeDasharray=".4 1.4" opacity=".5" />
+                    </svg>
+                  </span>
+                )}
+              </li>
+            )
+          })}
+        </ol>
+      </div>
+
+      <footer className="type-case__ledger" aria-hidden="true">
+        <span className="type-case__ledger-cell">
+          <em className="type-case__ledger-key">set on</em>
+          <span className="type-case__ledger-val">{setToday}</span>
+        </span>
+        <span className="type-case__ledger-cell">
+          <em className="type-case__ledger-key">touch</em>
+          <span className="type-case__ledger-val">{word === 'm3' ? 'the maker' : word === 'good' ? 'the verb' : 'the pause'}</span>
+        </span>
+        <span className="type-case__ledger-cell">
+          <em className="type-case__ledger-key">voice</em>
+          <span className="type-case__ledger-val">{VOICE_NAME[voice]}</span>
+        </span>
       </footer>
-    </figure>
+    </section>
   )
 }

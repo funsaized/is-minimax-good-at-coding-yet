@@ -38,6 +38,7 @@ import { QuestionHinge } from './QuestionHinge'
 import { SignaturePlate } from './SignaturePlate'
 import { PageSpine } from './PageSpine'
 import { ArrivalPlate } from './ArrivalPlate'
+import { TypeCase } from './TypeCase'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -376,6 +377,8 @@ export function App() {
       />
 
       <ArrivalPlate voice={voice} setToday={setToday} />
+
+      <TypeCase voice={voice} word={activeWord} setToday={setToday} onWord={(id, focus) => selectWord(id, focus ?? false)} />
 
       <MarginalCaret
         side="right"
