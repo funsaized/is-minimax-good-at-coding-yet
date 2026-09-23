@@ -40,6 +40,7 @@ import { OverprintProof } from './OverprintProof'
 import { PageSpine } from './PageSpine'
 import { ArrivalPlate } from './ArrivalPlate'
 import { TypeCase } from './TypeCase'
+import { TitlePlate } from './TitlePlate'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -376,6 +377,8 @@ export function App() {
         progress={pageTime}
         onJump={jumpToFolio}
       />
+
+      <TitlePlate voice={voice} setToday={setToday} onVoice={selectVoice} />
 
       <ArrivalPlate voice={voice} setToday={setToday} />
 
