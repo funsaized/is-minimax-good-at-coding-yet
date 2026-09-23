@@ -1,11 +1,13 @@
-# Iteration 459
+# Changelog
 
-A single composed folio now holds the question once on one plate at folio iv½.
+## Iteration 460
 
-## Changes
+A single composed folio now lifts the question mark to the heart of the broadside.
 
-- Added a new composed folio, **The Held Question** (`src/HeldQuestion.tsx`), that sits between the notation key and the answer. The question is set once in the active voice on a single plate with corner brackets, a register mark, a held-line caption ("the page holds the question — let it land before you answer"), a three-voice specimen key (quiet / human / bold), a watermark, and a small wax seal.
-- Wired the new folio into `src/App.tsx` in place of the previous HeldReading, and updated the surrounding marginal caret text to match ("folio iv½ · the held question").
-- Added matching CSS at the end of `src/style.css` for `.held-question` and its children: a single-plate composition with corner brackets, a held-line caption, three-voice specimen grid, seal, watermark, register mark, ledger foot, and a small plate-rule top and bottom. The plate warms with the active voice, the title animates in on reveal, the pull animation lifts the title briefly when the lever strikes. Reduced-motion fallbacks and mobile breakpoints (880/720/540/480px) included.
-- Kept the document title and visible title as `is Minimax M3 good at frontend yet?`.
-- No external assets, fonts, scripts, or packages added. Build passes via `npm run build`.
+- New `FocalQuestionMark` component lives beneath the held-breath rule. One hand-drawn glyph, three voices (quiet · italic hairline; human · warm rounded; bold · heavy sans), each with its own stroke weight, bead shape, and ink drop. It is a button, not a static glyph — pressing it (or clicking) replays the typeset of the title.
+- The hero's typeset animation now exposes a `resetTick` that responds to the qmark button. The animation re-runs in place: the title's marked tokens fade back to 0 and typeset forward again. The page now has a quiet, second-rate of motion after the lever pull.
+- The corner pins of the broadside have been pulled in by `~2–6px` so they sit closer to the title's outer edge and stop competing with the new qmark halo for the same airspace.
+- The held-breath rule now sits flush against the qmark — there is one breath between the title and the punctuation, not two competing separators.
+- Responsive: the qmark scales from a generous 280px on desktop to 130px on narrow phones, and the caption line collapses gracefully so the qmark + voice letter still reads on small screens.
+- All motion respects `prefers-reduced-motion`; the qmark button itself is keyboard-focusable with a voice-coloured focus ring.
+- No new dependencies, no remote assets, no fabricated metrics. The component reuses the existing voice palette and tone rules.

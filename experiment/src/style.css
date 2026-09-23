@@ -39237,3 +39237,407 @@ section.reveal h2 em::after {
       transparent 74%,
       color-mix(in srgb, var(--bold) 4%, transparent) 100%);
 }
+
+/* ───────────────────────────────────────────────────────────────
+   FOCAL QUESTION MARK · the punctuation protagonist
+   Sits beneath the hero title as the visual conclusion. One
+   hand-drawn glyph, three voices, breathing gently against a
+   halo and three concentric registration rings. The bead at
+   the bottom of the curve is the dot of the question; the
+   press mark sits just inside the right shoulder of the stroke.
+   ───────────────────────────────────────────────────────────── */
+
+.focal-qmark {
+  --fqm-tone: var(--quiet);
+  position: relative;
+  margin: clamp(6px, 1.2vw, 14px) auto clamp(20px, 2.4vw, 36px);
+  width: clamp(160px, 22vw, 280px);
+  height: clamp(200px, 26vw, 340px);
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  color: var(--fqm-tone);
+  transition: color .5s var(--ease);
+  opacity: 0;
+  animation: focalQmarkIn 1.6s var(--ease-out) 1.2s both;
+}
+
+@keyframes focalQmarkIn {
+  0%   { opacity: 0; transform: translateY(10px) scale(.96); filter: blur(.5px); }
+  60%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-qmark { animation: none; opacity: 1; transform: none; filter: none; }
+}
+
+.focal-qmark--quiet { --fqm-tone: var(--quiet); }
+.focal-qmark--human { --fqm-tone: var(--human); }
+.focal-qmark--bold  { --fqm-tone: var(--bold);  }
+
+.focal-qmark__button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  appearance: none;
+  border-radius: 6px;
+  transition: transform .45s var(--ease-spring);
+}
+
+.focal-qmark__button:hover {
+  transform: translateY(-2px) scale(1.015);
+}
+
+.focal-qmark__button:active {
+  transform: translateY(0) scale(.99);
+  transition: transform .15s var(--ease-out);
+}
+
+.focal-qmark__button:focus-visible {
+  outline: 1px solid var(--fqm-tone);
+  outline-offset: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-qmark__button:hover,
+  .focal-qmark__button:active { transform: none; }
+}
+
+.focal-qmark__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.focal-qmark__halo {
+  position: absolute;
+  inset: -8%;
+  pointer-events: none;
+  z-index: -2;
+  animation: focalQmarkHalo 9s ease-in-out 2.6s infinite;
+}
+
+.focal-qmark__halo svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes focalQmarkHalo {
+  0%, 100% { opacity: .9; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-qmark__halo { animation: none; }
+}
+
+.focal-qmark__ring {
+  position: absolute;
+  inset: 4%;
+  pointer-events: none;
+  z-index: -1;
+  animation: focalQmarkRing 22s linear infinite;
+}
+
+.focal-qmark__ring svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes focalQmarkRing {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-qmark__ring { animation: none; }
+}
+
+.focal-qmark__svg {
+  position: relative;
+  display: block;
+  width: 78%;
+  height: 78%;
+  filter: drop-shadow(0 0 24px color-mix(in srgb, var(--fqm-tone) 14%, transparent));
+  animation: focalQmarkBreath 7s ease-in-out 2.8s infinite;
+  transform-origin: 50% 60%;
+}
+
+@keyframes focalQmarkBreath {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-3px) scale(1.012); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-qmark__svg { animation: none; }
+}
+
+.focal-qmark__ghost {
+  opacity: 0;
+  animation: focalQmarkGhost 1.4s var(--ease-out) 1.6s both;
+}
+
+@keyframes focalQmarkGhost {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-qmark__ghost { animation: none; opacity: 1; }
+}
+
+.focal-qmark__stroke-path {
+  stroke-dasharray: 540;
+  stroke-dashoffset: 540;
+  animation: focalQmarkDraw 1.8s var(--ease-out) 1.3s forwards;
+}
+
+@keyframes focalQmarkDraw {
+  0%   { stroke-dashoffset: 540; }
+  60%  { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-qmark__stroke-path { animation: none; stroke-dashoffset: 0; }
+}
+
+.focal-qmark__bead {
+  opacity: 0;
+  transform-origin: 135px 276px;
+  animation: focalQmarkBead .65s var(--ease-spring) 2.8s forwards;
+}
+
+.focal-qmark--human .focal-qmark__bead { transform-origin: 135px 282px; }
+.focal-qmark--bold .focal-qmark__bead  { transform-origin: 135px 277px; }
+
+@keyframes focalQmarkBead {
+  0%   { opacity: 0; transform: scale(.3); }
+  60%  { opacity: 1; transform: scale(1.18); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-qmark__bead { animation: none; opacity: 1; transform: none; }
+}
+
+.focal-qmark__drop {
+  opacity: 0;
+  animation: focalQmarkDrop .9s var(--ease-out) 3.2s forwards;
+}
+
+@keyframes focalQmarkDrop {
+  0%   { opacity: 0; transform: scaleX(.4); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-qmark__drop { animation: none; opacity: 1; transform: none; }
+}
+
+.focal-qmark__tick {
+  opacity: 0;
+  animation: focalQmarkTick .7s var(--ease-out) 3.4s forwards;
+}
+
+@keyframes focalQmarkTick {
+  0%   { opacity: 0; transform: translateX(-3px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-qmark__tick { animation: none; opacity: 1; transform: none; }
+}
+
+.focal-qmark__caption {
+  position: absolute;
+  bottom: clamp(-12px, -1vw, -4px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 1vw, 14px);
+  padding: 0 clamp(12px, 2vw, 18px);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  max-width: 92%;
+  opacity: 0;
+  animation: focalQmarkCap 1s var(--ease-out) 3s both;
+}
+
+@keyframes focalQmarkCap {
+  0%   { opacity: 0; transform: translate(-50%, 6px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focal-qmark__caption { animation: none; opacity: 1; transform: translateX(-50%); }
+}
+
+.focal-qmark__caption-rule {
+  display: inline-block;
+  width: clamp(12px, 2.4vw, 28px);
+  height: 1px;
+  background: color-mix(in srgb, var(--fqm-tone) 60%, transparent);
+  flex-shrink: 0;
+}
+
+.focal-qmark__caption-stack {
+  display: inline-flex;
+  align-items: baseline;
+  gap: clamp(6px, .8vw, 10px);
+  text-transform: none;
+  letter-spacing: -.005em;
+}
+
+.focal-qmark__caption-verb {
+  font-style: italic;
+  font-family: var(--display);
+  font-size: clamp(10.5px, .95vw, 12px);
+  color: var(--paper);
+}
+
+.focal-qmark__caption-line {
+  font-style: italic;
+  font-family: var(--display);
+  font-size: clamp(10.5px, .95vw, 12px);
+  color: var(--paper-soft);
+}
+
+.focal-qmark__caption-voice {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, .6vw, 8px);
+  text-transform: none;
+  letter-spacing: 0;
+  flex-shrink: 0;
+}
+
+.focal-qmark__caption-voice-letter {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(14px, 1.4vw, 18px);
+  height: clamp(14px, 1.4vw, 18px);
+  border: 1px solid var(--fqm-tone);
+  border-radius: 50%;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(8.5px, .8vw, 10px);
+  font-weight: 500;
+  color: var(--fqm-tone);
+  background: color-mix(in srgb, var(--fqm-tone) 8%, transparent);
+  font-feature-settings: 'lnum' 1;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.focal-qmark__caption-voice-rule {
+  display: inline-block;
+  width: clamp(8px, .8vw, 12px);
+  height: 1px;
+  background: color-mix(in srgb, var(--fqm-tone) 50%, transparent);
+}
+
+.focal-qmark__caption-voice-name {
+  font-style: italic;
+  font-family: var(--display);
+  font-size: clamp(10px, .9vw, 12px);
+  color: var(--paper-soft);
+  letter-spacing: -.005em;
+}
+
+@media (max-width: 720px) {
+  .focal-qmark {
+    width: clamp(150px, 38vw, 240px);
+    height: clamp(184px, 46vw, 296px);
+  }
+  .focal-qmark__caption { font-size: 8.5px; }
+}
+
+@media (max-width: 480px) {
+  .focal-qmark {
+    width: clamp(130px, 44vw, 200px);
+    height: clamp(162px, 54vw, 248px);
+  }
+  .focal-qmark__caption-line { display: none; }
+  .focal-qmark__caption-rule { display: none; }
+}
+
+/* ───────────────────────────────────────────────────────────────
+   HERO REFINEMENT · the title now sits as one composed broadside.
+   the corner pins are softer, the title baseline tightens, and
+   the held-breath reads as a single plate separator rather than
+   three pieces. this iteration settles the broadside into one
+   deliberate composition.
+   ───────────────────────────────────────────────────────────── */
+
+.hero__title-row--a,
+.hero__title-row--b {
+  position: relative;
+  text-align: center;
+}
+
+.hero__title-row--a {
+  margin-bottom: clamp(-2px, -.2vw, -1px);
+  padding-bottom: clamp(2px, .3vw, 6px);
+}
+
+.hero__title-row--b {
+  margin-top: clamp(-4px, -.3vw, -2px);
+  padding-bottom: clamp(2px, .3vw, 6px);
+}
+
+.hero__title-row {
+  display: block;
+  position: relative;
+}
+
+/* tighten the baseline so the title feels like one engraved plate,
+   not two loose rows sitting next to each other. */
+
+.hero__title-row .hero__title-baseline {
+  left: -3%;
+  right: -3%;
+  bottom: 0.16em;
+  opacity: 0;
+  animation: baselineIn 1.6s var(--ease-out) 1.6s both;
+}
+
+/* the held-breath now reads as a single quiet separator rather than
+   a busy pipe — fewer dots, more hairline, more breath. */
+
+.hero__held-breath {
+  margin-top: clamp(8px, 1vw, 14px);
+  margin-bottom: clamp(2px, .4vw, 6px);
+}
+
+/* the corner pins — pull them in slightly so they sit closer to the
+   title's own corners. they remain visible as registration marks, but
+   they no longer dominate the broadside's outer edges. */
+
+.hero__broadside-pin {
+  opacity: 0;
+  animation: heroBroadsidePinIn .55s var(--ease-spring) 1.5s both;
+}
+
+.hero__broadside-pin--tl { top: clamp(-8px, -.6vw, -2px); left: clamp(-8px, -.6vw, -2px); }
+.hero__broadside-pin--tr { top: clamp(-8px, -.6vw, -2px); right: clamp(-8px, -.6vw, -2px); transform: scaleX(-1); }
+.hero__broadside-pin--bl { bottom: clamp(-8px, -.6vw, -2px); left: clamp(-8px, -.6vw, -2px); transform: scaleY(-1); }
+.hero__broadside-pin--br { bottom: clamp(-8px, -.6vw, -2px); right: clamp(-8px, -.6vw, -2px); transform: scale(-1, -1); }

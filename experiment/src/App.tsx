@@ -400,6 +400,7 @@ export function App() {
           hover={hoveredWord}
           setToday={setToday}
           pullSignal={pullSignal}
+          setAnnouncement={setAnnouncement}
           onVoice={selectVoice}
           onWord={(id, focus) => selectWord(id, focus ?? false)}
           onHover={setHoveredWord}

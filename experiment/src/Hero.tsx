@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -15,6 +16,7 @@ import { FolioRule } from './FolioRule'
 import { TitleSignature } from './TitleSignature'
 import { CompositorInk } from './CompositorInk'
 import { BroadsideInscription } from './BroadsideInscription'
+import { FocalQuestionMark } from './FocalQuestionMark'
 
 type HeroProps = {
   voice: VoiceId
@@ -22,6 +24,7 @@ type HeroProps = {
   hover: WordId | null
   setToday: string
   pullSignal: number
+  setAnnouncement?: (text: string) => void
   onVoice: (voice: VoiceId) => void
   onWord: (word: WordId, focus?: boolean) => void
   onHover: (word: WordId | null) => void
@@ -128,17 +131,18 @@ export function Hero({
   hover,
   setToday,
   pullSignal,
+  setAnnouncement,
   onVoice,
   onWord,
   onHover,
   onWordKey,
   tokenRefs,
 }: HeroProps) {
-  const spec = VOICE[voice]
   const toneStyle = { '--hero-tone': `var(--${voice})` } as CSSProperties
 
   const [setProgress, setSetProgress] = useState(() => segmentOffsets(0))
   const [reduceMotion, setReduceMotion] = useState(false)
+  const [resetTick, setResetTick] = useState(0)
   const cleanupRef = useRef<(() => void) | null>(null)
 
   useEffect(() => {
@@ -176,6 +180,12 @@ export function Hero({
       window.clearTimeout(totalId)
       if (cleanupRef.current) cleanupRef.current()
     }
+  }, [reduceMotion, resetTick])
+
+  const setTheLineAgain = useCallback(() => {
+    if (reduceMotion) return
+    setResetTick(t => t + 1)
+    setAnnouncement?.('The line is set again.')
   }, [reduceMotion])
 
   return (
@@ -305,6 +315,8 @@ export function Hero({
           </span>
           <span className="hero__held-breath-rule" />
         </span>
+
+        <FocalQuestionMark voice={voice} onSetLine={setTheLineAgain} />
 
         <CompositorInk voice={voice} word={word} />
 
