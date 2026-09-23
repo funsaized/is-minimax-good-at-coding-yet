@@ -41,7 +41,7 @@ import { PageSpine } from './PageSpine'
 import { ArrivalPlate } from './ArrivalPlate'
 import { TypeCase } from './TypeCase'
 import { TitlePlate } from './TitlePlate'
-import { HalfTitle } from './HalfTitle'
+import { ReadingPrologue } from './ReadingPrologue'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -55,6 +55,7 @@ const VOICE_FACE: Record<VoiceId, string> = {
 const VOICE_LETTER: Record<VoiceId, string> = { quiet: 'A', human: 'B', bold: 'C' }
 
 export const FOLIOS = [
+  { id: 'prologue', index: '00', label: 'the prologue', hint: 'the question, composed once' },
   { id: 'opening', index: '0', label: 'the opening', hint: 'set the type · take the plate' },
   { id: 'question', index: 'i', label: 'the question', hint: 'one line, set three ways' },
   { id: 'press', index: 'ii', label: 'the press bed', hint: 'pull the lever, take an impression' },
@@ -379,7 +380,7 @@ export function App() {
         onJump={jumpToFolio}
       />
 
-      <HalfTitle voice={voice} setToday={setToday} onVoice={selectVoice} />
+      <ReadingPrologue voice={voice} setToday={setToday} onVoice={selectVoice} />
 
       <TitlePlate voice={voice} setToday={setToday} onVoice={selectVoice} />
 
