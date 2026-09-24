@@ -1,5 +1,5 @@
-Sharpened the question into a tactile signal desk with clearer voice controls and a more expressive reading rhythm.
-
-- Reworked the hero as a warm editorial plate paired with a responsive question dial.
-- Connected the title, margin notes, voice switcher, and answer fold into one visual system.
-- Added restrained motion, pointer response, keyboard shortcuts, and reduced-motion and mobile treatments.
+Re-framed the page as a midnight specimen sheet with clearer hierarchy, responsive reading paths, and tactile voice controls.
+- Reworked the hero into a paper-and-orbit composition with stronger editorial typography and tactile details.
+- Preserved the word-note, voice-switching, scroll-progress, and unfoldable-answer interactions.
+- Tightened mobile layouts, keyboard focus states, and reduced-motion behavior.
+- Verified the iteration with `npm run build`.

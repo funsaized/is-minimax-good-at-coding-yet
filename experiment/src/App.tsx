@@ -197,7 +197,7 @@ export function App() {
       const target = event.target as HTMLElement | null
       const tag = target?.tagName.toLowerCase()
       if (tag === 'input' || tag === 'textarea' || target?.isContentEditable) return
-      if (event.shiftKey && (event.key === 'V' || event.key === 'v')) {
+      if (event.shiftKey && event.key.toLowerCase() === 'v') {
         event.preventDefault()
         cycleVoice()
       }
@@ -232,7 +232,7 @@ export function App() {
         <a className="brand" href="#question" aria-label="M3 frontend field note, home">
           <span className="brand__mark" aria-hidden="true">
             <svg viewBox="0 0 40 40" role="presentation">
-              <path d="M9 27.5V12h4l7 9.2 7-9.2h4v15.5h-4.5v-8.3L20 28l-6.5-8.8v8.3z" fill="currentColor" />
+              <path d="M8 28V12h4.1l7.9 9.7 7.9-9.7H32v16h-4.4v-8.5L20 28l-7.6-9.5V28z" fill="currentColor" />
               <circle cx="31.5" cy="9" r="2.1" fill="var(--ink)" />
             </svg>
           </span>
@@ -256,7 +256,7 @@ export function App() {
         </nav>
 
         <div className="header-tone">
-          <span className="header-tone__label">tone</span>
+          <span className="header-tone__label">temperature</span>
           <div className="header-tone__options" role="group" aria-label="Set the page voice">
             {VOICES.map(item => (
               <button
@@ -274,38 +274,22 @@ export function App() {
         </div>
       </header>
 
-      <aside className="side-index" aria-label="On this page">
-        <span className="side-index__label">on this page</span>
-        <div className="side-index__list">
-          {NAV_ITEMS.map((item, index) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              className={activeSection === item.id ? 'is-active' : ''}
-              aria-current={activeSection === item.id ? 'location' : undefined}
-            >
-              <span className="side-index__dot" aria-hidden="true" />
-              <span className="side-index__text">{item.label}</span>
-              <span className="side-index__number">0{index + 1}</span>
-            </a>
-          ))}
-        </div>
-        <span className="side-index__rule" aria-hidden="true" />
-        <span className="side-index__hint">read slowly</span>
-      </aside>
-
       <main className="page-content">
         <section id="question" className="hero-section reveal" aria-labelledby="question-title">
           <div className="hero-section__topline">
-            <span className="eyebrow"><span className="eyebrow__dash" />a small test of judgment</span>
-            <span className="hero-section__aside">one question / three voices</span>
+            <span className="eyebrow"><span className="eyebrow__spark">✳</span>the opening question</span>
+            <span className="hero-section__aside">one sentence / three ways to hear it</span>
           </div>
 
           <div className="hero-card">
             <div className="hero-card__copy">
-              <div className="hero-card__chapter">the first impression</div>
+              <div className="hero-card__topline">
+                <span>the short version</span>
+                <span>folio / i</span>
+              </div>
+              <div className="hero-card__chapter">a small test of judgment</div>
               <h1 id="question-title" className={`hero-title hero-title--${voice}`} aria-label={TITLE}>
-                <span className="hero-title__line">is Minimax </span>
+                <span className="hero-title__prefix">is Minimax</span>{' '}
                 <button
                   type="button"
                   className={`title-token title-token--model ${selectedWord === 'm3' ? 'is-selected' : ''}`}
@@ -317,8 +301,7 @@ export function App() {
                   aria-label="M3 — open margin note"
                 >
                   M3
-                </button>
-                <span className="hero-title__space"> </span>
+                </button>{' '}
                 <button
                   type="button"
                   className={`title-token title-token--good ${selectedWord === 'good' ? 'is-selected' : ''}`}
@@ -330,8 +313,8 @@ export function App() {
                   aria-label="good at — open margin note"
                 >
                   good at
-                </button>
-                <span className="hero-title__line"> frontend </span>
+                </button>{' '}
+                <span className="hero-title__phrase">frontend</span>{' '}
                 <button
                   type="button"
                   className={`title-token title-token--yet ${selectedWord === 'yet' ? 'is-selected' : ''}`}
@@ -351,9 +334,7 @@ export function App() {
               <div className="hero-card__actions">
                 <a className="button button--ink" href="#field-notes">
                   <span>read the field notes</span>
-                  <svg viewBox="0 0 18 18" aria-hidden="true">
-                    <path d="M3 9h11M9.5 4.5 14 9l-4.5 4.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <ArrowIcon />
                 </a>
                 <button type="button" className="voice-cycle" onClick={cycleVoice}>
                   <span>change the temperature</span>
@@ -383,18 +364,15 @@ export function App() {
         </div>
 
         <section id="field-notes" className="field-section reveal" aria-labelledby="field-title">
-          <div className="section-heading">
-            <div>
-              <span className="eyebrow"><span className="eyebrow__dash" />the margin notes</span>
-              <h2 id="field-title">Three words.<br /><em>One point of view.</em></h2>
-            </div>
-            <p className="section-heading__lede">
-              The sentence is a tiny instrument. Touch a word to hear the decision hiding underneath it.
-            </p>
-          </div>
+          <SectionHeading
+            eyebrow="the margin notes"
+            title={<>Three words.<br /><em>One point of view.</em></>}
+            lede="The sentence is a tiny instrument. Touch a word to hear the decision hiding underneath it."
+          />
 
           <div className="word-lab">
             <div className="word-list" role="list" aria-label="Question words">
+              <div className="word-list__header"><span>choose a word</span><span>the small evidence</span></div>
               {NOTES.map(note => (
                 <button
                   key={note.id}
@@ -417,7 +395,7 @@ export function App() {
 
             <article className="margin-note" key={activeNote.id} aria-live="polite">
               <div className="margin-note__top">
-                <span>margin note / folio {activeNote.folio}</span>
+                <span>margin note / {activeNote.folio}</span>
                 <span className="margin-note__mark">{activeNote.id === 'm3' ? '⌇' : activeNote.id === 'good' ? '∧' : '?'}</span>
               </div>
               <div className="margin-note__body">
@@ -436,15 +414,12 @@ export function App() {
         <div className="page-divider page-divider--short reveal" aria-hidden="true"><span /><span /></div>
 
         <section id="voices" className="voices-section reveal" aria-labelledby="voices-title">
-          <div className="section-heading section-heading--voices">
-            <div>
-              <span className="eyebrow"><span className="eyebrow__dash" />the same line, three voices</span>
-              <h2 id="voices-title">Change the <em>temperature.</em></h2>
-            </div>
-            <p className="section-heading__lede">
-              Typography is not a coat of paint. It changes what the reader is asked to do.
-            </p>
-          </div>
+          <SectionHeading
+            eyebrow="the same line, three voices"
+            title={<>Change the <em>temperature.</em></>}
+            lede="Typography is not a coat of paint. It changes what the reader is asked to do."
+            className="section-heading--voices"
+          />
 
           <div className="voice-grid">
             {VOICES.map(item => {
@@ -461,7 +436,7 @@ export function App() {
                     <span className="voice-card__tagline">{item.tagline}</span>
                     <span className={`voice-card__sample voice-card__sample--${item.id}`}>{item.sample}</span>
                     <span className="voice-card__bottom">
-                      <span className="voice-card__meter" aria-hidden="true"><i /><i /><i /></span>
+                      <span className="voice-card__underline" aria-hidden="true"><i /><i /><i /></span>
                       <span>{isActive ? 'selected' : 'select'}</span>
                     </span>
                     <span className="voice-card__detail">{item.detail}</span>
@@ -475,7 +450,7 @@ export function App() {
 
         <section id="answer" className="answer-section reveal" aria-labelledby="answer-title">
           <div className="answer-intro">
-            <span className="eyebrow"><span className="eyebrow__dash" />the pause</span>
+            <span className="eyebrow"><span className="eyebrow__spark">✳</span>the pause</span>
             <h2 id="answer-title">Some answers<br />need <em>room.</em></h2>
             <p>Not because the page is withholding something. Because a good answer should arrive after the reader has made a little space for it.</p>
             <button ref={answerTriggerRef} type="button" className="fold-button" onClick={toggleAnswer} aria-expanded={answerOpen} aria-controls="answer-leaf">
@@ -543,6 +518,36 @@ export function App() {
   )
 }
 
+function SectionHeading({
+  eyebrow,
+  title,
+  lede,
+  className = '',
+}: {
+  eyebrow: string
+  title: React.ReactNode
+  lede: string
+  className?: string
+}) {
+  return (
+    <div className={`section-heading ${className}`}>
+      <div>
+        <span className="eyebrow"><span className="eyebrow__spark">✳</span>{eyebrow}</span>
+        <h2>{title}</h2>
+      </div>
+      <p className="section-heading__lede">{lede}</p>
+    </div>
+  )
+}
+
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 18 18" aria-hidden="true">
+      <path d="M3 9h11M9.5 4.5 14 9l-4.5 4.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
   const active = VOICES.find(item => item.id === voice) ?? VOICES[0]
 
@@ -556,7 +561,7 @@ function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
         <svg className="question-dial__drawing" viewBox="0 0 520 500" aria-hidden="true">
           <defs>
             <radialGradient id="dial-halo" cx="50%" cy="50%" r="50%">
-              <stop offset="0" stopColor="var(--tone)" stopOpacity=".2" />
+              <stop offset="0" stopColor="var(--tone)" stopOpacity=".22" />
               <stop offset=".62" stopColor="var(--tone)" stopOpacity=".05" />
               <stop offset="1" stopColor="var(--tone)" stopOpacity="0" />
             </radialGradient>
@@ -594,7 +599,7 @@ function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
           ))}
         </div>
         <div className="question-dial__readout">
-          <span>currently listening</span>
+          <span>current voice</span>
           <strong>{active.name}</strong>
         </div>
       </div>
