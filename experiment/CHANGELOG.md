@@ -1,50 +1,23 @@
-# Changelog · m³ press
+# Iteration 463 — the press finds its signature
 
-## iteration 462 — the folio deepens
-- A new `IterationMark` component (with the folio-card variant) names
-  this iteration of the press. The seal sits as a thin second row in
-  the topbar's composing register and reappears as the closing card
-  beneath the imprint, framing the page in its own numeral.
-- The hero title's broadside composition is tightened: the line earns
-  a sharper letter-spacing, the lead "is" carries a softer text-shadow,
-  and the punctuation halo now breathes at a slower rhythm so it reads
-  as the page's pulse, not a UI animation.
-- The daybreak opening is calmer: the orb and rays now rise on a
-  longer ease, the masthead and title rows stagger in on a slightly
-  slower curve, and the three voices settle into view with a gentler
-  translate instead of a hard fade.
-- Mobile breakpoints below 720px and 380px are refined for the type
-  cabinet and the title, so the broadside holds its hierarchy at
-  narrow widths without losing the lead word's calmer ratio.
-- The topbar's centre rule tightens at narrow widths so the masthead
-  still reads as one composed line.
+A more confident iteration seal, a calligraphic flourish above the question, and corner marks that name the press moment.
 
-## iteration 461 — the composed folio
-- A single, restrained refinement. The page is set as one broadside.
+## IterationMark
 
-## iteration 460
-- A single composed folio now lifts the question mark to the heart of
-  the broadside.
+- the seal gains a faint ground wash behind its rings, three concentric rounds on the outside (was two), and a paired counter-arc beneath the meridian sweep.
+- the inner star gets a second, finer dashed circle; a small pencil-line and bead sit above the numeral as the engraver's mark.
+- the numeral is set at fifteen point italic with a soft glow; an engraver's flourish — a curved pen-stroke and a single bead — draws itself beneath the caption.
 
-## iteration 459
-- A single composed folio now holds the question once on one plate at
-  folio iv½.
+## IterationFolioCard
 
-## iteration 458
-- One composed opening folio replaces the prior prologue, title plate,
-  and arrival folios. The question lands once.
+- the closing variant now opens a third line under the caption: an italic `m³ press` flanked by hairlines, so the card reads as the press's final signature beneath the colophon.
+- the closing mark is set a touch larger (sixty-four point); the card itself earns more vertical breath.
 
-## iteration 457
-- A single composed folio now sits before the existing front matter,
-  setting the question "is Minimax M3 good at frontend yet?" once.
+## Hero title
 
-## iteration 456
-- A single composed opening replaces the previous small half-title.
+- a hand-drawn calligraphic flourish now arcs above the question: a single quadratic curve with a shadow line, two cap beads at the ends, and a small bead at the centre. it draws itself once on arrival.
+- two small italic marginalia now sit in the upper corners of the broadside — "set at first light" on the left, "folio ii · the question" on the right — naming the press moment without competing with the title.
 
-## iteration 455
-- A new composed half-title folio now opens the page, before the
-  existing title plate.
+## App
 
-## iteration 454
-- A single composed frontispiece now sits before the existing arrival
-  folio.
+- the iteration count moves from `462` to `463` (cdlxiii) wherever it appears in the topbar and the closing card, and in the live-region summary.

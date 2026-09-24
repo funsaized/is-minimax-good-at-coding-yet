@@ -3,14 +3,15 @@ import type { VoiceId } from './App'
 
 /**
  * IterationMark — a small engraved seal that names the current folio
- * of the press (folio 462). Designed to read as a quiet, ornamented
- * signature wherever it sits — top-right of the topbar, corner of the
- * daybreak folio, or as the closing mark on the colophon.
+ * of the press. Designed to read as a quiet, ornamented signature
+ * wherever it sits — top-right of the topbar, corner of the daybreak
+ * folio, or as the closing mark on the colophon.
  *
- * The mark is composed of three concentric circles carrying a numeral,
- * set inside a thin frame the device reads as a letterpress impression.
- * It shifts colour as the voice cycles and never carries chrome that
- * competes with the title's type.
+ * The mark is composed of concentric circles, a meridian sweep, four
+ * cardinal pips and a numeric centre. The numeral is set in a confident
+ * italic with a small superscript accent; the caption reads as a
+ * letterpress engraving beneath. The mark shifts colour as the voice
+ * cycles and never carries chrome that competes with the title's type.
  */
 
 type IterationMarkProps = {
@@ -19,6 +20,7 @@ type IterationMarkProps = {
   variant?: 'inline' | 'corner' | 'closing'
   label?: string
   numeral?: string
+  caption?: string
 }
 
 export function IterationMark({
@@ -27,16 +29,20 @@ export function IterationMark({
   variant = 'inline',
   label = 'folio cdlxii',
   numeral = '462',
+  caption,
 }: IterationMarkProps) {
   const baseId = useId().replace(/:/g, '')
   const fadeId = `im-fade-${baseId}`
   const innerId = `im-inner-${baseId}`
+  const groundId = `im-ground-${baseId}`
   const tone = `var(--${voice})`
   const style = {
     '--mark-tone': tone,
     width: `${size}px`,
     height: `${size}px`,
   } as CSSProperties
+
+  const captionText = caption ?? label
 
   return (
     <svg
@@ -54,15 +60,23 @@ export function IterationMark({
           <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
         </linearGradient>
         <radialGradient id={innerId} cx="50%" cy="42%" r="60%">
-          <stop offset="0%" stopColor="currentColor" stopOpacity=".16" />
-          <stop offset="62%" stopColor="currentColor" stopOpacity=".04" />
+          <stop offset="0%" stopColor="currentColor" stopOpacity=".18" />
+          <stop offset="62%" stopColor="currentColor" stopOpacity=".05" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id={groundId} cx="50%" cy="58%" r="58%">
+          <stop offset="0%" stopColor="currentColor" stopOpacity=".12" />
           <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
         </radialGradient>
       </defs>
 
-      {/* the outer frame — a thin, two-stroke roundel that reads as an impression */}
-      <circle cx="30" cy="30" r="28" fill="none" stroke="currentColor" strokeWidth=".7" opacity=".62" />
-      <circle cx="30" cy="30" r="26.4" fill="none" stroke="currentColor" strokeWidth=".28" opacity=".32" />
+      {/* the ground wash — a faint radial lift behind the seal */}
+      <circle cx="30" cy="30" r="26" fill={`url(#${groundId})`} />
+
+      {/* the outer frame — three concentric rounds that read as a letterpress impression */}
+      <circle cx="30" cy="30" r="28" fill="none" stroke="currentColor" strokeWidth=".7" opacity=".7" />
+      <circle cx="30" cy="30" r="26.4" fill="none" stroke="currentColor" strokeWidth=".26" opacity=".34" />
+      <circle cx="30" cy="30" r="24.8" fill="none" stroke="currentColor" strokeWidth=".18" strokeDasharray=".5 1.4" opacity=".26" />
 
       {/* the inner orb — a faint radial wash that lifts the numeral */}
       <circle cx="30" cy="30" r="22" fill={`url(#${innerId})`} />
@@ -88,6 +102,15 @@ export function IterationMark({
         strokeLinecap="round"
         opacity=".55"
       />
+      {/* a paired counter-arc beneath, lifting the lower half of the seal */}
+      <path
+        d="M9.5 32 Q30 49 50.5 32"
+        fill="none"
+        stroke={`url(#${fadeId})`}
+        strokeWidth=".4"
+        strokeLinecap="round"
+        opacity=".32"
+      />
 
       {/* the four cardinal pips */}
       <circle cx="30" cy="6.5" r="1.1" fill="currentColor" opacity=".7" />
@@ -96,18 +119,23 @@ export function IterationMark({
       <circle cx="53.5" cy="30" r="1.1" fill="currentColor" opacity=".7" />
 
       {/* the small bead at the centre — a star inside a star */}
-      <circle cx="30" cy="30" r="14" fill="none" stroke="currentColor" strokeWidth=".32" strokeDasharray=".6 1.4" opacity=".5" />
+      <circle cx="30" cy="30" r="14" fill="none" stroke="currentColor" strokeWidth=".32" strokeDasharray=".6 1.4" opacity=".55" />
+      <circle cx="30" cy="30" r="9" fill="none" stroke="currentColor" strokeWidth=".22" strokeDasharray=".4 1.2" opacity=".42" />
 
-      {/* the numeral */}
+      {/* a tiny pencil-line that reads as the engraver's mark above the numeral */}
+      <line x1="24" y1="22.4" x2="36" y2="22.4" stroke="currentColor" strokeWidth=".26" strokeLinecap="round" opacity=".55" />
+      <circle cx="30" cy="22.4" r=".55" fill="currentColor" opacity=".7" />
+
+      {/* the numeral — a confident italic that anchors the seal */}
       <text
         className="iteration-mark__numeral"
         x="30"
-        y="34"
+        y="34.5"
         textAnchor="middle"
         fontFamily="'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif"
         fontStyle="italic"
         fontWeight="500"
-        fontSize="14"
+        fontSize="15"
         fill="currentColor"
       >
         {numeral}
@@ -123,10 +151,16 @@ export function IterationMark({
         fontSize="3.2"
         letterSpacing="2"
         fill="currentColor"
-        opacity=".78"
+        opacity=".82"
       >
-        {label.toUpperCase()}
+        {captionText.toUpperCase()}
       </text>
+
+      {/* the engraver's flourish — a tiny pen-stroke beneath the caption */}
+      <g className="iteration-mark__flourish" stroke="currentColor" fill="none" strokeLinecap="round" opacity=".5">
+        <path d="M22 49.5 Q30 47.6 38 49.5" strokeWidth=".26" />
+        <circle cx="30" cy="48.5" r=".45" fill="currentColor" stroke="none" />
+      </g>
     </svg>
   )
 }
@@ -136,6 +170,9 @@ export function IterationMark({
  * Used as a corner detail on the daybreak folio and as the closing mark
  * on the colophon. The card adds a horizontal rule above and below the
  * seal so the mark sits as a signature line, not an isolated icon.
+ *
+ * The closing variant opens a third line that names the press, so the
+ * card reads as the press's final signature beneath the colophon.
  */
 
 type IterationFolioCardProps = {
@@ -165,7 +202,7 @@ export function IterationFolioCard({
     >
       <span className="iteration-card__rule iteration-card__rule--l" aria-hidden="true" />
       <span className="iteration-card__stack">
-        <IterationMark voice={voice} size={variant === 'closing' ? 56 : 44} variant={variant} numeral={numeral} />
+        <IterationMark voice={voice} size={variant === 'closing' ? 64 : 48} variant={variant} numeral={numeral} />
         <span className="iteration-card__caption">
           <em className="iteration-card__caption-key">the iteration</em>
           <span className="iteration-card__caption-rule" aria-hidden="true" />
@@ -177,6 +214,13 @@ export function IterationFolioCard({
             </>
           )}
         </span>
+        {variant === 'closing' && (
+          <span className="iteration-card__signature" aria-hidden="true">
+            <span className="iteration-card__signature-rule iteration-card__signature-rule--l" />
+            <em className="iteration-card__signature-mark">m³ press</em>
+            <span className="iteration-card__signature-rule iteration-card__signature-rule--r" />
+          </span>
+        )}
         {meta && <span className="iteration-card__meta">{meta}</span>}
       </span>
       <span className="iteration-card__rule iteration-card__rule--r" aria-hidden="true" />

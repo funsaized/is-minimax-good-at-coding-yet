@@ -195,6 +195,42 @@ export function Hero({
       <div className="hero__broadside">
         <BroadsideInscription voice={voice} setToday={setToday} />
 
+        <span className="hero__title-flourish" aria-hidden="true">
+          <svg viewBox="0 0 360 28" preserveAspectRatio="none">
+            <path
+              className="hero__title-flourish-stroke"
+              d="M 4 16 Q 60 4 132 12 T 270 10 Q 320 12 356 6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth=".55"
+              strokeLinecap="round"
+            />
+            <path
+              className="hero__title-flourish-shadow"
+              d="M 12 19 Q 70 11 132 17 T 256 15 Q 304 17 348 12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth=".28"
+              strokeLinecap="round"
+              opacity=".42"
+            />
+            <circle className="hero__title-flourish-cap hero__title-flourish-cap--l" cx="4" cy="16" r="1.3" fill="currentColor" opacity=".85" />
+            <circle className="hero__title-flourish-cap hero__title-flourish-cap--l" cx="4" cy="16" r=".4" fill="var(--night)" />
+            <circle className="hero__title-flourish-cap hero__title-flourish-cap--r" cx="356" cy="6" r="1.3" fill="currentColor" opacity=".85" />
+            <circle className="hero__title-flourish-cap hero__title-flourish-cap--r" cx="356" cy="6" r=".4" fill="var(--night)" />
+            <circle className="hero__title-flourish-bead" cx="180" cy="11" r="1" fill="currentColor" opacity=".7" />
+          </svg>
+        </span>
+
+        <span className="hero__title-corner hero__title-corner--tl" aria-hidden="true">
+          <span className="hero__title-corner-rule" />
+          <em>set at first light</em>
+        </span>
+        <span className="hero__title-corner hero__title-corner--tr" aria-hidden="true">
+          <em>folio ii · the question</em>
+          <span className="hero__title-corner-rule" />
+        </span>
+
         <span className="hero__broadside-pin hero__broadside-pin--tl" aria-hidden="true">
           <svg viewBox="0 0 26 26">
             <circle cx="13" cy="13" r="11" fill="none" stroke="currentColor" strokeWidth=".55" opacity=".75" />

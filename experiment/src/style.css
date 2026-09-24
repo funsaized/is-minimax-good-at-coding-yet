@@ -11635,6 +11635,161 @@ button.voice-spec__item {
   .hero__title-baseline { animation: none !important; opacity: 1; transform: none; }
 }
 
+/* — the title flourish · a single hand-drawn calligraphic stroke
+   that arcs above the title, drawing itself once on arrival.
+   reads as the press's pen-stroke before the question lands. */
+
+.hero__title-flourish {
+  position: absolute;
+  top: clamp(-18px, -1.8vw, -8px);
+  left: 50%;
+  width: clamp(220px, 38vw, 360px);
+  height: 28px;
+  transform: translateX(-50%);
+  color: var(--hero-tone, var(--quiet));
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  animation: heroTitleFlourishIn 1.4s var(--ease-out) .5s both;
+}
+
+.hero__title-flourish svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero__title-flourish-stroke {
+  stroke-dasharray: 460;
+  stroke-dashoffset: 460;
+  animation: heroTitleFlourishDraw 1.6s var(--ease-out) .7s forwards;
+}
+
+.hero__title-flourish-shadow {
+  stroke-dasharray: 380;
+  stroke-dashoffset: 380;
+  animation: heroTitleFlourishShadow 1.6s var(--ease-out) .95s forwards;
+}
+
+.hero__title-flourish-cap {
+  opacity: 0;
+  transform-origin: center;
+  animation: heroTitleFlourishCap .5s var(--ease-spring) 2.05s forwards;
+}
+
+.hero__title-flourish-cap--r {
+  animation-delay: 2.25s;
+}
+
+.hero__title-flourish-bead {
+  opacity: 0;
+  transform-origin: center;
+  animation: heroTitleFlourishBead .45s var(--ease-spring) 1.85s forwards;
+}
+
+@keyframes heroTitleFlourishIn {
+  0%   { opacity: 0; transform: translate(-50%, -4px); }
+  100% { opacity: .9; transform: translate(-50%, 0); }
+}
+
+@keyframes heroTitleFlourishDraw {
+  0%   { stroke-dashoffset: 460; opacity: 0; }
+  100% { stroke-dashoffset: 0;   opacity: .85; }
+}
+
+@keyframes heroTitleFlourishShadow {
+  0%   { stroke-dashoffset: 380; opacity: 0; }
+  100% { stroke-dashoffset: 0;   opacity: .42; }
+}
+
+@keyframes heroTitleFlourishCap {
+  0%   { opacity: 0; transform: scale(.2); }
+  60%  { opacity: 1; transform: scale(1.3); }
+  100% { opacity: .9; transform: scale(1); }
+}
+
+@keyframes heroTitleFlourishBead {
+  0%   { opacity: 0; transform: scale(.2); }
+  60%  { opacity: 1; transform: scale(1.3); }
+  100% { opacity: .85; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title-flourish { animation: none; opacity: .9; transform: translateX(-50%); }
+  .hero__title-flourish-stroke { animation: none; stroke-dashoffset: 0; opacity: .85; }
+  .hero__title-flourish-shadow { animation: none; stroke-dashoffset: 0; opacity: .42; }
+  .hero__title-flourish-cap { animation: none; opacity: .9; transform: none; }
+  .hero__title-flourish-bead { animation: none; opacity: .85; transform: none; }
+}
+
+@media (max-width: 720px) {
+  .hero__title-flourish { width: 200px; height: 22px; top: -14px; }
+}
+
+@media (max-width: 540px) {
+  .hero__title-flourish { display: none; }
+}
+
+/* — the title corner marks · small italic marginalia in the
+   upper corners of the broadside, naming the press moment.
+   kept short so they don't compete with the title itself. */
+
+.hero__title-corner {
+  position: absolute;
+  top: clamp(8px, 1.4vw, 22px);
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, .8vw, 12px);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  animation: heroTitleCornerIn 1s var(--ease-out) 1.4s both;
+}
+
+.hero__title-corner em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: clamp(11.5px, .95vw, 13px);
+  color: var(--paper-soft);
+}
+
+.hero__title-corner-rule {
+  display: inline-block;
+  width: clamp(18px, 2.6vw, 40px);
+  height: 1px;
+  background: var(--line-strong);
+  opacity: .6;
+}
+
+.hero__title-corner--tl {
+  left: clamp(14px, 2.6vw, 36px);
+}
+
+.hero__title-corner--tr {
+  right: clamp(14px, 2.6vw, 36px);
+}
+
+@keyframes heroTitleCornerIn {
+  0%   { opacity: 0; transform: translateY(-3px); }
+  100% { opacity: .82; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title-corner { animation: none; opacity: .82; transform: none; }
+}
+
+@media (max-width: 720px) {
+  .hero__title-corner { display: none; }
+}
+
 /* — the chase frame, lightened further — */
 
 .hero__chase {
@@ -39689,10 +39844,27 @@ body { line-height: 1.62; }
 
 .iteration-mark__numeral {
   letter-spacing: -.01em;
+  font-feature-settings: 'kern', 'liga', 'lnum' 1;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, currentColor 22%, transparent));
 }
 
 .iteration-mark__caption {
   letter-spacing: 2px;
+}
+
+/* — the engraver's flourish · a tiny pen-stroke that draws itself once —
+   reads as the seal's signature, settling beneath the caption. */
+
+.iteration-mark__flourish path {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: iterationMarkFlourishDraw 1.6s var(--ease-out) 1.4s forwards;
+}
+
+.iteration-mark__flourish circle {
+  opacity: 0;
+  transform-origin: 30px 48.5px;
+  animation: iterationMarkFlourishBead .55s var(--ease-spring) 2.7s forwards;
 }
 
 @keyframes iterationMarkSweep {
@@ -39701,8 +39873,21 @@ body { line-height: 1.62; }
   100% { transform: rotate(360deg); opacity: .5; }
 }
 
+@keyframes iterationMarkFlourishDraw {
+  0%   { stroke-dashoffset: 30; opacity: 0; }
+  100% { stroke-dashoffset: 0; opacity: .55; }
+}
+
+@keyframes iterationMarkFlourishBead {
+  0%   { opacity: 0; transform: scale(.2); }
+  60%  { opacity: 1; transform: scale(1.3); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .iteration-mark__ticks line { animation: none; }
+  .iteration-mark__flourish path { animation: none; stroke-dashoffset: 0; opacity: .55; }
+  .iteration-mark__flourish circle { animation: none; opacity: 1; transform: none; }
 }
 
 /* — topbar iteration · a quiet seal that sits as a thin second
@@ -39885,6 +40070,46 @@ body { line-height: 1.62; }
   font-size: clamp(11.5px, 0.95vw, 13px);
   color: var(--muted);
   letter-spacing: -.005em;
+}
+
+/* — the press signature · a third line on the closing card that
+   names the press in italic with flanking hairlines, so the card
+   reads as the press's final signature beneath the colophon. */
+
+.iteration-card__signature {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(13.5px, 1.15vw, 15.5px);
+  letter-spacing: -.005em;
+  color: var(--mark-tone);
+}
+
+.iteration-card__signature-mark {
+  font-style: italic;
+  font-weight: 500;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.iteration-card__signature-rule {
+  display: inline-block;
+  flex: 1 1 auto;
+  width: clamp(28px, 6vw, 80px);
+  height: 1px;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--mark-tone) 45%, transparent));
+}
+
+.iteration-card__signature-rule--l {
+  background: linear-gradient(to left, transparent, color-mix(in srgb, var(--mark-tone) 45%, transparent));
+}
+
+.iteration-card--closing {
+  padding-top: clamp(28px, 3.4vw, 48px);
+  padding-bottom: clamp(28px, 3.4vw, 48px);
 }
 
 @keyframes iterationCardIn {

@@ -363,11 +363,11 @@ export function App() {
           onCycleVoice={cycleVoice}
           onJump={jumpToFolio}
         />
-        <span className="topbar__iteration" aria-label={`Iteration 462 of the press`}>
+        <span className="topbar__iteration" aria-label={`Iteration 463 of the press`}>
           <span className="topbar__iteration-rule" aria-hidden="true" />
           <span className="topbar__iteration-stack">
-            <em>folio cdlxii</em>
-            <IterationMark voice={voice} size={28} variant="inline" numeral="462" label="cdlxii" />
+            <em>folio cdlxiii</em>
+            <IterationMark voice={voice} size={28} variant="inline" numeral="463" label="cdlxiii" />
           </span>
         </span>
       </header>
@@ -475,13 +475,13 @@ export function App() {
       <IterationFolioCard
         voice={voice}
         variant="closing"
-        numeral="462"
-        caption="folio · cdlxii"
+        numeral="463"
+        caption="folio · cdlxiii"
         meta={`composed ${setToday} · set in ${VOICE_NAME[voice].toLowerCase()}`}
       />
 
       <span className="sr-only" aria-live="polite">{announcement}</span>
-      <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}) · ${pullCount} impressions on the day · iteration 462, folio cdlxii of the press.`}</span>
+      <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}) · ${pullCount} impressions on the day · iteration 463, folio cdlxiii of the press.`}</span>
       <span className="sr-only" aria-live="off">{`Page-time · ${timeOfDay}`}</span>
     </main>
   )
