@@ -39641,3 +39641,19 @@ section.reveal h2 em::after {
 .hero__broadside-pin--tr { top: clamp(-8px, -.6vw, -2px); right: clamp(-8px, -.6vw, -2px); transform: scaleX(-1); }
 .hero__broadside-pin--bl { bottom: clamp(-8px, -.6vw, -2px); left: clamp(-8px, -.6vw, -2px); transform: scaleY(-1); }
 .hero__broadside-pin--br { bottom: clamp(-8px, -.6vw, -2px); right: clamp(-8px, -.6vw, -2px); transform: scale(-1, -1); }
+
+/* ────────────────────────────────────────────────────────────
+   m³ press · iteration 461 — the composed folio
+   the surrounding ornaments fall away so each folio holds its
+   own weight. the page now reads as one broadside.
+   ──────────────────────────────────────────────────────────── */
+
+/* the page's body gains a touch more breathing space — the
+   folios beneath benefit from a slightly more generous line,
+   set so the reader can rest at the close of each plate. */
+
+body { line-height: 1.62; }
+
+@media (max-width: 640px) {
+  body { line-height: 1.58; }
+}

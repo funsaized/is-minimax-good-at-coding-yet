@@ -23,19 +23,15 @@ import { PageHolds } from './PageHolds'
 import { HeldSilence } from './HeldSilence'
 import { Colophon } from './Colophon'
 import { PrinterAtlas } from './PrinterAtlas'
-import { ReadingNote } from './ReadingNote'
 import { SpineThread } from './SpineThread'
 import { ReadingCompass } from './ReadingCompass'
 import { ReadingPouch } from './ReadingPouch'
 import { TheBookMark } from './TheBookMark'
-import { ComposingBreath } from './ComposingBreath'
 import { LastLamp } from './LastLamp'
 import { Imprint } from './Imprint'
 import { Constellation } from './Constellation'
-import { MarginalCaret } from './MarginalCaret'
 import { WordHoverNote } from './WordHoverNote'
 import { SettingSeal } from './SettingSeal'
-import { SignaturePlate } from './SignaturePlate'
 import { OverprintProof } from './OverprintProof'
 import { PageSpine } from './PageSpine'
 import { TypeCase } from './TypeCase'
@@ -60,8 +56,8 @@ export const FOLIOS = [
   { id: 'specimen', index: 'iv', label: 'the notation key', hint: 'how the three voices read' },
   { id: 'held', index: 'iv½', label: 'the held reading', hint: 'one line, three proofs, one plate' },
   { id: 'answer', index: 'v', label: 'the answer', hint: 'folded once, then folded back' },
-  { id: 'pageholds', index: 'v½', label: 'the page holds', hint: 'one breath, after the answer' },
-  { id: 'pouch', index: 'vi', label: 'the reader’s pouch', hint: 'three slips, kept close' },
+  { id: 'page-holds', index: 'v½', label: 'the page holds', hint: 'one breath, after the answer' },
+  { id: 'pouch', index: 'vi', label: "the reader's pouch", hint: 'three slips, kept close' },
 ] as const
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
@@ -236,8 +232,7 @@ export function App() {
         return
       }
       if (event.key === 'Escape' && answerOpen) {
-        const target = event.target as HTMLElement | null
-        const isInsideAnswer = target?.closest('.answer')
+        const isInsideAnswer = (event.target as HTMLElement | null)?.closest('.answer')
         if (isInsideAnswer) return
         setAnswerOpen(false)
         setAnnouncement('Answer folded back.')
@@ -323,7 +318,7 @@ export function App() {
       className={`app app--voice-${voice} app--word-${activeWord} ${isPulling ? 'app--pulling' : ''}`}
       style={style}
     >
-<PaperGrain />
+      <PaperGrain />
       <span className="app__void" aria-hidden="true" />
       <span className="app__backdrop" aria-hidden="true" />
       <span className="app__atmo" aria-hidden="true" />
@@ -381,16 +376,6 @@ export function App() {
 
       <TypeCase voice={voice} word={activeWord} setToday={setToday} onWord={(id, focus) => selectWord(id, focus ?? false)} />
 
-      <MarginalCaret
-        side="right"
-        voice={voice}
-        glyph="⌇"
-        eyebrow="folio 00 · the prologue"
-        note="the page is set before the question is asked — the reader arrives in the dark."
-        attribution="m³ · first light"
-        offset={120}
-      />
-
       <SettingSeal voice={voice} word={activeWord} setToday={setToday} />
 
       <section id="question" className="hero reveal" aria-labelledby="hero-title-label">
@@ -409,19 +394,8 @@ export function App() {
         />
       </section>
 
-      <MarginalCaret
-        side="left"
-        voice={voice}
-        glyph="∧"
-        eyebrow="folio i · the question"
-        note="set the line softly — three words carry the whole weight of the page."
-        attribution="the question, kept open"
-      />
-
       <WordHoverNote active={selectedWord} hover={hoveredWord} voice={voice} />
 
-      <SignaturePlate voice={voice} setToday={setToday} placement="mid" />
-      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="ii" title="the press bed" hint="pull a lever · take an impression" voice={voice} />
       <Press
         voice={voice}
@@ -433,17 +407,6 @@ export function App() {
         setToday={setToday}
       />
 
-      <MarginalCaret
-        side="right"
-        voice={voice}
-        glyph="∴"
-        eyebrow="folio ii · the press bed"
-        note="pull once and the line answers in a new face — the page remembers the lever."
-        attribution="compositor, on the bed"
-        offset={60}
-      />
-
-      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="iii" title="the proof line" hint="three voices, set on the same cord" voice={voice} />
       <ProofLine
         voice={voice}
@@ -452,24 +415,12 @@ export function App() {
         onSelect={handleProofSelect}
       />
 
-      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="iv" title="the notation key" hint="how the three voices read" voice={voice} />
       <Specimen active={voice} onSelect={selectVoice} />
 
-      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="iv½" title="the held question" hint="one plate · one line · three faces" voice={voice} soft />
       <HeldQuestion voice={voice} setToday={setToday} onVoice={selectVoice} />
 
-      <MarginalCaret
-        side="left"
-        voice={voice}
-        glyph="?"
-        eyebrow="folio iv½ · the held question"
-        note="the question, set once on a single plate — three voices ready, the page holds them all."
-        attribution="held once, three ways"
-      />
-
-      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="v" title="the answer" hint="folded once · then folded back" voice={voice} />
       <Answer
         open={answerOpen}
@@ -481,18 +432,6 @@ export function App() {
         setToday={setToday}
       />
 
-      <MarginalCaret
-        side="right"
-        voice={voice}
-        glyph="∴"
-        eyebrow="folio v · the answer"
-        note="yes — but only when it earns the pause. the page holds the question open until you ask."
-        attribution="three readings, one line"
-        offset={80}
-      />
-
-      <ComposingBreath voice={voice} count={FOLIOS.length} />
-      <FolioTurn index="v¼" title="the held silence" hint="a single breath, between the answer and the page" voice={voice} soft />
       <HeldSilence
         voice={voice}
         setToday={setToday}
@@ -500,30 +439,9 @@ export function App() {
         pullSignal={pullSignal}
       />
 
-      <MarginalCaret
-        side="left"
-        voice={voice}
-        glyph="·"
-        eyebrow="folio v¼ · the held silence"
-        note="between the answer and the cord that follows — a single breath, then the page holds the line."
-        attribution="the page, between two breaths"
-        offset={20}
-      />
-
-      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="v½" title="the page holds" hint="one breath, after the answer" voice={voice} soft />
       <PageHolds voice={voice} setToday={setToday} />
 
-      <MarginalCaret
-        side="left"
-        voice={voice}
-        glyph="⌇"
-        eyebrow="folio v½ · the page holds"
-        note="the answer is read once — then the page itself rests for a breath, and the three readings stay held on the cord."
-        attribution="a quiet reading, between"
-      />
-
-      <ComposingBreath voice={voice} count={FOLIOS.length} />
       <FolioTurn index="—" title="the colophon" hint="the page, signed off" voice={voice} soft />
       <Colophon
         voice={voice}
@@ -534,8 +452,7 @@ export function App() {
         keptCounts={keptCounts}
       />
 
-      <ComposingBreath voice={voice} count={FOLIOS.length} />
-      <FolioTurn index="vi" title="the reader’s pouch" hint="three slips · kept close" voice={voice} />
+      <FolioTurn index="vi" title="the reader's pouch" hint="three slips · kept close" voice={voice} />
       <ReadingPouch voice={voice} active={activeWord} setToday={setToday} />
 
       <FolioTurn index="vi½" title="the bookmark" hint="one line · kept after the broadside is set down" voice={voice} soft />
@@ -546,8 +463,6 @@ export function App() {
       <LastLamp voice={voice} setToday={setToday} />
 
       <Imprint voice={voice} setToday={setToday} />
-
-      <SignaturePlate voice={voice} setToday={setToday} placement="closing" size="compact" />
 
       <span className="sr-only" aria-live="polite">{announcement}</span>
       <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}) · ${pullCount} impressions on the day.`}</span>
