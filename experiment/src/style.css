@@ -39830,12 +39830,43 @@ body { line-height: 1.62; }
   flex-shrink: 0;
   display: block;
   cursor: default;
-  transition: color .45s var(--ease), transform .6s var(--ease-spring), opacity .35s var(--ease);
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .42));
+  transition:
+    color .45s var(--ease),
+    transform .7s var(--ease-spring),
+    opacity .35s var(--ease),
+    filter .55s var(--ease);
 }
 
 .iteration-mark--quiet { color: var(--quiet); }
 .iteration-mark--human { color: var(--human); }
 .iteration-mark--bold  { color: var(--bold);  }
+
+.iteration-mark__puddle {
+  transform-origin: 30px 30px;
+  animation: iterationWaxSpread 1.6s var(--ease-out) .2s both;
+}
+
+.iteration-mark__shadow {
+  transform-origin: 30px 30px;
+  animation: iterationWaxSpread 1.6s var(--ease-out) .2s both;
+}
+
+.iteration-mark__hilite {
+  transform-origin: 30px 30px;
+  animation: iterationWaxHilite 1.8s var(--ease-out) .4s both;
+}
+
+.iteration-mark__rim-outer {
+  stroke-dasharray: 230;
+  stroke-dashoffset: 230;
+  animation: iterationRimDraw 1.4s var(--ease-out) .55s forwards;
+}
+
+.iteration-mark__crackle {
+  opacity: 0;
+  animation: iterationCrackleIn 1.1s var(--ease-out) 1.6s both;
+}
 
 .iteration-mark__ticks line {
   transform-origin: 30px 30px;
@@ -39845,11 +39876,31 @@ body { line-height: 1.62; }
 .iteration-mark__numeral {
   letter-spacing: -.01em;
   font-feature-settings: 'kern', 'liga', 'lnum' 1;
-  filter: drop-shadow(0 0 6px color-mix(in srgb, currentColor 22%, transparent));
+  filter: drop-shadow(0 0 4px color-mix(in srgb, currentColor 32%, transparent));
+  transform-origin: 30px 30px;
+  animation: iterationNumeralPress 1s var(--ease-spring) 1.1s both;
+}
+
+.iteration-mark__roman {
+  letter-spacing: 1.4px;
+  font-feature-settings: 'lnum' 1, 'tnum' 1;
+  opacity: .7;
+  transform-origin: 30px 40px;
+  animation: iterationRomanIn 1s var(--ease-out) 1.5s both;
 }
 
 .iteration-mark__caption {
   letter-spacing: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iteration-mark__puddle,
+  .iteration-mark__shadow,
+  .iteration-mark__hilite,
+  .iteration-mark__rim-outer,
+  .iteration-mark__crackle,
+  .iteration-mark__numeral,
+  .iteration-mark__roman { animation: none; transform: none; opacity: 1; stroke-dashoffset: 0; }
 }
 
 /* — the engraver's flourish · a tiny pen-stroke that draws itself once —
@@ -39882,6 +39933,40 @@ body { line-height: 1.62; }
   0%   { opacity: 0; transform: scale(.2); }
   60%  { opacity: 1; transform: scale(1.3); }
   100% { opacity: 1; transform: scale(1); }
+}
+
+/* iteration 464 — the wax spread as the press comes down */
+@keyframes iterationWaxSpread {
+  0%   { transform: scale(.7); opacity: 0; }
+  60%  { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes iterationWaxHilite {
+  0%   { transform: scale(.6); opacity: 0; }
+  60%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes iterationRimDraw {
+  0%   { stroke-dashoffset: 230; opacity: 0; }
+  100% { stroke-dashoffset: 0; opacity: .7; }
+}
+
+@keyframes iterationCrackleIn {
+  0%   { opacity: 0; }
+  100% { opacity: .22; }
+}
+
+@keyframes iterationNumeralPress {
+  0%   { transform: scale(.6); opacity: 0; filter: blur(1px); }
+  60%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; filter: blur(0); }
+}
+
+@keyframes iterationRomanIn {
+  0%   { opacity: 0; transform: translateY(2px); }
+  100% { opacity: .7; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -40005,6 +40090,29 @@ body { line-height: 1.62; }
   border-top: 1px solid color-mix(in srgb, var(--mark-tone) 22%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--mark-tone) 22%, transparent);
   position: relative;
+}
+
+/* iteration 464 — the seal sits on a small pressed card so the mark
+   reads as if pressed onto a piece of folio paper, not floating. */
+.iteration-card__stack > .iteration-mark {
+  padding: clamp(6px, .8vw, 10px);
+  border-radius: 4px;
+  background:
+    radial-gradient(ellipse 60% 50% at 32% 28%,
+      color-mix(in srgb, var(--mark-tone) 14%, transparent) 0%,
+      transparent 70%),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--paper) 4%, transparent) 0%,
+      color-mix(in srgb, var(--mark-tone) 4%, transparent) 100%);
+  border: 1px solid color-mix(in srgb, var(--mark-tone) 22%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--paper) 14%, transparent),
+    inset 0 -1px 0 rgba(0, 0, 0, .32),
+    0 8px 22px -16px rgba(0, 0, 0, .65);
+}
+
+.iteration-card--closing .iteration-card__stack > .iteration-mark {
+  padding: clamp(8px, 1vw, 14px);
 }
 
 .iteration-card__stack::before,
@@ -40342,11 +40450,14 @@ body { line-height: 1.62; }
 
 .iteration-card .iteration-mark {
   cursor: default;
-  transition: transform .8s var(--ease-spring), color .4s var(--ease);
+  transition:
+    transform .8s var(--ease-spring),
+    color .4s var(--ease),
+    filter .55s var(--ease);
 }
 
 .iteration-card:hover .iteration-mark {
-  transform: rotate(8deg);
+  transform: rotate(8deg) scale(1.04);
 }
 
 @media (prefers-reduced-motion: reduce) {
