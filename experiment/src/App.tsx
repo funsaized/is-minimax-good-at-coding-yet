@@ -36,6 +36,7 @@ import { OverprintProof } from './OverprintProof'
 import { PageSpine } from './PageSpine'
 import { TypeCase } from './TypeCase'
 import { Daybreak } from './Daybreak'
+import { IterationMark, IterationFolioCard } from './IterationMark'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -362,6 +363,13 @@ export function App() {
           onCycleVoice={cycleVoice}
           onJump={jumpToFolio}
         />
+        <span className="topbar__iteration" aria-label={`Iteration 462 of the press`}>
+          <span className="topbar__iteration-rule" aria-hidden="true" />
+          <span className="topbar__iteration-stack">
+            <em>folio cdlxii</em>
+            <IterationMark voice={voice} size={28} variant="inline" numeral="462" label="cdlxii" />
+          </span>
+        </span>
       </header>
 
       <PageSpine
@@ -464,8 +472,16 @@ export function App() {
 
       <Imprint voice={voice} setToday={setToday} />
 
+      <IterationFolioCard
+        voice={voice}
+        variant="closing"
+        numeral="462"
+        caption="folio · cdlxii"
+        meta={`composed ${setToday} · set in ${VOICE_NAME[voice].toLowerCase()}`}
+      />
+
       <span className="sr-only" aria-live="polite">{announcement}</span>
-      <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}) · ${pullCount} impressions on the day.`}</span>
+      <span className="sr-only">{`Now on folio ${activeFolioIndex} of ${FOLIOS.length} · voice set in ${VOICE_NAME[voice]} (${VOICE_FACE[voice]}, letter ${VOICE_LETTER[voice]}) · ${pullCount} impressions on the day · iteration 462, folio cdlxii of the press.`}</span>
       <span className="sr-only" aria-live="off">{`Page-time · ${timeOfDay}`}</span>
     </main>
   )

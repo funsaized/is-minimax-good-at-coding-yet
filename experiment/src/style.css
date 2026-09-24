@@ -39657,3 +39657,473 @@ body { line-height: 1.62; }
 @media (max-width: 640px) {
   body { line-height: 1.58; }
 }
+
+/* ────────────────────────────────────────────────────────────
+   m³ press · iteration 462 — the folio deepens
+   the seal finds a place in the topbar, the colophon now signs
+   off on an iteration card, and the title holds a sharper line.
+   the page keeps its broadside but earns a quieter confidence.
+   ──────────────────────────────────────────────────────────── */
+
+/* — iteration mark · the engraved seal that names this folio —
+   designed to sit at three sizes: the small inline in the
+   topbar, the corner detail on the daybreak, and the closing
+   card beneath the colophon. the mark reads at every size. */
+
+.iteration-mark {
+  color: var(--mark-tone, var(--quiet));
+  flex-shrink: 0;
+  display: block;
+  cursor: default;
+  transition: color .45s var(--ease), transform .6s var(--ease-spring), opacity .35s var(--ease);
+}
+
+.iteration-mark--quiet { color: var(--quiet); }
+.iteration-mark--human { color: var(--human); }
+.iteration-mark--bold  { color: var(--bold);  }
+
+.iteration-mark__ticks line {
+  transform-origin: 30px 30px;
+  animation: iterationMarkSweep 14s linear infinite;
+}
+
+.iteration-mark__numeral {
+  letter-spacing: -.01em;
+}
+
+.iteration-mark__caption {
+  letter-spacing: 2px;
+}
+
+@keyframes iterationMarkSweep {
+  0%   { transform: rotate(0deg); opacity: .5; }
+  50%  { transform: rotate(180deg); opacity: .28; }
+  100% { transform: rotate(360deg); opacity: .5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iteration-mark__ticks line { animation: none; }
+}
+
+/* — topbar iteration · a quiet seal that sits as a thin second
+   row beneath the composing register. the seal anchors the
+   press mark with the iteration numeral on the right. */
+
+.topbar__iteration {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(6px, .65vw, 10px);
+  padding: clamp(3px, .35vw, 5px) 0 clamp(7px, .8vw, 10px);
+  margin-top: clamp(-4px, -.3vw, -1px);
+  border-top: 1px solid var(--line-soft);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+  opacity: 0;
+  animation: topbarIterationIn 1.2s var(--ease-out) 1.4s both;
+}
+
+.topbar__iteration-rule {
+  display: inline-block;
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, color-mix(in srgb, var(--paper) 8%, transparent) 40%, transparent 90%);
+  margin-right: clamp(8px, 1.2vw, 14px);
+}
+
+.topbar__iteration em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12px;
+  color: var(--paper);
+}
+
+.topbar__iteration-stack {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, .65vw, 10px);
+}
+
+@keyframes topbarIterationIn {
+  0% { opacity: 0; transform: translateY(-3px); }
+  100% { opacity: .85; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topbar__iteration { animation: none; opacity: .85; transform: none; }
+}
+
+@media (max-width: 1080px) {
+  .topbar__iteration em { display: none; }
+  .topbar__iteration-stack { gap: 6px; }
+}
+
+@media (max-width: 880px) {
+  .topbar__iteration { padding: 3px 0 6px; }
+}
+
+@media (max-width: 720px) {
+  .topbar__iteration { display: none; }
+}
+
+/* — iteration card · a closing seal beneath the colophon —
+   three-quarter rule with a centred seal and a caption that
+   names the iteration. the card reads as a final signature,
+   the place the press marks the folio before the reader
+   sets the page down. */
+
+.iteration-card {
+  --mark-tone: var(--quiet);
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(14px, 2vw, 32px);
+  max-width: 1320px;
+  margin: clamp(48px, 6vw, 96px) auto clamp(28px, 3.6vw, 56px);
+  padding: clamp(18px, 2.6vw, 32px) var(--gutter);
+  color: var(--mark-tone);
+  opacity: 0;
+  transform: translateY(8px);
+  animation: iterationCardIn 1.4s var(--ease-out) .15s both;
+}
+
+.iteration-card--quiet { --mark-tone: var(--quiet); }
+.iteration-card--human { --mark-tone: var(--human); }
+.iteration-card--bold  { --mark-tone: var(--bold);  }
+
+.iteration-card__rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent 0%,
+    color-mix(in srgb, var(--mark-tone) 0%, transparent) 0%,
+    color-mix(in srgb, var(--mark-tone) 30%, transparent) 50%,
+    color-mix(in srgb, var(--mark-tone) 0%, transparent) 100%);
+  opacity: .85;
+}
+
+.iteration-card__rule--l { background: linear-gradient(to right, transparent 0%, color-mix(in srgb, var(--mark-tone) 36%, transparent) 100%); }
+.iteration-card__rule--r { background: linear-gradient(to left, transparent 0%, color-mix(in srgb, var(--mark-tone) 36%, transparent) 100%); }
+
+.iteration-card__stack {
+  display: inline-grid;
+  justify-items: center;
+  gap: 8px;
+  padding: clamp(6px, 1vw, 12px) clamp(10px, 1.4vw, 18px);
+  border-top: 1px solid color-mix(in srgb, var(--mark-tone) 22%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--mark-tone) 22%, transparent);
+  position: relative;
+}
+
+.iteration-card__stack::before,
+.iteration-card__stack::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mark-tone);
+  transform: translateY(-50%);
+  opacity: .78;
+}
+.iteration-card__stack::before { left: -3px; }
+.iteration-card__stack::after  { right: -3px; }
+
+.iteration-card__caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+}
+
+.iteration-card__caption em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12.5px;
+  color: var(--paper);
+}
+
+.iteration-card__caption-rule {
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  background: var(--mark-tone);
+  opacity: .55;
+}
+
+.iteration-card__caption-dot {
+  opacity: .55;
+  color: var(--paper-soft);
+}
+
+.iteration-card__caption-tag {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 12.5px;
+  color: var(--paper-soft);
+}
+
+.iteration-card__meta {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(11.5px, 0.95vw, 13px);
+  color: var(--muted);
+  letter-spacing: -.005em;
+}
+
+@keyframes iterationCardIn {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iteration-card { animation: none; opacity: 1; transform: none; }
+}
+
+@media (max-width: 720px) {
+  .iteration-card {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    text-align: center;
+  }
+  .iteration-card__rule { width: 60%; margin: 0 auto; }
+  .iteration-card__stack { padding: 12px 18px; }
+  .iteration-card__caption { flex-wrap: wrap; justify-content: center; }
+}
+
+/* — title refinement · the hero's broadside line earns a
+   slightly more confident kerning and a crisper shadow, and
+   the punctuation halo now breathes at a slower rhythm so
+   it reads as the page's pulse, not a UI animation. */
+
+.hero__title {
+  letter-spacing: -.036em;
+  font-feature-settings: 'kern', 'liga', 'dlig' 1, 'onum' 1, 'ss01' 1, 'ss02' 1;
+}
+
+.hero__title--bold {
+  letter-spacing: -.058em;
+  font-feature-settings: 'kern', 'liga', 'dlig' 1, 'onum' 1, 'ss03' 1;
+}
+
+.hero__title-lead {
+  letter-spacing: -.022em;
+  text-shadow: 0 0 26px color-mix(in srgb, var(--hero-tone, var(--quiet)) 14%, transparent);
+}
+
+.hero__title::after {
+  animation-duration: 3.4s;
+  animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+}
+
+/* — the held breath rule · the line beneath the title is set
+   at a calmer gradient peak and now breathes once on arrival,
+   then settles, so it reads as the page's first breath rather
+   than a looped ornament. */
+
+.hero__title::before {
+  animation: heroBaselineIn 2.6s var(--ease-out) 1.4s both, heroBaselineSettle 7.6s var(--ease-soft) 4s 1;
+}
+
+@keyframes heroBaselineSettle {
+  0%   { opacity: .55; transform: scaleX(1); }
+  50%  { opacity: .72; transform: scaleX(1.012); }
+  100% { opacity: .55; transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title::before { animation: none; opacity: .55; transform: none; }
+}
+
+/* — title mobile refinement · the broadside line holds its
+   hierarchy at narrow widths: the lead "is" stays calm and
+   the line composition never breaks. */
+
+@media (max-width: 540px) {
+  .hero__title {
+    letter-spacing: -.03em;
+    line-height: 1.06;
+    max-width: 12ch;
+  }
+  .hero__title-lead {
+    font-size: clamp(19px, 7vw, 30px);
+    letter-spacing: -.018em;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero__title { font-size: clamp(40px, 13vw, 72px); max-width: 10ch; }
+  .hero__title-lead { font-size: clamp(17px, 6vw, 26px); }
+}
+
+/* — topbar mid-stack refinement · the centre rule between
+   the date and the page-time tightens at narrow widths so the
+   masthead still reads as one composed line. */
+
+@media (max-width: 880px) {
+  .topbar__center {
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+  }
+  .topbar__center-sep em { display: none; }
+  .topbar__center-date { font-size: 12.5px; }
+}
+
+/* — the daybreak orb · a slightly calmer rise. the orb and
+   rays now hold at the top of the page for a beat before
+   fading, and the dawn wash lifts more gently. the orb no
+   longer loops its breath animation — it reads as one rise. */
+
+.daybreak__orb-half {
+  transform-origin: 300px 200px;
+  transform: translateY(64px) scale(.86);
+  transition: transform 2s cubic-bezier(.16, 1, .3, 1);
+}
+
+.daybreak.is-rise .daybreak__orb-half {
+  transform: translateY(0) scale(1);
+}
+
+.daybreak__orb-half--halo {
+  opacity: .85;
+  animation: daybreakOrbBreath 9.4s ease-in-out infinite;
+  animation-delay: 1.8s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__orb-half { transition: none; transform: none; }
+  .daybreak.is-rise .daybreak__orb-half { transform: none; }
+  .daybreak__orb-half--halo { animation: none; }
+}
+
+/* — the daybreak eyes — a softer reveal so the masthead
+   lifts the reader instead of falling on them. */
+
+.daybreak__masthead {
+  animation: daybreakHeadIn 1.4s var(--ease-out) .4s both;
+}
+
+.daybreak__eyebrow {
+  animation: daybreakEyebrowIn 1.2s var(--ease-out) .65s both;
+}
+
+.daybreak__title-row {
+  animation: daybreakTitleRowIn 1.4s var(--ease-out) forwards;
+}
+
+.daybreak__title-row--a { animation-delay: 1s; }
+.daybreak__title-row--b { animation-delay: 1.3s; }
+.daybreak__title-row--c { animation-delay: 1.6s; }
+
+.daybreak__voices .daybreak__voice {
+  animation: daybreakVoiceIn 1s var(--ease-out) forwards;
+}
+
+.daybreak__voices .daybreak__voice:nth-of-type(1) { animation-delay: 2s; }
+.daybreak__voices .daybreak__voice:nth-of-type(2) { animation-delay: 2.15s; }
+.daybreak__voices .daybreak__voice:nth-of-type(3) { animation-delay: 2.3s; }
+
+@keyframes daybreakVoiceIn {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daybreak__voices .daybreak__voice { animation: none; opacity: 1; transform: none; }
+}
+
+/* — the constellation connects to the colophon · when the
+   reader scrolls past 96% of the page, the trail dims so
+   the iteration card reads as the final mark. */
+
+.constellation {
+  transition: opacity .8s var(--ease);
+}
+
+/* — type-case mobile · the three pieces stack at narrow widths
+   so the cabinet reads as a column, not a row that crowds. */
+
+@media (max-width: 720px) {
+  .type-case__pieces {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .type-case__piece {
+    justify-self: center;
+    max-width: 320px;
+  }
+  .type-case__voice-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 540px) {
+  .type-case__piece {
+    max-width: 280px;
+  }
+}
+
+/* — the daybreak ledger at narrow widths stacks the cells
+   so the closing line still reads. */
+
+@media (max-width: 720px) {
+  .daybreak__ledger {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    text-align: center;
+  }
+  .daybreak__ledger-cell {
+    justify-content: center;
+  }
+  .daybreak__handoff {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .daybreak__handoff-rule {
+    width: clamp(40px, 16vw, 80px);
+  }
+  .daybreak__handoff-arrow { display: none; }
+}
+
+/* — the topbar nav buttons · a calmer focus ring so the
+   nav reads as one composed masthead. */
+
+.compose-register__voices:focus-visible,
+.compose-register__voice:focus-visible {
+  outline-offset: 3px;
+}
+
+/* — a final refinement · the iteration mark earns its own
+   hover that lifts and rotates gently. only when used in
+   interactive contexts. */
+
+.iteration-card .iteration-mark {
+  cursor: default;
+  transition: transform .8s var(--ease-spring), color .4s var(--ease);
+}
+
+.iteration-card:hover .iteration-mark {
+  transform: rotate(8deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iteration-card:hover .iteration-mark { transform: none; }
+}
