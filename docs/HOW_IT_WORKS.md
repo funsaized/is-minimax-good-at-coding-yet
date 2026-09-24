@@ -72,7 +72,7 @@ Each invocation starts a new OpenCode session. The request in `runner/prompt.md`
 The essential invocation is:
 
 ```sh
-opencode run --pure --model minimax-coding-plan/MiniMax-M3 --format json '<fixed prompt>'
+opencode run --pure --model opencode/space-bunny-free --format json '<fixed prompt>'
 ```
 
 The real implementation passes the prompt as a subprocess argument rather than assembling an executable shell string. This prevents punctuation in the prompt from becoming shell commands. `--pure` avoids external OpenCode plugins, and JSON output gives the runner structured completion, error, and usage events.
@@ -94,9 +94,9 @@ There is one boundary while generating code and another while displaying it. The
 | `/usr`, `/etc`, Node, OpenCode executable | Read-only runtime files |
 | Host home, Git repo, GitHub and Vercel credentials | Not mounted |
 
-A bind mount exposes an existing file or directory at another location. A read-only bind mount lets the process read it but prevents writes. The candidate has only the MiniMax provider credential; the publishing credentials stay with the outer runner. The copied provider credential is removed after a normally completed or failed turn. A forcibly killed process may leave private runtime files behind, so `.runner/` must remain out of Git.
+A bind mount exposes an existing file or directory at another location. A read-only bind mount lets the process read it but prevents writes. Space Bunny Free works without a provider credential; publishing credentials stay with the outer runner. A forcibly killed process may leave private runtime files behind, so `.runner/` must remain out of Git.
 
-The sandbox shares the host network so OpenCode can reach MiniMax's API. It is **not** a network isolation mechanism. The prompt disallows external page dependencies, and browser validation also blocks them. On this machine, `/etc/resolv.conf` points to a file under `/run`; that target must be mounted too, or DNS fails inside the sandbox even though networking is available.
+The sandbox shares the host network so OpenCode can reach the model API. It is **not** a network isolation mechanism. The prompt disallows external page dependencies, and browser validation also blocks them. On this machine, `/etc/resolv.conf` points to a file under `/run`; that target must be mounted too, or DNS fails inside the sandbox even though networking is available.
 
 Vite's usual config loader writes a temporary file into `node_modules`. We use `--configLoader native` for the experiment so builds work with read-only dependencies. This is a good example of adapting normal development tools to an isolated environment.
 

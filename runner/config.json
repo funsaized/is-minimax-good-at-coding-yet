@@ -1,5 +1,5 @@
 {
-  "model": "minimax-coding-plan/MiniMax-M3",
+  "model": "opencode/space-bunny-free",
   "intervalMinutes": 30,
   "timeoutMinutes": 18,
   "maxRunsPerDay": 48,

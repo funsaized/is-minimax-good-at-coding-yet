@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import os from 'node:os'
 import { ROOT, command, filesIn, hash, parseUsage, writeJSON, config } from './lib.mjs'
 import { ensureChangelog } from './changelog.mjs'
 
@@ -11,10 +10,8 @@ export async function makeCandidate(attempt, context) {
   await fs.cp(path.join(ROOT, 'experiment'), work, { recursive: true, filter: source => !['dist', 'node_modules'].includes(path.basename(source)) })
   await fs.writeFile(path.join(work, 'ITERATION_CONTEXT.md'), context)
   await fs.writeFile(path.join(work, 'CHANGELOG.md'), '')
-  const auth = JSON.parse(await fs.readFile(path.join(os.homedir(), '.local/share/opencode/auth.json'), 'utf8'))
-  if (!auth['minimax-coding-plan']) throw new Error('MiniMax provider is not authenticated in OpenCode')
   const home = path.join(attempt, 'home')
-  await writeJSON(path.join(home, '.local/share/opencode/auth.json'), { 'minimax-coding-plan': auth['minimax-coding-plan'] })
+  await fs.mkdir(home, { recursive: true })
   const agentConfig = {
     $schema: 'https://opencode.ai/config.json',
     model: config.model, share: 'disabled', autoupdate: false,

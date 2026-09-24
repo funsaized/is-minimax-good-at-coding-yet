@@ -30,7 +30,7 @@ npm run dev
 
 ## Run the experiment
 
-The runner requires Linux, Bubblewrap (`bwrap`), Chromium (or Playwright's installed Chromium), Node, Git, GitHub CLI, and OpenCode. It uses your existing `gh`, Vercel CLI, and `minimax-coding-plan` OpenCode logins. No credentials belong in this repository. The Node dependencies and Vercel CLI are pinned by `package-lock.json`.
+The runner requires Linux, Bubblewrap (`bwrap`), Chromium (or Playwright's installed Chromium), Node, Git, GitHub CLI, and OpenCode. Space Bunny Free needs no OpenCode Zen login. It uses your existing `gh` and Vercel CLI logins. No credentials belong in this repository. The Node dependencies and Vercel CLI are pinned by `package-lock.json`.
 
 ```sh
 npm run status           # Published version, pending work, usage, errors
@@ -54,7 +54,7 @@ The target is one iteration start every **30 minutes**, with at most 48 model ru
 
 ## Publication and recovery
 
-Each fresh OpenCode session receives the exact same prompt and the previous published source with a short history. The model can change only the experiment. Bubblewrap gives it a temporary writable workspace, read-only dependencies/build configuration, and only its MiniMax provider credential. It cannot access the host's GitHub/Vercel credentials, source archive, or viewer. Browser checks run before acceptance. The iframe runs with `sandbox="allow-scripts"`; snapshot assets permit its opaque origin and prohibit external network dependencies via CSP.
+Each fresh OpenCode session receives the exact same prompt and the previous published source with a short history. The model can change only the experiment. Bubblewrap gives it a temporary writable workspace and read-only dependencies/build configuration, with no host credentials. It cannot access the host's GitHub/Vercel credentials, source archive, or viewer. Browser checks run before acceptance. The iframe runs with `sandbox="allow-scripts"`; snapshot assets permit its opaque origin and prohibit external network dependencies via CSP.
 
 After a valid turn the runner commits source, saves the immutable build and screenshots, commits the archive, and pushes to GitHub. It creates a Vercel deployment without moving the live alias, checks the public viewer and iframe, then promotes it. Until promotion, visitors keep the previous working site. Publication state lives in ignored `.runner/state.json`; a deployment failure retries the same archived version. Attempts and private model logs are kept in `.runner/attempts/`.
 
@@ -70,7 +70,6 @@ Snapshots deliberately live in Git. The worker pauses before the archive exceeds
 
 ```sh
 gh auth login
-opencode auth login                 # Authenticate the MiniMax coding plan
 npx vercel login
 npx vercel link --yes --project is-minimax-good-at-coding-yet
 git init -b main

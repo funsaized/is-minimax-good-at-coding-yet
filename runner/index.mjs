@@ -25,7 +25,7 @@ async function finishCandidate() {
       }
       await fs.copyFile(path.join(p.attempt, 'work/CHANGELOG.md'), path.join(ROOT, 'experiment/CHANGELOG.md'))
     }
-    p.sourceCommit = await commitIfChanged(p.seed ? 'chore: preserve original black-page seed' : `feat: MiniMax M3 iteration ${p.id} — ${p.summary}`, ['experiment'])
+    p.sourceCommit = await commitIfChanged(p.seed ? 'chore: preserve original black-page seed' : `feat: ${config.model} iteration ${p.id} — ${p.summary}`, ['experiment'])
     p.stage = 'source'; state.pending = p; await saveState(state)
   }
   if (p.stage === 'source') {
@@ -88,7 +88,7 @@ async function once() {
   if (await git('status', '--porcelain')) throw new Error('Working tree has uncommitted changes; commit them before starting the worker')
   await git('pull', '--ff-only', 'origin', 'main')
   const manifest = await readManifest()
-  if (!manifest.iterations.length || !state.lastPublished) throw new Error('Publish the seed before starting MiniMax')
+  if (!manifest.iterations.length || !state.lastPublished) throw new Error('Publish the seed before starting the model')
   if (await directorySize(path.join(ROOT, 'public/iterations')) >= config.maxArchiveBytes) throw new Error('Archive size limit reached; increase maxArchiveBytes deliberately before continuing')
   const id = manifest.iterations.at(-1).id + 1
   const started = Date.now()
@@ -101,7 +101,7 @@ async function once() {
   state.days[day].runs++
   state.activeAttempt = { id, attempt, startedAt: new Date(started).toISOString() }
   await saveState(state)
-  log(`MiniMax M3 is developing iteration ${id}`)
+  log(`${config.model} is developing iteration ${id}`)
   let result
   try {
     result = await runModel(attempt)
@@ -125,8 +125,6 @@ async function once() {
     state.days[day].estimatedCostUsd += usage.estimatedCostUsd
     delete state.activeAttempt
     await saveState(state)
-    // Only the model provider credential was copied here; remove it after the turn.
-    await fs.rm(path.join(attempt, 'home/.local/share/opencode/auth.json'), { force: true })
   }
   await finishCandidate()
   return publishPending()
