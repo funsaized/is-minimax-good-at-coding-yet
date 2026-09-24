@@ -8853,6 +8853,25 @@
         "outputTokens": 13213,
         "steps": 65
       }
+    },
+    {
+      "id": 466,
+      "parentId": 465,
+      "createdAt": "2026-09-24T11:15:57.813Z",
+      "summary": "Reframed the page as a compact field guide with a tactile question, voice switcher, and unfoldable answer.",
+      "path": "/iterations/000466/index.html",
+      "screenshot": "/iterations/000466/desktop.png",
+      "mobileScreenshot": "/iterations/000466/mobile.png",
+      "sourceCommit": "44c69e84458af7be2d830847093d9e88ca24c042",
+      "model": "opencode/space-bunny-free",
+      "durationSeconds": 285,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": {
+        "estimatedCostUsd": 0,
+        "inputTokens": 77819,
+        "outputTokens": 23726,
+        "steps": 25
+      }
     }
   ]
 }
