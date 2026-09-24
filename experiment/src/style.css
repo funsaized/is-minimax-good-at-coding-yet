@@ -40463,3 +40463,282 @@ body { line-height: 1.62; }
 @media (prefers-reduced-motion: reduce) {
   .iteration-card:hover .iteration-mark { transform: none; }
 }
+
+/* ────────────────────────────────────────────────────────────
+   BROADSIDE FOLIO · iteration 465
+   a signature seal set into the broadside plate, named below
+   the question. the seal reads as the press's thumbprint on
+   the page: a small wax circle flanked by two hairlines, with
+   "m³ press · folio i" above and a composed date+voice stamp
+   beneath. replaces the four scattered corner pins from
+   iteration 464 with one composed signature moment.
+   ──────────────────────────────────────────────────────────── */
+
+.broadside-folio {
+  --bf-tone: var(--quiet);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(14px, 2.2vw, 32px);
+  margin: clamp(28px, 4.2vw, 56px) auto clamp(8px, 1.6vw, 22px);
+  padding: 0 clamp(8px, 1.6vw, 22px);
+  color: var(--bf-tone);
+  max-width: 920px;
+  z-index: 3;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: broadsideFolioIn 1.4s var(--ease-out) 2.6s both;
+}
+
+.broadside-folio--quiet { --bf-tone: var(--quiet); }
+.broadside-folio--human { --bf-tone: var(--human); }
+.broadside-folio--bold  { --bf-tone: var(--bold);  }
+
+.broadside-folio__rule {
+  display: block;
+  height: 1px;
+  position: relative;
+  opacity: .85;
+  color: currentColor;
+}
+
+.broadside-folio__rule svg {
+  display: block;
+  width: 100%;
+  height: 6px;
+}
+
+.broadside-folio__rule--l::after,
+.broadside-folio__rule--r::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    color-mix(in srgb, currentColor 22%, transparent) 30%,
+    color-mix(in srgb, currentColor 38%, transparent) 50%,
+    color-mix(in srgb, currentColor 22%, transparent) 70%,
+    transparent 100%);
+  opacity: .55;
+  pointer-events: none;
+}
+
+.broadside-folio__stack {
+  display: inline-grid;
+  justify-items: center;
+  gap: clamp(6px, .8vw, 12px);
+  padding: clamp(8px, 1.2vw, 16px) clamp(14px, 2vw, 26px);
+  border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  position: relative;
+}
+
+.broadside-folio__stack::before,
+.broadside-folio__stack::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translateY(-50%);
+  opacity: .82;
+  box-shadow: 0 0 0 2px var(--night);
+}
+.broadside-folio__stack::before { left: -2.5px; }
+.broadside-folio__stack::after  { right: -2.5px; }
+
+.broadside-folio__lead {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+}
+
+.broadside-folio__press {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: clamp(12.5px, 1.05vw, 14.5px);
+  color: var(--paper);
+}
+
+.broadside-folio__sep {
+  opacity: .42;
+  color: var(--paper-soft);
+}
+
+.broadside-folio__folio {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.broadside-folio__folio-key {
+  opacity: .78;
+}
+
+.broadside-folio__folio-num {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: clamp(12.5px, 1.05vw, 14.5px);
+  color: var(--paper);
+}
+
+.broadside-folio__seal {
+  width: clamp(64px, 7.4vw, 86px);
+  height: clamp(64px, 7.4vw, 86px);
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .35));
+  transition: transform .8s var(--ease-spring);
+  animation: broadsideFolioSealIn 1.2s var(--ease-spring) 2.95s both;
+}
+
+.broadside-folio:hover .broadside-folio__seal {
+  transform: rotate(-4deg) scale(1.04);
+}
+
+.broadside-folio__trail {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--paper-soft);
+}
+
+.broadside-folio__trail-key { opacity: .78; }
+.broadside-folio__trail-sep { opacity: .42; color: var(--paper-soft); }
+.broadside-folio__trail-date {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: clamp(11.5px, .95vw, 13px);
+  color: var(--paper);
+}
+.broadside-folio__trail-voice em {
+  font-style: italic;
+  font-family: var(--display);
+  text-transform: none;
+  letter-spacing: -.005em;
+  color: var(--paper);
+}
+
+@keyframes broadsideFolioIn {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes broadsideFolioSealIn {
+  0%   { opacity: 0; transform: scale(.6) rotate(-12deg); }
+  60%  { opacity: 1; transform: scale(1.06) rotate(2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .broadside-folio { animation: none; opacity: 1; transform: none; }
+  .broadside-folio__seal { animation: none; transition: none; transform: none; }
+}
+
+@media (max-width: 720px) {
+  .broadside-folio {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    text-align: center;
+    margin-top: clamp(20px, 4vw, 36px);
+  }
+  .broadside-folio__rule {
+    width: 60%;
+    margin: 0 auto;
+    max-width: 240px;
+  }
+  .broadside-folio__lead,
+  .broadside-folio__trail {
+    font-size: 9px;
+    letter-spacing: .2em;
+  }
+  .broadside-folio__press,
+  .broadside-folio__folio-num,
+  .broadside-folio__trail-date,
+  .broadside-folio__trail-voice em {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .broadside-folio__seal {
+    width: 60px;
+    height: 60px;
+  }
+  .broadside-folio__stack { padding: 8px 14px; }
+}
+
+/* ────────────────────────────────────────────────────────────
+   iteration 465 · the four corner pins from iteration 464 are
+   retired — the broadside-folio seal now holds the plate's
+   signature moment, so the pins were visually redundant.
+   the css is kept as a no-op (display:none) to preserve any
+   legacy references without leaving stray ornaments on the page.
+   ──────────────────────────────────────────────────────────── */
+
+.hero__broadside-pin { display: none; }
+
+/* ────────────────────────────────────────────────────────────
+   iteration 465 · title refinement
+   the question is set a touch larger, with tighter leading and
+   a more confident tracking, so the title reads as a single
+   composed letterpress impression.
+   ──────────────────────────────────────────────────────────── */
+
+.hero__title {
+  letter-spacing: -.038em;
+  line-height: 1.0;
+  font-size: clamp(58px, 11.6vw, 188px);
+}
+
+.hero__title--bold {
+  letter-spacing: -.058em;
+  line-height: 1.0;
+}
+
+.hero__title-row--a {
+  margin-bottom: clamp(0px, .1vw, 4px);
+}
+
+.hero__title-row--b {
+  margin-top: clamp(0px, .1vw, 4px);
+}
+
+.hero__title::after {
+  animation-duration: 3.6s;
+}
+
+@media (max-width: 720px) {
+  .hero__title { line-height: 1.02; max-width: 14ch; letter-spacing: -.034em; }
+}
+
+@media (max-width: 540px) {
+  .hero__title {
+    line-height: 1.04;
+    max-width: 11ch;
+    font-size: clamp(48px, 14vw, 84px);
+    letter-spacing: -.03em;
+  }
+  .hero__title-row--a { padding-bottom: clamp(2px, .8vw, 4px); }
+  .hero__title-lead { font-size: clamp(20px, 7vw, 32px); margin-right: .08em; }
+}
+
