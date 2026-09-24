@@ -1,5 +1,5 @@
-Reframed the page as a compact field guide with a tactile question, voice switcher, and unfoldable answer.
+Sharpened the question into a tactile signal desk with clearer voice controls and a more expressive reading rhythm.
 
-- Replaced the dense folio composition with a responsive nocturnal-and-paper visual system in `App.tsx` and `style.css`.
-- Added keyboard-accessible word notes, three voice controls, hash navigation, scroll progress, and Escape-to-fold answer behavior.
-- Added inline SVG orbit motion, expressive transitions, reduced-motion handling, and no remote assets.
+- Reworked the hero as a warm editorial plate paired with a responsive question dial.
+- Connected the title, margin notes, voice switcher, and answer fold into one visual system.
+- Added restrained motion, pointer response, keyboard shortcuts, and reduced-motion and mobile treatments.

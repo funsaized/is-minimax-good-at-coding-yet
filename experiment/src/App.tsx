@@ -19,6 +19,13 @@ type VoiceSpec = {
   detail: string
 }
 
+type QuestionDialProps = {
+  voice: VoiceId
+  onVoice: (id: VoiceId) => void
+  onMove: (event: ReactPointerEvent<HTMLDivElement>) => void
+  onLeave: (event: ReactPointerEvent<HTMLDivElement>) => void
+}
+
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
 const VOICES: VoiceSpec[] = [
@@ -57,6 +64,11 @@ const NAV_ITEMS = [
 
 const NEXT_VOICE: Record<VoiceId, VoiceId> = { quiet: 'human', human: 'bold', bold: 'quiet' }
 const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
+const DIAL_NODES: Record<VoiceId, { x: number; y: number }> = {
+  quiet: { x: 17, y: 23 },
+  human: { x: 78, y: 22 },
+  bold: { x: 73, y: 77 },
+}
 
 export function App() {
   const [voice, setVoice] = useState<VoiceId>('quiet')
@@ -95,11 +107,10 @@ export function App() {
     setAnswerOpen(current => {
       const next = !current
       setAnnouncement(next ? 'The answer is unfolded.' : 'The answer is folded back.')
-      if (next) {
-        window.requestAnimationFrame(() => answerCloseRef.current?.focus())
-      } else {
-        window.requestAnimationFrame(() => answerTriggerRef.current?.focus())
-      }
+      window.requestAnimationFrame(() => {
+        if (next) answerCloseRef.current?.focus()
+        else answerTriggerRef.current?.focus()
+      })
       return next
     })
   }, [])
@@ -120,7 +131,7 @@ export function App() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
         if (visible[0]) setActiveSection(visible[0].target.id)
       },
-      { rootMargin: '-28% 0px -58% 0px', threshold: [0.08, 0.2, 0.5] },
+      { rootMargin: '-24% 0px -62% 0px', threshold: [0.05, 0.2, 0.5, 0.8] },
     )
     sections.forEach(section => observer.observe(section))
     return () => observer.disconnect()
@@ -141,7 +152,7 @@ export function App() {
           }
         })
       },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.08 },
+      { rootMargin: '0px 0px -9% 0px', threshold: 0.08 },
     )
     reveals.forEach(element => observer.observe(element))
     return () => observer.disconnect()
@@ -195,17 +206,18 @@ export function App() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [cycleVoice])
 
-  const onOrbitMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+  const onDialMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect()
+    if (!bounds.width || !bounds.height) return
     const x = Math.min(88, Math.max(12, ((event.clientX - bounds.left) / bounds.width) * 100))
     const y = Math.min(84, Math.max(16, ((event.clientY - bounds.top) / bounds.height) * 100))
-    event.currentTarget.style.setProperty('--orbit-x', `${x}%`)
-    event.currentTarget.style.setProperty('--orbit-y', `${y}%`)
+    event.currentTarget.style.setProperty('--dial-x', `${x}%`)
+    event.currentTarget.style.setProperty('--dial-y', `${y}%`)
   }
 
-  const onOrbitLeave = (event: ReactPointerEvent<HTMLDivElement>) => {
-    event.currentTarget.style.setProperty('--orbit-x', '50%')
-    event.currentTarget.style.setProperty('--orbit-y', '50%')
+  const onDialLeave = (event: ReactPointerEvent<HTMLDivElement>) => {
+    event.currentTarget.style.setProperty('--dial-x', '50%')
+    event.currentTarget.style.setProperty('--dial-y', '50%')
   }
 
   return (
@@ -220,9 +232,8 @@ export function App() {
         <a className="brand" href="#question" aria-label="M3 frontend field note, home">
           <span className="brand__mark" aria-hidden="true">
             <svg viewBox="0 0 40 40" role="presentation">
-              <rect x="1" y="1" width="38" height="38" rx="12" fill="currentColor" />
-              <path d="M11 27V13h4.2l4.8 7 4.8-7H29v14h-4v-7.7l-5 7.1-5-7.1V27z" fill="var(--night)" />
-              <circle cx="31" cy="9" r="2" fill="var(--coral)" />
+              <path d="M9 27.5V12h4l7 9.2 7-9.2h4v15.5h-4.5v-8.3L20 28l-6.5-8.8v8.3z" fill="currentColor" />
+              <circle cx="31.5" cy="9" r="2.1" fill="var(--ink)" />
             </svg>
           </span>
           <span className="brand__copy">
@@ -244,11 +255,22 @@ export function App() {
           ))}
         </nav>
 
-        <div className="header-note" aria-label="Page premise">
-          <span className="header-note__dot" aria-hidden="true" />
-          <span>one question</span>
-          <span className="header-note__slash" aria-hidden="true">/</span>
-          <span>three readings</span>
+        <div className="header-tone">
+          <span className="header-tone__label">tone</span>
+          <div className="header-tone__options" role="group" aria-label="Set the page voice">
+            {VOICES.map(item => (
+              <button
+                key={item.id}
+                type="button"
+                className={`header-tone__button header-tone__button--${item.id} ${voice === item.id ? 'is-active' : ''}`}
+                onClick={() => selectVoice(item.id)}
+                aria-pressed={voice === item.id}
+                aria-label={`Set the page in ${item.name} voice`}
+              >
+                {item.letter}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
@@ -276,12 +298,12 @@ export function App() {
         <section id="question" className="hero-section reveal" aria-labelledby="question-title">
           <div className="hero-section__topline">
             <span className="eyebrow"><span className="eyebrow__dash" />a small test of judgment</span>
-            <span className="hero-section__aside">frontend / open question</span>
+            <span className="hero-section__aside">one question / three voices</span>
           </div>
 
           <div className="hero-card">
             <div className="hero-card__copy">
-              <span className="hero-card__chapter">the first impression</span>
+              <div className="hero-card__chapter">the first impression</div>
               <h1 id="question-title" className={`hero-title hero-title--${voice}`} aria-label={TITLE}>
                 <span className="hero-title__line">is Minimax </span>
                 <button
@@ -296,7 +318,7 @@ export function App() {
                 >
                   M3
                 </button>
-                <span className="hero-title__line" aria-hidden="true"> </span>
+                <span className="hero-title__space"> </span>
                 <button
                   type="button"
                   className={`title-token title-token--good ${selectedWord === 'good' ? 'is-selected' : ''}`}
@@ -324,8 +346,7 @@ export function App() {
                 </button>
               </h1>
               <p className="hero-card__lede">
-                A page can answer before it performs. This one is trying to find the exact balance:
-                enough character to feel authored, enough restraint to let the question stay yours.
+                Not a verdict. A small reading of the moment: can this page hold a point of view, invite a touch, and still know when to become quiet?
               </p>
               <div className="hero-card__actions">
                 <a className="button button--ink" href="#field-notes">
@@ -334,11 +355,15 @@ export function App() {
                     <path d="M3 9h11M9.5 4.5 14 9l-4.5 4.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </a>
-                <span className="hero-card__hint"><span className="hint-dot" aria-hidden="true" />tap a word to open its margin note</span>
+                <button type="button" className="voice-cycle" onClick={cycleVoice}>
+                  <span>change the temperature</span>
+                  <kbd>shift</kbd><span>+</span><kbd>v</kbd>
+                </button>
               </div>
+              <p className="hero-card__hint"><span className="hint-dot" aria-hidden="true" />tap a word to open its margin note</p>
             </div>
 
-            <OrbitCard voice={voice} onVoice={selectVoice} onMove={onOrbitMove} onLeave={onOrbitLeave} />
+            <QuestionDial voice={voice} onVoice={selectVoice} onMove={onDialMove} onLeave={onDialLeave} />
           </div>
 
           <div className="hero-section__footnote">
@@ -349,9 +374,10 @@ export function App() {
 
         <div className="page-divider reveal" aria-hidden="true">
           <span />
-          <svg viewBox="0 0 100 8" preserveAspectRatio="none">
-            <path d="M0 4h36m28 0h36" fill="none" stroke="currentColor" strokeWidth=".7" strokeDasharray="1 3" />
-            <circle cx="50" cy="4" r="2" fill="currentColor" />
+          <svg viewBox="0 0 120 12" preserveAspectRatio="none">
+            <path d="M0 6h43m34 0h43" fill="none" stroke="currentColor" strokeWidth=".7" strokeDasharray="1 4" />
+            <circle cx="60" cy="6" r="2.2" fill="currentColor" />
+            <circle cx="60" cy="6" r="5" fill="none" stroke="currentColor" strokeWidth=".5" opacity=".5" />
           </svg>
           <span />
         </div>
@@ -391,7 +417,7 @@ export function App() {
 
             <article className="margin-note" key={activeNote.id} aria-live="polite">
               <div className="margin-note__top">
-                <span>margin note / {activeNote.folio}</span>
+                <span>margin note / folio {activeNote.folio}</span>
                 <span className="margin-note__mark">{activeNote.id === 'm3' ? '⌇' : activeNote.id === 'good' ? '∧' : '?'}</span>
               </div>
               <div className="margin-note__body">
@@ -401,7 +427,7 @@ export function App() {
               </div>
               <div className="margin-note__footer">
                 <span>{activeNote.prompt}</span>
-                <span>{activeNote.seen}</span>
+                <span>{activeNote.editor}</span>
               </div>
             </article>
           </div>
@@ -434,6 +460,10 @@ export function App() {
                     <span className="voice-card__name">{item.name}</span>
                     <span className="voice-card__tagline">{item.tagline}</span>
                     <span className={`voice-card__sample voice-card__sample--${item.id}`}>{item.sample}</span>
+                    <span className="voice-card__bottom">
+                      <span className="voice-card__meter" aria-hidden="true"><i /><i /><i /></span>
+                      <span>{isActive ? 'selected' : 'select'}</span>
+                    </span>
                     <span className="voice-card__detail">{item.detail}</span>
                   </button>
                 </article>
@@ -459,7 +489,7 @@ export function App() {
             </button>
           </div>
 
-          <div className={`answer-leaf ${answerOpen ? 'is-open' : ''}`} id="answer-leaf">
+          <div className={`answer-leaf ${answerOpen ? 'is-open' : ''}`} id="answer-leaf" role="region" aria-label="The answer">
             <div className="answer-leaf__closed" aria-hidden={answerOpen}>
               <span className="answer-leaf__question">?</span>
               <span>the answer is folded here</span>
@@ -513,65 +543,65 @@ export function App() {
   )
 }
 
-function OrbitCard({
-  voice,
-  onVoice,
-  onMove,
-  onLeave,
-}: {
-  voice: VoiceId
-  onVoice: (id: VoiceId) => void
-  onMove: (event: ReactPointerEvent<HTMLDivElement>) => void
-  onLeave: (event: ReactPointerEvent<HTMLDivElement>) => void
-}) {
+function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
   const active = VOICES.find(item => item.id === voice) ?? VOICES[0]
 
   return (
-    <div className="orbit-card" onPointerMove={onMove} onPointerLeave={onLeave} aria-label="A three voice orbit around the question">
-      <div className="orbit-card__header">
-        <span>the three voice field</span>
+    <div className="question-dial" onPointerMove={onMove} onPointerLeave={onLeave} role="group" aria-label="Three voice field around the question">
+      <div className="question-dial__header">
+        <span>the question, in orbit</span>
         <span>move / touch</span>
       </div>
-      <div className="orbit-card__stage">
-        <svg className="orbit-card__drawing" viewBox="0 0 480 420" aria-hidden="true">
+      <div className="question-dial__stage">
+        <svg className="question-dial__drawing" viewBox="0 0 520 500" aria-hidden="true">
           <defs>
-            <radialGradient id="orbit-halo" cx="50%" cy="50%" r="50%">
+            <radialGradient id="dial-halo" cx="50%" cy="50%" r="50%">
               <stop offset="0" stopColor="var(--tone)" stopOpacity=".2" />
+              <stop offset=".62" stopColor="var(--tone)" stopOpacity=".05" />
               <stop offset="1" stopColor="var(--tone)" stopOpacity="0" />
             </radialGradient>
           </defs>
-          <circle cx="240" cy="210" r="116" fill="url(#orbit-halo)" />
-          <circle className="orbit-card__ring orbit-card__ring--outer" cx="240" cy="210" r="142" />
-          <ellipse className="orbit-card__ring orbit-card__ring--tilt" cx="240" cy="210" rx="176" ry="68" transform="rotate(-24 240 210)" />
-          <ellipse className="orbit-card__ring orbit-card__ring--inner" cx="240" cy="210" rx="82" ry="38" transform="rotate(-24 240 210)" />
-          <path className="orbit-card__path" d="M95 140C160 52 333 46 390 143s-45 206-163 192S57 225 95 140Z" />
-          <path className="orbit-card__path orbit-card__path--ghost" d="M109 281C176 353 315 355 373 276" />
-          <circle className="orbit-card__center-ring" cx="240" cy="210" r="48" />
-          <circle className="orbit-card__center-dot" cx="240" cy="210" r="4" />
+          <circle cx="260" cy="250" r="174" fill="url(#dial-halo)" />
+          <circle className="question-dial__ring question-dial__ring--outer" cx="260" cy="250" r="170" />
+          <ellipse className="question-dial__ring question-dial__ring--tilt" cx="260" cy="250" rx="202" ry="77" transform="rotate(-23 260 250)" />
+          <ellipse className="question-dial__ring question-dial__ring--inner" cx="260" cy="250" rx="96" ry="42" transform="rotate(-23 260 250)" />
+          <path className="question-dial__path" d="M94 173C151 62 345 52 422 155s-41 235-173 223S55 274 94 173Z" />
+          <path className="question-dial__path question-dial__path--ghost" d="M103 335c62 88 234 101 320-6" />
+          <line className="question-dial__axis" x1="260" y1="38" x2="260" y2="462" />
+          <line className="question-dial__axis" x1="48" y1="250" x2="472" y2="250" />
+          <circle className="question-dial__center-ring" cx="260" cy="250" r="58" />
+          <circle className="question-dial__center-dot" cx="260" cy="250" r="4" />
         </svg>
-        <span className="orbit-card__spark" aria-hidden="true" />
-        <span className="orbit-card__center">
-          <strong>M3</strong>
-          <span>one question</span>
-        </span>
-        {VOICES.map((item, index) => (
-          <button
-            key={item.id}
-            type="button"
-            className={`orbit-node orbit-node--${item.id} ${voice === item.id ? 'is-active' : ''}`}
-            style={{ '--node-x': `${[16, 79, 58][index]}%`, '--node-y': `${[22, 25, 78][index]}%` } as CSSProperties}
-            onClick={() => onVoice(item.id)}
-            aria-label={`Use the ${item.name} voice`}
-            aria-pressed={voice === item.id}
-          >
-            <span>{item.letter}</span>
-          </button>
-        ))}
+        <span className="question-dial__spark" aria-hidden="true" />
+        <div className="question-dial__center">
+          <span className="question-dial__eyebrow">hold here</span>
+          <strong>?</strong>
+          <span className="question-dial__subline">m3 / open question</span>
+        </div>
+        <div className="question-dial__nodes">
+          {VOICES.map(item => (
+            <button
+              key={item.id}
+              type="button"
+              className={`dial-node dial-node--${item.id} ${voice === item.id ? 'is-active' : ''}`}
+              style={{ '--node-x': `${DIAL_NODES[item.id].x}%`, '--node-y': `${DIAL_NODES[item.id].y}%` } as CSSProperties}
+              onClick={() => onVoice(item.id)}
+              aria-label={`Use the ${item.name} voice`}
+              aria-pressed={voice === item.id}
+            >
+              <span>{item.letter}</span>
+            </button>
+          ))}
+        </div>
+        <div className="question-dial__readout">
+          <span>currently listening</span>
+          <strong>{active.name}</strong>
+        </div>
       </div>
-      <div className="orbit-card__footer">
-        <span className={`orbit-card__swatch orbit-card__swatch--${voice}`} aria-hidden="true" />
-        <span>now listening: <strong>{active.name}</strong></span>
-        <span className="orbit-card__footer-arrow" aria-hidden="true">↘</span>
+      <div className="question-dial__footer">
+        <span className={`question-dial__swatch question-dial__swatch--${voice}`} aria-hidden="true" />
+        <span>click a node to set the type</span>
+        <span className="question-dial__arrow" aria-hidden="true">↘</span>
       </div>
     </div>
   )
