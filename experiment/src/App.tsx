@@ -176,16 +176,16 @@ export function App() {
   }, [cycleVoice])
 
   return (
-    <div className={`folio folio--${voice}`}>
-      <div className="paper-fleck" aria-hidden="true" />
+    <div className={`signal-page signal-page--${voice}`}>
+      <div className="ambient-grid" aria-hidden="true" />
       <a className="skip-link" href="#question">Skip to the question</a>
 
       <header className="topbar">
         <a className="brand" href="#question" aria-label="M3 frontend type trial, back to the question">
-          <span className="brand__stamp" aria-hidden="true">m³</span>
-          <span className="brand__name">
-            <strong>frontend type trial</strong>
-            <small>question under examination</small>
+          <span className="brand__mark" aria-hidden="true">m³</span>
+          <span className="brand__copy">
+            <strong>frontend field note</strong>
+            <small>one question, under a lens</small>
           </span>
         </a>
 
@@ -202,14 +202,14 @@ export function App() {
           ))}
         </nav>
 
-        <div className="mode-switcher" role="group" aria-label="Set the page's type voice">
-          <span className="mode-switcher__label">voice</span>
-          <div className="mode-switcher__set">
+        <div className="voice-switcher" role="group" aria-label="Set the page's type voice">
+          <span className="voice-switcher__label">voice</span>
+          <div className="voice-switcher__set">
             {VOICES.map(item => (
               <button
                 key={item.id}
                 type="button"
-                className={`mode-button mode-button--${item.id} ${voice === item.id ? 'is-active' : ''}`}
+                className={`voice-button voice-button--${item.id} ${voice === item.id ? 'is-active' : ''}`}
                 onClick={() => selectVoice(item.id)}
                 aria-pressed={voice === item.id}
                 aria-label={`Use the ${item.name} type voice`}
@@ -223,161 +223,159 @@ export function App() {
       </header>
 
       <main className="page-shell">
-        <section id="question" className="question-section" aria-labelledby="question-title">
-          <div className="question-poster">
-            <div className="poster-meta" aria-hidden="true">
-              <span>frontend / type trial</span>
-              <span>one question under a loupe</span>
-              <span>read · touch · decide</span>
-            </div>
+        <section id="question" className="hero-section" aria-labelledby="question-title">
+          <div className="hero-rule" aria-hidden="true">
+            <span>frontend / type trial</span>
+            <span>one question under a loupe</span>
+            <span>read · touch · decide</span>
+          </div>
 
-            <div className="question-layout">
-              <div className="question-copy">
-                <p className="poster-kicker"><span aria-hidden="true">✳</span>Not a benchmark. A closer look.</p>
-                <h1 id="question-title" className="question-title">
-                  <span className="title-row title-row--one">is Minimax</span>{' '}
-                  <span className="title-row title-row--two">
-                    <button
-                      type="button"
-                      className={`title-word title-word--m3 ${selectedWord === 'm3' ? 'is-selected' : ''}`}
-                      onClick={() => selectWord('m3')}
-                      onMouseEnter={() => setHoveredWord('m3')}
-                      onMouseLeave={() => setHoveredWord(null)}
-                      onFocus={() => setHoveredWord('m3')}
-                      onBlur={() => setHoveredWord(null)}
-                      aria-pressed={selectedWord === 'm3'}
-                    >
-                      M3
-                    </button>
-                  </span>{' '}
-                  <span className="title-row title-row--three">
-                    <button
-                      type="button"
-                      className={`title-word title-word--good ${selectedWord === 'good' ? 'is-selected' : ''}`}
-                      onClick={() => selectWord('good')}
-                      onMouseEnter={() => setHoveredWord('good')}
-                      onMouseLeave={() => setHoveredWord(null)}
-                      onFocus={() => setHoveredWord('good')}
-                      onBlur={() => setHoveredWord(null)}
-                      aria-pressed={selectedWord === 'good'}
-                    >
-                      good at
-                    </button>
-                  </span>{' '}
-                  <span className="title-row title-row--four">frontend</span>{' '}
-                  <span className="title-row title-row--five">
-                    <button
-                      type="button"
-                      className={`title-word title-word--yet ${selectedWord === 'yet' ? 'is-selected' : ''}`}
-                      onClick={() => selectWord('yet')}
-                      onMouseEnter={() => setHoveredWord('yet')}
-                      onMouseLeave={() => setHoveredWord(null)}
-                      onFocus={() => setHoveredWord('yet')}
-                      onBlur={() => setHoveredWord(null)}
-                      aria-pressed={selectedWord === 'yet'}
-                    >
-                      yet?
-                    </button>
-                    <span className="title-caret" aria-hidden="true" />
-                  </span>
-                </h1>
+          <div className="hero-grid">
+            <div className="hero-copy">
+              <p className="eyebrow"><span aria-hidden="true">✳</span>not a benchmark. a closer look.</p>
+              <h1 id="question-title" className="question-title" aria-label={TITLE}>
+                <span className="title-line title-line--one">is Minimax</span>{' '}
+                <span className="title-line title-line--two">
+                  <button
+                    type="button"
+                    className={`title-word title-word--m3 ${selectedWord === 'm3' ? 'is-selected' : ''}`}
+                    onClick={() => selectWord('m3')}
+                    onMouseEnter={() => setHoveredWord('m3')}
+                    onMouseLeave={() => setHoveredWord(null)}
+                    onFocus={() => setHoveredWord('m3')}
+                    onBlur={() => setHoveredWord(null)}
+                    aria-pressed={selectedWord === 'm3'}
+                  >
+                    M3
+                  </button>
+                </span>{' '}
+                <span className="title-line title-line--three">
+                  <button
+                    type="button"
+                    className={`title-word title-word--good ${selectedWord === 'good' ? 'is-selected' : ''}`}
+                    onClick={() => selectWord('good')}
+                    onMouseEnter={() => setHoveredWord('good')}
+                    onMouseLeave={() => setHoveredWord(null)}
+                    onFocus={() => setHoveredWord('good')}
+                    onBlur={() => setHoveredWord(null)}
+                    aria-pressed={selectedWord === 'good'}
+                  >
+                    good at
+                  </button>
+                </span>{' '}
+                <span className="title-line title-line--four">frontend</span>{' '}
+                <span className="title-line title-line--five">
+                  <button
+                    type="button"
+                    className={`title-word title-word--yet ${selectedWord === 'yet' ? 'is-selected' : ''}`}
+                    onClick={() => selectWord('yet')}
+                    onMouseEnter={() => setHoveredWord('yet')}
+                    onMouseLeave={() => setHoveredWord(null)}
+                    onFocus={() => setHoveredWord('yet')}
+                    onBlur={() => setHoveredWord(null)}
+                    aria-pressed={selectedWord === 'yet'}
+                  >
+                    yet?
+                  </button>
+                  <span className="title-caret" aria-hidden="true" />
+                </span>
+              </h1>
 
-                <div className="question-copy__footer">
-                  <p>Judged by what is here: a point of view, a clear reading path, and motion that knows when to leave the room.</p>
-                  <div className="question-actions">
-                    <a className="primary-link" href="#field-notes">
-                      <span>read the close-up</span>
-                      <ArrowIcon />
-                    </a>
-                    <button type="button" className="voice-cycle" onClick={cycleVoice} aria-keyshortcuts="Shift+V">
-                      <span>try another voice</span>
-                      <kbd>shift</kbd><span>+</span><kbd>v</kbd>
-                    </button>
-                  </div>
-                </div>
+              <p className="hero-dek">A page can be clear without disappearing. This one keeps its fingerprints visible, then lets the question keep its pause.</p>
+
+              <div className="hero-actions">
+                <a className="primary-link" href="#field-notes">
+                  <span>enter the close-up</span>
+                  <ArrowIcon />
+                </a>
+                <button type="button" className="voice-cycle" onClick={cycleVoice} aria-keyshortcuts="Shift+V">
+                  <span>try another voice</span>
+                  <kbd>shift</kbd><span>+</span><kbd>v</kbd>
+                </button>
               </div>
 
-              <Loupe note={activeNote} voiceName={activeVoice.name} />
+              <p className="interaction-hint"><span aria-hidden="true">↖</span> touch a colored phrase to move the lens</p>
             </div>
 
-            <div className="poster-footer">
-              <p id="word-note-instruction"><span aria-hidden="true">↖</span> Touch a colored word to move the loupe.</p>
-              <div className="poster-footer__mode">
-                <span>page voice</span>
-                <strong>{activeVoice.name}</strong>
-              </div>
-              <div className="poster-stamp" aria-hidden="true">
-                <span>point of view</span>
-                <strong>?</strong>
-                <span>not a verdict</span>
-              </div>
-            </div>
+            <Loupe note={activeNote} voiceName={activeVoice.name} />
+          </div>
+
+          <div className="hero-footer">
+            <span><i aria-hidden="true" /> the page is asking, not declaring</span>
+            <span className="hero-footer__voice">page voice <strong>{activeVoice.name}</strong></span>
+            <span className="hero-footer__index">title / 01</span>
           </div>
         </section>
 
-        <PrintRule />
+        <OrbitRule />
 
         <section id="field-notes" className="reading-section reveal" aria-labelledby="reading-title">
           <SectionIntro
             titleId="reading-title"
             eyebrow="close reading"
             title={<>The sentence has <em>pressure points.</em></>}
-            lede="M3 names the maker, “good at” names the standard, and “yet?” protects the honest pause. Choose a phrase to read its job."
+            lede="M3 names the maker. “good at” names the standard. “yet?” protects the honest pause. Choose a phrase to read its job."
           />
 
-          <div className="reading-grid">
-            <div className="note-index" role="group" aria-label="Choose a phrase from the question">
-              {NOTES.map(note => (
-                <button
-                  key={note.id}
-                  type="button"
-                  className={`note-tab ${selectedWord === note.id ? 'is-selected' : ''} ${hoveredWord === note.id ? 'is-hovered' : ''}`}
-                  onClick={() => selectWord(note.id)}
-                  onMouseEnter={() => setHoveredWord(note.id)}
-                  onMouseLeave={() => setHoveredWord(null)}
-                  onFocus={() => setHoveredWord(note.id)}
-                  onBlur={() => setHoveredWord(null)}
-                  aria-pressed={selectedWord === note.id}
-                >
-                  <span className="note-tab__number">{note.index}</span>
-                  <span className="note-tab__word">{note.label}</span>
-                  <span className="note-tab__gloss">{note.gloss}</span>
-                  <span className="note-tab__arrow" aria-hidden="true">↗</span>
-                </button>
-              ))}
+          <div className="reading-layout">
+            <div className="phrase-index" role="group" aria-label="Choose a phrase from the question">
+              <div className="phrase-index__header">
+                <span>choose a pressure point</span>
+                <span aria-hidden="true">01—03</span>
+              </div>
+              <div className="phrase-index__items">
+                {NOTES.map(note => (
+                  <button
+                    key={note.id}
+                    type="button"
+                    className={`phrase-button ${selectedWord === note.id ? 'is-selected' : ''} ${hoveredWord === note.id ? 'is-hovered' : ''}`}
+                    onClick={() => selectWord(note.id)}
+                    onMouseEnter={() => setHoveredWord(note.id)}
+                    onMouseLeave={() => setHoveredWord(null)}
+                    onFocus={() => setHoveredWord(note.id)}
+                    onBlur={() => setHoveredWord(null)}
+                    aria-pressed={selectedWord === note.id}
+                  >
+                    <span className="phrase-button__number">{note.index}</span>
+                    <span className="phrase-button__label">{note.label}</span>
+                    <span className="phrase-button__gloss">{note.gloss}</span>
+                    <span className="phrase-button__arrow" aria-hidden="true">↗</span>
+                  </button>
+                ))}
+              </div>
+              <p className="phrase-index__hint">The same sentence, read from three distances.</p>
             </div>
 
-            <article className="note-sheet" key={activeNote.id} aria-live="polite">
-              <div className="note-sheet__topline">
-                <span>phrase / {activeNote.index}</span>
-                <span aria-hidden="true">{activeNote.id === 'm3' ? '∿' : activeNote.id === 'good' ? '↗' : '?'}</span>
+            <article className="note-card" key={activeNote.id} aria-live="polite">
+              <div className="note-card__topline">
+                <span>close read / {activeNote.index}</span>
+                <span aria-hidden="true">{activeNote.folio}</span>
               </div>
-              <div className="note-sheet__body">
-                <span className="note-sheet__phrase">{activeNote.label}</span>
-                <p className="note-sheet__kicker">{activeNote.title}</p>
-                <blockquote>{activeNote.body}</blockquote>
+              <div className="note-card__body">
+                <p className="note-card__kicker">{activeNote.title}</p>
+                <h3>{activeNote.label}</h3>
+                <p className="note-card__copy">{activeNote.body}</p>
+                <div className="note-card__footer">
+                  <span><b aria-hidden="true">↳</b> {activeNote.prompt}</span>
+                  <span>{activeNote.editor}</span>
+                </div>
               </div>
-              <div className="note-sheet__footer">
-                <span>{activeNote.prompt}</span>
-                <span>{activeNote.editor}</span>
-              </div>
-              <span className="note-sheet__ghost" aria-hidden="true">{activeNote.label}</span>
+              <NoteGlyph id={activeNote.id} />
+              <span className="note-card__ghost" aria-hidden="true">{activeNote.label}</span>
             </article>
           </div>
         </section>
-
-        <PrintRule />
 
         <section id="voices" className="trials-section reveal" aria-labelledby="trials-title">
           <SectionIntro
             titleId="trials-title"
             eyebrow="three type trials"
-            title={<>Same words. <em>Different manners.</em></>}
-            lede="Choose a specimen and the whole page changes its voice. The words stay put; the personality changes around them."
+            title={<>One sentence.<em>Three temperatures.</em></>}
+            lede="Switch the voice; the words stay in place. A useful interface has a point of view before it has a palette."
           />
 
           <div className="trial-grid">
-            {VOICES.map(item => {
+            {VOICES.map((item, index) => {
               const isActive = item.id === voice
               return (
                 <article key={item.id} className={`trial-card trial-card--${item.id} ${isActive ? 'is-active' : ''}`}>
@@ -389,7 +387,7 @@ export function App() {
                   >
                     <span className="trial-card__topline">
                       <span className="trial-card__letter">{item.letter}</span>
-                      <span>{item.manner}</span>
+                      <span>trial {String(index + 1).padStart(2, '0')}</span>
                       <span className="trial-card__arrow" aria-hidden="true">↗</span>
                     </span>
                     <span className="trial-card__name">{item.name}</span>
@@ -397,7 +395,7 @@ export function App() {
                     <span className="trial-card__detail">{item.detail}</span>
                     <span className="trial-card__state">
                       <i aria-hidden="true" />
-                      {isActive ? 'now setting the page' : 'apply this voice'}
+                      {isActive ? 'selected voice' : 'set this voice'}
                     </span>
                   </button>
                 </article>
@@ -434,8 +432,8 @@ export function App() {
             </button>
           </div>
 
-          <div className={`answer-sheet ${answerOpen ? 'is-open' : ''}`}>
-            <div className="answer-sheet__topline">
+          <div className={`answer-card ${answerOpen ? 'is-open' : ''}`}>
+            <div className="answer-card__topline">
               <span>answer / no scorecard</span>
               <span aria-hidden="true">{answerOpen ? '●' : '○'}</span>
             </div>
@@ -468,7 +466,7 @@ export function App() {
       <footer className="site-footer">
         <a href="#question" className="footer-return"><span aria-hidden="true">↑</span> return to the question</a>
         <p>the work is the question.</p>
-        <span>self-contained / client-side / type in motion</span>
+        <span>question / close read / type trial</span>
       </footer>
 
       <span className="sr-only" aria-live="polite">{announcement}</span>
@@ -489,14 +487,14 @@ function SectionIntro({ titleId, eyebrow, title, lede }: { titleId: string; eyeb
   )
 }
 
-function PrintRule() {
+function OrbitRule() {
   return (
-    <div className="print-rule" aria-hidden="true">
+    <div className="orbit-rule" aria-hidden="true">
       <span />
-      <svg viewBox="0 0 74 24">
-        <path d="M2 12h23M49 12h23" fill="none" stroke="currentColor" strokeWidth="1" />
-        <path d="m31 6 6 6-6 6M43 6l-6 6 6 6" fill="none" stroke="currentColor" strokeWidth="1" />
-        <circle cx="37" cy="12" r="2" fill="currentColor" />
+      <svg viewBox="0 0 92 28">
+        <path d="M3 14h25M64 14h25" fill="none" stroke="currentColor" strokeWidth="1" />
+        <path d="m34 7 7 7-7 7M58 7l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="1" />
+        <circle cx="46" cy="14" r="3" fill="currentColor" />
       </svg>
       <span />
     </div>
@@ -519,15 +517,16 @@ function Loupe({ note, voiceName }: { note: (typeof NOTES)[number]; voiceName: s
         <span aria-hidden="true">word / lens</span>
       </div>
       <div className="loupe-stage">
-        <svg className="loupe-stage__drawing" viewBox="0 0 320 330" aria-hidden="true">
-          <circle cx="160" cy="156" r="115" />
-          <ellipse cx="160" cy="156" rx="137" ry="51" transform="rotate(-18 160 156)" />
-          <path d="M41 217c72 72 194 79 249-11" />
-          <line x1="160" y1="25" x2="160" y2="288" />
-          <line x1="28" y1="156" x2="292" y2="156" />
+        <span className="loupe-stage__label loupe-stage__label--top" aria-hidden="true">field / {note.index}</span>
+        <span className="loupe-stage__label loupe-stage__label--side" aria-hidden="true">x / word · y / intent</span>
+        <svg className="loupe-stage__drawing" viewBox="0 0 360 360" aria-hidden="true">
+          <circle cx="180" cy="170" r="122" />
+          <ellipse cx="180" cy="170" rx="146" ry="58" transform="rotate(-19 180 170)" />
+          <path d="M45 237c84 76 202 77 270-13" />
+          <line x1="180" y1="28" x2="180" y2="312" />
+          <line x1="34" y1="170" x2="326" y2="170" />
+          <path d="M101 87c38 19 87 24 137 11" />
         </svg>
-        <span className="loupe-stage__coordinate loupe-stage__coordinate--x" aria-hidden="true">x / word</span>
-        <span className="loupe-stage__coordinate loupe-stage__coordinate--y" aria-hidden="true">y / intent</span>
         <div className="loupe-lens" key={note.id}>
           <span>under the lens</span>
           <strong>{note.label}</strong>
@@ -543,5 +542,29 @@ function Loupe({ note, voiceName }: { note: (typeof NOTES)[number]; voiceName: s
         <span className="loupe-card__voice">{voiceName} voice</span>
       </div>
     </aside>
+  )
+}
+
+function NoteGlyph({ id }: { id: WordId }) {
+  if (id === 'm3') {
+    return (
+      <svg className="note-glyph note-glyph--m3" viewBox="0 0 220 160" aria-hidden="true">
+        <path d="M32 126V34l78 92V34M146 34v92M146 34h58M146 70h48" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="square" />
+        <circle cx="146" cy="126" r="5" fill="currentColor" />
+      </svg>
+    )
+  }
+  if (id === 'good') {
+    return (
+      <svg className="note-glyph note-glyph--good" viewBox="0 0 220 160" aria-hidden="true">
+        <path d="M28 126 78 32l50 94M48 89h61M128 126V32h42c25 0 37 14 37 34 0 19-12 34-37 34h-42M128 100h47" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="square" strokeLinejoin="miter" />
+      </svg>
+    )
+  }
+  return (
+    <svg className="note-glyph note-glyph--yet" viewBox="0 0 220 160" aria-hidden="true">
+      <path d="M39 43c7-17 22-25 40-25 24 0 39 13 39 34 0 19-11 27-27 38-13 9-18 15-18 27M73 142v4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="square" />
+      <path d="M139 33v94M139 127h49" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="square" />
+    </svg>
   )
 }
