@@ -5,7 +5,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { NOTES, type WordId } from './notes'
+import { NOTES, type Note, type WordId } from './notes'
 
 export type VoiceId = 'quiet' | 'human' | 'bold'
 
@@ -33,7 +33,7 @@ const VOICES: VoiceSpec[] = [
     id: 'human',
     letter: 'B',
     name: 'warm',
-    manner: 'soft italic / open',
+    manner: 'sans / open',
     sample: 'is M3 good at frontend yet?',
     detail: 'A human tilt, without losing the sentence. Warmth stays in the gesture, not the noise.',
   },
@@ -176,14 +176,14 @@ export function App() {
   }, [cycleVoice])
 
   return (
-    <div className={`signal-page signal-page--${voice}`}>
-      <div className="ambient-grid" aria-hidden="true" />
+    <div className={`paper-page paper-page--${voice}`}>
+      <div className="paper-grain" aria-hidden="true" />
       <a className="skip-link" href="#question">Skip to the question</a>
 
-      <header className="topbar">
-        <a className="brand" href="#question" aria-label="M3 frontend type trial, back to the question">
-          <span className="brand__mark" aria-hidden="true">m³</span>
-          <span className="brand__copy">
+      <header className="masthead">
+        <a className="identity" href="#question" aria-label="M3 frontend field note, back to the question">
+          <span className="identity__mark" aria-hidden="true">M3</span>
+          <span className="identity__copy">
             <strong>frontend field note</strong>
             <small>one question, under a lens</small>
           </span>
@@ -203,7 +203,7 @@ export function App() {
         </nav>
 
         <div className="voice-switcher" role="group" aria-label="Set the page's type voice">
-          <span className="voice-switcher__label">voice</span>
+          <span className="voice-switcher__label">type voice</span>
           <div className="voice-switcher__set">
             {VOICES.map(item => (
               <button
@@ -225,9 +225,9 @@ export function App() {
       <main className="page-shell">
         <section id="question" className="hero-section" aria-labelledby="question-title">
           <div className="hero-rule" aria-hidden="true">
-            <span>frontend / type trial</span>
-            <span>one question under a loupe</span>
-            <span>read · touch · decide</span>
+            <span>field note / frontend</span>
+            <span>type, intent, atmosphere</span>
+            <span>touch the ink</span>
           </div>
 
           <div className="hero-grid">
@@ -281,7 +281,7 @@ export function App() {
                 </span>
               </h1>
 
-              <p className="hero-dek">A page can be clear without disappearing. This one keeps its fingerprints visible, then lets the question keep its pause.</p>
+              <p className="hero-dek">A close reading of the moment a question becomes a page: what carries the eye, what invites a hand, and what earns the pause.</p>
 
               <div className="hero-actions">
                 <a className="primary-link" href="#field-notes">
@@ -297,13 +297,13 @@ export function App() {
               <p className="interaction-hint"><span aria-hidden="true">↖</span> touch a colored phrase to move the lens</p>
             </div>
 
-            <Loupe note={activeNote} voiceName={activeVoice.name} />
+            <LensCard note={activeNote} voiceName={activeVoice.name} />
           </div>
 
-          <div className="hero-footer">
+          <div className="hero-foot">
             <span><i aria-hidden="true" /> the page is asking, not declaring</span>
-            <span className="hero-footer__voice">page voice <strong>{activeVoice.name}</strong></span>
-            <span className="hero-footer__index">title / 01</span>
+            <span>page voice <strong>{activeVoice.name}</strong></span>
+            <span>question / close read / type trial</span>
           </div>
         </section>
 
@@ -318,12 +318,12 @@ export function App() {
           />
 
           <div className="reading-layout">
-            <div className="phrase-index" role="group" aria-label="Choose a phrase from the question">
-              <div className="phrase-index__header">
+            <div className="phrase-rail" role="group" aria-label="Choose a phrase from the question">
+              <div className="phrase-rail__header">
                 <span>choose a pressure point</span>
                 <span aria-hidden="true">01—03</span>
               </div>
-              <div className="phrase-index__items">
+              <div className="phrase-rail__items">
                 {NOTES.map(note => (
                   <button
                     key={note.id}
@@ -343,10 +343,10 @@ export function App() {
                   </button>
                 ))}
               </div>
-              <p className="phrase-index__hint">The same sentence, read from three distances.</p>
+              <p className="phrase-rail__hint">The same sentence, read from three distances.</p>
             </div>
 
-            <article className="note-card" key={activeNote.id} aria-live="polite">
+            <article className={`note-card note-card--${activeNote.id}`} key={activeNote.id} aria-live="polite">
               <div className="note-card__topline">
                 <span>close read / {activeNote.index}</span>
                 <span aria-hidden="true">{activeNote.folio}</span>
@@ -355,18 +355,18 @@ export function App() {
                 <p className="note-card__kicker">{activeNote.title}</p>
                 <h3>{activeNote.label}</h3>
                 <p className="note-card__copy">{activeNote.body}</p>
-                <div className="note-card__footer">
-                  <span><b aria-hidden="true">↳</b> {activeNote.prompt}</span>
-                  <span>{activeNote.editor}</span>
-                </div>
+                <div className="note-card__prompt"><b aria-hidden="true">↳</b> {activeNote.prompt}</div>
               </div>
               <NoteGlyph id={activeNote.id} />
-              <span className="note-card__ghost" aria-hidden="true">{activeNote.label}</span>
+              <div className="note-card__footer">
+                <span>{activeNote.editor}</span>
+                <span className="note-card__folio">mark / {activeNote.folio}</span>
+              </div>
             </article>
           </div>
         </section>
 
-        <section id="voices" className="trials-section reveal" aria-labelledby="trials-title">
+        <section id="voices" className="voices-section reveal" aria-labelledby="trials-title">
           <SectionIntro
             titleId="trials-title"
             eyebrow="three type trials"
@@ -374,26 +374,27 @@ export function App() {
             lede="Switch the voice; the words stay in place. A useful interface has a point of view before it has a palette."
           />
 
-          <div className="trial-grid">
+          <div className="voice-grid">
             {VOICES.map((item, index) => {
               const isActive = item.id === voice
               return (
-                <article key={item.id} className={`trial-card trial-card--${item.id} ${isActive ? 'is-active' : ''}`}>
+                <article key={item.id} className={`voice-card voice-card--${item.id} ${isActive ? 'is-active' : ''}`}>
                   <button
                     type="button"
                     onClick={() => selectVoice(item.id)}
                     aria-pressed={isActive}
                     aria-label={`Set the page in the ${item.name} voice`}
                   >
-                    <span className="trial-card__topline">
-                      <span className="trial-card__letter">{item.letter}</span>
+                    <span className="voice-card__topline">
+                      <span className="voice-card__letter">{item.letter}</span>
                       <span>trial {String(index + 1).padStart(2, '0')}</span>
-                      <span className="trial-card__arrow" aria-hidden="true">↗</span>
+                      <span className="voice-card__arrow" aria-hidden="true">↗</span>
                     </span>
-                    <span className="trial-card__name">{item.name}</span>
-                    <span className={`trial-card__sample trial-card__sample--${item.id}`}>{item.sample}</span>
-                    <span className="trial-card__detail">{item.detail}</span>
-                    <span className="trial-card__state">
+                    <span className="voice-card__name">{item.name}</span>
+                    <span className="voice-card__manner">{item.manner}</span>
+                    <span className={`voice-card__sample voice-card__sample--${item.id}`}>{item.sample}</span>
+                    <span className="voice-card__detail">{item.detail}</span>
+                    <span className="voice-card__state">
                       <i aria-hidden="true" />
                       {isActive ? 'selected voice' : 'set this voice'}
                     </span>
@@ -411,7 +412,7 @@ export function App() {
 
         <section id="answer" className="answer-section reveal" aria-labelledby="answer-title">
           <div className="answer-intro">
-            <p className="answer-intro__eyebrow"><span aria-hidden="true">✳</span> the useful answer</p>
+            <p className="eyebrow"><span aria-hidden="true">✳</span> the useful answer</p>
             <h2 id="answer-title">Small answer.<br /><em>Clear breath.</em></h2>
             <p>The question does not need a speech. It needs one honest sentence—and enough space around it to land.</p>
             <button
@@ -443,9 +444,9 @@ export function App() {
                   <button ref={answerCloseRef} type="button" className="answer-close" onClick={toggleAnswer} aria-label="Cover the answer again">
                     <span aria-hidden="true">×</span>
                   </button>
-                  <span className="answer-window__yes">yes.</span>
-                  <h3>When restraint and character pull in the same direction.</h3>
-                  <p>A useful frontend has a point of view you can feel, a hierarchy you can read, and interactions that reward attention without demanding it.</p>
+                  <span className="answer-window__yes">yes, with a hand.</span>
+                  <h3>When the interface has a point of view you can feel.</h3>
+                  <p>A useful frontend has a hierarchy you can read, a little warmth in the details, and motion that rewards attention without demanding it.</p>
                   <ul>
                     <li><span>A</span>Choose one clear idea.</li>
                     <li><span>B</span>Let warmth live in the details.</li>
@@ -509,17 +510,17 @@ function ArrowIcon() {
   )
 }
 
-function Loupe({ note, voiceName }: { note: (typeof NOTES)[number]; voiceName: string }) {
+function LensCard({ note, voiceName }: { note: Note; voiceName: string }) {
   return (
-    <aside className="loupe-card" aria-label="Close reading loupe">
-      <div className="loupe-card__header">
+    <aside className={`lens-card lens-card--${note.id}`} aria-label="Interactive close-reading lens">
+      <div className="lens-card__header">
         <span>close reading</span>
         <span aria-hidden="true">word / lens</span>
       </div>
-      <div className="loupe-stage">
-        <span className="loupe-stage__label loupe-stage__label--top" aria-hidden="true">field / {note.index}</span>
-        <span className="loupe-stage__label loupe-stage__label--side" aria-hidden="true">x / word · y / intent</span>
-        <svg className="loupe-stage__drawing" viewBox="0 0 360 360" aria-hidden="true">
+      <div className="lens-stage">
+        <span className="lens-stage__label lens-stage__label--top" aria-hidden="true">field / {note.index}</span>
+        <span className="lens-stage__label lens-stage__label--side" aria-hidden="true">x / word · y / intent</span>
+        <svg className="lens-stage__drawing" viewBox="0 0 360 360" aria-hidden="true">
           <circle cx="180" cy="170" r="122" />
           <ellipse cx="180" cy="170" rx="146" ry="58" transform="rotate(-19 180 170)" />
           <path d="M45 237c84 76 202 77 270-13" />
@@ -527,19 +528,19 @@ function Loupe({ note, voiceName }: { note: (typeof NOTES)[number]; voiceName: s
           <line x1="34" y1="170" x2="326" y2="170" />
           <path d="M101 87c38 19 87 24 137 11" />
         </svg>
-        <div className="loupe-lens" key={note.id}>
+        <div className="lens-disc" key={note.id}>
           <span>under the lens</span>
           <strong>{note.label}</strong>
           <em>{note.gloss}</em>
         </div>
-        <span className="loupe-stage__dot" aria-hidden="true" />
+        <span className="lens-stage__dot" aria-hidden="true" />
       </div>
-      <div className="loupe-card__footer">
+      <div className="lens-card__footer">
         <div>
           <span>current reading</span>
           <strong>{note.title}</strong>
         </div>
-        <span className="loupe-card__voice">{voiceName} voice</span>
+        <span className="lens-card__voice">{voiceName} voice</span>
       </div>
     </aside>
   )
