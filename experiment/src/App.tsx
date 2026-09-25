@@ -5,6 +5,7 @@ import {
   useState,
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
+  type ReactNode,
 } from 'react'
 import { NOTES, type WordId } from './notes'
 
@@ -17,6 +18,7 @@ type VoiceSpec = {
   tagline: string
   sample: string
   detail: string
+  color: string
 }
 
 type QuestionDialProps = {
@@ -33,9 +35,10 @@ const VOICES: VoiceSpec[] = [
     id: 'quiet',
     letter: 'A',
     name: 'quiet cut',
-    tagline: 'a smaller kind of confidence',
+    tagline: 'a lighter kind of confidence',
     sample: 'is m3 good at frontend yet?',
-    detail: 'Leave the answer in the margins until the reader leans in.',
+    detail: 'A little breathing room lets the sharpest word arrive without a drumroll.',
+    color: 'blue',
   },
   {
     id: 'human',
@@ -43,7 +46,8 @@ const VOICES: VoiceSpec[] = [
     name: 'human hand',
     tagline: 'warmth without noise',
     sample: 'is M3 good at frontend yet?',
-    detail: 'A page can feel made by someone when its edges stay a little soft.',
+    detail: 'The edges stay soft enough to feel touched, never soft enough to lose the point.',
+    color: 'coral',
   },
   {
     id: 'bold',
@@ -51,7 +55,8 @@ const VOICES: VoiceSpec[] = [
     name: 'bold signal',
     tagline: 'a little less polite',
     sample: 'IS M3 GOOD AT FRONTEND YET?',
-    detail: 'Say the whole thing once. Then leave enough space for the question to matter.',
+    detail: 'Say it once, clearly, then leave the reader enough room to finish the thought.',
+    color: 'lime',
   },
 ]
 
@@ -64,10 +69,11 @@ const NAV_ITEMS = [
 
 const NEXT_VOICE: Record<VoiceId, VoiceId> = { quiet: 'human', human: 'bold', bold: 'quiet' }
 const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
+const VOICE_ACCENT: Record<VoiceId, string> = { quiet: 'blue', human: 'coral', bold: 'lime' }
 const DIAL_NODES: Record<VoiceId, { x: number; y: number }> = {
-  quiet: { x: 17, y: 23 },
-  human: { x: 78, y: 22 },
-  bold: { x: 73, y: 77 },
+  quiet: { x: 16, y: 23 },
+  human: { x: 80, y: 24 },
+  bold: { x: 73, y: 78 },
 }
 
 export function App() {
@@ -131,7 +137,7 @@ export function App() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
         if (visible[0]) setActiveSection(visible[0].target.id)
       },
-      { rootMargin: '-24% 0px -62% 0px', threshold: [0.05, 0.2, 0.5, 0.8] },
+      { rootMargin: '-18% 0px -66% 0px', threshold: [0.05, 0.2, 0.5, 0.8] },
     )
     sections.forEach(section => observer.observe(section))
     return () => observer.disconnect()
@@ -152,7 +158,7 @@ export function App() {
           }
         })
       },
-      { rootMargin: '0px 0px -9% 0px', threshold: 0.08 },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.08 },
     )
     reveals.forEach(element => observer.observe(element))
     return () => observer.disconnect()
@@ -222,8 +228,8 @@ export function App() {
 
   return (
     <div className={`app app--${voice}`} style={shellStyle}>
-      <div className="app__ambient app__ambient--top" aria-hidden="true" />
-      <div className="app__ambient app__ambient--bottom" aria-hidden="true" />
+      <div className="ambient ambient--top" aria-hidden="true" />
+      <div className="ambient ambient--bottom" aria-hidden="true" />
       <div className="app__grain" aria-hidden="true" />
       <div className="app__progress" aria-hidden="true"><span /></div>
       <a className="skip-link" href="#question">Skip to the question</a>
@@ -237,8 +243,8 @@ export function App() {
             </svg>
           </span>
           <span className="brand__copy">
-            <strong>frontend / field note</strong>
-            <small>an experiment in making room</small>
+            <strong>m³ / field note</strong>
+            <small>a small reading of the question</small>
           </span>
         </a>
 
@@ -255,14 +261,14 @@ export function App() {
           ))}
         </nav>
 
-        <div className="header-tone">
-          <span className="header-tone__label">temperature</span>
-          <div className="header-tone__options" role="group" aria-label="Set the page voice">
+        <div className="voice-control">
+          <span className="voice-control__label">type / temperature</span>
+          <div className="voice-control__options" role="group" aria-label="Set the page voice">
             {VOICES.map(item => (
               <button
                 key={item.id}
                 type="button"
-                className={`header-tone__button header-tone__button--${item.id} ${voice === item.id ? 'is-active' : ''}`}
+                className={`voice-control__button voice-control__button--${item.id} ${voice === item.id ? 'is-active' : ''}`}
                 onClick={() => selectVoice(item.id)}
                 aria-pressed={voice === item.id}
                 aria-label={`Set the page in ${item.name} voice`}
@@ -275,85 +281,92 @@ export function App() {
       </header>
 
       <main className="page-content">
-        <section id="question" className="hero-section reveal" aria-labelledby="question-title">
-          <div className="hero-section__topline">
+        <section id="question" className="hero-section is-in" aria-labelledby="question-title">
+          <div className="section-rail">
             <span className="eyebrow"><span className="eyebrow__spark">✳</span>the opening question</span>
-            <span className="hero-section__aside">one sentence / three ways to hear it</span>
+            <span>one sentence / three ways to hear it</span>
           </div>
 
-          <div className="hero-card">
-            <div className="hero-card__copy">
-              <div className="hero-card__topline">
-                <span>the short version</span>
-                <span>folio / i</span>
+          <div className="hero-layout">
+            <article className="hero-poster">
+              <div className="hero-poster__topline">
+                <span>the question, set in public</span>
+                <span className="hero-poster__seal" aria-hidden="true">M3</span>
               </div>
-              <div className="hero-card__chapter">a small test of judgment</div>
+              <div className="hero-poster__chapter">a test of judgment, not a verdict</div>
               <h1 id="question-title" className={`hero-title hero-title--${voice}`} aria-label={TITLE}>
-                <span className="hero-title__prefix">is Minimax</span>{' '}
-                <button
-                  type="button"
-                  className={`title-token title-token--model ${selectedWord === 'm3' ? 'is-selected' : ''}`}
-                  onClick={() => selectWord('m3')}
-                  onMouseEnter={() => setHoveredWord('m3')}
-                  onMouseLeave={() => setHoveredWord(null)}
-                  onFocus={() => setHoveredWord('m3')}
-                  onBlur={() => setHoveredWord(null)}
-                  aria-label="M3 — open margin note"
-                >
-                  M3
-                </button>{' '}
-                <button
-                  type="button"
-                  className={`title-token title-token--good ${selectedWord === 'good' ? 'is-selected' : ''}`}
-                  onClick={() => selectWord('good')}
-                  onMouseEnter={() => setHoveredWord('good')}
-                  onMouseLeave={() => setHoveredWord(null)}
-                  onFocus={() => setHoveredWord('good')}
-                  onBlur={() => setHoveredWord(null)}
-                  aria-label="good at — open margin note"
-                >
-                  good at
-                </button>{' '}
-                <span className="hero-title__phrase">frontend</span>{' '}
-                <button
-                  type="button"
-                  className={`title-token title-token--yet ${selectedWord === 'yet' ? 'is-selected' : ''}`}
-                  onClick={() => selectWord('yet')}
-                  onMouseEnter={() => setHoveredWord('yet')}
-                  onMouseLeave={() => setHoveredWord(null)}
-                  onFocus={() => setHoveredWord('yet')}
-                  onBlur={() => setHoveredWord(null)}
-                  aria-label="yet — open margin note"
-                >
-                  yet<span className="title-token__question">?</span>
-                </button>
+                <span className="hero-title__line">is Minimax</span>{' '}
+                <span className="hero-title__line">
+                  <button
+                    type="button"
+                    className={`title-token title-token--model ${selectedWord === 'm3' ? 'is-selected' : ''}`}
+                    onClick={() => selectWord('m3')}
+                    onMouseEnter={() => setHoveredWord('m3')}
+                    onMouseLeave={() => setHoveredWord(null)}
+                    onFocus={() => setHoveredWord('m3')}
+                    onBlur={() => setHoveredWord(null)}
+                    aria-label="M3 — open margin note"
+                  >
+                    M3
+                  </button>{' '}
+                  <button
+                    type="button"
+                    className={`title-token title-token--good ${selectedWord === 'good' ? 'is-selected' : ''}`}
+                    onClick={() => selectWord('good')}
+                    onMouseEnter={() => setHoveredWord('good')}
+                    onMouseLeave={() => setHoveredWord(null)}
+                    onFocus={() => setHoveredWord('good')}
+                    onBlur={() => setHoveredWord(null)}
+                    aria-label="good at — open margin note"
+                  >
+                    good at
+                  </button>
+                </span>{' '}
+                <span className="hero-title__line">
+                  <span className="hero-title__word">frontend</span>{' '}
+                  <button
+                    type="button"
+                    className={`title-token title-token--yet ${selectedWord === 'yet' ? 'is-selected' : ''}`}
+                    onClick={() => selectWord('yet')}
+                    onMouseEnter={() => setHoveredWord('yet')}
+                    onMouseLeave={() => setHoveredWord(null)}
+                    onFocus={() => setHoveredWord('yet')}
+                    onBlur={() => setHoveredWord(null)}
+                    aria-label="yet — open margin note"
+                  >
+                    yet<span className="title-token__question">?</span>
+                  </button>
+                </span>
               </h1>
-              <p className="hero-card__lede">
+              <p className="hero-poster__lede">
                 Not a verdict. A small reading of the moment: can this page hold a point of view, invite a touch, and still know when to become quiet?
               </p>
-              <div className="hero-card__actions">
+              <div className="hero-poster__actions">
                 <a className="button button--ink" href="#field-notes">
-                  <span>read the field notes</span>
+                  <span>follow the thread</span>
                   <ArrowIcon />
                 </a>
                 <button type="button" className="voice-cycle" onClick={cycleVoice}>
-                  <span>change the temperature</span>
+                  <span>try another voice</span>
                   <kbd>shift</kbd><span>+</span><kbd>v</kbd>
                 </button>
               </div>
-              <p className="hero-card__hint"><span className="hint-dot" aria-hidden="true" />tap a word to open its margin note</p>
-            </div>
+              <p className="hero-poster__hint"><span className="hint-dot" aria-hidden="true" />touch a word to open its margin note</p>
+              <span className="hero-poster__corner-mark" aria-hidden="true">↗</span>
+            </article>
 
             <QuestionDial voice={voice} onVoice={selectVoice} onMove={onDialMove} onLeave={onDialLeave} />
           </div>
 
-          <div className="hero-section__footnote">
-            <span><span className="footnote-mark" aria-hidden="true">↳</span> the question is the interface</span>
-            <span>the answer is allowed to take its time</span>
-          </div>
+          <a className="active-note-strip" href="#field-notes">
+            <span className="active-note-strip__label">margin note / {activeNote.folio}</span>
+            <strong>{activeNote.gloss}</strong>
+            <span className="active-note-strip__prompt">{activeNote.prompt}</span>
+            <span className="active-note-strip__arrow" aria-hidden="true">↗</span>
+          </a>
         </section>
 
-        <div className="page-divider reveal" aria-hidden="true">
+        <div className="page-divider" aria-hidden="true">
           <span />
           <svg viewBox="0 0 120 12" preserveAspectRatio="none">
             <path d="M0 6h43m34 0h43" fill="none" stroke="currentColor" strokeWidth=".7" strokeDasharray="1 4" />
@@ -366,7 +379,7 @@ export function App() {
         <section id="field-notes" className="field-section reveal" aria-labelledby="field-title">
           <SectionHeading
             eyebrow="the margin notes"
-            title={<>Three words.<br /><em>One point of view.</em></>}
+            title={<>Read the <em>edges.</em></>}
             lede="The sentence is a tiny instrument. Touch a word to hear the decision hiding underneath it."
           />
 
@@ -399,7 +412,7 @@ export function App() {
                 <span className="margin-note__mark">{activeNote.id === 'm3' ? '⌇' : activeNote.id === 'good' ? '∧' : '?'}</span>
               </div>
               <div className="margin-note__body">
-                <p className="margin-note__kicker">{activeNote.title}</p>
+                <span className="margin-note__kicker">{activeNote.title}</span>
                 <h3>{activeNote.gloss}</h3>
                 <p>{activeNote.body}</p>
               </div>
@@ -407,11 +420,12 @@ export function App() {
                 <span>{activeNote.prompt}</span>
                 <span>{activeNote.editor}</span>
               </div>
+              <span className="margin-note__stamp" aria-hidden="true">M3</span>
             </article>
           </div>
         </section>
 
-        <div className="page-divider page-divider--short reveal" aria-hidden="true"><span /><span /></div>
+        <div className="page-divider page-divider--short" aria-hidden="true"><span /><span /></div>
 
         <section id="voices" className="voices-section reveal" aria-labelledby="voices-title">
           <SectionHeading
@@ -525,7 +539,7 @@ function SectionHeading({
   className = '',
 }: {
   eyebrow: string
-  title: React.ReactNode
+  title: ReactNode
   lede: string
   className?: string
 }) {
@@ -550,6 +564,7 @@ function ArrowIcon() {
 
 function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
   const active = VOICES.find(item => item.id === voice) ?? VOICES[0]
+  const accent = VOICE_ACCENT[voice]
 
   return (
     <div className="question-dial" onPointerMove={onMove} onPointerLeave={onLeave} role="group" aria-label="Three voice field around the question">
@@ -561,8 +576,8 @@ function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
         <svg className="question-dial__drawing" viewBox="0 0 520 500" aria-hidden="true">
           <defs>
             <radialGradient id="dial-halo" cx="50%" cy="50%" r="50%">
-              <stop offset="0" stopColor="var(--tone)" stopOpacity=".22" />
-              <stop offset=".62" stopColor="var(--tone)" stopOpacity=".05" />
+              <stop offset="0" stopColor="var(--tone)" stopOpacity=".25" />
+              <stop offset=".62" stopColor="var(--tone)" stopOpacity=".06" />
               <stop offset="1" stopColor="var(--tone)" stopOpacity="0" />
             </radialGradient>
           </defs>
@@ -576,6 +591,7 @@ function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
           <line className="question-dial__axis" x1="48" y1="250" x2="472" y2="250" />
           <circle className="question-dial__center-ring" cx="260" cy="250" r="58" />
           <circle className="question-dial__center-dot" cx="260" cy="250" r="4" />
+          <path className="question-dial__comet" d="M105 146c-23 17-34 35-37 58" />
         </svg>
         <span className="question-dial__spark" aria-hidden="true" />
         <div className="question-dial__center">
@@ -602,6 +618,7 @@ function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
           <span>current voice</span>
           <strong>{active.name}</strong>
         </div>
+        <div className="question-dial__color-tag" aria-hidden="true">{accent}</div>
       </div>
       <div className="question-dial__footer">
         <span className={`question-dial__swatch question-dial__swatch--${voice}`} aria-hidden="true" />
