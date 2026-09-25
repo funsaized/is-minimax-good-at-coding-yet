@@ -3,6 +3,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from 'react'
@@ -71,6 +72,8 @@ const VOICE_NAME: Record<VoiceId, string> = {
   human: 'warm',
   bold: 'direct',
 }
+
+const clampProbe = (value: number) => Math.max(8, Math.min(92, value))
 
 export function App() {
   const [voice, setVoice] = useState<VoiceId>('quiet')
@@ -183,7 +186,7 @@ export function App() {
 
   return (
     <div className={`atlas-page atlas-page--${voice}`}>
-      <div className="page-noise" aria-hidden="true" />
+      <div className="page-grain" aria-hidden="true" />
       <a className="skip-link" href="#question">Skip to the question</a>
 
       <header className="masthead">
@@ -191,7 +194,7 @@ export function App() {
           <span className="wordmark__stamp" aria-hidden="true">M3</span>
           <span className="wordmark__copy">
             <strong>frontend field note</strong>
-            <small>an answer in progress</small>
+            <small>one question, closely read</small>
           </span>
         </a>
 
@@ -232,14 +235,14 @@ export function App() {
       <main className="page-shell">
         <section id="question" className="hero-panel" aria-labelledby="question-title">
           <div className="hero-panel__header">
-            <span><i className="signal-dot" aria-hidden="true" /> opening / question</span>
-            <span className="hero-panel__instruction">select a phrase to move the lens</span>
-            <span>folio 001</span>
+            <span><i className="signal-dot" aria-hidden="true" /> opening question</span>
+            <span className="hero-panel__instruction">choose a phrase / move the lens</span>
+            <span>the sentence, under glass</span>
           </div>
 
           <div className="hero-panel__grid">
             <div className="hero-panel__copy">
-              <p className="eyebrow"><span className="eyebrow__star" aria-hidden="true" />not a scorecard. a closer look.</p>
+              <p className="eyebrow"><span className="eyebrow__star" aria-hidden="true" />a close reading of a good question</p>
               <h1 id="question-title" className="question-title" aria-label={TITLE}>
                 <span className="title-line title-line--one">is Minimax</span>{' '}
                 <span className="title-line title-line--two">
@@ -291,11 +294,11 @@ export function App() {
                 </span>
               </h1>
 
-              <p className="hero-lede">A close reading of the moment a question becomes a page: what carries the eye, what invites a hand, and what earns the pause.</p>
+              <p className="hero-lede">A question is already a tiny interface. This page treats the sentence as a specimen: choose a phrase, change the temperature, and notice what asks to be looked at twice.</p>
 
               <div className="hero-actions">
                 <a className="primary-link" href="#field-notes">
-                  <span>enter the close-up</span>
+                  <span>read the close-up</span>
                   <ArrowIcon />
                 </a>
                 <button type="button" className="voice-cycle" onClick={cycleVoice} aria-keyshortcuts="Shift+V">
@@ -532,19 +535,41 @@ function LensInstrument({ note, voiceName }: { note: Note; voiceName: string }) 
     const bounds = event.currentTarget.getBoundingClientRect()
     const x = ((event.clientX - bounds.left) / bounds.width) * 100
     const y = ((event.clientY - bounds.top) / bounds.height) * 100
-    setProbe({
-      x: Math.max(8, Math.min(92, x)),
-      y: Math.max(10, Math.min(90, y)),
-    })
+    setProbe({ x: clampProbe(x), y: clampProbe(y) })
+  }
+
+  const nudgeProbe = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    const amount = event.shiftKey ? 10 : 4
+    const offsets: Record<string, [number, number]> = {
+      ArrowLeft: [-amount, 0],
+      ArrowRight: [amount, 0],
+      ArrowUp: [0, -amount],
+      ArrowDown: [0, amount],
+    }
+    const offset = offsets[event.key]
+    if (!offset) return
+    event.preventDefault()
+    setProbe(current => ({ x: clampProbe(current.x + offset[0]), y: clampProbe(current.y + offset[1]) }))
   }
 
   return (
     <aside className={`lens-instrument lens-instrument--${note.id}`} aria-label="Interactive close-reading lens" aria-live="polite">
       <div className="lens-instrument__header">
-        <span>close reading</span>
+        <span>close reading / lens</span>
         <span className="lens-instrument__mark" aria-hidden="true">{note.index} / 03</span>
       </div>
-      <div className="lens-instrument__stage" onPointerMove={moveProbe} onPointerLeave={() => setProbe({ x: 50, y: 48 })}>
+      <span className="sr-only" id="lens-keyboard-help">Use the arrow keys to move the reading point. Hold shift for a larger move.</span>
+      <div
+        className="lens-instrument__stage"
+        onPointerDown={moveProbe}
+        onPointerMove={moveProbe}
+        onPointerLeave={() => setProbe({ x: 50, y: 48 })}
+        onKeyDown={nudgeProbe}
+        tabIndex={0}
+        role="group"
+        aria-label="Lens stage"
+        aria-describedby="lens-keyboard-help"
+      >
         <span className="lens-instrument__label lens-instrument__label--top" aria-hidden="true">field / {note.index}</span>
         <span className="lens-instrument__label lens-instrument__label--side" aria-hidden="true">x / word · y / intent</span>
         <svg className="lens-instrument__drawing" viewBox="0 0 360 360" aria-hidden="true">
@@ -567,6 +592,7 @@ function LensInstrument({ note, voiceName }: { note: Note; voiceName: string }) 
           <span className={`lens-node lens-node--good ${note.id === 'good' ? 'is-current' : ''}`}>good</span>
           <span className={`lens-node lens-node--yet ${note.id === 'yet' ? 'is-current' : ''}`}>yet?</span>
         </div>
+        <span className="lens-instrument__hint" aria-hidden="true">drag / arrows to probe</span>
       </div>
       <div className="lens-instrument__footer">
         <div>

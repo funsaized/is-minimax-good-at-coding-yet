@@ -1,7 +1,6 @@
-Rebuilt the field note as a nocturnal print atlas with a responsive phrase lens.
+Rebuilt the field note as a warm chromatic specimen with clearer hierarchy and calmer interactions.
 
-- Recomposed the page around a paper hero specimen, dark type trials, and a clear answer reveal.
-- Kept the phrase lens, three voice treatments, keyboard cycling, section navigation, and Escape-to-close answer interaction.
-- Added a pointer-responsive reading probe, clearer focus states, and more considered mobile stacking.
-- Preserved the required visible and document title.
-- Verified with `npm run build`.
+- Reframed the page around a paper, ink, coral, and lime visual system with stronger type contrast.
+- Recomposed the hero as an editorial specimen panel and gave the close-reading lens a more prominent circular instrument treatment.
+- Kept phrase selection, voice switching, hash navigation, keyboard shortcut support, answer reveal, focus restoration, and reduced-motion handling.
+- Added keyboard-operable lens probing with arrow-key nudging and a visible interaction hint.
