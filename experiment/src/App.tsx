@@ -20,7 +20,7 @@ type VoiceSpec = {
   detail: string
 }
 
-type SignalFieldProps = {
+type SignalDeskProps = {
   voice: VoiceId
   onVoice: (id: VoiceId) => void
   onMove: (event: ReactPointerEvent<HTMLDivElement>) => void
@@ -67,9 +67,9 @@ const NEXT_VOICE: Record<VoiceId, VoiceId> = { quiet: 'human', human: 'bold', bo
 const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
 const VOICE_TONE: Record<VoiceId, string> = { quiet: 'blue', human: 'coral', bold: 'lime' }
 const SIGNAL_NODES: Record<VoiceId, { x: number; y: number }> = {
-  quiet: { x: 16, y: 25 },
+  quiet: { x: 16, y: 28 },
   human: { x: 82, y: 22 },
-  bold: { x: 75, y: 80 },
+  bold: { x: 74, y: 79 },
 }
 
 export function App() {
@@ -133,7 +133,7 @@ export function App() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
         if (visible[0]) setActiveSection(visible[0].target.id)
       },
-      { rootMargin: '-20% 0px -65% 0px', threshold: [0.05, 0.2, 0.5, 0.8] },
+      { rootMargin: '-18% 0px -68% 0px', threshold: [0.05, 0.2, 0.5, 0.8] },
     )
     sections.forEach(section => observer.observe(section))
     return () => observer.disconnect()
@@ -211,7 +211,7 @@ export function App() {
   const onSignalMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect()
     if (!bounds.width || !bounds.height) return
-    const x = Math.min(88, Math.max(12, ((event.clientX - bounds.left) / bounds.width) * 100))
+    const x = Math.min(86, Math.max(14, ((event.clientX - bounds.left) / bounds.width) * 100))
     const y = Math.min(84, Math.max(16, ((event.clientY - bounds.top) / bounds.height) * 100))
     event.currentTarget.style.setProperty('--signal-x', `${x}%`)
     event.currentTarget.style.setProperty('--signal-y', `${y}%`)
@@ -225,17 +225,14 @@ export function App() {
   return (
     <div className={`app app--${voice}`} style={shellStyle}>
       <div className="app__grain" aria-hidden="true" />
-      <div className="app__glow app__glow--one" aria-hidden="true" />
-      <div className="app__glow app__glow--two" aria-hidden="true" />
+      <div className="app__wash app__wash--blue" aria-hidden="true" />
+      <div className="app__wash app__wash--coral" aria-hidden="true" />
       <div className="app__progress" aria-hidden="true"><span /></div>
       <a className="skip-link" href="#question">Skip to the question</a>
 
-      <header className="site-header">
+      <header className="masthead">
         <a className="brand" href="#question" aria-label="M3 frontend field note, home">
-          <span className="brand__mark" aria-hidden="true">
-            <span>m³</span>
-            <i />
-          </span>
+          <span className="brand__mark" aria-hidden="true"><span>m³</span><i /></span>
           <span className="brand__copy">
             <strong>m³ / frontend field note</strong>
             <small>an open question, in three voices</small>
@@ -255,14 +252,14 @@ export function App() {
           ))}
         </nav>
 
-        <div className="voice-control">
-          <span className="voice-control__label">temperature</span>
-          <div className="voice-control__options" role="group" aria-label="Set the page voice">
+        <div className="voice-switcher">
+          <span className="voice-switcher__label">temperature</span>
+          <div className="voice-switcher__options" role="group" aria-label="Set the page voice">
             {VOICES.map(item => (
               <button
                 key={item.id}
                 type="button"
-                className={`voice-control__button voice-control__button--${item.id} ${voice === item.id ? 'is-active' : ''}`}
+                className={`voice-switcher__button voice-switcher__button--${item.id} ${voice === item.id ? 'is-active' : ''}`}
                 onClick={() => selectVoice(item.id)}
                 aria-pressed={voice === item.id}
                 aria-label={`Set the page in ${item.name} voice`}
@@ -274,20 +271,20 @@ export function App() {
         </div>
       </header>
 
-      <main className="page-content">
+      <main className="page-shell">
         <section id="question" className="hero-section" aria-labelledby="question-title">
           <div className="section-rail">
             <span className="eyebrow"><span className="eyebrow__spark">✳</span>the opening question</span>
             <span>one sentence / three ways to hear it</span>
           </div>
 
-          <div className="hero-layout">
-            <article className="question-poster">
-              <div className="question-poster__topline">
+          <div className="hero-grid">
+            <article className="question-plate">
+              <div className="question-plate__topline">
                 <span>the question, set in public</span>
-                <span className="question-poster__index">a field note</span>
+                <span className="question-plate__folio">the opening folio</span>
               </div>
-              <div className="question-poster__chapter">a test of judgment, not a verdict</div>
+              <div className="question-plate__kicker"><span aria-hidden="true">✳</span> a test of judgment, not a verdict</div>
               <h1 id="question-title" className={`hero-title hero-title--${voice}`} aria-label={TITLE}>
                 <span className="hero-title__line">is Minimax</span>{' '}
                 <span className="hero-title__line">
@@ -299,6 +296,7 @@ export function App() {
                     onMouseLeave={() => setHoveredWord(null)}
                     onFocus={() => setHoveredWord('m3')}
                     onBlur={() => setHoveredWord(null)}
+                    aria-pressed={selectedWord === 'm3'}
                     aria-label="M3 — open margin note"
                   >
                     M3
@@ -311,6 +309,7 @@ export function App() {
                     onMouseLeave={() => setHoveredWord(null)}
                     onFocus={() => setHoveredWord('good')}
                     onBlur={() => setHoveredWord(null)}
+                    aria-pressed={selectedWord === 'good'}
                     aria-label="good at — open margin note"
                   >
                     good at
@@ -326,16 +325,17 @@ export function App() {
                     onMouseLeave={() => setHoveredWord(null)}
                     onFocus={() => setHoveredWord('yet')}
                     onBlur={() => setHoveredWord(null)}
+                    aria-pressed={selectedWord === 'yet'}
                     aria-label="yet — open margin note"
                   >
                     yet<span className="title-token__question">?</span>
                   </button>
                 </span>
               </h1>
-              <p className="question-poster__lede">
+              <p className="question-plate__lede">
                 Not a verdict. A small reading of the moment: can this page hold a point of view, invite a touch, and still know when to become quiet?
               </p>
-              <div className="question-poster__actions">
+              <div className="question-plate__actions">
                 <a className="button button--ink" href="#field-notes">
                   <span>follow the margin notes</span>
                   <ArrowIcon />
@@ -345,18 +345,19 @@ export function App() {
                   <kbd>shift</kbd><span>+</span><kbd>v</kbd>
                 </button>
               </div>
-              <p className="question-poster__hint"><span className="hint-dot" aria-hidden="true" />touch a word to open its margin note</p>
-              <span className="question-poster__stamp" aria-hidden="true">m³<br /><small>read slowly</small></span>
+              <p className="question-plate__hint"><span className="hint-dot" aria-hidden="true" />touch a word to open its margin note</p>
+              <span className="question-plate__stamp" aria-hidden="true">m³<br /><small>read slowly</small></span>
+              <span className="question-plate__ghost-mark" aria-hidden="true">?</span>
             </article>
 
-            <SignalField voice={voice} onVoice={selectVoice} onMove={onSignalMove} onLeave={onSignalLeave} />
+            <SignalDesk voice={voice} onVoice={selectVoice} onMove={onSignalMove} onLeave={onSignalLeave} />
           </div>
 
-          <a className="active-note-strip" href="#field-notes">
-            <span className="active-note-strip__label">margin note / {activeNote.folio}</span>
+          <a className="note-ribbon" href="#field-notes">
+            <span className="note-ribbon__label">active margin note / {activeNote.folio}</span>
             <strong>{activeNote.gloss}</strong>
-            <span className="active-note-strip__prompt">{activeNote.prompt}</span>
-            <span className="active-note-strip__arrow" aria-hidden="true">↗</span>
+            <span className="note-ribbon__prompt">{activeNote.prompt}</span>
+            <span className="note-ribbon__arrow" aria-hidden="true">↗</span>
           </a>
         </section>
 
@@ -370,16 +371,16 @@ export function App() {
           <span />
         </div>
 
-        <section id="field-notes" className="field-section section-panel reveal" aria-labelledby="field-title">
+        <section id="field-notes" className="section-shell field-section reveal" aria-labelledby="field-title">
           <SectionHeading
+            titleId="field-title"
             eyebrow="the margin notes"
             title={<>Read the <em>edges.</em></>}
             lede="The sentence is a tiny instrument. Touch a word to hear the decision hiding underneath it."
-            className="section-heading--light"
           />
 
-          <div className="notes-workbench">
-            <div className="word-list" role="list" aria-label="Question words">
+          <div className="notes-composition">
+            <div className="word-list" role="group" aria-label="Question words">
               <div className="word-list__header"><span>choose a word</span><span>the small evidence</span></div>
               {NOTES.map(note => (
                 <button
@@ -404,7 +405,7 @@ export function App() {
             <article className="margin-note" key={activeNote.id} aria-live="polite">
               <div className="margin-note__top">
                 <span>margin note / {activeNote.folio}</span>
-                <span className="margin-note__mark">{activeNote.id === 'm3' ? '⌇' : activeNote.id === 'good' ? '∧' : '?'}</span>
+                <span className="margin-note__mark" aria-hidden="true">{activeNote.id === 'm3' ? '⌇' : activeNote.id === 'good' ? '∧' : '?'}</span>
               </div>
               <div className="margin-note__body">
                 <span className="margin-note__kicker">{activeNote.title}</span>
@@ -422,12 +423,12 @@ export function App() {
 
         <div className="page-divider page-divider--short" aria-hidden="true"><span /><span /></div>
 
-        <section id="voices" className="voices-section reveal" aria-labelledby="voices-title">
+        <section id="voices" className="section-shell voices-section reveal" aria-labelledby="voices-title">
           <SectionHeading
+            titleId="voices-title"
             eyebrow="the same line, three voices"
             title={<>Change the <em>temperature.</em></>}
             lede="Typography is not a coat of paint. It changes what the reader is asked to do."
-            className="section-heading--voices"
           />
 
           <div className="voice-grid">
@@ -457,7 +458,7 @@ export function App() {
           <div className="voice-footnote"><span className="voice-footnote__key">shortcut</span><kbd>shift</kbd><span>+</span><kbd>v</kbd><span>cycle the voice</span></div>
         </section>
 
-        <section id="answer" className="answer-section reveal" aria-labelledby="answer-title">
+        <section id="answer" className="section-shell answer-section reveal" aria-labelledby="answer-title">
           <div className="answer-intro">
             <span className="eyebrow"><span className="eyebrow__spark">✳</span>the pause</span>
             <h2 id="answer-title">Some answers<br />need <em>room.</em></h2>
@@ -531,18 +532,18 @@ function SectionHeading({
   eyebrow,
   title,
   lede,
-  className = '',
+  titleId,
 }: {
   eyebrow: string
   title: ReactNode
   lede: string
-  className?: string
+  titleId: string
 }) {
   return (
-    <div className={`section-heading ${className}`}>
+    <div className="section-heading">
       <div>
         <span className="eyebrow"><span className="eyebrow__spark">✳</span>{eyebrow}</span>
-        <h2>{title}</h2>
+        <h2 id={titleId}>{title}</h2>
       </div>
       <p className="section-heading__lede">{lede}</p>
     </div>
@@ -557,44 +558,44 @@ function ArrowIcon() {
   )
 }
 
-function SignalField({ voice, onVoice, onMove, onLeave }: SignalFieldProps) {
+function SignalDesk({ voice, onVoice, onMove, onLeave }: SignalDeskProps) {
   const active = VOICES.find(item => item.id === voice) ?? VOICES[0]
   const tone = VOICE_TONE[voice]
 
   return (
-    <aside className="signal-field" role="group" aria-label="Three voice field around the question">
-      <div className="signal-field__header">
+    <aside className="signal-desk" role="group" aria-label="Three voice field around the question">
+      <div className="signal-desk__header">
         <span>the question, in orbit</span>
         <span>move / touch</span>
       </div>
-      <div className="signal-field__stage" onPointerMove={onMove} onPointerLeave={onLeave}>
-        <svg className="signal-field__drawing" viewBox="0 0 520 500" aria-hidden="true">
+      <div className="signal-desk__stage" onPointerMove={onMove} onPointerLeave={onLeave}>
+        <svg className="signal-desk__drawing" viewBox="0 0 520 500" aria-hidden="true">
           <defs>
             <radialGradient id="signal-halo" cx="50%" cy="50%" r="50%">
-              <stop offset="0" stopColor="var(--voice)" stopOpacity=".36" />
-              <stop offset=".62" stopColor="var(--voice)" stopOpacity=".08" />
+              <stop offset="0" stopColor="var(--voice)" stopOpacity=".25" />
+              <stop offset=".62" stopColor="var(--voice)" stopOpacity=".07" />
               <stop offset="1" stopColor="var(--voice)" stopOpacity="0" />
             </radialGradient>
           </defs>
           <circle cx="260" cy="250" r="174" fill="url(#signal-halo)" />
-          <circle className="signal-field__ring signal-field__ring--outer" cx="260" cy="250" r="170" />
-          <ellipse className="signal-field__ring signal-field__ring--tilt" cx="260" cy="250" rx="202" ry="77" transform="rotate(-23 260 250)" />
-          <ellipse className="signal-field__ring signal-field__ring--inner" cx="260" cy="250" rx="96" ry="42" transform="rotate(-23 260 250)" />
-          <path className="signal-field__path" d="M94 173C151 62 345 52 422 155s-41 235-173 223S55 274 94 173Z" />
-          <path className="signal-field__path signal-field__path--ghost" d="M103 335c62 88 234 101 320-6" />
-          <line className="signal-field__axis" x1="260" y1="38" x2="260" y2="462" />
-          <line className="signal-field__axis" x1="48" y1="250" x2="472" y2="250" />
-          <circle className="signal-field__center-ring" cx="260" cy="250" r="58" />
-          <circle className="signal-field__center-dot" cx="260" cy="250" r="4" />
-          <path className="signal-field__comet" d="M105 146c-23 17-34 35-37 58" />
+          <circle className="signal-desk__ring signal-desk__ring--outer" cx="260" cy="250" r="170" />
+          <ellipse className="signal-desk__ring signal-desk__ring--tilt" cx="260" cy="250" rx="202" ry="77" transform="rotate(-23 260 250)" />
+          <ellipse className="signal-desk__ring signal-desk__ring--inner" cx="260" cy="250" rx="96" ry="42" transform="rotate(-23 260 250)" />
+          <path className="signal-desk__path" d="M94 173C151 62 345 52 422 155s-41 235-173 223S55 274 94 173Z" />
+          <path className="signal-desk__path signal-desk__path--ghost" d="M103 335c62 88 234 101 320-6" />
+          <line className="signal-desk__axis" x1="260" y1="38" x2="260" y2="462" />
+          <line className="signal-desk__axis" x1="48" y1="250" x2="472" y2="250" />
+          <circle className="signal-desk__center-ring" cx="260" cy="250" r="58" />
+          <circle className="signal-desk__center-dot" cx="260" cy="250" r="4" />
+          <path className="signal-desk__comet" d="M105 146c-23 17-34 35-37 58" />
         </svg>
-        <span className="signal-field__pointer" aria-hidden="true" />
-        <div className="signal-field__center">
-          <span className="signal-field__eyebrow">hold here</span>
+        <span className="signal-desk__pointer" aria-hidden="true" />
+        <div className="signal-desk__center">
+          <span>currently listening</span>
           <strong>?</strong>
-          <span className="signal-field__subline">m3 / open question</span>
+          <span>m3 / open question</span>
         </div>
-        <div className="signal-field__nodes">
+        <div className="signal-desk__nodes">
           {VOICES.map(item => (
             <button
               key={item.id}
@@ -609,16 +610,16 @@ function SignalField({ voice, onVoice, onMove, onLeave }: SignalFieldProps) {
             </button>
           ))}
         </div>
-        <div className="signal-field__readout">
+        <div className="signal-desk__readout">
           <span>current voice</span>
           <strong>{active.name}</strong>
         </div>
-        <div className="signal-field__tone" aria-hidden="true">{tone}</div>
+        <div className="signal-desk__tone" aria-hidden="true">{tone}</div>
       </div>
-      <div className="signal-field__footer">
-        <span className={`signal-field__swatch signal-field__swatch--${voice}`} aria-hidden="true" />
+      <div className="signal-desk__footer">
+        <span className={`signal-desk__swatch signal-desk__swatch--${voice}`} aria-hidden="true" />
         <span>choose a node to set the type</span>
-        <span className="signal-field__arrow" aria-hidden="true">↘</span>
+        <span className="signal-desk__arrow" aria-hidden="true">↘</span>
       </div>
     </aside>
   )

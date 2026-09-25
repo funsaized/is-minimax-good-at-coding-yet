@@ -1,5 +1,5 @@
-Reframed the field note as a dark signal room with clearer hierarchy and tactile voice controls.
+Reframed the field note as a warm printed guide with a tactile voice tuner.
 
-Replaced the light multi-card composition with a midnight editorial palette, an illuminated question poster, and a contrasting orbit field for the existing voice controls. Kept the word-note and answer interactions, tightened their focus states, and added responsive layouts and reduced-motion handling for the animated signal details.
-
-Updated typography, spacing, section rhythm, and mobile navigation to keep the question readable without adding external assets or services.
+- Rebuilt the hero as a dark ink plate paired with a paper signal desk.
+- Preserved the interactive word notes, three voice modes, hash navigation, and unfoldable answer.
+- Added a lighter paper palette, stronger responsive hierarchy, and reduced-motion-aware motion.
