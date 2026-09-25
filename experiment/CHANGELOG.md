@@ -1,8 +1,5 @@
-A light ink-and-signal desk makes the question tactile, readable, and alive.
+Reframed the field note as a dark signal room with clearer hierarchy and tactile voice controls.
 
-- Replaced the dark field-note treatment with a warm paper canvas, cobalt night panel, and coral/lime signal accents.
-- Reworked the hero poster and question orbit for stronger hierarchy, responsive rhythm, and expressive pointer motion.
-- Kept word notes, voice controls, keyboard cycling, progress navigation, and the unfoldable answer while making their states clearer.
-- Added responsive layouts and reduced-motion handling for the new visual system.
+Replaced the light multi-card composition with a midnight editorial palette, an illuminated question poster, and a contrasting orbit field for the existing voice controls. Kept the word-note and answer interactions, tightened their focus states, and added responsive layouts and reduced-motion handling for the animated signal details.
 
-`npm run build` passes.
+Updated typography, spacing, section rhythm, and mobile navigation to keep the question readable without adding external assets or services.

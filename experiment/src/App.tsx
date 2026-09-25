@@ -20,7 +20,7 @@ type VoiceSpec = {
   detail: string
 }
 
-type QuestionDialProps = {
+type SignalFieldProps = {
   voice: VoiceId
   onVoice: (id: VoiceId) => void
   onMove: (event: ReactPointerEvent<HTMLDivElement>) => void
@@ -58,18 +58,18 @@ const VOICES: VoiceSpec[] = [
 
 const NAV_ITEMS = [
   { id: 'question', label: 'question' },
-  { id: 'field-notes', label: 'field notes' },
+  { id: 'field-notes', label: 'margin notes' },
   { id: 'voices', label: 'voices' },
   { id: 'answer', label: 'the pause' },
 ] as const
 
 const NEXT_VOICE: Record<VoiceId, VoiceId> = { quiet: 'human', human: 'bold', bold: 'quiet' }
 const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
-const VOICE_ACCENT: Record<VoiceId, string> = { quiet: 'blue', human: 'coral', bold: 'lime' }
-const DIAL_NODES: Record<VoiceId, { x: number; y: number }> = {
-  quiet: { x: 15, y: 24 },
+const VOICE_TONE: Record<VoiceId, string> = { quiet: 'blue', human: 'coral', bold: 'lime' }
+const SIGNAL_NODES: Record<VoiceId, { x: number; y: number }> = {
+  quiet: { x: 16, y: 25 },
   human: { x: 82, y: 22 },
-  bold: { x: 74, y: 80 },
+  bold: { x: 75, y: 80 },
 }
 
 export function App() {
@@ -208,25 +208,25 @@ export function App() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [cycleVoice])
 
-  const onDialMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+  const onSignalMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect()
     if (!bounds.width || !bounds.height) return
     const x = Math.min(88, Math.max(12, ((event.clientX - bounds.left) / bounds.width) * 100))
     const y = Math.min(84, Math.max(16, ((event.clientY - bounds.top) / bounds.height) * 100))
-    event.currentTarget.style.setProperty('--dial-x', `${x}%`)
-    event.currentTarget.style.setProperty('--dial-y', `${y}%`)
+    event.currentTarget.style.setProperty('--signal-x', `${x}%`)
+    event.currentTarget.style.setProperty('--signal-y', `${y}%`)
   }
 
-  const onDialLeave = (event: ReactPointerEvent<HTMLDivElement>) => {
-    event.currentTarget.style.setProperty('--dial-x', '50%')
-    event.currentTarget.style.setProperty('--dial-y', '50%')
+  const onSignalLeave = (event: ReactPointerEvent<HTMLDivElement>) => {
+    event.currentTarget.style.setProperty('--signal-x', '50%')
+    event.currentTarget.style.setProperty('--signal-y', '50%')
   }
 
   return (
     <div className={`app app--${voice}`} style={shellStyle}>
-      <div className="app__paper-texture" aria-hidden="true" />
-      <div className="app__ink-wash app__ink-wash--one" aria-hidden="true" />
-      <div className="app__ink-wash app__ink-wash--two" aria-hidden="true" />
+      <div className="app__grain" aria-hidden="true" />
+      <div className="app__glow app__glow--one" aria-hidden="true" />
+      <div className="app__glow app__glow--two" aria-hidden="true" />
       <div className="app__progress" aria-hidden="true"><span /></div>
       <a className="skip-link" href="#question">Skip to the question</a>
 
@@ -237,7 +237,7 @@ export function App() {
             <i />
           </span>
           <span className="brand__copy">
-            <strong>m³ / field note</strong>
+            <strong>m³ / frontend field note</strong>
             <small>an open question, in three voices</small>
           </span>
         </a>
@@ -285,7 +285,7 @@ export function App() {
             <article className="question-poster">
               <div className="question-poster__topline">
                 <span>the question, set in public</span>
-                <span className="question-poster__index">01 / 04</span>
+                <span className="question-poster__index">a field note</span>
               </div>
               <div className="question-poster__chapter">a test of judgment, not a verdict</div>
               <h1 id="question-title" className={`hero-title hero-title--${voice}`} aria-label={TITLE}>
@@ -337,7 +337,7 @@ export function App() {
               </p>
               <div className="question-poster__actions">
                 <a className="button button--ink" href="#field-notes">
-                  <span>follow the thread</span>
+                  <span>follow the margin notes</span>
                   <ArrowIcon />
                 </a>
                 <button type="button" className="voice-cycle" onClick={cycleVoice}>
@@ -349,7 +349,7 @@ export function App() {
               <span className="question-poster__stamp" aria-hidden="true">m³<br /><small>read slowly</small></span>
             </article>
 
-            <QuestionDial voice={voice} onVoice={selectVoice} onMove={onDialMove} onLeave={onDialLeave} />
+            <SignalField voice={voice} onVoice={selectVoice} onMove={onSignalMove} onLeave={onSignalLeave} />
           </div>
 
           <a className="active-note-strip" href="#field-notes">
@@ -557,50 +557,50 @@ function ArrowIcon() {
   )
 }
 
-function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
+function SignalField({ voice, onVoice, onMove, onLeave }: SignalFieldProps) {
   const active = VOICES.find(item => item.id === voice) ?? VOICES[0]
-  const accent = VOICE_ACCENT[voice]
+  const tone = VOICE_TONE[voice]
 
   return (
-    <div className="question-dial" onPointerMove={onMove} onPointerLeave={onLeave} role="group" aria-label="Three voice field around the question">
-      <div className="question-dial__header">
+    <aside className="signal-field" role="group" aria-label="Three voice field around the question">
+      <div className="signal-field__header">
         <span>the question, in orbit</span>
         <span>move / touch</span>
       </div>
-      <div className="question-dial__stage">
-        <svg className="question-dial__drawing" viewBox="0 0 520 500" aria-hidden="true">
+      <div className="signal-field__stage" onPointerMove={onMove} onPointerLeave={onLeave}>
+        <svg className="signal-field__drawing" viewBox="0 0 520 500" aria-hidden="true">
           <defs>
-            <radialGradient id="ink-dial-halo" cx="50%" cy="50%" r="50%">
-              <stop offset="0" stopColor="var(--voice)" stopOpacity=".3" />
-              <stop offset=".62" stopColor="var(--voice)" stopOpacity=".07" />
+            <radialGradient id="signal-halo" cx="50%" cy="50%" r="50%">
+              <stop offset="0" stopColor="var(--voice)" stopOpacity=".36" />
+              <stop offset=".62" stopColor="var(--voice)" stopOpacity=".08" />
               <stop offset="1" stopColor="var(--voice)" stopOpacity="0" />
             </radialGradient>
           </defs>
-          <circle cx="260" cy="250" r="174" fill="url(#ink-dial-halo)" />
-          <circle className="question-dial__ring question-dial__ring--outer" cx="260" cy="250" r="170" />
-          <ellipse className="question-dial__ring question-dial__ring--tilt" cx="260" cy="250" rx="202" ry="77" transform="rotate(-23 260 250)" />
-          <ellipse className="question-dial__ring question-dial__ring--inner" cx="260" cy="250" rx="96" ry="42" transform="rotate(-23 260 250)" />
-          <path className="question-dial__path" d="M94 173C151 62 345 52 422 155s-41 235-173 223S55 274 94 173Z" />
-          <path className="question-dial__path question-dial__path--ghost" d="M103 335c62 88 234 101 320-6" />
-          <line className="question-dial__axis" x1="260" y1="38" x2="260" y2="462" />
-          <line className="question-dial__axis" x1="48" y1="250" x2="472" y2="250" />
-          <circle className="question-dial__center-ring" cx="260" cy="250" r="58" />
-          <circle className="question-dial__center-dot" cx="260" cy="250" r="4" />
-          <path className="question-dial__comet" d="M105 146c-23 17-34 35-37 58" />
+          <circle cx="260" cy="250" r="174" fill="url(#signal-halo)" />
+          <circle className="signal-field__ring signal-field__ring--outer" cx="260" cy="250" r="170" />
+          <ellipse className="signal-field__ring signal-field__ring--tilt" cx="260" cy="250" rx="202" ry="77" transform="rotate(-23 260 250)" />
+          <ellipse className="signal-field__ring signal-field__ring--inner" cx="260" cy="250" rx="96" ry="42" transform="rotate(-23 260 250)" />
+          <path className="signal-field__path" d="M94 173C151 62 345 52 422 155s-41 235-173 223S55 274 94 173Z" />
+          <path className="signal-field__path signal-field__path--ghost" d="M103 335c62 88 234 101 320-6" />
+          <line className="signal-field__axis" x1="260" y1="38" x2="260" y2="462" />
+          <line className="signal-field__axis" x1="48" y1="250" x2="472" y2="250" />
+          <circle className="signal-field__center-ring" cx="260" cy="250" r="58" />
+          <circle className="signal-field__center-dot" cx="260" cy="250" r="4" />
+          <path className="signal-field__comet" d="M105 146c-23 17-34 35-37 58" />
         </svg>
-        <span className="question-dial__pointer" aria-hidden="true" />
-        <div className="question-dial__center">
-          <span className="question-dial__eyebrow">hold here</span>
+        <span className="signal-field__pointer" aria-hidden="true" />
+        <div className="signal-field__center">
+          <span className="signal-field__eyebrow">hold here</span>
           <strong>?</strong>
-          <span className="question-dial__subline">m3 / open question</span>
+          <span className="signal-field__subline">m3 / open question</span>
         </div>
-        <div className="question-dial__nodes">
+        <div className="signal-field__nodes">
           {VOICES.map(item => (
             <button
               key={item.id}
               type="button"
-              className={`dial-node dial-node--${item.id} ${voice === item.id ? 'is-active' : ''}`}
-              style={{ '--node-x': `${DIAL_NODES[item.id].x}%`, '--node-y': `${DIAL_NODES[item.id].y}%` } as CSSProperties}
+              className={`signal-node signal-node--${item.id} ${voice === item.id ? 'is-active' : ''}`}
+              style={{ '--node-x': `${SIGNAL_NODES[item.id].x}%`, '--node-y': `${SIGNAL_NODES[item.id].y}%` } as CSSProperties}
               onClick={() => onVoice(item.id)}
               aria-label={`Use the ${item.name} voice`}
               aria-pressed={voice === item.id}
@@ -609,17 +609,17 @@ function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
             </button>
           ))}
         </div>
-        <div className="question-dial__readout">
+        <div className="signal-field__readout">
           <span>current voice</span>
           <strong>{active.name}</strong>
         </div>
-        <div className="question-dial__color-tag" aria-hidden="true">{accent}</div>
+        <div className="signal-field__tone" aria-hidden="true">{tone}</div>
       </div>
-      <div className="question-dial__footer">
-        <span className={`question-dial__swatch question-dial__swatch--${voice}`} aria-hidden="true" />
-        <span>click a node to set the type</span>
-        <span className="question-dial__arrow" aria-hidden="true">↘</span>
+      <div className="signal-field__footer">
+        <span className={`signal-field__swatch signal-field__swatch--${voice}`} aria-hidden="true" />
+        <span>choose a node to set the type</span>
+        <span className="signal-field__arrow" aria-hidden="true">↘</span>
       </div>
-    </div>
+    </aside>
   )
 }
