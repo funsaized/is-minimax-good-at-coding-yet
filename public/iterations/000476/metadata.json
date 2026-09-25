@@ -1,0 +1,19 @@
+{
+  "id": 476,
+  "parentId": 475,
+  "createdAt": "2026-09-25T07:42:56.460Z",
+  "summary": "Brightened the field note into a tactile risograph reading room.",
+  "path": "/iterations/000476/index.html",
+  "screenshot": "/iterations/000476/desktop.png",
+  "mobileScreenshot": "/iterations/000476/mobile.png",
+  "sourceCommit": "b84e4d1a8c8df7c44d2edeade713b8527ee9b777",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 189,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 49067,
+    "outputTokens": 23621,
+    "steps": 11
+  }
+}
