@@ -296,6 +296,14 @@ export function App() {
                 </span>
               </h1>
 
+              <div className="title-annotation" aria-hidden="true">
+                <span>the pause is part of the point</span>
+                <svg viewBox="0 0 155 35" focusable="false">
+                  <path d="M3 25c25 9 47-9 71-7 25 2 33 17 76 3" />
+                  <path d="m139 15 11 6-11 5" />
+                </svg>
+              </div>
+
               <p className="hero-lede">A question is already a tiny interface. This page treats the sentence as a specimen: choose a phrase, change the temperature, and notice what asks to be looked at twice.</p>
 
               <div className="hero-actions">
@@ -362,7 +370,7 @@ export function App() {
                   </button>
                 ))}
               </div>
-              <p className="phrase-index__hint">The same sentence, read from three distances.</p>
+              <div className="phrase-index__footer"><span>one sentence / three distances</span><span aria-hidden="true">↘</span></div>
             </div>
 
             <article className={`note-card note-card--${activeNote.id}`} key={activeNote.id} aria-live="polite">
@@ -540,6 +548,24 @@ function LensInstrument({ note, voiceName, onSelect }: { note: Note; voiceName: 
     setProbe({ x: clampProbe(x), y: clampProbe(y) })
   }
 
+  const beginProbe = (event: ReactPointerEvent<HTMLDivElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId)
+    moveProbe(event)
+  }
+
+  const dragProbe = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.buttons === 0) return
+    moveProbe(event)
+  }
+
+  const endProbe = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+    }
+  }
+
+  const resetProbe = () => setProbe({ x: 50, y: 48 })
+
   const nudgeProbe = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     const amount = event.shiftKey ? 10 : 4
     const offsets: Record<string, [number, number]> = {
@@ -563,9 +589,11 @@ function LensInstrument({ note, voiceName, onSelect }: { note: Note; voiceName: 
       <span className="sr-only" id="lens-keyboard-help">Use the arrow keys to move the reading point. Hold shift for a larger move.</span>
       <div
         className="lens-instrument__stage"
-        onPointerDown={moveProbe}
-        onPointerMove={moveProbe}
-        onPointerLeave={() => setProbe({ x: 50, y: 48 })}
+        onPointerDown={beginProbe}
+        onPointerMove={dragProbe}
+        onPointerUp={endProbe}
+        onPointerCancel={endProbe}
+        onPointerLeave={resetProbe}
         onKeyDown={nudgeProbe}
         tabIndex={0}
         role="group"
@@ -595,6 +623,7 @@ function LensInstrument({ note, voiceName, onSelect }: { note: Note; voiceName: 
               key={item.id}
               type="button"
               className={`lens-node lens-node--${item.id} ${note.id === item.id ? 'is-current' : ''}`}
+              onPointerDown={event => event.stopPropagation()}
               onClick={() => onSelect(item.id)}
               aria-label={`Move the lens to ${item.label}`}
               aria-pressed={note.id === item.id}
