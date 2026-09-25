@@ -1,6 +1,6 @@
-Rebuilt the field note as a warm chromatic specimen with clearer hierarchy and calmer interactions.
+A chromatic field desk gives the question a sharper lens, warmer paper, and more tactile phrase reading.
 
-- Reframed the page around a paper, ink, coral, and lime visual system with stronger type contrast.
-- Recomposed the hero as an editorial specimen panel and gave the close-reading lens a more prominent circular instrument treatment.
-- Kept phrase selection, voice switching, hash navigation, keyboard shortcut support, answer reveal, focus restoration, and reduced-motion handling.
-- Added keyboard-operable lens probing with arrow-key nudging and a visible interaction hint.
+- Reworked the hero, lens, and section rhythm around a blue, coral, and acid ink palette.
+- Made lens nodes selectable controls and kept pointer, keyboard, and reduced-motion paths intact.
+- Improved the type trials, answer reveal, responsive composition, and focus states.
+- Preserved the exact page title and kept the app self-contained.

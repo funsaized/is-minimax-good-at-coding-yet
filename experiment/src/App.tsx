@@ -73,7 +73,7 @@ const VOICE_NAME: Record<VoiceId, string> = {
   bold: 'direct',
 }
 
-const clampProbe = (value: number) => Math.max(8, Math.min(92, value))
+const clampProbe = (value: number) => Math.max(9, Math.min(91, value))
 
 export function App() {
   const [voice, setVoice] = useState<VoiceId>('quiet')
@@ -132,7 +132,7 @@ export function App() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
         if (visible[0]) setActiveSection(visible[0].target.id)
       },
-      { rootMargin: '-18% 0px -66% 0px', threshold: [0.05, 0.2, 0.5] },
+      { rootMargin: '-16% 0px -68% 0px', threshold: [0.05, 0.2, 0.5] },
     )
     sections.forEach(section => observer.observe(section))
     return () => observer.disconnect()
@@ -185,13 +185,14 @@ export function App() {
   }, [cycleVoice])
 
   return (
-    <div className={`atlas-page atlas-page--${voice}`}>
-      <div className="page-grain" aria-hidden="true" />
+    <div className={`field-note field-note--${voice}`}>
+      <div className="ambient-grid" aria-hidden="true" />
+      <div className="paper-noise" aria-hidden="true" />
       <a className="skip-link" href="#question">Skip to the question</a>
 
       <header className="masthead">
         <a className="wordmark" href="#question" aria-label="M3 frontend field note, back to the question">
-          <span className="wordmark__stamp" aria-hidden="true">M3</span>
+          <span className="wordmark__stamp" aria-hidden="true"><span>M3</span></span>
           <span className="wordmark__copy">
             <strong>frontend field note</strong>
             <small>one question, closely read</small>
@@ -213,7 +214,7 @@ export function App() {
         </nav>
 
         <div className="voice-picker" role="group" aria-label="Set the page's type voice">
-          <span className="voice-picker__label">voice</span>
+          <span className="voice-picker__label">type voice</span>
           <div className="voice-picker__set">
             {VOICES.map(item => (
               <button
@@ -234,14 +235,15 @@ export function App() {
 
       <main className="page-shell">
         <section id="question" className="hero-panel" aria-labelledby="question-title">
-          <div className="hero-panel__header">
-            <span><i className="signal-dot" aria-hidden="true" /> opening question</span>
-            <span className="hero-panel__instruction">choose a phrase / move the lens</span>
-            <span>the sentence, under glass</span>
+          <div className="hero-panel__topline">
+            <span className="topline-label"><i className="signal-dot" aria-hidden="true" /> opening question</span>
+            <span className="topline-center">the sentence, under glass</span>
+            <span className="topline-label topline-label--right">choose a phrase / move the lens</span>
           </div>
 
-          <div className="hero-panel__grid">
+          <div className="hero-panel__body">
             <div className="hero-panel__copy">
+              <div className="hero-panel__folio"><span>title study</span><span>close enough to notice</span></div>
               <p className="eyebrow"><span className="eyebrow__star" aria-hidden="true" />a close reading of a good question</p>
               <h1 id="question-title" className="question-title" aria-label={TITLE}>
                 <span className="title-line title-line--one">is Minimax</span>{' '}
@@ -310,7 +312,7 @@ export function App() {
               <p className="interaction-cue"><span className="interaction-cue__line" aria-hidden="true" /> touch a colored phrase to move the lens</p>
             </div>
 
-            <LensInstrument note={activeNote} voiceName={activeVoice.name} />
+            <LensInstrument note={activeNote} voiceName={activeVoice.name} onSelect={selectWord} />
           </div>
 
           <div className="hero-panel__footer">
@@ -322,7 +324,7 @@ export function App() {
 
         <ThreadBreak />
 
-        <section id="field-notes" className="reading-panel section--paper reveal" aria-labelledby="reading-title">
+        <section id="field-notes" className="reading-panel reveal" aria-labelledby="reading-title">
           <SectionIntro
             number="01"
             titleId="reading-title"
@@ -528,7 +530,7 @@ function ArrowIcon() {
   )
 }
 
-function LensInstrument({ note, voiceName }: { note: Note; voiceName: string }) {
+function LensInstrument({ note, voiceName, onSelect }: { note: Note; voiceName: string; onSelect: (id: WordId) => void }) {
   const [probe, setProbe] = useState<ProbePosition>({ x: 50, y: 48 })
 
   const moveProbe = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -587,10 +589,19 @@ function LensInstrument({ note, voiceName }: { note: Note; voiceName: string }) 
           <strong>{note.label}</strong>
           <em>{note.gloss}</em>
         </div>
-        <div className="lens-instrument__nodes" aria-hidden="true">
-          <span className="lens-node lens-node--m3">M3</span>
-          <span className={`lens-node lens-node--good ${note.id === 'good' ? 'is-current' : ''}`}>good</span>
-          <span className={`lens-node lens-node--yet ${note.id === 'yet' ? 'is-current' : ''}`}>yet?</span>
+        <div className="lens-instrument__nodes">
+          {NOTES.map(item => (
+            <button
+              key={item.id}
+              type="button"
+              className={`lens-node lens-node--${item.id} ${note.id === item.id ? 'is-current' : ''}`}
+              onClick={() => onSelect(item.id)}
+              aria-label={`Move the lens to ${item.label}`}
+              aria-pressed={note.id === item.id}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
         <span className="lens-instrument__hint" aria-hidden="true">drag / arrows to probe</span>
       </div>
