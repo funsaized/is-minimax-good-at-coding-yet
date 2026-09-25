@@ -1,6 +1,7 @@
-A sharper editorial workbench with clearer hierarchy, a tactile phrase lens, and a steadier reading flow.
+Turned the field note into a cobalt-and-vermilion broadside with a clearer phrase map.
 
-- Reworked the page around a dark title specimen, warm paper surfaces, and offset print details.
-- Improved the phrase lens with drag capture, keyboard nudging, stronger focus states, and clearer phrase feedback.
-- Tightened the close-read index, type-trial cards, answer reveal, typography, spacing, and mobile layouts.
-- Preserved the required title, document title, client-only behavior, and reduced-motion support.
+- Regrouped the exact question into a stronger three-line title study.
+- Replaced the crowded lens treatment with a draggable, keyboard-navigable phrase map.
+- Shifted the sections into a restrained cobalt, paper, vermilion, and acid-ink palette.
+- Kept the type trials, close-reading notes, answer reveal, responsive layout, and reduced-motion support.
+- Verified with `npm run build`.

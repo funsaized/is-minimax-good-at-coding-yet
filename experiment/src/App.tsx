@@ -73,7 +73,7 @@ const VOICE_NAME: Record<VoiceId, string> = {
   bold: 'direct',
 }
 
-const clampProbe = (value: number) => Math.max(9, Math.min(91, value))
+const clampProbe = (value: number) => Math.max(10, Math.min(90, value))
 
 export function App() {
   const [voice, setVoice] = useState<VoiceId>('quiet')
@@ -109,7 +109,7 @@ export function App() {
   const toggleAnswer = useCallback(() => {
     const next = !answerOpen
     setAnswerOpen(next)
-    setAnnouncement(next ? 'The answer is revealed.' : 'The answer is covered again.')
+    setAnnouncement(next ? 'The short answer is revealed.' : 'The short answer is covered again.')
     window.requestAnimationFrame(() => {
       if (next) answerCloseRef.current?.focus()
       else answerTriggerRef.current?.focus()
@@ -132,7 +132,7 @@ export function App() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
         if (visible[0]) setActiveSection(visible[0].target.id)
       },
-      { rootMargin: '-16% 0px -68% 0px', threshold: [0.05, 0.2, 0.5] },
+      { rootMargin: '-18% 0px -67% 0px', threshold: [0.05, 0.2, 0.5] },
     )
     sections.forEach(section => observer.observe(section))
     return () => observer.disconnect()
@@ -185,15 +185,18 @@ export function App() {
   }, [cycleVoice])
 
   return (
-    <div className={`field-note field-note--${voice}`}>
-      <div className="ambient-grid" aria-hidden="true" />
-      <div className="paper-noise" aria-hidden="true" />
+    <div className={`reading-room reading-room--${voice}`}>
+      <div className="room-atmosphere" aria-hidden="true">
+        <span className="room-atmosphere__orb room-atmosphere__orb--one" />
+        <span className="room-atmosphere__orb room-atmosphere__orb--two" />
+        <span className="room-atmosphere__grain" />
+      </div>
       <a className="skip-link" href="#question">Skip to the question</a>
 
       <header className="masthead">
         <a className="wordmark" href="#question" aria-label="M3 frontend field note, back to the question">
-          <span className="wordmark__stamp" aria-hidden="true"><span>M3</span></span>
-          <span className="wordmark__copy">
+          <span className="wordmark__mark" aria-hidden="true">M3</span>
+          <span className="wordmark__name">
             <strong>frontend field note</strong>
             <small>one question, closely read</small>
           </span>
@@ -207,8 +210,8 @@ export function App() {
               href={`#${item.id}`}
               aria-current={activeSection === item.id ? 'location' : undefined}
             >
-              <span className="section-nav__index">0{index + 1}</span>
-              <span>{item.label}</span>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              {item.label}
             </a>
           ))}
         </nav>
@@ -224,7 +227,6 @@ export function App() {
                 onClick={() => selectVoice(item.id)}
                 aria-pressed={voice === item.id}
                 aria-label={`Use the ${item.name} type voice`}
-                title={item.name}
               >
                 {item.letter}
               </button>
@@ -234,16 +236,19 @@ export function App() {
       </header>
 
       <main className="page-shell">
-        <section id="question" className="hero-panel" aria-labelledby="question-title">
-          <div className="hero-panel__topline">
-            <span className="topline-label"><i className="signal-dot" aria-hidden="true" /> opening question</span>
-            <span className="topline-center">the sentence, under glass</span>
-            <span className="topline-label topline-label--right">choose a phrase / move the lens</span>
+        <section id="question" className="hero-section" aria-labelledby="question-title">
+          <div className="hero-section__rail">
+            <span><i className="signal-dot" aria-hidden="true" /> opening question</span>
+            <span>the sentence, under glass</span>
+            <span>move the lens <b aria-hidden="true">↘</b></span>
           </div>
 
-          <div className="hero-panel__body">
-            <div className="hero-panel__copy">
-              <div className="hero-panel__folio"><span>title study</span><span>close enough to notice</span></div>
+          <div className="hero-section__body">
+            <div className="hero-copy">
+              <div className="hero-copy__folio">
+                <span>title study</span>
+                <span>close enough to notice</span>
+              </div>
               <p className="eyebrow"><span className="eyebrow__star" aria-hidden="true" />a close reading of a good question</p>
               <h1 id="question-title" className="question-title" aria-label={TITLE}>
                 <span className="title-line title-line--one">is Minimax</span>{' '}
@@ -260,9 +265,7 @@ export function App() {
                     aria-label="Move the lens to M3"
                   >
                     M3
-                  </button>
-                </span>{' '}
-                <span className="title-line title-line--three">
+                  </button>{' '}
                   <button
                     type="button"
                     className={`title-word title-word--good ${selectedWord === 'good' ? 'is-selected' : ''}`}
@@ -277,8 +280,8 @@ export function App() {
                     good at
                   </button>
                 </span>{' '}
-                <span className="title-line title-line--four">frontend</span>{' '}
-                <span className="title-line title-line--five">
+                <span className="title-line title-line--three">
+                  <span>frontend </span>
                   <button
                     type="button"
                     className={`title-word title-word--yet ${selectedWord === 'yet' ? 'is-selected' : ''}`}
@@ -298,9 +301,9 @@ export function App() {
 
               <div className="title-annotation" aria-hidden="true">
                 <span>the pause is part of the point</span>
-                <svg viewBox="0 0 155 35" focusable="false">
-                  <path d="M3 25c25 9 47-9 71-7 25 2 33 17 76 3" />
-                  <path d="m139 15 11 6-11 5" />
+                <svg viewBox="0 0 160 34" focusable="false">
+                  <path d="M3 24c29 9 49-8 76-6 24 2 38 14 77 1" />
+                  <path d="m143 14 12 5-12 6" />
                 </svg>
               </div>
 
@@ -320,19 +323,26 @@ export function App() {
               <p className="interaction-cue"><span className="interaction-cue__line" aria-hidden="true" /> touch a colored phrase to move the lens</p>
             </div>
 
-            <LensInstrument note={activeNote} voiceName={activeVoice.name} onSelect={selectWord} />
+            <SignalMap note={activeNote} voiceName={activeVoice.name} onSelect={selectWord} />
           </div>
 
-          <div className="hero-panel__footer">
-            <span><i className="hero-panel__signal" aria-hidden="true" /> the page is asking, not declaring</span>
+          <div className="hero-section__footer">
+            <span><i className="hero-section__signal" aria-hidden="true" /> the page is asking, not declaring</span>
             <span>active phrase <strong>{activeNote.label}</strong></span>
             <span>read the shape, not the claim</span>
           </div>
         </section>
 
-        <ThreadBreak />
+        <div className="thread-break" aria-hidden="true">
+          <span />
+          <svg viewBox="0 0 120 28">
+            <path d="M4 14h33M83 14h33M41 8l7 6-7 6M79 8l-7 6 7 6" />
+            <circle cx="60" cy="14" r="3" />
+          </svg>
+          <span />
+        </div>
 
-        <section id="field-notes" className="reading-panel reveal" aria-labelledby="reading-title">
+        <section id="field-notes" className="close-read-section reveal" aria-labelledby="reading-title">
           <SectionIntro
             number="01"
             titleId="reading-title"
@@ -341,18 +351,18 @@ export function App() {
             lede="M3 names the maker. “good at” names the standard. “yet?” protects the honest pause. Choose a phrase to read its job."
           />
 
-          <div className="reading-layout">
-            <div className="phrase-index" role="group" aria-label="Choose a phrase from the question">
-              <div className="phrase-index__header">
+          <div className="close-read-layout">
+            <div className="phrase-menu" role="group" aria-label="Choose a phrase from the question">
+              <div className="phrase-menu__heading">
                 <span>choose a pressure point</span>
                 <span aria-hidden="true">01—03</span>
               </div>
-              <div className="phrase-list">
+              <div className="phrase-menu__list">
                 {NOTES.map(note => (
                   <button
                     key={note.id}
                     type="button"
-                    className={`phrase-button ${selectedWord === note.id ? 'is-selected' : ''} ${hoveredWord === note.id ? 'is-hovered' : ''}`}
+                    className={`phrase-choice phrase-choice--${note.id} ${selectedWord === note.id ? 'is-selected' : ''} ${hoveredWord === note.id ? 'is-hovered' : ''}`}
                     onClick={() => selectWord(note.id)}
                     onMouseEnter={() => setHoveredWord(note.id)}
                     onMouseLeave={() => setHoveredWord(null)}
@@ -360,32 +370,29 @@ export function App() {
                     onBlur={() => setHoveredWord(null)}
                     aria-pressed={selectedWord === note.id}
                   >
-                    <span className="phrase-button__index">{note.index}</span>
-                    <span className="phrase-button__label">{note.label}</span>
-                    <span className="phrase-button__copy">
-                      <strong>{note.title}</strong>
-                      <small>{note.gloss}</small>
-                    </span>
-                    <span className="phrase-button__arrow" aria-hidden="true">↗</span>
+                    <span className="phrase-choice__index">{note.index}</span>
+                    <span className="phrase-choice__name">{note.label}</span>
+                    <span className="phrase-choice__title">{note.title}</span>
+                    <span className="phrase-choice__arrow" aria-hidden="true">↗</span>
                   </button>
                 ))}
               </div>
-              <div className="phrase-index__footer"><span>one sentence / three distances</span><span aria-hidden="true">↘</span></div>
+              <div className="phrase-menu__footer"><span>one sentence / three distances</span><span aria-hidden="true">↘</span></div>
             </div>
 
-            <article className={`note-card note-card--${activeNote.id}`} key={activeNote.id} aria-live="polite">
-              <div className="note-card__topline">
+            <article className={`note-sheet note-sheet--${activeNote.id}`} key={activeNote.id} aria-live="polite">
+              <div className="note-sheet__topline">
                 <span>close read / {activeNote.index}</span>
-                <span aria-hidden="true">{activeNote.folio}</span>
+                <span className="note-sheet__folio" aria-hidden="true">{activeNote.folio}</span>
               </div>
-              <div className="note-card__body">
-                <p className="note-card__kicker">{activeNote.title}</p>
+              <div className="note-sheet__body">
+                <p className="note-sheet__kicker">{activeNote.title}</p>
                 <h3>{activeNote.label}</h3>
-                <p className="note-card__copy">{activeNote.body}</p>
-                <div className="note-card__prompt"><b aria-hidden="true">↳</b> {activeNote.prompt}</div>
+                <p className="note-sheet__copy">{activeNote.body}</p>
+                <div className="note-sheet__prompt"><b aria-hidden="true">↳</b> {activeNote.prompt}</div>
               </div>
               <WordGlyph id={activeNote.id} />
-              <div className="note-card__footer">
+              <div className="note-sheet__footer">
                 <span>{activeNote.editor}</span>
                 <span>margin note / {activeNote.folio}</span>
               </div>
@@ -393,7 +400,7 @@ export function App() {
           </div>
         </section>
 
-        <section id="voices" className="voices-panel section--dark reveal" aria-labelledby="trials-title">
+        <section id="voices" className="voices-section reveal" aria-labelledby="trials-title">
           <SectionIntro
             number="02"
             titleId="trials-title"
@@ -422,10 +429,7 @@ export function App() {
                     <span className="voice-card__manner">{item.manner}</span>
                     <span className={`voice-card__sample voice-card__sample--${item.id}`}>{item.sample}</span>
                     <span className="voice-card__detail">{item.detail}</span>
-                    <span className="voice-card__state">
-                      <i aria-hidden="true" />
-                      {isActive ? 'selected voice' : 'set this voice'}
-                    </span>
+                    <span className="voice-card__state"><i aria-hidden="true" />{isActive ? 'selected voice' : 'set this voice'}</span>
                   </button>
                 </article>
               )
@@ -438,7 +442,7 @@ export function App() {
           </div>
         </section>
 
-        <section id="answer" className="answer-panel section--dark reveal" aria-labelledby="answer-title">
+        <section id="answer" className="answer-section reveal" aria-labelledby="answer-title">
           <div className="answer-intro">
             <p className="eyebrow"><span className="eyebrow__star" aria-hidden="true" /> the useful answer</p>
             <h2 id="answer-title">Small answer.<br /><em>Clear breath.</em></h2>
@@ -451,11 +455,7 @@ export function App() {
               aria-expanded={answerOpen}
               aria-controls="answer-window"
             >
-              <span className="cover-button__icon" aria-hidden="true">
-                <svg viewBox="0 0 20 20">
-                  <path d="M4 10h12M10.5 4.5 16 10l-5.5 5.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
+              <span className="cover-button__icon" aria-hidden="true"><ArrowIcon /></span>
               <span>{answerOpen ? 'cover the answer' : 'lift the answer'}</span>
               {answerOpen && <kbd>esc</kbd>}
             </button>
@@ -469,9 +469,7 @@ export function App() {
             <div id="answer-window" className="answer-window" aria-live="polite">
               {answerOpen ? (
                 <div className="answer-window__content">
-                  <button ref={answerCloseRef} type="button" className="answer-close" onClick={toggleAnswer} aria-label="Cover the answer again">
-                    <span aria-hidden="true">×</span>
-                  </button>
+                  <button ref={answerCloseRef} type="button" className="answer-close" onClick={toggleAnswer} aria-label="Cover the answer again">×</button>
                   <span className="answer-window__yes">yes, with a hand.</span>
                   <h3>When the interface has a point of view you can feel.</h3>
                   <p>A useful frontend has a hierarchy you can read, a little warmth in the details, and motion that rewards attention without demanding it.</p>
@@ -516,20 +514,6 @@ function SectionIntro({ number, titleId, eyebrow, title, lede }: { number: strin
   )
 }
 
-function ThreadBreak() {
-  return (
-    <div className="thread-break" aria-hidden="true">
-      <span />
-      <svg viewBox="0 0 110 30">
-        <path d="M4 15h30M76 15h30" fill="none" stroke="currentColor" strokeWidth="1" />
-        <path d="m38 7 7 8-7 8M72 7l-7 8 7 8" fill="none" stroke="currentColor" strokeWidth="1" />
-        <circle cx="55" cy="15" r="3" fill="currentColor" />
-      </svg>
-      <span />
-    </div>
-  )
-}
-
 function ArrowIcon() {
   return (
     <svg viewBox="0 0 20 20" aria-hidden="true">
@@ -538,11 +522,12 @@ function ArrowIcon() {
   )
 }
 
-function LensInstrument({ note, voiceName, onSelect }: { note: Note; voiceName: string; onSelect: (id: WordId) => void }) {
+function SignalMap({ note, voiceName, onSelect }: { note: Note; voiceName: string; onSelect: (id: WordId) => void }) {
   const [probe, setProbe] = useState<ProbePosition>({ x: 50, y: 48 })
 
   const moveProbe = (event: ReactPointerEvent<HTMLDivElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect()
+    if (!bounds.width || !bounds.height) return
     const x = ((event.clientX - bounds.left) / bounds.width) * 100
     const y = ((event.clientY - bounds.top) / bounds.height) * 100
     setProbe({ x: clampProbe(x), y: clampProbe(y) })
@@ -564,8 +549,6 @@ function LensInstrument({ note, voiceName, onSelect }: { note: Note; voiceName: 
     }
   }
 
-  const resetProbe = () => setProbe({ x: 50, y: 48 })
-
   const nudgeProbe = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     const amount = event.shiftKey ? 10 : 4
     const offsets: Record<string, [number, number]> = {
@@ -581,65 +564,64 @@ function LensInstrument({ note, voiceName, onSelect }: { note: Note; voiceName: 
   }
 
   return (
-    <aside className={`lens-instrument lens-instrument--${note.id}`} aria-label="Interactive close-reading lens" aria-live="polite">
-      <div className="lens-instrument__header">
-        <span>close reading / lens</span>
-        <span className="lens-instrument__mark" aria-hidden="true">{note.index} / 03</span>
+    <aside className={`signal-map signal-map--${note.id}`} aria-label="Interactive close-reading map">
+      <div className="signal-map__header">
+        <span>close reading / map</span>
+        <button type="button" className="map-reset" onPointerDown={event => event.stopPropagation()} onClick={() => setProbe({ x: 50, y: 48 })}>center point</button>
       </div>
-      <span className="sr-only" id="lens-keyboard-help">Use the arrow keys to move the reading point. Hold shift for a larger move.</span>
+      <span className="sr-only" id="map-keyboard-help">Use the arrow keys to move the reading point. Hold shift for a larger move.</span>
       <div
-        className="lens-instrument__stage"
+        className="signal-map__stage"
         onPointerDown={beginProbe}
         onPointerMove={dragProbe}
         onPointerUp={endProbe}
         onPointerCancel={endProbe}
-        onPointerLeave={resetProbe}
         onKeyDown={nudgeProbe}
         tabIndex={0}
         role="group"
-        aria-label="Lens stage"
-        aria-describedby="lens-keyboard-help"
+        aria-label="Reading point stage"
+        aria-describedby="map-keyboard-help"
       >
-        <span className="lens-instrument__label lens-instrument__label--top" aria-hidden="true">field / {note.index}</span>
-        <span className="lens-instrument__label lens-instrument__label--side" aria-hidden="true">x / word · y / intent</span>
-        <svg className="lens-instrument__drawing" viewBox="0 0 360 360" aria-hidden="true">
-          <circle cx="180" cy="170" r="122" />
-          <ellipse cx="180" cy="170" rx="146" ry="58" transform="rotate(-19 180 170)" />
-          <path d="M45 237c84 76 202 77 270-13" />
-          <line x1="180" y1="28" x2="180" y2="312" />
-          <line x1="34" y1="170" x2="326" y2="170" />
-          <path d="M101 87c38 19 87 24 137 11" />
+        <span className="signal-map__label signal-map__label--top" aria-hidden="true">field / {note.index}</span>
+        <span className="signal-map__label signal-map__label--side" aria-hidden="true">x / word · y / intent</span>
+        <svg className="signal-map__drawing" viewBox="0 0 420 360" aria-hidden="true">
+          <circle cx="210" cy="176" r="112" />
+          <ellipse cx="210" cy="176" rx="170" ry="68" transform="rotate(-18 210 176)" />
+          <path d="M40 236c91 76 222 78 337-4" />
+          <line x1="210" y1="24" x2="210" y2="329" />
+          <line x1="31" y1="176" x2="389" y2="176" />
+          <path d="M110 93c45 22 105 27 169 10" />
         </svg>
-        <div className="lens-instrument__crosshair" aria-hidden="true"><i /><i /></div>
-        <div className="lens-instrument__probe" style={{ left: `${probe.x}%`, top: `${probe.y}%` }} aria-hidden="true" />
-        <div className="lens-disc" key={note.id}>
+        <div className="signal-map__crosshair" aria-hidden="true"><i /><i /></div>
+        <div className="signal-map__probe" style={{ left: `${probe.x}%`, top: `${probe.y}%` }} aria-hidden="true" />
+        <div className="signal-map__center" key={note.id}>
           <span>under the lens</span>
-          <strong>{note.label}</strong>
-          <em>{note.gloss}</em>
+          <strong>?</strong>
+          <em>{note.label}</em>
         </div>
-        <div className="lens-instrument__nodes">
+        <div className="signal-map__nodes">
           {NOTES.map(item => (
             <button
               key={item.id}
               type="button"
-              className={`lens-node lens-node--${item.id} ${note.id === item.id ? 'is-current' : ''}`}
+              className={`map-node map-node--${item.id} ${note.id === item.id ? 'is-current' : ''}`}
               onPointerDown={event => event.stopPropagation()}
               onClick={() => onSelect(item.id)}
-              aria-label={`Move the lens to ${item.label}`}
+              aria-label={`Move the reading point to ${item.label}`}
               aria-pressed={note.id === item.id}
             >
               {item.label}
             </button>
           ))}
         </div>
-        <span className="lens-instrument__hint" aria-hidden="true">drag / arrows to probe</span>
+        <span className="signal-map__hint" aria-hidden="true">drag / arrows to probe</span>
       </div>
-      <div className="lens-instrument__footer">
+      <div className="signal-map__footer">
         <div>
           <span>current reading</span>
           <strong>{note.title}</strong>
         </div>
-        <span className="lens-instrument__voice">{voiceName} voice</span>
+        <span>{voiceName} voice</span>
       </div>
     </aside>
   )
@@ -648,23 +630,23 @@ function LensInstrument({ note, voiceName, onSelect }: { note: Note; voiceName: 
 function WordGlyph({ id }: { id: WordId }) {
   if (id === 'm3') {
     return (
-      <svg className="word-glyph word-glyph--m3" viewBox="0 0 220 160" aria-hidden="true">
-        <path d="M32 126V34l78 92V34M146 34v92M146 34h58M146 70h48" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="square" />
-        <circle cx="146" cy="126" r="5" fill="currentColor" />
+      <svg className="word-glyph word-glyph--m3" viewBox="0 0 240 170" aria-hidden="true">
+        <path d="M32 132V38l80 94V38M151 38v94M151 38h58M151 73h48" />
+        <circle cx="151" cy="132" r="5" />
       </svg>
     )
   }
   if (id === 'good') {
     return (
-      <svg className="word-glyph word-glyph--good" viewBox="0 0 220 160" aria-hidden="true">
-        <path d="M28 126 78 32l50 94M48 89h61M128 126V32h42c25 0 37 14 37 34 0 19-12 34-37 34h-42M128 100h47" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="square" strokeLinejoin="miter" />
+      <svg className="word-glyph word-glyph--good" viewBox="0 0 240 170" aria-hidden="true">
+        <path d="M30 132 82 34l52 98M50 92h64M139 132V34h45c27 0 40 15 40 36s-13 36-40 36h-45M139 103h50" />
       </svg>
     )
   }
   return (
-    <svg className="word-glyph word-glyph--yet" viewBox="0 0 220 160" aria-hidden="true">
-      <path d="M39 43c7-17 22-25 40-25 24 0 39 13 39 34 0 19-11 27-27 38-13 9-18 15-18 27M73 142v4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="square" />
-      <path d="M139 33v94M139 127h49" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="square" />
+    <svg className="word-glyph word-glyph--yet" viewBox="0 0 240 170" aria-hidden="true">
+      <path d="M42 47c8-18 24-27 43-27 25 0 42 14 42 36 0 21-12 30-29 42-14 10-20 17-20 29M78 149v5" />
+      <path d="M150 36v96M150 132h50" />
     </svg>
   )
 }
