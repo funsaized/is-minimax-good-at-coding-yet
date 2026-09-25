@@ -65,11 +65,11 @@ const NAV_ITEMS = [
 
 const NEXT_VOICE: Record<VoiceId, VoiceId> = { quiet: 'human', human: 'bold', bold: 'quiet' }
 const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
-const VOICE_TONE: Record<VoiceId, string> = { quiet: 'blue', human: 'coral', bold: 'lime' }
+const VOICE_TONE: Record<VoiceId, string> = { quiet: 'periwinkle', human: 'coral', bold: 'chartreuse' }
 const SIGNAL_NODES: Record<VoiceId, { x: number; y: number }> = {
-  quiet: { x: 16, y: 28 },
-  human: { x: 82, y: 22 },
-  bold: { x: 74, y: 79 },
+  quiet: { x: 16, y: 26 },
+  human: { x: 84, y: 20 },
+  bold: { x: 73, y: 80 },
 }
 
 export function App() {
@@ -133,7 +133,7 @@ export function App() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
         if (visible[0]) setActiveSection(visible[0].target.id)
       },
-      { rootMargin: '-18% 0px -68% 0px', threshold: [0.05, 0.2, 0.5, 0.8] },
+      { rootMargin: '-16% 0px -70% 0px', threshold: [0.05, 0.2, 0.5, 0.8] },
     )
     sections.forEach(section => observer.observe(section))
     return () => observer.disconnect()
@@ -211,8 +211,8 @@ export function App() {
   const onSignalMove = (event: ReactPointerEvent<HTMLDivElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect()
     if (!bounds.width || !bounds.height) return
-    const x = Math.min(86, Math.max(14, ((event.clientX - bounds.left) / bounds.width) * 100))
-    const y = Math.min(84, Math.max(16, ((event.clientY - bounds.top) / bounds.height) * 100))
+    const x = Math.min(88, Math.max(12, ((event.clientX - bounds.left) / bounds.width) * 100))
+    const y = Math.min(86, Math.max(14, ((event.clientY - bounds.top) / bounds.height) * 100))
     event.currentTarget.style.setProperty('--signal-x', `${x}%`)
     event.currentTarget.style.setProperty('--signal-y', `${y}%`)
   }
@@ -225,8 +225,8 @@ export function App() {
   return (
     <div className={`app app--${voice}`} style={shellStyle}>
       <div className="app__grain" aria-hidden="true" />
-      <div className="app__wash app__wash--blue" aria-hidden="true" />
-      <div className="app__wash app__wash--coral" aria-hidden="true" />
+      <div className="app__aurora app__aurora--blue" aria-hidden="true" />
+      <div className="app__aurora app__aurora--coral" aria-hidden="true" />
       <div className="app__progress" aria-hidden="true"><span /></div>
       <a className="skip-link" href="#question">Skip to the question</a>
 
@@ -235,7 +235,7 @@ export function App() {
           <span className="brand__mark" aria-hidden="true"><span>m³</span><i /></span>
           <span className="brand__copy">
             <strong>m³ / frontend field note</strong>
-            <small>an open question, in three voices</small>
+            <small>one question, three temperatures</small>
           </span>
         </a>
 
@@ -253,7 +253,7 @@ export function App() {
         </nav>
 
         <div className="voice-switcher">
-          <span className="voice-switcher__label">temperature</span>
+          <span className="voice-switcher__label">set temperature</span>
           <div className="voice-switcher__options" role="group" aria-label="Set the page voice">
             {VOICES.map(item => (
               <button
@@ -275,16 +275,16 @@ export function App() {
         <section id="question" className="hero-section" aria-labelledby="question-title">
           <div className="section-rail">
             <span className="eyebrow"><span className="eyebrow__spark">✳</span>the opening question</span>
-            <span>one sentence / three ways to hear it</span>
+            <span>hold the sentence / change the temperature</span>
           </div>
 
           <div className="hero-grid">
-            <article className="question-plate">
-              <div className="question-plate__topline">
+            <article className="question-card">
+              <div className="question-card__topline">
                 <span>the question, set in public</span>
-                <span className="question-plate__folio">the opening folio</span>
+                <span>folio / opening</span>
               </div>
-              <div className="question-plate__kicker"><span aria-hidden="true">✳</span> a test of judgment, not a verdict</div>
+              <div className="question-card__kicker"><span aria-hidden="true">✳</span> a test of judgment, not a verdict</div>
               <h1 id="question-title" className={`hero-title hero-title--${voice}`} aria-label={TITLE}>
                 <span className="hero-title__line">is Minimax</span>{' '}
                 <span className="hero-title__line">
@@ -332,10 +332,10 @@ export function App() {
                   </button>
                 </span>
               </h1>
-              <p className="question-plate__lede">
+              <p className="question-card__lede">
                 Not a verdict. A small reading of the moment: can this page hold a point of view, invite a touch, and still know when to become quiet?
               </p>
-              <div className="question-plate__actions">
+              <div className="question-card__actions">
                 <a className="button button--ink" href="#field-notes">
                   <span>follow the margin notes</span>
                   <ArrowIcon />
@@ -345,9 +345,9 @@ export function App() {
                   <kbd>shift</kbd><span>+</span><kbd>v</kbd>
                 </button>
               </div>
-              <p className="question-plate__hint"><span className="hint-dot" aria-hidden="true" />touch a word to open its margin note</p>
-              <span className="question-plate__stamp" aria-hidden="true">m³<br /><small>read slowly</small></span>
-              <span className="question-plate__ghost-mark" aria-hidden="true">?</span>
+              <p className="question-card__hint"><span className="hint-dot" aria-hidden="true" />touch a word to open its margin note</p>
+              <span className="question-card__seal" aria-hidden="true">m³<br /><small>read slowly</small></span>
+              <span className="question-card__ghost-mark" aria-hidden="true">?</span>
             </article>
 
             <SignalDesk voice={voice} onVoice={selectVoice} onMove={onSignalMove} onLeave={onSignalLeave} />
@@ -427,7 +427,7 @@ export function App() {
           <SectionHeading
             titleId="voices-title"
             eyebrow="the same line, three voices"
-            title={<>Change the <em>temperature.</em></>}
+            title={<>Let the sentence<br /><em>change shape.</em></>}
             lede="Typography is not a coat of paint. It changes what the reader is asked to do."
           />
 
@@ -565,15 +565,15 @@ function SignalDesk({ voice, onVoice, onMove, onLeave }: SignalDeskProps) {
   return (
     <aside className="signal-desk" role="group" aria-label="Three voice field around the question">
       <div className="signal-desk__header">
-        <span>the question, in orbit</span>
+        <span>voice atlas</span>
         <span>move / touch</span>
       </div>
       <div className="signal-desk__stage" onPointerMove={onMove} onPointerLeave={onLeave}>
         <svg className="signal-desk__drawing" viewBox="0 0 520 500" aria-hidden="true">
           <defs>
             <radialGradient id="signal-halo" cx="50%" cy="50%" r="50%">
-              <stop offset="0" stopColor="var(--voice)" stopOpacity=".25" />
-              <stop offset=".62" stopColor="var(--voice)" stopOpacity=".07" />
+              <stop offset="0" stopColor="var(--voice)" stopOpacity=".32" />
+              <stop offset=".62" stopColor="var(--voice)" stopOpacity=".08" />
               <stop offset="1" stopColor="var(--voice)" stopOpacity="0" />
             </radialGradient>
           </defs>
@@ -591,7 +591,7 @@ function SignalDesk({ voice, onVoice, onMove, onLeave }: SignalDeskProps) {
         </svg>
         <span className="signal-desk__pointer" aria-hidden="true" />
         <div className="signal-desk__center">
-          <span>currently listening</span>
+          <span>the live sentence</span>
           <strong>?</strong>
           <span>m3 / open question</span>
         </div>
@@ -611,8 +611,12 @@ function SignalDesk({ voice, onVoice, onMove, onLeave }: SignalDeskProps) {
           ))}
         </div>
         <div className="signal-desk__readout">
-          <span>current voice</span>
+          <span>active temperature</span>
           <strong>{active.name}</strong>
+        </div>
+        <div className="signal-desk__sample">
+          <span>current setting</span>
+          <strong>{active.sample}</strong>
         </div>
         <div className="signal-desk__tone" aria-hidden="true">{tone}</div>
       </div>
