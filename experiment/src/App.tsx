@@ -56,9 +56,9 @@ const VOICES: VoiceSpec[] = [
 
 const NAV_ITEMS = [
   { id: 'question', label: 'question' },
-  { id: 'field-notes', label: 'close read' },
+  { id: 'field-notes', label: 'pressure points' },
   { id: 'voices', label: 'type trials' },
-  { id: 'answer', label: 'answer' },
+  { id: 'answer', label: 'short answer' },
 ] as const
 
 const NEXT_VOICE: Record<VoiceId, VoiceId> = {
@@ -73,7 +73,7 @@ const VOICE_NAME: Record<VoiceId, string> = {
   bold: 'direct',
 }
 
-const clampProbe = (value: number) => Math.max(10, Math.min(90, value))
+const clampProbe = (value: number) => Math.max(9, Math.min(91, value))
 
 export function App() {
   const [voice, setVoice] = useState<VoiceId>('quiet')
@@ -185,18 +185,19 @@ export function App() {
   }, [cycleVoice])
 
   return (
-    <div className={`reading-room reading-room--${voice}`}>
-      <div className="room-atmosphere" aria-hidden="true">
-        <span className="room-atmosphere__orb room-atmosphere__orb--one" />
-        <span className="room-atmosphere__orb room-atmosphere__orb--two" />
-        <span className="room-atmosphere__grain" />
+    <div className={`field-guide field-guide--${voice}`}>
+      <div className="field-guide__atmosphere" aria-hidden="true">
+        <span className="field-guide__sun" />
+        <span className="field-guide__contour field-guide__contour--one" />
+        <span className="field-guide__contour field-guide__contour--two" />
+        <span className="field-guide__grain" />
       </div>
       <a className="skip-link" href="#question">Skip to the question</a>
 
-      <header className="masthead">
+      <header className="topbar">
         <a className="wordmark" href="#question" aria-label="M3 frontend field note, back to the question">
-          <span className="wordmark__mark" aria-hidden="true">M3</span>
-          <span className="wordmark__name">
+          <span className="wordmark__seal" aria-hidden="true"><i>M3</i></span>
+          <span className="wordmark__words">
             <strong>frontend field note</strong>
             <small>one question, closely read</small>
           </span>
@@ -238,16 +239,16 @@ export function App() {
       <main className="page-shell">
         <section id="question" className="hero-section" aria-labelledby="question-title">
           <div className="hero-section__rail">
-            <span><i className="signal-dot" aria-hidden="true" /> opening question</span>
-            <span>the sentence, under glass</span>
-            <span>move the lens <b aria-hidden="true">↘</b></span>
+            <span><i className="signal-dot" aria-hidden="true" /> working title</span>
+            <span>the sentence, under a lens</span>
+            <span>choose a phrase <b aria-hidden="true">↘</b></span>
           </div>
 
           <div className="hero-section__body">
             <div className="hero-copy">
               <div className="hero-copy__folio">
-                <span>title study</span>
-                <span>close enough to notice</span>
+                <span>specimen / 01</span>
+                <span>read the shape, not the claim</span>
               </div>
               <p className="eyebrow"><span className="eyebrow__star" aria-hidden="true" />a close reading of a good question</p>
               <h1 id="question-title" className="question-title" aria-label={TITLE}>
@@ -307,33 +308,33 @@ export function App() {
                 </svg>
               </div>
 
-              <p className="hero-lede">A question is already a tiny interface. This page treats the sentence as a specimen: choose a phrase, change the temperature, and notice what asks to be looked at twice.</p>
+              <p className="hero-lede">One question, three pressure points. Treat the sentence as a small interface: choose a phrase, change the type temperature, and notice what earns the second look.</p>
 
               <div className="hero-actions">
                 <a className="primary-link" href="#field-notes">
-                  <span>read the close-up</span>
+                  <span>open the field notes</span>
                   <ArrowIcon />
                 </a>
                 <button type="button" className="voice-cycle" onClick={cycleVoice} aria-keyshortcuts="Shift+V">
-                  <span>try another voice</span>
+                  <span>change the voice</span>
                   <kbd>shift</kbd><span>+</span><kbd>v</kbd>
                 </button>
               </div>
 
-              <p className="interaction-cue"><span className="interaction-cue__line" aria-hidden="true" /> touch a colored phrase to move the lens</p>
+              <p className="interaction-cue"><span className="interaction-cue__line" aria-hidden="true" /> select a phrase / move the lens</p>
             </div>
 
             <SignalMap note={activeNote} voiceName={activeVoice.name} onSelect={selectWord} />
           </div>
 
           <div className="hero-section__footer">
-            <span><i className="hero-section__signal" aria-hidden="true" /> the page is asking, not declaring</span>
+            <span><i className="hero-section__signal" aria-hidden="true" /> a title in three distances</span>
             <span>active phrase <strong>{activeNote.label}</strong></span>
-            <span>read the shape, not the claim</span>
+            <span>look once, then look again</span>
           </div>
         </section>
 
-        <div className="thread-break" aria-hidden="true">
+        <div className="field-divider" aria-hidden="true">
           <span />
           <svg viewBox="0 0 120 28">
             <path d="M4 14h33M83 14h33M41 8l7 6-7 6M79 8l-7 6 7 6" />
@@ -342,22 +343,22 @@ export function App() {
           <span />
         </div>
 
-        <section id="field-notes" className="close-read-section reveal" aria-labelledby="reading-title">
+        <section id="field-notes" className="pressure-section reveal" aria-labelledby="reading-title">
           <SectionIntro
             number="01"
             titleId="reading-title"
-            eyebrow="close reading"
-            title={<>The sentence has <em>pressure points.</em></>}
+            eyebrow="pressure points"
+            title={<>The sentence has <em>somewhere to stand.</em></>}
             lede="M3 names the maker. “good at” names the standard. “yet?” protects the honest pause. Choose a phrase to read its job."
           />
 
-          <div className="close-read-layout">
-            <div className="phrase-menu" role="group" aria-label="Choose a phrase from the question">
-              <div className="phrase-menu__heading">
-                <span>choose a pressure point</span>
+          <div className="pressure-layout">
+            <div className="phrase-index" role="group" aria-label="Choose a phrase from the question">
+              <div className="phrase-index__heading">
+                <span>phrase index</span>
                 <span aria-hidden="true">01—03</span>
               </div>
-              <div className="phrase-menu__list">
+              <div className="phrase-index__list">
                 {NOTES.map(note => (
                   <button
                     key={note.id}
@@ -377,7 +378,7 @@ export function App() {
                   </button>
                 ))}
               </div>
-              <div className="phrase-menu__footer"><span>one sentence / three distances</span><span aria-hidden="true">↘</span></div>
+              <div className="phrase-index__footer"><span>one sentence / three distances</span><span aria-hidden="true">↘</span></div>
             </div>
 
             <article className={`note-sheet note-sheet--${activeNote.id}`} key={activeNote.id} aria-live="polite">
@@ -386,7 +387,7 @@ export function App() {
                 <span className="note-sheet__folio" aria-hidden="true">{activeNote.folio}</span>
               </div>
               <div className="note-sheet__body">
-                <p className="note-sheet__kicker">{activeNote.title}</p>
+                <p className="note-sheet__kicker">{activeNote.gloss}</p>
                 <h3>{activeNote.label}</h3>
                 <p className="note-sheet__copy">{activeNote.body}</p>
                 <div className="note-sheet__prompt"><b aria-hidden="true">↳</b> {activeNote.prompt}</div>
@@ -405,7 +406,7 @@ export function App() {
             number="02"
             titleId="trials-title"
             eyebrow="three type trials"
-            title={<>One sentence.<em>Three temperatures.</em></>}
+            title={<>One sentence.<em>Three handwritings.</em></>}
             lede="Switch the voice; the words stay in place. A useful interface has a point of view before it has a palette."
           />
 
@@ -463,7 +464,7 @@ export function App() {
 
           <div className={`answer-card ${answerOpen ? 'is-open' : ''}`}>
             <div className="answer-card__topline">
-              <span>answer / no scorecard</span>
+              <span>short answer / no scorecard</span>
               <span aria-hidden="true">{answerOpen ? '●' : '○'}</span>
             </div>
             <div id="answer-window" className="answer-window" aria-live="polite">
@@ -566,7 +567,7 @@ function SignalMap({ note, voiceName, onSelect }: { note: Note; voiceName: strin
   return (
     <aside className={`signal-map signal-map--${note.id}`} aria-label="Interactive close-reading map">
       <div className="signal-map__header">
-        <span>close reading / map</span>
+        <span>phrase lens / {note.index}</span>
         <button type="button" className="map-reset" onPointerDown={event => event.stopPropagation()} onClick={() => setProbe({ x: 50, y: 48 })}>center point</button>
       </div>
       <span className="sr-only" id="map-keyboard-help">Use the arrow keys to move the reading point. Hold shift for a larger move.</span>

@@ -1,7 +1,7 @@
-Turned the field note into a cobalt-and-vermilion broadside with a clearer phrase map.
+Rebuilt the page as a warm field guide with a tactile phrase lens and clearer reading flow.
 
-- Regrouped the exact question into a stronger three-line title study.
-- Replaced the crowded lens treatment with a draggable, keyboard-navigable phrase map.
-- Shifted the sections into a restrained cobalt, paper, vermilion, and acid-ink palette.
-- Kept the type trials, close-reading notes, answer reveal, responsive layout, and reduced-motion support.
-- Verified with `npm run build`.
+Recomposed the hero, phrase index, type trials, and answer reveal around paper specimens, a dark botanical ground, and local system typography.
+
+Kept keyboard phrase selection, Shift+V voice cycling, drag/arrow lens movement, reduced-motion handling, and responsive layouts intact.
+
+Verified with npm run build.
