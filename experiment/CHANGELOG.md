@@ -1,5 +1,7 @@
-Midnight observatory reframes the question as a tactile, interactive close-reading instrument.
-- Replaced the light risograph desk with a dark signal field, floating paper hero, and calmer editorial hierarchy.
-- Kept the phrase lens and type-voice controls, adding a clearer orbital instrument, active-node states, and keyboard-friendly focus treatment.
-- Reworked the close read, voice trials, answer reveal, footer, and responsive layouts around the new visual system.
-- Preserved the required title and added reduced-motion handling for all new ambient and reveal animations.
+Rebuilt the field note as a nocturnal print atlas with a responsive phrase lens.
+
+- Recomposed the page around a paper hero specimen, dark type trials, and a clear answer reveal.
+- Kept the phrase lens, three voice treatments, keyboard cycling, section navigation, and Escape-to-close answer interaction.
+- Added a pointer-responsive reading probe, clearer focus states, and more considered mobile stacking.
+- Preserved the required visible and document title.
+- Verified with `npm run build`.

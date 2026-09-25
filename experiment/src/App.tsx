@@ -3,6 +3,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from 'react'
 import { NOTES, type Note, type WordId } from './notes'
@@ -16,6 +17,11 @@ type VoiceSpec = {
   manner: string
   sample: string
   detail: string
+}
+
+type ProbePosition = {
+  x: number
+  y: number
 }
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
@@ -77,7 +83,7 @@ export function App() {
   const answerCloseRef = useRef<HTMLButtonElement | null>(null)
 
   const activeWord = hoveredWord ?? selectedWord
-  const activeNote = NOTES.find(note => note.id === activeWord) ?? NOTES[1]
+  const activeNote = NOTES.find(note => note.id === activeWord) ?? NOTES[0]
   const activeVoice = VOICES.find(item => item.id === voice) ?? VOICES[0]
 
   const selectWord = useCallback((id: WordId) => {
@@ -176,40 +182,41 @@ export function App() {
   }, [cycleVoice])
 
   return (
-    <div className={`night-page night-page--${voice}`}>
-      <div className="paper-grain" aria-hidden="true" />
+    <div className={`atlas-page atlas-page--${voice}`}>
+      <div className="page-noise" aria-hidden="true" />
       <a className="skip-link" href="#question">Skip to the question</a>
 
-      <header className="topbar">
-        <a className="brand" href="#question" aria-label="M3 frontend field note, back to the question">
-          <span className="brand__mark" aria-hidden="true">M3</span>
-          <span className="brand__copy">
+      <header className="masthead">
+        <a className="wordmark" href="#question" aria-label="M3 frontend field note, back to the question">
+          <span className="wordmark__stamp" aria-hidden="true">M3</span>
+          <span className="wordmark__copy">
             <strong>frontend field note</strong>
-            <small>one question, under a lens</small>
+            <small>an answer in progress</small>
           </span>
         </a>
 
-        <nav className="site-nav" aria-label="Page sections">
-          {NAV_ITEMS.map(item => (
+        <nav className="section-nav" aria-label="Page sections">
+          {NAV_ITEMS.map((item, index) => (
             <a
               key={item.id}
               className={activeSection === item.id ? 'is-active' : ''}
               href={`#${item.id}`}
               aria-current={activeSection === item.id ? 'location' : undefined}
             >
+              <span className="section-nav__index">0{index + 1}</span>
               <span>{item.label}</span>
             </a>
           ))}
         </nav>
 
-        <div className="voice-control" role="group" aria-label="Set the page's type voice">
-          <span className="voice-control__label">type voice</span>
-          <div className="voice-control__set">
+        <div className="voice-picker" role="group" aria-label="Set the page's type voice">
+          <span className="voice-picker__label">voice</span>
+          <div className="voice-picker__set">
             {VOICES.map(item => (
               <button
                 key={item.id}
                 type="button"
-                className={`voice-button voice-button--${item.id} ${voice === item.id ? 'is-active' : ''}`}
+                className={`voice-key voice-key--${item.id} ${voice === item.id ? 'is-active' : ''}`}
                 onClick={() => selectVoice(item.id)}
                 aria-pressed={voice === item.id}
                 aria-label={`Use the ${item.name} type voice`}
@@ -223,15 +230,15 @@ export function App() {
       </header>
 
       <main className="page-shell">
-        <section id="question" className="hero-section" aria-labelledby="question-title">
-          <div className="hero-meta" aria-hidden="true">
-            <span><i className="hero-meta__dot" /> field note / frontend</span>
-            <span>read the shape before the claim</span>
-            <span>close range</span>
+        <section id="question" className="hero-panel" aria-labelledby="question-title">
+          <div className="hero-panel__header">
+            <span><i className="signal-dot" aria-hidden="true" /> opening / question</span>
+            <span className="hero-panel__instruction">select a phrase to move the lens</span>
+            <span>folio 001</span>
           </div>
 
-          <div className="hero-layout">
-            <div className="hero-copy">
+          <div className="hero-panel__grid">
+            <div className="hero-panel__copy">
               <p className="eyebrow"><span className="eyebrow__star" aria-hidden="true" />not a scorecard. a closer look.</p>
               <h1 id="question-title" className="question-title" aria-label={TITLE}>
                 <span className="title-line title-line--one">is Minimax</span>{' '}
@@ -245,6 +252,7 @@ export function App() {
                     onFocus={() => setHoveredWord('m3')}
                     onBlur={() => setHoveredWord(null)}
                     aria-pressed={selectedWord === 'm3'}
+                    aria-label="Move the lens to M3"
                   >
                     M3
                   </button>
@@ -259,6 +267,7 @@ export function App() {
                     onFocus={() => setHoveredWord('good')}
                     onBlur={() => setHoveredWord(null)}
                     aria-pressed={selectedWord === 'good'}
+                    aria-label="Move the lens to good at"
                   >
                     good at
                   </button>
@@ -274,6 +283,7 @@ export function App() {
                     onFocus={() => setHoveredWord('yet')}
                     onBlur={() => setHoveredWord(null)}
                     aria-pressed={selectedWord === 'yet'}
+                    aria-label="Move the lens to yet"
                   >
                     yet?
                   </button>
@@ -300,8 +310,8 @@ export function App() {
             <LensInstrument note={activeNote} voiceName={activeVoice.name} />
           </div>
 
-          <div className="hero-foot">
-            <span><i className="hero-foot__signal" aria-hidden="true" /> the page is asking, not declaring</span>
+          <div className="hero-panel__footer">
+            <span><i className="hero-panel__signal" aria-hidden="true" /> the page is asking, not declaring</span>
             <span>active phrase <strong>{activeNote.label}</strong></span>
             <span>read the shape, not the claim</span>
           </div>
@@ -309,7 +319,7 @@ export function App() {
 
         <ThreadBreak />
 
-        <section id="field-notes" className="reading-section reveal" aria-labelledby="reading-title">
+        <section id="field-notes" className="reading-panel section--paper reveal" aria-labelledby="reading-title">
           <SectionIntro
             number="01"
             titleId="reading-title"
@@ -319,8 +329,8 @@ export function App() {
           />
 
           <div className="reading-layout">
-            <div className="phrase-panel" role="group" aria-label="Choose a phrase from the question">
-              <div className="phrase-panel__header">
+            <div className="phrase-index" role="group" aria-label="Choose a phrase from the question">
+              <div className="phrase-index__header">
                 <span>choose a pressure point</span>
                 <span aria-hidden="true">01—03</span>
               </div>
@@ -347,7 +357,7 @@ export function App() {
                   </button>
                 ))}
               </div>
-              <p className="phrase-panel__hint">The same sentence, read from three distances.</p>
+              <p className="phrase-index__hint">The same sentence, read from three distances.</p>
             </div>
 
             <article className={`note-card note-card--${activeNote.id}`} key={activeNote.id} aria-live="polite">
@@ -370,7 +380,7 @@ export function App() {
           </div>
         </section>
 
-        <section id="voices" className="voices-section reveal" aria-labelledby="trials-title">
+        <section id="voices" className="voices-panel section--dark reveal" aria-labelledby="trials-title">
           <SectionIntro
             number="02"
             titleId="trials-title"
@@ -415,7 +425,7 @@ export function App() {
           </div>
         </section>
 
-        <section id="answer" className="answer-section reveal" aria-labelledby="answer-title">
+        <section id="answer" className="answer-panel section--dark reveal" aria-labelledby="answer-title">
           <div className="answer-intro">
             <p className="eyebrow"><span className="eyebrow__star" aria-hidden="true" /> the useful answer</p>
             <h2 id="answer-title">Small answer.<br /><em>Clear breath.</em></h2>
@@ -516,16 +526,28 @@ function ArrowIcon() {
 }
 
 function LensInstrument({ note, voiceName }: { note: Note; voiceName: string }) {
+  const [probe, setProbe] = useState<ProbePosition>({ x: 50, y: 48 })
+
+  const moveProbe = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect()
+    const x = ((event.clientX - bounds.left) / bounds.width) * 100
+    const y = ((event.clientY - bounds.top) / bounds.height) * 100
+    setProbe({
+      x: Math.max(8, Math.min(92, x)),
+      y: Math.max(10, Math.min(90, y)),
+    })
+  }
+
   return (
-    <aside className={`instrument instrument--${note.id}`} aria-label="Interactive close-reading lens" aria-live="polite">
-      <div className="instrument__header">
+    <aside className={`lens-instrument lens-instrument--${note.id}`} aria-label="Interactive close-reading lens" aria-live="polite">
+      <div className="lens-instrument__header">
         <span>close reading</span>
-        <span className="instrument__header-mark" aria-hidden="true">01 / 03</span>
+        <span className="lens-instrument__mark" aria-hidden="true">{note.index} / 03</span>
       </div>
-      <div className="instrument__stage">
-        <span className="instrument__label instrument__label--top" aria-hidden="true">field / {note.index}</span>
-        <span className="instrument__label instrument__label--side" aria-hidden="true">x / word · y / intent</span>
-        <svg className="instrument__drawing" viewBox="0 0 360 360" aria-hidden="true">
+      <div className="lens-instrument__stage" onPointerMove={moveProbe} onPointerLeave={() => setProbe({ x: 50, y: 48 })}>
+        <span className="lens-instrument__label lens-instrument__label--top" aria-hidden="true">field / {note.index}</span>
+        <span className="lens-instrument__label lens-instrument__label--side" aria-hidden="true">x / word · y / intent</span>
+        <svg className="lens-instrument__drawing" viewBox="0 0 360 360" aria-hidden="true">
           <circle cx="180" cy="170" r="122" />
           <ellipse cx="180" cy="170" rx="146" ry="58" transform="rotate(-19 180 170)" />
           <path d="M45 237c84 76 202 77 270-13" />
@@ -533,25 +555,25 @@ function LensInstrument({ note, voiceName }: { note: Note; voiceName: string }) 
           <line x1="34" y1="170" x2="326" y2="170" />
           <path d="M101 87c38 19 87 24 137 11" />
         </svg>
-        <div className="instrument__nodes" aria-hidden="true">
-          <span className="instrument-node instrument-node--m3">M3</span>
-          <span className={`instrument-node instrument-node--good ${note.id === 'good' ? 'is-current' : ''}`}>good</span>
-          <span className={`instrument-node instrument-node--yet ${note.id === 'yet' ? 'is-current' : ''}`}>yet?</span>
-        </div>
+        <div className="lens-instrument__crosshair" aria-hidden="true"><i /><i /></div>
+        <div className="lens-instrument__probe" style={{ left: `${probe.x}%`, top: `${probe.y}%` }} aria-hidden="true" />
         <div className="lens-disc" key={note.id}>
           <span>under the lens</span>
           <strong>{note.label}</strong>
           <em>{note.gloss}</em>
         </div>
-        <span className="instrument__dot" aria-hidden="true" />
-        <span className="instrument__crosshair" aria-hidden="true"><i /><i /></span>
+        <div className="lens-instrument__nodes" aria-hidden="true">
+          <span className="lens-node lens-node--m3">M3</span>
+          <span className={`lens-node lens-node--good ${note.id === 'good' ? 'is-current' : ''}`}>good</span>
+          <span className={`lens-node lens-node--yet ${note.id === 'yet' ? 'is-current' : ''}`}>yet?</span>
+        </div>
       </div>
-      <div className="instrument__footer">
+      <div className="lens-instrument__footer">
         <div>
           <span>current reading</span>
           <strong>{note.title}</strong>
         </div>
-        <span className="instrument__voice">{voiceName} voice</span>
+        <span className="lens-instrument__voice">{voiceName} voice</span>
       </div>
     </aside>
   )
