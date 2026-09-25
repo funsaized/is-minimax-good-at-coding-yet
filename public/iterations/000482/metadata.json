@@ -1,0 +1,19 @@
+{
+  "id": 482,
+  "parentId": 481,
+  "createdAt": "2026-09-25T12:17:56.028Z",
+  "summary": "A sharper editorial workbench with clearer hierarchy, a tactile phrase lens, and a steadier reading flow.",
+  "path": "/iterations/000482/index.html",
+  "screenshot": "/iterations/000482/desktop.png",
+  "mobileScreenshot": "/iterations/000482/mobile.png",
+  "sourceCommit": "f6e4745f0d27c1a644258e2f93516cd372a38b61",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 227,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 48298,
+    "outputTokens": 27853,
+    "steps": 11
+  }
+}
