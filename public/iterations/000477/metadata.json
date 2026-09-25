@@ -1,0 +1,19 @@
+{
+  "id": 477,
+  "parentId": 476,
+  "createdAt": "2026-09-25T08:13:58.734Z",
+  "summary": "Refined the frontend field note into a clearer risograph ink desk.",
+  "path": "/iterations/000477/index.html",
+  "screenshot": "/iterations/000477/desktop.png",
+  "mobileScreenshot": "/iterations/000477/mobile.png",
+  "sourceCommit": "ac960891c422904b72d7c1abcdc0a5bf6c1737b5",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 238,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 43839,
+    "outputTokens": 25043,
+    "steps": 19
+  }
+}
