@@ -239,7 +239,7 @@ export function App() {
       <main className="page-shell">
         <section id="question" className="hero-section" aria-labelledby="question-title">
           <div className="hero-section__rail">
-            <span><i className="signal-dot" aria-hidden="true" /> working title</span>
+            <span><i className="signal-dot" aria-hidden="true" /> title study</span>
             <span>the sentence, under a lens</span>
             <span>choose a phrase <b aria-hidden="true">↘</b></span>
           </div>
@@ -247,7 +247,7 @@ export function App() {
           <div className="hero-section__body">
             <div className="hero-copy">
               <div className="hero-copy__folio">
-                <span>specimen / 01</span>
+                <span>title study</span>
                 <span>read the shape, not the claim</span>
               </div>
               <p className="eyebrow"><span className="eyebrow__star" aria-hidden="true" />a close reading of a good question</p>
@@ -464,7 +464,7 @@ export function App() {
 
           <div className={`answer-card ${answerOpen ? 'is-open' : ''}`}>
             <div className="answer-card__topline">
-              <span>short answer / no scorecard</span>
+              <span>short answer / one clear thought</span>
               <span aria-hidden="true">{answerOpen ? '●' : '○'}</span>
             </div>
             <div id="answer-window" className="answer-window" aria-live="polite">

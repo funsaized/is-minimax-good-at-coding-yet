@@ -1,7 +1,5 @@
-Rebuilt the page as a warm field guide with a tactile phrase lens and clearer reading flow.
+Night print lab gives the question a warmer, clearer interactive reading.
 
-Recomposed the hero, phrase index, type trials, and answer reveal around paper specimens, a dark botanical ground, and local system typography.
-
-Kept keyboard phrase selection, Shift+V voice cycling, drag/arrow lens movement, reduced-motion handling, and responsive layouts intact.
-
-Verified with npm run build.
+- Rebuilt the page around deep ink, warm paper, acid-chartreuse signals, and coral registration marks.
+- Strengthened the hero hierarchy, phrase-reading map, type trials, answer reveal, and responsive layouts.
+- Preserved keyboard controls, reduced-motion support, self-contained assets, and the required title.
