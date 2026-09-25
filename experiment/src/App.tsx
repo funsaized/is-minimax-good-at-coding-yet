@@ -232,7 +232,7 @@ export function App() {
 
           <div className="hero-grid">
             <div className="hero-copy">
-              <p className="eyebrow"><span aria-hidden="true">✳</span>not a benchmark. a closer look.</p>
+              <p className="eyebrow"><span className="eyebrow__spark" aria-hidden="true">✳</span>not a benchmark. a closer look.</p>
               <h1 id="question-title" className="question-title" aria-label={TITLE}>
                 <span className="title-line title-line--one">is Minimax</span>{' '}
                 <span className="title-line title-line--two">
@@ -302,7 +302,7 @@ export function App() {
 
           <div className="hero-foot">
             <span><i aria-hidden="true" /> the page is asking, not declaring</span>
-            <span>page voice <strong>{activeVoice.name}</strong></span>
+            <span>phrase lens <strong>{activeNote.label}</strong></span>
             <span>question / close read / type trial</span>
           </div>
         </section>
@@ -311,6 +311,7 @@ export function App() {
 
         <section id="field-notes" className="reading-section reveal" aria-labelledby="reading-title">
           <SectionIntro
+            number="01"
             titleId="reading-title"
             eyebrow="close reading"
             title={<>The sentence has <em>pressure points.</em></>}
@@ -368,6 +369,7 @@ export function App() {
 
         <section id="voices" className="voices-section reveal" aria-labelledby="trials-title">
           <SectionIntro
+            number="02"
             titleId="trials-title"
             eyebrow="three type trials"
             title={<>One sentence.<em>Three temperatures.</em></>}
@@ -412,7 +414,7 @@ export function App() {
 
         <section id="answer" className="answer-section reveal" aria-labelledby="answer-title">
           <div className="answer-intro">
-            <p className="eyebrow"><span aria-hidden="true">✳</span> the useful answer</p>
+            <p className="eyebrow"><span className="eyebrow__spark" aria-hidden="true">✳</span> the useful answer</p>
             <h2 id="answer-title">Small answer.<br /><em>Clear breath.</em></h2>
             <p>The question does not need a speech. It needs one honest sentence—and enough space around it to land.</p>
             <button
@@ -476,11 +478,11 @@ export function App() {
   )
 }
 
-function SectionIntro({ titleId, eyebrow, title, lede }: { titleId: string; eyebrow: string; title: ReactNode; lede: string }) {
+function SectionIntro({ number, titleId, eyebrow, title, lede }: { number: string; titleId: string; eyebrow: string; title: ReactNode; lede: string }) {
   return (
     <header className="section-intro">
       <div>
-        <p className="eyebrow"><span aria-hidden="true">✳</span>{eyebrow}</p>
+        <p className="eyebrow"><span className="eyebrow__spark" aria-hidden="true">✳</span><span className="eyebrow__number">{number}</span>{eyebrow}</p>
         <h2 id={titleId}>{title}</h2>
       </div>
       <p className="section-intro__lede">{lede}</p>
@@ -534,6 +536,7 @@ function LensCard({ note, voiceName }: { note: Note; voiceName: string }) {
           <em>{note.gloss}</em>
         </div>
         <span className="lens-stage__dot" aria-hidden="true" />
+        <span className="lens-stage__crosshair" aria-hidden="true"><i /><i /></span>
       </div>
       <div className="lens-card__footer">
         <div>

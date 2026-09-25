@@ -1,3 +1,6 @@
-Brightened the field note into a tactile risograph reading room.
-Rebuilt the page around warm paper, cobalt/coral/lime ink, a larger editorial question, and a responsive close-reading lens.
-Retained the phrase selector, type-voice trials, keyboard shortcut, answer reveal, focus handling, and reduced-motion support.
+Refined the frontend field note into a clearer risograph ink desk.
+
+- Reworked the hero into a stronger title specimen with a more legible phrase lens and tactile orbit details.
+- Tightened the close-read, type-trial, and answer sections around consistent color, spacing, and editorial hierarchy.
+- Preserved keyboard-accessible phrase, voice, navigation, and answer-reveal interactions with reduced-motion and mobile handling.
+- Verified the production build with `npm run build`.
