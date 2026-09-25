@@ -18,7 +18,6 @@ type VoiceSpec = {
   tagline: string
   sample: string
   detail: string
-  color: string
 }
 
 type QuestionDialProps = {
@@ -38,7 +37,6 @@ const VOICES: VoiceSpec[] = [
     tagline: 'a lighter kind of confidence',
     sample: 'is m3 good at frontend yet?',
     detail: 'A little breathing room lets the sharpest word arrive without a drumroll.',
-    color: 'blue',
   },
   {
     id: 'human',
@@ -47,7 +45,6 @@ const VOICES: VoiceSpec[] = [
     tagline: 'warmth without noise',
     sample: 'is M3 good at frontend yet?',
     detail: 'The edges stay soft enough to feel touched, never soft enough to lose the point.',
-    color: 'coral',
   },
   {
     id: 'bold',
@@ -56,7 +53,6 @@ const VOICES: VoiceSpec[] = [
     tagline: 'a little less polite',
     sample: 'IS M3 GOOD AT FRONTEND YET?',
     detail: 'Say it once, clearly, then leave the reader enough room to finish the thought.',
-    color: 'lime',
   },
 ]
 
@@ -71,9 +67,9 @@ const NEXT_VOICE: Record<VoiceId, VoiceId> = { quiet: 'human', human: 'bold', bo
 const VOICE_NAME: Record<VoiceId, string> = { quiet: 'quiet cut', human: 'human hand', bold: 'bold signal' }
 const VOICE_ACCENT: Record<VoiceId, string> = { quiet: 'blue', human: 'coral', bold: 'lime' }
 const DIAL_NODES: Record<VoiceId, { x: number; y: number }> = {
-  quiet: { x: 16, y: 23 },
-  human: { x: 80, y: 24 },
-  bold: { x: 73, y: 78 },
+  quiet: { x: 15, y: 24 },
+  human: { x: 82, y: 22 },
+  bold: { x: 74, y: 80 },
 }
 
 export function App() {
@@ -88,7 +84,7 @@ export function App() {
 
   const activeWord = hoveredWord ?? selectedWord
   const activeNote = NOTES.find(note => note.id === activeWord) ?? NOTES[1]
-  const shellStyle = { '--tone': `var(--${voice})` } as CSSProperties
+  const shellStyle = { '--voice': `var(--${voice})` } as CSSProperties
 
   const selectWord = useCallback((id: WordId) => {
     setSelectedWord(id)
@@ -137,7 +133,7 @@ export function App() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
         if (visible[0]) setActiveSection(visible[0].target.id)
       },
-      { rootMargin: '-18% 0px -66% 0px', threshold: [0.05, 0.2, 0.5, 0.8] },
+      { rootMargin: '-20% 0px -65% 0px', threshold: [0.05, 0.2, 0.5, 0.8] },
     )
     sections.forEach(section => observer.observe(section))
     return () => observer.disconnect()
@@ -228,23 +224,21 @@ export function App() {
 
   return (
     <div className={`app app--${voice}`} style={shellStyle}>
-      <div className="ambient ambient--top" aria-hidden="true" />
-      <div className="ambient ambient--bottom" aria-hidden="true" />
-      <div className="app__grain" aria-hidden="true" />
+      <div className="app__paper-texture" aria-hidden="true" />
+      <div className="app__ink-wash app__ink-wash--one" aria-hidden="true" />
+      <div className="app__ink-wash app__ink-wash--two" aria-hidden="true" />
       <div className="app__progress" aria-hidden="true"><span /></div>
       <a className="skip-link" href="#question">Skip to the question</a>
 
       <header className="site-header">
         <a className="brand" href="#question" aria-label="M3 frontend field note, home">
           <span className="brand__mark" aria-hidden="true">
-            <svg viewBox="0 0 40 40" role="presentation">
-              <path d="M8 28V12h4.1l7.9 9.7 7.9-9.7H32v16h-4.4v-8.5L20 28l-7.6-9.5V28z" fill="currentColor" />
-              <circle cx="31.5" cy="9" r="2.1" fill="var(--ink)" />
-            </svg>
+            <span>m³</span>
+            <i />
           </span>
           <span className="brand__copy">
             <strong>m³ / field note</strong>
-            <small>a small reading of the question</small>
+            <small>an open question, in three voices</small>
           </span>
         </a>
 
@@ -262,7 +256,7 @@ export function App() {
         </nav>
 
         <div className="voice-control">
-          <span className="voice-control__label">type / temperature</span>
+          <span className="voice-control__label">temperature</span>
           <div className="voice-control__options" role="group" aria-label="Set the page voice">
             {VOICES.map(item => (
               <button
@@ -281,19 +275,19 @@ export function App() {
       </header>
 
       <main className="page-content">
-        <section id="question" className="hero-section is-in" aria-labelledby="question-title">
+        <section id="question" className="hero-section" aria-labelledby="question-title">
           <div className="section-rail">
             <span className="eyebrow"><span className="eyebrow__spark">✳</span>the opening question</span>
             <span>one sentence / three ways to hear it</span>
           </div>
 
           <div className="hero-layout">
-            <article className="hero-poster">
-              <div className="hero-poster__topline">
+            <article className="question-poster">
+              <div className="question-poster__topline">
                 <span>the question, set in public</span>
-                <span className="hero-poster__seal" aria-hidden="true">M3</span>
+                <span className="question-poster__index">01 / 04</span>
               </div>
-              <div className="hero-poster__chapter">a test of judgment, not a verdict</div>
+              <div className="question-poster__chapter">a test of judgment, not a verdict</div>
               <h1 id="question-title" className={`hero-title hero-title--${voice}`} aria-label={TITLE}>
                 <span className="hero-title__line">is Minimax</span>{' '}
                 <span className="hero-title__line">
@@ -338,10 +332,10 @@ export function App() {
                   </button>
                 </span>
               </h1>
-              <p className="hero-poster__lede">
+              <p className="question-poster__lede">
                 Not a verdict. A small reading of the moment: can this page hold a point of view, invite a touch, and still know when to become quiet?
               </p>
-              <div className="hero-poster__actions">
+              <div className="question-poster__actions">
                 <a className="button button--ink" href="#field-notes">
                   <span>follow the thread</span>
                   <ArrowIcon />
@@ -351,8 +345,8 @@ export function App() {
                   <kbd>shift</kbd><span>+</span><kbd>v</kbd>
                 </button>
               </div>
-              <p className="hero-poster__hint"><span className="hint-dot" aria-hidden="true" />touch a word to open its margin note</p>
-              <span className="hero-poster__corner-mark" aria-hidden="true">↗</span>
+              <p className="question-poster__hint"><span className="hint-dot" aria-hidden="true" />touch a word to open its margin note</p>
+              <span className="question-poster__stamp" aria-hidden="true">m³<br /><small>read slowly</small></span>
             </article>
 
             <QuestionDial voice={voice} onVoice={selectVoice} onMove={onDialMove} onLeave={onDialLeave} />
@@ -376,14 +370,15 @@ export function App() {
           <span />
         </div>
 
-        <section id="field-notes" className="field-section reveal" aria-labelledby="field-title">
+        <section id="field-notes" className="field-section section-panel reveal" aria-labelledby="field-title">
           <SectionHeading
             eyebrow="the margin notes"
             title={<>Read the <em>edges.</em></>}
             lede="The sentence is a tiny instrument. Touch a word to hear the decision hiding underneath it."
+            className="section-heading--light"
           />
 
-          <div className="word-lab">
+          <div className="notes-workbench">
             <div className="word-list" role="list" aria-label="Question words">
               <div className="word-list__header"><span>choose a word</span><span>the small evidence</span></div>
               {NOTES.map(note => (
@@ -575,13 +570,13 @@ function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
       <div className="question-dial__stage">
         <svg className="question-dial__drawing" viewBox="0 0 520 500" aria-hidden="true">
           <defs>
-            <radialGradient id="dial-halo" cx="50%" cy="50%" r="50%">
-              <stop offset="0" stopColor="var(--tone)" stopOpacity=".25" />
-              <stop offset=".62" stopColor="var(--tone)" stopOpacity=".06" />
-              <stop offset="1" stopColor="var(--tone)" stopOpacity="0" />
+            <radialGradient id="ink-dial-halo" cx="50%" cy="50%" r="50%">
+              <stop offset="0" stopColor="var(--voice)" stopOpacity=".3" />
+              <stop offset=".62" stopColor="var(--voice)" stopOpacity=".07" />
+              <stop offset="1" stopColor="var(--voice)" stopOpacity="0" />
             </radialGradient>
           </defs>
-          <circle cx="260" cy="250" r="174" fill="url(#dial-halo)" />
+          <circle cx="260" cy="250" r="174" fill="url(#ink-dial-halo)" />
           <circle className="question-dial__ring question-dial__ring--outer" cx="260" cy="250" r="170" />
           <ellipse className="question-dial__ring question-dial__ring--tilt" cx="260" cy="250" rx="202" ry="77" transform="rotate(-23 260 250)" />
           <ellipse className="question-dial__ring question-dial__ring--inner" cx="260" cy="250" rx="96" ry="42" transform="rotate(-23 260 250)" />
@@ -593,7 +588,7 @@ function QuestionDial({ voice, onVoice, onMove, onLeave }: QuestionDialProps) {
           <circle className="question-dial__center-dot" cx="260" cy="250" r="4" />
           <path className="question-dial__comet" d="M105 146c-23 17-34 35-37 58" />
         </svg>
-        <span className="question-dial__spark" aria-hidden="true" />
+        <span className="question-dial__pointer" aria-hidden="true" />
         <div className="question-dial__center">
           <span className="question-dial__eyebrow">hold here</span>
           <strong>?</strong>
