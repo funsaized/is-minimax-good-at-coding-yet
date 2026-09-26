@@ -1,37 +1,45 @@
-Duotone reading desk: one large title, one dark type-trial band, and a keyboard close read.
+Two-colour press sheet: the question is set as a riso print job, and the lens became a real loupe.
 
-**Direction.** The warm field-guide/atlas look was replaced with a riso-duotone desk: chalk
-paper, near-black ink, vermillion, electric blue and one spot of yellow, with CSS-only washes,
-a faint grid, a halftone dot field and grain. Type carries the hierarchy — one serif for
-display and reading, one sans for UI, one mono for labels — using only fonts already on the
-machine.
+## Iteration 487
 
-**Title.** "is Minimax M3 good at frontend yet?" is now set as three display lines at
-`clamp(2.4rem, 8.3vw, 8.2rem)`, with the indented second line doing the work. "good at" wears a
-marker block, "yet?" is the only vermillion element, and a leader line is drawn from the margin
-note up to the question mark. Each phrase is a real button: it selects, it announces, and the
-page leans toward the pointer — words drift, tilt and light up inside a `requestAnimationFrame`
-loop that writes CSS custom properties, so nothing re-renders on mouse move. Pointer tracking
-is skipped for touch and disabled entirely under `prefers-reduced-motion`.
+### What changed
 
-**Close read.** The three phrases are a `radiogroup` with roving tabindex, arrow keys, Home/End
-and per-item help text. Selecting one re-cuts a reading card: the fragment is set as a large
-specimen, a hand-drawn red rule re-inks itself, and the gloss, body, three checks, prompt and
-margin note re-mount. The abstract drag-probe map from the previous iteration is gone; nothing
-in the hero is a control that does nothing.
+**Direction.** Replaced the warm duotone reading desk with a two-colour press sheet: newsprint
+stock, black and fluorescent pink and federal blue, halftone textures, sprocket rails, crop and
+registration marks, and a printer's ink bar in the colophon. The whole page is now one print job
+with three inks and a slug line.
 
-**Type trials.** The three voices (editorial serif / plain sans / heavy poster) still re-cut the
-whole page, including the title, via the top-bar A/B/C keys, the trial cards, or Shift+V. They
-now live in a dark band with a halftone field so the section reads as a deliberate break in the
-page, and the three cards show the sentence in their own face.
+**Removed.** The three-way "type voice" switcher and its global `shift`+`V` shortcut. It only
+swapped fonts, it hijacked a browser shortcut, and it was the one control that did the least.
+The fourth section (a dark type-trial band) went with it. Four sections became three: the
+question, a close read, the short answer.
 
-**Also.** A sticky "three distances" ladder re-renders the sentence at close, mid and far size
-with the active phrase marked, so selection is legible from across the fold. The answer is a
-single sealed-card control: focus moves to the close button on open, Escape covers it and
-returns focus. Headings use balanced wrapping, the mobile nav is a fading scroll strip, the
-footer echoes the title in outline stroke, and all motion collapses to nothing under reduced
-motion. No fonts, images, scripts, storage or network calls; CSS gzip 10.3 kB → 6.9 kB.
+**The lens, deepened.** Hovering, tapping or focusing a phrase in the title now moves a halftone
+bloom to that phrase, and the sticky loupe in the right column prints the phrase with its second
+impression sliding out of register as you engage it. Pulling the pointer across the title leans
+the type toward the cursor and draws a pink marker swipe that tightens to an x-height band.
 
-**Housekeeping.** Removed 188 orphaned `.tsx` modules left in `src/` by earlier iterations. They
-were unreachable from `main.tsx` and 67 of them imported a now-obsolete `VoiceId` from `App.tsx`,
-which broke `tsc --noEmit`. `npm run build` passes.
+**The page now obeys its own copy.** Each phrase's brief is demonstrated rather than asserted:
+`M3` is set at 0.56em in the title (smaller, not louder); `good at` gets an unstyled line of its
+own at full width; the `?` in `yet` drops to a line of its own in the specimen and lands on a
+halftone dot in the title. Three lines of the close-read copy were rewritten to match what the
+page actually does.
+
+**Close read.** Each phrase now prints a specimen sheet: a slug line with how it is set, the
+phrase in two misregistered spot inks under the black, the gloss, the note, a margin note set in
+the right margin, and the brief as a three-column instruction band.
+
+**Short answer.** The sealed card became a proof sheet with a real disclosure toggle
+(`aria-expanded` / `aria-controls`), a squeegee sweep on open, and staggered print-in. Focus stays
+on the toggle instead of being stolen, and `esc` puts the sheet back.
+
+**Motion and access.** `1` `2` `3` pull a phrase into the lens, arrows step through the title and
+the phrase index, and the keycard in the loupe documents exactly that. Scroll reveals are now
+armed by a flag the observer sets, so content can never be left hidden if the observer is
+unavailable. Fixed two real bugs found while checking: `overflow-x: hidden` on the page frame was
+breaking `position: sticky`, and the title's leading was tight enough to clip descenders. Added a
+print stylesheet.
+
+**Files.** `src/App.tsx` rewritten, `src/style.css` rewritten, new `src/marks.tsx` (local SVG
+press marks), `src/notes.ts` extended with `set` and `drop` fields. No new dependencies, no
+remote fonts, images, scripts or network calls; the title and document title are unchanged.
