@@ -1,0 +1,19 @@
+{
+  "id": 487,
+  "parentId": 486,
+  "createdAt": "2026-09-26T13:58:34.790Z",
+  "summary": "Two-colour press sheet: the question is set as a riso print job, and the lens became a real loupe.",
+  "path": "/iterations/000487/index.html",
+  "screenshot": "/iterations/000487/desktop.png",
+  "mobileScreenshot": "/iterations/000487/mobile.png",
+  "sourceCommit": "12b95fe61af41549b7fbf47c6be449b138d280c1",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 1005,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 74402,
+    "outputTokens": 33641,
+    "steps": 87
+  }
+}
