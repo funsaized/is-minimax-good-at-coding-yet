@@ -1,45 +1,55 @@
-Two-colour press sheet: the question is set as a riso print job, and the lens became a real loupe.
+Make-ready: the press sheet now hands you the plate and you can pull it into register.
 
-## Iteration 487
+## The change
+The page previously *looked* like a two-colour riso pull but never admitted it. This iteration makes
+the misregistration real and operable. A single "plate offset" dial drives one pair of CSS variables
+on `:root`, and everything that is printed on the sheet follows it: the hero title, the plate card
+loupe, and the close-read specimen. A "pull to register" button eases the plate home on a rAF curve;
+at zero, the fringes collapse and the type goes crisp. A three-plate registration eye in the plate
+card reads the state — the black plate holds still, the pink and blue plates slide, and at register
+all three collapse into one bullseye.
 
-### What changed
+The offset is done with layered `text-shadow` on the live text, not duplicated ghost DOM, so the
+title's accessible name and text content stay exactly `is Minimax M3 good at frontend yet?`. The
+offset is scaled as a proportion of the type size (`--fringe-scale`) so the fringe reads as
+misregistration on a 7rem headline and on a 2.4rem phone headline alike.
 
-**Direction.** Replaced the warm duotone reading desk with a two-colour press sheet: newsprint
-stock, black and fluorescent pink and federal blue, halftone textures, sprocket rails, crop and
-registration marks, and a printer's ink bar in the colophon. The whole page is now one print job
-with three inks and a slug line.
+## What was added
+- `MakeReady` control in the plate column: a real range input with a centre detent, loose/tight
+  scale, tabular-numeric readout, `aria-valuetext`, and a `pull to register` button that animates the
+  plate home. In register the button becomes a state, not a dead control.
+- `RegisterEye` (`src/marks.tsx`): three registration crosses whose offsets are the plate offset.
+- Paper tooth generated in-browser with an inline `feTurbulence` data-URI tile, replacing the
+  repeating scanline gradients.
+- `M3` given a hairline lockup — structure instead of emphasis, which is what phrase 01 actually
+  argues for — with its own scaled fringe and a pull-driven ink shadow.
+- The question mark rocks on a long loop and freezes on its neutral point while it is the phrase
+  under the lens; its half-tone landing pad is now proportionally larger.
+- The left rail reports the live register state and turns pink when the plate is home.
 
-**Removed.** The three-way "type voice" switcher and its global `shift`+`V` shortcut. It only
-swapped fonts, it hijacked a browser shortcut, and it was the one control that did the least.
-The fourth section (a dark type-trial band) went with it. Four sections became three: the
-question, a close read, the short answer.
+## What was removed
+- The large half-tone "bloom" cloud behind the title. It was decorative weight competing with the
+  title and animated `top`/`left` on every phrase change; the screened fringes now do that job with
+  real meaning.
+- The `HandArrow` margin SVG. It was stretched with `preserveAspectRatio="none"`, so the hand-drawn
+  line was distorted into a smear. The margin note is now a pink gradient rule plus a serif pull.
+- The infinite `mark-breathe` rotation that ran on every slugline mark on the page. Ambient motion
+  on eight identical elements was noise, not character.
+- Duplicate ghost layers in the specimen card (aria-hidden text copies of the phrase).
+- The loupe's duplicate gloss line, which restated the index row it sat next to.
 
-**The lens, deepened.** Hovering, tapping or focusing a phrase in the title now moves a halftone
-bloom to that phrase, and the sticky loupe in the right column prints the phrase with its second
-impression sliding out of register as you engage it. Pulling the pointer across the title leans
-the type toward the cursor and draws a pink marker swipe that tightens to an x-height band.
+## What was tightened
+- Specimen body: heading and copy now share one column, closing a row-gap hole between them.
+- Index rows carry the short measure ("six letters") instead of a set line that wrapped to two.
+- The index column is sticky, so the phrase list stays with the specimen while it scrolls.
+- Answer section columns start together; the closing note no longer orphans a word.
+- `text-wrap: balance` on headings, `pretty` on body copy; serif and mono both kept in use.
 
-**The page now obeys its own copy.** Each phrase's brief is demonstrated rather than asserted:
-`M3` is set at 0.56em in the title (smaller, not louder); `good at` gets an unstyled line of its
-own at full width; the `?` in `yet` drops to a line of its own in the specimen and lands on a
-halftone dot in the title. Three lines of the close-read copy were rewritten to match what the
-page actually does.
-
-**Close read.** Each phrase now prints a specimen sheet: a slug line with how it is set, the
-phrase in two misregistered spot inks under the black, the gloss, the note, a margin note set in
-the right margin, and the brief as a three-column instruction band.
-
-**Short answer.** The sealed card became a proof sheet with a real disclosure toggle
-(`aria-expanded` / `aria-controls`), a squeegee sweep on open, and staggered print-in. Focus stays
-on the toggle instead of being stolen, and `esc` puts the sheet back.
-
-**Motion and access.** `1` `2` `3` pull a phrase into the lens, arrows step through the title and
-the phrase index, and the keycard in the loupe documents exactly that. Scroll reveals are now
-armed by a flag the observer sets, so content can never be left hidden if the observer is
-unavailable. Fixed two real bugs found while checking: `overflow-x: hidden` on the page frame was
-breaking `position: sticky`, and the title's leading was tight enough to clip descenders. Added a
-print stylesheet.
-
-**Files.** `src/App.tsx` rewritten, `src/style.css` rewritten, new `src/marks.tsx` (local SVG
-press marks), `src/notes.ts` extended with `set` and `drop` fields. No new dependencies, no
-remote fonts, images, scripts or network calls; the title and document title are unchanged.
+## Verification
+`npm run build` (tsc + vite) passes. Rendered locally in Chromium at 1728 / 1440 / 860 / 390px:
+no horizontal overflow, no console or page errors, document title and `h1` text content both exactly
+`is Minimax M3 good at frontend yet?`. Verified keyboard paths — `1`/`2`/`3` pull a phrase into the
+lens, arrows step the index and the plate, `Esc` re-covers the proof sheet, the range input is
+native and focusable — and verified under `prefers-reduced-motion: reduce`, where the pull resolves
+instantly to register, the rocking mark stops, the magnetic pull is disabled, and the plate control
+still works.

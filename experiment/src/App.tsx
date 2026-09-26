@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from 'react'
 import { findNote, NOTES, phraseLines, WORD_IDS, type WordId } from './notes'
-import { CropMark, HandArrow, RegistrationMark, Squeegee } from './marks'
+import { CropMark, RegisterEye, RegistrationMark, Squeegee } from './marks'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -25,6 +25,13 @@ const INKS = [
   { id: 'blue', name: 'federal blue', use: 'the second impression' },
 ] as const
 
+/* the plate offset, in the page's own unit: 0 is a perfect register */
+const REGISTER_MIN = -3
+const REGISTER_MAX = 3
+const REGISTER_DEFAULT = 1.15
+const REGISTER_TOLERANCE = 0.14
+const REGISTER_RAMP = 2.85
+
 const prefersStill = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -34,14 +41,16 @@ export function App() {
   const [hover, setHover] = useState<WordId | null>(null)
   const [section, setSection] = useState<string>('question')
   const [proof, setProof] = useState(false)
+  const [reg, setReg] = useState(REGISTER_DEFAULT)
   const [announce, setAnnounce] = useState('')
-  const sheetRef = useRef<HTMLDivElement | null>(null)
+  const pullFrame = useRef(0)
+  const regRef = useRef(REGISTER_DEFAULT)
   const indexRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
   const shown = hover ?? active
   const note = findNote(shown)
-  const lines = phraseLines(note.label, note.drop)
   const engaged = hover !== null
+  const settled = Math.abs(reg) <= REGISTER_TOLERANCE
 
   const select = useCallback((id: WordId, announceIt = true) => {
     setActive(id)
@@ -51,22 +60,56 @@ export function App() {
     setAnnounce(`${found.index}. ${found.label}. ${found.title}.`)
   }, [])
 
-  /* park the lens on the chosen phrase so the halftone bloom follows the eye */
+  /* one source of truth for the plate: CSS reads these, the eye reads them, we read them */
   useEffect(() => {
-    const host = sheetRef.current
-    if (!host) return
-    const place = () => {
-      const el = host.querySelector<HTMLElement>(`[data-word="${shown}"]`)
-      if (!el) return
-      const box = host.getBoundingClientRect()
-      const mark = el.getBoundingClientRect()
-      host.style.setProperty('--bx', `${(mark.left + mark.width / 2 - box.left).toFixed(1)}px`)
-      host.style.setProperty('--by', `${(mark.top + mark.height / 2 - box.top).toFixed(1)}px`)
+    regRef.current = reg
+    const root = document.documentElement
+    root.style.setProperty('--reg-x', `${(reg * REGISTER_RAMP).toFixed(2)}px`)
+    root.style.setProperty('--reg-y', `${(reg * REGISTER_RAMP * 0.46).toFixed(2)}px`)
+    root.dataset.register = settled ? 'on' : 'off'
+  }, [reg, settled])
+
+  const stopPull = useCallback(() => {
+    if (pullFrame.current) {
+      cancelAnimationFrame(pullFrame.current)
+      pullFrame.current = 0
     }
-    place()
-    window.addEventListener('resize', place)
-    return () => window.removeEventListener('resize', place)
-  }, [shown])
+  }, [])
+
+  const setPlate = useCallback(
+    (value: number) => {
+      stopPull()
+      setReg(Math.min(REGISTER_MAX, Math.max(REGISTER_MIN, value)))
+    },
+    [stopPull],
+  )
+
+  /* the pull: a squeegee drag that eases the plate home and stops dead on register */
+  const pull = useCallback(() => {
+    stopPull()
+    const from = regRef.current
+    if (prefersStill() || Math.abs(from) <= REGISTER_TOLERANCE) {
+      setReg(0)
+      setAnnounce('Plate pulled into register.')
+      return
+    }
+    const start = performance.now()
+    const duration = 860
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration)
+      setReg(from * (1 - (1 - t) ** 3))
+      if (t < 1) {
+        pullFrame.current = requestAnimationFrame(tick)
+      } else {
+        pullFrame.current = 0
+        setReg(0)
+        setAnnounce('Plate pulled into register.')
+      }
+    }
+    pullFrame.current = requestAnimationFrame(tick)
+  }, [stopPull])
+
+  useEffect(() => stopPull, [stopPull])
 
   useEffect(() => {
     document.title = TITLE
@@ -158,8 +201,9 @@ export function App() {
     <div className="press">
       <div className="stock" aria-hidden="true">
         <span className="stock__fibre" />
-        <span className="stock__halftone" />
+        <span className="stock__grain" />
         <span className="stock__wash" />
+        <span className="stock__halftone" />
         <span className="sprockets sprockets--left" />
         <span className="sprockets sprockets--right" />
       </div>
@@ -167,10 +211,10 @@ export function App() {
       <a className="skip-link" href="#question">Skip to the question</a>
 
       <header className="slugbar">
-        <a className="brand" href="#question" aria-label="Two-colour press sheet, back to the question">
+        <a className="brand" href="#question" aria-label="Press sheet, back to the question">
           <RegistrationMark className="brand__mark" />
           <span className="brand__text">
-            <strong>two-colour press sheet</strong>
+            <strong>press sheet · make ready</strong>
             <small>black · fluorescent pink · federal blue</small>
           </span>
         </a>
@@ -189,7 +233,7 @@ export function App() {
           ))}
         </nav>
 
-        <p className="readout" aria-hidden="true">
+        <p className={`readout ${engaged ? 'is-live' : ''}`} aria-hidden="true">
           <span className="readout__dot" />
           lens <strong>{note.index}</strong> {note.label}
         </p>
@@ -200,30 +244,34 @@ export function App() {
           <p className="rail" aria-hidden="true">
             <span>one sentence</span>
             <span>two inks</span>
-            <span>printed here</span>
+            <span className="rail__reg" />
           </p>
 
           <div className="sheet__grid">
-            <div className="sheet__main" ref={sheetRef}>
-              <span className="bloom" aria-hidden="true" />
-
+            <div className="sheet__main">
               <p className="slugline">
                 <RegistrationMark className="slugline__mark" />
-                the title, at reading size
+                the title, pulled twice
               </p>
 
-              <QuestionTitle selected={active} onSelect={select} onPreview={setHover} />
+              <QuestionTitle
+                selected={active}
+                hot={shown}
+                onSelect={select}
+                onPreview={setHover}
+              />
 
               <p className="margin-note">
+                <span className="margin-note__rule" aria-hidden="true" />
                 <span className="margin-note__text">
                   The question mark is load-bearing. <em>Give it somewhere to land.</em>
                 </span>
-                <HandArrow className="margin-note__arrow" />
               </p>
 
               <p className="lede">
-                The sentence is short enough to take apart. Lean toward a phrase and the sheet
-                answers: what that fragment carries, and what it asks of the page.
+                The sentence is short enough to take apart, and short enough to print badly on
+                purpose. Lean toward a phrase and the page reads it back to you. Then take the
+                plate in your hands and pull it into register.
               </p>
 
               <div className="actions">
@@ -246,31 +294,35 @@ export function App() {
               </div>
 
               <p className="hint" id="lens-help">
-                <span aria-hidden="true">↳</span> hover, tap or focus a phrase in the title
+                <span aria-hidden="true">↳</span> hover, tap or focus a phrase in the title · then
+                pull the plate into register
               </p>
             </div>
 
-            <aside className={`loupe ${engaged ? 'is-engaged' : ''}`} aria-label="Loupe, the phrase under the lens">
-              <div className="loupe__frame">
-                <span className="loupe__mark" aria-hidden="true">
-                  <RegistrationMark />
-                </span>
+            <aside className="plate" aria-label="The plate: the phrase under the lens, and the register control">
+              <div className={`plate__card ${engaged ? 'is-engaged' : ''}`}>
+                <div className="plate__head">
+                  <p className="plate__tag">
+                    <span className="plate__num">plate {note.index}</span>
+                    <strong>{note.gloss}</strong>
+                  </p>
+                  <RegisterEye className="plate__eye" />
+                </div>
 
-                <p className="loupe__word">
-                  <span className="sr-only">{note.label}</span>
-                  <span className="loupe__ink" aria-hidden="true">{note.label}</span>
-                  <span className="loupe__ghost" aria-hidden="true">{note.label}</span>
-                </p>
+                <p className="plate__word">{note.label}</p>
 
-                <p className="loupe__slugs">
-                  <span>{note.index} · {note.gloss}</span>
-                  <span className="loupe__state">{engaged ? 'in the lens' : 'at rest'}</span>
+                <p className="plate__slugs">
+                  <span>{note.set}</span>
+                  <span className="plate__state">{engaged ? 'in the lens' : 'at rest'}</span>
                 </p>
               </div>
+
+              <MakeReady reg={reg} settled={settled} onSlide={setPlate} onPull={pull} />
 
               <dl className="keycard">
                 <div><dt><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></dt><dd>pull a phrase into the lens</dd></div>
                 <div><dt><kbd>tab</kbd></dt><dd>step through the title</dd></div>
+                <div><dt><kbd>←</kbd><kbd>→</kbd></dt><dd>move the plate</dd></div>
                 <div><dt><kbd>esc</kbd></dt><dd>put the proof sheet back</dd></div>
               </dl>
             </aside>
@@ -287,7 +339,8 @@ export function App() {
               <h2 id="close-title">Three phrases. <em>Three jobs.</em></h2>
               <p>
                 Take the sentence apart. Each phrase below is a brief: pick one and the sheet shows
-                how it is set here, and what it is asking the page to do.
+                how it is set here, what it is asking the page to do, and where its two impressions
+                are sitting.
               </p>
             </div>
           </header>
@@ -324,7 +377,7 @@ export function App() {
                       <span className="index__label">{item.label}</span>
                       <span className="index__gloss">{item.gloss}</span>
                     </span>
-                    <span className="index__measure" aria-hidden="true">{item.measure}</span>
+                    <span className="index__set" aria-hidden="true">{item.measure}</span>
                   </button>
                 )
               })}
@@ -342,16 +395,18 @@ export function App() {
               <div className={`specimen__stage specimen__stage--${note.id}`}>
                 <p className="specimen__word">
                   <span className="sr-only">{note.label}</span>
-                  <span className="specimen__ghost specimen__ghost--pink" aria-hidden="true">
-                    {lines.map(line => <span key={line}>{line}</span>)}
-                  </span>
-                  <span className="specimen__ghost specimen__ghost--blue" aria-hidden="true">
-                    {lines.map(line => <span key={line}>{line}</span>)}
-                  </span>
                   <span className="specimen__main" aria-hidden="true">
-                    {lines.map(line => <span key={line}>{line}</span>)}
+                    {phraseLines(note.label, note.drop).map(line => (
+                      <span
+                        key={line}
+                        className={line === note.drop ? 'specimen__line specimen__line--drop' : 'specimen__line'}
+                      >
+                        {line}
+                      </span>
+                    ))}
                   </span>
                 </p>
+                {note.drop ? <span className="specimen__pad" aria-hidden="true" /> : null}
                 <span className="specimen__reg" aria-hidden="true">
                   <RegistrationMark />
                 </span>
@@ -359,8 +414,10 @@ export function App() {
 
               <div className="specimen__body">
                 <p className="specimen__gloss">{note.gloss}</p>
-                <h3 id="specimen-title">{note.title}</h3>
-                <p className="specimen__copy">{note.body}</p>
+                <div className="specimen__lede">
+                  <h3 id="specimen-title">{note.title}</h3>
+                  <p className="specimen__copy">{note.body}</p>
+                </div>
                 <p className="specimen__margin">{note.margin}</p>
               </div>
 
@@ -390,7 +447,7 @@ export function App() {
                 The question does not need a speech. It needs one honest sentence and enough quiet
                 around it to land.
               </p>
-              <p className="answer__note">The proof sheet is held until you pull it.</p>
+              <p className="answer__note">Held under the sheet until you pull it.</p>
             </div>
 
             <div className={`proof ${proof ? 'is-open' : ''}`}>
@@ -428,7 +485,7 @@ export function App() {
                 </p>
                 <ol className="proof__tests">
                   <li><span>01</span>Hierarchy: could you name the second most important thing without thinking twice?</li>
-                  <li><span>02</span>Hand: is there one detail that only this page could have?</li>
+                  <li><span>02</span>Hand: the page hands you the plate. Does the tool actually do something?</li>
                   <li><span>03</span>Restraint: does everything stop moving the moment you stop reading?</li>
                 </ol>
                 <p className="proof__coda">
@@ -466,8 +523,10 @@ export function App() {
             </div>
 
             <p className="colophon__note">
-              Set with the fonts already on your machine: one grotesque, one serif, one mono. No web
-              fonts, no images, no network calls, no accounts. The only motion is a print pull.
+              Two impressions, deliberately out of register until you pull the plate. Set with the
+              fonts already on your machine — one grotesque, one serif, one mono. No web fonts, no
+              image files, no network calls. Every movement here is a print decision, and each one
+              stops the moment you ask it to.
             </p>
           </div>
 
@@ -483,12 +542,80 @@ export function App() {
   )
 }
 
+function MakeReady({
+  reg,
+  settled,
+  onSlide,
+  onPull,
+}: {
+  reg: number
+  settled: boolean
+  onSlide: (value: number) => void
+  onPull: () => void
+}) {
+  const reading = settled
+    ? 'in register'
+    : `off register, ${reg > 0 ? 'plus' : 'minus'} ${Math.abs(reg).toFixed(2)}`
+
+  return (
+    <div className={`mkr ${settled ? 'is-settled' : ''}`}>
+      <div className="mkr__head">
+        <p className="mkr__title">
+          <span className="mkr__dot" aria-hidden="true" />
+          make ready
+        </p>
+        <p className="mkr__read" aria-hidden="true">
+          {settled ? 'in register' : <>{reg > 0 ? '+' : '−'}{Math.abs(reg).toFixed(2)}</>}
+        </p>
+      </div>
+
+      <label className="mkr__label" htmlFor="plate-offset">
+        plate offset
+        <span aria-hidden="true">drag the plate</span>
+      </label>
+
+      <div className="mkr__slider">
+        <span className="mkr__detent" aria-hidden="true" />
+        <input
+          id="plate-offset"
+          className="mkr__range"
+          type="range"
+          min={REGISTER_MIN}
+          max={REGISTER_MAX}
+          step={0.05}
+          value={reg}
+          aria-valuetext={reading}
+          onChange={event => onSlide(Number(event.currentTarget.value))}
+        />
+      </div>
+
+      <p className="mkr__scale" aria-hidden="true">
+        <span>loose</span>
+        <span className="mkr__zero">register</span>
+        <span>tight</span>
+      </p>
+
+      <button
+        type="button"
+        className="mkr__pull"
+        aria-disabled={settled}
+        onClick={onPull}
+      >
+        <Squeegee className="mkr__pull-icon" />
+        {settled ? 'in register' : 'pull to register'}
+      </button>
+    </div>
+  )
+}
+
 function QuestionTitle({
   selected,
+  hot,
   onSelect,
   onPreview,
 }: {
   selected: WordId
+  hot: WordId
   onSelect: (id: WordId) => void
   onPreview: (id: WordId | null) => void
 }) {
@@ -548,14 +675,16 @@ function QuestionTitle({
     words.current[next]?.focus()
   }
 
-  const word = (id: WordId, children: ReactNode) => (
+  const word = (id: WordId, className: string, children: ReactNode) => (
     <button
       ref={node => {
         words.current[id] = node
       }}
       type="button"
       data-word={id}
-      className={`question__word question__word--${id} ${selected === id ? 'is-selected' : ''}`}
+      className={`question__word ${className} ${selected === id ? 'is-selected' : ''} ${
+        hot === id ? 'is-hot' : ''
+      }`}
       onClick={() => onSelect(id)}
       onMouseEnter={() => onPreview(id)}
       onMouseLeave={() => onPreview(null)}
@@ -570,17 +699,22 @@ function QuestionTitle({
   )
 
   return (
-    <h1 id="question-title" className="question" onPointerMove={track} onPointerLeave={clear}>
+    <h1
+      id="question-title"
+      className={`question is-on-${hot}`}
+      onPointerMove={track}
+      onPointerLeave={clear}
+    >
       <span className="question__line" style={{ '--i': 0 } as CSSProperties}>
         <span className="question__plain">is Minimax </span>
-        {word('m3', 'M3')}
+        {word('m3', 'question__word--m3', <span className="chip">M3</span>)}
       </span>{' '}
       <span className="question__line" style={{ '--i': 1 } as CSSProperties}>
-        {word('good', 'good at')}
+        {word('good', 'question__word--good', 'good at')}
       </span>{' '}
       <span className="question__line" style={{ '--i': 2 } as CSSProperties}>
         <span className="question__plain">frontend </span>
-        {word('yet', <>yet<span className="question__mark">?</span></>)}
+        {word('yet', 'question__word--yet', <>yet<span className="question__mark">?</span></>)}
       </span>
     </h1>
   )

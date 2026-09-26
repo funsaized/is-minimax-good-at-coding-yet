@@ -44,12 +44,46 @@ export function Squeegee({ className }: MarkProps) {
   )
 }
 
-/** A hairline arrow, drawn by hand, for the margin note. */
-export function HandArrow({ className }: MarkProps) {
+/**
+ * The make-ready eye. Three registration crosses, one per impression:
+ * the black plate sits still, the two colour plates slide with the plate offset.
+ * Bring the offset to zero and all three collapse into one clean bullseye.
+ */
+export function RegisterEye({ className }: MarkProps) {
+  const cross = 'M36 19v34M19 36h34'
+  const ring = <circle cx="36" cy="36" r="5.4" fill="none" stroke="currentColor" strokeWidth="1.7" />
   return (
-    <svg className={className} viewBox="0 0 150 44" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-      <path d="M4 40C48 40 96 30 128 8" />
-      <path d="m118 10 15-4-4 15" />
+    <svg className={className} viewBox="0 0 72 72" aria-hidden="true" focusable="false">
+      <rect
+        className="register-eye__frame"
+        x="7"
+        y="7"
+        width="58"
+        height="58"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+        opacity=".3"
+      />
+      <path
+        d="M36 .5v8M36 63.5v8M.5 36h8M63.5 36h8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1"
+        opacity=".45"
+      />
+      <g className="register-eye__plate register-eye__plate--pink">
+        <path d={cross} fill="none" stroke="currentColor" strokeWidth="1.7" />
+        {ring}
+      </g>
+      <g className="register-eye__plate register-eye__plate--blue">
+        <path d={cross} fill="none" stroke="currentColor" strokeWidth="1.7" />
+        {ring}
+      </g>
+      <g className="register-eye__plate register-eye__plate--black">
+        <path d={cross} fill="none" stroke="currentColor" strokeWidth="1.7" />
+        {ring}
+      </g>
     </svg>
   )
 }
