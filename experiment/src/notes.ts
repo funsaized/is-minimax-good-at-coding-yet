@@ -3,51 +3,63 @@ export type WordId = 'm3' | 'good' | 'yet'
 export type Note = {
   id: WordId
   index: string
-  folio: string
+  measure: string
   label: string
   title: string
   gloss: string
   body: string
+  look: string[]
   prompt: string
-  editor: string
-  seen: string
+  margin: string
 }
 
 export const NOTES: Note[] = [
   {
     id: 'm3',
     index: '01',
-    folio: 'i',
+    measure: 'two characters',
     label: 'M3',
-    title: 'Keep the fingerprint',
-    gloss: 'a habit, not a name',
-    body: 'A useful page should leave evidence of a point of view. Not a logo. Not a trick. A small, repeatable act of judgment.',
-    prompt: 'the maker is a habit',
-    editor: 'a quiet corner of the title — leave it alone',
-    seen: 'seen twice today',
+    title: 'A name worn like a habit',
+    gloss: 'the subject',
+    body: '“M3” is the only proper noun in the sentence, so it can carry weight without shouting. Give it structure instead of emphasis — a mark, a lockup, one repeatable sign of hand — and let the ordinary words stay ordinary.',
+    look: [
+      'Set it smaller than the sentence, not louder.',
+      'Let the words around it keep their plain voice.',
+      'Repeat the mark once, then stop using it.',
+    ],
+    prompt: 'what repeats on this page?',
+    margin: 'the subject, held in two characters',
   },
   {
     id: 'good',
     index: '02',
-    folio: 'ii',
+    measure: 'six letters',
     label: 'good at',
-    title: 'Choose one clear thing',
-    gloss: 'confidence is generous',
-    body: 'The interface gets quieter when it stops presenting every possible answer. A confident choice gives the reader somewhere to stand.',
-    prompt: 'make room for attention',
-    editor: 'the verb of the question — keep it present tense',
-    seen: 'read aloud once',
+    title: 'The standard, stated plainly',
+    gloss: 'the hinge',
+    body: '“Good at” is the plainest phrase in the sentence, and that is why it works. It needs no italics, no caps, no glow. The design should match its directness and spend its effort somewhere else — on the space around it.',
+    look: [
+      'No styling at all on these six letters.',
+      'Give them the longest line on the page.',
+      'Let the words after them do the showing off.',
+    ],
+    prompt: 'where is the effort actually spent?',
+    margin: 'the plainest words hold the most weight',
   },
   {
     id: 'yet',
     index: '03',
-    folio: 'iii',
+    measure: 'three characters',
     label: 'yet?',
-    title: 'Protect the pause',
-    gloss: 'the question stays open',
-    body: '“Yet” carries the honest part. The space before an answer is not a gap to decorate; it is where the reader arrives.',
-    prompt: 'leave room to arrive',
-    editor: 'the question mark is doing real work here',
-    seen: 'circled in pencil',
+    title: 'The pause, protected',
+    gloss: 'the turn',
+    body: '“Yet” is a small door left open, and the question mark is doing real work. Give the mark somewhere to land: a rule, a card, a closing line. Unfinished is a tone, not a bug.',
+    look: [
+      'Let the question mark land on a line of its own.',
+      'Stop the paragraph where the eye stops.',
+      'Leave one thing unsaid, on purpose.',
+    ],
+    prompt: 'what do you refuse to finish?',
+    margin: 'the sentence ends open; the page should not slam it shut',
   },
 ]

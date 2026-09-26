@@ -3,108 +3,98 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from 'react'
-import { NOTES, type Note, type WordId } from './notes'
+import { NOTES, type WordId } from './notes'
 
-export type VoiceId = 'quiet' | 'human' | 'bold'
+type VoiceId = 'editorial' | 'plain' | 'black'
 
 type VoiceSpec = {
   id: VoiceId
   letter: string
   name: string
   manner: string
-  sample: string
   detail: string
-}
-
-type ProbePosition = {
-  x: number
-  y: number
 }
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
 const VOICES: VoiceSpec[] = [
   {
-    id: 'quiet',
+    id: 'editorial',
     letter: 'A',
-    name: 'measured',
-    manner: 'serif / spacious',
-    sample: 'is M3 good at frontend yet?',
-    detail: 'A little restraint gives every word a clean edge and enough air to be understood.',
+    name: 'editorial',
+    manner: 'serif / measured',
+    detail: 'Old-style warmth, hairline rules instead of boxes, and a palette that stays out of the way.',
   },
   {
-    id: 'human',
+    id: 'plain',
     letter: 'B',
-    name: 'warm',
+    name: 'plain',
     manner: 'sans / open',
-    sample: 'is M3 good at frontend yet?',
-    detail: 'A human tilt, without losing the sentence. Warmth stays in the gesture, not the noise.',
+    detail: 'Humanist sans, generous leading, one spot colour, and nothing underlined twice.',
   },
   {
-    id: 'bold',
+    id: 'black',
     letter: 'C',
-    name: 'direct',
-    manner: 'sans / emphatic',
-    sample: 'IS M3 GOOD AT FRONTEND YET?',
-    detail: 'A firmer voice with blunt hierarchy. The page becomes louder only where it needs to.',
+    name: 'black',
+    manner: 'poster / emphatic',
+    detail: 'Heavy weight, tight fit, spent once at the top of the page — a poster, not a whole system.',
   },
 ]
 
+const NEXT_VOICE: Record<VoiceId, VoiceId> = {
+  editorial: 'plain',
+  plain: 'black',
+  black: 'editorial',
+}
+
 const NAV_ITEMS = [
   { id: 'question', label: 'question' },
-  { id: 'field-notes', label: 'pressure points' },
+  { id: 'phrases', label: 'close read' },
   { id: 'voices', label: 'type trials' },
   { id: 'answer', label: 'short answer' },
 ] as const
 
-const NEXT_VOICE: Record<VoiceId, VoiceId> = {
-  quiet: 'human',
-  human: 'bold',
-  bold: 'quiet',
-}
+const WORD_IDS: WordId[] = ['m3', 'good', 'yet']
 
-const VOICE_NAME: Record<VoiceId, string> = {
-  quiet: 'measured',
-  human: 'warm',
-  bold: 'direct',
-}
-
-const clampProbe = (value: number) => Math.max(9, Math.min(91, value))
+const prefersStill = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export function App() {
-  const [voice, setVoice] = useState<VoiceId>('quiet')
-  const [selectedWord, setSelectedWord] = useState<WordId>('good')
-  const [hoveredWord, setHoveredWord] = useState<WordId | null>(null)
+  const [voice, setVoice] = useState<VoiceId>('editorial')
+  const [selected, setSelected] = useState<WordId>('good')
+  const [hovered, setHovered] = useState<WordId | null>(null)
   const [activeSection, setActiveSection] = useState<string>('question')
   const [answerOpen, setAnswerOpen] = useState(false)
   const [announcement, setAnnouncement] = useState('')
-  const answerTriggerRef = useRef<HTMLButtonElement | null>(null)
+  const answerSealRef = useRef<HTMLButtonElement | null>(null)
   const answerCloseRef = useRef<HTMLButtonElement | null>(null)
+  const choiceRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
-  const activeWord = hoveredWord ?? selectedWord
-  const activeNote = NOTES.find(note => note.id === activeWord) ?? NOTES[0]
+  const activeId = hovered ?? selected
+  const activeNote = NOTES.find(note => note.id === activeId) ?? NOTES[0]
   const activeVoice = VOICES.find(item => item.id === voice) ?? VOICES[0]
 
   const selectWord = useCallback((id: WordId) => {
-    setSelectedWord(id)
+    setSelected(id)
     const note = NOTES.find(item => item.id === id)
-    if (note) setAnnouncement(`${note.label}: ${note.title}. ${note.gloss}.`)
+    if (note) setAnnouncement(`${note.label}. ${note.title}. ${note.gloss}.`)
   }, [])
 
-  const selectVoice = useCallback((id: VoiceId) => {
+  const setVoiceAndAnnounce = useCallback((id: VoiceId) => {
     setVoice(id)
-    setAnnouncement(`The page is now set in the ${VOICE_NAME[id]} voice.`)
+    const found = VOICES.find(item => item.id === id)
+    if (found) setAnnouncement(`The page is now set in the ${found.name} voice.`)
   }, [])
 
   const cycleVoice = useCallback(() => {
-    const next = NEXT_VOICE[voice]
-    setVoice(next)
-    setAnnouncement(`The page is now set in the ${VOICE_NAME[next]} voice.`)
-  }, [voice])
+    setVoiceAndAnnounce(NEXT_VOICE[voice])
+  }, [setVoiceAndAnnounce, voice])
 
   const toggleAnswer = useCallback(() => {
     const next = !answerOpen
@@ -112,7 +102,7 @@ export function App() {
     setAnnouncement(next ? 'The short answer is revealed.' : 'The short answer is covered again.')
     window.requestAnimationFrame(() => {
       if (next) answerCloseRef.current?.focus()
-      else answerTriggerRef.current?.focus()
+      else answerSealRef.current?.focus()
     })
   }, [answerOpen])
 
@@ -132,7 +122,7 @@ export function App() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
         if (visible[0]) setActiveSection(visible[0].target.id)
       },
-      { rootMargin: '-18% 0px -67% 0px', threshold: [0.05, 0.2, 0.5] },
+      { rootMargin: '-20% 0px -66% 0px', threshold: [0.04, 0.2, 0.5] },
     )
     sections.forEach(section => observer.observe(section))
     return () => observer.disconnect()
@@ -152,7 +142,7 @@ export function App() {
           observer.unobserve(entry.target)
         })
       },
-      { rootMargin: '0px 0px -10% 0px', threshold: 0.08 },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.06 },
     )
     reveals.forEach(element => observer.observe(element))
     return () => observer.disconnect()
@@ -184,22 +174,40 @@ export function App() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [cycleVoice])
 
+  const nudgeChoice = (event: ReactKeyboardEvent<HTMLButtonElement>, id: WordId) => {
+    let next: WordId | null = null
+    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+      next = WORD_IDS[(WORD_IDS.indexOf(id) + 1) % WORD_IDS.length]
+    } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+      next = WORD_IDS[(WORD_IDS.indexOf(id) + WORD_IDS.length - 1) % WORD_IDS.length]
+    } else if (event.key === 'Home') {
+      next = WORD_IDS[0]
+    } else if (event.key === 'End') {
+      next = WORD_IDS[WORD_IDS.length - 1]
+    }
+    if (!next) return
+    event.preventDefault()
+    selectWord(next)
+    choiceRefs.current[next]?.focus()
+  }
+
   return (
-    <div className={`field-guide field-guide--${voice}`}>
-      <div className="field-guide__atmosphere" aria-hidden="true">
-        <span className="field-guide__sun" />
-        <span className="field-guide__contour field-guide__contour--one" />
-        <span className="field-guide__contour field-guide__contour--two" />
-        <span className="field-guide__grain" />
+    <div className={`desk desk--${voice}`}>
+      <div className="desk__atmosphere" aria-hidden="true">
+        <span className="desk__wash desk__wash--red" />
+        <span className="desk__wash desk__wash--blue" />
+        <span className="desk__grid" />
+        <span className="desk__grain" />
       </div>
+
       <a className="skip-link" href="#question">Skip to the question</a>
 
       <header className="topbar">
-        <a className="wordmark" href="#question" aria-label="M3 frontend field note, back to the question">
-          <span className="wordmark__seal" aria-hidden="true"><i>M3</i></span>
+        <a className="wordmark" href="#question" aria-label="Reading desk, back to the question">
+          <span className="wordmark__seal" aria-hidden="true">M3</span>
           <span className="wordmark__words">
-            <strong>frontend field note</strong>
-            <small>one question, closely read</small>
+            <strong>frontend, read closely</strong>
+            <small>one sentence, three distances</small>
           </span>
         </a>
 
@@ -211,21 +219,21 @@ export function App() {
               href={`#${item.id}`}
               aria-current={activeSection === item.id ? 'location' : undefined}
             >
-              <span>{String(index + 1).padStart(2, '0')}</span>
+              <span className="section-nav__number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
               {item.label}
             </a>
           ))}
         </nav>
 
         <div className="voice-picker" role="group" aria-label="Set the page's type voice">
-          <span className="voice-picker__label">type voice</span>
-          <div className="voice-picker__set">
+          <span className="voice-picker__label">voice</span>
+          <div className="voice-picker__keys">
             {VOICES.map(item => (
               <button
                 key={item.id}
                 type="button"
-                className={`voice-key voice-key--${item.id} ${voice === item.id ? 'is-active' : ''}`}
-                onClick={() => selectVoice(item.id)}
+                className={`voice-key ${voice === item.id ? 'is-active' : ''}`}
+                onClick={() => setVoiceAndAnnounce(item.id)}
                 aria-pressed={voice === item.id}
                 aria-label={`Use the ${item.name} type voice`}
               >
@@ -236,418 +244,427 @@ export function App() {
         </div>
       </header>
 
-      <main className="page-shell">
-        <section id="question" className="hero-section" aria-labelledby="question-title">
-          <div className="hero-section__rail">
-            <span><i className="signal-dot" aria-hidden="true" /> title study</span>
-            <span>the sentence, under a lens</span>
-            <span>choose a phrase <b aria-hidden="true">↘</b></span>
-          </div>
+      <main className="page">
+        <section id="question" className="hero" aria-labelledby="question-title">
+          <div className="hero__copy">
+            <p className="kicker">
+              <span className="kicker__star" aria-hidden="true">✳</span>
+              <span className="kicker__text">a working page, answering the question by being one</span>
+            </p>
 
-          <div className="hero-section__body">
-            <div className="hero-copy">
-              <div className="hero-copy__folio">
-                <span>title study</span>
-                <span>read the shape, not the claim</span>
-              </div>
-              <p className="eyebrow"><span className="eyebrow__star" aria-hidden="true" />a close reading of a good question</p>
-              <h1 id="question-title" className="question-title" aria-label={TITLE}>
-                <span className="title-line title-line--one">is Minimax</span>{' '}
-                <span className="title-line title-line--two">
-                  <button
-                    type="button"
-                    className={`title-word title-word--m3 ${selectedWord === 'm3' ? 'is-selected' : ''}`}
-                    onClick={() => selectWord('m3')}
-                    onMouseEnter={() => setHoveredWord('m3')}
-                    onMouseLeave={() => setHoveredWord(null)}
-                    onFocus={() => setHoveredWord('m3')}
-                    onBlur={() => setHoveredWord(null)}
-                    aria-pressed={selectedWord === 'm3'}
-                    aria-label="Move the lens to M3"
-                  >
-                    M3
-                  </button>{' '}
-                  <button
-                    type="button"
-                    className={`title-word title-word--good ${selectedWord === 'good' ? 'is-selected' : ''}`}
-                    onClick={() => selectWord('good')}
-                    onMouseEnter={() => setHoveredWord('good')}
-                    onMouseLeave={() => setHoveredWord(null)}
-                    onFocus={() => setHoveredWord('good')}
-                    onBlur={() => setHoveredWord(null)}
-                    aria-pressed={selectedWord === 'good'}
-                    aria-label="Move the lens to good at"
-                  >
-                    good at
-                  </button>
-                </span>{' '}
-                <span className="title-line title-line--three">
-                  <span>frontend </span>
-                  <button
-                    type="button"
-                    className={`title-word title-word--yet ${selectedWord === 'yet' ? 'is-selected' : ''}`}
-                    onClick={() => selectWord('yet')}
-                    onMouseEnter={() => setHoveredWord('yet')}
-                    onMouseLeave={() => setHoveredWord(null)}
-                    onFocus={() => setHoveredWord('yet')}
-                    onBlur={() => setHoveredWord(null)}
-                    aria-pressed={selectedWord === 'yet'}
-                    aria-label="Move the lens to yet"
-                  >
-                    yet?
-                  </button>
-                  <span className="title-caret" aria-hidden="true" />
-                </span>
-              </h1>
+            <QuestionTitle selected={selected} onSelect={selectWord} onPreview={setHovered} />
 
-              <div className="title-annotation" aria-hidden="true">
-                <span>the pause is part of the point</span>
-                <svg viewBox="0 0 160 34" focusable="false">
-                  <path d="M3 24c29 9 49-8 76-6 24 2 38 14 77 1" />
-                  <path d="m143 14 12 5-12 6" />
-                </svg>
-              </div>
+            <Legend active={activeNote.id} />
 
-              <p className="hero-lede">One question, three pressure points. Treat the sentence as a small interface: choose a phrase, change the type temperature, and notice what earns the second look.</p>
-
-              <div className="hero-actions">
-                <a className="primary-link" href="#field-notes">
-                  <span>open the field notes</span>
-                  <ArrowIcon />
-                </a>
-                <button type="button" className="voice-cycle" onClick={cycleVoice} aria-keyshortcuts="Shift+V">
-                  <span>change the voice</span>
-                  <kbd>shift</kbd><span>+</span><kbd>v</kbd>
-                </button>
-              </div>
-
-              <p className="interaction-cue"><span className="interaction-cue__line" aria-hidden="true" /> select a phrase / move the lens</p>
+            <div className="hero__note">
+              <p>
+                The question mark is load-bearing.{' '}
+                <em>Give it somewhere to land.</em>
+              </p>
+              <svg viewBox="0 0 200 48" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path d="M6 44C62 44 116 30 158 6" />
+                <path d="m145 8 15-2-4 15" />
+              </svg>
             </div>
 
-            <SignalMap note={activeNote} voiceName={activeVoice.name} onSelect={selectWord} />
+            <p className="lede">
+              One sentence, three jobs. Choose a phrase to read what it carries, change the type
+              voice to feel the temperature move, then open the short answer.
+            </p>
+
+            <div className="hero__actions">
+              <a className="button button--solid" href="#phrases">
+                <span>read the sentence closely</span>
+                <ArrowIcon />
+              </a>
+              <button type="button" className="button button--ghost" onClick={cycleVoice} aria-keyshortcuts="Shift+V">
+                <span>change the voice</span>
+                <kbd>shift</kbd>
+                <span aria-hidden="true">+</span>
+                <kbd>v</kbd>
+              </button>
+            </div>
+
+            <p className="hero__hint" id="word-help">
+              <span aria-hidden="true">↳</span> hover, tap or focus a phrase in the title — the page leans toward it
+            </p>
           </div>
 
-          <div className="hero-section__footer">
-            <span><i className="hero-section__signal" aria-hidden="true" /> a title in three distances</span>
-            <span>active phrase <strong>{activeNote.label}</strong></span>
-            <span>look once, then look again</span>
-          </div>
+          <aside className="ladder" aria-label="The sentence at three distances">
+            <div className="ladder__head">
+              <h2>three distances</h2>
+              <p>A sentence that survives being made small has a shape worth keeping.</p>
+            </div>
+            <LadderRow size="lg" active={activeNote.id} />
+            <LadderRow size="md" active={activeNote.id} />
+            <LadderRow size="sm" active={activeNote.id} />
+            <div className="ladder__foot">
+              <span>set in the <strong>{activeVoice.name}</strong> voice</span>
+              <a href="#voices">see the trials <span aria-hidden="true">↘</span></a>
+            </div>
+          </aside>
         </section>
 
-        <div className="field-divider" aria-hidden="true">
-          <span />
-          <svg viewBox="0 0 120 28">
-            <path d="M4 14h33M83 14h33M41 8l7 6-7 6M79 8l-7 6 7 6" />
-            <circle cx="60" cy="14" r="3" />
-          </svg>
-          <span />
-        </div>
-
-        <section id="field-notes" className="pressure-section reveal" aria-labelledby="reading-title">
-          <SectionIntro
+        <section id="phrases" className="phrases" aria-labelledby="phrases-title">
+          <SectionHead
             number="01"
-            titleId="reading-title"
-            eyebrow="pressure points"
-            title={<>The sentence has <em>somewhere to stand.</em></>}
-            lede="M3 names the maker. “good at” names the standard. “yet?” protects the honest pause. Choose a phrase to read its job."
+            titleId="phrases-title"
+            kicker="close read"
+            title={<>Three phrases.{' '}<em>Three jobs.</em></>}
+            lede="The sentence is short enough to take apart. Pick a phrase and the reading desk shows what that fragment carries, and what it asks of the page."
           />
 
-          <div className="pressure-layout">
-            <div className="phrase-index" role="group" aria-label="Choose a phrase from the question">
-              <div className="phrase-index__heading">
-                <span>phrase index</span>
-                <span aria-hidden="true">01—03</span>
-              </div>
-              <div className="phrase-index__list">
+          <div className="phrases__body">
+            <div className="choices" role="radiogroup" aria-label="Choose a phrase to read closely" aria-describedby="choices-help">
+              <div className="choices__list">
                 {NOTES.map(note => (
                   <button
                     key={note.id}
                     type="button"
-                    className={`phrase-choice phrase-choice--${note.id} ${selectedWord === note.id ? 'is-selected' : ''} ${hoveredWord === note.id ? 'is-hovered' : ''}`}
+                    role="radio"
+                    ref={node => {
+                      choiceRefs.current[note.id] = node
+                    }}
+                    tabIndex={selected === note.id ? 0 : -1}
+                    aria-checked={selected === note.id}
+                    className={`choice choice--${note.id} ${selected === note.id ? 'is-selected' : ''} ${activeNote.id === note.id ? 'is-hot' : ''}`}
                     onClick={() => selectWord(note.id)}
-                    onMouseEnter={() => setHoveredWord(note.id)}
-                    onMouseLeave={() => setHoveredWord(null)}
-                    onFocus={() => setHoveredWord(note.id)}
-                    onBlur={() => setHoveredWord(null)}
-                    aria-pressed={selectedWord === note.id}
+                    onMouseEnter={() => setHovered(note.id)}
+                    onMouseLeave={() => setHovered(null)}
+                    onFocus={() => setHovered(note.id)}
+                    onBlur={() => setHovered(null)}
+                    onKeyDown={event => nudgeChoice(event, note.id)}
                   >
-                    <span className="phrase-choice__index">{note.index}</span>
-                    <span className="phrase-choice__name">{note.label}</span>
-                    <span className="phrase-choice__title">{note.title}</span>
-                    <span className="phrase-choice__arrow" aria-hidden="true">↗</span>
+                    <span className="choice__index" aria-hidden="true">{note.index}</span>
+                    <span className="choice__text">
+                      <span className="choice__label">{note.label}</span>
+                      <span className="choice__title">{note.title}</span>
+                    </span>
+                    <span className="choice__measure" aria-hidden="true">{note.measure}</span>
                   </button>
                 ))}
               </div>
-              <div className="phrase-index__footer"><span>one sentence / three distances</span><span aria-hidden="true">↘</span></div>
+              <p className="choices__help" id="choices-help">
+                Arrow keys move between phrases. Enter or space opens the reading.
+              </p>
             </div>
 
-            <article className={`note-sheet note-sheet--${activeNote.id}`} key={activeNote.id} aria-live="polite">
-              <div className="note-sheet__topline">
-                <span>close read / {activeNote.index}</span>
-                <span className="note-sheet__folio" aria-hidden="true">{activeNote.folio}</span>
+            <article className={`reading reading--${activeNote.id}`} key={activeNote.id} aria-live="polite">
+              <div className="reading__top">
+                <span className="reading__folio">close read / {activeNote.index}</span>
+                <span className="reading__stamp" aria-hidden="true">M3</span>
               </div>
-              <div className="note-sheet__body">
-                <p className="note-sheet__kicker">{activeNote.gloss}</p>
-                <h3>{activeNote.label}</h3>
-                <p className="note-sheet__copy">{activeNote.body}</p>
-                <div className="note-sheet__prompt"><b aria-hidden="true">↳</b> {activeNote.prompt}</div>
+
+              <div className="reading__specimen">
+                <p className="reading__fragment">{activeNote.label}</p>
+                <svg className="reading__underline" viewBox="0 0 320 26" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                  <path d="M3 17C58 7 122 19 184 11c42-6 84 1 133 7" />
+                  <path className="reading__underline--ghost" d="M9 23C64 13 128 24 190 16c40-5 82 1 126 8" />
+                </svg>
               </div>
-              <WordGlyph id={activeNote.id} />
-              <div className="note-sheet__footer">
-                <span>{activeNote.editor}</span>
-                <span>margin note / {activeNote.folio}</span>
+
+              <div className="reading__body">
+                <p className="reading__gloss">{activeNote.gloss}</p>
+                <h3>{activeNote.title}</h3>
+                <p className="reading__copy">{activeNote.body}</p>
+              </div>
+
+              <ul className="reading__look">
+                {activeNote.look.map(item => (
+                  <li key={item}><span aria-hidden="true">→</span>{item}</li>
+                ))}
+              </ul>
+
+              <div className="reading__foot">
+                <p className="reading__prompt"><span aria-hidden="true">↳</span> {activeNote.prompt}</p>
+                <p className="reading__margin">{activeNote.margin}</p>
               </div>
             </article>
           </div>
         </section>
 
-        <section id="voices" className="voices-section reveal" aria-labelledby="trials-title">
-          <SectionIntro
+        <section id="voices" className="voices" aria-labelledby="voices-title">
+          <SectionHead
             number="02"
-            titleId="trials-title"
-            eyebrow="three type trials"
-            title={<>One sentence.<em>Three handwritings.</em></>}
-            lede="Switch the voice; the words stay in place. A useful interface has a point of view before it has a palette."
+            titleId="voices-title"
+            kicker="type trials"
+            title={<>Same words.{' '}<em>Three temperatures.</em></>}
+            lede="The palette and the layout never move — only the type does. Choose a voice and the whole page, title included, is re-cut in it."
           />
 
-          <div className="voice-grid">
+          <div className="voices__grid">
             {VOICES.map(item => {
               const isActive = item.id === voice
               return (
-                <article key={item.id} className={`voice-card voice-card--${item.id} ${isActive ? 'is-active' : ''}`}>
+                <article key={item.id} className={`trial trial--${item.id} ${isActive ? 'is-active' : ''}`}>
                   <button
                     type="button"
-                    onClick={() => selectVoice(item.id)}
+                    onClick={() => setVoiceAndAnnounce(item.id)}
                     aria-pressed={isActive}
                     aria-label={`Set the page in the ${item.name} voice`}
                   >
-                    <span className="voice-card__topline">
-                      <span className="voice-card__letter">{item.letter}</span>
-                      <span>{item.name} voice</span>
-                      <span className="voice-card__arrow" aria-hidden="true">↗</span>
+                    <span className="trial__top">
+                      <span className="trial__letter" aria-hidden="true">{item.letter}</span>
+                      <span className="trial__manner">{item.manner}</span>
                     </span>
-                    <span className="voice-card__name">{item.name}</span>
-                    <span className="voice-card__manner">{item.manner}</span>
-                    <span className={`voice-card__sample voice-card__sample--${item.id}`}>{item.sample}</span>
-                    <span className="voice-card__detail">{item.detail}</span>
-                    <span className="voice-card__state"><i aria-hidden="true" />{isActive ? 'selected voice' : 'set this voice'}</span>
+                    <span className="trial__sample">
+                      <MiniSentence active={activeNote.id} />
+                    </span>
+                    <span className="trial__name">{item.name}</span>
+                    <span className="trial__detail">{item.detail}</span>
+                    <span className="trial__state">
+                      <i aria-hidden="true" />
+                      {isActive ? 'in use on this page' : 'set this voice'}
+                    </span>
                   </button>
                 </article>
               )
             })}
           </div>
 
-          <div className="shortcut-note">
+          <p className="voices__note">
             <span>Keyboard shortcut</span>
-            <kbd>shift</kbd><span>+</span><kbd>v</kbd><span>cycles the type voice</span>
-          </div>
+            <kbd>shift</kbd>
+            <span aria-hidden="true">+</span>
+            <kbd>v</kbd>
+            <span>cycles the type voice</span>
+          </p>
         </section>
 
-        <section id="answer" className="answer-section reveal" aria-labelledby="answer-title">
-          <div className="answer-intro">
-            <p className="eyebrow"><span className="eyebrow__star" aria-hidden="true" /> the useful answer</p>
-            <h2 id="answer-title">Small answer.<br /><em>Clear breath.</em></h2>
-            <p>The question does not need a speech. It needs one honest sentence—and enough space around it to land.</p>
-            <button
-              ref={answerTriggerRef}
-              type="button"
-              className="cover-button"
-              onClick={toggleAnswer}
-              aria-expanded={answerOpen}
-              aria-controls="answer-window"
-            >
-              <span className="cover-button__icon" aria-hidden="true"><ArrowIcon /></span>
-              <span>{answerOpen ? 'cover the answer' : 'lift the answer'}</span>
-              {answerOpen && <kbd>esc</kbd>}
-            </button>
+        <section id="answer" className="answer" aria-labelledby="answer-title">
+          <div className="answer__intro">
+            <p className="kicker">
+              <span className="kicker__star" aria-hidden="true">✳</span>
+              <span className="kicker__text">the short answer</span>
+            </p>
+            <h2 id="answer-title">One sentence,<br /><em>delivered plainly.</em></h2>
+            <p>
+              The question does not need a speech. It needs one honest sentence and enough quiet
+              around it to land.
+            </p>
           </div>
 
-          <div className={`answer-card ${answerOpen ? 'is-open' : ''}`}>
-            <div className="answer-card__topline">
-              <span>short answer / one clear thought</span>
-              <span aria-hidden="true">{answerOpen ? '●' : '○'}</span>
-            </div>
-            <div id="answer-window" className="answer-window" aria-live="polite">
-              {answerOpen ? (
-                <div className="answer-window__content">
-                  <button ref={answerCloseRef} type="button" className="answer-close" onClick={toggleAnswer} aria-label="Cover the answer again">×</button>
-                  <span className="answer-window__yes">yes, with a hand.</span>
-                  <h3>When the interface has a point of view you can feel.</h3>
-                  <p>A useful frontend has a hierarchy you can read, a little warmth in the details, and motion that rewards attention without demanding it.</p>
-                  <ul>
-                    <li><span>A</span>Choose one clear idea.</li>
-                    <li><span>B</span>Let warmth live in the details.</li>
-                    <li><span>C</span>Make motion earn its place.</li>
-                  </ul>
-                </div>
-              ) : (
-                <div className="answer-window__cover" aria-hidden="true">
-                  <span className="answer-window__question">?</span>
-                  <span>one sentence waits under the dot</span>
-                </div>
-              )}
-            </div>
+          <div className={`seal-card ${answerOpen ? 'is-open' : ''}`}>
+            {answerOpen ? (
+              <div className="seal-card__open" id="answer-window" aria-live="polite">
+                <button
+                  ref={answerCloseRef}
+                  type="button"
+                  className="seal-card__close"
+                  onClick={toggleAnswer}
+                  aria-label="Cover the short answer again"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+                <p className="seal-card__yes">yes — with a hand.</p>
+                <p className="seal-card__claim">
+                  When the interface has a point of view you can feel, and knows when to stop moving.
+                </p>
+                <ul className="seal-card__tests">
+                  <li><span>01</span>Hierarchy: could you name the second most important thing without thinking twice?</li>
+                  <li><span>02</span>Hand: is there one detail that only this page could have?</li>
+                  <li><span>03</span>Restraint: does everything stop moving the moment you stop reading?</li>
+                </ul>
+                <p className="seal-card__coda">
+                  And the honest part: any model can write the markup. The difference lives in the
+                  hundred small decisions nobody asked for.
+                </p>
+              </div>
+            ) : (
+              <button
+                ref={answerSealRef}
+                type="button"
+                className="seal-card__sealed"
+                onClick={toggleAnswer}
+                aria-expanded={false}
+              >
+                <span className="seal-card__slip" aria-hidden="true">
+                  <span>the short answer</span>
+                  <span>sealed</span>
+                </span>
+                <span className="seal-card__glyph" aria-hidden="true">?</span>
+                <span className="seal-card__invite">lift the cover</span>
+                <span className="seal-card__hint" aria-hidden="true">one sentence is waiting under the dot</span>
+              </button>
+            )}
           </div>
         </section>
       </main>
 
-      <footer className="site-footer">
-        <a href="#question" className="footer-return"><span aria-hidden="true">↑</span> return to the question</a>
-        <p>the work is the question.</p>
-        <span>close read / type trial / clear answer</span>
+      <footer className="footer">
+        <p className="footer__echo" aria-hidden="true">{TITLE}</p>
+        <div className="footer__grid">
+          <a className="footer__return" href="#question">
+            <span aria-hidden="true">↑</span> back to the question
+          </a>
+          <div className="footer__colophon">
+            <p>Set with the fonts already on your machine: one serif, one sans, one mono. No web fonts, no images, no network calls.</p>
+            <p>Ink: chalk, near-black, vermillion, electric blue. Everything else is a rule.</p>
+          </div>
+          <p className="footer__closing">The experiment is the page.</p>
+        </div>
       </footer>
 
       <span className="sr-only" aria-live="polite">{announcement}</span>
-      <span className="sr-only">Current type voice: {activeVoice.name}. Active phrase: {activeNote.label}.</span>
+      <span className="sr-only">Current type voice: {activeVoice.name}. Phrase under the lens: {activeNote.label}.</span>
     </div>
   )
 }
 
-function SectionIntro({ number, titleId, eyebrow, title, lede }: { number: string; titleId: string; eyebrow: string; title: ReactNode; lede: string }) {
+function QuestionTitle({
+  selected,
+  onSelect,
+  onPreview,
+}: {
+  selected: WordId
+  onSelect: (id: WordId) => void
+  onPreview: (id: WordId | null) => void
+}) {
+  const words = useRef<Record<string, HTMLButtonElement | null>>({})
+  const frame = useRef(0)
+
+  const clear = useCallback(() => {
+    WORD_IDS.forEach(id => {
+      const el = words.current[id]
+      if (!el) return
+      el.style.setProperty('--pull', '0')
+      el.style.setProperty('--dx', '0px')
+      el.style.setProperty('--dy', '0px')
+    })
+  }, [])
+
+  const track = useCallback((event: ReactPointerEvent<HTMLHeadingElement>) => {
+    if (event.pointerType !== 'mouse' || prefersStill()) return
+    const host = event.currentTarget
+    const hostBox = host.getBoundingClientRect()
+    const reach = Math.min(280, Math.max(140, hostBox.width * 0.34))
+    const px = event.clientX
+    const py = event.clientY
+    if (frame.current) cancelAnimationFrame(frame.current)
+    frame.current = requestAnimationFrame(() => {
+      frame.current = 0
+      WORD_IDS.forEach(id => {
+        const el = words.current[id]
+        if (!el) return
+        const box = el.getBoundingClientRect()
+        const dx = px - (box.left + box.width / 2)
+        const dy = py - (box.top + box.height / 2)
+        const distance = Math.hypot(dx, dy)
+        const pull = distance > reach ? 0 : (1 - distance / reach) ** 2
+        el.style.setProperty('--pull', pull.toFixed(3))
+        el.style.setProperty('--dx', `${(dx * 0.15 * pull).toFixed(2)}px`)
+        el.style.setProperty('--dy', `${(dy * 0.12 * pull - pull * 3).toFixed(2)}px`)
+      })
+    })
+  }, [])
+
+  useEffect(() => () => {
+    if (frame.current) cancelAnimationFrame(frame.current)
+  }, [])
+
+  const word = (id: WordId, text: string) => (
+    <button
+      ref={node => {
+        words.current[id] = node
+      }}
+      type="button"
+      className={`question__word question__word--${id} ${selected === id ? 'is-selected' : ''}`}
+      onClick={() => onSelect(id)}
+      onMouseEnter={() => onPreview(id)}
+      onMouseLeave={() => onPreview(null)}
+      onFocus={() => onPreview(id)}
+      onBlur={() => onPreview(null)}
+      aria-pressed={selected === id}
+      aria-describedby="word-help"
+    >
+      {text}
+    </button>
+  )
+
   return (
-    <header className="section-intro">
-      <div>
-        <p className="section-kicker"><span className="section-kicker__number">{number}</span>{eyebrow}</p>
+    <h1 id="question-title" className="question" aria-label={TITLE} onPointerMove={track} onPointerLeave={clear}>
+      <span className="question__line" style={{ '--i': 0 } as CSSProperties}>
+        <span className="question__plain">is Minimax </span>
+        {word('m3', 'M3')}
+      </span>{' '}
+      <span className="question__line question__line--indent" style={{ '--i': 1 } as CSSProperties}>
+        {word('good', 'good at')}
+      </span>{' '}
+      <span className="question__line" style={{ '--i': 2 } as CSSProperties}>
+        <span className="question__plain">frontend </span>
+        {word('yet', 'yet?')}
+      </span>
+    </h1>
+  )
+}
+
+function Legend({ active }: { active: WordId }) {
+  return (
+    <ol className="legend" aria-label="The sentence, divided into three phrases">
+      {NOTES.map(note => (
+        <li key={note.id} className={`legend__item legend__item--${note.id} ${active === note.id ? 'is-active' : ''}`}>
+          <span className="legend__tick" aria-hidden="true" />
+          <span className="legend__index" aria-hidden="true">{note.index}</span>
+          <span className="legend__label">{note.label}</span>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+function MiniSentence({ active }: { active: WordId }) {
+  return (
+    <span className="mini">
+      <span className="mini__plain">is Minimax </span>
+      <b className={active === 'm3' ? 'is-on' : ''}>M3</b>{' '}
+      <b className={active === 'good' ? 'is-on' : ''}>good at</b>{' '}
+      <span className="mini__plain">frontend </span>
+      <b className={active === 'yet' ? 'is-on' : ''}>yet?</b>
+    </span>
+  )
+}
+
+function LadderRow({ size, active }: { size: 'lg' | 'md' | 'sm'; active: WordId }) {
+  const labels = { lg: 'close', md: 'mid', sm: 'far' } as const
+  return (
+    <div className={`ladder__row ladder__row--${size}`} aria-hidden="true">
+      <span className="ladder__label">{labels[size]}</span>
+      <p className="ladder__type"><MiniSentence active={active} /></p>
+    </div>
+  )
+}
+
+function SectionHead({
+  number,
+  titleId,
+  kicker,
+  title,
+  lede,
+}: {
+  number: string
+  titleId: string
+  kicker: string
+  title: ReactNode
+  lede: string
+}) {
+  return (
+    <header className="section-head reveal">
+      <p className="section-head__kicker">
+        <span className="section-head__number" aria-hidden="true">{number}</span>
+        <span className="printed">{kicker}</span>
+      </p>
+      <div className="section-head__grid">
         <h2 id={titleId}>{title}</h2>
+        <p className="section-head__lede">{lede}</p>
       </div>
-      <p className="section-intro__lede">{lede}</p>
     </header>
   )
 }
 
 function ArrowIcon() {
   return (
-    <svg viewBox="0 0 20 20" aria-hidden="true">
-      <path d="M3 10h13M10.5 4.5 16 10l-5.5 5.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function SignalMap({ note, voiceName, onSelect }: { note: Note; voiceName: string; onSelect: (id: WordId) => void }) {
-  const [probe, setProbe] = useState<ProbePosition>({ x: 50, y: 48 })
-
-  const moveProbe = (event: ReactPointerEvent<HTMLDivElement>) => {
-    const bounds = event.currentTarget.getBoundingClientRect()
-    if (!bounds.width || !bounds.height) return
-    const x = ((event.clientX - bounds.left) / bounds.width) * 100
-    const y = ((event.clientY - bounds.top) / bounds.height) * 100
-    setProbe({ x: clampProbe(x), y: clampProbe(y) })
-  }
-
-  const beginProbe = (event: ReactPointerEvent<HTMLDivElement>) => {
-    event.currentTarget.setPointerCapture(event.pointerId)
-    moveProbe(event)
-  }
-
-  const dragProbe = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (event.buttons === 0) return
-    moveProbe(event)
-  }
-
-  const endProbe = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId)
-    }
-  }
-
-  const nudgeProbe = (event: ReactKeyboardEvent<HTMLDivElement>) => {
-    const amount = event.shiftKey ? 10 : 4
-    const offsets: Record<string, [number, number]> = {
-      ArrowLeft: [-amount, 0],
-      ArrowRight: [amount, 0],
-      ArrowUp: [0, -amount],
-      ArrowDown: [0, amount],
-    }
-    const offset = offsets[event.key]
-    if (!offset) return
-    event.preventDefault()
-    setProbe(current => ({ x: clampProbe(current.x + offset[0]), y: clampProbe(current.y + offset[1]) }))
-  }
-
-  return (
-    <aside className={`signal-map signal-map--${note.id}`} aria-label="Interactive close-reading map">
-      <div className="signal-map__header">
-        <span>phrase lens / {note.index}</span>
-        <button type="button" className="map-reset" onPointerDown={event => event.stopPropagation()} onClick={() => setProbe({ x: 50, y: 48 })}>center point</button>
-      </div>
-      <span className="sr-only" id="map-keyboard-help">Use the arrow keys to move the reading point. Hold shift for a larger move.</span>
-      <div
-        className="signal-map__stage"
-        onPointerDown={beginProbe}
-        onPointerMove={dragProbe}
-        onPointerUp={endProbe}
-        onPointerCancel={endProbe}
-        onKeyDown={nudgeProbe}
-        tabIndex={0}
-        role="group"
-        aria-label="Reading point stage"
-        aria-describedby="map-keyboard-help"
-      >
-        <span className="signal-map__label signal-map__label--top" aria-hidden="true">field / {note.index}</span>
-        <span className="signal-map__label signal-map__label--side" aria-hidden="true">x / word · y / intent</span>
-        <svg className="signal-map__drawing" viewBox="0 0 420 360" aria-hidden="true">
-          <circle cx="210" cy="176" r="112" />
-          <ellipse cx="210" cy="176" rx="170" ry="68" transform="rotate(-18 210 176)" />
-          <path d="M40 236c91 76 222 78 337-4" />
-          <line x1="210" y1="24" x2="210" y2="329" />
-          <line x1="31" y1="176" x2="389" y2="176" />
-          <path d="M110 93c45 22 105 27 169 10" />
-        </svg>
-        <div className="signal-map__crosshair" aria-hidden="true"><i /><i /></div>
-        <div className="signal-map__probe" style={{ left: `${probe.x}%`, top: `${probe.y}%` }} aria-hidden="true" />
-        <div className="signal-map__center" key={note.id}>
-          <span>under the lens</span>
-          <strong>?</strong>
-          <em>{note.label}</em>
-        </div>
-        <div className="signal-map__nodes">
-          {NOTES.map(item => (
-            <button
-              key={item.id}
-              type="button"
-              className={`map-node map-node--${item.id} ${note.id === item.id ? 'is-current' : ''}`}
-              onPointerDown={event => event.stopPropagation()}
-              onClick={() => onSelect(item.id)}
-              aria-label={`Move the reading point to ${item.label}`}
-              aria-pressed={note.id === item.id}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
-        <span className="signal-map__hint" aria-hidden="true">drag / arrows to probe</span>
-      </div>
-      <div className="signal-map__footer">
-        <div>
-          <span>current reading</span>
-          <strong>{note.title}</strong>
-        </div>
-        <span>{voiceName} voice</span>
-      </div>
-    </aside>
-  )
-}
-
-function WordGlyph({ id }: { id: WordId }) {
-  if (id === 'm3') {
-    return (
-      <svg className="word-glyph word-glyph--m3" viewBox="0 0 240 170" aria-hidden="true">
-        <path d="M32 132V38l80 94V38M151 38v94M151 38h58M151 73h48" />
-        <circle cx="151" cy="132" r="5" />
-      </svg>
-    )
-  }
-  if (id === 'good') {
-    return (
-      <svg className="word-glyph word-glyph--good" viewBox="0 0 240 170" aria-hidden="true">
-        <path d="M30 132 82 34l52 98M50 92h64M139 132V34h45c27 0 40 15 40 36s-13 36-40 36h-45M139 103h50" />
-      </svg>
-    )
-  }
-  return (
-    <svg className="word-glyph word-glyph--yet" viewBox="0 0 240 170" aria-hidden="true">
-      <path d="M42 47c8-18 24-27 43-27 25 0 42 14 42 36 0 21-12 30-29 42-14 10-20 17-20 29M78 149v5" />
-      <path d="M150 36v96M150 132h50" />
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+      <path d="M3 10h13M10.5 4.5 16 10l-5.5 5.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
