@@ -7,7 +7,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
 } from 'react'
-import { Squeegee } from './marks'
+import { RegisterEye, Squeegee } from './marks'
 
 /* the plate offset, in the page's own unit: 0 is a perfect register */
 export const PULL_MIN = -3
@@ -68,7 +68,7 @@ const makeScreen = () => {
  * The press bed. A squeegee blade rides on a strip of wet ink, and the black,
  * fluorescent pink and federal blue plates are all laid down at whatever offset
  * the blade is sitting at. Slide the blade onto the gate and the three
- * impressions land on the same pixels.
+ * impressions land on the same pixels — in the film, and in the type above.
  */
 export function PullBed({
   reg,
@@ -127,6 +127,15 @@ export function PullBed({
     const plateWidth = w - inset * 2
     const drift = reg * unitNow * FILM_GAIN
 
+    /* the gate: the one line all three plates have to agree with */
+    const gate = Math.round(w / 2) + 0.5
+    const bladeX = gate + reg * unitNow
+    const gateHalf = Math.max(4, PULL_GATE * unitNow * 2.2)
+
+    /* the gate window, so you can see where right is before you get there */
+    ctx.fillStyle = settled ? 'rgba(255, 46, 107, .13)' : 'rgba(21, 20, 27, .055)'
+    ctx.fillRect(gate - gateHalf, 0, gateHalf * 2, h)
+
     ctx.save()
     ctx.beginPath()
     ctx.rect(0, 0, w, h)
@@ -140,19 +149,33 @@ export function PullBed({
 
     /* three impressions, multiplied where they meet: near-black in register */
     ctx.globalCompositeOperation = 'multiply'
-    plate(INK_BLACK, 0, 0.46)
-    plate(INK_PINK, drift, 0.62)
-    plate(INK_BLUE, -drift * BLUE_RATIO, 0.52)
+    plate(INK_BLACK, 0, 0.3)
+    plate(INK_PINK, drift, 0.44)
+    plate(INK_BLUE, -drift * BLUE_RATIO, 0.38)
 
     if (!screenRef.current) {
       const pattern = ctx.createPattern(makeScreen(), 'repeat')
       if (pattern) screenRef.current = pattern
     }
     if (screenRef.current) {
-      ctx.globalAlpha = 0.42
+      ctx.globalAlpha = 0.26
       ctx.fillStyle = screenRef.current
       ctx.fillRect(inset, top, plateWidth, band)
     }
+
+    /* the wet trail: ink starved behind the blade, a shade deeper than the wash */
+    const smear = unitNow * 1.7
+    const left = reg >= 0 ? bladeX - smear : bladeX
+    const shade = ctx.createLinearGradient(reg >= 0 ? bladeX : bladeX, 0, reg >= 0 ? left : bladeX + smear, 0)
+    shade.addColorStop(0, 'rgba(21, 20, 27, .2)')
+    shade.addColorStop(1, 'rgba(21, 20, 27, 0)')
+    ctx.globalAlpha = 1
+    ctx.fillStyle = shade
+    ctx.fillRect(left, top, smear, band)
+
+    /* ink still standing up at the foot of the blade */
+    ctx.fillStyle = 'rgba(255, 255, 255, .3)'
+    ctx.fillRect(bladeX - 1, top, 2, band)
     ctx.restore()
     ctx.globalAlpha = 1
 
@@ -162,8 +185,6 @@ export function PullBed({
     ctx.fillStyle = 'rgba(21, 20, 27, .2)'
     ctx.fillRect(inset, top + band - 2, plateWidth, 2)
 
-    /* the gate: the one line all three plates have to agree with */
-    const gate = Math.round(w / 2) + 0.5
     const gateInk = settled ? 'rgba(255, 46, 107, .95)' : 'rgba(255, 46, 107, .5)'
     ctx.strokeStyle = gateInk
     ctx.lineWidth = 1
@@ -299,8 +320,11 @@ export function PullBed({
           <span className="bed__dot" aria-hidden="true" />
           press bed
         </p>
-        <p className="bed__read" aria-hidden="true">
-          {settled ? 'in register' : <>{reg > 0 ? '+' : '−'}{Math.abs(reg).toFixed(2)}</>}
+        <p className="bed__read">
+          <RegisterEye className="bed__eye" />
+          <span>
+            {settled ? 'in register' : <>{reg > 0 ? '+' : '−'}{Math.abs(reg).toFixed(2)} off register</>}
+          </span>
         </p>
       </div>
 
@@ -325,7 +349,7 @@ export function PullBed({
         <span>
           <span aria-hidden="true">↳</span> drag the blade along the bed
         </span>
-        <em>the gate catches it — then every impression agrees</em>
+        <em>the gate catches it — then every impression on the page agrees</em>
       </p>
     </div>
   )

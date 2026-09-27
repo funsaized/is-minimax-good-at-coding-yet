@@ -7,10 +7,12 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
+  type RefObject,
 } from 'react'
 import { findNote, NOTES, phraseLines, WORD_IDS, type WordId } from './notes'
-import { CropMark, RegisterEye, RegistrationMark, Squeegee } from './marks'
-import { inRegister, plateOffset, PULL_MAX, PULL_MIN, PULL_REST, PullBed } from './pull'
+import { CropMark, RegistrationMark, Squeegee } from './marks'
+import { Plated } from './plate'
+import { inRegister, plateOffset, PULL_REST, PullBed } from './pull'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -26,6 +28,13 @@ const INKS = [
   { id: 'blue', name: 'federal blue', use: 'the second impression' },
 ] as const
 
+const SHORTCUTS = [
+  { keys: ['1', '2', '3'], label: 'put a plate up' },
+  { keys: ['←', '→'], label: 'nudge the blade' },
+  { keys: ['0'], label: 'snap to the gate' },
+  { keys: ['esc'], label: 'cover the proof sheet' },
+] as const
+
 const prefersStill = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -38,24 +47,23 @@ export function App() {
   const [reg, setReg] = useState(PULL_REST)
   const [catchTick, setCatchTick] = useState(0)
   const [announce, setAnnounce] = useState('')
-  const inkRef = useRef<HTMLDivElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const specimenRef = useRef<HTMLDivElement>(null)
+  const plateRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const wasSettled = useRef(false)
-  const indexRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
   const shown = hover ?? active
-  const note = findNote(shown)
-  const engaged = hover !== null
   const settled = inRegister(reg)
+  const at = WORD_IDS.indexOf(active)
 
-  const select = useCallback((id: WordId, announceIt = true) => {
+  const select = useCallback((id: WordId) => {
     setActive(id)
     setHover(id)
-    if (!announceIt) return
     const found = findNote(id)
-    setAnnounce(`${found.index}. ${found.label}. ${found.title}.`)
+    setAnnounce(`Plate ${found.index}. ${found.label}. ${found.title}.`)
   }, [])
 
-  /* one source of truth for the plate: css reads these, the film reads them, we read them */
+  /* one source of truth for the plate: css reads these, the ink reads them, we read them */
   useEffect(() => {
     const { x, y } = plateOffset(reg)
     const root = document.documentElement
@@ -65,30 +73,29 @@ export function App() {
     root.dataset.register = settled ? 'on' : 'off'
   }, [reg, settled])
 
-  /* the moment the ink lands, and only then */
+  /* the moment the three impressions agree, and only then */
   useEffect(() => {
     if (settled && !wasSettled.current) {
       setCatchTick(tick => tick + 1)
-      setAnnounce('Ink in register. All three plates agree.')
+      setAnnounce('Ink in register. All three impressions agree.')
     }
     wasSettled.current = settled
   }, [settled])
 
+  /* the pull lands: colour plates fly home, black prints over the top */
   useEffect(() => {
     if (!catchTick) return
-    const el = inkRef.current
-    if (!el) return
-    el.classList.remove('is-catch')
-    void el.offsetWidth
-    el.classList.add('is-catch')
-    const settle = () => el.classList.remove('is-catch')
-    el.addEventListener('animationend', settle, { once: true })
-    return () => el.removeEventListener('animationend', settle)
+    const nodes = [titleRef.current, specimenRef.current].filter(Boolean) as HTMLElement[]
+    if (!nodes.length) return
+    const timers = nodes.map(node => {
+      node.classList.add('is-catch')
+      return window.setTimeout(() => node.classList.remove('is-catch'), 1200)
+    })
+    return () => {
+      timers.forEach(id => window.clearTimeout(id))
+      nodes.forEach(node => node.classList.remove('is-catch'))
+    }
   }, [catchTick])
-
-  const setPlate = useCallback((value: number) => {
-    setReg(Math.min(PULL_MAX, Math.max(PULL_MIN, value)))
-  }, [])
 
   useEffect(() => {
     document.title = TITLE
@@ -148,6 +155,11 @@ export function App() {
         setAnnounce('The short answer is covered again.')
         return
       }
+      if (event.key === '0') {
+        event.preventDefault()
+        setReg(0)
+        return
+      }
       if (event.key >= '1' && event.key <= '3') {
         const id = WORD_IDS[Number(event.key) - 1]
         if (!id) return
@@ -159,21 +171,20 @@ export function App() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [proof, select])
 
-  const nudgeIndex = (event: ReactKeyboardEvent<HTMLButtonElement>, id: WordId) => {
+  const walk = (from: WordId, step: number) =>
+    WORD_IDS[(WORD_IDS.indexOf(from) + step + WORD_IDS.length) % WORD_IDS.length]
+
+  /* arrow keys walk the radiogroup; focus follows, as a radio group should */
+  const nudge = (event: ReactKeyboardEvent<HTMLElement>, id: WordId) => {
     let next: WordId | null = null
-    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
-      next = WORD_IDS[(WORD_IDS.indexOf(id) + 1) % WORD_IDS.length]
-    } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
-      next = WORD_IDS[(WORD_IDS.indexOf(id) + WORD_IDS.length - 1) % WORD_IDS.length]
-    } else if (event.key === 'Home') {
-      next = WORD_IDS[0]
-    } else if (event.key === 'End') {
-      next = WORD_IDS[WORD_IDS.length - 1]
-    }
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = walk(id, 1)
+    else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = walk(id, -1)
+    else if (event.key === 'Home') next = WORD_IDS[0]
+    else if (event.key === 'End') next = WORD_IDS[WORD_IDS.length - 1]
     if (!next) return
     event.preventDefault()
-    select(next, false)
-    indexRefs.current[next]?.focus()
+    select(next)
+    plateRefs.current[next]?.focus()
   }
 
   return (
@@ -213,109 +224,127 @@ export function App() {
           ))}
         </nav>
 
-        <p className={`readout ${engaged ? 'is-live' : ''}`} aria-hidden="true">
-          <span className="readout__dot" />
-          plate <strong>{note.index}</strong> {note.label}
+        <p className="gauge" data-on={settled ? 'on' : 'off'}>
+          <span className="gauge__plates" aria-hidden="true">
+            <i className="gauge__dot gauge__dot--black" />
+            <i className="gauge__dot gauge__dot--pink" />
+            <i className="gauge__dot gauge__dot--blue" />
+          </span>
+          <span className="gauge__read">{settled ? 'in register' : 'off register'}</span>
         </p>
       </header>
 
       <main className="page">
         <section id="question" className="sheet" aria-labelledby="question-title">
-          <p className="rail" aria-hidden="true">
-            <span>one sentence</span>
-            <span>three inks</span>
-            <span className="rail__reg" />
+          <p className="slugline sheet__slug">
+            <RegistrationMark className="slugline__mark" />
+            the question · set three times · pulled once
           </p>
 
-          <div className="sheet__grid">
-            <div className="sheet__main">
-              <p className="slugline">
-                <RegistrationMark className="slugline__mark" />
-                the title, pulled twice
-              </p>
+          <QuestionTitle
+            titleRef={titleRef}
+            selected={active}
+            hot={shown}
+            onSelect={select}
+            onPreview={setHover}
+          />
 
-              <div ref={inkRef} className="hero__ink">
-                <QuestionTitle
-                  selected={active}
-                  hot={shown}
-                  onSelect={select}
-                  onPreview={setHover}
+          <div
+            className="plates"
+            role="radiogroup"
+            aria-label="Which phrase is on the plate"
+            aria-describedby="plates-help"
+          >
+            {NOTES.map(item => (
+              <button
+                key={item.id}
+                type="button"
+                role="radio"
+                ref={node => {
+                  plateRefs.current[item.id] = node
+                }}
+                tabIndex={item.id === active ? 0 : -1}
+                aria-checked={item.id === active}
+                className={`plates__row ${item.id === active ? 'is-active' : ''} ${
+                  item.id === shown ? 'is-hot' : ''
+                }`}
+                onClick={() => select(item.id)}
+                onMouseEnter={() => setHover(item.id)}
+                onMouseLeave={() => setHover(null)}
+                onFocus={() => setHover(item.id)}
+                onBlur={() => setHover(null)}
+                onKeyDown={event => nudge(event, item.id)}
+              >
+                <span className="plates__num" aria-hidden="true">{item.index}</span>
+                <Plated
+                  className="plates__stack"
+                  render={() => <span className="plates__type">{item.label}</span>}
                 />
-              </div>
-
-              <div className="hero__band">
-                <p className="margin-note">
-                  <span className="margin-note__rule" aria-hidden="true" />
-                  <span className="margin-note__text">
-                    The question mark is load-bearing. <em>Give it somewhere to land.</em>
-                  </span>
-                </p>
-
-                <div className="hero__say">
-                  <p className="lede">
-                    The sentence is short enough to take apart, and short enough to print badly on
-                    purpose. Lean toward a phrase and the sheet reads it back to you. Then take the
-                    blade to the gate and pull the ink into register.
-                  </p>
-
-                  <div className="actions">
-                    <a className="button button--ink" href="#close">
-                      read it closely
-                      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                        <path
-                          d="M3 10h13M10.5 4.5 16 10l-5.5 5.5"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.7"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </a>
-                    <a className="button button--quiet" href="#answer">
-                      skip to the short answer
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              <p className="hint" id="title-help">
-                <span aria-hidden="true">↳</span> hover, tap or focus a phrase in the title — the
-                plate reads it back to you
-              </p>
-            </div>
-
-            <aside className="plate" aria-label="The phrase currently on the plate">
-              <div className={`plate__card ${engaged ? 'is-engaged' : ''}`}>
-                <div className="plate__head">
-                  <p className="plate__tag">
-                    <span className="plate__num">plate {note.index}</span>
-                    <strong>{note.gloss}</strong>
-                  </p>
-                  <RegisterEye className="plate__eye" />
-                </div>
-
-                <p className="plate__word">{note.label}</p>
-
-                <p className="plate__slugs">
-                  <span>{note.set}</span>
-                  <span className="plate__state">{engaged ? 'under the plate' : 'at rest'}</span>
-                </p>
-              </div>
-
-              <dl className="keycard">
-                <div><dt><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></dt><dd>put a phrase on the plate</dd></div>
-                <div><dt><kbd>tab</kbd></dt><dd>step through the title</dd></div>
-                <div><dt><kbd>←</kbd><kbd>→</kbd></dt><dd>nudge the blade</dd></div>
-                <div><dt><kbd>space</kbd></dt><dd>catch the gate</dd></div>
-                <div><dt><kbd>esc</kbd></dt><dd>put the proof sheet back</dd></div>
-              </dl>
-            </aside>
+                <span className="plates__role">{item.gloss}</span>
+              </button>
+            ))}
           </div>
+          <p className="sr-only" id="plates-help">
+            Choosing a plate moves the highlight in the title above and the specimen below.
+          </p>
+
+          <div className="band">
+            <p className="margin-note">
+              <span className="margin-note__rule" aria-hidden="true" />
+              <span className="margin-note__text">
+                The question mark is load-bearing. <em>Give it somewhere to land.</em>
+              </span>
+            </p>
+
+            <div className="band__say">
+              <p className="lede">
+                The sentence is short enough to take apart, and short enough to print badly on
+                purpose. Every word below is set three times over — black, pink, blue — and the
+                plates do not agree with each other until you do something about it.
+              </p>
+
+              <div className="actions">
+                <a className="button button--ink" href="#close">
+                  read it closely
+                  <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                    <path
+                      d="M3 10h13M10.5 4.5 16 10l-5.5 5.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </a>
+                <a className="button button--quiet" href="#answer">
+                  skip to the short answer
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <p className="hint">
+            <span aria-hidden="true">↳</span> pick a phrase — in the title, or on the plate below — and
+            the whole sheet follows you
+          </p>
 
           <div className="bedrow">
-            <PullBed reg={reg} onSlide={setPlate} />
+            <PullBed reg={reg} onSlide={value => setReg(value)} />
           </div>
+
+          <dl className="keys">
+            {SHORTCUTS.map(item => (
+              <div key={item.label}>
+                <dt>
+                  {item.keys.map(key => (
+                    <kbd key={key}>{key}</kbd>
+                  ))}
+                </dt>
+                <dd>{item.label}</dd>
+              </div>
+            ))}
+          </dl>
         </section>
 
         <section id="close" className="read" aria-labelledby="close-title">
@@ -325,104 +354,58 @@ export function App() {
               close read
             </p>
             <div className="read__intro">
-              <h2 id="close-title">Three phrases. <em>Three jobs.</em></h2>
+              <h2 id="close-title">One plate, <em>taken apart.</em></h2>
               <p>
-                Take the sentence apart. Each phrase below is a brief: pick one and the sheet shows
-                how it is set here, what it is asking the page to do, and where its two impressions
-                are sitting right now.
+                The sentence has three phrases and each one is doing a different job. Take them in
+                turn: what the page is being asked, where the type is actually set, and what it
+                refuses to finish.
               </p>
             </div>
           </header>
 
-          <div className="read__grid">
-            <div
-              className="index"
-              role="radiogroup"
-              aria-label="Choose a phrase to read closely"
-              aria-describedby="index-help"
+          <div className="stepper">
+            <button
+              type="button"
+              className="stepper__nav"
+              onClick={() => select(walk(active, -1))}
+              aria-label="Previous phrase"
             >
-              {NOTES.map(item => {
-                const isActive = item.id === active
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    role="radio"
-                    ref={node => {
-                      indexRefs.current[item.id] = node
-                    }}
-                    tabIndex={isActive ? 0 : -1}
-                    aria-checked={isActive}
-                    className={`index__row ${isActive ? 'is-active' : ''} ${shown === item.id ? 'is-hot' : ''}`}
-                    onClick={() => select(item.id)}
-                    onMouseEnter={() => setHover(item.id)}
-                    onMouseLeave={() => setHover(null)}
-                    onFocus={() => setHover(item.id)}
-                    onBlur={() => setHover(null)}
-                    onKeyDown={event => nudgeIndex(event, item.id)}
-                  >
-                    <span className="index__number" aria-hidden="true">{item.index}</span>
-                    <span className="index__body">
-                      <span className="index__label">{item.label}</span>
-                      <span className="index__gloss">{item.gloss}</span>
-                    </span>
-                    <span className="index__set" aria-hidden="true">{item.measure}</span>
-                  </button>
-                )
-              })}
-              <p className="index__help" id="index-help">
-                Arrow keys move. The specimen follows.
-              </p>
-            </div>
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <path d="M16 10H4M9.5 4.5 4 10l5.5 5.5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
 
-            <article className="specimen" key={note.id} aria-labelledby="specimen-title">
-              <p className="specimen__slug">
-                <span>close read / {note.index}</span>
-                <span>{note.set}</span>
-              </p>
-
-              <div className={`specimen__stage specimen__stage--${note.id}`}>
-                <span className="specimen__gate" aria-hidden="true" />
-                <p className="specimen__word">
-                  <span className="sr-only">{note.label}</span>
-                  <span className="specimen__main" aria-hidden="true">
-                    {phraseLines(note.label, note.drop).map(line => (
-                      <span
-                        key={line}
-                        className={line === note.drop ? 'specimen__line specimen__line--drop' : 'specimen__line'}
-                      >
-                        {line}
-                      </span>
-                    ))}
-                  </span>
-                </p>
-                {note.drop ? <span className="specimen__pad" aria-hidden="true" /> : null}
-                <span className="specimen__reg" aria-hidden="true">
-                  <RegistrationMark />
-                </span>
-              </div>
-
-              <div className="specimen__body">
-                <p className="specimen__gloss">{note.gloss}</p>
-                <div className="specimen__lede">
-                  <h3 id="specimen-title">{note.title}</h3>
-                  <p className="specimen__copy">{note.body}</p>
-                </div>
-                <p className="specimen__margin">{note.margin}</p>
-              </div>
-
-              <ol className="brief">
-                {note.look.map((line, position) => (
-                  <li key={line}>
-                    <span aria-hidden="true">{String(position + 1).padStart(2, '0')}</span>
-                    {line}
-                  </li>
+            <p className="stepper__read">
+              <span className="stepper__dots" aria-hidden="true">
+                {NOTES.map(item => (
+                  <i key={item.id} className={item.id === active ? 'is-on' : ''} />
                 ))}
-              </ol>
+              </span>
+              <span className="stepper__index" aria-hidden="true">{findNote(active).index}</span>
+              <Plated
+                className="stepper__stack"
+                render={() => <span className="stepper__type">{findNote(active).label}</span>}
+              />
+              <em>{findNote(active).gloss}</em>
+            </p>
 
-              <p className="specimen__prompt"><span aria-hidden="true">↳</span> {note.prompt}</p>
-            </article>
+            <button
+              type="button"
+              className="stepper__nav"
+              onClick={() => select(walk(active, 1))}
+              aria-label="Next phrase"
+            >
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <path d="M4 10h12M10.5 4.5 16 10l-5.5 5.5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
           </div>
+
+          <Specimen
+            stageRef={specimenRef}
+            note={findNote(active)}
+            onStep={step => select(walk(active, step))}
+          />
         </section>
 
         <section id="answer" className="answer" aria-labelledby="answer-title">
@@ -432,7 +415,7 @@ export function App() {
                 <RegistrationMark className="slugline__mark" />
                 the short answer
               </p>
-              <h2 id="answer-title">One sentence, delivered <em>plainly.</em></h2>
+              <h2 id="answer-title">One sentence. <em>No speech.</em></h2>
               <p>
                 The question does not need a speech. It needs one honest sentence and enough quiet
                 around it to land.
@@ -514,10 +497,10 @@ export function App() {
 
             <p className="colophon__note">
               Three impressions, deliberately out of register until you take the blade to the gate.
-              The wet ink on the bed is drawn in a canvas, not downloaded; the paper grain is a filter,
-              not an image. Set with the fonts already on your machine — one grotesque, one serif, one
-              mono. No web fonts, no network calls. Every movement here is a print decision, and each
-              one stops the moment you ask it to.
+              The wet ink on the bed is drawn in a canvas and the paper tooth is an inline filter —
+              nothing here is downloaded. Set with the fonts already on your machine: one grotesque,
+              one serif, one mono. No web fonts, no network, nothing stored. Every movement on this
+              page is a print decision, and each one stops the moment you ask it to.
             </p>
           </div>
 
@@ -533,12 +516,96 @@ export function App() {
   )
 }
 
+/** One phrase, magnified: the same three impressions, at reading size. */
+function Specimen({
+  note,
+  stageRef,
+  onStep,
+}: {
+  note: ReturnType<typeof findNote>
+  stageRef: RefObject<HTMLDivElement | null>
+  onStep: (step: number) => void
+}) {
+  const lines = phraseLines(note.label, note.drop)
+
+  return (
+    <article className="specimen" aria-labelledby="specimen-title" key={note.id}>
+      <p className="specimen__slug">
+        <span>close read · {note.index} of 03</span>
+        <span>{note.measure} · {note.set}</span>
+      </p>
+
+      <div ref={stageRef} className={`specimen__stage specimen__stage--${note.id}`}>
+        <span className="specimen__gate" aria-hidden="true" />
+
+        <Plated
+          className="specimen__stack"
+          render={ghost => (
+            <span className="specimen__word">
+              {ghost ? null : <span className="sr-only">{note.label}</span>}
+              <span className="specimen__main">
+                {lines.map(line => (
+                  <span
+                    key={line}
+                    className={line === note.drop ? 'specimen__line specimen__line--drop' : 'specimen__line'}
+                  >
+                    {line}
+                  </span>
+                ))}
+              </span>
+            </span>
+          )}
+        />
+
+        {note.drop ? <span className="specimen__pad" aria-hidden="true" /> : null}
+
+        <p className="specimen__rule" aria-hidden="true">
+          <span className="specimen__rule-count">{note.chars}</span>
+          <span className="specimen__rule-word">{note.measure}</span>
+        </p>
+
+        <span className="specimen__reg" aria-hidden="true">
+          <RegistrationMark />
+        </span>
+      </div>
+
+      <div className="specimen__body">
+        <p className="specimen__gloss">{note.gloss}</p>
+        <div className="specimen__lede">
+          <h3 id="specimen-title">{note.title}</h3>
+          <p className="specimen__copy">{note.body}</p>
+        </div>
+        <p className="specimen__margin">{note.margin}</p>
+      </div>
+
+      <ol className="brief">
+        {note.look.map((line, position) => (
+          <li key={line}>
+            <span aria-hidden="true">{String(position + 1).padStart(2, '0')}</span>
+            {line}
+          </li>
+        ))}
+      </ol>
+
+      <div className="specimen__foot">
+        <p className="specimen__prompt"><span aria-hidden="true">↳</span> {note.prompt}</p>
+        <p className="specimen__turn">
+          <button type="button" onClick={() => onStep(-1)}>← back</button>
+          <button type="button" onClick={() => onStep(1)}>next plate →</button>
+        </p>
+      </div>
+    </article>
+  )
+}
+
 function QuestionTitle({
+  titleRef,
   selected,
   hot,
   onSelect,
   onPreview,
 }: {
+  titleRef: RefObject<HTMLHeadingElement | null>
   selected: WordId
   hot: WordId
   onSelect: (id: WordId) => void
@@ -557,7 +624,8 @@ function QuestionTitle({
     })
   }, [])
 
-  const track = useCallback((event: ReactPointerEvent<HTMLHeadingElement>) => {
+  /* the type leans toward the cursor, and the plates behind it lag a little */
+  const track = useCallback((event: ReactPointerEvent<HTMLElement>) => {
     if (event.pointerType !== 'mouse' || prefersStill()) return
     const host = event.currentTarget
     const reach = Math.min(300, Math.max(150, host.getBoundingClientRect().width * 0.32))
@@ -574,8 +642,8 @@ function QuestionTitle({
         const dy = py - (box.top + box.height / 2)
         const pull = Math.hypot(dx, dy) > reach ? 0 : (1 - Math.hypot(dx, dy) / reach) ** 2
         el.style.setProperty('--pull', pull.toFixed(3))
-        el.style.setProperty('--dx', `${(dx * 0.13 * pull).toFixed(2)}px`)
-        el.style.setProperty('--dy', `${(dy * 0.1 * pull - pull * 2.5).toFixed(2)}px`)
+        el.style.setProperty('--dx', `${(dx * 0.022 * pull).toFixed(2)}px`)
+        el.style.setProperty('--dy', `${(dy * 0.02 * pull - pull * 4.5).toFixed(2)}px`)
       })
     })
   }, [])
@@ -592,55 +660,68 @@ function QuestionTitle({
     const back = event.key === 'ArrowLeft' || event.key === 'ArrowUp'
     if (!forward && !back) return
     event.preventDefault()
-    const at = WORD_IDS.indexOf(id)
+    const here = WORD_IDS.indexOf(id)
     const next = forward
-      ? WORD_IDS[(at + 1) % WORD_IDS.length]
-      : WORD_IDS[(at + WORD_IDS.length - 1) % WORD_IDS.length]
+      ? WORD_IDS[(here + 1) % WORD_IDS.length]
+      : WORD_IDS[(here + WORD_IDS.length - 1) % WORD_IDS.length]
     onSelect(next)
     words.current[next]?.focus()
   }
 
-  const word = (id: WordId, className: string, children: ReactNode) => (
-    <button
-      ref={node => {
-        words.current[id] = node
-      }}
-      type="button"
-      data-word={id}
-      className={`question__word ${className} ${selected === id ? 'is-selected' : ''} ${
-        hot === id ? 'is-hot' : ''
-      }`}
-      onClick={() => onSelect(id)}
-      onMouseEnter={() => onPreview(id)}
-      onMouseLeave={() => onPreview(null)}
-      onFocus={() => onPreview(id)}
-      onBlur={() => onPreview(null)}
-      onKeyDown={event => step(event, id)}
-      aria-pressed={selected === id}
-      aria-describedby="title-help"
-    >
-      {children}
-    </button>
-  )
+  const word = (ghost: boolean) => (id: WordId, children: ReactNode) => {
+    const shape = `w w--${id}`
+    if (ghost) {
+      return <span className={shape}>{children}</span>
+    }
+    return (
+      <button
+        ref={node => {
+          words.current[id] = node
+        }}
+        type="button"
+        className={`${shape} ${selected === id ? 'is-selected' : ''} ${hot === id ? 'is-hot' : ''}`}
+        onClick={() => onSelect(id)}
+        onMouseEnter={() => onPreview(id)}
+        onMouseLeave={() => onPreview(null)}
+        onFocus={() => onPreview(id)}
+        onBlur={() => onPreview(null)}
+        onKeyDown={event => step(event, id)}
+        aria-pressed={selected === id}
+      >
+        {children}
+      </button>
+    )
+  }
+
+  const lines = (ghost: boolean) => {
+    const w = word(ghost)
+    return (
+      <span className="q__lines">
+        <span className="q__line q__line--1" style={{ '--i': 0 } as CSSProperties}>
+          <span className="q__plain">is Minimax </span>
+          {w('m3', <span className="chip">M3</span>)}
+        </span>
+        <span className="q__line q__line--2" style={{ '--i': 1 } as CSSProperties}>
+          {w('good', 'good at')}
+        </span>
+        <span className="q__line q__line--3" style={{ '--i': 2 } as CSSProperties}>
+          <span className="q__plain">frontend </span>
+          {w('yet', <>yet<span className="mark">?</span></>)}
+        </span>
+      </span>
+    )
+  }
 
   return (
     <h1
       id="question-title"
+      ref={titleRef}
       className={`question is-on-${hot}`}
       onPointerMove={track}
       onPointerLeave={clear}
     >
-      <span className="question__line" style={{ '--i': 0 } as CSSProperties}>
-        <span className="question__plain">is Minimax </span>
-        {word('m3', 'question__word--m3', <span className="chip">M3</span>)}
-      </span>{' '}
-      <span className="question__line" style={{ '--i': 1 } as CSSProperties}>
-        {word('good', 'question__word--good', 'good at')}
-      </span>{' '}
-      <span className="question__line" style={{ '--i': 2 } as CSSProperties}>
-        <span className="question__plain">frontend </span>
-        {word('yet', 'question__word--yet', <>yet<span className="question__mark">?</span></>)}
-      </span>
+      <Plated className="question__stack" render={lines} />
+      <span className="question__wash" aria-hidden="true" />
     </h1>
   )
 }

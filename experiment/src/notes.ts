@@ -4,6 +4,8 @@ export type Note = {
   id: WordId
   index: string
   measure: string
+  /** how many characters the phrase actually sets, counted */
+  chars: number
   label: string
   gloss: string
   set: string
@@ -20,6 +22,7 @@ export const NOTES: Note[] = [
     id: 'm3',
     index: '01',
     measure: 'two characters',
+    chars: 2,
     label: 'M3',
     gloss: 'the subject',
     set: 'set small, in a lockup',
@@ -38,6 +41,7 @@ export const NOTES: Note[] = [
     id: 'good',
     index: '02',
     measure: 'six letters',
+    chars: 6,
     label: 'good at',
     gloss: 'the hinge',
     set: 'no treatment, full measure',
@@ -56,6 +60,7 @@ export const NOTES: Note[] = [
     id: 'yet',
     index: '03',
     measure: 'three characters',
+    chars: 3,
     label: 'yet?',
     gloss: 'the turn',
     set: 'the mark drops to its own line',

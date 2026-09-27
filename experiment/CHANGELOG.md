@@ -1,44 +1,61 @@
-# Changelog
+Iteration 490 — the title is now genuinely printed three times, and the register pull cleans it up.
 
-## 489 — The register control became a press bed you can actually pull
+The idea
+Previous iterations kept the misregistration concept trapped in a corner card and a
+canvas strip, while the hero type faked the effect with a two-layer `text-shadow`. This
+iteration moves the mechanic into the type itself.
 
-The range slider is gone. In its place the sheet now carries a full-width press bed: a strip of
-wet ink with a squeegee blade riding on it. Drag the blade and the black, fluorescent pink and
-federal blue plates slide apart or back together; let go inside the gate and it catches. The
-fringes in the title, the phrase on the plate, and the make-ready eye all read from that one
-value, exactly as before — the control is now the physical thing the page was describing.
+Added src/plate.tsx: a `Plated` primitive that renders one set of lines three times
+deep. The black plate is real, interactive type; the pink and blue plates are inert
+copies of the identical markup, offset by the live plate value and composited with
+`mix-blend-mode: multiply` so the overprint darkens the way ink actually does. The
+three layers are verified to be pixel-identical in geometry (0.00px width and height
+delta), which is what makes the misalignment read as a press accident rather than a
+bug. The title, the plate list, the stepper and the specimen all use the same
+primitive, so the whole page is one idea instead of three.
 
-### What changed
+Because the concept is now in the type, the payoff is real: at rest the sentence is
+chromatically fringed, and the moment the blade reaches the gate the three impressions
+land on the same pixels and it becomes one razor-sharp black voice.
 
-- **New `src/pull.tsx` — `PullBed`.** A canvas paints the ink film: paper wash, roller banding,
-  three plates multiplied over one another, a generated halftone screen, the wet edge, the gate,
-  trim corners and a scale. It repaints only when the offset or the size changes, and resizes with
-  a `ResizeObserver`. The blade is DOM, not canvas, so it stays crisp and animatable.
-- **The bed is the whole register control.** Pointer drag with pointer capture, `touch-action:
-  pan-y` so vertical scroll still works on touch, and full keyboard parity as a `role="slider"`:
-  arrows nudge, shift-arrows and page keys move coarsely, `Home`/`End` reach the ends, and
-  `Space`/`Enter` pull the blade home. `aria-valuetext` speaks in print-shop terms
-  ("off register, plus 0.90"), and the live region announces the moment the ink lands.
-- **Register is a real event now.** Leaving the gate stamps the bed: a rotated rubber stamp, a
-  pink keyline under the bed, a solid gate, a burst of pink in the detent, and a one-shot flex
-  through the title with a wash of colour under it. Leaving register again takes it all back.
-- **The offset got quieter, the film got louder.** The type fringe ramp came down (2.85 → 2) so
-  the sheet reads as *slightly* out of register at rest rather than broken, while the bed's film
-  exaggerates the same offset so the mechanism is legible.
-- **Hero recomposed.** The title grew to `clamp(2.5rem, 8vw, 8.4rem)`; the margin note and the
-  lede now sit side by side in a band instead of stacking; the bed spans the sheet underneath
-  them, which gives the section a base and gives the squeegee somewhere to travel.
-- **The selected phrase is marked with a drawn rule**, not a pink slab — closer to what the page
-  argues for in its own copy, and it keeps the black type dominant.
-- **Fixed a dead variable.** `--settle` was styled in four places and never written by the app,
-  so the detent and the status dot could never react. It is now set alongside `--reg-x`/`--reg-y`.
-- **New motion:** the paper grain creeps across the sheet on a 26s loop and a soft light band
-  drifts behind it; both stop dead under `prefers-reduced-motion`. The blade tilts with the
-  offset and squeaks while it is being dragged.
-- **New detail:** the specimen stage carries a masked registration guide — a hairline in the top
-  and bottom margins only, so it never crosses the type — with a small "register" caption.
-- Vocabulary is consistent now: the rail says *three inks* (there are three), the readout and the
-  card both say *plate*, and the keycard leads with what the blade does.
+Composition
+- Title re-set as a two-column poster: subject and hinge on the left, "frontend yet?"
+  bottom-aligned on the right, sharing a baseline.
+- Removed the hero aside (plate card, keycard) and the slugbar phrase readout. Four
+  places were restating which phrase was selected; now there is one plate list.
+- Added a full-width plate list under the title, styled as a job ticket.
+- Replaced the close-read three-item list with a single large specimen plus a
+  stepper, so the page has one primary control instead of two competing ones.
+- Specimen stage is now a two-column stage: the type, and a ruled measure column
+  carrying the character count. Tightened the vertical padding that left a dead void.
+- Header right side is now a register gauge: three dots that converge as the plate
+  converges. It reports press state instead of duplicating the plate card.
 
-Unchanged: the exact visible title and document title, the three sections, the phrase notes, the
-proof sheet, the colophon, the entry point, the framework and the build.
+Motion
+- The catch: colour plates fly home from ±30px with a blur, the black plate prints
+  over the top with a short flex, and a pink wash spreads under the title. Fires only
+  on the off-register → in-register edge.
+- Colour plates land before the black plate on first paint, the way overprint works.
+- The paper washes and halftone drift with the plate offset, so the whole sheet is
+  out of register.
+- Reduced the magnetic pull on the title words to a 6px rise; the previous 39px
+  displacement would have torn the word off its own ghosts.
+
+Press bed
+- Moved the make-ready eye onto the bed header, where it belongs.
+- Canvas gains a gate window so you can see where right is before you get there, and
+  a wet trail starved behind the blade. Lightened the plate alphas; the ink band was
+  reading as a solid purple slab.
+
+Fixes
+- notes.ts gained an explicit `chars` count. The measure rule was parsing a digit out
+  of "six letters" and rendering 1 for every phrase.
+- `0` now snaps the blade to the gate globally. The old keycard advertised `space`
+  for that, which only worked when the bed happened to hold focus.
+- The plate list is a proper radiogroup: one tab stop, arrows walk it, focus follows.
+- Sticky bar opacity raised; the shortcut strip was reading through it.
+
+Verified in Chromium at 1440 and 390: no horizontal overflow, no console errors,
+document title and visible title unchanged. Under `prefers-reduced-motion` the catch
+animation and word lift are removed but the plate offset still resolves to 0, so the
+mechanic keeps working with nothing moving.
