@@ -8,6 +8,11 @@
    sentence, under a loupe. it splits with the plates and closes
    onto one voice at the gate, exactly when the page does.
 
+   the sheet prints wet at the top and dries going down the press.
+   the question is three plates plainly apart; the close read below
+   it is nearly one voice, because the ink has had time to settle.
+   that arc is the whole reason the page is still readable.
+
    the scale: the question is the largest type on the page by a
    wide margin. everything after it is a job ticket, a specimen
    or a label, and is set accordingly.
@@ -34,8 +39,8 @@
   --stock-2: #e6dfcd;
   --stock-3: #fcfaf3;
   --black: #15141b;
-  --ink-70: #4b4856;
-  --ink-50: #6f6b7c;
+  --ink-70: #454150;
+  --ink-50: #615d6e;
   --rule: rgba(21, 20, 27, .17);
   --rule-soft: rgba(21, 20, 27, .09);
   --pink: #ff2e6b;
@@ -43,11 +48,27 @@
   --blue: #2a3ec9;
   --blue-ink: #26329e;
 
-  /* written by the app: the plate offset, and whether the ink has landed */
-  --reg-x: 1.8px;
-  --reg-y: .83px;
+  /* written by the app: the true plate offset, and whether the ink has landed */
+  --reg-x: 3.36px;
+  --reg-y: 1.55px;
   --fringe-scale: 1;
   --settle: 0;
+  /* written by the app too: how dry the sheet is, 1 at the press → 0 once the
+     ink has dried out. the fringe is the plate offset through a wet/dry ramp,
+     and it falls back to the true offset if the app never gets to write it. */
+  --dry: 0;
+  --fringe-x: var(--reg-x);
+  --fringe-y: var(--reg-y);
+
+  /* the offset shadows under the cards are not decoration: they are the pink
+     plate, printed behind the black one. so they ride the plate offset, and
+     every card on the sheet snaps home the instant the gate catches the blade */
+  --lift: calc(var(--reg-x) * 1.5);
+  --drop: calc(var(--reg-y) * 1.5);
+  --lift-x: calc(5px + var(--lift));
+  --lift-y: calc(5px + var(--drop));
+  --lift-x-lg: calc(11px + var(--lift));
+  --lift-y-lg: calc(11px + var(--drop));
 
   --display: 'Helvetica Neue', Helvetica, Arial, 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
   --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
@@ -220,15 +241,17 @@ kbd {
   animation: drum 26s linear infinite;
 }
 
-/* the ink washes drift with the plate, so the whole sheet is out of register */
+/* the ink washes drift with the plate, so the whole sheet is out of register —
+   and the wash cools off as the sheet dries, the way real ink does */
 .stock__wash {
   position: absolute;
   inset: 0;
   background:
     radial-gradient(56rem 40rem at 90% -10%, rgba(255, 46, 107, .12), transparent 62%),
     radial-gradient(50rem 40rem at -8% 60%, rgba(42, 62, 201, .11), transparent 64%);
-  transform: translate3d(calc(var(--reg-x) * 2.4), calc(var(--reg-y) * 2.4), 0);
-  transition: transform .24s linear;
+  opacity: calc(1 - var(--dry) * .5);
+  transform: translate3d(calc(var(--fringe-x) * 2.4), calc(var(--fringe-y) * 2.4), 0);
+  transition: transform .24s linear, opacity .4s var(--ease);
 }
 
 /* the drum creeps a fraction of a millimetre, forever */
@@ -608,8 +631,8 @@ html[data-register='on'] .edge__ink--black {
    ============================================================= */
 
 .plated {
-  --px: calc(var(--reg-x) * var(--fringe-scale));
-  --py: calc(var(--reg-y) * var(--fringe-scale));
+  --px: calc(var(--fringe-x) * var(--fringe-scale));
+  --py: calc(var(--fringe-y) * var(--fringe-scale));
   position: relative;
   display: block;
   transform-origin: 0% 66%;
@@ -831,29 +854,95 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
   opacity: .6;
 }
 
-/* the void the two-column split leaves is a screen, not a hole */
-.question__corner {
+/* the void the two-column split leaves is not a hole and not a patch of
+   texture. it holds the instrument: the three registration crosses, set large
+   enough to read, riding the plate from the middle of the sheet. out of
+   register they are three marks arguing; at the gate one bullseye, and the
+   frame firms up the way a rule does when the press agrees with itself.
+
+   the caption sits beside the cross rather than under it, so the whole group is
+   exactly one mark tall: at .6em it clears the one-line void at every size, and
+   the line below it never has to make room. */
+.question__gate {
   position: absolute;
-  top: 0;
+  top: .16em;
   right: 0;
   z-index: 0;
-  width: 50%;
-  height: 50%;
-  color: var(--pink);
-  background-image: radial-gradient(circle, currentColor 1.15px, transparent 1.45px);
-  background-size: 7px 7px;
-  opacity: .32;
-  mask-image: radial-gradient(94% 108% at 84% 14%, #000 2%, transparent 76%);
-  -webkit-mask-image: radial-gradient(94% 108% at 84% 14%, #000 2%, transparent 76%);
-  transform: translate3d(calc(var(--reg-x) * 2.2), calc(var(--reg-y) * 2.2), 0);
-  transition: transform .24s linear;
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1vw, 15px);
   pointer-events: none;
 }
 
+.question__target {
+  flex: 0 0 auto;
+  width: .6em;
+  height: .6em;
+  color: var(--black);
+}
+
+.question__gate-read {
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--micro);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 @media (max-width: 900px) {
-  .question__corner {
+  /* one column, so there is no void to hold anything */
+  .question__gate {
     display: none;
   }
+}
+
+.plate-target__frame {
+  color: var(--black);
+  opacity: .3;
+  transition: opacity .35s var(--ease);
+}
+
+.plate-target__plate {
+  mix-blend-mode: multiply;
+}
+
+.plate-target__plate--pink {
+  color: var(--pink-ink);
+  transform: translate(calc(var(--reg-x) * 1.5), calc(var(--reg-y) * 1.5));
+  transition: transform .2s var(--ease-out);
+}
+
+.plate-target__plate--blue {
+  color: var(--blue-ink);
+  transform: translate(calc(var(--reg-x) * -.9), calc(var(--reg-y) * -.9));
+  transition: transform .2s var(--ease-out);
+}
+
+.plate-target__plate--black {
+  color: var(--black);
+}
+
+html[data-register='on'] .plate-target__frame {
+  opacity: .6;
+}
+
+html[data-register='on'] .plate-target__plate--black {
+  filter: drop-shadow(0 0 4px rgba(255, 46, 107, .65));
+}
+
+/* one ring, thrown once, when the three impressions agree */
+.plate-target__ping {
+  color: var(--pink);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.is-catch .plate-target__ping {
+  animation: ping 1.1s var(--ease-out) .14s both;
 }
 
 .plated__layer--black .q__line {
@@ -975,12 +1064,14 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
 }
 
 .plated__layer--black .mark {
-  animation: ask 8.4s var(--ease) infinite;
+  /* a long, uneven breath rather than a metronome, so the page never sits in a
+     perfectly even loop */
+  animation: ask 13s var(--ease) infinite;
 }
 
 .question.is-on-yet .mark {
   animation-play-state: paused;
-  animation-delay: -6.2s;
+  animation-delay: -10.1s;
 }
 
 /* somewhere to land: the pad the mark rocks over. at the gate the rule prints
@@ -1091,23 +1182,6 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
   text-transform: uppercase;
 }
 
-.hint {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin: clamp(14px, 1.8vw, 22px) 0 0;
-  color: var(--ink-50);
-  font-family: var(--mono);
-  font-size: var(--micro);
-  line-height: 1.6;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
-
-.hint span {
-  color: var(--pink-ink);
-}
-
 /* ---------- the band under the title ---------- */
 
 .band {
@@ -1192,12 +1266,12 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
 .button--ink {
   color: var(--stock-3);
   background: var(--black);
-  box-shadow: 5px 5px 0 var(--pink);
+  box-shadow: var(--lift-x) var(--lift-y) 0 var(--pink);
 }
 
 .button--ink:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0 var(--pink);
+  box-shadow: calc(var(--lift-x) + 2px) calc(var(--lift-y) + 2px) 0 var(--pink);
 }
 
 .button--ink:hover svg {
@@ -1229,7 +1303,7 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
   position: relative;
   background: var(--stock-3);
   border: 1px solid var(--black);
-  box-shadow: 5px 5px 0 rgba(21, 20, 27, .12);
+  box-shadow: var(--lift-x) var(--lift-y) 0 rgba(21, 20, 27, .14);
   cursor: ew-resize;
   touch-action: pan-y;
   user-select: none;
@@ -1238,7 +1312,7 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
 }
 
 .bed.is-settled {
-  box-shadow: 5px 5px 0 var(--pink);
+  box-shadow: var(--lift-x) var(--lift-y) 0 var(--pink);
 }
 
 .bed.is-dragging {
@@ -1246,7 +1320,7 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
 }
 
 .bed:hover {
-  box-shadow: 5px 5px 0 rgba(21, 20, 27, .2);
+  box-shadow: var(--lift-x) var(--lift-y) 0 rgba(21, 20, 27, .22);
 }
 
 .bed:focus-visible {
@@ -1507,19 +1581,48 @@ html[data-register='on'] .register-eye__plate--black {
   }
 }
 
-/* ---------- the shortcut strip: one legend for the whole sheet ---------- */
+/* ---------- the workstrip: one rule-bounded strip that says how to work it ---------- */
 
-.keysrow {
+/* the two hints used to float loose under the title. they describe one thing —
+   the controls — so they sit in one strip, ruled top and bottom, directly under
+   the instrument they talk about. */
+.workstrip {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 8px clamp(16px, 2.4vw, 30px);
+  grid-template-columns: minmax(0, .58fr) minmax(0, 1.42fr);
+  gap: 10px clamp(16px, 2.4vw, 40px);
   align-items: center;
-  margin-top: clamp(20px, 2.4vw, 32px);
-  padding-top: clamp(14px, 1.8vw, 22px);
-  border-top: 1px solid var(--rule-soft);
+  margin-top: clamp(14px, 1.8vw, 22px);
+  padding: 12px 0 13px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule-soft);
 }
 
-.keysrow__label {
+.workstrip__note {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  color: var(--ink-70);
+  font-family: var(--mono);
+  font-size: var(--micro);
+  line-height: 1.6;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.workstrip__note span {
+  flex: 0 0 auto;
+  color: var(--pink-ink);
+}
+
+.workstrip__keys {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 7px;
+  min-width: 0;
+}
+
+.workstrip__label {
   color: var(--ink-50);
   font-family: var(--mono);
   font-size: .57rem;
@@ -1532,7 +1635,7 @@ html[data-register='on'] .register-eye__plate--black {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 5px clamp(13px, 1.9vw, 28px);
+  gap: 5px clamp(11px, 1.5vw, 22px);
   min-width: 0;
   margin: 0;
 }
@@ -1555,9 +1658,10 @@ html[data-register='on'] .register-eye__plate--black {
   letter-spacing: 0;
 }
 
-@media (max-width: 700px) {
-  .keysrow {
+@media (max-width: 1180px) {
+  .workstrip {
     grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
   }
 }
 
@@ -1614,7 +1718,9 @@ html[data-register='on'] .register-eye__plate--black {
   background: var(--stock-3);
   border: 1px solid var(--rule);
   border-radius: 3px;
-  box-shadow: 10px 10px 0 rgba(42, 62, 201, .1);
+  /* the second impression: the card, printed once in black and once in blue,
+     a plate-width apart. it closes up when the blade reaches the gate. */
+  box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 rgba(42, 62, 201, .16);
   animation: card-print .5s var(--ease-out) both;
 }
 
@@ -1994,12 +2100,12 @@ html[data-register='on'] .register-eye__plate--black {
   background: var(--stock-3);
   border: 1px solid var(--black);
   border-radius: 4px;
-  box-shadow: 12px 12px 0 var(--pink);
+  box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 var(--pink);
   transition: box-shadow .4s var(--ease);
 }
 
 .proof.is-open {
-  box-shadow: 12px 12px 0 var(--blue);
+  box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 var(--blue);
 }
 
 .proof__bar {
@@ -2443,6 +2549,18 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
+/* one ring, thrown once, the moment the three impressions agree */
+@keyframes ping {
+  from {
+    opacity: .8;
+    transform: scale(.92);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
+
 @keyframes pad-in {
   from {
     opacity: 0;
@@ -2677,6 +2795,12 @@ html[data-reveal='on'] .reveal.is-in {
     display: none;
   }
 
+  /* a phone has no room for a plate-width offset behind a card */
+  :root {
+    --lift-x-lg: calc(6px + var(--lift));
+    --lift-y-lg: calc(6px + var(--drop));
+  }
+
   .plates {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2721,14 +2845,6 @@ html[data-reveal='on'] .reveal.is-in {
     justify-content: center;
   }
 
-  .proof {
-    box-shadow: 7px 7px 0 var(--pink);
-  }
-
-  .proof.is-open {
-    box-shadow: 7px 7px 0 var(--blue);
-  }
-
   .colophon__grid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2747,6 +2863,17 @@ html[data-reveal='on'] .reveal.is-in {
   .specimen__foot {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  /* the plate-stepping controls are the only way through the close read on a
+     phone, so they get a thumb-sized target */
+  .specimen__turn {
+    width: 100%;
+  }
+
+  .specimen__turn button {
+    flex: 1 1 0;
+    min-height: 44px;
   }
 
   .bed__read {
@@ -2832,7 +2959,7 @@ html[data-reveal='on'] .reveal.is-in {
   /* the plate is the one thing that must still work when nothing moves */
   .plated__layer--ghost,
   .stock__wash,
-  .question__corner,
+  .plate-target__plate,
   .bed__blade,
   .edge__plate,
   .edge__ink {
@@ -2845,13 +2972,15 @@ html[data-reveal='on'] .reveal.is-in {
   .is-catch .plated__layer--blue,
   .is-catch .question__wash,
   .is-catch .specimen__flash,
+  .is-catch .plate-target__ping,
   .press.is-catch .stock__sheen {
     animation: none;
   }
 
   .question__wash,
   .specimen__flash,
-  .stock__sheen {
+  .stock__sheen,
+  .plate-target__ping {
     opacity: 0;
   }
 
@@ -2873,8 +3002,7 @@ html[data-reveal='on'] .reveal.is-in {
   .stock,
   .sprockets,
   .edge,
-  .keysrow,
-  .hint,
+  .workstrip,
   .actions,
   .bed {
     display: none;

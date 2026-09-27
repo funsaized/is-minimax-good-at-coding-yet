@@ -1,40 +1,63 @@
-The film on the press bed now prints the sentence itself, and the blade lands the question mark on a rule.
+The press sheet now prints wet at the top and dries going down the press, so the plates read as plates.
 
-The strip under the title was a diagram of the plate offset: a band of ink, three
-colours, a squeegee riding on it. It is now the sentence. The canvas draws the same
-two lines the title draws — `is Minimax M3` over `good at frontend yet?` — on a
-strip of newsprint, through a halftone screen, in three impressions multiplied
-where they meet. The offset is measured in em rather than in sheet-width, because
-a misregistration is a fraction of the type and not of the paper, and the curve is
-eased so the loose end of the bed opens up loud while the last fraction of a unit
-is the quiet part the gate takes. The bed moved up to sit directly under the
-question it prints, and its scale row and hint collapsed into one line under the
-strip.
+## What changed
 
-Coming into register now pays something back. The question mark has always been
-described as load-bearing, so the sheet prints it something to stand on: a
-hairline under the last line of the title while the plates are loose, and at the
-gate one pink rule wiping out to the trim with the mark's dot pad spreading along
-it. The same accident of the press as the column rule, landing on the one word
-the page says it refuses to finish.
+**The misregistration finally reads as three plates.** The plate ramp was 2px per
+unit, so the colour plates sat ~1.8px apart — a smudge, not a fault. It is now 3px
+per unit, and the bed's film loupe reaches further (0.46 → 0.6em). Opening the page
+shows the three impressions plainly apart; taking the blade to the gate collapses
+the whole title to one clean voice, which is the payoff the page was built around.
 
-Type is now three voices and no more. The grotesque is the press — the title, the
-job ticket, the specimen stage, the buttons. The serif is the reading: both
-section headings, every lede, the specimen copy, the three rules, the short
-answer's claim. The mono is the furniture and stays where it was. The short answer
-is the loudest thing on the page after the question and is now set in the quietest
-voice on the page, which is the argument it was making anyway.
+**The sheet dries as it goes down the press.** The plate offset now drives two
+values: the true offset, which every readout follows, and a *fringe* — the same
+offset faded by a smoothstep ramp over the first 1.5 viewports. The question
+prints wet; the close read beneath it prints dry. The specimen's type is now
+legible as one voice instead of carrying the title's full chromatic mess, and the
+page gains a top-to-bottom arc rather than uniform noise. Verified: fringe decays
+3.00px → 0.36px across the scroll while the true offset stays live at 3.00px.
+The bed's film keeps the amplified view, so the strip and the page stay in
+agreement at every scroll depth.
 
-Removed: the stepper above the specimen, which restated a control the plate ticket
-and the keyboard already own, and the specimen's floating register line, which the
-measure rule at the end of the set line does better. The keyboard legend is one
-wrapping line of keys instead of a four-cell grid, the plate ticket's ink fringe
-is reduced so the job ticket stays readable, the specimen stage's blue screen is
-stronger so the space a dropped mark could land in reads as printed stock rather
-than emptiness, and the proof card is shorter so the quiet beside it is quieter on
-purpose.
+**The title's void holds the instrument.** The empty top-right quadrant of the
+two-column title was being patched over with a dot screen — texture standing in
+for content. It now holds `PlateTarget`, the same three registration crosses the
+control strip carries, set at .6em with a caption beside it. Out of register they
+are three marks arguing; at the gate one bullseye, the frame firms up, and a single
+ring pings outwards once. The caption sits beside the cross rather than under it,
+so the group is exactly one mark tall and clears the one-line void at every
+viewport width (measured 7–12px clearance from 920px to 1920px; hidden below
+900px where there is no void).
 
-Checked at 390, 1440 and 1920 wide, and with reduced motion on: the register
-animation, sheen and pointer-tracking all still stop, and the strip and the landing
-rule land directly in their settled state. Tab order is unchanged, the plate
-radiogroup still roves, and the global 1/2/3, arrows, 0 and escape all still work.
+**The offset shadows are the pink plate.** Four unrelated hard-shadow systems
+(5px, 10px, 12px, 7px across bed, button, specimen, proof) were a borrowed trend.
+They now share one plate-driven pair, so every card's shadow is the second
+impression of that card and travels with the blade — the whole sheet's furniture
+snaps home together at the gate. One variable pair instead of four literals.
+
+**One strip instead of two floating hints.** The "pick a phrase" line and the
+keyboard legend described the same thing and drifted apart down the page. They are
+now a single ruled `.workstrip` sitting directly under the instrument they talk
+about.
+
+**Readability.** `--ink-50` and `--ink-70` were darkened to 5.5:1 and 8.6:1 on the
+stock (from 4.5:1). Under 760px the plate-width card shadow drops to 6px, and the
+specimen's plate-stepping controls get thumb-sized targets.
+
+**Bug found and fixed during the iteration:** the plate CSS variables were being
+written only on mount, so snapping to the gate moved the readout and the stamp but
+left the type out of register. The offset now reprints on every blade change via a
+stored sync function, with the scroll listener attached once so dragging never
+churns listeners.
+
+**Cleanups:** removed a pre-existing unused `at` binding; lengthened the question
+mark's rocking from a 8.4s metronome to an uneven 13s breath.
+
+## Preserved
+
+Title and document title unchanged. Entry point, framework, package files and
+build config untouched. Reduced motion prints the sheet permanently dry
+(`--dry: 1`), suppresses the ping, and leaves nothing hidden — verified in a
+`reducedMotion: 'reduce'` context. Tab order verified: skip link, brand, three nav
+anchors, three title words, the bed slider, three plate radios, both actions, both
+specimen controls. No network, no storage, no parent-frame access; the plate
+target is `aria-hidden` because the slider already announces the state.

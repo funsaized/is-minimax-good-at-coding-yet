@@ -12,14 +12,16 @@ import { RegisterEye, Squeegee } from './marks'
 /* the plate offset, in the page's own unit: 0 is a perfect register */
 export const PULL_MIN = -3
 export const PULL_MAX = 3
-export const PULL_REST = 0.9
+export const PULL_REST = 1
 export const PULL_GATE = 0.14
-export const PULL_RAMP = 2
+/* a misregistration you cannot see is a decoration, not a fault: the page has to
+   open with the plates plainly apart, so a unit of blade is worth 3px of sheet */
+export const PULL_RAMP = 3
 
 /* the film is a loupe held over the sentence itself, so the offset it shows is
    far larger than the one the type above shows. measured in em, because a
    misregistration is a fraction of the type and not of the sheet */
-const FILM_REACH = 0.46
+const FILM_REACH = 0.6
 /* the blue plate is cut a little under the pink, which is why the fringes read uneven */
 const BLUE_RATIO = 0.62
 

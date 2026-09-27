@@ -18,6 +18,46 @@ export function RegistrationMark({ className }: MarkProps) {
   )
 }
 
+/**
+ * The registration target, set large.
+ *
+ * The same three crosses the control strip carries, at a size you can actually
+ * read: one impression each, sitting wherever the press left it. Out of register
+ * it is three marks arguing; at the gate they collapse into one clean bullseye
+ * and a single ring pings outwards once.
+ *
+ * It stands in the void the two-column title leaves — the one part of the
+ * composition with nothing to say — so it says the only thing left to say.
+ */
+export function PlateTarget({ className }: MarkProps) {
+  const CROSS = 'M50 7v86M7 50h86'
+  const diamond = 'M50 33.5 66.5 50 50 66.5 33.5 50Z'
+  const impression = (
+    <g>
+      <path d={CROSS} fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="50" cy="50" r="12" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <path d={diamond} fill="none" stroke="currentColor" strokeWidth=".9" />
+    </g>
+  )
+  return (
+    <svg className={className} viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <g className="plate-target__frame">
+        <rect x="2.5" y="2.5" width="95" height="95" fill="none" stroke="currentColor" strokeWidth=".8" />
+        <path
+          d="M2.5 13V2.5H13M87 2.5h10.5V13M97.5 87v10.5H87M13 97.5H2.5V87"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+      </g>
+      <g className="plate-target__plate plate-target__plate--pink">{impression}</g>
+      <g className="plate-target__plate plate-target__plate--blue">{impression}</g>
+      <g className="plate-target__plate plate-target__plate--black">{impression}</g>
+      <circle className="plate-target__ping" cx="50" cy="50" r="12" fill="none" stroke="currentColor" strokeWidth="1" />
+    </svg>
+  )
+}
+
 /** Crop corner, for the trim edge of a printed sheet. */
 export function CropMark({ className }: MarkProps) {
   return (

@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { findNote, NOTES, phraseLines, WORD_IDS, type WordId } from './notes'
 import { ControlEdge } from './edge'
-import { CropMark, RegistrationMark, Squeegee } from './marks'
+import { CropMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
 import { Plated } from './plate'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
 
@@ -53,10 +53,11 @@ export function App() {
   const specimenRef = useRef<HTMLDivElement>(null)
   const plateRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const wasSettled = useRef(false)
+  const regRef = useRef(reg)
+  regRef.current = reg
 
   const shown = hover ?? active
   const settled = inRegister(reg)
-  const at = WORD_IDS.indexOf(active)
 
   const select = useCallback((id: WordId) => {
     setActive(id)
@@ -65,15 +66,64 @@ export function App() {
     setAnnounce(`Plate ${found.index}. ${found.label}. ${found.title}.`)
   }, [])
 
-  /* one source of truth for the plate: css reads these, the ink reads them, we read them */
+  /* One source of truth for the plate, and it answers to two questions.
+     The true offset -- which every readout follows, the gauge, the control
+     strip, the shadows under the cards. And the fringe: the same offset, faded
+     as the sheet dries going down the press. The question prints wet, three
+     plates plainly apart; the close read beneath it prints dry, which is the
+     only reason anyone can read the close read at all.
+
+     The scroll listener is attached once. When the blade moves there is no
+     listener to re-attach, just a repaint -- dragging the bed must not churn
+     the DOM sixty times a second. */
+  const paintPlate = useRef<() => void>(() => {})
   useEffect(() => {
-    const { x, y } = plateOffset(reg)
     const root = document.documentElement
-    root.style.setProperty('--reg-x', `${x.toFixed(2)}px`)
-    root.style.setProperty('--reg-y', `${y.toFixed(2)}px`)
+    const still = prefersStill()
+    let frame = 0
+
+    const sync = () => {
+      const { x, y } = plateOffset(regRef.current)
+      root.style.setProperty('--reg-x', `${x.toFixed(2)}px`)
+      root.style.setProperty('--reg-y', `${y.toFixed(2)}px`)
+      const travel = still ? 1 : Math.min(1, window.scrollY / Math.max(1, window.innerHeight * 1.5))
+      const dry = travel * travel * (3 - 2 * travel)
+      const wet = 1 - dry * 0.88
+      root.style.setProperty('--dry', dry.toFixed(3))
+      root.style.setProperty('--fringe-x', `${(x * wet).toFixed(2)}px`)
+      root.style.setProperty('--fringe-y', `${(y * wet).toFixed(2)}px`)
+    }
+    paintPlate.current = sync
+
+    const onMove = () => {
+      if (frame) return
+      frame = requestAnimationFrame(() => {
+        frame = 0
+        sync()
+      })
+    }
+
+    sync()
+    window.addEventListener('scroll', onMove, { passive: true })
+    window.addEventListener('resize', onMove)
+    return () => {
+      window.removeEventListener('scroll', onMove)
+      window.removeEventListener('resize', onMove)
+      if (frame) cancelAnimationFrame(frame)
+      paintPlate.current = () => {}
+    }
+  }, [])
+
+  /* the blade moved: the whole sheet reprints, at the new offset */
+  useEffect(() => {
+    paintPlate.current()
+  }, [reg, settled])
+
+  useEffect(() => {
+    const root = document.documentElement
     root.style.setProperty('--settle', settled ? '1' : '0')
     root.dataset.register = settled ? 'on' : 'off'
-  }, [reg, settled])
+  }, [settled])
 
   /* the moment the three impressions agree, and only then */
   useEffect(() => {
@@ -278,10 +328,25 @@ export function App() {
             <PullBed reg={reg} onSlide={value => setReg(value)} />
           </div>
 
-          <p className="hint">
-            <span aria-hidden="true">↳</span> pick a phrase — in the title or on a plate — and the
-            sheet follows you
-          </p>
+          <div className="workstrip">
+            <p className="workstrip__note">
+              <span aria-hidden="true">↳</span> pick a phrase — in the title or on a plate — and the
+              sheet follows you
+            </p>
+            <div className="workstrip__keys">
+              <span className="workstrip__label">the blade responds to</span>
+              <ul className="keys">
+                {SHORTCUTS.map(item => (
+                  <li key={item.label}>
+                    {item.keys.map(key => (
+                      <kbd key={key}>{key}</kbd>
+                    ))}
+                    <span>{item.label}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
           <div
             className="plates"
@@ -356,20 +421,6 @@ export function App() {
                 </a>
               </div>
             </div>
-          </div>
-
-          <div className="keysrow">
-            <p className="keysrow__label">the blade responds to</p>
-            <ul className="keys">
-              {SHORTCUTS.map(item => (
-                <li key={item.label}>
-                  {item.keys.map(key => (
-                    <kbd key={key}>{key}</kbd>
-                  ))}
-                  <span>{item.label}</span>
-                </li>
-              ))}
-            </ul>
           </div>
         </section>
 
@@ -485,6 +536,9 @@ export function App() {
 
             <p className="colophon__note">
               Three impressions, deliberately out of register until you take the blade to the gate.
+              The sheet prints wet at the top and dries as it goes down the press, so the question
+              is three plates arguing and the close read beneath it is one clean voice. The offset
+              shadows under the cards are the pink plate, which is why they travel with the blade.
               The wet ink on the bed is drawn in a canvas and the paper tooth is an inline filter —
               nothing here is downloaded. Set with the fonts already on your machine: one grotesque,
               one serif, one mono. No web fonts, no network, nothing stored. Every movement on this
@@ -715,9 +769,14 @@ function QuestionTitle({
       onPointerMove={track}
       onPointerLeave={clear}
     >
-      {/* the void the two-column split leaves, filled with a screen rather than
-          left as a hole — and printed out of register with everything else */}
-      <span className="question__corner" aria-hidden="true" />
+      {/* the void the two-column split leaves is not filled with texture: it
+          holds the instrument. the same three crosses the control strip carries,
+          set large enough to read, reporting the plate from the middle of the
+          sheet. at the gate it is one bullseye and nothing else. */}
+      <span className="question__gate" aria-hidden="true">
+        <PlateTarget className="question__target" />
+        <span className="question__gate-read">reg. mark · live read</span>
+      </span>
       <Plated className="question__stack" render={lines} />
       <span className="question__wash" aria-hidden="true" />
     </h1>
