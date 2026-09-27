@@ -35,13 +35,17 @@ export const plateOffset = (reg: number) => ({
 
 export const inRegister = (reg: number) => Math.abs(reg) <= PULL_GATE
 
+const clamp = (value: number) => Math.min(PULL_MAX, Math.max(PULL_MIN, value))
+
+/** the gate is magnetic: a blade released inside it is caught, not left hovering */
+export const snapPull = (value: number) => (inRegister(value) ? 0 : clamp(value))
+
 /** the print-shop reading of an offset, in words */
 export const registerText = (reg: number) =>
   inRegister(reg)
     ? 'in register'
     : `off register, ${reg > 0 ? 'plus' : 'minus'} ${Math.abs(reg).toFixed(2)}`
 
-const clamp = (value: number) => Math.min(PULL_MAX, Math.max(PULL_MIN, value))
 const unitFor = (width: number) => (width / (PULL_MAX * 2)) * 0.92
 
 /** a six-pixel halftone tile, generated once and reused as a fill pattern */
@@ -249,6 +253,9 @@ export function PullBed({
 
   const slideTo = (value: number) => onSlide(clamp(value))
 
+  /** keyboard nudges get the same magnetism a release inside the gate gets */
+  const nudgeTo = (value: number) => onSlide(snapPull(value))
+
   const move = (clientX: number) => {
     const bed = bedRef.current
     if (!bed) return
@@ -273,7 +280,7 @@ export function PullBed({
       event.currentTarget.releasePointerCapture(event.pointerId)
     }
     /* the gate catches a blade that let go inside it */
-    if (inRegister(reg)) slideTo(0)
+    slideTo(snapPull(reg))
   }
 
   const keys = (event: ReactKeyboardEvent<HTMLDivElement>) => {
@@ -292,7 +299,7 @@ export function PullBed({
     }
     if (next === null) return
     event.preventDefault()
-    slideTo(next)
+    nudgeTo(next)
   }
 
   return (

@@ -10,9 +10,10 @@ import {
   type RefObject,
 } from 'react'
 import { findNote, NOTES, phraseLines, WORD_IDS, type WordId } from './notes'
+import { ControlEdge } from './edge'
 import { CropMark, RegistrationMark, Squeegee } from './marks'
 import { Plated } from './plate'
-import { inRegister, plateOffset, PULL_REST, PullBed } from './pull'
+import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -47,6 +48,7 @@ export function App() {
   const [reg, setReg] = useState(PULL_REST)
   const [catchTick, setCatchTick] = useState(0)
   const [announce, setAnnounce] = useState('')
+  const pressRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const specimenRef = useRef<HTMLDivElement>(null)
   const plateRefs = useRef<Record<string, HTMLButtonElement | null>>({})
@@ -82,10 +84,12 @@ export function App() {
     wasSettled.current = settled
   }, [settled])
 
-  /* the pull lands: colour plates fly home, black prints over the top */
+  /* the pull lands: every colour plate on the sheet flies home, black prints over the top */
   useEffect(() => {
     if (!catchTick) return
-    const nodes = [titleRef.current, specimenRef.current].filter(Boolean) as HTMLElement[]
+    const nodes = [pressRef.current, titleRef.current, specimenRef.current].filter(
+      Boolean,
+    ) as HTMLElement[]
     if (!nodes.length) return
     const timers = nodes.map(node => {
       node.classList.add('is-catch')
@@ -138,7 +142,16 @@ export function App() {
       { rootMargin: '0px 0px -6% 0px', threshold: 0.05 },
     )
     reveals.forEach(node => observer.observe(node))
-    return () => observer.disconnect()
+    /* a printed sheet cannot sit half-inked: if nobody ever scrolls, or a tool
+       captures the page whole, let it all show rather than leave holes in it */
+    const failsafe = window.setTimeout(() => {
+      reveals.forEach(node => node.classList.add('is-in'))
+      observer.disconnect()
+    }, 2400)
+    return () => {
+      window.clearTimeout(failsafe)
+      observer.disconnect()
+    }
   }, [])
 
   useEffect(() => {
@@ -158,6 +171,14 @@ export function App() {
       if (event.key === '0') {
         event.preventDefault()
         setReg(0)
+        return
+      }
+      /* the legend promises the arrows nudge the blade, so they do — from anywhere
+         that has not already claimed them (the bed, a plate, a word in the title) */
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault()
+        const reach = event.shiftKey ? 0.5 : 0.12
+        setReg(value => snapPull(value + (event.key === 'ArrowRight' ? reach : -reach)))
         return
       }
       if (event.key >= '1' && event.key <= '3') {
@@ -188,16 +209,17 @@ export function App() {
   }
 
   return (
-    <div className="press">
+    <div className="press" ref={pressRef}>
       <div className="stock" aria-hidden="true">
         <span className="stock__fibre" />
         <span className="stock__grain" />
         <span className="stock__wash" />
-        <span className="stock__halftone" />
         <span className="stock__roller" />
-        <span className="sprockets sprockets--left" />
-        <span className="sprockets sprockets--right" />
+        <span className="stock__sheen" />
+        <span className="sprockets" />
       </div>
+
+      <ControlEdge />
 
       <a className="skip-link" href="#question">Skip to the question</a>
 
@@ -237,8 +259,11 @@ export function App() {
       <main className="page">
         <section id="question" className="sheet" aria-labelledby="question-title">
           <p className="slugline sheet__slug">
-            <RegistrationMark className="slugline__mark" />
-            the question · set three times · pulled once
+            <span className="sheet__slug-lead">
+              <RegistrationMark className="slugline__mark" />
+              the question · set three times · pulled once
+            </span>
+            <span className="sheet__slug-fact">one sentence · seven words · three impressions</span>
           </p>
 
           <QuestionTitle
@@ -288,6 +313,11 @@ export function App() {
             Choosing a plate moves the highlight in the title above and the specimen below.
           </p>
 
+          <p className="hint">
+            <span aria-hidden="true">↳</span> pick a phrase — in the title or on a plate — and the
+            sheet follows you
+          </p>
+
           <div className="band">
             <p className="margin-note">
               <span className="margin-note__rule" aria-hidden="true" />
@@ -299,7 +329,7 @@ export function App() {
             <div className="band__say">
               <p className="lede">
                 The sentence is short enough to take apart, and short enough to print badly on
-                purpose. Every word below is set three times over — black, pink, blue — and the
+                purpose. Every word above is set three times over — black, pink, blue — and the
                 plates do not agree with each other until you do something about it.
               </p>
 
@@ -324,27 +354,25 @@ export function App() {
             </div>
           </div>
 
-          <p className="hint">
-            <span aria-hidden="true">↳</span> pick a phrase — in the title, or on the plate below — and
-            the whole sheet follows you
-          </p>
-
           <div className="bedrow">
             <PullBed reg={reg} onSlide={value => setReg(value)} />
           </div>
 
-          <dl className="keys">
-            {SHORTCUTS.map(item => (
-              <div key={item.label}>
-                <dt>
-                  {item.keys.map(key => (
-                    <kbd key={key}>{key}</kbd>
-                  ))}
-                </dt>
-                <dd>{item.label}</dd>
-              </div>
-            ))}
-          </dl>
+          <div className="keysrow">
+            <p className="keysrow__label">the blade responds to</p>
+            <dl className="keys">
+              {SHORTCUTS.map(item => (
+                <div key={item.label}>
+                  <dt>
+                    {item.keys.map(key => (
+                      <kbd key={key}>{key}</kbd>
+                    ))}
+                  </dt>
+                  <dd>{item.label}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </section>
 
         <section id="close" className="read" aria-labelledby="close-title">
@@ -673,6 +701,7 @@ function QuestionTitle({
     if (ghost) {
       return <span className={shape}>{children}</span>
     }
+    const found = findNote(id)
     return (
       <button
         ref={node => {
@@ -689,6 +718,10 @@ function QuestionTitle({
         aria-pressed={selected === id}
       >
         {children}
+        <span className="sr-only">
+          {' '}
+          — plate {found.index}, {found.gloss}
+        </span>
       </button>
     )
   }
@@ -720,6 +753,9 @@ function QuestionTitle({
       onPointerMove={track}
       onPointerLeave={clear}
     >
+      {/* the void the two-column split leaves, filled with a screen rather than
+          left as a hole — and printed out of register with everything else */}
+      <span className="question__corner" aria-hidden="true" />
       <Plated className="question__stack" render={lines} />
       <span className="question__wash" aria-hidden="true" />
     </h1>
