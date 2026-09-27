@@ -230,7 +230,9 @@ export function PullBed({
 
     const gateInk = settled ? 'rgba(255, 46, 107, .95)' : 'rgba(255, 46, 107, .5)'
     const ruleTop = Math.round(baseline - size * 0.72)
-    const ruleFoot = Math.round(baseline + leading * (FILM_LINES.length - 1) + size * 0.18)
+    /* the gate is capped at the cap height of the first line and the baseline of
+       the last — the two lines it is actually registering */
+    const ruleFoot = Math.round(baseline + leading * (FILM_LINES.length - 1))
     ctx.strokeStyle = gateInk
     ctx.lineWidth = 1
     ctx.setLineDash(settled ? [] : [3, 4])
@@ -243,6 +245,38 @@ export function PullBed({
     ctx.fillStyle = gateInk
     ctx.fillRect(gate - 7, ruleTop, 14, 1.5)
     ctx.fillRect(gate - 7, ruleFoot - 1.5, 14, 1.5)
+
+    /* and the film prints its own landing rule, because the mark at the end of
+       the last line needs something to stand on here as much as it does on the
+       sheet. the hair of paper left between the mark and the rule is the notch
+       an ink trap fills, so the two pools close up as the plates agree — the
+       same trap, off the same number, a third of the size. */
+    const tail = FILM_LINES[FILM_LINES.length - 1]
+    const markLeft = pad + ctx.measureText(tail.slice(0, -1)).width
+    const markWide = ctx.measureText(tail.slice(-1)).width
+    const foot = ruleFoot + size * 0.13 + 0.5
+    ctx.strokeStyle = settled ? 'rgba(42, 62, 201, .72)' : 'rgba(21, 20, 27, .24)'
+    ctx.lineWidth = 1
+    ctx.beginPath()
+    ctx.moveTo(pad, foot)
+    ctx.lineTo(markLeft + markWide, foot)
+    ctx.stroke()
+    const pool = settled ? 1 : 0.12
+    const wide = size * 0.1
+    const tall = size * 0.08
+    const notchL = markLeft + size * 0.02
+    const notchR = markLeft + markWide - size * 0.02
+    ctx.fillStyle = settled ? INK_PINK : 'rgba(255, 46, 107, .45)'
+    ctx.beginPath()
+    ctx.moveTo(notchL, foot)
+    ctx.lineTo(notchL - wide * pool, foot)
+    ctx.lineTo(notchL, foot - tall * pool)
+    ctx.closePath()
+    ctx.moveTo(notchR, foot)
+    ctx.lineTo(notchR + wide * pool, foot)
+    ctx.lineTo(notchR, foot - tall * pool)
+    ctx.closePath()
+    ctx.fill()
 
     /* a scale under the ink, to read the offset against */
     const rule = Math.round(h - 7) + 0.5

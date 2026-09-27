@@ -13,6 +13,12 @@
    it is nearly one voice, because the ink has had time to settle.
    that arc is the whole reason the page is still readable.
 
+   and every corner on the sheet is trapped. an ink trap is the
+   ink a pressman puts in the notch where a stroke lands on a rule,
+   so the join does not print light; here they grow with the
+   register, which makes the gate legible as a change in the
+   smallest marks on the page rather than in a panel of readouts.
+
    the scale: the question is the largest type on the page by a
    wide margin. everything after it is a job ticket, a specimen
    or a label, and is set accordingly.
@@ -105,6 +111,11 @@ html {
   scroll-padding-top: 104px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* one number for the whole page: how hard the press is pressing. it is set
+     once, by the app, and everything that answers to the register reads it —
+     including the ink traps, which is why it is worth animating rather than
+     snapping. */
+  transition: --settle .55s var(--ease-out);
 }
 
 body {
@@ -724,6 +735,58 @@ html[data-register='on'] .edge__ink--black {
   transition: none;
 }
 
+/* =============================================================
+   THE INK TRAP
+   Where a stroke lands on a rule the paper notches away, and the
+   pressman fills that notch with ink on purpose — otherwise the
+   sheet prints light exactly where two shapes meet. The trap is
+   the correction for a junction, not a mark laid on top of one.
+
+   so it has an opinion about the register. loose plates and the
+   pools are slivers, three of them arguing at three offsets; at the
+   gate they are one locked pair of wedges. the page keeps exactly one
+   number for this — the register, in --settle — so a trap drawn in
+   the title, a trap on the measure and a trap in the film on the bed
+   all fill on the same beat, from the same cause.
+   ============================================================= */
+
+.ink-trap {
+  --trap: var(--settle);
+  position: absolute;
+  overflow: visible;
+}
+
+.ink-trap__rule {
+  opacity: .5;
+  transition: opacity .4s var(--ease);
+}
+
+/* pink is the only ink on a press that beads up in a corner, so the
+   pools are pink in every plate, including the blue one */
+.ink-trap__pool {
+  fill: var(--pink);
+  transform-box: fill-box;
+  transform: scale(calc(.07 + var(--trap) * .93), calc(.03 + var(--trap) * .97));
+  opacity: calc(.26 + var(--trap) * .74);
+  transition: transform .55s var(--ease-out), opacity .45s var(--ease);
+}
+
+.ink-trap__pool--start {
+  transform-origin: 0% 0%;
+}
+
+.ink-trap__pool--end {
+  transform-origin: 100% 0%;
+}
+
+html[data-register='on'] .ink-trap__rule {
+  opacity: .9;
+}
+
+.is-catch .ink-trap__pool {
+  filter: drop-shadow(0 0 3px rgba(255, 46, 107, .55));
+}
+
 /* ---------- the question sheet ---------- */
 
 .sheet {
@@ -808,28 +871,48 @@ html[data-register='on'] .edge__ink--black {
 
 /* the landing rule. the question mark is load-bearing, so the sheet prints it
    something to stand on: a hairline under the last line while the plates are
-   loose, and — at the gate — one pink rule running the full measure, out to the
-   trim, with the mark's pad spreading along it. */
+   loose, and — at the gate — one rule in the blue plate running the full
+   measure, out to the trim, with ink pooled in both of its corners and the
+   mark's pad spreading along it.
+
+   the fade lives in the paint and not in an opacity, because the traps hang off
+   the ends of this rule and a group opacity would take them down with it. */
 .q__land {
   position: absolute;
   right: 0;
   bottom: -.2em;
   left: 0;
   height: .04em;
-  background: currentColor;
-  opacity: .2;
+  background: color-mix(in srgb, currentColor 20%, transparent);
   transform: scaleX(.9);
   transform-origin: 100% 50%;
-  transition: transform .58s var(--ease-out), opacity .4s var(--ease),
-    height .4s var(--ease), background .4s var(--ease);
+  transition: transform .58s var(--ease-out), background .4s var(--ease),
+    height .4s var(--ease);
   pointer-events: none;
 }
 
 html[data-register='on'] .q__land {
   height: .06em;
-  background: var(--pink-ink);
-  opacity: 1;
+  background: color-mix(in srgb, var(--blue-ink) 76%, transparent);
   transform: scaleX(1);
+}
+
+/* the two corners where the rule meets the trim: a wedge of pink, growing. the
+   trap's own rule band sits at the top of the mark, so dropping it on the top
+   edge of the rule puts the ink in the notch underneath. */
+.q__trap {
+  top: 0;
+  width: .5em;
+  height: .145em;
+  pointer-events: none;
+}
+
+.q__trap--start {
+  left: 0;
+}
+
+.q__trap--end {
+  right: 0;
 }
 
 /* the column rule, printed three times: out of register it is three hairlines,
@@ -1065,13 +1148,23 @@ html[data-register='on'] .plate-target__plate--black {
 
 .plated__layer--black .mark {
   /* a long, uneven breath rather than a metronome, so the page never sits in a
-     perfectly even loop */
+     perfectly even loop. it starts and ends at rest, which is what lets it stop
+     dead the moment the sheet is straight */
   animation: ask 13s var(--ease) infinite;
 }
 
 .question.is-on-yet .mark {
   animation-play-state: paused;
-  animation-delay: -10.1s;
+  animation-delay: -6.4s;
+}
+
+/* and the one thing it stops for: a sheet in register is a straight sheet, and
+   a straight sheet does not lean. the question gives up rocking the moment the
+   plates agree — the pause, protected, and this time the page means it. */
+html[data-register='on'] .plated__layer--black .mark {
+  animation: none;
+  rotate: 0deg;
+  transition: rotate .6s var(--ease-out);
 }
 
 /* somewhere to land: the pad the mark rocks over. at the gate the rule prints
@@ -1356,7 +1449,7 @@ html[data-register='on'] .plate-target__plate--black {
   overflow: hidden;
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .58rem;
+  font-size: .6rem;
   letter-spacing: .14em;
   text-align: center;
   text-overflow: ellipsis;
@@ -1537,8 +1630,8 @@ html[data-register='on'] .register-eye__plate--black {
   padding: 8px 12px 10px;
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .57rem;
-  line-height: 1.5;
+  font-size: .6rem;
+  line-height: 1.55;
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -1625,7 +1718,7 @@ html[data-register='on'] .register-eye__plate--black {
 .workstrip__label {
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .57rem;
+  font-size: .59rem;
   letter-spacing: .14em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -1647,7 +1740,7 @@ html[data-register='on'] .register-eye__plate--black {
   min-width: 0;
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .58rem;
+  font-size: .6rem;
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -1883,23 +1976,25 @@ html[data-register='on'] .register-eye__plate--black {
   white-space: nowrap;
 }
 
-/* a tick at each end of the measured line */
-.specimen__rule::before,
-.specimen__rule::after {
-  position: absolute;
+/* the end of the measured line. the tick and the notch of ink under it are one
+   mark — the whole corner, drawn by the same hand — so the pools are already
+   most of the way filled on a column this far down the press, and only finish
+   filling at the gate. */
+.specimen__trap {
   left: -1px;
-  width: clamp(7px, .9vw, 12px);
-  height: 1px;
-  content: '';
-  background: var(--pink-ink);
+  width: clamp(10px, 1.2vw, 16px);
+  height: calc(clamp(10px, 1.2vw, 16px) * .55);
+  color: var(--pink-ink);
+  --trap: calc(.42 + var(--settle) * .58);
 }
 
-.specimen__rule::before {
+.specimen__trap--start {
   top: 0;
 }
 
-.specimen__rule::after {
+.specimen__trap--end {
   bottom: 0;
+  scale: 1 -1;
 }
 
 .specimen__reg {
@@ -2243,8 +2338,9 @@ html[data-register='on'] .register-eye__plate--black {
 
 .proof__tests li {
   display: grid;
-  grid-template-columns: 2.4rem minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: 1.9rem minmax(0, 1fr) 18px;
+  gap: 8px;
+  align-items: center;
   padding: 12px 0;
   border-bottom: 1px solid var(--rule-soft);
   color: var(--ink-70);
@@ -2259,6 +2355,40 @@ html[data-register='on'] .register-eye__plate--black {
   font-family: var(--mono);
   font-size: .64rem;
   letter-spacing: .06em;
+}
+
+/* the sheet is checked, not decorated: each line gets stamped off in the press's
+   own order, one after another, and the tick is drawn rather than faded in */
+.proof__tick {
+  width: 18px;
+  height: 18px;
+  overflow: visible;
+}
+
+.proof__tick-box {
+  fill: none;
+  stroke: var(--rule);
+  stroke-width: 1.3;
+  transition: fill .3s var(--ease), stroke .3s var(--ease);
+}
+
+.proof__tick-mark {
+  fill: none;
+  stroke: var(--stock-3);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 13;
+  stroke-dashoffset: 13;
+}
+
+.proof.is-open .proof__tick-box {
+  fill: var(--pink);
+  stroke: var(--pink);
+}
+
+.proof.is-open .proof__tick-mark {
+  animation: tick-in .38s var(--ease-out) calc(.56s + var(--i) * .09s) both;
 }
 
 .proof__coda {
@@ -2280,8 +2410,8 @@ html[data-register='on'] .register-eye__plate--black {
 
 .proof.is-open .proof__yes { animation-delay: .3s; }
 .proof.is-open .proof__claim { animation-delay: .4s; }
-.proof.is-open .proof__tests li { animation-delay: .52s; }
-.proof.is-open .proof__coda { animation-delay: .58s; }
+.proof.is-open .proof__tests li { animation-delay: calc(.44s + var(--i) * .09s); }
+.proof.is-open .proof__coda { animation-delay: .84s; }
 
 /* ---------- colophon ---------- */
 
@@ -2404,9 +2534,16 @@ html[data-register='on'] .register-eye__plate--black {
 }
 
 .colophon__note {
+  display: grid;
+  gap: 10px;
   color: rgba(252, 250, 243, .6);
   font-size: .84rem;
   line-height: 1.56;
+}
+
+.colophon__note p + p {
+  padding-top: 10px;
+  border-top: 1px solid rgba(252, 250, 243, .12);
 }
 
 .colophon__closing {
@@ -2581,6 +2718,16 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
+/* the check, drawn the way a pen draws it */
+@keyframes tick-in {
+  from {
+    stroke-dashoffset: 13;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 @keyframes sweep {
   from {
     opacity: 0;
@@ -2595,14 +2742,18 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
-/* the question, rocking on its hinge, asking */
+/* the question, rocking on its hinge, asking — and coming back to rest, so the
+   sheet can go still without the mark jumping the last degree */
 @keyframes ask {
   0%,
   100% {
-    rotate: -1.2deg;
+    rotate: 0deg;
   }
-  46% {
-    rotate: 1.5deg;
+  20% {
+    rotate: -1.25deg;
+  }
+  76% {
+    rotate: 1.4deg;
   }
 }
 
@@ -2767,8 +2918,8 @@ html[data-reveal='on'] .reveal.is-in {
     text-align: left;
   }
 
-  .specimen__rule::before,
-  .specimen__rule::after {
+  /* the column stands on end here, so the corner it trapped no longer exists */
+  .specimen__trap {
     display: none;
   }
 
@@ -2898,10 +3049,6 @@ html[data-reveal='on'] .reveal.is-in {
     right: 8px;
     font-size: .53rem;
   }
-
-  .keys > div {
-    padding: 8px 10px;
-  }
 }
 
 /* ---------- reduced motion ---------- */
@@ -2949,6 +3096,22 @@ html[data-reveal='on'] .reveal.is-in {
 
   .mark {
     rotate: 0deg;
+  }
+
+  html[data-register='on'] .plated__layer--black .mark {
+    animation: none;
+  }
+
+  /* the traps are the register, not a flourish: they must still fill, they
+     simply arrive without travelling */
+  .ink-trap__pool {
+    transition: none;
+  }
+
+  /* and the check is already drawn */
+  .proof__tick-mark {
+    stroke-dashoffset: 0;
+    animation: none;
   }
 
   .mark::after {
@@ -3020,7 +3183,10 @@ html[data-reveal='on'] .reveal.is-in {
 
   .q__land {
     background: #000;
-    opacity: 1;
+  }
+
+  .ink-trap__pool {
+    fill: #000;
   }
 
   html[data-reveal='on'] .reveal {

@@ -11,6 +11,7 @@ import {
 } from 'react'
 import { findNote, NOTES, phraseLines, WORD_IDS, type WordId } from './notes'
 import { ControlEdge } from './edge'
+import { InkTrap } from './ink'
 import { CropMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
 import { Plated } from './plate'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
@@ -302,7 +303,11 @@ export function App() {
             <i className="gauge__dot gauge__dot--pink" />
             <i className="gauge__dot gauge__dot--blue" />
           </span>
-          <span className="gauge__read">{settled ? 'in register' : 'off register'}</span>
+          {/* the bar reports the plate, so it reports the number too — otherwise
+              the reader is told there is a problem and given no way to judge it */}
+          <span className="gauge__read">
+            {settled ? 'in register' : `off ${reg > 0 ? '+' : '−'}${Math.abs(reg).toFixed(2)}`}
+          </span>
         </p>
       </header>
 
@@ -496,9 +501,26 @@ export function App() {
                   When the interface has a point of view you can feel, and knows when to stop moving.
                 </p>
                 <ol className="proof__tests">
-                  <li><span>01</span>Hierarchy: could you name the second most important thing without thinking twice?</li>
-                  <li><span>02</span>Hand: the page hands you the blade. Does the tool actually do something?</li>
-                  <li><span>03</span>Restraint: does everything stop moving the moment you stop reading?</li>
+                  {[
+                    'Hierarchy: could you name the second most important thing without thinking twice?',
+                    'Hand: the page hands you the blade. Does the tool actually do something?',
+                    'Restraint: does everything stop moving the moment you stop reading?',
+                  ].map((line, index) => (
+                    <li key={line} style={{ '--i': index } as CSSProperties}>
+                      <span>{String(index + 1).padStart(2, '0')}</span>
+                      <p>{line}</p>
+                      <svg
+                        className="proof__tick"
+                        viewBox="0 0 18 18"
+                        preserveAspectRatio="xMidYMid meet"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <rect className="proof__tick-box" x="1.5" y="1.5" width="15" height="15" rx="2.6" />
+                        <path className="proof__tick-mark" d="M5.1 9.3 7.8 12 12.9 6.1" />
+                      </svg>
+                    </li>
+                  ))}
                 </ol>
                 <p className="proof__coda">
                   And the honest part: any model can write the markup. The difference lives in the
@@ -534,16 +556,23 @@ export function App() {
               ))}
             </div>
 
-            <p className="colophon__note">
-              Three impressions, deliberately out of register until you take the blade to the gate.
-              The sheet prints wet at the top and dries as it goes down the press, so the question
-              is three plates arguing and the close read beneath it is one clean voice. The offset
-              shadows under the cards are the pink plate, which is why they travel with the blade.
-              The wet ink on the bed is drawn in a canvas and the paper tooth is an inline filter —
-              nothing here is downloaded. Set with the fonts already on your machine: one grotesque,
-              one serif, one mono. No web fonts, no network, nothing stored. Every movement on this
-              page is a print decision, and each one stops the moment you ask it to.
-            </p>
+            <div className="colophon__note">
+              <p>
+                Three impressions, deliberately out of register until you take the blade to the gate.
+                The sheet prints wet at the top and dries as it goes down the press, so the question
+                is three plates arguing and the close read beneath it is one clean voice. The offset
+                shadows under the cards are the pink plate, which is why they travel with the blade.
+              </p>
+              <p>
+                Where a stroke lands on a rule there is a notch, and a pressman fills it with ink on
+                purpose — an ink trap. Every corner on this sheet is trapped, and the traps only fill
+                once the plates agree. The wet ink on the bed is drawn in a canvas and the paper
+                tooth is an inline filter; nothing here is downloaded. Set with the fonts already on
+                your machine: one grotesque, one serif, one mono. No web fonts, no network, nothing
+                stored. Every movement on this page is a print decision, and each one stops the
+                moment you ask it to.
+              </p>
+            </div>
           </div>
 
           <p className="colophon__closing">
@@ -578,6 +607,7 @@ function Specimen({
       </p>
 
       <div ref={stageRef} className={`specimen__stage specimen__stage--${note.id}`}>
+        <span className="specimen__flash" aria-hidden="true" />
         <Plated
           className="specimen__stack"
           render={ghost => (
@@ -600,6 +630,11 @@ function Specimen({
         {note.drop ? <span className="specimen__pad" aria-hidden="true" /> : null}
 
         <p className="specimen__rule" aria-hidden="true">
+          {/* each end of the measure is a corner like any other: the tick and the
+              ink gathered in the notch under it are one mark, and the ink only
+              finishes gathering at the gate */}
+          <InkTrap className="specimen__trap specimen__trap--start" />
+          <InkTrap className="specimen__trap specimen__trap--end" />
           <span className="specimen__rule-count">{note.chars}</span>
           <span className="specimen__rule-word">{note.measure}</span>
         </p>
@@ -727,7 +762,7 @@ function QuestionTitle({
         onFocus={() => onPreview(id)}
         onBlur={() => onPreview(null)}
         onKeyDown={event => step(event, id)}
-        aria-pressed={selected === id}
+        aria-current={selected === id}
       >
         {children}
         <span className="sr-only">
@@ -754,8 +789,12 @@ function QuestionTitle({
           {w('yet', <>yet<span className="mark">?</span></>)}
           {/* the rule the question mark lands on. printed three times, it is three
               short stubs until the blade reaches the gate, and then one rule
-              running the full measure */}
-          <span className="q__land" aria-hidden="true" />
+              running the full measure — and the two corners where it meets the
+              trim are ink traps, so they fill as the sheet comes into register */}
+          <span className="q__land" aria-hidden="true">
+            <InkTrap className="q__trap q__trap--start" rule={false} />
+            <InkTrap className="q__trap q__trap--end" rule={false} />
+          </span>
         </span>
       </span>
     )

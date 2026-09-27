@@ -1,63 +1,53 @@
-The press sheet now prints wet at the top and dries going down the press, so the plates read as plates.
+# Changelog
+
+Iteration 494: every corner on the sheet is an ink trap, and the traps fill when the blade reaches the gate.
+
+## The direction
+
+The page already had one verb — pull the blade to the gate — and one number, the register. Until
+now that number was only legible in the readouts: the gauge, the strip, the shadows under the
+cards. So this iteration moved it down into the typography. An ink trap is the ink a pressman
+puts in the notch where a stroke lands on a rule, so the join does not print light. Every corner
+on the sheet is now one, and the traps grow with `--settle` — the same number that drives the
+plate offset. Loose plates, three sets of slivers arguing at three offsets. The gate, one locked
+pair of wedges. The register becomes visible in the smallest marks on the page instead of only in
+a panel of readouts, and the corner-fill logic is the same in all three places.
 
 ## What changed
 
-**The misregistration finally reads as three plates.** The plate ramp was 2px per
-unit, so the colour plates sat ~1.8px apart — a smudge, not a fault. It is now 3px
-per unit, and the bed's film loupe reaches further (0.46 → 0.6em). Opening the page
-shows the three impressions plainly apart; taking the blade to the gate collapses
-the whole title to one clean voice, which is the payoff the page was built around.
+- **New `src/ink.tsx`** — an `InkTrap` mark: a rule with a pool of pink ink in the notch at each
+  end. The pools are always the pink plate's, because pink is the only ink on a press that beads
+  up in a corner. Drawn as one mark with its rule, or as pools alone where the sheet already
+  prints the rule three times.
+- **`--settle` is now a transitioning registered property**, so the traps, the bed dot, the
+  mark's pad and the shadow colour all arrive on one eased beat instead of snapping.
+- **The title's landing rule** traps both of its corners, and at the gate it firms into one rule
+  in the blue plate — a cool rule with warm ink in it, rather than a pink rule. The fade moved
+  from a group opacity into the paint so it no longer takes the traps down with it.
+- **The measure column in the close read** now draws its end ticks and their pools together: the
+  tick and the notch of ink beneath it are one corner, one mark. Those traps are already ~42%
+  filled, because that column is a long way down the press; the register only finishes the job.
+- **The film on the bed prints its own landing rule**, under the mark at the end of its sentence,
+  with two pools that close up at the gate. The gate's own end cap moved up to the last baseline,
+  so the gate is now capped by the two lines it is actually registering.
+- **The question mark stops rocking at the gate.** `ask` now returns to rest at both ends of its
+  cycle, so a straight sheet can stop dead without the mark jumping the last degree — the pause
+  the plate 03 note asks for, and the page now means it.
+- **The proof sheet is checked off as it prints.** Three rows, three drawn ticks, staggered in
+  the press's order behind the lines landing. Reduced motion gets them already drawn.
+- **The slugbar gauge reports the number**, not just the verdict: `off −1.00` rather than
+  `off register`, so a reader is not told there is a problem and given no way to judge it.
+- **Fixed:** the close read's catch flash was styled and animated but never rendered. It is in the
+  DOM now, so the specimen card takes the pull like the rest of the sheet.
+- **`aria-pressed` → `aria-current`** on the three words in the title, which are one item of a set
+  rather than three independent toggles, and which already have a matching radiogroup below.
+- Readability: the colophon note is two paragraphs under one rule instead of one 100-word block;
+  the smallest mono furniture (bed caption, bed foot, key hints, workstrip label) is a step larger;
+  a dead `.keys > div` rule is gone. Traps and print styles added, and the traps do not travel
+  under `prefers-reduced-motion`.
 
-**The sheet dries as it goes down the press.** The plate offset now drives two
-values: the true offset, which every readout follows, and a *fringe* — the same
-offset faded by a smoothstep ramp over the first 1.5 viewports. The question
-prints wet; the close read beneath it prints dry. The specimen's type is now
-legible as one voice instead of carrying the title's full chromatic mess, and the
-page gains a top-to-bottom arc rather than uniform noise. Verified: fringe decays
-3.00px → 0.36px across the scroll while the true offset stays live at 3.00px.
-The bed's film keeps the amplified view, so the strip and the page stay in
-agreement at every scroll depth.
+## Unchanged
 
-**The title's void holds the instrument.** The empty top-right quadrant of the
-two-column title was being patched over with a dot screen — texture standing in
-for content. It now holds `PlateTarget`, the same three registration crosses the
-control strip carries, set at .6em with a caption beside it. Out of register they
-are three marks arguing; at the gate one bullseye, the frame firms up, and a single
-ring pings outwards once. The caption sits beside the cross rather than under it,
-so the group is exactly one mark tall and clears the one-line void at every
-viewport width (measured 7–12px clearance from 920px to 1920px; hidden below
-900px where there is no void).
-
-**The offset shadows are the pink plate.** Four unrelated hard-shadow systems
-(5px, 10px, 12px, 7px across bed, button, specimen, proof) were a borrowed trend.
-They now share one plate-driven pair, so every card's shadow is the second
-impression of that card and travels with the blade — the whole sheet's furniture
-snaps home together at the gate. One variable pair instead of four literals.
-
-**One strip instead of two floating hints.** The "pick a phrase" line and the
-keyboard legend described the same thing and drifted apart down the page. They are
-now a single ruled `.workstrip` sitting directly under the instrument they talk
-about.
-
-**Readability.** `--ink-50` and `--ink-70` were darkened to 5.5:1 and 8.6:1 on the
-stock (from 4.5:1). Under 760px the plate-width card shadow drops to 6px, and the
-specimen's plate-stepping controls get thumb-sized targets.
-
-**Bug found and fixed during the iteration:** the plate CSS variables were being
-written only on mount, so snapping to the gate moved the readout and the stamp but
-left the type out of register. The offset now reprints on every blade change via a
-stored sync function, with the scroll listener attached once so dragging never
-churns listeners.
-
-**Cleanups:** removed a pre-existing unused `at` binding; lengthened the question
-mark's rocking from a 8.4s metronome to an uneven 13s breath.
-
-## Preserved
-
-Title and document title unchanged. Entry point, framework, package files and
-build config untouched. Reduced motion prints the sheet permanently dry
-(`--dry: 1`), suppresses the ping, and leaves nothing hidden — verified in a
-`reducedMotion: 'reduce'` context. Tab order verified: skip link, brand, three nav
-anchors, three title words, the bed slider, three plate radios, both actions, both
-specimen controls. No network, no storage, no parent-frame access; the plate
-target is `aria-hidden` because the slider already announces the state.
+The title and document title, the three-voice type system, the press bed and its keyboard
+controls, the plate list, the proof reveal, the wet/dry arc down the page, and the fact that
+nothing is downloaded: no fonts, no scripts, no images, no network, no storage.
