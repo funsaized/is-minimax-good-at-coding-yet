@@ -4,9 +4,16 @@
    the title is printed three times and the plates do not agree
    until the reader takes the blade to the gate
 
+   the film on the bed is not a diagram of the offset — it is the
+   sentence, under a loupe. it splits with the plates and closes
+   onto one voice at the gate, exactly when the page does.
+
    the scale: the question is the largest type on the page by a
    wide margin. everything after it is a job ticket, a specimen
    or a label, and is set accordingly.
+
+   three voices, no more: the grotesque is the press, the serif is
+   the reading, the mono is the furniture.
    ============================================================= */
 
 @property --settle {
@@ -57,9 +64,10 @@
   /* one scale, used everywhere */
   --question: clamp(2.5rem, 6.8vw, 7.2rem);
   --specimen: clamp(2.1rem, 5.6vw, 5rem);
-  --head: clamp(1.72rem, 3.1vw, 2.85rem);
+  --head: clamp(1.95rem, 3.5vw, 3.2rem);
   --sub: clamp(1.18rem, 1.5vw, 1.5rem);
   --body: clamp(1rem, .22vw + .94rem, 1.12rem);
+  --read: clamp(1.04rem, .3vw + .97rem, 1.22rem);
   --micro: .63rem;
 }
 
@@ -650,7 +658,6 @@ html[data-register='on'] .edge__ink--black {
 .plated__layer--ghost .chip,
 .plated__layer--ghost .mark,
 .plated__layer--ghost .plates__type,
-.plated__layer--ghost .stepper__type,
 .plated__layer--ghost .specimen__main,
 .plated__layer--ghost .specimen__line {
   color: inherit;
@@ -721,8 +728,13 @@ html[data-register='on'] .edge__ink--black {
 }
 
 @media (max-width: 620px) {
+  :root {
+    --micro: .55rem;
+  }
+
   .sheet__slug {
     flex-wrap: wrap;
+    letter-spacing: .12em;
   }
 
   .sheet__slug-fact {
@@ -768,6 +780,33 @@ html[data-register='on'] .edge__ink--black {
   grid-column: 2;
   grid-row: 1 / span 2;
   align-self: end;
+  position: relative;
+}
+
+/* the landing rule. the question mark is load-bearing, so the sheet prints it
+   something to stand on: a hairline under the last line while the plates are
+   loose, and — at the gate — one pink rule running the full measure, out to the
+   trim, with the mark's pad spreading along it. */
+.q__land {
+  position: absolute;
+  right: 0;
+  bottom: -.2em;
+  left: 0;
+  height: .04em;
+  background: currentColor;
+  opacity: .2;
+  transform: scaleX(.9);
+  transform-origin: 100% 50%;
+  transition: transform .58s var(--ease-out), opacity .4s var(--ease),
+    height .4s var(--ease), background .4s var(--ease);
+  pointer-events: none;
+}
+
+html[data-register='on'] .q__land {
+  height: .06em;
+  background: var(--pink-ink);
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 /* the column rule, printed three times: out of register it is three hairlines,
@@ -944,13 +983,14 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
   animation-delay: -6.2s;
 }
 
-/* somewhere to land */
+/* somewhere to land: the pad the mark rocks over. at the gate the rule prints
+   underneath it and the pad becomes the ink spreading along it. */
 .mark::after {
   position: absolute;
-  bottom: -.18em;
+  bottom: -.29em;
   left: 46%;
-  width: max(14px, .19em);
-  height: max(14px, .19em);
+  width: max(14px, .26em);
+  height: max(14px, .26em);
   content: '';
   color: var(--pink);
   background-image: radial-gradient(circle, currentColor 1.15px, transparent 1.45px);
@@ -1030,7 +1070,7 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
   min-width: 0;
   /* ink spread is a fixed fraction of the type, so small type takes a smaller
      fringe: the plate stays honest without turning the job ticket to mud */
-  --fringe-scale: .52;
+  --fringe-scale: .34;
 }
 
 .plates__type {
@@ -1055,8 +1095,7 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  max-width: 62ch;
-  margin: 12px 0 0;
+  margin: clamp(14px, 1.8vw, 22px) 0 0;
   color: var(--ink-50);
   font-family: var(--mono);
   font-size: var(--micro);
@@ -1114,9 +1153,11 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
 }
 
 .lede {
-  max-width: 47ch;
+  max-width: 46ch;
   color: var(--ink-70);
-  font-size: var(--body);
+  font-family: var(--serif);
+  font-size: var(--read);
+  line-height: 1.48;
   text-wrap: pretty;
 }
 
@@ -1176,10 +1217,12 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
 
 /* ---------- the press bed: wet ink and a squeegee you can take hold of ---------- */
 
+/* the instrument sits immediately under the question, because it is the thing
+   that prints it */
 .bedrow {
-  margin-top: clamp(28px, 3.4vw, 50px);
-  padding-top: clamp(18px, 2.2vw, 28px);
-  border-top: 1px solid var(--black);
+  margin-top: clamp(24px, 3vw, 44px);
+  padding-top: clamp(16px, 2vw, 26px);
+  border-top: 1px solid var(--rule);
 }
 
 .bed {
@@ -1215,13 +1258,14 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px 12px;
   padding: 9px 12px 9px 14px;
   border-bottom: 1px solid var(--rule);
 }
 
 .bed__title {
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: 9px;
   font-family: var(--mono);
@@ -1229,6 +1273,27 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
   font-weight: 700;
   letter-spacing: .18em;
   text-transform: uppercase;
+}
+
+/* what the strip is: the same lines the title sets, under a loupe */
+.bed__caption {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .14em;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .bed__caption {
+    display: none;
+  }
 }
 
 .bed__dot {
@@ -1303,7 +1368,7 @@ html[data-register='on'] .register-eye__plate--black {
 .bed__film {
   display: block;
   width: 100%;
-  height: clamp(88px, 10.4vw, 118px);
+  height: clamp(98px, 11.4vw, 132px);
 }
 
 /* the squeegee: a handle above the bed, a blade down through the ink */
@@ -1389,17 +1454,36 @@ html[data-register='on'] .register-eye__plate--black {
   transform: rotate(-8deg) scale(1);
 }
 
-.bed__scale {
+.bed__foot {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  gap: 6px 18px;
   margin: 0;
-  padding: 8px 12px 0;
+  padding: 8px 12px 10px;
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .55rem;
-  letter-spacing: .14em;
+  font-size: .57rem;
+  line-height: 1.5;
+  letter-spacing: .1em;
   text-transform: uppercase;
+}
+
+.bed__hint {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.bed__hint > span {
+  color: var(--pink-ink);
+}
+
+.bed__scale {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: baseline;
+  gap: clamp(10px, 1.8vw, 24px);
 }
 
 .bed__gate {
@@ -1412,37 +1496,14 @@ html[data-register='on'] .register-eye__plate--black {
   transform: translateY(-1px);
 }
 
-.bed__hint {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 18px;
-  margin: 0;
-  padding: 8px 12px 11px;
-  color: var(--ink-50);
-  font-family: var(--mono);
-  font-size: .57rem;
-  line-height: 1.5;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-}
-
-.bed__hint span {
-  color: var(--pink-ink);
-}
-
-.bed__hint em {
-  color: var(--ink-70);
-  font-style: normal;
-}
-
-@media (max-width: 760px) {
-  .bed__hint {
-    display: block;
+@media (max-width: 560px) {
+  .bed__foot {
+    flex-direction: column;
+    gap: 4px;
   }
 
-  .bed__hint em {
-    display: none;
+  .bed__scale {
+    gap: 14px;
   }
 }
 
@@ -1451,9 +1512,11 @@ html[data-register='on'] .register-eye__plate--black {
 .keysrow {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 10px 18px;
+  gap: 8px clamp(16px, 2.4vw, 30px);
   align-items: center;
-  margin-top: 14px;
+  margin-top: clamp(20px, 2.4vw, 32px);
+  padding-top: clamp(14px, 1.8vw, 22px);
+  border-top: 1px solid var(--rule-soft);
 }
 
 .keysrow__label {
@@ -1466,54 +1529,34 @@ html[data-register='on'] .register-eye__plate--black {
 }
 
 .keys {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1px;
-  margin: 0;
-  background: var(--rule-soft);
-  border: 1px solid var(--rule-soft);
-}
-
-.keys > div {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 5px clamp(13px, 1.9vw, 28px);
   min-width: 0;
-  padding: 9px clamp(10px, 1.2vw, 16px);
-  background: rgba(252, 250, 243, .55);
+  margin: 0;
 }
 
-.keys dt {
-  display: flex;
-  flex: 0 0 auto;
-  gap: 3px;
-}
-
-.keys dd {
-  overflow: hidden;
+.keys li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
   color: var(--ink-50);
   font-family: var(--mono);
   font-size: .58rem;
   letter-spacing: .1em;
-  text-overflow: ellipsis;
   text-transform: uppercase;
-  white-space: nowrap;
 }
 
-@media (max-width: 1040px) {
-  .keys {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.keys li + li::before {
+  content: '·';
+  color: var(--pink);
+  letter-spacing: 0;
 }
 
 @media (max-width: 700px) {
   .keysrow {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-@media (max-width: 560px) {
-  .keys {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -1537,130 +1580,32 @@ html[data-register='on'] .register-eye__plate--black {
   margin-top: 20px;
 }
 
+/* the reading voice: the headings hand off from the press to the page, so the
+   serif takes the words and the grotesque keeps the furniture */
 .read__intro h2,
 .answer__copy h2 {
-  font-family: var(--display);
+  font-family: var(--serif);
   font-size: var(--head);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -.048em;
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -.024em;
   text-wrap: balance;
 }
 
 .read__intro h2 em,
 .answer__copy h2 em {
   color: var(--pink-ink);
-  font-style: normal;
-  text-decoration: underline;
-  text-decoration-color: var(--pink);
-  text-decoration-thickness: .09em;
-  text-underline-offset: .1em;
+  font-style: italic;
 }
 
 .read__intro > p {
-  max-width: var(--measure);
-  padding-bottom: .3rem;
+  max-width: 52ch;
+  padding-bottom: .34rem;
   color: var(--ink-70);
-  font-size: var(--body);
+  font-family: var(--serif);
+  font-size: var(--read);
+  line-height: 1.46;
   text-wrap: pretty;
-}
-
-/* ---------- the stepper: walk the plates without leaving the specimen ---------- */
-
-.stepper {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-  padding: 8px 10px;
-  background: var(--stock-3);
-  border: 1px solid var(--rule);
-  border-radius: 3px;
-}
-
-.stepper__nav {
-  display: grid;
-  width: 38px;
-  height: 38px;
-  place-items: center;
-  color: var(--ink-70);
-  border: 1px solid transparent;
-  border-radius: 3px;
-  transition: color .2s var(--ease), background .2s var(--ease), border-color .2s var(--ease);
-}
-
-.stepper__nav svg {
-  width: 19px;
-  height: 19px;
-}
-
-.stepper__nav:hover {
-  color: var(--stock-3);
-  background: var(--black);
-  border-color: var(--black);
-}
-
-.stepper__read {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-  padding: 0 4px;
-  justify-content: center;
-}
-
-.stepper__dots {
-  display: flex;
-  flex: 0 0 auto;
-  gap: 5px;
-}
-
-.stepper__dots i {
-  width: 6px;
-  height: 6px;
-  background: var(--rule);
-  border-radius: 50%;
-  transition: background .3s var(--ease), transform .3s var(--spring);
-}
-
-.stepper__dots i.is-on {
-  background: var(--pink);
-  transform: scale(1.25);
-}
-
-.stepper__index {
-  color: var(--pink-ink);
-  font-family: var(--mono);
-  font-size: .62rem;
-  font-weight: 700;
-  letter-spacing: .18em;
-}
-
-.stepper__stack {
-  flex: 0 0 auto;
-  --fringe-scale: .48;
-}
-
-.stepper__type {
-  display: block;
-  font-family: var(--display);
-  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -.035em;
-}
-
-.stepper__read em {
-  overflow: hidden;
-  color: var(--ink-50);
-  font-family: var(--mono);
-  font-size: .58rem;
-  font-style: normal;
-  letter-spacing: .14em;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-  white-space: nowrap;
 }
 
 /* ---------- specimen ---------- */
@@ -1674,15 +1619,15 @@ html[data-register='on'] .register-eye__plate--black {
 }
 
 .specimen__stage--m3 {
-  --stage-tint: rgba(255, 46, 107, .045);
+  --stage-tint: rgba(255, 46, 107, .028);
 }
 
 .specimen__stage--good {
-  --stage-tint: rgba(255, 46, 107, .032);
+  --stage-tint: rgba(255, 46, 107, .018);
 }
 
 .specimen__stage--yet {
-  --stage-tint: rgba(42, 62, 201, .06);
+  --stage-tint: rgba(42, 62, 201, .038);
 }
 
 .specimen__slug {
@@ -1717,6 +1662,9 @@ html[data-register='on'] .register-eye__plate--black {
     var(--stage-tint, transparent);
 }
 
+/* the space the set phrase does not use is not empty: it is the screen the
+   whole stage is printed through, and the only thing a dropped mark could land
+   on. the wider the sheet, the more of it there is to print. */
 .specimen__stage::after {
   position: absolute;
   inset: 0;
@@ -1725,10 +1673,10 @@ html[data-register='on'] .register-eye__plate--black {
   color: var(--blue);
   background-image: radial-gradient(circle, currentColor 1.05px, transparent 1.3px);
   background-size: 7px 7px;
-  opacity: .12;
+  opacity: .2;
   pointer-events: none;
-  mask-image: linear-gradient(115deg, transparent 42%, #000 96%);
-  -webkit-mask-image: linear-gradient(115deg, transparent 42%, #000 96%);
+  mask-image: linear-gradient(104deg, transparent 26%, #000 84%);
+  -webkit-mask-image: linear-gradient(104deg, transparent 26%, #000 84%);
 }
 
 /* the pull landing, in wash rather than bloom */
@@ -1745,32 +1693,8 @@ html[data-register='on'] .register-eye__plate--black {
   z-index: 1;
 }
 
-/* the line every plate is measured against: ticks in the margins, clear of the type */
-.specimen__gate {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  z-index: 0;
-  width: 1px;
-  background: rgba(209, 18, 75, .45);
-  mask-image: linear-gradient(180deg, #000 0 15%, transparent 27% 72%, #000 86% 100%);
-  -webkit-mask-image: linear-gradient(180deg, #000 0 15%, transparent 27% 72%, #000 86% 100%);
-  pointer-events: none;
-}
-
-.specimen__gate::after {
-  position: absolute;
-  bottom: 14px;
-  left: 7px;
-  content: 'register';
-  color: rgba(209, 18, 75, .72);
-  font-family: var(--mono);
-  font-size: .55rem;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-}
-
+/* the measure itself is the gate now: the rule stands at the end of the line
+   every plate is set to, with a tick at each end of the measured run */
 .specimen__stack {
   position: relative;
   z-index: 1;
@@ -1920,7 +1844,9 @@ html[data-register='on'] .register-eye__plate--black {
   max-width: 58ch;
   margin-top: 14px;
   color: var(--ink-70);
-  font-size: var(--body);
+  font-family: var(--serif);
+  font-size: var(--read);
+  line-height: 1.5;
   text-wrap: pretty;
 }
 
@@ -1951,8 +1877,10 @@ html[data-register='on'] .register-eye__plate--black {
   padding: clamp(15px, 1.8vw, 22px);
   background: var(--stock-3);
   color: var(--ink-70);
-  font-size: .9rem;
-  line-height: 1.42;
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.44;
+  text-wrap: pretty;
 }
 
 .brief li span {
@@ -2038,10 +1966,12 @@ html[data-register='on'] .register-eye__plate--black {
 }
 
 .answer__copy > p {
-  max-width: 38ch;
+  max-width: 40ch;
   margin: 18px 0 0;
   color: var(--ink-70);
-  font-size: var(--body);
+  font-family: var(--serif);
+  font-size: var(--read);
+  line-height: 1.48;
   text-wrap: pretty;
 }
 
@@ -2134,8 +2064,8 @@ html[data-register='on'] .register-eye__plate--black {
   display: grid;
   place-items: center;
   gap: 12px;
-  min-height: clamp(230px, 26vw, 300px);
-  padding: clamp(28px, 4vw, 48px);
+  min-height: clamp(206px, 20vw, 262px);
+  padding: clamp(26px, 3.4vw, 42px);
   text-align: center;
   background: repeating-linear-gradient(135deg, rgba(21, 20, 27, .045) 0 1px, transparent 1px 9px);
   border-radius: 0 0 3px 3px;
@@ -2186,14 +2116,16 @@ html[data-register='on'] .register-eye__plate--black {
   text-transform: uppercase;
 }
 
+/* the punchline is the loudest thing on the page after the question, and it is
+   set in the quietest voice on the page: that is the whole point of it */
 .proof__claim {
-  max-width: 24ch;
-  margin: 12px 0 0;
-  font-family: var(--display);
-  font-size: clamp(1.55rem, 3vw, 2.45rem);
-  font-weight: 800;
-  line-height: 1.04;
-  letter-spacing: -.045em;
+  max-width: 26ch;
+  margin: 14px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3.1vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -.02em;
   text-wrap: balance;
 }
 
@@ -2210,8 +2142,10 @@ html[data-register='on'] .register-eye__plate--black {
   padding: 12px 0;
   border-bottom: 1px solid var(--rule-soft);
   color: var(--ink-70);
-  font-size: .92rem;
-  line-height: 1.44;
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.46;
+  text-wrap: pretty;
 }
 
 .proof__tests span {
@@ -2810,22 +2744,6 @@ html[data-reveal='on'] .reveal.is-in {
     font-size: .8rem;
   }
 
-  .stepper {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 6px;
-    padding: 7px 6px;
-  }
-
-  .stepper__read {
-    flex-wrap: wrap;
-    gap: 6px 10px;
-  }
-
-  .stepper__read em {
-    flex-basis: 100%;
-    text-align: center;
-  }
-
   .specimen__foot {
     flex-direction: column;
     align-items: flex-start;
@@ -2958,7 +2876,6 @@ html[data-reveal='on'] .reveal.is-in {
   .keysrow,
   .hint,
   .actions,
-  .stepper,
   .bed {
     display: none;
   }
@@ -2973,8 +2890,9 @@ html[data-reveal='on'] .reveal.is-in {
     display: none;
   }
 
-  .specimen__gate {
-    background: rgba(0, 0, 0, .35);
+  .q__land {
+    background: #000;
+    opacity: 1;
   }
 
   html[data-reveal='on'] .reveal {

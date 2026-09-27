@@ -1,66 +1,40 @@
-# Changelog
+The film on the press bed now prints the sentence itself, and the blade lands the question mark on a rule.
 
-Gave the question the largest type on the page, and printed its column rule three times.
+The strip under the title was a diagram of the plate offset: a band of ink, three
+colours, a squeegee riding on it. It is now the sentence. The canvas draws the same
+two lines the title draws — `is Minimax M3` over `good at frontend yet?` — on a
+strip of newsprint, through a halftone screen, in three impressions multiplied
+where they meet. The offset is measured in em rather than in sheet-width, because
+a misregistration is a fraction of the type and not of the paper, and the curve is
+eased so the loose end of the bed opens up loud while the last fraction of a unit
+is the quiet part the gate takes. The bed moved up to sit directly under the
+question it prints, and its scale row and hint collapsed into one line under the
+strip.
 
-## What changed
+Coming into register now pays something back. The question mark has always been
+described as load-bearing, so the sheet prints it something to stand on: a
+hairline under the last line of the title while the plates are loose, and at the
+gate one pink rule wiping out to the trim with the mark's dot pad spreading along
+it. The same accident of the press as the column rule, landing on the one word
+the page says it refuses to finish.
 
-**The hierarchy was inverted.** The close-read specimen set at up to 7rem while the question
-itself capped at 5.8rem, so a detail was louder than its subject. The type now runs on one
-declared scale: the question at 6.8vw/7.2rem, the specimen at 5.6vw/5.2rem, section heads at
-3.1vw/2.85rem, body at 1.12rem, labels at .63rem. On a 1680px sheet the question sets at 114px
-against the specimen's 80px.
+Type is now three voices and no more. The grotesque is the press — the title, the
+job ticket, the specimen stage, the buttons. The serif is the reading: both
+section headings, every lede, the specimen copy, the three rules, the short
+answer's claim. The mono is the furniture and stays where it was. The short answer
+is the loudest thing on the page after the question and is now set in the quietest
+voice on the page, which is the argument it was making anyway.
 
-**The two-column title split got a reason.** The column rule down the middle of the hero is
-printed on all three plates, so out of register it reads as three hairlines and at the gate it
-collapses into one — and turns pink. The void the split leaves at the top right is now a halftone
-wedge that travels with the plate offset, instead of a halftone blob parked in a fixed page
-background where it had no relationship to the type.
+Removed: the stepper above the specimen, which restated a control the plate ticket
+and the keyboard already own, and the specimen's floating register line, which the
+measure rule at the end of the set line does better. The keyboard legend is one
+wrapping line of keys instead of a four-cell grid, the plate ticket's ink fringe
+is reduced so the job ticket stays readable, the specimen stage's blue screen is
+stronger so the space a dropped mark could land in reads as printed stock rather
+than emptiness, and the proof card is shorter so the quiet beside it is quieter on
+purpose.
 
-**The pull now lands on the whole sheet.** The catch class moved onto the page root, so every
-plated stack on the page slams into register at once, not just the title and the specimen, and a
-wet gloss crosses the stock once as the ink agrees.
-
-**Ink spread now scales with the type.** At full strength the fringe turned the 26px job-ticket
-plate names to mud. The plate list and the stepper take roughly half the offset, the way ink
-spread behaves on small type. The big type keeps the full accident.
-
-**A control strip on the trim edge.** Three crosses at the live plate offset that collapse into
-one bullseye at the gate, a density bar of the three inks, and a slug. It reports the plate and
-does nothing else; the bed is still the tool. Hidden below 1180px.
-
-**The specimen's measure stands at the end of the line.** It was pinned to the far edge of the
-stage with the phrase marooned at the opposite side. The set phrase now takes the width it needs
-and the measure rides just past it, so the count reads against the type it counts. The stage's
-two body columns are set columns with real space between them, not one wide track with a gap.
-
-**The keyboard legend stopped lying.** It promised that the arrow keys nudge the blade, but they
-only worked when the bed already held focus. Arrows now nudge from anywhere that has not claimed
-them, and a keyboard nudge gets the same magnetic gate a pointer release gets, so the blade
-snaps to zero instead of hovering in the gate.
-
-**Copy fixes.** The lede said "every word below" about a title printed above it. The hint said
-"the plate below" about a plate list above it, and sat below the lede while describing the title.
-Both corrected; the hint now sits with the plate list it describes.
-
-**Mobile got its proper measure.** Single-column, the title can be far larger than the
-two-column setting allows: 13.5vw up to 4.6rem, which takes it from 40px to 74px at 760px wide.
-
-**Scroll reveals carry a failsafe.** A reveal that only un-hides on intersection leaves holes in
-a full-page capture. After 2.4s everything is revealed regardless, so the sheet cannot sit half
-inked.
-
-## Verification
-
-Built with `tsc --noEmit && vite build`, clean. Checked in Chromium at 360–1680px: no horizontal
-overflow at any width, no title wrap, and the question/specimen ratio holds across the range.
-Tab order runs skip-link, brand, three nav items, three title words, the one live plate radio,
-two actions, the bed slider, the stepper, the specimen turn, the proof toggle, the return link.
-Title words show a 2px focus ring and the plate mark on keyboard focus. Under
-`prefers-reduced-motion: reduce` the cursor lean, the drum, the sheen and the catch animation are
-all off, and pressing `0` still brings the sheet into register.
-
-## Notes
-
-No network, no fonts, no packages, no storage, no frames touched. Still CSS, local SVG, one
-canvas and the installed dependencies. The viewer owns iteration numbering and status; nothing
-on the page claims either.
+Checked at 390, 1440 and 1920 wide, and with reduced motion on: the register
+animation, sheen and pointer-tracking all still stop, and the strip and the landing
+rule land directly in their settled state. Tab order is unchanged, the plate
+radiogroup still roves, and the global 1/2/3, arrows, 0 and escape all still work.

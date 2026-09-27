@@ -274,6 +274,15 @@ export function App() {
             onPreview={setHover}
           />
 
+          <div className="bedrow">
+            <PullBed reg={reg} onSlide={value => setReg(value)} />
+          </div>
+
+          <p className="hint">
+            <span aria-hidden="true">↳</span> pick a phrase — in the title or on a plate — and the
+            sheet follows you
+          </p>
+
           <div
             className="plates"
             role="radiogroup"
@@ -313,11 +322,6 @@ export function App() {
             Choosing a plate moves the highlight in the title above and the specimen below.
           </p>
 
-          <p className="hint">
-            <span aria-hidden="true">↳</span> pick a phrase — in the title or on a plate — and the
-            sheet follows you
-          </p>
-
           <div className="band">
             <p className="margin-note">
               <span className="margin-note__rule" aria-hidden="true" />
@@ -354,24 +358,18 @@ export function App() {
             </div>
           </div>
 
-          <div className="bedrow">
-            <PullBed reg={reg} onSlide={value => setReg(value)} />
-          </div>
-
           <div className="keysrow">
             <p className="keysrow__label">the blade responds to</p>
-            <dl className="keys">
+            <ul className="keys">
               {SHORTCUTS.map(item => (
-                <div key={item.label}>
-                  <dt>
-                    {item.keys.map(key => (
-                      <kbd key={key}>{key}</kbd>
-                    ))}
-                  </dt>
-                  <dd>{item.label}</dd>
-                </div>
+                <li key={item.label}>
+                  {item.keys.map(key => (
+                    <kbd key={key}>{key}</kbd>
+                  ))}
+                  <span>{item.label}</span>
+                </li>
               ))}
-            </dl>
+            </ul>
           </div>
         </section>
 
@@ -390,44 +388,6 @@ export function App() {
               </p>
             </div>
           </header>
-
-          <div className="stepper">
-            <button
-              type="button"
-              className="stepper__nav"
-              onClick={() => select(walk(active, -1))}
-              aria-label="Previous phrase"
-            >
-              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                <path d="M16 10H4M9.5 4.5 4 10l5.5 5.5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-
-            <p className="stepper__read">
-              <span className="stepper__dots" aria-hidden="true">
-                {NOTES.map(item => (
-                  <i key={item.id} className={item.id === active ? 'is-on' : ''} />
-                ))}
-              </span>
-              <span className="stepper__index" aria-hidden="true">{findNote(active).index}</span>
-              <Plated
-                className="stepper__stack"
-                render={() => <span className="stepper__type">{findNote(active).label}</span>}
-              />
-              <em>{findNote(active).gloss}</em>
-            </p>
-
-            <button
-              type="button"
-              className="stepper__nav"
-              onClick={() => select(walk(active, 1))}
-              aria-label="Next phrase"
-            >
-              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                <path d="M4 10h12M10.5 4.5 16 10l-5.5 5.5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-          </div>
 
           <Specimen
             stageRef={specimenRef}
@@ -564,8 +524,6 @@ function Specimen({
       </p>
 
       <div ref={stageRef} className={`specimen__stage specimen__stage--${note.id}`}>
-        <span className="specimen__gate" aria-hidden="true" />
-
         <Plated
           className="specimen__stack"
           render={ghost => (
@@ -740,6 +698,10 @@ function QuestionTitle({
         <span className="q__line q__line--3" style={{ '--i': 2 } as CSSProperties}>
           <span className="q__plain">frontend </span>
           {w('yet', <>yet<span className="mark">?</span></>)}
+          {/* the rule the question mark lands on. printed three times, it is three
+              short stubs until the blade reaches the gate, and then one rule
+              running the full measure */}
+          <span className="q__land" aria-hidden="true" />
         </span>
       </span>
     )

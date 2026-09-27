@@ -16,8 +16,10 @@ export const PULL_REST = 0.9
 export const PULL_GATE = 0.14
 export const PULL_RAMP = 2
 
-/* the film is a magnified look at the sheet edge, so it travels further than the type */
-const FILM_GAIN = 0.4
+/* the film is a loupe held over the sentence itself, so the offset it shows is
+   far larger than the one the type above shows. measured in em, because a
+   misregistration is a fraction of the type and not of the sheet */
+const FILM_REACH = 0.46
 /* the blue plate is cut a little under the pink, which is why the fringes read uneven */
 const BLUE_RATIO = 0.62
 
@@ -26,6 +28,11 @@ const PAPER_BOTTOM = '#e3dbc7'
 const INK_BLACK = '#15141b'
 const INK_PINK = '#ff2e6b'
 const INK_BLUE = '#2a3ec9'
+
+/* the sentence, set on the film the way the sheet sets it: subject above, claim below */
+const FILM_LINES = ['is Minimax M3', 'good at frontend yet?']
+const FILM_STACK =
+  '"Helvetica Neue", Helvetica, Arial, "Avenir Next", "Segoe UI", system-ui, sans-serif'
 
 /** where the coloured plates sit on the page, in css pixels */
 export const plateOffset = (reg: number) => ({
@@ -47,6 +54,22 @@ export const registerText = (reg: number) =>
     : `off register, ${reg > 0 ? 'plus' : 'minus'} ${Math.abs(reg).toFixed(2)}`
 
 const unitFor = (width: number) => (width / (PULL_MAX * 2)) * 0.92
+
+/**
+ * How far the film shows the plates apart.
+ *
+ * The film magnifies the error, not the position: outside the gate the offset is
+ * stretched out so a third of a unit is plainly a third of a unit, and inside the
+ * gate it is exactly zero. The curve is eased so the loose end of the bed opens
+ * up loud and the last fraction of a unit is the quiet part — the part the gate
+ * takes. So the strip agrees with the page the instant the page does: one clean
+ * voice, printed three times.
+ */
+const magnify = (reg: number) => {
+  const out = (Math.abs(reg) - PULL_GATE) / (PULL_MAX - PULL_GATE)
+  const eased = Math.pow(Math.min(1, Math.max(0, out)), 0.62)
+  return Math.sign(reg) * eased
+}
 
 /** a six-pixel halftone tile, generated once and reused as a fill pattern */
 const makeScreen = () => {
@@ -71,8 +94,12 @@ const makeScreen = () => {
 /**
  * The press bed. A squeegee blade rides on a strip of wet ink, and the black,
  * fluorescent pink and federal blue plates are all laid down at whatever offset
- * the blade is sitting at. Slide the blade onto the gate and the three
- * impressions land on the same pixels — in the film, and in the type above.
+ * the blade is sitting at.
+ *
+ * The strip is not a diagram of the offset — it is the sentence. The film prints
+ * the very same lines the title prints, at film size and under a loupe: the
+ * plates are split while the blade is loose, and they close onto one clean voice
+ * the moment the gate catches it. Everything the strip does, the page does too.
  */
 export function PullBed({
   reg,
@@ -124,20 +151,27 @@ export function PullBed({
     ctx.fillStyle = 'rgba(21, 20, 27, .04)'
     for (let y = 1; y < h; y += 3) ctx.fillRect(0, y, w, 1)
 
-    /* the printed area, inset so both plate edges stay in frame */
-    const inset = Math.max(7, Math.min(18, w * 0.022))
-    const top = Math.round(h * 0.17)
-    const band = Math.round(h * 0.66)
-    const plateWidth = w - inset * 2
-    const drift = reg * unitNow * FILM_GAIN
+    /* the screen the stock is printed through — under the ink, not over it, so
+       the type stays type and the paper stays paper */
+    if (!screenRef.current) {
+      const pattern = ctx.createPattern(makeScreen(), 'repeat')
+      if (pattern) screenRef.current = pattern
+    }
+    if (screenRef.current) {
+      ctx.globalAlpha = 0.11
+      ctx.fillStyle = screenRef.current
+      ctx.fillRect(0, 0, w, h)
+      ctx.globalAlpha = 1
+    }
 
-    /* the gate: the one line all three plates have to agree with */
+    /* the trim edge, so the corners of the strip stay in frame */
+    const inset = Math.max(7, Math.min(18, w * 0.022))
     const gate = Math.round(w / 2) + 0.5
     const bladeX = gate + reg * unitNow
     const gateHalf = Math.max(4, PULL_GATE * unitNow * 2.2)
 
     /* the gate window, so you can see where right is before you get there */
-    ctx.fillStyle = settled ? 'rgba(255, 46, 107, .13)' : 'rgba(21, 20, 27, .055)'
+    ctx.fillStyle = settled ? 'rgba(255, 46, 107, .13)' : 'rgba(21, 20, 27, .05)'
     ctx.fillRect(gate - gateHalf, 0, gateHalf * 2, h)
 
     ctx.save()
@@ -145,51 +179,56 @@ export function PullBed({
     ctx.rect(0, 0, w, h)
     ctx.clip()
 
-    const plate = (colour: string, offset: number, alpha: number) => {
-      ctx.globalAlpha = alpha
+    /* the sentence, set the way the sheet sets it, at film size */
+    const pad = Math.max(13, Math.min(40, w * 0.038))
+    const longest = Math.max(...FILM_LINES.map(line => line.length))
+    const size = Math.max(10, Math.min(h * 0.28, (w - pad * 2) / (longest * 0.545)))
+    const leading = size * 1.2
+    const baseline = (h - (leading * (FILM_LINES.length - 1) + size)) / 2 + size
+    /* a misregistration is a fraction of the type, not of the sheet */
+    const reach = magnify(reg) * size * FILM_REACH
+
+    ctx.textAlign = 'left'
+    ctx.textBaseline = 'alphabetic'
+    ctx.font = `800 ${size.toFixed(1)}px ${FILM_STACK}`
+
+    const impression = (colour: string, dx: number, dy: number) => {
       ctx.fillStyle = colour
-      ctx.fillRect(inset + offset, top, plateWidth, band)
+      FILM_LINES.forEach((line, index) => {
+        ctx.fillText(line, pad + dx, baseline + index * leading + dy)
+      })
     }
 
     /* three impressions, multiplied where they meet: near-black in register */
     ctx.globalCompositeOperation = 'multiply'
-    plate(INK_BLACK, 0, 0.3)
-    plate(INK_PINK, drift, 0.44)
-    plate(INK_BLUE, -drift * BLUE_RATIO, 0.38)
-
-    if (!screenRef.current) {
-      const pattern = ctx.createPattern(makeScreen(), 'repeat')
-      if (pattern) screenRef.current = pattern
-    }
-    if (screenRef.current) {
-      ctx.globalAlpha = 0.26
-      ctx.fillStyle = screenRef.current
-      ctx.fillRect(inset, top, plateWidth, band)
-    }
+    impression(INK_BLACK, 0, 0)
+    impression(INK_PINK, reach, reach * 0.46)
+    impression(INK_BLUE, -reach * BLUE_RATIO, -reach * BLUE_RATIO * 0.46)
+    ctx.globalCompositeOperation = 'source-over'
 
     /* the wet trail: ink starved behind the blade, a shade deeper than the wash */
     const smear = unitNow * 1.7
     const left = reg >= 0 ? bladeX - smear : bladeX
-    const shade = ctx.createLinearGradient(reg >= 0 ? bladeX : bladeX, 0, reg >= 0 ? left : bladeX + smear, 0)
+    const shade = ctx.createLinearGradient(
+      bladeX,
+      0,
+      reg >= 0 ? left : bladeX + smear,
+      0,
+    )
     shade.addColorStop(0, 'rgba(21, 20, 27, .2)')
     shade.addColorStop(1, 'rgba(21, 20, 27, 0)')
-    ctx.globalAlpha = 1
     ctx.fillStyle = shade
-    ctx.fillRect(left, top, smear, band)
+    ctx.fillRect(left, 0, smear, h)
 
-    /* ink still standing up at the foot of the blade */
-    ctx.fillStyle = 'rgba(255, 255, 255, .3)'
-    ctx.fillRect(bladeX - 1, top, 2, band)
+    /* ink still standing up on the face of the blade */
+    ctx.fillStyle = 'rgba(255, 255, 255, .26)'
+    ctx.fillRect(bladeX - 1, 0, 2, h)
     ctx.restore()
     ctx.globalAlpha = 1
 
-    /* the wet edge: ink still standing up, and a little shade in the trough */
-    ctx.fillStyle = 'rgba(255, 255, 255, .22)'
-    ctx.fillRect(inset, top, plateWidth, 1.5)
-    ctx.fillStyle = 'rgba(21, 20, 27, .2)'
-    ctx.fillRect(inset, top + band - 2, plateWidth, 2)
-
     const gateInk = settled ? 'rgba(255, 46, 107, .95)' : 'rgba(255, 46, 107, .5)'
+    const ruleTop = Math.round(baseline - size * 0.72)
+    const ruleFoot = Math.round(baseline + leading * (FILM_LINES.length - 1) + size * 0.18)
     ctx.strokeStyle = gateInk
     ctx.lineWidth = 1
     ctx.setLineDash(settled ? [] : [3, 4])
@@ -198,23 +237,24 @@ export function PullBed({
     ctx.lineTo(gate, h - 2)
     ctx.stroke()
     ctx.setLineDash([])
+    /* the gate wears end caps, the way a register mark does */
     ctx.fillStyle = gateInk
-    ctx.fillRect(gate - 7, top, 14, 1.5)
-    ctx.fillRect(gate - 7, top + band - 1.5, 14, 1.5)
+    ctx.fillRect(gate - 7, ruleTop, 14, 1.5)
+    ctx.fillRect(gate - 7, ruleFoot - 1.5, 14, 1.5)
 
     /* a scale under the ink, to read the offset against */
     const rule = Math.round(h - 7) + 0.5
     ctx.strokeStyle = 'rgba(21, 20, 27, .34)'
     for (let i = 0; i <= 12; i += 1) {
-      const x = Math.round(inset + (plateWidth * i) / 12) + 0.5
+      const x = Math.round(pad + ((w - pad * 2) * i) / 12) + 0.5
       ctx.beginPath()
       ctx.moveTo(x, rule - (i % 6 === 0 ? 6 : 3))
       ctx.lineTo(x, rule)
       ctx.stroke()
     }
     ctx.beginPath()
-    ctx.moveTo(inset, rule)
-    ctx.lineTo(w - inset, rule)
+    ctx.moveTo(pad, rule)
+    ctx.lineTo(w - pad, rule)
     ctx.stroke()
 
     /* trim corners */
@@ -344,19 +384,18 @@ export function PullBed({
         <span className={`bed__stamp ${settled ? 'is-on' : ''}`} aria-hidden="true">
           in register
         </span>
+        <p className="bed__caption" aria-hidden="true">the sentence · pulled once</p>
       </div>
 
-      <p className="bed__scale" aria-hidden="true">
-        <span>loose</span>
-        <span className={`bed__gate ${settled ? 'is-on' : ''}`}>the gate</span>
-        <span>tight</span>
-      </p>
-
-      <p className="bed__hint">
-        <span>
+      <p className="bed__foot">
+        <span className="bed__hint">
           <span aria-hidden="true">↳</span> drag the blade along the bed
         </span>
-        <em>the gate catches it — then every impression on the page agrees</em>
+        <span className="bed__scale" aria-hidden="true">
+          <span>loose</span>
+          <span className={`bed__gate ${settled ? 'is-on' : ''}`}>the gate</span>
+          <span>tight</span>
+        </span>
       </p>
     </div>
   )
