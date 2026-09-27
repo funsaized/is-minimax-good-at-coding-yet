@@ -1,7 +1,7 @@
 /* =============================================================
    press sheet · make ready
    stock: newsprint · inks: black, fluorescent pink, federal blue
-   the plate is out of register until the reader pulls it home
+   the plate is out of register until the reader takes the blade to the gate
    ============================================================= */
 
 @property --settle {
@@ -27,9 +27,9 @@
   --fringe-pink: #ff2e6b;
   --fringe-blue: #2a38ab;
 
-  /* written by the app: the plate offset */
-  --reg-x: 3.2px;
-  --reg-y: 1.5px;
+  /* written by the app: the plate offset, and whether the ink has landed */
+  --reg-x: 1.8px;
+  --reg-y: .83px;
   --fringe-scale: 1;
   --settle: 0;
 
@@ -45,7 +45,6 @@
 
   --head: clamp(2.05rem, 4.2vw, 3.5rem);
   --body: clamp(.95rem, .3vw + .86rem, 1.06rem);
-  --fringe: .2s linear;
 }
 
 * {
@@ -189,11 +188,12 @@ kbd {
 /* paper tooth, generated in the browser, never downloaded */
 .stock__grain {
   position: absolute;
-  inset: 0;
+  inset: -10%;
   opacity: .55;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='g' filterUnits='userSpaceOnUse' x='0' y='0' width='150' height='150'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.07 0 0 0 0 0.07 0 0 0 0 0.1 0.62 0.5 0 0 -0.42'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23g)'/%3E%3C/svg%3E");
   background-size: 150px 150px;
   mix-blend-mode: multiply;
+  animation: drum 26s linear infinite;
 }
 
 .stock__wash {
@@ -216,6 +216,18 @@ kbd {
   opacity: .2;
   mask-image: radial-gradient(120% 100% at 100% 0%, #000 6%, transparent 70%);
   -webkit-mask-image: radial-gradient(120% 100% at 100% 0%, #000 6%, transparent 70%);
+}
+
+/* the drum creeps a fraction of a millimetre, forever */
+.stock__roller {
+  position: absolute;
+  inset: -20% -4%;
+  opacity: .5;
+  background:
+    radial-gradient(38rem 12rem at 18% 26%, rgba(255, 255, 255, .5), transparent 70%),
+    radial-gradient(30rem 9rem at 78% 68%, rgba(21, 20, 27, .05), transparent 72%);
+  mix-blend-mode: soft-light;
+  animation: drift 38s var(--ease) infinite alternate;
 }
 
 .sprockets {
@@ -453,20 +465,42 @@ kbd {
   min-width: 0;
 }
 
+.hero__ink {
+  position: relative;
+  transform-origin: 0% 62%;
+}
+
+/* the ink lands: one quick flex of the whole title, and a wash of colour under it */
+.hero__ink.is-catch {
+  animation: ink-bloom 1s var(--ease-out);
+}
+
+.hero__ink.is-catch::after {
+  content: '';
+  position: absolute;
+  inset: -6% -2% -4%;
+  z-index: 0;
+  background: radial-gradient(60% 90% at 22% 62%, rgba(255, 46, 107, .3), transparent 70%);
+  pointer-events: none;
+  animation: ink-wash 1s var(--ease-out);
+}
+
 /* the plate itself: two coloured impressions behind the black, wherever the plate sits */
 .question {
   --fx: calc(var(--reg-x) * var(--fringe-scale));
   --fy: calc(var(--reg-y) * var(--fringe-scale));
+  position: relative;
+  z-index: 1;
   margin: clamp(20px, 2.4vw, 34px) 0 0;
   font-family: var(--display);
-  font-size: clamp(2.5rem, 7.2vw, 7rem);
+  font-size: clamp(2.5rem, 8vw, 8.4rem);
   font-weight: 800;
   line-height: 1.01;
   letter-spacing: -.052em;
   text-shadow:
     var(--fx) var(--fy) 0 var(--fringe-pink),
     calc(var(--fx) * -.6) calc(var(--fy) * -.6) 0 var(--fringe-blue);
-  transition: text-shadow .2s linear;
+  transition: text-shadow .22s linear;
 }
 
 .question__line {
@@ -490,7 +524,6 @@ kbd {
   transform: translate3d(var(--dx), var(--dy), 0) rotate(calc(var(--pull) * -1.1deg)) scale(calc(1 + var(--pull) * .022));
   transform-origin: 50% 60%;
   transition: transform .3s var(--ease-out);
-  will-change: transform;
 }
 
 .question__word--m3 {
@@ -532,7 +565,7 @@ kbd {
     calc(var(--cfx) * -.6) calc(var(--cfy) * -.6) 0 var(--fringe-blue);
   box-shadow: calc(var(--pull) * 4px) calc(var(--pull) * 4px) 0 var(--pink);
   transition: color .26s var(--ease), background .26s var(--ease), box-shadow .26s var(--ease),
-    text-shadow .2s linear;
+    text-shadow .22s linear;
 }
 
 .question__word--m3.is-selected .chip,
@@ -559,9 +592,16 @@ kbd {
   display: none;
 }
 
+/* the phrase on the plate is marked with a drawn rule, never a slab */
 .question__word.is-selected::before {
-  opacity: max(calc(var(--pull) * .82), .32);
-  transform: scaleX(1) scaleY(1);
+  top: auto;
+  right: -.06em;
+  bottom: .17em;
+  left: -.06em;
+  height: .055em;
+  opacity: 1;
+  border-radius: 1px;
+  transform: none;
 }
 
 .question__word:focus-visible::before {
@@ -598,12 +638,23 @@ kbd {
   animation: dot-in .55s var(--ease-out) .95s both;
 }
 
+.hero__band {
+  display: grid;
+  grid-template-columns: minmax(0, .84fr) minmax(0, 1.16fr);
+  gap: clamp(22px, 3vw, 54px);
+  align-items: start;
+  margin-top: clamp(26px, 3vw, 46px);
+}
+
+.hero__say {
+  min-width: 0;
+}
+
 .margin-note {
   display: grid;
   grid-template-columns: 3px minmax(0, 1fr);
   gap: 0 16px;
   align-items: start;
-  margin: clamp(22px, 2.4vw, 32px) 0 0;
 }
 
 .margin-note__rule {
@@ -631,7 +682,6 @@ kbd {
 
 .lede {
   max-width: 47ch;
-  margin: clamp(24px, 2.8vw, 38px) 0 0;
   color: var(--ink-70);
   font-size: var(--body);
   text-wrap: pretty;
@@ -641,7 +691,7 @@ kbd {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: clamp(24px, 2.6vw, 34px) 0 0;
+  margin: clamp(20px, 2.2vw, 28px) 0 0;
 }
 
 .button {
@@ -694,8 +744,8 @@ kbd {
   display: flex;
   align-items: center;
   gap: 8px;
-  max-width: 52ch;
-  margin: 18px 0 0;
+  max-width: 56ch;
+  margin: clamp(20px, 2.2vw, 28px) 0 0;
   color: var(--ink-50);
   font-family: var(--mono);
   font-size: .62rem;
@@ -808,7 +858,7 @@ html[data-register='on'] .register-eye__plate--black {
   text-shadow:
     var(--fx) var(--fy) 0 var(--fringe-pink),
     calc(var(--fx) * -.6) calc(var(--fy) * -.6) 0 var(--fringe-blue);
-  transition: text-shadow .2s linear;
+  transition: text-shadow .22s linear;
 }
 
 .plate__slugs {
@@ -836,29 +886,58 @@ html[data-register='on'] .register-eye__plate--black {
   opacity: .5;
 }
 
-/* ---------- make ready: the plate offset ---------- */
+/* ---------- the press bed: wet ink and a squeegee you can take hold of ---------- */
 
-.mkr {
+/* the bed runs the full width of the sheet, the way a bed actually does */
+.bedrow {
+  margin-top: clamp(30px, 3.6vw, 54px);
+  padding-top: clamp(20px, 2.4vw, 30px);
+  border-top: 1px solid var(--black);
+}
+
+.bed {
   position: relative;
-  padding: 15px 16px 16px;
   background: var(--stock-3);
   border: 1px solid var(--black);
   box-shadow: 5px 5px 0 rgba(21, 20, 27, .12);
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
   transition: box-shadow .4s var(--ease);
 }
 
-.mkr.is-settled {
+.bed.is-settled {
   box-shadow: 5px 5px 0 var(--pink);
 }
 
-.mkr__head {
+.bed.is-dragging {
+  cursor: grabbing;
+}
+
+.bed:hover {
+  box-shadow: 5px 5px 0 rgba(21, 20, 27, .2);
+}
+
+.bed:hover .bed__bar::after {
+  opacity: 1;
+}
+
+.bed:focus-visible {
+  outline: 2px solid var(--pink-ink);
+  outline-offset: 3px;
+}
+
+.bed__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  padding: 10px 12px 9px;
+  border-bottom: 1px solid var(--rule);
 }
 
-.mkr__title {
+.bed__title {
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -869,7 +948,7 @@ html[data-register='on'] .register-eye__plate--black {
   text-transform: uppercase;
 }
 
-.mkr__dot {
+.bed__dot {
   width: 8px;
   height: 8px;
   background: var(--pink);
@@ -879,7 +958,7 @@ html[data-register='on'] .register-eye__plate--black {
   transition: box-shadow .35s var(--ease), transform .35s var(--spring);
 }
 
-.mkr__read {
+.bed__read {
   color: var(--ink-70);
   font-family: var(--mono);
   font-size: .64rem;
@@ -888,104 +967,111 @@ html[data-register='on'] .register-eye__plate--black {
   transition: color .3s var(--ease);
 }
 
-.mkr.is-settled .mkr__read {
+.bed.is-settled .bed__read {
   color: var(--pink-ink);
 }
 
-.mkr__label {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 13px 0 6px;
-  color: var(--ink-50);
-  font-family: var(--mono);
-  font-size: .58rem;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
-
-.mkr__slider {
+.bed__strip {
   position: relative;
-  height: 26px;
+  overflow: hidden;
+  background: var(--stock-2);
 }
 
-.mkr__detent {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 50%;
-  width: 2px;
-  margin-left: -1px;
-  pointer-events: none;
-  background: var(--pink);
-  border-radius: 2px;
-  opacity: calc(.35 + var(--settle) * .65);
-  box-shadow: 0 0 0 calc(var(--settle) * 5px) rgba(255, 46, 107, calc(var(--settle) * .28));
-  transition: opacity .3s var(--ease), box-shadow .35s var(--ease);
-}
-
-.mkr__range {
-  -webkit-appearance: none;
-  appearance: none;
+.bed__film {
   display: block;
   width: 100%;
-  height: 26px;
-  margin: 0;
-  background: none;
-  cursor: ew-resize;
+  height: clamp(92px, 11vw, 124px);
 }
 
-.mkr__range::-webkit-slider-runnable-track {
-  height: 10px;
-  background: linear-gradient(90deg, var(--stock-2), var(--stock-2));
-  border: 1px solid var(--black);
+/* the squeegee: a handle above the bed, a blade down through the ink */
+.bed__blade {
+  position: absolute;
+  inset: 0;
+  transform: translateX(calc(var(--reg) * var(--unit)));
+  transition: transform .16s var(--ease-out);
+  pointer-events: none;
+}
+
+.bed.is-dragging .bed__blade,
+.bed.is-dragging .bed__arm {
+  transition: none;
+}
+
+.bed__arm {
+  position: absolute;
+  top: 2.4%;
+  left: 50%;
+  width: clamp(54px, 8.4%, 124px);
+  height: 13.5%;
+  color: var(--black);
+  transform: translateX(-50%);
+  rotate: calc(var(--reg) * -.5deg);
+  transition: rotate .16s var(--ease-out);
+  filter: drop-shadow(1.5px 1.5px 0 rgba(255, 46, 107, .5));
+}
+
+.bed__bar {
+  position: absolute;
+  top: 15.5%;
+  left: 50%;
+  width: 9px;
+  height: 67.5%;
+  background: linear-gradient(90deg, #0a0910 0 20%, #7d7a8d 42%, #100f16 66%);
+  border-radius: 2px 2px 0 0;
+  box-shadow: 2px 0 0 rgba(255, 46, 107, .5), -1px 0 0 rgba(42, 62, 201, .4);
+  transform: translateX(-50%);
+}
+
+/* wet ink gathering at the foot of the blade */
+.bed__bar::after {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  left: -3px;
+  height: 5px;
+  content: '';
+  background: var(--pink);
+  border-radius: 1px;
+  opacity: .9;
+}
+
+/* the blade complains while it is being dragged */
+.bed.is-dragging .bed__bar {
+  animation: squeak .13s linear infinite;
+}
+
+/* a rubber stamp, slammed the moment the ink agrees with itself */
+.bed__stamp {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  padding: 4px 9px 3px;
+  color: var(--pink-ink);
+  border: 1.5px solid var(--pink-ink);
   border-radius: 2px;
+  font-family: var(--mono);
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  line-height: 1;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: rotate(-8deg) scale(1.5);
+  transition: opacity .3s var(--ease), transform .5s var(--spring);
+  pointer-events: none;
 }
 
-.mkr__range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px;
-  height: 24px;
-  margin-top: -8px;
-  background: var(--black);
-  border: 0;
-  border-radius: 2px;
-  box-shadow: 2px 2px 0 var(--pink);
-  transition: box-shadow .25s var(--ease);
+.bed__stamp.is-on {
+  opacity: .92;
+  transform: rotate(-8deg) scale(1);
 }
 
-.mkr__range::-moz-range-track {
-  height: 10px;
-  background: var(--stock-2);
-  border: 1px solid var(--black);
-  border-radius: 2px;
-}
-
-.mkr__range::-moz-range-thumb {
-  width: 16px;
-  height: 24px;
-  background: var(--black);
-  border: 0;
-  border-radius: 2px;
-  box-shadow: 2px 2px 0 var(--pink);
-}
-
-.mkr__range:hover::-webkit-slider-thumb,
-.mkr__range:focus-visible::-webkit-slider-thumb {
-  box-shadow: 2px 2px 0 var(--blue);
-}
-
-.mkr__range:hover::-moz-range-thumb,
-.mkr__range:focus-visible::-moz-range-thumb {
-  box-shadow: 2px 2px 0 var(--blue);
-}
-
-.mkr__scale {
+.bed__scale {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin: 5px 0 0;
+  margin: 0;
+  padding: 8px 12px 0;
   color: var(--ink-50);
   font-family: var(--mono);
   font-size: .55rem;
@@ -993,56 +1079,48 @@ html[data-register='on'] .register-eye__plate--black {
   text-transform: uppercase;
 }
 
-.mkr__zero {
+.bed__gate {
+  color: var(--ink-70);
+  transition: color .3s var(--ease), transform .4s var(--spring);
+}
+
+.bed__gate.is-on {
   color: var(--pink-ink);
-  transition: color .3s var(--ease);
-}
-
-.mkr__pull {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 40px;
-  margin-top: 13px;
-  color: var(--stock-3);
-  background: var(--black);
-  border-radius: 3px;
-  font-family: var(--mono);
-  font-size: .6rem;
-  font-weight: 700;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  transition: color .22s var(--ease), background .22s var(--ease), transform .3s var(--spring);
-}
-
-.mkr__pull-icon {
-  width: 22px;
-  height: 15px;
-  transition: transform .5s var(--ease-out);
-}
-
-.mkr__pull:hover {
-  color: var(--black);
-  background: var(--pink);
   transform: translateY(-1px);
 }
 
-.mkr__pull:hover .mkr__pull-icon {
-  transform: translateX(3px);
+.bed__hint {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 0;
+  padding: 8px 12px 11px;
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: .57rem;
+  line-height: 1.5;
+  letter-spacing: .09em;
+  text-transform: uppercase;
 }
 
-.mkr__pull[aria-disabled='true'] {
+.bed__hint span {
   color: var(--pink-ink);
-  background: rgba(255, 46, 107, .1);
-  box-shadow: inset 0 0 0 1px var(--pink);
-  cursor: default;
-  transform: none;
 }
 
-.mkr__pull[aria-disabled='true'] .mkr__pull-icon {
-  transform: none;
+.bed__hint em {
+  color: var(--ink-70);
+  font-style: normal;
+}
+
+@media (max-width: 760px) {
+  .bed__hint {
+    display: block;
+  }
+
+  .bed__hint em {
+    display: none;
+  }
 }
 
 /* ---------- keycard ---------- */
@@ -1303,6 +1381,32 @@ html[data-register='on'] .register-eye__plate--black {
   -webkit-mask-image: linear-gradient(115deg, transparent 42%, #000 96%);
 }
 
+/* the line every plate is measured against: ticks in the margins, clear of the type */
+.specimen__gate {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: 0;
+  width: 1px;
+  background: rgba(209, 18, 75, .45);
+  mask-image: linear-gradient(180deg, #000 0 15%, transparent 27% 76%, #000 88% 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0 15%, transparent 27% 76%, #000 88% 100%);
+  pointer-events: none;
+}
+
+.specimen__gate::after {
+  position: absolute;
+  bottom: 10px;
+  left: 7px;
+  content: 'register';
+  color: rgba(209, 18, 75, .72);
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
 .specimen__word {
   --fx: calc(var(--reg-x) * 1.15 * var(--fringe-scale));
   --fy: calc(var(--reg-y) * 1.15 * var(--fringe-scale));
@@ -1321,7 +1425,7 @@ html[data-register='on'] .register-eye__plate--black {
   text-shadow:
     var(--fx) var(--fy) 0 var(--fringe-pink),
     calc(var(--fx) * -.6) calc(var(--fy) * -.6) 0 var(--fringe-blue);
-  transition: text-shadow .2s linear;
+  transition: text-shadow .22s linear;
 }
 
 .specimen__line {
@@ -1926,6 +2030,68 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
+/* the sheet takes the strain, then relaxes */
+@keyframes ink-bloom {
+  0% {
+    transform: scale(1);
+  }
+  32% {
+    transform: scale(1.016);
+  }
+  64% {
+    transform: scale(.997);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ink-wash {
+  0% {
+    opacity: 0;
+    transform: scale(.96);
+  }
+  34% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+}
+
+/* the blade complains while it is being dragged */
+@keyframes squeak {
+  0% {
+    rotate: -1.1deg;
+  }
+  50% {
+    rotate: 1.1deg;
+  }
+  100% {
+    rotate: -1.1deg;
+  }
+}
+
+/* the drum, forever a fraction out of true */
+@keyframes drum {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-150px, 90px, 0);
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(-2%, 1%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(2%, -2%, 0) scale(1.08);
+  }
+}
+
 /* ---------- wide screens ---------- */
 
 @media (min-width: 1400px) {
@@ -1977,9 +2143,16 @@ html[data-reveal='on'] .reveal.is-in {
 
 /* ---------- responsive ---------- */
 
+@media (max-width: 1280px) {
+  .brand__text small {
+    display: none;
+  }
+}
+
 @media (max-width: 1180px) {
   .read__intro,
-  .answer__grid {
+  .answer__grid,
+  .hero__band {
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
   }
@@ -1987,6 +2160,14 @@ html[data-reveal='on'] .reveal.is-in {
   .read__intro > p,
   .answer__copy > p {
     max-width: 58ch;
+  }
+
+  .hero__band {
+    margin-top: 24px;
+  }
+
+  .margin-note__text {
+    max-width: 46ch;
   }
 
   .colophon__grid {
@@ -2049,14 +2230,6 @@ html[data-reveal='on'] .reveal.is-in {
     gap: 12px 16px;
   }
 
-  .plate__card {
-    grid-row: span 2;
-  }
-
-  .keycard {
-    grid-column: 1 / -1;
-  }
-
   .read__grid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2100,14 +2273,6 @@ html[data-reveal='on'] .reveal.is-in {
 
   .plate {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .plate__card {
-    grid-row: auto;
-  }
-
-  .keycard {
-    grid-column: auto;
   }
 
   .index {
@@ -2169,6 +2334,16 @@ html[data-reveal='on'] .reveal.is-in {
   .proof__bar {
     flex-wrap: wrap;
   }
+
+  .bed__film {
+    height: 104px;
+  }
+
+  .bed__stamp {
+    top: 7px;
+    right: 8px;
+    font-size: .53rem;
+  }
 }
 
 /* ---------- reduced motion ---------- */
@@ -2206,6 +2381,10 @@ html[data-reveal='on'] .reveal.is-in {
     opacity: .42;
   }
 
+  html[data-reveal='on'] .question__word.is-selected::before {
+    opacity: 1;
+  }
+
   html[data-reveal='on'] .question__word:focus-visible::before {
     opacity: .8;
   }
@@ -2222,8 +2401,19 @@ html[data-reveal='on'] .reveal.is-in {
   /* the plate is the one thing that must still work when nothing moves */
   .question,
   .plate__word,
-  .specimen__main {
+  .specimen__main,
+  .bed__blade {
     transition: none;
+  }
+
+  .stock__grain,
+  .stock__roller,
+  .bed.is-dragging .bed__bar {
+    animation: none;
+  }
+
+  .bed__stamp.is-on {
+    transform: rotate(-8deg);
   }
 }
 
@@ -2236,7 +2426,7 @@ html[data-reveal='on'] .reveal.is-in {
   .keycard,
   .hint,
   .actions,
-  .mkr {
+  .bed {
     display: none;
   }
 
@@ -2250,6 +2440,10 @@ html[data-reveal='on'] .reveal.is-in {
   .plate__word,
   .specimen__main {
     text-shadow: none;
+  }
+
+  .specimen__gate {
+    background: rgba(0, 0, 0, .35);
   }
 
   html[data-reveal='on'] .reveal {

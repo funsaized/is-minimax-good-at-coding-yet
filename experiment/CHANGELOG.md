@@ -1,55 +1,44 @@
-Make-ready: the press sheet now hands you the plate and you can pull it into register.
+# Changelog
 
-## The change
-The page previously *looked* like a two-colour riso pull but never admitted it. This iteration makes
-the misregistration real and operable. A single "plate offset" dial drives one pair of CSS variables
-on `:root`, and everything that is printed on the sheet follows it: the hero title, the plate card
-loupe, and the close-read specimen. A "pull to register" button eases the plate home on a rAF curve;
-at zero, the fringes collapse and the type goes crisp. A three-plate registration eye in the plate
-card reads the state — the black plate holds still, the pink and blue plates slide, and at register
-all three collapse into one bullseye.
+## 489 — The register control became a press bed you can actually pull
 
-The offset is done with layered `text-shadow` on the live text, not duplicated ghost DOM, so the
-title's accessible name and text content stay exactly `is Minimax M3 good at frontend yet?`. The
-offset is scaled as a proportion of the type size (`--fringe-scale`) so the fringe reads as
-misregistration on a 7rem headline and on a 2.4rem phone headline alike.
+The range slider is gone. In its place the sheet now carries a full-width press bed: a strip of
+wet ink with a squeegee blade riding on it. Drag the blade and the black, fluorescent pink and
+federal blue plates slide apart or back together; let go inside the gate and it catches. The
+fringes in the title, the phrase on the plate, and the make-ready eye all read from that one
+value, exactly as before — the control is now the physical thing the page was describing.
 
-## What was added
-- `MakeReady` control in the plate column: a real range input with a centre detent, loose/tight
-  scale, tabular-numeric readout, `aria-valuetext`, and a `pull to register` button that animates the
-  plate home. In register the button becomes a state, not a dead control.
-- `RegisterEye` (`src/marks.tsx`): three registration crosses whose offsets are the plate offset.
-- Paper tooth generated in-browser with an inline `feTurbulence` data-URI tile, replacing the
-  repeating scanline gradients.
-- `M3` given a hairline lockup — structure instead of emphasis, which is what phrase 01 actually
-  argues for — with its own scaled fringe and a pull-driven ink shadow.
-- The question mark rocks on a long loop and freezes on its neutral point while it is the phrase
-  under the lens; its half-tone landing pad is now proportionally larger.
-- The left rail reports the live register state and turns pink when the plate is home.
+### What changed
 
-## What was removed
-- The large half-tone "bloom" cloud behind the title. It was decorative weight competing with the
-  title and animated `top`/`left` on every phrase change; the screened fringes now do that job with
-  real meaning.
-- The `HandArrow` margin SVG. It was stretched with `preserveAspectRatio="none"`, so the hand-drawn
-  line was distorted into a smear. The margin note is now a pink gradient rule plus a serif pull.
-- The infinite `mark-breathe` rotation that ran on every slugline mark on the page. Ambient motion
-  on eight identical elements was noise, not character.
-- Duplicate ghost layers in the specimen card (aria-hidden text copies of the phrase).
-- The loupe's duplicate gloss line, which restated the index row it sat next to.
+- **New `src/pull.tsx` — `PullBed`.** A canvas paints the ink film: paper wash, roller banding,
+  three plates multiplied over one another, a generated halftone screen, the wet edge, the gate,
+  trim corners and a scale. It repaints only when the offset or the size changes, and resizes with
+  a `ResizeObserver`. The blade is DOM, not canvas, so it stays crisp and animatable.
+- **The bed is the whole register control.** Pointer drag with pointer capture, `touch-action:
+  pan-y` so vertical scroll still works on touch, and full keyboard parity as a `role="slider"`:
+  arrows nudge, shift-arrows and page keys move coarsely, `Home`/`End` reach the ends, and
+  `Space`/`Enter` pull the blade home. `aria-valuetext` speaks in print-shop terms
+  ("off register, plus 0.90"), and the live region announces the moment the ink lands.
+- **Register is a real event now.** Leaving the gate stamps the bed: a rotated rubber stamp, a
+  pink keyline under the bed, a solid gate, a burst of pink in the detent, and a one-shot flex
+  through the title with a wash of colour under it. Leaving register again takes it all back.
+- **The offset got quieter, the film got louder.** The type fringe ramp came down (2.85 → 2) so
+  the sheet reads as *slightly* out of register at rest rather than broken, while the bed's film
+  exaggerates the same offset so the mechanism is legible.
+- **Hero recomposed.** The title grew to `clamp(2.5rem, 8vw, 8.4rem)`; the margin note and the
+  lede now sit side by side in a band instead of stacking; the bed spans the sheet underneath
+  them, which gives the section a base and gives the squeegee somewhere to travel.
+- **The selected phrase is marked with a drawn rule**, not a pink slab — closer to what the page
+  argues for in its own copy, and it keeps the black type dominant.
+- **Fixed a dead variable.** `--settle` was styled in four places and never written by the app,
+  so the detent and the status dot could never react. It is now set alongside `--reg-x`/`--reg-y`.
+- **New motion:** the paper grain creeps across the sheet on a 26s loop and a soft light band
+  drifts behind it; both stop dead under `prefers-reduced-motion`. The blade tilts with the
+  offset and squeaks while it is being dragged.
+- **New detail:** the specimen stage carries a masked registration guide — a hairline in the top
+  and bottom margins only, so it never crosses the type — with a small "register" caption.
+- Vocabulary is consistent now: the rail says *three inks* (there are three), the readout and the
+  card both say *plate*, and the keycard leads with what the blade does.
 
-## What was tightened
-- Specimen body: heading and copy now share one column, closing a row-gap hole between them.
-- Index rows carry the short measure ("six letters") instead of a set line that wrapped to two.
-- The index column is sticky, so the phrase list stays with the specimen while it scrolls.
-- Answer section columns start together; the closing note no longer orphans a word.
-- `text-wrap: balance` on headings, `pretty` on body copy; serif and mono both kept in use.
-
-## Verification
-`npm run build` (tsc + vite) passes. Rendered locally in Chromium at 1728 / 1440 / 860 / 390px:
-no horizontal overflow, no console or page errors, document title and `h1` text content both exactly
-`is Minimax M3 good at frontend yet?`. Verified keyboard paths — `1`/`2`/`3` pull a phrase into the
-lens, arrows step the index and the plate, `Esc` re-covers the proof sheet, the range input is
-native and focusable — and verified under `prefers-reduced-motion: reduce`, where the pull resolves
-instantly to register, the rocking mark stops, the magnetic pull is disabled, and the plate control
-still works.
+Unchanged: the exact visible title and document title, the three sections, the phrase notes, the
+proof sheet, the colophon, the entry point, the framework and the build.

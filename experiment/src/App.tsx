@@ -10,6 +10,7 @@ import {
 } from 'react'
 import { findNote, NOTES, phraseLines, WORD_IDS, type WordId } from './notes'
 import { CropMark, RegisterEye, RegistrationMark, Squeegee } from './marks'
+import { inRegister, plateOffset, PULL_MAX, PULL_MIN, PULL_REST, PullBed } from './pull'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -25,13 +26,6 @@ const INKS = [
   { id: 'blue', name: 'federal blue', use: 'the second impression' },
 ] as const
 
-/* the plate offset, in the page's own unit: 0 is a perfect register */
-const REGISTER_MIN = -3
-const REGISTER_MAX = 3
-const REGISTER_DEFAULT = 1.15
-const REGISTER_TOLERANCE = 0.14
-const REGISTER_RAMP = 2.85
-
 const prefersStill = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -41,16 +35,17 @@ export function App() {
   const [hover, setHover] = useState<WordId | null>(null)
   const [section, setSection] = useState<string>('question')
   const [proof, setProof] = useState(false)
-  const [reg, setReg] = useState(REGISTER_DEFAULT)
+  const [reg, setReg] = useState(PULL_REST)
+  const [catchTick, setCatchTick] = useState(0)
   const [announce, setAnnounce] = useState('')
-  const pullFrame = useRef(0)
-  const regRef = useRef(REGISTER_DEFAULT)
+  const inkRef = useRef<HTMLDivElement>(null)
+  const wasSettled = useRef(false)
   const indexRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
   const shown = hover ?? active
   const note = findNote(shown)
   const engaged = hover !== null
-  const settled = Math.abs(reg) <= REGISTER_TOLERANCE
+  const settled = inRegister(reg)
 
   const select = useCallback((id: WordId, announceIt = true) => {
     setActive(id)
@@ -60,56 +55,40 @@ export function App() {
     setAnnounce(`${found.index}. ${found.label}. ${found.title}.`)
   }, [])
 
-  /* one source of truth for the plate: CSS reads these, the eye reads them, we read them */
+  /* one source of truth for the plate: css reads these, the film reads them, we read them */
   useEffect(() => {
-    regRef.current = reg
+    const { x, y } = plateOffset(reg)
     const root = document.documentElement
-    root.style.setProperty('--reg-x', `${(reg * REGISTER_RAMP).toFixed(2)}px`)
-    root.style.setProperty('--reg-y', `${(reg * REGISTER_RAMP * 0.46).toFixed(2)}px`)
+    root.style.setProperty('--reg-x', `${x.toFixed(2)}px`)
+    root.style.setProperty('--reg-y', `${y.toFixed(2)}px`)
+    root.style.setProperty('--settle', settled ? '1' : '0')
     root.dataset.register = settled ? 'on' : 'off'
   }, [reg, settled])
 
-  const stopPull = useCallback(() => {
-    if (pullFrame.current) {
-      cancelAnimationFrame(pullFrame.current)
-      pullFrame.current = 0
+  /* the moment the ink lands, and only then */
+  useEffect(() => {
+    if (settled && !wasSettled.current) {
+      setCatchTick(tick => tick + 1)
+      setAnnounce('Ink in register. All three plates agree.')
     }
+    wasSettled.current = settled
+  }, [settled])
+
+  useEffect(() => {
+    if (!catchTick) return
+    const el = inkRef.current
+    if (!el) return
+    el.classList.remove('is-catch')
+    void el.offsetWidth
+    el.classList.add('is-catch')
+    const settle = () => el.classList.remove('is-catch')
+    el.addEventListener('animationend', settle, { once: true })
+    return () => el.removeEventListener('animationend', settle)
+  }, [catchTick])
+
+  const setPlate = useCallback((value: number) => {
+    setReg(Math.min(PULL_MAX, Math.max(PULL_MIN, value)))
   }, [])
-
-  const setPlate = useCallback(
-    (value: number) => {
-      stopPull()
-      setReg(Math.min(REGISTER_MAX, Math.max(REGISTER_MIN, value)))
-    },
-    [stopPull],
-  )
-
-  /* the pull: a squeegee drag that eases the plate home and stops dead on register */
-  const pull = useCallback(() => {
-    stopPull()
-    const from = regRef.current
-    if (prefersStill() || Math.abs(from) <= REGISTER_TOLERANCE) {
-      setReg(0)
-      setAnnounce('Plate pulled into register.')
-      return
-    }
-    const start = performance.now()
-    const duration = 860
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / duration)
-      setReg(from * (1 - (1 - t) ** 3))
-      if (t < 1) {
-        pullFrame.current = requestAnimationFrame(tick)
-      } else {
-        pullFrame.current = 0
-        setReg(0)
-        setAnnounce('Plate pulled into register.')
-      }
-    }
-    pullFrame.current = requestAnimationFrame(tick)
-  }, [stopPull])
-
-  useEffect(() => stopPull, [stopPull])
 
   useEffect(() => {
     document.title = TITLE
@@ -204,6 +183,7 @@ export function App() {
         <span className="stock__grain" />
         <span className="stock__wash" />
         <span className="stock__halftone" />
+        <span className="stock__roller" />
         <span className="sprockets sprockets--left" />
         <span className="sprockets sprockets--right" />
       </div>
@@ -235,7 +215,7 @@ export function App() {
 
         <p className={`readout ${engaged ? 'is-live' : ''}`} aria-hidden="true">
           <span className="readout__dot" />
-          lens <strong>{note.index}</strong> {note.label}
+          plate <strong>{note.index}</strong> {note.label}
         </p>
       </header>
 
@@ -243,7 +223,7 @@ export function App() {
         <section id="question" className="sheet" aria-labelledby="question-title">
           <p className="rail" aria-hidden="true">
             <span>one sentence</span>
-            <span>two inks</span>
+            <span>three inks</span>
             <span className="rail__reg" />
           </p>
 
@@ -254,52 +234,58 @@ export function App() {
                 the title, pulled twice
               </p>
 
-              <QuestionTitle
-                selected={active}
-                hot={shown}
-                onSelect={select}
-                onPreview={setHover}
-              />
-
-              <p className="margin-note">
-                <span className="margin-note__rule" aria-hidden="true" />
-                <span className="margin-note__text">
-                  The question mark is load-bearing. <em>Give it somewhere to land.</em>
-                </span>
-              </p>
-
-              <p className="lede">
-                The sentence is short enough to take apart, and short enough to print badly on
-                purpose. Lean toward a phrase and the page reads it back to you. Then take the
-                plate in your hands and pull it into register.
-              </p>
-
-              <div className="actions">
-                <a className="button button--ink" href="#close">
-                  read it closely
-                  <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                    <path
-                      d="M3 10h13M10.5 4.5 16 10l-5.5 5.5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </a>
-                <a className="button button--quiet" href="#answer">
-                  skip to the short answer
-                </a>
+              <div ref={inkRef} className="hero__ink">
+                <QuestionTitle
+                  selected={active}
+                  hot={shown}
+                  onSelect={select}
+                  onPreview={setHover}
+                />
               </div>
 
-              <p className="hint" id="lens-help">
-                <span aria-hidden="true">↳</span> hover, tap or focus a phrase in the title · then
-                pull the plate into register
+              <div className="hero__band">
+                <p className="margin-note">
+                  <span className="margin-note__rule" aria-hidden="true" />
+                  <span className="margin-note__text">
+                    The question mark is load-bearing. <em>Give it somewhere to land.</em>
+                  </span>
+                </p>
+
+                <div className="hero__say">
+                  <p className="lede">
+                    The sentence is short enough to take apart, and short enough to print badly on
+                    purpose. Lean toward a phrase and the sheet reads it back to you. Then take the
+                    blade to the gate and pull the ink into register.
+                  </p>
+
+                  <div className="actions">
+                    <a className="button button--ink" href="#close">
+                      read it closely
+                      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                        <path
+                          d="M3 10h13M10.5 4.5 16 10l-5.5 5.5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.7"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </a>
+                    <a className="button button--quiet" href="#answer">
+                      skip to the short answer
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <p className="hint" id="title-help">
+                <span aria-hidden="true">↳</span> hover, tap or focus a phrase in the title — the
+                plate reads it back to you
               </p>
             </div>
 
-            <aside className="plate" aria-label="The plate: the phrase under the lens, and the register control">
+            <aside className="plate" aria-label="The phrase currently on the plate">
               <div className={`plate__card ${engaged ? 'is-engaged' : ''}`}>
                 <div className="plate__head">
                   <p className="plate__tag">
@@ -313,19 +299,22 @@ export function App() {
 
                 <p className="plate__slugs">
                   <span>{note.set}</span>
-                  <span className="plate__state">{engaged ? 'in the lens' : 'at rest'}</span>
+                  <span className="plate__state">{engaged ? 'under the plate' : 'at rest'}</span>
                 </p>
               </div>
 
-              <MakeReady reg={reg} settled={settled} onSlide={setPlate} onPull={pull} />
-
               <dl className="keycard">
-                <div><dt><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></dt><dd>pull a phrase into the lens</dd></div>
+                <div><dt><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></dt><dd>put a phrase on the plate</dd></div>
                 <div><dt><kbd>tab</kbd></dt><dd>step through the title</dd></div>
-                <div><dt><kbd>←</kbd><kbd>→</kbd></dt><dd>move the plate</dd></div>
+                <div><dt><kbd>←</kbd><kbd>→</kbd></dt><dd>nudge the blade</dd></div>
+                <div><dt><kbd>space</kbd></dt><dd>catch the gate</dd></div>
                 <div><dt><kbd>esc</kbd></dt><dd>put the proof sheet back</dd></div>
               </dl>
             </aside>
+          </div>
+
+          <div className="bedrow">
+            <PullBed reg={reg} onSlide={setPlate} />
           </div>
         </section>
 
@@ -340,7 +329,7 @@ export function App() {
               <p>
                 Take the sentence apart. Each phrase below is a brief: pick one and the sheet shows
                 how it is set here, what it is asking the page to do, and where its two impressions
-                are sitting.
+                are sitting right now.
               </p>
             </div>
           </header>
@@ -382,7 +371,7 @@ export function App() {
                 )
               })}
               <p className="index__help" id="index-help">
-                Arrow keys move. The loupe above follows.
+                Arrow keys move. The specimen follows.
               </p>
             </div>
 
@@ -393,6 +382,7 @@ export function App() {
               </p>
 
               <div className={`specimen__stage specimen__stage--${note.id}`}>
+                <span className="specimen__gate" aria-hidden="true" />
                 <p className="specimen__word">
                   <span className="sr-only">{note.label}</span>
                   <span className="specimen__main" aria-hidden="true">
@@ -485,7 +475,7 @@ export function App() {
                 </p>
                 <ol className="proof__tests">
                   <li><span>01</span>Hierarchy: could you name the second most important thing without thinking twice?</li>
-                  <li><span>02</span>Hand: the page hands you the plate. Does the tool actually do something?</li>
+                  <li><span>02</span>Hand: the page hands you the blade. Does the tool actually do something?</li>
                   <li><span>03</span>Restraint: does everything stop moving the moment you stop reading?</li>
                 </ol>
                 <p className="proof__coda">
@@ -523,10 +513,11 @@ export function App() {
             </div>
 
             <p className="colophon__note">
-              Two impressions, deliberately out of register until you pull the plate. Set with the
-              fonts already on your machine — one grotesque, one serif, one mono. No web fonts, no
-              image files, no network calls. Every movement here is a print decision, and each one
-              stops the moment you ask it to.
+              Three impressions, deliberately out of register until you take the blade to the gate.
+              The wet ink on the bed is drawn in a canvas, not downloaded; the paper grain is a filter,
+              not an image. Set with the fonts already on your machine — one grotesque, one serif, one
+              mono. No web fonts, no network calls. Every movement here is a print decision, and each
+              one stops the moment you ask it to.
             </p>
           </div>
 
@@ -538,72 +529,6 @@ export function App() {
       </footer>
 
       <span className="sr-only" aria-live="polite">{announce}</span>
-    </div>
-  )
-}
-
-function MakeReady({
-  reg,
-  settled,
-  onSlide,
-  onPull,
-}: {
-  reg: number
-  settled: boolean
-  onSlide: (value: number) => void
-  onPull: () => void
-}) {
-  const reading = settled
-    ? 'in register'
-    : `off register, ${reg > 0 ? 'plus' : 'minus'} ${Math.abs(reg).toFixed(2)}`
-
-  return (
-    <div className={`mkr ${settled ? 'is-settled' : ''}`}>
-      <div className="mkr__head">
-        <p className="mkr__title">
-          <span className="mkr__dot" aria-hidden="true" />
-          make ready
-        </p>
-        <p className="mkr__read" aria-hidden="true">
-          {settled ? 'in register' : <>{reg > 0 ? '+' : '−'}{Math.abs(reg).toFixed(2)}</>}
-        </p>
-      </div>
-
-      <label className="mkr__label" htmlFor="plate-offset">
-        plate offset
-        <span aria-hidden="true">drag the plate</span>
-      </label>
-
-      <div className="mkr__slider">
-        <span className="mkr__detent" aria-hidden="true" />
-        <input
-          id="plate-offset"
-          className="mkr__range"
-          type="range"
-          min={REGISTER_MIN}
-          max={REGISTER_MAX}
-          step={0.05}
-          value={reg}
-          aria-valuetext={reading}
-          onChange={event => onSlide(Number(event.currentTarget.value))}
-        />
-      </div>
-
-      <p className="mkr__scale" aria-hidden="true">
-        <span>loose</span>
-        <span className="mkr__zero">register</span>
-        <span>tight</span>
-      </p>
-
-      <button
-        type="button"
-        className="mkr__pull"
-        aria-disabled={settled}
-        onClick={onPull}
-      >
-        <Squeegee className="mkr__pull-icon" />
-        {settled ? 'in register' : 'pull to register'}
-      </button>
     </div>
   )
 }
@@ -692,7 +617,7 @@ function QuestionTitle({
       onBlur={() => onPreview(null)}
       onKeyDown={event => step(event, id)}
       aria-pressed={selected === id}
-      aria-describedby="lens-help"
+      aria-describedby="title-help"
     >
       {children}
     </button>
