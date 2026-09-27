@@ -1,0 +1,19 @@
+{
+  "id": 490,
+  "parentId": 489,
+  "createdAt": "2026-09-27T07:08:59.140Z",
+  "summary": "Iteration 490 — the title is now genuinely printed three times, and the register pull cleans it up.",
+  "path": "/iterations/000490/index.html",
+  "screenshot": "/iterations/000490/desktop.png",
+  "mobileScreenshot": "/iterations/000490/mobile.png",
+  "sourceCommit": "1a46d2a5be0eca75791b8188df1d97a0e235a097",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 878,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 66572,
+    "outputTokens": 42998,
+    "steps": 57
+  }
+}
