@@ -62,19 +62,21 @@ const SLIP = [
   ['assets', 'local SVG and CSS only. no web fonts, no network, nothing stored'],
 ] as const
 
-/* the four mechanisms, in the order you meet them going down the press */
+/* the four mechanisms, in the order you meet them going down the press. each one
+   is a fact about the sheet, said once, in the pressman's own voice — the foot
+   of a press run is a note about the run, not an essay about printing. */
 const MACHINERY = [
   [
     'one number, and one ramp.',
-    'Everything out of register on this page is the plate offset: the fringes, the card shadows, the pools in the traps, the gauge, the marks at the ends of the fold, the seam where the press run begins. The short answer is the exception — it prints in register whatever the blade is doing, because it is the one sentence the press is allowed to get right. Exactly one thing on the page is not a hand at all: the sheet dries as you read down it, and the three impressions close on their own as it dries.',
+    'Everything out of register on this page is the plate offset: the fringes, the shadows under the cards, the pools in the traps, the gauge, the marks at the ends of the fold, the seam where the press run begins. The short answer is the exception — it prints in register whatever the blade is doing, because it is the one sentence the press is allowed to get right.',
   ],
   [
     'wet, then dry.',
-    'The question prints at the press, three plates plainly apart. The close read beneath it has had time to settle and is nearly one voice. That arc is the only reason the page stays readable at all, and it is the one movement on the sheet that nobody has to ask for — climb back to the question and the ink wets up again.',
+    'The question prints at the press, three plates plainly apart. Two screens further down the same three plates have almost closed on the words, and that arc is the only reason the close read is readable at all. Nothing about it needs a hand from you — climb back to the question and the ink wets up again.',
   ],
   [
     'trapped corners.',
-    'Where a stroke lands on a rule the paper notches away, and a pressman fills the notch on purpose. The pools are slivers until the blade reaches the gate, and only the pink plate beads up in a corner.',
+    'Where a stroke lands on a rule the paper notches away, so a pressman fills the notch on purpose. The pools are slivers until the blade reaches the gate, and only the pink plate beads up in a corner.',
   ],
   [
     'stops on request.',
@@ -558,24 +560,28 @@ export function App() {
 
         <div className="page">
           {/* THE TYPE LIST. the last thing on the light sheet, and the only
-              quiet one: a press type list, showing the three faces the page is
-              actually set in at the sizes it actually uses them, with the
-              register readout riding in the furniture face so the number and
-              the letterforms that print it share a rectangle. */}
+              quiet one: a make-ready note rather than a section with a heading,
+              because a type list is furniture and furniture does not get a
+              heading. three ruled cells, one per face, each a ladder of the
+              sizes that face really uses — and each naming the family this
+              machine actually resolved, measured at run time. the one step this
+              band does not print is the widest on the page: the title is set
+              across the full measure, and a second poster in a third of the
+              width would undo the only two the sheet is allowed. */}
           <section id="type" className="type" aria-labelledby="type-title">
             <header className="type__head reveal">
-              <p className="slugline">
+              <h2 className="slugline type__slugline" id="type-title">
                 <RegistrationMark className="slugline__mark" />
                 the type list
+                <span className="type__slug-fact">three faces · nothing downloaded</span>
+              </h2>
+              <p className="type__lede">
+                No font file is loaded to set this page — it is set in the three faces the machine
+                already has, and spaced so the differences do not show. Each cell prints the widest
+                step of every size the page really uses it at, and each then names the family your
+                machine resolved, which is a fact about this computer and not an opinion about the
+                design.
               </p>
-              <div className="type__intro">
-                <h2 id="type-title">Three faces, <em>one scale.</em></h2>
-                <p>
-                  No font file is loaded to set this page — it is set in the three faces the
-                  machine already has, and spaced so the differences do not show. Each sample
-                  below is the widest step of its own size.
-                </p>
-              </div>
             </header>
 
             <TypeList reg={reg} />

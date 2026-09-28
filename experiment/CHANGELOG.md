@@ -1,58 +1,49 @@
-# is Minimax M3 good at frontend yet?
+Iteration 500 — the type list now names the face your machine actually resolved, and the scale is true again.
 
-Iteration 499 — the wet→dry arc is now real, and the sheet is folded once, where it changes purpose.
+**The type list stops being a claim about the page and becomes a fact about the reader.**
 
-## The ink ramp
+- `src/faces.tsx` (new). Each of the three stacks is resolved at run time: a canvas
+  probe is set in the platform generic, then in every family of the chain in turn,
+  and the first candidate whose width and height differ from the generic is the
+  family really being set. If nothing differs, the chain fell all the way through
+  and the cell says so. Cached per stack; a null canvas prints the stack and
+  leaves the answer out rather than printing a guess.
+- `src/typelist.tsx`. Every cell now prints that answer and a receipt ("3rd of 7 in
+  the chain · measured, not asked for", or "nothing in the chain is here · the
+  platform's own sans"). The answer is drawn in the page's own three plates, by the
+  name element's own two pseudos at a third of the spread, so a new line on the
+  sheet is printed by the sheet's own mechanic instead of being bolted on.
+- The widest step the list used to print is gone. It was the title's own 7.2rem, set
+  in a third of the width, which put a second poster in the middle of the page and
+  quietly broke the only rule the sheet makes about type. The title is set across
+  the full measure and you have already read it.
+- `--specimen` 5rem → 4.2rem, so the ladder is 7.2 question, 4.3 claim, 4.2 set
+  phrase, 3.2 section head, and the short answer is honestly the second loudest
+  thing on the page.
 
-The page has been claiming since iteration 493 that it "prints wet at the top and dries going
-down the press". It was not doing it. The ramp existed only as a fade on the background wash,
-and the type printed at one spread from the top of the sheet to the bottom.
+**Composition and type.**
 
-- `Plated` (`src/plate.tsx`) takes a `wet` prop: how far the ink has spread around each
-  letterform when the sheet comes off the press. It is written to the stack as `--wet`.
-- The app now writes one number for the whole page, `--ink-close` (1 at the press → .12 once
-  the ink has set), measured from the top of the document, easing on a smoothstep over about
-  three and a bit screens.
-- `.plated` multiplies four things and no others: the true plate offset, the responsive
-  `--fringe-scale` the media queries already took down on a phone, the stack's own `--wet`,
-  and `--ink-close`. The spread is a fraction of the type, never of the sheet.
-- Wetness per stack: question `1`, job ticket `.6`, close read `.72`, short answer `0`. The
-  answer keeps its own arrival: the press is allowed to get that one right.
-- `--fringe-x/y` now carry the true offset instead of a pre-dried one, and the background wash
-  rides the ramp as well. That removes a double-count and fixes a real bug: under reduced motion
-  the old code forced the ramp to 1 at scroll 0, so the title opened at 12% spread — nearly in
-  register — in exactly the browsers that had asked for stillness. The ramp is now a position,
-  not a journey, so it is independent of the motion preference and the title always opens on
-  the press with the plates plainly apart. `--dry` is left to the wash, which is the one piece
-  of the press allowed to give up early.
+- The type list lost its heading. Three sections in a row opened identically — slug,
+  rule, two-column head, standfirst — which reads as a template rather than a sheet.
+  A type list is a note on the run, so it is set like one: a slug on a rule carrying
+  one hard-right fact, and a paragraph under it.
+- Serif display headings: `-.024em` → `-.008em` tracking, `1.02` → `1.08` leading. A
+  serif is already fitted at display sizes, so the tracking a grotesque needs only
+  opens the joints up, and 1.02 lines a descender into the line beneath it.
+- One vertical rhythm. Four `--air-*` tokens replace a dozen clamps invented next to
+  the things they separated; the sheet, the bands, the heads, the press run and the
+  colophon all read the same four steps.
+- Colophon mechanism notes shortened. The foot of a press run is a note about the
+  run, not an essay about printing.
 
-## The fold
+**Cost.**
 
-- A full-bleed crease between the close read and the type list — the argument above it, the
-  proofing below it. Not a cut and not a grey band: the half still coming down turns away from
-  the light and goes a shade deeper, the half below lies back on itself and catches some back,
-  and between them the stock is crushed hard enough that the ink skips, which is the hairline of
-  bare paper along the line.
-- A registration target at each end of the crease, in the same three plates and at the same
-  offsets as the rest of the sheet (`FoldMark` in `src/marks.tsx`). Once the type around it has
-  dried and closed up, the marks at the ends of the fold are the last thing on the page still
-  reporting where the plates are.
-- `main` is now two `.page` measures with the fold between them, so the crease runs to the trim
-  at any width. The head of the type list starts close under the paper, so the fold and its rule
-  read as one event.
-- The far mark is dropped below 620px — a phone has no gutter wide enough to carry it, and the
-  gauge in the slugbar is the readout there.
+- `mix-blend-mode` removed from `.stock__grain` and `.stock__roller`. Both are
+  full-viewport layers that animate forever, and a blend pass over the whole
+  viewport under a sticky bar repaints the page for as long as it runs. The washes
+  carry their own alpha now, so they are transforms on a composited layer. Nothing
+  else on the sheet changed tone.
 
-## Copy that keeps up
-
-- The close read's intro now says the ink has been setting since the top of the sheet.
-- Colophon: the first mechanism is "one number, and one ramp", and it accounts for the fold
-  marks; the second notes the arc is the one movement nobody has to ask for, and that climbing
-  back to the question wets it up again; the fourth says the ramp keeps working under reduced
-  motion. The job ticket's stock row mentions the fold, the register row mentions the ramp.
-
-## Unchanged
-
-Title and document title, the entry point, the press bed, the three plates, the ream, the type
-list, the proof and its `p` key, the register and the gate, the colour and type scales, and the
-reduced-motion and print behaviour beyond the two lines noted above. `npm run build` passes.
+**Unchanged.** The title and the document title, the entry point, the three-plate
+mechanic and the one number it runs on, the press bed, the ream, the proof pull, the
+keyboard map, the reduced-motion behaviour, the print styles.

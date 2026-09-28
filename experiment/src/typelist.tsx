@@ -1,10 +1,11 @@
 import type { CSSProperties } from 'react'
+import { useFaceReading, type FaceReading, type Kind } from './faces'
 import { RegisterEye } from './marks'
 import { inRegister } from './pull'
 
 type Scale =
-  | 'question'
   | 'claim'
+  | 'specimen'
   | 'sub'
   | 'head'
   | 'read'
@@ -29,38 +30,55 @@ type Face = {
   id: string
   name: string
   kind: string
+  /** which of the three families this is, for the measurement */
+  measure: Kind
   role: string
   stack: string
   steps: Step[]
 }
+
+const ORDINALS = ['', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th']
 
 /**
  * THE TYPE LIST.
  *
  * The last thing on the light sheet is the one thing the page has been claiming
  * all the way down: it is set in the grotesque, the serif and the mono, and it
- * is set in them on purpose. So the sheet ends by showing its work — a press
- * type list, three cells, each one a short ladder of the sizes that face is
- * actually used at, every sample annotated with the token that sets it and the
- * widest step of that token. The samples are the machine's own faces, which is
- * the argument: nothing was loaded, and the sizes carry the voice instead.
+ * is set in them on purpose. So the sheet ends by showing its work — three ruled
+ * cells, each a short ladder of the sizes that face is actually used at, every
+ * sample annotated with the token that sets it and the widest step of that
+ * token. The samples are the machine's own faces, which is the argument:
+ * nothing was loaded, and the sizes carry the voice instead.
  *
- * And it is the only cell on the sheet that carries a moving figure. The gauge
- * is set in the furniture face, so the readout and the letterforms that print
- * it are in the same rectangle: while the blade is loose the number is loose
- * with it, and there is no separate panel anywhere on the page that says so.
+ * and each cell now reports the one fact nobody could have written down: what
+ * this machine actually set it in. measured, cell by cell, at run time — see
+ * `faces`. the chain is printed above the answer because the chain is the claim
+ * and the answer is the proof, and on a machine with none of the six names on
+ * it the cell says so instead of pretending.
+ *
+ * the one step this band does not print is the widest one on the page. the title
+ * is set across the full measure, at a size no cell here could hold honestly,
+ * and you have already read it. printing it again in a third of the width would
+ * put a second poster in the middle of the sheet, and the page has exactly one
+ * of those — at the very top — and exactly one more at the very bottom.
+ *
+ * the furniture cell is the only one that carries a moving figure. the gauge is
+ * set in the face it is reporting on, so the readout and the letterforms that
+ * print it are in the same rectangle, and there is no separate panel anywhere on
+ * the page that says the number is live.
  */
 const FACES: Face[] = [
   {
     id: 'press',
     name: 'the press',
     kind: 'grotesque',
+    measure: 'sans',
     role: 'the question, the answer, every number',
     stack:
       '"Helvetica Neue", Helvetica, Arial, "Avenir Next", "Segoe UI", system-ui, sans-serif',
     steps: [
-      { token: '--question', size: '7.2rem', text: 'yet?', scale: 'question' },
       { token: '--claim', size: '4.3rem', text: 'yes —', scale: 'claim' },
+      { token: '--specimen', size: '4.2rem', text: 'good at', scale: 'specimen' },
       { token: '--sub', size: '1.5rem', text: 'The pause, protected', scale: 'sub' },
     ],
   },
@@ -68,6 +86,7 @@ const FACES: Face[] = [
     id: 'reading',
     name: 'the reading',
     kind: 'serif',
+    measure: 'serif',
     role: 'the prose, and only the prose',
     stack: '"Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif',
     steps: [
@@ -91,6 +110,7 @@ const FACES: Face[] = [
     id: 'furniture',
     name: 'the furniture',
     kind: 'mono',
+    measure: 'mono',
     role: 'slugs, keys and figures — the labels, and only the labels',
     stack: 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
     steps: [
@@ -102,67 +122,92 @@ const FACES: Face[] = [
   },
 ]
 
+/** one line under each resolved name: how hard it was to get, and what it cost */
+const receipt = (reading: FaceReading, face: Face) =>
+  reading.fell
+    ? `nothing in the chain is here · the platform's own ${face.measure}`
+    : `${ORDINALS[reading.tried] ?? `${reading.tried}th`} of ${
+        reading.chain.length
+      } in the chain · measured, not asked for`
+
 export function TypeList({ reg }: { reg: number }) {
   const settled = inRegister(reg)
 
   return (
     <div className="type__body">
       <div className="type__grid">
-        {FACES.map(face => (
-          <article className={`type__panel type__panel--${face.id} reveal`} key={face.id}>
-            <header className="type__face">
-              <h3 className="type__face-name">
-                {face.name}
-                <span className="type__face-kind">{face.kind}</span>
-              </h3>
-              <p className="type__face-role">{face.role}</p>
-            </header>
+        {FACES.map(face => {
+          const reading = useFaceReading(face.stack, face.measure)
+          return (
+            <article className={`type__panel type__panel--${face.id} reveal`} key={face.id}>
+              <header className="type__face">
+                <h3 className="type__face-name">
+                  {face.name}
+                  <span className="type__face-kind">{face.kind}</span>
+                </h3>
+                <p className="type__face-role">{face.role}</p>
+              </header>
 
-            <ol className="type__steps">
-              {face.steps.map((step, position) => (
-                <li
-                  className={`type__step ${step.live ? 'type__step--live' : ''}`}
-                  key={step.token}
-                  style={{ '--i': position } as CSSProperties}
-                >
-                  {step.live ? (
-                    <p className="type__gauge" data-on={settled ? 'on' : 'off'}>
-                      <RegisterEye className="type__eye" />
-                      <span className="type__gauge-read">
-                        {settled ? (
-                          'in register'
-                        ) : (
-                          <>
-                            {reg > 0 ? '+' : '−'}
-                            {Math.abs(reg).toFixed(2)} off
-                          </>
-                        )}
-                      </span>
+              <ol className="type__steps">
+                {face.steps.map((step, position) => (
+                  <li
+                    className={`type__step ${step.live ? 'type__step--live' : ''}`}
+                    key={step.token}
+                    style={{ '--i': position } as CSSProperties}
+                  >
+                    {step.live ? (
+                      <p className="type__gauge" data-on={settled ? 'on' : 'off'}>
+                        <RegisterEye className="type__eye" />
+                        <span className="type__gauge-read">
+                          {settled ? (
+                            'in register'
+                          ) : (
+                            <>
+                              {reg > 0 ? '+' : '−'}
+                              {Math.abs(reg).toFixed(2)} off
+                            </>
+                          )}
+                        </span>
+                      </p>
+                    ) : (
+                      <p className={`type__sample type__sample--${step.scale}`}>{step.text}</p>
+                    )}
+                    <p className="type__note">
+                      <span>{step.token}</span>
+                      <span>{step.size}</span>
                     </p>
-                  ) : (
-                    <p className={`type__sample type__sample--${step.scale}`}>{step.text}</p>
-                  )}
-                  <p className="type__note">
-                    <span>{step.token}</span>
-                    <span>{step.size}</span>
-                  </p>
-                </li>
-              ))}
-            </ol>
+                  </li>
+                ))}
+              </ol>
 
-            <footer className="type__panel-foot">
-              <p className="type__stack">{face.stack}</p>
-              <p className="type__load">
-                <span aria-hidden="true">↳</span> no file loaded
-              </p>
-            </footer>
-          </article>
-        ))}
+              <footer className="type__panel-foot">
+                <p className="type__stack">{face.stack}</p>
+                <p className="type__load">
+                  <span aria-hidden="true">↳</span> no file loaded
+                </p>
+                <p className="type__resolved">
+                  <span className="type__resolved-kicker">set in, on this machine</span>
+                  {/* the answer is printed by the same three plates as everything
+                      else on the sheet, at a quarter of the spread: a label this
+                      small is set smaller, which is the page's own law applied to
+                      a line that is new. */}
+                  <span className="type__resolved-name" data-text={reading?.resolved ?? '—'}>
+                    {reading?.resolved ?? '—'}
+                  </span>
+                  <span className="type__resolved-note">
+                    {reading ? receipt(reading, face) : 'no canvas here to measure with'}
+                  </span>
+                </p>
+              </footer>
+            </article>
+          )
+        })}
       </div>
 
       <p className="type__foot">
         <span aria-hidden="true">↳</span>
-        two poster sizes, three label tiers, and nothing in between louder than a section head
+        two poster sizes, one set phrase, three label tiers, and nothing in between louder than a
+        section head
       </p>
     </div>
   )
