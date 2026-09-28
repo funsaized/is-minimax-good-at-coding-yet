@@ -1,0 +1,19 @@
+{
+  "id": 499,
+  "parentId": 498,
+  "createdAt": "2026-09-28T08:42:12.707Z",
+  "summary": "Iteration 499 — the wet→dry arc is now real, and the sheet is folded once, where it changes purpose.",
+  "path": "/iterations/000499/index.html",
+  "screenshot": "/iterations/000499/desktop.png",
+  "mobileScreenshot": "/iterations/000499/mobile.png",
+  "sourceCommit": "2a2acdf082f2e88c5131b4e04b5c6f6127389424",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 515,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 89527,
+    "outputTokens": 17899,
+    "steps": 73
+  }
+}
