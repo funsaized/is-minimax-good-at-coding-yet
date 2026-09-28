@@ -1,0 +1,19 @@
+{
+  "id": 496,
+  "parentId": 495,
+  "createdAt": "2026-09-28T03:25:17.177Z",
+  "summary": "Iteration 496 — the short answer is promoted to a second poster, printed in three impressions that lock.",
+  "path": "/iterations/000496/index.html",
+  "screenshot": "/iterations/000496/desktop.png",
+  "mobileScreenshot": "/iterations/000496/mobile.png",
+  "sourceCommit": "428e3e05db88f3ad50f653b7bfe8febc8cec1164",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 629,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 83567,
+    "outputTokens": 25971,
+    "steps": 90
+  }
+}
