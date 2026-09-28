@@ -7,7 +7,17 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
 } from 'react'
+import { prefersStill } from './motion'
 import { RegisterEye, Squeegee } from './marks'
+
+/* what the press itself answers to. these are printed on the bed rather than
+   printed next to the proof, because the bed is the only one of the two the
+   reader is already looking at when they wonder what the keys do. */
+const SHORTCUTS = [
+  { keys: ['1', '2', '3'], label: 'put a plate up' },
+  { keys: ['←', '→'], label: 'nudge the blade' },
+  { keys: ['0'], label: 'snap to the gate' },
+] as const
 
 /* the plate offset, in the page's own unit: 0 is a perfect register */
 export const PULL_MIN = -3
@@ -93,6 +103,20 @@ const makeScreen = () => {
   return tile
 }
 
+/* how long the ink the blade lays down stays wet, and how many of the last
+   points of the path the strip is willing to remember. a squeegee does not
+   travel without printing: it puts a band of ink the width of its own path on
+   the sheet, and that band dries. so the strip keeps a short tail of the
+   gesture rather than only the position, and the reader can see the way they
+   came. two and a half seconds is about as long as newsprint stays tacky. */
+const WET_MS = 2500
+const WET_MAX = 140
+/* and how long the gate takes to take it back off. the blade that reaches the
+   gate does not stop printing — it wipes, which is what a squeegee is for. */
+const WIPE_MS = 620
+
+type Wet = { x: number; t: number }
+
 /**
  * The press bed. A squeegee blade rides on a strip of wet ink, and the black,
  * fluorescent pink and federal blue plates are all laid down at whatever offset
@@ -102,6 +126,15 @@ const makeScreen = () => {
  * the very same lines the title prints, at film size and under a loupe: the
  * plates are split while the blade is loose, and they close onto one clean voice
  * the moment the gate catches it. Everything the strip does, the page does too.
+ *
+ * and the blade now has a memory. it used to report one position and nothing
+ * else, so a drag across a thousand pixels of wet ink left the sheet exactly as
+ * clean as it found it — which is not what a squeegee does. the strip now keeps
+ * the last couple of seconds of the gesture and prints it as a band of ink that
+ * dries from the far end back, so the reader can see the road the blade took,
+ * and the gate takes the band back off again: the ink goes outward from the blade
+ * and there is nothing left behind it. that is the reward for registering, and
+ * it is the only one on the page that is a thing the reader physically did.
  */
 export function PullBed({
   reg,
@@ -111,6 +144,7 @@ export function PullBed({
   onSlide: (value: number) => void
 }) {
   const bedRef = useRef<HTMLDivElement>(null)
+  const stripRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const screenRef = useRef<CanvasPattern | null>(null)
   const paintRef = useRef<() => void>(() => {})
@@ -119,6 +153,156 @@ export function PullBed({
   const [unit, setUnit] = useState(120)
   const [dragging, setDragging] = useState(false)
   const settled = inRegister(reg)
+
+  /* --- the wet trail, on its own canvas so the film underneath never repaints --- */
+
+  const trailRef = useRef<HTMLCanvasElement>(null)
+  const wetRef = useRef<Wet[]>([])
+  const wipeRef = useRef(-1)
+  const loopRef = useRef(0)
+  const wetPaintRef = useRef<() => void>(() => {})
+  const settledRef = useRef(settled)
+  settledRef.current = settled
+
+  const paintWet = useCallback(() => {
+    const canvas = trailRef.current
+    const ctx = canvas?.getContext('2d')
+    if (!canvas || !ctx) return
+
+    const rect = canvas.getBoundingClientRect()
+    const w = Math.max(1, Math.round(rect.width))
+    const h = Math.max(1, Math.round(rect.height))
+    const ratio = Math.min(2.5, window.devicePixelRatio || 1)
+    const pixels = Math.round(w * ratio)
+    const rows = Math.round(h * ratio)
+    if (canvas.width !== pixels || canvas.height !== rows) {
+      canvas.width = pixels
+      canvas.height = rows
+    }
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
+    ctx.clearRect(0, 0, w, h)
+    ctx.globalAlpha = 1
+
+    const now = performance.now()
+    const wet = wetRef.current
+    while (wet.length && now - wet[0].t > WET_MS) wet.shift()
+
+    /* the wipe is measured outward from the gate rather than from the newest
+       point, because the newest point is the blade and the blade is what does
+       the taking. an inch of the band on either side of the gate is the last to
+       go, which is what a squeegee leaves behind it. */
+    const gateX = Math.round(w / 2) + 0.5
+    let cleared = 0
+    if (wipeRef.current >= 0) {
+      const run = (now - wipeRef.current) / WIPE_MS
+      if (run >= 1) {
+        wet.length = 0
+        wipeRef.current = -1
+        return
+      }
+      cleared = Math.max(0, run) * (w / 2 + 60)
+    }
+
+    const live = cleared ? wet.filter(point => Math.abs(point.x - gateX) > cleared) : wet
+    if (live.length !== wet.length) {
+      wet.length = 0
+      for (const point of live) wet.push(point)
+    }
+    if (live.length < 2) return
+
+    /* the band: heaviest just above the middle, where the film is printed, and
+       feathered at both edges so it is ink soaking into stock and not a bar */
+    const band = ctx.createLinearGradient(0, 0, 0, h)
+    band.addColorStop(0, 'rgba(20, 19, 26, 0)')
+    band.addColorStop(.34, 'rgba(20, 19, 26, .1)')
+    band.addColorStop(.56, 'rgba(20, 19, 26, .2)')
+    band.addColorStop(1, 'rgba(20, 19, 26, 0)')
+
+    ctx.fillStyle = band
+    for (let i = 1; i < live.length; i += 1) {
+      const age = (now - live[i].t) / WET_MS
+      ctx.globalAlpha = Math.max(0, 1 - age) ** 1.5
+      if (ctx.globalAlpha < .012) continue
+      ctx.fillRect(
+        Math.min(live[i - 1].x, live[i].x),
+        0,
+        Math.max(1, Math.abs(live[i].x - live[i - 1].x) + .6),
+        h,
+      )
+    }
+    ctx.globalAlpha = 1
+
+    /* and the bead of ink still standing up on the face of the blade, which is
+       the only part of the band that is pink: it has not had time to soak in */
+    const head = live[live.length - 1]
+    const fresh = 1 - Math.min(1, (now - head.t) / (WET_MS * .45))
+    if (fresh > .02 && wipeRef.current < 0) {
+      const r = Math.max(7, unitFor(w) * .36)
+      const bead = ctx.createRadialGradient(head.x, h / 2, 0, head.x, h / 2, r)
+      bead.addColorStop(0, `rgba(255, 46, 107, ${(.32 * fresh).toFixed(3)})`)
+      bead.addColorStop(1, 'rgba(255, 46, 107, 0)')
+      ctx.fillStyle = bead
+      ctx.fillRect(head.x - r, h / 2 - r, r * 2, r * 2)
+    }
+  }, [])
+  wetPaintRef.current = paintWet
+
+  /* the loop only runs while there is something wet on the sheet, so a reader
+     who never touches the bed pays nothing for it at all */
+  const startLoop = useCallback(() => {
+    if (loopRef.current) return
+    const tick = () => {
+      loopRef.current = 0
+      wetPaintRef.current()
+      if (wetRef.current.length >= 2 || wipeRef.current >= 0) {
+        loopRef.current = requestAnimationFrame(tick)
+      }
+    }
+    loopRef.current = requestAnimationFrame(tick)
+  }, [])
+
+  useEffect(
+    () => () => {
+      if (loopRef.current) cancelAnimationFrame(loopRef.current)
+      loopRef.current = 0
+    },
+    [],
+  )
+
+  /* the drag prints. the blade only lays ink while it is loose: once the gate
+     has caught it the sheet is clean and stays clean until it is moved again.
+     and it only prints at all for a reader who has not asked for stillness —
+     the band drying is movement, so a still browser is given the clean sheet
+     rather than the same band held still. */
+  const layWet = useCallback(
+    (clientX: number) => {
+      const strip = stripRef.current
+      if (!strip || settledRef.current || prefersStill()) return
+      const x = clientX - strip.getBoundingClientRect().left
+      const wet = wetRef.current
+      const last = wet[wet.length - 1]
+      if (last && Math.abs(last.x - x) < 1.6) return
+      wet.push({ x, t: performance.now() })
+      if (wet.length > WET_MAX) wet.shift()
+      startLoop()
+    },
+    [startLoop],
+  )
+
+  /* and the arrival takes it back off, which is the last thing the blade does
+     on this page and the only reward that is not also a change of state */
+  useEffect(() => {
+    if (settled) {
+      if (wetRef.current.length >= 2 && !prefersStill()) {
+        wipeRef.current = performance.now()
+      } else {
+        wetRef.current.length = 0
+      }
+      startLoop()
+    } else {
+      wipeRef.current = -1
+    }
+  }, [settled, startLoop])
 
   const paint = useCallback(() => {
     const canvas = canvasRef.current
@@ -346,6 +530,7 @@ export function PullBed({
     event.currentTarget.setPointerCapture(event.pointerId)
     event.currentTarget.focus({ preventScroll: true })
     move(event.clientX)
+    layWet(event.clientX)
   }
 
   const release = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -391,7 +576,9 @@ export function PullBed({
       aria-valuetext={registerText(reg)}
       onPointerDown={grab}
       onPointerMove={event => {
-        if (draggingRef.current) move(event.clientX)
+        if (!draggingRef.current) return
+        move(event.clientX)
+        layWet(event.clientX)
       }}
       onPointerUp={release}
       onPointerCancel={release}
@@ -411,8 +598,14 @@ export function PullBed({
         </p>
       </div>
 
-      <div className="bed__strip">
-        <canvas ref={canvasRef} className="bed__film" />
+      <div className="bed__strip" ref={stripRef}>
+        {/* the plate is its own positioned box so the trail is exactly the size of
+            the film and not of the strip: the band belongs on the ink, and the
+            caption bar underneath the plate is not ink */}
+        <span className="bed__plate">
+          <canvas ref={canvasRef} className="bed__film" />
+          <canvas ref={trailRef} className="bed__trail" />
+        </span>
         <span className="bed__blade" aria-hidden="true">
           <Squeegee className="bed__arm" />
           <span className="bed__bar" />
@@ -425,8 +618,18 @@ export function PullBed({
 
       <p className="bed__foot">
         <span className="bed__hint">
-          <span aria-hidden="true">↳</span> drag the blade along the bed
+          <span aria-hidden="true">↳</span> drag the blade
         </span>
+        <ul className="keys">
+          {SHORTCUTS.map(item => (
+            <li key={item.label}>
+              {item.keys.map(key => (
+                <kbd key={key}>{key}</kbd>
+              ))}
+              <span>{item.label}</span>
+            </li>
+          ))}
+        </ul>
         <span className="bed__scale" aria-hidden="true">
           <span>loose</span>
           <span className={`bed__gate ${settled ? 'is-on' : ''}`}>the gate</span>

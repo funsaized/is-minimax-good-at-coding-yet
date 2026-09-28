@@ -12,6 +12,7 @@ import {
 import { findNote, NOTES, WORD_IDS, type WordId } from './notes'
 import { ControlEdge } from './edge'
 import { InkTrap } from './ink'
+import { prefersStill } from './motion'
 import { CropMark, FoldMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
 import { Plated } from './plate'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
@@ -36,14 +37,11 @@ const INKS = [
   { id: 'blue', name: 'federal blue', use: 'the second impression' },
 ] as const
 
-/* what the press itself answers to. the proof has its own keys and they are
-   printed next to the proof, because that is the only control on this page
-   that is not under the reader's cursor when they want it. */
-const SHORTCUTS = [
-  { keys: ['1', '2', '3'], label: 'put a plate up' },
-  { keys: ['←', '→'], label: 'nudge the blade' },
-  { keys: ['0'], label: 'snap to the gate' },
-] as const
+/* what the press itself answers to. the keys are printed on the bed rather than
+   here, because the bed is the only one of the two the reader is already looking
+   at when they wonder what they can press. the proof keeps its own pair, and it
+   is the one control on the page that is never under the cursor when it is
+   wanted. */
 
 /* the press run's own job ticket. every line is a fact about the page, not a
    number anybody has to believe. the type used to be a row here; it is a whole
@@ -84,16 +82,13 @@ const MACHINERY = [
   ],
 ] as const
 
-const prefersStill = () =>
-  typeof window !== 'undefined' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
 export function App() {
   const [active, setActive] = useState<WordId>('good')
   const [hover, setHover] = useState<WordId | null>(null)
   const [section, setSection] = useState<string>('question')
   const [proof, setProof] = useState(false)
   const [reg, setReg] = useState(PULL_REST)
+  const [plateTick, setPlateTick] = useState(0)
   const [catchTick, setCatchTick] = useState(0)
   const [announce, setAnnounce] = useState('')
   const pressRef = useRef<HTMLDivElement>(null)
@@ -110,6 +105,7 @@ export function App() {
   const select = useCallback((id: WordId) => {
     setActive(id)
     setHover(id)
+    setPlateTick(tick => tick + 1)
     const found = findNote(id)
     setAnnounce(`Plate ${found.index}. ${found.label}. ${found.title}.`)
   }, [])
@@ -308,8 +304,9 @@ export function App() {
         setAnnounce('Blade snapped to the gate.')
         return
       }
-      /* the legend promises the arrows nudge the blade, so they do — from anywhere
-         that has not already claimed them (the bed, a plate, a word in the title) */
+      /* the bed foot promises the arrows nudge the blade, so they do — from
+         anywhere that has not already claimed them (the bed, a plate, a word in
+         the title) */
       if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
         event.preventDefault()
         const reach = event.shiftKey ? 0.5 : 0.12
@@ -388,9 +385,17 @@ export function App() {
             <i className="gauge__dot gauge__dot--blue" />
           </span>
           {/* the bar reports the plate, so it reports the number too — otherwise
-              the reader is told there is a problem and given no way to judge it */}
+              the reader is told there is a problem and given no way to judge it.
+              and it names the plate that is up, because the phrase the reader
+              chose forty seconds ago on the other side of the question is not
+              anywhere in view from here, and the gauge is the one fixed thing
+              they are always looking at. */}
           <span className="gauge__read">
             {settled ? 'in register' : `off ${reg > 0 ? '+' : '−'}${Math.abs(reg).toFixed(2)}`}
+          </span>
+          <span className="gauge__plate" aria-hidden="true">
+            <i className="gauge__pin" key={plateTick} />
+            {findNote(active).index}
           </span>
         </p>
       </header>
@@ -461,24 +466,15 @@ export function App() {
               <PullBed reg={reg} onSlide={value => setReg(value)} />
             </div>
 
-            {/* the legend, once, and as one hairline. it used to be a strip with
-                a rule above and a rule below, which made four labels sitting
-                between the instrument and its plates look like a fifth module */}
-            <div className="legend">
-              <p className="legend__note">
-                <span aria-hidden="true">↳</span> pick a phrase, or take the blade — the sheet follows you
-              </p>
-              <ul className="keys">
-                {SHORTCUTS.map(item => (
-                  <li key={item.label}>
-                    {item.keys.map(key => (
-                      <kbd key={key}>{key}</kbd>
-                    ))}
-                    <span>{item.label}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/* the instruction belongs to the thing it is about. it used to be its
+                own band of labels between the instrument and the plates, which
+                made four short sentences sitting between two panels look like a
+                fifth module; the keys are on the bed now, where they work, and
+                the one line left is the one thing a reader cannot guess. */}
+            <p className="plates__cue">
+              <span aria-hidden="true">↳</span> or take the blade and pull a proof — the sheet follows
+              you either way
+            </p>
 
             <div
               className="plates"
@@ -518,7 +514,7 @@ export function App() {
             </div>
             <p className="sr-only" id="plates-help">
               Choosing a plate moves the highlight in the title above, and pulls that sheet to the
-              top of the ream below.
+              top of the ream below. Keys 1, 2 and 3 pick a plate from anywhere on the sheet.
             </p>
           </section>
 

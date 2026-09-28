@@ -76,9 +76,13 @@ const FACES: Face[] = [
     role: 'the question, the answer, every number',
     stack:
       '"Helvetica Neue", Helvetica, Arial, "Avenir Next", "Segoe UI", system-ui, sans-serif',
+    /* deliberately not in ladder order: --head is a serif token and this is the
+       grotesque cell, so the head is printed one cell over. a type list that
+       listed a face's sizes out of order would be the one dishonest thing on a
+       band whose whole job is to be a proof. */
     steps: [
       { token: '--claim', size: '4.3rem', text: 'yes —', scale: 'claim' },
-      { token: '--specimen', size: '4.2rem', text: 'good at', scale: 'specimen' },
+      { token: '--specimen', size: '2.62rem', text: 'good at', scale: 'specimen' },
       { token: '--sub', size: '1.5rem', text: 'The pause, protected', scale: 'sub' },
     ],
   },
@@ -245,8 +249,9 @@ export function TypeList({ reg }: { reg: number }) {
 
       <p className="type__foot">
         <span aria-hidden="true">↳</span>
-        two poster sizes, one set phrase, three label tiers, and nothing in between louder than a
-        section head
+        two poster sizes — 7.2 and 4.3 — then a head at 3.2, the set phrase at 2.62, and three
+        label tiers below that. nothing in between is louder than a section head, and the numbers
+        are blue because they are measurements
       </p>
     </div>
   )

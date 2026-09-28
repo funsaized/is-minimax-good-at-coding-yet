@@ -168,7 +168,9 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
         <ol className="brief">
           {note.look.map((line, position) => (
             <li key={line}>
-              <span aria-hidden="true">{String(position + 1).padStart(2, '0')}</span>
+              <span className="brief__fig" aria-hidden="true">
+                {String(position + 1).padStart(2, '0')}
+              </span>
               {line}
             </li>
           ))}

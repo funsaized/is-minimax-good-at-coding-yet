@@ -82,11 +82,61 @@
    in register — the short sentence is now a second poster, set
    from the same two steps as the question, printed by the same
    three plates, and it does not ride the blade at all.
-
-   the scale: two poster sizes and nothing in between louder than
-   a section head. the question is the largest type on the page by
-   a wide margin, the short answer is the second, and everything
+   the scale: two poster sizes and nothing in between louder than a
+   section head. the question is the largest type on the page by a
+   wide margin, the short answer is the second, and everything
    between them is a job ticket, a specimen or a label.
+
+   AND NOW THE SCALE IS ACTUALLY TRUE. it was claimed in this
+   comment, printed on the type list at the foot of the sheet, and
+   quietly broken in the middle of the page: the close read was set
+   at 4.2rem, a hair under the answer and a whole step louder than
+   the section head it sits under, so the sheet had three loud
+   things on it and said it had two. the specimen is now the step
+   directly under the head, and going down the page the order is
+   7.2, then the answer at 4.3, a head at 3.2, the set phrase at
+   2.6 and nothing else above a label. one thing is given up: the
+   close read is no longer a poster. it does not need to be — the
+   stage is recomposed to make up for it, with the phrase standing
+   hard left and the ruled measure carried out to the trim, so the
+   sheet it is printed on is wider than the type on it and the
+   reader can see the counted run and the column that counts it in
+   one glance.
+
+   THE COLOUR HAS A GRAMMAR. the page had one accent and used it
+   for everything: the plates, the kickers, the rules, the numbers.
+   so the pink now means one thing — the press: the turn, the ink,
+   the trap, the plate that is up — and every figure, count, size
+   and resolved measurement on the light sheet is federal blue.
+   two accents is one more than a page needs, but one accent doing
+   five jobs is a page with no accents at all.
+
+   and the blue is only ever a figure. it is never a rule and never a
+   heading, so the eye reads it as data without being told to: the
+   plate figures, the counted characters on the specimen, the numbers
+   in the type list and the resolved family all arrive in the same ink
+   and mean the same kind of thing — a thing somebody measured.
+
+   AND THE PRESS REMEMBERS. a squeegee does not travel without
+   printing. the bed used to report one position and nothing else,
+   so a drag across the whole strip left the sheet exactly as clean
+   as it found it — which is not what a squeegee does. the strip
+   now keeps the last couple of seconds of the gesture and prints
+   them as a band of wet ink that dries from the far end back, so
+   the road the blade took is on the paper; and the gate takes the
+   band back off again, outward from the blade, leaving nothing
+   behind it. the loop only runs while something is wet, so a
+   reader who never touches the bed pays nothing for it, and it is
+   on a canvas of its own so the film underneath never repaints.
+
+   and the bar grew one thing. the gauge reported the register from
+   the first iteration, which is a fact about the machine — but the
+   phrase the reader chose is a fact about them, and from half the
+   page it is nowhere in view. so the plate that is up is pinned into
+   the bar: a blue figure and a pink pin that drops into its hole on
+   every change. one glyph wide on a phone, where the numeric
+   readout is the thing that goes instead.
+
 
    THE REAM. the close read is a stack of three sheets now: the one
    you are reading on top, the other two behind it with their figures
@@ -225,15 +275,16 @@
   /* ONE SCALE, USED EVERYWHERE, AND IT IS A LADDER. two poster sizes, and
      nothing between them louder than a section head. the question is the
      largest type on the page by a wide margin, the short answer is the second,
-     and the run between them is furniture. the close read is the one thing
-     that has to be nearly as loud as the answer to justify itself, so it gets
-     the step directly under the claim and no more: it must never read as a
-     third poster, or the argument that the sentence is set three times starts
-     to look like a page that cannot pick a size. */
+     and the run between them is furniture: a head at 3.2, then the set phrase
+     of the close read at 2.6. the specimen used to be set at 4.2 — a hair
+     under the claim and a whole step over the head — which put a third poster
+     in the middle of the sheet and made the rule this block states a lie. it
+     is now the step directly under the head and no more, so the order going
+     down the page never doubles back. */
   --question: clamp(2.5rem, 6.8vw, 7.2rem);
   --claim: clamp(1.72rem, 4.4vw, 4.3rem);
-  --specimen: clamp(1.95rem, 4.3vw, 4.2rem);
   --head: clamp(1.9rem, 3.4vw, 3.2rem);
+  --specimen: clamp(1.55rem, 2.9vw, 2.62rem);
   --sub: clamp(1.18rem, 1.5vw, 1.5rem);
   --body: clamp(1rem, .22vw + .94rem, 1.12rem);
   --read: clamp(1.04rem, .3vw + .97rem, 1.22rem);
@@ -794,6 +845,53 @@ html[data-register='on'] .edge__ink--black {
   box-shadow: 0 0 0 3px rgba(255, 46, 107, .18);
 }
 
+/* WHICH PLATE IS UP. the figure and the phrase in the title travel together, and
+   the reader is fifty screens away from the title half the time they are on this
+   page. so the plate that is currently on the press is pinned into the bar — a
+   blue figure, because it is a number, and a pink dot, because it is the press —
+   and it is the only thing on the sheet that reports a choice rather than a
+   measurement. the dot takes a pink wash while it is the one being pointed at,
+   so the bar says *this* plate even when the reader is only hovering another. */
+.gauge__plate {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 10px;
+  border-left: 1px solid var(--rule);
+  color: var(--blue-ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .16em;
+}
+
+.gauge__pin {
+  width: 6px;
+  height: 6px;
+  background: var(--pink);
+  border-radius: 50%;
+  transform-origin: center;
+  /* the pin is remounted on every change of plate, so this is the bar saying
+     *that* one is up. it is a press pin dropping into a hole rather than a
+     notification, and it is the only motion in the bar that is not about the
+     register — everything else here reports the plates, this reports the choice */
+  animation: pin-swap .52s var(--spring) both;
+}
+
+@keyframes pin-swap {
+  0% {
+    transform: scale(.15);
+    box-shadow: 0 0 0 0 rgba(255, 46, 107, .55);
+  }
+
+  55% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 5px rgba(255, 46, 107, 0);
+  }
+}
+
 /* ---------- shared bits ---------- */
 
 .main {
@@ -1074,7 +1172,18 @@ html[data-register='on'] .ink-trap__rule {
   font-size: var(--question);
   font-weight: 800;
   line-height: .92;
+  /* THE LOCK-UP. at the gate the poster's letterspacing tightens by about a
+     sixtieth of an em. it is four thousandths of a size unit and nobody will
+     ever see it happen — but the sheet has just been pulled tight, and the way a
+     press shows that it is showing you is by setting a hair closer. it is the
+     only piece of motion on this page that is not a state changing, and it is
+     also the only one that is priced in thousandths, which is the point. */
   letter-spacing: -.055em;
+  transition: letter-spacing .8s var(--ease-out);
+}
+
+html[data-register='on'] .question {
+  letter-spacing: -.0585em;
 }
 
 .q__lines {
@@ -1343,16 +1452,30 @@ html[data-register='on'] .plate-target__plate--black {
   box-shadow: 3px 3px 0 var(--pink);
 }
 
-/* the plate on the bed, seen through the paper: a drawn rule, never a slab */
+/* the plate on the bed, seen through the paper.
+
+   it used to be a rectangle that grew out of the left edge of the word, which
+   reads as a highlight box rather than as ink: a rectangle has four corners and
+   a mark on a press has two. so it is now a wedge — thin at the start, deep at
+   the end — which is the shape a squeegee actually leaves, and it reaches a
+   little way past the word it is under, because ink spread is the one thing on
+   this page that is never in register with anything. */
 .w::before {
   position: absolute;
-  inset: .19em -.07em .22em;
+  inset: .2em -.1em .24em -.1em;
   z-index: -1;
   content: '';
-  background: var(--pink);
-  opacity: calc(var(--pull) * .82);
-  transform: scaleX(calc(.3 + var(--pull) * .72)) scaleY(calc(.6 + var(--pull) * .4));
-  transform-origin: 4% 50%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    var(--pink) 13%,
+    var(--pink) 92%,
+    transparent 100%
+  );
+  opacity: calc(var(--pull) * .8);
+  clip-path: polygon(0% 42%, 100% 8%, 100% 96%, 0% 62%);
+  transform: scaleX(calc(.34 + var(--pull) * .7));
+  transform-origin: 2% 50%;
   transition: opacity .3s var(--ease), transform .35s var(--ease-out);
 }
 
@@ -1427,7 +1550,6 @@ html[data-register='on'] .plated__layer--black .mark {
 .plates {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: var(--air-band);
   border-top: 1px solid var(--black);
   border-bottom: 1px solid var(--rule);
 }
@@ -1475,8 +1597,11 @@ html[data-register='on'] .plated__layer--black .mark {
   box-shadow: inset 0 -22px 30px -24px rgba(21, 20, 27, .3);
 }
 
+/* the figure is a count, so it is federal blue: every number on the light sheet
+   is a measurement and the measurement ink is the blue plate. the pink belongs
+   to the press — the plate that is up, the rule under the word that is set. */
 .plates__num {
-  color: var(--pink-ink);
+  color: var(--blue-ink);
   font-family: var(--mono);
   font-size: var(--label-2);
   font-weight: 700;
@@ -1647,6 +1772,7 @@ html[data-register='on'] .plated__layer--black .mark {
 /* ---------- the press bed: wet ink and a squeegee you can take hold of ---------- */
 
 /* the instrument sits immediately under the argument, because it is the thing
+
    that prints it. no rule between them: the bed brings its own black frame,
    and three hairlines inside 200px is a stack of stripes, not a sheet. the
    whitespace is the divider. */
@@ -1704,15 +1830,22 @@ html[data-register='on'] .plated__layer--black .mark {
   text-transform: uppercase;
 }
 
-/* what the strip is: the same lines the title sets, under a loupe */
+/* what the strip is: the same lines the title sets, under a loupe. set under
+   the plate rather than over it, because the one thing the plate must not be
+   asked to do is hold an annotation — the plate is the film and the film is the
+   sentence, and a sentence with a caption printed across it is a diagram. */
 .bed__caption {
-  flex: 1 1 auto;
   min-width: 0;
+  margin: 0;
+  padding: 5px 12px 6px;
   overflow: hidden;
   color: var(--ink-50);
+  border-top: 1px solid var(--rule);
+  background: rgba(21, 20, 27, .022);
   font-family: var(--mono);
   font-size: var(--label-2);
   letter-spacing: .14em;
+  line-height: 1.4;
   text-align: center;
   text-overflow: ellipsis;
   text-transform: uppercase;
@@ -1794,10 +1927,31 @@ html[data-register='on'] .register-eye__plate--black {
   background: var(--stock-2);
 }
 
+/* the plate: the two canvases stacked in one positioned box, so the band the
+   blade lays down is exactly the size of the film and never creeps down over the
+   caption bar underneath it */
+.bed__plate {
+  position: relative;
+  display: block;
+}
+
 .bed__film {
   display: block;
   width: 100%;
   height: clamp(98px, 11.4vw, 132px);
+}
+
+/* THE WET TRAIL. the ink the blade lays down on its own way across, on a
+   canvas of its own so the film underneath — which is the whole sentence, drawn
+   once per impression — never repaints while the band dries. it is painted in
+   ink rather than in a glow, because what is left on newsprint by something
+   that has just gone over it is ink. */
+.bed__trail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 /* the squeegee: a handle above the bed, a blade down through the ink */
@@ -1839,7 +1993,10 @@ html[data-register='on'] .register-eye__plate--black {
   transform: translateX(-50%);
 }
 
-/* wet ink gathering at the foot of the blade */
+/* wet ink gathering at the foot of the blade. this is the same bead the canvas
+   trail paints at the head of the band, in the same pink and at the same weight
+   — so the two read as one piece of ink: the bead here is what has not yet run
+   into the strip, and the bead on the canvas is what has. */
 .bed__bar::after {
   position: absolute;
   right: -3px;
@@ -1883,11 +2040,17 @@ html[data-register='on'] .register-eye__plate--black {
   transform: rotate(-8deg) scale(1);
 }
 
+/* the foot of the bed is the instrument's own label, so the keys live here now
+   rather than in a band of their own between the bed and the plates: they are
+   the press's keys, the bed is the press, and the reader is already looking at
+   it. three groups and a scale across one hairline, and it breaks to two and
+   then to one long before anything is squeezed. */
 .bed__foot {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 6px 18px;
+  gap: 5px clamp(12px, 1.9vw, 26px);
   margin: 0;
   padding: 8px 12px 10px;
   color: var(--ink-50);
@@ -1902,6 +2065,7 @@ html[data-register='on'] .register-eye__plate--black {
   display: flex;
   align-items: baseline;
   gap: 8px;
+  flex: 0 1 auto;
 }
 
 .bed__hint > span {
@@ -1913,6 +2077,7 @@ html[data-register='on'] .register-eye__plate--black {
   flex: 0 0 auto;
   align-items: baseline;
   gap: clamp(10px, 1.8vw, 24px);
+  margin-left: auto;
 }
 
 .bed__gate {
@@ -1925,38 +2090,62 @@ html[data-register='on'] .register-eye__plate--black {
   transform: translateY(-1px);
 }
 
-@media (max-width: 560px) {
-  .bed__foot {
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .bed__scale {
-    gap: 14px;
-  }
-}
-
-/* ---------- the legend: one hairline, one line, the keys and nothing else ---- */
-
-/* four short labels describing the whole instrument do not need a box of their
-   own. one hairline above them, set as a single row that breaks when it has to,
-   and the sheet's eye goes straight on to the plates underneath. */
-.legend {
+/* the keys. flex, so each pair and its label is one thing that can wrap, and a
+   middot between the groups rather than a rule between them: the foot is one
+   line of furniture and it should read that way at a glance. the label is
+   allowed to wrap on its own — a key whose meaning has been cut in half is
+   worse than a key on two lines — but the pair of keys themselves never
+   separate. */
+.keys {
   display: flex;
+  flex: 1 1 auto;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 6px clamp(16px, 2.4vw, 40px);
-  margin-top: var(--air-tight);
-  padding-top: 8px;
-  border-top: 1px solid var(--rule);
+  gap: 4px clamp(9px, 1.3vw, 17px);
+  min-width: 0;
+  margin: 0;
 }
 
-.legend__note {
+.keys li {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 3px 6px;
+  min-width: 0;
+  line-height: 1.5;
+}
+
+.keys li > span {
+  min-width: 0;
+}
+
+.keys li + li::before {
+  margin-right: 1px;
+  content: '·';
+  color: var(--pink);
+  letter-spacing: 0;
+}
+
+/* the keys are printed against the bed's own frame, so the little plates are a
+   shade deeper than the ones on paper and pick up the strip's shadow */
+.keys kbd {
+  padding: 1px 5px 2px;
+  color: var(--ink-70);
+  background: var(--stock-2);
+  border-color: rgba(20, 19, 26, .2);
+  font-size: .6rem;
+}
+
+/* the instruction for the plates, printed as one line on the top of the plate
+   band. it used to sit in its own ruled strip between the instrument and the
+   choice, which is the one place on the sheet where a reader is not looking at
+   anything — a band of four labels with a rule above and a rule below, reading
+   as a fifth module rather than as a note. */
+.plates__cue {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  min-width: 0;
+  margin: var(--air-band) 0 10px;
   color: var(--ink-50);
   font-family: var(--mono);
   font-size: var(--label-3);
@@ -1965,35 +2154,9 @@ html[data-register='on'] .register-eye__plate--black {
   text-transform: uppercase;
 }
 
-.legend__note span {
+.plates__cue > span {
   flex: 0 0 auto;
   color: var(--pink-ink);
-}
-
-.keys {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 5px clamp(11px, 1.5vw, 20px);
-  min-width: 0;
-  margin: 0;
-}
-
-.keys li {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-width: 0;
-  color: var(--ink-50);
-  font-family: var(--mono);
-  font-size: var(--label-3);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
-
-.keys li + li::before {
-  content: '·';
-  color: var(--pink);
   letter-spacing: 0;
 }
 
@@ -2093,10 +2256,12 @@ html[data-register='on'] .register-eye__plate--black {
 .specimen__stage {
   position: relative;
   display: grid;
-  /* the measure stands at the end of the line, not at the far edge of the sheet:
-     the set phrase takes the width it needs, and the rest is the space the mark
-     is allowed to land in */
-  grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+  /* the set phrase stands hard left and the ruled measure is carried out to the
+     trim, so the sheet the phrase is printed on is wider than the phrase on it.
+     that is the whole point of a specimen: you are meant to see the air around
+     the setting, and the column that counts it belongs on the edge of the sheet
+     rather than a fixed distance after the type. */
+  grid-template-columns: minmax(0, 1fr) auto;
   column-gap: clamp(18px, 2.4vw, 40px);
   align-items: end;
   padding: clamp(24px, 3vw, 44px) clamp(20px, 2.6vw, 36px) clamp(26px, 2.8vw, 40px);
@@ -2107,9 +2272,9 @@ html[data-register='on'] .register-eye__plate--black {
     var(--stage-tint, transparent);
 }
 
-/* the space the set phrase does not use is not empty: it is the screen the
-   whole stage is printed through, and the only thing a dropped mark could land
-   on. the wider the sheet, the more of it there is to print. */
+/* the space between the setting and the measure is not empty: it is the screen
+   the whole stage is printed through, and it is only ever drawn across the gap
+   the phrase leaves — never under the type, and never under the count. */
 .specimen__stage::after {
   position: absolute;
   inset: 0;
@@ -2120,8 +2285,8 @@ html[data-register='on'] .register-eye__plate--black {
   background-size: 7px 7px;
   opacity: .2;
   pointer-events: none;
-  mask-image: linear-gradient(104deg, transparent 26%, #000 84%);
-  -webkit-mask-image: linear-gradient(104deg, transparent 26%, #000 84%);
+  mask-image: linear-gradient(96deg, transparent 12%, #000 46%, transparent 86%);
+  -webkit-mask-image: linear-gradient(96deg, transparent 12%, #000 46%, transparent 86%);
 }
 
 /* the pull landing, in wash rather than bloom */
@@ -2144,8 +2309,9 @@ html[data-register='on'] .register-eye__plate--black {
   position: relative;
   z-index: 1;
   grid-column: 1;
-  min-width: min(42%, 19rem);
-  min-height: clamp(58px, 6.2vw, 84px);
+  justify-self: start;
+  min-width: 0;
+  min-height: clamp(52px, 5.4vw, 74px);
 }
 
 .specimen__word {
@@ -2153,8 +2319,8 @@ html[data-register='on'] .register-eye__plate--black {
   font-family: var(--display);
   font-size: var(--specimen);
   font-weight: 800;
-  line-height: .86;
-  letter-spacing: -.056em;
+  line-height: .94;
+  letter-spacing: -.05em;
 }
 
 .specimen__main {
@@ -2187,30 +2353,32 @@ html[data-register='on'] .register-eye__plate--black {
   animation: pad-in .62s var(--ease-out) .12s both;
 }
 
-/* the measure, ruled the way a compositor counts it: a ruled column standing at
-   the end of the measured line, one figure per character */
+/* the measure, ruled the way a compositor counts it: a ruled column standing on
+   the trim, one figure per character, with the name of the run under it */
 .specimen__rule {
   position: relative;
   z-index: 1;
   display: grid;
   grid-column: 2;
+  justify-self: end;
   align-self: stretch;
   align-content: end;
-  justify-items: start;
+  justify-items: end;
   gap: 6px;
+  padding-right: 2px;
   padding-left: clamp(12px, 1.4vw, 20px);
   border-left: 1px solid var(--rule);
   color: var(--ink-50);
-  text-align: left;
+  text-align: right;
 }
 
 .specimen__rule-count {
-  color: var(--black);
+  color: var(--blue-ink);
   font-family: var(--display);
-  font-size: clamp(1.35rem, 2.2vw, 1.95rem);
+  font-size: clamp(1.15rem, 1.7vw, 1.5rem);
   font-weight: 800;
   line-height: .9;
-  letter-spacing: -.04em;
+  letter-spacing: -.03em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -2330,8 +2498,10 @@ html[data-register='on'] .register-eye__plate--black {
   text-wrap: pretty;
 }
 
-.brief li span {
-  color: var(--pink-ink);
+/* the figures are counts, so federal blue — and the pink that used to sit here
+   is kept for the one thing it is for: the prompt the reader takes away */
+.brief__fig {
+  color: var(--blue-ink);
   font-family: var(--mono);
   font-size: var(--label-2);
   letter-spacing: .08em;
@@ -2540,7 +2710,7 @@ html[data-register='on'] .register-eye__plate--black {
 
 .ream__fig {
   flex: 0 0 auto;
-  color: var(--pink-ink);
+  color: var(--blue-ink);
   font-weight: 700;
   letter-spacing: .16em;
 }
@@ -2745,16 +2915,18 @@ html[data-register='on'] .fold-mark__plate--black {
    smaller. it is the only figure on the sheet that is a fact
    about the reader rather than about the press.
 
-   AND THE SCALE IS NOW TRUE. the page said it had two poster
+   THE SCALE IS NOW TRUE. the page said it had two poster
    sizes, and the type list printed the widest step of the title
    in a third of the width — which put a second poster in the
    middle of the sheet and quietly broke the only rule the sheet
    makes about type. the cell no longer prints that step: the
    title is set across the full measure and you have already read
-   it. the close read is set a hair under the short answer
-   instead, so the order going down the page is 7.2, then a set
-   phrase at 4.2, then a section head at 3.2, and the answer at
-   4.3 is the last word and the second loudest thing on it.
+   it. the close read used to be set a hair under the short
+   answer, which broke the rule a second way and put a third
+   poster in the middle of the sheet; it is now the step directly
+   under the head, so the order going down the page is 7.2, then
+   the answer at 4.3, a head at 3.2, the set phrase at 2.62, and
+   the answer is the last word and the second loudest thing on it.
 
    and the air between the bands is a token now, because a
    sheet with twelve clamps invented next to the thing they
@@ -2905,10 +3077,12 @@ html[data-register='on'] .fold-mark__plate--black {
 }
 
 /* the step the close read is set at, which used to be the widest thing on the
-   sheet after the title and is now a hair under the claim — see the head of
-   this file */
+   sheet after the title, then a hair under the claim, and is now the step
+   directly under the head — see the head of this file. it is a specimen and not
+   a poster, and the cell above it is the only other place on the page that
+   claims to be as loud as the answer. */
 .type__sample--specimen {
-  font-size: 4.2rem;
+  font-size: 2.62rem;
 }
 
 .type__sample--sub {
@@ -2949,11 +3123,18 @@ html[data-register='on'] .fold-mark__plate--black {
   font-family: var(--mono);
   font-size: var(--label-3);
   letter-spacing: .11em;
+  font-variant-numeric: tabular-nums;
   text-transform: uppercase;
 }
 
 .type__note > span:first-child {
   color: var(--black);
+}
+
+/* the token is a name and the size is a measurement, and the page now says which
+   is which: the figure is federal blue, like every other number on the sheet */
+.type__note > span:last-child {
+  color: var(--blue-ink);
 }
 
 /* the gauge, set in the face it is reporting on */
@@ -3134,11 +3315,13 @@ html[data-register='on'] .fold-mark__plate--black {
   flex-wrap: wrap;
   align-items: baseline;
   gap: 4px 12px;
+  max-width: 92ch;
   padding: 11px 0 0;
   color: var(--ink-50);
   font-family: var(--mono);
   font-size: var(--label-3);
-  letter-spacing: .12em;
+  line-height: 1.6;
+  letter-spacing: .11em;
   text-transform: uppercase;
 }
 
@@ -3627,6 +3810,15 @@ html[data-register='on'] .run__seam-rule--black {
 .plated__layer--ghost .proof__claim-c {
   color: inherit;
   text-shadow: none;
+}
+
+/* the answer locks up on the same beat the title does, and for the same reason:
+   a sheet that has just been pulled tight sets its letters closer together. it
+   rides --pull rather than the blade, because nothing on this card answers to the
+   blade — so the answer tightens exactly as it arrives and not before. */
+.proof__claim-a,
+.proof__claim-b {
+  letter-spacing: calc(-.052em - var(--pull) * .004em);
 }
 
 /* the poster ends, the rubric begins, and where those two meet there is a
@@ -4399,7 +4591,7 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   .type__sample--specimen {
-    font-size: clamp(1.85rem, 6.6vw, 4.2rem);
+    font-size: clamp(1.5rem, 5vw, 2.62rem);
   }
 
   .type__sample--head {
@@ -4508,12 +4700,14 @@ html[data-reveal='on'] .reveal.is-in {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* one column, so the count and the name of the run sit under the setting as a
+     line of their own rather than in a ruled column beside it */
   .specimen__rule {
     grid-column: 1;
     grid-auto-flow: column;
     grid-auto-columns: auto;
     align-items: baseline;
-    justify-content: start;
+    justify-self: start;
     justify-items: start;
     gap: 10px;
     padding: 12px 0 0;
@@ -4534,6 +4728,7 @@ html[data-reveal='on'] .reveal.is-in {
 
   .specimen__stack {
     min-width: 0;
+    justify-self: stretch;
   }
 
   .specimen__margin {
@@ -4546,6 +4741,10 @@ html[data-reveal='on'] .reveal.is-in {
     --fringe-scale: .62;
   }
 
+  /* the number goes, and the plate that is up stays: on a phone the bar is two
+     rows and the second is the nav, so the readout can afford to be the thing
+     that goes — but the figure for the plate is one glyph wide and it is the
+     only piece of state on the sheet that the title is not showing you */
   .gauge__read {
     display: none;
   }
@@ -4650,6 +4849,13 @@ html[data-reveal='on'] .reveal.is-in {
     height: 26px;
   }
 
+  /* the scale goes first on a phone: the gate is already a dashed rule standing
+     in the film and a figure in the readout, so the three words are the one part
+     of the foot the reader can afford to lose, and the keys are not */
+  .bed__scale {
+    display: none;
+  }
+
   .proof__bar {
     flex-wrap: wrap;
   }
@@ -4745,6 +4951,20 @@ html[data-reveal='on'] .reveal.is-in {
     transition: none;
   }
 
+  /* and the wet trail is not drawn at all: a band of ink drying from the far end
+     back is movement, so a still reader is given the clean strip the way they
+     are given the straight sheet. `layWet` declines it at the source rather than
+     the canvas being hidden, so a still browser does no per-frame work at all */
+  .bed__trail {
+    display: none;
+  }
+
+  /* the lock-up is not declined, and that is the point: it is state, not journey.
+     a sheet that only pulled tight in a browser allowed to move would be a
+     sheet whose reward for registering is conditional on the reader's settings,
+     which is the one thing the register is not. both posters still lock up —
+     they simply arrive already tight. */
+
   /* and the ink ramp is a position, not a journey: the sheet is exactly as dry
      down here as it would be with motion on, because a page that dries only when
      it is allowed to move is a page that is illegible in a still browser */
@@ -4784,6 +5004,12 @@ html[data-reveal='on'] .reveal.is-in {
   .stock__grain,
   .stock__roller,
   .bed.is-dragging .bed__bar {
+    animation: none;
+  }
+
+  /* and the pin is simply in the hole: the state is the figure, and the drop is
+     the only part of it that is movement */
+  .gauge__pin {
     animation: none;
   }
 
@@ -4837,9 +5063,9 @@ html[data-reveal='on'] .reveal.is-in {
   .stock,
   .sprockets,
   .edge,
-  .legend,
   .actions,
   .bed,
+  .plates__cue,
   .ream__well,
   .fold,
   .run__glow {

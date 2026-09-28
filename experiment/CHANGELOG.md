@@ -1,44 +1,15 @@
-Iteration 501: the type now takes an impression — it sinks into the stock, and only once the plates agree.
+Iteration 502: the press remembers the drag, the scale stops lying, and pink and blue each get one job.
 
-**The impression.** A press prints into paper, not onto it, so the poster, the close
-read and the short answer now sit *below* the surface: a lit edge under each glyph and
-a shade above it. The depth is one number, `--imp`, in `em` so a phrase set small is
-pressed less deeply than a poster. It reads `--settle` on the light sheet, so nothing
-is pressed at all while the plates are arguing and the whole sheet takes the impression
-on the beat the blade reaches the gate; the answer overrides it with `--pull`, because
-the answer was never printed by the blade. Only the black plate carries it — the colour
-plates are ink, and ink does not sink paper.
+**The blade leaves a trail.** The bed reported one position, so a drag across the whole strip left the sheet exactly as clean as it found it — which is not what a squeegee does. The strip now keeps the last 2.5 seconds of the gesture and prints them as a band of wet ink that dries from the far end back, with a pink bead on the head that matches the one already on the blade's foot. Reaching the gate wipes the band off again, outward from the blade, leaving nothing behind it. The band lives on a canvas of its own so the film underneath never repaints, the frame loop only runs while something is wet, and a reader who has asked for stillness is declined it at the source rather than having a hidden canvas updated.
 
-**The rules press too.** The title's landing rule and the proof's landing rule take the
-same depth, so the two lines the type stands on are printed into the paper as well.
+**The scale is now true.** The sheet claimed two poster sizes and printed the claim on its own type list, then broke it in the middle of the page: the close read was set at 4.2rem, louder than the section head it sat under, so there were three loud things on the sheet and the rule was a lie. `--specimen` is now 2.62rem — the step directly under the head at 3.2. Going down the page the order is 7.2, the answer at 4.3, a head at 3.2, the set phrase at 2.62, and three label tiers below that.
 
-**`plate-press` simplified.** The answer's arrival keyframe was painting a second copy
-of the two colour plates as text-shadows on top of the two ghost layers that were
-already arriving. Redundant, and one more thing standing between the poster and its
-impression.
+**The colour has a grammar.** One accent was doing five jobs. Pink now means the press — the turn, the ink, the trap, the plate that is up. Every figure, count, size and resolved measurement on the light sheet is federal blue: the plate numbers, the counted characters on the specimen, the brief's figures, the type list's sizes. Blue is never a rule and never a heading, so it reads as data without being labelled.
 
-**The ink film.** The press run and the colophon are the largest area of colour on the
-page and they were a flat fill. Both slabs now carry a film: the drum's banding, a broad
-light off the top edge, and a faint pink bounce off the foot. Each owns a stacking
-context so the film stays under the bloom and the proof card rather than climbing out
-over the light sheet. Switched off in print.
+**The specimen stage was recomposed** to make up for the smaller phrase: the set phrase stands hard left, the ruled measure is carried out to the trim, and the screen between them is the only thing printed in that gap. The sheet the phrase is set on is now wider than the phrase on it, which is what a specimen is for.
 
-**The chain.** The type list printed its font stack as the literal CSS it is written as
-— a wrapped `font-family` string, quoted names and all, at the same size as the specimen
-it was annotating. It now prints the families in the order the sheet asked for them,
-joined by pink arrows, with the one that actually stuck set in black; when the chain
-falls all the way through, the generic the platform really drew goes on the end. Set as
-a wrapping flex row, because a run of arrows with no spaces in it has no break
-opportunity and a six-deep chain walked straight across its cell into the next one.
+**One band was deleted and one line kept.** The key legend was four labels in a ruled strip between the instrument and the plates, which read as a fifth module. The keys moved onto the bed's own foot, where they work and where the reader is already looking; the one line left is the instruction for the plates, set on the plate band itself.
 
-**The notes.** The colophon's four mechanisms were four paragraphs at a ~95-character
-measure, which read as a wall. They are notes now: a roman figure, a 64-character
-measure, a hair above each, two to a row from 860px. The job ticket next to them now
-fills its own cell to the bottom, so the foot of the run has no hole in it.
+**Smaller things.** The title's letterspacing tightens by three and a half thousandths of an em at the gate, and the answer does the same on its own pull ramp — state, not journey, so it survives reduced motion. The word-swipe behind a hovered phrase is a tapered wedge rather than a growing rectangle, because a mark on a press has two ends. The bed's film and trail are wrapped in one positioned box so the band never creeps over the caption bar. The slugbar pins the plate that is up, in blue, with a pink pin that drops into its hole on every change — the figure stays on a phone where the numeric readout goes.
 
-**Accessibility.** The `0` key moves the blade from anywhere on the sheet, so it now
-says so in the live region. Verified: no page errors, tab order unchanged, and under
-`prefers-reduced-motion` the impression is fully applied at the gate with no journey —
-it is a value, not an animation.
-
-`npm run build` passes. No dependencies, no network, no assets added.
+**Files.** `src/motion.ts` added (shared `prefersStill`). `src/App.tsx`, `src/pull.tsx`, `src/typelist.tsx`, `src/ream.tsx`, `src/style.css` edited. No new dependencies, no network, title unchanged, `npm run build` clean.
