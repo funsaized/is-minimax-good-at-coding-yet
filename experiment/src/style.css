@@ -13,6 +13,28 @@
    it is nearly one voice, because the ink has had time to settle.
    that arc is the whole reason the page is still readable.
 
+   AND NOW THE ARC IS REAL. the dry ramp used to be a claim in this
+   comment and a fade on a background wash. it is now a number —
+   --ink-close — written from the reader's own distance down the
+   document, and every set of lines multiplies its spread by it, so
+   the same three plates genuinely close up on the sentence as you go
+   down the sheet. every impression declares how wet it is when the
+   sheet comes off the press: the title is 1, the job ticket under it
+   is .6, the specimen is .72, and the short answer is 0 because the
+   press is allowed to get that one right. nothing about it needs a
+   hand, and it still works when the reader has asked for stillness.
+
+   THE FOLD. a posted sheet is folded, and a fold is a crease rather
+   than a cut: the paper is crushed along the line so the ink skips
+   there, and the half that curls under is a shade deeper. it sits
+   exactly where the sheet changes purpose — the argument above it, the
+   proofing below it — so the one piece of pure paper on the page is
+   also the piece that says how far down the reader has got. and it
+   carries the register: a target at each end of the crease, printed in
+   the same three plates at the same offsets, so once the type around
+   it has dried and closed up, the marks at the ends of the fold are
+   the last thing on the page still reporting where the plates are.
+
    and every corner on the sheet is trapped. an ink trap is the
    ink a pressman puts in the notch where a stroke lands on a rule,
    so the join does not print light; here they grow with the
@@ -71,6 +93,19 @@
   initial-value: 0;
 }
 
+/* how dry the sheet is, 1 at the press → .12 once the ink has set. written by
+   the app from the reader's own distance down the document, so this is the one
+   number on the page that nobody has to touch: it is not a state, it is a
+   position. the type list and the answer below it are printed into paper that
+   has already agreed with itself, and climbing back to the question wets it up
+   again. each impression declares its own wetness on top of this — see
+   `.plated` — so the fringe is a fraction of the type and never of the sheet. */
+@property --ink-close {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
 /* how far the proof has been pulled, 0 → 1. a second number to --settle on
    purpose: the answer does not answer to the blade. it is the one sentence on
    the page that is always in register, so it gets its own ramp, and the only
@@ -107,10 +142,13 @@
   --reg-y: 1.55px;
   --fringe-scale: 1;
   --settle: 0;
-  /* written by the app too: how dry the sheet is, 1 at the press → 0 once the
-     ink has dried out. the fringe is the plate offset through a wet/dry ramp,
-     and it falls back to the true offset if the app never gets to write it. */
+  /* --fringe-x/y is the true plate offset, and --ink-close is how far the ink has
+     closed on it: two halves of one idea, multiplied together by `.plated` so a
+     stack can be told how wet it is when the sheet comes off the press. both are
+     written by the app and both fall back to a sheet at the press. --dry is a
+     separate, softer ramp that only the paper wash behind the sheet reads. */
   --dry: 0;
+  --ink-close: 1;
   --fringe-x: var(--reg-x);
   --fringe-y: var(--reg-y);
 
@@ -325,7 +363,10 @@ kbd {
 }
 
 /* the ink washes drift with the plate, so the whole sheet is out of register —
-   and the wash cools off as the sheet dries, the way real ink does */
+   and they ride the same ramp the type does, so the paper stops drifting as the
+   sheet dries. --dry is only allowed to fade them: that is the one piece of the
+   press that gives up early when the reader has asked for stillness, because a
+   soft background gradient settling is a change of tone, not a movement */
 .stock__wash {
   position: absolute;
   inset: 0;
@@ -333,7 +374,11 @@ kbd {
     radial-gradient(56rem 40rem at 90% -10%, rgba(255, 46, 107, .12), transparent 62%),
     radial-gradient(50rem 40rem at -8% 60%, rgba(42, 62, 201, .11), transparent 64%);
   opacity: calc(1 - var(--dry) * .5);
-  transform: translate3d(calc(var(--fringe-x) * 2.4), calc(var(--fringe-y) * 2.4), 0);
+  transform: translate3d(
+    calc(var(--fringe-x) * var(--ink-close) * 2.4),
+    calc(var(--fringe-y) * var(--ink-close) * 2.4),
+    0
+  );
   transition: transform .24s linear, opacity .4s var(--ease);
 }
 
@@ -727,11 +772,19 @@ html[data-register='on'] .edge__ink--black {
    One set of lines, printed black, pink and blue. The colour
    plates are identical inert copies sitting wherever the press
    left them, multiplied into the paper.
+
+   the spread is the product of three things and no others: how far
+   the blade is from the gate (--fringe-x), how big the sheet is
+   being set (--fringe-scale, which the media queries take down on a
+   phone), and how far the reader is down the press (--ink-close).
+   each stack also declares its own --wet, so a phrase set small
+   takes a smaller spread than the poster above it. bring the blade
+   to the gate and the spread is zero whatever else is true.
    ============================================================= */
 
 .plated {
-  --px: calc(var(--fringe-x) * var(--fringe-scale));
-  --py: calc(var(--fringe-y) * var(--fringe-scale));
+  --px: calc(var(--fringe-x) * var(--fringe-scale) * var(--wet, 1) * var(--ink-close));
+  --py: calc(var(--fringe-y) * var(--fringe-scale) * var(--wet, 1) * var(--ink-close));
   position: relative;
   display: block;
   transform-origin: 0% 66%;
@@ -1340,9 +1393,6 @@ html[data-register='on'] .plated__layer--black .mark {
 
 .plates__stack {
   min-width: 0;
-  /* ink spread is a fixed fraction of the type, so small type takes a smaller
-     fringe: the plate stays honest without turning the job ticket to mud */
-  --fringe-scale: .34;
 }
 
 .plates__type {
@@ -2448,6 +2498,122 @@ html[data-register='on'] .register-eye__plate--black {
 }
 
 /* =============================================================
+   THE FOLD
+   A posted sheet is folded, and a fold is a crease rather than a
+   cut. three things happen along that line and all three are here:
+   the paper is crushed, so the ink skips and a hairline of bare
+   stock shows through; the half of the sheet that curls under sits a
+   shade deeper than the half that does not; and the line is the
+   quietest full-width event on the page, which is why it goes
+   exactly where the sheet changes purpose — the argument above it,
+   the proofing below it.
+
+   it is also the last place the register is still loud. a target is
+   printed at each end of the crease in the same three plates and at
+   the same offsets as the rest of the sheet, so the type around it
+   can dry and close up and the marks at the ends of the fold are
+   still reporting where the plates are. which is the whole argument
+   of the page, told by the two smallest marks on it.
+   ============================================================= */
+
+.fold {
+  position: relative;
+  /* tall enough that the shading under the crease is a band of paper and not a
+     line of CSS, and short enough that it reads as a fold rather than a break */
+  height: clamp(54px, 7vw, 104px);
+  margin: clamp(4px, .7vw, 12px) 0 clamp(2px, .4vw, 8px);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* the crease itself. it is not symmetrical, because paper does not crease
+   symmetrically: the half still coming down turns away from the light and goes
+   a shade deeper, the half below is already lying back on itself and catches
+   some of it back, and between them the stock is crushed hard enough to crack,
+   which is the hairline of bare paper right along the line. a fold printed only
+   as a grey band is a fold you cannot see. */
+.fold::before {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background: linear-gradient(
+    180deg,
+    rgba(21, 20, 27, 0) 0%,
+    rgba(21, 20, 27, .035) 26%,
+    rgba(21, 20, 27, .088) 48.2%,
+    rgba(252, 250, 243, .92) 49.5%,
+    rgba(252, 250, 243, .5) 50.4%,
+    rgba(255, 255, 255, .3) 57%,
+    rgba(21, 20, 27, .016) 80%,
+    rgba(21, 20, 27, 0) 100%
+  );
+}
+
+.fold__mark {
+  position: absolute;
+  top: 50%;
+  width: 15px;
+  height: 15px;
+  color: var(--black);
+  opacity: .42;
+  transform: translateY(-50%);
+}
+
+/* the marks stand in the gutter, because a crease is reported from the edges of
+   the sheet and never from the middle of it */
+.fold__mark--start {
+  left: var(--gutter);
+}
+
+.fold__mark--end {
+  right: var(--gutter);
+}
+
+.fold-mark__plate {
+  transition: transform .2s var(--ease-out);
+}
+
+/* the same two ratios the rest of the sheet uses, so the fold is the same
+   misregistration as the title and the seam and not a fourth opinion */
+.fold-mark__plate--pink {
+  color: var(--pink-ink);
+  transform: translate(calc(var(--reg-x) * 1.3), calc(var(--reg-y) * 1.3));
+}
+
+.fold-mark__plate--blue {
+  color: var(--blue-ink);
+  transform: translate(calc(var(--reg-x) * -.78), calc(var(--reg-y) * -.78));
+}
+
+.fold-mark__plate--black {
+  color: var(--black);
+}
+
+html[data-register='on'] .fold__mark {
+  opacity: .72;
+}
+
+html[data-register='on'] .fold-mark__plate--black {
+  filter: drop-shadow(0 0 4px rgba(255, 46, 107, .6));
+}
+
+/* a phone has no gutter wide enough to carry a mark at each end of a crease, so
+   the crease keeps its paper and loses its register: the gauge in the slugbar is
+   the readout there, and it is never further than one thumb away */
+@media (max-width: 620px) {
+  .fold__mark--end {
+    display: none;
+  }
+}
+
+/* the crease is the break, so the section below it starts close under the paper:
+   the fold and the rule at the head of the type list read as one event — the
+   sheet is folded, and the proofing half begins on the far side of it */
+.fold + .page .type__head {
+  padding-top: clamp(13px, 1.5vw, 22px);
+}
+
+/* =============================================================
    THE TYPE LIST
    The last thing on the light sheet is the one thing the page has
    been claiming all the way down: it is set in the grotesque, the
@@ -3091,10 +3257,6 @@ html[data-register='on'] .run__seam-rule--black {
    ============================================================= */
 
 .proof__stack {
-  /* the answer does not answer to the blade. zero fringe scale means the
-     colour plates sit on the black plate's pixels whatever the blade is
-     doing, and the arrival is played entirely by keyframes instead */
-  --fringe-scale: 0;
   margin-top: clamp(10px, 1.1vw, 15px);
 }
 
@@ -4211,12 +4373,17 @@ html[data-reveal='on'] .reveal.is-in {
   .plated__layer--ghost,
   .stock__wash,
   .plate-target__plate,
+  .fold-mark__plate,
   .bed__blade,
   .edge__plate,
   .edge__ink,
   .type__gauge {
     transition: none;
   }
+
+  /* and the ink ramp is a position, not a journey: the sheet is exactly as dry
+     down here as it would be with motion on, because a page that dries only when
+     it is allowed to move is a page that is illegible in a still browser */
 
   /* and the type list is simply already picked */
   html[data-reveal='on'] .type__panel.is-in .type__sample,
@@ -4302,6 +4469,7 @@ html[data-reveal='on'] .reveal.is-in {
   .actions,
   .bed,
   .ream__well,
+  .fold,
   .run__glow {
     display: none;
   }
@@ -4310,6 +4478,12 @@ html[data-reveal='on'] .reveal.is-in {
      press furniture, and the paper they stood on is not printed either */
   .ream {
     padding-top: 0;
+  }
+
+  /* and a printout is not posted, so the crease goes and the head of the type
+     list gets its own air back */
+  .fold + .page .type__head {
+    padding-top: 26px;
   }
 
   /* the press run prints as ink on paper, so the slab becomes the sheet again

@@ -119,6 +119,9 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
           <span className="specimen__flash" aria-hidden="true" />
           <Plated
             className="specimen__stack"
+            /* the close read is set well down the press, so its three
+               impressions are nearly one voice by the time the reader is here */
+            wet={0.72}
             render={ghost => (
               <span className="specimen__word">
                 {ghost ? null : <span className="sr-only">{note.label}</span>}

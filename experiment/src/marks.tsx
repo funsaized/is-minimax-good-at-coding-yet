@@ -58,6 +58,37 @@ export function PlateTarget({ className }: MarkProps) {
   )
 }
 
+/**
+ * The mark on the fold.
+ *
+ * A folded sheet is creased, not cut, so the paper at the crease is crushed and
+ * the ink skips there — a fold you cannot see is not a fold. The page prints one
+ * registration target at each end of the crease, in the same three plates and at
+ * the same offsets as everything else, so the crease is also the one place on
+ * the sheet where the register is legible from the middle of the page: the type
+ * around it has dried and closed up, and the mark has not moved.
+ */
+export function FoldMark({ className }: MarkProps) {
+  const impression = (
+    <g>
+      <circle cx="12" cy="12" r="6.4" fill="none" stroke="currentColor" strokeWidth="1.3" />
+      <path
+        d="M12 .4v4.4M12 19.2v4.4M.4 12h4.4M19.2 12h4.4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+      />
+    </g>
+  )
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <g className="fold-mark__plate fold-mark__plate--pink">{impression}</g>
+      <g className="fold-mark__plate fold-mark__plate--blue">{impression}</g>
+      <g className="fold-mark__plate fold-mark__plate--black">{impression}</g>
+    </svg>
+  )
+}
+
 /** Crop corner, for the trim edge of a printed sheet. */
 export function CropMark({ className }: MarkProps) {
   return (

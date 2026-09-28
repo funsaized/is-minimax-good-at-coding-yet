@@ -12,7 +12,7 @@ import {
 import { findNote, NOTES, WORD_IDS, type WordId } from './notes'
 import { ControlEdge } from './edge'
 import { InkTrap } from './ink'
-import { CropMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
+import { CropMark, FoldMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
 import { Plated } from './plate'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
 import { Ream } from './ream'
@@ -51,20 +51,26 @@ const SHORTCUTS = [
    out loud — the number the whole page answers to. */
 const SLIP = [
   ['sentence', 'is Minimax M3 good at frontend yet? — seven words, three impressions'],
-  ['stock', 'newsprint: drum banding, tooth in an inline filter, wet ink on a canvas'],
-  ['register', 'one number for the whole sheet: the gate is ±0.14, and a unit of blade is 3px of paper'],
+  [
+    'stock',
+    'newsprint: drum banding, tooth in an inline filter, wet ink on a canvas, one fold below the close read',
+  ],
+  [
+    'register',
+    'one number and one ramp: the gate is ±0.14, a unit of blade is 3px of paper, and the ink closes on both as the reader goes down the sheet',
+  ],
   ['assets', 'local SVG and CSS only. no web fonts, no network, nothing stored'],
 ] as const
 
 /* the four mechanisms, in the order you meet them going down the press */
 const MACHINERY = [
   [
-    'one number, and one exception.',
-    'Everything out of register on this page is the plate offset: the fringes, the card shadows, the pools in the traps, the gauge, the seam where the press run begins. The short answer is the exception — it prints in register whatever the blade is doing, because it is the one sentence the press is allowed to get right.',
+    'one number, and one ramp.',
+    'Everything out of register on this page is the plate offset: the fringes, the card shadows, the pools in the traps, the gauge, the marks at the ends of the fold, the seam where the press run begins. The short answer is the exception — it prints in register whatever the blade is doing, because it is the one sentence the press is allowed to get right. Exactly one thing on the page is not a hand at all: the sheet dries as you read down it, and the three impressions close on their own as it dries.',
   ],
   [
     'wet, then dry.',
-    'The question prints at the press, three plates plainly apart. The close read beneath it has had time to settle and is nearly one voice. That arc is the only reason the page stays readable at all.',
+    'The question prints at the press, three plates plainly apart. The close read beneath it has had time to settle and is nearly one voice. That arc is the only reason the page stays readable at all, and it is the one movement on the sheet that nobody has to ask for — climb back to the question and the ink wets up again.',
   ],
   [
     'trapped corners.',
@@ -72,7 +78,7 @@ const MACHINERY = [
   ],
   [
     'stops on request.',
-    'Every movement here is a print decision, and each one ends the moment reduced motion is asked for. The blade, the register and the traps keep working; nothing flies.',
+    'Every movement here is a print decision, and each one ends the moment reduced motion is asked for. The blade, the register, the ramp and the traps keep working; nothing flies.',
   ],
 ] as const
 
@@ -108,10 +114,21 @@ export function App() {
 
   /* One source of truth for the plate, and it answers to two questions.
      The true offset -- which every readout follows, the gauge, the control
-     strip, the shadows under the cards. And the fringe: the same offset, faded
-     as the sheet dries going down the press. The question prints wet, three
-     plates plainly apart; the close read beneath it prints dry, which is the
-     only reason anyone can read the close read at all.
+     strip, the shadows under the cards, the marks at the ends of the fold.
+     And the ink: how far the spread has closed up, which is the same offset
+     taken through a drying ramp. The question prints wet, three plates plainly
+     apart; the close read beneath it has had time to settle and is nearly one
+     voice, and that arc is the only reason anyone can read the close read.
+
+     Exactly one number does the drying, --ink-close, and it is measured from
+     the top of the document rather than from the motion preference: an ink
+     ramp is a position, not a journey, so a reader who has asked for stillness
+     still gets a sheet that is as dry at the foot of the page as it would have
+     been with motion on -- and still opens on the press with the plates plainly
+     apart, which is the one thing a still browser must not lose. --dry is left
+     to the paper wash, which is the only other thing on the sheet that cares
+     how far down the press you are, and it is the one that is allowed to give
+     up early.
 
      The scroll listener is attached once. When the blade moves there is no
      listener to re-attach, just a repaint -- dragging the bed must not churn
@@ -122,16 +139,28 @@ export function App() {
     const still = prefersStill()
     let frame = 0
 
+    const ease = (value: number) => value * value * (3 - 2 * value)
+
     const sync = () => {
       const { x, y } = plateOffset(regRef.current)
       root.style.setProperty('--reg-x', `${x.toFixed(2)}px`)
       root.style.setProperty('--reg-y', `${y.toFixed(2)}px`)
-      const travel = still ? 1 : Math.min(1, window.scrollY / Math.max(1, window.innerHeight * 1.5))
-      const dry = travel * travel * (3 - 2 * travel)
-      const wet = 1 - dry * 0.88
-      root.style.setProperty('--dry', dry.toFixed(3))
-      root.style.setProperty('--fringe-x', `${(x * wet).toFixed(2)}px`)
-      root.style.setProperty('--fringe-y', `${(y * wet).toFixed(2)}px`)
+      root.style.setProperty('--fringe-x', `${x.toFixed(2)}px`)
+      root.style.setProperty('--fringe-y', `${y.toFixed(2)}px`)
+
+      /* the wash on the paper behind the sheet, which is the only background on
+         the page that cools off as the sheet dries */
+      const wash = still ? 1 : Math.min(1, window.scrollY / Math.max(1, window.innerHeight * 1.5))
+      root.style.setProperty('--dry', ease(wash).toFixed(3))
+
+      /* the ink. three and a bit screens is roughly where the light sheet runs
+         out, so the last of the spread is gone by the time the reader reaches
+         the type list -- and the short answer below that is printed into paper
+         that has already agreed with itself. it eases, because ink does not dry
+         at a constant rate, and it is a function of position rather than of
+         history, so climbing back to the question wets the sheet up again. */
+      const reach = Math.min(1, window.scrollY / Math.max(1, window.innerHeight * 3.2))
+      root.style.setProperty('--ink-close', (1 - ease(reach) * 0.88).toFixed(3))
     }
     paintPlate.current = sync
 
@@ -475,6 +504,7 @@ export function App() {
                   <span className="plates__num" aria-hidden="true">{item.index}</span>
                   <Plated
                     className="plates__stack"
+                    wet={0.6}
                     render={() => <span className="plates__type">{item.label}</span>}
                   />
                   <span className="plates__role">{item.gloss}</span>
@@ -498,14 +528,35 @@ export function App() {
                 <p>
                   The sentence has three phrases and each one is doing a different job. All three
                   are printed: the one you are reading is on top of the ream, the other two are
-                  still in it behind.
+                  still in it behind. The ink has been setting since the top of the sheet, so by
+                  the time you get here the three impressions have almost closed on the words.
                 </p>
               </div>
             </header>
 
             <Ream active={active} stageRef={specimenRef} onStep={step => select(walk(active, step))} />
           </section>
+        </div>
 
+        {/* THE FOLD. a press sheet is posted folded, and the fold is a crease
+            rather than a cut: the paper is crushed at the line, the ink skips
+            there, and the half that curls under is a shade deeper than the half
+            that does not. it sits exactly where the sheet changes purpose --
+            the close read above it is the argument, the type list below it is
+            the proofing -- so the one piece of pure paper on the page is also
+            the piece that says where the reader has got to.
+
+            and it carries the register. a target is printed at each end of the
+            crease, in the same three plates and at the same offsets as the rest
+            of the sheet, so by the time the type around it has dried and closed
+            up, the marks at the ends of the fold are the last thing on the page
+            still telling the reader where the plates are. */}
+        <div className="fold" aria-hidden="true">
+          <FoldMark className="fold__mark fold__mark--start" />
+          <FoldMark className="fold__mark fold__mark--end" />
+        </div>
+
+        <div className="page">
           {/* THE TYPE LIST. the last thing on the light sheet, and the only
               quiet one: a press type list, showing the three faces the page is
               actually set in at the sizes it actually uses them, with the
@@ -609,6 +660,10 @@ export function App() {
                     <p className="proof__statement">
                       <Plated
                         className="proof__stack"
+                        /* the answer does not answer to the blade, and it does not
+                           answer to the ramp either: the sentence the press is
+                           allowed to get right is dry before it is ever pulled */
+                        wet={0}
                         render={() => (
                           <span className="proof__claim">
                             <span className="proof__claim-a">When the interface has a point of view</span>
@@ -864,7 +919,7 @@ function QuestionTitle({
         <PlateTarget className="question__target" />
         <span className="question__gate-read">reg. mark · live read</span>
       </span>
-      <Plated className="question__stack" render={lines} />
+      <Plated className="question__stack" wet={1} render={lines} />
       <span className="question__wash" aria-hidden="true" />
     </h1>
   )
