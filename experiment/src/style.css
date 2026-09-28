@@ -19,6 +19,19 @@
    register, which makes the gate legible as a change in the
    smallest marks on the page rather than in a panel of readouts.
 
+   THE PRESS RUN. the page has a beginning, a machine and an
+   answer, and it now ends in ink instead of in light. the stand-
+   first sits directly under the poster, because the argument
+   about the title belongs there and not under the furniture;
+   the answer is printed on the dark slab at the foot of the run
+   so the page gets a real climax rather than one flat tone with a
+   dark footer bolted on. the join between them is the page's own
+   idea said one last time: three rules at the current plate
+   offset, sitting a hair apart, collapsing to one line at the
+   gate. and the answer is the only thing on the page that lands
+   in register — the short sentence arrives as three plates
+   arguing and locks, which is the whole point of it.
+
    the scale: the question is the largest type on the page by a
    wide margin. everything after it is a job ticket, a specimen
    or a label, and is set accordingly.
@@ -79,6 +92,19 @@
   --display: 'Helvetica Neue', Helvetica, Arial, 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
   --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* the press run: the ink slab at the foot of the sheet. it is printed in the
+     three plates' own colours on #14131a, so the pink and the blue both have to
+     be lifted off the light sheet's values or they disappear into it */
+  --slab: #14131a;
+  --slab-ink: #fbf8f1;
+  --slab-70: rgba(251, 248, 241, .76);
+  --slab-50: rgba(251, 248, 241, .54);
+  --slab-pink: #ff5c8d;
+  --slab-blue: #7a86ff;
+  /* the control strip is fixed furniture that crosses both halves of the page,
+     so its own ink has to read on newsprint and on the slab alike */
+  --edge-ink: #6d6979;
 
   --gutter: clamp(18px, 4.2vw, 76px);
   /* the gap between the two title columns: the column rule is centred on it */
@@ -320,14 +346,14 @@ kbd {
   inset: 0 auto 0 0;
   width: 1px;
   content: '';
-  background: var(--rule);
+  background: rgba(109, 105, 121, .4);
 }
 
 .edge__slug {
   position: absolute;
   top: 92px;
   left: 50%;
-  color: var(--ink-50);
+  color: var(--edge-ink);
   font-family: var(--mono);
   font-size: .55rem;
   letter-spacing: .22em;
@@ -337,18 +363,27 @@ kbd {
   transform: translateX(-50%);
 }
 
-/* three crosses at the current offset, collapsing into one bullseye at the gate */
+/* three crosses at the current offset, collapsing into one bullseye at the gate.
+   the mark lives on a patch of stock, the way a target printed outside the trim
+   does, because half the strip sits over the ink slab and black on black is
+   not a mark at all. */
 .edge__target {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 24px;
-  height: 24px;
-  color: var(--blue);
+  display: grid;
+  width: 30px;
+  height: 30px;
+  color: var(--black);
+  background: rgba(243, 239, 229, .92);
+  border: 1px solid rgba(21, 20, 27, .16);
+  place-items: center;
   transform: translate(-50%, -50%);
 }
 
 .edge__target svg {
+  width: 20px;
+  height: 20px;
   overflow: visible;
 }
 
@@ -609,6 +644,10 @@ html[data-register='on'] .edge__ink--black {
 }
 
 /* ---------- shared bits ---------- */
+
+.main {
+  display: block;
+}
 
 .page {
   width: min(1560px, 100%);
@@ -1275,42 +1314,61 @@ html[data-register='on'] .plated__layer--black .mark {
   text-transform: uppercase;
 }
 
-/* ---------- the band under the title ---------- */
+/* ---------- the standfirst: the argument, directly under the poster ---------- */
 
-.band {
+/* the lede used to sit under the bed, the keys and the job ticket, which is
+   three pieces of furniture above the only prose the page had. it is the
+   standfirst a spread opens with, so it is where it belongs now: under the
+   type, in a narrow measure beside a margin note that has something specific
+   to say about the question mark. */
+.standfirst {
   display: grid;
-  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
-  gap: clamp(22px, 3vw, 56px);
+  grid-template-columns: minmax(0, 22ch) minmax(0, 1fr);
+  gap: clamp(20px, 2.8vw, 48px);
   align-items: start;
-  margin-top: clamp(26px, 3vw, 46px);
+  margin-top: clamp(22px, 2.6vw, 44px);
+  padding-top: clamp(20px, 2.4vw, 32px);
+  border-top: 1px solid var(--rule);
 }
 
-.band__say {
+/* the note is two lines against a five-line paragraph, so it sits in the middle
+   of its column: a margin note set against the block it annotates, not a stub
+   hanging off the top of it */
+.standfirst__note {
+  display: grid;
+  gap: 10px;
+  align-self: center;
   min-width: 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--pink);
 }
 
-.margin-note {
-  display: grid;
-  grid-template-columns: 3px minmax(0, 1fr);
-  gap: 0 16px;
-  align-items: start;
+.standfirst__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--pink-ink);
+  font-family: var(--mono);
+  font-size: var(--micro);
+  font-weight: 500;
+  letter-spacing: .17em;
+  text-transform: uppercase;
 }
 
-.margin-note__rule {
-  align-self: stretch;
-  background: linear-gradient(180deg, var(--pink), rgba(255, 46, 107, 0));
+.standfirst__mark {
+  width: 13px;
+  height: 13px;
 }
 
-.margin-note__text {
-  max-width: 27ch;
+.standfirst__note-text {
   color: var(--ink-70);
   font-family: var(--serif);
-  font-size: clamp(1.04rem, .8vw + .86rem, 1.3rem);
-  line-height: 1.3;
+  font-size: clamp(1.02rem, .7vw + .88rem, 1.26rem);
+  line-height: 1.32;
   text-wrap: pretty;
 }
 
-.margin-note__text em {
+.standfirst__note-text em {
   color: var(--black);
   font-style: italic;
   text-decoration: underline;
@@ -1319,20 +1377,28 @@ html[data-register='on'] .plated__layer--black .mark {
   text-underline-offset: 4px;
 }
 
+.standfirst__say {
+  min-width: 0;
+}
+
 .lede {
-  max-width: 46ch;
+  max-width: 52ch;
   color: var(--ink-70);
   font-family: var(--serif);
-  font-size: var(--read);
-  line-height: 1.48;
+  font-size: clamp(1.08rem, .48vw + .99rem, 1.36rem);
+  line-height: 1.5;
   text-wrap: pretty;
 }
 
+/* the standfirst is the one block of reading on the sheet, so it gets the one
+   piece of plain text the page allows itself: the lede is the only place on the
+   light sheet set in the serif at reading size without a rule or a label around
+   it. everything else is a job ticket. */
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: clamp(18px, 2vw, 26px) 0 0;
+  margin: clamp(18px, 1.9vw, 26px) 0 0;
 }
 
 .button {
@@ -1384,10 +1450,10 @@ html[data-register='on'] .plated__layer--black .mark {
 
 /* ---------- the press bed: wet ink and a squeegee you can take hold of ---------- */
 
-/* the instrument sits immediately under the question, because it is the thing
+/* the instrument sits immediately under the argument, because it is the thing
    that prints it */
 .bedrow {
-  margin-top: clamp(24px, 3vw, 44px);
+  margin-top: clamp(22px, 2.6vw, 40px);
   padding-top: clamp(16px, 2vw, 26px);
   border-top: 1px solid var(--rule);
 }
@@ -2140,11 +2206,132 @@ html[data-register='on'] .register-eye__plate--black {
   border-color: var(--black);
 }
 
+/* =============================================================
+   THE PRESS RUN
+   The light sheet stops and the ink slab begins, and the join is
+   the page's own idea said one last time. Three rules ride the
+   current plate offset — the black plate reads as paper because
+   the ground it would print on is gone — so they sit a hair apart
+   while the blade is loose and are one crisp line at the gate.
+
+   the slab is a second set of tokens, not a second set of styles:
+   everything inside it re-reads the same names in the slab's own
+   values, which is why the copy, the rules and the accents all
+   turn over in one place. the proof card is a physical sheet
+   lying on the slab, so it puts the light palette back.
+   ============================================================= */
+
+.run {
+  position: relative;
+  margin-top: clamp(34px, 4.4vw, 74px);
+  color: var(--slab-ink);
+  background: var(--slab);
+  --black: var(--slab-ink);
+  --stock-3: var(--slab-ink);
+  --ink-70: var(--slab-70);
+  --ink-50: var(--slab-50);
+  --rule: rgba(251, 248, 241, .18);
+  --rule-soft: rgba(251, 248, 241, .1);
+  --pink-ink: var(--slab-pink);
+  --blue: var(--slab-blue);
+  --blue-ink: var(--slab-blue);
+}
+
+/* selection turns over with the sheet: light type on the pink plate is fine on
+   newsprint, and unreadable on ink */
+.run ::selection,
+.colophon ::selection {
+  color: var(--slab);
+  background: var(--slab-pink);
+}
+
+/* three rules, one per plate, at the offset the blade is actually sitting at.
+   the pink and the blue are the same two ratios the rest of the sheet uses, so
+   the seam is the same misregistration as everything else on the page. */
+.run__seam {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.run__seam-rule {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  left: 0;
+  height: 2px;
+  transition: transform .2s var(--ease-out), box-shadow .45s var(--ease);
+}
+
+.run__seam-rule--black {
+  background: var(--slab-ink);
+}
+
+.run__seam-rule--pink {
+  background: var(--slab-pink);
+  transform: translateX(calc(var(--reg-x) * 1.14));
+}
+
+.run__seam-rule--blue {
+  background: var(--slab-blue);
+  transform: translateX(calc(var(--reg-x) * -.74));
+}
+
+html[data-register='on'] .run__seam-rule--black {
+  box-shadow: 0 0 7px rgba(251, 248, 241, .55);
+}
+
+/* the trim ticks at the ends of the join: the sheet is cut here, and the corner
+   it is cut at is a corner like any other on a press sheet */
+.run__seam::before,
+.run__seam::after {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 9px;
+  content: '';
+  background: rgba(251, 248, 241, .55);
+}
+
+.run__seam::before {
+  left: 1px;
+}
+
+.run__seam::after {
+  right: 1px;
+}
+
+/* the slab takes the light when the proof is pulled. it is a wet slab: the bloom
+   sits behind the card and behind the quiet on the left of it, never over either,
+   and it is exactly the run's own height so it cannot bleed down onto the
+   colophon — a positioned element would paint over that, and a bloom is not
+   something to hand the footer by accident. it scales up from the seam instead. */
+.run__glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(64% 52% at 74% 26%, rgba(255, 46, 107, .3), transparent 70%),
+    radial-gradient(52% 46% at 18% 62%, rgba(42, 62, 201, .26), transparent 72%);
+  opacity: 0;
+  transform: scale(.94);
+  transform-origin: 50% 0;
+  transition: opacity 1.05s var(--ease) .18s, transform 1.15s var(--ease) .1s;
+  pointer-events: none;
+}
+
+.run.is-open .run__glow {
+  opacity: 1;
+  transform: none;
+}
+
 /* ---------- short answer ---------- */
 
 .answer {
-  padding: clamp(50px, 6vw, 96px) 0 clamp(30px, 4vw, 56px);
-  border-top: 2px solid var(--black);
+  padding: clamp(46px, 5.4vw, 88px) 0 clamp(44px, 5vw, 78px);
 }
 
 .answer__grid {
@@ -2181,7 +2368,7 @@ html[data-register='on'] .register-eye__plate--black {
   max-width: none;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 6px 12px;
   margin-top: auto;
   padding-top: clamp(18px, 2vw, 26px);
   color: var(--ink-50);
@@ -2191,16 +2378,48 @@ html[data-register='on'] .register-eye__plate--black {
   text-transform: uppercase;
 }
 
+/* the keys are printed here rather than only in the strip at the top, because
+   this is the one control on the page that is not under the reader's cursor */
+.answer__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--slab-50);
+}
+
+.answer__key > [aria-hidden='true'] {
+  margin: 0 -3px;
+  color: var(--slab-pink);
+}
+
+.answer__key kbd {
+  color: var(--slab-pink);
+  background: rgba(251, 248, 241, .07);
+  border-color: rgba(251, 248, 241, .22);
+}
+
 .proof {
+  /* a physical proof sheet lying on the slab, so the light palette goes back on
+     here and the card stays the brightest object in the run */
+  --black: #15141b;
+  --stock-3: #fcfaf3;
+  --ink-70: #454150;
+  --ink-50: #615d6e;
+  --rule: rgba(21, 20, 27, .17);
+  --rule-soft: rgba(21, 20, 27, .09);
+  --pink-ink: #d1124b;
+  --blue: #2a3ec9;
+  --blue-ink: #26329e;
+  color: var(--black);
   background: var(--stock-3);
   border: 1px solid var(--black);
   border-radius: 4px;
-  box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 var(--pink);
+  box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 var(--pink), 0 26px 60px -34px rgba(0, 0, 0, .8);
   transition: box-shadow .4s var(--ease);
 }
 
 .proof.is-open {
-  box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 var(--blue);
+  box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 var(--blue), 0 30px 70px -30px rgba(0, 0, 0, .85);
 }
 
 .proof__bar {
@@ -2293,15 +2512,40 @@ html[data-register='on'] .register-eye__plate--black {
 
 .proof__window {
   position: relative;
+  min-height: clamp(206px, 20vw, 262px);
   padding: clamp(24px, 3vw, 40px);
   overflow: hidden;
   border-radius: 0 0 3px 3px;
 }
 
+/* the sheet is pulled, not switched: it unrolls off the bar as the ink comes
+   across, and the panel it replaces is gone before the first frame of that
+   lands, so the swap is never seen */
+.proof.is-open .proof__window {
+  animation: unroll .6s var(--ease-out) both;
+}
+
+@keyframes unroll {
+  from {
+    opacity: 0;
+    transform: perspective(1100px) rotateX(-9deg) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .proof__sweep {
   position: absolute;
   inset: -20% -40%;
-  background: linear-gradient(102deg, transparent 40%, rgba(255, 255, 255, .8) 50%, transparent 60%);
+  background: linear-gradient(
+    102deg,
+    transparent 40%,
+    rgba(255, 255, 255, .92) 50%,
+    rgba(255, 46, 107, .3) 54%,
+    transparent 61%
+  );
   pointer-events: none;
 }
 
@@ -2401,30 +2645,76 @@ html[data-register='on'] .register-eye__plate--black {
   text-wrap: pretty;
 }
 
+/* the answer is the one thing on the page that lands in register. it arrives as
+   three plates a hair apart and locks — the page's own mechanic, spent on its
+   own punchline, so the last thing the reader sees is the thing the whole
+   instrument was built to do. */
 .proof.is-open .proof__yes,
-.proof.is-open .proof__claim,
+.proof.is-open .proof__claim {
+  animation: plate-land .78s var(--ease-out) both;
+}
+
 .proof.is-open .proof__tests li,
 .proof.is-open .proof__coda {
   animation: print-line .55s var(--ease-out) both;
 }
 
-.proof.is-open .proof__yes { animation-delay: .3s; }
-.proof.is-open .proof__claim { animation-delay: .4s; }
-.proof.is-open .proof__tests li { animation-delay: calc(.44s + var(--i) * .09s); }
-.proof.is-open .proof__coda { animation-delay: .84s; }
+.proof.is-open .proof__yes {
+  animation-delay: .26s;
+}
 
-/* ---------- colophon ---------- */
+.proof.is-open .proof__claim {
+  animation-delay: .34s;
+}
+
+.proof.is-open .proof__tests li {
+  animation-delay: calc(.46s + var(--i) * .09s);
+}
+
+.proof.is-open .proof__coda {
+  animation-delay: .86s;
+}
+
+@keyframes plate-land {
+  0% {
+    opacity: 0;
+    text-shadow:
+      6px 2.4px 0 rgba(255, 46, 107, .45),
+      -4.8px -1.9px 0 rgba(42, 62, 201, .45);
+  }
+  58% {
+    opacity: 1;
+    text-shadow:
+      1px .4px 0 rgba(255, 46, 107, .14),
+      -.8px -.3px 0 rgba(42, 62, 201, .14);
+  }
+  100% {
+    opacity: 1;
+    text-shadow:
+      0 0 0 rgba(255, 46, 107, 0),
+      0 0 0 rgba(42, 62, 201, 0);
+  }
+}
+
+/* ---------- colophon: the foot of the press run ---------- */
 
 .colophon {
-  margin-top: clamp(56px, 7vw, 110px);
-  padding: clamp(40px, 5vw, 78px) var(--gutter) clamp(26px, 3.4vw, 44px);
-  color: var(--stock-3);
-  background: #14131a;
+  /* the same slab as the run above it, with no light between: the dark end of
+     the page is one continuous stretch of ink from the seam to the last line */
+  --black: var(--slab-ink);
+  --ink-70: var(--slab-70);
+  --ink-50: var(--slab-50);
+  --rule: rgba(251, 248, 241, .18);
+  --pink-ink: var(--slab-pink);
+  color: var(--slab-ink);
+  background: var(--slab);
 }
 
 .colophon__inner {
   width: min(1560px, 100%);
   margin: 0 auto;
+  padding: clamp(30px, 3.6vw, 54px) var(--gutter) clamp(30px, 4vw, 58px);
+  border-top: 1px solid rgba(251, 248, 241, .14);
 }
 
 .colophon__echo {
@@ -2454,9 +2744,11 @@ html[data-register='on'] .register-eye__plate--black {
   margin: clamp(16px, 2vw, 26px) 0 0;
 }
 
+/* the three flats, at press density. black and federal blue both have to carry a
+   hairline on the slab, because on ink they are the two darkest inks there is */
 .inkbar--black {
   background: #030305;
-  box-shadow: inset 0 0 0 1px rgba(252, 250, 243, .3);
+  box-shadow: inset 0 0 0 1px rgba(251, 248, 241, .3);
 }
 
 .inkbar--pink {
@@ -2464,17 +2756,133 @@ html[data-register='on'] .register-eye__plate--black {
 }
 
 .inkbar--blue {
-  background: var(--blue);
+  background: #2a3ec9;
+  box-shadow: inset 0 0 0 1px rgba(251, 248, 241, .24);
 }
 
 .colophon__grid {
   display: grid;
-  grid-template-columns: minmax(0, .74fr) minmax(0, 1.06fr) minmax(0, .9fr);
-  gap: clamp(18px, 3vw, 48px);
+  grid-template-columns: minmax(0, .96fr) minmax(0, 1.04fr);
+  gap: clamp(22px, 3.4vw, 56px);
   align-items: start;
   margin-top: clamp(22px, 2.6vw, 34px);
   padding-top: 20px;
-  border-top: 1px solid rgba(252, 250, 243, .18);
+  border-top: 1px solid rgba(251, 248, 241, .18);
+}
+
+/* the job ticket, ruled the way a press slip is: term in the mono, set flush,
+   detail in the serif, and one hair between every row. the two prose paragraphs
+   this replaced were the same four facts in a shape nobody could scan. the rule
+   above it belongs to the grid, so the slip starts directly under it. */
+.colophon__slip {
+  display: grid;
+}
+
+.colophon__slip-row {
+  display: grid;
+  grid-template-columns: 6.4rem minmax(0, 1fr);
+  gap: 4px clamp(12px, 1.6vw, 22px);
+  padding: 11px 0 12px;
+  border-bottom: 1px solid rgba(251, 248, 241, .14);
+}
+
+.colophon__slip dt {
+  padding-top: .16em;
+  color: var(--slab-pink);
+  font-family: var(--mono);
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.colophon__slip dd {
+  min-width: 0;
+  color: var(--slab-70);
+  font-family: var(--serif);
+  font-size: .95rem;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.colophon__slip dd em {
+  color: var(--slab-ink);
+  font-style: italic;
+}
+
+.colophon__inks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.colophon__inks > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--slab-50);
+}
+
+.colophon__swatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.colophon__swatch--black {
+  background: #05050a;
+  box-shadow: inset 0 0 0 1px rgba(251, 248, 241, .5);
+}
+
+.colophon__swatch--pink {
+  background: var(--pink);
+}
+
+.colophon__swatch--blue {
+  background: var(--slab-blue);
+}
+
+/* what the four mechanisms are. the lead-in is the pressman's voice, set in the
+   grotesque; the rest is the reading voice, the same one as the close read. */
+.colophon__machine {
+  display: grid;
+  gap: 11px;
+  align-content: start;
+}
+
+.colophon__machine li {
+  padding-left: 14px;
+  border-left: 1px solid rgba(251, 248, 241, .18);
+  color: var(--slab-50);
+  font-family: var(--serif);
+  font-size: .95rem;
+  line-height: 1.52;
+  text-wrap: pretty;
+}
+
+.colophon__machine strong {
+  color: var(--slab-ink);
+  font-family: var(--display);
+  font-size: .9rem;
+  font-weight: 800;
+  letter-spacing: -.024em;
+}
+
+.colophon__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-top: clamp(22px, 2.6vw, 34px);
+  padding-top: 16px;
+  border-top: 1px solid rgba(251, 248, 241, .18);
 }
 
 .colophon__return {
@@ -2499,61 +2907,11 @@ html[data-register='on'] .register-eye__plate--black {
   transform: translateY(-3px);
 }
 
-.colophon__notes {
-  display: grid;
-  gap: 7px;
-  color: rgba(252, 250, 243, .68);
-  font-size: .84rem;
-  line-height: 1.5;
-}
-
-.colophon__notes strong {
-  color: var(--stock-3);
-}
-
-.colophon__swatch {
-  display: inline-block;
-  width: 9px;
-  height: 9px;
-  margin-right: 8px;
-  border-radius: 50%;
-  vertical-align: baseline;
-}
-
-.colophon__swatch--black {
-  background: #030305;
-  box-shadow: inset 0 0 0 1px rgba(252, 250, 243, .4);
-}
-
-.colophon__swatch--pink {
-  background: var(--pink);
-}
-
-.colophon__swatch--blue {
-  background: #3d4bf0;
-}
-
-.colophon__note {
-  display: grid;
-  gap: 10px;
-  color: rgba(252, 250, 243, .6);
-  font-size: .84rem;
-  line-height: 1.56;
-}
-
-.colophon__note p + p {
-  padding-top: 10px;
-  border-top: 1px solid rgba(252, 250, 243, .12);
-}
-
 .colophon__closing {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: clamp(22px, 2.6vw, 34px);
-  padding-top: 16px;
-  border-top: 1px solid rgba(252, 250, 243, .18);
-  color: var(--stock-3);
+  color: var(--slab-ink);
   font-family: var(--serif);
   font-size: 1.04rem;
   font-style: italic;
@@ -2809,8 +3167,7 @@ html[data-reveal='on'] .reveal.is-in {
 
 @media (max-width: 1180px) {
   .read__intro,
-  .answer__grid,
-  .band {
+  .answer__grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
   }
@@ -2820,16 +3177,15 @@ html[data-reveal='on'] .reveal.is-in {
     max-width: 58ch;
   }
 
-  .margin-note__text {
-    max-width: 46ch;
+  /* one column of standfirst prose is already a comfortable measure, so the
+     margin note goes to the top and reads as a note on the title above it */
+  .standfirst {
+    grid-template-columns: minmax(0, 20ch) minmax(0, 1fr);
+    gap: clamp(18px, 2.4vw, 32px);
   }
 
-  .colophon__grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-
-  .colophon__note {
-    grid-column: 1 / -1;
+  .colophon__slip-row {
+    grid-template-columns: 5.4rem minmax(0, 1fr);
   }
 }
 
@@ -2897,6 +3253,21 @@ html[data-reveal='on'] .reveal.is-in {
   /* no second column, so there is no column rule to print three times */
   .question__stack .plated__layer::before {
     display: none;
+  }
+
+  /* below this the note and the lede stop being a margin and become body copy,
+     so the note takes the top of the standfirst and reads as an epigraph */
+  .standfirst {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .standfirst__note {
+    max-width: 44ch;
+  }
+
+  .colophon__grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .specimen__body,
@@ -2996,8 +3367,12 @@ html[data-reveal='on'] .reveal.is-in {
     justify-content: center;
   }
 
-  .colophon__grid {
+  /* the slip loses its term column rather than squeezing it: a press slip on a
+     phone is term above detail, which is how the form was filled in for a
+     century before there were columns to lose */
+  .colophon__slip-row {
     grid-template-columns: minmax(0, 1fr);
+    gap: 3px;
   }
 }
 
@@ -3156,6 +3531,26 @@ html[data-reveal='on'] .reveal.is-in {
   .bed__stamp.is-on {
     transform: rotate(-8deg);
   }
+
+  /* the answer is already in register: it never gets to arrive out of it. the
+     slab still blooms, because the bloom is state and not movement — it simply
+     arrives without travelling, and quieter than it would have */
+  .proof.is-open .proof__window,
+  .proof.is-open .proof__yes,
+  .proof.is-open .proof__claim {
+    animation: none;
+  }
+
+  .proof.is-open .proof__sweep {
+    opacity: 0;
+  }
+
+  .run__glow {
+    background:
+      radial-gradient(74% 58% at 74% 26%, rgba(255, 46, 107, .16), transparent 72%),
+      radial-gradient(64% 52% at 18% 62%, rgba(42, 62, 201, .14), transparent 74%);
+    transform: none;
+  }
 }
 
 /* ---------- print ---------- */
@@ -3167,14 +3562,56 @@ html[data-reveal='on'] .reveal.is-in {
   .edge,
   .workstrip,
   .actions,
-  .bed {
+  .bed,
+  .run__glow {
     display: none;
   }
 
-  .press,
+  /* the press run prints as ink on paper, so the slab becomes the sheet again
+     and the seam is just the three rules it always was */
+  .run,
   .colophon {
     background: #fff;
     color: #000;
+    --black: #000;
+    --stock-3: #fff;
+    --ink-70: #333;
+    --ink-50: #555;
+    --rule: rgba(0, 0, 0, .35);
+    --rule-soft: rgba(0, 0, 0, .2);
+    --pink-ink: #000;
+    --blue: #000;
+    --blue-ink: #000;
+    --slab-ink: #000;
+    --slab-70: #333;
+    --slab-50: #555;
+    --slab-pink: #000;
+    --slab-blue: #000;
+  }
+
+  .colophon__inner {
+    border-top-color: rgba(0, 0, 0, .4);
+  }
+
+  .colophon__slip-row,
+  .colophon__foot,
+  .colophon__grid {
+    border-color: rgba(0, 0, 0, .4);
+  }
+
+  .colophon__machine li {
+    border-color: rgba(0, 0, 0, .4);
+  }
+
+  .run__seam-rule--black,
+  .run__seam-rule--pink,
+  .run__seam-rule--blue {
+    background: #000;
+  }
+
+  .run__seam::before,
+  .run__seam::after {
+    background: rgba(0, 0, 0, .55);
   }
 
   .plated__layer--ghost {
@@ -3199,6 +3636,13 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   .colophon__echo {
+    color: transparent;
     -webkit-text-stroke: .6px #000;
+  }
+
+  @supports not ((-webkit-text-stroke: 1px black) or (text-stroke: 1px black)) {
+    .colophon__echo {
+      color: rgba(0, 0, 0, .35);
+    }
   }
 }

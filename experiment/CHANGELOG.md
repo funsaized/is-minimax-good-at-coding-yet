@@ -1,53 +1,19 @@
-# Changelog
+Standfirst under the title, and the page now ends in ink: the short answer is pulled in register.
 
-Iteration 494: every corner on the sheet is an ink trap, and the traps fill when the blade reaches the gate.
+## Iteration 495 — the press run
 
-## The direction
+Promoted the page's only argument to a standfirst under the title, and gave the sheet a dark second half so the experiment ends in ink instead of in light.
 
-The page already had one verb — pull the blade to the gate — and one number, the register. Until
-now that number was only legible in the readouts: the gauge, the strip, the shadows under the
-cards. So this iteration moved it down into the typography. An ink trap is the ink a pressman
-puts in the notch where a stroke lands on a rule, so the join does not print light. Every corner
-on the sheet is now one, and the traps grow with `--settle` — the same number that drives the
-plate offset. Loose plates, three sets of slivers arguing at three offsets. The gate, one locked
-pair of wedges. The register becomes visible in the smallest marks on the page instead of only in
-a panel of readouts, and the corner-fill logic is the same in all three places.
+**Hierarchy.** The lede and the margin note used to sit below the press bed, the key strip and the plate ticket — three pieces of furniture above the only prose the page had. Both now sit directly under the poster in a 22ch margin-note column beside the standfirst, with the actions under the lede. The instrument follows, which is the order the page is actually making an argument in. The margin note is centred against the five-line paragraph it annotates rather than hanging off the top of it.
 
-## What changed
+**The press run.** `#answer` moved into a full-bleed ink slab, and the colophon now continues the same slab with no light between them: one continuous stretch of dark from the seam to the last line. The slab is a second set of design tokens, not a second set of styles — `--black`, `--ink-70`, `--ink-50`, `--rule`, `--pink-ink` and `--blue` are re-read inside it, so the copy, rules and accents all turn over in one place. The proof card is a physical sheet lying on the slab, so it puts the light palette back.
 
-- **New `src/ink.tsx`** — an `InkTrap` mark: a rule with a pool of pink ink in the notch at each
-  end. The pools are always the pink plate's, because pink is the only ink on a press that beads
-  up in a corner. Drawn as one mark with its rule, or as pools alone where the sheet already
-  prints the rule three times.
-- **`--settle` is now a transitioning registered property**, so the traps, the bed dot, the
-  mark's pad and the shadow colour all arrive on one eased beat instead of snapping.
-- **The title's landing rule** traps both of its corners, and at the gate it firms into one rule
-  in the blue plate — a cool rule with warm ink in it, rather than a pink rule. The fade moved
-  from a group opacity into the paint so it no longer takes the traps down with it.
-- **The measure column in the close read** now draws its end ticks and their pools together: the
-  tick and the notch of ink beneath it are one corner, one mark. Those traps are already ~42%
-  filled, because that column is a long way down the press; the register only finishes the job.
-- **The film on the bed prints its own landing rule**, under the mark at the end of its sentence,
-  with two pools that close up at the gate. The gate's own end cap moved up to the last baseline,
-  so the gate is now capped by the two lines it is actually registering.
-- **The question mark stops rocking at the gate.** `ask` now returns to rest at both ends of its
-  cycle, so a straight sheet can stop dead without the mark jumping the last degree — the pause
-  the plate 03 note asks for, and the page now means it.
-- **The proof sheet is checked off as it prints.** Three rows, three drawn ticks, staggered in
-  the press's order behind the lines landing. Reduced motion gets them already drawn.
-- **The slugbar gauge reports the number**, not just the verdict: `off −1.00` rather than
-  `off register`, so a reader is not told there is a problem and given no way to judge it.
-- **Fixed:** the close read's catch flash was styled and animated but never rendered. It is in the
-  DOM now, so the specimen card takes the pull like the rest of the sheet.
-- **`aria-pressed` → `aria-current`** on the three words in the title, which are one item of a set
-  rather than three independent toggles, and which already have a matching radiogroup below.
-- Readability: the colophon note is two paragraphs under one rule instead of one 100-word block;
-  the smallest mono furniture (bed caption, bed foot, key hints, workstrip label) is a step larger;
-  a dead `.keys > div` rule is gone. Traps and print styles added, and the traps do not travel
-  under `prefers-reduced-motion`.
+**The seam.** The join between light and dark is the page's own idea stated once more: three rules riding the current plate offset at the same two ratios the rest of the sheet uses. Loose plates, three lines a hair apart; at the gate one crisp line with a bloom on it. The seam moves with the blade wherever the reader is on the page, and it was added to the reduced-motion exemption list so the register still reads when nothing moves.
 
-## Unchanged
+**The answer lands in register.** Pulling the proof now unrolls the window off its bar, and "yes — with a hand" and the claim arrive as two colour plates a hair apart that collapse onto one voice. It is the only thing on the page permitted to land that way, which is the whole point of it. The slab takes the light behind the card as the pull goes past; the bloom is exactly the run's own height so it cannot bleed onto the colophon.
 
-The title and document title, the three-voice type system, the press bed and its keyboard
-controls, the plate list, the proof reveal, the wet/dry arc down the page, and the fact that
-nothing is downloaded: no fonts, no scripts, no images, no network, no storage.
+**Colophon rebuilt as a press slip.** Two paragraphs of implementation prose became a ruled term/detail job ticket (sentence, stock, type, assets) with the three inks swatched under the first row, and a four-item list of the mechanisms the page is actually built from: one number, wet then dry, trapped corners, stops on request. Same facts, a shape that can be scanned.
+
+**Also.** `p` pulls the proof and `esc` covers it, so the sheet can be worked end to end from the keyboard; the keys are printed beside the answer, which is the one control not under the cursor, and the toggle carries `aria-keyshortcuts`. The control strip's target now sits on a patch of stock, because the fixed strip crosses both halves of the page and black-on-black is not a mark. Selection turns over with the sheet. Federal blue in the density bar and black in the black swatch both carry a hairline so the flats read on ink. The lead is a shade smaller and the standfirst a shade tighter, which brings the top of the press bed back to the first screen.
+
+Verified in Chromium at 1440, 1280, 834, 390 and 320 wide: no horizontal overflow, no console errors, tab order unchanged, all slab text at or above 4.5:1.

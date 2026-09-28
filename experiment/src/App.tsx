@@ -34,7 +34,37 @@ const SHORTCUTS = [
   { keys: ['1', '2', '3'], label: 'put a plate up' },
   { keys: ['←', '→'], label: 'nudge the blade' },
   { keys: ['0'], label: 'snap to the gate' },
+  { keys: ['p'], label: 'pull the proof' },
   { keys: ['esc'], label: 'cover the proof sheet' },
+] as const
+
+/* the press run's own job ticket. every line is a fact about the page, not a
+   number anybody has to believe */
+const SLIP = [
+  ['sentence', 'is Minimax M3 good at frontend yet? — seven words, three impressions'],
+  ['stock', 'newsprint: drum banding, tooth in an inline filter, wet ink on a canvas'],
+  ['type', 'one grotesque, one serif, one mono — whichever three the machine already has'],
+  ['assets', 'local SVG and CSS only. no web fonts, no network, nothing stored'],
+] as const
+
+/* the four mechanisms, in the order you meet them going down the press */
+const MACHINERY = [
+  [
+    'one number.',
+    'Everything out of register on this page is the plate offset: the fringes, the card shadows, the pools in the traps, the gauge, the seam where the press run begins. Nothing is misprinted here for any other reason.',
+  ],
+  [
+    'wet, then dry.',
+    'The question prints at the press, three plates plainly apart. The close read beneath it has had time to settle and is nearly one voice. That arc is the only reason the page stays readable at all.',
+  ],
+  [
+    'trapped corners.',
+    'Where a stroke lands on a rule the paper notches away, and a pressman fills the notch on purpose. The pools are slivers until the blade reaches the gate, and only the pink plate beads up in a corner.',
+  ],
+  [
+    'stops on request.',
+    'Every movement here is a print decision, and each one ends the moment reduced motion is asked for. The blade, the register and the traps keep working; nothing flies.',
+  ],
 ] as const
 
 const prefersStill = () =>
@@ -213,6 +243,17 @@ export function App() {
       const tag = target?.tagName.toLowerCase()
       if (tag === 'input' || tag === 'textarea' || target?.isContentEditable) return
 
+      /* the proof has a key of its own, so the sheet can be worked end to end
+         without ever having to reach for the pointer */
+      if (event.key === 'p' || event.key === 'P') {
+        event.preventDefault()
+        setProof(value => {
+          const next = !value
+          setAnnounce(next ? 'The short answer is revealed.' : 'The short answer is covered again.')
+          return next
+        })
+        return
+      }
       if (event.key === 'Escape' && proof) {
         event.preventDefault()
         setProof(false)
@@ -311,225 +352,258 @@ export function App() {
         </p>
       </header>
 
-      <main className="page">
-        <section id="question" className="sheet" aria-labelledby="question-title">
-          <p className="slugline sheet__slug">
-            <span className="sheet__slug-lead">
-              <RegistrationMark className="slugline__mark" />
-              the question · set three times · pulled once
-            </span>
-            <span className="sheet__slug-fact">one sentence · seven words · three impressions</span>
-          </p>
-
-          <QuestionTitle
-            titleRef={titleRef}
-            selected={active}
-            hot={shown}
-            onSelect={select}
-            onPreview={setHover}
-          />
-
-          <div className="bedrow">
-            <PullBed reg={reg} onSlide={value => setReg(value)} />
-          </div>
-
-          <div className="workstrip">
-            <p className="workstrip__note">
-              <span aria-hidden="true">↳</span> pick a phrase — in the title or on a plate — and the
-              sheet follows you
-            </p>
-            <div className="workstrip__keys">
-              <span className="workstrip__label">the blade responds to</span>
-              <ul className="keys">
-                {SHORTCUTS.map(item => (
-                  <li key={item.label}>
-                    {item.keys.map(key => (
-                      <kbd key={key}>{key}</kbd>
-                    ))}
-                    <span>{item.label}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div
-            className="plates"
-            role="radiogroup"
-            aria-label="Which phrase is on the plate"
-            aria-describedby="plates-help"
-          >
-            {NOTES.map(item => (
-              <button
-                key={item.id}
-                type="button"
-                role="radio"
-                ref={node => {
-                  plateRefs.current[item.id] = node
-                }}
-                tabIndex={item.id === active ? 0 : -1}
-                aria-checked={item.id === active}
-                className={`plates__row ${item.id === active ? 'is-active' : ''} ${
-                  item.id === shown ? 'is-hot' : ''
-                }`}
-                onClick={() => select(item.id)}
-                onMouseEnter={() => setHover(item.id)}
-                onMouseLeave={() => setHover(null)}
-                onFocus={() => setHover(item.id)}
-                onBlur={() => setHover(null)}
-                onKeyDown={event => nudge(event, item.id)}
-              >
-                <span className="plates__num" aria-hidden="true">{item.index}</span>
-                <Plated
-                  className="plates__stack"
-                  render={() => <span className="plates__type">{item.label}</span>}
-                />
-                <span className="plates__role">{item.gloss}</span>
-              </button>
-            ))}
-          </div>
-          <p className="sr-only" id="plates-help">
-            Choosing a plate moves the highlight in the title above and the specimen below.
-          </p>
-
-          <div className="band">
-            <p className="margin-note">
-              <span className="margin-note__rule" aria-hidden="true" />
-              <span className="margin-note__text">
-                The question mark is load-bearing. <em>Give it somewhere to land.</em>
-              </span>
-            </p>
-
-            <div className="band__say">
-              <p className="lede">
-                The sentence is short enough to take apart, and short enough to print badly on
-                purpose. Every word above is set three times over — black, pink, blue — and the
-                plates do not agree with each other until you do something about it.
-              </p>
-
-              <div className="actions">
-                <a className="button button--ink" href="#close">
-                  read it closely
-                  <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                    <path
-                      d="M3 10h13M10.5 4.5 16 10l-5.5 5.5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </a>
-                <a className="button button--quiet" href="#answer">
-                  skip to the short answer
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="close" className="read" aria-labelledby="close-title">
-          <header className="read__head reveal">
-            <p className="slugline">
-              <RegistrationMark className="slugline__mark" />
-              close read
-            </p>
-            <div className="read__intro">
-              <h2 id="close-title">One plate, <em>taken apart.</em></h2>
-              <p>
-                The sentence has three phrases and each one is doing a different job. Take them in
-                turn: what the page is being asked, where the type is actually set, and what it
-                refuses to finish.
-              </p>
-            </div>
-          </header>
-
-          <Specimen
-            stageRef={specimenRef}
-            note={findNote(active)}
-            onStep={step => select(walk(active, step))}
-          />
-        </section>
-
-        <section id="answer" className="answer" aria-labelledby="answer-title">
-          <div className="answer__grid">
-            <div className="answer__copy reveal">
-              <p className="slugline">
+      <main className="main">
+        <div className="page">
+          <section id="question" className="sheet" aria-labelledby="question-title">
+            <p className="slugline sheet__slug">
+              <span className="sheet__slug-lead">
                 <RegistrationMark className="slugline__mark" />
-                the short answer
+                the question · set three times · pulled once
+              </span>
+              <span className="sheet__slug-fact">one sentence · seven words · three impressions</span>
+            </p>
+
+            <QuestionTitle
+              titleRef={titleRef}
+              selected={active}
+              hot={shown}
+              onSelect={select}
+              onPreview={setHover}
+            />
+
+            {/* the argument belongs under the title, not under the furniture. it is
+                the standfirst a spread opens with: what the page is, then the
+                instrument it is asking to be handed. */}
+            <div className="standfirst">
+              <p className="standfirst__note">
+                <span className="standfirst__kicker">
+                  <RegistrationMark className="standfirst__mark" />
+                  on the mark
+                </span>
+                <span className="standfirst__note-text">
+                  The question mark is load-bearing. <em>Give it somewhere to land.</em>
+                </span>
               </p>
-              <h2 id="answer-title">One sentence. <em>No speech.</em></h2>
-              <p>
-                The question does not need a speech. It needs one honest sentence and enough quiet
-                around it to land.
-              </p>
-              <p className="answer__note">Held under the sheet until you pull it.</p>
+
+              <div className="standfirst__say">
+                <p className="lede">
+                  Seven words — short enough to take apart, short enough to print badly on purpose.
+                  Each one is set three times over, black and pink and blue, and the plates refuse to
+                  agree with each other until you take the blade in your hand. This page is that
+                  argument, printed.
+                </p>
+
+                <div className="actions">
+                  <a className="button button--ink" href="#close">
+                    read it closely
+                    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                      <path
+                        d="M3 10h13M10.5 4.5 16 10l-5.5 5.5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </a>
+                  <a className="button button--quiet" href="#answer">
+                    skip to the short answer
+                  </a>
+                </div>
+              </div>
             </div>
 
-            <div className={`proof ${proof ? 'is-open' : ''}`}>
-              <div className="proof__bar">
-                <span className="proof__tag">
-                  <RegistrationMark className="proof__tag-mark" />
-                  proof sheet
-                </span>
-                <button
-                  type="button"
-                  className="toggle"
-                  aria-expanded={proof}
-                  aria-controls="proof-body"
-                  onClick={() => {
-                    const next = !proof
-                    setProof(next)
-                    setAnnounce(next ? 'The short answer is revealed.' : 'The short answer is covered again.')
-                  }}
-                >
-                  <Squeegee className="toggle__icon" />
-                  {proof ? 'sheet back' : 'pull proof'}
-                </button>
-              </div>
+            <div className="bedrow">
+              <PullBed reg={reg} onSlide={value => setReg(value)} />
+            </div>
 
-              <div className="proof__held" aria-hidden="true">
-                <span className="proof__held-mark"><RegistrationMark /></span>
-                <p>one sentence, held under the sheet</p>
-              </div>
-
-              <div className="proof__window" id="proof-body" role="region" aria-label="The short answer" hidden={!proof}>
-                <span className="proof__sweep" aria-hidden="true" />
-                <p className="proof__yes">yes — with a hand</p>
-                <p className="proof__claim">
-                  When the interface has a point of view you can feel, and knows when to stop moving.
-                </p>
-                <ol className="proof__tests">
-                  {[
-                    'Hierarchy: could you name the second most important thing without thinking twice?',
-                    'Hand: the page hands you the blade. Does the tool actually do something?',
-                    'Restraint: does everything stop moving the moment you stop reading?',
-                  ].map((line, index) => (
-                    <li key={line} style={{ '--i': index } as CSSProperties}>
-                      <span>{String(index + 1).padStart(2, '0')}</span>
-                      <p>{line}</p>
-                      <svg
-                        className="proof__tick"
-                        viewBox="0 0 18 18"
-                        preserveAspectRatio="xMidYMid meet"
-                        aria-hidden="true"
-                        focusable="false"
-                      >
-                        <rect className="proof__tick-box" x="1.5" y="1.5" width="15" height="15" rx="2.6" />
-                        <path className="proof__tick-mark" d="M5.1 9.3 7.8 12 12.9 6.1" />
-                      </svg>
+            <div className="workstrip">
+              <p className="workstrip__note">
+                <span aria-hidden="true">↳</span> pick a phrase — in the title or on a plate — and the
+                sheet follows you
+              </p>
+              <div className="workstrip__keys">
+                <span className="workstrip__label">the blade responds to</span>
+                <ul className="keys">
+                  {SHORTCUTS.map(item => (
+                    <li key={item.label}>
+                      {item.keys.map(key => (
+                        <kbd key={key}>{key}</kbd>
+                      ))}
+                      <span>{item.label}</span>
                     </li>
                   ))}
-                </ol>
-                <p className="proof__coda">
-                  And the honest part: any model can write the markup. The difference lives in the
-                  hundred small decisions nobody asked for.
-                </p>
+                </ul>
               </div>
             </div>
+
+            <div
+              className="plates"
+              role="radiogroup"
+              aria-label="Which phrase is on the plate"
+              aria-describedby="plates-help"
+            >
+              {NOTES.map(item => (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="radio"
+                  ref={node => {
+                    plateRefs.current[item.id] = node
+                  }}
+                  tabIndex={item.id === active ? 0 : -1}
+                  aria-checked={item.id === active}
+                  className={`plates__row ${item.id === active ? 'is-active' : ''} ${
+                    item.id === shown ? 'is-hot' : ''
+                  }`}
+                  onClick={() => select(item.id)}
+                  onMouseEnter={() => setHover(item.id)}
+                  onMouseLeave={() => setHover(null)}
+                  onFocus={() => setHover(item.id)}
+                  onBlur={() => setHover(null)}
+                  onKeyDown={event => nudge(event, item.id)}
+                >
+                  <span className="plates__num" aria-hidden="true">{item.index}</span>
+                  <Plated
+                    className="plates__stack"
+                    render={() => <span className="plates__type">{item.label}</span>}
+                  />
+                  <span className="plates__role">{item.gloss}</span>
+                </button>
+              ))}
+            </div>
+            <p className="sr-only" id="plates-help">
+              Choosing a plate moves the highlight in the title above and the specimen below.
+            </p>
+          </section>
+
+          <section id="close" className="read" aria-labelledby="close-title">
+            <header className="read__head reveal">
+              <p className="slugline">
+                <RegistrationMark className="slugline__mark" />
+                close read
+              </p>
+              <div className="read__intro">
+                <h2 id="close-title">One plate, <em>taken apart.</em></h2>
+                <p>
+                  The sentence has three phrases and each one is doing a different job. Take them in
+                  turn: what the page is being asked, where the type is actually set, and what it
+                  refuses to finish.
+                </p>
+              </div>
+            </header>
+
+            <Specimen
+              stageRef={specimenRef}
+              note={findNote(active)}
+              onStep={step => select(walk(active, step))}
+            />
+          </section>
+        </div>
+
+        {/* THE PRESS RUN. the light sheet ends and the ink slab begins, and the
+            join is the page's whole idea restated one last time: three rules at
+            the current plate offset, printed one per plate, sitting a hair apart.
+            at the gate they are one line. the answer is pulled down here too, and
+            it lands the only way the answer is allowed to land — in register. */}
+        <div className={`run ${proof ? 'is-open' : ''}`}>
+          <span className="run__seam" aria-hidden="true">
+            <i className="run__seam-rule run__seam-rule--black" />
+            <i className="run__seam-rule run__seam-rule--pink" />
+            <i className="run__seam-rule run__seam-rule--blue" />
+          </span>
+          <span className="run__glow" aria-hidden="true" />
+
+          <div className="page">
+            <section id="answer" className="answer" aria-labelledby="answer-title">
+              <div className="answer__grid">
+                <div className="answer__copy reveal">
+                  <p className="slugline">
+                    <RegistrationMark className="slugline__mark" />
+                    the short answer
+                  </p>
+                  <h2 id="answer-title">One sentence. <em>No speech.</em></h2>
+                  <p>
+                    The question does not need a speech. It needs one honest sentence and enough
+                    quiet around it to land.
+                  </p>
+                  <p className="answer__note">
+                    Held under the sheet until you pull it.
+                    <span className="answer__key">
+                      <kbd>p</kbd> pulls it
+                      <span aria-hidden="true">·</span>
+                      <kbd>esc</kbd> covers it
+                    </span>
+                  </p>
+                </div>
+
+                <div className={`proof ${proof ? 'is-open' : ''}`}>
+                  <div className="proof__bar">
+                    <span className="proof__tag">
+                      <RegistrationMark className="proof__tag-mark" />
+                      proof sheet
+                    </span>
+                    <button
+                      type="button"
+                      className="toggle"
+                      aria-expanded={proof}
+                      aria-controls="proof-body"
+                      aria-keyshortcuts="p"
+                      onClick={() => {
+                        const next = !proof
+                        setProof(next)
+                        setAnnounce(next ? 'The short answer is revealed.' : 'The short answer is covered again.')
+                      }}
+                    >
+                      <Squeegee className="toggle__icon" />
+                      {proof ? 'sheet back' : 'pull proof'}
+                    </button>
+                  </div>
+
+                  <div className="proof__held" aria-hidden="true">
+                    <span className="proof__held-mark"><RegistrationMark /></span>
+                    <p>one sentence, held under the sheet</p>
+                  </div>
+
+                  <div className="proof__window" id="proof-body" role="region" aria-label="The short answer" hidden={!proof}>
+                    <span className="proof__sweep" aria-hidden="true" />
+                    <p className="proof__yes">yes — with a hand</p>
+                    <p className="proof__claim">
+                      When the interface has a point of view you can feel, and knows when to stop moving.
+                    </p>
+                    <ol className="proof__tests">
+                      {[
+                        'Hierarchy: could you name the second most important thing without thinking twice?',
+                        'Hand: the page hands you the blade. Does the tool actually do something?',
+                        'Restraint: does everything stop moving the moment you stop reading?',
+                      ].map((line, index) => (
+                        <li key={line} style={{ '--i': index } as CSSProperties}>
+                          <span>{String(index + 1).padStart(2, '0')}</span>
+                          <p>{line}</p>
+                          <svg
+                            className="proof__tick"
+                            viewBox="0 0 18 18"
+                            preserveAspectRatio="xMidYMid meet"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <rect className="proof__tick-box" x="1.5" y="1.5" width="15" height="15" rx="2.6" />
+                            <path className="proof__tick-mark" d="M5.1 9.3 7.8 12 12.9 6.1" />
+                          </svg>
+                        </li>
+                      ))}
+                    </ol>
+                    <p className="proof__coda">
+                      And the honest part: any model can write the markup. The difference lives in the
+                      hundred small decisions nobody asked for.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
-        </section>
+        </div>
       </main>
 
       <footer className="colophon">
@@ -543,42 +617,48 @@ export function App() {
           </div>
 
           <div className="colophon__grid">
+            <dl className="colophon__slip">
+              {SLIP.map(([term, detail]) => (
+                <div className="colophon__slip-row" key={term}>
+                  <dt>{term}</dt>
+                  <dd>
+                    {term === 'sentence' ? <em>{detail}</em> : detail}
+                    {term === 'sentence' ? (
+                      <span className="colophon__inks">
+                        {INKS.map(ink => (
+                          <span key={ink.id}>
+                            <i
+                              className={`colophon__swatch colophon__swatch--${ink.id}`}
+                              aria-hidden="true"
+                            />
+                            {ink.name}
+                          </span>
+                        ))}
+                      </span>
+                    ) : null}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            <ul className="colophon__machine">
+              {MACHINERY.map(([lead, rest]) => (
+                <li key={lead}>
+                  <strong>{lead}</strong> {rest}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="colophon__foot">
             <a className="colophon__return" href="#question">
               <span aria-hidden="true">↑</span> back to the question
             </a>
-
-            <div className="colophon__notes">
-              {INKS.map(ink => (
-                <p key={ink.id}>
-                  <span className={`colophon__swatch colophon__swatch--${ink.id}`} aria-hidden="true" />
-                  <strong>{ink.name}</strong> — {ink.use}
-                </p>
-              ))}
-            </div>
-
-            <div className="colophon__note">
-              <p>
-                Three impressions, deliberately out of register until you take the blade to the gate.
-                The sheet prints wet at the top and dries as it goes down the press, so the question
-                is three plates arguing and the close read beneath it is one clean voice. The offset
-                shadows under the cards are the pink plate, which is why they travel with the blade.
-              </p>
-              <p>
-                Where a stroke lands on a rule there is a notch, and a pressman fills it with ink on
-                purpose — an ink trap. Every corner on this sheet is trapped, and the traps only fill
-                once the plates agree. The wet ink on the bed is drawn in a canvas and the paper
-                tooth is an inline filter; nothing here is downloaded. Set with the fonts already on
-                your machine: one grotesque, one serif, one mono. No web fonts, no network, nothing
-                stored. Every movement on this page is a print decision, and each one stops the
-                moment you ask it to.
-              </p>
-            </div>
+            <p className="colophon__closing">
+              <CropMark className="colophon__crop" />
+              The experiment is the page.
+            </p>
           </div>
-
-          <p className="colophon__closing">
-            <CropMark className="colophon__crop" />
-            The experiment is the page.
-          </p>
         </div>
       </footer>
 
