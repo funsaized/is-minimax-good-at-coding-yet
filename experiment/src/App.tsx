@@ -18,10 +18,13 @@ import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
+/* the three passes of a make-ready, and the order you meet them in. roman, not
+   arabic: 01–03 already belongs to the three plates, and a page that uses the
+   same figures for two different lists has thrown its hierarchy away */
 const NAV_ITEMS = [
-  { id: 'question', number: '01', label: 'the question' },
-  { id: 'close', number: '02', label: 'close read' },
-  { id: 'answer', number: '03', label: 'the short answer' },
+  { id: 'question', number: 'i', label: 'the question' },
+  { id: 'close', number: 'ii', label: 'close read' },
+  { id: 'answer', number: 'iii', label: 'pull the proof' },
 ] as const
 
 const INKS = [
@@ -30,12 +33,13 @@ const INKS = [
   { id: 'blue', name: 'federal blue', use: 'the second impression' },
 ] as const
 
+/* what the press itself answers to. the proof has its own keys and they are
+   printed next to the proof, because that is the only control on this page
+   that is not under the reader's cursor when they want it. */
 const SHORTCUTS = [
   { keys: ['1', '2', '3'], label: 'put a plate up' },
   { keys: ['←', '→'], label: 'nudge the blade' },
   { keys: ['0'], label: 'snap to the gate' },
-  { keys: ['p'], label: 'pull the proof' },
-  { keys: ['esc'], label: 'cover the proof sheet' },
 ] as const
 
 /* the press run's own job ticket. every line is a fact about the page, not a
@@ -50,8 +54,8 @@ const SLIP = [
 /* the four mechanisms, in the order you meet them going down the press */
 const MACHINERY = [
   [
-    'one number.',
-    'Everything out of register on this page is the plate offset: the fringes, the card shadows, the pools in the traps, the gauge, the seam where the press run begins. Nothing is misprinted here for any other reason.',
+    'one number, and one exception.',
+    'Everything out of register on this page is the plate offset: the fringes, the card shadows, the pools in the traps, the gauge, the seam where the press run begins. The short answer is the exception — it prints in register whatever the blade is doing, because it is the one sentence the press is allowed to get right.',
   ],
   [
     'wet, then dry.',
@@ -418,24 +422,23 @@ export function App() {
               <PullBed reg={reg} onSlide={value => setReg(value)} />
             </div>
 
-            <div className="workstrip">
-              <p className="workstrip__note">
-                <span aria-hidden="true">↳</span> pick a phrase — in the title or on a plate — and the
-                sheet follows you
+            {/* the legend, once, and as one hairline. it used to be a strip with
+                a rule above and a rule below, which made four labels sitting
+                between the instrument and its plates look like a fifth module */}
+            <div className="legend">
+              <p className="legend__note">
+                <span aria-hidden="true">↳</span> pick a phrase, or take the blade — the sheet follows you
               </p>
-              <div className="workstrip__keys">
-                <span className="workstrip__label">the blade responds to</span>
-                <ul className="keys">
-                  {SHORTCUTS.map(item => (
-                    <li key={item.label}>
-                      {item.keys.map(key => (
-                        <kbd key={key}>{key}</kbd>
-                      ))}
-                      <span>{item.label}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="keys">
+                {SHORTCUTS.map(item => (
+                  <li key={item.label}>
+                    {item.keys.map(key => (
+                      <kbd key={key}>{key}</kbd>
+                    ))}
+                    <span>{item.label}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div
@@ -569,9 +572,34 @@ export function App() {
                   <div className="proof__window" id="proof-body" role="region" aria-label="The short answer" hidden={!proof}>
                     <span className="proof__sweep" aria-hidden="true" />
                     <p className="proof__yes">yes — with a hand</p>
-                    <p className="proof__claim">
-                      When the interface has a point of view you can feel, and knows when to stop moving.
+
+                    {/* the punchline is the second poster on the page, so it is
+                        set like one: the same face, the same weight, the same
+                        tracking as the question, and no longer than it needs to
+                        be. and it is printed by the page's own three plates —
+                        except these three are always in register, because the
+                        answer is the one sentence the press is allowed to get
+                        right. they arrive a hair apart and lock. */}
+                    <p className="proof__statement">
+                      <Plated
+                        className="proof__stack"
+                        render={() => (
+                          <span className="proof__claim">
+                            <span className="proof__claim-a">When the interface has a point of view</span>
+                            <span className="proof__claim-b">you can feel,</span>
+                            <span className="proof__claim-c">and it knows when to stop moving.</span>
+                          </span>
+                        )}
+                      />
                     </p>
+
+                    {/* the same landing the mark gets on the title: a rule to
+                        stand on, and the two corners of it trapped. */}
+                    <p className="proof__land" aria-hidden="true">
+                      <InkTrap className="proof__trap proof__trap--start" rule={false} />
+                      <InkTrap className="proof__trap proof__trap--end" rule={false} />
+                    </p>
+
                     <ol className="proof__tests">
                       {[
                         'Hierarchy: could you name the second most important thing without thinking twice?',

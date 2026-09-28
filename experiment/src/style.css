@@ -29,18 +29,32 @@
    idea said one last time: three rules at the current plate
    offset, sitting a hair apart, collapsing to one line at the
    gate. and the answer is the only thing on the page that lands
-   in register — the short sentence arrives as three plates
-   arguing and locks, which is the whole point of it.
+   in register — the short sentence is now a second poster, set
+   from the same two steps as the question, printed by the same
+   three plates, and it does not ride the blade at all.
 
-   the scale: the question is the largest type on the page by a
-   wide margin. everything after it is a job ticket, a specimen
-   or a label, and is set accordingly.
+   the scale: two poster sizes and nothing in between louder than
+   a section head. the question is the largest type on the page by
+   a wide margin, the short answer is the second, and everything
+   between them is a job ticket, a specimen or a label.
 
    three voices, no more: the grotesque is the press, the serif is
-   the reading, the mono is the furniture.
+   the reading, the mono is the furniture. and only three sizes of
+   label, because a page that has one shouts everything at the same
+   volume.
    ============================================================= */
 
 @property --settle {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+/* how far the proof has been pulled, 0 → 1. a second number to --settle on
+   purpose: the answer does not answer to the blade. it is the one sentence on
+   the page that is always in register, so it gets its own ramp, and the only
+   thing that moves it is the reader. */
+@property --pull {
   syntax: '<number>';
   inherits: true;
   initial-value: 0;
@@ -54,17 +68,17 @@
 }
 
 :root {
-  --stock: #f3efe5;
-  --stock-2: #e6dfcd;
+  --stock: #f2eee2;
+  --stock-2: #e4dcc8;
   --stock-3: #fcfaf3;
-  --black: #15141b;
-  --ink-70: #454150;
-  --ink-50: #615d6e;
-  --rule: rgba(21, 20, 27, .17);
-  --rule-soft: rgba(21, 20, 27, .09);
-  --pink: #ff2e6b;
+  --black: #14131a;
+  --ink-70: #403c4c;
+  --ink-50: #5b5768;
+  --rule: rgba(20, 19, 26, .16);
+  --rule-soft: rgba(20, 19, 26, .085);
+  --pink: #ff2a63;
   --pink-ink: #d1124b;
-  --blue: #2a3ec9;
+  --blue: #2b3ec4;
   --blue-ink: #26329e;
 
   /* written by the app: the true plate offset, and whether the ink has landed */
@@ -94,14 +108,14 @@
   --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
 
   /* the press run: the ink slab at the foot of the sheet. it is printed in the
-     three plates' own colours on #14131a, so the pink and the blue both have to
+     three plates' own colours on #131118, so the pink and the blue both have to
      be lifted off the light sheet's values or they disappear into it */
-  --slab: #14131a;
+  --slab: #131118;
   --slab-ink: #fbf8f1;
-  --slab-70: rgba(251, 248, 241, .76);
-  --slab-50: rgba(251, 248, 241, .54);
-  --slab-pink: #ff5c8d;
-  --slab-blue: #7a86ff;
+  --slab-70: rgba(251, 248, 241, .78);
+  --slab-50: rgba(251, 248, 241, .56);
+  --slab-pink: #ff5f8e;
+  --slab-blue: #808cff;
   /* the control strip is fixed furniture that crosses both halves of the page,
      so its own ink has to read on newsprint and on the slab alike */
   --edge-ink: #6d6979;
@@ -114,14 +128,25 @@
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --spring: cubic-bezier(.34, 1.36, .5, 1);
 
-  /* one scale, used everywhere */
+  /* ONE SCALE, USED EVERYWHERE. two poster sizes, and nothing between them
+     louder than a section head. the answer is the second poster and it is set
+     from the same two steps as the question, so the page has exactly one voice
+     at the top and one at the foot, and the run between them is furniture. */
   --question: clamp(2.5rem, 6.8vw, 7.2rem);
+  --claim: clamp(1.72rem, 4.4vw, 4.3rem);
   --specimen: clamp(2.1rem, 5.6vw, 5rem);
   --head: clamp(1.95rem, 3.5vw, 3.2rem);
   --sub: clamp(1.18rem, 1.5vw, 1.5rem);
   --body: clamp(1rem, .22vw + .94rem, 1.12rem);
   --read: clamp(1.04rem, .3vw + .97rem, 1.22rem);
-  --micro: .63rem;
+
+  /* three tiers of label, and no more. the kicker names a thing, the caption
+     annotates it, the fine tier is furniture. a page that only has one label
+     size shouts everything at the same volume. */
+  --label: .66rem;
+  --label-2: .615rem;
+  --label-3: .575rem;
+  --micro: var(--label);
 }
 
 * {
@@ -355,7 +380,7 @@ kbd {
   left: 50%;
   color: var(--edge-ink);
   font-family: var(--mono);
-  font-size: .55rem;
+  font-size: var(--label-3);
   letter-spacing: .22em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -375,7 +400,7 @@ kbd {
   width: 30px;
   height: 30px;
   color: var(--black);
-  background: rgba(243, 239, 229, .92);
+  background: rgba(242, 238, 226, .92);
   border: 1px solid rgba(21, 20, 27, .16);
   place-items: center;
   transform: translate(-50%, -50%);
@@ -484,7 +509,7 @@ html[data-register='on'] .edge__ink--black {
   gap: clamp(12px, 3vw, 44px);
   padding: 11px var(--gutter);
   border-bottom: 1px solid var(--rule);
-  background: rgba(243, 239, 229, .965);
+  background: rgba(242, 238, 226, .965);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
 }
@@ -527,7 +552,7 @@ html[data-register='on'] .edge__ink--black {
   overflow: hidden;
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .58rem;
+  font-size: var(--label-3);
   letter-spacing: .08em;
   text-overflow: ellipsis;
   text-transform: uppercase;
@@ -580,8 +605,11 @@ html[data-register='on'] .edge__ink--black {
 .nav__number {
   color: var(--pink-ink);
   font-family: var(--mono);
-  font-size: .6rem;
-  letter-spacing: .04em;
+  font-size: var(--label-3);
+  font-weight: 600;
+  letter-spacing: .1em;
+  /* roman, and never once confused with the plate figures below */
+  text-transform: lowercase;
 }
 
 /* ---------- the register gauge: the only thing in the bar worth watching ---------- */
@@ -593,7 +621,7 @@ html[data-register='on'] .edge__ink--black {
   justify-self: end;
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .58rem;
+  font-size: var(--label-3);
   letter-spacing: .14em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -663,7 +691,7 @@ html[data-register='on'] .edge__ink--black {
   font-family: var(--mono);
   font-size: var(--micro);
   font-weight: 500;
-  letter-spacing: .17em;
+  letter-spacing: .145em;
   text-transform: uppercase;
 }
 
@@ -854,7 +882,7 @@ html[data-register='on'] .ink-trap__rule {
 
 @media (max-width: 620px) {
   :root {
-    --micro: .55rem;
+    --label: .55rem;
   }
 
   .sheet__slug {
@@ -1279,9 +1307,9 @@ html[data-register='on'] .plated__layer--black .mark {
 .plates__num {
   color: var(--pink-ink);
   font-family: var(--mono);
-  font-size: .6rem;
+  font-size: var(--label-2);
   font-weight: 700;
-  letter-spacing: .18em;
+  letter-spacing: .16em;
   transition: color .26s var(--ease);
 }
 
@@ -1309,7 +1337,7 @@ html[data-register='on'] .plated__layer--black .mark {
 .plates__role {
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .58rem;
+  font-size: var(--label-3);
   letter-spacing: .14em;
   text-transform: uppercase;
 }
@@ -1351,7 +1379,7 @@ html[data-register='on'] .plated__layer--black .mark {
   font-family: var(--mono);
   font-size: var(--micro);
   font-weight: 500;
-  letter-spacing: .17em;
+  letter-spacing: .145em;
   text-transform: uppercase;
 }
 
@@ -1451,11 +1479,11 @@ html[data-register='on'] .plated__layer--black .mark {
 /* ---------- the press bed: wet ink and a squeegee you can take hold of ---------- */
 
 /* the instrument sits immediately under the argument, because it is the thing
-   that prints it */
+   that prints it. no rule between them: the bed brings its own black frame,
+   and three hairlines inside 200px is a stack of stripes, not a sheet. the
+   whitespace is the divider. */
 .bedrow {
-  margin-top: clamp(22px, 2.6vw, 40px);
-  padding-top: clamp(16px, 2vw, 26px);
-  border-top: 1px solid var(--rule);
+  margin-top: clamp(26px, 3.2vw, 48px);
 }
 
 .bed {
@@ -1502,9 +1530,9 @@ html[data-register='on'] .plated__layer--black .mark {
   align-items: center;
   gap: 9px;
   font-family: var(--mono);
-  font-size: .6rem;
+  font-size: var(--label-2);
   font-weight: 700;
-  letter-spacing: .18em;
+  letter-spacing: .16em;
   text-transform: uppercase;
 }
 
@@ -1515,7 +1543,7 @@ html[data-register='on'] .plated__layer--black .mark {
   overflow: hidden;
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .6rem;
+  font-size: var(--label-2);
   letter-spacing: .14em;
   text-align: center;
   text-overflow: ellipsis;
@@ -1546,7 +1574,7 @@ html[data-register='on'] .plated__layer--black .mark {
   gap: 10px;
   color: var(--ink-70);
   font-family: var(--mono);
-  font-size: .62rem;
+  font-size: var(--label-2);
   font-variant-numeric: tabular-nums;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -1671,7 +1699,7 @@ html[data-register='on'] .register-eye__plate--black {
   border: 1.5px solid var(--pink-ink);
   border-radius: 2px;
   font-family: var(--mono);
-  font-size: .58rem;
+  font-size: var(--label-3);
   font-weight: 700;
   letter-spacing: .2em;
   line-height: 1;
@@ -1696,7 +1724,7 @@ html[data-register='on'] .register-eye__plate--black {
   padding: 8px 12px 10px;
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .6rem;
+  font-size: var(--label-3);
   line-height: 1.55;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -1740,61 +1768,45 @@ html[data-register='on'] .register-eye__plate--black {
   }
 }
 
-/* ---------- the workstrip: one rule-bounded strip that says how to work it ---------- */
+/* ---------- the legend: one hairline, one line, the keys and nothing else ---- */
 
-/* the two hints used to float loose under the title. they describe one thing —
-   the controls — so they sit in one strip, ruled top and bottom, directly under
-   the instrument they talk about. */
-.workstrip {
-  display: grid;
-  grid-template-columns: minmax(0, .58fr) minmax(0, 1.42fr);
-  gap: 10px clamp(16px, 2.4vw, 40px);
-  align-items: center;
-  margin-top: clamp(14px, 1.8vw, 22px);
-  padding: 12px 0 13px;
+/* four short labels describing the whole instrument do not need a box of their
+   own. one hairline above them, set as a single row that breaks when it has to,
+   and the sheet's eye goes straight on to the plates underneath. */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px clamp(16px, 2.4vw, 40px);
+  margin-top: clamp(13px, 1.7vw, 20px);
+  padding-top: 9px;
   border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule-soft);
 }
 
-.workstrip__note {
+.legend__note {
   display: flex;
   align-items: baseline;
   gap: 8px;
   min-width: 0;
-  color: var(--ink-70);
+  color: var(--ink-50);
   font-family: var(--mono);
-  font-size: var(--micro);
-  line-height: 1.6;
+  font-size: var(--label-3);
+  line-height: 1.5;
   letter-spacing: .1em;
   text-transform: uppercase;
 }
 
-.workstrip__note span {
+.legend__note span {
   flex: 0 0 auto;
   color: var(--pink-ink);
-}
-
-.workstrip__keys {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 7px;
-  min-width: 0;
-}
-
-.workstrip__label {
-  color: var(--ink-50);
-  font-family: var(--mono);
-  font-size: .59rem;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  white-space: nowrap;
 }
 
 .keys {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 5px clamp(11px, 1.5vw, 22px);
+  gap: 5px clamp(11px, 1.5vw, 20px);
   min-width: 0;
   margin: 0;
 }
@@ -1806,7 +1818,7 @@ html[data-register='on'] .register-eye__plate--black {
   min-width: 0;
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .6rem;
+  font-size: var(--label-3);
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -1815,13 +1827,6 @@ html[data-register='on'] .register-eye__plate--black {
   content: '·';
   color: var(--pink);
   letter-spacing: 0;
-}
-
-@media (max-width: 1180px) {
-  .workstrip {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
-  }
 }
 
 /* ---------- close read ---------- */
@@ -1905,7 +1910,7 @@ html[data-register='on'] .register-eye__plate--black {
   border-bottom: 1px solid var(--rule);
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .6rem;
+  font-size: var(--label-2);
   letter-spacing: .14em;
   text-transform: uppercase;
 }
@@ -2036,7 +2041,7 @@ html[data-register='on'] .register-eye__plate--black {
 
 .specimen__rule-word {
   font-family: var(--mono);
-  font-size: .55rem;
+  font-size: var(--label-3);
   letter-spacing: .16em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -2089,7 +2094,7 @@ html[data-register='on'] .register-eye__plate--black {
   color: var(--pink-ink);
   font-family: var(--mono);
   font-size: var(--micro);
-  letter-spacing: .17em;
+  letter-spacing: .145em;
   text-transform: uppercase;
 }
 
@@ -2153,7 +2158,7 @@ html[data-register='on'] .register-eye__plate--black {
 .brief li span {
   color: var(--pink-ink);
   font-family: var(--mono);
-  font-size: .62rem;
+  font-size: var(--label-2);
   letter-spacing: .08em;
 }
 
@@ -2193,7 +2198,7 @@ html[data-register='on'] .register-eye__plate--black {
   border: 1px solid var(--rule);
   border-radius: 2px;
   font-family: var(--mono);
-  font-size: .6rem;
+  font-size: var(--label-3);
   font-weight: 600;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -2336,7 +2341,10 @@ html[data-register='on'] .run__seam-rule--black {
 
 .answer__grid {
   display: grid;
-  grid-template-columns: minmax(0, .84fr) minmax(0, 1.16fr);
+  /* the copy gets the narrow column and the proof card the wide one: the card
+     is carrying a poster now and the paragraph beside it is not going to
+     compete with it, so the page gives the poster the room */
+  grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr);
   gap: clamp(28px, 4vw, 68px);
   align-items: start;
 }
@@ -2373,7 +2381,7 @@ html[data-register='on'] .run__seam-rule--black {
   padding-top: clamp(18px, 2vw, 26px);
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .6rem;
+  font-size: var(--label-3);
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -2401,24 +2409,27 @@ html[data-register='on'] .run__seam-rule--black {
 .proof {
   /* a physical proof sheet lying on the slab, so the light palette goes back on
      here and the card stays the brightest object in the run */
-  --black: #15141b;
+  --black: #14131a;
   --stock-3: #fcfaf3;
-  --ink-70: #454150;
-  --ink-50: #615d6e;
-  --rule: rgba(21, 20, 27, .17);
-  --rule-soft: rgba(21, 20, 27, .09);
+  --ink-70: #403c4c;
+  --ink-50: #5b5768;
+  --rule: rgba(20, 19, 26, .16);
+  --rule-soft: rgba(20, 19, 26, .085);
   --pink-ink: #d1124b;
-  --blue: #2a3ec9;
+  --blue: #2b3ec4;
   --blue-ink: #26329e;
+  /* the answer's own ramp. nothing on this card answers to the blade. */
+  --pull: 0;
   color: var(--black);
   background: var(--stock-3);
   border: 1px solid var(--black);
   border-radius: 4px;
   box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 var(--pink), 0 26px 60px -34px rgba(0, 0, 0, .8);
-  transition: box-shadow .4s var(--ease);
+  transition: box-shadow .4s var(--ease), --pull .8s var(--ease-out);
 }
 
 .proof.is-open {
+  --pull: 1;
   box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 var(--blue), 0 30px 70px -30px rgba(0, 0, 0, .85);
 }
 
@@ -2438,8 +2449,8 @@ html[data-register='on'] .run__seam-rule--black {
   align-items: center;
   gap: 9px;
   font-family: var(--mono);
-  font-size: .6rem;
-  letter-spacing: .17em;
+  font-size: var(--label-2);
+  letter-spacing: .15em;
   text-transform: uppercase;
 }
 
@@ -2458,7 +2469,7 @@ html[data-register='on'] .run__seam-rule--black {
   background: var(--stock-3);
   border-radius: 100px;
   font-family: var(--mono);
-  font-size: .62rem;
+  font-size: var(--label-2);
   font-weight: 700;
   letter-spacing: .14em;
   text-transform: uppercase;
@@ -2484,10 +2495,12 @@ html[data-register='on'] .run__seam-rule--black {
   display: grid;
   place-items: center;
   gap: 12px;
-  min-height: clamp(206px, 20vw, 262px);
+  /* tall enough that pulling the sheet is a sheet being drawn out from under a
+     cover, and not a card suddenly changing its mind about its own height */
+  min-height: clamp(252px, 25vw, 360px);
   padding: clamp(26px, 3.4vw, 42px);
   text-align: center;
-  background: repeating-linear-gradient(135deg, rgba(21, 20, 27, .045) 0 1px, transparent 1px 9px);
+  background: repeating-linear-gradient(135deg, rgba(20, 19, 26, .045) 0 1px, transparent 1px 9px);
   border-radius: 0 0 3px 3px;
 }
 
@@ -2505,14 +2518,14 @@ html[data-register='on'] .run__seam-rule--black {
 .proof__held p {
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: .6rem;
+  font-size: var(--label-2);
   letter-spacing: .15em;
   text-transform: uppercase;
 }
 
 .proof__window {
   position: relative;
-  min-height: clamp(206px, 20vw, 262px);
+  min-height: clamp(252px, 25vw, 360px);
   padding: clamp(24px, 3vw, 40px);
   overflow: hidden;
   border-radius: 0 0 3px 3px;
@@ -2556,34 +2569,132 @@ html[data-register='on'] .run__seam-rule--black {
 .proof__yes {
   color: var(--pink-ink);
   font-family: var(--mono);
-  font-size: .62rem;
-  letter-spacing: .18em;
+  font-size: var(--label-2);
+  font-weight: 600;
+  letter-spacing: .15em;
   text-transform: uppercase;
 }
 
-/* the punchline is the loudest thing on the page after the question, and it is
-   set in the quietest voice on the page: that is the whole point of it */
+/* =============================================================
+   THE SECOND POSTER
+   The page had one loud thing on it, and it was at the top. But a sheet
+   that ends in a whisper has no climax: the short answer is the last
+   thing anybody reads, and it was set a stop and a half below the
+   question. So it is promoted. Same face, same weight, same tracking
+   as the question — one voice at the head of the sheet and one at the
+   foot of it, and furniture in between.
+
+   and it is printed by the page's own three plates, which is the whole
+   point of the instrument spent on its own punchline. the one thing
+   it will not do is ride the blade: these three impressions are in
+   register before the pull, because the answer is the one sentence the
+   press is allowed to get right. they arrive a hair apart and lock.
+   ============================================================= */
+
+.proof__stack {
+  /* the answer does not answer to the blade. zero fringe scale means the
+     colour plates sit on the black plate's pixels whatever the blade is
+     doing, and the arrival is played entirely by keyframes instead */
+  --fringe-scale: 0;
+  margin-top: clamp(10px, 1.1vw, 15px);
+}
+
 .proof__claim {
-  max-width: 26ch;
-  margin: 14px 0 0;
-  font-family: var(--serif);
-  font-size: clamp(1.6rem, 3.1vw, 2.5rem);
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -.02em;
+  display: block;
+}
+
+.proof__claim-a,
+.proof__claim-b {
+  display: block;
+  font-family: var(--display);
+  font-size: var(--claim);
+  font-weight: 800;
+  line-height: .93;
+  letter-spacing: -.052em;
   text-wrap: balance;
+}
+
+.proof__claim-a {
+  color: var(--black);
+}
+
+/* the only block of fluoro pink at poster size on the whole page, and it
+   is two words long. that is the budget. */
+.proof__claim-b {
+  color: var(--pink-ink);
+}
+
+/* the third line drops out of the poster voice and back into the reading
+   voice — the point of view in letters, the evidence underneath it */
+.proof__claim-c {
+  display: block;
+  max-width: 30ch;
+  margin-top: .62em;
+  color: var(--ink-70);
+  font-family: var(--serif);
+  font-size: clamp(1.04rem, 1.3vw, 1.34rem);
+  font-style: italic;
+  line-height: 1.38;
+  letter-spacing: -.006em;
+  text-wrap: pretty;
+}
+
+/* the ghosts are ink, not type: no lockups, no colour of their own, and the
+   italics stay exactly where they are — three impressions that disagree about
+   a letter's width are not an accident of the press, they are a bug. the
+   colour plates are the plates' colour, whatever the black plate has
+   underneath them. */
+.plated__layer--ghost .proof__claim,
+.plated__layer--ghost .proof__claim-a,
+.plated__layer--ghost .proof__claim-b,
+.plated__layer--ghost .proof__claim-c {
+  color: inherit;
+}
+
+/* the poster ends, the rubric begins, and where those two meet there is a
+   junction — so the join gets a rule, and the two ends of that rule get the
+   same trapped corners the title and the measure get. same rule, same traps,
+   same pink. they fill because the proof was pulled, not because a blade
+   moved: this is the only corner on the page that answers to the pull. */
+.proof__land {
+  position: relative;
+  height: 2px;
+  margin: clamp(16px, 1.7vw, 22px) 0 0;
+  background: color-mix(in srgb, currentColor 22%, transparent);
+  transition: background .5s var(--ease), height .35s var(--ease);
+}
+
+.proof.is-open .proof__land {
+  height: 3px;
+  background: color-mix(in srgb, var(--blue-ink) 78%, transparent);
+}
+
+.proof__trap {
+  top: 0;
+  width: 14px;
+  height: 6px;
+  /* the answer's own ramp, not the blade's */
+  --trap: calc(.1 + var(--pull) * .9);
+}
+
+.proof__trap--start {
+  left: 0;
+}
+
+.proof__trap--end {
+  right: 0;
 }
 
 .proof__tests {
   display: grid;
-  margin: clamp(20px, 2.4vw, 28px) 0 0;
+  margin: clamp(22px, 2.6vw, 32px) 0 0;
   border-top: 1px solid var(--rule-soft);
 }
 
 .proof__tests li {
   display: grid;
   grid-template-columns: 1.9rem minmax(0, 1fr) 18px;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
   padding: 12px 0;
   border-bottom: 1px solid var(--rule-soft);
@@ -2597,7 +2708,7 @@ html[data-register='on'] .run__seam-rule--black {
 .proof__tests span {
   color: var(--blue-ink);
   font-family: var(--mono);
-  font-size: .64rem;
+  font-size: var(--label-2);
   letter-spacing: .06em;
 }
 
@@ -2645,54 +2756,80 @@ html[data-register='on'] .run__seam-rule--black {
   text-wrap: pretty;
 }
 
-/* the answer is the one thing on the page that lands in register. it arrives as
-   three plates a hair apart and locks — the page's own mechanic, spent on its
-   own punchline, so the last thing the reader sees is the thing the whole
-   instrument was built to do. */
-.proof.is-open .proof__yes,
-.proof.is-open .proof__claim {
-  animation: plate-land .78s var(--ease-out) both;
+/* the answer lands, and the landing is the page's own mechanic rather than a
+   fade: two colour plates arrive a hair outside their marks, the black prints
+   over the top of them, and the three lock into one voice. the poster is set
+   at poster size, so the arrival has to be the quiet one — no bloom, no throw,
+   nothing on the sheet that is louder than the sentence landing. */
+.proof.is-open .plated__layer--pink {
+  animation: plate-lock .78s var(--ease-out) .1s both;
 }
 
+.proof.is-open .plated__layer--blue {
+  animation: plate-lock-blue .78s var(--ease-out) .1s both;
+}
+
+.proof.is-open .plated__layer--black {
+  animation: plate-press .78s var(--ease-out) both;
+}
+
+.proof.is-open .proof__yes,
 .proof.is-open .proof__tests li,
 .proof.is-open .proof__coda {
   animation: print-line .55s var(--ease-out) both;
 }
 
 .proof.is-open .proof__yes {
-  animation-delay: .26s;
-}
-
-.proof.is-open .proof__claim {
-  animation-delay: .34s;
+  animation-delay: .16s;
 }
 
 .proof.is-open .proof__tests li {
-  animation-delay: calc(.46s + var(--i) * .09s);
+  animation-delay: calc(.5s + var(--i) * .09s);
 }
 
 .proof.is-open .proof__coda {
-  animation-delay: .86s;
+  animation-delay: .92s;
 }
 
-@keyframes plate-land {
+@keyframes plate-lock {
+  from {
+    opacity: 0;
+    transform: translate3d(5px, 2.4px, 0) scale(1.022);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes plate-lock-blue {
+  from {
+    opacity: 0;
+    transform: translate3d(-4px, -1.9px, 0) scale(1.022);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* black prints last, and prints hard: it arrives out of a soft blur with the
+   two colour plates still showing a couple of pixels through it, which is what
+   an overprint looks like from about a foot away */
+@keyframes plate-press {
   0% {
     opacity: 0;
+    filter: blur(3.4px);
     text-shadow:
-      6px 2.4px 0 rgba(255, 46, 107, .45),
-      -4.8px -1.9px 0 rgba(42, 62, 201, .45);
-  }
-  58% {
-    opacity: 1;
-    text-shadow:
-      1px .4px 0 rgba(255, 46, 107, .14),
-      -.8px -.3px 0 rgba(42, 62, 201, .14);
+      6px 2.4px 0 rgba(255, 42, 99, .4),
+      -4.8px -1.9px 0 rgba(43, 62, 196, .4);
   }
   100% {
     opacity: 1;
+    filter: none;
     text-shadow:
-      0 0 0 rgba(255, 46, 107, 0),
-      0 0 0 rgba(42, 62, 201, 0);
+      0 0 0 rgba(255, 42, 99, 0),
+      0 0 0 rgba(43, 62, 196, 0);
   }
 }
 
@@ -2790,7 +2927,7 @@ html[data-register='on'] .run__seam-rule--black {
   padding-top: .16em;
   color: var(--slab-pink);
   font-family: var(--mono);
-  font-size: .6rem;
+  font-size: var(--label-2);
   font-weight: 600;
   letter-spacing: .15em;
   text-transform: uppercase;
@@ -2816,7 +2953,7 @@ html[data-register='on'] .run__seam-rule--black {
   gap: 4px 14px;
   margin-top: 6px;
   font-family: var(--mono);
-  font-size: .58rem;
+  font-size: var(--label-3);
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -3403,7 +3540,7 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   .bed__read {
-    font-size: .58rem;
+    font-size: var(--label-3);
   }
 
   .bed__eye {
@@ -3422,7 +3559,7 @@ html[data-reveal='on'] .reveal.is-in {
   .bed__stamp {
     top: 7px;
     right: 8px;
-    font-size: .53rem;
+    font-size: var(--label-3);
   }
 }
 
@@ -3537,11 +3674,23 @@ html[data-reveal='on'] .reveal.is-in {
      arrives without travelling, and quieter than it would have */
   .proof.is-open .proof__window,
   .proof.is-open .proof__yes,
-  .proof.is-open .proof__claim {
+  .proof.is-open .proof__tests li,
+  .proof.is-open .proof__coda,
+  .proof.is-open .plated__layer--pink,
+  .proof.is-open .plated__layer--blue,
+  .proof.is-open .plated__layer--black {
     animation: none;
   }
 
-  .proof.is-open .proof__sweep {
+  /* the answer's ramp does not need a journey either: the traps are simply
+     already full, because the proof is either pulled or it is not */
+  .proof,
+  .proof__land,
+  .proof__trap {
+    transition: none;
+  }
+
+  .proof__sweep {
     opacity: 0;
   }
 
@@ -3560,7 +3709,7 @@ html[data-reveal='on'] .reveal.is-in {
   .stock,
   .sprockets,
   .edge,
-  .workstrip,
+  .legend,
   .actions,
   .bed,
   .run__glow {
@@ -3618,8 +3767,18 @@ html[data-reveal='on'] .reveal.is-in {
     display: none;
   }
 
-  .q__land {
+  .q__land,
+  .proof__land {
     background: #000;
+  }
+
+  /* a printout has no pull key, so the sheet arrives already drawn */
+  .proof__window[hidden] {
+    display: block;
+  }
+
+  .proof__held {
+    display: none;
   }
 
   .ink-trap__pool {
