@@ -1,15 +1,70 @@
-Iteration 502: the press remembers the drag, the scale stops lying, and pink and blue each get one job.
+The short answer is no longer behind a button: it shows through the stock, and the bar turns over at the seam.
 
-**The blade leaves a trail.** The bed reported one position, so a drag across the whole strip left the sheet exactly as clean as it found it — which is not what a squeegee does. The strip now keeps the last 2.5 seconds of the gesture and prints them as a band of wet ink that dries from the far end back, with a pink bead on the head that matches the one already on the blade's foot. Reaching the gate wipes the band off again, outward from the blade, leaving nothing behind it. The band lives on a canvas of its own so the film underneath never repaints, the frame loop only runs while something is wet, and a reader who has asked for stillness is declined it at the source rather than having a hidden canvas updated.
+## The show-through
 
-**The scale is now true.** The sheet claimed two poster sizes and printed the claim on its own type list, then broke it in the middle of the page: the close read was set at 4.2rem, louder than the section head it sat under, so there were three loud things on the sheet and the rule was a lie. `--specimen` is now 2.62rem — the step directly under the head at 3.2. Going down the page the order is 7.2, the answer at 4.3, a head at 3.2, the set phrase at 2.62, and three label tiers below that.
+The proof card used to hold a hatched panel, a registration mark and the promise
+that a sentence was somewhere below. The short answer is no longer gated.
 
-**The colour has a grammar.** One accent was doing five jobs. Pink now means the press — the turn, the ink, the trap, the plate that is up. Every figure, count, size and resolved measurement on the light sheet is federal blue: the plate numbers, the counted characters on the specimen, the brief's figures, the type list's sizes. Blue is never a rule and never a heading, so it reads as data without being labelled.
+It is now set on a sheet lying face down under this one, and newsprint is thin
+enough that ink comes through it as a soft grey shadow of itself. The whole
+sentence is legible through the stock before anything is touched, and pulling the
+proof is no longer a reveal — it is a print: the same words, the same three lines,
+coming into focus in the exact box the shadow was standing in.
 
-**The specimen stage was recomposed** to make up for the smaller phrase: the set phrase stands hard left, the ruled measure is carried out to the trim, and the screen between them is the only thing printed in that gap. The sheet the phrase is set on is now wider than the phrase on it, which is what a specimen is for.
+- `ProofSheet` is now one component rendered twice (`src/App.tsx`). The claim,
+  the rubric and the coda are declared once, so the two copies of the sentence
+  cannot disagree.
+- Both copies sit in one grid cell, so the card reserves the room the proof needs
+  either way. Pulling the proof no longer changes the page's height — the jump
+  the old card made is gone.
+- The shadow is set in a warm grey rather than in black, the two words set in
+  fluorescent pink still read as the pink ones through the stock, and the small
+  type under the poster is only just there.
+- The cover sheet (hatch, bloom of light through the stock) lifts on the pull,
+  along with the squeegee caption pinned to the foot of the shadow.
+- The window is `visibility`-hidden rather than `hidden`, so the copy is never
+  announced or focusable before the reader has pulled it.
+- `answer__note` and the job ticket's stock line were rewritten to match.
 
-**One band was deleted and one line kept.** The key legend was four labels in a ruled strip between the instrument and the plates, which read as a fifth module. The keys moved onto the bed's own foot, where they work and where the reader is already looking; the one line left is the instruction for the plates, set on the plate band itself.
+## The bar goes over
 
-**Smaller things.** The title's letterspacing tightens by three and a half thousandths of an em at the gate, and the answer does the same on its own pull ramp — state, not journey, so it survives reduced motion. The word-swipe behind a hovered phrase is a tapered wedge rather than a growing rectangle, because a mark on a press has two ends. The bed's film and trail are wrapped in one positioned box so the band never creeps over the caption bar. The slugbar pins the plate that is up, in blue, with a pink pin that drops into its hole on every change — the figure stays on a phone where the numeric readout goes.
+The slugbar is the trim edge of the sheet, and a trim edge is a strip of the same
+stock as whatever it is lying over — the control strip on the right edge has
+always known this, which is why it carries a patch of light stock behind its mark.
+The bar did not, so crossing the seam dropped a band of newsprint onto a slab of
+solid ink with a hard edge and nothing to say for it.
 
-**Files.** `src/motion.ts` added (shared `prefersStill`). `src/App.tsx`, `src/pull.tsx`, `src/typelist.tsx`, `src/ream.tsx`, `src/style.css` edited. No new dependencies, no network, title unchanged, `npm run build` clean.
+- It now turns over at the seam by swapping the slab's own palette tokens onto
+  the bar (`src/App.tsx` writes `data-slab`, `src/style.css` consumes it).
+- It is a position, not a state: it does not matter which way the reader came
+  past the line.
+- The seam position and the bar height are measured through a `ResizeObserver`,
+  not read per frame, so the scroll handler still writes custom properties and
+  does no layout.
+
+## The last of the chrome
+
+The bar carried four rounded pills and the proof carried a fifth, on a page made
+of paper, ink, rules and hard edges.
+
+- The index is a slug now: the mono, the caps, the tracking, and a hairline of
+  pink under whichever pass of the press the reader is standing in.
+- The pull is a printed key carrying the same hard pink shadow the sheet uses for
+  a plate that has moved, and it lies down in the bar once the proof is out.
+- The answer's left column got a foot rule, so the air under its paragraph reads
+  as a composition rather than as a hole.
+- The mobile index keeps the furniture size instead of stepping up a size on the
+  narrowest screen.
+- The slugbar drops to two rows at 1180px rather than 1040px, because the index
+  is now set in wider caps than the pills it replaced.
+
+## Accessibility and motion
+
+- Nothing new animates that is not declined under `prefers-reduced-motion`. The
+  show-through crossfade is a state change, the squeegee caption's sway is not,
+  and the blur on the shadow is a fact about paper rather than a journey.
+- The pull key keeps `aria-expanded`, `aria-controls` and `p` / `esc`; the live
+  region now says the proof was pulled rather than that something was revealed.
+- Print output hides the cover and the shadow and shows the sheet set, and no
+  longer prints the pull key.
+- `npm run build` passes.

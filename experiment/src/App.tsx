@@ -37,6 +37,26 @@ const INKS = [
   { id: 'blue', name: 'federal blue', use: 'the second impression' },
 ] as const
 
+/* THE SHORT ANSWER, AS SET. one place for the sentence, because the sheet prints
+   it twice — once on the slab where it is read, and once as a shadow of itself on
+   the far side of the stock, where you can see it before anybody has pulled
+   anything. two copies of a punchline that are allowed to disagree is a way of
+   making sure one of them is wrong. */
+const CLAIM = [
+  'When the interface has a point of view',
+  'you can feel,',
+  'and it knows when to stop moving.',
+] as const
+
+const CHECKS = [
+  'Hierarchy: could you name the second most important thing without thinking twice?',
+  'Hand: the page hands you the blade. Does the tool actually do something?',
+  'Restraint: does everything stop moving the moment you stop reading?',
+] as const
+
+const CODA =
+  'And the honest part: any model can write the markup. The difference lives in the hundred small decisions nobody asked for.'
+
 /* what the press itself answers to. the keys are printed on the bed rather than
    here, because the bed is the only one of the two the reader is already looking
    at when they wonder what they can press. the proof keeps its own pair, and it
@@ -51,7 +71,7 @@ const SLIP = [
   ['sentence', 'is Minimax M3 good at frontend yet? — seven words, three impressions'],
   [
     'stock',
-    'newsprint: drum banding, tooth in an inline filter, wet ink on a canvas, one fold below the close read',
+    'newsprint: drum banding, tooth in an inline filter, wet ink on a canvas, one fold below the close read, and thin enough at the foot of the run to read the answer through',
   ],
   [
     'register',
@@ -94,6 +114,9 @@ export function App() {
   const pressRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const specimenRef = useRef<HTMLDivElement>(null)
+  const slugRef = useRef<HTMLElement>(null)
+  const runRef = useRef<HTMLDivElement>(null)
+  const onSlab = useRef(false)
   const plateRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const wasSettled = useRef(false)
   const regRef = useRef(reg)
@@ -136,6 +159,12 @@ export function App() {
     const root = document.documentElement
     const still = prefersStill()
     let frame = 0
+    /* where the sheet turns over, and how tall the trim edge is. both are
+       measured rather than read per frame, because the scroll handler is
+       already writing custom properties and a layout read after a write costs
+       the reader a frame */
+    let runTop = Infinity
+    let barH = 0
 
     const ease = (value: number) => value * value * (3 - 2 * value)
 
@@ -159,6 +188,16 @@ export function App() {
          history, so climbing back to the question wets the sheet up again. */
       const reach = Math.min(1, window.scrollY / Math.max(1, window.innerHeight * 3.2))
       root.style.setProperty('--ink-close', (1 - ease(reach) * 0.88).toFixed(3))
+
+      /* and the sheet turns over at the seam. a position and not a state, so it
+         does not need motion to work and it does not care which way the reader
+         came past the line. */
+      const on = window.scrollY + barH > runTop
+      if (on !== onSlab.current) {
+        onSlab.current = on
+        if (on) root.dataset.slab = 'on'
+        else delete root.dataset.slab
+      }
     }
     paintPlate.current = sync
 
@@ -170,13 +209,36 @@ export function App() {
       })
     }
 
-    sync()
+    const remeasure = () => {
+      const bar = slugRef.current?.getBoundingClientRect()
+      const run = runRef.current?.getBoundingClientRect()
+      if (bar) barH = bar.height
+      /* the seam is a place in the document, and the document can be scrolled
+         while it is being measured, so the box is put back where it was found */
+      if (run) runTop = window.scrollY + run.top
+      onMove()
+    }
+
+    /* the bar is its own size and everything above the seam feeds the height of
+       the page, so these two observers between them catch every layout the
+       reader could produce -- a rotated phone, a wrapped slug, a type list that
+       measured its own face a beat later -- without the scroll listener ever
+       asking the page where anything is */
+    const measure =
+      typeof ResizeObserver === 'function' ? new ResizeObserver(remeasure) : null
+    if (measure) {
+      if (slugRef.current) measure.observe(slugRef.current)
+      measure.observe(document.body)
+    }
+
+    remeasure()
     window.addEventListener('scroll', onMove, { passive: true })
-    window.addEventListener('resize', onMove)
+    window.addEventListener('resize', remeasure)
     return () => {
       window.removeEventListener('scroll', onMove)
-      window.removeEventListener('resize', onMove)
+      window.removeEventListener('resize', remeasure)
       if (frame) cancelAnimationFrame(frame)
+      measure?.disconnect()
       paintPlate.current = () => {}
     }
   }, [])
@@ -285,7 +347,7 @@ export function App() {
         event.preventDefault()
         setProof(value => {
           const next = !value
-          setAnnounce(next ? 'The short answer is revealed.' : 'The short answer is covered again.')
+          setAnnounce(next ? 'The proof is pulled. The short answer is set.' : 'The proof is covered again.')
           return next
         })
         return
@@ -355,7 +417,7 @@ export function App() {
 
       <a className="skip-link" href="#question">Skip to the question</a>
 
-      <header className="slugbar">
+      <header className="slugbar" ref={slugRef}>
         <a className="brand" href="#question" aria-label="Press sheet, back to the question">
           <RegistrationMark className="brand__mark" />
           <span className="brand__text">
@@ -592,7 +654,7 @@ export function App() {
             the current plate offset, printed one per plate, sitting a hair apart.
             at the gate they are one line. the answer is pulled down here too, and
             it lands the only way the answer is allowed to land — in register. */}
-        <div className={`run ${proof ? 'is-open' : ''}`}>
+        <div className={`run ${proof ? 'is-open' : ''}`} ref={runRef}>
           <span className="run__seam" aria-hidden="true">
             <i className="run__seam-rule run__seam-rule--black" />
             <i className="run__seam-rule run__seam-rule--pink" />
@@ -614,7 +676,7 @@ export function App() {
                     quiet around it to land.
                   </p>
                   <p className="answer__note">
-                    Held under the sheet until you pull it.
+                    The words come through the stock before you pull it.
                     <span className="answer__key">
                       <kbd>p</kbd> pulls it
                       <span aria-hidden="true">·</span>
@@ -638,7 +700,7 @@ export function App() {
                       onClick={() => {
                         const next = !proof
                         setProof(next)
-                        setAnnounce(next ? 'The short answer is revealed.' : 'The short answer is covered again.')
+                        setAnnounce(next ? 'The proof is pulled. The short answer is set.' : 'The proof is covered again.')
                       }}
                     >
                       <Squeegee className="toggle__icon" />
@@ -646,72 +708,42 @@ export function App() {
                     </button>
                   </div>
 
-                  <div className="proof__held" aria-hidden="true">
-                    <span className="proof__held-mark"><RegistrationMark /></span>
-                    <p>one sentence, held under the sheet</p>
-                  </div>
+                  {/* THE SHOW-THROUGH. the answer is set on a sheet that is lying
+                      face down under this one, and newsprint is thin: ink set on
+                      it comes through as a soft grey shadow of itself. so the
+                      proof was never actually hidden — the reader could see the
+                      whole sentence sitting there under the sheet, out of focus
+                      and half-lit, and pulling the proof is not a reveal. it is
+                      a print. the same words, the same three lines, coming into
+                      focus in the exact box the ghost was standing in.
 
-                  <div className="proof__window" id="proof-body" role="region" aria-label="The short answer" hidden={!proof}>
-                    <span className="proof__sweep" aria-hidden="true" />
-                    <p className="proof__yes">yes — with a hand</p>
+                      and because both copies occupy the same box, nothing on the
+                      page moves when the proof is pulled. the card reserves the
+                      room the proof needs either way, so a reader who pulls it
+                      halfway down the sheet is not yanked by their own hand — the
+                      one jump the old card made is the one jump this removes. */}
+                  <div className="proof__stage">
+                    <span className="proof__cover" aria-hidden="true" />
 
-                    {/* the punchline is the second poster on the page, so it is
-                        set like one: the same face, the same weight, the same
-                        tracking as the question, and no longer than it needs to
-                        be. and it is printed by the page's own three plates —
-                        except these three are always in register, because the
-                        answer is the one sentence the press is allowed to get
-                        right. they arrive a hair apart and lock. */}
-                    <p className="proof__statement">
-                      <Plated
-                        className="proof__stack"
-                        /* the answer does not answer to the blade, and it does not
-                           answer to the ramp either: the sentence the press is
-                           allowed to get right is dry before it is ever pulled */
-                        wet={0}
-                        render={() => (
-                          <span className="proof__claim">
-                            <span className="proof__claim-a">When the interface has a point of view</span>
-                            <span className="proof__claim-b">you can feel,</span>
-                            <span className="proof__claim-c">and it knows when to stop moving.</span>
-                          </span>
-                        )}
-                      />
-                    </p>
+                    <div className="proof__held" aria-hidden="true">
+                      <ProofSheet through />
+                      <p className="proof__through">
+                        <Squeegee className="proof__through-icon" />
+                        <span>showing through the stock</span>
+                        <kbd>p</kbd>
+                      </p>
+                    </div>
 
-                    {/* the same landing the mark gets on the title: a rule to
-                        stand on, and the two corners of it trapped. */}
-                    <p className="proof__land" aria-hidden="true">
-                      <InkTrap className="proof__trap proof__trap--start" rule={false} />
-                      <InkTrap className="proof__trap proof__trap--end" rule={false} />
-                    </p>
-
-                    <ol className="proof__tests">
-                      {[
-                        'Hierarchy: could you name the second most important thing without thinking twice?',
-                        'Hand: the page hands you the blade. Does the tool actually do something?',
-                        'Restraint: does everything stop moving the moment you stop reading?',
-                      ].map((line, index) => (
-                        <li key={line} style={{ '--i': index } as CSSProperties}>
-                          <span>{String(index + 1).padStart(2, '0')}</span>
-                          <p>{line}</p>
-                          <svg
-                            className="proof__tick"
-                            viewBox="0 0 18 18"
-                            preserveAspectRatio="xMidYMid meet"
-                            aria-hidden="true"
-                            focusable="false"
-                          >
-                            <rect className="proof__tick-box" x="1.5" y="1.5" width="15" height="15" rx="2.6" />
-                            <path className="proof__tick-mark" d="M5.1 9.3 7.8 12 12.9 6.1" />
-                          </svg>
-                        </li>
-                      ))}
-                    </ol>
-                    <p className="proof__coda">
-                      And the honest part: any model can write the markup. The difference lives in the
-                      hundred small decisions nobody asked for.
-                    </p>
+                    <div
+                      className="proof__window"
+                      id="proof-body"
+                      role="region"
+                      aria-label="The short answer"
+                      aria-hidden={!proof}
+                    >
+                      <span className="proof__sweep" aria-hidden="true" />
+                      <ProofSheet />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -927,5 +959,91 @@ function QuestionTitle({
       <Plated className="question__stack" wet={1} render={lines} />
       <span className="question__wash" aria-hidden="true" />
     </h1>
+  )
+}
+
+/**
+ * THE PROOF, PRINTED TWICE.
+ *
+ * The short answer used to live behind a button: a hatched panel, a registration
+ * mark and the promise that there was a sentence down there somewhere. That is a
+ * gate, and the one thing a page whose job is answering a question should not do
+ * is make the reader ask twice before they are told.
+ *
+ * So it is not behind anything. The answer is set on a sheet lying face down
+ * under this one, and newsprint is thin enough that ink shows through it as a
+ * soft grey shadow of itself — you can read the whole sentence through the stock
+ * before you touch anything, and the panel that used to hold the secret is now
+ * holding the sentence.
+ *
+ * Which is why this is one component and not two. The copy under the sheet and
+ * the copy on it have to be the same words in the same box, or pulling the proof
+ * is a swap rather than a print, and the reader watches a sentence teleport
+ * rather than set. `through` therefore changes the one thing that is genuinely
+ * different about the far side of a sheet — the claim is a single faint plate
+ * there, not three — and leaves the geometry to the stylesheet.
+ */
+function ProofSheet({ through = false }: { through?: boolean }) {
+  const claim = (
+    <span className="proof__claim">
+      <span className="proof__claim-a">{CLAIM[0]}</span>
+      <span className="proof__claim-b">{CLAIM[1]}</span>
+      <span className="proof__claim-c">{CLAIM[2]}</span>
+    </span>
+  )
+
+  return (
+    <>
+      <p className="proof__yes">yes — with a hand</p>
+
+      {/* the punchline is the second poster on the page, so it is set like one:
+          the same face, the same weight, the same tracking as the question, and
+          no longer than it needs to be. and it is printed by the page's own three
+          plates — except these three are always in register, because the answer
+          is the one sentence the press is allowed to get right. they arrive a
+          hair apart and lock. */}
+      <p className="proof__statement">
+        {through ? (
+          <span className="proof__stack proof__stack--through">{claim}</span>
+        ) : (
+          <Plated
+            className="proof__stack"
+            /* the answer does not answer to the blade, and it does not answer to
+               the ramp either: the sentence the press is allowed to get right is
+               dry before it is ever pulled */
+            wet={0}
+            render={() => claim}
+          />
+        )}
+      </p>
+
+      {/* the same landing the mark gets on the title: a rule to stand on, and the
+          two corners of it trapped. */}
+      <p className="proof__land" aria-hidden="true">
+        <InkTrap className="proof__trap proof__trap--start" rule={false} />
+        <InkTrap className="proof__trap proof__trap--end" rule={false} />
+      </p>
+
+      <ol className="proof__tests">
+        {CHECKS.map((line, index) => (
+          <li key={line} style={{ '--i': index } as CSSProperties}>
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <p>{line}</p>
+            <svg
+              className="proof__tick"
+              viewBox="0 0 18 18"
+              preserveAspectRatio="xMidYMid meet"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <rect className="proof__tick-box" x="1.5" y="1.5" width="15" height="15" rx="2.6" />
+              <path className="proof__tick-mark" d="M5.1 9.3 7.8 12 12.9 6.1" />
+            </svg>
+          </li>
+        ))}
+      </ol>
+
+      <p className="proof__coda">{CODA}</p>
+    </>
   )
 }

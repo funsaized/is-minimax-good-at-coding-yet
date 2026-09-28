@@ -163,6 +163,61 @@
    belongs in the face it is reporting on: the readout and the
    letterforms printing it share a rectangle, so the register is
    legible as a number in a typeface rather than as another panel.
+
+
+   =============================================================
+   ITERATION 503 — FINISH THE SHEET
+
+   three changes and one idea underneath them: the page is a printed
+   sheet, all the way to the bottom, and it had stopped being one in
+   three places at once.
+
+   THE SHOW-THROUGH. the short answer lived behind a button — a
+   hatched panel, a registration mark and the promise of a sentence.
+   a page whose whole job is answering a question cannot make the
+   reader ask before it will tell them, so the answer is not behind
+   anything: it is set on a sheet lying face down under this one, and
+   newsprint is thin enough that ink comes through it as a soft grey
+   shadow of itself. the whole sentence is legible through the stock
+   before anybody touches anything, and pulling the proof is no
+   longer a reveal. it is a print — the same words, the same three
+   lines, coming into focus in the exact box the shadow was standing
+   in. the two copies are one component for the same reason: two
+   copies of a punchline that are allowed to disagree is a way of
+   making sure one of them is wrong.
+
+   and because both copies live in one grid cell, the card reserves
+   the room the proof needs either way. the pull moves nothing on the
+   page, which is the one jump the old card made and the only thing
+   here that was genuinely a fault rather than a flourish.
+
+   the ink does not come through the stock in black, so it does not
+   come through in black: the shadow is a warm grey, the two words
+   set in fluorescent pink still read as the pink ones, and the small
+   type under the poster is only just there — which is how much of it
+   you can actually read through a sheet of paper.
+
+   THE BAR GOES OVER. the slugbar is the trim edge of the sheet, and
+   a trim edge is a strip of the same stock as whatever it is lying
+   over. the control strip down the side of the page has always known
+   this — it carries a patch of light stock behind its mark for
+   exactly the reason. the bar did not, so crossing the seam dropped a
+   band of newsprint onto a slab of solid ink with a hard edge and
+   nothing to say for it. it turns over now, by swapping the slab's
+   own tokens onto the bar, so it is the same bar printed on the
+   other stock rather than a differently-themed bar. it is a position
+   and not a state, so it does not matter which way the reader came
+   past the line, and the two measurements it needs are read off a
+   ResizeObserver rather than off every frame.
+
+   THE LAST OF THE CHROME. the bar carried four rounded pills, the
+   proof carried a fifth, and everything else on the page is paper,
+   ink, rules and hard edges. the index is a slug now — the mono, the
+   caps, the tracking, a hairline of pink under whichever pass of the
+   press the reader is standing in — and the pull is a printed key
+   carrying the same hard pink shadow the whole sheet uses for a plate
+   that has moved, which then lies down in the bar once the proof is
+   out and there is nothing left to shout about.
    ============================================================= */
 
 @property --settle {
@@ -686,6 +741,52 @@ html[data-register='on'] .edge__ink--black {
   background: rgba(242, 238, 226, .965);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
+  transition: background .5s var(--ease), border-color .5s var(--ease);
+}
+
+/* THE BAR GOES OVER WITH THE SHEET. the slugbar is the trim edge of the sheet,
+   and a trim edge is a strip of the same stock as whatever it is lying over —
+   the control strip down the side of the page has always known this, which is
+   why it carries a patch of light stock behind its mark. the bar did not, so
+   crossing the seam dropped a band of newsprint onto a slab of solid ink with
+   nothing to say so much as a hard edge between them.
+
+   so it turns over. the swap is the whole palette, taken from the slab's own
+   tokens, so the bar is not a differently-themed bar — it is the same bar,
+   printed on the other stock. and it is a position rather than a state, so it
+   does not matter which way the reader came past the seam. */
+html[data-slab='on'] .slugbar {
+  --black: var(--slab-ink);
+  --ink-70: var(--slab-70);
+  --ink-50: var(--slab-50);
+  --rule: rgba(251, 248, 241, .2);
+  --rule-soft: rgba(251, 248, 241, .12);
+  --pink-ink: var(--slab-pink);
+  /* the figure pinned into the bar is a figure like any other, and the blue that
+     carries it on newsprint is unreadable on ink */
+  --blue-ink: var(--slab-blue);
+  background: rgba(19, 17, 24, .88);
+}
+
+/* and the bar turns over as one thing, rather than the brand arriving a beat
+   before the readout did */
+.brand,
+.brand__mark,
+.brand__text small,
+.gauge,
+.gauge__read,
+.gauge__plate,
+.nav a {
+  transition: color .45s var(--ease), background .45s var(--ease),
+    border-color .45s var(--ease);
+}
+
+.brand__mark {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--pink-ink);
+  transition: color .45s var(--ease), transform .6s var(--spring);
 }
 
 .brand {
@@ -695,18 +796,6 @@ html[data-register='on'] .edge__ink--black {
   align-items: center;
   gap: 10px;
   color: var(--black);
-}
-
-.brand__mark {
-  flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
-  color: var(--pink-ink);
-  transition: transform .6s var(--spring);
-}
-
-.brand:hover .brand__mark {
-  transform: rotate(90deg);
 }
 
 .brand__text {
@@ -733,57 +822,78 @@ html[data-register='on'] .edge__ink--black {
   white-space: nowrap;
 }
 
+/* THE INDEX. the bar is on screen the whole time the reader is on the page, and
+   it was the last piece of software chrome left on a sheet made of paper: four
+   rounded pills and a chip, sitting in a row of hard edges, rules and ink. so it
+   is a slug now — the mono, the caps, the tracking, and a hairline of pink under
+   whichever pass of the press the reader is standing in. nothing about the page's
+   furniture should look like a web app, because the whole argument is that it is
+   not one. */
 .nav {
   display: flex;
   align-items: center;
-  gap: clamp(2px, .7vw, 12px);
+  gap: clamp(0px, .5vw, 8px);
 }
 
 .nav a {
   position: relative;
   display: inline-flex;
   align-items: baseline;
-  gap: 7px;
-  padding: 7px 13px 8px;
+  gap: 8px;
+  padding: 6px clamp(6px, .9vw, 12px) 9px;
   color: var(--ink-50);
-  border: 1px solid transparent;
-  border-radius: 100px;
-  font-size: .84rem;
+  font-family: var(--mono);
+  font-size: var(--label-2);
+  font-weight: 500;
+  letter-spacing: .15em;
   white-space: nowrap;
-  transition: color .24s var(--ease), background .24s var(--ease), border-color .24s var(--ease);
+  text-transform: uppercase;
+  transition: color .45s var(--ease);
 }
 
-.nav a:hover {
-  color: var(--black);
-  border-color: var(--rule);
-}
-
-.nav a.is-active {
-  color: var(--black);
-  background: var(--stock-3);
-  border-color: var(--rule);
-}
-
-.nav a.is-active::after {
+.nav a::after {
   position: absolute;
-  right: 13px;
-  bottom: 3px;
-  left: 13px;
+  right: clamp(6px, .9vw, 12px);
+  bottom: 2px;
+  left: clamp(6px, .9vw, 12px);
   height: 2px;
   content: '';
   background: var(--pink);
   border-radius: 2px;
-  animation: rule-in .4s var(--ease-out) both;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform .42s var(--ease-out);
 }
 
+.nav a:hover {
+  color: var(--black);
+}
+
+.nav a:hover::after,
+.nav a.is-active::after {
+  transform: scaleX(1);
+}
+
+.nav a.is-active {
+  color: var(--black);
+  font-weight: 700;
+}
+
+/* the passes of a make-ready, and the one you are in. a figure about the reader
+   is the only thing on the bar that is not a figure about the press, so it stays
+   in the muted ink and lets the pink underline say *here* */
 .nav__number {
-  color: var(--pink-ink);
-  font-family: var(--mono);
+  color: inherit;
   font-size: var(--label-3);
   font-weight: 600;
   letter-spacing: .1em;
   /* roman, and never once confused with the plate figures below */
   text-transform: lowercase;
+  transition: color .45s var(--ease);
+}
+
+.nav a.is-active .nav__number {
+  color: var(--pink-ink);
 }
 
 /* ---------- the register gauge: the only thing in the bar worth watching ---------- */
@@ -3531,6 +3641,11 @@ html[data-register='on'] .run__seam-rule--black {
   text-wrap: pretty;
 }
 
+/* the keys are printed here rather than only in the strip at the top, because
+   this is the one control on the page that is not under the reader's cursor.
+   the rule above them is the one that makes the air in this column deliberate:
+   a headline block, a slab of nothing, and a foot — which is a composition,
+   where a footnote stranded three hundred pixels under a paragraph is a hole */
 .answer__copy .answer__note {
   display: flex;
   max-width: none;
@@ -3539,6 +3654,7 @@ html[data-register='on'] .run__seam-rule--black {
   gap: 6px 12px;
   margin-top: auto;
   padding-top: clamp(18px, 2vw, 26px);
+  border-top: 1px solid rgba(251, 248, 241, .18);
   color: var(--ink-50);
   font-family: var(--mono);
   font-size: var(--label-3);
@@ -3623,20 +3739,28 @@ html[data-register='on'] .run__seam-rule--black {
   color: var(--pink);
 }
 
+/* the one control on the page that is not under the reader's cursor when they
+   want it, so it is a key rather than a button: square, printed, and carrying
+   the same hard pink shadow the whole sheet uses for a plate that has moved. a
+   pill here was the last shape on the page that had never been through a press */
 .toggle {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 8px 15px;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 15px;
   color: var(--black);
   background: var(--stock-3);
-  border-radius: 100px;
+  border: 1px solid var(--stock-3);
+  border-radius: 2px;
+  box-shadow: 3px 3px 0 var(--pink);
   font-family: var(--mono);
   font-size: var(--label-2);
   font-weight: 700;
   letter-spacing: .14em;
   text-transform: uppercase;
-  transition: background .22s var(--ease), color .22s var(--ease), transform .3s var(--spring);
+  transition: background .22s var(--ease), color .22s var(--ease),
+    box-shadow .3s var(--ease), transform .3s var(--spring);
 }
 
 .toggle__icon {
@@ -3645,76 +3769,210 @@ html[data-register='on'] .run__seam-rule--black {
 }
 
 .toggle:hover {
-  color: #fff;
+  color: var(--stock-3);
   background: var(--pink-ink);
-  transform: translateY(-1px);
+  border-color: var(--pink-ink);
+  box-shadow: 3px 3px 0 var(--slab-blue);
+  transform: translate(-1px, -1px);
+}
+
+/* and once the proof is out, the key is the bar you put it back on, so it stops
+   shouting and lies flat in the bar like any other piece of furniture */
+.proof.is-open .toggle {
+  color: var(--slab-ink);
+  background: transparent;
+  border-color: rgba(251, 248, 241, .3);
+  box-shadow: none;
+}
+
+.proof.is-open .toggle:hover {
+  color: var(--slab-ink);
+  background: transparent;
+  border-color: var(--slab-pink);
+  transform: none;
 }
 
 .proof :focus-visible {
   outline-color: var(--pink);
 }
 
-.proof__held {
+/* =============================================================
+   THE SHOW-THROUGH
+   The short answer used to live behind a button: a hatched panel,
+   a registration mark, and the promise that a sentence was down
+   there. That is a gate, and the one thing a page whose job is
+   answering a question must not do is make the reader ask twice.
+
+   so it is not behind anything. the answer is set on a sheet lying
+   face down under this one, and newsprint is thin enough that ink
+   comes through it as a soft grey shadow of itself. the whole
+   sentence is legible through the stock before the reader touches
+   anything, and pulling the proof is not a reveal — it is a print.
+   the same words, the same three lines, coming into focus in the
+   exact box the shadow was standing in.
+
+   which is why both copies are in one grid cell. the room the proof
+   needs is reserved either way, so nothing on the page moves when
+   it is pulled, and the ghost and the sheet are guaranteed to be the
+   same size — a sentence that teleports instead of setting is the
+   one thing this could have got wrong.
+
+   the cover is the sheet lying on top, and it is what gets drawn off
+   the bar: its hatch and the bloom of light through the stock both go
+   at once with the shadow itself, on one beat.
+   ============================================================= */
+
+.proof__stage {
+  position: relative;
   display: grid;
-  place-items: center;
-  gap: 12px;
-  /* tall enough that pulling the sheet is a sheet being drawn out from under a
-     cover, and not a card suddenly changing its mind about its own height */
+  /* tall enough that the card is a proof sheet rather than a card that changes
+     its own height, and short enough that it still reads as a sheet */
   min-height: clamp(252px, 25vw, 360px);
-  padding: clamp(26px, 3.4vw, 42px);
-  text-align: center;
-  background: repeating-linear-gradient(135deg, rgba(20, 19, 26, .045) 0 1px, transparent 1px 9px);
   border-radius: 0 0 3px 3px;
 }
 
+/* the sheet on top: the hatch of a cover, and a broad light coming through the
+   thin stock behind the sentence. it is the only thing in the card that moves
+   when the proof is pulled, and it moves because it is physically being removed */
+.proof__cover {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 0 0 3px 3px;
+  background:
+    radial-gradient(58% 40% at 34% 46%, rgba(255, 46, 107, .08), transparent 72%),
+    repeating-linear-gradient(135deg, rgba(20, 19, 26, .028) 0 1px, transparent 1px 9px);
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity .5s var(--ease);
+}
+
+.proof.is-open .proof__cover {
+  opacity: 0;
+}
+
+/* the far side of the sheet. the same proof, printed once, without a press: soft,
+   low, and out of focus, because it is being read through paper. the answer's own
+   ramp is pinned off here — nothing under the sheet is allowed to answer to the
+   pull, including the rule under the sentence and the two corners of it */
+.proof__held {
+  --pull: 0;
+  display: flex;
+  grid-area: 1 / 1;
+  flex-direction: column;
+  padding: clamp(24px, 3vw, 40px);
+  transition: opacity .46s var(--ease);
+}
+
+/* the blur is on the type under the sheet and not on the panel, so the caption
+   printed on the cover above it stays the one crisp thing on the card */
+.proof__held > :not(.proof__through) {
+  filter: blur(1.05px);
+  transition: filter .46s var(--ease);
+}
+
 .proof.is-open .proof__held {
-  display: none;
+  opacity: 0;
 }
 
-.proof__held-mark {
-  width: clamp(66px, 8vw, 92px);
-  height: clamp(66px, 8vw, 92px);
-  color: var(--pink-ink);
-  animation: breathe 6s var(--ease) infinite;
+.proof.is-open .proof__held > :not(.proof__through) {
+  filter: blur(3.4px);
 }
 
-.proof__held p {
+/* ink does not come through the stock in black. it comes through as a warm grey,
+   a shade lighter than itself, and the two words set in fluorescent pink still
+   read as the pink ones — which is the one thing the shadow tells you about the
+   composition before you have pulled anything */
+.proof__held .proof__yes {
+  color: color-mix(in srgb, var(--pink-ink) 30%, transparent);
+}
+
+.proof__held .proof__claim-a {
+  color: color-mix(in srgb, var(--black) 34%, transparent);
+}
+
+.proof__held .proof__claim-b {
+  color: color-mix(in srgb, var(--pink-ink) 36%, transparent);
+}
+
+.proof__held .proof__claim-c,
+.proof__held .proof__tests li,
+.proof__held .proof__tests span,
+.proof__held .proof__coda {
+  color: color-mix(in srgb, var(--black) 12%, transparent);
+}
+
+.proof__held .proof__land {
+  background: color-mix(in srgb, var(--black) 8%, transparent);
+}
+
+.proof__held .ink-trap__pool {
+  opacity: .14;
+}
+
+.proof__held .proof__tick-box {
+  stroke: color-mix(in srgb, var(--black) 12%, transparent);
+}
+
+.proof__held .proof__tick-mark {
+  stroke: transparent;
+}
+
+/* and the caption, pinned to the foot of the shadow. the sentence is the promise;
+   this is the only thing on the card that tells the reader what to do about it */
+.proof__through {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 10px;
+  margin-top: auto;
+  padding-top: clamp(16px, 1.8vw, 24px);
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: var(--label-2);
-  letter-spacing: .15em;
+  font-size: var(--label-3);
+  letter-spacing: .14em;
+  text-align: center;
   text-transform: uppercase;
+}
+
+.proof__through-icon {
+  width: 20px;
+  height: 14px;
+  color: var(--pink-ink);
+  animation: through-sway 7s var(--ease) infinite;
 }
 
 .proof__window {
   position: relative;
-  min-height: clamp(252px, 25vw, 360px);
+  z-index: 1;
+  grid-area: 1 / 1;
   padding: clamp(24px, 3vw, 40px);
   overflow: hidden;
   border-radius: 0 0 3px 3px;
+  /* out of focus and out of the tree: visibility rather than opacity, so the copy
+     is never announced before the reader has pulled it, and never focusable */
+  visibility: hidden;
+  opacity: 0;
+  filter: blur(2.2px);
+  transform: translateY(5px);
+  transition: opacity .48s var(--ease-out), filter .48s var(--ease-out),
+    transform .48s var(--ease-out), visibility 0s linear .48s;
 }
 
-/* the sheet is pulled, not switched: it unrolls off the bar as the ink comes
-   across, and the panel it replaces is gone before the first frame of that
-   lands, so the swap is never seen */
 .proof.is-open .proof__window {
-  animation: unroll .6s var(--ease-out) both;
-}
-
-@keyframes unroll {
-  from {
-    opacity: 0;
-    transform: perspective(1100px) rotateX(-9deg) translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+  visibility: visible;
+  opacity: 1;
+  filter: none;
+  transform: none;
+  transition: opacity .52s var(--ease-out), filter .52s var(--ease-out),
+    transform .52s var(--ease-out), visibility 0s;
 }
 
 .proof__sweep {
   position: absolute;
   inset: -20% -40%;
+  z-index: 3;
   background: linear-gradient(
     102deg,
     transparent 40%,
@@ -3755,6 +4013,15 @@ html[data-register='on'] .run__seam-rule--black {
    ============================================================= */
 
 .proof__stack {
+  margin-top: clamp(10px, 1.1vw, 15px);
+}
+
+/* the far side carries one plate, not three, and it has to set in exactly the
+   place the three plates set — so it takes the stack's own box and gives up
+   everything else about it */
+.proof__stack--through {
+  display: block;
+  position: relative;
   margin-top: clamp(10px, 1.1vw, 15px);
 }
 
@@ -3834,7 +4101,9 @@ html[data-register='on'] .run__seam-rule--black {
   transition: background .5s var(--ease), height .35s var(--ease);
 }
 
-.proof.is-open .proof__land {
+/* only the sheet on top of the stack fills its rule: the shadow of the same rule
+   under the cover stays the hairline it has always been */
+.proof.is-open .proof__window .proof__land {
   height: 3px;
   background: color-mix(in srgb, var(--blue-ink) 78%, transparent);
 }
@@ -3943,21 +4212,24 @@ html[data-register='on'] .run__seam-rule--black {
   animation: plate-press .78s var(--ease-out) both;
 }
 
-.proof.is-open .proof__yes,
-.proof.is-open .proof__tests li,
-.proof.is-open .proof__coda {
+/* the type on the sheet is picked, not faded: only the copy on top of the stack
+   is set line by line, because the shadow of the same words under the sheet is
+   not being re-set, it has been there all along */
+.proof.is-open .proof__window .proof__yes,
+.proof.is-open .proof__window .proof__tests li,
+.proof.is-open .proof__window .proof__coda {
   animation: print-line .55s var(--ease-out) both;
 }
 
-.proof.is-open .proof__yes {
+.proof.is-open .proof__window .proof__yes {
   animation-delay: .16s;
 }
 
-.proof.is-open .proof__tests li {
+.proof.is-open .proof__window .proof__tests li {
   animation-delay: calc(.5s + var(--i) * .09s);
 }
 
-.proof.is-open .proof__coda {
+.proof.is-open .proof__window .proof__coda {
   animation-delay: .92s;
 }
 
@@ -4444,15 +4716,6 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
-@keyframes rule-in {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
 /* a line of type is picked and set down: it arrives out of focus the way ink
    does through a screen, and it is already in register when it lands */
 @keyframes set-type {
@@ -4505,13 +4768,17 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
-@keyframes breathe {
+/* the squeegee is still above the cover, and the cover is still on the card */
+@keyframes through-sway {
   0%,
   100% {
-    transform: rotate(0deg);
+    rotate: -3deg;
+    translate: 0 0;
   }
+
   50% {
-    transform: rotate(9deg);
+    rotate: 3deg;
+    translate: 0 1px;
   }
 }
 
@@ -4612,13 +4879,12 @@ html[data-reveal='on'] .reveal.is-in {
   .colophon__slip-row {
     grid-template-columns: 5.4rem minmax(0, 1fr);
   }
-}
 
-@media (max-width: 1040px) {
-  :root {
-    --fringe-scale: .82;
-  }
-
+  /* the index went to the mono and the tracking when it stopped being four pills,
+     and the caps it now wears are a little wider than the labels they replaced.
+     so the bar gives up its single row a good deal earlier than it used to: the
+     index gets its own line and the brand and the readout keep the top one,
+     which is the same two-row bar a narrow screen was already getting. */
   html {
     scroll-padding-top: 124px;
   }
@@ -4651,6 +4917,12 @@ html[data-reveal='on'] .reveal.is-in {
 
   .nav::-webkit-scrollbar {
     display: none;
+  }
+}
+
+@media (max-width: 1040px) {
+  :root {
+    --fringe-scale: .82;
   }
 }
 
@@ -4819,9 +5091,12 @@ html[data-reveal='on'] .reveal.is-in {
     padding-top: 9px;
   }
 
+  /* the index is furniture, so it keeps the furniture size on a phone too: a bar
+     that grows a step of type on the narrowest screen is the one place on the
+     sheet where the furniture gets louder as the page gets smaller */
   .nav a {
-    padding: 6px 10px 7px;
-    font-size: .8rem;
+    padding: 5px 8px 8px;
+    letter-spacing: .12em;
   }
 
   .specimen__foot {
@@ -5025,14 +5300,19 @@ html[data-reveal='on'] .reveal.is-in {
 
   /* the answer is already in register: it never gets to arrive out of it. the
      slab still blooms, because the bloom is state and not movement — it simply
-     arrives without travelling, and quieter than it would have */
-  .proof.is-open .proof__window,
-  .proof.is-open .proof__yes,
-  .proof.is-open .proof__tests li,
-  .proof.is-open .proof__coda,
+     arrives without travelling, and quieter than it would have. and the shadow
+     under the sheet is not a journey either: the cover simply is not there, and
+     the words are simply set. the ink still comes through the stock soft, which
+     is a fact about newsprint and not about motion */
+  .proof.is-open .proof__window *,
   .proof.is-open .plated__layer--pink,
   .proof.is-open .plated__layer--blue,
   .proof.is-open .plated__layer--black {
+    animation: none;
+  }
+
+  .proof__through-icon {
+    rotate: 0deg;
     animation: none;
   }
 
@@ -5068,6 +5348,7 @@ html[data-reveal='on'] .reveal.is-in {
   .plates__cue,
   .ream__well,
   .fold,
+  .toggle,
   .run__glow {
     display: none;
   }
@@ -5125,7 +5406,8 @@ html[data-reveal='on'] .reveal.is-in {
 
   .colophon__slip-row,
   .colophon__foot,
-  .colophon__grid {
+  .colophon__grid,
+  .answer__note {
     border-color: rgba(0, 0, 0, .4);
   }
 
@@ -5160,13 +5442,20 @@ html[data-reveal='on'] .reveal.is-in {
     background: #000;
   }
 
-  /* a printout has no pull key, so the sheet arrives already drawn */
-  .proof__window[hidden] {
-    display: block;
+  /* a printout has no cover over it and no pull key, so the sheet arrives already
+     drawn — the shadow and the caption are what the reader was being shown, and
+     a printout shows the print */
+  .proof__held,
+  .proof__cover,
+  .proof__through {
+    display: none;
   }
 
-  .proof__held {
-    display: none;
+  .proof__window {
+    visibility: visible;
+    opacity: 1;
+    filter: none;
+    transform: none;
   }
 
   .ink-trap__pool {
