@@ -68,7 +68,7 @@ const SLIP = [
 const MACHINERY = [
   [
     'one number, and one ramp.',
-    'Everything out of register on this page is the plate offset: the fringes, the shadows under the cards, the pools in the traps, the gauge, the marks at the ends of the fold, the seam where the press run begins. The short answer is the exception — it prints in register whatever the blade is doing, because it is the one sentence the press is allowed to get right.',
+    'Everything out of register on this page is the plate offset: the fringes, the shadows under the cards, the pools in the traps, the gauge, the marks at the ends of the fold, the seam where the press run begins — and how deep the type is pressed into the paper. The short answer is the exception — it prints in register whatever the blade is doing, because it is the one sentence the press is allowed to get right.',
   ],
   [
     'wet, then dry.',
@@ -303,6 +303,9 @@ export function App() {
       if (event.key === '0') {
         event.preventDefault()
         setReg(0)
+        /* the bed reports itself through its own slider role, but this key moves
+           it from anywhere on the sheet, so it has to say so as well */
+        setAnnounce('Blade snapped to the gate.')
         return
       }
       /* the legend promises the arrows nudge the blade, so they do — from anywhere

@@ -1,49 +1,44 @@
-Iteration 500 — the type list now names the face your machine actually resolved, and the scale is true again.
+Iteration 501: the type now takes an impression — it sinks into the stock, and only once the plates agree.
 
-**The type list stops being a claim about the page and becomes a fact about the reader.**
+**The impression.** A press prints into paper, not onto it, so the poster, the close
+read and the short answer now sit *below* the surface: a lit edge under each glyph and
+a shade above it. The depth is one number, `--imp`, in `em` so a phrase set small is
+pressed less deeply than a poster. It reads `--settle` on the light sheet, so nothing
+is pressed at all while the plates are arguing and the whole sheet takes the impression
+on the beat the blade reaches the gate; the answer overrides it with `--pull`, because
+the answer was never printed by the blade. Only the black plate carries it — the colour
+plates are ink, and ink does not sink paper.
 
-- `src/faces.tsx` (new). Each of the three stacks is resolved at run time: a canvas
-  probe is set in the platform generic, then in every family of the chain in turn,
-  and the first candidate whose width and height differ from the generic is the
-  family really being set. If nothing differs, the chain fell all the way through
-  and the cell says so. Cached per stack; a null canvas prints the stack and
-  leaves the answer out rather than printing a guess.
-- `src/typelist.tsx`. Every cell now prints that answer and a receipt ("3rd of 7 in
-  the chain · measured, not asked for", or "nothing in the chain is here · the
-  platform's own sans"). The answer is drawn in the page's own three plates, by the
-  name element's own two pseudos at a third of the spread, so a new line on the
-  sheet is printed by the sheet's own mechanic instead of being bolted on.
-- The widest step the list used to print is gone. It was the title's own 7.2rem, set
-  in a third of the width, which put a second poster in the middle of the page and
-  quietly broke the only rule the sheet makes about type. The title is set across
-  the full measure and you have already read it.
-- `--specimen` 5rem → 4.2rem, so the ladder is 7.2 question, 4.3 claim, 4.2 set
-  phrase, 3.2 section head, and the short answer is honestly the second loudest
-  thing on the page.
+**The rules press too.** The title's landing rule and the proof's landing rule take the
+same depth, so the two lines the type stands on are printed into the paper as well.
 
-**Composition and type.**
+**`plate-press` simplified.** The answer's arrival keyframe was painting a second copy
+of the two colour plates as text-shadows on top of the two ghost layers that were
+already arriving. Redundant, and one more thing standing between the poster and its
+impression.
 
-- The type list lost its heading. Three sections in a row opened identically — slug,
-  rule, two-column head, standfirst — which reads as a template rather than a sheet.
-  A type list is a note on the run, so it is set like one: a slug on a rule carrying
-  one hard-right fact, and a paragraph under it.
-- Serif display headings: `-.024em` → `-.008em` tracking, `1.02` → `1.08` leading. A
-  serif is already fitted at display sizes, so the tracking a grotesque needs only
-  opens the joints up, and 1.02 lines a descender into the line beneath it.
-- One vertical rhythm. Four `--air-*` tokens replace a dozen clamps invented next to
-  the things they separated; the sheet, the bands, the heads, the press run and the
-  colophon all read the same four steps.
-- Colophon mechanism notes shortened. The foot of a press run is a note about the
-  run, not an essay about printing.
+**The ink film.** The press run and the colophon are the largest area of colour on the
+page and they were a flat fill. Both slabs now carry a film: the drum's banding, a broad
+light off the top edge, and a faint pink bounce off the foot. Each owns a stacking
+context so the film stays under the bloom and the proof card rather than climbing out
+over the light sheet. Switched off in print.
 
-**Cost.**
+**The chain.** The type list printed its font stack as the literal CSS it is written as
+— a wrapped `font-family` string, quoted names and all, at the same size as the specimen
+it was annotating. It now prints the families in the order the sheet asked for them,
+joined by pink arrows, with the one that actually stuck set in black; when the chain
+falls all the way through, the generic the platform really drew goes on the end. Set as
+a wrapping flex row, because a run of arrows with no spaces in it has no break
+opportunity and a six-deep chain walked straight across its cell into the next one.
 
-- `mix-blend-mode` removed from `.stock__grain` and `.stock__roller`. Both are
-  full-viewport layers that animate forever, and a blend pass over the whole
-  viewport under a sticky bar repaints the page for as long as it runs. The washes
-  carry their own alpha now, so they are transforms on a composited layer. Nothing
-  else on the sheet changed tone.
+**The notes.** The colophon's four mechanisms were four paragraphs at a ~95-character
+measure, which read as a wall. They are notes now: a roman figure, a 64-character
+measure, a hair above each, two to a row from 860px. The job ticket next to them now
+fills its own cell to the bottom, so the foot of the run has no hole in it.
 
-**Unchanged.** The title and the document title, the entry point, the three-plate
-mechanic and the one number it runs on, the press bed, the ream, the proof pull, the
-keyboard map, the reduced-motion behaviour, the print styles.
+**Accessibility.** The `0` key moves the blade from anywhere on the sheet, so it now
+says so in the live region. Verified: no page errors, tab order unchanged, and under
+`prefers-reduced-motion` the impression is fully applied at the gate with no journey —
+it is a value, not an animation.
+
+`npm run build` passes. No dependencies, no network, no assets added.

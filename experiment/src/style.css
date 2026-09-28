@@ -41,6 +41,34 @@
    register, which makes the gate legible as a change in the
    smallest marks on the page rather than in a panel of readouts.
 
+   THE IMPRESSION. a press does not print on top of the sheet,
+   it prints into it, and until this iteration the type sat on
+   the stock like anything else on a screen. so the type now
+   sinks: a shade above each glyph and a lit edge under it, and
+   the depth of both is --imp, which is --settle everywhere on
+   the light sheet and --pull on the answer. which means the
+   poster, the close read and the short answer have no impression
+   at all while the plates are arguing, and take one the instant
+   they agree — so the last thing the reader gets for bringing
+   the blade to the gate is the sheet itself pressing down under
+   the words. it is a hair of light and a hair of shade, in em,
+   so a phrase set small is pressed less deeply than a poster.
+   and the colour plates never take it: a deboss is a property
+   of the paper, not of an ink.
+
+   THE INK FILM. the press run and the colophon are one stretch
+   of solid ink, and the largest area of flat colour on the page
+   was reading as a css background rather than as ink. so the
+   slab carries a film of its own now: the drum's banding, a
+   broad light off the top edge and a pink bounce off the foot —
+   the same wet film the paper carries, printed on the dark side.
+
+   THE CHAIN. the type list used to print its font stack as a
+   wrapped css string, which was the ugliest thing on the sheet
+   and set at the same size as the specimen it was annotating.
+   it now prints the families in the order the sheet asked for
+   them, with the one that actually stuck set in black.
+
    THE PRESS RUN. the page has a beginning, a machine and an
    answer, and it now ends in ink instead of in light. the stand-
    first sits directly under the poster, because the argument
@@ -151,6 +179,13 @@
   --ink-close: 1;
   --fringe-x: var(--reg-x);
   --fringe-y: var(--reg-y);
+
+  /* how deep the type is pressed into the stock. one number, and it is not a
+     state: on the light sheet it is the register, so nothing on the sheet is
+     pressed at all while the plates are still arguing and the whole poster
+     takes the impression on the beat the ink agrees. the answer overrides it
+     with its own ramp, because the answer is not printed by the blade. */
+  --imp: var(--settle);
 
   /* the offset shadows under the cards are not decoration: they are the pink
      plate, printed behind the black one. so they ride the plate offset, and
@@ -948,6 +983,46 @@ html[data-register='on'] .ink-trap__rule {
 
 .is-catch .ink-trap__pool {
   filter: drop-shadow(0 0 3px rgba(255, 46, 107, .55));
+}
+
+/* =============================================================
+   THE IMPRESSION
+   The plate is not a highlight and it is not a drop shadow. A
+   press puts type into the sheet: the wall of the impression
+   nearest the light catches it, the far wall is in shadow, and
+   the paper between them is a hair lower than the paper around
+   it. So the type gets a shade above it and a lit edge under it,
+   and it gets both at once, which is the only thing that reads
+   as depth rather than as a sticker.
+
+   --imp is the depth, in em, so a phrase set small is pressed
+   less deeply than a poster — the same law a compositor uses
+   when a misregistration is a fraction of the type and not of
+   the sheet. It is written once (:root reads the register; the
+   answer reads its own pull) and nothing on this page animates
+   it, so a reader who has asked for stillness still gets a
+   fully pressed sheet.
+
+   only the black plate carries it. The two colour plates are
+   ink, and ink does not sink paper; and their geometry has to
+   stay byte-identical to the black or the misalignment stops
+   being an accident of the press and starts being a bug.
+   ============================================================= */
+
+.plated__layer--black .q__line,
+.plated__layer--black .specimen__line,
+.plated .proof__claim-a,
+.plated .proof__claim-b {
+  text-shadow:
+    0 calc(.022em * var(--imp)) 0 rgba(255, 255, 255, calc(.72 * var(--imp))),
+    0 calc(-.01em * var(--imp)) 0 rgba(20, 19, 26, calc(.26 * var(--imp)));
+}
+
+/* the two rules the type stands on are printed into the paper too, so they
+   take the same press: a lit hairline the width of the rule, under it */
+.q__land,
+.proof__land {
+  box-shadow: 0 calc(.014em * var(--imp)) 0 rgba(252, 250, 243, calc(.5 * var(--imp)));
 }
 
 /* ---------- the question sheet ---------- */
@@ -2917,29 +2992,65 @@ html[data-register='on'] .fold-mark__plate--black {
   padding-top: 14px;
 }
 
-.type__stack {
-  color: var(--ink-50);
+/* the chain, as the sheet asked for it. this used to print the literal css the
+   stack is written as — a wrapped font-family string, quoted names and all, at
+   the same size as the specimen it was annotating, which made it both the ugliest
+   thing on the sheet and the least useful. the families go out in the order they
+   were asked for, the one that stuck is set in black, and the arrow between them
+   is the pink plate doing what it has done everywhere else on this page. */
+.type__chain {
+  display: grid;
+  gap: 5px;
+}
+
+.type__chain-kicker,
+.type__chain-list {
   font-family: var(--mono);
   font-size: var(--label-3);
   line-height: 1.6;
-  letter-spacing: .04em;
-  overflow-wrap: anywhere;
-}
-
-.type__load {
-  display: flex;
-  align-items: baseline;
-  gap: 7px;
-  margin-top: 5px;
-  color: var(--ink-50);
-  font-family: var(--mono);
-  font-size: var(--label-3);
-  letter-spacing: .1em;
+  letter-spacing: .09em;
   text-transform: uppercase;
 }
 
-.type__load > span {
+.type__chain-kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  color: var(--ink-50);
+}
+
+.type__chain-kicker > span {
   color: var(--pink-ink);
+  letter-spacing: 0;
+}
+
+/* flex, not inline: the families sit in a run of arrows with no space between
+   them, so an inline run has no break opportunity in it at all and a six-deep
+   chain walks straight out of its cell and across the one next to it. as flex
+   items each name is one thing that can wrap where the chain runs out of room. */
+.type__chain-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px .3em;
+  color: var(--ink-50);
+}
+
+.type__chain-list > span {
+  white-space: nowrap;
+}
+
+.type__chain-list > span + span::before {
+  margin-right: .7em;
+  content: '→';
+  color: var(--pink-ink);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* the one that stuck */
+.type__chain-list > .is-set {
+  color: var(--black);
+  font-weight: 600;
 }
 
 /* =============================================================
@@ -3066,6 +3177,10 @@ html[data-reveal='on'] .type__panel.is-in .type__resolved-name {
 
 .run {
   position: relative;
+  /* the ink film below is a positioned layer, so the slab owns a stacking
+     context of its own — otherwise the film would climb out and land over the
+     light sheet above it. */
+  isolation: isolate;
   margin-top: var(--air-sheet);
   color: var(--slab-ink);
   background: var(--slab);
@@ -3078,6 +3193,30 @@ html[data-reveal='on'] .type__panel.is-in .type__resolved-name {
   --pink-ink: var(--slab-pink);
   --blue: var(--slab-blue);
   --blue-ink: var(--slab-blue);
+}
+
+/* THE INK FILM. the run and the colophon are one unbroken stretch of solid ink
+   and it is the largest area of colour on the page, so it cannot be a flat fill:
+   the drum's banding runs through it, a broad light comes off the top edge where
+   the sheet came out of the roller, and the pink plate bounces back off the foot.
+   it is the same film the light sheet carries, printed on the dark side, and it
+   stays under the bloom and under the proof card rather than over either. */
+.run::before,
+.colophon::before {
+  position: absolute;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(251, 248, 241, .01) 0 1px, transparent 1px 4px),
+    radial-gradient(120% 58% at 50% -14%, rgba(251, 248, 241, .045), transparent 66%),
+    radial-gradient(66% 42% at 50% 116%, rgba(255, 46, 107, .05), transparent 68%);
+}
+
+.run > .page,
+.colophon > .colophon__inner {
+  position: relative;
+  z-index: 1;
 }
 
 /* selection turns over with the sheet: light type on the pink plate is fine on
@@ -3258,6 +3397,9 @@ html[data-register='on'] .run__seam-rule--black {
   --blue-ink: #26329e;
   /* the answer's own ramp. nothing on this card answers to the blade. */
   --pull: 0;
+  /* and so the answer's own impression: the proof is either pulled or it is not,
+     and a sheet that has been pulled has been pressed. */
+  --imp: var(--pull);
   color: var(--black);
   background: var(--stock-3);
   border: 1px solid var(--black);
@@ -3473,16 +3615,18 @@ html[data-register='on'] .run__seam-rule--black {
   text-wrap: pretty;
 }
 
-/* the ghosts are ink, not type: no lockups, no colour of their own, and the
-   italics stay exactly where they are — three impressions that disagree about
-   a letter's width are not an accident of the press, they are a bug. the
-   colour plates are the plates' colour, whatever the black plate has
+/* the ghosts are ink, not type: no lockups, no colour of their own, no
+   impression — a deboss is something the paper did, not something an ink
+   carries. the italics stay exactly where they are: three impressions that
+   disagree about a letter's width are not an accident of the press, they are a
+   bug. the colour plates are the plates' colour, whatever the black plate has
    underneath them. */
 .plated__layer--ghost .proof__claim,
 .plated__layer--ghost .proof__claim-a,
 .plated__layer--ghost .proof__claim-b,
 .plated__layer--ghost .proof__claim-c {
   color: inherit;
+  text-shadow: none;
 }
 
 /* the poster ends, the rubric begins, and where those two meet there is a
@@ -3647,23 +3791,20 @@ html[data-register='on'] .run__seam-rule--black {
   }
 }
 
-/* black prints last, and prints hard: it arrives out of a soft blur with the
-   two colour plates still showing a couple of pixels through it, which is what
-   an overprint looks like from about a foot away */
+/* black prints last, and prints hard: it arrives out of a soft blur and settles,
+   with the two colour plates still showing a couple of pixels through it, which
+   is what an overprint looks like from about a foot away. the colour showing
+   through is the two ghost layers doing their own arrival — the keyframe used to
+   paint a second copy of them as text-shadows, which is both redundant and one
+   more thing standing between the poster and its impression. */
 @keyframes plate-press {
   0% {
     opacity: 0;
     filter: blur(3.4px);
-    text-shadow:
-      6px 2.4px 0 rgba(255, 42, 99, .4),
-      -4.8px -1.9px 0 rgba(43, 62, 196, .4);
   }
   100% {
     opacity: 1;
     filter: none;
-    text-shadow:
-      0 0 0 rgba(255, 42, 99, 0),
-      0 0 0 rgba(43, 62, 196, 0);
   }
 }
 
@@ -3672,6 +3813,8 @@ html[data-register='on'] .run__seam-rule--black {
 .colophon {
   /* the same slab as the run above it, with no light between: the dark end of
      the page is one continuous stretch of ink from the seam to the last line */
+  position: relative;
+  isolation: isolate;
   --black: var(--slab-ink);
   --ink-70: var(--slab-70);
   --ink-50: var(--slab-50);
@@ -3735,7 +3878,11 @@ html[data-register='on'] .run__seam-rule--black {
   display: grid;
   grid-template-columns: minmax(0, .96fr) minmax(0, 1.04fr);
   gap: clamp(22px, 3.4vw, 56px);
-  align-items: start;
+  /* the notes on the right run to twice the length of the slip on the left, and
+     a hole at the foot of the shorter column is the one thing a press run must
+     not have. so the two cells are the same height and the slip fills its own —
+     a form is filled to the bottom of the box it was printed in. */
+  align-items: stretch;
   margin-top: var(--air-block);
   padding-top: var(--air-tight);
   border-top: 1px solid rgba(251, 248, 241, .18);
@@ -3747,6 +3894,7 @@ html[data-register='on'] .run__seam-rule--black {
    above it belongs to the grid, so the slip starts directly under it. */
 .colophon__slip {
   display: grid;
+  align-content: space-between;
 }
 
 .colophon__slip-row {
@@ -3820,29 +3968,65 @@ html[data-register='on'] .run__seam-rule--black {
 }
 
 /* what the four mechanisms are. the lead-in is the pressman's voice, set in the
-   grotesque; the rest is the reading voice, the same one as the close read. */
+   grotesque; the rest is the reading voice, the same one as the close read.
+   four paragraphs stacked in one column ran to a hundred characters of measure
+   and read as a wall, so they are notes now: a figure, a measure of their own,
+   a hair above each — and two to a row from the width where two will fit, which
+   is the whole difference between a foot of a press run and a paragraph of it. */
 .colophon__machine {
   display: grid;
-  gap: 11px;
+  gap: 0 clamp(18px, 2.4vw, 40px);
   align-content: start;
+  counter-reset: note;
 }
 
 .colophon__machine li {
-  padding-left: 14px;
-  border-left: 1px solid rgba(251, 248, 241, .18);
+  position: relative;
+  max-width: 64ch;
+  padding: 13px 0 14px 2.4rem;
+  border-top: 1px solid rgba(251, 248, 241, .18);
   color: var(--slab-50);
   font-family: var(--serif);
   font-size: .95rem;
-  line-height: 1.52;
+  line-height: 1.55;
   text-wrap: pretty;
+}
+
+.colophon__machine li::before {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  counter-increment: note;
+  color: var(--slab-pink);
+  content: counter(note, lower-roman);
+  font-family: var(--mono);
+  font-size: var(--label-2);
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+
+.colophon__machine li:first-child {
+  border-top: 0;
 }
 
 .colophon__machine strong {
   color: var(--slab-ink);
   font-family: var(--display);
-  font-size: .9rem;
+  font-size: .92rem;
   font-weight: 800;
   letter-spacing: -.024em;
+}
+
+@media (min-width: 860px) {
+  .colophon__machine {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* the second row of a two-up note block starts a row, so it takes the rule —
+     and the two notes in the first row take theirs from the rule above the lot */
+  .colophon__machine li:nth-child(2) {
+    border-top: 0;
+  }
 }
 
 .colophon__foot {
@@ -4660,6 +4844,19 @@ html[data-reveal='on'] .reveal.is-in {
   .fold,
   .run__glow {
     display: none;
+  }
+
+  /* a printout has no wet film on the ink, and no impression in the paper either:
+     a lit hairline under every letter is invisible on white and the shade above
+     it would just read as a printing fault */
+  .run::before,
+  .colophon::before {
+    display: none;
+  }
+
+  :root,
+  .proof {
+    --imp: 0;
   }
 
   /* a printout has no stack in it, only the sheet: the two edges behind are

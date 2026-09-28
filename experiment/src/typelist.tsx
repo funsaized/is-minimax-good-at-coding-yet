@@ -130,6 +130,27 @@ const receipt = (reading: FaceReading, face: Face) =>
         reading.chain.length
       } in the chain · measured, not asked for`
 
+/**
+ * The chain, in the order the sheet asked for it.
+ *
+ * The stack used to be printed here as the literal css it is written as: a
+ * wrapped `font-family` string, quoted names and all, set at the same size as the
+ * specimen it was annotating — which is both the ugliest thing on the sheet and
+ * the least useful, because the question was never what the sheet hoped for. So
+ * it now prints the families themselves, in order, with the one that actually
+ * stuck in black and the rest in the muted tone.
+ *
+ * and when the chain fell all the way through, the generic the platform really
+ * drew is put on the end — which is the honest reading of a bare box, and the
+ * only place on the page where the answer is a face nobody asked for.
+ */
+const chainOf = (reading: FaceReading | null): string[] => {
+  if (!reading) return []
+  return reading.chain.includes(reading.resolved)
+    ? reading.chain
+    : [...reading.chain, reading.resolved]
+}
+
 export function TypeList({ reg }: { reg: number }) {
   const settled = inRegister(reg)
 
@@ -138,6 +159,7 @@ export function TypeList({ reg }: { reg: number }) {
       <div className="type__grid">
         {FACES.map(face => {
           const reading = useFaceReading(face.stack, face.measure)
+          const chain = chainOf(reading)
           return (
             <article className={`type__panel type__panel--${face.id} reveal`} key={face.id}>
               <header className="type__face">
@@ -181,9 +203,26 @@ export function TypeList({ reg }: { reg: number }) {
               </ol>
 
               <footer className="type__panel-foot">
-                <p className="type__stack">{face.stack}</p>
-                <p className="type__load">
-                  <span aria-hidden="true">↳</span> no file loaded
+                {/* the chain the sheet asked for, and the one name in it that
+                    stuck. nothing is downloaded, and this is the whole claim. */}
+                <p className="type__chain">
+                  <span className="type__chain-kicker">
+                    <span aria-hidden="true">↳</span> the chain, as asked · no file loaded
+                  </span>
+                  <span className="type__chain-list">
+                    {chain.length ? (
+                      chain.map(name => (
+                        <span
+                          key={name}
+                          className={name === reading?.resolved ? 'is-set' : undefined}
+                        >
+                          {name}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="is-set">nothing measured here</span>
+                    )}
+                  </span>
                 </p>
                 <p className="type__resolved">
                   <span className="type__resolved-kicker">set in, on this machine</span>
