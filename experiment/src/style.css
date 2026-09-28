@@ -38,6 +38,16 @@
    a wide margin, the short answer is the second, and everything
    between them is a job ticket, a specimen or a label.
 
+   THE REAM. the close read is a stack of three sheets now: the one
+   you are reading on top, the other two behind it with their figures
+   and glosses showing on the edge. it is the only place on the page
+   where changing a plate moves physical paper — the sheet that came
+   forward is lit and off the stack for the length of the swap, and
+   the one it displaced drops away behind it, so choosing a phrase is
+   something the reader watches happen rather than reads about. the
+   front sheet does not move at all: the paper is already there and
+   the type on it is re-inked.
+
    three voices, no more: the grotesque is the press, the serif is
    the reading, the mono is the furniture. and only three sizes of
    label, because a page that has one shouts everything at the same
@@ -1836,7 +1846,7 @@ html[data-register='on'] .register-eye__plate--black {
 }
 
 .read__head {
-  padding: clamp(28px, 3.4vw, 52px) 0 clamp(20px, 2.4vw, 30px);
+  padding: clamp(28px, 3.4vw, 52px) 0 clamp(12px, 1.5vw, 20px);
   border-top: 2px solid var(--black);
 }
 
@@ -1876,16 +1886,15 @@ html[data-register='on'] .register-eye__plate--black {
   text-wrap: pretty;
 }
 
-/* ---------- specimen ---------- */
+/* ---------- specimen: the sheet on top of the ream ---------- */
 
 .specimen {
   background: var(--stock-3);
   border: 1px solid var(--rule);
   border-radius: 3px;
-  /* the second impression: the card, printed once in black and once in blue,
+  /* the second impression: the sheet, printed once in black and once in blue,
      a plate-width apart. it closes up when the blade reaches the gate. */
   box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 rgba(42, 62, 201, .16);
-  animation: card-print .5s var(--ease-out) both;
 }
 
 .specimen__stage--m3 {
@@ -2209,6 +2218,216 @@ html[data-register='on'] .register-eye__plate--black {
   color: var(--stock-3);
   background: var(--black);
   border-color: var(--black);
+}
+
+/* =============================================================
+   THE REAM
+   The close read was one card that changed its mind about its own
+   contents: a fade, a repaint, and no sign at all that the other two
+   phrases had been printed. But the argument of the whole page is that
+   the sentence is set three times, so the close read is three sheets of
+   paper now — the one you are reading on top, the other two behind it,
+   fanned a little so it is obvious what is still waiting.
+
+   the two edges are paper and not buttons. the plate is chosen from the
+   title, from the job ticket and from the flick at the foot of the
+   sheet, and a fourth control that only re-says the other three would
+   take the reader's eye off the stack rather than add to it. what the
+   stack does instead is move. pull a different phrase and the sheet
+   comes up out of it, its own edge slides back down behind the sheet
+   in front of that one, the third edge changes seats — and every
+   edge that enters or leaves does so from behind the top sheet, which
+   is the only way paper can be picked up or put down.
+
+   so the geometry is a stack, not a list. the well is zero-height and
+   the edges hang off its bottom edge, each one tucked a few pixels
+   behind the sheet in front of it. that tuck is the whole trick: a bar
+   with a shadow under it is a bar, and a bar that disappears behind
+   something is a sheet.
+   ============================================================= */
+
+.ream {
+  --fan-step: clamp(27px, 2.9vw, 38px);
+  --fan-tuck: 9px;
+  --fan-open: 0px;
+  --fan-gap: calc(var(--fan-step) - var(--fan-tuck) + var(--fan-open));
+  position: relative;
+  /* room for two edges, and slack for the stack to loosen into */
+  padding-top: calc((var(--fan-step) - var(--fan-tuck)) * 2 + 20px);
+}
+
+/* the stack loosens under a hand on it — pointing at the two edges, or tabbing
+   to the flick at the foot of the sheet and reaching in to it. state, not
+   movement: the sheets do not animate, they sit a few pixels further apart. */
+.ream:focus-within,
+.ream__well:hover {
+  --fan-open: clamp(3px, .5vw, 7px);
+}
+
+/* zero-height, and the sheets hang off its bottom edge. the invisible panel
+   above it is the only thing on the page that owns that strip of the page: it
+   is the part of the sheet you touch when you mean to touch the stack. */
+.ream__well {
+  position: relative;
+  height: 0;
+}
+
+.ream__well::before {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: calc((var(--fan-step) - var(--fan-tuck)) * 2 + 2px);
+  content: '';
+}
+
+.ream__tab {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.1vw, 15px);
+  height: var(--fan-step);
+  /* the pad is the sheet's own, so the plate figure on the edge behind stands
+     exactly under the slug on the sheet in front of it */
+  padding: 0 clamp(18px, 2.2vw, 28px);
+  overflow: hidden;
+  color: var(--ink-50);
+  /* a sheet in the back of a stack is never the same tone as the one on top of
+     it, and this is the only thing in the section telling the reader that there
+     is a pile here at all */
+  background: linear-gradient(180deg, #f7f2e5 0%, #ece5d3 70%, #e3dbc7 100%);
+  border: 1px solid rgba(20, 19, 26, .2);
+  border-bottom: 0;
+  border-radius: 3px 3px 0 0;
+  /* the shadow falls downward, because it is cast by the sheet in front of it:
+     the only place the two of them touch is the sliver of edge they share */
+  box-shadow: 0 4px 8px -6px rgba(21, 20, 27, .6);
+  font-family: var(--mono);
+  font-size: var(--label-2);
+  letter-spacing: .13em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform-origin: 50% 100%;
+  /* an edge that has just come into the stack is inked on arrival; the end of
+     the animation is the seat it belongs in, so nothing is left to clean up */
+  animation: tab-in .5s var(--ease-out) both;
+  transition: transform .55s var(--ease-out), rotate .55s var(--ease-out),
+    left .55s var(--ease-out), right .55s var(--ease-out), box-shadow .4s var(--ease);
+}
+
+/* seat one tucks the bottom of itself behind the sheet on top of the ream, and
+   seat two sits a gap above that — the gap being one sheet less the tuck, so
+   every edge shows the same sliver of itself and the pair reads as a stack */
+.ream__tab[data-rank='1'] {
+  transform: translate3d(0, var(--fan-tuck), 0);
+}
+
+.ream__tab[data-rank='2'] {
+  z-index: 0;
+  /* and the deepest seat is the one nobody squared up: a few pixels narrower
+     than the sheet above it, and a fraction out of true */
+  right: 4px;
+  left: 3px;
+  transform: translate3d(0, calc(var(--fan-tuck) - var(--fan-gap)), 0);
+}
+
+/* a collected stack is never square, and a fraction of a degree across the
+   whole width of the sheet is enough to say so without tilting a single
+   letter out of its line. nothing on a phone is wide enough to read it. */
+@media (min-width: 760px) {
+  .ream__tab[data-rank='1'] {
+    rotate: 0deg;
+  }
+
+  .ream__tab[data-rank='2'] {
+    rotate: -.4deg;
+  }
+}
+
+/* the edge of the sheet that has just been pulled to the top, on its way back
+   down into the pile behind the sheet in front of it. it goes the way a sheet
+   goes: down and under, not up and away. --out-from is the seat it came out of,
+   so it starts exactly where it was standing and no further. */
+.ream__tab[data-rank='3'] {
+  z-index: 0;
+  animation: tab-back .5s var(--ease) both;
+}
+
+/* and it is a back sheet, so it is a shade deeper than the one in front of it */
+.ream__tab::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background: rgba(21, 20, 27, .07);
+  opacity: 1;
+  transition: opacity .5s var(--ease);
+}
+
+.ream__tab[data-rank='1']::after {
+  opacity: 0;
+}
+
+.ream__fig {
+  flex: 0 0 auto;
+  color: var(--pink-ink);
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+
+.ream__word {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-70);
+  font-family: var(--display);
+  font-size: 1.05em;
+  font-weight: 800;
+  letter-spacing: -.028em;
+  /* the phrase as it is actually set, in the press's own face: the figure and
+     the gloss are furniture and they are set in caps, the phrase is type */
+  text-transform: none;
+  text-overflow: ellipsis;
+}
+
+.ream__gloss {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+}
+
+.ream__front {
+  position: relative;
+  z-index: 2;
+  /* the sheet on top casts one as well as the blue plate's second impression,
+     and it has to cast it upward: there is paper standing on its edge */
+  box-shadow:
+    0 -9px 15px -11px rgba(21, 20, 27, .5),
+    var(--lift-x-lg) var(--lift-y-lg) 0 rgba(42, 62, 201, .16);
+  /* and it is printed wet and lands wet: it comes up out of the stack with the
+     ink still moving, and the animation is on the sheet itself rather than on
+     what is printed on it, so pulling a different phrase brings a whole sheet
+     forward instead of changing the words inside a card that never moved */
+  animation: sheet-on .52s var(--ease-out) both;
+}
+
+@media (max-width: 620px) {
+  .ream {
+    --fan-step: 30px;
+    --fan-tuck: 7px;
+  }
+
+  /* a phone has no room for a gloss on the edge of a sheet: the figure and the
+     phrase are enough to recognise it by */
+  .ream__gloss {
+    display: none;
+  }
 }
 
 /* =============================================================
@@ -3170,14 +3389,44 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
-@keyframes card-print {
+/* the sheet on top of the ream comes up out of the stack: a few pixels of
+   travel, a hair of scale and the ink still wet, and the end of the animation is
+   the seat the sheet belongs in, so there is nothing to clean up afterwards */
+@keyframes sheet-on {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translate3d(0, 20px, 0) scale(.99);
+    filter: blur(3px);
   }
   to {
     opacity: 1;
     transform: none;
+    filter: none;
+  }
+}
+
+/* an edge of the stack arriving: it comes up from behind the sheet in front of
+   it, so it can only ever be printed out from under something */
+@keyframes tab-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+}
+
+/* and one going back: from the seat it was standing in, down behind the sheet
+   in front of it, and out of sight well before the top sheet has landed */
+@keyframes tab-back {
+  from {
+    opacity: 1;
+    transform: translate3d(0, calc(var(--fan-tuck) - (var(--out-from) - 1) * var(--fan-gap)), 0);
+  }
+  46% {
+    opacity: 0;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--fan-tuck) + 14px), 0);
   }
 }
 
@@ -3665,6 +3914,12 @@ html[data-reveal='on'] .reveal.is-in {
     animation: none;
   }
 
+  /* the stack is a stack either way: the sheets are in their seats, and a
+     fraction of a degree of paper is a fact about paper, not a journey */
+  .ream__tab {
+    rotate: 0deg;
+  }
+
   .bed__stamp.is-on {
     transform: rotate(-8deg);
   }
@@ -3712,8 +3967,15 @@ html[data-reveal='on'] .reveal.is-in {
   .legend,
   .actions,
   .bed,
+  .ream__well,
   .run__glow {
     display: none;
+  }
+
+  /* a printout has no stack in it, only the sheet: the two edges behind are
+     press furniture, and the paper they stood on is not printed either */
+  .ream {
+    padding-top: 0;
   }
 
   /* the press run prints as ink on paper, so the slab becomes the sheet again

@@ -9,12 +9,13 @@ import {
   type ReactNode,
   type RefObject,
 } from 'react'
-import { findNote, NOTES, phraseLines, WORD_IDS, type WordId } from './notes'
+import { findNote, NOTES, WORD_IDS, type WordId } from './notes'
 import { ControlEdge } from './edge'
 import { InkTrap } from './ink'
 import { CropMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
 import { Plated } from './plate'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
+import { Ream } from './ream'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
@@ -477,7 +478,8 @@ export function App() {
               ))}
             </div>
             <p className="sr-only" id="plates-help">
-              Choosing a plate moves the highlight in the title above and the specimen below.
+              Choosing a plate moves the highlight in the title above, and pulls that sheet to the
+              top of the ream below.
             </p>
           </section>
 
@@ -488,20 +490,16 @@ export function App() {
                 close read
               </p>
               <div className="read__intro">
-                <h2 id="close-title">One plate, <em>taken apart.</em></h2>
+                <h2 id="close-title">Three sheets, <em>one at a time.</em></h2>
                 <p>
-                  The sentence has three phrases and each one is doing a different job. Take them in
-                  turn: what the page is being asked, where the type is actually set, and what it
-                  refuses to finish.
+                  The sentence has three phrases and each one is doing a different job. All three
+                  are printed: the one you are reading is on top of the ream, the other two are
+                  still in it behind.
                 </p>
               </div>
             </header>
 
-            <Specimen
-              stageRef={specimenRef}
-              note={findNote(active)}
-              onStep={step => select(walk(active, step))}
-            />
+            <Ream active={active} stageRef={specimenRef} onStep={step => select(walk(active, step))} />
           </section>
         </div>
 
@@ -692,92 +690,6 @@ export function App() {
 
       <span className="sr-only" aria-live="polite">{announce}</span>
     </div>
-  )
-}
-
-/** One phrase, magnified: the same three impressions, at reading size. */
-function Specimen({
-  note,
-  stageRef,
-  onStep,
-}: {
-  note: ReturnType<typeof findNote>
-  stageRef: RefObject<HTMLDivElement | null>
-  onStep: (step: number) => void
-}) {
-  const lines = phraseLines(note.label, note.drop)
-
-  return (
-    <article className="specimen" aria-labelledby="specimen-title" key={note.id}>
-      <p className="specimen__slug">
-        <span>close read · {note.index} of 03</span>
-        <span>{note.measure} · {note.set}</span>
-      </p>
-
-      <div ref={stageRef} className={`specimen__stage specimen__stage--${note.id}`}>
-        <span className="specimen__flash" aria-hidden="true" />
-        <Plated
-          className="specimen__stack"
-          render={ghost => (
-            <span className="specimen__word">
-              {ghost ? null : <span className="sr-only">{note.label}</span>}
-              <span className="specimen__main">
-                {lines.map(line => (
-                  <span
-                    key={line}
-                    className={line === note.drop ? 'specimen__line specimen__line--drop' : 'specimen__line'}
-                  >
-                    {line}
-                  </span>
-                ))}
-              </span>
-            </span>
-          )}
-        />
-
-        {note.drop ? <span className="specimen__pad" aria-hidden="true" /> : null}
-
-        <p className="specimen__rule" aria-hidden="true">
-          {/* each end of the measure is a corner like any other: the tick and the
-              ink gathered in the notch under it are one mark, and the ink only
-              finishes gathering at the gate */}
-          <InkTrap className="specimen__trap specimen__trap--start" />
-          <InkTrap className="specimen__trap specimen__trap--end" />
-          <span className="specimen__rule-count">{note.chars}</span>
-          <span className="specimen__rule-word">{note.measure}</span>
-        </p>
-
-        <span className="specimen__reg" aria-hidden="true">
-          <RegistrationMark />
-        </span>
-      </div>
-
-      <div className="specimen__body">
-        <p className="specimen__gloss">{note.gloss}</p>
-        <div className="specimen__lede">
-          <h3 id="specimen-title">{note.title}</h3>
-          <p className="specimen__copy">{note.body}</p>
-        </div>
-        <p className="specimen__margin">{note.margin}</p>
-      </div>
-
-      <ol className="brief">
-        {note.look.map((line, position) => (
-          <li key={line}>
-            <span aria-hidden="true">{String(position + 1).padStart(2, '0')}</span>
-            {line}
-          </li>
-        ))}
-      </ol>
-
-      <div className="specimen__foot">
-        <p className="specimen__prompt"><span aria-hidden="true">↳</span> {note.prompt}</p>
-        <p className="specimen__turn">
-          <button type="button" onClick={() => onStep(-1)}>← back</button>
-          <button type="button" onClick={() => onStep(1)}>next plate →</button>
-        </p>
-      </div>
-    </article>
   )
 }
 
