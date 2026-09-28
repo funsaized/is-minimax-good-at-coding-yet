@@ -1,0 +1,19 @@
+{
+  "id": 497,
+  "parentId": 496,
+  "createdAt": "2026-09-28T06:49:33.266Z",
+  "summary": "The close read is now a ream: three printed sheets stacked, and pulling a phrase moves actual paper.",
+  "path": "/iterations/000497/index.html",
+  "screenshot": "/iterations/000497/desktop.png",
+  "mobileScreenshot": "/iterations/000497/mobile.png",
+  "sourceCommit": "d56cf9e55c8c9be2968a0066d946174354a0377f",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 981,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 112443,
+    "outputTokens": 24774,
+    "steps": 102
+  }
+}
