@@ -52,6 +52,17 @@
    the reading, the mono is the furniture. and only three sizes of
    label, because a page that has one shouts everything at the same
    volume.
+
+   THE TYPE LIST. the light sheet now ends by showing its work:
+   three ruled cells, one per face, each a short ladder of the sizes
+   that face is actually used at, every sample annotated with the
+   token that sets it and the widest step of that token. nothing is
+   downloaded to make it — the samples are the machine's own faces,
+   which is the argument, printed as a list. and the one cell that
+   carries a moving figure is the furniture cell, because the gauge
+   belongs in the face it is reporting on: the readout and the
+   letterforms printing it share a rectangle, so the register is
+   legible as a number in a typeface rather than as another panel.
    ============================================================= */
 
 @property --settle {
@@ -1841,16 +1852,19 @@ html[data-register='on'] .register-eye__plate--black {
 
 /* ---------- close read ---------- */
 
-.read {
+.read,
+.type {
   padding: 0 0 clamp(20px, 2.4vw, 40px);
 }
 
-.read__head {
+.read__head,
+.type__head {
   padding: clamp(28px, 3.4vw, 52px) 0 clamp(12px, 1.5vw, 20px);
   border-top: 2px solid var(--black);
 }
 
-.read__intro {
+.read__intro,
+.type__intro {
   display: grid;
   grid-template-columns: minmax(0, 1.06fr) minmax(0, .94fr);
   gap: clamp(18px, 3vw, 56px);
@@ -1861,6 +1875,7 @@ html[data-register='on'] .register-eye__plate--black {
 /* the reading voice: the headings hand off from the press to the page, so the
    serif takes the words and the grotesque keeps the furniture */
 .read__intro h2,
+.type__intro h2,
 .answer__copy h2 {
   font-family: var(--serif);
   font-size: var(--head);
@@ -1871,12 +1886,14 @@ html[data-register='on'] .register-eye__plate--black {
 }
 
 .read__intro h2 em,
+.type__intro h2 em,
 .answer__copy h2 em {
   color: var(--pink-ink);
   font-style: italic;
 }
 
-.read__intro > p {
+.read__intro > p,
+.type__intro > p {
   max-width: 52ch;
   padding-bottom: .34rem;
   color: var(--ink-70);
@@ -2428,6 +2445,269 @@ html[data-register='on'] .register-eye__plate--black {
   .ream__gloss {
     display: none;
   }
+}
+
+/* =============================================================
+   THE TYPE LIST
+   The last thing on the light sheet is the one thing the page has
+   been claiming all the way down: it is set in the grotesque, the
+   serif and the mono, and it is set in them on purpose. so the
+   sheet ends by showing its work — three cells, each one a short
+   ladder of the sizes that face is actually used at, every sample
+   annotated with the token that sets it and the widest step of
+   that token. the samples are the machine's own faces: nothing was
+   loaded, and the sizes carry the voice instead.
+
+   and it is the one cell that carries a moving figure. the gauge
+   is set in the furniture face, so the readout and the letterforms
+   printing it share a rectangle, and there is no panel anywhere
+   else on the sheet that says the number is live.
+
+   the samples are the sheet's own copy, and the third cell of each
+   ladder is a fragment of a line the page already prints — so the
+   list is a proof of the type, not an alphabet in a box.
+   ============================================================= */
+
+.type__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--black);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* three ruled cells, the way a press proof is ruled: the rules are the
+   dividers, so there are no gaps for a column to fall out of */
+.type__panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0 clamp(14px, 1.6vw, 24px) clamp(15px, 1.8vw, 22px);
+  border-left: 1px solid var(--rule);
+}
+
+.type__panel:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.type__panel:last-child {
+  padding-right: 0;
+}
+
+.type__face {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 3px 14px;
+  padding: 11px 0 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.type__face-name {
+  font-family: var(--mono);
+  font-size: var(--label-2);
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.type__face-kind {
+  margin-left: 9px;
+  color: var(--pink-ink);
+  font-weight: 500;
+}
+
+.type__face-role {
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.type__step {
+  padding: clamp(11px, 1.2vw, 18px) 0;
+}
+
+.type__step + .type__step {
+  border-top: 1px solid var(--rule-soft);
+}
+
+/* every sample is black. the colour on this sheet is the plates' job, and a
+   specimen printed in fluoro pink is a swatch, not a specimen */
+.type__sample {
+  color: var(--black);
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+.type__panel--press .type__sample {
+  font-family: var(--display);
+  font-weight: 800;
+  line-height: .94;
+  letter-spacing: -.04em;
+}
+
+.type__panel--reading .type__sample {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -.012em;
+}
+
+.type__panel--reading .type__sample--note {
+  color: var(--ink-70);
+  font-style: italic;
+  line-height: 1.34;
+}
+
+.type__panel--furniture .type__sample {
+  font-family: var(--mono);
+  font-weight: 600;
+  line-height: 1.42;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+/* the widest step of each token, which is the step a wide screen prints at */
+.type__sample--question {
+  font-size: 7.2rem;
+}
+
+.type__sample--claim {
+  font-size: 4.3rem;
+}
+
+.type__sample--sub {
+  font-size: 1.5rem;
+}
+
+.type__sample--head {
+  font-size: 3.2rem;
+}
+
+.type__sample--read {
+  font-size: 1.22rem;
+}
+
+.type__sample--note {
+  font-size: .92rem;
+}
+
+.type__sample--label {
+  font-size: var(--label);
+}
+
+.type__sample--label2 {
+  font-size: var(--label-2);
+}
+
+.type__sample--label3 {
+  font-size: var(--label-3);
+}
+
+.type__note {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 7px;
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.type__note > span:first-child {
+  color: var(--black);
+}
+
+/* the gauge, set in the face it is reporting on */
+.type__gauge {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--black);
+  font-family: var(--mono);
+  font-size: var(--label-2);
+  font-weight: 600;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  transition: color .35s var(--ease);
+}
+
+.type__eye {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+}
+
+.type__gauge-read {
+  font-variant-numeric: tabular-nums;
+  transition: color .3s var(--ease);
+}
+
+.type__gauge[data-on='on'] .type__gauge-read {
+  color: var(--pink-ink);
+}
+
+/* the foot of a cell is pinned to the bottom of it, so three cells of very
+   different lengths still read as one band rather than three ragged lists */
+.type__panel-foot {
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+.type__stack {
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  line-height: 1.6;
+  letter-spacing: .04em;
+  overflow-wrap: anywhere;
+}
+
+.type__load {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin-top: 5px;
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.type__load > span {
+  color: var(--pink-ink);
+}
+
+.type__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  padding: 11px 0 0;
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.type__foot > span {
+  color: var(--pink-ink);
+}
+
+/* the cells set themselves as the band arrives, one step after another: a type
+   list being picked, rather than a list that was always there */
+html[data-reveal='on'] .type__panel.is-in .type__sample,
+html[data-reveal='on'] .type__panel.is-in .type__gauge {
+  animation: set-type .58s var(--ease-out) both;
+  animation-delay: calc(var(--i) * 70ms);
 }
 
 /* =============================================================
@@ -3462,6 +3742,19 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
+/* a line of type is picked and set down: it arrives out of focus the way ink
+   does through a screen, and it is already in register when it lands */
+@keyframes set-type {
+  from {
+    opacity: 0;
+    filter: blur(7px);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+  }
+}
+
 /* the check, drawn the way a pen draws it */
 @keyframes tick-in {
   from {
@@ -3553,14 +3846,48 @@ html[data-reveal='on'] .reveal.is-in {
 
 @media (max-width: 1180px) {
   .read__intro,
+  .type__intro,
   .answer__grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
   }
 
   .read__intro > p,
+  .type__intro > p,
   .answer__copy > p {
     max-width: 58ch;
+  }
+
+  /* the cells are the full measure down here, so they take the vertical rules
+     between them back and the widest samples can be set at the size the sheet
+     sets them — the band stacks rather than shrinking its own type */
+  .type__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .type__panel {
+    padding-right: 0;
+    border-left: 0;
+  }
+
+  .type__panel + .type__panel {
+    border-top: 1px solid var(--rule);
+  }
+
+  .type__sample--question {
+    font-size: clamp(2.8rem, 12vw, 7.2rem);
+  }
+
+  .type__sample--claim {
+    font-size: clamp(1.9rem, 7vw, 4.3rem);
+  }
+
+  .type__sample--head {
+    font-size: clamp(1.7rem, 6vw, 3.2rem);
+  }
+
+  .type__sample--read {
+    font-size: clamp(1.05rem, 2.2vw, 1.22rem);
   }
 
   /* one column of standfirst prose is already a comfortable measure, so the
@@ -3886,8 +4213,15 @@ html[data-reveal='on'] .reveal.is-in {
   .plate-target__plate,
   .bed__blade,
   .edge__plate,
-  .edge__ink {
+  .edge__ink,
+  .type__gauge {
     transition: none;
+  }
+
+  /* and the type list is simply already picked */
+  html[data-reveal='on'] .type__panel.is-in .type__sample,
+  html[data-reveal='on'] .type__panel.is-in .type__gauge {
+    animation: none;
   }
 
   /* and the colour plates land without travelling first */

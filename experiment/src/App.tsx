@@ -16,16 +16,18 @@ import { CropMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
 import { Plated } from './plate'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
 import { Ream } from './ream'
+import { TypeList } from './typelist'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
 
-/* the three passes of a make-ready, and the order you meet them in. roman, not
+/* the passes of a make-ready, and the order you meet them in. roman, not
    arabic: 01–03 already belongs to the three plates, and a page that uses the
    same figures for two different lists has thrown its hierarchy away */
 const NAV_ITEMS = [
   { id: 'question', number: 'i', label: 'the question' },
   { id: 'close', number: 'ii', label: 'close read' },
-  { id: 'answer', number: 'iii', label: 'pull the proof' },
+  { id: 'type', number: 'iii', label: 'the type list' },
+  { id: 'answer', number: 'iv', label: 'pull the proof' },
 ] as const
 
 const INKS = [
@@ -44,11 +46,13 @@ const SHORTCUTS = [
 ] as const
 
 /* the press run's own job ticket. every line is a fact about the page, not a
-   number anybody has to believe */
+   number anybody has to believe. the type used to be a row here; it is a whole
+   section of the sheet now, so this line carries the one fact nothing else says
+   out loud — the number the whole page answers to. */
 const SLIP = [
   ['sentence', 'is Minimax M3 good at frontend yet? — seven words, three impressions'],
   ['stock', 'newsprint: drum banding, tooth in an inline filter, wet ink on a canvas'],
-  ['type', 'one grotesque, one serif, one mono — whichever three the machine already has'],
+  ['register', 'one number for the whole sheet: the gate is ±0.14, and a unit of blade is 3px of paper'],
   ['assets', 'local SVG and CSS only. no web fonts, no network, nothing stored'],
 ] as const
 
@@ -500,6 +504,30 @@ export function App() {
             </header>
 
             <Ream active={active} stageRef={specimenRef} onStep={step => select(walk(active, step))} />
+          </section>
+
+          {/* THE TYPE LIST. the last thing on the light sheet, and the only
+              quiet one: a press type list, showing the three faces the page is
+              actually set in at the sizes it actually uses them, with the
+              register readout riding in the furniture face so the number and
+              the letterforms that print it share a rectangle. */}
+          <section id="type" className="type" aria-labelledby="type-title">
+            <header className="type__head reveal">
+              <p className="slugline">
+                <RegistrationMark className="slugline__mark" />
+                the type list
+              </p>
+              <div className="type__intro">
+                <h2 id="type-title">Three faces, <em>one scale.</em></h2>
+                <p>
+                  No font file is loaded to set this page — it is set in the three faces the
+                  machine already has, and spaced so the differences do not show. Each sample
+                  below is the widest step of its own size.
+                </p>
+              </div>
+            </header>
+
+            <TypeList reg={reg} />
           </section>
         </div>
 
