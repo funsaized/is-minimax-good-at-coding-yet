@@ -218,6 +218,51 @@
    carrying the same hard pink shadow the whole sheet uses for a plate
    that has moved, which then lies down in the bar once the proof is
    out and there is nothing left to shout about.
+
+
+   =============================================================
+   ITERATION 504 — RULE THE SHEET
+
+   the page had six bands and no sheet. each one was composed on
+   whatever grid suited it — two columns under the title, three in
+   the job ticket, a fixed 62ch in the specimen, a 0.7/1.3 split at
+   the answer — and the only vertical rule on the whole page was the
+   one in the void the title happens to leave. so it read as a stack
+   of good sections rather than as one piece of paper, and the void
+   in the answer's copy column was a hole with a comment admitting it.
+
+   a press sheet is ruled. the type area is a rectangle of hairlines
+   and the page is set inside it, so the sheet now prints its own:
+   twelve equal columns, edge to edge, down the full height of every
+   band, with two trim corners at the head of the type area and the
+   foot of it. one mark, printed three times.
+
+   and it is printed by the same three plates as the type, at the
+   same two ratios, so the armature is out of register while the
+   blade is loose and collapses into one set of crisp lines at the
+   gate. the reader learns the register last from the shape of the
+   page itself, on the largest mark it has. it also rides the drying
+   ramp, so the ruling is widest at the press and has nearly closed on
+   itself by the type list — the structure dries with the type
+   standing on it. all of it a position, not a journey, so a still
+   reader gets the same sheet.
+
+   the grid underneath has no gap. the gutter is padding inside the
+   columns, which is the only arrangement in which a track edge and a
+   printed rule are the same x on every band — and that agreement is
+   the whole reason the ruling is worth printing. a grid you can only
+   see is wallpaper. so the job ticket and the type list divide on
+   the printed rule at four and eight, the standfirst divides at
+   three, the close read and the answer at four, the slip and the
+   notes at five, and the hole in the answer's copy column is now a
+   margin of ruled paper, which is what that column always was.
+
+   two things stay off the armature on purpose. the specimen is a
+   sheet of paper lying on the ruled one and keeps margins of its
+   own, and so does the press bed, which is an instrument standing
+   on top of the sheet rather than part of it. the ruling runs on
+   underneath both of them and comes out the far side, which is the
+   whole reason a ruling and a layout are worth having.
    ============================================================= */
 
 @property --settle {
@@ -326,6 +371,26 @@
   --ease: cubic-bezier(.2, .8, .2, 1);
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --spring: cubic-bezier(.34, 1.36, .5, 1);
+
+  /* =============================================================
+     THE TYPE AREA
+     Twelve equal columns, edge to edge, and no gap between them.
+     The gutter is padding inside the columns instead, which is the
+     only arrangement in which a track boundary and a printed rule
+     are the same x on every band — and that agreement is the whole
+     reason the ruling is worth printing at all. A grid you can only
+     see is wallpaper; a grid you can see and read against is the
+     thing that makes six separately-composed bands into one sheet.
+     ============================================================= */
+  --sheet: 1560px;
+  --cols: 12;
+  --track: repeat(12, minmax(0, 1fr));
+  /* half the gutter, which is what a column that stops short of its
+     own boundary carries on each side */
+  --pad: clamp(9px, 1.05vw, 19px);
+  /* and the air on a division of the measure that is a decision — a
+     two-column band reads as two columns and not as twelve */
+  --split: clamp(20px, 3vw, 54px);
 
   /* ONE SCALE, USED EVERYWHERE, AND IT IS A LADDER. two poster sizes, and
      nothing between them louder than a section head. the question is the
@@ -1008,8 +1073,11 @@ html[data-slab='on'] .slugbar {
   display: block;
 }
 
+/* positioned so the type area can be printed against it: the ruling hangs off
+   the page's own content box, which is where the measure actually starts */
 .page {
-  width: min(1560px, 100%);
+  position: relative;
+  width: min(var(--sheet), 100%);
   margin: 0 auto;
   padding: 0 var(--gutter);
 }
@@ -1030,6 +1098,161 @@ html[data-slab='on'] .slugbar {
   width: 15px;
   height: 15px;
   color: var(--pink-ink);
+}
+
+/* =============================================================
+   THE RULING
+
+   Every press sheet is ruled: the type area is a rectangle of
+   hairlines and the page is set inside it. this one had never
+   printed its own. each band was composed on whatever grid suited
+   it — two columns here, three there, a fixed measure in another
+   place — so the page was a stack of good sections and not a
+   sheet, and the only vertical rule on the page was the lonely
+   one in the void the title leaves.
+
+   so the type area is printed now: twelve equal columns, edge to
+   edge, down the full height of every band. three impressions, at
+   the same two ratios as every other mark here, so the armature
+   is out of register while the blade is loose and collapses into
+   one set of crisp lines at the gate. the reader learns the
+   register last from the shape of the page itself.
+
+   and it rides the drying ramp, which is the detail that makes it
+   press rather than decoration: at the press the ruling is widest
+   and the three plates are plainly apart; by the type list the
+   structure has almost closed on itself. the type dries and so
+   does the grid it is standing on. none of it needs a hand, and
+   all of it is a position rather than a journey — a still reader
+   gets exactly the same sheet.
+
+   the markup is three empty plates and no geometry at all. the
+   rules are a gradient one twelfth of the width, so a band of any
+   height costs the same three nodes. the grid underneath has no
+   gap: the gutter is padding inside the columns, so a track edge
+   and a printed rule land on the same x everywhere.
+   ============================================================= */
+
+.ruling {
+  --pitch: calc(100% / var(--cols));
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.ruling--light {
+  /* behind the ink and the type, and in the same stacking context as the
+     paper, so the overprint darkens the way ink on stock does */
+  right: var(--gutter);
+  left: var(--gutter);
+  z-index: -1;
+  /* and the field is pressed harder at the press than at the foot of the run,
+     because that is where the ink is still wet */
+  opacity: calc(.6 + var(--ink-close) * .4);
+}
+
+.ruling--slab {
+  /* the slab is centred exactly like the page is, so the ruling is too: the
+     offset of a 1560px sheet in a wider viewport, plus the gutter */
+  right: calc(max(0px, (100% - var(--sheet)) / 2) + var(--gutter));
+  left: calc(max(0px, (100% - var(--sheet)) / 2) + var(--gutter));
+  z-index: 0;
+  opacity: .82;
+}
+
+.ruling__plate {
+  position: absolute;
+  inset: 0;
+  display: block;
+  color: rgba(20, 19, 26, .14);
+  background-image: repeating-linear-gradient(
+    90deg,
+    currentColor 0 1px,
+    transparent 1px var(--pitch)
+  );
+  /* the last boundary is the right edge of the type area, which the repeating
+     gradient cannot reach: a run of twelve lands one gap short of it */
+  box-shadow: inset -1px 0 0 currentColor;
+  transition: transform .2s var(--ease-out), color .5s var(--ease);
+  mix-blend-mode: multiply;
+}
+
+.ruling__plate--pink {
+  color: rgba(255, 42, 99, .28);
+  transform: translate(
+    calc(var(--reg-x) * var(--fringe-scale) * var(--ink-close) * 1.14),
+    calc(var(--reg-y) * var(--fringe-scale) * var(--ink-close) * 1.14)
+  );
+}
+
+.ruling__plate--blue {
+  color: rgba(43, 62, 196, .26);
+  transform: translate(
+    calc(var(--reg-x) * var(--fringe-scale) * var(--ink-close) * -.74),
+    calc(var(--reg-y) * var(--fringe-scale) * var(--ink-close) * -.74)
+  );
+}
+
+.ruling--slab .ruling__plate {
+  mix-blend-mode: screen;
+  /* and the slab is dry: the sheet has stopped moving on the ink by the time
+     the reader gets here, so these three ride the blade and nothing else */
+  transform: none;
+}
+
+.ruling--slab .ruling__plate--black {
+  color: rgba(251, 248, 241, .13);
+}
+
+.ruling--slab .ruling__plate--pink {
+  color: rgba(255, 95, 142, .3);
+  transform: translate(
+    calc(var(--reg-x) * var(--fringe-scale) * 1.14),
+    calc(var(--reg-y) * var(--fringe-scale) * 1.14)
+  );
+}
+
+.ruling--slab .ruling__plate--blue {
+  color: rgba(128, 140, 255, .28);
+  transform: translate(
+    calc(var(--reg-x) * var(--fringe-scale) * -.74),
+    calc(var(--reg-y) * var(--fringe-scale) * -.74)
+  );
+}
+
+/* the ink firms when the plates agree: the same one-step the bar's readout and
+   the bed's stamp take, on the largest mark on the page */
+html[data-register='on'] .ruling--light .ruling__plate--black {
+  color: rgba(20, 19, 26, .23);
+}
+
+/* the two trim corners of a type area. one pair is what a press sheet prints,
+   and it is enough to say the ruling is a printed rectangle and not a pattern */
+.ruling--light .ruling__plate--black::before,
+.ruling--light .ruling__plate--black::after {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  content: '';
+  border: 0 solid currentColor;
+  opacity: .85;
+}
+
+.ruling--light .ruling__plate--black::before {
+  top: 0;
+  left: 0;
+  border-top-width: 1.5px;
+  border-left-width: 1.5px;
+}
+
+.ruling--light .ruling__plate--black::after {
+  right: 0;
+  bottom: 0;
+  border-right-width: 1.5px;
+  border-bottom-width: 1.5px;
 }
 
 /* =============================================================
@@ -1657,9 +1880,12 @@ html[data-register='on'] .plated__layer--black .mark {
 
 /* ---------- the plate list: a job ticket under the title ---------- */
 
+/* three cells on the armature, four columns each, and the vertical divider
+   between them lands exactly on the printed rule at four and eight. the job
+   ticket and the ruling are the same mark, printed twice */
 .plates {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: var(--track);
   border-top: 1px solid var(--black);
   border-bottom: 1px solid var(--rule);
 }
@@ -1669,14 +1895,25 @@ html[data-register='on'] .plated__layer--black .mark {
   display: grid;
   gap: 4px;
   min-width: 0;
-  padding: 14px clamp(14px, 1.7vw, 24px) 16px;
+  padding: 14px var(--pad) 16px;
   text-align: left;
   border-left: 1px solid var(--rule);
   transition: background .26s var(--ease);
 }
 
-.plates__row:first-child {
+.plates__row:nth-child(1) {
+  grid-column: 1 / span 4;
+  padding-left: 0;
   border-left: 0;
+}
+
+.plates__row:nth-child(2) {
+  grid-column: 5 / span 4;
+}
+
+.plates__row:nth-child(3) {
+  grid-column: 9 / span 4;
+  padding-right: 0;
 }
 
 .plates__row::before {
@@ -1754,22 +1991,25 @@ html[data-register='on'] .plated__layer--black .mark {
    to say about the question mark. */
 .standfirst {
   display: grid;
-  grid-template-columns: minmax(0, 22ch) minmax(0, 1fr);
-  gap: clamp(20px, 2.8vw, 48px);
+  grid-template-columns: var(--track);
   align-items: start;
   margin-top: var(--air-band);
   padding-top: var(--air-block);
   border-top: 1px solid var(--rule);
 }
 
-/* the note is two lines against a five-line paragraph, so it sits in the middle
-   of its column: a margin note set against the block it annotates, not a stub
-   hanging off the top of it */
+/* three columns of the armature for the note and nine for the argument. the
+   division is on the rule at three, and the pink rule the note is set against
+   stands on the type area's own left boundary. the note is two lines against a
+   five-line paragraph, so it sits in the middle of its column — a margin note
+   set against the block it annotates, not a stub hanging off the top of it */
 .standfirst__note {
+  grid-column: 1 / span 3;
   display: grid;
   gap: 10px;
   align-self: center;
   min-width: 0;
+  padding-right: var(--pad);
   padding-left: 14px;
   border-left: 2px solid var(--pink);
 }
@@ -1809,6 +2049,7 @@ html[data-register='on'] .plated__layer--black .mark {
 }
 
 .standfirst__say {
+  grid-column: 4 / span 9;
   min-width: 0;
 }
 
@@ -2285,10 +2526,29 @@ html[data-register='on'] .register-eye__plate--black {
 
 .read__intro {
   display: grid;
-  grid-template-columns: minmax(0, 1.06fr) minmax(0, .94fr);
-  gap: clamp(18px, 3vw, 56px);
+  grid-template-columns: var(--track);
   align-items: end;
   margin-top: var(--air-block);
+}
+
+/* half the measure for the head and half for the paragraph it introduces, split
+   on the rule at six. a two-column band still has to be a division and not
+   twelve columns, so the air sits on the first cell and the printed rule runs
+   through the gutter rather than being covered by it */
+.read__intro h2 {
+  grid-column: 1 / span 6;
+  padding-right: var(--split);
+}
+
+.read__intro > p {
+  grid-column: 7 / span 6;
+  max-width: 52ch;
+  padding-bottom: .34rem;
+  color: var(--ink-70);
+  font-family: var(--serif);
+  font-size: var(--read);
+  line-height: 1.46;
+  text-wrap: pretty;
 }
 
 /* the reading voice: the headings hand off from the press to the page, so the
@@ -2313,16 +2573,6 @@ html[data-register='on'] .register-eye__plate--black {
 .answer__copy h2 em {
   color: var(--pink-ink);
   font-style: italic;
-}
-
-.read__intro > p {
-  max-width: 52ch;
-  padding-bottom: .34rem;
-  color: var(--ink-70);
-  font-family: var(--serif);
-  font-size: var(--read);
-  line-height: 1.46;
-  text-wrap: pretty;
 }
 
 /* ---------- specimen: the sheet on top of the ream ---------- */
@@ -2534,8 +2784,9 @@ html[data-register='on'] .register-eye__plate--black {
 
 .specimen__body {
   display: grid;
-  /* two set columns with the space left between them, not one wide track with a
-     gap the reader has to guess at */
+  /* the specimen is a sheet of paper lying on the ruled one, so it keeps margins
+     of its own and the armature runs on underneath it. two set columns with the
+     space left between them, not one wide track with a gap to guess at */
   grid-template-columns: minmax(0, 62ch) minmax(0, 230px);
   justify-content: space-between;
   gap: clamp(18px, 2.6vw, 42px);
@@ -2587,6 +2838,9 @@ html[data-register='on'] .register-eye__plate--black {
   line-height: 1.36;
 }
 
+/* the brief is printed on the specimen itself — a separate sheet of paper lying
+   on the one being ruled, with margins of its own. so it keeps its own three
+   columns: the armature runs on underneath it and comes out the far side */
 .brief {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3076,29 +3330,39 @@ html[data-register='on'] .fold-mark__plate--black {
   text-wrap: pretty;
 }
 
+/* ---------- the type list: three cells on the same twelve columns ---------- */
+
 .type__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: var(--track);
   border-top: 1px solid var(--black);
   border-bottom: 1px solid var(--rule);
 }
 
 /* three ruled cells, the way a press proof is ruled: the rules are the
-   dividers, so there are no gaps for a column to fall out of */
+   dividers, so there are no gaps for a column to fall out of — and here the
+   rules are the printed ones, so the band and the armature are one mark */
 .type__panel {
   display: flex;
+  grid-row: 1;
   flex-direction: column;
   min-width: 0;
-  padding: 0 clamp(14px, 1.6vw, 24px) clamp(15px, 1.8vw, 22px);
+  padding: 0 var(--pad) clamp(15px, 1.8vw, 22px);
   border-left: 1px solid var(--rule);
 }
 
-.type__panel:first-child {
+.type__panel:nth-child(1) {
+  grid-column: 1 / span 4;
   padding-left: 0;
   border-left: 0;
 }
 
-.type__panel:last-child {
+.type__panel:nth-child(2) {
+  grid-column: 5 / span 4;
+}
+
+.type__panel:nth-child(3) {
+  grid-column: 9 / span 4;
   padding-right: 0;
 }
 
@@ -3528,6 +3792,7 @@ html[data-reveal='on'] .type__panel.is-in .type__resolved-name {
   top: 0;
   right: 0;
   left: 0;
+  z-index: 1;
   height: 3px;
   overflow: hidden;
   pointer-events: none;
@@ -3588,6 +3853,7 @@ html[data-register='on'] .run__seam-rule--black {
 .run__glow {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background:
     radial-gradient(64% 52% at 74% 26%, rgba(255, 46, 107, .3), transparent 70%),
     radial-gradient(52% 46% at 18% 62%, rgba(42, 62, 201, .26), transparent 72%);
@@ -3611,20 +3877,29 @@ html[data-register='on'] .run__seam-rule--black {
 
 .answer__grid {
   display: grid;
-  /* the copy gets the narrow column and the proof card the wide one: the card
-     is carrying a poster now and the paragraph beside it is not going to
-     compete with it, so the page gives the poster the room */
-  grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr);
-  gap: clamp(28px, 4vw, 68px);
+  /* four columns of copy and eight of proof, split on the rule at four. the
+     card is carrying a poster and the paragraph beside it is not going to
+     compete with it, so the page gives the poster the room — and the air on the
+     division is a decision, so the printed rule runs through it rather than
+     being covered up by a gap */
+  grid-template-columns: var(--track);
   align-items: start;
 }
 
 .answer__copy {
   /* the copy column runs the full height of the proof card beside it, with the
-     held-under note pinned to the bottom so the two edges line up */
+     held-under note pinned to the bottom so the two edges line up. what fills
+     the air in between is the ruling: a margin of ruled paper, which is what
+     that column is */
+  grid-column: 1 / span 4;
   align-self: stretch;
   display: flex;
   flex-direction: column;
+  padding-right: var(--split);
+}
+
+.proof {
+  grid-column: 5 / span 8;
 }
 
 .answer__copy h2 {
@@ -3685,6 +3960,7 @@ html[data-register='on'] .run__seam-rule--black {
 .proof {
   /* a physical proof sheet lying on the slab, so the light palette goes back on
      here and the card stays the brightest object in the run */
+  grid-column: 5 / span 8;
   --black: #14131a;
   --stock-3: #fcfaf3;
   --ink-70: #403c4c;
@@ -4340,12 +4616,13 @@ html[data-register='on'] .run__seam-rule--black {
 
 .colophon__grid {
   display: grid;
-  grid-template-columns: minmax(0, .96fr) minmax(0, 1.04fr);
-  gap: clamp(22px, 3.4vw, 56px);
-  /* the notes on the right run to twice the length of the slip on the left, and
-     a hole at the foot of the shorter column is the one thing a press run must
-     not have. so the two cells are the same height and the slip fills its own —
-     a form is filled to the bottom of the box it was printed in. */
+  /* the slip gets five columns of the armature and the notes seven, split on
+     the rule at five. the notes on the right run to twice the length of the
+     slip on the left, and a hole at the foot of the shorter column is the one
+     thing a press run must not have. so the two cells are the same height and
+     the slip fills its own — a form is filled to the bottom of the box it was
+     printed in */
+  grid-template-columns: var(--track);
   align-items: stretch;
   margin-top: var(--air-block);
   padding-top: var(--air-tight);
@@ -4357,8 +4634,10 @@ html[data-register='on'] .run__seam-rule--black {
    this replaced were the same four facts in a shape nobody could scan. the rule
    above it belongs to the grid, so the slip starts directly under it. */
 .colophon__slip {
+  grid-column: 1 / span 5;
   display: grid;
   align-content: space-between;
+  padding-right: var(--split);
 }
 
 .colophon__slip-row {
@@ -4438,6 +4717,7 @@ html[data-register='on'] .run__seam-rule--black {
    a hair above each — and two to a row from the width where two will fit, which
    is the whole difference between a foot of a press run and a paragraph of it. */
 .colophon__machine {
+  grid-column: 6 / span 7;
   display: grid;
   gap: 0 clamp(18px, 2.4vw, 40px);
   align-content: start;
@@ -4823,10 +5103,20 @@ html[data-reveal='on'] .reveal.is-in {
 }
 
 @media (max-width: 1180px) {
+  /* the bands that divide the measure go to one column and take their spans
+     with them — the ruling is still printed, and a ruled sheet with a single
+     column of type in it is what a narrow press proof actually looks like */
   .read__intro,
   .answer__grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 18px;
+    row-gap: 18px;
+  }
+
+  .read__intro h2,
+  .read__intro > p,
+  .answer__copy,
+  .proof {
+    grid-column: 1 / -1;
+    padding-right: 0;
   }
 
   .read__intro > p,
@@ -4834,15 +5124,21 @@ html[data-reveal='on'] .reveal.is-in {
     max-width: 58ch;
   }
 
+  .standfirst__note {
+    grid-column: 1 / span 2;
+  }
+
+  .standfirst__say {
+    grid-column: 3 / span 4;
+  }
+
   /* the cells are the full measure down here, so they take the vertical rules
      between them back and the widest samples can be set at the size the sheet
      sets them — the band stacks rather than shrinking its own type */
-  .type__grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .type__panel {
+    grid-column: 1 / -1;
     padding-right: 0;
+    padding-left: 0;
     border-left: 0;
   }
 
@@ -4869,11 +5165,10 @@ html[data-reveal='on'] .reveal.is-in {
     font-size: clamp(1.05rem, 2.2vw, 1.22rem);
   }
 
-  /* one column of standfirst prose is already a comfortable measure, so the
-     margin note goes to the top and reads as a note on the title above it */
-  .standfirst {
-    grid-template-columns: minmax(0, 20ch) minmax(0, 1fr);
-    gap: clamp(18px, 2.4vw, 32px);
+  .colophon__slip,
+  .colophon__machine {
+    grid-column: 1 / -1;
+    padding-right: 0;
   }
 
   .colophon__slip-row {
@@ -4955,16 +5250,17 @@ html[data-reveal='on'] .reveal.is-in {
   /* below this the note and the lede stop being a margin and become body copy,
      so the note takes the top of the standfirst and reads as an epigraph */
   .standfirst {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 18px;
+    row-gap: 18px;
+  }
+
+  .standfirst__note,
+  .standfirst__say {
+    grid-column: 1 / -1;
+    padding-right: 0;
   }
 
   .standfirst__note {
     max-width: 44ch;
-  }
-
-  .colophon__grid {
-    grid-template-columns: minmax(0, 1fr);
   }
 
   .specimen__body,
@@ -5027,14 +5323,21 @@ html[data-reveal='on'] .reveal.is-in {
     --lift-y-lg: calc(6px + var(--drop));
   }
 
-  .plates {
-    grid-template-columns: minmax(0, 1fr);
+  /* the armature steps down with the bands. the job ticket is the last band
+     still printed three-up, so this is the last width at which twelve columns
+     have a cell to divide; below it six is still enough to read a sheet against
+     and no longer enough to look like a texture */
+  .ruling {
+    --pitch: calc(100% / 6);
   }
 
   .plates__row {
+    grid-column: 1 / -1;
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 12px;
+    padding-right: 0;
+    padding-left: 0;
     border-left: 0;
     border-top: 1px solid var(--rule);
   }
@@ -5087,6 +5390,13 @@ html[data-reveal='on'] .reveal.is-in {
 }
 
 @media (max-width: 560px) {
+  /* four columns is the most a hand-held sheet can carry without the hairlines
+     becoming the texture of the page — and every band down here is one column
+     anyway, so nothing on it is out of register with the armature */
+  .ruling {
+    --pitch: calc(100% / 4);
+  }
+
   .slugbar {
     padding-top: 9px;
   }
@@ -5219,6 +5529,7 @@ html[data-reveal='on'] .reveal.is-in {
   .stock__wash,
   .plate-target__plate,
   .fold-mark__plate,
+  .ruling__plate,
   .bed__blade,
   .edge__plate,
   .edge__ink,
@@ -5242,7 +5553,11 @@ html[data-reveal='on'] .reveal.is-in {
 
   /* and the ink ramp is a position, not a journey: the sheet is exactly as dry
      down here as it would be with motion on, because a page that dries only when
-     it is allowed to move is a page that is illegible in a still browser */
+     it is allowed to move is a page that is illegible in a still browser. the
+     ruling dries with it, which is the same argument about the same number */
+
+  /* and the trim corners stay: they are a printed mark on the type area and not
+     a journey, so a still reader gets the whole rectangle */
 
   /* and the type list is simply already picked, the measured family and all */
   html[data-reveal='on'] .type__panel.is-in .type__sample,
@@ -5349,6 +5664,7 @@ html[data-reveal='on'] .reveal.is-in {
   .ream__well,
   .fold,
   .toggle,
+  .ruling,
   .run__glow {
     display: none;
   }

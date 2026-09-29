@@ -1,70 +1,51 @@
-The short answer is no longer behind a button: it shows through the stock, and the bar turns over at the seam.
+Iteration 504: the sheet prints its own type area — twelve ruled columns, three plates deep, locking at the gate.
 
-## The show-through
+## What changed
 
-The proof card used to hold a hatched panel, a registration mark and the promise
-that a sentence was somewhere below. The short answer is no longer gated.
+A press sheet is ruled, and this one had never printed its own. Six bands were
+each composed on whatever grid suited them, so the page read as a stack of good
+sections rather than as one piece of paper. It now prints a type area: twelve
+equal columns, edge to edge, down the full height of every band, with a pair of
+trim corners at the head and foot of it.
 
-It is now set on a sheet lying face down under this one, and newsprint is thin
-enough that ink comes through it as a soft grey shadow of itself. The whole
-sentence is legible through the stock before anything is touched, and pulling the
-proof is no longer a reveal — it is a print: the same words, the same three lines,
-coming into focus in the exact box the shadow was standing in.
+The ruling is printed by the same three plates as the type, at the same two
+ratios, so it is out of register while the blade is loose and collapses into one
+set of crisp lines at the gate. It also rides the existing `--ink-close` ramp, so
+the armature is widest at the press and has nearly closed on itself by the type
+list — the structure dries with the type standing on it.
 
-- `ProofSheet` is now one component rendered twice (`src/App.tsx`). The claim,
-  the rubric and the coda are declared once, so the two copies of the sentence
-  cannot disagree.
-- Both copies sit in one grid cell, so the card reserves the room the proof needs
-  either way. Pulling the proof no longer changes the page's height — the jump
-  the old card made is gone.
-- The shadow is set in a warm grey rather than in black, the two words set in
-  fluorescent pink still read as the pink ones through the stock, and the small
-  type under the poster is only just there.
-- The cover sheet (hatch, bloom of light through the stock) lifts on the pull,
-  along with the squeegee caption pinned to the foot of the shadow.
-- The window is `visibility`-hidden rather than `hidden`, so the copy is never
-  announced or focusable before the reader has pulled it.
-- `answer__note` and the job ticket's stock line were rewritten to match.
+Every band that divides the measure now divides on a printed rule: the job
+ticket and the type list at four and eight, the standfirst at three, the close
+read and the answer at four, the job ticket in the colophon at five. The grid
+underneath carries no gap — the gutter is padding inside the columns — so a
+track edge and a printed rule are the same x on every band.
 
-## The bar goes over
+The void in the answer's copy column is now a margin of ruled paper rather than
+a hole.
 
-The slugbar is the trim edge of the sheet, and a trim edge is a strip of the same
-stock as whatever it is lying over — the control strip on the right edge has
-always known this, which is why it carries a patch of light stock behind its mark.
-The bar did not, so crossing the seam dropped a band of newsprint onto a slab of
-solid ink with a hard edge and nothing to say for it.
+## Files
 
-- It now turns over at the seam by swapping the slab's own palette tokens onto
-  the bar (`src/App.tsx` writes `data-slab`, `src/style.css` consumes it).
-- It is a position, not a state: it does not matter which way the reader came
-  past the line.
-- The seam position and the bar height are measured through a `ResizeObserver`,
-  not read per frame, so the scroll handler still writes custom properties and
-  does no layout.
+- `src/ruling.tsx` — new. Three empty plate elements and no geometry; the rules
+  are a gradient one twelfth of the width, so a band of any height costs the same
+  three nodes. `aria-hidden`, no pointer events.
+- `src/App.tsx` — the ruling is mounted on both light sheets, on the ink slab and
+  on the colophon. No other markup changed; the title and `document.title` are
+  untouched.
+- `src/style.css` — `--sheet` / `--cols` / `--track` / `--pad` / `--split`; the
+  `.ruling` block; the five two-column bands and the two three-up bands re-gridded
+  onto the armature; the specimen and the press bed deliberately left off it, as
+  separate sheets lying on the ruled one.
 
-## The last of the chrome
+## Behaviour
 
-The bar carried four rounded pills and the proof carried a fifth, on a page made
-of paper, ink, rules and hard edges.
-
-- The index is a slug now: the mono, the caps, the tracking, and a hairline of
-  pink under whichever pass of the press the reader is standing in.
-- The pull is a printed key carrying the same hard pink shadow the sheet uses for
-  a plate that has moved, and it lies down in the bar once the proof is out.
-- The answer's left column got a foot rule, so the air under its paragraph reads
-  as a composition rather than as a hole.
-- The mobile index keeps the furniture size instead of stepping up a size on the
-  narrowest screen.
-- The slugbar drops to two rows at 1180px rather than 1040px, because the index
-  is now set in wider caps than the pills it replaced.
-
-## Accessibility and motion
-
-- Nothing new animates that is not declined under `prefers-reduced-motion`. The
-  show-through crossfade is a state change, the squeegee caption's sway is not,
-  and the blur on the shadow is a fact about paper rather than a journey.
-- The pull key keeps `aria-expanded`, `aria-controls` and `p` / `esc`; the live
-  region now says the proof was pulled rather than that something was revealed.
-- Print output hides the cover and the shadow and shows the sheet set, and no
-  longer prints the pull key.
-- `npm run build` passes.
+- **Reduced motion.** Nothing new animates. The ruling's plate offsets are
+  positions driven by the plate offset and the drying ramp, both of which are
+  already written for a still reader, so the same sheet is printed; only the
+  200ms transition on the plates is dropped, alongside the existing mark.
+- **Responsive.** The armature steps down with the bands: twelve columns while
+  the job ticket is still printed three-up, six below 760px, four below 560px.
+  Bands stack and take their column spans with them; the specimen and the brief
+  keep their own internal grids.
+- **Print.** The ruling is dropped, with the rest of the screen furniture.
+- **No new assets, network, storage or frame access.** The title, the framework,
+  the entry point and the tests are unchanged.

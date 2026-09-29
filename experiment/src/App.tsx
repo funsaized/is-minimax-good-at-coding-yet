@@ -17,6 +17,7 @@ import { CropMark, FoldMark, PlateTarget, RegistrationMark, Squeegee } from './m
 import { Plated } from './plate'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
 import { Ream } from './ream'
+import { Ruling } from './ruling'
 import { TypeList } from './typelist'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
@@ -464,6 +465,7 @@ export function App() {
 
       <main className="main">
         <div className="page">
+          <Ruling />
           <section id="question" className="sheet" aria-labelledby="question-title">
             <p className="slugline sheet__slug">
               <span className="sheet__slug-lead">
@@ -620,6 +622,10 @@ export function App() {
         </div>
 
         <div className="page">
+          {/* the far side of the fold is ruled the same way the near side was: the
+              sheet was folded once and the ruling goes through the crease, so the
+              type list is set in the same type area the question was */}
+          <Ruling />
           {/* THE TYPE LIST. the last thing on the light sheet, and the only
               quiet one: a make-ready note rather than a section with a heading,
               because a type list is furniture and furniture does not get a
@@ -661,6 +667,13 @@ export function App() {
             <i className="run__seam-rule run__seam-rule--blue" />
           </span>
           <span className="run__glow" aria-hidden="true" />
+
+          {/* the ink slab is ruled too. it cannot multiply — there is no paper
+              under it to darken — so the same three rules are printed as light
+              on it, and they ride the blade rather than the drying ramp, because
+              by the time the reader is this far down the press the sheet has
+              already dried. */}
+          <Ruling tone="slab" />
 
           <div className="page">
             <section id="answer" className="answer" aria-labelledby="answer-title">
@@ -753,6 +766,7 @@ export function App() {
       </main>
 
       <footer className="colophon">
+        <Ruling tone="slab" />
         <div className="colophon__inner">
           <p className="colophon__echo" aria-hidden="true">{TITLE}</p>
 
