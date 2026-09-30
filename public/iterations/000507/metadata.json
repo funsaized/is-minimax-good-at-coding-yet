@@ -1,0 +1,19 @@
+{
+  "id": 507,
+  "parentId": 506,
+  "createdAt": "2026-09-30T10:43:11.486Z",
+  "summary": "Iteration 507 — the plate case moves under the poster, the blade travels instead of blinking, and the gauge is a link to",
+  "path": "/iterations/000507/index.html",
+  "screenshot": "/iterations/000507/desktop.png",
+  "mobileScreenshot": "/iterations/000507/mobile.png",
+  "sourceCommit": "0292f7bed5b07f1536ade16a3551673ef5171d78",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 747,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 122422,
+    "outputTokens": 23135,
+    "steps": 92
+  }
+}
