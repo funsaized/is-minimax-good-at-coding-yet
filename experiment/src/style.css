@@ -2041,11 +2041,12 @@ html[data-register='on'] .plated__layer--black .mark {
   border-top: 1px solid var(--rule);
 }
 
-/* three columns of the armature for the note and nine for the argument. the
-   division is on the rule at three, and the pink rule the note is set against
-   stands on the type area's own left boundary. the note is two lines against a
-   five-line paragraph, so it sits in the middle of its column — a margin note
-   set against the block it annotates, not a stub hanging off the top of it */
+/* three columns of the armature for the note, four for the argument, five for
+   the way on. the division is on the rule at three, and the pink rule the note
+   is set against stands on the type area's own left boundary. the note is two
+   lines against a five-line paragraph, so it sits in the middle of its column —
+   a margin note set against the block it annotates, not a stub hanging off the
+   top of it */
 .standfirst__note {
   grid-column: 1 / span 3;
   display: grid;
@@ -2092,12 +2093,16 @@ html[data-register='on'] .plated__layer--black .mark {
 }
 
 .standfirst__say {
-  grid-column: 4 / span 9;
+  grid-column: 4 / span 4;
   min-width: 0;
+  /* the way on starts on the rule at seven, so the argument stops a gutter
+     short of it — a column that runs hard into a printed rule reads as one
+     block with the next one rather than as two */
+  padding-right: var(--pad);
 }
 
 .lede {
-  max-width: 52ch;
+  max-width: 46ch;
   color: var(--ink-70);
   font-family: var(--serif);
   font-size: clamp(1.08rem, .48vw + .99rem, 1.36rem);
@@ -2125,11 +2130,22 @@ html[data-register='on'] .plated__layer--black .mark {
    drags a wedge of squeegee ink under it, and pointing at a way on
    does the same thing at a third of the size — a squeegee is a
    squeegee wherever the sheet puts it.
+
+   And it stands in the last five columns of the band, sitting on the
+   foot of the standfirst rather than hanging under the lede in the
+   middle of the sheet. A ruled sheet with four empty columns at the
+   end of a band is a band that ran out of things to say, and the
+   type area is an armature: every band is meant to be measured
+   against it, and one that stops two thirds of the way across cannot
+   be read against anything.
    ============================================================= */
 
 .xlinks {
-  max-width: 44ch;
-  margin-top: clamp(20px, 2.1vw, 30px);
+  grid-column: 8 / span 5;
+  align-self: end;
+  /* the block starts on a printed rule and runs to the trim, so the air is
+     inside the columns and the rules are the ones the sheet already prints */
+  padding-left: var(--pad);
   border-top: 1px solid var(--black);
 }
 
@@ -4171,8 +4187,9 @@ html[data-register='on'] .run__seam-rule--black {
 /* the keys are printed here rather than only in the strip at the top, because
    this is the one control on the page that is not under the reader's cursor.
    the rule above them is the one that makes the air in this column deliberate:
-   a headline block, a slab of nothing, and a foot — which is a composition,
-   where a footnote stranded three hundred pixels under a paragraph is a hole */
+   a headline block, the rubric, a slab of nothing, and a foot — which is a
+   composition, where a footnote stranded three hundred pixels under a paragraph
+   is a hole */
 .answer__copy .answer__note {
   display: flex;
   max-width: none;
@@ -4187,6 +4204,112 @@ html[data-register='on'] .run__seam-rule--black {
   font-size: var(--label-3);
   letter-spacing: .1em;
   text-transform: uppercase;
+}
+
+/* =============================================================
+   THE RUBRIC
+   The three tests the answer sets for itself used to be printed
+   inside the proof, which put the only criteria the page ever states
+   about itself in the one place on the page where nothing can be
+   read: behind a card, and then behind a sheet of newsprint, and on a
+   phone behind a card two words wide. On a wide screen they were a
+   grey ghost; nobody has ever read them.
+
+   So they come out of the card and stand in the slab, in the copy
+   column, in the light — where the argument is, and next to the
+   sentence they are testing. The card keeps what the card is for: the
+   answer, and the way the answer arrives.
+
+   and the check is real. The sheet is stamped off in the press's own
+   order when the proof is pulled, one box after another, which is a
+   thing that happens on the page rather than a transition on a
+   component — and the mark is not drawn at all until it happens, so
+   there is no tick standing in a slab promising a result nobody has
+   seen yet.
+   ============================================================= */
+
+.rubric {
+  margin-top: var(--air-block);
+}
+
+.rubric__kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 11px 0 4px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label-2);
+  font-weight: 500;
+  letter-spacing: .13em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.rubric__kicker > span {
+  color: var(--pink-ink);
+  letter-spacing: 0;
+}
+
+.rubric__list li {
+  display: grid;
+  grid-template-columns: 1.9rem minmax(0, 1fr) 20px;
+  gap: 10px;
+  align-items: start;
+  padding: 11px 0 12px;
+  border-bottom: 1px solid var(--rule-soft);
+  color: var(--ink-70);
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.44;
+  text-wrap: pretty;
+}
+
+/* the figure is a figure, so it is printed in the blue every other measurement
+   on the sheet is printed in — the same grammar the type list and the ream's
+   edges use, carried onto the dark side of the sheet with it */
+.rubric__list li > span {
+  padding-top: .12em;
+  color: var(--blue-ink);
+  font-family: var(--mono);
+  font-size: var(--label-2);
+  letter-spacing: .06em;
+}
+
+.rubric__tick {
+  width: 20px;
+  height: 20px;
+  margin-top: .05em;
+  overflow: visible;
+}
+
+.rubric__tick-box {
+  fill: none;
+  stroke: rgba(251, 248, 241, .3);
+  stroke-width: 1.3;
+  transition: fill .3s var(--ease), stroke .3s var(--ease);
+}
+
+.rubric__tick-mark {
+  fill: none;
+  stroke: var(--slab-ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 13;
+  stroke-dashoffset: 13;
+}
+
+/* the stamp. it rides the run rather than the card, because the card is on the
+   sheet and the sheet is what got checked */
+.run.is-open .rubric__tick-box {
+  fill: var(--slab-pink);
+  stroke: var(--slab-pink);
+}
+
+.run.is-open .rubric__tick-mark {
+  animation: tick-in .38s var(--ease-out) calc(.46s + var(--i) * .1s) both;
 }
 
 /* the keys are printed here rather than only in the strip at the top, because
@@ -4354,8 +4477,10 @@ html[data-register='on'] .run__seam-rule--black {
   position: relative;
   display: grid;
   /* tall enough that the card is a proof sheet rather than a card that changes
-     its own height, and short enough that it still reads as a sheet */
-  min-height: clamp(252px, 25vw, 360px);
+     its own height, and short enough that it still reads as a sheet. it lost
+     the rubric to the slab beside it, so what is left is the answer and its
+     foot — and this is the height that fits those two. */
+  min-height: clamp(258px, 24vw, 344px);
   border-radius: 0 0 3px 3px;
 }
 
@@ -4393,9 +4518,12 @@ html[data-register='on'] .run__seam-rule--black {
 }
 
 /* the blur is on the type under the sheet and not on the panel, so the caption
-   printed on the cover above it stays the one crisp thing on the card */
+   printed on the cover above it stays the one crisp thing on the card. it is
+   barely a blur: a sheet of newsprint with ink on the far side of it is soft,
+   not frosted, and the difference is the difference between reading the answer
+   through the stock and finding a smudge where the answer is */
 .proof__held > :not(.proof__through) {
-  filter: blur(1.05px);
+  filter: blur(.8px);
   transition: filter .46s var(--ease);
 }
 
@@ -4410,40 +4538,37 @@ html[data-register='on'] .run__seam-rule--black {
 /* ink does not come through the stock in black. it comes through as a warm grey,
    a shade lighter than itself, and the two words set in fluorescent pink still
    read as the pink ones — which is the one thing the shadow tells you about the
-   composition before you have pulled anything */
+   composition before you have pulled anything.
+
+   and it has to actually be read. the sheet has said for three iterations that
+   the whole sentence is legible through the paper before the reader touches
+   anything, and at a third of an alpha on a cream ground it was not: it was a
+   texture. the shadow is set dark enough to be type, and the small type under
+   the poster is set dark enough to be a sentence too — a press proof you can
+   see the answer on but cannot read is a different object from this one. */
 .proof__held .proof__yes {
-  color: color-mix(in srgb, var(--pink-ink) 30%, transparent);
+  color: color-mix(in srgb, var(--pink-ink) 42%, transparent);
 }
 
 .proof__held .proof__claim-a {
-  color: color-mix(in srgb, var(--black) 34%, transparent);
+  color: color-mix(in srgb, var(--black) 47%, transparent);
 }
 
 .proof__held .proof__claim-b {
-  color: color-mix(in srgb, var(--pink-ink) 36%, transparent);
+  color: color-mix(in srgb, var(--pink-ink) 49%, transparent);
 }
 
 .proof__held .proof__claim-c,
-.proof__held .proof__tests li,
-.proof__held .proof__tests span,
 .proof__held .proof__coda {
-  color: color-mix(in srgb, var(--black) 12%, transparent);
+  color: color-mix(in srgb, var(--black) 30%, transparent);
 }
 
 .proof__held .proof__land {
-  background: color-mix(in srgb, var(--black) 8%, transparent);
+  background: color-mix(in srgb, var(--black) 14%, transparent);
 }
 
 .proof__held .ink-trap__pool {
-  opacity: .14;
-}
-
-.proof__held .proof__tick-box {
-  stroke: color-mix(in srgb, var(--black) 12%, transparent);
-}
-
-.proof__held .proof__tick-mark {
-  stroke: transparent;
+  opacity: .3;
 }
 
 /* and the caption, pinned to the foot of the shadow. the sentence is the promise;
@@ -4475,6 +4600,10 @@ html[data-register='on'] .run__seam-rule--black {
   position: relative;
   z-index: 1;
   grid-area: 1 / 1;
+  /* a column, so the slug in the foot margin is pinned to the bottom of the
+     sheet rather than set a hand's width under the last line of type */
+  display: flex;
+  flex-direction: column;
   padding: clamp(24px, 3vw, 40px);
   overflow: hidden;
   border-radius: 0 0 3px 3px;
@@ -4652,67 +4781,6 @@ html[data-register='on'] .run__seam-rule--black {
   right: 0;
 }
 
-.proof__tests {
-  display: grid;
-  margin: clamp(22px, 2.6vw, 32px) 0 0;
-  border-top: 1px solid var(--rule-soft);
-}
-
-.proof__tests li {
-  display: grid;
-  grid-template-columns: 1.9rem minmax(0, 1fr) 18px;
-  gap: 10px;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--rule-soft);
-  color: var(--ink-70);
-  font-family: var(--serif);
-  font-size: 1rem;
-  line-height: 1.46;
-  text-wrap: pretty;
-}
-
-.proof__tests span {
-  color: var(--blue-ink);
-  font-family: var(--mono);
-  font-size: var(--label-2);
-  letter-spacing: .06em;
-}
-
-/* the sheet is checked, not decorated: each line gets stamped off in the press's
-   own order, one after another, and the tick is drawn rather than faded in */
-.proof__tick {
-  width: 18px;
-  height: 18px;
-  overflow: visible;
-}
-
-.proof__tick-box {
-  fill: none;
-  stroke: var(--rule);
-  stroke-width: 1.3;
-  transition: fill .3s var(--ease), stroke .3s var(--ease);
-}
-
-.proof__tick-mark {
-  fill: none;
-  stroke: var(--stock-3);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 13;
-  stroke-dashoffset: 13;
-}
-
-.proof.is-open .proof__tick-box {
-  fill: var(--pink);
-  stroke: var(--pink);
-}
-
-.proof.is-open .proof__tick-mark {
-  animation: tick-in .38s var(--ease-out) calc(.56s + var(--i) * .09s) both;
-}
-
 .proof__coda {
   max-width: 54ch;
   margin: clamp(16px, 1.8vw, 22px) 0 0;
@@ -4721,6 +4789,29 @@ html[data-register='on'] .run__seam-rule--black {
   font-size: 1rem;
   font-style: italic;
   text-wrap: pretty;
+}
+
+/* the foot of the proof sheet, pinned to the bottom margin the way every other
+   sheet on this page pins its own. the light sheet has one, the press bed has
+   one, and the sheet carrying the only sentence anybody came for had a hundred
+   pixels of bare stock under its last line instead */
+.proof__foot {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: clamp(16px, 1.8vw, 24px);
+  border-top: 1px solid var(--rule-soft);
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.proof__foot > span {
+  color: var(--pink-ink);
+  letter-spacing: 0;
 }
 
 /* the answer lands, and the landing is the page's own mechanic rather than a
@@ -4744,8 +4835,8 @@ html[data-register='on'] .run__seam-rule--black {
    is set line by line, because the shadow of the same words under the sheet is
    not being re-set, it has been there all along */
 .proof.is-open .proof__window .proof__yes,
-.proof.is-open .proof__window .proof__tests li,
-.proof.is-open .proof__window .proof__coda {
+.proof.is-open .proof__window .proof__coda,
+.proof.is-open .proof__window .proof__foot {
   animation: print-line .55s var(--ease-out) both;
 }
 
@@ -4753,12 +4844,12 @@ html[data-register='on'] .run__seam-rule--black {
   animation-delay: .16s;
 }
 
-.proof.is-open .proof__window .proof__tests li {
-  animation-delay: calc(.5s + var(--i) * .09s);
+.proof.is-open .proof__window .proof__coda {
+  animation-delay: .8s;
 }
 
-.proof.is-open .proof__window .proof__coda {
-  animation-delay: .92s;
+.proof.is-open .proof__window .proof__foot {
+  animation-delay: .98s;
 }
 
 @keyframes plate-lock {
@@ -5382,13 +5473,29 @@ html[data-reveal='on'] .reveal.is-in {
 
   .standfirst__say {
     grid-column: 3 / span 4;
+    padding-right: var(--pad);
+  }
+
+  /* the way on is the last division of the band, so it is the last thing to go
+     over: it keeps the two columns the note and the lede gave up */
+  .xlinks {
+    grid-column: 7 / -1;
+    padding-left: 0;
   }
 
   /* the cells are the full measure down here, so they take the vertical rules
      between them back and the widest samples can be set at the size the sheet
-     sets them — the band stacks rather than shrinking its own type */
-  .type__panel {
+     sets them — the band stacks rather than shrinking its own type.
+     the spans are reset with the same :nth-child() the base rule sets them
+     with, because .type__panel:nth-child() is the more specific of the two and
+     a plain .type__panel down here loses to it: for three iterations the cells
+     stayed three-up at every width, and on a phone the samples of one cell
+     were printed straight through the samples of the next. */
+  .type__panel:nth-child(1),
+  .type__panel:nth-child(2),
+  .type__panel:nth-child(3) {
     grid-column: 1 / -1;
+    grid-row: auto;
     padding-right: 0;
     padding-left: 0;
     border-left: 0;
@@ -5500,19 +5607,26 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   /* below this the note and the lede stop being a margin and become body copy,
-     so the note takes the top of the standfirst and reads as an epigraph */
+     so the note takes the top of the standfirst and reads as an epigraph, and
+     the way on goes under it at the full measure — it is the only way off the
+     first screen on a phone, so it is the last thing allowed to get narrow */
   .standfirst {
     row-gap: 18px;
   }
 
   .standfirst__note,
-  .standfirst__say {
+  .standfirst__say,
+  .xlinks {
     grid-column: 1 / -1;
     padding-right: 0;
   }
 
   .standfirst__note {
     max-width: 44ch;
+  }
+
+  .xlinks {
+    padding-left: 0;
   }
 
   .specimen__body,
@@ -5583,15 +5697,26 @@ html[data-reveal='on'] .reveal.is-in {
     --pitch: calc(100% / 6);
   }
 
-  .plates__row {
+  /* and the three cells of the job ticket become three ruled lines of a form.
+     the spans are reset with the same :nth-child() the base rules set them with,
+     because .plates__row:nth-child() is the more specific of the two and a plain
+     .plates__row down here loses to it: the phrases were printed three-up at
+     every width, and on a phone each of them got a quarter of the sheet, which
+     is where "good at" started printing straight through "yet?" */
+  .plates__row:nth-child(1),
+  .plates__row:nth-child(2),
+  .plates__row:nth-child(3) {
     grid-column: 1 / -1;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
     padding-right: 0;
     padding-left: 0;
     border-left: 0;
     border-top: 1px solid var(--rule);
+  }
+
+  .plates__row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
   }
 
   .plates__row:first-child {
@@ -5760,10 +5885,17 @@ html[data-reveal='on'] .reveal.is-in {
     transition: none;
   }
 
-  /* and the check is already drawn */
-  .proof__tick-mark {
+  /* and the check is already drawn the moment the sheet is out — but it is not
+     drawn before that, in this browser or any other: a tick standing in an
+     empty box on the slab is a promise of a result nobody has been shown */
+  .rubric__tick-mark {
+    stroke: transparent;
     stroke-dashoffset: 0;
     animation: none;
+  }
+
+  .run.is-open .rubric__tick-mark {
+    stroke: var(--slab-ink);
   }
 
   .mark::after {
@@ -6011,6 +6143,19 @@ html[data-reveal='on'] .reveal.is-in {
   .q__land,
   .proof__land {
     background: #000;
+  }
+
+  /* and the rubric is checked on a printout: there is no pull left to watch and
+     a page of paper cannot leave three empty boxes standing in for a result the
+     reader has already been given, so the stamp prints as the stamp ends up */
+  .rubric__tick-box {
+    fill: #000;
+    stroke: #000;
+  }
+
+  .rubric__tick-mark {
+    stroke: #fff;
+    stroke-dashoffset: 0;
   }
 
   /* a printout has no cover over it and no pull key, so the sheet arrives already

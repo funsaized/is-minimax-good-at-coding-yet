@@ -70,6 +70,12 @@ const CLAIM = [
   'and it knows when to stop moving.',
 ] as const
 
+/* the three tests the answer sets for itself. they used to be printed inside the
+   proof, which put the only criteria the page ever states behind a card and
+   then behind a sheet of newsprint: a grey ghost on a wide screen, a grey ghost
+   two words wide on a phone. they stand in the slab now, in the light, beside
+   the sentence they are testing — and they stamp off in the press's own order
+   the moment the proof is pulled. */
 const CHECKS = [
   'Hierarchy: could you name the second most important thing without thinking twice?',
   'Hand: the page hands you the blade. Does the tool actually do something?',
@@ -525,32 +531,42 @@ export function App() {
                   agree with each other until you take the blade in your hand. This page is that
                   argument, printed.
                 </p>
-
-                {/* THE WAY ON. the standfirst ended in the last two rounded
-                    rectangles on the page, which is a poor contradiction of an
-                    argument that the whole sheet is not a web app. so the way on
-                    is a way on: a kicker, and two ruled cross-references in the
-                    furniture face, each carrying the number of the pass it takes
-                    you to. the reader is not asked to trust that the page has
-                    somewhere to go — the number is read out of the index at the
-                    top of the bar, and it is the same numbering all the way
-                    through. */}
-                <nav className="xlinks" aria-label="Where to go next">
-                  <p className="xlinks__kicker">
-                    <span aria-hidden="true">↳</span> where to next
-                  </p>
-                  <a className="xlink" href="#close">
-                    {ARROW}
-                    <span className="xlink__label">read it closely</span>
-                    <span className="xlink__to" aria-hidden="true">{passOf('close')}</span>
-                  </a>
-                  <a className="xlink xlink--quiet" href="#answer">
-                    {ARROW}
-                    <span className="xlink__label">skip to the short answer</span>
-                    <span className="xlink__to" aria-hidden="true">{passOf('answer')}</span>
-                  </a>
-                </nav>
               </div>
+
+              {/* THE WAY ON. the standfirst used to end in the last two rounded
+                  rectangles on the page, which is a poor contradiction of an
+                  argument that the whole sheet is not a web app. so the way on
+                  is a way on: a kicker, and two ruled cross-references in the
+                  furniture face, each carrying the number of the pass it takes
+                  you to. the reader is not asked to trust that the page has
+                  somewhere to go — the number is read out of the index at the
+                  top of the bar, and it is the same numbering all the way
+                  through.
+
+                  and it is not under the argument either. the standfirst was
+                  printing the note in three columns, the lede in nine and the
+                  way on under the lede, which left the last four columns of the
+                  type area with nothing on them at all — a band that stops two
+                  thirds of the way across a ruled sheet reads as a band that ran
+                  out of ideas. so the way on takes columns eight to twelve,
+                  which is a division like any other, and the three parts read in
+                  the order the eye goes: what to notice, what the page is, where
+                  to go next. */}
+              <nav className="xlinks" aria-label="Where to go next">
+                <p className="xlinks__kicker">
+                  <span aria-hidden="true">↳</span> where to next
+                </p>
+                <a className="xlink" href="#close">
+                  {ARROW}
+                  <span className="xlink__label">read it closely</span>
+                  <span className="xlink__to" aria-hidden="true">{passOf('close')}</span>
+                </a>
+                <a className="xlink xlink--quiet" href="#answer">
+                  {ARROW}
+                  <span className="xlink__label">skip to the short answer</span>
+                  <span className="xlink__to" aria-hidden="true">{passOf('answer')}</span>
+                </a>
+              </nav>
             </div>
 
             <div className="bedrow">
@@ -749,6 +765,40 @@ export function App() {
                     The question does not need a speech. It needs one honest sentence and enough
                     quiet around it to land.
                   </p>
+
+                  {/* THE RUBRIC. the three tests used to be set inside the proof,
+                      which is the one place on the page where nothing can be
+                      read: behind a card, and then behind a sheet of newsprint,
+                      and on a phone behind a card two words wide. they are the
+                      only criteria the page ever states about itself, so they
+                      stand out here instead, in the slab's own light, in the
+                      column that carries the argument — and they stamp off in
+                      the press's order when the proof is pulled, which is the
+                      moment they were written for. */}
+                  <section className="rubric" aria-labelledby="rubric-title">
+                    <h3 className="rubric__kicker" id="rubric-title">
+                      <span aria-hidden="true">↳</span> and the three things it is checked against
+                    </h3>
+                    <ol className="rubric__list">
+                      {CHECKS.map((line, index) => (
+                        <li key={line} style={{ '--i': index } as CSSProperties}>
+                          <span>{String(index + 1).padStart(2, '0')}</span>
+                          <p>{line}</p>
+                          <svg
+                            className="rubric__tick"
+                            viewBox="0 0 18 18"
+                            preserveAspectRatio="xMidYMid meet"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <rect className="rubric__tick-box" x="1.5" y="1.5" width="15" height="15" rx="2.6" />
+                            <path className="rubric__tick-mark" d="M5.1 9.3 7.8 12 12.9 6.1" />
+                          </svg>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+
                   <p className="answer__note">
                     The words come through the stock before you pull it.
                     <span className="answer__key">
@@ -1099,26 +1149,19 @@ function ProofSheet({ through = false }: { through?: boolean }) {
         <InkTrap className="proof__trap proof__trap--end" rule={false} />
       </p>
 
-      <ol className="proof__tests">
-        {CHECKS.map((line, index) => (
-          <li key={line} style={{ '--i': index } as CSSProperties}>
-            <span>{String(index + 1).padStart(2, '0')}</span>
-            <p>{line}</p>
-            <svg
-              className="proof__tick"
-              viewBox="0 0 18 18"
-              preserveAspectRatio="xMidYMid meet"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <rect className="proof__tick-box" x="1.5" y="1.5" width="15" height="15" rx="2.6" />
-              <path className="proof__tick-mark" d="M5.1 9.3 7.8 12 12.9 6.1" />
-            </svg>
-          </li>
-        ))}
-      </ol>
-
       <p className="proof__coda">{CODA}</p>
+
+      {/* THE FOOT OF THE PROOF. a proof sheet has a slug in its bottom margin
+          and this one did not, which left the card with a hundred pixels of
+          bare stock under the last line of type — and the light sheet prints
+          its own foot two bands above, so the one sheet on the page with the
+          most to say had the least furniture. it carries the same three facts
+          the run does, and it only prints once the sheet has been pulled. */}
+      {through ? null : (
+        <p className="proof__foot">
+          <span aria-hidden="true">↳</span> the short answer · set in register · nothing downloaded
+        </p>
+      )}
     </>
   )
 }

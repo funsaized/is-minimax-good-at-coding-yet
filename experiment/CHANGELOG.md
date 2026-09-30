@@ -1,51 +1,65 @@
-Give the sheet its edges: a head on the job ticket, a foot on the light sheet, and no buttons left.
+# 506 — the answer is printed, not a ghost
 
-## Iteration 505
+The short answer shows through the stock, its three tests stand in the slab, and the type list works on a phone.
 
-One idea: a press sheet is a physical object, and the three things it was
-missing were all about where one thing stops and the next begins.
+## The rubric comes out of the card
 
-**The foot of the sheet.** The light sheet had a head and no foot. The type
-list ended on its own bottom rule and then there was bare stock until the ink
-slab began — a hole where an end should be, and the only band on the page with
-nothing standing at either edge of it. The foot margin is printed now, and the
-slug in it says the two true things about the place: the light sheet ends
-here, and the answer is set below it in register.
+The three tests the answer sets for itself — hierarchy, hand, restraint — were
+printed inside the proof, which is the one place on the page where nothing can be
+read: behind a card, and then behind a sheet of newsprint, and on a phone behind a
+card two words wide. On a wide screen they were a grey ghost; nobody had read
+them. They now stand in the ink slab, in the copy column, in the light, beside
+the sentence they are testing, and they stamp off in the press's order when the
+proof is pulled. The card keeps what the card is for: the answer and the way it
+arrives.
 
-The foot also carries the last live marks on the page. By that point the type
-above it has dried to a twelfth of the press offset and the ruling has almost
-closed on itself, so the three flats printed there still ride the true plate
-offset — the last thing on the light sheet that says how loose the press is.
-At the gate they fuse: the black flat takes the pink and the two colour flats
-go, which is the reward the gauge and the bar already give, said one last time
-by the three smallest marks on the page. The flats are the true offset and not
-the dried one on purpose; they carry the same two ratios as every other mark,
-so the foot is the same misregistration and not a fourth opinion.
+Consequences worth naming: the pull's choreography now has something to show next
+to it (three pink boxes stamping one after another, in the dark, while the sheet
+prints itself), the slab's left column is no longer a headline, a slab of nothing
+and a footnote, and the card lost the hundred pixels of bare stock under its last
+line — it gained a foot slug of its own, printing only once the sheet has been
+pulled.
 
-**The job ticket got a head.** Every other band on the light sheet opens the
-same way — a slug on a rule, a fact on the same line. The job ticket opened
-with a sentence floating fifty pixels above its own top rule with nothing
-between them but air, which read as a fifth module rather than as a label. It
-is the label now: the slug names the band and the instruction is set under it
-as the gloss it already was. It has not moved an inch on the page; it has only
-stopped hovering. Below 700px it is cut, along with the bed's caption — which
-of the three plates is on the bed is a glyph, and the bed's own foot already
-says the same thing about taking the blade.
+## The shadow is legible now
 
-**No buttons.** The standfirst ended in the last two rounded rectangles in the
-document, which is a poor contradiction of an argument that the whole sheet is
-not a web app. The way on is a way on now: a kicker and two ruled
-cross-references in the furniture face, each carrying the number of the pass it
-takes you to. Those numbers are read out of the index at the head of the file
-rather than typed again, so the two numberings cannot drift apart. Pointing at
-one drags the same wedge of squeegee ink under the label that the title drags
-under a word. The pass numeral stays federal blue on hover, because the sheet's
-colour grammar says the blue is only ever a figure — the pink on a pointed-at
-cross-reference belongs to the arrow and the wedge, which are the press.
+Iteration 503 said the whole sentence can be read through the stock before the
+reader touches anything. At a third of an alpha on a cream ground it could not:
+it was a texture. The shadow is set dark enough to be type, the small type under
+the poster is dark enough to be a sentence, and the blur is a hair's less — a
+sheet of newsprint with ink on the far side of it is soft, not frosted. The pull
+is now a print rather than the first time anybody could read the thing.
 
-**Where the rules went.** `.actions` and both `.button` variants are gone, and
-the cross-references print in `@media print` alongside the bed and the pull key
-rather than surviving as dead anchors; the flats close up with the rest of the
-colour plates on paper, because a printout has one plate. The flats were added
-to the reduced-motion list that keeps working with transitions off, since they
-report the register and are a fact about the paper rather than a journey.
+## The standfirst fills the type area
+
+The band printed the note in three columns, the lede in nine, and the way on
+under the lede — which left the last four columns of a ruled sheet with nothing
+on them. A band that stops two thirds of the way across an armature reads as a
+band that ran out of ideas. The way on now takes columns eight to twelve, sitting
+on the foot of the band, and the band reads in the order the eye goes: what to
+notice, what the page is, where to go next. The lede keeps a gutter's air before
+the rule at seven.
+
+## Two specificity bugs, and a sheet that works at 390px
+
+`.type__panel:nth-child()` and `.plates__row:nth-child()` are more specific than
+the plain class the responsive blocks use to reset their spans, so for three
+iterations neither band ever collapsed: the type list stayed three-up at every
+width and the job ticket stayed three-up on a phone. At 390px each cell was a
+quarter of the sheet wide, and the samples of one cell were printed straight
+through the samples of the next — "The pause, protected" through the margin note,
+"good at" through "yet?". Both spans are now reset with the same `:nth-child()`
+the base rules set them with, and the band collapses the way its own comments
+always said it would.
+
+## Also
+
+- The rubric's checks are not drawn until the proof is out, in this browser or any
+  other: a tick standing in an empty box is a promise of a result nobody has seen.
+  Under reduced motion the stamp prints already drawn and the box still waits.
+- A printout has no pull left to watch, so the three checks print as the stamp
+  ends up rather than as three empty boxes.
+- The rubric's figures are the same federal blue as every other measurement on the
+  sheet, which now includes the dark side of it.
+
+`npm run build` is clean. No network, no fonts, no storage; the document title
+and the visible title are unchanged.
