@@ -38,6 +38,27 @@ const INKS = [
   { id: 'blue', name: 'federal blue', use: 'the second impression' },
 ] as const
 
+/* the pass a cross-reference takes you to, taken from the index itself. a sheet
+   refers to another part of itself by its pass number and by nothing else, and
+   the two numbers below are read out of the list at the top of the file rather
+   than typed again, so a pass can be renumbered in one place. */
+const passOf = (id: string) => NAV_ITEMS.find(item => item.id === id)?.number ?? ''
+
+/* the way on, printed as one mark twice over: an arrow is the press, so it is
+   pink here exactly as it is everywhere else on the sheet */
+const ARROW = (
+  <svg className="xlink__arrow" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+    <path
+      d="M4 10h11M10.5 4.5 16 10l-5.5 5.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
 /* THE SHORT ANSWER, AS SET. one place for the sentence, because the sheet prints
    it twice — once on the slab where it is read, and once as a shadow of itself on
    the far side of the stock, where you can see it before anybody has pulled
@@ -505,24 +526,30 @@ export function App() {
                   argument, printed.
                 </p>
 
-                <div className="actions">
-                  <a className="button button--ink" href="#close">
-                    read it closely
-                    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-                      <path
-                        d="M3 10h13M10.5 4.5 16 10l-5.5 5.5"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                {/* THE WAY ON. the standfirst ended in the last two rounded
+                    rectangles on the page, which is a poor contradiction of an
+                    argument that the whole sheet is not a web app. so the way on
+                    is a way on: a kicker, and two ruled cross-references in the
+                    furniture face, each carrying the number of the pass it takes
+                    you to. the reader is not asked to trust that the page has
+                    somewhere to go — the number is read out of the index at the
+                    top of the bar, and it is the same numbering all the way
+                    through. */}
+                <nav className="xlinks" aria-label="Where to go next">
+                  <p className="xlinks__kicker">
+                    <span aria-hidden="true">↳</span> where to next
+                  </p>
+                  <a className="xlink" href="#close">
+                    {ARROW}
+                    <span className="xlink__label">read it closely</span>
+                    <span className="xlink__to" aria-hidden="true">{passOf('close')}</span>
                   </a>
-                  <a className="button button--quiet" href="#answer">
-                    skip to the short answer
+                  <a className="xlink xlink--quiet" href="#answer">
+                    {ARROW}
+                    <span className="xlink__label">skip to the short answer</span>
+                    <span className="xlink__to" aria-hidden="true">{passOf('answer')}</span>
                   </a>
-                </div>
+                </nav>
               </div>
             </div>
 
@@ -530,15 +557,23 @@ export function App() {
               <PullBed reg={reg} onSlide={value => setReg(value)} />
             </div>
 
-            {/* the instruction belongs to the thing it is about. it used to be its
-                own band of labels between the instrument and the plates, which
-                made four short sentences sitting between two panels look like a
-                fifth module; the keys are on the bed now, where they work, and
-                the one line left is the one thing a reader cannot guess. */}
-            <p className="plates__cue">
-              <span aria-hidden="true">↳</span> or take the blade and pull a proof — the sheet follows
-              you either way
-            </p>
+            {/* the head of the job ticket. every other band on the light sheet
+                opens the same way — a slug on a rule, with a fact standing on the
+                same line — and the job ticket opened with a sentence floating
+                fifty pixels above its own top rule, which read as a fifth module
+                rather than as the label on a band. it is the label now: the slug
+                names the band, and the sentence about the blade is set under it
+                as the gloss it always was. */}
+            <header className="plates__head">
+              <p className="slugline">
+                <RegistrationMark className="slugline__mark" />
+                the plate on the bed
+              </p>
+              <p className="plates__cue">
+                <span aria-hidden="true">↳</span> or take the blade and pull a proof — the sheet
+                follows you either way
+              </p>
+            </header>
 
             <div
               className="plates"
@@ -653,6 +688,32 @@ export function App() {
 
             <TypeList reg={reg} />
           </section>
+
+          {/* THE FOOT OF THE SHEET. a sheet has a foot margin and a slug in it,
+              and this one had nothing: the type list ended, and then there was
+              bare stock until the ink slab began. that is a hole, not an end.
+
+              and it is the last place on the light sheet where the plates are
+              still wide open. by now the type above has dried to a twelfth of
+              the press offset, the ruling has almost closed on itself, and the
+              three flats standing here are still riding the true offset — the
+              three marks the press keeps for itself, printed at the foot of the
+              sheet where they can be read without reading anything at all.
+
+              and at the gate they fuse: the black flat takes the pink and the two
+              colour flats go, which is the reward the gauge and the bar already
+              give, said one last time by the three smallest marks on the page. */}
+          <footer className="sheetfoot">
+            <p className="sheetfoot__edge">
+              <span className="sheetfoot__flats" aria-hidden="true">
+                <i className="sheetfoot__flat sheetfoot__flat--black" />
+                <i className="sheetfoot__flat sheetfoot__flat--pink" />
+                <i className="sheetfoot__flat sheetfoot__flat--blue" />
+              </span>
+              end of the light sheet
+            </p>
+            <p className="sheetfoot__next">the short answer is set below, in register</p>
+          </footer>
         </div>
 
         {/* THE PRESS RUN. the light sheet ends and the ink slab begins, and the

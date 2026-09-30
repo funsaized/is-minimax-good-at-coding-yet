@@ -261,9 +261,52 @@
    sheet of paper lying on the ruled one and keeps margins of its
    own, and so does the press bed, which is an instrument standing
    on top of the sheet rather than part of it. the ruling runs on
-   underneath both of them and comes out the far side, which is the
-   whole reason a ruling and a layout are worth having.
+   underneath both of them and comes out the far side, which is
+   the whole reason a ruling and a layout are worth having.
+
+   =============================================================
+   ITERATION 505 — GIVE THE SHEET ITS EDGES
+
+   a press sheet is a physical object, and the last three things it
+   was missing were all about where one thing stops and the next
+   begins.
+
+   THE FOOT OF THE SHEET. the light sheet had a head and no foot.
+   the type list ended on its own bottom rule and then there was
+   bare stock until the ink slab began — a hole where an end should
+   be, and the only band on the page with nothing standing at either
+   edge of it. so the foot margin is printed now, and the slug in
+   it is the one honest fact about the run: the light sheet ends
+   here, and the answer is set below it.
+
+   and the foot carries the last live marks on the page. the type
+   above it has dried to a twelfth of the press offset and the
+   ruling has nearly closed on itself, so the three flats printed
+   there are still riding the true plate offset — the last thing on
+   the light sheet that tells you how loose the press is. and at the
+   gate they fuse, black taking the pink and the two colour flats
+   going, which is the reward the gauge and the bar already give,
+   said one last time by the three smallest marks on the page.
+
+   THE JOB TICKET GETS A HEAD. every other band on the sheet opens
+   the same way — a slug on a rule, a fact on the same line — and
+   the job ticket opened with a sentence floating fifty pixels above
+   its own top rule with nothing between them. four short sentences
+   between two panels is a module; a slug and its gloss is a label.
+   the instruction has not moved an inch on the page, it has only
+   stopped hovering.
+
+   AND NO BUTTONS. the standfirst ended in the last two rounded
+   rectangles in the document, which is a poor contradiction of an
+   argument that the whole sheet is not a web app. the way on is a
+   way on now: a kicker and two ruled cross-references in the
+   furniture face, each carrying the number of the pass it takes you
+   to — read out of the index at the head of the file, so the two
+   numberings cannot drift apart. pointing at one drags the same
+   wedge of pink under the label that the title drags under a word,
+   because a squeegee is a squeegee wherever the sheet puts it.
    ============================================================= */
+
 
 @property --settle {
   syntax: '<number>';
@@ -2062,62 +2105,148 @@ html[data-register='on'] .plated__layer--black .mark {
   text-wrap: pretty;
 }
 
-/* the standfirst is the one block of reading on the sheet, so it gets the one
-   piece of plain text the page allows itself: the lede is the only place on the
-   light sheet set in the serif at reading size without a rule or a label around
-   it. everything else is a job ticket. */
-.actions {
+/* =============================================================
+   THE WAY ON
+   The standfirst used to end in the last two rounded rectangles
+   in the document: a black block with a hard pink shadow and a
+   hairline box beside it. Everything else on the sheet is paper,
+   ink, rules and hard edges, and these two were the proof that a
+   page can be made of press and still leave a web app in the
+   middle of it.
+
+   So they are cross-references, which is what a printed proof uses
+   to send you to another part of itself: the furniture face, the
+   caps, the tracking, a rule above the block and a hair between
+   the two. Each one carries the number of the pass it takes you to,
+   in the blue every other figure on the sheet is printed in, and
+   the arrow is pink, because the arrow is the press.
+
+   The hover is the title's hover. Pointing at a word on the poster
+   drags a wedge of squeegee ink under it, and pointing at a way on
+   does the same thing at a third of the size — a squeegee is a
+   squeegee wherever the sheet puts it.
+   ============================================================= */
+
+.xlinks {
+  max-width: 44ch;
+  margin-top: clamp(20px, 2.1vw, 30px);
+  border-top: 1px solid var(--black);
+}
+
+.xlinks__kicker {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: clamp(18px, 1.9vw, 26px) 0 0;
+  align-items: baseline;
+  gap: 8px;
+  padding: 9px 0 3px;
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 500;
+  letter-spacing: .145em;
+  text-transform: uppercase;
 }
 
-.button {
-  display: inline-flex;
+.xlinks__kicker > span {
+  color: var(--pink-ink);
+  letter-spacing: 0;
+}
+
+/* a thumb-sized target, because on a phone these two are the only
+   way off the first screen */
+.xlink {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
-  min-height: 46px;
-  padding: 0 20px;
-  border: 1px solid var(--black);
-  border-radius: 3px;
-  font-size: .88rem;
-  font-weight: 700;
-  letter-spacing: -.005em;
-  transition: color .22s var(--ease), background .22s var(--ease), transform .3s var(--spring),
-    box-shadow .3s var(--ease), border-color .22s var(--ease);
+  gap: 11px;
+  min-height: 44px;
+  padding: 9px 0 10px;
+  border-top: 1px solid var(--rule-soft);
+  color: var(--ink-70);
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 600;
+  letter-spacing: .13em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  transition: color .22s var(--ease);
 }
 
-.button svg {
-  width: 18px;
-  height: 18px;
-  transition: transform .35s var(--ease-out);
+.xlink__arrow {
+  width: 16px;
+  height: 16px;
+  color: var(--pink-ink);
+  transition: transform .34s var(--ease-out);
 }
 
-.button--ink {
-  color: var(--stock-3);
-  background: var(--black);
-  box-shadow: var(--lift-x) var(--lift-y) 0 var(--pink);
+.xlink__label {
+  position: relative;
+  z-index: 0;
+  min-width: 0;
+  transition: transform .34s var(--ease-out);
 }
 
-.button--ink:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: calc(var(--lift-x) + 2px) calc(var(--lift-y) + 2px) 0 var(--pink);
+/* the wedge. identical geometry to the one under a word in the title —
+   thin at the start, deep at the end, because that is the shape a
+   squeegee leaves and not the shape a highlighter does */
+.xlink__label::before {
+  position: absolute;
+  z-index: -1;
+  inset: .18em -.34em .1em -.3em;
+  content: '';
+  background: var(--pink);
+  clip-path: polygon(0% 42%, 100% 8%, 100% 96%, 0% 62%);
+  opacity: .82;
+  transform: scaleX(0);
+  transform-origin: 2% 50%;
+  transition: transform .36s var(--ease-out);
 }
 
-.button--ink:hover svg {
+/* and the pass it takes you to: a figure, so it is printed in blue — and it
+   stays blue on hover, because the sheet's colour grammar says the blue is only
+   ever a figure. the pink on a pointed-at cross-reference belongs to the
+   arrow and the wedge, which are the press. */
+.xlink__to {
+  color: var(--blue-ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .16em;
+}
+
+.xlink:hover,
+.xlink:focus-visible {
+  color: var(--black);
+}
+
+.xlink:hover .xlink__label,
+.xlink:focus-visible .xlink__label {
   transform: translateX(3px);
 }
 
-.button--quiet {
-  color: var(--ink-70);
-  border-color: var(--rule);
+.xlink:hover .xlink__label::before,
+.xlink:focus-visible .xlink__label::before {
+  transform: scaleX(1);
 }
 
-.button--quiet:hover {
-  color: var(--black);
-  background: var(--stock-3);
-  border-color: var(--black);
+.xlink:hover .xlink__arrow,
+.xlink:focus-visible .xlink__arrow {
+  transform: translateX(3px);
+}
+
+/* and the quieter one takes the full pink the moment it is pointed at, so the
+   two ways on differ in weight rather than in behaviour */
+.xlink--quiet:hover .xlink__arrow,
+.xlink--quiet:focus-visible .xlink__arrow {
+  color: var(--pink-ink);
+}
+
+/* the second one is a door, not a destination: it says so by being a
+   shade quieter, and it is still a full target */
+.xlink--quiet {
+  color: var(--ink-50);
+  font-weight: 500;
+}
+
+.xlink--quiet .xlink__arrow {
+  color: color-mix(in srgb, var(--pink-ink) 45%, transparent);
 }
 
 /* ---------- the press bed: wet ink and a squeegee you can take hold of ---------- */
@@ -2205,6 +2334,13 @@ html[data-register='on'] .plated__layer--black .mark {
 
 @media (max-width: 700px) {
   .bed__caption {
+    display: none;
+  }
+
+  /* the job ticket's gloss is the one line on the sheet that can be cut
+     without losing anything: which plate is on the bed is a glyph, and the
+     bed's own foot already says the same thing about taking the blade */
+  .plates__cue {
     display: none;
   }
 }
@@ -2487,16 +2623,31 @@ html[data-register='on'] .register-eye__plate--black {
   font-size: .6rem;
 }
 
-/* the instruction for the plates, printed as one line on the top of the plate
-   band. it used to sit in its own ruled strip between the instrument and the
-   choice, which is the one place on the sheet where a reader is not looking at
-   anything — a band of four labels with a rule above and a rule below, reading
-   as a fifth module rather than as a note. */
-.plates__cue {
+/* THE HEAD OF THE JOB TICKET. every other band on the light sheet opens
+   the same way — a slug on a 2px rule with a fact standing on the same
+   line — and the job ticket opened with a sentence floating fifty pixels
+   above its own top rule, with nothing between them but air. four short
+   sentences between two panels is a fifth module; a slug and its gloss is
+   a label.
+
+   so the instruction has not moved an inch on the page. it has only stopped
+   hovering: the slug names the band, the sentence is the gloss under it,
+   and the two of them now share the head rule the sheet prints on every
+   other band, which is why the rule reads as part of the sheet rather
+   than as something the ticket happens to own. */
+.plates__head {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 8px;
-  margin: var(--air-band) 0 10px;
+  gap: 4px clamp(16px, 2.4vw, 34px);
+  margin-top: var(--air-band);
+  padding-bottom: var(--air-block);
+  border-top: 2px solid var(--black);
+}
+
+.plates__cue {
+  flex: 0 1 auto;
+  min-width: 0;
   color: var(--ink-50);
   font-family: var(--mono);
   font-size: var(--label-3);
@@ -2506,7 +2657,6 @@ html[data-register='on'] .register-eye__plate--black {
 }
 
 .plates__cue > span {
-  flex: 0 0 auto;
   color: var(--pink-ink);
   letter-spacing: 0;
 }
@@ -3715,6 +3865,108 @@ html[data-reveal='on'] .type__panel.is-in .type__gauge {
 
 html[data-reveal='on'] .type__panel.is-in .type__resolved-name {
   animation: set-type .58s var(--ease-out) .3s both;
+}
+
+/* =============================================================
+   THE FOOT OF THE SHEET
+   The light sheet had a head and no foot. The type list ended on
+   its own bottom rule and then there was bare stock until the ink
+   slab began — a hole where an end should be, and the only band on
+   the page with nothing standing at either edge of it.
+
+   So the foot margin is printed, and the slug in it says the two
+   true things about the place: the light sheet ends here, and the
+   answer is set below it in register, which is a fact about the
+   answer rather than a promise about the reader.
+
+   and the foot carries the last live marks on the page. the type
+   above it has dried to a twelfth of the press offset and the
+   ruling has almost closed on itself, so the three flats printed
+   there are still riding the true plate offset — the last thing on
+   the light sheet that says how loose the press is, and the only
+   place a reader can see it without reading anything at all.
+
+   at the gate they fuse: the black flat takes the pink and the two
+   colour flats go, which is the reward the gauge and the bar already
+   give, said one last time by the three smallest marks on the page.
+   ============================================================= */
+
+/* the type list hands its bottom air over to the foot slug rather than keeping
+   it: the band before the foot rule is a foot margin, and a foot margin is
+   tighter than the run of air that separates two bands */
+.type {
+  padding-bottom: var(--air-block);
+}
+
+/* the foot margin: one rule, and a shade lighter than the 2px rule that opens
+   a band, because a foot slug is not the head of anything */
+.sheetfoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px clamp(18px, 2.6vw, 44px);
+  padding: var(--air-block) 0 0;
+  border-top: 1px solid var(--black);
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label-2);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.sheetfoot p {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 11px;
+}
+
+/* the three flats: black still, the two colour plates wherever the press
+   left them. this is the true offset and not the dried one — the whole
+   point of putting them at the foot is that the reader has just walked
+   past two thirds of a sheet of type that has closed on itself */
+.sheetfoot__flats {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 7px;
+}
+
+.sheetfoot__flat {
+  position: absolute;
+  top: 0;
+  left: 8px;
+  display: block;
+  width: 12px;
+  height: 7px;
+  transition: transform .2s linear, background .35s var(--ease), opacity .35s var(--ease);
+}
+
+.sheetfoot__flat--black {
+  background: var(--black);
+}
+
+/* the same two ratios as every other mark on the sheet, so the foot is the
+   same misregistration and not a fourth opinion */
+.sheetfoot__flat--pink {
+  background: var(--pink);
+  transform: translate(calc(var(--reg-x) * 1.5), calc(var(--reg-y) * 1.5));
+}
+
+.sheetfoot__flat--blue {
+  background: var(--blue);
+  transform: translate(calc(var(--reg-x) * -1), calc(var(--reg-y) * -1));
+}
+
+html[data-register='on'] .sheetfoot__flat--black {
+  background: var(--pink-ink);
+}
+
+html[data-register='on'] .sheetfoot__flat--pink,
+html[data-register='on'] .sheetfoot__flat--blue {
+  opacity: 0;
 }
 
 /* =============================================================
@@ -5369,11 +5621,6 @@ html[data-reveal='on'] .reveal.is-in {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .button {
-    flex: 1 1 100%;
-    justify-content: center;
-  }
-
   /* the slip loses its term column rather than squeezing it: a press slip on a
      phone is term above detail, which is how the form was filled in for a
      century before there were columns to lose */
@@ -5533,6 +5780,7 @@ html[data-reveal='on'] .reveal.is-in {
   .bed__blade,
   .edge__plate,
   .edge__ink,
+  .sheetfoot__flat,
   .type__gauge {
     transition: none;
   }
@@ -5658,7 +5906,7 @@ html[data-reveal='on'] .reveal.is-in {
   .stock,
   .sprockets,
   .edge,
-  .actions,
+  .xlinks,
   .bed,
   .plates__cue,
   .ream__well,
@@ -5750,6 +5998,13 @@ html[data-reveal='on'] .reveal.is-in {
      printout has one plate */
   .type__resolved-name::before,
   .type__resolved-name::after {
+    display: none;
+  }
+
+  /* and for the three flats in the foot margin, which are only ever about how
+     loose this particular press is sitting */
+  .sheetfoot__flat--pink,
+  .sheetfoot__flat--blue {
     display: none;
   }
 
