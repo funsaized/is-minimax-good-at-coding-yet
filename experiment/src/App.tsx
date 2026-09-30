@@ -152,6 +152,10 @@ export function App() {
 
   const shown = hover ?? active
   const settled = inRegister(reg)
+  /* which of the three cells of the case the blade is standing over. read out of
+     the same list the cells are printed from, so a plate cannot be on the bed and
+     off the case at the same time */
+  const plateSeat = Math.max(0, WORD_IDS.indexOf(active))
 
   const select = useCallback((id: WordId) => {
     setActive(id)
@@ -468,18 +472,30 @@ export function App() {
           ))}
         </nav>
 
-        <p className="gauge" data-on={settled ? 'on' : 'off'}>
+        {/* THE READOUT IS A WAY TO THE INSTRUMENT.
+
+            the bar reports the plate, so it reports the number too — otherwise
+            the reader is told there is a problem and given no way to judge it.
+            and it names the plate that is up, because the phrase the reader
+            chose forty seconds ago on the other side of the question is not
+            anywhere in view from here, and the gauge is the one fixed thing
+            they are always looking at.
+
+            and it was a readout about something four screens down the sheet: the
+            reader was told the press was off register by a unit and a bit, and
+            the blade that fixes it was under a poster, a job ticket and a
+            paragraph of argument. so the whole gauge is the way to the bed. it
+            says the number, it says which plate is up, and it is a link, and
+            from anywhere on the page — from the answer, from the type list, from
+            the middle of the close read — one press of it puts the blade under
+            the reader's hand. the sheet's own third test is that the page hands
+            you the blade, and the hand-off used to be somewhere else. */}
+        <a className="gauge" data-on={settled ? 'on' : 'off'} href="#bed">
           <span className="gauge__plates" aria-hidden="true">
             <i className="gauge__dot gauge__dot--black" />
             <i className="gauge__dot gauge__dot--pink" />
             <i className="gauge__dot gauge__dot--blue" />
           </span>
-          {/* the bar reports the plate, so it reports the number too — otherwise
-              the reader is told there is a problem and given no way to judge it.
-              and it names the plate that is up, because the phrase the reader
-              chose forty seconds ago on the other side of the question is not
-              anywhere in view from here, and the gauge is the one fixed thing
-              they are always looking at. */}
           <span className="gauge__read">
             {settled ? 'in register' : `off ${reg > 0 ? '+' : '−'}${Math.abs(reg).toFixed(2)}`}
           </span>
@@ -487,7 +503,9 @@ export function App() {
             <i className="gauge__pin" key={plateTick} />
             {findNote(active).index}
           </span>
-        </p>
+          <span className="gauge__to" aria-hidden="true">↓</span>
+          <span className="sr-only"> — the press bed, further down the sheet</span>
+        </a>
       </header>
 
       <main className="main">
@@ -510,9 +528,111 @@ export function App() {
               onPreview={setHover}
             />
 
+            {/* THE PLATE CASE, DIRECTLY UNDER THE POSTER.
+
+                it used to be the last thing in this band, under the standfirst
+                and under the press bed — which put the only choice on the whole
+                sheet a paragraph and an instrument away from the one thing it
+                changes. the reader arrived at the question, read some argument,
+                played with a machine they had not been told what it was for, and
+                only then found the three phrases. on a phone that was three
+                screens, and the bed is a tall one.
+
+                so the order is now the order the eye wants: the poster, the three
+                plates that are set from it, the argument, and then the blade that
+                prints all of it. the bed keeps the place the stylesheet has been
+                claiming for it all along — immediately under the argument,
+                bringing its own frame, with no rule between them — and the
+                argument keeps the place it was given, which is over the type.
+
+                the cue under the slug now points forward rather than sideways, and
+                the help text says the title is above the reader instead of below. */}
+            <header className="plates__head">
+              <p className="slugline">
+                <RegistrationMark className="slugline__mark" />
+                the plate on the bed
+              </p>
+              <p className="plates__cue">
+                <span aria-hidden="true">↳</span> one at a time — the blade is further down the
+                sheet
+              </p>
+            </header>
+
+            <div
+              className="plates"
+              role="radiogroup"
+              aria-label="Which phrase is on the plate"
+              aria-describedby="plates-help"
+            >
+              {NOTES.map(item => (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="radio"
+                  ref={node => {
+                    plateRefs.current[item.id] = node
+                  }}
+                  tabIndex={item.id === active ? 0 : -1}
+                  aria-checked={item.id === active}
+                  className={`plates__row ${item.id === active ? 'is-active' : ''} ${
+                    item.id === shown ? 'is-hot' : ''
+                  }`}
+                  onClick={() => select(item.id)}
+                  onMouseEnter={() => setHover(item.id)}
+                  onMouseLeave={() => setHover(null)}
+                  onFocus={() => setHover(item.id)}
+                  onBlur={() => setHover(null)}
+                  onKeyDown={event => nudge(event, item.id)}
+                >
+                  {/* the case states each plate in one line before it sets it:
+                      the figure, which is a count and so is blue, and the job the
+                      phrase does in the sentence. the count of the run goes under
+                      the setting, where the specimen measures the same run at
+                      four times the size — so a reader choosing a plate knows what
+                      they are choosing without having to go and look. */}
+                  <span className="plates__meta">
+                    <span className="plates__num" aria-hidden="true">{item.index}</span>
+                    <span className="plates__gloss">{item.gloss}</span>
+                  </span>
+                  <Plated
+                    className="plates__stack"
+                    wet={0.6}
+                    render={() => <span className="plates__type">{item.label}</span>}
+                  />
+                  <span className="plates__count" aria-hidden="true">{item.measure}</span>
+                </button>
+              ))}
+
+              {/* THE BLADE. one squeegee on the top rule of the case, and it
+                  travels to whichever cell is up — so putting a different plate
+                  on the press is a pass of the blade across the bed, which is
+                  what it is, instead of three separate bars snapping on and off
+                  in three places at once. it is a single element positioned off
+                  one number rather than three elements cross-fading, so the ink
+                  keeps its direction: the leading edge is the end the reader
+                  came from, and the mark is a wedge for the same reason the
+                  wedge under a word in the title is a wedge.
+
+                  and on a phone the case is three stacked lines of a form rather
+                  than three columns, so the blade turns with it and runs down
+                  the left edge. one mark, two orientations — the same answer the
+                  job ticket already gave its own rules. */}
+              <span
+                className="plates__blade"
+                style={{ '--blade': plateSeat } as CSSProperties}
+                aria-hidden="true"
+              />
+            </div>
+            <p className="sr-only" id="plates-help">
+              Choosing a plate lights that phrase in the title above you, and pulls its sheet to the
+              top of the ream below. Keys 1, 2 and 3 pick a plate from anywhere on the sheet.
+            </p>
+
             {/* the argument belongs under the title, not under the furniture. it is
                 the standfirst a spread opens with: what the page is, then the
-                instrument it is asking to be handed. */}
+                instrument it is asking to be handed. and it still opens the band
+                on the same 2px rule every other band on the light sheet opens on,
+                so moving the job ticket above it took nothing away from it. */}
             <div className="standfirst">
               <p className="standfirst__note">
                 <span className="standfirst__kicker">
@@ -569,68 +689,9 @@ export function App() {
               </nav>
             </div>
 
-            <div className="bedrow">
+            <div className="bedrow" id="bed">
               <PullBed reg={reg} onSlide={value => setReg(value)} />
             </div>
-
-            {/* the head of the job ticket. every other band on the light sheet
-                opens the same way — a slug on a rule, with a fact standing on the
-                same line — and the job ticket opened with a sentence floating
-                fifty pixels above its own top rule, which read as a fifth module
-                rather than as the label on a band. it is the label now: the slug
-                names the band, and the sentence about the blade is set under it
-                as the gloss it always was. */}
-            <header className="plates__head">
-              <p className="slugline">
-                <RegistrationMark className="slugline__mark" />
-                the plate on the bed
-              </p>
-              <p className="plates__cue">
-                <span aria-hidden="true">↳</span> or take the blade and pull a proof — the sheet
-                follows you either way
-              </p>
-            </header>
-
-            <div
-              className="plates"
-              role="radiogroup"
-              aria-label="Which phrase is on the plate"
-              aria-describedby="plates-help"
-            >
-              {NOTES.map(item => (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="radio"
-                  ref={node => {
-                    plateRefs.current[item.id] = node
-                  }}
-                  tabIndex={item.id === active ? 0 : -1}
-                  aria-checked={item.id === active}
-                  className={`plates__row ${item.id === active ? 'is-active' : ''} ${
-                    item.id === shown ? 'is-hot' : ''
-                  }`}
-                  onClick={() => select(item.id)}
-                  onMouseEnter={() => setHover(item.id)}
-                  onMouseLeave={() => setHover(null)}
-                  onFocus={() => setHover(item.id)}
-                  onBlur={() => setHover(null)}
-                  onKeyDown={event => nudge(event, item.id)}
-                >
-                  <span className="plates__num" aria-hidden="true">{item.index}</span>
-                  <Plated
-                    className="plates__stack"
-                    wet={0.6}
-                    render={() => <span className="plates__type">{item.label}</span>}
-                  />
-                  <span className="plates__role">{item.gloss}</span>
-                </button>
-              ))}
-            </div>
-            <p className="sr-only" id="plates-help">
-              Choosing a plate moves the highlight in the title above, and pulls that sheet to the
-              top of the ream below. Keys 1, 2 and 3 pick a plate from anywhere on the sheet.
-            </p>
           </section>
 
           <section id="close" className="read" aria-labelledby="close-title">
@@ -865,7 +926,9 @@ export function App() {
                       aria-label="The short answer"
                       aria-hidden={!proof}
                     >
-                      <span className="proof__sweep" aria-hidden="true" />
+                      <span className="proof__sweep" aria-hidden="true">
+                        <Squeegee className="proof__pull" />
+                      </span>
                       <ProofSheet />
                     </div>
                   </div>

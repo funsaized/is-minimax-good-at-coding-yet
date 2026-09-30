@@ -305,6 +305,59 @@
    numberings cannot drift apart. pointing at one drags the same
    wedge of pink under the label that the title drags under a word,
    because a squeegee is a squeegee wherever the sheet puts it.
+
+   =============================================================
+   ITERATION 507 — THE PLATE CASE, AND A WAY TO THE BLADE
+
+   the sheet's two live facts are which plate is up and how far the
+   blade is from the gate. both of them were readable from anywhere on
+   the page and actionable from almost nowhere, and the one choice the
+   page offers was a long way from the thing it changes.
+
+   THE CASE MOVES UNDER THE POSTER. the order in the question band was
+   poster, argument, instrument, job ticket — so a reader arrived at
+   the question, read a paragraph, played with a machine nobody had
+   told them what it was for, and only then found the three phrases.
+   on a phone that was three screens, and the bed is a tall one. so the
+   order is now the order the eye wants: the poster, the three plates
+   that are set from it, the argument, and the blade that prints all of
+   it. nothing moved except the ticket, and the bed is now genuinely
+   where the stylesheet has been claiming it is — immediately under the
+   argument, with no rule between them, bringing its own frame.
+
+   and the case earns the place it has been given. each cell now says
+   what the plate is for and how long the run is, in the furniture face
+   and in the blue every other measurement on the sheet is printed in,
+   so choosing a plate no longer means going somewhere else to find out
+   what it is. the phrase itself steps up one size: it is the only
+   control on the light sheet and it was set at the size of a ticket.
+
+   ONE BLADE, NOT THREE BARS. the cells each drew their own wedge of
+   pink, and all three snapped at once in three different places, which
+   is the least press-like thing on a press sheet — a blade does not
+   appear, it travels. so the three marks are one squeegee sitting on
+   the top rule of the case, positioned off a single number and sliding
+   to whichever cell is up: exactly the gesture the bed makes two bands
+   lower. and because a phone sets the case as three stacked lines
+   rather than three columns, the blade turns with the case and runs
+   down its left edge — one mark, two orientations, and the case still
+   has a single place where the ink is.
+
+   THE GAUGE IS A LINK. the bar has always carried the register, and
+   the register is a fact about a machine four screens down the sheet,
+   so the reader was told the press was off by a unit and a bit and the
+   thing that fixes it was somewhere under a poster. the gauge is the
+   way to the bed now: one press of it puts the blade under the
+   reader's hand, from the answer, from the type list, from the middle
+   of the close read. the sheet's own second test is that the page hands
+   you the blade, and the hand-off was in the wrong place.
+
+   and the pull got a squeegee of its own. the light that crosses the
+   proof sheet when it is pulled is now dragged by the same bar the
+   toggle wears, riding the same sweep on the same beat, so the control
+   on the card and the thing the control does are one object. it goes
+   with the sweep and is gone when the sweep is, which is how a still
+   browser gets the sentence without the gesture.
    ============================================================= */
 
 
@@ -1006,6 +1059,12 @@ html[data-slab='on'] .slugbar {
 
 /* ---------- the register gauge: the only thing in the bar worth watching ---------- */
 
+/* it is a link, and it is the way to the blade. a readout about a machine four
+   screens down the sheet told the reader the press was off register and nothing
+   else; the sheet's own second test is that the page hands you the blade, so the
+   hand-off now lives on the one fixed thing the reader is always looking at. it
+   is the only link in the bar and it is the only thing in the bar that does
+   anything, which is the correct ratio for furniture. */
 .gauge {
   display: inline-flex;
   align-items: center;
@@ -1017,6 +1076,23 @@ html[data-slab='on'] .slugbar {
   letter-spacing: .14em;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+/* the mark that says this is a way somewhere: the same downward arrow the
+   colophon uses to send a reader back up the sheet, in the press's pink */
+.gauge__to {
+  color: var(--pink-ink);
+  font-family: var(--display);
+  font-size: .88rem;
+  font-weight: 800;
+  line-height: .8;
+  translate: 0 0;
+  transition: color .45s var(--ease), translate .3s var(--ease-out);
+}
+
+.gauge:hover .gauge__to,
+.gauge:focus-visible .gauge__to {
+  translate: 0 2px;
 }
 
 .gauge__plates {
@@ -1921,24 +1997,42 @@ html[data-register='on'] .plated__layer--black .mark {
   transition: opacity .4s var(--ease), transform .5s var(--spring);
 }
 
-/* ---------- the plate list: a job ticket under the title ---------- */
+/* =============================================================
+   THE PLATE CASE
 
-/* three cells on the armature, four columns each, and the vertical divider
-   between them lands exactly on the printed rule at four and eight. the job
-   ticket and the ruling are the same mark, printed twice */
+   the only choice on the sheet, and it now sits directly under the
+   poster it changes. three cells on the armature, four columns each,
+   and the vertical divider between them lands exactly on the printed
+   rule at four and eight: the job ticket and the ruling are the same
+   mark, printed twice.
+
+   each cell states the plate before it sets it — the figure, which is
+   a count and so is blue, and the job the phrase does in the sentence
+   — and the run it prints, which is the count the specimen measures at
+   four times the size two bands further down. so the case is a ticket
+   you can act on rather than a list you have to interpret.
+
+   and the mark that says which cell is up is one squeegee, not three
+   wedges. a blade travels; it does not appear. one element, sitting on
+   the top rule, positioned off a single number, sliding to the cell
+   that is on the press — the same gesture the bed makes below it, and
+   the reason choosing a plate now reads as a thing happening rather
+   than as a highlight changing colour.
+   ============================================================= */
+
 .plates {
+  position: relative;
   display: grid;
   grid-template-columns: var(--track);
   border-top: 1px solid var(--black);
-  border-bottom: 1px solid var(--rule);
 }
 
 .plates__row {
   position: relative;
   display: grid;
-  gap: 4px;
+  gap: 5px;
   min-width: 0;
-  padding: 14px var(--pad) 16px;
+  padding: 15px var(--pad) 17px;
   text-align: left;
   border-left: 1px solid var(--rule);
   transition: background .26s var(--ease);
@@ -1959,32 +2053,33 @@ html[data-register='on'] .plated__layer--black .mark {
   padding-right: 0;
 }
 
-.plates__row::before {
-  position: absolute;
-  top: -1px;
-  right: 0;
-  left: 0;
-  height: 3px;
-  content: '';
-  background: var(--pink);
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  transition: transform .42s var(--ease-out);
-}
-
 .plates__row:hover,
 .plates__row.is-hot {
   background: rgba(252, 250, 243, .72);
 }
 
-.plates__row:hover::before,
-.plates__row.is-active::before {
-  transform: scaleX(1);
-}
-
 .plates__row.is-active {
   background: rgba(252, 250, 243, .9);
-  box-shadow: inset 0 -22px 30px -24px rgba(21, 20, 27, .3);
+  box-shadow: inset 0 -24px 32px -26px rgba(21, 20, 27, .32);
+}
+
+/* THE BLADE. one squeegee on the top rule of the case, a third of the way across
+   per cell, riding the same number the cells are printed from. the leading end is
+   cut off square and the trailing end is a wedge, because ink does not stop
+   abruptly behind a squeegee and the direction of travel should be legible: it
+   is the same asymmetry the wedge under a word in the title has. */
+.plates__blade {
+  --slot: calc(100% / 3);
+  position: absolute;
+  top: -1px;
+  left: calc(var(--blade) * var(--slot));
+  z-index: 1;
+  width: var(--slot);
+  height: 3px;
+  background: var(--pink);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+  transition: left .44s var(--ease-out);
+  pointer-events: none;
 }
 
 /* the figure is a count, so it is federal blue: every number on the light sheet
@@ -2003,26 +2098,67 @@ html[data-register='on'] .plated__layer--black .mark {
   color: var(--black);
 }
 
-.plates__stack {
+/* the figure and the job it does, on one line, because a cell three lines deep is
+   a paragraph and this is a ticket */
+.plates__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
   min-width: 0;
 }
 
-.plates__type {
-  display: block;
-  font-family: var(--display);
-  font-size: clamp(1.2rem, 1.7vw, 1.62rem);
-  font-weight: 800;
-  line-height: 1.04;
-  letter-spacing: -.04em;
-  transition: color .26s var(--ease);
-}
-
-.plates__role {
+.plates__gloss {
+  overflow: hidden;
   color: var(--ink-50);
   font-family: var(--mono);
   font-size: var(--label-3);
   letter-spacing: .14em;
+  text-overflow: ellipsis;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.plates__stack {
+  min-width: 0;
+}
+
+/* the phrase is the control, and it was set at the size of a job ticket. it steps
+   up one notch on the sheet's ladder — still furniture above the label tier, and
+   still four steps under the poster it sits beneath. */
+.plates__type {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(1.32rem, 1.95vw, 1.82rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -.042em;
+  transition: color .26s var(--ease);
+}
+
+/* THE CELL THAT IS UP MARKS ITS PHRASE THE WAY THE POSTER MARKS THE WORD IT
+   BELONGS TO. the sheet already has one way of saying "this is the one": a rule
+   of press ink under the type, and the poster draws it inside the three plates,
+   so it fringes while the press is loose. the case draws the same rule under the
+   phrase it has up, which means the reader can match the two without being told
+   which of the three words in the sentence a plate corresponds to — the mark is
+   in the same place and it is the same ink. */
+.plates__row.is-active .plates__type {
+  text-decoration: underline;
+  text-decoration-color: var(--pink);
+  text-decoration-thickness: .085em;
+  text-underline-offset: .17em;
+}
+
+/* the run the phrase prints, counted — the same fact the specimen stands its ruled
+   measure on, and in the same ink, so the two agree without either of them
+   explaining the other */
+.plates__count {
+  color: var(--blue-ink);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  font-weight: 600;
+  letter-spacing: .11em;
+  text-transform: lowercase;
 }
 
 /* ---------- the standfirst: the argument, directly under the poster ---------- */
@@ -2031,14 +2167,21 @@ html[data-register='on'] .plated__layer--black .mark {
    three pieces of furniture above the only prose the page had. it is the
    standfirst a spread opens with, so it is where it belongs now: under the
    type, in a narrow measure beside a margin note that has something specific
-   to say about the question mark. */
+   to say about the question mark.
+
+   and it opens its band on the same 2px rule the close read and the type list
+   open theirs on, which is what it should have been doing all along. it used to
+   close the job ticket with a hairline instead, because the ticket used to sit
+   above it and the two rules read as one divider; now the ticket has moved up
+   under the poster and the argument is a band of the sheet in its own right, so
+   it gets a head rule like every other one. */
 .standfirst {
   display: grid;
   grid-template-columns: var(--track);
   align-items: start;
   margin-top: var(--air-band);
   padding-top: var(--air-block);
-  border-top: 1px solid var(--rule);
+  border-top: 2px solid var(--black);
 }
 
 /* three columns of the armature for the note, four for the argument, five for
@@ -2267,11 +2410,11 @@ html[data-register='on'] .plated__layer--black .mark {
 
 /* ---------- the press bed: wet ink and a squeegee you can take hold of ---------- */
 
-/* the instrument sits immediately under the argument, because it is the thing
-
-   that prints it. no rule between them: the bed brings its own black frame,
-   and three hairlines inside 200px is a stack of stripes, not a sheet. the
-   whitespace is the divider. */
+/* the instrument sits at the foot of the argument, because it is the thing that
+   prints it, and because the reader has just been told what the page is and
+   only now needs the means. no rule between them: the bed brings its own black
+   frame, and three hairlines inside 200px is a stack of stripes, not a sheet.
+   the whitespace is the divider. */
 .bedrow {
   margin-top: var(--air-band);
 }
@@ -2544,9 +2687,9 @@ html[data-register='on'] .register-eye__plate--black {
 }
 
 /* the foot of the bed is the instrument's own label, so the keys live here now
-   rather than in a band of their own between the bed and the plates: they are
-   the press's keys, the bed is the press, and the reader is already looking at
-   it. three groups and a scale across one hairline, and it breaks to two and
+   and not in a band of their own: they are the press's keys, the bed is the
+   press, the reader is already looking at it, and it is the last thing in the
+   band. three groups and a scale across one hairline, and it breaks to two and
    then to one long before anything is squeezed. */
 .bed__foot {
   display: flex;
@@ -2648,9 +2791,15 @@ html[data-register='on'] .register-eye__plate--black {
 
    so the instruction has not moved an inch on the page. it has only stopped
    hovering: the slug names the band, the sentence is the gloss under it,
-   and the two of them now share the head rule the sheet prints on every
-   other band, which is why the rule reads as part of the sheet rather
-   than as something the ticket happens to own. */
+   and the two of them share the head rule the sheet prints on every other
+   band, which is why the rule reads as part of the sheet rather than as
+   something the ticket happens to own.
+
+   and it is now directly under the poster rather than at the foot of the
+   band, so the head rule is the line the reader's eye breaks on after the
+   last line of type: the poster stops, the press begins. the air above it
+   is the widest on the light sheet for the same reason — it is the biggest
+   piece of type on the page, and it is owed the most room. */
 .plates__head {
   display: flex;
   flex-wrap: wrap;
@@ -4644,6 +4793,24 @@ html[data-register='on'] .run__seam-rule--black {
   animation: sweep 1.05s var(--ease-out) .06s both;
 }
 
+/* THE PULL, BEING DONE BY SOMETHING. the sweep is a band of light crossing the
+   sheet, which is a very good description of what a squeegee does and a poor
+   picture of who is doing it — so the bar the toggle wears rides the band it is
+   dragging, on the same sweep and the same beat, and the two are one gesture. it
+   is a stock shape scaled up, which is exactly what the bed does to the same
+   shape, and it travels with the sweep and is gone when the sweep is: nothing to
+   clean up afterwards, and a reader who has asked for stillness gets the
+   sentence without the arm. */
+.proof__pull {
+  position: absolute;
+  top: 50%;
+  left: 52%;
+  width: clamp(64px, 8.4vw, 104px);
+  color: var(--pink-ink);
+  filter: drop-shadow(0 2px 6px rgba(20, 19, 26, .32));
+  transform: translate(-50%, -50%);
+}
+
 .proof__yes {
   color: var(--pink-ink);
   font-family: var(--mono);
@@ -5703,6 +5870,13 @@ html[data-reveal='on'] .reveal.is-in {
      .plates__row down here loses to it: the phrases were printed three-up at
      every width, and on a phone each of them got a quarter of the sheet, which
      is where "good at" started printing straight through "yet?" */
+  .plates {
+    /* the three lines are the same line, set three times, so the rows are made
+       equal — which is also what lets the blade travel a third of the case at a
+       time and land on a boundary rather than near one */
+    grid-auto-rows: 1fr;
+  }
+
   .plates__row:nth-child(1),
   .plates__row:nth-child(2),
   .plates__row:nth-child(3) {
@@ -5714,32 +5888,42 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   .plates__row {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px 12px;
   }
 
   .plates__row:first-child {
     border-top: 0;
   }
 
-  .plates__row::before {
-    top: 0;
-    bottom: 0;
-    right: auto;
+  /* the blade turns with the case. it runs down the left edge instead of along
+     the top rule, a third of the way per cell, and the wedge is cut off the other
+     corner so the ink still stops behind it rather than in front of it */
+  .plates__blade {
+    top: calc(var(--blade) * var(--slot));
+    left: 0;
     width: 3px;
-    height: auto;
-    transform: scaleY(0);
-    transform-origin: 50% 0;
+    height: var(--slot);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), 0 100%);
+    transition: top .44s var(--ease-out);
   }
 
-  .plates__row:hover::before,
-  .plates__row.is-active::before {
-    transform: scaleY(1);
+  /* flex rather than a three-column grid, because on a 360px sheet the figure and
+     the job it does and the count of the run are three lengths that do not add up,
+     and a form line that overflows is worse than one that ellipsises. the count is
+     the last thing to give way, the job is the first */
+  .plates__meta {
+    flex: 0 1 auto;
   }
 
-  .plates__role {
-    text-align: right;
+  .plates__stack {
+    flex: 1 1 auto;
+  }
+
+  .plates__count {
+    flex: 0 0 auto;
+    margin-left: auto;
   }
 
   .brief {
@@ -6045,8 +6229,15 @@ html[data-reveal='on'] .reveal.is-in {
   .fold,
   .toggle,
   .ruling,
+  .proof__sweep,
   .run__glow {
     display: none;
+  }
+
+  /* and a printout has one plate, so the blade on the job ticket is printed in
+     it rather than left in fluorescent pink */
+  .plates__blade {
+    background: #000;
   }
 
   /* a printout has no wet film on the ink, and no impression in the paper either:

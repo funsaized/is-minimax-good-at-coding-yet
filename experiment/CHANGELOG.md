@@ -1,65 +1,40 @@
-# 506 — the answer is printed, not a ghost
+Iteration 507 — the plate case moves under the poster, the blade travels instead of blinking, and the gauge is a link to the blade.
 
-The short answer shows through the stock, its three tests stand in the slab, and the type list works on a phone.
+The question band was ordered poster, argument, instrument, job ticket, which put the only
+choice on the sheet a paragraph and a tall instrument away from the one thing it changes —
+three screens on a phone. It is now poster, the three plates set from it, the argument, the
+blade. The press bed ends up where the stylesheet has been claiming it is all along:
+immediately under the argument, with no rule between them, bringing its own frame. The
+standfirst opens its band on the same 2px rule as the close read and the type list, and the
+job ticket's hairline foot went with the ticket.
 
-## The rubric comes out of the card
+The case earns the place. Each cell now states the plate's job ("the subject", "the hinge",
+"the turn") on the figure's line and the length of the run it prints ("two characters",
+"six letters", "three characters") under the setting, in the blue every other measurement on
+the sheet is printed in, so choosing a plate no longer means going elsewhere to find out
+what you are choosing. The phrase steps up one size — it is the only control on the light
+sheet and it was set at job-ticket size.
 
-The three tests the answer sets for itself — hierarchy, hand, restraint — were
-printed inside the proof, which is the one place on the page where nothing can be
-read: behind a card, and then behind a sheet of newsprint, and on a phone behind a
-card two words wide. On a wide screen they were a grey ghost; nobody had read
-them. They now stand in the ink slab, in the copy column, in the light, beside
-the sentence they are testing, and they stamp off in the press's order when the
-proof is pulled. The card keeps what the card is for: the answer and the way it
-arrives.
+Three pink wedges snapping in three places are replaced by one squeegee on the top rule of
+the case, positioned off a single number and sliding to the cell that is up: a blade
+travels, it does not appear. On a phone the case is three stacked lines rather than three
+columns, so the blade turns with it and runs down the left edge — one mark, two
+orientations. The cell that is up also marks its phrase with the same rule of press ink the
+poster draws under the word it belongs to, fringed by the three plates while the press is
+loose and one clean line at the gate.
 
-Consequences worth naming: the pull's choreography now has something to show next
-to it (three pink boxes stamping one after another, in the dark, while the sheet
-prints itself), the slab's left column is no longer a headline, a slab of nothing
-and a footnote, and the card lost the hundred pixels of bare stock under its last
-line — it gained a foot slug of its own, printing only once the sheet has been
-pulled.
+The register gauge in the bar is now a link to the press bed. It reported a fact about a
+machine four screens down the sheet; one press of it puts the blade under the reader's
+hand from anywhere on the page, which is what the sheet's own second test asks for. Carries
+a pink downward arrow on hover, and its accessible name reads the number and the
+destination.
 
-## The shadow is legible now
+The proof pull is now dragged by a squeegee: the bar the toggle wears rides the light band
+crossing the sheet, on the same sweep and the same beat. It travels with the sweep and is
+gone when the sweep is, so a reduced-motion reader gets the sentence without the gesture.
 
-Iteration 503 said the whole sentence can be read through the stock before the
-reader touches anything. At a third of an alpha on a cream ground it could not:
-it was a texture. The shadow is set dark enough to be type, the small type under
-the poster is dark enough to be a sentence, and the blur is a hair's less — a
-sheet of newsprint with ink on the far side of it is soft, not frosted. The pull
-is now a print rather than the first time anybody could read the thing.
-
-## The standfirst fills the type area
-
-The band printed the note in three columns, the lede in nine, and the way on
-under the lede — which left the last four columns of a ruled sheet with nothing
-on them. A band that stops two thirds of the way across an armature reads as a
-band that ran out of ideas. The way on now takes columns eight to twelve, sitting
-on the foot of the band, and the band reads in the order the eye goes: what to
-notice, what the page is, where to go next. The lede keeps a gutter's air before
-the rule at seven.
-
-## Two specificity bugs, and a sheet that works at 390px
-
-`.type__panel:nth-child()` and `.plates__row:nth-child()` are more specific than
-the plain class the responsive blocks use to reset their spans, so for three
-iterations neither band ever collapsed: the type list stayed three-up at every
-width and the job ticket stayed three-up on a phone. At 390px each cell was a
-quarter of the sheet wide, and the samples of one cell were printed straight
-through the samples of the next — "The pause, protected" through the margin note,
-"good at" through "yet?". Both spans are now reset with the same `:nth-child()`
-the base rules set them with, and the band collapses the way its own comments
-always said it would.
-
-## Also
-
-- The rubric's checks are not drawn until the proof is out, in this browser or any
-  other: a tick standing in an empty box is a promise of a result nobody has seen.
-  Under reduced motion the stamp prints already drawn and the box still waits.
-- A printout has no pull left to watch, so the three checks print as the stamp
-  ends up rather than as three empty boxes.
-- The rubric's figures are the same federal blue as every other measurement on the
-  sheet, which now includes the dark side of it.
-
-`npm run build` is clean. No network, no fonts, no storage; the document title
-and the visible title are unchanged.
+Verified at 1440, 1280, 1200, 820, 640 and 390 wide and under prefers-reduced-motion:
+the case reflows to form lines, the blade turns, the gauge link scrolls the bed to just
+under the bar, the radiogroup still walks with the arrow keys and announces, `p`/`Escape`
+still pull and cover the proof, hash navigation still works, no console errors. Print gets
+the blade in one plate and loses the arm. No new dependencies, no network, no storage.
