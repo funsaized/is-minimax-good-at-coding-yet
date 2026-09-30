@@ -358,6 +358,57 @@
    on the card and the thing the control does are one object. it goes
    with the sweep and is gone when the sweep is, which is how a still
    browser gets the sentence without the gesture.
+
+   =============================================================
+   ITERATION 508 — THE ANSWER, IN THE FIRST SCREEN
+
+   the page's title is a question, and for five hundred and seven
+   iterations the sheet did not answer it in the first screen. it
+   described itself instead: the standfirst under the poster was
+   three sentences about how the title is set, how many plates print
+   it and where the blade lives, and the answer — the four words the
+   proof sheet is stamped with — was six screens down, in the faintest
+   ink a press can lay, behind a cover, on the dark side of the page.
+
+   so the standfirst says the thing. the verdict is the same four
+   words the proof is stamped with, set as a lockup — the verb in the
+   press voice at the specimen step, the rest of the sentence in the
+   reading voice on the same baseline, which is the page handing the
+   question over to itself in the two typefaces it is printed in. the
+   paragraph under it is the honest part: any model can write the
+   markup, and the margin is in the hundred small decisions nobody
+   asked for. the furniture keeps explaining itself further down,
+   where there is room for it.
+
+   the band finally opens like every other band on the light sheet —
+   on the 2px rule, with a slug and a fact on it — and says what it
+   is: the answer, said once. at the foot of the run the band says
+   the other half of the same line: the answer, pulled.
+
+   THE LANDING, AND --land. the rule under the verdict is the
+   poster's landing rule at a third of the size, and it is drawn the
+   way a squeegee draws one: a bead of pink leading, the settled rule
+   behind it, running the full width of the argument with the ink
+   gathered in both corners. it is drawn there, and not under the
+   poster, because
+   pulling the proof presses the whole sheet — so the sentence at the
+   head of the run and the sentence at the foot of it land on the
+   same beat, off one number, and neither end has to know about the
+   other. --land is 0 while the proof is covered and 1 once it is
+   pulled; the verdict takes its impression from it rather than from
+   the register, because nothing on the light sheet answers to the
+   blade.
+
+   the traps ride the two ends of the mark and not the two ends of the
+   cell, so the left one slides out of the corner and the right one
+   arrives in it. a scaled box would have left the far trap floating
+   in the stock, which is the whole reason the rule grows in width
+   instead.
+
+   and the division moved with it: the margin note keeps three
+   columns, the argument takes five, the way on takes the last four.
+   the same three-part band, on the same armature, split on the
+   printed rules at three and eight.
    ============================================================= */
 
 
@@ -381,10 +432,25 @@
 }
 
 /* how far the proof has been pulled, 0 → 1. a second number to --settle on
-   purpose: the answer does not answer to the blade. it is the one sentence on
-   the page that is always in register, so it gets its own ramp, and the only
+   purpose: the answer does not answer to the blade. it is the one sentence on the
+   page that is always in register, so it gets its own ramp, and the only
    thing that moves it is the reader. */
 @property --pull {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+/* how far the pull has reached up the sheet, 0 → 1. the verdict at the head of
+   the standfirst is the same four words the proof sheet is stamped with at the
+   foot of the run, and when the proof lands the sheet has been pressed — so the
+   rule under the verdict runs the full width of the argument and the ink
+   gathers in both its
+   corners, on the same beat as the pull six bands below. one number on the root,
+   so the two ends of the page land together and neither has to know about the
+   other. it is a position and not a journey, so a still browser gets the sheet
+   already landed. */
+@property --land {
   syntax: '<number>';
   inherits: true;
   initial-value: 0;
@@ -540,8 +606,8 @@ html {
   /* one number for the whole page: how hard the press is pressing. it is set
      once, by the app, and everything that answers to the register reads it —
      including the ink traps, which is why it is worth animating rather than
-     snapping. */
-  transition: --settle .55s var(--ease-out);
+     snapping. and one beside it for the pull, which is the answer's own ramp. */
+  transition: --settle .55s var(--ease-out), --land .72s var(--ease-out);
 }
 
 body {
@@ -1614,6 +1680,13 @@ html[data-register='on'] .ink-trap__rule {
   .sheet__slug-fact {
     display: none;
   }
+
+  /* a slug keeps one fact on a phone, the way every other slug on the sheet
+     does — the standfirst's fact is the one that goes, because the band it
+     heads is the one the reader is already standing in */
+  .standfirst__slug-fact {
+    display: none;
+  }
 }
 
 /* the title, split across two columns like a poster: subject left, claim right */
@@ -2161,20 +2234,41 @@ html[data-register='on'] .plated__layer--black .mark {
   text-transform: lowercase;
 }
 
-/* ---------- the standfirst: the argument, directly under the poster ---------- */
+/* =============================================================
+   THE STANDFIRST: THE ANSWER, IN THE FIRST SCREEN
 
-/* the lede used to sit under the bed, the keys and the job ticket, which is
-   three pieces of furniture above the only prose the page had. it is the
-   standfirst a spread opens with, so it is where it belongs now: under the
-   type, in a narrow measure beside a margin note that has something specific
-   to say about the question mark.
+   For five hundred and seven iterations this band was a
+   description of the page. It opened on a 2px rule like every
+   other band but carried no slug, printed the margin note in three
+   columns and the argument in four, and the argument was three
+   sentences about how the title is set and where the blade lives.
+   Which is how the one page in the document whose whole job is
+   answering a question spent its first screen not answering it —
+   the answer was six screens down, in the faintest ink a press can
+   lay, behind a cover.
 
-   and it opens its band on the same 2px rule the close read and the type list
-   open theirs on, which is what it should have been doing all along. it used to
-   close the job ticket with a hairline instead, because the ticket used to sit
-   above it and the two rules read as one divider; now the ticket has moved up
-   under the poster and the argument is a band of the sheet in its own right, so
-   it gets a head rule like every other one. */
+   So the band says the thing. The verdict is the same four words
+   the proof sheet is stamped with at the foot of the run; the
+   paragraph under it is the honest part, in the plainest voice on
+   the sheet; and the furniture keeps explaining itself further down
+   where there is room for it.
+
+   THE LANDING. The rule under the verdict is the poster's landing
+   rule at a third of the size: a short stub while the answer is only
+   spoken, and — the beat the reader pulls the proof at the far end of
+   the page — the full width of the argument with the ink pooled in
+   both its corners, because a sheet that has been pressed draws a
+   full rule. It is the same number (--land), the same traps and the
+   same landing as the title and the proof, so the sentence at the
+   head of the run and the sentence at the foot of it are set by one
+   pressman and not two.
+
+   And the division moved: the note keeps three columns, the
+   argument takes five, and the way on takes the last four — the
+   same three-part band on the same armature, with the splits on the
+   printed rules at three and eight.
+   ============================================================= */
+
 .standfirst {
   display: grid;
   grid-template-columns: var(--track);
@@ -2184,12 +2278,34 @@ html[data-register='on'] .plated__layer--black .mark {
   border-top: 2px solid var(--black);
 }
 
-/* three columns of the armature for the note, four for the argument, five for
+/* every band on the light sheet opens with a slug and a fact on the
+   same line, and this one is the only one that did not */
+.standfirst__slug {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding-bottom: 13px;
+}
+
+.standfirst__slug-lead {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.standfirst__slug-fact {
+  color: var(--ink-50);
+  white-space: nowrap;
+}
+
+/* three columns of the armature for the note, five for the argument, four for
    the way on. the division is on the rule at three, and the pink rule the note
    is set against stands on the type area's own left boundary. the note is two
-   lines against a five-line paragraph, so it sits in the middle of its column —
-   a margin note set against the block it annotates, not a stub hanging off the
-   top of it */
+   lines against a verdict and a paragraph, so it sits in the middle of its
+   column — a margin note set against the block it annotates, not a stub hanging
+   off the top of it */
 .standfirst__note {
   grid-column: 1 / span 3;
   display: grid;
@@ -2236,19 +2352,149 @@ html[data-register='on'] .plated__layer--black .mark {
 }
 
 .standfirst__say {
-  grid-column: 4 / span 4;
+  grid-column: 4 / span 5;
   min-width: 0;
-  /* the way on starts on the rule at seven, so the argument stops a gutter
+  /* the way on starts on the rule at eight, so the argument stops a gutter
      short of it — a column that runs hard into a printed rule reads as one
      block with the next one rather than as two */
   padding-right: var(--pad);
 }
 
+/* =============================================================
+   THE VERDICT
+
+   One line, and it is the line the proof sheet is stamped with six
+   screens down. Set as a lockup rather than a run of words: the verb
+   in the press voice at the specimen step, the rest of the sentence
+   in the reading voice on the same baseline, so the page hands the
+   question over to itself in two typefaces and one breath.
+
+   and the rule under it is the poster's landing rule at a third of
+   the size — a stub while the answer is only spoken, and then, on
+   --land, the full width of the argument with the ink pooled in both
+   corners. the traps are the pink plate, as they are everywhere else
+   on the sheet, and they fill off the same number the poster's fill
+   off, so the sentence at the head of the run and the sentence at the
+   foot of it land together.
+   ============================================================= */
+
+.verdict {
+  position: relative;
+  /* the sheet has been pressed by the time the answer is printed, so the
+     verdict takes an impression — the same --imp the poster takes at the
+     gate, driven by the answer's own ramp rather than by the register */
+  --imp: var(--land);
+  margin: 0 0 var(--air-block);
+  line-height: 1;
+}
+
+.verdict__yes {
+  display: inline-block;
+  color: var(--pink-ink);
+  font-family: var(--display);
+  font-size: var(--specimen);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.045em;
+  text-shadow:
+    0 calc(.022em * var(--imp)) 0 rgba(255, 255, 255, calc(.72 * var(--imp))),
+    0 calc(-.01em * var(--imp)) 0 rgba(20, 19, 26, calc(.26 * var(--imp)));
+}
+
+/* the rest of the sentence, in the reading voice, on the same baseline: the
+   lockup is the two voices the sheet is printed in, answering to each other in
+   one line */
+.verdict__rest {
+  display: inline-block;
+  margin-left: .32em;
+  color: var(--black);
+  font-family: var(--serif);
+  font-size: var(--sub);
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -.012em;
+}
+
+/* THE LANDING. the rule the sentence stands on, and the two corners where it
+   meets the trim — the poster's landing rule at a third of the size, drawn the
+   way a squeegee draws one: a bead of pink leading, the settled rule behind it,
+   running the full width of the argument. the two traps ride the two ends of
+   the mark rather
+   than the two ends of the cell, so the left one slides out of the corner and
+   the right one arrives in it — the rule growing is the whole gesture, and a
+   scaled box would have left the far trap floating in the stock.
+
+   the rule and the traps are set at the specimen step so every measurement on
+   them is a fraction of the type and not a fraction of the body, which is the
+   law the whole sheet is set under. */
+.verdict__land {
+  position: absolute;
+  bottom: -.2em;
+  left: 0;
+  width: calc(42% + var(--land) * 58%);
+  height: .04em;
+  font-size: var(--specimen);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--blue-ink) 74%, transparent) 0 72%,
+    var(--pink) 100%
+  );
+  pointer-events: none;
+}
+
+/* the ink still standing on the face of the blade — the same bead the film on
+   the press bed wears, and the only part of the landing that is pink. it is
+   behind the type, because ink on paper is */
+.verdict__land::after {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: -1;
+  width: .9em;
+  height: .9em;
+  content: '';
+  background: radial-gradient(circle, rgba(255, 42, 99, .55) 0 20%, transparent 66%);
+  opacity: calc(var(--land) * .9);
+  transform: translate(50%, -50%);
+}
+
+.verdict__trap {
+  top: 0;
+  width: .42em;
+  height: .12em;
+  font-size: var(--specimen);
+  --trap: var(--land);
+  pointer-events: none;
+}
+
+.verdict__trap--start {
+  left: 0;
+}
+
+.verdict__trap--end {
+  right: 0;
+}
+
+/* the pass. the same wash the poster and the specimen take at the gate, thrown
+   once, on the beat the pull reaches the head of the sheet */
+.verdict__bloom {
+  position: absolute;
+  inset: -52% -12% -34% -8%;
+  z-index: -1;
+  background: radial-gradient(48% 84% at 22% 54%, rgba(255, 42, 99, .26), transparent 74%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+html[data-pulled='on'] .verdict__bloom {
+  animation: wash-in 1s var(--ease-out) both;
+}
+
 .lede {
-  max-width: 46ch;
+  max-width: 52ch;
   color: var(--ink-70);
   font-family: var(--serif);
-  font-size: clamp(1.08rem, .48vw + .99rem, 1.36rem);
+  font-size: clamp(1.06rem, .42vw + .97rem, 1.28rem);
   line-height: 1.5;
   text-wrap: pretty;
 }
@@ -2284,7 +2530,7 @@ html[data-register='on'] .plated__layer--black .mark {
    ============================================================= */
 
 .xlinks {
-  grid-column: 8 / span 5;
+  grid-column: 9 / span 4;
   align-self: end;
   /* the block starts on a printed rule and runs to the trim, so the air is
      inside the columns and the rules are the ones the sheet already prints */
@@ -5639,14 +5885,14 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   .standfirst__say {
-    grid-column: 3 / span 4;
+    grid-column: 3 / span 5;
     padding-right: var(--pad);
   }
 
   /* the way on is the last division of the band, so it is the last thing to go
      over: it keeps the two columns the note and the lede gave up */
   .xlinks {
-    grid-column: 7 / -1;
+    grid-column: 8 / -1;
     padding-left: 0;
   }
 
@@ -5773,12 +6019,17 @@ html[data-reveal='on'] .reveal.is-in {
     display: none;
   }
 
-  /* below this the note and the lede stop being a margin and become body copy,
-     so the note takes the top of the standfirst and reads as an epigraph, and
-     the way on goes under it at the full measure — it is the only way off the
-     first screen on a phone, so it is the last thing allowed to get narrow */
+  /* below this the note and the verdict stop being a margin and become body
+     copy, so the slug takes the top of the standfirst as a heading, the note
+     reads as an epigraph, and the way on goes under it at the full measure — it
+     is the only way off the first screen on a phone, so it is the last thing
+     allowed to get narrow */
   .standfirst {
     row-gap: 18px;
+  }
+
+  .standfirst__slug {
+    padding-bottom: 0;
   }
 
   .standfirst__note,
@@ -5790,6 +6041,13 @@ html[data-reveal='on'] .reveal.is-in {
 
   .standfirst__note {
     max-width: 44ch;
+  }
+
+  /* and the verdict keeps its two voices on one baseline at a phone's
+     measure, which is the whole lockup — the verb steps up a little so the two
+     halves still read as one line rather than as a headline and a caption */
+  .verdict__rest {
+    margin-left: .28em;
   }
 
   .xlinks {
@@ -6151,7 +6409,8 @@ html[data-reveal='on'] .reveal.is-in {
   .question__wash,
   .specimen__flash,
   .stock__sheen,
-  .plate-target__ping {
+  .plate-target__ping,
+  .verdict__bloom {
     opacity: 0;
   }
 
@@ -6199,8 +6458,19 @@ html[data-reveal='on'] .reveal.is-in {
      already full, because the proof is either pulled or it is not */
   .proof,
   .proof__land,
-  .proof__trap {
+  .proof__trap,
+  .verdict__land,
+  .verdict__trap {
     transition: none;
+  }
+
+  /* and neither does the verdict's. --land is a state and not a journey — the
+     answer at the head of the run is either spoken or printed — so a still
+     browser gets the sheet already landed, and the wash simply does not happen
+     because the bloom is the one part of the landing that is only movement */
+  .verdict__bloom {
+    animation: none;
+    opacity: 0;
   }
 
   .proof__sweep {
@@ -6332,8 +6602,28 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   .q__land,
-  .proof__land {
+  .proof__land,
+  .verdict__land {
     background: #000;
+  }
+
+  /* and the verdict prints landed: a printout is a sheet that has been through
+     the press, so the rule runs the full width of the argument and both corners
+     are trapped — the reader is not asked to pull anything off paper */
+  .verdict__land {
+    width: 100%;
+  }
+
+  .verdict__land::after {
+    display: none;
+  }
+
+  .verdict__trap {
+    --trap: 1;
+  }
+
+  .verdict__bloom {
+    display: none;
   }
 
   /* and the rubric is checked on a printout: there is no pull left to watch and

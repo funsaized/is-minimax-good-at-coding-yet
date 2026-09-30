@@ -82,8 +82,21 @@ const CHECKS = [
   'Restraint: does everything stop moving the moment you stop reading?',
 ] as const
 
+/* THE STANDING ARGUMENT. what the sheet says once the verdict is on the table
+   above it. this used to be three sentences about the page's own furniture — how
+   the title is set, how many plates print it, where the blade lives — which is
+   an argument a reader has to already be interested in before it means anything.
+   it is now the answer to the title instead, in the plainest voice on the sheet,
+   and the furniture explains itself further down where there is room for it. */
+const LEDE =
+  'And the margin is thin. Any model can write the markup. It is the hundred small decisions nobody asked for — what leads, what gives way, what goes still the moment you stop reading.'
+
+/* the foot of the proof. the standfirst has the honest part now, so the coda
+   does the other half of the job: it says what the rest of the page is for and
+   hands the reader the one control that answers the question the sheet is set
+   in — the register. */
 const CODA =
-  'And the honest part: any model can write the markup. The difference lives in the hundred small decisions nobody asked for.'
+  'The rest of this sheet is the other hundred, made visible. Take the blade and the sentence comes into register.'
 
 /* what the press itself answers to. the keys are printed on the bed rather than
    here, because the bed is the only one of the two the reader is already looking
@@ -103,7 +116,7 @@ const SLIP = [
   ],
   [
     'register',
-    'one number and one ramp: the gate is ±0.14, a unit of blade is 3px of paper, and the ink closes on both as the reader goes down the sheet',
+    'one number and one ramp: the gate is ±0.14, a unit of blade is 3px of paper, and the ink closes on both as the reader goes down the sheet. the pull answers to a second ramp of its own, so the sentence the press is allowed to get right is said at the head of the run and printed at the foot of it, and the two land on the same beat',
   ],
   ['assets', 'local SVG and CSS only. no web fonts, no network, nothing stored'],
 ] as const
@@ -285,6 +298,23 @@ export function App() {
     root.style.setProperty('--settle', settled ? '1' : '0')
     root.dataset.register = settled ? 'on' : 'off'
   }, [settled])
+
+  /* THE PULL, ON THE WHOLE SHEET. --land is the second ramp on the page, and it
+     is the answer's own: 0 while the proof is covered, 1 once the reader has
+     pulled it. nothing on the light sheet answers to the blade, so nothing up
+     here moves when the blade moves — but the verdict in the standfirst above is
+     the same four words the proof is stamped with, and when the proof lands the
+     sheet has been pressed, so the rule under the verdict runs the full width of
+     the argument, the ink gathers in both its corners and the sentence takes the
+     same impression the poster takes at the gate.
+
+     one number, written on the root, so the two ends of the page land on the
+     same beat and neither has to know about the other. */
+  useEffect(() => {
+    const root = document.documentElement
+    root.style.setProperty('--land', proof ? '1' : '0')
+    root.dataset.pulled = proof ? 'on' : 'off'
+  }, [proof])
 
   /* the moment the three impressions agree, and only then */
   useEffect(() => {
@@ -628,12 +658,33 @@ export function App() {
               top of the ream below. Keys 1, 2 and 3 pick a plate from anywhere on the sheet.
             </p>
 
-            {/* the argument belongs under the title, not under the furniture. it is
-                the standfirst a spread opens with: what the page is, then the
-                instrument it is asking to be handed. and it still opens the band
-                on the same 2px rule every other band on the light sheet opens on,
-                so moving the job ticket above it took nothing away from it. */}
+            {/* THE ANSWER, IN THE FIRST SCREEN.
+
+                the argument belongs under the title, not under the furniture. it is
+                the standfirst a spread opens with, and for a long time the
+                standfirst was three sentences about the page's own machinery — how
+                the title is set, how many plates print it, where the blade lives.
+                which meant the one page in the document whose whole job is
+                answering a question spent its first screen describing itself, and
+                did not answer it until six screens down, in the faintest ink a
+                press can lay, behind a cover.
+
+                so the verdict is said here, in the first screen, in the same words
+                the proof sheet is stamped with at the foot of the run: the same
+                four-word answer, set by the same two voices on one baseline, under
+                the same rule the question mark lands on. and the band finally
+                opens the way every other band on the light sheet opens — on the
+                2px rule, with a slug and a fact on it — because it is a band now
+                and not a paragraph somebody parked above a machine. */}
             <div className="standfirst">
+              <p className="slugline standfirst__slug">
+                <span className="standfirst__slug-lead">
+                  <RegistrationMark className="slugline__mark" />
+                  the answer, said once
+                </span>
+                <span className="standfirst__slug-fact">and printed once, at the foot of the run</span>
+              </p>
+
               <p className="standfirst__note">
                 <span className="standfirst__kicker">
                   <RegistrationMark className="standfirst__mark" />
@@ -645,12 +696,32 @@ export function App() {
               </p>
 
               <div className="standfirst__say">
-                <p className="lede">
-                  Seven words — short enough to take apart, short enough to print badly on purpose.
-                  Each one is set three times over, black and pink and blue, and the plates refuse to
-                  agree with each other until you take the blade in your hand. This page is that
-                  argument, printed.
+                {/* THE VERDICT. one line, and it is the line the proof sheet is
+                    stamped with six screens down — the sheet keeps the two copies
+                    of it in register by hand, which is the joke and the mechanic at
+                    once.
+
+                    set as a lockup rather than a run of words: the verb in the
+                    press voice at the specimen step, the rest of the sentence in
+                    the reading voice on the same baseline, so the page hands the
+                    question over to itself in two typefaces. and the rule beneath
+                    it is the poster's landing rule at a third of the size — a
+                    short stub while the answer is only spoken, and then, the beat
+                    the reader pulls the proof at the other end of the page, the
+                    full width of the argument with the ink pooled in both corners,
+                    because a sheet that has been pressed draws a full rule. same
+                    number, same traps, same landing as the title and the proof. */}
+                <p className="verdict">
+                  <span className="verdict__bloom" aria-hidden="true" />
+                  <span className="verdict__yes">yes</span>
+                  <span className="verdict__rest">— with a hand.</span>
+                  <span className="verdict__land" aria-hidden="true">
+                    <InkTrap className="verdict__trap verdict__trap--start" rule={false} />
+                    <InkTrap className="verdict__trap verdict__trap--end" rule={false} />
+                  </span>
                 </p>
+
+                <p className="lede">{LEDE}</p>
               </div>
 
               {/* THE WAY ON. the standfirst used to end in the last two rounded
@@ -668,9 +739,9 @@ export function App() {
                   way on under the lede, which left the last four columns of the
                   type area with nothing on them at all — a band that stops two
                   thirds of the way across a ruled sheet reads as a band that ran
-                  out of ideas. so the way on takes columns eight to twelve,
-                  which is a division like any other, and the three parts read in
-                  the order the eye goes: what to notice, what the page is, where
+                  out of ideas. so the way on takes the last four columns, which
+                  is a division like any other, and the three parts read in the
+                  order the eye goes: what to notice, what the page says, where
                   to go next. */}
               <nav className="xlinks" aria-label="Where to go next">
                 <p className="xlinks__kicker">
@@ -683,7 +754,7 @@ export function App() {
                 </a>
                 <a className="xlink xlink--quiet" href="#answer">
                   {ARROW}
-                  <span className="xlink__label">skip to the short answer</span>
+                  <span className="xlink__label">go to the pulled answer</span>
                   <span className="xlink__to" aria-hidden="true">{passOf('answer')}</span>
                 </a>
               </nav>
@@ -789,7 +860,9 @@ export function App() {
               </span>
               end of the light sheet
             </p>
-            <p className="sheetfoot__next">the short answer is set below, in register</p>
+            <p className="sheetfoot__next">
+              said once at the head of the sheet, printed once below, in register
+            </p>
           </footer>
         </div>
 
@@ -819,7 +892,7 @@ export function App() {
                 <div className="answer__copy reveal">
                   <p className="slugline">
                     <RegistrationMark className="slugline__mark" />
-                    the short answer
+                    the answer, pulled
                   </p>
                   <h2 id="answer-title">One sentence. <em>No speech.</em></h2>
                   <p>
@@ -1222,7 +1295,7 @@ function ProofSheet({ through = false }: { through?: boolean }) {
           the run does, and it only prints once the sheet has been pulled. */}
       {through ? null : (
         <p className="proof__foot">
-          <span aria-hidden="true">↳</span> the short answer · set in register · nothing downloaded
+          <span aria-hidden="true">↳</span> the pulled answer · set in register · nothing downloaded
         </p>
       )}
     </>

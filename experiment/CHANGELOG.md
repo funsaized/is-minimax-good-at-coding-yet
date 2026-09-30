@@ -1,40 +1,55 @@
-Iteration 507 — the plate case moves under the poster, the blade travels instead of blinking, and the gauge is a link to the blade.
+Iteration 508: the sheet answers in the first screen, and the pull lands the answer at both ends of the run.
 
-The question band was ordered poster, argument, instrument, job ticket, which put the only
-choice on the sheet a paragraph and a tall instrument away from the one thing it changes —
-three screens on a phone. It is now poster, the three plates set from it, the argument, the
-blade. The press bed ends up where the stylesheet has been claiming it is all along:
-immediately under the argument, with no rule between them, bringing its own frame. The
-standfirst opens its band on the same 2px rule as the close read and the type list, and the
-job ticket's hairline foot went with the ticket.
+**The problem.** The title is a question, and the page did not answer it until six
+screens down, in the faintest ink a press can lay, behind a cover, on the dark
+side of the sheet. The standfirst directly under the poster — the one place a
+spread says what it is — was three sentences about the page's own machinery: how
+the title is set, how many plates print it, where the blade lives.
 
-The case earns the place. Each cell now states the plate's job ("the subject", "the hinge",
-"the turn") on the figure's line and the length of the run it prints ("two characters",
-"six letters", "three characters") under the setting, in the blue every other measurement on
-the sheet is printed in, so choosing a plate no longer means going elsewhere to find out
-what you are choosing. The phrase steps up one size — it is the only control on the light
-sheet and it was set at job-ticket size.
+**The verdict, in the first screen.** The standfirst now carries the same four
+words the proof sheet is stamped with at the foot of the run, set as a lockup
+rather than a run of words: the verb in the press voice at the specimen step, the
+rest of the sentence in the reading voice on the same baseline. The page hands
+the question over to itself in the two typefaces it is printed in. The paragraph
+under it is the honest part — any model can write the markup, and the margin is
+in the hundred small decisions nobody asked for. The furniture keeps explaining
+itself further down, where there is room for it.
 
-Three pink wedges snapping in three places are replaced by one squeegee on the top rule of
-the case, positioned off a single number and sliding to the cell that is up: a blade
-travels, it does not appear. On a phone the case is three stacked lines rather than three
-columns, so the blade turns with it and runs down the left edge — one mark, two
-orientations. The cell that is up also marks its phrase with the same rule of press ink the
-poster draws under the word it belongs to, fringed by the three plates while the press is
-loose and one clean line at the gate.
+**The band opens like a band.** The standfirst was the only band on the light
+sheet with no slug. It has one now — *the answer, said once* — on the same 2px
+rule every other band opens on, with a fact on the same line, and the fact drops
+on a phone. At the foot of the run the band says the other half of the same line:
+*the answer, pulled*.
 
-The register gauge in the bar is now a link to the press bed. It reported a fact about a
-machine four screens down the sheet; one press of it puts the blade under the reader's
-hand from anywhere on the page, which is what the sheet's own second test asks for. Carries
-a pink downward arrow on hover, and its accessible name reads the number and the
-destination.
+**The landing, and `--land`.** The rule under the verdict is the poster's landing
+rule at a third of the size, drawn the way a squeegee draws one: a bead of pink
+leading, the settled rule behind it, running the full width of the argument with
+the ink gathered in both its corners. It is drawn there, and not under the
+poster, because pulling the proof presses the whole sheet — so the sentence at
+the head of the run and the sentence at the foot of it land on the same beat, off
+one number, and neither end has to know about the other.
 
-The proof pull is now dragged by a squeegee: the bar the toggle wears rides the light band
-crossing the sheet, on the same sweep and the same beat. It travels with the sweep and is
-gone when the sweep is, so a reduced-motion reader gets the sentence without the gesture.
+`--land` is a second registered ramp beside `--settle`: 0 while the proof is
+covered, 1 once it is pulled, written once on the root and transitioned there.
+The verdict takes its impression from it rather than from the register, because
+nothing on the light sheet answers to the blade. The traps ride the two ends of
+the *mark* and not the two ends of the cell, so the left one slides out of the
+corner and the right one arrives in it; the rule grows in width rather than being
+scaled, because a scaled box left the far trap floating in the stock.
 
-Verified at 1440, 1280, 1200, 820, 640 and 390 wide and under prefers-reduced-motion:
-the case reflows to form lines, the blade turns, the gauge link scrolls the bed to just
-under the bar, the radiogroup still walks with the arrow keys and announces, `p`/`Escape`
-still pull and cover the proof, hash navigation still works, no console errors. Print gets
-the blade in one plate and loses the arm. No new dependencies, no network, no storage.
+**The division moved with it.** The margin note keeps three columns, the argument
+takes five, the way on takes the last four — the same three-part band on the same
+armature, split on the printed rules at three and eight.
+
+**Also.** The lede steps down a step and takes a wider measure, now that it is
+sharing its column with the verdict. The cross-reference to the foot of the run
+is named for what is there. The job ticket's *register* row and the proof sheet's
+foot slug say the same thing, because the sheet is only worth reading if its
+captions are true.
+
+**Held.** The verdict is set at the specimen step, so the type list's declared
+ladder is still true: two posters, a head, the set phrase, three label tiers.
+`--land` is a position and not a journey, so a reduced-motion browser gets the
+sheet already landed and simply does without the wash. A printout arrives landed.
+Title, entry point, framework and build untouched; no network, no storage, no new
+dependencies.
