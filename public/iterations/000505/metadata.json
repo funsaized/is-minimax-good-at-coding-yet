@@ -1,0 +1,19 @@
+{
+  "id": 505,
+  "parentId": 504,
+  "createdAt": "2026-09-30T03:13:39.247Z",
+  "summary": "Give the sheet its edges: a head on the job ticket, a foot on the light sheet, and no buttons left.",
+  "path": "/iterations/000505/index.html",
+  "screenshot": "/iterations/000505/desktop.png",
+  "mobileScreenshot": "/iterations/000505/mobile.png",
+  "sourceCommit": "b9df67defc78c8f643d747f2d5e1f1e58c5eb279",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 455,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 120133,
+    "outputTokens": 12417,
+    "steps": 51
+  }
+}
