@@ -409,6 +409,51 @@
    columns, the argument takes five, the way on takes the last four.
    the same three-part band, on the same armature, split on the
    printed rules at three and eight.
+
+   =============================================================
+   ITERATION 509 — THE PULL TRAVELS THE SHEET
+
+   the proof carried its own sweep: a band of light crossing the
+   four hundred pixels of the card, with the toggle's bar riding it.
+   that is a good description of a squeegee and a poor one of a
+   print. a pull crosses the sheet — and this page sets the same short
+   answer at the top of the run as well as the foot of it, off one
+   number, so the moment the proof comes out is the moment the
+   sentence at the head of the page takes an impression. a blade that
+   only travels inside the last card cannot say that.
+
+   so the pull is the sheet's, and the card's own sweep is gone: two
+   blades on one gesture is one too many. it runs UNDER the slug bar,
+   because a bar lying across the trim edge is the one thing a blade
+   never crosses, and it stops short of the control strip, because
+   that strip is outside the trim. two layers, because a squeegee
+   does two things: the blade is the lit edge and the pink bead still
+   standing on its face, travelling at a constant speed — a drag, not
+   a gesture — and the film is the ink starved onto the stock behind
+   it, which wets in step with the blade and then dries, because
+   newsprint only stays tacky for so long. both are transform and
+   opacity, neither repaints the sheet, and it is mounted only for
+   the length of the pull.
+
+   THE LADDER. the type band was the one band on the light sheet that
+   ran out two thirds of the way across: a slug across the whole
+   measure, then a paragraph in the first six columns and nothing at
+   all in the last six, with the armature's own rules going on through
+   the hole. on a ruled sheet that is not restraint. so the claim the
+   band has been making in three other places — two poster sizes and
+   nothing louder than a section head between them — is printed as a
+   ladder in the columns the paragraph gave up, on the same twelve
+   columns as every other band, with the figures in the blue every
+   measured thing on this page is printed in. the run-on sentence it
+   replaces was true and unreadable; a ladder is both.
+
+   and the bar keeps the reader where they are: below 1180 the index
+   is a scrolling strip, which is the right answer for four caps
+   slugs in the mono on a phone and also means the pass the reader is
+   standing in can sit off the end under a hairline mask, saying
+   nothing. the bar brings it back into view when it changes, and
+   only when there is somewhere to go — a strip that fits is left
+   exactly as it was printed.
    ============================================================= */
 
 
@@ -4245,23 +4290,130 @@ html[data-register='on'] .fold-mark__plate--black {
   transform: translate(calc(var(--rx) * -.74), calc(var(--ry) * -.74));
 }
 
-.type__foot {
+/* THE LADDER. the scale used to be one run-on sentence in the first column of a
+   ruled band, with eight hundred pixels of empty sheet and the column rules going
+   on through it to the right. on an armature that is not restraint, it is a hole
+   with a claim in it — so the claim is a ladder now, printed in the columns the
+   paragraph gave up, and it is set on the twelve-column track with a printed rule
+   at eight, the way every other division on this sheet is.
+
+   the head keeps the padding and the 2px rule it shares with the close read; this
+   only makes it a track, so the slug spans it and the two halves below it land on
+   the same twelve columns as every other band. */
+.type__head {
+  display: grid;
+  grid-template-columns: var(--track);
+  align-items: start;
+}
+
+.type__slugline {
+  grid-column: 1 / -1;
+}
+
+.type__intro {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: var(--track);
+  align-items: start;
+  margin-top: var(--air-block);
+}
+
+.type__lede {
+  grid-column: 1 / span 6;
+  max-width: 52ch;
+  margin-top: 0;
+  color: var(--ink-70);
+  font-family: var(--serif);
+  font-size: var(--read);
+  line-height: 1.46;
+  text-wrap: pretty;
+}
+
+.scale {
+  grid-column: 8 / -1;
+  min-width: 0;
+  padding-left: var(--pad);
+  border-left: 1px solid var(--rule);
+}
+
+.scale__kicker {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 12px;
-  max-width: 92ch;
-  padding: 11px 0 0;
+  align-items: center;
+  gap: 9px;
+  padding-bottom: 8px;
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: var(--label-3);
-  line-height: 1.6;
-  letter-spacing: .11em;
+  font-size: var(--label);
+  font-weight: 500;
+  letter-spacing: .145em;
   text-transform: uppercase;
 }
 
-.type__foot > span {
+.scale__mark {
+  width: 13px;
+  height: 13px;
   color: var(--pink-ink);
+}
+
+.scale__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* one step of the scale per line: the token that sets it hard left, what it is
+   for in the middle, and the figure hard right — a job ticket read from the top
+   down, with the number in the ink every other number on the sheet is in */
+.scale__list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  padding: 7px 0;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.scale__token,
+.scale__role,
+.scale__size,
+.scale__note {
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  line-height: 1.4;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.scale__token {
+  color: var(--black);
+  font-weight: 600;
+}
+
+.scale__role {
+  grid-column: 1;
+  color: var(--ink-50);
+  letter-spacing: .08em;
+  text-transform: none;
+}
+
+.scale__size {
+  grid-row: 1;
+  grid-column: 2;
+  color: var(--blue-ink);
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+
+.scale__note {
+  padding-top: 11px;
+  border-top: 1px solid var(--rule-soft);
+  color: var(--ink-50);
+  letter-spacing: .1em;
+}
+
+.scale__note > span {
+  color: var(--pink-ink);
+  letter-spacing: 0;
 }
 
 /* the cells set themselves as the band arrives, one step after another: a type
@@ -5021,40 +5173,135 @@ html[data-register='on'] .run__seam-rule--black {
     transform .52s var(--ease-out), visibility 0s;
 }
 
-.proof__sweep {
-  position: absolute;
-  inset: -20% -40%;
-  z-index: 3;
-  background: linear-gradient(
-    102deg,
-    transparent 40%,
-    rgba(255, 255, 255, .92) 50%,
-    rgba(255, 46, 107, .3) 54%,
-    transparent 61%
-  );
+/* =============================================================
+   THE PULL, ON THE WHOLE SHEET
+
+   The proof carried its own sweep: a band of light crossing the
+   four hundred pixels of the card, with the toggle's bar riding
+   it. That is a good description of a squeegee and a poor one of
+   a print — a pull crosses the sheet, and this page sets the same
+   short answer at the top of the run as well as the foot of it,
+   on the same --land number, so the moment the proof comes out is
+   the moment the sentence at the head of the page takes an
+   impression. A blade that only travels inside the last card
+   cannot say that.
+
+   So the pull is the sheet's, and the card's own sweep is gone:
+   two blades on one gesture is one too many. It runs UNDER the
+   slug bar, because a bar lying across the trim edge is the one
+   thing a blade never crosses, and it stops short of the control
+   strip, because that strip is outside the trim.
+
+   Two layers, because a squeegee does two things. The blade is the
+   lit edge and the pink bead still standing on its face, and it
+   travels at a constant speed — a drag, not a gesture. The film is
+   the ink starved onto the stock behind it: it grows out from the
+   left in step with the blade and then dries, because newsprint
+   only stays tacky for so long. Both are transform and opacity, so
+   neither repaints the sheet, and a reader who never pulls the
+   proof pays nothing for either of them.
+
+   It is entirely travel, so under reduced motion the whole thing
+   goes and the reader gets the printed answer with no arm crossing
+   the page — the same answer every other gesture on this sheet
+   gives.
+   ============================================================= */
+
+.pullsheet {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  overflow: hidden;
   pointer-events: none;
 }
 
-.proof.is-open .proof__sweep {
-  animation: sweep 1.05s var(--ease-out) .06s both;
+/* and the control strip down the trim edge is outside the trim, so the blade is
+   not dragged across it — it stops at the paper, which is the one boundary on a
+   press sheet a squeegee respects */
+@media (min-width: 1181px) {
+  .pullsheet {
+    right: 34px;
+  }
 }
 
-/* THE PULL, BEING DONE BY SOMETHING. the sweep is a band of light crossing the
-   sheet, which is a very good description of what a squeegee does and a poor
-   picture of who is doing it — so the bar the toggle wears rides the band it is
-   dragging, on the same sweep and the same beat, and the two are one gesture. it
-   is a stock shape scaled up, which is exactly what the bed does to the same
-   shape, and it travels with the sweep and is gone when the sweep is: nothing to
-   clean up afterwards, and a reader who has asked for stillness gets the
-   sentence without the arm. */
-.proof__pull {
+/* where the blade is. it is the size of the viewport so its own
+   width is the distance it has to cover, and the band hangs off
+   its leading edge rather than being sized against the sheet */
+.pullsheet__blade {
+  position: absolute;
+  inset: -8% -2%;
+  transform: translate3d(-100%, 0, 0);
+  animation: pull-travel .84s linear both;
+}
+
+.pullsheet__band {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: clamp(112px, 17vw, 264px);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(20, 19, 26, .012) 26%,
+    rgba(20, 19, 26, .055) 62%,
+    rgba(20, 19, 26, .115) 88%,
+    rgba(255, 255, 255, .46) 97%,
+    rgba(255, 46, 107, .3) 100%
+  );
+}
+
+/* the ink still standing up on the face of the blade — the only part
+   of the whole pull that is pink, and the one that reads on the ink
+   slab as well as on newsprint */
+.pullsheet__bead {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(255, 42, 99, .62) 13%,
+    rgba(255, 42, 99, .62) 87%,
+    transparent
+  );
+  box-shadow: 0 0 16px 3px rgba(255, 42, 99, .34);
+}
+
+/* and the arm, riding the bead it is dragging. a stock shape blown
+   up, which is exactly what the bed does to the same shape */
+.pullsheet__arm {
   position: absolute;
   top: 50%;
-  left: 52%;
-  width: clamp(64px, 8.4vw, 104px);
-  color: var(--pink-ink);
-  filter: drop-shadow(0 2px 6px rgba(20, 19, 26, .32));
-  transform: translate(-50%, -50%);
+  right: 0;
+  width: clamp(76px, 9.6vw, 136px);
+  color: var(--pink);
+  opacity: .5;
+  filter: drop-shadow(0 5px 13px rgba(20, 19, 26, .3));
+  transform: translate(50%, -50%);
+}
+
+/* the film. it is warm rather than black, because a dark film is
+   invisible on the ink slab and the slab is half the page */
+.pullsheet__film {
+  position: absolute;
+  inset: -8% -2%;
+  opacity: 0;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(255, 42, 99, .045) 32%,
+    rgba(20, 19, 26, .05) 54%,
+    transparent
+  );
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  /* the later animation wins the property it shares, so the film is
+     simply dry for the second half of its life — one element, one
+     journey, and nothing left behind it */
+  animation: pull-film .84s linear both, pull-dry 1.5s var(--ease) .84s both;
 }
 
 .proof__yes {
@@ -5775,17 +6022,52 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
-@keyframes sweep {
-  from {
+/* the blade crosses the sheet at the speed it is dragged, which is the one thing
+   about this gesture that is not eased: a squeegee is a constant pull, and any
+   easing on it reads as a swipe on a phone rather than as a press */
+@keyframes pull-travel {
+  0% {
     opacity: 0;
-    transform: translateX(-46%);
+    transform: translate3d(-100%, 0, 0);
   }
-  30% {
+  7% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* and the film it starves behind it, which wets and then dries rather than
+   travelling: the same beat as the blade, then one and a half seconds of
+   newsprint going off */
+@keyframes pull-film {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  7% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes pull-dry {
+  from {
     opacity: 1;
   }
   to {
     opacity: 0;
-    transform: translateX(46%);
   }
 }
 
@@ -5896,6 +6178,23 @@ html[data-reveal='on'] .reveal.is-in {
     padding-left: 0;
   }
 
+  /* the ladder is the last division of its band, so it is the last thing to go
+     over: it keeps the rule the paragraph gave up as a rule of its own, printed
+     across the full measure, and the measure it is printed at stops being two
+     thirds of the sheet */
+  .type__lede,
+  .scale {
+    grid-column: 1 / -1;
+  }
+
+  .scale {
+    margin-top: var(--air-block);
+    padding-top: var(--air-block);
+    padding-left: 0;
+    border-top: 1px solid var(--rule);
+    border-left: 0;
+  }
+
   /* the cells are the full measure down here, so they take the vertical rules
      between them back and the widest samples can be set at the size the sheet
      sets them — the band stacks rather than shrinking its own type.
@@ -5976,6 +6275,10 @@ html[data-reveal='on'] .reveal.is-in {
     justify-content: flex-start;
     margin: 0 calc(var(--gutter) * -1);
     padding: 0 var(--gutter) 4px;
+    /* the bar brings the current pass back into view itself, so a focused link
+       is never left jammed against the trim with its own hairline mask over it */
+    scroll-padding-inline: calc(var(--gutter) + 10px);
+    overscroll-behavior-x: contain;
     overflow-x: auto;
     scrollbar-width: none;
     mask-image: linear-gradient(90deg, #000 0 86%, transparent 100%);
@@ -6473,8 +6776,11 @@ html[data-reveal='on'] .reveal.is-in {
     opacity: 0;
   }
 
-  .proof__sweep {
-    opacity: 0;
+  /* the pull is nothing but travel, so a still browser does not get it at all:
+     the answer is printed, the verdict at the head of the run is landed, and
+     there is no blade crossing the page to read past */
+  .pullsheet {
+    display: none;
   }
 
   .run__glow {
@@ -6499,7 +6805,7 @@ html[data-reveal='on'] .reveal.is-in {
   .fold,
   .toggle,
   .ruling,
-  .proof__sweep,
+  .pullsheet,
   .run__glow {
     display: none;
   }

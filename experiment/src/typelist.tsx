@@ -246,13 +246,6 @@ export function TypeList({ reg }: { reg: number }) {
           )
         })}
       </div>
-
-      <p className="type__foot">
-        <span aria-hidden="true">↳</span>
-        two poster sizes — 7.2 and 4.3 — then a head at 3.2, the set phrase at 2.62, and three
-        label tiers below that. nothing in between is louder than a section head, and the numbers
-        are blue because they are measurements
-      </p>
     </div>
   )
 }

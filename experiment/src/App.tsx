@@ -16,6 +16,7 @@ import { prefersStill } from './motion'
 import { CropMark, FoldMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
 import { Plated } from './plate'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
+import { Pullsheet } from './pullsheet'
 import { Ream } from './ream'
 import { Ruling } from './ruling'
 import { TypeList } from './typelist'
@@ -80,6 +81,21 @@ const CHECKS = [
   'Hierarchy: could you name the second most important thing without thinking twice?',
   'Hand: the page hands you the blade. Does the tool actually do something?',
   'Restraint: does everything stop moving the moment you stop reading?',
+] as const
+
+/* THE LADDER, AS A LADDER. the sheet claims, in three places, that it has two
+   poster sizes and nothing in between louder than a section head — and then said
+   it as one run-on sentence stranded in the first column of a ruled band, with
+   eight hundred pixels of empty sheet to the right of it. so the claim is a list
+   now: the five steps of the scale in the order they are set, read out of the
+   tokens the sheet actually sets them in, with the figures in the ink every
+   measured thing on this page is printed in. */
+const SCALE = [
+  { token: '--question', role: 'the question', size: '7.2rem' },
+  { token: '--claim', role: 'the short answer', size: '4.3rem' },
+  { token: '--head', role: 'a section head', size: '3.2rem' },
+  { token: '--specimen', role: 'the set phrase', size: '2.62rem' },
+  { token: '--label', role: 'labels, and only labels', size: '.66rem' },
 ] as const
 
 /* THE STANDING ARGUMENT. what the sheet says once the verdict is on the table
@@ -148,6 +164,7 @@ export function App() {
   const [hover, setHover] = useState<WordId | null>(null)
   const [section, setSection] = useState<string>('question')
   const [proof, setProof] = useState(false)
+  const [pullTick, setPullTick] = useState(0)
   const [reg, setReg] = useState(PULL_REST)
   const [plateTick, setPlateTick] = useState(0)
   const [catchTick, setCatchTick] = useState(0)
@@ -157,6 +174,7 @@ export function App() {
   const specimenRef = useRef<HTMLDivElement>(null)
   const slugRef = useRef<HTMLElement>(null)
   const runRef = useRef<HTMLDivElement>(null)
+  const navRef = useRef<HTMLElement>(null)
   const onSlab = useRef(false)
   const plateRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const wasSettled = useRef(false)
@@ -177,6 +195,25 @@ export function App() {
     const found = findNote(id)
     setAnnounce(`Plate ${found.index}. ${found.label}. ${found.title}.`)
   }, [])
+
+  /* THE PULL, FROM EITHER END. the proof can be pulled from the key it prints on
+     the proof sheet or from the key it prints beside the answer, and both of them
+     have to travel the same road: the sheet is pressed, not just the card. one
+     callback so the whole-sheet blade and the word on --land can never come apart
+     and leave a reader pressing the key and watching nothing cross the page. */
+  const pullProof = useCallback((next: boolean) => {
+    setProof(next)
+    if (next) setPullTick(tick => tick + 1)
+    setAnnounce(next ? 'The proof is pulled. The short answer is set.' : 'The proof is covered again.')
+  }, [])
+
+  /* and the blade is taken off the sheet once it has dried, so a reader who has
+     pulled the answer twenty times is not holding twenty full-viewport layers */
+  useEffect(() => {
+    if (!pullTick) return
+    const gone = window.setTimeout(() => setPullTick(0), 2400)
+    return () => window.clearTimeout(gone)
+  }, [pullTick])
 
   /* One source of truth for the plate, and it answers to two questions.
      The true offset -- which every readout follows, the gauge, the control
@@ -364,6 +401,24 @@ export function App() {
     return () => observer.disconnect()
   }, [])
 
+  /* THE INDEX FOLLOWS THE READER. below 1180 the slug is a scrolling strip, which
+     is the right answer for four caps slugs in the mono on a phone — and it means
+     the pass the reader is standing in can sit off the end of the bar, under a
+     hairline mask, telling them nothing. so the bar brings the current pass back
+     into view when it changes, and only when there is genuinely somewhere to go:
+     a strip that fits is left exactly as it was printed. */
+  useEffect(() => {
+    const nav = navRef.current
+    if (!nav || nav.scrollWidth <= nav.clientWidth + 1) return
+    const here = nav.querySelector<HTMLAnchorElement>('[aria-current="location"]')
+    if (!here) return
+    const want = here.offsetLeft - (nav.clientWidth - here.offsetWidth) / 2
+    nav.scrollTo({
+      left: Math.max(0, want),
+      behavior: prefersStill() ? 'auto' : 'smooth',
+    })
+  }, [section])
+
   useEffect(() => {
     const reveals = Array.from(document.querySelectorAll<HTMLElement>('.reveal'))
     /* only arm the hidden state when an observer can actually un-hide it */
@@ -407,11 +462,7 @@ export function App() {
          without ever having to reach for the pointer */
       if (event.key === 'p' || event.key === 'P') {
         event.preventDefault()
-        setProof(value => {
-          const next = !value
-          setAnnounce(next ? 'The proof is pulled. The short answer is set.' : 'The proof is covered again.')
-          return next
-        })
+        pullProof(!proof)
         return
       }
       if (event.key === 'Escape' && proof) {
@@ -446,7 +497,7 @@ export function App() {
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [proof, select])
+  }, [proof, pullProof, select])
 
   const walk = (from: WordId, step: number) =>
     WORD_IDS[(WORD_IDS.indexOf(from) + step + WORD_IDS.length) % WORD_IDS.length]
@@ -477,6 +528,11 @@ export function App() {
 
       <ControlEdge />
 
+      {/* the pull, on the whole sheet rather than inside the last card. it is
+          mounted only for the length of the drag and keyed on the count, so two
+          pulls in a row are two pulls rather than one that never restarted */}
+      {pullTick ? <Pullsheet key={pullTick} /> : null}
+
       <a className="skip-link" href="#question">Skip to the question</a>
 
       <header className="slugbar" ref={slugRef}>
@@ -488,7 +544,7 @@ export function App() {
           </span>
         </a>
 
-        <nav className="nav" aria-label="Page sections">
+        <nav className="nav" aria-label="Page sections" ref={navRef}>
           {NAV_ITEMS.map(item => (
             <a
               key={item.id}
@@ -817,7 +873,16 @@ export function App() {
               machine actually resolved, measured at run time. the one step this
               band does not print is the widest on the page: the title is set
               across the full measure, and a second poster in a third of the
-              width would undo the only two the sheet is allowed. */}
+              width would undo the only two the sheet is allowed.
+
+              and the band no longer runs out two thirds of the way across. it
+              printed a slug across the whole measure, then a paragraph in the
+              first six columns and nothing at all in the last six — which on a
+              ruled sheet is not restraint, it is a band that ran out of ideas
+              with the column rules going on right through the hole. so the
+              claim the band has been making in three places, that the scale has
+              two posters and nothing louder than a head in between, is printed
+              as a ladder in the columns the paragraph gave up. */}
           <section id="type" className="type" aria-labelledby="type-title">
             <header className="type__head reveal">
               <h2 className="slugline type__slugline" id="type-title">
@@ -825,13 +890,35 @@ export function App() {
                 the type list
                 <span className="type__slug-fact">three faces · nothing downloaded</span>
               </h2>
-              <p className="type__lede">
-                No font file is loaded to set this page — it is set in the three faces the machine
-                already has, and spaced so the differences do not show. Each cell prints the widest
-                step of every size the page really uses it at, and each then names the family your
-                machine resolved, which is a fact about this computer and not an opinion about the
-                design.
-              </p>
+              <div className="type__intro">
+                <p className="type__lede">
+                  No font file is loaded to set this page — it is set in the three faces the machine
+                  already has, and spaced so the differences do not show. Each cell prints the widest
+                  step of every size the page really uses it at, and each then names the family your
+                  machine resolved, which is a fact about this computer and not an opinion about the
+                  design.
+                </p>
+
+                <section className="scale" aria-labelledby="scale-title">
+                  <h3 className="scale__kicker" id="scale-title">
+                    <RegistrationMark className="scale__mark" />
+                    the scale, in order
+                  </h3>
+                  <ol className="scale__list">
+                    {SCALE.map((step, index) => (
+                      <li key={step.token} style={{ '--i': index } as CSSProperties}>
+                        <span className="scale__token">{step.token}</span>
+                        <span className="scale__role">{step.role}</span>
+                        <span className="scale__size">{step.size}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="scale__note">
+                    <span aria-hidden="true">↳</span> two posters, then a head, then a specimen.
+                    the figures are blue because they are measurements.
+                  </p>
+                </section>
+              </div>
             </header>
 
             <TypeList reg={reg} />
@@ -955,11 +1042,7 @@ export function App() {
                       aria-expanded={proof}
                       aria-controls="proof-body"
                       aria-keyshortcuts="p"
-                      onClick={() => {
-                        const next = !proof
-                        setProof(next)
-                        setAnnounce(next ? 'The proof is pulled. The short answer is set.' : 'The proof is covered again.')
-                      }}
+                      onClick={() => pullProof(!proof)}
                     >
                       <Squeegee className="toggle__icon" />
                       {proof ? 'sheet back' : 'pull proof'}
@@ -999,9 +1082,6 @@ export function App() {
                       aria-label="The short answer"
                       aria-hidden={!proof}
                     >
-                      <span className="proof__sweep" aria-hidden="true">
-                        <Squeegee className="proof__pull" />
-                      </span>
                       <ProofSheet />
                     </div>
                   </div>
