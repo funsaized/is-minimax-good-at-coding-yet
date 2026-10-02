@@ -6,6 +6,17 @@ type RulingProps = {
    * multiply anything, so there the same three rules are printed as light.
    */
   tone?: 'light' | 'slab'
+  /**
+   * Print this ruling a step back from the others.
+   *
+   * The armature is at press strength over the sheet that carries the poster,
+   * which is the loudest piece of type on the page: the sheet was printing its
+   * own grid at full weight directly underneath its own headline, and the two
+   * fought. The proofing sheet further down takes the full strength, because
+   * that is the band where the ruling is doing structural work rather than
+   * sitting behind something that already shouts.
+   */
+  veil?: boolean
 }
 
 /**
@@ -40,10 +51,12 @@ type RulingProps = {
  * gradient at one twelfth of the width, which is why a band of any height costs
  * the same three nodes.
  */
-export function Ruling({ className = '', tone = 'light' }: RulingProps) {
+export function Ruling({ className = '', tone = 'light', veil = false }: RulingProps) {
   return (
     <span
-      className={`ruling ruling--${tone}${className ? ` ${className}` : ''}`}
+      className={`ruling ruling--${tone}${veil ? ' ruling--veil' : ''}${
+        className ? ` ${className}` : ''
+      }`}
       aria-hidden="true"
     >
       <i className="ruling__plate ruling__plate--blue" />

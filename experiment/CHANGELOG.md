@@ -1,47 +1,54 @@
-Iteration 510: the sheet stops being a card — cut corners, ink shadows, a trim bar, a counted measure.
+The stock is lit now: a key light, one press bloom, and a lamp that tightens when the plates come into register.
 
-**The sheet is not a card.** The close read and the proof were the last two rounded
-rectangles on the page, and the only large objects on it whose shadows ignored the
-press: eleven pixels of static grey blur that no blade could close, while a rule
-under them, a wedge of ink in a notch and a row of seven-pixel flats at the foot
-of the sheet were all reporting the register. The proof's shadow also turned blue
-when the proof was pulled, and this sheet only ever prints blue as a figure.
+## Iteration 511 — the sheet is lit
 
-- Corners cut on the specimen, the proof, its bar, its stage and its cover —
-  paper is cut, and the press bed has been square throughout.
-- The specimen's shadow is now the second impression: the blue plate at the same
-  1.5 ratio as every other mark, collapsing to nothing at the gate. The proof's is
-  the pink plate on the same terms. The only blurred layer left is the proof's own
-  shadow cast on the ink.
-- Both sheets carry a lit lip — a hairline of light down the head and fore-edge,
-  a hairline of shade down the foot — so they have thickness.
-- At the gate the specimen's edge takes the pink (the register); the proof's takes
-  it when the proof is pulled. Pulling also grows the pink bead on the proof's own
-  edge instead of changing its colour.
-- Removed the now-unused `--lift-x-lg` / `--lift-y-lg` tokens, whose static eleven
-  pixels were the reason the sheets could never reach the gate.
+Direction: the light on the paper is the register. The register was already reported
+nine times on the page (bar gauge, bed stamp, foot flats, the mark in the title, the two
+fold marks, the ruling, the paper's own shadow, two type-list gauges). Every one of
+those was a readout; none of them was felt. This iteration moves the number into the
+light and quiets the room.
 
-**The trim bar.** A trimmed print shows its separations at the trim. The sheet
-printed that bar down the control strip and as the flats at the foot of the light
-sheet, and never on the paper — the one place a reader looks without being asked.
-Each sheet of paper now carries one on its own foot margin, hard against the trim,
-same two ratios, same fusion at the gate. On the proof the flats are lifted onto
-the slab palette. New file `src/paper.tsx` holds the mark and the pica below.
+**The stock is lit** (`src/style.css`, `.stock__fibre`, `.stock__wash`)
+- The paper was a flat cream with two large radial smears veiled over the whole
+  viewport — one pink, one blue. It now takes a broad key light off the top left and
+  deepens away from it in warm brown. The drum banding is no longer multiplied in: at
+  2% black over cream, ordinary compositing is indistinguishable and saves a
+  full-viewport blend under the sticky bar.
+- The blue wash is deleted. On this sheet blue is only ever a figure, and a figure does
+  not get to be the colour of the room. One bloom of press pink remains, kept high and
+  tight behind the poster, still riding the plate offset and the drying ramp.
 
-**The pica.** The close read printed the length of the run it was setting as a
-figure, which is a claim. The column beside the setting now carries a rule of
-picas — one tick a character, standing on a hairline, as wide as the phrase on the
-sheet — so the count and the figure can no longer disagree. Blue, because it is a
-measurement; set one tick at a time, because a counting rule is.
+**The lamp** (`src/App.tsx`, `.stock__lamp`)
+- New fixed layer. Out of register it is wide, faint, magenta and drifts with the
+  plates; at the gate the magenta goes out of it and one warm core is left, tightened
+  and no longer drifting.
+- Two pseudo-layers rather than one blended background, because a background cannot be
+  transitioned. Three opacity ramps and one transform — all compositor work.
+- Dims over the ink slab rather than going out. A position, not a journey: reduced
+  motion and print both get the sheet already in its state, and a reader who never
+  touches the blade still sees the loose light and an honest opening register.
 
-**Two fixes in the same band.** The specimen's stage carried two textures behind
-the one setting the band exists to show (a rule every 34px and the dot screen);
-the screen stays, the rule goes. And the specimen's title was the last heading on
-the page set in the press voice — it is now in the reading face, one step under
-the section head in the same family, so the page has two heading voices rather
-than three.
+**The armature steps back** (`src/ruling.tsx`, `.ruling`)
+- All three ruling plates come down a step in weight (.14/.28/.26 → .105/.17/.15). At
+  press strength the colour plates were printing a magenta and a blue line down the
+  whole measure over the poster.
+- New `veil` prop, used on the sheet carrying the poster, drops that sheet's ruling a
+  further step. The proofing sheet keeps full strength, where the ruling is doing
+  structural work rather than standing behind something that already shouts.
 
-**Notes.** Client-only, no new dependencies, no network. Motion added is a state
-collapse and a staggered count, both covered by the existing reduced-motion
-handling. Print styles updated: the trim bar prints in one plate, the lit lips and
-plate offsets come off.
+**One motion, one hierarchy**
+- The scroll reveal was the only thing on the page arriving like a web page: 20px of
+  rise and a fade. It now prints, off the same gesture as the poster's lines.
+- `--ink-70` steps darker (#403c4c → #3a3646), so the argument is black and the
+  furniture is grey by a wider margin. `--ink-50` is untouched, to keep the small
+  mono labels where they were.
+- The poster gets the largest margin on the sheet (38px → 62px): it sat too close
+  under its own slug to read as a composition rather than a stack.
+- The close-read sheet and the proof sheet take the same key light as the run they are
+  lying on, instead of being flat white rectangles cut out of it.
+- The slug bar and the control strip derive their ground from `--stock` rather than a
+  number typed out of it, so they stay in step with the paper as it is lit.
+
+Unchanged: the title and document title, the entry point, the four passes and their
+numbering, every control's behaviour, keyboard support, and all reported numbers.
+`npm run build` passes.

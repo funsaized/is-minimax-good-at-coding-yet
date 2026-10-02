@@ -518,11 +518,15 @@ export function App() {
 
   return (
     <div className="press" ref={pressRef}>
+      {/* the room, not the paper: the key light, the tooth, the press's own
+          bloom in the stock, the roller — and the lamp, which is the one layer
+          here that answers to the register rather than to the light. */}
       <div className="stock" aria-hidden="true">
         <span className="stock__fibre" />
         <span className="stock__grain" />
         <span className="stock__wash" />
         <span className="stock__roller" />
+        <span className="stock__lamp" />
         <span className="stock__sheen" />
         <span className="sprockets" />
       </div>
@@ -597,7 +601,10 @@ export function App() {
 
       <main className="main">
         <div className="page">
-          <Ruling />
+          {/* the armature, one step back: this is the sheet carrying the poster,
+              and the grid underneath a headline is the loudest thing on a
+              press sheet after the headline itself */}
+          <Ruling veil />
           <section id="question" className="sheet" aria-labelledby="question-title">
             <p className="slugline sheet__slug">
               <span className="sheet__slug-lead">

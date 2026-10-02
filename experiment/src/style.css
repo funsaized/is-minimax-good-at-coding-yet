@@ -510,6 +510,49 @@
    the count and the figure can no longer disagree. the ticks are
    blue because they are a measurement, and they are set one at a
    time because a counting rule is set one at a time.
+
+   =============================================================
+   ITERATION 511 — THE SHEET IS LIT
+
+   the light on the paper is the register.
+
+   one number has been reported on this page in nine places — the
+   gauge, the bed's stamp, the flats at the foot, the mark in the
+   title, the fold, the ruling, the paper's own shadow, the two type
+   gauges. every one of those is a readout. not one of them is felt.
+   so the lamp takes the number instead: out of register the light is
+   wide, faint and magenta, and it drifts with the plates, because
+   everything else on this sheet does. bring the blade to the gate
+   and it tightens into one warm core that has stopped drifting, and
+   the reader has registered the page before reading a figure off it.
+   it is a position and not a journey, so a still browser gets the
+   sheet already lit.
+
+   and the stock was not paper, it was a flat cream with two large
+   radial smears veiled over the whole viewport — one pink, one
+   blue — which is a room with the lights off. so the paper now has
+   a key light off the top left, a warm shade gathering away from
+   it, and one bloom of press pink kept high and tight behind the
+   poster. the blue wash is gone outright: on this sheet blue is only
+   ever a figure, and a figure has no business being the colour of
+   the room.
+
+   THE ARMATURE STEPS BACK. the ruling is at press strength where
+   the poster is, so the sheet was printing its own grid at full
+   weight directly underneath its own headline and the two fought.
+   the whole armature comes down a step in weight, and the sheet
+   carrying the poster comes down a step again — the proofing sheet
+   further down keeps the full rule, because that is the band where
+   the armature is doing structural work rather than standing behind
+   something that already shouts.
+
+   ONE MOTION. the scroll reveal was the last thing on the page
+   arriving the way a web page arrives — twenty pixels of rise and a
+   fade — while everything else here sets like ink coming into focus.
+   it prints now, off the same keyframe the poster uses.
+
+   and the reading voice takes one step darker, so the argument is
+   black and the furniture is grey by a wider margin than it was.
    ============================================================= */
 
 
@@ -573,8 +616,16 @@
      suggest depth but it can never put a highlight on an edge, and without the
      highlight every sheet on this page was a rectangle floating over a rectangle */
   --paper-lit: #fffdf6;
+  /* and the two sheets of paper lying on the run take the same key light the
+     stock takes, from the same corner, so they belong to the room they are
+     lying in rather than to a palette */
+  --paper-key: #fffdf7;
+  --paper-foot: #f1ecdf;
   --black: #14131a;
-  --ink-70: #403c4c;
+  /* the reading voice. one step darker than it was, so the argument on this
+     sheet is genuinely black and the furniture is genuinely grey, by a wider
+     margin than a body colour two steps off the display ever gave */
+  --ink-70: #3a3646;
   --ink-50: #5b5768;
   --rule: rgba(20, 19, 26, .16);
   --rule-soft: rgba(20, 19, 26, .085);
@@ -839,14 +890,34 @@ kbd {
   pointer-events: none;
 }
 
-/* roller banding: the faint unevenness of a big drum */
+/* THE LIGHT ON THE STOCK. the paper behind the sheet used to be a flat cream
+   with a faint vertical gradient over it, which is a background and not a sheet:
+   nothing in the document had a light falling on it, nothing got nearer the
+   window or further from it, and every band sat at exactly the same value from
+   the head of the run to the foot.
+
+   so the stock is lit. a broad key comes off the top left, the way a pressroom
+   window is, the stock deepens away from it in warm brown rather than in grey,
+   and the drum banding still runs through all of it. the drum is no longer
+   multiplied — at two per cent of black over a cream ground, ordinary
+   compositing darkens it just as well, and a full-viewport blend under a sticky
+   bar is a repaint of the whole page for a difference nobody can see.
+
+   this layer is the only one on the page that does not move when the blade
+   moves. the light in a room is not printed by the press. */
 .stock__fibre {
   position: absolute;
   inset: 0;
   background:
-    repeating-linear-gradient(0deg, rgba(21, 20, 27, .021) 0 1px, transparent 1px 3px),
-    linear-gradient(180deg, rgba(255, 255, 255, .55), transparent 34%, rgba(21, 20, 27, .035));
-  mix-blend-mode: multiply;
+    radial-gradient(128% 96% at 4% -14%, rgba(255, 255, 255, .46), rgba(255, 255, 255, 0) 56%),
+    linear-gradient(
+      156deg,
+      rgba(255, 255, 255, .26) 0%,
+      rgba(255, 255, 255, 0) 32%,
+      rgba(132, 104, 66, .05) 78%,
+      rgba(96, 74, 48, .1) 100%
+    ),
+    repeating-linear-gradient(0deg, rgba(21, 20, 27, .021) 0 1px, transparent 1px 3px);
 }
 
 /* paper tooth, generated in the browser, never downloaded.
@@ -865,17 +936,20 @@ kbd {
   animation: drum 26s linear infinite;
 }
 
-/* the ink washes drift with the plate, so the whole sheet is out of register —
-   and they ride the same ramp the type does, so the paper stops drifting as the
-   sheet dries. --dry is only allowed to fade them: that is the one piece of the
-   press that gives up early when the reader has asked for stillness, because a
-   soft background gradient settling is a change of tone, not a movement */
+/* THE PRESS IN THE STOCK. the only tint the paper is allowed, and it is the
+   one ink on this sheet that means the press: the wash drifted off the top
+   right of the sheet — the press end, where the question is set — so it rides
+   the plate offset and dries with the type, and it fades as the reader goes
+   down the run.
+
+   the other half of the pair is gone. a large blue radial across the middle
+   left of every viewport was doing two jobs at once and neither of them was
+   good: it tinted the colour of the room, and blue on this sheet is only ever
+   a figure. a figure does not get to be the light. */
 .stock__wash {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(56rem 40rem at 90% -10%, rgba(255, 46, 107, .12), transparent 62%),
-    radial-gradient(50rem 40rem at -8% 60%, rgba(42, 62, 201, .11), transparent 64%);
+  background: radial-gradient(48rem 36rem at 88% -14%, rgba(255, 46, 107, .11), transparent 64%);
   opacity: calc(1 - var(--dry) * .5);
   transform: translate3d(
     calc(var(--fringe-x) * var(--ink-close) * 2.4),
@@ -893,11 +967,104 @@ kbd {
 .stock__roller {
   position: absolute;
   inset: -20% -4%;
-  opacity: .46;
+  opacity: .42;
   background:
-    radial-gradient(38rem 12rem at 18% 26%, rgba(255, 255, 255, .62), transparent 70%),
+    radial-gradient(38rem 12rem at 18% 26%, rgba(255, 255, 255, .52), transparent 70%),
     radial-gradient(30rem 9rem at 78% 68%, rgba(21, 20, 27, .05), transparent 72%);
   animation: drift 38s var(--ease) infinite alternate;
+}
+
+/* =============================================================
+   THE LAMP — THE LIGHT ON THE PAPER IS THE REGISTER
+
+   One number is reported nine times on this page: the gauge in the
+   bar, the bed's stamp, the flats at the foot of the light sheet,
+   the mark in the title, the two marks at the ends of the fold, the
+   ruling, the paper's own shadow, and the two gauges in the type
+   list. Every one of those is a readout. Not one of them is felt.
+
+   So the lamp takes the number. Out of register the light is wide,
+   faint and magenta, and it drifts with the plates — a light through
+   a sheet that is not sitting flat spreads, colours and wanders, and
+   on this page everything wanders with the plates. At the gate the
+   magenta goes out of it altogether and what is left is one warm core
+   that has stopped drifting: three opacity ramps and one transform,
+   all of them compositor work, so nothing on the sheet repaints.
+
+   Two layers rather than one background with a blended stop,
+   because a background cannot be transitioned: the core is its own
+   element and the press in the light is another, and the second one
+   simply is not there at the gate.
+
+   It is a position and not a journey — the same state the plate
+   targets are in — so a reader who has asked for stillness gets the
+   sheet already lit, and one who never touches the blade gets the
+   loose light and a page that is honest about the register it opens
+   on. It dims over the ink slab rather than going out, because the
+   lamp does not move when the sheet comes off the press.
+   ============================================================= */
+.stock__lamp {
+  position: absolute;
+  inset: -34%;
+  transform: translate3d(calc(var(--fringe-x) * 8), calc(var(--fringe-y) * 8), 0) scale(1.14);
+  transition: transform .9s var(--ease-out);
+}
+
+.stock__lamp::before,
+.stock__lamp::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background-repeat: no-repeat;
+  transition: opacity .8s var(--ease-out);
+}
+
+/* the core. wide and thin while the plates argue, one clean warm centre when they
+   agree — a light through a sheet that is lying flat does not spread */
+.stock__lamp::before {
+  opacity: .34;
+  background-image: radial-gradient(
+    30% 22% at 41% 33%,
+    rgba(255, 252, 242, .62) 0%,
+    rgba(255, 246, 226, .2) 46%,
+    rgba(255, 246, 226, 0) 76%
+  );
+}
+
+/* and the only part of the light that is ink. pink is the press on this sheet,
+   and a loose press is the one thing here that is allowed to colour the room */
+.stock__lamp::after {
+  opacity: .9;
+  background-image: radial-gradient(
+    42% 33% at 41% 33%,
+    rgba(255, 46, 107, .12) 0%,
+    rgba(255, 122, 172, .05) 52%,
+    rgba(255, 46, 107, 0) 80%
+  );
+}
+
+html[data-register='on'] .stock__lamp {
+  transform: none;
+}
+
+html[data-register='on'] .stock__lamp::before {
+  opacity: .74;
+}
+
+html[data-register='on'] .stock__lamp::after {
+  opacity: 0;
+}
+
+html[data-slab='on'] .stock__lamp {
+  transform: none;
+}
+
+html[data-slab='on'] .stock__lamp::before {
+  opacity: .12;
+}
+
+html[data-slab='on'] .stock__lamp::after {
+  opacity: .06;
 }
 
 /* the wet gloss that crosses the whole sheet when the pull lands */
@@ -972,7 +1139,7 @@ kbd {
   width: 30px;
   height: 30px;
   color: var(--black);
-  background: rgba(242, 238, 226, .92);
+  background: color-mix(in srgb, var(--stock) 92%, transparent);
   border: 1px solid rgba(21, 20, 27, .16);
   place-items: center;
   transform: translate(-50%, -50%);
@@ -1081,7 +1248,11 @@ html[data-register='on'] .edge__ink--black {
   gap: clamp(12px, 3vw, 44px);
   padding: 11px var(--gutter);
   border-bottom: 1px solid var(--rule);
-  background: rgba(242, 238, 226, .965);
+  /* the bar is the trim edge of the sheet, and a trim edge is the same stock as
+     whatever it is lying over — so it takes the paper's colour rather than a
+     number typed out of it, and it is thin enough that the light coming off the
+     top left of the run reaches through it */
+  background: color-mix(in srgb, var(--stock) 84%, transparent);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   transition: background .5s var(--ease), border-color .5s var(--ease);
@@ -1452,7 +1623,19 @@ html[data-slab='on'] .slugbar {
   z-index: -1;
   /* and the field is pressed harder at the press than at the foot of the run,
      because that is where the ink is still wet */
-  opacity: calc(.6 + var(--ink-close) * .4);
+  opacity: calc(.58 + var(--ink-close) * .36);
+}
+
+/* THE ARMATURE STEPS BACK UNDER THE POSTER. a press sheet prints its ruling at
+   full weight because there is nothing else competing with it. this one had a
+   poster set across the top of the type area at 7.2rem, which is not nothing
+   else competing with it — so the sheet that carries the poster prints the grid
+   a step lighter, and the proofing sheet further down, where the ruling is the
+   only armature there is, keeps the whole weight. one step, not a removal: the
+   sheet is still ruled, and the reader still learns the register from the shape
+   of the page. */
+.ruling--veil {
+  opacity: calc(.36 + var(--ink-close) * .24);
 }
 
 .ruling--slab {
@@ -1468,7 +1651,12 @@ html[data-slab='on'] .slugbar {
   position: absolute;
   inset: 0;
   display: block;
-  color: rgba(20, 19, 26, .14);
+  /* the whole armature comes down a step in weight. at press strength the two
+     colour plates were printing a magenta and a blue line down the entire
+     measure, eight hundred pixels apart, over the top of the poster — which is
+     a dirty screen and not a misregistered press. they are still plainly two
+     plates arguing at two offsets; they are just no longer tinting the room. */
+  color: rgba(20, 19, 26, .105);
   background-image: repeating-linear-gradient(
     90deg,
     currentColor 0 1px,
@@ -1482,7 +1670,7 @@ html[data-slab='on'] .slugbar {
 }
 
 .ruling__plate--pink {
-  color: rgba(255, 42, 99, .28);
+  color: rgba(255, 42, 99, .17);
   transform: translate(
     calc(var(--reg-x) * var(--fringe-scale) * var(--ink-close) * 1.14),
     calc(var(--reg-y) * var(--fringe-scale) * var(--ink-close) * 1.14)
@@ -1490,7 +1678,7 @@ html[data-slab='on'] .slugbar {
 }
 
 .ruling__plate--blue {
-  color: rgba(43, 62, 196, .26);
+  color: rgba(43, 62, 196, .15);
   transform: translate(
     calc(var(--reg-x) * var(--fringe-scale) * var(--ink-close) * -.74),
     calc(var(--reg-y) * var(--fringe-scale) * var(--ink-close) * -.74)
@@ -1527,7 +1715,7 @@ html[data-slab='on'] .slugbar {
 /* the ink firms when the plates agree: the same one-step the bar's readout and
    the bed's stamp take, on the largest mark on the page */
 html[data-register='on'] .ruling--light .ruling__plate--black {
-  color: rgba(20, 19, 26, .23);
+  color: rgba(20, 19, 26, .185);
 }
 
 /* the two trim corners of a type area. one pair is what a press sheet prints,
@@ -1808,7 +1996,11 @@ html[data-register='on'] .ink-trap__rule {
 /* the title, split across two columns like a poster: subject left, claim right */
 .question {
   position: relative;
-  margin: clamp(20px, 2.4vw, 38px) 0 0;
+  /* the loudest thing on the sheet gets the largest margin on it. it used to sit
+     thirty-eight pixels under a hairline slug, which is a stack rather than a
+     composition — the eye had no room between the rule and the headline, so the
+     headline and the grid underneath it landed as one texture. */
+  margin: clamp(30px, 3.8vw, 62px) 0 0;
   font-family: var(--display);
   font-size: var(--question);
   font-weight: 800;
@@ -3288,6 +3480,11 @@ html[data-register='on'] .register-eye__plate--black {
   /* the trim bar hangs off the foot edge, which needs a positioned host */
   position: relative;
   background: var(--stock-3);
+  /* a sheet of paper lying on the run is in the same light as the run: lit off
+     the top left, a shade deeper where it turns away at the foot. flat white
+     stock on flat cream stock is the one thing on this page that never looked
+     like it was lying on anything */
+  background-image: linear-gradient(158deg, var(--paper-key) 0%, var(--stock-3) 48%, var(--paper-foot) 100%);
   /* a cut edge, so the frame is a shade firmer than a hairline rule — it is the
      edge of a piece of paper and not one of the armature's own hairlines */
   border: 1px solid rgba(20, 19, 26, .3);
@@ -5140,7 +5337,7 @@ html[data-register='on'] .run__seam-rule--black {
   grid-column: 5 / span 8;
   --black: #14131a;
   --stock-3: #fcfaf3;
-  --ink-70: #403c4c;
+  --ink-70: #3a3646;
   --ink-50: #5b5768;
   --rule: rgba(20, 19, 26, .16);
   --rule-soft: rgba(20, 19, 26, .085);
@@ -5154,6 +5351,10 @@ html[data-register='on'] .run__seam-rule--black {
   --imp: var(--pull);
   color: var(--black);
   background: var(--stock-3);
+  /* and it is lying on ink, in the same room: the same key off the top left and
+     the same shade where the sheet turns away at the foot, so the proof is the
+     brightest object on the slab rather than a white rectangle cut out of it */
+  background-image: linear-gradient(158deg, var(--paper-key) 0%, var(--stock-3) 46%, var(--paper-foot) 100%);
   /* paper is cut, not rounded: this is the last rounded rectangle on the light
      side of the sheet's own argument, and the bed has been square all along */
   border: 1px solid var(--black);
@@ -6111,15 +6312,24 @@ html[data-register='on'] .run__seam-rule--black {
 
 /* ---------- scroll reveal ---------- */
 
-/* only hide a reveal when the observer is there to bring it back */
+/* ONE MOTION ON THE WHOLE SHEET. every other arrival here is ink coming into
+   focus: the poster's lines print, the proof's type is picked line by line, the
+   specimens are set. the scroll reveal was the one thing on the page that
+   arrived the way a web page arrives — twenty pixels of travel and a fade — so
+   for five hundred and ten iterations this sheet had two motion vocabularies
+   and the one the reader meets last, on every band below the poster, was the
+   generic one. it prints now, off the same gesture as `print-line`. */
 html[data-reveal='on'] .reveal {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+  filter: blur(3px);
+  transform: translateY(.28rem);
+  transition: opacity .66s var(--ease-out), filter .66s var(--ease-out),
+    transform .66s var(--ease-out);
 }
 
 html[data-reveal='on'] .reveal.is-in {
   opacity: 1;
+  filter: none;
   transform: none;
 }
 
@@ -6882,6 +7092,7 @@ html[data-reveal='on'] .reveal.is-in {
   html[data-reveal='on'] .reveal {
     opacity: 1;
     transform: none;
+    filter: none;
   }
 
   .w {
@@ -7280,6 +7491,7 @@ html[data-reveal='on'] .reveal.is-in {
   html[data-reveal='on'] .reveal {
     opacity: 1;
     transform: none;
+    filter: none;
   }
 
   .colophon {
