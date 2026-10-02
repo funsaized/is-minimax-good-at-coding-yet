@@ -14,6 +14,7 @@ import { ControlEdge } from './edge'
 import { InkTrap } from './ink'
 import { prefersStill } from './motion'
 import { CropMark, FoldMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
+import { Sheetbar } from './paper'
 import { Plated } from './plate'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
 import { Pullsheet } from './pullsheet'
@@ -1031,6 +1032,12 @@ export function App() {
                 </div>
 
                 <div className={`proof ${proof ? 'is-open' : ''}`}>
+                  {/* the same trim mark the close read wears, on the proof's own
+                      foot margin. the proof is the second piece of paper on the
+                      page and it was the only one whose edge said nothing about
+                      the press */}
+                  <Sheetbar />
+
                   <div className="proof__bar">
                     <span className="proof__tag">
                       <RegistrationMark className="proof__tag-mark" />

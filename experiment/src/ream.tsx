@@ -8,6 +8,7 @@ import {
 import { findNote, phraseLines, WORD_IDS, type WordId } from './notes'
 import { InkTrap } from './ink'
 import { RegistrationMark } from './marks'
+import { Pica, Sheetbar } from './paper'
 import { Plated } from './plate'
 
 /**
@@ -110,6 +111,11 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
         aria-labelledby="specimen-title"
         key={note.id}
       >
+        {/* the trim mark, on this sheet's own foot margin: the same three flats
+            the foot of the light sheet prints, set hard against the trim, so the
+            register is legible off the paper the reader is looking at */}
+        <Sheetbar />
+
         <p className="specimen__slug">
           <span>close read · {note.index} of 03</span>
           <span>{note.measure} · {note.set}</span>
@@ -148,6 +154,10 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
             <InkTrap className="specimen__trap specimen__trap--start" />
             <InkTrap className="specimen__trap specimen__trap--end" />
             <span className="specimen__rule-count">{note.chars}</span>
+            {/* the run counted rather than asserted: one pica a character, so the
+                rule is exactly as wide as the setting and cannot disagree with the
+                figure printed over it */}
+            <Pica ticks={note.chars} />
             <span className="specimen__rule-word">{note.measure}</span>
           </p>
 

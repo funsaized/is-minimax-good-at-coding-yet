@@ -454,6 +454,62 @@
    nothing. the bar brings it back into view when it changes, and
    only when there is somewhere to go — a strip that fits is left
    exactly as it was printed.
+
+   =============================================================
+   ITERATION 510 — THE SHEET IS NOT A CARD
+
+   the sheet has spent three iterations removing rounded rectangles
+   out of it — four pills in the bar, a fifth on the proof — on the
+   grounds that everything else here is paper, ink, rules and hard
+   edges. the two pieces of paper lying on the page were the last
+   two, and they were the worst of it, because their shadows were
+   eleven pixels of grey blur with a static term no blade could
+   ever close: the largest object on the light sheet and the largest
+   object on the slab were the only two large objects on the page
+   that did not answer to the register at all, while a rule under
+   them, a wedge of ink in a notch and a row of seven-pixel flats at
+   the foot of the sheet were all reporting it. the proof was worse
+   still: its shadow turned blue when the proof came out, and this
+   sheet only ever prints blue as a figure.
+
+   so they are sheets. cut corners, because paper is cut. the
+   shadow is ink — the specimen is the second impression, so the
+   blue plate lies behind it at the same 1.5 ratio every other mark
+   uses; the proof is the plate itself, so pink does. both collapse
+   at the gate along with the rest of the press, and at the gate the
+   edge takes the press instead, which is the one-step the bar's
+   readout, the bed's stamp and the flats at the foot have been
+   giving all along. the one blurred layer left is the proof's own
+   shadow cast on the ink, which is a real thing rather than a plate.
+   and pulling the proof now grows the pink bead on the sheet's own
+   edge instead of changing its colour.
+
+   the lit lip goes on as well: a hairline of light down the head
+   and the fore-edge, a hairline of shade down the foot. a sheet has
+   thickness, and a hairline is the only part of that a blurred
+   shadow can never fake.
+
+   THE TRIM BAR. a trimmed print shows its separations at the trim
+   — black, pink, blue, a hair apart, printed outside the type area.
+   this sheet prints that bar down the control strip and as the flats
+   at the foot of the light sheet, and it had never printed it on the
+   paper, which is the one place a reader looks without being asked
+   to. each sheet of paper now carries one on its own foot margin,
+   hard against the trim, where the space below is guaranteed to be
+   there at 320px as well as at 1560: same mark, same two ratios,
+   same fusion at the gate. the fourth time the sheet says the same
+   thing, and not a fourth opinion. on the proof the flats are lifted
+   onto the slab palette, because black on ink is not a mark and
+   neither is federal blue at its light-side value.
+
+   THE PICA. the close read printed the length of the run it was
+   setting — "six letters", "three characters" — as a figure, which
+   is a claim. a compositor counts it, so the column beside the
+   setting now carries a rule of picas: one tick a character,
+   standing on a hairline, as wide as the phrase on the sheet, so
+   the count and the figure can no longer disagree. the ticks are
+   blue because they are a measurement, and they are set one at a
+   time because a counting rule is set one at a time.
    ============================================================= */
 
 
@@ -512,6 +568,11 @@
   --stock: #f2eee2;
   --stock-2: #e4dcc8;
   --stock-3: #fcfaf3;
+  /* the lit lip. one hairline of light along the head and the fore-edge of a
+     sheet of paper, which is how paper gets its thickness — a blurred shadow can
+     suggest depth but it can never put a highlight on an edge, and without the
+     highlight every sheet on this page was a rectangle floating over a rectangle */
+  --paper-lit: #fffdf6;
   --black: #14131a;
   --ink-70: #403c4c;
   --ink-50: #5b5768;
@@ -546,13 +607,15 @@
 
   /* the offset shadows under the cards are not decoration: they are the pink
      plate, printed behind the black one. so they ride the plate offset, and
-     every card on the sheet snaps home the instant the gate catches the blade */
+     every card on the sheet snaps home the instant the gate catches the blade.
+     the two _lg steps are gone: they carried a static eleven pixels that no
+     blade could ever close, which is how the two sheets of paper on this page
+     spent five hundred iterations as the only large objects on it that ignored
+     the press entirely. */
   --lift: calc(var(--reg-x) * 1.5);
   --drop: calc(var(--reg-y) * 1.5);
   --lift-x: calc(5px + var(--lift));
   --lift-y: calc(5px + var(--drop));
-  --lift-x-lg: calc(11px + var(--lift));
-  --lift-y-lg: calc(11px + var(--drop));
 
   --display: 'Helvetica Neue', Helvetica, Arial, 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
   --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
@@ -598,6 +661,14 @@
   /* and the air on a division of the measure that is a decision — a
      two-column band reads as two columns and not as twelve */
   --split: clamp(20px, 3vw, 54px);
+
+  /* THE TRIM BAR. a press sheet prints a short bar of flat ink outside its own
+     trim, and outside the trim is the only place on a sheet wide enough to hold
+     one: the bar hangs below the foot edge and sits hard against the right-hand
+     boundary of the type area, which is the one piece of margin on this page
+     that is guaranteed to be there at 320px as well as at 1560. */
+--bar-w: clamp(18px, 2.2vw, 30px);
+  --bar-h: 6px;
 
   /* ONE SCALE, USED EVERYWHERE, AND IT IS A LADDER. two poster sizes, and
      nothing between them louder than a section head. the question is the
@@ -3183,13 +3254,136 @@ html[data-register='on'] .register-eye__plate--black {
 
 /* ---------- specimen: the sheet on top of the ream ---------- */
 
+/* =============================================================
+   THE SHEET IS NOT A CARD
+
+   the two pieces of paper lying on this page — the close read
+   and the proof — were rounded rectangles with a blurred grey
+   shadow eleven pixels wide, which is the one thing here that
+   had never been through a press. the shadow did not move when
+   the blade moved, so the largest object on the light sheet and
+   the largest object on the slab were the only two large objects
+   on the page that did not answer to the register at all, while
+   the rule under them, the ink traps and a row of seven-pixel
+   flats at the foot of the sheet were all reporting it.
+
+   so they are sheets now. the corners are cut, because paper is
+   cut. the shadow is ink: the specimen is the second impression,
+   printed once in black and once in blue, so the blue plate lies
+   behind it at the same 1.5 ratio every other mark on this page
+   uses, and it collapses to nothing at the gate along with the
+   rest of the press. and the lit lip goes on — one hairline of
+   light down the head and the fore-edge, one of shade down the
+   foot — because a sheet has thickness, and a hairline is the
+   only part of that a blurred shadow can never fake.
+
+   and at the gate the edge takes the press, which is the same
+   one-step the bar's readout, the bed's stamp and the flats at
+   the foot of the sheet already give. the largest object on the
+   light sheet now says what the smallest ones have been saying
+   all along.
+   ============================================================= */
+
 .specimen {
+  /* the trim bar hangs off the foot edge, which needs a positioned host */
+  position: relative;
   background: var(--stock-3);
-  border: 1px solid var(--rule);
-  border-radius: 3px;
-  /* the second impression: the sheet, printed once in black and once in blue,
-     a plate-width apart. it closes up when the blade reaches the gate. */
-  box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 rgba(42, 62, 201, .16);
+  /* a cut edge, so the frame is a shade firmer than a hairline rule — it is the
+     edge of a piece of paper and not one of the armature's own hairlines */
+  border: 1px solid rgba(20, 19, 26, .3);
+  border-radius: 0;
+  box-shadow:
+    inset 1px 1px 0 var(--paper-lit),
+    inset -1px -1px 0 rgba(20, 19, 26, .1),
+    calc(var(--reg-x) * 1.5) calc(var(--reg-y) * 1.5) 0
+      color-mix(in srgb, var(--blue) 68%, transparent);
+  transition: box-shadow .34s var(--ease-out), border-color .4s var(--ease);
+}
+
+html[data-register='on'] .specimen {
+  border-color: var(--pink-ink);
+}
+
+/* =============================================================
+   THE TRIM BAR
+
+   a trimmed print shows its separations at the trim: black, pink
+   and blue, a hair apart, printed outside the type area. the sheet
+   already prints that bar down the control strip and as the flats
+   at the foot of the light sheet; it had never printed it on the
+   paper, which is the one place a reader looks at without being
+   asked to.
+
+   so each sheet of paper carries one on its own foot margin, hard
+   against the trim. same mark, same two ratios, same fusion at the
+   gate — the fourth time the sheet says the same thing, and not a
+   fourth opinion. on the proof the flats are lifted onto the slab
+   palette, because black on ink is not a mark and neither is
+   federal blue at its light-side value.
+   ============================================================= */
+
+.sheetbar {
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  display: block;
+  width: var(--bar-w);
+  height: var(--bar-h);
+  pointer-events: none;
+}
+
+.sheetbar__flat {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: var(--bar-w);
+  height: var(--bar-h);
+  transition: transform .2s linear, background .35s var(--ease), opacity .35s var(--ease);
+}
+
+.sheetbar__flat--black {
+  background: var(--black);
+}
+
+/* the same two ratios as every other mark on the page: pink out to one and a
+   half plates, blue back under one */
+.sheetbar__flat--pink {
+  background: var(--pink);
+  transform: translate(calc(var(--reg-x) * 1.5), calc(var(--reg-y) * 1.5));
+}
+
+.sheetbar__flat--blue {
+  background: var(--blue);
+  transform: translate(calc(var(--reg-x) * -1), calc(var(--reg-y) * -1));
+}
+
+html[data-register='on'] .sheetbar__flat--black {
+  background: var(--pink-ink);
+}
+
+html[data-register='on'] .sheetbar__flat--pink,
+html[data-register='on'] .sheetbar__flat--blue {
+  opacity: 0;
+}
+
+/* the proof is a light sheet lying on the ink, so its edge marks have to be
+   lifted onto the slab palette the way the slab's own ruling is: black flat on
+   a slab is not a mark, and neither is federal blue at its light-side value */
+.proof .sheetbar__flat--pink {
+  background: var(--slab-pink);
+}
+
+.proof .sheetbar__flat--blue {
+  background: var(--slab-blue);
+}
+
+.proof .sheetbar__flat--black {
+  box-shadow: 0 0 0 1px rgba(251, 248, 241, .45);
+}
+
+html[data-register='on'] .proof .sheetbar__flat--black {
+  background: var(--slab-pink);
 }
 
 .specimen__stage--m3 {
@@ -3233,9 +3427,14 @@ html[data-register='on'] .register-eye__plate--black {
   padding: clamp(24px, 3vw, 44px) clamp(20px, 2.6vw, 36px) clamp(26px, 2.8vw, 40px);
   overflow: hidden;
   border-bottom: 1px solid var(--rule);
-  background:
-    linear-gradient(90deg, rgba(21, 20, 27, .035) 0 1px, transparent 1px 34px),
-    var(--stage-tint, transparent);
+  /* one screen, not two. the stage carried a rule every thirty-four pixels as
+     well as the dot screen printed through it, and two textures behind the one
+     setting the band exists to show is not restraint — it is a second idea
+     competing with the type. the screen stays, because a screen is what a press
+     prints a wash through, and the tint that varies with the plate stays because
+     it is the wash. the measuring is done by the rule on the right, which now
+     counts the run instead of asserting it. */
+  background: var(--stage-tint, transparent);
 }
 
 /* the space between the setting and the measure is not empty: it is the screen
@@ -3249,7 +3448,7 @@ html[data-register='on'] .register-eye__plate--black {
   color: var(--blue);
   background-image: radial-gradient(circle, currentColor 1.05px, transparent 1.3px);
   background-size: 7px 7px;
-  opacity: .2;
+  opacity: .26;
   pointer-events: none;
   mask-image: linear-gradient(96deg, transparent 12%, #000 46%, transparent 86%);
   -webkit-mask-image: linear-gradient(96deg, transparent 12%, #000 46%, transparent 86%);
@@ -3356,6 +3555,55 @@ html[data-register='on'] .register-eye__plate--black {
   white-space: nowrap;
 }
 
+/* =============================================================
+   THE PICA
+
+   the run was printed as a figure, which is a claim. a
+   compositor counts it: a rule of picas, one tick a character,
+   standing on a hairline, as wide as the setting it measures.
+
+   so the measure is counted here rather than asserted. the rule
+   is exactly as wide as the run — two ticks for M3, three for
+   yet?, six for good at — so the column beside the setting grows
+   and shrinks with the phrase on the sheet and cannot disagree
+   with the number printed above it. the ticks are federal blue
+   because they are a measurement, and they are set one at a time
+   because a rule of picas is set one at a time.
+   ============================================================= */
+
+.pica {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 17px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.pica i {
+  display: block;
+  width: 1px;
+  height: 100%;
+  background: var(--blue-ink);
+  opacity: .46;
+  transform-origin: 50% 100%;
+  animation: tick-set .3s var(--ease-out) both;
+  /* counted after the sheet lands, one pica at a time */
+  animation-delay: calc(260ms + var(--i, 0) * 52ms);
+}
+
+/* the odd picas are the full rule; the rest are half-height, which is how a
+   counting rule is actually drawn, and every fifth is a full one so a long run
+   can be found at a glance */
+.pica i:nth-child(even) {
+  height: 52%;
+}
+
+.pica i:nth-child(5n + 1) {
+  height: 100%;
+  opacity: .68;
+}
+
 /* the end of the measured line. the tick and the notch of ink under it are one
    mark — the whole corner, drawn by the same hand — so the pools are already
    most of the way filled on a column this far down the press, and only finish
@@ -3408,12 +3656,20 @@ html[data-register='on'] .register-eye__plate--black {
   text-transform: uppercase;
 }
 
+/* THE TITLE OF THE SHEET COMES OFF THE PRESS. it was the last heading on the
+   page set in the grotesque, which made it the third heading voice on a sheet
+   that claims to have three: the press sets the two posters and the phrases,
+   the reading voice sets the words, the mono sets the furniture. a card heading
+   is prose, not a poster, and setting it in the serif also puts it one step
+   below the section head in the same face — a size ladder a reader can walk up
+   — instead of a change of typeface at a size the section head is about to use
+   two bands later. */
 .specimen__body h3 {
-  font-family: var(--display);
+  font-family: var(--serif);
   font-size: var(--sub);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -.038em;
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -.01em;
   text-wrap: balance;
 }
 
@@ -3713,9 +3969,7 @@ html[data-register='on'] .register-eye__plate--black {
   z-index: 2;
   /* the sheet on top casts one as well as the blue plate's second impression,
      and it has to cast it upward: there is paper standing on its edge */
-  box-shadow:
-    0 -9px 15px -11px rgba(21, 20, 27, .5),
-    var(--lift-x-lg) var(--lift-y-lg) 0 rgba(42, 62, 201, .16);
+  box-shadow: 0 -9px 15px -11px rgba(21, 20, 27, .5);
   /* and it is printed wet and lands wet: it comes up out of the stack with the
      ink still moving, and the animation is on the sheet itself rather than on
      what is printed on it, so pulling a different phrase brings a whole sheet
@@ -4882,6 +5136,7 @@ html[data-register='on'] .run__seam-rule--black {
 .proof {
   /* a physical proof sheet lying on the slab, so the light palette goes back on
      here and the card stays the brightest object in the run */
+  position: relative;
   grid-column: 5 / span 8;
   --black: #14131a;
   --stock-3: #fcfaf3;
@@ -4899,15 +5154,38 @@ html[data-register='on'] .run__seam-rule--black {
   --imp: var(--pull);
   color: var(--black);
   background: var(--stock-3);
+  /* paper is cut, not rounded: this is the last rounded rectangle on the light
+     side of the sheet's own argument, and the bed has been square all along */
   border: 1px solid var(--black);
-  border-radius: 4px;
-  box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 var(--pink), 0 26px 60px -34px rgba(0, 0, 0, .8);
-  transition: box-shadow .4s var(--ease), --pull .8s var(--ease-out);
+  border-radius: 0;
+  /* THE SHEET, NOT A CARD. the shadow was eleven pixels of blur that never moved
+     with the blade, and turned blue — a colour this sheet only ever prints as a
+     figure — the moment the proof came out. so it is ink now: the pink plate at
+     the same 1.5 ratio every other mark uses, so it collapses at the gate with
+     the rest of the press, and the one blurred layer left is the sheet's own
+     shadow cast on the ink, which is a real thing and not a plate. */
+  box-shadow:
+    calc(var(--reg-x) * 1.5) calc(var(--reg-y) * 1.5) 0 var(--pink),
+    0 26px 60px -34px rgba(0, 0, 0, .8);
+  transition: box-shadow .4s var(--ease-out), border-color .45s var(--ease),
+    --pull .8s var(--ease-out);
 }
 
 .proof.is-open {
   --pull: 1;
-  box-shadow: var(--lift-x-lg) var(--lift-y-lg) 0 var(--blue), 0 30px 70px -30px rgba(0, 0, 0, .85);
+  /* and the pull is the pink bead standing up on the face of the blade: the
+     only part of the gesture that belongs to the paper rather than the room */
+  box-shadow:
+    calc(var(--reg-x) * 1.5 + var(--pull) * 5px) calc(var(--reg-y) * 1.5 + var(--pull) * 5px) 0
+      var(--pink),
+    0 30px 70px -30px rgba(0, 0, 0, .85);
+}
+
+/* a sheet that has been pulled has been pressed, and a straight sheet shows it on
+   its edge — the same one-step the bar's readout, the bed's stamp and the flats
+   at the foot of the light sheet have been giving all along */
+.run.is-open .proof {
+  border-color: var(--pink-ink);
 }
 
 .proof__bar {
@@ -4918,7 +5196,7 @@ html[data-register='on'] .run__seam-rule--black {
   padding: 10px 12px 10px 16px;
   color: var(--stock-3);
   background: var(--black);
-  border-radius: 3px 3px 0 0;
+  border-radius: 0;
 }
 
 .proof__tag {
@@ -5024,11 +5302,17 @@ html[data-register='on'] .run__seam-rule--black {
   position: relative;
   display: grid;
   /* tall enough that the card is a proof sheet rather than a card that changes
-     its own height, and short enough that it still reads as a sheet. it lost
-     the rubric to the slab beside it, so what is left is the answer and its
+     its own height, and short enough that it still reads as a sheet. it lost the
+     rubric to the slab beside it, so what is left is the answer and its
      foot — and this is the height that fits those two. */
   min-height: clamp(258px, 24vw, 344px);
-  border-radius: 0 0 3px 3px;
+  border-radius: 0;
+  /* THE LIT LIP, where the paper is. the proof's own frame is under its black
+     bar for the first ten pixels, so the highlight that gives a sheet its
+     thickness belongs on the paper field rather than on the frame */
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, .9),
+    inset -1px -1px 0 rgba(20, 19, 26, .08);
 }
 
 /* the sheet on top: the hatch of a cover, and a broad light coming through the
@@ -5038,7 +5322,7 @@ html[data-register='on'] .run__seam-rule--black {
   position: absolute;
   inset: 0;
   z-index: 2;
-  border-radius: 0 0 3px 3px;
+  border-radius: 0;
   background:
     radial-gradient(58% 40% at 34% 46%, rgba(255, 46, 107, .08), transparent 72%),
     repeating-linear-gradient(135deg, rgba(20, 19, 26, .028) 0 1px, transparent 1px 9px);
@@ -6022,6 +6306,18 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
+/* one pica of the counting rule, set down */
+@keyframes tick-set {
+  from {
+    opacity: 0;
+    transform: scaleY(.15);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
 /* the blade crosses the sheet at the speed it is dragged, which is the one thing
    about this gesture that is not eased: a squeegee is a constant pull, and any
    easing on it reads as a swipe on a phone rather than as a press */
@@ -6409,12 +6705,6 @@ html[data-reveal='on'] .reveal.is-in {
      only piece of state on the sheet that the title is not showing you */
   .gauge__read {
     display: none;
-  }
-
-  /* a phone has no room for a plate-width offset behind a card */
-  :root {
-    --lift-x-lg: calc(6px + var(--lift));
-    --lift-y-lg: calc(6px + var(--drop));
   }
 
   /* the armature steps down with the bands. the job ticket is the last band
@@ -6814,6 +7104,28 @@ html[data-reveal='on'] .reveal.is-in {
      it rather than left in fluorescent pink */
   .plates__blade {
     background: #000;
+  }
+
+  /* and the same goes for the trim bar on each sheet of paper: three flats in one
+     plate, which is what the flat ink at the trim actually is on paper. the lit
+     lip goes too — on white it is not a highlight, it is a printing fault */
+  .sheetbar__flat--pink,
+  .sheetbar__flat--blue {
+    background: #000;
+  }
+
+  .sheetbar__flat--black {
+    background: #000;
+    box-shadow: none;
+  }
+
+  html[data-register='on'] .sheetbar__flat--black {
+    background: #000;
+  }
+
+  .specimen,
+  .proof__stage {
+    box-shadow: none;
   }
 
   /* a printout has no wet film on the ink, and no impression in the paper either:

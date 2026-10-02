@@ -1,54 +1,47 @@
-Iteration 509: the pull crosses the whole sheet, and the type band stops running out two thirds across.
+Iteration 510: the sheet stops being a card — cut corners, ink shadows, a trim bar, a counted measure.
 
-**The pull travels the sheet.** The proof card carried its own sweep — a band of light
-crossing four hundred pixels of the card, with the toggle's squeegee riding it. That is a
-good description of a squeegee and a poor one of a print. A pull crosses the sheet, and
-this page already sets the same short answer at the top of the run as well as the foot of
-it off one number (`--land`), so the moment the proof comes out is the moment the sentence
-at the head of the page takes an impression. A blade that only travelled inside the last
-card could not say that.
+**The sheet is not a card.** The close read and the proof were the last two rounded
+rectangles on the page, and the only large objects on it whose shadows ignored the
+press: eleven pixels of static grey blur that no blade could close, while a rule
+under them, a wedge of ink in a notch and a row of seven-pixel flats at the foot
+of the sheet were all reporting the register. The proof's shadow also turned blue
+when the proof was pulled, and this sheet only ever prints blue as a figure.
 
-So the blade is now the sheet's, and the card's own sweep is gone — two blades on one
-gesture is one too many. The new pull runs under the slug bar, because a bar lying across
-the trim edge is the one thing a blade never crosses, and stops short of the control
-strip, because that strip is outside the trim. Two layers, because a squeegee does two
-things: the blade is the lit edge and the pink bead still standing on its face, travelling
-at a constant speed (a drag, not a gesture), and the film is the ink starved onto the
-stock behind it, which wets in step with the blade and then dries. Both are transform and
-opacity, neither repaints the sheet, the whole thing is mounted only for the length of the
-pull and keyed on a counter so two pulls in a row are two pulls. It is entirely travel, so
-under reduced motion it does not run at all and the reader simply gets the printed answer.
+- Corners cut on the specimen, the proof, its bar, its stage and its cover —
+  paper is cut, and the press bed has been square throughout.
+- The specimen's shadow is now the second impression: the blue plate at the same
+  1.5 ratio as every other mark, collapsing to nothing at the gate. The proof's is
+  the pink plate on the same terms. The only blurred layer left is the proof's own
+  shadow cast on the ink.
+- Both sheets carry a lit lip — a hairline of light down the head and fore-edge,
+  a hairline of shade down the foot — so they have thickness.
+- At the gate the specimen's edge takes the pink (the register); the proof's takes
+  it when the proof is pulled. Pulling also grows the pink bead on the proof's own
+  edge instead of changing its colour.
+- Removed the now-unused `--lift-x-lg` / `--lift-y-lg` tokens, whose static eleven
+  pixels were the reason the sheets could never reach the gate.
 
-Both routes to the pull — the key on the proof sheet and the key beside the answer — now
-go through one callback, so the travelling blade and the word on `--land` cannot come
-apart and leave a reader pressing a key and watching nothing cross the page.
+**The trim bar.** A trimmed print shows its separations at the trim. The sheet
+printed that bar down the control strip and as the flats at the foot of the light
+sheet, and never on the paper — the one place a reader looks without being asked.
+Each sheet of paper now carries one on its own foot margin, hard against the trim,
+same two ratios, same fusion at the gate. On the proof the flats are lifted onto
+the slab palette. New file `src/paper.tsx` holds the mark and the pica below.
 
-**The ladder.** The type band was the one band on the light sheet whose content stopped
-short of the measure: a slug across the whole width, then a paragraph in the first six
-columns (507px of 1319px at 1440) and nothing in the last six, with the armature's own
-column rules going on through the empty half. The claim the band was already making in
-three other places — two poster sizes, nothing louder than a section head between them —
-was printed as a run-on sentence stranded in that first column, 812px short of the trim.
-It is now a ladder of five steps in the columns the paragraph gave up, on the same twelve
-columns as every other band, split on the printed rule at eight, token hard left, figure
-hard right in federal blue like every other measured thing on the page. The head keeps the
-padding and the 2px rule it shares with the close read; it only gains a track. Below 1180
-the two halves stack and the ladder takes a rule of its own across the full measure.
+**The pica.** The close read printed the length of the run it was setting as a
+figure, which is a claim. The column beside the setting now carries a rule of
+picas — one tick a character, standing on a hairline, as wide as the phrase on the
+sheet — so the count and the figure can no longer disagree. Blue, because it is a
+measurement; set one tick at a time, because a counting rule is.
 
-**The bar keeps the reader where they are.** Below 1180 the index is a scrolling strip,
-which is the right answer for four caps slugs in the mono on a phone and also means the
-pass the reader is standing in can sit off the end of the bar under a hairline mask,
-telling them nothing. The bar now brings the current pass back into view when it changes,
-and only when there is genuinely somewhere to go: a strip that fits is left exactly as it
-was printed. The strip also gets inline scroll padding, so a focused link is never left
-jammed against the trim with its own mask over it.
+**Two fixes in the same band.** The specimen's stage carried two textures behind
+the one setting the band exists to show (a rule every 34px and the dot screen);
+the screen stays, the rule goes. And the specimen's title was the last heading on
+the page set in the press voice — it is now in the reading face, one step under
+the section head in the same family, so the page has two heading voices rather
+than three.
 
-**Also.** `src/faces.tsx` carried a raw NUL byte in a template literal, which made the
-file read as binary; it is now the `\u0000` escape it always meant to be.
-
-Checked: `npm run build` passes. No horizontal overflow at 1440, 1280, 1024, 768 or 390.
-Measured geometry above the type band is unchanged. The pull renders above the sheet and
-below the slug bar, hit-tests as expected, travels, and is removed from the DOM afterwards.
-Reduced motion hides it entirely and still opens the proof. The index scrolls itself to the
-active pass on a phone and is left alone on a desktop. All eighteen tab stops still carry a
-visible focus ring; the visible title and the document title are unchanged.
+**Notes.** Client-only, no new dependencies, no network. Motion added is a state
+collapse and a staggered count, both covered by the existing reduced-motion
+handling. Print styles updated: the trim bar prints in one plate, the lit lips and
+plate offsets come off.
