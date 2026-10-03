@@ -1972,8 +1972,22 @@ html[data-register='on'] .ink-trap__rule {
 }
 
 @media (max-width: 620px) {
-  :root {
-    --label: .55rem;
+  /* THE FLOOR ON THE SMALLEST TYPE ON THE PAGE.
+
+     this used to drop the label tier to .55rem — about nine pixels — on a phone,
+     which put every band slug on the sheet, every kicker and every cross-reference
+     below the two finer tiers printed beside them, and below the size the sheet's
+     own type list claims the slug is set at. a screen that cannot read the section
+     it is standing in cannot navigate by section, and here the slugs are the only
+     thing naming the sections. so the override goes: the floor is one step, on
+     every width, and the page says the same thing about its own type at 375px as
+     it does at 1560.
+
+     and the slugs tighten by a twenty-fifth to pay for it, which is also what a
+     tracked slug in a narrow measure has to do: --label is 10.5px, and at .145em
+     the question's own slug does not fit a phone without wrapping. */
+  .slugline {
+    letter-spacing: .12em;
   }
 
   .sheet__slug {
@@ -5790,12 +5804,196 @@ html[data-register='on'] .run__seam-rule--black {
 }
 
 .proof__yes {
+  min-width: 0;
   color: var(--pink-ink);
   font-family: var(--mono);
   font-size: var(--label-2);
   font-weight: 600;
   letter-spacing: .15em;
   text-transform: uppercase;
+}
+
+/* =============================================================
+   THE HEAD LINE OF THE PROOF, AND THE SIGN-OFF
+
+   The sheet's own verdict about itself has always been printed alone on
+   the first line of the proof, hard against the left margin with a
+   full width of clean paper to its right. That empty half was the
+   best place on the whole sheet for the one mark that had never been
+   on it: a chop. A pressman's proof mark is pressed on by hand, a
+   couple of degrees off square because nobody sets a stamp square,
+   and it is how a sheet that has been looked at says so.
+
+   and the condition it prints under is the only thing on this page
+   that needs both halves of the press at once. The blade had a
+   reward and the pull had a reward, and a reader could take one, take
+   both or take neither and the page had no way to tell the three
+   apart — so the two are asked about each other, and the answer is
+   one small stamp and one line of plain words at the foot of the run.
+
+   Both of the marks on this line are in the pink plate, because both
+   of them are the press: a verdict about a press sheet, set in the
+   ink the press itself prints with. Nothing else on the card is
+   allowed that colour at this size.
+
+   The row is in both copies of the proof, not only the top one — the
+   shadow under the sheet reserves the space the sheet is going to use,
+   so pulling the proof never shoves the poster down a line.
+   ============================================================= */
+
+.proof__yes-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px clamp(14px, 2vw, 30px);
+}
+
+.signoff {
+  position: relative;
+  flex: 0 0 auto;
+  /* out of the tree until the condition is met: it is a mark on the paper, not
+     something in the sentence, and nothing is going to be announced twice. its
+     box is reserved either way, which is the same promise the proof makes about
+     the poster under it. */
+  visibility: hidden;
+  opacity: 0;
+}
+
+.signoff__chop {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 12px 6px;
+  color: var(--pink-ink);
+  border: 1.4px solid currentColor;
+  border-radius: 1px;
+  /* the ink of the stamp itself: a chop is opaque, and the one hard edge on it is
+     the shadow it throws on the paper as it comes down */
+  box-shadow: 2px 2px 0 color-mix(in srgb, var(--pink-ink) 24%, transparent);
+  font-family: var(--mono);
+}
+
+/* the second rule of a chop. one rectangle and one inset rectangle is the whole
+   vocabulary of a stamp, and it is drawn by the stylesheet rather than printed in
+   the markup because it is a border and not a glyph */
+.signoff__chop::after {
+  position: absolute;
+  inset: 2.6px;
+  content: '';
+  border: 1px solid currentColor;
+  opacity: .42;
+  pointer-events: none;
+}
+
+.signoff__row {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* the word in the poster voice. the tick beside it is in the mono, because a
+   stroke and a word are different kinds of mark and the sheet has never pretended
+   otherwise */
+.signoff__word {
+  font-family: var(--display);
+  font-size: 1.06rem;
+  font-weight: 800;
+  line-height: .86;
+  letter-spacing: -.035em;
+}
+
+.signoff__note {
+  position: relative;
+  z-index: 1;
+  color: color-mix(in srgb, var(--pink-ink) 82%, var(--stock-3));
+  font-size: var(--label-3);
+  font-weight: 600;
+  letter-spacing: .17em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.signoff__tick {
+  width: 19px;
+  height: 14px;
+  overflow: visible;
+}
+
+/* a chop is ink with an edge, and an edge is a stroke — so the tick inside it is
+   drawn rather than faded in, from the heel of the mark to the point of it */
+.signoff__tick-mark {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 27;
+  stroke-dashoffset: 27;
+}
+
+/* and the two flecks of ink that land a beat later, because a hand-held stamp
+   never comes down perfectly clean */
+.signoff__fleck {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  background: var(--pink-ink);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.signoff__fleck--a {
+  top: -3px;
+  left: 7px;
+  width: 3px;
+  height: 3px;
+}
+
+.signoff__fleck--b {
+  right: -4px;
+  bottom: 1px;
+  width: 2px;
+  height: 2px;
+}
+
+html[data-ready='on'] .signoff {
+  visibility: visible;
+  opacity: 1;
+  animation: chop-press .6s var(--spring) both;
+}
+
+html[data-ready='on'] .signoff__tick-mark {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset .3s var(--ease-out) .17s;
+}
+
+html[data-ready='on'] .signoff__fleck {
+  animation: fleck .48s var(--ease-out) both;
+}
+
+html[data-ready='on'] .signoff__fleck--b {
+  animation-delay: .09s;
+}
+
+/* the chop is the widest mark on the proof and it is set at the size the sheet
+   prints it, so on a phone it takes its own line under the verdict rather than
+   squeezing the verdict into a column. the tracking closes by a step to pay for
+   the extra width — a tracked slug at a phone's measure is a slug that wraps in the
+   middle of a word. */
+@media (max-width: 620px) {
+  .signoff__chop {
+    gap: 8px;
+    padding: 4px 10px 5px;
+  }
+
+  .signoff__note {
+    letter-spacing: .12em;
+  }
 }
 
 /* =============================================================
@@ -6310,6 +6508,73 @@ html[data-register='on'] .run__seam-rule--black {
   color: var(--pink);
 }
 
+/* =============================================================
+   THE SIGN-OFF, IN WORDS
+
+   The chop on the proof sheet is the reward for finishing the press,
+   and a reward that exists only inside one card is a reward only the
+   readers who happen to be looking at that card ever find. So the
+   foot of the run says the same thing in the plainest voice the sheet
+   owns: what the sheet is waiting for, and the plain fact that it is
+   no longer waiting.
+
+   It is a line of the colophon rather than a control, because it does
+   nothing. It reports two numbers the reader has already moved with
+   their own hands, and it invites them to move them; it is the one
+   sentence on the page that changes, which is exactly why it is set to
+   change rather than swapped out from under the eye.
+   ============================================================= */
+
+.colophon__signoff {
+  flex: 1 0 100%;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(251, 248, 241, .14);
+  color: var(--slab-50);
+  font-family: var(--mono);
+  font-size: var(--label-2);
+  font-weight: 500;
+  letter-spacing: .13em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* the little empty box, waiting for the ink. it is the colophon's copy of the
+   chop and it fills on the same condition, so the two marks either agree or
+   neither of them is showing */
+.colophon__signoff-box {
+  flex: 0 0 auto;
+  padding: 3px 8px 4px;
+  color: var(--slab-50);
+  border: 1px solid rgba(251, 248, 241, .3);
+  font-family: var(--display);
+  font-size: .92rem;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1;
+  text-transform: lowercase;
+  transition: color .45s var(--ease), border-color .45s var(--ease),
+    box-shadow .45s var(--ease);
+}
+
+.colophon__signoff[data-on='on'] {
+  color: var(--slab-70);
+}
+
+.colophon__signoff[data-on='on'] .colophon__signoff-box {
+  color: var(--slab-pink);
+  border-color: currentColor;
+  box-shadow: 2px 2px 0 rgba(255, 95, 142, .4);
+  animation: chop-press .6s var(--spring) both;
+}
+
+.colophon__signoff-text {
+  min-width: 0;
+  text-wrap: pretty;
+}
+
 /* ---------- scroll reveal ---------- */
 
 /* ONE MOTION ON THE WHOLE SHEET. every other arrival here is ink coming into
@@ -6426,6 +6691,36 @@ html[data-reveal='on'] .reveal.is-in {
   100% {
     opacity: 0;
     transform: translateX(34%);
+  }
+}
+
+/* the chop comes down. a stamp is not faded up and it is not eased into place: it
+   arrives too large and out of focus, because a hand brings it down from above,
+   and it hardens on the beat with a small overshoot at the end of the travel. the
+   rotation is in both keyframes rather than on the element, because it is the
+   angle of the hand and not a resting property of the mark. */
+@keyframes chop-press {
+  from {
+    opacity: 0;
+    filter: blur(2.4px);
+    transform: rotate(-2.6deg) scale(1.52);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+    transform: rotate(-2.6deg) scale(1);
+  }
+}
+
+/* and the ink beside it, which spreads into itself rather than travelling */
+@keyframes fleck {
+  from {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+  to {
+    opacity: .58;
+    transform: scale(1);
   }
 }
 
@@ -7176,6 +7471,30 @@ html[data-reveal='on'] .reveal.is-in {
      sheet whose reward for registering is conditional on the reader's settings,
      which is the one thing the register is not. both posters still lock up —
      they simply arrive already tight. */
+
+  /* and the chop is already down. a stamp that fades up in a still browser is a
+     sticker; what the reader gets instead is the whole mark, at the angle of the
+     hand and with its tick already drawn, arriving on the same beat as everything
+     else on the sheet. the flecks are ink, not travel, so they are simply there. */
+  .signoff {
+    animation: none !important;
+    filter: none;
+    transform: rotate(-2.6deg);
+  }
+
+  .colophon__signoff-box {
+    animation: none !important;
+  }
+
+  .signoff__tick-mark {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+
+  .signoff__fleck {
+    animation: none !important;
+    opacity: .58;
+  }
 
   /* and the ink ramp is a position, not a journey: the sheet is exactly as dry
      down here as it would be with motion on, because a page that dries only when

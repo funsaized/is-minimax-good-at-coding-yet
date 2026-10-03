@@ -20,6 +20,7 @@ import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
 import { Pullsheet } from './pullsheet'
 import { Ream } from './ream'
 import { Ruling } from './ruling'
+import { Signoff } from './signoff'
 import { TypeList } from './typelist'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
@@ -179,11 +180,21 @@ export function App() {
   const onSlab = useRef(false)
   const plateRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const wasSettled = useRef(false)
+  const wasReady = useRef(false)
   const regRef = useRef(reg)
   regRef.current = reg
 
   const shown = hover ?? active
   const settled = inRegister(reg)
+  /* THE SHEET IS SIGNED OFF. the blade and the pull are two separate pieces of
+     machinery and each of them had a reward of its own, which meant a reader could
+     work neither, work one, or work both and the page could not tell the three
+     apart. so the two are given a joint condition — the plates agree AND the proof
+     is out — and that is the only state here that says the reader ran the press
+     rather than watched it run. it prints one chop on the proof sheet, and it is
+     said in plain words at the foot of the run, where somebody who never opened the
+     proof can still read it. */
+  const ready = settled && proof
   /* which of the three cells of the case the blade is standing over. read out of
      the same list the cells are printed from, so a plate cannot be on the bed and
      off the case at the same time */
@@ -363,6 +374,19 @@ export function App() {
     wasSettled.current = settled
   }, [settled])
 
+  /* THE SIGN-OFF, and the only place on the sheet where the two halves of the press
+     are asked about each other. one attribute on the root, so the chop on the proof
+     and the line at the foot of the run are the same fact rather than two copies of
+     it, and said once, because a stamp that lands without a word is a stamp the
+     reader is told about rather than shown. */
+  useEffect(() => {
+    document.documentElement.dataset.ready = ready ? 'on' : 'off'
+    if (ready && !wasReady.current) {
+      setAnnounce('Signed off. The proof is pulled and the plates are in register.')
+    }
+    wasReady.current = ready
+  }, [ready])
+
   /* the pull lands: every colour plate on the sheet flies home, black prints over the top */
   useEffect(() => {
     if (!catchTick) return
@@ -503,7 +527,12 @@ export function App() {
   const walk = (from: WordId, step: number) =>
     WORD_IDS[(WORD_IDS.indexOf(from) + step + WORD_IDS.length) % WORD_IDS.length]
 
-  /* arrow keys walk the radiogroup; focus follows, as a radio group should */
+  /* arrow keys walk the radiogroup; focus follows, as a radio group should.
+
+     and the walk is claimed outright: the bed's own promise that the arrows nudge
+     the blade is kept on the window, so without stopping the event here a reader
+     who put a plate on with the arrow keys also moved the blade half a unit on the
+     way — two machines answering one key, one of them silently. */
   const nudge = (event: ReactKeyboardEvent<HTMLElement>, id: WordId) => {
     let next: WordId | null = null
     if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = walk(id, 1)
@@ -512,6 +541,7 @@ export function App() {
     else if (event.key === 'End') next = WORD_IDS[WORD_IDS.length - 1]
     if (!next) return
     event.preventDefault()
+    event.stopPropagation()
     select(next)
     plateRefs.current[next]?.focus()
   }
@@ -1159,6 +1189,24 @@ export function App() {
               <CropMark className="colophon__crop" />
               The experiment is the page.
             </p>
+
+            {/* THE SIGN-OFF, IN WORDS. the chop on the proof sheet is the reward for
+                finishing the press, and a reward that only exists inside one card is
+                a reward only the readers who happen to be looking at that card
+                ever find. so the foot of the run says the same thing in the plainest
+                voice the sheet owns: what the sheet is waiting for, and the plain
+                fact that it is no longer waiting. both halves of the sentence are
+                facts about the reader's own hands, and it is the only text on the
+                page that changes — which is why it is set to change rather than
+                swapped out from under the eye. */}
+            <p className="colophon__signoff" data-on={ready ? 'on' : 'off'}>
+              <span className="colophon__signoff-box" aria-hidden="true">ok</span>
+              <span className="colophon__signoff-text">
+                {ready
+                  ? 'signed off — the blade is at the gate and the proof is pulled'
+                  : 'not signed off — the blade has to reach the gate, and the proof has to be pulled'}
+              </span>
+            </p>
           </div>
         </div>
       </footer>
@@ -1230,6 +1278,9 @@ function QuestionTitle({
     const back = event.key === 'ArrowLeft' || event.key === 'ArrowUp'
     if (!forward && !back) return
     event.preventDefault()
+    /* the same claim as the case below the poster: the title walks its own three
+       plates on the arrows, and the blade must not hear about it */
+    event.stopPropagation()
     const here = WORD_IDS.indexOf(id)
     const next = forward
       ? WORD_IDS[(here + 1) % WORD_IDS.length]
@@ -1349,7 +1400,24 @@ function ProofSheet({ through = false }: { through?: boolean }) {
 
   return (
     <>
-      <p className="proof__yes">yes — with a hand</p>
+      {/* THE HEAD LINE OF THE PROOF, AND THE SIGN-OFF.
+
+          the two marks on this sheet sit on one line and are set against each
+          other: the sheet says what it thinks at the left, and the pressman says
+          what he thinks of it at the right. both of them are in the pink plate,
+          because both of them are the press — a verdict about a press sheet, set
+          in the ink the press itself uses.
+
+          the row is in both copies of the proof, not just the top one, because the
+          shadow under the sheet has to reserve the same space the sheet will use:
+          otherwise pulling the proof would shove the poster down a line, and a
+          print is not supposed to move the type around it. only the copy on top
+          carries the chop, and the chop only prints once the two halves of the
+          press agree — see Signoff. */}
+      <p className="proof__yes-row">
+        <span className="proof__yes">yes — with a hand</span>
+        {through ? null : <Signoff />}
+      </p>
 
       {/* the punchline is the second poster on the page, so it is set like one:
           the same face, the same weight, the same tracking as the question, and

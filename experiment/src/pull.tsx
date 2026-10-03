@@ -545,6 +545,11 @@ export function PullBed({
   }
 
   const keys = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    /* the bed is the one place on the sheet that owns the arrow keys outright, and
+       it says so in the window as well as here. the two used to run together: a
+       reader holding the bed and pressing → nudged the blade by the bed's tenth of a
+       unit and then again by the window's 0.12, which is a machine that does not
+       agree with its own label. the claim is made once, here. */
     const step = event.shiftKey ? 0.5 : 0.1
     let next: number | null = null
     if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') next = reg - step
@@ -560,6 +565,7 @@ export function PullBed({
     }
     if (next === null) return
     event.preventDefault()
+    event.stopPropagation()
     nudgeTo(next)
   }
 

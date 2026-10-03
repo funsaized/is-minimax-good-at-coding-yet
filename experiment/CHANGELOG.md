@@ -1,54 +1,46 @@
-The stock is lit now: a key light, one press bloom, and a lamp that tightens when the plates come into register.
+Iteration 512: the blade and the pull get one finish — a proof chop and a line of words at the foot of the run.
 
-## Iteration 511 — the sheet is lit
+**Direction: the sheet can be signed off.**
 
-Direction: the light on the paper is the register. The register was already reported
-nine times on the page (bar gauge, bed stamp, foot flats, the mark in the title, the two
-fold marks, the ruling, the paper's own shadow, two type-list gauges). Every one of
-those was a readout; none of them was felt. This iteration moves the number into the
-light and quiets the room.
+The page had two pieces of machinery. The blade, which brings the three plates into
+register, and the pull, which prints the short answer at the foot of the run. Each
+had a reward of its own — the ink agreeing with itself, the sentence printing — but
+neither knew the other existed, so a reader could work one, work both, or work
+neither and the page could not tell the three cases apart. The two are now asked
+about each other: **in register AND pulled** is the one state on this page that
+means the reader ran the press rather than watched it run.
 
-**The stock is lit** (`src/style.css`, `.stock__fibre`, `.stock__wash`)
-- The paper was a flat cream with two large radial smears veiled over the whole
-  viewport — one pink, one blue. It now takes a broad key light off the top left and
-  deepens away from it in warm brown. The drum banding is no longer multiplied in: at
-  2% black over cream, ordinary compositing is indistinguishable and saves a
-  full-viewport blend under the sticky bar.
-- The blue wash is deleted. On this sheet blue is only ever a figure, and a figure does
-  not get to be the colour of the room. One bloom of press pink remains, kept high and
-  tight behind the poster, still riding the plate offset and the drying ramp.
+**What was added**
 
-**The lamp** (`src/App.tsx`, `.stock__lamp`)
-- New fixed layer. Out of register it is wide, faint, magenta and drifts with the
-  plates; at the gate the magenta goes out of it and one warm core is left, tightened
-  and no longer drifting.
-- Two pseudo-layers rather than one blended background, because a background cannot be
-  transitioned. Three opacity ramps and one transform — all compositor work.
-- Dims over the ink slab rather than going out. A position, not a journey: reduced
-  motion and print both get the sheet already in its state, and a reader who never
-  touches the blade still sees the loose light and an honest opening register.
+- `src/signoff.tsx` — the proof chop. A pressman's sign-off mark: double-ruled,
+  pressed on by hand, a couple of degrees off square because nobody sets a chop
+  square, in the pink plate because both marks on that line are the press. It is
+  set against the sheet's own verdict on the head line of the proof, and the row is
+  present in both copies of the proof so pulling the sheet never shoves the poster
+  down a line.
+- The chop arrives pressed rather than faded: too large and out of focus, hardening
+  on the beat with an overshoot, the tick inside it drawn stroke-first because a chop
+  is ink with an edge, and two flecks of ink a beat later because a hand-held stamp
+  never lands perfectly clean. Under reduced motion it is simply already down, at the
+  angle of the hand, tick drawn.
+- The foot of the press run says the same thing in plain words and invites the move:
+  *not signed off — the blade has to reach the gate, and the proof has to be pulled*,
+  becoming *signed off* when it is. Its small box fills on the same condition as the
+  chop, and it is announced once through the existing live region.
 
-**The armature steps back** (`src/ruling.tsx`, `.ruling`)
-- All three ruling plates come down a step in weight (.14/.28/.26 → .105/.17/.15). At
-  press strength the colour plates were printing a magenta and a blue line down the
-  whole measure over the poster.
-- New `veil` prop, used on the sheet carrying the poster, drops that sheet's ruling a
-  further step. The proofing sheet keeps full strength, where the ruling is doing
-  structural work rather than standing behind something that already shouts.
+**What was fixed**
 
-**One motion, one hierarchy**
-- The scroll reveal was the only thing on the page arriving like a web page: 20px of
-  rise and a fade. It now prints, off the same gesture as the poster's lines.
-- `--ink-70` steps darker (#403c4c → #3a3646), so the argument is black and the
-  furniture is grey by a wider margin. `--ink-50` is untouched, to keep the small
-  mono labels where they were.
-- The poster gets the largest margin on the sheet (38px → 62px): it sat too close
-  under its own slug to read as a composition rather than a stack.
-- The close-read sheet and the proof sheet take the same key light as the run they are
-  lying on, instead of being flat white rectangles cut out of it.
-- The slug bar and the control strip derive their ground from `--stock` rather than a
-  number typed out of it, so they stay in step with the paper as it is lit.
+- **Small type on phones.** The label tier was dropped to `.55rem` — about nine
+  pixels — below 620px, which put every band slug, kicker and cross-reference under
+  the two finer tiers printed beside them and under the size the page's own type list
+  claims the slug is set at. The override is gone: one floor on every width. Slugs
+  tighten from `.145em` to `.12em` to pay for it.
+- **Two machines answering one key.** The arrow keys are promised by the bed on the
+  window, so the plate radiogroup, the words in the title and the bed itself all ran
+  their own handler *and* the window's: walking a plate with the arrows also moved
+  the blade a fifth of a unit, and a reader holding the bed nudged it by 0.1 and then
+  again by 0.12. Each of the three now claims the event outright.
 
-Unchanged: the title and document title, the entry point, the four passes and their
-numbering, every control's behaviour, keyboard support, and all reported numbers.
-`npm run build` passes.
+**Unchanged:** title, document title, entry point, framework, tests, and every
+existing mechanic — the plates, the bed, the film, the wet trail, the pull, the show
+through, the rubric, the fold, the type list, the colophon.
