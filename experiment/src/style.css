@@ -553,6 +553,71 @@
 
    and the reading voice takes one step darker, so the argument is
    black and the furniture is grey by a wider margin than it was.
+   =============================================================
+   THE SHEET IS PRESSED
+
+   One idea, in four places: everything on this page is ink on
+   paper, and ink has tooth, weight and consequence.
+
+   THE SCREEN. every colour impression on this sheet was a flat,
+   perfectly even translucent tint, and a flat translucent tint is a
+   css filter standing in for ink rather than ink. Newsprint takes
+   the tooth of the paper, so the density of a colour varies from
+   one place to the next and the edge of a solid is ragged where the
+   stock runs high. The colour is now printed through a rag screen —
+   and through a screen as a MASK, not as a texture over the top,
+   which is the whole point: the pinholes it punches are the stock
+   showing through the ink. On the light sheet they are warm paper;
+   on the ink slab at the foot of the run they are the dark ground,
+   and the flat bar of fluorescent pink in the colophon comes out
+   looking like a bar of fluorescent pink. Same turbulence the
+   paper grain and the halftone on the bed's film are already made
+   of, generated in the browser, never downloaded, and static: a
+   screen is a property of the press and not of the register, so it
+   is not one more place the blade reports itself.
+
+   the armature is deliberately left unscreened. It is a one-pixel
+   hairline, and a hairline through a rag screen is a dotted line.
+
+   THE GATE IS MAGNETIC, NOT STICKY. the bed used to catch the blade
+   only on release, so the reader dragged the whole width of the
+   strip watching the colour stay apart to the last pixel and was
+   then handed the reward all at once — a switch rather than a
+   press. The gate now reaches out over a band four times its own
+   width and takes the blade while the drag is still live, so the
+   sheet comes into register underneath the hand about a third of a
+   unit out: the fringes close, the traps fill, the flats fuse and
+   the lamp tightens all while the blade is still moving. The curve
+   is continuous and flat at the edge of the band, so nothing
+   lurches when the magnet lets go and a blade far from the gate is
+   exactly as stiff as it always was.
+
+   THE DROP. the question mark rocks over a dot screen and nothing
+   had ever fallen on it, which is a pad with no purpose. Putting
+   the turn on the press now sheds one bead of pink ink: it lets go,
+   falls the height of the pad, flattens on landing and is taken by
+   the screen underneath. One fall per plate, about a second, no
+   loop, and it fires on the plate going UP rather than on a cursor
+   landing on the case — a flourish that plays without being asked
+   is the one thing this sheet has never had.
+
+   THE POSTER OWES THE SHEET ITS WIDEST GAPS. the biggest piece of
+   type on the page was being given the air of a caption above it
+   and the air of any other head rule below it, which is how a 7.2rem
+   headline ended up living at the density of the furniture around
+   it — and the page's own first test is whether a reader can name
+   the second most important thing without thinking twice, which is
+   not a question you can ask of a headline that has not been given
+   room to be the first. Two air steps that belong to the poster
+   alone, and nothing else on the light sheet uses them.
+
+   and the answer is now printed at the step the scale ladder claims
+   for it. --claim is "the short answer", the answer is printed
+   twice, and the head of the run had been taking the step below it
+   because it happened to have more room in a five-column block than
+   the proof sheet has in a card. Both copies set at the same token:
+   the poster is the first thing on the sheet, the verdict is the
+   second, and the reader can name it without being asked.
    ============================================================= */
 
 
@@ -633,6 +698,18 @@
   --pink-ink: #d1124b;
   --blue: #2b3ec4;
   --blue-ink: #26329e;
+
+  /* THE SCREEN. ink on newsprint does not print flat. it takes the tooth of the
+     paper, so its density varies from one place to the next and the edge of a
+     solid is ragged where the stock runs high and full where it runs low — and
+     every colour impression on this sheet used to be a perfectly even translucent
+     tint, which is a css filter standing in for ink and not ink. this is that
+     tooth: the same turbulence the paper grain is built out of, generated in the
+     browser, never downloaded. it is used as a mask rather than as a texture
+     painted on top, so the holes in it are the stock showing through the ink —
+     which is the whole reason ink reads as ink. see THE SCREEN below. */
+  --screen: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='s' filterUnits='userSpaceOnUse' x='0' y='0' width='160' height='160'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .98 .98 .98 -.54 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23s)'/%3E%3C/svg%3E");
+  --rag: 200px;
 
   /* written by the app: the true plate offset, and whether the ink has landed */
   --reg-x: 3.36px;
@@ -755,6 +832,19 @@
   --air-block: clamp(17px, 2.1vw, 28px); /* inside one band */
   --air-band: clamp(27px, 3.3vw, 50px); /* between two bands on one sheet */
   --air-sheet: clamp(40px, 4.8vw, 78px); /* between two sheets */
+
+  /* AND TWO STEPS THAT BELONG TO THE POSTER ALONE. four steps is right for a
+     sheet of bands, and wrong for the one band on the sheet that carries the
+     biggest piece of type on the page. the poster was being given the same air
+     above it as a job ticket gets, and the same air below it as every other
+     head rule, which is how a 7.2rem headline ended up living at the density of
+     the furniture around it — and the page's own first test is whether a reader
+     can name the second most important thing without thinking twice, which is
+     not a question you can ask of a headline that has not been given room to be
+     the first. these are the two widest gaps on the light sheet and nothing else
+     on it uses them. */
+  --air-poster: clamp(36px, 5.4vw, 92px); /* the slug, then the poster */
+  --air-press: clamp(40px, 5.6vw, 96px); /* the poster, then the press */
 }
 
 * {
@@ -1745,6 +1835,58 @@ html[data-register='on'] .ruling--light .ruling__plate--black {
 }
 
 /* =============================================================
+   THE SCREEN
+
+   Every colour impression on this sheet used to be a flat,
+   perfectly even translucent tint — a css filter standing in
+   for ink. Ink on newsprint is not like that. It takes the tooth
+   of the paper, so its density varies from one place to the next
+   and the edge of a solid is ragged where the stock runs high and
+   full where it runs low, and the three flats the press prints
+   outside its own trim have visible grain in them at seven pixels
+   tall.
+
+   That tooth is the cheapest thing standing between this page
+   looking printed and looking rendered, and it was already in the
+   file: the paper grain and the halftone the bed's film is
+   printed through are both made of the same turbulence.
+
+   So the colour is printed through a screen — not painted over
+   one, and not overlaid as a texture on top of it. It is a mask,
+   which means the pinholes it punches are the pinholes the sheet
+   would really have had: the stock shows through the ink, which
+   is the entire reason ink reads as ink and a translucent box
+   does not. On the light sheet those pinholes are warm paper; on
+   the ink slab at the foot of the run they are the dark ground,
+   and a flat bar of fluorescent pink comes out looking like a bar
+   of fluorescent pink instead of a swatch in a palette.
+
+   The ruling is deliberately not screened. It is a one-pixel
+   hairline, and a hairline through a rag screen is a dotted line
+   — which reads as a printing fault rather than as tooth. The
+   armature is a printed rule and it is allowed to be one.
+
+   And nothing here moves. A screen is a property of the press,
+   not of the register: it is not one more place the blade reports
+   itself, so it costs no repaint per frame and a reader who has
+   asked for stillness gets exactly the same sheet.
+   ============================================================= */
+
+.plated__layer--ghost,
+.ink-trap__pool,
+.w::before,
+.xlink__label::before,
+.plates__blade,
+.sheetfoot__flat,
+.sheetbar__flat,
+.inkbar {
+  -webkit-mask-image: var(--screen);
+  mask-image: var(--screen);
+  -webkit-mask-size: var(--rag) var(--rag);
+  mask-size: var(--rag) var(--rag);
+}
+
+/* =============================================================
    THE THREE IMPRESSIONS
    One set of lines, printed black, pink and blue. The colour
    plates are identical inert copies sitting wherever the press
@@ -2010,11 +2152,13 @@ html[data-register='on'] .ink-trap__rule {
 /* the title, split across two columns like a poster: subject left, claim right */
 .question {
   position: relative;
-  /* the loudest thing on the sheet gets the largest margin on it. it used to sit
-     thirty-eight pixels under a hairline slug, which is a stack rather than a
-     composition — the eye had no room between the rule and the headline, so the
-     headline and the grid underneath it landed as one texture. */
-  margin: clamp(30px, 3.8vw, 62px) 0 0;
+  /* the loudest thing on the sheet gets the largest margin on it, and the widest
+     one is above it: it used to sit thirty-eight pixels under a hairline slug,
+     which is a stack rather than a composition — the eye had no room between the
+     rule and the headline, so the headline and the grid underneath it landed as
+     one texture. now the slug stops, and the poster has the widest gap on the
+     light sheet between it and anything at all. */
+  margin: var(--air-poster) 0 0;
   font-family: var(--display);
   font-size: var(--question);
   font-weight: 800;
@@ -2393,6 +2537,100 @@ html[data-register='on'] .plated__layer--black .mark {
 }
 
 /* =============================================================
+   THE DROP
+
+   The mark's pad is where the pause lands, and a pad is only
+   worth printing if something arrives on it. The close read
+   already drops the question mark onto its own line and calls it
+   a place to land; down here the mark simply rocks over a dot
+   screen and nothing ever falls on it.
+
+   So when the turn is the plate on the press, the mark sheds one
+   bead of pink ink. It lets go, falls the height of the pad,
+   stretches on the way down, flattens as it lands and is taken by
+   the screen underneath — a single drop, once per plate, about a
+   second long, and nothing left behind it but the pool the sheet
+   was printing anyway.
+
+   It is deliberately a state and not a journey: no loop, so the
+   poster never sits in a beat, and the bead only exists at all
+   while the third plate is the one under the reader's hand — put
+   another plate up and the question mark is a question mark
+   again. A still reader is given the pad without the fall, which
+   is the same deal the rest of the sheet makes: the state, not
+   the journey.
+
+   The bead is positioned off the same number as the pad's ::after
+   and travels the same .42em the pad's centre sits below the foot
+   of the mark, so it lands in the middle of the screen rather than
+   beside it.
+   ============================================================= */
+
+.mark__bead {
+  position: absolute;
+  top: 100%;
+  left: 46%;
+  width: .085em;
+  height: .085em;
+  border-radius: 50%;
+  background: var(--pink);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 0);
+}
+
+/* and the ghosts carry none of it: they are inert copies of the same set of
+   lines, and the two have to stay byte-identical in geometry */
+.plated__layer--ghost .mark__bead {
+  display: none;
+}
+
+/* and the drop fires on the plate going UP, not on a pointer landing on the case:
+   `is-on-yet` is also true while the reader is only pointing at the third cell,
+   and a bead of ink that fell every time a cursor drifted over a row would be
+   the one flourish on the sheet that plays without being asked. `is-up-yet` is
+   the press: it changes when a plate is put on, by hand, by key or by flick. */
+.question.is-up-yet .mark__bead {
+  animation: bead-fall 1.15s var(--ease) both;
+}
+
+@keyframes bead-fall {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -.14em) scale(.5, .85);
+    animation-timing-function: cubic-bezier(.42, 0, .74, .44);
+  }
+
+  18% {
+    opacity: 1;
+    transform: translate(-50%, .02em) scale(.82, 1.28);
+    animation-timing-function: cubic-bezier(.24, .68, .42, 1);
+  }
+
+  58% {
+    opacity: 1;
+    transform: translate(-50%, .36em) scale(1, 1.02);
+    animation-timing-function: cubic-bezier(.3, 0, .7, 1);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translate(-50%, .42em) scale(1.75, .4);
+    animation-timing-function: cubic-bezier(.4, 0, .6, 1);
+  }
+
+  86% {
+    opacity: .5;
+    transform: translate(-50%, .425em) scale(1.2, .82);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, .43em) scale(.55, .55);
+  }
+}
+
+/* =============================================================
    THE PLATE CASE
 
    the only choice on the sheet, and it now sits directly under the
@@ -2425,9 +2663,14 @@ html[data-register='on'] .plated__layer--black .mark {
 .plates__row {
   position: relative;
   display: grid;
-  gap: 5px;
+  gap: 6px;
   min-width: 0;
-  padding: 15px var(--pad) 17px;
+  /* the case is the one control on the sheet and it is sitting directly under
+     the poster, so it is set as a strip of a form rather than as three cards:
+     a little more air above and below each line than a caption would take, so
+     the block reads as a ticket sitting under a headline and not as four more
+     bands at the same weight */
+  padding: 19px var(--pad) 21px;
   text-align: left;
   border-left: 1px solid var(--rule);
   transition: background .26s var(--ease);
@@ -2523,7 +2766,7 @@ html[data-register='on'] .plated__layer--black .mark {
 .plates__type {
   display: block;
   font-family: var(--display);
-  font-size: clamp(1.32rem, 1.95vw, 1.82rem);
+  font-size: clamp(1.4rem, 2.1vw, 1.94rem);
   font-weight: 800;
   line-height: 1.02;
   letter-spacing: -.042em;
@@ -2706,7 +2949,9 @@ html[data-register='on'] .plated__layer--black .mark {
      verdict takes an impression — the same --imp the poster takes at the
      gate, driven by the answer's own ramp rather than by the register */
   --imp: var(--land);
-  margin: 0 0 var(--air-block);
+  /* the landing rule hangs a fifth of the verb below the box, so the air under
+     the verdict carries the rule and the gap to the lede on top of it */
+  margin: 0 0 calc(var(--air-block) + 10px);
   line-height: 1;
 }
 
@@ -2714,7 +2959,14 @@ html[data-register='on'] .plated__layer--black .mark {
   display: inline-block;
   color: var(--pink-ink);
   font-family: var(--display);
-  font-size: var(--specimen);
+  /* THE SECOND LOUDEST THING ON THE SHEET, and it is printed at the step the
+     scale ladder claims for it. --claim is "the short answer", and the answer is
+     printed twice — here, at the head of the run, and again stamped on the proof
+     six bands down — so both copies now set at the same token rather than the
+     head of the run taking the step below it because it had more room in a
+     five-column block. the poster is the first thing, this is the second, and
+     the reader can name it without being asked. */
+  font-size: var(--claim);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -.045em;
@@ -2725,10 +2977,14 @@ html[data-register='on'] .plated__layer--black .mark {
 
 /* the rest of the sentence, in the reading voice, on the same baseline: the
    lockup is the two voices the sheet is printed in, answering to each other in
-   one line */
+   one line. it stays on --sub and is not dragged up after the verb: the whole
+   point of a lockup is the gap between the two voices, and a tail lifted to meet
+   a --claim head is a sentence set at one weight, which is the thing this line
+   exists not to be. the sheet's scale is a ladder and the tail does not get a
+   rung of its own. */
 .verdict__rest {
   display: inline-block;
-  margin-left: .32em;
+  margin-left: .28em;
   color: var(--black);
   font-family: var(--serif);
   font-size: var(--sub);
@@ -2755,7 +3011,11 @@ html[data-register='on'] .plated__layer--black .mark {
   left: 0;
   width: calc(42% + var(--land) * 58%);
   height: .04em;
-  font-size: var(--specimen);
+  /* the rule the verdict stands on is measured against the verb, not the body, so
+     it is a fraction of the sentence at its own step and not of the lede below
+     it — the same law the rest of the sheet is set under, applied to the one
+     rule that carries the page's answer */
+  font-size: var(--claim);
   background: linear-gradient(
     90deg,
     color-mix(in srgb, var(--blue-ink) 74%, transparent) 0 72%,
@@ -2784,7 +3044,7 @@ html[data-register='on'] .plated__layer--black .mark {
   top: 0;
   width: .42em;
   height: .12em;
-  font-size: var(--specimen);
+  font-size: var(--claim);
   --trap: var(--land);
   pointer-events: none;
 }
@@ -3373,7 +3633,14 @@ html[data-register='on'] .register-eye__plate--black {
   flex-wrap: wrap;
   align-items: baseline;
   gap: 4px clamp(16px, 2.4vw, 34px);
-  margin-top: var(--air-band);
+  /* the gap below the poster is the widest on the light sheet, and it is not a
+     band gap: it is the line the reader's eye breaks on after the last line of
+     type. the poster stops and the press begins, so the air between them is the
+     only place on the sheet that is neither one nor the other, and it is worth
+     more than any rule. it used to be --air-band, the same gap a job ticket gets
+     from the paragraph above it, which put the headline and the machine it
+     prints at the same density as two captions in a column. */
+  margin-top: var(--air-press);
   padding-bottom: var(--air-block);
   border-top: 2px solid var(--black);
 }
@@ -7148,10 +7415,10 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   /* and the verdict keeps its two voices on one baseline at a phone's
-     measure, which is the whole lockup — the verb steps up a little so the two
-     halves still read as one line rather than as a headline and a caption */
+     measure, which is the whole lockup — the tail closes up so the two halves
+     still read as one line rather than as a headline and a caption */
   .verdict__rest {
-    margin-left: .28em;
+    margin-left: .22em;
   }
 
   .xlinks {
@@ -7246,7 +7513,12 @@ html[data-reveal='on'] .reveal.is-in {
   .plates__row {
     display: flex;
     align-items: baseline;
-    gap: 6px 12px;
+    gap: 8px 12px;
+    /* the strip gives way to three ruled lines of a form here, so the air each
+       line was given as a card of the case has to come back off it — otherwise
+       a phone gets three of the tallest targets on the page and loses the rest of
+       the sheet below them */
+    padding: 13px 0 13px;
   }
 
   .plates__row:first-child {
@@ -7417,6 +7689,13 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   html[data-register='on'] .plated__layer--black .mark {
+    animation: none;
+  }
+
+  /* and the drop is not drawn at all: a bead of ink falling is movement, so a
+     still reader is given the pad — which is the state, and was there before the
+     fall and is there after it — rather than a bead arriving and being taken */
+  .question.is-up-yet .mark__bead {
     animation: none;
   }
 

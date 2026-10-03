@@ -59,6 +59,35 @@ const clamp = (value: number) => Math.min(PULL_MAX, Math.max(PULL_MIN, value))
 /** the gate is magnetic: a blade released inside it is caught, not left hovering */
 export const snapPull = (value: number) => (inRegister(value) ? 0 : clamp(value))
 
+/* HOW WIDE THE GATE REACHES, and how hard it pulls.
+
+   A gate is not sticky, it is magnetic: it takes the blade as the blade comes
+   near, so the last fraction of a unit is where the press does most of its work.
+   The old bed only caught the blade on release, which meant the reader dragged
+   the whole width of the strip, watched the colour stay apart right up to the
+   last pixel, and was then handed the reward all at once at the end of a gesture
+   — a switch, rather than a press.
+
+   So the bed now pulls while the drag is still live, over a band four times
+   wider than the gate itself, and the page goes into register underneath the
+   reader's hand about a third of a unit out. That is the moment the whole sheet
+   is built around: the fringes close, the traps fill, the flats fuse and the
+   lamp tightens, all while the blade is still moving.
+
+   The curve is (distance / reach) raised to a power, which is continuous and
+   flat at the edge of the band — nothing lurches when the magnet lets go, and a
+   blade a long way from the gate is exactly as stiff as it always was. The
+   power is above one so the magnet holds off through the middle of the approach
+   and then takes the blade quickly at the end, which is what a magnet does. */
+const MAGNET = 0.6
+const MAGNET_CURVE = 2.6
+
+const magnetic = (raw: number) => {
+  const distance = Math.abs(raw)
+  if (distance > MAGNET) return raw
+  return raw * (distance / MAGNET) ** MAGNET_CURVE
+}
+
 /** the print-shop reading of an offset, in words */
 export const registerText = (reg: number) =>
   inRegister(reg)
@@ -520,7 +549,11 @@ export function PullBed({
     const bed = bedRef.current
     if (!bed) return
     const rect = bed.getBoundingClientRect()
-    slideTo((clientX - (rect.left + rect.width / 2)) / unitFor(rect.width))
+    /* the cursor sets where the blade would sit; the gate has an opinion about
+       the last third of a unit of it, and applies that opinion while the drag
+       is still going rather than waiting to be released */
+    const raw = (clientX - (rect.left + rect.width / 2)) / unitFor(rect.width)
+    slideTo(magnetic(raw))
   }
 
   const grab = (event: ReactPointerEvent<HTMLDivElement>) => {

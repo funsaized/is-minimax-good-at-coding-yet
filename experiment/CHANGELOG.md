@@ -1,46 +1,44 @@
-Iteration 512: the blade and the pull get one finish — a proof chop and a line of words at the foot of the run.
+THE SHEET IS PRESSED — screened ink, a magnetic gate, one falling bead, and room for the poster.
 
-**Direction: the sheet can be signed off.**
+**Ink, not glass.** Every colour impression on the light sheet was a flat, perfectly even
+translucent tint — a CSS filter standing in for ink rather than ink. Newsprint takes the tooth
+of the paper, so ink density varies and the edge of a solid is ragged. A rag screen (generated in
+the browser from the same `feTurbulence` the paper grain and the bed's halftone already use, no
+remote assets) now masks the two colour plates on every `Plated` stack, the ink-trap pools, the
+squeegee wedges under a hovered word and a cross-reference, the plate case's blade, the trim bars
+on each sheet of paper, and the three flats in the colophon. It is a mask rather than an overlay,
+so the pinholes are the stock showing through the ink: warm paper on the light sheet, the dark
+slab ground at the foot of the run. The one-pixel armature is deliberately left unscreened — a
+hairline through a rag screen is a dotted line. Nothing about the screen animates; it is a
+property of the press, not another readout of the register.
 
-The page had two pieces of machinery. The blade, which brings the three plates into
-register, and the pull, which prints the short answer at the foot of the run. Each
-had a reward of its own — the ink agreeing with itself, the sentence printing — but
-neither knew the other existed, so a reader could work one, work both, or work
-neither and the page could not tell the three cases apart. The two are now asked
-about each other: **in register AND pulled** is the one state on this page that
-means the reader ran the press rather than watched it run.
+**The gate is magnetic, not sticky.** `PullBed` caught the blade only on release, so the colour
+stayed apart to the last pixel and the reward arrived as a switch. The gate now reaches over a
+band four times its own width during the drag (`magnetic()` in `pull.tsx`, `(d/0.6) ** 2.6`), so
+the sheet comes into register underneath the reader's hand about a third of a unit out — fringes
+closing, traps filling, flats fusing and the lamp tightening while the blade is still moving. The
+curve is continuous and flat at the edge of the band, and a blade far from the gate is unchanged.
 
-**What was added**
+**The drop.** The question mark rocked over a dot screen and nothing had ever fallen on it. When
+the turn is put on the press (`.question.is-up-yet`, so by hand, key or flick — not by a cursor
+resting on the case) the mark sheds one bead of pink ink: it falls the height of the pad,
+stretches, flattens and is taken by the screen. One fall per plate, ~1.15s, no loop. Declined
+entirely under `prefers-reduced-motion`, where the reader is given the pad alone.
 
-- `src/signoff.tsx` — the proof chop. A pressman's sign-off mark: double-ruled,
-  pressed on by hand, a couple of degrees off square because nobody sets a chop
-  square, in the pink plate because both marks on that line are the press. It is
-  set against the sheet's own verdict on the head line of the proof, and the row is
-  present in both copies of the proof so pulling the sheet never shoves the poster
-  down a line.
-- The chop arrives pressed rather than faded: too large and out of focus, hardening
-  on the beat with an overshoot, the tick inside it drawn stroke-first because a chop
-  is ink with an edge, and two flecks of ink a beat later because a hand-held stamp
-  never lands perfectly clean. Under reduced motion it is simply already down, at the
-  angle of the hand, tick drawn.
-- The foot of the press run says the same thing in plain words and invites the move:
-  *not signed off — the blade has to reach the gate, and the proof has to be pulled*,
-  becoming *signed off* when it is. Its small box fills on the same condition as the
-  chop, and it is announced once through the existing live region.
+**Hierarchy in the first screen.** Two air steps that belong to the poster alone
+(`--air-poster`, `--air-press`) put the widest gaps on the light sheet above and below the
+headline, so the biggest type on the page is no longer living at the density of the furniture
+around it. The plate case below it gained a little air and a step of size, and gave its air back
+at ≤760px so a phone does not lose three of the tallest targets on the page.
 
-**What was fixed**
+**The answer at the step the ladder claims for it.** `--claim` is documented as "the short
+answer" and printed by the scale ladder, but the verdict at the head of the run was set at
+`--specimen` — a step down, because it had more room in a five-column block than the proof sheet
+has in a card. Both copies of the answer now set at the same token, along with the landing rule
+and its traps, which are measured against the verb.
 
-- **Small type on phones.** The label tier was dropped to `.55rem` — about nine
-  pixels — below 620px, which put every band slug, kicker and cross-reference under
-  the two finer tiers printed beside them and under the size the page's own type list
-  claims the slug is set at. The override is gone: one floor on every width. Slugs
-  tighten from `.145em` to `.12em` to pay for it.
-- **Two machines answering one key.** The arrow keys are promised by the bed on the
-  window, so the plate radiogroup, the words in the title and the bed itself all ran
-  their own handler *and* the window's: walking a plate with the arrows also moved
-  the blade a fifth of a unit, and a reader holding the bed nudged it by 0.1 and then
-  again by 0.12. Each of the three now claims the event outright.
+**Copy kept honest.** The job ticket's `register` row states the magnetic gate; the press run's
+notes gain a fifth entry on the screen; the mechanisms comment no longer counts itself.
 
-**Unchanged:** title, document title, entry point, framework, tests, and every
-existing mechanic — the plates, the bed, the film, the wet trail, the pull, the show
-through, the rubric, the fold, the type list, the colophon.
+Title, document title, entry point, build configuration, keyboard handling, hash navigation and
+`--land` / `--settle` mechanics are untouched. `npm run build` passes (`tsc --noEmit` clean).

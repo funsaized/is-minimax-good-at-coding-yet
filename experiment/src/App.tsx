@@ -134,12 +134,12 @@ const SLIP = [
   ],
   [
     'register',
-    'one number and one ramp: the gate is ±0.14, a unit of blade is 3px of paper, and the ink closes on both as the reader goes down the sheet. the pull answers to a second ramp of its own, so the sentence the press is allowed to get right is said at the head of the run and printed at the foot of it, and the two land on the same beat',
+    'one number and one ramp: the gate is ±0.14, a unit of blade is 3px of paper, and the ink closes on both as the reader goes down the sheet. the gate is magnetic rather than sticky, so it takes the blade about a third of a unit out and the sheet comes into register underneath the hand instead of after it. the pull answers to a second ramp of its own, so the sentence the press is allowed to get right is said at the head of the run and printed at the foot of it, and the two land on the same beat',
   ],
   ['assets', 'local SVG and CSS only. no web fonts, no network, nothing stored'],
 ] as const
 
-/* the four mechanisms, in the order you meet them going down the press. each one
+/* the mechanisms, in the order you meet them going down the press. each one
    is a fact about the sheet, said once, in the pressman's own voice — the foot
    of a press run is a note about the run, not an essay about printing. */
 const MACHINERY = [
@@ -154,6 +154,10 @@ const MACHINERY = [
   [
     'trapped corners.',
     'Where a stroke lands on a rule the paper notches away, so a pressman fills the notch on purpose. The pools are slivers until the blade reaches the gate, and only the pink plate beads up in a corner.',
+  ],
+  [
+    'printed through a screen.',
+    'Every colour impression on this sheet is laid down through a rag screen rather than painted as a flat tint, so the pinholes in the ink are the paper showing through it — which is the whole difference between a printed sheet and a styled one. The screen is a property of the press, not of the register, so nothing about it moves when the blade does.',
   ],
   [
     'stops on request.',
@@ -796,8 +800,8 @@ export function App() {
                     once.
 
                     set as a lockup rather than a run of words: the verb in the
-                    press voice at the specimen step, the rest of the sentence in
-                    the reading voice on the same baseline, so the page hands the
+                    press voice at the claim step, the rest of the sentence in the
+                    reading voice on the same baseline, so the page hands the
                     question over to itself in two typefaces. and the rule beneath
                     it is the poster's landing rule at a third of the size — a
                     short stub while the answer is only spoken, and then, the beat
@@ -1332,7 +1336,18 @@ function QuestionTitle({
         </span>
         <span className="q__line q__line--3" style={{ '--i': 2 } as CSSProperties}>
           <span className="q__plain">frontend </span>
-          {w('yet', <>yet<span className="mark">?</span></>)}
+          {w('yet', (
+            <span className="mark">
+              ?
+              {/* THE DROP. the pad under the mark is where the pause lands, and a
+                  pad is only worth printing if something arrives on it — so when
+                  the turn is the plate on the press the mark sheds one bead of
+                  ink, which falls the height of the pad and is taken by the
+                  screen underneath it. one fall per plate, and nothing is left
+                  behind it but the pool the sheet was already printing. */}
+              <i className="mark__bead" />
+            </span>
+          ))}
           {/* the rule the question mark lands on. printed three times, it is three
               short stubs until the blade reaches the gate, and then one rule
               running the full measure — and the two corners where it meets the
@@ -1350,7 +1365,7 @@ function QuestionTitle({
     <h1
       id="question-title"
       ref={titleRef}
-      className={`question is-on-${hot}`}
+      className={`question is-on-${hot} is-up-${selected}`}
       onPointerMove={track}
       onPointerLeave={clear}
     >
