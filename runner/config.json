@@ -1,6 +1,6 @@
 {
   "model": "opencode/space-bunny-free",
-  "intervalMinutes": 30,
+  "intervalMinutes": 60,
   "timeoutMinutes": 45,
   "maxRunsPerDay": 48,
   "maxEstimatedDailyCostUsd": 10,

@@ -206,13 +206,13 @@ A lock directory records the worker PID. A second worker refuses to run while th
 
 ## 9. Wait, then repeat
 
-After publication, the runner targets the next start for 30 minutes after the previous turn began. Generation, validation, and deployment all count toward that interval. If they take longer than 30 minutes, the next turn can begin immediately after publication. Failed turns retry after the same 30-minute interval and never trigger an automatic pause. The loop sleeps in short intervals and checks for operator pause markers and allowances. It does not start overlapping model turns, so a slow response delays publication rather than creating concurrent work.
+After publication, the runner targets the next start for 60 minutes after the previous turn began. Generation, validation, and deployment all count toward that interval. If they take longer than 60 minutes, the next turn can begin immediately after publication. Failed turns retry after the same 60-minute interval and never trigger an automatic pause. The loop sleeps in short intervals and checks for operator pause markers and allowances. It does not start overlapping model turns, so a slow response delays publication rather than creating concurrent work.
 
 Defaults are in [`runner/config.json`](../runner/config.json):
 
 | Setting | Default | Purpose |
 | --- | --- | --- |
-| Interval | 30 minutes between starts | Controls successful and failed-attempt cadence |
+| Interval | 60 minutes between starts | Controls successful and failed-attempt cadence |
 | Turn timeout | 45 minutes | Bounds a stuck model process |
 | Daily model runs | 48 per UTC day | Allows a full day at the target cadence |
 | Reported daily cost | $10 | Stops new turns when reported usage reaches it |
