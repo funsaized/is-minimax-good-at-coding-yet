@@ -213,7 +213,7 @@ Defaults are in [`runner/config.json`](../runner/config.json):
 | Setting | Default | Purpose |
 | --- | --- | --- |
 | Interval | 30 minutes between starts | Controls successful and failed-attempt cadence |
-| Turn timeout | 30 minutes | Bounds a stuck model process |
+| Turn timeout | 45 minutes | Bounds a stuck model process |
 | Daily model runs | 48 per UTC day | Allows a full day at the target cadence |
 | Reported daily cost | $10 | Stops new turns when reported usage reaches it |
 | Snapshot / archive allowance | 12 MB / 10 GB | Supports multi-week runs while retaining a deliberate upper bound |
