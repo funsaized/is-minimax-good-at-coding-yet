@@ -1,44 +1,36 @@
-THE SHEET IS PRESSED — screened ink, a magnetic gate, one falling bead, and room for the poster.
+Iteration 514: quieter ink, and a cursor on the dry sheet wets it again.
 
-**Ink, not glass.** Every colour impression on the light sheet was a flat, perfectly even
-translucent tint — a CSS filter standing in for ink rather than ink. Newsprint takes the tooth
-of the paper, so ink density varies and the edge of a solid is ragged. A rag screen (generated in
-the browser from the same `feTurbulence` the paper grain and the bed's halftone already use, no
-remote assets) now masks the two colour plates on every `Plated` stack, the ink-trap pools, the
-squeegee wedges under a hovered word and a cross-reference, the plate case's blade, the trim bars
-on each sheet of paper, and the three flats in the colophon. It is a mask rather than an overlay,
-so the pinholes are the stock showing through the ink: warm paper on the light sheet, the dark
-slab ground at the foot of the run. The one-pixel armature is deliberately left unscreened — a
-hairline through a rag screen is a dotted line. Nothing about the screen animates; it is a
-property of the press, not another readout of the register.
+**The sheet remembers the hand.** The close read is the one band that prints with
+the plates nearly closed — the ink has had three screens down the run to settle.
+A cursor on the top sheet of the ream now wets it up again: the two colour plates
+open apart under the hand and a blot of ink follows it, and both dry back together
+when the hand comes off. One number, `--smear`, is written on the sheet and
+multiplied into the spread by `.plated`, so no other stack on the page can hear
+about it. Ink wets faster than it dries; a reader who has asked for stillness gets
+the same open plates with nothing travelling. Touch is claimed on press rather
+than on move, so a finger scrolling the page never smears the sheet.
 
-**The gate is magnetic, not sticky.** `PullBed` caught the blade only on release, so the colour
-stayed apart to the last pixel and the reward arrived as a switch. The gate now reaches over a
-band four times its own width during the drag (`magnetic()` in `pull.tsx`, `(d/0.6) ** 2.6`), so
-the sheet comes into register underneath the reader's hand about a third of a unit out — fringes
-closing, traps filling, flats fusing and the lamp tightening while the blade is still moving. The
-curve is continuous and flat at the edge of the band, and a blade far from the gate is unchanged.
+**Two holes in the close read closed.** The section head and the paragraph that
+introduces it shared a row but sat on their own baselines, so the head met a band
+of bare stock before any word of it; they share a first baseline now. The sheet's
+body was two fixed tracks pushed to the ends of the paper with eight hundred
+pixels of nothing between them — the prose and the margin note are two fracs of
+the measure now, and the note is set as a note (a pink stub above it, reading
+voice at reading size) rather than as a stamp in the corner.
 
-**The drop.** The question mark rocked over a dot screen and nothing had ever fallen on it. When
-the turn is put on the press (`.question.is-up-yet`, so by hand, key or flick — not by a cursor
-resting on the case) the mark sheds one bead of pink ink: it falls the height of the pad,
-stretches, flattens and is taken by the screen. One fall per plate, ~1.15s, no loop. Declined
-entirely under `prefers-reduced-motion`, where the reader is given the pad alone.
+**The plate case stopped shading itself like a table.** The cell that is up took a
+bright fill and a twenty-four pixel inset shadow, the only dark edge in a case
+made of hairlines. It takes paper now, and a landing rule is printed across its
+foot — the same mark the poster puts under the question mark.
 
-**Hierarchy in the first screen.** Two air steps that belong to the poster alone
-(`--air-poster`, `--air-press`) put the widest gaps on the light sheet above and below the
-headline, so the biggest type on the page is no longer living at the density of the furniture
-around it. The plate case below it gained a little air and a step of size, and gave its air back
-at ≤760px so a phone does not lose three of the tallest targets on the page.
+**Quieter ink, truer stock.** The armature comes down a step on all three plates,
+not only the two colour ones; the screen behind the specimen is a quarter lighter
+and held off the type; the press in the stock and the lamp's pink core are roughly
+halved and the brown corner of the paper is shallower, so the black type is black
+and the pink ink is the only pink on the sheet.
 
-**The answer at the step the ladder claims for it.** `--claim` is documented as "the short
-answer" and printed by the scale ladder, but the verdict at the head of the run was set at
-`--specimen` — a step down, because it had more room in a five-column block than the proof sheet
-has in a card. Both copies of the answer now set at the same token, along with the landing rule
-and its traps, which are measured against the verb.
+Copy: the close-read standfirst now says the cursor wets the sheet, and the job
+ticket gains a sixth note — *dry is not gone.*
 
-**Copy kept honest.** The job ticket's `register` row states the magnetic gate; the press run's
-notes gain a fifth entry on the screen; the mechanisms comment no longer counts itself.
-
-Title, document title, entry point, build configuration, keyboard handling, hash navigation and
-`--land` / `--settle` mechanics are untouched. `npm run build` passes (`tsc --noEmit` clean).
+Build: `npm run build` clean. No new dependencies, no network, no stored state;
+title and document title unchanged.

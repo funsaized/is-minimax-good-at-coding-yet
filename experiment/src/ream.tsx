@@ -1,13 +1,16 @@
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
   type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
   type RefObject,
 } from 'react'
 import { findNote, phraseLines, WORD_IDS, type WordId } from './notes'
 import { InkTrap } from './ink'
 import { RegistrationMark } from './marks'
+import { prefersStill } from './motion'
 import { Pica, Sheetbar } from './paper'
 import { Plated } from './plate'
 
@@ -55,6 +58,116 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
   const note = findNote(active)
   const behind = stackOrder(active).slice(1)
   const lines = phraseLines(note.label, note.drop)
+
+  /* THE DRY SHEET REMEMBERS THE HAND.
+
+     The close read is the one band on the sheet that prints with the plates
+     nearly closed — the ink has had three screens down the run to settle, and
+     that arc is the only reason it is readable. Which makes it the one place on
+     the page where a reader can be shown what the drying actually is: put a hand
+     on it and the ink wets up again, the two colour plates open apart under the
+     cursor and a blot of ink follows it, and both dry back together when the
+     hand comes off. Dry is not gone. It is only further down the press.
+
+     One number does all of it — `--smear`, written on the sheet and multiplied
+     into the spread by `.plated` — so nothing else on the page can hear about
+     it, and a reader who never points at the sheet pays nothing for the feature
+     beyond the three numbers it keeps in refs.
+
+     It is a loop rather than a transition because the sheet has to begin drying
+     the instant the hand leaves and has to stop on its own a moment later; ink
+     wets faster than it dries, which is the only asymmetry in it.
+
+     And a reader who has asked for stillness is given the same open plates with
+     nothing travelling: the number is written straight onto the sheet instead of
+     eased there, which is the same answer every other journey on this page gives. */
+
+  const sheetRef = useRef<HTMLElement>(null)
+  const aimRef = useRef(0)
+  const wetRef = useRef(0)
+  const loopRef = useRef(0)
+  /* the sheet is only measured when it has actually moved: a pointermove that
+     reads a box every event has to flush style before it can, and the wet number
+     it just wrote has invalidated the whole subtree. caching the box and
+     re-reading it only when the scroll position or the width has changed keeps
+     the blot under the cursor through a scroll without the loop ever thrashing */
+  const boxRef = useRef<{ x: number; y: number; w: number; h: number; sx: number; sy: number } | null>(
+    null,
+  )
+
+  const under = (host: HTMLElement, clientX: number, clientY: number) => {
+    const sx = window.scrollX
+    const sy = window.scrollY
+    const held = boxRef.current
+    let box = held
+    if (!box || box.sx !== sx || box.sy !== sy || box.w !== host.offsetWidth) {
+      const rect = host.getBoundingClientRect()
+      box = { x: rect.x, y: rect.y, w: rect.width, h: rect.height, sx, sy }
+      boxRef.current = box
+    }
+    return [
+      ((clientX - box.x) / Math.max(1, box.w)) * 100,
+      ((clientY - box.y) / Math.max(1, box.h)) * 100,
+    ] as const
+  }
+
+  const wet = useCallback((x: number, y: number, on: boolean) => {
+    const sheet = sheetRef.current
+    if (!sheet) return
+    aimRef.current = on ? 1 : 0
+    sheet.style.setProperty('--smear-x', `${x.toFixed(1)}%`)
+    sheet.style.setProperty('--smear-y', `${y.toFixed(1)}%`)
+
+    if (prefersStill()) {
+      if (loopRef.current) {
+        cancelAnimationFrame(loopRef.current)
+        loopRef.current = 0
+      }
+      wetRef.current = aimRef.current
+      sheet.style.setProperty('--smear', String(wetRef.current))
+      return
+    }
+
+    if (loopRef.current) return
+    const tick = () => {
+      loopRef.current = 0
+      const host = sheetRef.current
+      if (!host) return
+      const reach = wetRef.current < aimRef.current ? .17 : .055
+      wetRef.current += (aimRef.current - wetRef.current) * reach
+      if (Math.abs(aimRef.current - wetRef.current) < .003) wetRef.current = aimRef.current
+      host.style.setProperty('--smear', wetRef.current.toFixed(3))
+      if (wetRef.current === aimRef.current) return
+      loopRef.current = requestAnimationFrame(tick)
+    }
+    loopRef.current = requestAnimationFrame(tick)
+  }, [])
+
+  useEffect(
+    () => () => {
+      if (loopRef.current) cancelAnimationFrame(loopRef.current)
+      loopRef.current = 0
+    },
+    [],
+  )
+
+  const hover = (event: ReactPointerEvent<HTMLElement>) => {
+    /* a finger that is merely scrolling the page is not a hand on the sheet, so
+       touch is claimed on press instead of on move and it is let go on release */
+    if (event.pointerType !== 'mouse') return
+    const [x, y] = under(event.currentTarget, event.clientX, event.clientY)
+    wet(x, y, true)
+  }
+
+  const press = (event: ReactPointerEvent<HTMLElement>) => {
+    const [x, y] = under(event.currentTarget, event.clientX, event.clientY)
+    wet(x, y, true)
+  }
+
+  const lift = () => {
+    boxRef.current = null
+    wet(0, 0, false)
+  }
 
   /* the edge of the sheet that has just been pulled to the top, kept in the
      stack for as long as it takes to slide back down out of sight. without it
@@ -110,6 +223,12 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
         className="specimen ream__front"
         aria-labelledby="specimen-title"
         key={note.id}
+        ref={sheetRef}
+        onPointerMove={hover}
+        onPointerDown={press}
+        onPointerUp={lift}
+        onPointerCancel={lift}
+        onPointerLeave={lift}
       >
         {/* the trim mark, on this sheet's own foot margin: the same three flats
             the foot of the light sheet prints, set hard against the trim, so the
@@ -123,6 +242,10 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
 
         <div ref={stageRef} className={`specimen__stage specimen__stage--${note.id}`}>
           <span className="specimen__flash" aria-hidden="true" />
+          {/* the ink that comes back under a hand, following it. the only thing on
+              this sheet that is not printed, and the only thing on the page that
+              is drawn by the reader. */}
+          <span className="specimen__smudge" aria-hidden="true" />
           <Plated
             className="specimen__stack"
             /* the close read is set well down the press, so its three

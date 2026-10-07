@@ -999,13 +999,13 @@ kbd {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(128% 96% at 4% -14%, rgba(255, 255, 255, .46), rgba(255, 255, 255, 0) 56%),
+    radial-gradient(128% 96% at 4% -14%, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 56%),
     linear-gradient(
       156deg,
-      rgba(255, 255, 255, .26) 0%,
+      rgba(255, 255, 255, .3) 0%,
       rgba(255, 255, 255, 0) 32%,
-      rgba(132, 104, 66, .05) 78%,
-      rgba(96, 74, 48, .1) 100%
+      rgba(132, 104, 66, .034) 78%,
+      rgba(96, 74, 48, .07) 100%
     ),
     repeating-linear-gradient(0deg, rgba(21, 20, 27, .021) 0 1px, transparent 1px 3px);
 }
@@ -1039,7 +1039,7 @@ kbd {
 .stock__wash {
   position: absolute;
   inset: 0;
-  background: radial-gradient(48rem 36rem at 88% -14%, rgba(255, 46, 107, .11), transparent 64%);
+  background: radial-gradient(52rem 32rem at 94% -22%, rgba(255, 46, 107, .062), transparent 66%);
   opacity: calc(1 - var(--dry) * .5);
   transform: translate3d(
     calc(var(--fringe-x) * var(--ink-close) * 2.4),
@@ -1122,13 +1122,17 @@ kbd {
 }
 
 /* and the only part of the light that is ink. pink is the press on this sheet,
-   and a loose press is the one thing here that is allowed to colour the room */
+   and a loose press is the one thing here that is allowed to colour the room —
+   but only a little of it. this sits under the key light of a cream sheet, and at
+   the weight it was set the two read as one salmon sunset across the top third
+   of the page: the black type stopped being black and the pink ink stopped being
+   the only pink on the sheet. a loose press tints a room. it does not paint one. */
 .stock__lamp::after {
   opacity: .9;
   background-image: radial-gradient(
-    42% 33% at 41% 33%,
-    rgba(255, 46, 107, .12) 0%,
-    rgba(255, 122, 172, .05) 52%,
+    40% 31% at 41% 33%,
+    rgba(255, 46, 107, .07) 0%,
+    rgba(255, 122, 172, .028) 52%,
     rgba(255, 46, 107, 0) 80%
   );
 }
@@ -1713,7 +1717,7 @@ html[data-slab='on'] .slugbar {
   z-index: -1;
   /* and the field is pressed harder at the press than at the foot of the run,
      because that is where the ink is still wet */
-  opacity: calc(.58 + var(--ink-close) * .36);
+  opacity: calc(.44 + var(--ink-close) * .3);
 }
 
 /* THE ARMATURE STEPS BACK UNDER THE POSTER. a press sheet prints its ruling at
@@ -1725,7 +1729,7 @@ html[data-slab='on'] .slugbar {
    sheet is still ruled, and the reader still learns the register from the shape
    of the page. */
 .ruling--veil {
-  opacity: calc(.36 + var(--ink-close) * .24);
+  opacity: calc(.28 + var(--ink-close) * .2);
 }
 
 .ruling--slab {
@@ -1741,12 +1745,14 @@ html[data-slab='on'] .slugbar {
   position: absolute;
   inset: 0;
   display: block;
-  /* the whole armature comes down a step in weight. at press strength the two
-     colour plates were printing a magenta and a blue line down the entire
-     measure, eight hundred pixels apart, over the top of the poster — which is
-     a dirty screen and not a misregistered press. they are still plainly two
-     plates arguing at two offsets; they are just no longer tinting the room. */
-  color: rgba(20, 19, 26, .105);
+  /* THE WHOLE ARMATURE COMES DOWN A STEP IN WEIGHT, and this time all three
+     plates rather than only the two colour ones. at press strength the grid
+     printed a magenta and a blue line down the entire measure, twelve of them,
+     over the top of the poster — which is not a misregistered press, it is a
+     dirty screen. they are still plainly two plates arguing at two offsets, and
+     the reader still learns the register from the shape of the page; they are
+     just no longer competing with the type for the same ink. */
+  color: rgba(20, 19, 26, .088);
   background-image: repeating-linear-gradient(
     90deg,
     currentColor 0 1px,
@@ -1760,7 +1766,7 @@ html[data-slab='on'] .slugbar {
 }
 
 .ruling__plate--pink {
-  color: rgba(255, 42, 99, .17);
+  color: rgba(255, 42, 99, .1);
   transform: translate(
     calc(var(--reg-x) * var(--fringe-scale) * var(--ink-close) * 1.14),
     calc(var(--reg-y) * var(--fringe-scale) * var(--ink-close) * 1.14)
@@ -1768,7 +1774,7 @@ html[data-slab='on'] .slugbar {
 }
 
 .ruling__plate--blue {
-  color: rgba(43, 62, 196, .15);
+  color: rgba(43, 62, 196, .085);
   transform: translate(
     calc(var(--reg-x) * var(--fringe-scale) * var(--ink-close) * -.74),
     calc(var(--reg-y) * var(--fringe-scale) * var(--ink-close) * -.74)
@@ -1805,7 +1811,7 @@ html[data-slab='on'] .slugbar {
 /* the ink firms when the plates agree: the same one-step the bar's readout and
    the bed's stamp take, on the largest mark on the page */
 html[data-register='on'] .ruling--light .ruling__plate--black {
-  color: rgba(20, 19, 26, .185);
+  color: rgba(20, 19, 26, .155);
 }
 
 /* the two trim corners of a type area. one pair is what a press sheet prints,
@@ -1902,8 +1908,30 @@ html[data-register='on'] .ruling--light .ruling__plate--black {
    ============================================================= */
 
 .plated {
-  --px: calc(var(--fringe-x) * var(--fringe-scale) * var(--wet, 1) * var(--ink-close));
-  --py: calc(var(--fringe-y) * var(--fringe-scale) * var(--wet, 1) * var(--ink-close));
+  /* =============================================================
+     THE SHEET REMEMBERS THE HAND
+
+     --smear is 0 almost everywhere on this page. it is one number,
+     written by the close read while a hand is on the top sheet of the
+     ream, and it multiplies the same spread the blade writes — so
+     the two colour plates open apart under the cursor exactly as they
+     argued at the press, and dry back together when it leaves.
+
+     it multiplies rather than replaces, because the ink that comes
+     back is the ink that was already there: a sheet you have
+     touched re-opens along the direction it was printed, it does not
+     start printing somewhere else. and it is horizontal-weighted,
+     because a hand smears a press sheet along the run and a
+     compositor would have registered the slip across the line.
+
+     every other stack on the page reads a fallback of zero and is
+     therefore exactly the number it was before, which is why this
+     costs one declaration and not a class of its own.
+     ============================================================= */
+  --spread-x: calc(1 + var(--smear, 0) * 6);
+  --spread-y: calc(1 + var(--smear, 0) * 3.1);
+  --px: calc(var(--fringe-x) * var(--fringe-scale) * var(--wet, 1) * var(--ink-close) * var(--spread-x));
+  --py: calc(var(--fringe-y) * var(--fringe-scale) * var(--wet, 1) * var(--ink-close) * var(--spread-y));
   position: relative;
   display: block;
   transform-origin: 0% 66%;
@@ -2696,9 +2724,18 @@ html[data-register='on'] .plated__layer--black .mark {
   background: rgba(252, 250, 243, .72);
 }
 
+/* THE CELL THAT IS UP IS LIFTED OUT OF THE CASE, not lit up in it. the cell used
+   to take a bright fill and a twenty-four pixel inset shadow under its own edge,
+   which is the shading of a selected row in a table rather than the shading of a
+   piece of stock that has been pulled forward — and the shadow was the only dark
+   edge anywhere in a case made of hairlines, so it read as a bug. the cell now
+   takes paper, and the ink that comes off the blade is printed where the blade
+   would have left it: a landing rule across the foot of the cell that is up,
+   which is the same mark the poster puts under the question mark and the proof
+   puts under the answer. */
 .plates__row.is-active {
-  background: rgba(252, 250, 243, .9);
-  box-shadow: inset 0 -24px 32px -26px rgba(21, 20, 27, .32);
+  background: rgba(252, 250, 243, .92);
+  box-shadow: inset 0 -2px 0 0 var(--black);
 }
 
 /* THE BLADE. one squeegee on the top rule of the case, a third of the way across
@@ -3674,10 +3711,17 @@ html[data-register='on'] .register-eye__plate--black {
   border-top: 2px solid var(--black);
 }
 
+/* THE TWO VOICES SHARE A BASELINE. the head and the paragraph that introduces it
+   were sitting on their own baselines at the foot of a shared row, which put the
+   section head at the bottom of an empty band: the reader met a hundred and forty
+   pixels of bare stock above a three-word line, and a band with a hole in it reads
+   as a mistake long before it reads as air. first baselines together is how the
+   two are set on any spread worth looking at, and it is the same baseline the
+   standfirst hands the verdict over on. */
 .read__intro {
   display: grid;
   grid-template-columns: var(--track);
-  align-items: end;
+  align-items: baseline;
   margin-top: var(--air-block);
 }
 
@@ -3693,7 +3737,6 @@ html[data-register='on'] .register-eye__plate--black {
 .read__intro > p {
   grid-column: 7 / span 6;
   max-width: 52ch;
-  padding-bottom: .34rem;
   color: var(--ink-70);
   font-family: var(--serif);
   font-size: var(--read);
@@ -3917,7 +3960,9 @@ html[data-register='on'] .proof .sheetbar__flat--black {
 
 /* the space between the setting and the measure is not empty: it is the screen
    the whole stage is printed through, and it is only ever drawn across the gap
-   the phrase leaves — never under the type, and never under the count. */
+   the phrase leaves — never under the type, and never under the count. it is a
+   quarter lighter than it was, because a screen at this size stops being the
+   tooth of the paper and starts being a texture you can read words through. */
 .specimen__stage::after {
   position: absolute;
   inset: 0;
@@ -3926,10 +3971,10 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   color: var(--blue);
   background-image: radial-gradient(circle, currentColor 1.05px, transparent 1.3px);
   background-size: 7px 7px;
-  opacity: .26;
+  opacity: .16;
   pointer-events: none;
-  mask-image: linear-gradient(96deg, transparent 12%, #000 46%, transparent 86%);
-  -webkit-mask-image: linear-gradient(96deg, transparent 12%, #000 46%, transparent 86%);
+  mask-image: linear-gradient(96deg, transparent 16%, #000 54%, transparent 94%);
+  -webkit-mask-image: linear-gradient(96deg, transparent 16%, #000 54%, transparent 94%);
 }
 
 /* the pull landing, in wash rather than bloom */
@@ -3939,6 +3984,43 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   z-index: 0;
   background: radial-gradient(64% 84% at 28% 60%, rgba(255, 46, 107, .2), transparent 74%);
   opacity: 0;
+  pointer-events: none;
+}
+
+/* =============================================================
+   THE BLOT
+
+   A press sheet remembers every hand that has been on it. The
+   close read prints with the plates nearly closed — the ink has
+   had three screens down the run to settle — so a cursor on the top
+   sheet wets it again: the two colour plates open apart under the
+   hand, and this is the ink that comes back with them.
+
+   It is multiplied into the paper rather than laid over it, because
+   ink soaks down and out and it does not sit on the surface; it is
+   soft at every edge because newsprint takes a blot that way; and it
+   is one element positioned off two numbers, so it is only ever on
+   the sheet while a hand is, and it costs nothing when there isn't
+   one. It sits under the type and over the screen, which is the
+   order the two things happen in.
+   ============================================================= */
+.specimen__smudge {
+  position: absolute;
+  z-index: 0;
+  top: var(--smear-y, 50%);
+  left: var(--smear-x, 50%);
+  width: clamp(130px, 30%, 300px);
+  height: clamp(70px, 66%, 150px);
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgba(20, 19, 26, .13),
+    rgba(255, 42, 99, .055) 58%,
+    rgba(20, 19, 26, 0) 100%
+  );
+  mix-blend-mode: multiply;
+  opacity: calc(var(--smear, 0) * .9);
+  transform: translate(-50%, -50%) scale(calc(.45 + var(--smear, 0) * .8));
   pointer-events: none;
 }
 
@@ -4116,11 +4198,14 @@ html[data-register='on'] .proof .sheetbar__flat--black {
 
 .specimen__body {
   display: grid;
-  /* the specimen is a sheet of paper lying on the ruled one, so it keeps margins
-     of its own and the armature runs on underneath it. two set columns with the
-     space left between them, not one wide track with a gap to guess at */
-  grid-template-columns: minmax(0, 62ch) minmax(0, 230px);
-  justify-content: space-between;
+  /* THE READ IS A SPREAD, NOT A NOTE IN A MARGIN. the sheet was two fixed-width
+     tracks pushed to the ends of the paper — a 62ch column on the left and a
+     230px note on the right — so on a 1560px sheet there were eight hundred
+     pixels of nothing between them and the setting above. the two columns are
+     fracs of the sheet now and they share the measure, so the prose and the
+     thing it is annotating are two voices of one spread instead of a headline
+     and a sticker at the far edge. */
+  grid-template-columns: minmax(0, 1.24fr) minmax(0, 1fr);
   gap: clamp(18px, 2.6vw, 42px);
   padding: clamp(22px, 2.6vw, 34px) clamp(20px, 2.6vw, 36px) clamp(20px, 2.4vw, 30px);
 }
@@ -4157,7 +4242,7 @@ html[data-register='on'] .proof .sheetbar__flat--black {
 }
 
 .specimen__copy {
-  max-width: 58ch;
+  max-width: 60ch;
   margin-top: 14px;
   color: var(--ink-70);
   font-family: var(--serif);
@@ -4166,16 +4251,32 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   text-wrap: pretty;
 }
 
+/* THE MARGIN NOTE IS SET AS A MARGIN NOTE, not as a stamp in the corner. it was
+   a two-pixel pink rule down its fore-edge with the words hung off it, which is
+   a quotation mark pretending to be a column; set on a stub of pink above it, in
+   the reading voice at reading size, it is the third thing on the sheet and it
+   earns its own measure. the stub rather than a full rule because a rule that
+   crosses the whole column is a section head, and this is a note. */
 .specimen__margin {
   grid-column: 2;
-  align-self: end;
-  padding-left: 14px;
-  border-left: 2px solid var(--pink);
+  align-self: start;
+  max-width: 30ch;
+  padding-top: 14px;
   color: var(--ink-50);
   font-family: var(--serif);
-  font-size: .92rem;
+  font-size: 1.1rem;
   font-style: italic;
-  line-height: 1.36;
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.specimen__margin::before {
+  display: block;
+  width: 46px;
+  height: 2px;
+  margin-bottom: 12px;
+  content: '';
+  background: var(--pink);
 }
 
 /* the brief is printed on the specimen itself — a separate sheet of paper lying

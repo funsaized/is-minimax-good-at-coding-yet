@@ -163,6 +163,10 @@ const MACHINERY = [
     'stops on request.',
     'Every movement here is a print decision, and each one ends the moment reduced motion is asked for. The blade, the register, the ramp and the traps keep working; nothing flies.',
   ],
+  [
+    'dry is not gone.',
+    'The close read prints with the plates nearly closed, because the ink has had three screens down the run to settle. Run the cursor across the top sheet and it wets up again under you — the two colour plates open apart, a blot of ink follows your hand, and the whole thing dries back when you take it away. A press sheet remembers every hand that has been on it.',
+  ],
 ] as const
 
 export function App() {
@@ -875,7 +879,8 @@ export function App() {
                   The sentence has three phrases and each one is doing a different job. All three
                   are printed: the one you are reading is on top of the ream, the other two are
                   still in it behind. The ink has been setting since the top of the sheet, so by
-                  the time you get here the three impressions have almost closed on the words.
+                  the time you get here the three impressions have almost closed on the words — and
+                  a cursor on the top sheet wets them up again.
                 </p>
               </div>
             </header>
