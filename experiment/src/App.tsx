@@ -20,6 +20,7 @@ import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
 import { Pullsheet } from './pullsheet'
 import { Ream } from './ream'
 import { Ruling } from './ruling'
+import { ColumnRail } from './ruler'
 import { Signoff } from './signoff'
 import { TypeList } from './typelist'
 
@@ -137,6 +138,10 @@ const SLIP = [
     'one number and one ramp: the gate is ±0.14, a unit of blade is 3px of paper, and the ink closes on both as the reader goes down the sheet. the gate is magnetic rather than sticky, so it takes the blade about a third of a unit out and the sheet comes into register underneath the hand instead of after it. the pull answers to a second ramp of its own, so the sentence the press is allowed to get right is said at the head of the run and printed at the foot of it, and the two land on the same beat',
   ],
   ['assets', 'local SVG and CSS only. no web fonts, no network, nothing stored'],
+  [
+    'armature',
+    'twelve columns, numbered at the head of every band, with the rules that band is actually divided on marked in pink — read out of the layout rather than written down here, so the rail cannot drift away from the grid it is printing',
+  ],
 ] as const
 
 /* the mechanisms, in the order you meet them going down the press. each one
@@ -644,6 +649,18 @@ export function App() {
               press sheet after the headline itself */}
           <Ruling veil />
           <section id="question" className="sheet" aria-labelledby="question-title">
+            {/* THE ARMATURE IS NUMBERED. the sheet prints its own ruling and has
+                done since iteration 504, but a grid you can only see is wallpaper
+                — so every band opens with the twelve columns it is set in, one
+                figure to a column, each in the margin of its own track so a figure
+                and the column it belongs to are the same x everywhere. the marks in
+                pink are the rules this band is actually divided on, read out of the
+                tracks below rather than written down here, so the rail cannot drift
+                away from the layout it is printing. and it is the one line on the
+                sheet that changes as the reader moves, which is the whole argument
+                of the page in fourteen characters. */}
+            <ColumnRail section={section} />
+
             <p className="slugline sheet__slug">
               <span className="sheet__slug-lead">
                 <RegistrationMark className="slugline__mark" />
@@ -693,6 +710,7 @@ export function App() {
             <div
               className="plates"
               role="radiogroup"
+              data-track
               aria-label="Which phrase is on the plate"
               aria-describedby="plates-help"
             >
@@ -778,7 +796,7 @@ export function App() {
                 opens the way every other band on the light sheet opens — on the
                 2px rule, with a slug and a fact on it — because it is a band now
                 and not a paragraph somebody parked above a machine. */}
-            <div className="standfirst">
+            <div className="standfirst" data-track>
               <p className="slugline standfirst__slug">
                 <span className="standfirst__slug-lead">
                   <RegistrationMark className="slugline__mark" />
@@ -869,11 +887,12 @@ export function App() {
 
           <section id="close" className="read" aria-labelledby="close-title">
             <header className="read__head reveal">
+              <ColumnRail section={section} />
               <p className="slugline">
                 <RegistrationMark className="slugline__mark" />
                 close read
               </p>
-              <div className="read__intro">
+              <div className="read__intro" data-track>
                 <h2 id="close-title">Three sheets, <em>one at a time.</em></h2>
                 <p>
                   The sentence has three phrases and each one is doing a different job. All three
@@ -929,15 +948,22 @@ export function App() {
               with the column rules going on right through the hole. so the
               claim the band has been making in three places, that the scale has
               two posters and nothing louder than a head in between, is printed
-              as a ladder in the columns the paragraph gave up. */}
+              as a ladder in the columns the paragraph gave up — and the
+              division is now on the rule at seven, so the measure is whole.
+              the band used to hold six columns of prose and start the ladder at
+              eight, which left column seven standing empty with the armature's
+              own hairline going straight through it: the hole this band was
+              rebuilt to fill, reintroduced by the fix one rule further right.
+              the column rail above it is what found it. */}
           <section id="type" className="type" aria-labelledby="type-title">
             <header className="type__head reveal">
+              <ColumnRail section={section} />
               <h2 className="slugline type__slugline" id="type-title">
                 <RegistrationMark className="slugline__mark" />
                 the type list
                 <span className="type__slug-fact">three faces · nothing downloaded</span>
               </h2>
-              <div className="type__intro">
+              <div className="type__intro" data-track>
                 <p className="type__lede">
                   No font file is loaded to set this page — it is set in the three faces the machine
                   already has, and spaced so the differences do not show. Each cell prints the widest
@@ -1022,7 +1048,8 @@ export function App() {
 
           <div className="page">
             <section id="answer" className="answer" aria-labelledby="answer-title">
-              <div className="answer__grid">
+              <ColumnRail section={section} />
+              <div className="answer__grid" data-track>
                 <div className="answer__copy reveal">
                   <p className="slugline">
                     <RegistrationMark className="slugline__mark" />
@@ -1331,7 +1358,7 @@ function QuestionTitle({
   const lines = (ghost: boolean) => {
     const w = word(ghost)
     return (
-      <span className="q__lines">
+      <span className="q__lines" data-track data-split="6">
         <span className="q__line q__line--1" style={{ '--i': 0 } as CSSProperties}>
           <span className="q__plain">is Minimax </span>
           {w('m3', <span className="chip">M3</span>)}

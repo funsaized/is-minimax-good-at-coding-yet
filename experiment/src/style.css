@@ -618,6 +618,57 @@
    the proof sheet has in a card. Both copies set at the same token:
    the poster is the first thing on the sheet, the verdict is the
    second, and the reader can name it without being asked.
+
+   =============================================================
+   ITERATION 515 — THE ARMATURE IS NUMBERED
+
+   One hole, found by the thing that was built to find it.
+
+   THE RAIL. The sheet prints its own ruling — twelve equal
+   columns, edge to edge, the full height of every band — and has
+   done for ten iterations without anybody ever being able to read
+   anything against it. Iteration 504 said so itself: a grid you can
+   only see is wallpaper. It was a wallpaper. Twelve columns is not
+   a fact anybody learns, it is a texture, and the divisions between
+   the bands — which are real, which the printed rules and the
+   column gutters depend on, and which nobody could state — were a
+   private arrangement between the stylesheet and whoever wrote it.
+
+   So every band now opens with the armature numbered: one figure to
+   a column, set in the margin of its own track so a figure and the
+   column it belongs to are the same x everywhere. Twelve, in the
+   furniture face at the finest tier, and in the blue this sheet
+   prints every figure in — a column number is a measurement.
+
+   AND IT REPORTS. The pink marks in the head of the row are the
+   rules the band being read is actually divided on, and they are
+   read out of the DOM: the bands tag their own twelve-column tracks
+   and the rail asks the browser where each child of a track begins
+   and ends. So the rail cannot disagree with the layout it is
+   printing, it is right at every width without anybody maintaining
+   a table, and it costs a dozen computed styles on a band boundary
+   rather than a table that would be wrong within a month. They land
+   in column order, and they are the only line on the sheet that
+   changes as the reader moves.
+
+   Which is the page's own argument, restated about the page. Every
+   other fact on this sheet is claimed; this one is measured, and it
+   is measured in the reader's own position.
+
+   AND THE HOLE IT FOUND. The type band kept six columns for its
+   paragraph and started the scale ladder on the rule at eight,
+   which left the whole of column seven standing empty with the
+   armature's hairline running straight through it — the exact
+   fault the band was rebuilt to fix in iteration 509, reintroduced
+   by the fix one rule further right, where nothing was watching.
+   The division moves to the middle: six of prose, six of ladder,
+   and the measure is whole.
+
+   Below 900 the rail goes. Twelve figures across a phone is a row
+   of specks, the columns are under seventy pixels, and the
+   divisions — the whole point of it — cannot be read. The armature
+   already drops to six hairlines and then to four at these widths;
+   a ruler with more marks than it has room for is the same mistake.
    ============================================================= */
 
 
@@ -1838,6 +1889,167 @@ html[data-register='on'] .ruling--light .ruling__plate--black {
   bottom: 0;
   border-right-width: 1.5px;
   border-bottom-width: 1.5px;
+}
+
+/* =============================================================
+   THE COLUMN RAIL
+
+   The armature has been printed since iteration 504 and it was
+   never checked. Twelve equal columns down the whole height of
+   every band is a very good thing to look at and a very poor
+   thing to read: iteration 504 said as much itself — a grid you
+   can see is wallpaper — and then stopped, because the ruling
+   says nothing and the divisions were a private fact between the
+   stylesheet and whoever wrote it.
+
+   So the armature is numbered, at the head of every band, the way
+   a press proof is numbered. One figure to a column, set in the
+   margin of its own track so a figure and the column it belongs
+   to are the same x everywhere — which is the only arrangement
+   in which twelve of them can be set at all, and the same reason
+   the grid has no gap in it. The furniture face at the finest
+   tier, and the blue this sheet prints its measurements in: a
+   column number is a measurement, and it is the first one on the
+   page that is about the page's own shape rather than about a
+   phrase somebody wrote.
+
+   AND IT REPORTS. The pink marks are the rules the band being
+   read is actually divided on — measured out of that band's own
+   tracks rather than written down anywhere, so the rail cannot
+   drift away from the layout it is printing, and so it is right
+   at every width without anybody maintaining a table. They land
+   in column order and they are the only line on the sheet that
+   changes as the reader moves, which is the page's whole
+   argument in fourteen characters. Below 1180 every band takes
+   the full measure undivided and the rail says so with a dash.
+
+   And each mark is a wedge, cut like the blade's: the same
+   footprint the squeegee leaves, standing in the margin of the
+   figure whose column it opens, drawn from the top down as the
+   band arrives. Nothing else is added — no rule under the row,
+   no box, no panel — because the armature's twelve hairlines are
+   already running through this line and a second rectangle would
+   only say the same thing louder.
+   ============================================================= */
+
+.col-rail {
+  grid-column: 1 / -1;
+  margin-bottom: var(--air-tight);
+  /* the row of figures is the head of the band and the slug under it is its
+     caption, so the pair reads as one line of furniture rather than as a
+     component with two halves */
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  line-height: 1;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.col-rail__figs {
+  display: grid;
+  grid-template-columns: var(--track);
+}
+
+.col-rail__fig {
+  position: relative;
+  justify-self: start;
+  /* set in its own column like everything else on the sheet, so the figure and
+     the type it numbers share a left edge */
+  margin-left: var(--pad);
+  color: var(--blue-ink);
+  opacity: .5;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition: opacity .45s var(--ease);
+  /* the figures are set, one at a time, off the same gesture the poster's lines
+     and the type list's samples use. twelve of them take four hundred
+     milliseconds and they are the smallest type on the page doing the most
+     work, which is the right order of things. only `filter` is animated — the
+     opacity is the rail's own report and a keyframe must not take it. */
+  animation: fig-set .5s var(--ease-out) both;
+  animation-delay: calc(var(--i) * 30ms + 90ms);
+}
+
+/* the mark itself: a wedge of pink in the margin of the figure, cut like the
+   blade's footprint and standing on the boundary the figure opens. drawn from the
+   top down, so it lands in column order with the band. a hairline through a rag
+   screen is a dotted line, so this one is printed plain — it is a printed rule,
+   and the sheet allows it to be. */
+.col-rail__fig::before {
+  position: absolute;
+  top: -.4em;
+  height: calc(100% + .8em);
+  left: -.72em;
+  width: 4px;
+  content: '';
+  background: var(--pink-ink);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 2px) 100%, 0 100%);
+  opacity: 0;
+  transform: scaleY(.12);
+  transform-origin: 0 0;
+  transition: opacity .26s var(--ease), transform .46s var(--ease-out);
+  /* the marks land left to right, the way the rule would be run */
+  transition-delay: calc(var(--i) * 26ms);
+}
+
+.col-rail__fig[data-on='on'] {
+  opacity: 1;
+}
+
+.col-rail__fig[data-on='on']::before {
+  opacity: 1;
+  transform: none;
+}
+
+.col-rail__slug {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px clamp(14px, 2.2vw, 32px);
+  /* the one line on this sheet whose content changes with the reader's position,
+     so its box must not: a band that moved every time a column came or went
+     would take the section observer with it, and the reader would be told they
+     had changed bands while standing still. one line is reserved whatever the
+     band happens to be divided on, and the caption is cut to fit rather than
+     allowed to reflow the band under the observer that is reporting it */
+  min-height: 1.5em;
+  margin-top: 11px;
+  color: var(--ink-50);
+}
+
+.col-rail__slug-lead {
+  flex: 0 0 auto;
+}
+
+.col-rail__slug-fact {
+  margin-left: auto;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* and the figures in the caption are figures like any other */
+.col-rail__n {
+  color: var(--blue-ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .06em;
+}
+
+.col-rail__n + .col-rail__n {
+  margin-left: .5em;
+}
+
+@media (max-width: 899px) {
+  /* twelve figures across a phone is not a numbered armature, it is a row of
+     specks: the columns are under seventy pixels there and the divisions, which
+     are the whole point of the rail, cannot be read at all. the sheet already
+     drops the armature to six and then to four hairlines at these widths, and a
+     ruler with more marks than it has room for is the same mistake. the bands
+     still carry their own slug and their own 2px rule — nothing is lost but the
+     instrument, which was never going to be legible here. */
+  .col-rail {
+    display: none;
+  }
 }
 
 /* =============================================================
@@ -5128,7 +5340,7 @@ html[data-register='on'] .fold-mark__plate--black {
    on through it to the right. on an armature that is not restraint, it is a hole
    with a claim in it — so the claim is a ladder now, printed in the columns the
    paragraph gave up, and it is set on the twelve-column track with a printed rule
-   at eight, the way every other division on this sheet is.
+   of its own, the way every other division on this sheet is.
 
    the head keeps the padding and the 2px rule it shares with the close read; this
    only makes it a track, so the slug spans it and the two halves below it land on
@@ -5162,8 +5374,22 @@ html[data-register='on'] .fold-mark__plate--black {
   text-wrap: pretty;
 }
 
+/* THE HOLE IN THE TYPE BAND, CLOSED.
+
+   the paragraph kept the first six columns and the ladder started on the rule at
+   eight, which left the whole of column seven standing empty with the armature's
+   own hairline going straight through it. that is the fault this same band was
+   rebuilt to fix in iteration 509 — a band that stops two thirds of the way
+   across a ruled sheet reads as a band that ran out of ideas — and it had been
+   reintroduced by the fix, one rule further right, where nothing was watching
+   for it.
+
+   so the division moves to the middle and the measure is whole: six columns of
+   prose, six of ladder, split on the rule at seven. the ladder gets a column
+   back, the paragraph loses none of its measure, and the printed rule it hangs
+   on is now a real boundary rather than the leading edge of a hole. */
 .scale {
-  grid-column: 8 / -1;
+  grid-column: 7 / -1;
   min-width: 0;
   padding-left: var(--pad);
   border-left: 1px solid var(--rule);
@@ -7062,6 +7288,18 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
+/* a figure of the armature, set. the same gesture as the poster's lines and the
+   type list's samples, and — like every other arrival on this sheet — it is ink
+   coming into focus rather than a thing flying in from nowhere */
+@keyframes fig-set {
+  from {
+    filter: blur(4px);
+  }
+  to {
+    filter: none;
+  }
+}
+
 /* the chop comes down. a stamp is not faded up and it is not eased into place: it
    arrives too large and out of focus, because a hand brings it down from above,
    and it hardens on the beat with a small overshoot at the end of the travel. the
@@ -7756,6 +7994,18 @@ html[data-reveal='on'] .reveal.is-in {
     transition-duration: .001ms !important;
   }
 
+  /* a delay is not a duration, so the blanket rule above leaves every stagger
+     on the page standing — and a stagger with a .001ms animation under it holds
+     the thing it staggers in its `from` state for the length of the delay. the
+     figures of the armature are blurred for three hundred milliseconds and the
+     pink division marks are missing while a reader who asked for stillness is
+     looking straight at them, so the delays go too. */
+  .col-rail__fig,
+  .col-rail__fig::before {
+    animation-delay: 0s !important;
+    transition-delay: 0s !important;
+  }
+
   .reveal,
   html[data-reveal='on'] .reveal {
     opacity: 1;
@@ -8001,6 +8251,7 @@ html[data-reveal='on'] .reveal.is-in {
   .xlinks,
   .bed,
   .plates__cue,
+  .col-rail,
   .ream__well,
   .fold,
   .toggle,

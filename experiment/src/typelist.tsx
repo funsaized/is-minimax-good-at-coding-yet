@@ -160,7 +160,7 @@ export function TypeList({ reg }: { reg: number }) {
 
   return (
     <div className="type__body">
-      <div className="type__grid">
+      <div className="type__grid" data-track>
         {FACES.map(face => {
           const reading = useFaceReading(face.stack, face.measure)
           const chain = chainOf(reading)
