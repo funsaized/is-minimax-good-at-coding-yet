@@ -199,6 +199,13 @@ export function App() {
 
   const shown = hover ?? active
   const settled = inRegister(reg)
+  /* ONE WAY OF SAYING IT. the bar's gauge, the case's instrument and the type
+     list's gauge all report the register, and a readout that reads the same
+     number three different ways is three chances to be inconsistent — so the
+     sentence is built once, here, and printed three times. */
+  const regRead = settled
+    ? 'in register'
+    : `${reg > 0 ? '+' : '−'}${Math.abs(reg).toFixed(2)} off`
   /* THE SHEET IS SIGNED OFF. the blade and the pull are two separate pieces of
      machinery and each of them had a reward of its own, which meant a reader could
      work neither, work one, or work both and the page could not tell the three
@@ -630,9 +637,7 @@ export function App() {
             <i className="gauge__dot gauge__dot--pink" />
             <i className="gauge__dot gauge__dot--blue" />
           </span>
-          <span className="gauge__read">
-            {settled ? 'in register' : `off ${reg > 0 ? '+' : '−'}${Math.abs(reg).toFixed(2)}`}
-          </span>
+          <span className="gauge__read">{regRead}</span>
           <span className="gauge__plate" aria-hidden="true">
             <i className="gauge__pin" key={plateTick} />
             {findNote(active).index}
@@ -669,114 +674,25 @@ export function App() {
               <span className="sheet__slug-fact">one sentence · seven words · three impressions</span>
             </p>
 
-            <QuestionTitle
+            {/* THE POSTER AND ITS CASE, AS ONE COMPOSITION.
+
+                iteration 516. see `Poster` below for the whole argument: the
+                question is now set as three lines that obey its own three
+                notes, and the case that chooses between them has moved up
+                into the margin the split used to leave empty. */}
+            <Poster
               titleRef={titleRef}
               selected={active}
               hot={shown}
+              seat={plateSeat}
+              readout={regRead}
               onSelect={select}
               onPreview={setHover}
+              onNudge={nudge}
+              onPlateRef={(id, node) => {
+                plateRefs.current[id] = node
+              }}
             />
-
-            {/* THE PLATE CASE, DIRECTLY UNDER THE POSTER.
-
-                it used to be the last thing in this band, under the standfirst
-                and under the press bed — which put the only choice on the whole
-                sheet a paragraph and an instrument away from the one thing it
-                changes. the reader arrived at the question, read some argument,
-                played with a machine they had not been told what it was for, and
-                only then found the three phrases. on a phone that was three
-                screens, and the bed is a tall one.
-
-                so the order is now the order the eye wants: the poster, the three
-                plates that are set from it, the argument, and then the blade that
-                prints all of it. the bed keeps the place the stylesheet has been
-                claiming for it all along — immediately under the argument,
-                bringing its own frame, with no rule between them — and the
-                argument keeps the place it was given, which is over the type.
-
-                the cue under the slug now points forward rather than sideways, and
-                the help text says the title is above the reader instead of below. */}
-            <header className="plates__head">
-              <p className="slugline">
-                <RegistrationMark className="slugline__mark" />
-                the plate on the bed
-              </p>
-              <p className="plates__cue">
-                <span aria-hidden="true">↳</span> one at a time — the blade is further down the
-                sheet
-              </p>
-            </header>
-
-            <div
-              className="plates"
-              role="radiogroup"
-              data-track
-              aria-label="Which phrase is on the plate"
-              aria-describedby="plates-help"
-            >
-              {NOTES.map(item => (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="radio"
-                  ref={node => {
-                    plateRefs.current[item.id] = node
-                  }}
-                  tabIndex={item.id === active ? 0 : -1}
-                  aria-checked={item.id === active}
-                  className={`plates__row ${item.id === active ? 'is-active' : ''} ${
-                    item.id === shown ? 'is-hot' : ''
-                  }`}
-                  onClick={() => select(item.id)}
-                  onMouseEnter={() => setHover(item.id)}
-                  onMouseLeave={() => setHover(null)}
-                  onFocus={() => setHover(item.id)}
-                  onBlur={() => setHover(null)}
-                  onKeyDown={event => nudge(event, item.id)}
-                >
-                  {/* the case states each plate in one line before it sets it:
-                      the figure, which is a count and so is blue, and the job the
-                      phrase does in the sentence. the count of the run goes under
-                      the setting, where the specimen measures the same run at
-                      four times the size — so a reader choosing a plate knows what
-                      they are choosing without having to go and look. */}
-                  <span className="plates__meta">
-                    <span className="plates__num" aria-hidden="true">{item.index}</span>
-                    <span className="plates__gloss">{item.gloss}</span>
-                  </span>
-                  <Plated
-                    className="plates__stack"
-                    wet={0.6}
-                    render={() => <span className="plates__type">{item.label}</span>}
-                  />
-                  <span className="plates__count" aria-hidden="true">{item.measure}</span>
-                </button>
-              ))}
-
-              {/* THE BLADE. one squeegee on the top rule of the case, and it
-                  travels to whichever cell is up — so putting a different plate
-                  on the press is a pass of the blade across the bed, which is
-                  what it is, instead of three separate bars snapping on and off
-                  in three places at once. it is a single element positioned off
-                  one number rather than three elements cross-fading, so the ink
-                  keeps its direction: the leading edge is the end the reader
-                  came from, and the mark is a wedge for the same reason the
-                  wedge under a word in the title is a wedge.
-
-                  and on a phone the case is three stacked lines of a form rather
-                  than three columns, so the blade turns with it and runs down
-                  the left edge. one mark, two orientations — the same answer the
-                  job ticket already gave its own rules. */}
-              <span
-                className="plates__blade"
-                style={{ '--blade': plateSeat } as CSSProperties}
-                aria-hidden="true"
-              />
-            </div>
-            <p className="sr-only" id="plates-help">
-              Choosing a plate lights that phrase in the title above you, and pulls its sheet to the
-              top of the ream below. Keys 1, 2 and 3 pick a plate from anywhere on the sheet.
-            </p>
 
             {/* THE ANSWER, IN THE FIRST SCREEN.
 
@@ -1252,18 +1168,59 @@ export function App() {
   )
 }
 
-function QuestionTitle({
+/**
+ * THE POSTER, AND THE CASE THAT SETS IT.
+ *
+ * The question is three phrases and the page has three notes on what each one
+ * wants. Two of the three notes were about the *setting* — "give them a line of
+ * their own, at full width" for the hinge, "let the question mark land on a line
+ * of its own" for the turn — and the poster was breaking both of them, because
+ * the setting had been split across two columns so that a hole could be left in
+ * the middle of it. The void was filled with the register target, which is a
+ * decent mark in the wrong place, and the result was a headline with a hole in
+ * it and two phrases sharing baselines with words they were supposed to be set
+ * away from.
+ *
+ * So the split is gone. Three lines, one plate each, left-aligned on one x, the
+ * mark at the end of the third with the landing rule under it running the full
+ * width of the poster. The ragged right is the poster: a headline that has been
+ * fitted to a measure is a paragraph, and this is the loudest thing on the sheet.
+ *
+ * And the four columns the poster gave up are not a void. They are the case: the
+ * three plates move up out of the band underneath, where they were a strip of a
+ * form printed three times under a headline that had just told the reader they
+ * were set apart, and into the margin beside the type they set. Each row states
+ * its figure, its job in the sentence and the rule it is set by, so choosing a
+ * plate is a decision made next to its consequence — the row is under the line
+ * of the poster it lights, and the blade that marks it travels down the same
+ * edge at every width.
+ *
+ * The division is the armature's own: the poster is columns one to eight, the
+ * case is nine to twelve, and the rule the press prints between them is the rule
+ * between column eight and column nine. Nothing here is asserted anywhere.
+ */
+function Poster({
   titleRef,
   selected,
   hot,
+  seat,
+  readout,
   onSelect,
   onPreview,
+  onNudge,
+  onPlateRef,
 }: {
   titleRef: RefObject<HTMLHeadingElement | null>
   selected: WordId
   hot: WordId
+  /** which of the three cells the blade is standing over, read out of the notes */
+  seat: number
+  /** the register, in the plainest words the bar uses for it */
+  readout: string
   onSelect: (id: WordId) => void
   onPreview: (id: WordId | null) => void
+  onNudge: (event: ReactKeyboardEvent<HTMLElement>, id: WordId) => void
+  onPlateRef: (id: WordId, node: HTMLButtonElement | null) => void
 }) {
   const words = useRef<Record<string, HTMLButtonElement | null>>({})
   const frame = useRef(0)
@@ -1314,7 +1271,7 @@ function QuestionTitle({
     const back = event.key === 'ArrowLeft' || event.key === 'ArrowUp'
     if (!forward && !back) return
     event.preventDefault()
-    /* the same claim as the case below the poster: the title walks its own three
+    /* the same claim as the case beside the poster: the title walks its own three
        plates on the arrows, and the blade must not hear about it */
     event.stopPropagation()
     const here = WORD_IDS.indexOf(id)
@@ -1358,7 +1315,7 @@ function QuestionTitle({
   const lines = (ghost: boolean) => {
     const w = word(ghost)
     return (
-      <span className="q__lines" data-track data-split="6">
+      <span className="q__lines">
         <span className="q__line q__line--1" style={{ '--i': 0 } as CSSProperties}>
           <span className="q__plain">is Minimax </span>
           {w('m3', <span className="chip">M3</span>)}
@@ -1382,8 +1339,9 @@ function QuestionTitle({
           ))}
           {/* the rule the question mark lands on. printed three times, it is three
               short stubs until the blade reaches the gate, and then one rule
-              running the full measure — and the two corners where it meets the
-              trim are ink traps, so they fill as the sheet comes into register */}
+              running the full width of the poster — and the two corners where it
+              meets the column rule are ink traps, so they fill as the sheet comes
+              into register */}
           <span className="q__land" aria-hidden="true">
             <InkTrap className="q__trap q__trap--start" rule={false} />
             <InkTrap className="q__trap q__trap--end" rule={false} />
@@ -1394,24 +1352,111 @@ function QuestionTitle({
   }
 
   return (
-    <h1
-      id="question-title"
-      ref={titleRef}
-      className={`question is-on-${hot} is-up-${selected}`}
-      onPointerMove={track}
-      onPointerLeave={clear}
-    >
-      {/* the void the two-column split leaves is not filled with texture: it
-          holds the instrument. the same three crosses the control strip carries,
-          set large enough to read, reporting the plate from the middle of the
-          sheet. at the gate it is one bullseye and nothing else. */}
-      <span className="question__gate" aria-hidden="true">
-        <PlateTarget className="question__target" />
-        <span className="question__gate-read">reg. mark · live read</span>
-      </span>
-      <Plated className="question__stack" wet={1} render={lines} />
-      <span className="question__wash" aria-hidden="true" />
-    </h1>
+    <div className="poster" data-track>
+      <h1
+        id="question-title"
+        ref={titleRef}
+        className={`question is-on-${hot} is-up-${selected}`}
+        onPointerMove={track}
+        onPointerLeave={clear}
+      >
+        <Plated className="question__stack" wet={1} render={lines} />
+        <span className="question__wash" aria-hidden="true" />
+      </h1>
+
+      {/* THE CASE, IN THE POSTER'S MARGIN.
+
+          one row per plate, each stating the figure — which is a count, and so is
+          blue — the job the phrase does in the sentence, the phrase itself at the
+          sub step, and the rule the poster sets it by. the setting rule is the
+          row's own text: it is the sentence the close read argues at length two
+          screens down, said once here in eleven words, which is what the margin
+          of a poster is for. */}
+      <div className="qrail">
+        <p className="slugline qrail__slug">
+          <span className="qrail__slug-lead">
+            <RegistrationMark className="slugline__mark" />
+            the plate on the bed
+          </span>
+          <span className="qrail__slug-fact">01–03 · one at a time</span>
+        </p>
+
+        <div
+          className="qrail__list"
+          role="radiogroup"
+          aria-label="Which phrase is on the plate"
+          aria-describedby="plates-help"
+        >
+          {NOTES.map(item => (
+            <button
+              key={item.id}
+              type="button"
+              role="radio"
+              ref={node => onPlateRef(item.id, node)}
+              tabIndex={item.id === selected ? 0 : -1}
+              aria-checked={item.id === selected}
+              className={`qrail__row ${item.id === selected ? 'is-active' : ''} ${
+                item.id === hot ? 'is-hot' : ''
+              }`}
+              onClick={() => onSelect(item.id)}
+              onMouseEnter={() => onPreview(item.id)}
+              onMouseLeave={() => onPreview(null)}
+              onFocus={() => onPreview(item.id)}
+              onBlur={() => onPreview(null)}
+              onKeyDown={event => onNudge(event, item.id)}
+            >
+              <span className="qrail__meta">
+                <span className="qrail__num" aria-hidden="true">{item.index}</span>
+                <span className="qrail__gloss">{item.gloss}</span>
+              </span>
+              <Plated
+                className="qrail__stack"
+                wet={0.6}
+                render={() => <span className="qrail__type">{item.label}</span>}
+              />
+              <span className="qrail__set">{item.set}</span>
+            </button>
+          ))}
+
+          {/* THE BLADE, DOWN THE MARGIN. one squeegee standing on the left edge of
+              the case, a third of the way per row, riding the same number the
+              rows are printed from — so putting a plate on the press is a pass of
+              the blade rather than three bars snapping on and off in three places
+              at once. the leading end is square and the trailing end is a wedge,
+              because ink does not stop abruptly behind a squeegee and the
+              direction of travel should stay legible.
+
+              and it is one orientation at every width: the case was a strip of
+              three cells with the blade along its top rule, then three lines of a
+              form with the blade down the side, and the mark had to be rebuilt
+              twice to follow it. the case is three rows everywhere now, so there
+              is one mark and it never turns. */}
+          <span
+            className="qrail__blade"
+            style={{ '--blade': seat } as CSSProperties}
+            aria-hidden="true"
+          />
+        </div>
+
+        {/* THE INSTRUMENT, HOMED. the three crosses the control strip carries,
+            set where they can be read without being in the way of anything: the
+            foot of the case, on the armature rather than in the middle of a
+            headline. out of register they are three marks arguing; at the gate
+            one bullseye, and the figure beside them says so in the same words
+            the bar uses. */}
+        <p className="qrail__eye" aria-hidden="true">
+          <PlateTarget className="qrail__target" />
+          <span className="qrail__eye-read">
+            reg. mark · live read · <span className="qrail__eye-fig">{readout}</span>
+          </span>
+        </p>
+      </div>
+
+      <p className="sr-only" id="plates-help">
+        Choosing a plate lights that phrase in the title beside you, and pulls its sheet to
+        the top of the ream below. Keys 1, 2 and 3 pick a plate from anywhere on the sheet.
+      </p>
+    </div>
   )
 }
 

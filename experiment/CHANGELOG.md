@@ -1,40 +1,15 @@
-Iteration 515 — the armature is numbered, and the hole it found in the type band is closed.
+Iteration 516: the poster stops breaking its own rules, and the plate case moves up beside it.
 
-What changed
+**What changed**
 
-- New `src/ruler.tsx`, rendering a column rail at the head of all four bands
-  (the question, the close read, the type list, the answer). Twelve figures, one
-  to a column, set in the margin of its own track so a figure and the column it
-  belongs to are the same x everywhere. Furniture face at the finest tier, in the
-  blue the sheet already prints every measurement in.
-- The rail marks, in pink, the rules the band being read is actually divided on.
-  The divisions are measured out of that band's own twelve-column tracks (the
-  bands are tagged `data-track`) rather than written down anywhere, so the rail
-  cannot drift away from the layout it is printing and is correct at every width
-  on its own. `data-split` covers the one division a track draws itself instead of
-  inheriting — the poster's column rule, at the boundary between columns six and
-  seven.
-- The marks land in column order when a band arrives, the figures set in one at a
-  time off the existing `fig-set` gesture, and the rail's caption line has a
-  reserved height so the one line on the sheet that changes can never reflow a band
-  under the section observer that is reporting it.
-- Fixed a real composition fault the instrument exposed: the type band kept six
-  columns for its paragraph and started the scale ladder on the rule at eight,
-  leaving the whole of column seven empty with the armature's hairline running
-  through it. The division moves to the middle — six of prose, six of ladder.
-- A fifth row on the job ticket at the foot of the run, stating what the rail is.
-- Rail hidden below 900px (twelve figures across a phone is a row of specks, and
-  the divisions cannot be read), hidden in print alongside the ruling, and its
-  stagger delays zeroed under reduced motion, which the blanket animation rule
-  does not cover.
+- `src/App.tsx` — `QuestionTitle` is now `Poster` and renders the whole first band: the title plus the plate case. The case (previously a `.plates` band under the poster) is gone as a band; its radiogroup, blade, help text and refs moved into the new component. Register readout is built once in `App` (`regRead`) and printed by the bar gauge and the case instrument. A JSDoc on `Poster` states the argument.
+- `src/style.css` — new `THE POSTER, AND THE CASE BESIDE IT` block. `.poster` is a 12-column grid (poster 1–7, case 8–12). `.q__lines` is one track instead of two, so the question is three lines, one plate each, and the mark lands on a line of its own. Poster leading .92 → .96. The printed column rule now sits on the real column-8 boundary. New `.qrail*` block replaces `.plates*`; the case keeps one orientation at every width (blade down the left edge), so the mobile blade rewrite is gone. `.standfirst` takes the `--air-press` gap the case head used to carry. New 1180px breakpoint stacks the case under the poster at the full measure. `QuestionTitle`'s `data-track data-split="6"` moved to `.poster`, so the armature reports the division at 7.
+- Removed: `.plates`, `.plates__row`, `.plates__blade`, `.plates__num`, `.plates__meta`, `.plates__gloss`, `.plates__stack`, `.plates__type`, `.plates__count`, `.plates__head`, `.plates__cue`, `.question__gate`, `.question__target`, `.question__gate-read`, and their overrides.
 
-Why
+**Why**
 
-The sheet has printed its own twelve-column ruling since iteration 504 and nobody
-has ever been able to read anything against it — the ruling says nothing, and the
-divisions between the bands were a private arrangement between the stylesheet and
-whoever wrote it. This iteration turns the claim into something checkable and,
-in the type band, immediately pays for itself by finding a hole that ten iterations
-of explaining the grid had missed.
+The question was split across two columns so a hole could be left in the middle of it, and the hole was filled with the register target. That broke two of the three notes the page sets for itself — "give them a line of their own, at full width" for the hinge, "let the question mark land on a line of its own" for the turn. The case now sits in the columns the poster gave up, so choosing a plate happens next to the line it lights, and the four columns are the armature's own 8/9 division rather than a void.
 
-Verification: `npm run build` clean (tsc --noEmit + vite build).
+**Verified**
+
+`npm run build` clean (tsc + vite). No console or page errors. Checked at 340/390/600/820/1024/1280/1440/1680 and with `prefers-reduced-motion: reduce`. Keyboard: 1/2/3 pick a plate, arrows walk the radiogroup without moving the blade, `0` snaps to the gate, `p` pulls the proof, sign-off fires.

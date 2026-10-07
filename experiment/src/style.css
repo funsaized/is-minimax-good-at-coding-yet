@@ -2094,7 +2094,7 @@ html[data-register='on'] .ruling--light .ruling__plate--black {
 .ink-trap__pool,
 .w::before,
 .xlink__label::before,
-.plates__blade,
+.qrail__blade,
 .sheetfoot__flat,
 .sheetbar__flat,
 .inkbar {
@@ -2191,7 +2191,7 @@ html[data-register='on'] .ruling--light .ruling__plate--black {
 .plated__layer--ghost .w,
 .plated__layer--ghost .chip,
 .plated__layer--ghost .mark,
-.plated__layer--ghost .plates__type,
+.plated__layer--ghost .qrail__type,
 .plated__layer--ghost .specimen__main,
 .plated__layer--ghost .specimen__line {
   color: inherit;
@@ -2389,8 +2389,54 @@ html[data-register='on'] .ink-trap__rule {
   }
 }
 
-/* the title, split across two columns like a poster: subject left, claim right */
+/* =============================================================
+   THE POSTER, AND THE CASE BESIDE IT
+
+   the question was split across two columns so that a hole could
+   be left in the middle of it, and the hole was filled with the
+   register target. which meant the loudest thing on the sheet had
+   a void in it, and — worse — the split broke two of the three
+   notes the page sets for itself: the hinge was promised "a line of
+   its own, at full width" and had half a line, and the turn was
+   promised "the question mark lands on a line of its own" and had
+   it glued to the front of `frontend`. a page whose subject is
+   typographic judgement cannot set its own headline against its own
+   brief.
+
+   so the split is gone. three lines, one plate each, left-aligned
+   on one x, ragged right, and the landing rule under the mark runs
+   the full width of the poster. the ragged right is the poster: a
+   headline fitted to a measure is a paragraph, and this is the
+   biggest piece of type on the page.
+
+   and the four columns the poster gave up hold the case. the three
+   plates move up out of the band below — where they were a strip
+   of a form printed three times, under a headline that had just
+   told the reader those phrases are set apart — and into the
+   margin beside the type they set. the division is the armature's
+   own: columns one to eight, then nine to twelve, with the press
+   printing the rule between them. nothing here is asserted.
+
+   below 1180 a four-column margin is not a margin, so the case
+   goes under the poster at the full measure and keeps the same
+   three rows, the same left-edge blade and the same one
+   orientation it has everywhere else.
+   ============================================================= */
+
+.poster {
+  display: grid;
+  grid-template-columns: var(--track);
+  /* stretch, so the case is exactly as tall as the poster and its three rows come
+     out equal at every width — which is what lets one blade sit on the boundary
+     between two rows rather than near one. the poster is set from its own content
+     and never grows to meet it, because there is nothing below it inside this
+     grid for the extra height to be used by. */
+  align-items: stretch;
+}
+
 .question {
+  grid-column: 1 / span 7;
+  padding-right: var(--pad);
   position: relative;
   /* the loudest thing on the sheet gets the largest margin on it, and the widest
      one is above it: it used to sit thirty-eight pixels under a hairline slug,
@@ -2402,7 +2448,12 @@ html[data-register='on'] .ink-trap__rule {
   font-family: var(--display);
   font-size: var(--question);
   font-weight: 800;
-  line-height: .92;
+  /* the leading is tight enough to set the three lines as one block and loose
+     enough that the descender of `good at` does not sit on the shoulder of
+     `frontend`: .92 put them a hair apart, which reads as a mistake rather than
+     as a decision. .96 is as close as this face gets without the two words
+     touching. */
+  line-height: .96;
   /* THE LOCK-UP. at the gate the poster's letterspacing tightens by about a
      sixtieth of an em. it is four thousandths of a size unit and nobody will
      ever see it happen — but the sheet has just been pulled tight, and the way a
@@ -2417,10 +2468,14 @@ html[data-register='on'] .question {
   letter-spacing: -.0585em;
 }
 
+/* three lines, one track, and nothing to justify them. the poster is the only
+   thing on the sheet set this large, so it gets the widest measure it can have
+   and is left ragged — a fitted headline is a paragraph, and the shape of this
+   one is the shape of the sentence: short subject, short standard, the longest
+   run last, with the mark hanging off the end of it. */
 .q__lines {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  column-gap: var(--col-gap);
+  grid-template-columns: minmax(0, 1fr);
   align-content: end;
 }
 
@@ -2430,20 +2485,7 @@ html[data-register='on'] .question {
   overflow-wrap: break-word;
 }
 
-.q__line--1 {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.q__line--2 {
-  grid-column: 1;
-  grid-row: 2;
-}
-
 .q__line--3 {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: end;
   position: relative;
 }
 
@@ -2493,19 +2535,22 @@ html[data-register='on'] .q__land {
   right: 0;
 }
 
-/* the column rule, printed three times: out of register it is three hairlines,
-   and at the gate it collapses into one crisp rule. the same accident of the
-   press, made to look deliberate. */
+/* THE RULE BETWEEN THE POSTER AND THE CASE. printed three times: out of register
+   it is three hairlines, and at the gate it collapses into one crisp rule. it
+   stands exactly on the boundary between column eight and column nine — the same
+   rule the armature prints, set once by the press rather than once by the
+   stylesheet — and it goes down the whole height of the poster, because that is
+   how tall a composition two columns wide is taller than its margin. */
 .question__stack .plated__layer::before {
   position: absolute;
   top: -.05em;
   bottom: -.08em;
-  left: calc((100% + var(--col-gap)) / 2);
+  left: calc(100% + var(--pad));
   z-index: -1;
   width: 1px;
   content: '';
   background: currentColor;
-  opacity: .3;
+  opacity: .42;
   mask-image: linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent);
   -webkit-mask-image: linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent);
 }
@@ -2515,49 +2560,247 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
   opacity: .6;
 }
 
-/* the void the two-column split leaves is not a hole and not a patch of
-   texture. it holds the instrument: the three registration crosses, set large
-   enough to read, riding the plate from the middle of the sheet. out of
-   register they are three marks arguing; at the gate one bullseye, and the
-   frame firms up the way a rule does when the press agrees with itself.
+/* =============================================================
+   THE CASE, IN THE MARGIN
 
-   the caption sits beside the cross rather than under it, so the whole group is
-   exactly one mark tall: at .6em it clears the one-line void at every size, and
-   the line below it never has to make room. */
-.question__gate {
-  position: absolute;
-  top: .16em;
-  right: 0;
-  z-index: 0;
+   three rows, four columns, one blade. the case used to be a
+   band of its own under the poster and it was printed three times
+   across, so the reader chose a plate from a strip of a form that
+   was four hundred pixels away from the type that plate prints.
+   it is here instead: the row you put on the press sits directly
+   beside the line of the poster it lights, and the blade that
+   marks it runs down the left edge of the whole case.
+
+   every row states three things — the figure, which is a count and
+   so is blue; the job the phrase does in the sentence; and the rule
+   the poster sets it by. the third of those is the sentence the
+   close read argues at length two screens down, said once in
+   eleven words, which is what a margin is for. nothing here is new
+   information and all of it is load-bearing: the reader can set the
+   poster from this column without going anywhere else.
+   ============================================================= */
+
+.qrail {
+  grid-column: 8 / -1;
   display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-left: var(--pad);
+}
+
+.qrail__slug {
+  /* the slug every band on the light sheet opens on, standing in a margin rather
+     than across a measure: the fact moves under the lead instead of opposite
+     it, because opposite it there is no room */
+  flex-wrap: wrap;
+  gap: 3px 10px;
+  /* no rule of its own: the case opens on the 2px the press prints at the head of
+     a band, and a second hairline eleven pixels under the slug of the sheet
+     above it would be two rules in the same corner saying the same thing */
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 0;
+}
+
+.qrail__slug-lead {
+  display: inline-flex;
   align-items: center;
-  gap: clamp(8px, 1vw, 15px);
+  gap: 8px;
+  min-width: 0;
+}
+
+.qrail__slug-fact {
+  color: var(--ink-50);
+  white-space: nowrap;
+}
+
+.qrail__list {
+  /* the three lines are the same line, set three times, so the rows are made
+     equal — which is also what lets the blade travel a third of the case at a
+     time and land on a boundary rather than near one */
+  position: relative;
+  display: grid;
+  grid-auto-rows: 1fr;
+  flex: 1 1 auto;
+  border-top: 1px solid var(--black);
+}
+
+.qrail__row {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  align-content: center;
+  min-width: 0;
+  padding: 11px var(--pad) 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+  transition: background .26s var(--ease);
+}
+
+.qrail__row:hover,
+.qrail__row.is-hot {
+  background: rgba(252, 250, 243, .72);
+}
+
+/* a row of a form is focused from the inside, the way a ruled line takes a
+   pencil mark: the ring goes on the line rather than around the box, because an
+   outset ring on a full-height row reads as a card rather than as a field */
+.qrail__row:focus-visible {
+  outline-offset: -2px;
+  border-radius: 0;
+}
+
+/* THE CELL THAT IS UP IS LIFTED OUT OF THE CASE, not lit up in it. it takes
+   paper rather than a fill, the way the cell used to, and the ink the blade
+   leaves behind is printed where the blade would have left it — a landing rule
+   across the foot of the row, which is the same mark the poster puts under the
+   question mark and the proof puts under the answer. */
+.qrail__row.is-active {
+  background: rgba(252, 250, 243, .92);
+}
+
+.qrail__row.is-active::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  content: '';
+  background: var(--black);
+  transition: background .3s var(--ease);
+}
+
+html[data-register='on'] .qrail__row.is-active::after {
+  background: var(--pink-ink);
+}
+
+/* THE BLADE. one squeegee standing on the left edge of the case, a third of the
+   way per row, riding the same number the rows are printed from. the leading end
+   is cut off square and the trailing end is a wedge, because ink does not stop
+   abruptly behind a squeegee and the direction of travel has to stay legible.
+   one orientation, every width — the case is three rows on a phone too, so the
+   mark never has to be rebuilt. */
+.qrail__blade {
+  --slot: calc(100% / 3);
+  position: absolute;
+  top: calc(var(--blade) * var(--slot));
+  left: -1px;
+  z-index: 1;
+  width: 3px;
+  height: var(--slot);
+  background: var(--pink);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5px), 0 100%);
+  transition: top .44s var(--ease-out);
   pointer-events: none;
 }
 
-.question__target {
-  flex: 0 0 auto;
-  width: .6em;
-  height: .6em;
+/* the figure is a count, so it is federal blue: every number on the light sheet
+   is a measurement and the measurement ink is the blue plate. the pink belongs
+   to the press — the plate that is up, the rule under the word that is set. */
+.qrail__num {
+  color: var(--blue-ink);
+  font-family: var(--mono);
+  font-size: var(--label-2);
+  font-weight: 700;
+  letter-spacing: .16em;
+  transition: color .26s var(--ease);
+}
+
+.qrail__row.is-active .qrail__num {
   color: var(--black);
 }
 
-.question__gate-read {
+.qrail__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  min-width: 0;
+}
+
+.qrail__gloss {
+  overflow: hidden;
   color: var(--ink-50);
   font-family: var(--mono);
-  font-size: var(--micro);
-  font-weight: 500;
-  line-height: 1.3;
-  letter-spacing: .13em;
+  font-size: var(--label-3);
+  letter-spacing: .14em;
+  text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-@media (max-width: 900px) {
-  /* one column, so there is no void to hold anything */
-  .question__gate {
-    display: none;
-  }
+.qrail__stack {
+  min-width: 0;
+}
+
+/* the phrase is the control, so it is set in the grotesque at the sub step: the
+   same size the close read sets its own heads, and four steps under the poster
+   it stands beside. */
+.qrail__type {
+  display: block;
+  font-family: var(--display);
+  font-size: var(--sub);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -.038em;
+  transition: color .26s var(--ease);
+}
+
+/* the row marks its phrase the way the poster marks the word it belongs to, so
+   the reader can match the two without being told which three words in the
+   sentence a plate is: same place, same ink. */
+.qrail__row.is-active .qrail__type {
+  text-decoration: underline;
+  text-decoration-color: var(--pink);
+  text-decoration-thickness: .085em;
+  text-underline-offset: .16em;
+}
+
+.qrail__set {
+  overflow-wrap: break-word;
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  line-height: 1.45;
+  letter-spacing: .06em;
+}
+
+.qrail__row.is-active .qrail__set {
+  color: var(--ink-70);
+}
+
+/* THE INSTRUMENT, HOMED. the three crosses the control strip carries, set where
+   they can be read without being in the way of anything: the foot of the case,
+   on the armature rather than in the middle of a headline. out of register they
+   are three marks arguing; at the gate one bullseye. */
+.qrail__eye {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 0 var(--pad) 0 0;
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  line-height: 1.35;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.qrail__target {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  color: var(--black);
+}
+
+.qrail__eye-fig {
+  color: var(--blue-ink);
+  font-weight: 700;
+  transition: color .3s var(--ease);
+}
+
+html[data-register='on'] .qrail__eye-fig {
+  color: var(--black);
 }
 
 .plate-target__frame {
@@ -2893,161 +3136,6 @@ html[data-register='on'] .plated__layer--black .mark {
    than as a highlight changing colour.
    ============================================================= */
 
-.plates {
-  position: relative;
-  display: grid;
-  grid-template-columns: var(--track);
-  border-top: 1px solid var(--black);
-}
-
-.plates__row {
-  position: relative;
-  display: grid;
-  gap: 6px;
-  min-width: 0;
-  /* the case is the one control on the sheet and it is sitting directly under
-     the poster, so it is set as a strip of a form rather than as three cards:
-     a little more air above and below each line than a caption would take, so
-     the block reads as a ticket sitting under a headline and not as four more
-     bands at the same weight */
-  padding: 19px var(--pad) 21px;
-  text-align: left;
-  border-left: 1px solid var(--rule);
-  transition: background .26s var(--ease);
-}
-
-.plates__row:nth-child(1) {
-  grid-column: 1 / span 4;
-  padding-left: 0;
-  border-left: 0;
-}
-
-.plates__row:nth-child(2) {
-  grid-column: 5 / span 4;
-}
-
-.plates__row:nth-child(3) {
-  grid-column: 9 / span 4;
-  padding-right: 0;
-}
-
-.plates__row:hover,
-.plates__row.is-hot {
-  background: rgba(252, 250, 243, .72);
-}
-
-/* THE CELL THAT IS UP IS LIFTED OUT OF THE CASE, not lit up in it. the cell used
-   to take a bright fill and a twenty-four pixel inset shadow under its own edge,
-   which is the shading of a selected row in a table rather than the shading of a
-   piece of stock that has been pulled forward — and the shadow was the only dark
-   edge anywhere in a case made of hairlines, so it read as a bug. the cell now
-   takes paper, and the ink that comes off the blade is printed where the blade
-   would have left it: a landing rule across the foot of the cell that is up,
-   which is the same mark the poster puts under the question mark and the proof
-   puts under the answer. */
-.plates__row.is-active {
-  background: rgba(252, 250, 243, .92);
-  box-shadow: inset 0 -2px 0 0 var(--black);
-}
-
-/* THE BLADE. one squeegee on the top rule of the case, a third of the way across
-   per cell, riding the same number the cells are printed from. the leading end is
-   cut off square and the trailing end is a wedge, because ink does not stop
-   abruptly behind a squeegee and the direction of travel should be legible: it
-   is the same asymmetry the wedge under a word in the title has. */
-.plates__blade {
-  --slot: calc(100% / 3);
-  position: absolute;
-  top: -1px;
-  left: calc(var(--blade) * var(--slot));
-  z-index: 1;
-  width: var(--slot);
-  height: 3px;
-  background: var(--pink);
-  clip-path: polygon(0 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
-  transition: left .44s var(--ease-out);
-  pointer-events: none;
-}
-
-/* the figure is a count, so it is federal blue: every number on the light sheet
-   is a measurement and the measurement ink is the blue plate. the pink belongs
-   to the press — the plate that is up, the rule under the word that is set. */
-.plates__num {
-  color: var(--blue-ink);
-  font-family: var(--mono);
-  font-size: var(--label-2);
-  font-weight: 700;
-  letter-spacing: .16em;
-  transition: color .26s var(--ease);
-}
-
-.plates__row.is-active .plates__num {
-  color: var(--black);
-}
-
-/* the figure and the job it does, on one line, because a cell three lines deep is
-   a paragraph and this is a ticket */
-.plates__meta {
-  display: flex;
-  align-items: baseline;
-  gap: 9px;
-  min-width: 0;
-}
-
-.plates__gloss {
-  overflow: hidden;
-  color: var(--ink-50);
-  font-family: var(--mono);
-  font-size: var(--label-3);
-  letter-spacing: .14em;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.plates__stack {
-  min-width: 0;
-}
-
-/* the phrase is the control, and it was set at the size of a job ticket. it steps
-   up one notch on the sheet's ladder — still furniture above the label tier, and
-   still four steps under the poster it sits beneath. */
-.plates__type {
-  display: block;
-  font-family: var(--display);
-  font-size: clamp(1.4rem, 2.1vw, 1.94rem);
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -.042em;
-  transition: color .26s var(--ease);
-}
-
-/* THE CELL THAT IS UP MARKS ITS PHRASE THE WAY THE POSTER MARKS THE WORD IT
-   BELONGS TO. the sheet already has one way of saying "this is the one": a rule
-   of press ink under the type, and the poster draws it inside the three plates,
-   so it fringes while the press is loose. the case draws the same rule under the
-   phrase it has up, which means the reader can match the two without being told
-   which of the three words in the sentence a plate corresponds to — the mark is
-   in the same place and it is the same ink. */
-.plates__row.is-active .plates__type {
-  text-decoration: underline;
-  text-decoration-color: var(--pink);
-  text-decoration-thickness: .085em;
-  text-underline-offset: .17em;
-}
-
-/* the run the phrase prints, counted — the same fact the specimen stands its ruled
-   measure on, and in the same ink, so the two agree without either of them
-   explaining the other */
-.plates__count {
-  color: var(--blue-ink);
-  font-family: var(--mono);
-  font-size: var(--label-3);
-  font-weight: 600;
-  letter-spacing: .11em;
-  text-transform: lowercase;
-}
-
 /* =============================================================
    THE STANDFIRST: THE ANSWER, IN THE FIRST SCREEN
 
@@ -3087,7 +3175,14 @@ html[data-register='on'] .plated__layer--black .mark {
   display: grid;
   grid-template-columns: var(--track);
   align-items: start;
-  margin-top: var(--air-band);
+  /* the gap below the poster is the widest on the light sheet, and it is not a
+     band gap: it is the line the reader's eye breaks on after the last line of
+     type. the poster stops and the press begins, so the air between them is the
+     only place on the sheet that is neither one nor the other, and it is worth
+     more than any rule. it used to be --air-band, the same gap a job ticket gets
+     from the paragraph above it, which put the headline and the machine it
+     prints at the same density as two captions in a column. */
+  margin-top: var(--air-press);
   padding-top: var(--air-block);
   border-top: 2px solid var(--black);
 }
@@ -3573,12 +3668,6 @@ html[data-pulled='on'] .verdict__bloom {
     display: none;
   }
 
-  /* the job ticket's gloss is the one line on the sheet that can be cut
-     without losing anything: which plate is on the bed is a glyph, and the
-     bed's own foot already says the same thing about taking the blade */
-  .plates__cue {
-    display: none;
-  }
 }
 
 .bed__dot {
@@ -3857,57 +3946,6 @@ html[data-register='on'] .register-eye__plate--black {
   background: var(--stock-2);
   border-color: rgba(20, 19, 26, .2);
   font-size: .6rem;
-}
-
-/* THE HEAD OF THE JOB TICKET. every other band on the light sheet opens
-   the same way — a slug on a 2px rule with a fact standing on the same
-   line — and the job ticket opened with a sentence floating fifty pixels
-   above its own top rule, with nothing between them but air. four short
-   sentences between two panels is a fifth module; a slug and its gloss is
-   a label.
-
-   so the instruction has not moved an inch on the page. it has only stopped
-   hovering: the slug names the band, the sentence is the gloss under it,
-   and the two of them share the head rule the sheet prints on every other
-   band, which is why the rule reads as part of the sheet rather than as
-   something the ticket happens to own.
-
-   and it is now directly under the poster rather than at the foot of the
-   band, so the head rule is the line the reader's eye breaks on after the
-   last line of type: the poster stops, the press begins. the air above it
-   is the widest on the light sheet for the same reason — it is the biggest
-   piece of type on the page, and it is owed the most room. */
-.plates__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px clamp(16px, 2.4vw, 34px);
-  /* the gap below the poster is the widest on the light sheet, and it is not a
-     band gap: it is the line the reader's eye breaks on after the last line of
-     type. the poster stops and the press begins, so the air between them is the
-     only place on the sheet that is neither one nor the other, and it is worth
-     more than any rule. it used to be --air-band, the same gap a job ticket gets
-     from the paragraph above it, which put the headline and the machine it
-     prints at the same density as two captions in a column. */
-  margin-top: var(--air-press);
-  padding-bottom: var(--air-block);
-  border-top: 2px solid var(--black);
-}
-
-.plates__cue {
-  flex: 0 1 auto;
-  min-width: 0;
-  color: var(--ink-50);
-  font-family: var(--mono);
-  font-size: var(--label-3);
-  line-height: 1.5;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
-
-.plates__cue > span {
-  color: var(--pink-ink);
-  letter-spacing: 0;
 }
 
 /* ---------- close read ---------- */
@@ -7712,21 +7750,11 @@ html[data-reveal='on'] .reveal.is-in {
     letter-spacing: -.045em;
   }
 
+  /* the three lines are set a shade looser here: at .92 the descenders of
+     `frontend` and the pad under the question mark came within a pixel of each
+     other on a phone, and the mark is supposed to be standing on its pad */
   .q__lines {
-    grid-template-columns: minmax(0, 1fr);
     row-gap: .04em;
-  }
-
-  .q__line--1,
-  .q__line--2,
-  .q__line--3 {
-    grid-column: 1;
-    grid-row: auto;
-  }
-
-  /* no second column, so there is no column rule to print three times */
-  .question__stack .plated__layer::before {
-    display: none;
   }
 
   /* below this the note and the verdict stop being a margin and become body
@@ -7805,6 +7833,73 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
+/* THE CASE GOES UNDER THE POSTER ONCE THE MARGIN IS TOO NARROW TO BE ONE */
+
+@media (max-width: 1180px) {
+  /* THE CASE GOES UNDER THE POSTER. on a phone and on a narrow window a
+     four-column margin is not a margin, and the case stops being beside the
+     type it sets and starts being a band again — which is what it was, and what
+     it should not go back to being: a strip of a form with the headline four
+     hundred pixels above it. instead the three rows lay out as lines of a form
+     at the full measure, the figure and the phrase on one line and the rule the
+     poster sets it by under them, so the reader is still reading a case and
+     still reading it in the same order.
+
+     the blade does not turn. it was rebuilt for this width once already — along
+     the top rule on a wide screen, down the side on a phone — and the case is
+     three rows at every width now, so there is one mark and one orientation. */
+  .poster {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .question,
+  .qrail {
+    grid-column: 1 / -1;
+  }
+
+  .question {
+    padding-right: 0;
+  }
+
+  .qrail {
+    margin-top: var(--air-block);
+    padding-left: 0;
+  }
+
+  /* no second column, so there is no column rule to print three times */
+  .question__stack .plated__layer::before {
+    display: none;
+  }
+
+  .qrail__row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: 3px 12px;
+    /* the rows are lines of a form here, not cells of a case, so the air each one
+       was given as a cell has to come back off it — otherwise a phone gets three
+       of the tallest targets on the page and loses the rest of the sheet below */
+    padding: 10px 0 11px;
+  }
+
+  /* the figure and the job it does are a fixed measure here, so the three
+     phrases stack on one x: they are the same line set three times, and three
+     phrases that start three different places are three lines, not one */
+  .qrail__meta {
+    grid-column: 1;
+    min-width: 15ch;
+  }
+
+  .qrail__stack {
+    grid-column: 2;
+  }
+
+  .qrail__set {
+    grid-column: 1 / -1;
+  }
+
+}
+
 @media (max-width: 760px) {
   :root {
     --fringe-scale: .62;
@@ -7824,73 +7919,6 @@ html[data-reveal='on'] .reveal.is-in {
      and no longer enough to look like a texture */
   .ruling {
     --pitch: calc(100% / 6);
-  }
-
-  /* and the three cells of the job ticket become three ruled lines of a form.
-     the spans are reset with the same :nth-child() the base rules set them with,
-     because .plates__row:nth-child() is the more specific of the two and a plain
-     .plates__row down here loses to it: the phrases were printed three-up at
-     every width, and on a phone each of them got a quarter of the sheet, which
-     is where "good at" started printing straight through "yet?" */
-  .plates {
-    /* the three lines are the same line, set three times, so the rows are made
-       equal — which is also what lets the blade travel a third of the case at a
-       time and land on a boundary rather than near one */
-    grid-auto-rows: 1fr;
-  }
-
-  .plates__row:nth-child(1),
-  .plates__row:nth-child(2),
-  .plates__row:nth-child(3) {
-    grid-column: 1 / -1;
-    padding-right: 0;
-    padding-left: 0;
-    border-left: 0;
-    border-top: 1px solid var(--rule);
-  }
-
-  .plates__row {
-    display: flex;
-    align-items: baseline;
-    gap: 8px 12px;
-    /* the strip gives way to three ruled lines of a form here, so the air each
-       line was given as a card of the case has to come back off it — otherwise
-       a phone gets three of the tallest targets on the page and loses the rest of
-       the sheet below them */
-    padding: 13px 0 13px;
-  }
-
-  .plates__row:first-child {
-    border-top: 0;
-  }
-
-  /* the blade turns with the case. it runs down the left edge instead of along
-     the top rule, a third of the way per cell, and the wedge is cut off the other
-     corner so the ink still stops behind it rather than in front of it */
-  .plates__blade {
-    top: calc(var(--blade) * var(--slot));
-    left: 0;
-    width: 3px;
-    height: var(--slot);
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), 0 100%);
-    transition: top .44s var(--ease-out);
-  }
-
-  /* flex rather than a three-column grid, because on a 360px sheet the figure and
-     the job it does and the count of the run are three lengths that do not add up,
-     and a form line that overflows is worse than one that ellipsises. the count is
-     the last thing to give way, the job is the first */
-  .plates__meta {
-    flex: 0 1 auto;
-  }
-
-  .plates__stack {
-    flex: 1 1 auto;
-  }
-
-  .plates__count {
-    flex: 0 0 auto;
-    margin-left: auto;
   }
 
   .brief {
@@ -8250,7 +8278,6 @@ html[data-reveal='on'] .reveal.is-in {
   .edge,
   .xlinks,
   .bed,
-  .plates__cue,
   .col-rail,
   .ream__well,
   .fold,
@@ -8261,9 +8288,9 @@ html[data-reveal='on'] .reveal.is-in {
     display: none;
   }
 
-  /* and a printout has one plate, so the blade on the job ticket is printed in
-     it rather than left in fluorescent pink */
-  .plates__blade {
+  /* and a printout has one plate, so the blade on the case is printed in it
+     rather than left in fluorescent pink */
+  .qrail__blade {
     background: #000;
   }
 
