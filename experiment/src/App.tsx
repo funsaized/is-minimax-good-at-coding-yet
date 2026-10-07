@@ -14,7 +14,7 @@ import { ControlEdge } from './edge'
 import { InkTrap } from './ink'
 import { prefersStill } from './motion'
 import { CropMark, FoldMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
-import { Sheetbar } from './paper'
+import { Sheetbar, Pica } from './paper'
 import { Plated } from './plate'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
 import { Pullsheet } from './pullsheet'
@@ -25,6 +25,15 @@ import { Signoff } from './signoff'
 import { TypeList } from './typelist'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
+
+/* how many words the question is, counted out of the question itself. the head
+   slug says "one sentence · seven words · three impressions" and the job ticket
+   says it again, and a printed sheet never asserts a count — it prints one. so
+   the foot margin counts the run with a rule of picas and this is the number of
+   picas on the rule, taken from the sentence above it rather than typed beside
+   it. if the title ever changes the count changes with it and the two cannot
+   disagree. */
+const WORDS = TITLE.trim().split(/\s+/).length
 
 /* the passes of a make-ready, and the order you meet them in. roman, not
    arabic: 01–03 already belongs to the three plates, and a page that uses the
@@ -117,60 +126,55 @@ const LEDE =
 const CODA =
   'The rest of this sheet is the other hundred, made visible. Take the blade and the sentence comes into register.'
 
-/* what the press itself answers to. the keys are printed on the bed rather than
-   here, because the bed is the only one of the two the reader is already looking
-   at when they wonder what they can press. the proof keeps its own pair, and it
-   is the one control on the page that is never under the cursor when it is
-   wanted. */
+/* THE FOOT OF THE RUN, AS A JOB TICKET.
 
-/* the press run's own job ticket. every line is a fact about the page, not a
-   number anybody has to believe. the type used to be a row here; it is a whole
-   section of the sheet now, so this line carries the one fact nothing else says
-   out loud — the number the whole page answers to. */
+   this used to be five rows and four hundred words of the press explaining
+   itself: how many columns it is ruled into, what a unit of blade is worth in
+   pixels, why the gate is magnetic rather than sticky. all of it true, all of it
+   plain on the paper the reader was already holding, and none of it worth a line.
+
+   so the ticket is four rows and one line each. the armature row is gone because
+   the column rail already numbers the columns at the head of every band, in
+   blue, and says which rules that band is divided on — a ticket that repeats the
+   rail has stopped being a ticket. */
 const SLIP = [
   ['sentence', 'is Minimax M3 good at frontend yet? — seven words, three impressions'],
-  [
-    'stock',
-    'newsprint: drum banding, tooth in an inline filter, wet ink on a canvas, one fold below the close read, and thin enough at the foot of the run to read the answer through',
-  ],
+  ['stock', 'newsprint: tooth in an inline screen, wet ink on a canvas, one fold'],
   [
     'register',
-    'one number and one ramp: the gate is ±0.14, a unit of blade is 3px of paper, and the ink closes on both as the reader goes down the sheet. the gate is magnetic rather than sticky, so it takes the blade about a third of a unit out and the sheet comes into register underneath the hand instead of after it. the pull answers to a second ramp of its own, so the sentence the press is allowed to get right is said at the head of the run and printed at the foot of it, and the two land on the same beat',
+    'one number and one ramp. the gate is ±0.14 and it is magnetic, so the sheet comes into register under the hand rather than after it',
   ],
-  ['assets', 'local SVG and CSS only. no web fonts, no network, nothing stored'],
-  [
-    'armature',
-    'twelve columns, numbered at the head of every band, with the rules that band is actually divided on marked in pink — read out of the layout rather than written down here, so the rail cannot drift away from the grid it is printing',
-  ],
+  ['assets', 'local SVG and CSS. no web fonts, no network, nothing stored'],
 ] as const
 
-/* the mechanisms, in the order you meet them going down the press. each one
-   is a fact about the sheet, said once, in the pressman's own voice — the foot
-   of a press run is a note about the run, not an essay about printing. */
+/* FOUR NOTES FROM THE PRESS.
+
+   these were six paragraphs of about fifty words apiece — a third of a page of
+   design diary, in the darkest part of the sheet, underneath an answer the reader
+   had been given two bands earlier and had already used with their own hands.
+   they were also numbered i–vi, which are the same figures the index in the bar
+   gives its four passes, and this sheet's own law says a page that prints the
+   same numbers for two different lists has thrown its hierarchy away.
+
+   so: four notes instead of six, two lines each instead of five, and no figures
+   at all. 01–03 belongs to the three plates and the figures below a head belong
+   to the index; a note is neither, and the pink lead-in is anchor enough. */
 const MACHINERY = [
   [
-    'one number, and one ramp.',
-    'Everything out of register on this page is the plate offset: the fringes, the shadows under the cards, the pools in the traps, the gauge, the marks at the ends of the fold, the seam where the press run begins — and how deep the type is pressed into the paper. The short answer is the exception — it prints in register whatever the blade is doing, because it is the one sentence the press is allowed to get right.',
+    'one number, one ramp.',
+    'Everything out of register on this page is the plate offset — and it closes as the reader goes down the press, until the answer, which prints right whatever the blade is doing.',
   ],
   [
     'wet, then dry.',
-    'The question prints at the press, three plates plainly apart. Two screens further down the same three plates have almost closed on the words, and that arc is the only reason the close read is readable at all. Nothing about it needs a hand from you — climb back to the question and the ink wets up again.',
+    'The question prints at the press, three plates plainly apart. Two screens further down they have almost closed on the words, and that arc is the only reason the close read is readable.',
   ],
   [
-    'trapped corners.',
-    'Where a stroke lands on a rule the paper notches away, so a pressman fills the notch on purpose. The pools are slivers until the blade reaches the gate, and only the pink plate beads up in a corner.',
-  ],
-  [
-    'printed through a screen.',
-    'Every colour impression on this sheet is laid down through a rag screen rather than painted as a flat tint, so the pinholes in the ink are the paper showing through it — which is the whole difference between a printed sheet and a styled one. The screen is a property of the press, not of the register, so nothing about it moves when the blade does.',
+    'trapped, and screened.',
+    'Ink pools where a stroke lands on a rule, and every colour is laid through a rag screen, so the pinholes in it are the paper showing through.',
   ],
   [
     'stops on request.',
-    'Every movement here is a print decision, and each one ends the moment reduced motion is asked for. The blade, the register, the ramp and the traps keep working; nothing flies.',
-  ],
-  [
-    'dry is not gone.',
-    'The close read prints with the plates nearly closed, because the ink has had three screens down the run to settle. Run the cursor across the top sheet and it wets up again under you — the two colour plates open apart, a blot of ink follows your hand, and the whole thing dries back when you take it away. A press sheet remembers every hand that has been on it.',
+    'Every movement here is a print decision and each one ends the moment reduced motion is asked for. The blade keeps working; nothing flies.',
   ],
 ] as const
 
@@ -926,7 +930,18 @@ export function App() {
 
               and at the gate they fuse: the black flat takes the pink and the two
               colour flats go, which is the reward the gauge and the bar already
-              give, said one last time by the three smallest marks on the page. */}
+              give, said one last time by the three smallest marks on the page.
+
+              and between them the foot now counts the sentence. the head slug of
+              the sheet says "one sentence · seven words · three impressions" and
+              the job ticket at the foot of the run says it again — both of them
+              as claims. a printed sheet does not assert a count, it prints one,
+              so the claim is measured here: seven picas of a counting rule for
+              the seven words of the title, set beside the three flats, which are
+              the three impressions and are the last marks on the light sheet
+              still riding the true plate offset. same vocabulary as the counted
+              measure in the close read, in the margin rather than in the middle,
+              and it is the last thing the sheet checks rather than the first. */}
           <footer className="sheetfoot">
             <p className="sheetfoot__edge">
               <span className="sheetfoot__flats" aria-hidden="true">
@@ -935,6 +950,10 @@ export function App() {
                 <i className="sheetfoot__flat sheetfoot__flat--blue" />
               </span>
               end of the light sheet
+            </p>
+            <p className="sheetfoot__count">
+              <Pica ticks={WORDS} />
+              <span>one sentence · {WORDS} words · three impressions</span>
             </p>
             <p className="sheetfoot__next">
               said once at the head of the sheet, printed once below, in register
@@ -1124,13 +1143,24 @@ export function App() {
               ))}
             </dl>
 
-            <ul className="colophon__machine">
-              {MACHINERY.map(([lead, rest]) => (
-                <li key={lead}>
-                  <strong>{lead}</strong> {rest}
-                </li>
-              ))}
-            </ul>
+            {/* the notes get the same kind of head every other band on this page opens
+                with — a slug and a fact on one rule — because the foot of the run
+                is the one place on the sheet where a block of prose used to begin
+                with nothing at all above it. the rule it sits on is the one the
+                grid already printed, so the block starts directly under it. */}
+            <section className="colophon__notes" aria-labelledby="notes-title">
+              <h3 className="colophon__notes-kicker" id="notes-title">
+                <span aria-hidden="true">↳</span> four notes from the press
+                <span className="colophon__notes-fact">the page, taken apart</span>
+              </h3>
+              <ul className="colophon__machine">
+                {MACHINERY.map(([lead, rest]) => (
+                  <li key={lead}>
+                    <strong>{lead}</strong> {rest}
+                  </li>
+                ))}
+              </ul>
+            </section>
           </div>
 
           <div className="colophon__foot">
@@ -1160,6 +1190,50 @@ export function App() {
               </span>
             </p>
           </div>
+
+          {/* THE SHEET IS SIGNED AT THE FOOT.
+
+              every press sheet signs itself: the slug goes in the foot margin,
+              under the last rule, and the rule is the mark the title stands on
+              and the answer lands on — the sheet's one signature gesture, at the
+              quietest step on the page.
+
+              this one ended in three small links under a hairline, which is where
+              a web page ends rather than where a printed sheet ends. so the run
+              ends the way the head of the sheet begins: the full measure rule with
+              a trap at each end, and the question under it, set wide in the
+              furniture face at label size — the slug every proof carries, and
+              the third printing of the title on this page and the only one in
+              this voice.
+
+              AND IT IS THE WETTEST INK ON THE PAGE. the drying ramp is a property
+              of the sheet, and the sheet stops at the foot margin two bands
+              above; everything below is printed on the slab, and there is no paper
+              under the slab to dry into. so the last line on the page is printed by
+              all three plates at the true offset. leave the blade off the gate and
+              the question at the foot of the page is three impressions a hair
+              apart — pink to the right and down, blue to the left and up, black
+              where it belongs — and take it to the gate and the last thing on the
+              sheet is one clean voice.
+
+              that is the whole page in one line of type, and it is the only mark
+              on it that both ends of the press agree about. */}
+          <p className="colophon__last">
+            <span className="colophon__last-rule" aria-hidden="true">
+              <InkTrap className="colophon__last-trap colophon__last-trap--start" rule={false} />
+              <InkTrap className="colophon__last-trap colophon__last-trap--end" rule={false} />
+            </span>
+            <Plated
+              className="colophon__sig"
+              /* a phrase set at label size takes a fraction of the spread the
+                 poster takes, by the sheet's own law — but on the slab there is
+                 no ramp to close it, so this is the one stack on the page whose
+                 fringe is set by the blade alone */
+              wet={0.5}
+              render={() => <span className="colophon__sig-title">{TITLE}</span>}
+            />
+            <CropMark className="colophon__last-crop" />
+          </p>
         </div>
       </footer>
 

@@ -1,15 +1,33 @@
-Iteration 516: the poster stops breaking its own rules, and the plate case moves up beside it.
+The foot of the sheet is rebuilt: four short notes, a counted sentence, and the title in three plates at the bottom.
 
-**What changed**
+## The direction
 
-- `src/App.tsx` — `QuestionTitle` is now `Poster` and renders the whole first band: the title plus the plate case. The case (previously a `.plates` band under the poster) is gone as a band; its radiogroup, blade, help text and refs moved into the new component. Register readout is built once in `App` (`regRead`) and printed by the bar gauge and the case instrument. A JSDoc on `Poster` states the argument.
-- `src/style.css` — new `THE POSTER, AND THE CASE BESIDE IT` block. `.poster` is a 12-column grid (poster 1–7, case 8–12). `.q__lines` is one track instead of two, so the question is three lines, one plate each, and the mark lands on a line of its own. Poster leading .92 → .96. The printed column rule now sits on the real column-8 boundary. New `.qrail*` block replaces `.plates*`; the case keeps one orientation at every width (blade down the left edge), so the mobile blade rewrite is gone. `.standfirst` takes the `--air-press` gap the case head used to carry. New 1180px breakpoint stacks the case under the poster at the full measure. `QuestionTitle`'s `data-track data-split="6"` moved to `.poster`, so the armature reports the division at 7.
-- Removed: `.plates`, `.plates__row`, `.plates__blade`, `.plates__num`, `.plates__meta`, `.plates__gloss`, `.plates__stack`, `.plates__type`, `.plates__count`, `.plates__head`, `.plates__cue`, `.question__gate`, `.question__target`, `.question__gate-read`, and their overrides.
+Every previous iteration worked on the top of the page. This one works on the bottom, because the bottom was the weak end: the last thing any reader reached was a job ticket with three paragraphs in it, six more paragraphs of design diary beside it, and then three small links under a hairline — which is where a web page ends, not where a printed sheet ends.
 
-**Why**
+The through-line is *stop narrating, start printing*.
 
-The question was split across two columns so a hole could be left in the middle of it, and the hole was filled with the register target. That broke two of the three notes the page sets for itself — "give them a line of their own, at full width" for the hinge, "let the question mark land on a line of its own" for the turn. The case now sits in the columns the poster gave up, so choosing a plate happens next to the line it lights, and the four columns are the armature's own 8/9 division rather than a void.
+## What changed
 
-**Verified**
+**src/App.tsx**
 
-`npm run build` clean (tsc + vite). No console or page errors. Checked at 340/390/600/820/1024/1280/1440/1680 and with `prefers-reduced-motion: reduce`. Keyboard: 1/2/3 pick a plate, arrows walk the radiogroup without moving the blade, `0` snaps to the gate, `p` pulls the proof, sign-off fires.
+- `SLIP` cut from five rows to four, one line each. The `armature` row is gone: the column rail already numbers the columns at the head of every band and reports which rules each band divides on, so a ticket that repeats it has stopped being a ticket. The `register` row drops from about ninety words to twenty-four.
+- `MACHINERY` cut from six paragraphs (~330 words) to four notes (~120 words), two lines each. They also lose their `i–vi` figures, which were the same figures the index in the bar gives its four passes — the page's own law says a sheet that prints the same numbers for two different lists has thrown its hierarchy away.
+- New `WORDS`, counted out of `TITLE` itself, so the figure printed beside the counting rule cannot disagree with the sentence above it.
+- The light sheet's foot margin now carries the count: the existing `Pica` counting rule, seven ticks for the seven words, beside the three flats.
+- The colophon's notes are wrapped in a labelled section with a head, matching the slug-and-fact convention every other band on the sheet opens with.
+- New closing block at the foot of the run: the full-measure landing rule with an ink trap at each end, the title under it set wide in the furniture face at label size, printed by the same three plates, and the crop mark at the far end.
+
+**src/style.css**
+
+- `.colophon__notes` and `.colophon__notes-kicker`: the notes block gets a head, takes the rule the grid already printed, and is filled to the bottom of its box so the run cannot end with a hole in one of its columns.
+- `.colophon__machine`: counter removed, indent given back, `align-content: space-between` so the two ruled rows take up the slack against the taller ticket.
+- `.colophon`: `--blue` and `--blue-ink` added, so the slab's own lifted blues reach the new stack — the same second set of tokens the run already declares, rather than a second set of styles.
+- `.colophon__last` / `.colophon__last-rule` / `.colophon__last-trap` / `.colophon__sig`: the closing gesture. `--ink-close: 1` on the block, because the drying ramp belongs to the sheet and the sheet stops at the foot margin two bands above; below that there is no paper under the slab to dry into. So this is the one stack on the page whose fringe is set by the blade alone. The rule goes to full and the traps fill at the gate, exactly as the poster's landing and the proof's landing do.
+- `.sheetfoot__count`, and a 620px rule so the foot margin stacks rather than crushing three lines of furniture into a phone.
+- Signature tracking closes at 620px and again at 480px; the crop mark goes below 620px.
+- Reduced motion: the counting rule's ticks lose their stagger delay, for the same reason the column rail's figures do.
+- Print: the new rule prints at full strength, the colour plates drop to one, the traps go to black.
+
+## Unchanged
+
+Title and document title, entry point, framework, dependencies, build config. No network, no storage, no new assets. The blade, the pull, the plates, the ream, the type list and the proof all behave as they did.

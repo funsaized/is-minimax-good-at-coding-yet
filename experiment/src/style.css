@@ -669,6 +669,66 @@
    divisions — the whole point of it — cannot be read. The armature
    already drops to six hairlines and then to four at these widths;
    a ruler with more marks than it has room for is the same mistake.
+   =============================================================
+
+   =============================================================
+   THE FOOT OF THE SHEET IS A FOOT OF A SHEET
+
+   Five hundred and sixteen iterations in, the last thing anybody
+   read on this page was four hundred words of design diary. The
+   job ticket was five rows and three of them were paragraphs; the
+   notes beside it were six more, fifty words apiece, in the
+   darkest part of the sheet, underneath an answer the reader had
+   been given two bands earlier and had already used with their own
+   hands. And the band ended in three small links under a hairline,
+   which is where a web page ends rather than where a printed sheet
+   ends. So the page had its best typography at the top and its
+   worst writing at the bottom, and no ending at all.
+
+   THREE THINGS.
+
+   THE NOTES ARE NOTES. Six paragraphs became four, five lines
+   became two, and the roman figures came off. Those figures were
+   i–vi, which are the same figures the index in the bar gives its
+   four passes, and this sheet's own law says a page that prints the
+   same numbers for two different lists has thrown its hierarchy
+   away — so a note is now a ruled, unnumbered block anchored by the
+   pink lead-in, with a head above it like every other band here,
+   and it is filled to the bottom of the box it was printed in so
+   the run cannot end with a hole in one of its columns.
+
+   THE FOOT MARGIN COUNTS THE SENTENCE. The head slug says "one
+   sentence · seven words · three impressions" and the ticket says
+   it again, and both of them are claims. A printed sheet does not
+   assert a count, it prints one — the close read already counts the
+   run it is setting rather than asserting the length of it — so the
+   light sheet's foot margin now prints seven picas of a counting
+   rule beside the three flats, counted out of the title itself so
+   the figure and the rule cannot disagree. Same vocabulary, in a
+   margin instead of in the middle, and the last claim on the sheet
+   to be checked rather than the first.
+
+   AND THE SHEET IS SIGNED. Every press sheet puts its slug in the
+   foot margin under the last rule, and the rule is the mark the
+   title stands on and the answer lands on — one gesture, at the
+   quietest step on the page. The run now ends the way the head of
+   the sheet begins: the full measure rule, a trap at each end, and
+   the question under it set wide in the furniture face at label
+   size. The third printing of the title on this page and the only
+   one in this voice.
+
+   And it is the wettest ink on the page. The drying ramp is a
+   property of the sheet, and the sheet stops at the foot margin two
+   bands above; everything under it is printed on the slab, and
+   there is no paper under the slab to dry into. So the one stack
+   below the fold reads the blade and not the scroll. Leave the
+   blade off the gate and the question at the foot of the page is
+   three impressions a hair apart — pink to the right and down,
+   blue to the left and up, black where it belongs — and take it to
+   the gate and the last thing on the sheet is one clean voice.
+
+   That is the whole page in one line of type, and the only mark on
+   it both ends of the press agree about.
    ============================================================= */
 
 
@@ -5582,6 +5642,40 @@ html[data-reveal='on'] .type__panel.is-in .type__resolved-name {
   gap: 11px;
 }
 
+/* =============================================================
+   THE FOOT MARGIN COUNTS THE SHEET
+
+   The head slug of this sheet says "one sentence · seven words ·
+   three impressions" and the job ticket at the foot of the run
+   says it again. Both of them are claims, and a printed sheet does
+   not assert a count — it prints one, the way the close read prints
+   the length of the run it is setting instead of asserting it.
+
+   So the claim is measured, in the margin, at the end of the sheet
+   it is about: seven picas of a counting rule for the seven words of
+   the title, counted out of the title itself so the figure printed
+   beside the rule cannot disagree with the sentence above it, set
+   against the three flats — which are the three impressions, and are
+   the last marks on the light sheet still riding the true offset.
+
+   It is the same vocabulary as the counted measure in the ream, in
+   a foot margin rather than in the middle of a stage, and it is the
+   last claim on the sheet to be checked rather than the first.
+   ============================================================= */
+
+.sheetfoot__count .pica {
+  flex: 0 0 auto;
+  gap: 5px;
+}
+
+@media (max-width: 620px) {
+  /* three lines of furniture do not share a 320px foot margin, so the foot
+     stacks: the flats and the place, then the count, then the note below */
+  .sheetfoot p {
+    flex: 1 1 100%;
+  }
+}
+
 /* the three flats: black still, the two colour plates wherever the press
    left them. this is the true offset and not the dried one — the whole
    point of putting them at the foot is that the reader has just walked
@@ -6873,11 +6967,16 @@ html[data-ready='on'] .signoff__fleck--b {
      the page is one continuous stretch of ink from the seam to the last line */
   position: relative;
   isolation: isolate;
+  /* the same second set of tokens the run declares, rather than a second set of
+     styles: the blue that carries every figure on newsprint is unreadable on
+     ink, and the foot of the run now prints the title in three plates */
   --black: var(--slab-ink);
   --ink-70: var(--slab-70);
   --ink-50: var(--slab-50);
   --rule: rgba(251, 248, 241, .18);
   --pink-ink: var(--slab-pink);
+  --blue: var(--slab-blue);
+  --blue-ink: var(--slab-blue);
   color: var(--slab-ink);
   background: var(--slab);
 }
@@ -7028,43 +7127,75 @@ html[data-ready='on'] .signoff__fleck--b {
   background: var(--slab-blue);
 }
 
-/* what the four mechanisms are. the lead-in is the pressman's voice, set in the
+/* what the four notes are. the lead-in is the pressman's voice, set in the
    grotesque; the rest is the reading voice, the same one as the close read.
    four paragraphs stacked in one column ran to a hundred characters of measure
-   and read as a wall, so they are notes now: a figure, a measure of their own,
-   a hair above each — and two to a row from the width where two will fit, which
-   is the whole difference between a foot of a press run and a paragraph of it. */
-.colophon__machine {
+   and read as a wall, so they are notes now: a measure of their own and a hair
+   above each — and two to a row from the width where two will fit, which is the
+   whole difference between a foot of a press run and a paragraph of it. */
+.colophon__notes {
   grid-column: 6 / span 7;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+/* the block used to open straight into a paragraph with nothing above it, which
+   is the one thing a press run must not do in the middle of a page: a head of
+   type followed by no head. the rule is the one the grid already printed, so the
+   kicker and the ticket share it and the two columns still start together. */
+.colophon__notes-kicker {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 0 12px;
+  border-top: 1px solid var(--rule);
+  color: var(--slab-50);
+  font-family: var(--mono);
+  font-size: var(--label-2);
+  font-weight: 500;
+  letter-spacing: .15em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.colophon__notes-kicker > span:first-child {
+  color: var(--slab-pink);
+  letter-spacing: 0;
+}
+
+.colophon__notes-fact {
+  margin-left: auto;
+  opacity: .62;
+}
+
+/* NO FIGURES ON THESE NOTES. they were numbered i–vi, which are the same
+   figures the index in the bar gives its four passes, and 01–03 belongs to the
+   three plates. a page that prints the same numbers for two different lists has
+   thrown its hierarchy away, so the notes are notes: ruled, unnumbered, and
+   anchored by the pink lead-in, which is the one thing on the slab that always
+   means the press. */
+.colophon__machine {
   display: grid;
   gap: 0 clamp(18px, 2.4vw, 40px);
-  align-content: start;
-  counter-reset: note;
+  /* and the block is filled to the bottom of the box it was printed in, the
+     same law as the ticket beside it: four two-line notes are shorter than four
+     rows of a form, and a press run must not end with a hole in one of its
+     columns. the two ruled rows take up the slack */
+  flex: 1 0 auto;
+  align-content: space-between;
 }
 
 .colophon__machine li {
   position: relative;
-  max-width: 64ch;
-  padding: 13px 0 14px 2.4rem;
+  max-width: 62ch;
+  padding: 13px 0 14px;
   border-top: 1px solid rgba(251, 248, 241, .18);
   color: var(--slab-50);
   font-family: var(--serif);
   font-size: .95rem;
   line-height: 1.55;
   text-wrap: pretty;
-}
-
-.colophon__machine li::before {
-  position: absolute;
-  top: 15px;
-  left: 0;
-  counter-increment: note;
-  color: var(--slab-pink);
-  content: counter(note, lower-roman);
-  font-family: var(--mono);
-  font-size: var(--label-2);
-  font-weight: 600;
-  letter-spacing: .14em;
 }
 
 .colophon__machine li:first-child {
@@ -7138,6 +7269,144 @@ html[data-ready='on'] .signoff__fleck--b {
   width: 14px;
   height: 14px;
   color: var(--pink);
+}
+
+/* =============================================================
+   THE SHEET IS SIGNED AT THE FOOT
+
+   Every press sheet signs itself. The slug goes in the foot margin,
+   under the last rule, and the rule is the mark the title stands on
+   and the answer lands on — one gesture, at the quietest step on the
+   page.
+
+   This one ended in three small links under a hairline, which is
+   where a web page ends rather than where a printed sheet ends: the
+   last thing anyone read on this sheet was a paragraph of design
+   commentary. So the run ends the way the head of the sheet begins.
+   The full measure rule, a trap at each end, and the question under
+   it set wide in the furniture face at label size — the slug every
+   proof carries, and the only printing of the title in this voice.
+
+   AND IT IS THE WETTEST INK ON THE PAGE. The drying ramp is a
+   property of the sheet, and the sheet stops at the foot margin two
+   bands above; everything under it is printed on the slab, and there
+   is no paper under the slab to dry into. So the one stack below the
+   fold reads the blade and not the scroll, and the last line on the
+   page is the wettest ink on it. Leave the blade off the gate and
+   the question at the foot of the page is three impressions a hair
+   apart — pink to the right and down, blue to the left and up, black
+   where it belongs — and take it to the gate and the last thing on
+   the sheet is one clean voice.
+
+   That is the whole page in one line of type, and the only mark on
+   it both ends of the press agree about.
+   ============================================================= */
+
+.colophon__last {
+  /* the ramp stops at the foot margin. see the note above */
+  --ink-close: 1;
+  --sig-track: .3em;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  column-gap: clamp(14px, 2vw, 30px);
+  margin-top: clamp(30px, 4.2vw, 68px);
+  padding-top: clamp(15px, 1.9vw, 24px);
+  /* and a foot margin is deeper than a head margin: the signature is the last
+     thing on the page, and it is not pressed against the foot of the trim */
+  padding-bottom: clamp(22px, 3.2vw, 52px);
+}
+
+/* the rule the signature stands on. the poster's landing and the proof's
+   landing both go to full when the press agrees with itself, and this one is
+   the third, at the far end of the sheet */
+.colophon__last-rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--slab-blue) 62%, transparent) 0 84%,
+    var(--slab-pink) 100%
+  );
+  opacity: .5;
+  transition: opacity .5s var(--ease);
+  pointer-events: none;
+}
+
+html[data-register='on'] .colophon__last-rule {
+  opacity: .92;
+}
+
+.colophon__last-trap {
+  top: 0;
+  width: 11px;
+  height: 7px;
+}
+
+.colophon__last-trap--start {
+  left: 0;
+}
+
+.colophon__last-trap--end {
+  right: 0;
+}
+
+.colophon__sig {
+  min-width: 0;
+}
+
+.colophon__sig-title {
+  display: block;
+  color: var(--slab-ink);
+  font-family: var(--mono);
+  font-size: clamp(.72rem, 1.02vw, .88rem);
+  font-weight: 600;
+  letter-spacing: var(--sig-track);
+  line-height: 1.5;
+  /* a tracked slug carries its own trailing space, and a line of type set
+     against a rule wants to end on the rule's edge rather than a fifth of an em
+     short of it */
+  margin-right: calc(var(--sig-track) * -1);
+}
+
+/* the two colour plates carry the slab's own lifted pinks and blues — the run
+   above already declares them as the second set of tokens for this ground — and
+   the rag screen still punches through them, so the pinholes in the fringe are
+   the slab showing through the ink rather than paper. nothing else about the
+   stack is touched: the sheet has one job for its colour plates and one place
+   that job is done */
+
+.colophon__last-crop {
+  width: 13px;
+  height: 13px;
+  margin-bottom: 2px;
+  color: var(--slab-50);
+}
+
+@media (max-width: 620px) {
+  /* thirty five characters of a tracked slug is four hundred pixels of slug,
+     which is not a slug on a phone — the tracking closes a step and the crop
+     mark goes, because a trim corner with nothing beside it is a mark on a
+     phone and not furniture */
+  .colophon__last {
+    --sig-track: .16em;
+  }
+
+  .colophon__last-crop {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  /* and once more at the narrowest measure there is, so the slug lands whole on
+     one baseline rather than breaking between two words */
+  .colophon__last {
+    --sig-track: .12em;
+  }
 }
 
 /* =============================================================
@@ -7682,7 +7951,7 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   .colophon__slip,
-  .colophon__machine {
+  .colophon__notes {
     grid-column: 1 / -1;
     padding-right: 0;
   }
@@ -8034,6 +8303,14 @@ html[data-reveal='on'] .reveal.is-in {
     transition-delay: 0s !important;
   }
 
+  /* and so are the ticks of the counting rule, which stand up one at a time.
+     the foot margin counts the sentence with seven of them, and a still reader
+     would otherwise be looking at five of them and an empty rule */
+  .pica i {
+    animation-delay: 0s !important;
+    transition-delay: 0s !important;
+  }
+
   .reveal,
   html[data-reveal='on'] .reveal {
     opacity: 1;
@@ -8378,6 +8655,12 @@ html[data-reveal='on'] .reveal.is-in {
     border-color: rgba(0, 0, 0, .4);
   }
 
+  /* and the last rule on the sheet prints at full strength, the way every other
+     landing on this page does */
+  .colophon__last-rule {
+    opacity: 1;
+  }
+
   .run__seam-rule--black,
   .run__seam-rule--pink,
   .run__seam-rule--blue {
@@ -8409,7 +8692,8 @@ html[data-reveal='on'] .reveal.is-in {
 
   .q__land,
   .proof__land,
-  .verdict__land {
+  .verdict__land,
+  .colophon__last-rule {
     background: #000;
   }
 
