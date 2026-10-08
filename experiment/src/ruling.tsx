@@ -29,7 +29,11 @@ type RulingProps = {
  * at the head of a section. The result was a sheet of good sections and no sheet.
  *
  * So the type area is printed now: twelve equal columns, edge to edge, running
- * the full height of every band. The grid has no gap in it. The gutter is
+ * the full height of every band — or six, or four, because the count is one
+ * number on the root that the bands' tracks, this gradient and the rail at the
+ * head of every band all read. The armature has the width of the paper it is
+ * printed on, and all three of those agree about which width that is. The grid
+ * has no gap in it. The gutter is
  * padding inside the columns instead, which is the only way a track boundary and
  * a printed rule can be the same x on every band — and that agreement is the
  * whole reason the ruling is worth printing. A grid you can only see is wallpaper.

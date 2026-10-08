@@ -107,7 +107,7 @@ const SCALE = [
   { token: '--claim', role: 'the short answer', size: '4.3rem' },
   { token: '--head', role: 'a section head', size: '3.2rem' },
   { token: '--specimen', role: 'the set phrase', size: '2.62rem' },
-  { token: '--label', role: 'labels, and only labels', size: '.66rem' },
+  { token: '--label', role: 'labels, and only labels', size: '.725rem' },
 ] as const
 
 /* THE STANDING ARGUMENT. what the sheet says once the verdict is on the table
@@ -660,14 +660,22 @@ export function App() {
           <section id="question" className="sheet" aria-labelledby="question-title">
             {/* THE ARMATURE IS NUMBERED. the sheet prints its own ruling and has
                 done since iteration 504, but a grid you can only see is wallpaper
-                — so every band opens with the twelve columns it is set in, one
-                figure to a column, each in the margin of its own track so a figure
-                and the column it belongs to are the same x everywhere. the marks in
-                pink are the rules this band is actually divided on, read out of the
-                tracks below rather than written down here, so the rail cannot drift
-                away from the layout it is printing. and it is the one line on the
-                sheet that changes as the reader moves, which is the whole argument
-                of the page in fourteen characters. */}
+                — so every band opens with the columns it is set in, one figure to a
+                column, each in the margin of its own track so a figure and the
+                column it belongs to are the same x everywhere. the marks in pink
+                are the rules this band is actually divided on, read out of the
+                tracks below rather than written down here, so the rail cannot
+                drift away from the layout it is printing. and it is the one line on
+                the sheet that changes as the reader moves, which is the whole
+                argument of the page in fourteen characters.
+
+                and it counts. the rail used to print twelve figures and then be
+                deleted below nine hundred pixels, which left a phone looking at a
+                four-column armature with the one instrument that could have said so
+                switched off. it reads --cols now — the same number the bands are
+                ruled in and the same number the ruling's gradient is cut to — and
+                says the count in words in its own slug, so nothing about it is
+                asserted and nothing about it is fixed. */}
             <ColumnRail section={section} />
 
             <p className="slugline sheet__slug">

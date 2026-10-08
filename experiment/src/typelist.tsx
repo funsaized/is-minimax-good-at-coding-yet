@@ -118,9 +118,9 @@ const FACES: Face[] = [
     role: 'slugs, keys and figures — the labels, and only the labels',
     stack: 'ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace',
     steps: [
-      { token: '--label', size: '.66rem', text: 'pick a phrase, or take the blade', scale: 'label' },
-      { token: '--label-2', size: '.615rem', text: 'press proof · make ready', scale: 'label2' },
-      { token: '--label-3', size: '.575rem', text: 'close read · 02 of 03', scale: 'label3' },
+      { token: '--label', size: '.725rem', text: 'pick a phrase, or take the blade', scale: 'label' },
+      { token: '--label-2', size: '.672rem', text: 'press proof · make ready', scale: 'label2' },
+      { token: '--label-3', size: '.638rem', text: 'close read · 02 of 03', scale: 'label3' },
       { token: 'the gauge', size: 'as the blade sits', live: true },
     ],
   },

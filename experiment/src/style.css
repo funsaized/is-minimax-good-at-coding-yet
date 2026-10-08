@@ -166,6 +166,70 @@
 
 
    =============================================================
+   ITERATION 518 — A READING FLOOR, AND AN ARMATURE WITH A WIDTH
+
+   two changes, and they are the same change: the sheet is set at
+   the size you can read, and it now says out loud what it is.
+
+   THE FLOOR. the three label tiers were .66 / .615 / .575 of the
+   root — ten and a half, nine and eight, and nine and two pixels.
+   the bottom of that ladder was carrying a fifth of the page's
+   height in band slugs, column figures, job-ticket terms, keys,
+   cross-references and caption rows, and a reader had to lean in
+   for all of it. that is a hierarchy dressed up as a decision: the
+   differences between the tiers were real, and the whole ladder was
+   under the size at which caps stop being letters.
+
+   so the floor is ten and a fifth. --label 11.6, --label-2 10.75,
+   --label-3 10.2, and the three rungs are closer together than
+   they were, because what was broken was the bottom and not the
+   spacing. the one size on the sheet that was never in the ladder —
+   a key on the bed — is in it now. and the page's own type list
+   prints the three new figures beside the samples it is setting,
+   so nothing here is a claim: check the ladder at the foot of the
+   light sheet and it is the ladder everywhere else.
+
+   THE ARMATURE HAS THE WIDTH OF THE PAPER. --cols is now the only
+   place the count of columns is written. the bands' tracks are
+   repeat(var(--cols), ...), the printed rule is a gradient one
+   --cols-th of the width, and the rail at the head of every band
+   prints one figure to a column and reads the count back off the
+   DOM — and it says the count in words in its slug. twelve on the
+   press, six on a hand-held proof, four on a phone, and all three
+   of those are the same number.
+
+   which means the rail could stay. it used to be deleted outright
+   below nine hundred pixels — the one thing a measuring instrument
+   must never do — so a phone was left looking at a four-column
+   armature with the only line on the sheet that could account for
+   it switched off. it is set in the number of columns the ruling is
+   actually printing, all it gives up down there is the air.
+
+   and the rail's divisions stopped lying in one more place. a
+   margin note capped at forty-four characters sits in one column
+   and stops four hundred pixels along the row, and its box landed
+   near the sixth track by coincidence; the rail used to report that
+   as a division the band is not divided on. on a narrow screen it
+   was the only division the band had, so it would have been the
+   one mark on the rail and nothing was ever printed there. a box
+   that is not a whole number of tracks is a box something else
+   narrowed, and the rail says nothing about it.
+
+   THE FOLD SQUARES UP. --settle reaches the crease. a fold in
+   loose paper is a valley — the two halves at different depths and
+   the light breaking across the gap between them — and a fold in
+   paper that has been squared is a hair: the halves level, and what
+   is left is the crushed line itself. so the valley closes as the
+   blade comes to the gate. measured off the sheet rather than
+   argued about: the shading runs 238 to 218 and back to 236 while
+   the plates argue, and 238 flat with a nine-step sliver standing
+   on the middle once they agree. nothing travels and nothing is
+   drawn — the crease is a position, not a journey, so a still
+   reader gets the squared sheet immediately, and the two targets
+   at the ends of it give a tenth of a millimetre as they fuse.
+
+
+   =============================================================
    ITERATION 503 — FINISH THE SHEET
 
    three changes and one idea underneath them: the page is a printed
@@ -882,18 +946,28 @@
   --spring: cubic-bezier(.34, 1.36, .5, 1);
 
   /* =============================================================
-     THE TYPE AREA
+THE TYPE AREA
      Twelve equal columns, edge to edge, and no gap between them.
      The gutter is padding inside the columns instead, which is the
-     only arrangement in which a track boundary and a printed rule
-     are the same x on every band — and that agreement is the whole
-     reason the ruling is worth printing at all. A grid you can only
-     see is wallpaper; a grid you can see and read against is the
-     thing that makes six separately-composed bands into one sheet.
+     only arrangement in which a track boundary and a printed
+     rule are the same x on every band — and that agreement is the
+     whole reason the ruling is worth printing at all. A grid you
+     can only see is wallpaper; a grid you can see and read against
+     is the thing that makes six separately-composed bands into
+     one sheet.
+
+     --cols is the number of columns, and the layout and the
+     ruling both read it: the tracks are repeat(var(--cols), ...),
+     the printed rule is a gradient one --cols-th of the width, and
+     the rail at the head of every band prints one figure to a
+     column and reads it back off the DOM. So the armature has the
+     width of the paper it is printed on — twelve on the press, six
+     on a hand-held proof, four on a phone — and none of the three
+     has to be a lie about the other two.
      ============================================================= */
   --sheet: 1560px;
   --cols: 12;
-  --track: repeat(12, minmax(0, 1fr));
+  --track: repeat(var(--cols), minmax(0, 1fr));
   /* half the gutter, which is what a column that stops short of its
      own boundary carries on each side */
   --pad: clamp(9px, 1.05vw, 19px);
@@ -926,12 +1000,27 @@
   --body: clamp(1rem, .22vw + .94rem, 1.12rem);
   --read: clamp(1.04rem, .3vw + .97rem, 1.22rem);
 
-  /* three tiers of label, and no more. the kicker names a thing, the caption
+  /* THREE TIERS OF LABEL, AND NO MORE. the kicker names a thing, the caption
      annotates it, the fine tier is furniture. a page that only has one label
-     size shouts everything at the same volume. */
-  --label: .66rem;
-  --label-2: .615rem;
-  --label-3: .575rem;
+     size shouts everything at the same volume.
+
+     and every one of the three now sits above ten pixels, which none of them
+     did. the ladder used to bottom out at nine and a fifth — a band slug, a
+     column figure, a key on the bed, a term in the job ticket, all of it at
+     nine — and the sheet spent five thousand pixels of its height setting
+     words the reader has to lean in for. that is a decision dressed up as a
+     hierarchy: the differences between the tiers were real but the whole
+     ladder was set below the size at which caps stop being letters.
+
+     so the floor is ten and a fifth, the middle tier is a shade above it, and
+     the slug tier is a shade above that again — and the three steps are
+     closer together than they used to be, because the thing being fixed is
+     the bottom of the ladder and not the distance between its rungs. the
+     page's own type list prints these three figures at the foot of the light
+     sheet, and they are now the figures it is set at. */
+  --label: .725rem;
+  --label-2: .672rem;
+  --label-3: .638rem;
   --micro: var(--label);
 
   /* ONE VERTICAL BEAT. the sheet is a stack of bands, and the bands have to
@@ -2099,16 +2188,33 @@ html[data-register='on'] .ruling--light .ruling__plate--black {
   margin-left: .5em;
 }
 
+/* THE RAIL DOES NOT GO. below nine hundred the sheet is ruled in six columns and
+   below five hundred and sixty in four, and the rail is the one line on the page
+   that says so — so it is set in the number of columns the ruling is actually
+   printing rather than deleted. twelve figures across a phone was a row of
+   specks; four figures across a phone is a numbered armature, and the pink
+   wedges under the divisions are the only marks on the sheet that report on its
+   own shape.
+
+   all it loses down here is the air. the row of figures and the caption under it
+   were a band-head worth of height on a wide screen and a third of that on a
+   phone, and a press sheet has no business spending a hundred pixels of margin
+   on an instrument. */
 @media (max-width: 899px) {
-  /* twelve figures across a phone is not a numbered armature, it is a row of
-     specks: the columns are under seventy pixels there and the divisions, which
-     are the whole point of the rail, cannot be read at all. the sheet already
-     drops the armature to six and then to four hairlines at these widths, and a
-     ruler with more marks than it has room for is the same mistake. the bands
-     still carry their own slug and their own 2px rule — nothing is lost but the
-     instrument, which was never going to be legible here. */
   .col-rail {
-    display: none;
+    margin-bottom: calc(var(--air-tight) * .5);
+  }
+
+  .col-rail__fig {
+    margin-left: 0;
+  }
+
+  .col-rail__fig::before {
+    left: -.6em;
+  }
+
+  .col-rail__slug {
+    margin-top: 8px;
   }
 }
 
@@ -4004,8 +4110,11 @@ html[data-register='on'] .register-eye__plate--black {
   padding: 1px 5px 2px;
   color: var(--ink-70);
   background: var(--stock-2);
-  border-color: rgba(20, 19, 26, .2);
-  font-size: .6rem;
+  border-color: rgba(21, 20, 27, .2);
+  /* the one size on the sheet that was not in the ladder: a key on the bed is a
+     piece of type the reader is meant to press, and it was set a fifth of a
+     pixel below the finest caption. it is in the ladder now. */
+  font-size: var(--label-3);
 }
 
 /* ---------- close read ---------- */
@@ -4913,20 +5022,34 @@ html[data-register='on'] .proof .sheetbar__flat--black {
    a shade deeper, the half below is already lying back on itself and catches
    some of it back, and between them the stock is crushed hard enough to crack,
    which is the hairline of bare paper right along the line. a fold printed only
-   as a grey band is a fold you cannot see. */
+   as a grey band is a fold you cannot see.
+
+   AND IT SQUARES UP WITH THE PLATES. a crease in loose paper is a valley: the
+   two halves are at different depths and the light breaks across the gap between
+   them. a crease in paper that has been squared is a hair — the halves are at
+   the same level and what is left is the crushed line itself, about a pixel of
+   bare stock. so the fold takes --settle, the one number the whole sheet is
+   pressed by, and the valley closes as the reader brings the blade to the gate:
+   the shading goes, the band of bare stock narrows from a fifth of the fold to a
+   sliver, and the two targets at the ends of the crease come together. nothing
+   travels and nothing is drawn — the crease is a position, not a journey, so a
+   reader who has asked for stillness gets the same squared sheet immediately. */
 .fold::before {
+  --deep: calc(1 - var(--settle));
+  /* how far down the crease the paper is still crushed, as a share of the fold */
+  --crush: calc(48.4% - var(--deep) * 7.6%);
   position: absolute;
   inset: 0;
   content: '';
   background: linear-gradient(
     180deg,
     rgba(21, 20, 27, 0) 0%,
-    rgba(21, 20, 27, .035) 26%,
-    rgba(21, 20, 27, .088) 48.2%,
-    rgba(252, 250, 243, .92) 49.5%,
-    rgba(252, 250, 243, .5) 50.4%,
-    rgba(255, 255, 255, .3) 57%,
-    rgba(21, 20, 27, .016) 80%,
+    rgba(21, 20, 27, calc(.04 * var(--deep))) 26%,
+    rgba(21, 20, 27, calc(.095 * var(--deep))) var(--crush),
+    rgba(252, 250, 243, .92) calc(var(--crush) + 1.3%),
+    rgba(252, 250, 243, .5) calc(var(--crush) + 2.1%),
+    rgba(255, 255, 255, calc(.3 * var(--deep))) calc(var(--crush) + 8.6%),
+    rgba(21, 20, 27, calc(.018 * var(--deep))) 82%,
     rgba(21, 20, 27, 0) 100%
   );
 }
@@ -4971,8 +5094,14 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   color: var(--black);
 }
 
+/* the two targets at the ends of the crease come together with the plates, and
+   the crease gives a tenth of a millimetre as it does it — the one press on this
+   page that is a squash rather than a sweep. only the transform is animated,
+   because the opacity is the mark's own report of the register and a keyframe
+   must not take it. */
 html[data-register='on'] .fold__mark {
-  opacity: .72;
+  opacity: .78;
+  animation: crease-set .42s var(--ease-out) both;
 }
 
 html[data-register='on'] .fold-mark__plate--black {
@@ -7607,6 +7736,18 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
+/* the crease squares up. the fold is already a gradient that closes, so all this
+   has to do is give the crush its tenth of a millimetre — the paper settling the
+   last of the way rather than being told to */
+@keyframes crease-set {
+  from {
+    transform: translateY(calc(-50% - 2px));
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
 /* the chop comes down. a stamp is not faded up and it is not eased into place: it
    arrives too large and out of focus, because a hand brings it down from above,
    and it hardens on the beat with a small overshoot at the end of the travel. the
@@ -8185,9 +8326,17 @@ html[data-reveal='on'] .reveal.is-in {
   /* the armature steps down with the bands. the job ticket is the last band
      still printed three-up, so this is the last width at which twelve columns
      have a cell to divide; below it six is still enough to read a sheet against
-     and no longer enough to look like a texture */
-  .ruling {
-    --pitch: calc(100% / 6);
+     and no longer enough to look like a texture.
+
+     the number is written on the root rather than on the ruling, because the
+     ruling is only one of the two things that read it: the bands are ruled in
+     the same number of tracks, and the rail at the head of each band prints a
+     figure to a column. set on the ruling alone, the printed grid would have
+     dropped to six while the tracks underneath it stayed at twelve — which is
+     the one thing this sheet has spent five hundred iterations refusing to do,
+     and would have put every hairline in the wrong place. */
+  :root {
+    --cols: 6;
   }
 
   .brief {
@@ -8213,8 +8362,8 @@ html[data-reveal='on'] .reveal.is-in {
   /* four columns is the most a hand-held sheet can carry without the hairlines
      becoming the texture of the page — and every band down here is one column
      anyway, so nothing on it is out of register with the armature */
-  .ruling {
-    --pitch: calc(100% / 4);
+  :root {
+    --cols: 4;
   }
 
   .slugbar {
@@ -8271,7 +8420,11 @@ html[data-reveal='on'] .reveal.is-in {
 
   .bed__stamp {
     top: 7px;
-    right: 8px;
+    /* the stamp lands eight degrees off square, and a rotated box is wider than
+       the box it is rotated inside: at this width it was setting its top right
+       corner past the trim of the film. it is a hand stamp, so it stays crooked
+       — it just gets put down further from the edge. */
+    right: 15px;
     font-size: var(--label-3);
   }
 }

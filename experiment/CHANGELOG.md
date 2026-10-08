@@ -1,33 +1,44 @@
-The foot of the sheet is rebuilt: four short notes, a counted sentence, and the title in three plates at the bottom.
+Reading floor for the furniture, and an armature with the width of the paper it is printed on.
 
-## The direction
+**Labels come off the floor.** The three label tiers were .66 / .615 / .575 of the root —
+10.6, 9.8 and 9.2px — and the bottom of that ladder carried roughly a fifth of the page's
+height in band slugs, column figures, job-ticket terms, keys, cross-references and caption
+rows. Now .725 / .672 / .638 — 11.6, 10.75 and 10.2px. The rungs are closer together than
+they were, because the fault was the bottom of the ladder and not the spacing between it.
+The bed's key, the one size on the sheet that was never in the ladder, joins it.
+`SCALE` in App.tsx and the type list's step figures were updated to match, so the sheet
+still reports its own sizes truthfully.
 
-Every previous iteration worked on the top of the page. This one works on the bottom, because the bottom was the weak end: the last thing any reader reached was a job ticket with three paragraphs in it, six more paragraphs of design diary beside it, and then three small links under a hairline — which is where a web page ends, not where a printed sheet ends.
+**`--cols` is the only place the column count is written.** The bands' tracks are now
+`repeat(var(--cols), …)`, the ruling's gradient reads the same number, and the two media
+queries that already took the armature down to six and four now set it on `:root` instead of
+on the ruling alone — so the tracks and the printed rules move together. Measured across
+1560 → 320px, the grid, the ruling and the rail agree at every width.
 
-The through-line is *stop narrating, start printing*.
+**The column rail counts, and it stays.** It read `--cols` off the layout and printed that
+many figures, spelling the count in its slug ("armature · four columns"). Below 900px it is
+no longer deleted: it prints the number of columns the ruling is actually printing and gives
+up only its air. On a phone that is four blue figures on four printed hairlines instead of
+twelve hairlines and no instrument.
 
-## What changed
+**The rail stops reporting a division that is not one.** A grid child that is not a whole
+number of tracks wide was something else narrowed it — a `max-width`, a cap — and its box
+landed near a track boundary by coincidence. That is now skipped. Below 1180px, where every
+band is a single column, the rail says "divides at —" rather than naming a boundary nothing
+is printed on.
 
-**src/App.tsx**
+**The fold squares up with the plates.** `--settle` now reaches the crease. Measured off the
+rendered sheet: out of register the crease runs 238 → 218 → 248 → 236 (a valley, with the
+crushed line lit); at the gate it is 238 flat with a nine-step sliver on the middle. The two
+targets at the ends of the crease give a tenth of a millimetre as they fuse. It is a position
+and not a journey, so a reader who has asked for stillness gets the squared sheet
+immediately.
 
-- `SLIP` cut from five rows to four, one line each. The `armature` row is gone: the column rail already numbers the columns at the head of every band and reports which rules each band divides on, so a ticket that repeats it has stopped being a ticket. The `register` row drops from about ninety words to twenty-four.
-- `MACHINERY` cut from six paragraphs (~330 words) to four notes (~120 words), two lines each. They also lose their `i–vi` figures, which were the same figures the index in the bar gives its four passes — the page's own law says a sheet that prints the same numbers for two different lists has thrown its hierarchy away.
-- New `WORDS`, counted out of `TITLE` itself, so the figure printed beside the counting rule cannot disagree with the sentence above it.
-- The light sheet's foot margin now carries the count: the existing `Pica` counting rule, seven ticks for the seven words, beside the three flats.
-- The colophon's notes are wrapped in a labelled section with a head, matching the slug-and-fact convention every other band on the sheet opens with.
-- New closing block at the foot of the run: the full-measure landing rule with an ink trap at each end, the title under it set wide in the furniture face at label size, printed by the same three plates, and the crop mark at the far end.
+**Also fixed:** the bed's `in register` stamp set its top-right corner past the trim of the
+film at phone widths — a rotated box is wider than the box it is rotated inside, so it is put
+down further from the edge.
 
-**src/style.css**
-
-- `.colophon__notes` and `.colophon__notes-kicker`: the notes block gets a head, takes the rule the grid already printed, and is filled to the bottom of its box so the run cannot end with a hole in one of its columns.
-- `.colophon__machine`: counter removed, indent given back, `align-content: space-between` so the two ruled rows take up the slack against the taller ticket.
-- `.colophon`: `--blue` and `--blue-ink` added, so the slab's own lifted blues reach the new stack — the same second set of tokens the run already declares, rather than a second set of styles.
-- `.colophon__last` / `.colophon__last-rule` / `.colophon__last-trap` / `.colophon__sig`: the closing gesture. `--ink-close: 1` on the block, because the drying ramp belongs to the sheet and the sheet stops at the foot margin two bands above; below that there is no paper under the slab to dry into. So this is the one stack on the page whose fringe is set by the blade alone. The rule goes to full and the traps fill at the gate, exactly as the poster's landing and the proof's landing do.
-- `.sheetfoot__count`, and a 620px rule so the foot margin stacks rather than crushing three lines of furniture into a phone.
-- Signature tracking closes at 620px and again at 480px; the crop mark goes below 620px.
-- Reduced motion: the counting rule's ticks lose their stagger delay, for the same reason the column rail's figures do.
-- Print: the new rule prints at full strength, the colour plates drop to one, the traps go to black.
-
-## Unchanged
-
-Title and document title, entry point, framework, dependencies, build config. No network, no storage, no new assets. The blade, the pull, the plates, the ream, the type list and the proof all behave as they did.
+Verified: `npm run build` clean. Nothing on the page is set below 10.2px at 1440, 1180, 900 or
+390px (was 9.2px with ~50 elements under the floor). Tab order, the plate keys, the blade
+keys, the proof pull and the sign-off all still reach the same states with motion on and with
+`prefers-reduced-motion: reduce`, on desktop and on a phone.

@@ -22,22 +22,66 @@ import { useEffect, useState, type CSSProperties } from 'react'
  * rather than written down here. That is the whole argument of the sheet turned
  * on the sheet: nothing on the rail is asserted, it is the layout answering a
  * question, and the only thing about it that moves is answered by the reader's
- * own position in the document. Below 1180 every band takes the full measure
- * undivided, and the rail says so with a dash.
+ * own position in the document. A band that takes the full measure undivided
+ * says so with a dash.
+ *
+ * AND THE RAIL HAS THE WIDTH OF THE PAPER. It used to print twelve figures at
+ * every width and then be deleted outright below nine hundred pixels, which is
+ * the one thing a measuring instrument must never do: on a phone the sheet was
+ * printing a four-column armature and the rail — the thing that says so — was
+ * gone, so the reader was left looking at hairlines in a measure they could not
+ * account for. The count is now read off the layout rather than assumed, the
+ * same --cols the ruling prints and the same --cols the bands are ruled in, so
+ * the figures on the rail and the lines on the sheet cannot come apart; and the
+ * rail is never removed, because at four figures wide it is legible on a phone
+ * and it is the only line on the sheet that tells the reader what they are
+ * looking at.
  *
  * It is furniture and it carries no semantics. The bands it reports on are
  * already named by their own slugs and by the index in the bar, and what the
  * rail measures is said in plain words on the job ticket at the foot of the run.
  */
 
-/** the armature, as a count — the same twelve the ruling prints */
+/** the armature the sheet falls back to before anything has been measured */
 const COLUMNS = 12
 
 /** two figures, so a column number sits in a fixed box and twelve of them
  *  marching across the head of a band line up the way columns do */
 const pad = (n: number) => String(n).padStart(2, '0')
 
-const within = (n: number) => Math.min(COLUMNS, Math.max(1, n))
+/**
+ * How many columns this sheet is actually ruled in, read off the layout.
+ *
+ * `getComputedStyle` on a custom property hands back the token as it was written
+ * — `--cols` comes back as the string `12`, and as `6` and `4` where the media
+ * queries have taken it down — which is exactly the number the ruling's gradient
+ * and the bands' tracks are both built from, so reading it is reading the
+ * layout rather than reading a constant out of this file. A sheet before its
+ * first paint, or one with no computed style at all, keeps the twelve the type
+ * area is declared with.
+ *
+ * It is re-read whenever the band changes and on resize, and a ResizeObserver on
+ * the body catches a change of width the two of them somehow missed. Nothing is
+ * written while it runs, so it costs one style flush on a band boundary.
+ */
+const readArmature = (): number => {
+  /* `--cols` is the one number the armature is built from: the bands' tracks are
+     repeat(var(--cols), ...), the printed rule is a gradient one --cols-th of
+     the width, and the rail prints a figure to a column. `getComputedStyle` on a
+     custom property hands back the token as it was written, which is why reading
+     it here is reading the layout rather than reading a constant out of this
+     file — the media queries own the number, and a band whose own track list
+     happens to collapse to one column at a narrow width says nothing about the
+     armature the whole sheet is ruled in.
+
+     A sheet before its first paint, or one with no computed style at all, keeps
+     the twelve the type area is declared with. */
+  const count = Number.parseInt(
+    getComputedStyle(document.documentElement).getPropertyValue('--cols'),
+    10,
+  )
+  return Number.isFinite(count) && count > 1 && count < 64 ? count : COLUMNS
+}
 
 /**
  * The divisions a band prints, taken from its own tracks.
@@ -50,18 +94,12 @@ const within = (n: number) => Math.min(COLUMNS, Math.max(1, n))
  * So the tracks are measured. The page's own law is that a measurement is
  * printed in blue and never taken on trust, and the only honest source for
  * "which columns is this band set in" is the layout itself: the width of the
- * track divided into twelve gives the pitch, and the box of every child inside
- * it gives the columns that child actually occupies. Read this way the answer
- * cannot be wrong about `span`, cannot be wrong about `auto`, cannot be wrong
- * about what a media query did at this width, and cannot be left behind by
+ * track divided into the armature gives the pitch, and the box of every child
+ * inside it gives the columns that child actually occupies. Read this way the
+ * answer cannot be wrong about `span`, cannot be wrong about `auto`, cannot be
+ * wrong about what a media query did at this width, and cannot be left behind by
  * somebody editing the stylesheet — which a table of divisions would be within a
  * month.
- *
- * `data-split` is the one thing measurement cannot see: a track that draws a
- * division of its own instead of inheriting one from a track boundary. The
- * poster is the case in point — two halves of the measure with a rule on the
- * join, which is the boundary between column six and column seven and which no
- * child box reports because it belongs to the gap.
  *
  * And a child the grid never laid out is not a child to measure. The blade on
  * the top rule of the plate case is an absolutely positioned grid item: it is out
@@ -69,75 +107,105 @@ const within = (n: number) => Math.min(COLUMNS, Math.max(1, n))
  * blade's position rather than about the armature. Anything taken out of flow is
  * skipped, which is the only way a grid child stops being a column.
  *
- * Column 1 and column 12 are dropped. Those are the trim edges of the type area
- * and the sheet already prints trim corners there; what is left is the set of
- * interior rules a band actually breaks on.
+ * And a child the grid placed is a whole number of tracks wide, because the
+ * armature has no gap in it — the gutter is padding inside the columns. That is
+ * the test that keeps a max-width out of the answer. A margin note capped at
+ * forty-four characters sits in one column and stops four hundred pixels along
+ * the row, and its box lands near the sixth track by coincidence; the rail used
+ * to report that as a division the band is not divided on, and on a narrow
+ * screen it is the only division the band has, so it would have been the one
+ * mark on the rail and it was never printed. A box that is not a whole number of
+ * tracks is a box something else narrowed, and the rail says nothing about it.
+ *
+ * Column 1 and the last column are dropped. Those are the trim edges of the type
+ * area and the sheet already prints trim corners there; what is left is the set
+ * of interior rules a band actually breaks on.
  */
-const divisionsIn = (id: string): number[] => {
+const divisionsIn = (id: string, count: number): number[] => {
   const marks = new Set<number>()
   const band = document.getElementById(id)
   if (!band) return []
 
-  band.querySelectorAll<HTMLElement>('[data-track]').forEach(track => {
-    const own = track.dataset.split
-    if (own) own.split(' ').map(Number).forEach(n => marks.add(within(n)))
+  const within = (n: number) => Math.min(count, Math.max(1, n))
 
+  band.querySelectorAll<HTMLElement>('[data-track]').forEach(track => {
     const frame = track.getBoundingClientRect()
-    const pitch = frame.width / COLUMNS
+    const pitch = frame.width / count
     if (pitch <= 0) return
 
     for (const child of Array.from(track.children)) {
       if (getComputedStyle(child).position === 'absolute') continue
       const box = child.getBoundingClientRect()
       if (!box.width) continue
-      marks.add(within(Math.round((box.left - frame.left) / pitch) + 1))
-      marks.add(within(Math.round((box.right - frame.left) / pitch)))
+      const first = within(Math.round((box.left - frame.left) / pitch) + 1)
+      const last = within(Math.round((box.right - frame.left) / pitch))
+      /* a whole number of tracks, to within a pixel — see the note above */
+      if (Math.abs(box.width - (last - first + 1) * pitch) > 1.5) continue
+      marks.add(first)
+      marks.add(last)
     }
   })
 
-  return [...marks].filter(n => n > 1 && n < COLUMNS).sort((a, b) => a - b)
+  return [...marks].filter(n => n > 1 && n < count).sort((a, b) => a - b)
 }
 
 const sameRun = (a: number[], b: number[]) =>
   a.length === b.length && a.every((n, i) => n === b[i])
 
 /**
- * The divisions of whichever band is being read.
+ * The armature and the divisions of whichever band is being read.
  *
  * Read after the first paint rather than during it, which is why the rail inks
  * itself in: the marks are the last thing on the sheet to arrive, and they arrive
- * in column order. Resize is the only other thing that can move a division —
+ * in column order. A resize is the only other thing that can move a division —
  * it is the only thing that can change what the media queries left open, and it
  * is the only thing that can change the pitch the whole measure is divided by.
  *
  * The read is a few dozen boxes on a band boundary, not on a frame, and nothing
  * is written while it runs, so it costs one layout flush and no repaint.
  */
-function useArmature(section: string): number[] {
-  const [marks, setMarks] = useState<number[]>([])
+function useArmature(section: string): { count: number; marks: number[] } {
+  const [read, setRead] = useState<{ count: number; marks: number[] }>({
+    count: COLUMNS,
+    marks: [],
+  })
 
   useEffect(() => {
-    const read = () =>
-      setMarks(found => {
-        const next = divisionsIn(section)
-        return sameRun(found, next) ? found : next
-      })
+    const run = () => {
+      const count = readArmature()
+      const marks = divisionsIn(section, count)
+      setRead(found => (found.count === count && sameRun(found.marks, marks) ? found : { count, marks }))
+    }
 
-    read()
-    window.addEventListener('resize', read)
-    return () => window.removeEventListener('resize', read)
+    run()
+    window.addEventListener('resize', run)
+    /* a rotated phone reports its width before the media queries have caught up
+       on the first frame, and a rail that printed twelve figures on a sheet
+       ruled in four is worse than a rail a moment late */
+    const measure =
+      typeof ResizeObserver === 'function' ? new ResizeObserver(run) : null
+    if (measure && document.body) measure.observe(document.body)
+    return () => {
+      window.removeEventListener('resize', run)
+      measure?.disconnect()
+    }
   }, [section])
 
-  return marks
+  return read
 }
 
+const SPELLED = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve']
+
+/** the count as a job ticket writes it, and the fallback if it is ever past twelve */
+const counted = (n: number) => SPELLED[n] ?? String(n)
+
 export function ColumnRail({ section }: { section: string }) {
-  const marks = useArmature(section)
+  const { count, marks } = useArmature(section)
 
   return (
     <div className="col-rail" aria-hidden="true">
       <ol className="col-rail__figs">
-        {Array.from({ length: COLUMNS }, (_, i) => i + 1).map(n => (
+        {Array.from({ length: count }, (_, i) => i + 1).map(n => (
           <li
             key={n}
             className="col-rail__fig"
@@ -150,7 +218,7 @@ export function ColumnRail({ section }: { section: string }) {
       </ol>
 
       <p className="col-rail__slug">
-        <span className="col-rail__slug-lead">armature · twelve columns</span>
+        <span className="col-rail__slug-lead">armature · {counted(count)} columns</span>
         <span className="col-rail__slug-fact">
           divides at{' '}
           {marks.length ? (
