@@ -24,6 +24,7 @@ import { Ream } from './ream'
 import { Ruling } from './ruling'
 import { ColumnRail } from './ruler'
 import { Signoff } from './signoff'
+import { Spine } from './spine'
 import { TypeList } from './typelist'
 
 const TITLE = 'is Minimax M3 good at frontend yet?'
@@ -299,6 +300,17 @@ export function App() {
        the reader a frame */
     let runTop = Infinity
     let barH = 0
+    /* how far the sheet can travel at all, and therefore what a fraction of it
+       is. read with the chase rather than per frame, for the same reason: this
+       is documentElement.scrollHeight, and asking for it inside the scroll
+       handler is a layout flush on every frame of a scroll */
+    let scrollable = 1
+    /* and where the bead last stood. one custom property is written per frame of
+       a scroll rather than per frame of anything: a wheel that has been held
+       still writes the same number four hundred times a second otherwise, and
+       the bead is positioned off it, so every one of those is a layout of a
+       ten-pixel circle for no change of answer */
+    let lastTravel = -1
 
     const ease = (value: number) => value * value * (3 - 2 * value)
 
@@ -308,6 +320,19 @@ export function App() {
       root.style.setProperty('--reg-y', `${y.toFixed(2)}px`)
       root.style.setProperty('--fringe-x', `${x.toFixed(2)}px`)
       root.style.setProperty('--fringe-y', `${y.toFixed(2)}px`)
+
+      /* THE RUN. how much of the sheet has been through the press, as one
+         number from the reader's own distance down the document — beside
+         --ink-close, which says how dry that part of it is. the margin inks up
+         behind the reader and the bead stands where they are, and neither of
+         them is a journey: it is a position, so it costs a division and nothing
+         else, and a reader who has asked for stillness is given the same margin
+         at the same place on the page */
+      const travel = Math.min(1, Math.max(0, window.scrollY / scrollable))
+      if (Math.abs(travel - lastTravel) > 0.0002) {
+        lastTravel = travel
+        root.style.setProperty('--travel', travel.toFixed(4))
+      }
 
       /* the wash on the paper behind the sheet, which is the only background on
          the page that cools off as the sheet dries */
@@ -364,6 +389,37 @@ export function App() {
       /* the seam is a place in the document, and the document can be scrolled
          while it is being measured, so the box is put back where it was found */
       if (run) runTop = window.scrollY + run.top
+
+      /* THE FOUR MARKS ON THE RAIL. the rail in the head margin says how far
+         through the sheet the reader is, and it prints the four passes on
+         itself at the distance down the document each of them actually begins
+         at — measured, not spread evenly, because the close read is a screen and
+         a half and the type list is a screen and a rail that told the reader
+         otherwise would be the one instrument on this sheet that could not be
+         checked against the layout it is printing.
+
+         the line the marks are measured against is the same one the index above
+         them is judged by: eighteen per cent down the viewport, which is the
+         edge of the band the intersection observer reads the current pass from.
+         so the bead crossing a numeral and the bar's own hairline lighting up
+         are the same event arriving by two roads, and they cannot disagree.
+
+         nothing is printed until this has run — the marks carry no opacity until
+         the root says the run has been measured, which is the column rail's
+         trick and it is here for the same reason: four numerals stacked at the
+         head of the margin for one frame is worse than no rail at all. */
+      scrollable = Math.max(1, root.scrollHeight - window.innerHeight)
+      let placed = 0
+      NAV_ITEMS.forEach((item, index) => {
+        const node = document.getElementById(item.id)
+        if (!node) return
+        const top = window.scrollY + node.getBoundingClientRect().top
+        const at = (top - window.innerHeight * 0.18) / scrollable
+        root.style.setProperty(`--pass-${index + 1}`, Math.min(1, Math.max(0, at)).toFixed(4))
+        placed += 1
+      })
+      if (placed) root.dataset.run = 'on'
+
       onMove()
     }
 
@@ -669,6 +725,19 @@ export function App() {
       {pullTick ? <Pullsheet key={pullTick} /> : null}
 
       <a className="skip-link" href="#question">Skip to the question</a>
+
+      {/* THE RUN OF THE SHEET, IN THE HEAD MARGIN. the control strip on the other
+          side of the trim reports the plate; this reports the reader. the four
+          numerals are the four passes, placed where each band actually begins,
+          and they are links — a second, quieter way round a sheet that is five
+          thousand pixels tall, for a reader who is already halfway down it and
+          has lost track.
+
+          it sits after the skip link and before the bar because that is where it
+          sits on the sheet: it is the leftmost thing on the page, and a reader
+          tabbing in from the top meets it in the order they can see it. see
+          `spine.tsx`. */}
+      <Spine passes={NAV_ITEMS} section={section} />
 
       <header className="slugbar" ref={slugRef}>
         <a className="brand" href="#question" aria-label="Press sheet, back to the question">

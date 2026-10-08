@@ -1,45 +1,45 @@
-# Changelog
+The sheet finally tells you how far down it you are: a press rail in the head margin inks up behind the reader as they go.
 
-## Iteration 522 — The order of work
+## What changed
 
-Iteration 522: the standfirst's last four columns now carry a job ticket for the three machines.
+**The run of the sheet** (`src/spine.tsx`, new). The page is one piece of stock —
+five thousand pixels of ruled type with four bands, a fold, a seam and an ink
+slab in it — and every band printed its own slug, rule and rail saying what the
+reader was standing in. None of them said how far down they were. A fixed rail now
+occupies the head margin on the side the control strip is not on, and it:
 
-**What changed**
+- **Fills with ink as you read.** `--travel`, written by the listener that already
+  dries the ink and turns the bar over at the seam, masks a wash running from the
+  black plate at the head of the margin to the press's pink at the foot. Above the
+  bead is printed, below it is bare paper. The gradient is cut on the rail's own
+  height and the travelled part is masked out, so the drying arc never stretches.
+- **Carries the bead — the blade.** The bead rides `--reg-x`/`--reg-y`, the same
+  offset the film on the bed, the lamp on the stock, the quoins in the chase and
+  every mark in the bar ride, so the register is felt in the margin from anywhere
+  on the sheet. It takes the press's halo at the gate.
+- **Prints the four passes, measured.** `--pass-1`…`--pass-4` are read off the
+  layout on the same beat the chase and the seam are re-measured, against the same
+  18% the intersection observer judges the current pass from, so the bead crossing
+  a numeral and the bar's hairline lighting up are one event by two roads.
+- **Is a way on.** The four numerals are hash links with `aria-current`, so a
+  reader already halfway down has a second way round the sheet that does not
+  scroll. Placed after the skip link and before the bar, matching visual order.
 
-- **New `src/order.tsx` — the order of work.** The standfirst's third division
-  (columns nine to twelve) used to carry two thin cross-references to passes the
-  index in the slug bar already lists. It now carries a job ticket with three
-  rows, one per machine on the page, and every row is the operation it names.
-- **Row one — the three plates, as the keys they are actually pressed by.** A
-  radiogroup of three keycaps (`1` `2` `3`) with roving tabindex and arrow-key
-  navigation, each printing the same plate figure the case beside the poster
-  prints. Hovering or focusing a cap previews that phrase in the title. The cap
-  that is down is seated, not highlighted: black, one pixel proud, a hair of pink
-  along its bottom edge.
-- **Row two — the blade.** Off the gate the row reads *bring the blade to the
-  gate* and does it; on the gate it reads *knock the plates loose* and returns the
-  blade to its rest offset. The loosen direction was the operation the page was
-  missing, and without it a reader who has found the gate can never return to the
-  page they arrived to see. Both directions are real; neither label is printed
-  over a control with nothing to do. Live register figure at the right.
-- **Row three — the proof.** *Pull the proof* / *cover the proof again*, driving
-  the same state `p` and `Escape` drive from anywhere on the sheet. Takes the
-  pink on `--land`, off the same number the verdict and the seam take it on.
-- **The way on stays**, folded into the foot of the ticket as two
-  cross-references with the pass numbers still read out of the index in the bar.
-- **Motion.** Each row takes a half-second wash of pink across it when it is
-  used — the same bead-and-trail the landing rule draws — remounted on a tick so
-  it fires on every use rather than once, and covering the proof flashes as well
-  as pulling it. Suppressed by the existing blanket reduced-motion rule.
-- **Plumbing in `App.tsx`:** `toGate` and `loosen` callbacks (the `0` key and the
-  ticket share one road), a `gateTick` and a `proofTick` so both rows can flash
-  more than once, and `aria-keyshortcuts` on the case's radios and the ticket's
-  keys. The arrow key is claimed by both plate radiogroups so it cannot also
-  nudge the blade, as in the case.
+**A position, not a journey.** Nothing in the rail transitions, so reduced-motion
+readers get the same margin at the same place. `--travel` is only written when it
+actually changes.
 
-**Not changed:** the document title and the visible title; the entry point; the
-column rail's divisions for the question band (still 3, 4, 8, 9); the ticket
-prints nothing on paper, which takes the same four columns out of the standfirst
-that the way on used to.
+**Layout.** The rail is 34px at x12 with the numerals reading outward from it:
+8.2px of clear stock at 1280px, 15px at 1440, 22px at 1600. It is hidden below
+1280px, where the head margin is 53px wide. The perforations moved from 12px in
+to the sheet's edge (one column, 7px holes) to free the rest of the margin — a
+rail in furniture is a mistake. It is excluded from the print sheet.
 
-**Verified:** `npm run build` clean.
+## Checks
+
+`npm run build` clean. Verified in Chromium at 1920/1600/1440/1300/1281/1280/
+1180/390px: no overlap with the type area or the chase quoins at any width, tab
+order is skip link → rail → bar, hash links from the rail land the target under
+the sticky bar and update both navs, the slab token swap turns the rail over at
+the seam, the register halo and bead offset both follow the blade, and the
+reduced-motion and print paths were checked. No console errors.

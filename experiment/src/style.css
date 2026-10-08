@@ -954,6 +954,22 @@
   --reg-y: 1.55px;
   --fringe-scale: 1;
   --settle: 0;
+
+  /* THE RUN. how much of the sheet has been through the press. written from the
+     reader's own distance down the document, beside --ink-close, which says how
+     dry that part of it has got — the rail in the head margin inks up behind the
+     reader and a bead stands where they are. both are positions rather than
+     journeys, so a reader who has asked for stillness is given the same margin
+     at the same place on the page. --pass-1 to --pass-4 are where the four
+     passes begin, as fractions of the same travel, read out of the layout and
+     printed only once that read has happened: the four figures declared here are
+     what the rail holds for the frame before it, and the numerals carry no
+     opacity at all until the root says the run has been measured */
+  --travel: 0;
+  --pass-1: 0;
+  --pass-2: .3;
+  --pass-3: .62;
+  --pass-4: .93;
   /* --fringe-x/y is the true plate offset, and --ink-close is how far the ink has
      closed on it: two halves of one idea, multiplied together by `.plated` so a
      stack can be told how wet it is when the sheet comes off the press. both are
@@ -1493,14 +1509,18 @@ html[data-slab='on'] .stock__lamp::after {
   transform: translateX(-32%);
 }
 
+/* the perforations run hard against the edge of the sheet, which is where a
+   strip of perforated stock is actually torn, and which is the only part of the
+   head margin the run rail can be given without one of the two standing on the
+   other. a rail in a margin is furniture; a rail in furniture is a mistake. */
 .sprockets {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 12px;
-  width: 16px;
-  background-image: radial-gradient(circle at 50% 18px, rgba(21, 20, 27, .17) 0 4.1px, transparent 4.3px);
-  background-size: 100% 36px;
+  left: 0;
+  width: 9px;
+  background-image: radial-gradient(circle at 4.5px 18px, rgba(21, 20, 27, .17) 0 3.5px, transparent 3.7px);
+  background-size: 9px 36px;
 }
 
 @media (max-width: 1199px) {
@@ -9665,6 +9685,316 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
+/* =============================================================
+   ITERATION 523 — THE RUN OF THE SHEET
+
+   the sheet is one piece of stock. five thousand pixels of ruled
+   type, a head margin at the top of it and a foot margin at the
+   bottom, with four bands, a fold, a seam and an ink slab in
+   between. every one of those has its own slug, its own rule and
+   its own rail, and not one of them says how far down the reader
+   is.
+
+   which is a real cost, because the index in the bar says which
+   pass you are IN and says it perfectly well — so what the page
+   withholds is the other half: how much of the sheet is behind you,
+   and how much is still to come. on a document this tall that is
+   the difference between a page and a scroll.
+
+   so the head margin carries the drum's travel, on the side of the
+   trim the control strip is not on — the one piece of this page
+   that had nothing at all in it. the ink the sheet has already
+   taken is printed down it, and a bead stands where the reader is.
+   above the bead is black and below it is bare paper, because a
+   press inks a sheet as it goes through and never inks the part
+   that has not been through yet — so the single memorable thing
+   about this rail is that a reader who reads the whole page watches
+   a margin fill up with ink behind them, one screen at a time, for
+   one custom property a frame.
+
+   THE BEAD IS THE BLADE. it rides --reg-x and --reg-y, the same
+   two numbers the film on the bed, the lamp on the stock, the
+   quoins in the chase and every mark in the bar are riding, so the
+   register is legible in the margin from anywhere on the sheet and
+   not only from the instrument — and unlike the nine other marks
+   that report it, this one travels, which is the only reason
+   anybody would ever feel the number rather than read it. at the
+   gate it takes the halo the press leaves where the two of them
+   meet.
+
+   AND IT IS A WAY ON AS WELL AS A GAUGE. the index in the bar is
+   four caps slugs in a strip, which is the right instrument for a
+   reader who is about to decide where to go and the wrong one for
+   a reader already halfway down and wondering. four numerals in
+   the margin are the same four passes at a glance, and they are
+   links, and the rail does not scroll — so they are the way round
+   the sheet that keeps working at every scroll position.
+
+   THE MARKS ARE MEASURED, NOT SPREAD. --pass-1 to --pass-4 are
+   read off the layout on the same beat the page re-measures the
+   chase and the seam, against the same eighteen per cent the
+   intersection observer judges the current pass from, so the bead
+   crossing a numeral and the bar lighting up are one event
+   arriving by two roads. and nothing prints until that read has
+   happened, which is the column rail's trick and it is here for
+   the same reason: four numerals stacked at the head of the margin
+   for one frame is worse than no rail at all.
+
+   a position, not a journey. nothing here transitions — the bead
+   is where the reader is and the fill is what has been printed,
+   both written by the listener that dries the ink and turns the
+   bar over at the seam, so a reader who has asked for stillness is
+   given the same margin at the same place on the page.
+
+   and it goes over with the sheet, at the same seam and off the
+   same tokens the bar and the quoins take: below the press run the
+   blue that carries every figure on newsprint cannot be read on
+   ink, and the rail is nothing but figures.
+
+   THE GEOMETRY. thirty-four pixels wide, twelve pixels in from
+   the edge of the sheet and hard against the head margin of the
+   type area, with the rail at x6 and the numerals reading outward
+   from it at x14. the marks are nine pixels and the bead ten, and
+   the bead is drawn OVER the marks rather than under them,
+   because at the head of the sheet the first tick and the squeegee
+   stand on the same line. seven pixels of clear stock at the
+   narrowest width it is printed at, which is what sets the cutoff
+   below at 1280 rather than at the control strip's 1180: a margin
+   that is fifty-four pixels wide will hold a bead and a numeral,
+   but not a numeral and a paragraph.
+   ============================================================= */
+
+.spine {
+  position: fixed;
+  /* the rail starts under the bar — the bar is sticky and would otherwise have a
+     numeral standing on it for the whole of the reader's first screen — and stops
+     above the lower quoins, which are standing in the foot margin at the other
+     end of the same edge. it is placed off the type area rather than off the
+     window, so it moves with the sheet's own geometry: the arithmetic is the
+     chase's, on the same two numbers. */
+  top: calc(var(--chase-top) + 26px);
+  bottom: 64px;
+  left: calc(max(0px, (100% - var(--sheet)) / 2) + 12px);
+  z-index: 2;
+  width: 34px;
+  /* the rail is furniture and it must never stand between a reader and the type.
+     only the four numerals take the pointer, and only over their own mark */
+  pointer-events: none;
+  color: var(--ink-50);
+  transition: color .5s var(--ease);
+}
+
+.spine__rail {
+  position: absolute;
+  inset: 0;
+}
+
+/* the rail itself: a hairline standing in for the trim edge the whole type area
+   is measured from, and the one mark in this margin that is never in register
+   with anything, because it is the paper and not an impression on it. there is
+   one tick and it is at the foot: a rail that runs the full height of a sheet
+   has to say where it stops, and the head of it is already marked — by the
+   first pass, which is where the reader arrives */
+.spine__rail::before {
+  position: absolute;
+  inset: 0 auto 0 6px;
+  width: 1px;
+  content: '';
+  background: var(--rule);
+}
+
+.spine__rail::after {
+  position: absolute;
+  inset: 0 auto 0 3px;
+  width: 9px;
+  content: '';
+  background: linear-gradient(var(--ink-50), var(--ink-50)) 0 100% / 100% 1px no-repeat;
+}
+
+/* THE INK. printed from the head of the rail down to wherever the reader is, in a
+   wash that runs from the black plate at the top — which has had the whole of the
+   page above it to set — to the press's own pink at the foot, which is the only
+   place on the sheet the signature prints wet. so a reader halfway down is
+   looking at a rail that has gone warm at the bottom of it, and by the time they
+   reach the colophon it has taken the colour of the mark at the end of the
+   question.
+
+   the gradient is cut on the rail's own height and the travelled part is taken
+   out with a mask, so the drying arc is the same length all the way down instead
+   of stretching itself around whatever the reader has managed to read. */
+.spine__wet {
+  position: absolute;
+  inset: 0 auto 0 5.5px;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    var(--black) 0%,
+    var(--black) 50%,
+    color-mix(in srgb, var(--black) 60%, var(--pink-ink)) 86%,
+    var(--pink-ink) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    #000 0,
+    #000 calc(var(--travel) * 100%),
+    transparent calc(var(--travel) * 100%)
+  );
+  mask-image: linear-gradient(
+    180deg,
+    #000 0,
+    #000 calc(var(--travel) * 100%),
+    transparent calc(var(--travel) * 100%)
+  );
+}
+
+/* the four passes. no opacity until the run has been measured — see the head of
+   this block */
+.spine__passes {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.spine__pass {
+  position: absolute;
+  top: calc(var(--at) * 100%);
+  left: 0;
+  width: 34px;
+  transform: translateY(-50%);
+}
+
+.spine__pass a {
+  position: relative;
+  display: block;
+  /* thirty pixels is a generous target for a mark in a margin, and short enough
+     that two of them cannot sit on top of each other at any viewport height */
+  height: 30px;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity .45s var(--ease);
+}
+
+/* the three the reader is not standing in step back a little, the way the three
+   quiet column rails do. the step is small enough to read the difference and
+   large enough that a numeral nobody is looking for is still a numeral rather
+   than a smudge */
+html[data-run='on'] .spine__pass a {
+  opacity: .78;
+}
+
+html[data-run='on'] .spine__pass a:hover,
+html[data-run='on'] .spine__pass a:focus-visible {
+  opacity: 1;
+}
+
+/* the tick: a short rule standing out of the trim edge, the way a pass is marked
+   on a press sheet, and the only part of the mark that changes shape */
+.spine__tick {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 9px;
+  height: 1px;
+  background: var(--ink-50);
+  transition: width .28s var(--ease-out), background .28s var(--ease),
+    left .28s var(--ease-out);
+}
+
+/* and the numeral, which is a figure and so is blue — the same grammar the column
+   rail, the plate case and the gauge keep, in the same ink they print in, read
+   outward from the rail so the whole object fits inside a margin that is fifty
+   pixels wide */
+.spine__num {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  color: var(--blue-ink);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .04em;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translateY(-50%);
+  transition: color .28s var(--ease);
+}
+
+.spine__pass a:hover .spine__tick,
+.spine__pass a:focus-visible .spine__tick {
+  left: 1px;
+  width: 11px;
+  background: var(--pink-ink);
+}
+
+.spine__pass a:hover .spine__num,
+.spine__pass a:focus-visible .spine__num {
+  color: var(--black);
+}
+
+/* THE PASS YOU ARE STANDING IN takes its full weight, the way the live column rail
+   steps up out of the other three. and its tick grows to the head of the margin,
+   so that at the head of the document — where the bead is standing on it — the
+   mark and the squeegee read as one line and not as two things fighting for it */
+.spine__pass a[aria-current] {
+  opacity: 1;
+}
+
+.spine__pass a[aria-current] .spine__tick {
+  left: 0;
+  width: 12px;
+  background: var(--pink-ink);
+}
+
+.spine__pass a[aria-current] .spine__num {
+  color: var(--black);
+}
+
+/* the squeegee, over the marks. it stands at the true plate offset, and it is
+   the only mark on this page that travels, so it is also the only one that reads
+   as a machine rather than as a readout */
+.spine__bead {
+  position: absolute;
+  top: calc(var(--travel) * 100%);
+  left: 1.5px;
+  width: 10px;
+  height: 10px;
+  background: var(--pink);
+  border: 1.5px solid var(--black);
+  border-radius: 50%;
+  translate: calc(var(--reg-x) * .7) calc(var(--reg-y) * .7);
+}
+
+html[data-register='on'] .spine__bead {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pink) 26%, transparent);
+}
+
+/* THE RAIL TURNS OVER WITH THE SHEET, at the same seam and off the same tokens the
+   bar takes: below the press run the blue that carries every figure on newsprint
+   cannot be read on ink, and the rail is nothing but figures. */
+html[data-slab='on'] .spine {
+  --black: var(--slab-ink);
+  --ink-50: var(--slab-50);
+  --rule: rgba(251, 248, 241, .2);
+  --pink-ink: var(--slab-pink);
+  --blue-ink: var(--slab-blue);
+}
+
+/* ---------- the run, on a margin that is not wide enough to be one ---------- */
+
+@media (max-width: 1279px) {
+  /* the head margin below this is fifty-three pixels, and the rail is
+     thirty-four of them: seven left between the widest numeral and the first
+     column of type is a margin, and four is not. the control strip on the other
+     side of the sheet goes at 1180 because it is a narrower object; this one
+     goes at 1280 because it is a wider one. and the index in the bar is still
+     there at every width below this — nothing on this sheet gets said twice. */
+  .spine {
+    display: none;
+  }
+}
+
 /* ---------- reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {
@@ -9950,6 +10280,7 @@ html[data-reveal='on'] .reveal.is-in {
   .stock,
   .sprockets,
   .edge,
+  .spine,
   .order,
   .xlinks,
   .bed,
