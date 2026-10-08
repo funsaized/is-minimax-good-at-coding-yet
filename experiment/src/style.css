@@ -1296,19 +1296,39 @@ kbd {
    bar is a repaint of the whole page for a difference nobody can see.
 
    this layer is the only one on the page that does not move when the blade
-   moves. the light in a room is not printed by the press. */
+   moves. the light in a room is not printed by the press.
+
+   AND THE RANGE IS A RANGE. it used to top out at a seven per cent brown in the
+   far corner, which is a difference no eye can find and a page therefore reads
+   as one flat fill from the head of the sheet to the foot of it — nine thousand
+   pixels of an unchanging value, which is the other half of why the light sheet
+   felt endless. four washes now carry the room: a key that is genuinely a light,
+   a fall-off that is deep and a shade cool away from it (warm light and cool
+   shadow is the only split that reads as paper rather than as a web page), the
+   long diagonal that was here before, and a vignette for the corners — a room
+   with one window is darker where you cannot see out of.
+
+   all four are on a fixed layer that is never animated, so the depth costs one
+   paint at run time and nothing at all afterwards. */
+
 .stock__fibre {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(128% 96% at 4% -14%, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 56%),
+    /* the key. low and off to one side, the way a north light in a pressroom is */
+    radial-gradient(80% 64% at 7% -7%, rgba(255, 253, 244, .66), rgba(255, 250, 236, 0) 66%),
+    /* the fall-off. deep and very slightly cool, which is the half of a lit
+       room that stops it looking like a page */
+    radial-gradient(124% 102% at 106% 114%, rgba(44, 33, 58, .088) 0%, rgba(44, 33, 58, 0) 62%),
     linear-gradient(
-      156deg,
-      rgba(255, 255, 255, .3) 0%,
-      rgba(255, 255, 255, 0) 32%,
-      rgba(132, 104, 66, .034) 78%,
-      rgba(96, 74, 48, .07) 100%
+      154deg,
+      rgba(255, 255, 255, .26) 0%,
+      rgba(255, 255, 255, 0) 28%,
+      rgba(122, 94, 54, .04) 66%,
+      rgba(74, 56, 36, .092) 100%
     ),
+    /* and the corners */
+    radial-gradient(132% 104% at 44% 32%, rgba(255, 255, 255, 0) 46%, rgba(62, 46, 30, .062) 100%),
     repeating-linear-gradient(0deg, rgba(21, 20, 27, .021) 0 1px, transparent 1px 3px);
 }
 
@@ -1610,6 +1630,336 @@ html[data-register='on'] .edge__ink--black {
 @media (max-width: 1180px) {
   .edge {
     display: none;
+  }
+}
+
+/* =============================================================
+   ITERATION 520 — THE CHASE, AND A ROOM WITH A LIGHT IN IT
+
+   the page had nine thousand pixels of ruled type and nothing
+   holding it. the armature is printed as a field of hairlines edge
+   to edge — a good claim about the type area, and still not a
+   frame — so the one rectangle the whole sheet agrees about had no
+   edges of its own, and a reader scrolling down it had to be told
+   where the measure was.
+
+   in a composing room there is one, and it is iron. type is locked
+   into a chase by quoins: expanding wedges driven sideways so they
+   press the type solid against the frame from every side at once.
+   and that is the plainest thing available for what this page
+   already does — the reader is working a press, and the reward for
+   getting it right is a lock.
+
+   THE CHASE, AND THE FOUR QUOINS THAT LOCK IT
+
+   so four quoins, one in each corner of the type area, standing in
+   the margin where the corner actually is. two materials in one
+   mark, on purpose:
+
+   THE BARS ARE INK. the two rules running out of the corner are
+   the sides of the chase, and they are laid by the same three
+   plates at the same two ratios as everything else on the sheet, so
+   they are three rules a hair apart out of register and one crisp
+   rule at the gate. the corners of the page now report the
+   register from anywhere on it, which is a job the control strip
+   has been doing alone at one edge in thirty pixels.
+
+   THE WEDGE IS BRASS. a quoin is hardware, not ink, so it does not
+   split into three plates — which is exactly why printing two things
+   in one mark is worth it. an undriven quoin is standing short of the
+   frame, with daylight under it and a couple of degrees of askew,
+   because nobody in the history of the trade has ever set one square
+   by eye. a driven quoin is seated: flush, square, and with a hair
+   of pink standing in the split along its axis.
+
+   and it is all one number. --settle is the register — the same one
+   the ink traps fill from and the crease squares up on — so the
+   quoins are a POSITION and not a journey: there is no animation
+   here at all, only a transform recomputing as the register eases
+   on the root. a reader who has asked for stillness gets the seated
+   sheet immediately and costs nothing for it, which is the answer
+   the poster's lock-up and the fold already give.
+
+   THE FOUR ARE ONE OBJECT. iron does not arrive half at a time, so
+   all four turn over onto the slab's palette on the same seam the
+   slug bar turns over on: below the press run the chase is standing
+   on ink, and a chase that was standing on newsprint one screen
+   higher would be two different pieces of metal.
+
+   AND THE IRON IS BOLTED TO THE PAPER, not to the window — the one
+   decision here that had to be made rather than chosen. a chase
+   that rode the viewport would be the better object, four quoins
+   reporting the register from every screen; but the sheet is nine
+   thousand pixels of continuous ruled type with no margin down its
+   sides and none down the middle either, so it would have been
+   standing on live type from the moment the reader left the head of
+   the sheet. these are the two corners the sheet actually has — the
+   head of the type area, which is where a reader arrives and which
+   shares a frame with the blade, and the foot of it, under the
+   signature, in the one margin on the page deep enough to hold
+   hardware at 320px as well as at 1560.
+
+   THE ROOM. the stock is still a fixed layer and it still does not
+   answer to the blade, but its range was a seven per cent brown in
+   the far corner — a difference no eye can find, and therefore nine
+   thousand pixels of one unchanging value, which is the other half
+   of why the light sheet felt endless. four washes now carry the
+   room: a key off the top left that is genuinely a light, a fall-off
+   that is deep and a shade cool away from it (warm light and cool
+   shadow is the only split that reads as paper rather than as a web
+   page), the long diagonal that was already here, and a vignette for
+   the corners — a room with one window is darker where you cannot see
+   out of. all four sit on the layer that is never animated, so the
+   depth costs one paint at run time and nothing afterwards.
+
+   THE LAST OF THE RAGS. five passages were still setting their last
+   line wherever the greedy fit happened to drop it, and on a ruled
+   sheet a one-word last line is the most visible thing a paragraph
+   can do. `pretty` on all five and `balance` on the two short heads
+   beside them: the engine spends the last few lines and leaves every
+   line above them exactly where the compositor put it.
+   ============================================================= */
+
+:root {
+  /* how far down the trim edge the chase begins. the head margin of the type
+     area starts where the bar the quoins sit under ends, and the bar is two
+     rows on a phone and one on a desk, so this is read off the bar at run time
+     rather than written down — see `remeasure` in the app */
+  --chase-top: 52px;
+  /* and how big a quoin is. 32 is a mark you can read the split of; below it
+     the wedge is still a wedge and the bars are still the chase, which is the
+     whole requirement at any width */
+  --chase-w: 32px;
+}
+
+.chase {
+  position: absolute;
+  inset: 0;
+  /* the iron is fixed to the PAPER and not to the window, which is the one
+     decision in here that had to be made rather than chosen. a fixed frame would
+     be the better object — but the sheet is nine thousand pixels of continuous
+     ruled type with no margin down its sides and none down the middle either, so
+     a chase that rode the viewport would have four quoins standing on live type
+     from the moment the reader scrolled past the head of the sheet. a chase is
+     bolted to the press bed, not to the reader's eye, so these are the two
+     corners the sheet actually has: the head of the type area, which is where a
+     reader arrives and which is in the same frame as the blade, and the foot of
+     it, under the signature. */
+  z-index: 3;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.chase__corner {
+  position: absolute;
+  width: var(--chase-w);
+  height: var(--chase-w);
+  /* THE SEAT. a quoin that has not been driven stands short of the frame it is
+     locking, so the slack travel is inward — toward the type — rather than out
+     into the trim, and the whole of this transform is the register: it is
+     written in (1 - --settle) because that is the slack in the lock, and it is
+     not transitioned because --settle already is, on the root, with the sheet's
+     own easing. there is no second clock on this page and there is not one here
+     either.
+
+     --ox and --oy below are the way in, and --spin is which way the hand left
+     the quoin crooked, because nobody in the history of the trade has ever set
+     one square by eye. each corner sets its own pair, so the seating below is
+     written once and four corners share it. */
+  translate: calc(var(--ox) * (1 - var(--settle)) * 3.6px)
+    calc(var(--oy) * (1 - var(--settle)) * 3.6px);
+  rotate: calc(var(--spin) * (1 - var(--settle)));
+}
+
+/* THE CORNERS OF THE TYPE AREA. the same arithmetic the slab's ruling uses, on
+   the same two numbers: --sheet is the width of the paper and --gutter is the
+   margin outside the type area, so a track boundary, a printed rule and a quoin
+   cannot come apart at any width. 100% here is this layer's own width — the
+   width of the sheet — which is the only width the absolute positioning below
+   is resolved against.
+
+   --ox and --oy are the way IN, not the way out, and that is the whole trick of
+   seating a quoin on a position rather than on a keyframe: a quoin that has not
+   been driven is standing SHORT of the frame, so the slack travel is inward,
+   toward the type, and not outward into the trim. which also means the lower
+   pair cannot hang a sliver off the foot of the document, and the travel is
+   always inside the head margin or the foot margin where the quoin stands. */
+.chase__corner--tl {
+  top: var(--chase-top);
+  left: calc(max(0px, (100% - var(--sheet)) / 2) + var(--gutter));
+  --ox: 1;
+  --oy: 1;
+  --spin: 3.2deg;
+}
+
+.chase__corner--tr {
+  top: var(--chase-top);
+  right: calc(max(0px, (100% - var(--sheet)) / 2) + var(--gutter));
+  --ox: -1;
+  --oy: 1;
+  --spin: -3.2deg;
+}
+
+.chase__corner--bl {
+  top: auto;
+  bottom: 0;
+  left: calc(max(0px, (100% - var(--sheet)) / 2) + var(--gutter));
+  --ox: 1;
+  --oy: -1;
+  --spin: -3.2deg;
+}
+
+.chase__corner--br {
+  top: auto;
+  bottom: 0;
+  right: calc(max(0px, (100% - var(--sheet)) / 2) + var(--gutter));
+  --ox: -1;
+  --oy: -1;
+  --spin: 3.2deg;
+}
+
+.quoin {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* THE GLYPH IS DRAWN ONCE, FOR THE TOP-LEFT CORNER, and the other three are it
+   reflected — which is not a shortcut but the reason the bars run *into* the
+   page in all four: without the flip, two of the four quoins would be locking
+   the frame from the outside. the brass is shaded along its own diagonal and at
+   a low enough contrast that which way round it is lit is not a thing anybody
+   can see */
+.quoin--tr {
+  scale: -1 1;
+}
+
+.quoin--bl {
+  scale: 1 -1;
+}
+
+.quoin--br {
+  scale: -1 -1;
+}
+
+/* THE BARS, IN THREE PLATES. the same two ratios the crease at the ends of the
+   fold uses, so a quoin is the same misregistration as the title and the seam
+   and not a fourth opinion about it — and the colour transition is the one the
+   slug bar takes when it turns over onto the slab. */
+.quoin__plate {
+  transition: transform .2s var(--ease-out), color .45s var(--ease);
+}
+
+.quoin__bar {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.1;
+  stroke-linecap: square;
+}
+
+.quoin__plate--pink {
+  color: var(--pink-ink);
+  transform: translate(calc(var(--reg-x) * 1.35), calc(var(--reg-y) * 1.35));
+}
+
+.quoin__plate--blue {
+  color: var(--blue-ink);
+  transform: translate(calc(var(--reg-x) * -.82), calc(var(--reg-y) * -.82));
+}
+
+.quoin__plate--black {
+  color: var(--black);
+}
+
+html[data-register='on'] .quoin__plate--black {
+  filter: drop-shadow(0 0 3px rgba(255, 46, 107, .6));
+}
+
+/* THE HARDWARE. the shadow under it is the daylight a slack quoin stands off the
+   frame by, so it closes with the seat rather than being a second animation of
+   it — one group, so it is cast by the whole object and not by each of its three
+   lines separately. it is thrown away and up rather than down, because a quoin
+   sitting short of the frame has daylight under the end nearest the trim */
+.quoin__wedge {
+  filter: drop-shadow(
+    calc((1 - var(--settle)) * -1.5px) calc((1 - var(--settle)) * 1.5px)
+      calc(1px + (1 - var(--settle)) * 2.2px) rgba(52, 38, 22, .34)
+  );
+}
+
+.quoin__edge {
+  fill: none;
+  stroke: #2a2317;
+  stroke-width: 1;
+  stroke-linejoin: round;
+  opacity: .68;
+}
+
+/* the split down the axis of the wedge, which is a groove in the brass and not a
+   mark on the paper: it is always there, and it is never the press */
+.quoin__slot {
+  fill: none;
+  stroke: #2a2317;
+  stroke-width: .8;
+  opacity: .42;
+}
+
+/* AND THE INK IN IT. a wedge hammered home into a wet impression squeezes a
+   hair of the press's own pink out of the join, and that hair is thicker and
+   wider the tighter it is driven — one number again, and the only part of the
+   quoin that is doing the register's second job of being a readout */
+.quoin__squeeze {
+  fill: none;
+  stroke: var(--pink);
+  stroke-width: calc(.4px + var(--settle) * 1.5px);
+  stroke-linecap: round;
+  opacity: calc(var(--settle) * .88);
+}
+
+html[data-register='on'] .quoin__squeeze {
+  filter: drop-shadow(0 0 2.5px rgba(255, 46, 107, .7));
+}
+
+/* THE CHASE TURNS OVER WITH THE SHEET. below the press run the quoins are
+   standing on ink, and the blue that carries every figure on newsprint cannot be
+   read on ink — so they take the slab's own palette, at the same seam the slug
+   bar takes it, which is what makes them read as the same object on the other
+   stock rather than as a bar that changed its theme. the pink in the split is
+   the one mark here that is not transitioned at all: its weight is the register,
+   and the register already has its own clock. */
+html[data-slab='on'] .quoin__plate--pink {
+  color: var(--slab-pink);
+}
+
+html[data-slab='on'] .quoin__plate--blue {
+  color: var(--slab-blue);
+}
+
+html[data-slab='on'] .quoin__plate--black {
+  color: var(--slab-ink);
+}
+
+html[data-slab='on'] .quoin__squeeze {
+  stroke: var(--slab-pink);
+}
+
+/* AND THE LOWER PAIR GETS THE FOOT MARGIN, WHICH IS DEEPER THAN THE HEAD ONE on
+   purpose: the signature is the last thing on the page and it is not pressed
+   against the trim, and that air is where the lower quoins stand. they are
+   printed at every width, because unlike the head of the sheet the foot of this
+   one has somewhere to put hardware at 320px as well as at 1560 — the only
+   width-dependent thing about them is how big they are. */
+@media (max-width: 900px) {
+  :root {
+    --chase-w: 26px;
+  }
+}
+
+@media (max-width: 620px) {
+  :root {
+    --chase-w: 22px;
   }
 }
 
@@ -2046,6 +2396,34 @@ html[data-slab='on'] .slugbar {
 :root .colophon__slip dd,
 :root .colophon__machine li {
   hanging-punctuation: first last;
+}
+
+/* THE LAST OF THE RAGS. every passage on this sheet has been given `text-wrap`
+   at one point or another as it was written, which left five of them setting
+   their last line wherever the line break happened to fall — and on a ruled
+   sheet a one-word last line under a three-word first one is the most visible
+   thing a paragraph can do, because the reader sees the block before the words.
+   `pretty` is the whole of the fix and it costs nothing: the engine spends the
+   last few lines of a paragraph balancing them and leaves every line above it
+   exactly where the compositor put it, so the measure and the leading on this
+   page are unchanged and only the bottom of each block moves.
+
+   the four headings below take `balance` instead, because they are short and
+   they are set in a cell with a rule down one side of it: the hand fits a
+   three-word head across six columns far better than the greedy fit does, and
+   the specimen's title is the one heading on the sheet that is set at a
+   different step on every plate it is printed on. */
+:root .qrail__set,
+:root .specimen__margin,
+:root .rubric__list p,
+:root .answer__note,
+:root .colophon__closing {
+  text-wrap: pretty;
+}
+
+:root .specimen__body h3,
+:root .type__face-role {
+  text-wrap: balance;
 }
 
 /* =============================================================
@@ -8878,10 +9256,17 @@ html[data-reveal='on'] .reveal.is-in {
   .bed__blade,
   .edge__plate,
   .edge__ink,
+  .quoin__plate,
   .sheetfoot__flat,
   .type__gauge {
     transition: none;
   }
+
+  /* and the quoins need nothing at all, which is the whole reason they are built
+     out of the register rather than out of a keyframe: the seating is
+     (1 - --settle), so a still reader is handed the square sheet with the
+     squeeze already standing in the split, and the shadow a slack quoin casts
+     has already gone with it */
 
   /* and the wet trail is not drawn at all: a band of ink drying from the far end
      back is movement, so a still reader is given the clean strip the way they

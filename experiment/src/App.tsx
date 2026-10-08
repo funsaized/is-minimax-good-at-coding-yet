@@ -10,6 +10,7 @@ import {
   type RefObject,
 } from 'react'
 import { findNote, NOTES, WORD_IDS, type WordId } from './notes'
+import { Chase } from './chase'
 import { ControlEdge } from './edge'
 import { InkTrap } from './ink'
 import { prefersStill } from './motion'
@@ -330,7 +331,21 @@ export function App() {
     const remeasure = () => {
       const bar = slugRef.current?.getBoundingClientRect()
       const run = runRef.current?.getBoundingClientRect()
-      if (bar) barH = bar.height
+      /* THE CHASE STARTS UNDER THE BAR. the quoins stand in the head margin of
+         the type area, and the head margin begins where the trim edge the bar is
+         printed on ends — so the bar's own height is the one measurement the
+         chase needs, and the box this function already takes is the box that
+         holds it. on a phone the bar is two rows and on a rotated one it is
+         three, which is why the number is read rather than written down.
+
+         four pixels are added because a slack quoin travels inward, off the
+         trim edge and into the head margin, and three and a half of those
+         pixels would otherwise be spent underneath the bar — a sixty-pixel
+         overlay with a backdrop filter on it. */
+      if (bar) {
+        barH = bar.height
+        root.style.setProperty('--chase-top', `${Math.round(bar.height) + 4}px`)
+      }
       /* the seam is a place in the document, and the document can be scrolled
          while it is being measured, so the box is put back where it was found */
       if (run) runTop = window.scrollY + run.top
@@ -586,6 +601,14 @@ export function App() {
       </div>
 
       <ControlEdge />
+
+      {/* THE CHASE. four quoins at the four corners the type area actually has:
+          the bars round them are printed in the same three plates as everything
+          else here and split and fuse with them, and the wedges are brass that
+          seats as the blade comes to the gate. the upper pair share a frame with
+          the bed, so tightening the press tightens the corners of the page in
+          the same movement. see `chase.tsx` for why it is iron and not ink. */}
+      <Chase />
 
       {/* the pull, on the whole sheet rather than inside the last card. it is
           mounted only for the length of the drag and keyed on the count, so two
