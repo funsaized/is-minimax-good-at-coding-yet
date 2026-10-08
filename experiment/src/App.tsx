@@ -514,6 +514,45 @@ export function App() {
     }
   }, [])
 
+  /* THE SHEET ANSWERS ITS OWN ADDRESS.
+
+     every way on to a part of this page is a hash — the index in the bar, the two
+     cross-references under the standfirst, the gauge's link to the bed, the return
+     at the foot of the run — and not one of them worked if the reader arrived
+     with a hash already in the address bar. the sections are printed by React, so
+     the browser asked for the scroll before there was anything to scroll to,
+     found no element with that id, and never asked again: loading the sheet at
+     #type put the reader at the head of the question with the type list three
+     screens below and nothing on the page to say so.
+
+     so the sheet reads its own address once, after it has printed itself. the
+     reveals inside the target are inked in first, because a reader who lands on a
+     section should never arrive at bare type waiting for a second scroll to make
+     it appear; and the scroll is instant rather than smooth, because a journey
+     across four screens before the page has finished arriving is the one animation
+     nobody asks for. scroll-padding-top then puts the target under the bar, which
+     is the bar's own height at this width and nothing more. */
+  useEffect(() => {
+    const id = window.location.hash.slice(1)
+    if (!id) return
+    const root = document.documentElement
+    const frame = requestAnimationFrame(() => {
+      const target = document.getElementById(id)
+      if (!target) return
+      target
+        .querySelectorAll<HTMLElement>('.reveal')
+        .forEach(node => node.classList.add('is-in'))
+      const smooth = root.style.scrollBehavior
+      root.style.scrollBehavior = 'auto'
+      target.scrollIntoView({ block: 'start', behavior: 'auto' })
+      root.style.scrollBehavior = smooth
+      if (NAV_ITEMS.some(item => item.id === id)) setSection(id)
+    })
+    return () => cancelAnimationFrame(frame)
+    /* once, on load: a hash that changes afterwards is the browser's own business
+       again, and by then the reader has already been there */
+  }, [])
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.defaultPrevented || event.repeat) return
@@ -852,7 +891,34 @@ export function App() {
                 close read
               </p>
               <div className="read__intro" data-track>
-                <h2 id="close-title">Three sheets, <em>one at a time.</em></h2>
+                {/* THE HEAD AND ITS DECK ARE ONE CELL.
+
+                    the close read and the type list each open on a two-way split —
+                    a head in the first six columns and a paragraph in the last six
+                    — and the paragraph is always the taller of the two, so the head
+                    sat at the top of a hole roughly two hundred pixels deep with
+                    the armature's own hairline running down the middle of it. the
+                    rail above the band prints that column as one of twelve and says
+                    which rules the band divides on, so a reader can see the hole
+                    exactly.
+
+                    and the thing that belonged in it was the band's own figure: the
+                    close read was the one band on the sheet whose slug rule carried
+                    no count at all, while the paragraph beside it went on for seven
+                    lines. so the count comes off the question of how many things
+                    there are and hangs under the head it belongs to, on a short
+                    rule of its own, which is where a deck is set on any spread
+                    worth looking at — and which brings the foot of the left column
+                    down to within a line of the foot of the paragraph. */}
+                <div className="read__masthead">
+                  <h2 id="close-title">
+                    Three sheets, <em>one at a time.</em>
+                  </h2>
+                  <p className="read__deck">
+                    <span aria-hidden="true">↳</span> three phrases · three impressions ·
+                    one at a time
+                  </p>
+                </div>
                 <p>
                   The sentence has three phrases and each one is doing a different job. All three
                   are printed: the one you are reading is on top of the ream, the other two are
@@ -923,13 +989,30 @@ export function App() {
                 <span className="type__slug-fact">three faces · nothing downloaded</span>
               </h2>
               <div className="type__intro" data-track>
-                <p className="type__lede">
-                  No font file is loaded to set this page — it is set in the three faces the machine
-                  already has, and spaced so the differences do not show. Each cell prints the widest
-                  step of every size the page really uses it at, and each then names the family your
-                  machine resolved, which is a fact about this computer and not an opinion about the
-                  design.
-                </p>
+                {/* the same division, and the same fix. the paragraph kept the
+                    first six columns and the ladder the last six, and the ladder is
+                    a hundred and thirty pixels taller than any paragraph can be —
+                    five steps of a type scale do not compress. so the last figure
+                    printed on the sheet about its own type was hanging at the foot
+                    of the shorter column, two thirds of the way across a ruled
+                    measure, when it is a note about the paragraph as much as about
+                    the ladder: two posters, then a head, then a specimen, and the
+                    figures are blue because they are measurements. so it comes back
+                    under the paragraph it explains, and the ladder is left as what
+                    it is — five lines and a rule. */}
+                <div className="type__deck">
+                  <p className="type__lede">
+                    No font file is loaded to set this page — it is set in the three faces the
+                    machine already has, and spaced so the differences do not show. Each cell prints
+                    the widest step of every size the page really uses it at, and each then names
+                    the family your machine resolved, which is a fact about this computer and not an
+                    opinion about the design.
+                  </p>
+                  <p className="scale__note">
+                    <span aria-hidden="true">↳</span> two posters, then a head, then a specimen.
+                    the figures are blue because they are measurements.
+                  </p>
+                </div>
 
                 <section className="scale" aria-labelledby="scale-title">
                   <h3 className="scale__kicker" id="scale-title">
@@ -945,10 +1028,6 @@ export function App() {
                       </li>
                     ))}
                   </ol>
-                  <p className="scale__note">
-                    <span aria-hidden="true">↳</span> two posters, then a head, then a specimen.
-                    the figures are blue because they are measurements.
-                  </p>
                 </section>
               </div>
             </header>

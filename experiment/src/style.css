@@ -1718,6 +1718,57 @@ html[data-register='on'] .edge__ink--black {
    can do. `pretty` on all five and `balance` on the two short heads
    beside them: the engine spends the last few lines and leaves every
    line above them exactly where the compositor put it.
+
+   =============================================================
+   ITERATION 521 — A LOUP[E] YOU CAN READ, AND A BAR YOU CANNOT
+
+   four fixes, and all four are the same fault: furniture that was
+   louder than the information it was standing in front of.
+
+   THE LOUP[E] SPREADS THE ERROR, NOT THE SENTENCE. the film on the
+   bed is the one instrument that shows the reader what the plates are
+   doing, and it was doing it at six tenths of the type size — which is
+   not a misregistration, it is a second copy of every line laid on
+   top of the first, three of them, out at the loose end. the page
+   opens there, so the first thing the bed said was a heap of
+   overlapping letters. it is now a seventh of the type, which is what
+   ink spread at the edge of a letter looks like under a loupe, and
+   the colour plates thin out as they wander — a plate that is not
+   where it belongs is a plate that is not printing much — so out at
+   the loose end the sentence is a sentence with a pink and a blue
+   fringe, and at the gate it is one voice, exactly as it was. see
+   `pull.tsx` for the three lines and the mark.
+
+   THE BAR IS A BAR. the slug bar was the stock at eighty-four per
+   cent under a backdrop blur, and the blur was never applied: the
+   minifier drops the standard property and keeps the -webkit- alias,
+   which current engines no longer answer to, so the bar was
+   eighty-four per cent of nothing over live type. the type list read
+   straight through the index covering it and the pulled answer came up
+   through the bar on the slab like a watermark. it is opaque stock
+   now, with its depth from the same lit lip every other sheet here
+   carries — which is also cheaper, because nothing behind the bar is
+   read back and blurred on every frame of a scroll.
+
+   THE HEADS GET A FLOOR. the close read and the type list each open
+   on a two-way split, and in both cases the right-hand cell is a
+   seven-line paragraph and the left is a one-line head, so the head
+   sat at the top of a two-hundred-pixel hole with the armature's own
+   hairline down the middle of it — and the rail above the band prints
+   that column as one of twelve, so a reader could see the hole
+   exactly. the close read was also the one band on the sheet whose
+   slug rule carried no figure at all.
+
+   so the count comes off the question of how many things there are
+   and hangs under the head it belongs to, on a short rule of its own,
+   which is what a deck is for; and the last note printed on the sheet
+   about its own type comes out from under the taller column of the
+   type band and back under the paragraph it explains, because a note
+   about the sizes reads as an annotation of the paragraph and was
+   being set as an annotation of the ladder. nothing is added to the
+   page: two things already printed move to where the hole was.
+
+   and the sheet answers its own address — see the app.
    ============================================================= */
 
 :root {
@@ -1994,14 +2045,28 @@ html[data-slab='on'] .quoin__squeeze {
   gap: clamp(12px, 3vw, 44px);
   padding: 11px var(--gutter);
   border-bottom: 1px solid var(--rule);
-  /* the bar is the trim edge of the sheet, and a trim edge is the same stock as
-     whatever it is lying over — so it takes the paper's colour rather than a
-     number typed out of it, and it is thin enough that the light coming off the
-     top left of the run reaches through it */
-  background: color-mix(in srgb, var(--stock) 84%, transparent);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  transition: background .5s var(--ease), border-color .5s var(--ease);
+  /* THE BAR IS A BAR, NOT A WINDOW.
+
+     the slug bar was the stock at 84 per cent under a backdrop blur, which is a
+     lovely idea — the trim edge is a strip of the same paper, and letting the
+     light through it is true — and it did not survive contact with a page that is
+     nine thousand pixels of ruled type. the blur was never applied at all: the
+     minifier drops the standard property and keeps only the -webkit- alias, which
+     current engines no longer answer to, so the bar was eighty-four per cent of
+     nothing over live type. the type list read straight through the index that was
+     supposed to be covering it, and on the slab the answer's own sentence came up
+     through the bar like a watermark. a nav you can read the page behind is not a
+     nav.
+
+     so the bar is opaque stock, and it gets its depth from the same lit lip every
+     other sheet on this page carries rather than from the page showing through
+     it: a hairline of light along the trim edge and a short fall of shade under
+     it. which is also the cheaper of the two — nothing behind the bar has to be
+     read back and blurred on every frame of a scroll. */
+  background: var(--stock);
+  box-shadow: 0 1px 0 var(--paper-lit), 0 7px 20px -14px rgba(20, 19, 26, .6);
+  transition: background .5s var(--ease), border-color .5s var(--ease),
+    box-shadow .5s var(--ease);
 }
 
 /* THE BAR GOES OVER WITH THE SHEET. the slugbar is the trim edge of the sheet,
@@ -2015,6 +2080,10 @@ html[data-slab='on'] .quoin__squeeze {
    tokens, so the bar is not a differently-themed bar — it is the same bar,
    printed on the other stock. and it is a position rather than a state, so it
    does not matter which way the reader came past the seam. */
+/* and the bar turns over as one object: on the slab it is ink, and ink is opaque
+   even when the light sheet is not, so it takes the stock's own value rather than
+   a darkening of it. the lit lip goes with it — a sheet of newsprint on a slab has
+   no lit edge to catch. */
 html[data-slab='on'] .slugbar {
   --black: var(--slab-ink);
   --ink-70: var(--slab-70);
@@ -2025,7 +2094,8 @@ html[data-slab='on'] .slugbar {
   /* the figure pinned into the bar is a figure like any other, and the blue that
      carries it on newsprint is unreadable on ink */
   --blue-ink: var(--slab-blue);
-  background: rgba(19, 17, 24, .88);
+  background: #100e15;
+  box-shadow: 0 6px 20px -14px rgba(0, 0, 0, .9);
 }
 
 /* and the bar turns over as one thing, rather than the brand arriving a beat
@@ -2347,6 +2417,7 @@ html[data-slab='on'] .slugbar {
    thing on this sheet that is allowed to break the baseline is
    the loudest thing on it. */
 
+:root .read__deck,
 :root .slugline,
 :root .col-rail,
 :root .col-rail__slug,
@@ -4525,7 +4596,10 @@ html[data-register='on'] .register-eye__plate--black {
 .bed__film {
   display: block;
   width: 100%;
-  height: clamp(98px, 11.4vw, 132px);
+  /* the strip is three lines of poster deep now rather than two lines of
+     sentence, and it is a third taller to hold them: the reduction is the point,
+     and a loupe you cannot read through is a diagram */
+  height: clamp(102px, 13.2vw, 164px);
 }
 
 /* THE WET TRAIL. the ink the blade lays down on its own way across, on a
@@ -4779,6 +4853,41 @@ html[data-register='on'] .register-eye__plate--black {
   grid-template-columns: var(--track);
   align-items: baseline;
   margin-top: var(--air-block);
+}
+
+/* THE HEAD AND ITS DECK ARE ONE CELL, and the reason they have to be is the
+   paragraph beside them: a seven-line standfirst is always taller than a one-line
+   head, so the head sat at the top of a two-hundred-pixel hole with the armature's
+   hairline down the middle of it. giving the deck its own grid row would have put
+   it at the foot of the tallest cell instead of under the head, so the two are
+   wrapped and the row is two cells again — which is also what lets the first
+   baseline of the head and the paragraph still meet, which is the whole reason
+   this split is set on a shared baseline at all. */
+.read__masthead {
+  grid-column: 1 / span 6;
+  padding-right: var(--split);
+}
+
+/* a deck is the band's own figure, set under its head on a short rule of its own
+   — the count that used to be missing from the close read's slug, in the one
+   place on the sheet that has a name for it */
+.read__deck {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: var(--air-tight);
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.read__deck > span {
+  color: var(--pink-ink);
+  letter-spacing: 0;
 }
 
 /* half the measure for the head and half for the paragraph it introduces, split
@@ -6305,8 +6414,12 @@ html[data-register='on'] .fold-mark__plate--black {
   margin-top: var(--air-block);
 }
 
-.type__lede {
+.type__deck {
   grid-column: 1 / span 6;
+  padding-right: var(--pad);
+}
+
+.type__lede {
   max-width: 52ch;
   margin-top: 0;
   color: var(--ink-70);
@@ -6405,9 +6518,17 @@ html[data-register='on'] .fold-mark__plate--black {
   letter-spacing: .04em;
 }
 
+/* THE NOTE LEFT THE LADDER. it is a note about the sizes the paragraph is
+   describing as much as about the five rows beside it, and it was printed at the
+   foot of the taller column — the last thing on the sheet about its own type,
+   hanging two thirds of the way across a ruled measure, over the one column of
+   the band with nothing in it. it reads as an annotation of the paragraph and it
+   is set as one now: the same short rule under the same block, in the same
+   furniture, and the ladder is left with nothing under it but the armature. */
 .scale__note {
+  margin-top: var(--air-tight);
   padding-top: 11px;
-  border-top: 1px solid var(--rule-soft);
+  border-top: 1px solid var(--rule);
   color: var(--ink-50);
   letter-spacing: .1em;
 }
@@ -8719,6 +8840,7 @@ html[data-reveal='on'] .reveal.is-in {
     row-gap: 18px;
   }
 
+  .read__masthead,
   .read__intro h2,
   .read__intro > p,
   .answer__copy,
@@ -8752,7 +8874,7 @@ html[data-reveal='on'] .reveal.is-in {
      over: it keeps the rule the paragraph gave up as a rule of its own, printed
      across the full measure, and the measure it is printed at stops being two
      thirds of the sheet */
-  .type__lede,
+  .type__deck,
   .scale {
     grid-column: 1 / -1;
   }

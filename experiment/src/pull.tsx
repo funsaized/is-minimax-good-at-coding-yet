@@ -28,10 +28,25 @@ export const PULL_GATE = 0.14
    open with the plates plainly apart, so a unit of blade is worth 3px of sheet */
 export const PULL_RAMP = 3
 
-/* the film is a loupe held over the sentence itself, so the offset it shows is
-   far larger than the one the type above shows. measured in em, because a
-   misregistration is a fraction of the type and not of the sheet */
-const FILM_REACH = 0.6
+/* THE LOUP[E] SPREADS THE ERROR, BUT IT DOES NOT UNREAD THE SENTENCE.
+
+   the reach used to be .6 of the type size, which is not a misregistration at
+   all — it is a second copy of every line laid on top of the first, and three of
+   them at that. out at the loose end of the bed the film was a heap of
+   overlapping letters: the one instrument on the sheet that shows the reader
+   what the plates are doing was the only object on the page you could not read.
+   and it was in that state when the page opened.
+
+   so the reach is a fringe rather than a copy — about a seventh of the type,
+   which is what ink spread at the edge of a letter actually looks like under a
+   loupe — and the colour plates thin out as they wander, because a plate that is
+   not where it belongs is a plate that is not printing much. the black keeps the
+   words; the pink and the blue keep the argument about them. at the gate the
+   fringe is zero and there is one voice, which is the same reward as before. */
+const FILM_REACH = 0.145
+/* and how far a wandering plate gives up its ink, which is what makes the fringe
+   read as the edge of a stroke instead of as a whole second sentence */
+const FILM_THIN = 0.52
 /* the blue plate is cut a little under the pink, which is why the fringes read uneven */
 const BLUE_RATIO = 0.62
 
@@ -41,8 +56,12 @@ const INK_BLACK = '#15141b'
 const INK_PINK = '#ff2e6b'
 const INK_BLUE = '#2a3ec9'
 
-/* the sentence, set on the film the way the sheet sets it: subject above, claim below */
-const FILM_LINES = ['is Minimax M3', 'good at frontend yet?']
+/* the film is the poster, reduced: three lines on the same three rules, so the
+   loupe is a reduction of the thing it is a loupe of rather than a second setting
+   of the sentence that happens to fit in a strip. the mark is held out of the
+   lines because on this sheet the mark is always the pink plate. */
+const FILM_LINES = ['is Minimax M3', 'good at', 'frontend']
+const FILM_MARK = '?'
 const FILM_STACK =
   '"Helvetica Neue", Helvetica, Arial, "Avenir Next", "Segoe UI", system-ui, sans-serif'
 
@@ -431,14 +450,24 @@ export function PullBed({
     ctx.rect(0, 0, w, h)
     ctx.clip()
 
-    /* the sentence, set the way the sheet sets it, at film size */
+    /* the poster, reduced — three lines on the sheet's own three rules. the size is
+       a function of the space three lines have to live in, not of one line in the
+       middle of the strip, so the reduction holds at every bed height */
     const pad = Math.max(13, Math.min(40, w * 0.038))
-    const longest = Math.max(...FILM_LINES.map(line => line.length))
-    const size = Math.max(10, Math.min(h * 0.28, (w - pad * 2) / (longest * 0.545)))
+    const longest = Math.max(...FILM_LINES.map(line => line.length), FILM_MARK.length)
+    const stackH = 3.53
+    const size = Math.max(
+      9,
+      Math.min((h - 20) / stackH, (w - pad * 2) / (longest * 0.545)),
+    )
     const leading = size * 1.2
     const baseline = (h - (leading * (FILM_LINES.length - 1) + size)) / 2 + size
     /* a misregistration is a fraction of the type, not of the sheet */
-    const reach = magnify(reg) * size * FILM_REACH
+    const spread = magnify(reg)
+    const reach = spread * size * FILM_REACH
+    /* and how much ink a plate that has wandered off the letter is still laying
+       down — which is the other half of why the fringe is a fringe */
+    const thin = 1 - FILM_THIN * Math.abs(spread)
 
     ctx.textAlign = 'left'
     ctx.textBaseline = 'alphabetic'
@@ -449,14 +478,31 @@ export function PullBed({
       FILM_LINES.forEach((line, index) => {
         ctx.fillText(line, pad + dx, baseline + index * leading + dy)
       })
+      /* the mark is the pink plate everywhere on this sheet, including here */
+      ctx.fillText(FILM_MARK, pad + dx, baseline + 2 * leading + dy)
     }
 
-    /* three impressions, multiplied where they meet: near-black in register */
+    /* three impressions, multiplied where they meet: near-black in register. the
+       two colour plates are laid at the coverage a plate has when it is not on the
+       letter, so out at the loose end they are a hair of pink and a hair of blue
+       around a sentence you can still read. */
     ctx.globalCompositeOperation = 'multiply'
     impression(INK_BLACK, 0, 0)
+    ctx.globalAlpha = thin
     impression(INK_PINK, reach, reach * 0.46)
     impression(INK_BLUE, -reach * BLUE_RATIO, -reach * BLUE_RATIO * 0.46)
+    ctx.globalAlpha = 1
     ctx.globalCompositeOperation = 'source-over'
+
+    /* THE MARK ITSELF, over the three plates and in none of them: the pause is
+       printed once, in the press's own ink, exactly as it is on the poster — and
+       it is the one thing on the film that never misregisters. */
+    ctx.fillStyle = INK_PINK
+    ctx.fillText(
+      FILM_MARK,
+      pad + ctx.measureText(FILM_LINES[2]).width,
+      baseline + 2 * leading,
+    )
 
     /* the wet trail: ink starved behind the blade, a shade deeper than the wash */
     const smear = unitNow * 1.7
@@ -502,8 +548,8 @@ export function PullBed({
        an ink trap fills, so the two pools close up as the plates agree — the
        same trap, off the same number, a third of the size. */
     const tail = FILM_LINES[FILM_LINES.length - 1]
-    const markLeft = pad + ctx.measureText(tail.slice(0, -1)).width
-    const markWide = ctx.measureText(tail.slice(-1)).width
+    const markLeft = pad + ctx.measureText(tail).width
+    const markWide = ctx.measureText(FILM_MARK).width
     const foot = ruleFoot + size * 0.13 + 0.5
     ctx.strokeStyle = settled ? 'rgba(42, 62, 201, .72)' : 'rgba(21, 20, 27, .24)'
     ctx.lineWidth = 1
@@ -528,20 +574,13 @@ export function PullBed({
     ctx.closePath()
     ctx.fill()
 
-    /* a scale under the ink, to read the offset against */
-    const rule = Math.round(h - 7) + 0.5
-    ctx.strokeStyle = 'rgba(21, 20, 27, .34)'
-    for (let i = 0; i <= 12; i += 1) {
-      const x = Math.round(pad + ((w - pad * 2) * i) / 12) + 0.5
-      ctx.beginPath()
-      ctx.moveTo(x, rule - (i % 6 === 0 ? 6 : 3))
-      ctx.lineTo(x, rule)
-      ctx.stroke()
-    }
-    ctx.beginPath()
-    ctx.moveTo(pad, rule)
-    ctx.lineTo(w - pad, rule)
-    ctx.stroke()
+    /* THE SCALE IS GONE, and it is the one thing on this strip that was doing no
+       work. it was twelve ticks and a hairline under the type at two per cent
+       contrast, which at any bed height on this sheet resolved into a smudge — and
+       it was not reading the offset anyway: the offset has a rule of its own
+       printed down the strip, the bed's own foot is lettered LOOSE / THE GATE /
+       TIGHT, and the gauge in the bar carries the figure. what the space was
+       actually for was the three lines of the poster, which now have the room. */
 
     /* trim corners */
     ctx.strokeStyle = 'rgba(21, 20, 27, .5)'
