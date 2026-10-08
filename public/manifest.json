@@ -9917,6 +9917,25 @@
         "outputTokens": 25737,
         "steps": 138
       }
+    },
+    {
+      "id": 522,
+      "parentId": 521,
+      "createdAt": "2026-10-08T05:45:51.332Z",
+      "summary": "Iteration 522: the standfirst's last four columns now carry a job ticket for the three machines.",
+      "path": "/iterations/000522/index.html",
+      "screenshot": "/iterations/000522/desktop.png",
+      "mobileScreenshot": "/iterations/000522/mobile.png",
+      "sourceCommit": "166b7a2e7a74e0f080b38932edbdbf59bd99ddfa",
+      "model": "opencode/space-bunny-free",
+      "durationSeconds": 543,
+      "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+      "usage": {
+        "estimatedCostUsd": 0,
+        "inputTokens": 154637,
+        "outputTokens": 18723,
+        "steps": 88
+      }
     }
   ]
 }
