@@ -58,6 +58,13 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
   const note = findNote(active)
   const behind = stackOrder(active).slice(1)
   const lines = phraseLines(note.label, note.drop)
+  /* THE INITIAL. the quote and the letter it opens are set as one thing and
+     taken off the front of the paragraph, so the argument the reader is about to
+     spend a screen on starts with a letter instead of a quotation mark at body
+     size. two characters, counted out of the sentence rather than declared —
+     a note whose body opened with a word would give the same initial back. */
+  const initial = note.body.slice(0, 2)
+  const rest = note.body.slice(2)
 
   /* THE DRY SHEET REMEMBERS THE HAND.
 
@@ -293,7 +300,32 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
           <p className="specimen__gloss">{note.gloss}</p>
           <div className="specimen__lede">
             <h3 id="specimen-title">{note.title}</h3>
-            <p className="specimen__copy">{note.body}</p>
+            <p className="specimen__copy">
+              {/* THE INITIAL, PRINTED LAST.
+
+                  Every other piece of type on this sheet is printed by the press at
+                  the moment the reader arrives at it, which is why the reading
+                  voice is used for prose and not for anything that wants to be
+                  looked at. The initial is the exception and it says why: it is
+                  the last thing this band sets, so it is still riding the wet end
+                  of the run — three impressions at a spread the rest of the sheet
+                  has nearly closed on — and it is the one character on the page
+                  that takes the press into the paper the instant the reader
+                  brings the blade to the gate, a hair deeper than anything else
+                  set at this size.
+
+                  Two characters, the quote and the letter, floated into the margin
+                  so the quotation mark hangs outside the measure instead of
+                  pushing the first line of the paragraph half a letter to the
+                  right — which is what a body-size quote does, and it is the whole
+                  reason the sheet had never had an initial at all. */}
+              <Plated
+                className="specimen__initial"
+                wet={0.88}
+                render={() => <span className="specimen__initial-mark">{initial}</span>}
+              />
+              {rest}
+            </p>
           </div>
           <p className="specimen__margin">{note.margin}</p>
         </div>

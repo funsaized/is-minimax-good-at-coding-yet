@@ -17,13 +17,28 @@ import { useEffect, useState, type CSSProperties } from 'react'
  * every measurement in — a column number is a measurement, and it is the first
  * one on the page that is about the page's own shape rather than about a phrase.
  *
- * AND IT REPORTS. The pink marks in the head of the row are the rules the band
- * being read is actually divided on, measured out of that band's own tracks
- * rather than written down here. That is the whole argument of the sheet turned
- * on the sheet: nothing on the rail is asserted, it is the layout answering a
- * question, and the only thing about it that moves is answered by the reader's
- * own position in the document. A band that takes the full measure undivided
- * says so with a dash.
+ * AND IT REPORTS ON ITS OWN BAND. The pink marks in the head of the row are the
+ * rules the rail is printed above, measured out of that band's own tracks rather
+ * than written down here. Nothing on the rail is asserted: it is the layout
+ * answering a question, and a band that takes the full measure undivided says so
+ * with a dash.
+ *
+ * They used to be the rules of whichever band happened to be on screen, printed
+ * into all four rails at once — so the rail above the question could report the
+ * divisions of the type list, and did for as long as the reader stood in the type
+ * list. Four identical rows of figures, every one of them lying about three of
+ * the four bands it sat above, which is the one thing an instrument must not do.
+ * Each rail now measures the band it heads, so it is right or it is not right
+ * from the first paint.
+ *
+ * WHICH IS WHAT MAKES THE QUIET ONE POSSIBLE. Because a rail now knows its own
+ * band, the page can tell which of the four the reader is standing in and print
+ * that one at full ink. The other three keep every figure, every mark and the
+ * whole caption — nothing is removed, because a rail that vanishes at a narrow
+ * width is what this sheet has spent five hundred iterations refusing to do — but
+ * they step back a single weight. The difference between an instrument on the
+ * bench and four of them shouting over each other is about eight per cent of
+ * opacity, and it is the difference between reading a page and measuring it.
  *
  * AND THE RAIL HAS THE WIDTH OF THE PAPER. It used to print twelve figures at
  * every width and then be deleted outright below nine hundred pixels, which is
@@ -161,10 +176,12 @@ const sameRun = (a: number[], b: number[]) =>
  * it is the only thing that can change what the media queries left open, and it
  * is the only thing that can change the pitch the whole measure is divided by.
  *
- * The read is a few dozen boxes on a band boundary, not on a frame, and nothing
- * is written while it runs, so it costs one layout flush and no repaint.
+ * The read is a few dozen boxes, and it happens once per rail rather than once per
+ * band boundary: a rail's answer is a property of the band it heads, so it does
+ * not change when the reader walks from one band to the next. Nothing is written
+ * while it runs, so it costs one layout flush and no repaint.
  */
-function useArmature(section: string): { count: number; marks: number[] } {
+function useArmature(id: string): { count: number; marks: number[] } {
   const [read, setRead] = useState<{ count: number; marks: number[] }>({
     count: COLUMNS,
     marks: [],
@@ -173,7 +190,7 @@ function useArmature(section: string): { count: number; marks: number[] } {
   useEffect(() => {
     const run = () => {
       const count = readArmature()
-      const marks = divisionsIn(section, count)
+      const marks = divisionsIn(id, count)
       setRead(found => (found.count === count && sameRun(found.marks, marks) ? found : { count, marks }))
     }
 
@@ -189,7 +206,7 @@ function useArmature(section: string): { count: number; marks: number[] } {
       window.removeEventListener('resize', run)
       measure?.disconnect()
     }
-  }, [section])
+  }, [id])
 
   return read
 }
@@ -199,11 +216,19 @@ const SPELLED = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'e
 /** the count as a job ticket writes it, and the fallback if it is ever past twelve */
 const counted = (n: number) => SPELLED[n] ?? String(n)
 
-export function ColumnRail({ section }: { section: string }) {
-  const { count, marks } = useArmature(section)
+/**
+ * The armature, and the divisions of the band this rail is printed above.
+ *
+ * `id` is that band's own id, and it is the whole of the rail's claim: the marks
+ * are measured out of `#id` and nothing else. `live` is a separate thing — which
+ * of the four rails the reader is standing in — and it only decides how loudly
+ * the row is printed, never what it says.
+ */
+export function ColumnRail({ id, live = false }: { id: string; live?: boolean }) {
+  const { count, marks } = useArmature(id)
 
   return (
-    <div className="col-rail" aria-hidden="true">
+    <div className="col-rail" aria-hidden="true" data-live={live ? 'on' : 'off'}>
       <ol className="col-rail__figs">
         {Array.from({ length: count }, (_, i) => i + 1).map(n => (
           <li

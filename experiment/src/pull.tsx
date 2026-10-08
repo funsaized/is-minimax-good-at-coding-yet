@@ -144,6 +144,39 @@ const WET_MAX = 140
    gate does not stop printing — it wipes, which is what a squeegee is for. */
 const WIPE_MS = 620
 
+/* =============================================================
+   THE BLADE HAS MASS.
+
+   A squeegee is not a cursor. It is a bar of rubber on a handle being
+   pushed across a bed of wet ink, and when a reader lets go of one it
+   does not stop dead at the pixel they released it on — it carries,
+   and the bed takes the speed out of it.
+
+   So the bed keeps the speed the drag was going at and coasts on it when
+   the pointer lifts: a fraction of a second of travel measured in
+   friction rather than in milliseconds, so the machine has one damping
+   constant instead of a duration per gesture. What carries is the raw
+   position, and the magnet is applied to it afterwards — the same order
+   the drag uses, so the blade bends toward the gate on the way down
+   exactly as it does under a hand, and a flick that would have sailed
+   past the gate is taken by it on the way through rather than being
+   handed the reward at the end of the gesture.
+
+   It is capped hard. A pointer can cross the whole strip in three frames
+   and the number that comes out of that is thirty units a second, which
+   would throw the blade off the end of the bed and read as a bug rather
+   than as weight. Four units is about a third of the bed of travel on a
+   hard flick, which is what a bar of rubber on newsprint actually does.
+
+   And a reader who has asked for stillness gets none of it: the coast
+   is the one thing on this page that is motion rather than position, so
+   for them the blade is simply caught, where it was released, by the
+   same line of code that caught it before the mass was added.
+   ============================================================= */
+const FRICTION = 0.08
+const FLICK = 4
+const STOP_SPEED = 0.05
+
 type Wet = { x: number; t: number }
 
 /**
@@ -181,6 +214,10 @@ export function PullBed({
   const unitRef = useRef(0)
   const [unit, setUnit] = useState(120)
   const [dragging, setDragging] = useState(false)
+  /* the blade is still travelling after the hand has come off it, which is not
+     the same thing as a hand being on it — so it is its own flag, and the bar
+     complains about the carry rather than about the drag */
+  const [coasting, setCoasting] = useState(false)
   const settled = inRegister(reg)
 
   /* --- the wet trail, on its own canvas so the film underneath never repaints --- */
@@ -545,6 +582,16 @@ export function PullBed({
   /** keyboard nudges get the same magnetism a release inside the gate gets */
   const nudgeTo = (value: number) => onSlide(snapPull(value))
 
+  /* THE SPEED OF THE HAND. the bed was reading a position off the pointer and
+     nothing else, so a blade had no momentum and a flick was indistinguishable
+     from a slow drag — the reader let go and the machine stopped, which is what a
+     cursor does and not what a squeegee does. the last two samples of the drag
+     are enough to know how fast it was going; the dt is clamped because a tab
+     that has been in the background reports one enormous interval, and thirty
+     units a second is what you get from crossing the strip in a single frame. */
+  const lastRaw = useRef({ x: 0, t: 0 })
+  const speed = useRef(0)
+
   const move = (clientX: number) => {
     const bed = bedRef.current
     if (!bed) return
@@ -553,11 +600,103 @@ export function PullBed({
        the last third of a unit of it, and applies that opinion while the drag
        is still going rather than waiting to be released */
     const raw = (clientX - (rect.left + rect.width / 2)) / unitFor(rect.width)
+    const now = performance.now()
+    const held = lastRaw.current
+    const dt = held.t ? Math.min(0.1, (now - held.t) / 1000) : 0
+    if (dt > 0) speed.current = (raw - held.x) / dt
+    held.x = raw
+    held.t = now
     slideTo(magnetic(raw))
   }
 
+  /* AND THE CARRY. one loop, mounted on release and taken off the sheet when the
+     blade is caught, hits an end stop or runs out of speed. it drives the same
+     number the drag drives, so nothing else on the page has to know it exists:
+     the film, the wet band it lays down behind itself, the readout, the whole
+     sheet coming into register under it — all of it is already following --reg.
+
+     It starts from where the hand actually was, not from where the magnet had
+     pulled the blade to. Those are two different numbers inside the last third
+     of a unit, and starting from the second one would bend the carry through
+     the magnet a second time — which on a release inside the band is a jump of
+     a fifth of a unit in a single frame, and a machine that appears to decide
+     the gate is a fault rather than a gate. */
+  const coastRef = useRef(0)
+  const coast = useCallback(
+    (throwSpeed: number, from: number) => {
+      if (coastRef.current) cancelAnimationFrame(coastRef.current)
+      let raw = clamp(from)
+      let v = Math.min(FLICK, Math.max(-FLICK, throwSpeed))
+      let last = performance.now()
+      setCoasting(true)
+
+      const tick = () => {
+        coastRef.current = 0
+        const now = performance.now()
+        const dt = Math.min(0.05, (now - last) / 1000)
+        last = now
+        /* the preference is read fresh every frame rather than once on the way in:
+           a reader can ask for stillness while the blade is still travelling, and
+           a carry that ignored them for the remaining three hundred milliseconds
+           would be the one journey on the page that does */
+        if (prefersStill()) {
+          setCoasting(false)
+          onSlide(snapPull(raw))
+          return
+        }
+        raw += v * dt
+        v *= FRICTION ** dt
+        /* the gate is applied to the carry exactly as it is applied to the drag,
+           so a flick that arrives at the band is bent into it on the way in */
+        const shown = magnetic(raw)
+        if (inRegister(shown)) {
+          setCoasting(false)
+          onSlide(0)
+          return
+        }
+        if (
+          Math.abs(v) < STOP_SPEED ||
+          raw <= PULL_MIN ||
+          raw >= PULL_MAX
+        ) {
+          setCoasting(false)
+          onSlide(clamp(raw))
+          return
+        }
+        onSlide(shown)
+        /* a travelling squeegee prints. the band under the coast is the same band
+           under the drag, dried from the far end back, so the road the blade took
+           is on the paper whether the reader let go of it or threw it */
+        const strip = stripRef.current
+        if (strip) {
+          const box = strip.getBoundingClientRect()
+          layWet(box.left + box.width / 2 + shown * unitFor(box.width))
+        }
+        coastRef.current = requestAnimationFrame(tick)
+      }
+
+      coastRef.current = requestAnimationFrame(tick)
+    },
+    [layWet, onSlide],
+  )
+
+  useEffect(
+    () => () => {
+      if (coastRef.current) cancelAnimationFrame(coastRef.current)
+      coastRef.current = 0
+    },
+    [],
+  )
+
   const grab = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return
+    /* a hand on the blade stops it where it is, however fast it was going */
+    if (coastRef.current) {
+      cancelAnimationFrame(coastRef.current)
+      coastRef.current = 0
+    }
+    speed.current = 0
+    lastRaw.current = { x: 0, t: 0 }
     draggingRef.current = true
     setDragging(true)
     event.currentTarget.setPointerCapture(event.pointerId)
@@ -573,8 +712,18 @@ export function PullBed({
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId)
     }
-    /* the gate catches a blade that let go inside it */
-    slideTo(snapPull(reg))
+    const thrown = speed.current
+    const from = lastRaw.current.x
+    speed.current = 0
+    /* a blade that was barely moving has not been thrown, it has been put down,
+       and putting a squeegee down inside the gate is caught rather than left
+       hovering — which is the line the whole sheet is built on. a reader who has
+       asked for stillness is given that same line and no travel at all. */
+    if (prefersStill() || Math.abs(thrown) < 0.3) {
+      slideTo(snapPull(reg))
+      return
+    }
+    coast(thrown, from)
   }
 
   const keys = (event: ReactKeyboardEvent<HTMLDivElement>) => {
@@ -605,7 +754,9 @@ export function PullBed({
   return (
     <div
       ref={bedRef}
-      className={`bed ${settled ? 'is-settled' : ''} ${dragging ? 'is-dragging' : ''}`}
+      className={`bed ${settled ? 'is-settled' : ''} ${dragging ? 'is-dragging' : ''}${
+        coasting ? ' is-coasting' : ''
+      }`}
       role="slider"
       tabIndex={0}
       aria-label="Plate offset. Drag the squeegee along the bed, or use the arrow keys, to bring the ink into register."

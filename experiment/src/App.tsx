@@ -665,9 +665,17 @@ export function App() {
                 column it belongs to are the same x everywhere. the marks in pink
                 are the rules this band is actually divided on, read out of the
                 tracks below rather than written down here, so the rail cannot
-                drift away from the layout it is printing. and it is the one line on
-                the sheet that changes as the reader moves, which is the whole
-                argument of the page in fourteen characters.
+                drift away from the layout it is printing.
+
+                and each rail measures the band it is printed above. it used to be
+                handed whichever band the reader was standing in and print that
+                one's divisions into all four rails at once, so the rail above this
+                sentence reported the type list while the reader was in the type
+                list — four rows of figures, three of them lying. the section is
+                still passed here, but only to say which rail is the one being
+                read: that one prints at full ink and the other three step back a
+                weight, which is the difference between an instrument on the bench
+                and four of them shouting over each other.
 
                 and it counts. the rail used to print twelve figures and then be
                 deleted below nine hundred pixels, which left a phone looking at a
@@ -676,7 +684,7 @@ export function App() {
                 ruled in and the same number the ruling's gradient is cut to — and
                 says the count in words in its own slug, so nothing about it is
                 asserted and nothing about it is fixed. */}
-            <ColumnRail section={section} />
+            <ColumnRail id="question" live={section === 'question'} />
 
             <p className="slugline sheet__slug">
               <span className="sheet__slug-lead">
@@ -815,7 +823,7 @@ export function App() {
 
           <section id="close" className="read" aria-labelledby="close-title">
             <header className="read__head reveal">
-              <ColumnRail section={section} />
+              <ColumnRail id="close" live={section === 'close'} />
               <p className="slugline">
                 <RegistrationMark className="slugline__mark" />
                 close read
@@ -885,7 +893,7 @@ export function App() {
               the column rail above it is what found it. */}
           <section id="type" className="type" aria-labelledby="type-title">
             <header className="type__head reveal">
-              <ColumnRail section={section} />
+              <ColumnRail id="type" live={section === 'type'} />
               <h2 className="slugline type__slugline" id="type-title">
                 <RegistrationMark className="slugline__mark" />
                 the type list
@@ -991,7 +999,7 @@ export function App() {
 
           <div className="page">
             <section id="answer" className="answer" aria-labelledby="answer-title">
-              <ColumnRail section={section} />
+              <ColumnRail id="answer" live={section === 'answer'} />
               <div className="answer__grid" data-track>
                 <div className="answer__copy reveal">
                   <p className="slugline">

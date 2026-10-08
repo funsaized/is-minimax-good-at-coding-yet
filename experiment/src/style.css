@@ -791,6 +791,69 @@
    blue to the left and up, black where it belongs — and take it to
    the gate and the last thing on the sheet is one clean voice.
 
+   =============================================================
+   ITERATION 519 — A BASELINE, AN ARMATURE THAT KNOWS WHERE IT IS,
+   AND A BLADE WITH MASS
+
+   The sheet prints its armature in four places and has never
+   printed a baseline. That is the whole diagnosis: a compositor
+   sets two things, and this page had one of them, very loudly.
+
+   THE BASELINE. Every passage of prose on the sheet had invented
+   its own leading — nine different values between 1.3 and 1.55 —
+   and so had every row of furniture, which is the reason a page
+   of careful typography still reads as a list of parts rather
+   than as a sheet. There are now two numbers: --prose-lead for
+   everything the reader is asked to read, and one line box for
+   every piece of furniture on the page, so the slugs, the
+   kickers, the job-ticket terms, the cross-references and the key
+   rows are all the same height and land on the same beat. Nothing
+   about the leading changed by more than a tenth of a line and
+   the page is suddenly composed rather than assembled.
+
+   THE ARMATURE KNOWS WHERE IT IS. Each of the four column rails
+   was handed the band the reader happened to be standing in and
+   printed that band's divisions into all four of them, so the
+   rail above the question reported the type list for as long as
+   anybody was reading the type list. Four rows of figures, three
+   of them lying. Each rail measures the band it is printed above
+   now — which is the only arrangement in which the marks can be
+   believed — and because a rail now knows which band is its own,
+   the one the reader is in prints at full ink and the other three
+   step back a single weight. Nothing is removed. A rail that
+   vanishes is the thing this sheet keeps refusing to do.
+
+   THE INITIAL. The close read had a note on it, a heading on it,
+   a counted measure and a margin note, and no initial, because
+   every one of its three paragraphs opens with a quotation mark
+   and a body-size quotation mark pushes the first line of the
+   paragraph half a letter to the right — which is a real reason,
+   and is also why the page had never had one. The mark and the
+   letter it opens are now taken off the front of the sentence and
+   floated into the margin, so the quote hangs outside the measure
+   and the paragraph starts on the letter. It is set in the press
+   voice at three lines, printed by
+   all three impressions at a spread the rest of the sheet has
+   nearly closed on, because it is the last thing that band sets.
+   And it takes the impression: bring the blade to the gate and
+   the initial presses into the paper along with the poster, a
+   hair deeper than anything else set at that size.
+
+   THE BLADE HAS MASS. A squeegee is not a cursor, and the bed had
+   been reading a position off a pointer, so a blade stopped dead
+   at the pixel it was released on and a flick was
+   indistinguishable from a slow drag. The bed now keeps the speed
+   the drag was going at and coasts on it when the hand comes off
+   — friction as a damping constant rather than a duration per
+   gesture — with the magnet applied to the carry in the same order
+   it is applied to the drag, so a flick that arrives at the band
+   is bent into it on the way in and caught by the gate rather than
+   handed the reward at the end of the gesture. It is capped at a
+   third of the bed, it prints the band it travels across, and a
+   reader who has asked for stillness is given the old line: caught
+   where it was put down, with nothing travelling.
+
+
    That is the whole page in one line of type, and the only mark on
    it both ends of the press agree about.
    ============================================================= */
@@ -1022,6 +1085,45 @@ THE TYPE AREA
   --label-2: .672rem;
   --label-3: .638rem;
   --micro: var(--label);
+
+  /* =============================================================
+     THE BASELINE.
+
+     A compositor sets two things: an armature and a baseline. This
+     sheet has printed its armature in four places for fifteen
+     iterations and has never printed a baseline at all — which is
+     why nine different blocks of prose on it are set at 1.3, 1.4,
+     1.44, 1.45, 1.46, 1.48, 1.5, 1.55 and 1.6, and why every row
+     of furniture invented its own leading next to the thing it was
+     annotating. The page is not ugly because of any one of those
+     numbers. It reads as assembled rather than composed because of
+     all nine of them at once.
+
+     So there are two now, and nothing below this line is allowed a
+     third.
+
+     --furniture-lead is one line box, in absolute pixels, shared by
+     every slug, kicker, caption, key row, job-ticket term and
+     column figure on the sheet. It is in pixels rather than in em
+     because the three label tiers are a third of a pixel apart and
+     a leading that followed them would drag the whole ladder out
+     of square — the tiers are a size decision, the line is a
+     structure decision, and they are now two decisions.
+
+     --prose-lead is everything the reader is actually asked to
+     read, in the reading voice, at reading size and a measure
+     between forty and sixty-five characters. One number, because a
+     page that sets its argument in nine leading values has decided
+     nine times that the argument did not need a decision.
+
+     1.55 rather than 1.5 because the serif on this sheet has long
+     ascenders and a deep descender and its italic tail wants the
+     extra air, and rather than 1.62 because a line of a job ticket
+     is not a line of a book and the sheet is mostly the first
+     thing.
+     ============================================================= */
+  --furniture-lead: 18px;
+  --prose-lead: 1.55;
 
   /* ONE VERTICAL BEAT. the sheet is a stack of bands, and the bands have to
      agree about how far apart they sit — otherwise every gap is a clamp
@@ -1867,6 +1969,86 @@ html[data-slab='on'] .slugbar {
 }
 
 /* =============================================================
+   THE BASELINE, SPREAD
+
+   Two numbers, declared once on :root, and this is the block that
+   spends them. Every row of furniture on the sheet — the band
+   slugs, the kickers under a head, the caption under a specimen,
+   the terms in the job ticket, the keys on the bed, the rubric's
+   figures, the chain of families, the foot margin — now takes its
+   height from the same line box, so they land on one beat instead
+   of each inventing the leading of the thing two lines above it.
+
+   It is one declaration per class and not one per element on
+   purpose. A baseline you have to re-apply at every new call site
+   is not a baseline; it is a convention, and conventions are what
+   the nine leading values this replaces were.
+
+   It is written off :root rather than as a bare class so that it
+   sits over the components rather than under them: every block
+   below still carries the leading it was written with, this is the
+   layer that supersedes it, and a page that grows a new band
+   inherits the baseline for free instead of having to remember it.
+
+   And the reading passages take --prose-lead for the same reason,
+   in the reading voice only. The display steps keep their own
+   leading, because a poster is a block of set type and a block of
+   set type is fitted to itself rather than to a grid — the one
+   thing on this sheet that is allowed to break the baseline is
+   the loudest thing on it. */
+
+:root .slugline,
+:root .col-rail,
+:root .col-rail__slug,
+:root .qrail__slug,
+:root .specimen__slug,
+:root .sheetfoot p,
+:root .bed__head,
+:root .bed__foot,
+:root .keys,
+:root .brief__fig,
+:root .xlinks__kicker,
+:root .rubric__kicker,
+:root .scale__kicker,
+:root .scale__note,
+:root .type__note,
+:root .type__chain-kicker,
+:root .type__resolved-kicker,
+:root .colophon__notes-kicker {
+  line-height: var(--furniture-lead);
+}
+
+/* the reading voice, wherever it is set as a passage rather than as a
+   heading. one measure, one leading, one rag — the three things that
+   decide whether a column of words is comfortable, and the three this
+   sheet had been deciding separately in nine places. */
+:root .lede,
+:root .read__intro > p,
+:root .specimen__copy,
+:root .brief li,
+:root .type__lede,
+:root .answer__copy > p,
+:root .colophon__slip dd,
+:root .colophon__machine li {
+  line-height: var(--prose-lead);
+}
+
+/* and the optical edge, wherever the engine will give it: a quotation
+   mark or a hyphen at the head of a line hangs into the margin instead
+   of pushing the line right, which is the same alignment the initial
+   does by hand on the one paragraph that starts with a mark — which is
+   why that one is not on this list. */
+:root .lede,
+:root .read__intro > p,
+:root .brief li,
+:root .type__lede,
+:root .answer__copy > p,
+:root .colophon__slip dd,
+:root .colophon__machine li {
+  hanging-punctuation: first last;
+}
+
+/* =============================================================
    THE RULING
 
    Every press sheet is ruled: the type area is a rectangle of
@@ -2148,6 +2330,54 @@ html[data-register='on'] .ruling--light .ruling__plate--black {
 .col-rail__fig[data-on='on']::before {
   opacity: 1;
   transform: none;
+}
+
+/* =============================================================
+   THE RAIL IN ITS OWN BAND.
+
+   Four rails, one to a band, and every one of them says what its own
+   band is divided on — measured out of that band's own tracks, so
+   the figures and the printed rules cannot come apart.
+
+   Which makes the fourth thing possible. The rail at the head of
+   the band you are reading prints at full ink; the other three keep
+   every figure, every mark and the whole caption, and step back one
+   weight. Nothing is deleted — a rail that disappears is the one
+   thing this sheet has spent five hundred iterations refusing to
+   do, and a phone is exactly where it has to keep working — but
+   four identical rows of blue figures marching down a ruled sheet
+   is the page measuring itself out loud four times, and the eye
+   stops reading the moment the instrument starts shouting.
+
+   It is one opacity and one colour-mix. Eight per cent of weight is
+   the difference between a page with a measuring rail at the head
+   of every band and a page with a grid wallpaper at the head of
+   every band, and it is worth having written the marks honestly
+   first: a quiet rail that was lying would be worse than four
+   loud ones that were right.
+   ============================================================= */
+
+.col-rail[data-live='off'] .col-rail__fig {
+  opacity: .2;
+}
+
+.col-rail[data-live='off'] .col-rail__fig[data-on='on'] {
+  opacity: .46;
+}
+
+/* the wedge keeps its shape and loses its voice: a mark that is not
+   on the band being read is still a mark on that band */
+.col-rail[data-live='off'] .col-rail__fig::before {
+  opacity: .3;
+  transform: none;
+}
+
+.col-rail[data-live='off'] .col-rail__slug {
+  color: color-mix(in srgb, var(--ink-50) 62%, transparent);
+}
+
+.col-rail[data-live='on'] .col-rail__slug-lead {
+  color: var(--ink-70);
 }
 
 .col-rail__slug {
@@ -2479,6 +2709,7 @@ html[data-register='on'] .ink-trap__rule {
 
 .plated__layer--black .q__line,
 .plated__layer--black .specimen__line,
+.plated__layer--black .specimen__initial-mark,
 .plated .proof__claim-a,
 .plated .proof__claim-b {
   text-shadow:
@@ -3992,6 +4223,34 @@ html[data-register='on'] .register-eye__plate--black {
   animation: squeak .13s linear infinite;
 }
 
+/* =============================================================
+   THE CARRY.
+
+   The blade has mass now — see `coast` in pull.tsx — so the hand
+   can be off it and it can still be moving. That is not the same
+   state as a drag, and it is not dressed as one: the squeak slows
+   to the rate a bar of rubber actually complains at once nothing is
+   pushing it sideways, and it stops when the blade does.
+
+   The transition on the blade is what makes the carry legible at
+   all. Under a hand the position is written every frame and the
+   eased transition is switched off, because a transition on a
+   number that is already following a pointer only adds lag. Left
+   on — slower, half the duration — the blade arrives after the
+   number has stopped, so the last third of a flick is a settle
+   rather than a cut, and the reader can see where it was going
+   before it stopped.
+   ============================================================= */
+
+.bed.is-coasting .bed__blade,
+.bed.is-coasting .bed__arm {
+  transition: transform .28s var(--ease-out), rotate .28s var(--ease-out);
+}
+
+.bed.is-coasting .bed__bar {
+  animation: squeak .26s linear infinite;
+}
+
 /* a rubber stamp, slammed the moment the ink agrees with itself */
 .bed__stamp {
   position: absolute;
@@ -4668,6 +4927,84 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   font-size: var(--read);
   line-height: 1.5;
   text-wrap: pretty;
+}
+
+/* =============================================================
+   THE INITIAL.
+
+   Every one of the three notes on this page opens on a quotation
+   mark — the sheet is about three phrases, so the paragraphs about
+   them quote them — and a body-size quotation mark pushes the first
+   line of its paragraph half a letter to the right. That is the real
+   reason a page of this kind so often has no initial at all: not a
+   shortage of ideas about initial letters, a shortage of margin for
+   them.
+
+   So the mark and the letter it opens are taken off the front of the
+   sentence and floated into the margin that the sheet already has.
+   The quote hangs outside the measure, the paragraph starts on the
+   letter, and the two of them are set in the press voice at three
+   lines against the serif they interrupt — which is the whole of
+   the contrast: the reading voice reads, and the press voice
+   announces that it is about to.
+
+   In black, because an initial is the one piece of type on this
+   sheet that is unambiguously real type rather than ink laid over
+   it, and on this sheet that is what black is for.
+
+   Three lines rather than two, because the copy is set at
+   --prose-lead now and a two-line initial in a looser leading leaves
+   a hole under it on the second line's right. And a step under the
+   three and a half it was measured at, because the set phrase above
+   it is the loudest thing in this band and an initial that outweighs
+   it is a hierarchy inverted rather than a flourish.
+
+   And it is the wettest ink on the sheet. This band is set well down
+   the run, where the three impressions have almost closed on the
+   words above it; the initial declares itself at .88 so the pink and
+   the blue still stand a hair off it — it is the last thing this
+   band prints, and the page has kept that claim for everything else
+   it has ever printed, so it keeps it here too. It takes the press
+   as well: bring the blade to the gate and the initial goes into the
+   paper, which is the one reward on the page that is measured in a
+   single character.
+
+   The geometry is floats and not `initial-letter`, because one engine
+   takes it and the other does not, and a detail that only exists on
+   half the machines is not a detail — it is a lottery. The float
+   falls back to a plain quote at body size on the engine that does
+   not, which is what the page had before, and no worse. */
+.specimen__initial {
+  float: left;
+  /* hangs a fifth of its own em into the margin the specimen already
+     carries, so the quotation mark is cut by the measure rather than
+     sitting inside it */
+  margin: .02em .09em -.1em -.2em;
+  color: var(--black);
+  font-family: var(--display);
+  font-size: 3.2em;
+  font-weight: 800;
+  line-height: .78;
+  letter-spacing: -.05em;
+  text-indent: 0;
+}
+
+/* the letterform itself carries no geometry of its own — the float is
+   on the stack, and the two ghost impressions are positioned against
+   the stack rather than against the mark, so all three stay in
+   register with each other at every size. */
+.specimen__initial-mark {
+  display: block;
+}
+
+/* below the armature's own breakpoint the specimen is one column and
+   the margin is the gutter, so the hang is taken off: a quotation
+   mark clipped by the trim edge of a phone is a fault, not an
+   optical alignment. */
+@media (max-width: 560px) {
+  .specimen__initial {
+    margin-left: 0;
+  }
 }
 
 /* THE MARGIN NOTE IS SET AS A MARGIN NOTE, not as a stamp in the corner. it was
@@ -8627,7 +8964,8 @@ html[data-reveal='on'] .reveal.is-in {
 
   .stock__grain,
   .stock__roller,
-  .bed.is-dragging .bed__bar {
+  .bed.is-dragging .bed__bar,
+  .bed.is-coasting .bed__bar {
     animation: none;
   }
 
