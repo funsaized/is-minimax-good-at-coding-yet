@@ -1,0 +1,19 @@
+{
+  "id": 523,
+  "parentId": 522,
+  "createdAt": "2026-10-08T06:57:54.003Z",
+  "summary": "The sheet finally tells you how far down it you are: a press rail in the head margin inks up behind the reader as they g",
+  "path": "/iterations/000523/index.html",
+  "screenshot": "/iterations/000523/desktop.png",
+  "mobileScreenshot": "/iterations/000523/mobile.png",
+  "sourceCommit": "b89e7802a34a0dbd414a1a310ca9eeb6d23b5d2a",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 1259,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 169097,
+    "outputTokens": 23963,
+    "steps": 66
+  }
+}
