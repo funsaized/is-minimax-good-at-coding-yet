@@ -1,50 +1,45 @@
-# Iteration 521
+# Changelog
 
-The loupe reads: the bed's film is the poster reduced, and the bar is opaque instead of a window.
+## Iteration 522 — The order of work
 
-## What changed
+Iteration 522: the standfirst's last four columns now carry a job ticket for the three machines.
 
-**The loupe spreads the error, not the sentence** (`src/pull.tsx`)
-- The film on the press bed printed the three impressions at 60% of the type size — a second and third
-  copy of every line laid over the first, not a misregistration. At the loose end (the page's resting
-  state, `reg = +1.00`) it was a heap of overlapping letters.
-- The reach is now 14.5% of the type size, and the two colour plates thin out as they wander
-  (`FILM_THIN`), so out at the loose end the film is a sentence with a pink and a blue fringe and at
-  the gate it is still one voice.
-- The film now prints the poster's three lines — `is Minimax M3` / `good at` / `frontend` — with the
-  mark held out and printed once in the pink plate, so the loupe is a reduction of the thing it is a
-  loupe of. Film size is now derived from the space three lines need (`stackH`), and the strip is a
-  third taller to hold them.
-- Removed the twelve-tick scale under the film: it resolved into a smudge at every bed height and was
-  not reading the offset (the gate rule, the bed foot's LOOSE / THE GATE / TIGHT and the bar's gauge
-  all do).
+**What changed**
 
-**The bar is a bar, not a window** (`src/style.css`)
-- The slug bar was `color-mix(stock 84%)` over a `backdrop-filter` that never applied: the minifier
-  drops the standard property and keeps only the `-webkit-` alias, which current engines ignore. The
-  bar was 84% of nothing over live type — the type list read through the index, and the pulled answer
-  came through the bar on the slab like a watermark.
-- It is opaque stock now, with its depth from the same lit lip every other sheet on the page carries,
-  and the slab bar takes the slab's own value rather than a darkening of the stock.
+- **New `src/order.tsx` — the order of work.** The standfirst's third division
+  (columns nine to twelve) used to carry two thin cross-references to passes the
+  index in the slug bar already lists. It now carries a job ticket with three
+  rows, one per machine on the page, and every row is the operation it names.
+- **Row one — the three plates, as the keys they are actually pressed by.** A
+  radiogroup of three keycaps (`1` `2` `3`) with roving tabindex and arrow-key
+  navigation, each printing the same plate figure the case beside the poster
+  prints. Hovering or focusing a cap previews that phrase in the title. The cap
+  that is down is seated, not highlighted: black, one pixel proud, a hair of pink
+  along its bottom edge.
+- **Row two — the blade.** Off the gate the row reads *bring the blade to the
+  gate* and does it; on the gate it reads *knock the plates loose* and returns the
+  blade to its rest offset. The loosen direction was the operation the page was
+  missing, and without it a reader who has found the gate can never return to the
+  page they arrived to see. Both directions are real; neither label is printed
+  over a control with nothing to do. Live register figure at the right.
+- **Row three — the proof.** *Pull the proof* / *cover the proof again*, driving
+  the same state `p` and `Escape` drive from anywhere on the sheet. Takes the
+  pink on `--land`, off the same number the verdict and the seam take it on.
+- **The way on stays**, folded into the foot of the ticket as two
+  cross-references with the pass numbers still read out of the index in the bar.
+- **Motion.** Each row takes a half-second wash of pink across it when it is
+  used — the same bead-and-trail the landing rule draws — remounted on a tick so
+  it fires on every use rather than once, and covering the proof flashes as well
+  as pulling it. Suppressed by the existing blanket reduced-motion rule.
+- **Plumbing in `App.tsx`:** `toGate` and `loosen` callbacks (the `0` key and the
+  ticket share one road), a `gateTick` and a `proofTick` so both rows can flash
+  more than once, and `aria-keyshortcuts` on the case's radios and the ticket's
+  keys. The arrow key is claimed by both plate radiogroups so it cannot also
+  nudge the blade, as in the case.
 
-**The heads get a floor** (`src/App.tsx`, `src/style.css`)
-- The close read and the type list each opened on a two-way split where the right-hand cell is a
-  seven-line paragraph and the left is a one-line head, leaving a ~200px hole in the first six columns
-  with the armature's hairline down the middle of it.
-- The close read gains the figure its slug rule never carried, set as a deck under its head
-  (`.read__deck`), with the head and deck wrapped into one grid cell so the shared baseline with the
-  paragraph survives.
-- The type band's closing note moves out from under the taller column and back under the paragraph it
-  explains; the ladder is left with nothing under it but the armature.
-- Nothing was added to the page — two things already printed moved to where the hole was.
+**Not changed:** the document title and the visible title; the entry point; the
+column rail's divisions for the question band (still 3, 4, 8, 9); the ticket
+prints nothing on paper, which takes the same four columns out of the standfirst
+that the way on used to.
 
-**The sheet answers its own address** (`src/App.tsx`)
-- Loading the page at a hash did nothing: the targets are printed by React, so the browser asked for
-  the scroll before there was anything to scroll to and never asked again. The sheet now reads
-  `location.hash` once after it has printed itself, inks in the target's reveals first, and scrolls
-  instantly (no journey across four screens before the page has finished arriving).
-
-## Notes
-- Verified at 360 / 390 / 480 / 768 / 1024 / 1280 / 1440 and with `prefers-reduced-motion: reduce`.
-  No console errors, no new overflow. Build passes (`npm run build`).
-- Title, document title, entry point, package files and build config untouched.
+**Verified:** `npm run build` clean.

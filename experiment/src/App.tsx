@@ -15,6 +15,7 @@ import { ControlEdge } from './edge'
 import { InkTrap } from './ink'
 import { prefersStill } from './motion'
 import { CropMark, FoldMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
+import { Order } from './order'
 import { Sheetbar, Pica } from './paper'
 import { Plated } from './plate'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
@@ -57,21 +58,6 @@ const INKS = [
    the two numbers below are read out of the list at the top of the file rather
    than typed again, so a pass can be renumbered in one place. */
 const passOf = (id: string) => NAV_ITEMS.find(item => item.id === id)?.number ?? ''
-
-/* the way on, printed as one mark twice over: an arrow is the press, so it is
-   pink here exactly as it is everywhere else on the sheet */
-const ARROW = (
-  <svg className="xlink__arrow" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-    <path
-      d="M4 10h11M10.5 4.5 16 10l-5.5 5.5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-)
 
 /* THE SHORT ANSWER, AS SET. one place for the sentence, because the sheet prints
    it twice — once on the slab where it is read, and once as a shadow of itself on
@@ -187,6 +173,8 @@ export function App() {
   const [pullTick, setPullTick] = useState(0)
   const [reg, setReg] = useState(PULL_REST)
   const [plateTick, setPlateTick] = useState(0)
+  const [gateTick, setGateTick] = useState(0)
+  const [proofTick, setProofTick] = useState(0)
   const [catchTick, setCatchTick] = useState(0)
   const [announce, setAnnounce] = useState('')
   const pressRef = useRef<HTMLDivElement>(null)
@@ -241,6 +229,11 @@ export function App() {
   const pullProof = useCallback((next: boolean) => {
     setProof(next)
     if (next) setPullTick(tick => tick + 1)
+    /* and the row in the order of work takes a beat of ink on both turns —
+       covering the proof is a decision as much as pulling it is, and a control
+       that only acknowledges half of what it does is a control that feels
+       broken the other half of the time */
+    setProofTick(tick => tick + 1)
     setAnnounce(next ? 'The proof is pulled. The short answer is set.' : 'The proof is covered again.')
   }, [])
 
@@ -251,6 +244,28 @@ export function App() {
     const gone = window.setTimeout(() => setPullTick(0), 2400)
     return () => window.clearTimeout(gone)
   }, [pullTick])
+
+  /* THE BLADE, FROM EITHER END. the reader reaches it two ways: the `0` key,
+     which is printed at the foot of the sheet, and the third row of the order of
+     work, which is in the first screen. both of them have to travel the same
+     road, or a reader who takes the blade to the gate from the ticket would
+     watch the sheet refuse to agree with itself.
+
+     and the row offers both directions, which is the operation the page had
+     been missing: a pressman knocks the forme loose to change it, and without
+     that a reader who has found the gate can never come back and look at the
+     page they arrived to see — three plates plainly apart, at the press, wet. */
+  const toGate = useCallback(() => {
+    setReg(0)
+    setGateTick(tick => tick + 1)
+    setAnnounce('Blade snapped to the gate.')
+  }, [])
+
+  const loosen = useCallback(() => {
+    setReg(PULL_REST)
+    setGateTick(tick => tick + 1)
+    setAnnounce('Plates knocked loose. The three impressions open again.')
+  }, [])
 
   /* One source of truth for the plate, and it answers to two questions.
      The true offset -- which every readout follows, the gauge, the control
@@ -576,10 +591,9 @@ export function App() {
       }
       if (event.key === '0') {
         event.preventDefault()
-        setReg(0)
-        /* the bed reports itself through its own slider role, but this key moves
+        /* the blade reports itself through its own slider role, but this key moves
            it from anywhere on the sheet, so it has to say so as well */
-        setAnnounce('Blade snapped to the gate.')
+        toGate()
         return
       }
       /* the bed foot promises the arrows nudge the blade, so they do — from
@@ -600,7 +614,7 @@ export function App() {
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [proof, pullProof, select])
+  }, [proof, pullProof, select, toGate])
 
   const walk = (from: WordId, step: number) =>
     WORD_IDS[(WORD_IDS.indexOf(from) + step + WORD_IDS.length) % WORD_IDS.length]
@@ -842,40 +856,37 @@ export function App() {
                 <p className="lede">{LEDE}</p>
               </div>
 
-              {/* THE WAY ON. the standfirst used to end in the last two rounded
-                  rectangles on the page, which is a poor contradiction of an
-                  argument that the whole sheet is not a web app. so the way on
-                  is a way on: a kicker, and two ruled cross-references in the
-                  furniture face, each carrying the number of the pass it takes
-                  you to. the reader is not asked to trust that the page has
-                  somewhere to go — the number is read out of the index at the
-                  top of the bar, and it is the same numbering all the way
-                  through.
+              {/* THE ORDER OF WORK. the last four columns of the band used to
+                  carry two thin links to passes the index in the bar already
+                  lists, which is a poor use of the only division of the standfirst
+                  that is not prose — and it left the three machines on this page
+                  invisible. the blade is a strip of film below the fold, the pull
+                  is a key printed at the foot of the slab, and the plates are
+                  three words in the headline, so the one control the whole sheet
+                  is about looked like part of the sentence.
 
-                  and it is not under the argument either. the standfirst was
-                  printing the note in three columns, the lede in nine and the
-                  way on under the lede, which left the last four columns of the
-                  type area with nothing on them at all — a band that stops two
-                  thirds of the way across a ruled sheet reads as a band that ran
-                  out of ideas. so the way on takes the last four columns, which
-                  is a division like any other, and the three parts read in the
-                  order the eye goes: what to notice, what the page says, where
-                  to go next. */}
-              <nav className="xlinks" aria-label="Where to go next">
-                <p className="xlinks__kicker">
-                  <span aria-hidden="true">↳</span> where to next
-                </p>
-                <a className="xlink" href="#close">
-                  {ARROW}
-                  <span className="xlink__label">read it closely</span>
-                  <span className="xlink__to" aria-hidden="true">{passOf('close')}</span>
-                </a>
-                <a className="xlink xlink--quiet" href="#answer">
-                  {ARROW}
-                  <span className="xlink__label">go to the pulled answer</span>
-                  <span className="xlink__to" aria-hidden="true">{passOf('answer')}</span>
-                </a>
-              </nav>
+                  so the division carries the three of them instead: the keys that
+                  pick a plate, the blade and its gate, the proof and its pull.
+                  every row is the operation it names and prints its own live
+                  state, and the two cross-references stay at the foot of it so
+                  the way on is not lost. see `order.tsx`. */}
+              <Order
+                active={active}
+                hot={shown}
+                regRead={regRead}
+                settled={settled}
+                proof={proof}
+                plateTick={plateTick}
+                gateTick={gateTick}
+                proofTick={proofTick}
+                toClose={passOf('close')}
+                toAnswer={passOf('answer')}
+                onSelect={select}
+                onPreview={setHover}
+                onGate={toGate}
+                onLoosen={loosen}
+                onPull={pullProof}
+              />
             </div>
 
             <div className="bedrow" id="bed">
@@ -1590,6 +1601,7 @@ function Poster({
               className={`qrail__row ${item.id === selected ? 'is-active' : ''} ${
                 item.id === hot ? 'is-hot' : ''
               }`}
+              aria-keyshortcuts={`${WORD_IDS.indexOf(item.id) + 1}`}
               onClick={() => onSelect(item.id)}
               onMouseEnter={() => onPreview(item.id)}
               onMouseLeave={() => onPreview(null)}

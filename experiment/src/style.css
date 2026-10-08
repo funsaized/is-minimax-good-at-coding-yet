@@ -2429,6 +2429,9 @@ html[data-slab='on'] .slugbar {
 :root .keys,
 :root .brief__fig,
 :root .xlinks__kicker,
+:root .order__kicker,
+:root .order__lead,
+:root .order__state,
 :root .rubric__kicker,
 :root .scale__kicker,
 :root .scale__note,
@@ -4302,12 +4305,12 @@ html[data-pulled='on'] .verdict__bloom {
    ============================================================= */
 
 .xlinks {
-  grid-column: 9 / span 4;
-  align-self: end;
-  /* the block starts on a printed rule and runs to the trim, so the air is
-     inside the columns and the rules are the ones the sheet already prints */
-  padding-left: var(--pad);
-  border-top: 1px solid var(--black);
+  /* the way on is now the foot of the order of work rather than a division of
+     the band in its own right, so it is no longer a grid item: the rule it opened
+     on is the one the ticket opens on, and the air it used to hold is the air
+     inside the ticket's own rows. it keeps its own rules and its own kicker,
+     because a way on is a way on. */
+  min-width: 0;
 }
 
 .xlinks__kicker {
@@ -4424,6 +4427,396 @@ html[data-pulled='on'] .verdict__bloom {
 
 .xlink--quiet .xlink__arrow {
   color: color-mix(in srgb, var(--pink-ink) 45%, transparent);
+}
+
+/* =============================================================
+   THE ORDER OF WORK
+
+   iteration 522. the last four columns of the standfirst used
+   to carry two thin links to passes the index in the bar already
+   lists, which is a poor use of the one division of that band which
+   is not prose — and it left the three machines on this page
+   invisible.
+
+   The blade is a strip of film below the fold, and a reader has to
+   already know it drags. The pull is a key printed on a card at the
+   foot of a slab, in furniture type, under a headline about a
+   sentence. The plates — the one control the whole sheet is about —
+   are three words inside the headline itself, so they read as part
+   of the sentence, which they are and which is exactly the problem:
+   nothing ever said the question was a machine with three settings.
+
+   So this division carries all three. It is a job ticket: three rows,
+   one per machine, every row a real control that does the thing its
+   key does, every row printing its own live state in the sheet's own
+   grammar — a figure in blue, a state in pink, a label in the
+   furniture face, a rule between rows and no boxes around anything.
+
+   It sits on the foot of the band against the argument, exactly where
+   the way on did, and it divides the same columns it divided before,
+   so the armature and the column rail above it are unchanged and
+   still report this band as dividing at three, four, eight and nine.
+
+   AND THE ROWS ARE THUMB-SIZED, which the way on's links already
+   were and which is the only reason a control like this can live
+   inside a paragraph: on a phone it is the last thing in the
+   standfirst and the only way to reach any of the three machines
+   without scrolling past all of them.
+   ============================================================= */
+
+.order {
+  position: relative;
+  grid-column: 9 / span 4;
+  align-self: end;
+  min-width: 0;
+  padding-left: var(--pad);
+}
+
+.order__kicker {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 9px 0 4px;
+  border-top: 1px solid var(--black);
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 500;
+  letter-spacing: .145em;
+  text-transform: uppercase;
+}
+
+.order__kicker > span:first-child {
+  color: var(--pink-ink);
+  letter-spacing: 0;
+}
+
+.order__fact {
+  overflow: hidden;
+  color: var(--ink-50);
+  font-size: var(--label-3);
+  letter-spacing: .11em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* a row. one rule across the measure, and the air inside the row — there is no
+   box, because this sheet has not drawn a box around anything since the bed and
+   the proof took their own borders with them.
+
+   the layout is declared per row rather than here, and that is not tidiness: a
+   button is a grid container in name only on some engines, so the two rows that
+   are controls are laid out with flex and the one row that is not — the plates,
+   which is a plain div — is laid out with the grid the rest of the sheet uses. */
+.order__row {
+  position: relative;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 7px 0 8px;
+  border-top: 1px solid var(--rule-soft);
+  text-align: left;
+}
+
+/* the plates row carries its state inside the label, under the lead, rather than
+   against the trim: a figure set under the thing it answers for reads as the
+   answer to that thing, which is what this row is */
+.order__row--plates {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  border-top-color: var(--rule);
+}
+
+.order__label {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  font-family: var(--mono);
+}
+
+/* a label wraps rather than ellipsises: this column is four of twelve at the
+   press and the whole measure on a phone, and a job ticket that loses the end
+   of "bring the blade to the gate" to a row of dots is a ticket that cannot be
+   read at a glance */
+.order__lead {
+  color: var(--ink-50);
+  font-size: var(--label-2);
+  font-weight: 500;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  transition: color .26s var(--ease);
+}
+
+/* the state, on the right. it is right-aligned against the trim so the three
+   figures of the three rows sit on one x, which is the whole reason a form
+   prints them there */
+.order__state {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* a figure is a figure: every number on the light sheet is a measurement and the
+   measurement ink is the blue plate. the pink belongs to the press, and a
+   measurement that is in register is a measurement that is finished */
+.order__fig {
+  color: var(--blue-ink);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  transition: color .3s var(--ease);
+}
+
+.order__what {
+  overflow: hidden;
+  min-width: 0;
+  color: var(--ink-50);
+  text-overflow: ellipsis;
+}
+
+.order__act {
+  display: flex;
+  transition: background .26s var(--ease);
+}
+
+/* the label takes what is left of the row, and nothing else may push it out:
+   the state on the right is a figure and is never allowed to wrap */
+.order__act .order__label {
+  flex: 1 1 auto;
+}
+
+.order__act:hover {
+  background: rgba(252, 250, 243, .72);
+}
+
+.order__act:hover .order__lead {
+  color: var(--black);
+}
+
+.order__act:focus-visible {
+  outline: 2px solid var(--pink-ink);
+  outline-offset: -2px;
+  border-radius: 0;
+}
+
+/* and the row that is done says so in the only ink that means *the press has
+   done this*: pink. the state it names at the right goes black at the same
+   moment, because a finished measurement stops being a measurement */
+.order__act[data-on='on'] .order__lead {
+  color: var(--pink-ink);
+}
+
+.order__act[data-on='on'] .order__fig {
+  color: var(--black);
+}
+
+/* the key the row is worked from, printed as a key and not as a caption. it
+   carries the whole vocabulary of the ticket: three caps for the plates, then
+   the two figures this sheet's own keys are printed as */
+.order__key {
+  min-width: 1.55em;
+  padding: 2px 5px 3px;
+  color: var(--ink-70);
+  background: var(--stock-2);
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  transition: color .26s var(--ease), background .26s var(--ease),
+    translate .18s var(--ease-out), box-shadow .26s var(--ease);
+}
+
+/* a row whose machine is running takes its key the same pink the bar's pin and
+   the poster's traps take, and the cap sits down on the paper by a pixel — a
+   keycap that has been pressed and is still down */
+.order__act[data-on='on'] .order__key {
+  color: var(--stock-3);
+  background: var(--pink-ink);
+  border-color: var(--pink-ink);
+  border-bottom-width: 1px;
+  translate: 0 1px;
+}
+
+.order__act:hover .order__key {
+  box-shadow: 0 1px 0 rgba(20, 19, 26, .3);
+}
+
+/* THE PRESS. the flash that dries. a key that is used is used with a beat of
+   pink over it, and newsprint does not hold a mark for long, so this is a wash
+   rather than a fill: it is remounted on a tick and runs about half a second.
+   it is the only animation in the ticket, and it is the reason the ticket feels
+   like a machine rather than like a list. */
+.order__flash,
+.key__press {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--pink) 42%, transparent),
+    color-mix(in srgb, var(--pink) 8%, transparent)
+  );
+  pointer-events: none;
+}
+
+.order__flash {
+  animation: order-wash .52s var(--ease-out) both;
+}
+
+/* the caps. three of them, in a row, sized to be read at the furniture tier and
+   pressed like type */
+.order__keys {
+  display: flex;
+  gap: 4px;
+}
+
+.key {
+  position: relative;
+  display: grid;
+  gap: 1px;
+  min-width: 27px;
+  min-height: 40px;
+  align-content: center;
+  justify-items: center;
+  padding: 4px 5px 3px;
+  color: var(--ink-50);
+  background: var(--stock-3);
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  transition: color .2s var(--ease), background .2s var(--ease),
+    border-color .2s var(--ease), translate .2s var(--ease-out),
+    box-shadow .2s var(--ease);
+}
+
+.key:hover,
+.key.is-hot {
+  color: var(--black);
+  box-shadow: 0 1px 0 rgba(20, 19, 26, .3);
+}
+
+.key:focus-visible {
+  outline: 2px solid var(--pink-ink);
+  outline-offset: 2px;
+}
+
+.key__cap {
+  font-family: var(--mono);
+  font-size: var(--label);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* the plate figure under the cap, in blue: it is a count, and it is the same
+   figure the case prints beside the poster, so a key and a row can be matched
+   without being told which is which */
+.key__fig {
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: .06em;
+  opacity: .62;
+  transition: opacity .2s var(--ease);
+}
+
+/* THE CAP THAT IS DOWN. the plate on the press is not highlighted, it is seated:
+   white stock, a black cap, the face standing a pixel proud of the ones either
+   side of it, and a hair of pink along the bottom edge — the bead still standing
+   on the face of the blade, which is the same mark the landing rule draws at the
+   head of the run and the wash on the rows below draws when they are used. that
+   is what lets the three caps here and the three rows of the case beside the
+   poster be read as one machine printed twice. */
+.key.is-up {
+  color: var(--black);
+  background: var(--stock-3);
+  border-color: var(--black);
+  border-bottom: 1px solid var(--pink-ink);
+  translate: 0 1px;
+}
+
+.key.is-up .key__fig {
+  color: var(--pink-ink);
+  opacity: 1;
+}
+
+.key__press {
+  inset: 0;
+  border-radius: 3px;
+  animation: key-press .46s var(--ease-out) both;
+}
+
+@keyframes order-wash {
+  0% {
+    opacity: 0;
+    transform: scaleX(.35);
+    transform-origin: 0 50%;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+    transform-origin: 0 50%;
+  }
+}
+
+@keyframes key-press {
+  0% {
+    opacity: 0;
+    transform: scaleY(.4);
+  }
+
+  26% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scaleY(1);
+  }
+}
+
+/* THE WAY ON, now the foot of the ticket rather than the whole of the column.
+   the hair above each link is gone — the ticket is already ruling rows — so
+   what is left is two lines of furniture with a pink wedge under them, and the
+   pass they lead to still printed in blue. */
+.order .xlinks {
+  padding-left: 0;
+  border-top: 0;
+}
+
+.order .xlinks__kicker {
+  padding: 6px 0 0;
+}
+
+.order .xlink {
+  min-height: 38px;
+  padding: 7px 0 8px;
+  border-top: 0;
+}
+
+.order .xlink:first-of-type {
+  border-top: 1px solid var(--rule-soft);
 }
 
 /* ---------- the press bed: wet ink and a squeegee you can take hold of ---------- */
@@ -8863,9 +9256,10 @@ html[data-reveal='on'] .reveal.is-in {
     padding-right: var(--pad);
   }
 
-  /* the way on is the last division of the band, so it is the last thing to go
-     over: it keeps the two columns the note and the lede gave up */
-  .xlinks {
+  /* the order of work is the last division of the band, so it is the last thing to
+     go over: it keeps the columns the note and the lede gave up. a pressman's
+     job ticket is not the thing that has to fit and the argument is */
+  .order {
     grid-column: 8 / -1;
     padding-left: 0;
   }
@@ -9019,7 +9413,7 @@ html[data-reveal='on'] .reveal.is-in {
 
   .standfirst__note,
   .standfirst__say,
-  .xlinks {
+  .order {
     grid-column: 1 / -1;
     padding-right: 0;
   }
@@ -9035,8 +9429,13 @@ html[data-reveal='on'] .reveal.is-in {
     margin-left: .22em;
   }
 
-  .xlinks {
-    padding-left: 0;
+  /* one column, so the ticket rules itself from the trim on one side and the
+     gutter on the other, and the three caps keep the full measure in front of
+     them rather than being squeezed into the label. the way on goes back to a
+     thumb target here — on a phone these two are the only way off the first
+     screen, and the ticket cannot be the reason they got smaller */
+  .order .xlink {
+    min-height: 44px;
   }
 
   .specimen__body,
@@ -9551,6 +9950,7 @@ html[data-reveal='on'] .reveal.is-in {
   .stock,
   .sprockets,
   .edge,
+  .order,
   .xlinks,
   .bed,
   .col-rail,
