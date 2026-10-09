@@ -1,45 +1,25 @@
-The sheet finally tells you how far down it you are: a press rail in the head margin inks up behind the reader as they go.
+# The answer stands under the question, and the plates now lag the hand.
 
-## What changed
+## One division for the first screen
 
-**The run of the sheet** (`src/spine.tsx`, new). The page is one piece of stock —
-five thousand pixels of ruled type with four bands, a fold, a seam and an ink
-slab in it — and every band printed its own slug, rule and rail saying what the
-reader was standing in. None of them said how far down they were. A fixed rail now
-occupies the head margin on the side the control strip is not on, and it:
+The poster is set in columns 1–7 with the plate case in 8–12. The band underneath — the one whose job is to answer the title — divided at 3 and 8, so the two halves of the first screen disagreed about where the type ended, and the loudest sentence on the sheet began a third of the way across from the word it was answering.
 
-- **Fills with ink as you read.** `--travel`, written by the listener that already
-  dries the ink and turns the bar over at the seam, masks a wash running from the
-  black plate at the head of the margin to the press's pink at the foot. Above the
-  bead is printed, below it is bare paper. The gradient is cut on the rail's own
-  height and the travelled part is masked out, so the drying arc never stretches.
-- **Carries the bead — the blade.** The bead rides `--reg-x`/`--reg-y`, the same
-  offset the film on the bed, the lamp on the stock, the quoins in the chase and
-  every mark in the bar ride, so the register is felt in the margin from anywhere
-  on the sheet. It takes the press's halo at the gate.
-- **Prints the four passes, measured.** `--pass-1`…`--pass-4` are read off the
-  layout on the same beat the chase and the seam are re-measured, against the same
-  18% the intersection observer judges the current pass from, so the bead crossing
-  a numeral and the bar's hairline lighting up are one event by two roads.
-- **Is a way on.** The four numerals are hash links with `aria-current`, so a
-  reader already halfway down has a second way round the sheet that does not
-  scroll. Placed after the skip link and before the bar, matching visual order.
+The verdict and its paragraph now run the poster's own seven columns; the press's margin takes the rest. Title, answer and argument share one left edge and one division from the top of the sheet to the bottom of the first screen. The column rail measures its own band out of the layout, so it now reports one division (`07 08`) instead of three, and reports it truthfully at every width.
 
-**A position, not a journey.** Nothing in the rail transitions, so reduced-motion
-readers get the same margin at the same place. `--travel` is only written when it
-actually changes.
+Both blocks stop the same pad short of the same printed rule at column eight, which means the rule the question mark lands on and the rule the verdict lands on are the same width between the same two xs. At the gate the first screen shows two blue rules stacked under the widest air on the sheet, aligned end for end.
 
-**Layout.** The rail is 34px at x12 with the numerals reading outward from it:
-8.2px of clear stock at 1280px, 15px at 1440, 22px at 1600. It is hidden below
-1280px, where the head margin is 53px wide. The perforations moved from 12px in
-to the sheet's edge (one column, 7px holes) to free the rest of the margin — a
-rail in furniture is a mistake. It is excluded from the print sheet.
+The "on the mark" note moves out of the first three columns and into the margin under the case, where the three plates already live; it keeps its pink rule, which now stands on the division itself. Below 1180px the whole band stacks into one column in reading order: answer, paragraph, note, machines.
 
-## Checks
+## The plates lag the hand
 
-`npm run build` clean. Verified in Chromium at 1920/1600/1440/1300/1281/1280/
-1180/390px: no overlap with the type area or the chase quoins at any width, tab
-order is skip link → rail → bar, hash links from the rail land the target under
-the sticky bar and update both navs, the slab token swap turns the rail over at
-the seam, the register halo and bead offset both follow the blade, and the
-reduced-motion and print paths were checked. No console errors.
+Three impressions of one phrase moved as a single object: the pointer leaned the black face toward the cursor and the pink and blue leaned with it by the same distance in the same direction, which reads as one headline with a chromatic edge. The stylesheet claimed a lag that had no mechanism behind it.
+
+The two ghost faces are now held alongside the black face and are handed the same numbers the black face is. They answer with a third of the travel plus the sheet's own spread, so the black stays where it is set and the colour arrives late and opens further along the direction the press printed in. The pointer writes `--pull`; keyboard focus on a phrase writes `--key` (only for `:focus-visible`, so a click does not prise the plate apart); a row of the plate case under the hand writes `--plate` through a `data-plate` attribute on the poster. The stylesheet adds all three, so the case and the poster are one machine with three readouts rather than two pictures of the same three choices. The pink wedge and its shadow are suppressed on the ghost faces, where they would put a highlight on the ink instead of on the paper.
+
+The pointer pass was rewritten to read all three rectangles before writing any style, so a frame costs one layout flush instead of three.
+
+Reduced motion takes all of it: the existing blanket `.w { transform: none !important }` puts the black and the ghosts back where they were printed.
+
+## Unchanged
+
+Title, document title, entry point, framework, package files and build configuration. No new dependencies, no network, no assets, no storage. `npm run build` passes (`tsc --noEmit` and `vite build`).

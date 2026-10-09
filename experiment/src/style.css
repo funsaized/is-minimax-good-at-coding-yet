@@ -166,6 +166,68 @@
 
 
    =============================================================
+   ITERATION 524 — THE ANSWER STANDS UNDER THE QUESTION
+
+   one division, one axis, and one gesture you can point at.
+
+   THE BAND DIVIDES ONCE. the poster is columns one to seven and
+   the case is eight to twelve. the band underneath it — the one
+   whose whole job is to answer the title — divided at three and
+   eight, so the two halves of the first screen disagreed about
+   where the type ended, and the loudest sentence on the sheet
+   began a third of the way across from the word it was answering.
+   the verdict and the paragraph now run the poster's own seven
+   columns and the press's margin takes the rest, so the title,
+   its answer and its argument share one left edge and one
+   division, top to bottom of the first screen. the rail, which
+   measures its own band rather than trusting a table, now has
+   one division to report instead of three, and reports it.
+
+   THE TWO LANDINGS ARE THE SAME RULE. the question mark lands on
+   a rule and the verdict lands on a rule, and those rules are now
+   the same width between the same two xs — the poster's block and
+   the answer's block both stop the same pad short of the same
+   printed rule at column eight. bring the blade to the gate and
+   the first screen has two blue rules stacked under the widest
+   air on the sheet, aligned end for end, and the reader can see
+   that the sheet meant it.
+
+   the note about the mark moves with the machinery. "on the mark
+   — the question mark is load-bearing" was set in the first three
+   columns against the trim, annotating a sentence three hundred
+   pixels to its right. it is under the case now, where the three
+   plates live, and it keeps its pink rule — which now stands on
+   the division itself, so the band says which half you are in.
+
+   below 1180 the whole of it stacks: answer, paragraph, note,
+   the three machines. one column, in the order it is read.
+
+   THE PLATES LAG THE HAND. three impressions of one phrase used
+   to move as a single object — the pointer leaned the black face
+   toward the cursor and the pink and the blue leaned with it,
+   three hairlines sliding the same distance in the same
+   direction, which reads as one headline with a chromatic edge
+   rather than as a sheet printed three times. the stylesheet
+   claimed the plates lagged. they did not.
+
+   they do now. the ghost faces are handed the same three numbers
+   the black face is and answer with a third of the travel plus
+   the sheet's own spread, so the black stays where it is set and
+   the colour arrives late and opens further along the direction
+   the press printed it in. it is --smear's arithmetic taken
+   phrase by phrase instead of sheet-wide.
+
+   and the case has a share in it. a row of the plate case under
+   the hand re-wets the phrase it sets at --plate, so the case
+   and the poster have stopped being two pictures of the same
+   three choices and are one machine with three readouts: the
+   cursor answers with --pull, the keyboard answers with --key,
+   the case answers with --plate, and the stylesheet adds all
+   three. reduced motion takes the lot, because the blanket rule
+   already puts .w back at transform: none.
+
+
+   =============================================================
    ITERATION 518 — A READING FLOOR, AND AN ARMATURE WITH A WIDTH
 
    two changes, and they are the same change: the sheet is set at
@@ -3065,6 +3127,60 @@ html[data-register='on'] .ruling--light .ruling__plate--black {
   color: inherit;
 }
 
+/* =============================================================
+   THE PLATES LAG THE HAND
+
+   Three impressions of one phrase, and until this iteration they
+   moved as one object: the pointer leaned the black face toward the
+   cursor and the pink and the blue leaned with it, three hairlines
+   of type sliding in exactly the same direction by exactly the same
+   distance. The claim in the source — that the plates lag behind
+   the type — was a comment and not a mechanism, and a headline
+   whose three plates translate together reads as one headline with
+   a chromatic edge rather than as a sheet printed three times.
+
+   So the colour plates are handed the same three numbers the black
+   face is, and they answer with a third of the travel and the
+   sheet's own spread on top of it. The black stays exactly where
+   it is set; the pink and the blue arrive late and open further
+   along the direction the press printed them in. It is the same
+   arithmetic the ream uses for --smear, taken phrase by phrase
+   instead of sheet-wide, and it is the reason a reader can now
+   see that a cursor near a word is doing something to the press
+   rather than to the type.
+
+   And the case has a share in it. A row of the plate case under
+   the hand re-wets the phrase it sets, at --plate, so the case
+   and the poster have stopped being two pictures of the same
+   three choices and are one machine with three readouts.
+   ============================================================= */
+
+.plated__layer--ghost .w {
+  transform: translate3d(
+      calc(
+        var(--dx) * .3 + var(--px) * (var(--pull) + var(--key) + var(--plate)) * 1.55
+      ),
+      calc(
+        var(--dy) * .3 + var(--py) * (var(--pull) + var(--key) + var(--plate)) * 1.55
+      ),
+      0
+    );
+  transition: transform .34s var(--ease-out);
+}
+
+.poster[data-plate='m3'] .plated__layer--ghost .w--m3,
+.poster[data-plate='good'] .plated__layer--ghost .w--good,
+.poster[data-plate='yet'] .plated__layer--ghost .w--yet {
+  --plate: .62;
+}
+
+/* and the ghosts carry none of the marks a hand leaves on the stock: the pink
+   wedge under a phrase and its hard pink shadow belong to the black face, and
+   printing them twice would put a highlight on the ink instead of on the paper */
+.plated__layer--ghost .w::before {
+  display: none;
+}
+
 .plated__layer--ghost .chip {
   border-color: currentColor;
   box-shadow: none;
@@ -3744,6 +3860,8 @@ html[data-register='on'] .plate-target__plate--black {
 /* the words: a lift toward the cursor, and the plate behind them lagging */
 .w {
   --pull: 0;
+  --key: 0;
+  --plate: 0;
   --dx: 0px;
   --dy: 0px;
   position: relative;
@@ -3755,8 +3873,9 @@ html[data-register='on'] .plate-target__plate--black {
   background: none;
   font: inherit;
   letter-spacing: inherit;
-  transform: translate3d(var(--dx), var(--dy), 0) rotate(calc(var(--pull) * -1.4deg))
-    scale(calc(1 + var(--pull) * .016));
+  transform: translate3d(var(--dx), var(--dy), 0)
+    rotate(calc((var(--pull) + var(--key)) * -1.4deg))
+    scale(calc(1 + (var(--pull) + var(--key)) * .016));
   transform-origin: 50% 62%;
   transition: transform .32s var(--ease-out);
 }
@@ -4043,6 +4162,12 @@ html[data-register='on'] .plated__layer--black .mark {
 .standfirst {
   display: grid;
   grid-template-columns: var(--track);
+  /* three rows and no gap: the slug, the answer and the press's own margin. the
+     air between them is set on the things themselves rather than on the grid,
+     because the air under the slug belongs to the answer and the air under the
+     note belongs to the order of work, and a row gap would have charged both to
+     the row it happened to fall in. */
+  grid-template-rows: auto auto auto;
   align-items: start;
   /* the gap below the poster is the widest on the light sheet, and it is not a
      band gap: it is the line the reader's eye breaks on after the last line of
@@ -4078,19 +4203,29 @@ html[data-register='on'] .plated__layer--black .mark {
   white-space: nowrap;
 }
 
-/* three columns of the armature for the note, five for the argument, four for
-   the way on. the division is on the rule at three, and the pink rule the note
-   is set against stands on the type area's own left boundary. the note is two
-   lines against a verdict and a paragraph, so it sits in the middle of its
-   column — a margin note set against the block it annotates, not a stub hanging
-   off the top of it */
+/* THE PRESS'S OWN MARGIN. the note used to take the first three columns and the
+   answer the middle five, so the first screen was divided at three and eight
+   while the poster above it — the same band, two bands up — was divided at seven
+   and eight. the two halves of the first screen disagreed about where the type
+   ended, and the answer, which is the loudest thing under the title, began a
+   third of the way across from the word it was answering.
+
+   so the band divides once, on the poster's own rule. the note goes to the
+   press's margin beside the case, which is where every other note on this sheet
+   about a particular mark already sits, and the note keeps its pink rule — that
+   rule now stands on the division itself, so it is the band saying which half
+   of it you are reading. */
 .standfirst__note {
-  grid-column: 1 / span 3;
+  grid-column: 8 / -1;
+  grid-row: 2;
   display: grid;
   gap: 10px;
-  align-self: center;
+  align-self: start;
   min-width: 0;
-  padding-right: var(--pad);
+  /* a margin note is a note and not a sub-head: capped so it breaks in its own
+     column instead of running the whole measure of the margin on one line */
+  max-width: 42ch;
+  padding-top: var(--air-block);
   padding-left: 14px;
   border-left: 2px solid var(--pink);
 }
@@ -4129,12 +4264,27 @@ html[data-register='on'] .plated__layer--black .mark {
   text-underline-offset: 4px;
 }
 
+/* THE SAME SEVEN COLUMNS AS THE POSTER. this block is the answer, and it used to
+   start at column four — under the middle of the title — so the sentence that
+   answers the headline began a third of the way across the sheet from the word
+   it was answering. it now runs the poster's measure and stops the same pad short
+   of the same printed rule, which means the rule the question mark lands on and
+   the rule the verdict lands on are the same length and stand on the same two xs:
+   the mark and the answer are printed one under the other and a reader can see
+   that they were set that way on purpose.
+
+   it spans the answer and the press's margin so the two of them can be one
+   composition — the left block spanning the answer and the order of work, which
+   is what stops seven columns of empty paper appearing between them. it hangs
+   from the top of that span rather than floating in the middle of it: the answer
+   is the first thing under the title and nothing on this page should be set
+   below the line it has to cross to reach. */
 .standfirst__say {
-  grid-column: 4 / span 5;
+  grid-column: 1 / span 7;
+  grid-row: 2 / span 2;
+  align-self: start;
   min-width: 0;
-  /* the way on starts on the rule at eight, so the argument stops a gutter
-     short of it — a column that runs hard into a printed rule reads as one
-     block with the next one rather than as two */
+  padding-top: var(--air-block);
   padding-right: var(--pad);
 }
 
@@ -4486,9 +4636,11 @@ html[data-pulled='on'] .verdict__bloom {
 
 .order {
   position: relative;
-  grid-column: 9 / span 4;
-  align-self: end;
+  grid-column: 8 / -1;
+  grid-row: 3;
+  align-self: start;
   min-width: 0;
+  padding-top: var(--air-block);
   padding-left: var(--pad);
 }
 
@@ -9267,20 +9419,33 @@ html[data-reveal='on'] .reveal.is-in {
     max-width: 58ch;
   }
 
+  /* the answer's margin goes over with the poster's. the case dropped to the
+     full measure when the four-column margin stopped being one, so there is no
+     margin left down here for the answer to keep: the whole of the standfirst
+     is one column, in the order it is read — the answer, its paragraph, the
+     pressman's note, the three machines. */
+  .standfirst {
+    grid-template-rows: none;
+    row-gap: var(--air-block);
+  }
+
+  .standfirst__note,
+  .standfirst__say,
+  .order {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    padding-top: 0;
+  }
+
   .standfirst__note {
-    grid-column: 1 / span 2;
+    max-width: 44ch;
   }
 
   .standfirst__say {
-    grid-column: 3 / span 5;
-    padding-right: var(--pad);
+    align-self: start;
   }
 
-  /* the order of work is the last division of the band, so it is the last thing to
-     go over: it keeps the columns the note and the lede gave up. a pressman's
-     job ticket is not the thing that has to fit and the argument is */
   .order {
-    grid-column: 8 / -1;
     padding-left: 0;
   }
 
@@ -9435,11 +9600,13 @@ html[data-reveal='on'] .reveal.is-in {
   .standfirst__say,
   .order {
     grid-column: 1 / -1;
+    grid-row: auto;
     padding-right: 0;
   }
 
   .standfirst__note {
     max-width: 44ch;
+    padding-left: 12px;
   }
 
   /* and the verdict keeps its two voices on one baseline at a phone's

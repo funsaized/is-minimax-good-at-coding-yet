@@ -849,6 +849,7 @@ export function App() {
               titleRef={titleRef}
               selected={active}
               hot={shown}
+              hovering={hover}
               seat={plateSeat}
               readout={regRead}
               onSelect={select}
@@ -876,7 +877,18 @@ export function App() {
                 the same rule the question mark lands on. and the band finally
                 opens the way every other band on the light sheet opens — on the
                 2px rule, with a slug and a fact on it — because it is a band now
-                and not a paragraph somebody parked above a machine. */}
+                and not a paragraph somebody parked above a machine.
+
+                and the band is divided once. the poster above divides after
+                column seven and the case takes the rest, and this band used to
+                divide at three and eight — so the two halves of the first screen
+                disagreed about where the type ends, and the answer, which is the
+                loudest thing under the title, began a third of the way across
+                from the word it was answering. the verdict and the paragraph run
+                the same seven columns as the poster now, and the machinery moves
+                into the press's own margin beside them, so the title, its answer
+                and its argument share one left edge and one division, top to
+                bottom. */}
             <div className="standfirst" data-track>
               <p className="slugline standfirst__slug">
                 <span className="standfirst__slug-lead">
@@ -884,16 +896,6 @@ export function App() {
                   the answer, said once
                 </span>
                 <span className="standfirst__slug-fact">and printed once, at the foot of the run</span>
-              </p>
-
-              <p className="standfirst__note">
-                <span className="standfirst__kicker">
-                  <RegistrationMark className="standfirst__mark" />
-                  on the mark
-                </span>
-                <span className="standfirst__note-text">
-                  The question mark is load-bearing. <em>Give it somewhere to land.</em>
-                </span>
               </p>
 
               <div className="standfirst__say">
@@ -924,6 +926,24 @@ export function App() {
 
                 <p className="lede">{LEDE}</p>
               </div>
+
+              {/* THE PRESS'S OWN MARGIN. the note used to sit in the first three
+                  columns, against the left edge of the sheet, and the answer it
+                  annotates began a third of the way across from it — so the one
+                  line on this page that says what the question mark is for was
+                  printed in the margin and the answer was printed in the middle.
+                  it is under the case now, where the three plates live and where
+                  every other note on the sheet about a particular mark already
+                  sits, and the answer takes the poster's own left edge. */}
+              <p className="standfirst__note">
+                <span className="standfirst__kicker">
+                  <RegistrationMark className="standfirst__mark" />
+                  on the mark
+                </span>
+                <span className="standfirst__note-text">
+                  The question mark is load-bearing. <em>Give it somewhere to land.</em>
+                </span>
+              </p>
 
               {/* THE ORDER OF WORK. the last four columns of the band used to
                   carry two thin links to passes the index in the bar already
@@ -1467,14 +1487,30 @@ export function App() {
  * of the poster it lights, and the blade that marks it travels down the same
  * edge at every width.
  *
- * The division is the armature's own: the poster is columns one to eight, the
- * case is nine to twelve, and the rule the press prints between them is the rule
- * between column eight and column nine. Nothing here is asserted anywhere.
+ * The division is the armature's own: the poster is columns one to seven, the
+ * case is eight to twelve, and the rule the press prints between them is the rule
+ * between column seven and column eight. Nothing here is asserted anywhere.
+ *
+ * AND THE CASE IS AN INSTRUMENT, NOT A LIST. Pointing at a row used to light
+ * the phrase it sets and nothing else, which meant the case and the title were
+ * two pictures of the same three choices rather than one machine. Now a row under
+ * the hand re-wets *its own* phrase: that word's colour plates open again along
+ * the direction the sheet was printed, the black stays exactly where it is set,
+ * and the sentence comes into register around it. It is the same gesture the
+ * cursor makes over the title itself, at a third of the travel, and it is a
+ * pressman putting a plate up to the light and finding it off register.
+ *
+ * The three numbers that do it are declared once and read three times — the
+ * pointer's own --pull, the keyboard's --key, and the case's --plate — because
+ * a hand is a hand whether it arrives as a cursor, as a Tab or as a finger on a
+ * row of the case, and the sheet's whole argument is that one decision is only
+ * true when every instrument on it reports the same thing.
  */
 function Poster({
   titleRef,
   selected,
   hot,
+  hovering,
   seat,
   readout,
   onSelect,
@@ -1485,6 +1521,8 @@ function Poster({
   titleRef: RefObject<HTMLHeadingElement | null>
   selected: WordId
   hot: WordId
+  /** which row of the case is under the hand, if any — the plate it re-wets */
+  hovering: WordId | null
   /** which of the three cells the blade is standing over, read out of the notes */
   seat: number
   /** the register, in the plainest words the bar uses for it */
@@ -1495,41 +1533,73 @@ function Poster({
   onPlateRef: (id: WordId, node: HTMLButtonElement | null) => void
 }) {
   const words = useRef<Record<string, HTMLButtonElement | null>>({})
+  /* THE OTHER TWO IMPRESSIONS. the black face of a phrase is a button you can
+     touch; the pink and the blue are inert copies of the very same span, sitting
+     wherever the press left them. The pointer was only ever handed the first
+     one, so the claim in the stylesheet — that the plates lag behind the type —
+     was a comment rather than a mechanism. They are held here too, and every
+     number the hand writes goes to all three copies, because a plate that only
+     moves when the black one does is not a plate. */
+  const inks = useRef<Record<string, HTMLElement[]>>({})
   const frame = useRef(0)
+
+  const each = useCallback((id: WordId) => {
+    const list = inks.current[id]
+    return list?.length ? [words.current[id], ...list] : [words.current[id]]
+  }, [])
 
   const clear = useCallback(() => {
     WORD_IDS.forEach(id => {
-      const el = words.current[id]
-      if (!el) return
-      el.style.setProperty('--pull', '0')
-      el.style.setProperty('--dx', '0px')
-      el.style.setProperty('--dy', '0px')
-    })
-  }, [])
-
-  /* the type leans toward the cursor, and the plates behind it lag a little */
-  const track = useCallback((event: ReactPointerEvent<HTMLElement>) => {
-    if (event.pointerType !== 'mouse' || prefersStill()) return
-    const host = event.currentTarget
-    const reach = Math.min(300, Math.max(150, host.getBoundingClientRect().width * 0.32))
-    const px = event.clientX
-    const py = event.clientY
-    if (frame.current) cancelAnimationFrame(frame.current)
-    frame.current = requestAnimationFrame(() => {
-      frame.current = 0
-      WORD_IDS.forEach(id => {
-        const el = words.current[id]
-        if (!el) return
-        const box = el.getBoundingClientRect()
-        const dx = px - (box.left + box.width / 2)
-        const dy = py - (box.top + box.height / 2)
-        const pull = Math.hypot(dx, dy) > reach ? 0 : (1 - Math.hypot(dx, dy) / reach) ** 2
-        el.style.setProperty('--pull', pull.toFixed(3))
-        el.style.setProperty('--dx', `${(dx * 0.022 * pull).toFixed(2)}px`)
-        el.style.setProperty('--dy', `${(dy * 0.02 * pull - pull * 4.5).toFixed(2)}px`)
+      each(id).forEach(node => {
+        if (!node) return
+        node.style.setProperty('--pull', '0')
+        node.style.setProperty('--dx', '0px')
+        node.style.setProperty('--dy', '0px')
       })
     })
-  }, [])
+  }, [each])
+
+  /* the type leans toward the cursor, and the plates behind it lag a little */
+  const track = useCallback(
+    (event: ReactPointerEvent<HTMLElement>) => {
+      if (event.pointerType !== 'mouse' || prefersStill()) return
+      const host = event.currentTarget
+      const reach = Math.min(300, Math.max(150, host.getBoundingClientRect().width * 0.32))
+      const px = event.clientX
+      const py = event.clientY
+      if (frame.current) cancelAnimationFrame(frame.current)
+      frame.current = requestAnimationFrame(() => {
+        frame.current = 0
+        /* one layout read pass, then one write pass: the rectangles of the three
+           black words are read before any style is written, so the frame costs
+           one flush rather than three. */
+        const reads = WORD_IDS.map(id => {
+          const face = words.current[id]
+          return { id, face, box: face?.getBoundingClientRect() ?? null }
+        })
+        reads.forEach(({ id, box }) => {
+          let pull = 0
+          let dx = 0
+          let dy = 0
+          if (box) {
+            const away = Math.hypot(px - (box.left + box.width / 2), py - (box.top + box.height / 2))
+            if (away <= reach) {
+              pull = (1 - away / reach) ** 2
+              dx = (px - (box.left + box.width / 2)) * 0.022
+              dy = (py - (box.top + box.height / 2)) * 0.02 - pull * 4.5
+            }
+          }
+          each(id).forEach(node => {
+            if (!node) return
+            node.style.setProperty('--pull', pull.toFixed(3))
+            node.style.setProperty('--dx', `${dx.toFixed(2)}px`)
+            node.style.setProperty('--dy', `${dy.toFixed(2)}px`)
+          })
+        })
+      })
+    },
+    [each],
+  )
 
   useEffect(
     () => () => {
@@ -1554,10 +1624,30 @@ function Poster({
     words.current[next]?.focus()
   }
 
+  /* THE KEYBOARD IS A HAND TOO. tabbing onto a phrase in the title opens its
+     plates exactly as pointing at it does — no lean, because there is nowhere
+     for a Tab to lean towards, but the same three impressions coming apart
+     along the same axis. a pointer reports with --pull, the case reports with
+     --plate, and this reports with --key; the stylesheet adds all three. */
+  const key = (id: WordId, value: string) => {
+    each(id).forEach(node => node?.style.setProperty('--key', value))
+  }
+
   const word = (ghost: boolean) => (id: WordId, children: ReactNode) => {
     const shape = `w w--${id}`
     if (ghost) {
-      return <span className={shape}>{children}</span>
+      return (
+        <span
+          className={shape}
+          ref={node => {
+            if (!node) return
+            const list = inks.current[id] ?? (inks.current[id] = [])
+            if (!list.includes(node)) list.push(node)
+          }}
+        >
+          {children}
+        </span>
+      )
     }
     const found = findNote(id)
     return (
@@ -1570,8 +1660,24 @@ function Poster({
         onClick={() => onSelect(id)}
         onMouseEnter={() => onPreview(id)}
         onMouseLeave={() => onPreview(null)}
-        onFocus={() => onPreview(id)}
-        onBlur={() => onPreview(null)}
+        onFocus={event => {
+          onPreview(id)
+          /* only a keyboard opens the plates this way. `:focus-visible` is asked
+             of the button itself rather than trusted from the event, because a
+             click also focuses, and a press sheet that came apart because
+             somebody pressed on it would be a worse joke than the one it is. */
+          let keyboard = false
+          try {
+            keyboard = event.currentTarget.matches(':focus-visible')
+          } catch {
+            keyboard = false
+          }
+          if (keyboard) key(id, '0.5')
+        }}
+        onBlur={() => {
+          onPreview(null)
+          key(id, '0')
+        }}
         onKeyDown={event => step(event, id)}
         aria-current={selected === id}
       >
@@ -1624,7 +1730,7 @@ function Poster({
   }
 
   return (
-    <div className="poster" data-track>
+    <div className="poster" data-track data-plate={hovering ?? undefined}>
       <h1
         id="question-title"
         ref={titleRef}
