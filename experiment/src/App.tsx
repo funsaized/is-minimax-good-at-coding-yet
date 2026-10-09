@@ -19,6 +19,7 @@ import { CropMark, FoldMark, PlateTarget, RegistrationMark, Squeegee } from './m
 import { Order } from './order'
 import { Sheetbar, Pica } from './paper'
 import { Plated } from './plate'
+import { Pressrun } from './pressrun'
 import { inRegister, plateOffset, PULL_REST, PullBed, snapPull } from './pull'
 import { Pullsheet } from './pullsheet'
 import { Ream } from './ream'
@@ -95,7 +96,7 @@ const SCALE = [
   { token: '--question', role: 'the question', size: '7.2rem' },
   { token: '--claim', role: 'the short answer', size: '4.3rem' },
   { token: '--head', role: 'a section head', size: '3.2rem' },
-  { token: '--specimen', role: 'the set phrase', size: '2.62rem' },
+  { token: '--specimen', role: 'the set phrase', size: '3.05rem' },
   { token: '--label', role: 'labels, and only labels', size: '.725rem' },
 ] as const
 
@@ -178,6 +179,8 @@ export function App() {
   const [gateTick, setGateTick] = useState(0)
   const [proofTick, setProofTick] = useState(0)
   const [catchTick, setCatchTick] = useState(0)
+  const [runTick, setRunTick] = useState(0)
+  const runMs = useRef(0)
   const [announce, setAnnounce] = useState('')
   const pressRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -485,6 +488,41 @@ export function App() {
     wasSettled.current = settled
   }, [settled])
 
+  /* AND THE PRESS ACTUALLY RUNS.
+
+     the gate has always been reported in the smallest marks on the page, which
+     is right, but it was also instant: the reader put the blade on the gate,
+     everything agreed, and it was over before they had looked up. five thousand
+     pixels of paper and nothing ever travelled along it.
+
+     so one pass runs — a lit edge the width of the measure, the light it throws
+     ahead of itself and the film it leaves behind, the same machine as the pull
+     crossing the whole sheet instead of four hundred pixels of a card. it is
+     timed off the length of the document rather than set to a round number,
+     because a press runs at a speed: the blade crosses the reader's eye at the
+     same rate whatever they are reading, and a short sheet is a short pull.
+
+     the number is written into a ref rather than into state because the stylesheet
+     only needs it on the element and re-rendering the whole sheet with it would
+     be a second repaint of everything under a blade that is already moving. it is
+     mounted for the length of one pass and taken off again, and a reader who has
+     asked for stillness is never given it. */
+  useEffect(() => {
+    /* knocked loose again: the pass is taken off rather than left parked off the
+       bottom of the measure, so a reader who pushes the blade straight through
+       the gate and back out is not left holding an invisible overlay */
+    if (!settled) {
+      setRunTick(0)
+      return
+    }
+    if (prefersStill()) return
+    const height = Math.max(1, document.documentElement.scrollHeight)
+    runMs.current = Math.min(2500, Math.max(850, height / 2.6))
+    setRunTick(tick => tick + 1)
+    const gone = window.setTimeout(() => setRunTick(0), runMs.current + 120)
+    return () => window.clearTimeout(gone)
+  }, [settled])
+
   /* THE SIGN-OFF, and the only place on the sheet where the two halves of the press
      are asked about each other. one attribute on the root, so the chop on the proof
      and the line at the foot of the run are the same fact rather than two copies of
@@ -736,6 +774,11 @@ export function App() {
           mounted only for the length of the drag and keyed on the count, so two
           pulls in a row are two pulls rather than one that never restarted */}
       {pullTick ? <Pullsheet key={pullTick} /> : null}
+
+      {/* the press run: one pass down the whole measure on the beat the blade
+          reaches the gate. keyed the same way as the pull, for the same reason —
+          a second pass is a second pass and not a re-run of the first */}
+      {runTick ? <Pressrun key={runTick} ms={runMs.current} /> : null}
 
       <a className="skip-link" href="#question">Skip to the question</a>
 

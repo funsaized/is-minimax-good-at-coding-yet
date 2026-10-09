@@ -1128,15 +1128,22 @@ THE TYPE AREA
      nothing between them louder than a section head. the question is the
      largest type on the page by a wide margin, the short answer is the second,
      and the run between them is furniture: a head at 3.2, then the set phrase
-     of the close read at 2.6. the specimen used to be set at 4.2 — a hair
+     of the close read at 3.05. the specimen used to be set at 4.2 — a hair
      under the claim and a whole step over the head — which put a third poster
-     in the middle of the sheet and made the rule this block states a lie. it
-     is now the step directly under the head and no more, so the order going
-     down the page never doubles back. */
+     in the middle of the sheet and made the rule this block states a lie.
+
+     and then it was set at 2.6, which was honest and too modest. the close
+     read is the one band on this sheet that exists to look closely at a
+     phrase, and it was setting that phrase at the same size as the margin
+     notes annotating it — a specimen you have to lean in to read is a
+     paragraph with a rule under it. so the rung has gone up to 3.05: as
+     close under the head as a fourth of a rem will let it sit, still
+     unmistakably the step below it, and the order going down the page
+     still never doubles back. */
   --question: clamp(2.5rem, 6.8vw, 7.2rem);
   --claim: clamp(1.72rem, 4.4vw, 4.3rem);
   --head: clamp(1.9rem, 3.4vw, 3.2rem);
-  --specimen: clamp(1.55rem, 2.9vw, 2.62rem);
+  --specimen: clamp(1.72rem, 3.5vw, 3.05rem);
   --sub: clamp(1.18rem, 1.5vw, 1.5rem);
   --body: clamp(1rem, .22vw + .94rem, 1.12rem);
   --read: clamp(1.04rem, .3vw + .97rem, 1.22rem);
@@ -5921,7 +5928,7 @@ html[data-register='on'] .proof .sheetbar__flat--black {
      as the end of the setting */
   column-gap: 0;
   align-items: end;
-  padding: clamp(24px, 3vw, 44px) clamp(20px, 2.6vw, 36px) clamp(22px, 2.3vw, 32px);
+  padding: clamp(28px, 3.4vw, 52px) clamp(20px, 2.6vw, 36px) clamp(24px, 2.6vw, 36px);
   overflow: hidden;
   border-bottom: 1px solid var(--rule);
   /* one screen, not two. the stage carried a rule every thirty-four pixels as
@@ -6018,7 +6025,7 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   z-index: 1;
   justify-self: start;
   min-width: 0;
-  min-height: clamp(52px, 5.4vw, 74px);
+  min-height: clamp(58px, 6.8vw, 100px);
 }
 
 .specimen__word {
@@ -6082,7 +6089,7 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   justify-self: end;
   color: var(--blue-ink);
   font-family: var(--display);
-  font-size: clamp(1.05rem, 1.5vw, 1.34rem);
+  font-size: clamp(1.12rem, 1.9vw, 1.62rem);
   font-weight: 800;
   line-height: .9;
   letter-spacing: -.03em;
@@ -7469,8 +7476,7 @@ html[data-reveal='on'] .type__panel.is-in .type__resolved-name {
   gap: 11px;
 }
 
-/* =============================================================
-   THE FOOT MARGIN COUNTS THE SHEET
+/* THE FOOT MARGIN COUNTS THE SHEET
 
    The head slug of this sheet says "one sentence · seven words ·
    three impressions" and the job ticket at the foot of the run
@@ -7488,11 +7494,48 @@ html[data-reveal='on'] .type__panel.is-in .type__resolved-name {
    It is the same vocabulary as the counted measure in the ream, in
    a foot margin rather than in the middle of a stage, and it is the
    last claim on the sheet to be checked rather than the first.
-   ============================================================= */
 
-.sheetfoot__count .pica {
+   AND THE COUNT HAS TO BE ABLE TO STAND THERE. Three things share
+   this rule and they were sharing it as one shrinkable flex line:
+   the flats and the place, the counting rule, and a sixty-character
+   slug. Flex gave the shrink to whichever item had the most text,
+   which meant the slug — the only part of the count that is words —
+   was crushed to the width of its longest word and set as a column
+   five lines deep, at every width from sixteen hundred pixels down
+   to a phone. A count that cannot be read is not a count.
+
+   So the division is now made by the job: the rule is the only part
+   of the block that gives ground, the slug beside it never shrinks,
+   and the note at the end of the line is the part that wraps to a
+   line of its own. Which is what a foot margin does when the
+   measure runs out. */
+.sheetfoot__edge {
   flex: 0 0 auto;
+}
+
+.sheetfoot__count {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* the rule is what gives ground, and it gives it to the note */
+.sheetfoot__count .pica {
+  flex: 1 1 clamp(96px, 20vw, 260px);
   gap: 5px;
+  min-width: 96px;
+}
+
+.sheetfoot__count > span:not(.pica) {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* the note ends on the trim edge when it shares the line with the count, and
+   takes a line of its own at the right when it cannot */
+.sheetfoot__next {
+  flex: 0 1 auto;
+  margin-left: auto;
+  text-align: right;
 }
 
 @media (max-width: 620px) {
@@ -7500,6 +7543,11 @@ html[data-reveal='on'] .type__panel.is-in .type__resolved-name {
      stacks: the flats and the place, then the count, then the note below */
   .sheetfoot p {
     flex: 1 1 100%;
+  }
+
+  .sheetfoot__next {
+    margin-left: 0;
+    text-align: left;
   }
 }
 
@@ -10810,6 +10858,15 @@ html[data-slab='on'] .spine {
     display: none;
   }
 
+  /* and so does the press run, for the same reason and one step further: a
+     squeegee crossing a card is a beat of movement and a squeegee crossing the
+     whole sheet is five thousand pixels of it. what a still reader gets instead
+     is the thing the run was reporting in the first place — the three plates
+     closed, the traps filled, the readout at the bar saying so */
+  .pressrun {
+    display: none;
+  }
+
   .run__glow {
     background:
       radial-gradient(74% 58% at 74% 26%, rgba(255, 46, 107, .16), transparent 72%),
@@ -10835,6 +10892,7 @@ html[data-slab='on'] .spine {
   .toggle,
   .ruling,
   .pullsheet,
+  .pressrun,
   .run__glow {
     display: none;
   }
@@ -11042,5 +11100,184 @@ html[data-slab='on'] .spine {
     .colophon__echo {
       color: rgba(0, 0, 0, .35);
     }
+  }
+}
+
+/* =============================================================
+   ITERATION 527 — THE PRESS RUNS DOWN THE SHEET
+
+   =============================================================
+   THE GATE WAS NEVER SEEN HAPPENING
+
+   every report this page makes about the register is small, and
+   that has been the right call: the traps fill, the lamp goes
+   warm, the flats at the foot of the light sheet fuse, the chop
+   lands on the proof, the bar says two words. the gate is legible
+   as a change in the smallest marks on the page rather than as a
+   panel of readouts, which is why a 0.725rem label and the
+   poster can be trusted to say the same thing.
+
+   but small is not the same as quiet. the press itself had never
+   been seen running. bringing the blade to the gate was a switch
+   — a number, a colour, a dozen hairlines, all inside the same
+   twelve hundred milliseconds, all over before the reader had
+   looked up — on a page that is one long piece of paper with
+   nothing ever travelling along it.
+
+   so one pass runs. a lit edge the width of the measure with the
+   ink still standing on its face, the light it throws ahead onto
+   stock that has not been under it yet, and the film it starves
+   onto the sheet behind it. the same machine as the pull — same
+   pink bead, same lit lip, same film — crossing five thousand
+   pixels of sheet instead of four hundred of a card.
+
+   three layers and one traveller: the two washes hang off the
+   blade as its own before and its own after, so they cannot come
+   apart from it and there is nothing left to keep in step.
+
+   and it is timed off the length of the document rather than set
+   to a round number, because a press runs at a speed. the blade
+   crosses the reader's eye at the same rate whatever they are
+   reading, and a short sheet is a short pull. the duration
+   arrives on --run for that reason and for no other.
+
+   it reports nothing. the register, the ink, the impression and
+   the readout are all exactly where they were before it was
+   mounted, it is taken off again when the pass ends, and a reader
+   who has asked for stillness is never given it.
+
+   it runs under the slug bar, because a bar lying across the trim
+   edge is the one thing a blade never crosses, and it stops short
+   of the control strip, because that strip is outside the trim.
+   ============================================================= */
+
+.pressrun {
+  position: fixed;
+  inset: 0;
+  z-index: 54;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@media (min-width: 1181px) {
+  .pressrun {
+    right: 34px;
+  }
+}
+
+/* the edge itself: three pixels the width of the paper. the lit lip is the
+   white running out along the top of it, the bead is the pink standing on
+   the face below, and the shadow under it is the sheet being taken down
+   onto the bed rather than lying on it */
+.pressrun__blade {
+  position: absolute;
+  top: 0;
+  right: -3%;
+  left: -3%;
+  height: 3px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, .92) 0 34%,
+    rgba(255, 238, 216, .72) 34% 68%,
+    rgba(255, 46, 107, .5) 68% 100%
+  );
+  box-shadow:
+    0 0 22px 5px rgba(255, 46, 107, .3),
+    0 7px 20px rgba(20, 19, 26, .13);
+  will-change: transform;
+  animation: pressrun-travel var(--run) cubic-bezier(.3, .12, .28, 1) both;
+}
+
+/* the ink the blade starves onto the stock behind it — warm rather than black,
+   because a dark film is invisible on the ink slab and the slab is half the
+   page. this is the same gradient the pull leaves behind it, turned on its side */
+.pressrun__blade::before {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  left: 0;
+  height: 34vh;
+  content: '';
+  background: linear-gradient(
+    180deg,
+    rgba(20, 19, 26, 0) 0%,
+    rgba(20, 19, 26, .042) 56%,
+    rgba(255, 46, 107, .075) 100%
+  );
+}
+
+/* and the stock it has not reached yet, under the lamp. paper that has not been
+   under the press has nothing on it, and the blade is the only thing on this
+   page bright enough to put anything there — so the wash is warm and very nearly
+   white, which is what a lamp does to newsprint and what a css white never does */
+.pressrun__blade::after {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: 40vh;
+  content: '';
+  background: linear-gradient(
+    180deg,
+    rgba(255, 245, 222, .38) 0%,
+    rgba(255, 249, 234, .15) 52%,
+    rgba(255, 251, 240, 0) 100%
+  );
+}
+
+/* AND ON THE INK SLAB THE LAMP TURNS ROUND.
+
+   the wash in front of the blade is bare stock under a lamp, and there is no
+   bare stock at the foot of the run: the press run and the colophon are already
+   one stretch of solid ink, and a warm-white wash travelling across the slab
+   does not light it, it greys it — which is the one thing this sheet has spent
+   five hundred iterations refusing to let happen to its own ground.
+
+   so there the sheen goes behind the blade instead, where a wet edge catching
+   the light off wet ink actually is, and the stock ahead is left alone. it is
+   the same pass at the same speed; only the lamp has nothing to land on. and it
+   is the one thing on the page that asks the root a question, because the root
+   already says which half of the run the reader is standing in for the chase and
+   the slab ruling. */
+html[data-slab='on'] .pressrun__blade::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 214, 232, 0) 0%,
+    rgba(255, 214, 232, .05) 50%,
+    rgba(255, 228, 242, .17) 100%
+  );
+}
+
+html[data-slab='on'] .pressrun__blade::after {
+  background: none;
+}
+
+/* the ink still standing up on the face of the blade — the same bead the pull
+   drags and the bed wears. it is only ever printed at the gate, so it is drawn
+   at full strength: a run that happened while the plates were arguing would be
+   a second opinion about the register, and this sheet does not give two */
+.pressrun__bead {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 46, 107, 0) 0%,
+    rgba(255, 46, 107, .32) 13%,
+    rgba(255, 46, 107, .32) 87%,
+    rgba(255, 46, 107, 0) 100%
+  );
+}
+
+/* off the top of the measure and out under the bottom of it, so the pass never
+   begins and ends with a blade sitting on the reader's eye. it starts just above
+   the trim and the lamp it carries is already forty per cent of the way down the
+   viewport, so the first thing the reader sees is the sheet lighting up rather
+   than a rule arriving a quarter of a second late */
+@keyframes pressrun-travel {
+  from {
+    transform: translate3d(0, -5vh, 0);
+  }
+  to {
+    transform: translate3d(0, 136vh, 0);
   }
 }

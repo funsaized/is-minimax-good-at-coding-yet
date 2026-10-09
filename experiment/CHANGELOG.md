@@ -1,16 +1,47 @@
-The sheet prints its own sentence again, and the blade moves up into the bar where the reader can reach it.
+The press now runs down the whole sheet at the gate; the foot margin's count can be read again.
 
-**The poster had lost a word.** The third line opened the question mark straight onto `frontend`, so the headline read "is Minimax M3 / good at / frontend ?" — not the sentence the page is named. The mark needed the room, and the word went. The film on the press bed was reduced from the same omission, so the loupe agreed with the poster and both were short a word. `yet` is back in both, set as one lockup with the mark and held on one line: three letters in the press voice, a pause after them, the mark a shade larger because it is the loudest character on the sheet.
+## Iteration 527
 
-**The bar works the blade instead of reporting it.** The gauge in the press bar was a readout with a link under it — a promise to walk four screens down to the one control the page is about. It is now a strip of stock with the gate in the middle of it, the three impressions fusing at the centre and a pink squeegee that travels, drags, prints the band it leaves behind and stops at two marked end stops. Drag it, arrow it, `Home` for the gate, `End` to knock the forme loose, `Enter` for either. It is the same machine as the bed: `bedUnit` and `pressTo` now come out of `pull.tsx`, so the magnet, the gate and the limits are one set of rules and a hand that has learned the bar finds the bed under the same hand. New `src/blade.tsx`.
+**The gate is now something you watch happen.** Every report this sheet made
+about the register was deliberately small — traps fill, the lamp goes warm, the
+flats fuse, the chop lands, the readout says two words — which is right, but it
+meant the press itself was never seen running on five thousand pixels of paper.
+Bringing the blade to the gate is now a single choreographed pass: a lit edge the
+width of the measure with the ink standing on its face, the film it starves onto
+the stock behind it, and the bare stock ahead of it still under the lamp. It is
+the same machine as the pull, crossing the sheet instead of a card. New file
+`src/pressrun.tsx`; mounted for the length of one pass, keyed on its count, and
+never mounted under `prefers-reduced-motion`. It runs under the slug bar and
+stops short of the control strip, like the pull. On the ink slab the wash in
+front of the blade goes and the sheen moves behind it, because a warm-white
+wash travelling over solid ink greys it rather than lighting it.
 
-**The register is reachable from anywhere on the sheet.** `0` has always snapped the blade to the gate from anywhere on the page; `g` now knocks it loose, so a reader who has just registered the whole run can watch it come apart again. The pair is printed under the bed with the other keys.
+**The pass is timed off the length of the document**, not a round number: a press
+runs at a speed, so the blade crosses the reader's eye at the same rate whatever
+they are reading and a short sheet is a short pull. Clamped to 850–2500ms, held
+in a ref so nothing under a moving blade re-renders. It is taken off again when
+the forme is knocked loose.
 
-**Also this iteration**
-- The bar's strip is pinned to newsprint inks, so the three impressions on it survive the bar turning over to the slab's palette two thirds of the way down the run.
-- The bed's carry stands down the moment the number stops being its own, so a blade still coasting on the bed cannot fight a hand already on the strip.
-- The catch sweep in the bar is keyed on the same tick as the poster's wash, and is dropped entirely under `prefers-reduced-motion`.
-- Responsive: the strip is the last thing in the bar to narrow, the wordmark gives up its second line below 620px and ellipsises rather than wrapping, and the way down to the bed goes below 480px — the job ticket carries the same blade row a hundred pixels above it.
-- Arrow keys are claimed outright by the strip, so one key still means one thing.
+**The foot margin can count again.** The count, the counting rule and the note
+at the end of the line shared one shrinkable flex line, and flex gave the shrink
+to whichever item had the most text — so "one sentence · seven words · three
+impressions" was crushed to the width of its longest word and set as a column
+five lines deep, at every width from 1600px down to a phone. The rule is now the
+only part of the block that gives ground, the slug beside it never shrinks, and
+the note takes a line of its own when the measure runs out.
 
-`npm run build` passes.
+**The specimen got its rung.** `--specimen` went from 2.62rem to 3.05rem. The
+close read is the one band that exists to look closely at a phrase and it was
+setting that phrase at the same size as the margin notes annotating it. It is
+still the step directly under the head — the ladder printed on the type list now
+says 3.05rem, and the order going down the page still never doubles back. The
+stage's padding, the stack's reserved height and the count figure were rescaled
+around it.
+
+**Verified:** `npm run build` clean. No horizontal overflow from 320px to 1600px.
+Tab order and 2px focus outlines unchanged; reduced motion reaches register with
+no pass played.
+
+**Not changed:** the title, the entry point, the packages, the build
+configuration, the column rails, the drying ramp, the blade, the plate case, the
+proof, the ream's stack or the colour grammar.
