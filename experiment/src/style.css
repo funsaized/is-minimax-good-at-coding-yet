@@ -2185,9 +2185,10 @@ html[data-slab='on'] .slugbar {
 .brand,
 .brand__mark,
 .brand__text small,
-.gauge,
-.gauge__read,
-.gauge__plate,
+.console,
+.console__read,
+.console__plate,
+.console__bed,
 .nav a {
   transition: color .45s var(--ease), background .45s var(--ease),
     border-color .45s var(--ease);
@@ -2308,107 +2309,314 @@ html[data-slab='on'] .slugbar {
   color: var(--pink-ink);
 }
 
-/* ---------- the register gauge: the only thing in the bar worth watching ---------- */
+/* =============================================================
+   THE CONSOLE — THE BLADE, IN THE BAR
 
-/* it is a link, and it is the way to the blade. a readout about a machine four
-   screens down the sheet told the reader the press was off register and nothing
-   else; the sheet's own second test is that the page hands you the blade, so the
-   hand-off now lives on the one fixed thing the reader is always looking at. it
-   is the only link in the bar and it is the only thing in the bar that does
-   anything, which is the correct ratio for furniture. */
-.gauge {
+   The bar used to report the plate and link to the bed. That is
+   a readout about a machine four screens down the sheet: the
+   reader is told the press is off register by a unit and a bit
+   and is then made to walk the page to do anything about it. The
+   sheet's own second test is that the page hands you the blade,
+   and it was handing over a *link* — a promise to come back — on
+   the one piece of furniture that is on screen for the whole five
+   thousand pixels.
+
+   So the bar works it. What stands here is the press's third
+   machine, reduced: the gate, the three plates and a squeegee,
+   with no film, no wet trail and no sentence on it. Not a second
+   bed — the sheet needs one instrument that answers at a glance
+   and one instrument you can spend an afternoon with, and it had
+   two of the second kind and none of the first.
+
+   It is the same machine. `bedUnit` and `pressTo` are read out
+   of pull.tsx, so the magnet, the gate and the two end stops are
+   one set of rules, and a hand that has learned this strip finds
+   the bed under the same hand.
+   ============================================================= */
+
+.console {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: clamp(7px, .9vw, 13px);
   justify-self: end;
+  min-width: 0;
+}
+
+/* the readout keeps the bar's own words — a mono figure at the tracking every
+   other number on the sheet is set at, and the press's pink once the sheet is
+   straight. it is a readout and nothing more: the instrument beside it is the
+   thing that does anything, and the hairline on the figure to its right is what
+   tells the eye which of the two is which. */
+.console__read {
   color: var(--ink-50);
   font-family: var(--mono);
   font-size: var(--label-3);
+  font-variant-numeric: tabular-nums;
   letter-spacing: .14em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-/* the mark that says this is a way somewhere: the same downward arrow the
-   colophon uses to send a reader back up the sheet, in the press's pink */
-.gauge__to {
+.console__read[data-on='on'] {
   color: var(--pink-ink);
-  font-family: var(--display);
-  font-size: .88rem;
-  font-weight: 800;
-  line-height: .8;
-  translate: 0 0;
-  transition: color .45s var(--ease), translate .3s var(--ease-out);
 }
 
-.gauge:hover .gauge__to,
-.gauge:focus-visible .gauge__to {
-  translate: 0 2px;
-}
+/* ---------- the strip ---------- */
 
-.gauge__plates {
+.blade {
   position: relative;
-  display: grid;
-  width: 20px;
-  height: 20px;
-  place-items: center;
+  flex: 0 0 auto;
+  width: clamp(104px, 12.5vw, 150px);
+  height: 26px;
+  overflow: hidden;
+  cursor: ew-resize;
+  touch-action: none;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: var(--stock-3);
+  /* THE STRIP IS PAPER, so it is printed in the paper's inks whatever it is
+     standing on. the bar turns over to the slab's palette two thirds of the way
+     down the run, and without this the strip went with it: a cream ticket on
+     solid ink carrying three impressions in which the black was white and the
+     blue was a lilac. a pressman's blade does not change colour when it crosses
+     the sheet. */
+  --black: #14131a;
+  --pink-ink: #d1124b;
+  --blue-ink: #26329e;
+  --rule: rgba(20, 19, 26, .16);
+  /* the same lit lip every other piece of stock on this page carries: the strip
+     is a piece of paper standing on its edge in the bar, so it has a light along
+     its head and a shade under it, and is not a rounded rectangle */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), inset 0 -1px 2px rgba(20, 19, 26, .09);
+  transition: border-color .3s var(--ease), background .45s var(--ease);
 }
 
-.gauge__dot {
+.blade:hover {
+  border-color: color-mix(in srgb, var(--black) 4%, var(--rule));
+}
+
+.blade.is-dragging {
+  cursor: grabbing;
+}
+
+/* THE TWO END STOPS. a bed of six units with four per cent of paper left at
+   either end is the bed the bed is, so the strip prints its own limits rather
+   than letting the reader find them by pushing the arm into them — two ticks,
+   hard against the ends of the travel the arm is actually given, which is why
+   they are --reach and not a round number. they are also the only marks on this
+   strip that never move, which is what makes them read as the frame rather than
+   as another reading. */
+.blade::before,
+.blade::after {
   position: absolute;
-  width: 11px;
-  height: 11px;
-  border: 1.4px solid currentColor;
-  border-radius: 50%;
-  transition: transform .2s linear, background .3s var(--ease), opacity .3s var(--ease);
+  top: 50%;
+  width: 1px;
+  height: 7px;
+  content: '';
+  background: color-mix(in srgb, var(--black) 28%, transparent);
+  pointer-events: none;
+  translate: 0 -50%;
 }
 
-.gauge__dot--black {
+.blade::before {
+  left: calc(50% - var(--reach));
+}
+
+.blade::after {
+  right: calc(50% - var(--reach));
+}
+
+/* a control on a press sheet is ruled like a field, not ringed like a card, so
+   the focus sits on the trim edge of the strip and nowhere else */
+.blade:focus-visible {
+  outline: 2px solid var(--pink-ink);
+  outline-offset: 2px;
+}
+
+/* THE GATE. the window the press catches a blade in, drawn the way the bed draws
+   it: a dashed rule while the plates are loose and a solid one with a wash inside
+   it at the gate. --gate-half is PULL_GATE as a share of the travel, so the
+   window in the bar is the same band as the window on the bed rather than a
+   prettier one. */
+.blade__gate {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: calc(50% - var(--gate-half));
+  width: calc(var(--gate-half) * 2);
+  border: 1px dashed color-mix(in srgb, var(--pink-ink) 58%, transparent);
+  border-radius: 1px;
+}
+
+.blade__gate::after {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 50%;
+  width: 1px;
+  content: '';
+  background: var(--pink-ink);
+  opacity: .45;
+  transition: opacity .3s var(--ease);
+}
+
+.blade.is-settled .blade__gate {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--pink-ink) 74%, transparent);
+  background: color-mix(in srgb, var(--pink) 12%, transparent);
+}
+
+.blade.is-settled .blade__gate::after {
+  opacity: 1;
+}
+
+/* THE INK THE BLADE LEAVES. a squeegee does not travel without printing: it puts
+   a band the width of its own path on the sheet, heaviest just behind the arm and
+   drying away from it. this is the band, cut to the size of a bar — --wet-from is
+   the gate end of the run, --wet-wide its length, and the gradient points back at
+   the gate, so the wet is always behind the hand and never in front of it. at the
+   gate the run is nothing at all, because the arm has wiped it off. */
+.blade__wet {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: var(--wet-from);
+  width: var(--wet-wide);
+  background: linear-gradient(
+    var(--wet-to),
+    rgba(20, 19, 26, .3) 0%,
+    rgba(20, 19, 26, .1) 44%,
+    rgba(20, 19, 26, 0) 100%
+  );
+}
+
+/* THE THREE IMPRESSIONS. this is the one mark on the sheet that reports the
+   register by being it rather than by printing it: the pink and the blue sit a
+   fraction either side of the black, out at the loose end they are visibly
+   arguing, and at the gate they are one bullseye. the fringing here is the
+   page's own --reg-x and --reg-y read at well under half the travel the bed
+   gives them, because a strip this size can only carry so much before three
+   marks stop being a mark and become a smudge. */
+.blade__plates {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+}
+
+.blade__dot {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border: 1.3px solid currentColor;
+  border-radius: 50%;
+}
+
+.blade__dot--black {
   color: var(--black);
   background: var(--black);
 }
 
-.gauge__dot--pink {
+.blade__dot--pink {
   color: var(--pink);
-  background: color-mix(in srgb, var(--pink) 22%, transparent);
-  transform: translate(calc(var(--reg-x) * 1.9), calc(var(--reg-y) * 1.9));
+  background: color-mix(in srgb, var(--pink) 24%, transparent);
+  transform: translate(calc(var(--reg-x) * .62), calc(var(--reg-y) * .62));
 }
 
-.gauge__dot--blue {
+.blade__dot--blue {
   color: var(--blue);
-  background: color-mix(in srgb, var(--blue) 22%, transparent);
-  transform: translate(calc(var(--reg-x) * -1.2), calc(var(--reg-y) * -1.2));
+  background: color-mix(in srgb, var(--blue) 24%, transparent);
+  transform: translate(calc(var(--reg-x) * -.42), calc(var(--reg-y) * -.42));
 }
 
-.gauge[data-on='on'] .gauge__read {
-  color: var(--pink-ink);
-}
-
-.gauge[data-on='on'] .gauge__dot--black {
+.blade.is-settled .blade__dot--black {
   background: var(--pink);
   border-color: var(--pink);
-  box-shadow: 0 0 0 3px rgba(255, 46, 107, .18);
+}
+
+/* THE ARM. the same squeegee the bed carries, cut down to the width of the bar:
+   square at the leading end, wedged at the trailing one, because ink does not
+   stop abruptly behind a squeegee and the direction of travel has to stay
+   legible. --at is the arm's share of the strip in per cent, so the two
+   instruments agree about where the end stops are. */
+.blade__arm {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: calc(50% + var(--at) * 1%);
+  width: 3px;
+  margin-left: -1.5px;
+  background: var(--pink);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4px), 0 100%);
+}
+
+/* and the ink still standing up on its face — the bead off the bed's own trail,
+   which is the only reason this strip is a squeegee and not a cursor */
+.blade__bead {
+  position: absolute;
+  inset: 1px 0;
+  background: rgba(255, 255, 255, .34);
+}
+
+/* THE CATCH. the sweep of ink across the strip on the beat the three impressions
+   agree, keyed on the same tick the poster's own wash runs on — so the flash in
+   the bar and the flash on the headline are one event arriving by two roads. it
+   is a state made visible rather than a route the reader has to ride, which is
+   why it is the only thing in here that animates, and why a reader who has asked
+   for stillness is given the state without it. */
+.blade__lock {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    102deg,
+    transparent 34%,
+    rgba(255, 42, 99, .55) 50%,
+    transparent 66%
+  );
+  opacity: 0;
+  pointer-events: none;
+  animation: blade-lock .92s var(--ease-out) both;
+}
+
+@keyframes blade-lock {
+  0% {
+    opacity: 0;
+    transform: translateX(-44%);
+  }
+
+  22% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(44%);
+  }
 }
 
 /* WHICH PLATE IS UP. the figure and the phrase in the title travel together, and
-   the reader is fifty screens away from the title half the time they are on this
+   the reader is most of the way down the sheet most of the time they are on this
    page. so the plate that is currently on the press is pinned into the bar — a
-   blue figure, because it is a number, and a pink dot, because it is the press —
+   blue figure, because it is a number, and a pink pin, because it is the press —
    and it is the only thing on the sheet that reports a choice rather than a
-   measurement. the dot takes a pink wash while it is the one being pointed at,
-   so the bar says *this* plate even when the reader is only hovering another. */
-.gauge__plate {
+   measurement. */
+.console__plate {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding-left: 10px;
   border-left: 1px solid var(--rule);
   color: var(--blue-ink);
+  font-family: var(--mono);
+  font-size: var(--label-3);
   font-variant-numeric: tabular-nums;
   letter-spacing: .16em;
+  white-space: nowrap;
 }
 
-.gauge__pin {
+.console__pin {
   width: 6px;
   height: 6px;
   background: var(--pink);
@@ -2419,6 +2627,27 @@ html[data-slab='on'] .slugbar {
      notification, and it is the only motion in the bar that is not about the
      register — everything else here reports the plates, this reports the choice */
   animation: pin-swap .52s var(--spring) both;
+}
+
+/* THE WAY TO THE BED. the bar works the blade now, and the bed is where you go to
+   watch what it did — the film, the wet trail, the sentence under the loupe. so
+   the mark is the same downward arrow the colophon uses to send a reader back up
+   the sheet, in the press's pink, and it is the only link left in the bar. */
+.console__bed {
+  display: inline-flex;
+  align-items: center;
+  color: var(--pink-ink);
+  font-family: var(--display);
+  font-size: .88rem;
+  font-weight: 800;
+  line-height: .8;
+  translate: 0 0;
+  transition: translate .3s var(--ease-out);
+}
+
+.console__bed:hover,
+.console__bed:focus-visible {
+  translate: 0 2px;
 }
 
 @keyframes pin-swap {
@@ -4005,6 +4234,19 @@ html[data-register='on'] .plated__layer--black .mark {
   opacity: calc(.2 + var(--settle) * .8);
   transform: translateX(-50%) scale(calc(.5 + var(--settle) * .5));
   transition: opacity .4s var(--ease), transform .5s var(--spring);
+}
+
+/* THE TURN, IN WORDS.
+
+   `yet` and the mark are one button, and they are set as one lockup: three
+   letters in the press voice and a pause after them, held on one line so the
+   pause can never be pushed onto a line of its own by a narrow measure. the
+   mark keeps its own step — it is set a shade larger than the word it ends,
+   because it is the loudest character on the sheet and it should be — and the
+   pink both of them are printed in is the press's own, which is what this
+   phrase is: the one plate on the page that is about something the press did. */
+.turn {
+  white-space: nowrap;
 }
 
 /* =============================================================
@@ -9592,7 +9834,7 @@ html[data-reveal='on'] .reveal.is-in {
     grid-area: brand;
   }
 
-  .gauge {
+  .console {
     grid-area: readout;
   }
 
@@ -9730,6 +9972,50 @@ html[data-reveal='on'] .reveal.is-in {
   }
 }
 
+/* THE BAR HAS TO CARRY THE BLADE, SO THE WORDMARK GIVES GROUND */
+
+@media (max-width: 620px) {
+  /* the brand gives up its second line before it gives up a letter of its own
+     name: the three inks are printed again at the foot of the run, on the trim
+     of every sheet on the page and on the job ticket, and the bar's real job at
+     this width is the press */
+  .brand__text small {
+    display: none;
+  }
+
+  /* and the wordmark stops insisting on its whole length, because `fit-content`
+     is now the widest thing in the bar and the bar is carrying the sheet's only
+     control. it ellipsises rather than wraps: a wordmark that breaks in half at a
+     phone is a wordmark that has lost its baseline, and a furniture bar that
+     grows a row is the one place on this sheet where the furniture gets louder
+     as the page gets smaller. */
+  .brand__text strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .console {
+    gap: 6px;
+  }
+
+  .console__plate {
+    padding-left: 7px;
+  }
+
+  .blade {
+    width: clamp(78px, 24vw, 106px);
+  }
+}
+
+@media (max-width: 480px) {
+  /* the way to the bed goes on the narrowest bar, and it is the only thing in
+     the console that does. the job ticket's blade row stands a hundred pixels
+     above the bed and does the same work, so what is lost is an arrow. */
+  .console__bed {
+    display: none;
+  }
+}
+
 /* THE CASE GOES UNDER THE POSTER ONCE THE MARGIN IS TOO NARROW TO BE ONE */
 
 @media (max-width: 1180px) {
@@ -9810,9 +10096,19 @@ html[data-reveal='on'] .reveal.is-in {
   /* the number goes, and the plate that is up stays: on a phone the bar is two
      rows and the second is the nav, so the readout can afford to be the thing
      that goes — but the figure for the plate is one glyph wide and it is the
-     only piece of state on the sheet that the title is not showing you */
-  .gauge__read {
+     only piece of state on the sheet that the title is not showing you.
+
+     the strip stays, and stays last to narrow: it is the one control on this
+     page that does the thing the page is about, so it is the last thing in the
+     bar that could go and the first thing to give up width. a control you have
+     to scroll to is a link again, and the whole reason it moved up here was that
+     the link was not one. */
+  .console__read {
     display: none;
+  }
+
+  .blade {
+    width: clamp(92px, 26vw, 128px);
   }
 
   /* the armature steps down with the bands. the job ticket is the last band
@@ -10449,8 +10745,15 @@ html[data-slab='on'] .spine {
 
   /* and the pin is simply in the hole: the state is the figure, and the drop is
      the only part of it that is movement */
-  .gauge__pin {
+  .console__pin,
+  .blade__lock {
     animation: none;
+  }
+
+  /* the sweep of ink across the bar's strip is a route rather than a state, so
+     the state it announces — three impressions agreeing — is simply given */
+  .blade__lock {
+    opacity: 0;
   }
 
   /* the stack is a stack either way: the sheets are in their seats, and a

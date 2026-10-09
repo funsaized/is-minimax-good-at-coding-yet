@@ -17,6 +17,7 @@ const SHORTCUTS = [
   { keys: ['1', '2', '3'], label: 'put a plate up' },
   { keys: ['←', '→'], label: 'nudge the blade' },
   { keys: ['0'], label: 'snap to the gate' },
+  { keys: ['g'], label: 'knock it loose' },
 ] as const
 
 /* the plate offset, in the page's own unit: 0 is a perfect register */
@@ -59,8 +60,15 @@ const INK_BLUE = '#2a3ec9'
 /* the film is the poster, reduced: three lines on the same three rules, so the
    loupe is a reduction of the thing it is a loupe of rather than a second setting
    of the sentence that happens to fit in a strip. the mark is held out of the
-   lines because on this sheet the mark is always the pink plate. */
-const FILM_LINES = ['is Minimax M3', 'good at', 'frontend']
+   lines because on this sheet the mark is always the pink plate.
+
+   the third line carries the turn in words as well. it used to read `frontend`
+   with the mark set straight after it, because the reduction had been taken from
+   a poster that had dropped the same word — so the instrument and the thing it
+   is an instrument for agreed, and both were short a word of the sentence the
+   page is named after. a loupe that shows you a different sentence is the one
+   mark on the sheet that cannot be checked against the sheet. */
+const FILM_LINES = ['is Minimax M3', 'good at', 'frontend yet']
 const FILM_MARK = '?'
 const FILM_STACK =
   '"Helvetica Neue", Helvetica, Arial, "Avenir Next", "Segoe UI", system-ui, sans-serif'
@@ -134,6 +142,14 @@ const magnetic = (raw: number) => {
   return raw * (distance / MAGNET) ** MAGNET_CURVE
 }
 
+/**
+ * What the press does to a raw position: the gate has an opinion about the last
+ * third of a unit, and it has it while the hand is still down. Both instruments
+ * take a hand through this one door, so a drag on the bar and a drag on the bed
+ * are the same operation rather than two similar ones.
+ */
+export const pressTo = (raw: number) => snapPull(magnetic(raw))
+
 /** the print-shop reading of an offset, in words */
 export const registerText = (reg: number) =>
   inRegister(reg)
@@ -141,6 +157,16 @@ export const registerText = (reg: number) =>
     : `off register, ${reg > 0 ? 'plus' : 'minus'} ${Math.abs(reg).toFixed(2)}`
 
 const unitFor = (width: number) => (width / (PULL_MAX * 2)) * 0.92
+
+/**
+ * One unit of blade, as a fraction of the width it is measured on.
+ *
+ * The bed and the strip in the press bar are the same machine at two sizes, so
+ * they read this one function rather than each guessing at a pixels-per-unit:
+ * a hand that has found the coarse blade and then dropped onto the bed finds the
+ * same bed under the same hand.
+ */
+export const bedUnit = unitFor
 
 /**
  * How far the film shows the plates apart.
@@ -763,12 +789,22 @@ export function PullBed({
      a fifth of a unit in a single frame, and a machine that appears to decide
      the gate is a fault rather than a gate. */
   const coastRef = useRef(0)
+  /* THE OTHER HAND. the strip in the press bar drives the same number, so a blade
+     that is still being carried by this bed at the moment the reader has already
+     put a hand on the strip is two machines answering one press. `carried` is what
+     this loop last wrote, and `running` is whether it is still going: a change of
+     the number that is neither of those came from somewhere else, and the carry
+     gives it up. */
+  const carried = useRef(0)
+  const running = useRef(false)
   const coast = useCallback(
     (throwSpeed: number, from: number) => {
       if (coastRef.current) cancelAnimationFrame(coastRef.current)
       let raw = clamp(from)
       let v = Math.min(FLICK, Math.max(-FLICK, throwSpeed))
       let last = performance.now()
+      running.current = true
+      carried.current = reg
       setCoasting(true)
 
       const tick = () => {
@@ -781,6 +817,7 @@ export function PullBed({
            a carry that ignored them for the remaining three hundred milliseconds
            would be the one journey on the page that does */
         if (prefersStill()) {
+          running.current = false
           setCoasting(false)
           onSlide(snapPull(raw))
           return
@@ -791,6 +828,7 @@ export function PullBed({
            so a flick that arrives at the band is bent into it on the way in */
         const shown = magnetic(raw)
         if (inRegister(shown)) {
+          running.current = false
           setCoasting(false)
           onSlide(0)
           return
@@ -800,10 +838,12 @@ export function PullBed({
           raw <= PULL_MIN ||
           raw >= PULL_MAX
         ) {
+          running.current = false
           setCoasting(false)
           onSlide(clamp(raw))
           return
         }
+        carried.current = shown
         onSlide(shown)
         /* a travelling squeegee prints. the band under the coast is the same band
            under the drag, dried from the far end back, so the road the blade took
@@ -829,6 +869,16 @@ export function PullBed({
     [],
   )
 
+  /* and the carry stands down the moment the number stops being its own */
+  useEffect(() => {
+    if (draggingRef.current) return
+    if (!running.current || reg === carried.current) return
+    if (coastRef.current) cancelAnimationFrame(coastRef.current)
+    coastRef.current = 0
+    running.current = false
+    setCoasting(false)
+  }, [reg])
+
   const grab = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return
     /* a hand on the blade stops it where it is, however fast it was going */
@@ -836,6 +886,7 @@ export function PullBed({
       cancelAnimationFrame(coastRef.current)
       coastRef.current = 0
     }
+    running.current = false
     speed.current = 0
     lastRaw.current = { x: 0, t: 0 }
     draggingRef.current = true

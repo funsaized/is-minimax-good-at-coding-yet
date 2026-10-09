@@ -10,6 +10,7 @@ import {
   type RefObject,
 } from 'react'
 import { findNote, NOTES, WORD_IDS, type WordId } from './notes'
+import { BarBlade } from './blade'
 import { Chase } from './chase'
 import { ControlEdge } from './edge'
 import { InkTrap } from './ink'
@@ -588,13 +589,13 @@ export function App() {
   /* THE SHEET ANSWERS ITS OWN ADDRESS.
 
      every way on to a part of this page is a hash — the index in the bar, the two
-     cross-references under the standfirst, the gauge's link to the bed, the return
-     at the foot of the run — and not one of them worked if the reader arrived
-     with a hash already in the address bar. the sections are printed by React, so
-     the browser asked for the scroll before there was anything to scroll to,
-     found no element with that id, and never asked again: loading the sheet at
-     #type put the reader at the head of the question with the type list three
-     screens below and nothing on the page to say so.
+     cross-references under the standfirst, the bar's own way down to the bed, the
+     return at the foot of the run — and not one of them worked if the reader
+     arrived with a hash already in the address bar. the sections are printed by
+     React, so the browser asked for the scroll before there was anything to
+     scroll to, found no element with that id, and never asked again: loading the
+     sheet at #type put the reader at the head of the question with the type list
+     three screens below and nothing on the page to say so.
 
      so the sheet reads its own address once, after it has printed itself. the
      reveals inside the target are inked in first, because a reader who lands on a
@@ -652,6 +653,18 @@ export function App() {
         toGate()
         return
       }
+      /* AND THE OTHER WAY. `0` has always brought the blade to the gate from
+         anywhere on the page, and nothing anywhere took it back out again: the
+         only way to loosen the forme was a button in the job ticket, four
+         hundred pixels down the first screen. now that the bar carries the blade
+         itself, a reader who has just registered five thousand pixels of sheet
+         has to be able to watch it come apart again — which is the whole point of
+         a loose plate, and the pair is printed under the bed with `0`. */
+      if (event.key === 'g' || event.key === 'G') {
+        event.preventDefault()
+        loosen()
+        return
+      }
       /* the bed foot promises the arrows nudge the blade, so they do — from
          anywhere that has not already claimed them (the bed, a plate, a word in
          the title) */
@@ -670,7 +683,7 @@ export function App() {
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [proof, pullProof, select, toGate])
+  }, [proof, pullProof, select, toGate, loosen])
 
   const walk = (from: WordId, step: number) =>
     WORD_IDS[(WORD_IDS.indexOf(from) + step + WORD_IDS.length) % WORD_IDS.length]
@@ -762,38 +775,34 @@ export function App() {
           ))}
         </nav>
 
-        {/* THE READOUT IS A WAY TO THE INSTRUMENT.
+        {/* THE CONSOLE, AND THE BLADE ON IT.
 
-            the bar reports the plate, so it reports the number too — otherwise
-            the reader is told there is a problem and given no way to judge it.
-            and it names the plate that is up, because the phrase the reader
-            chose forty seconds ago on the other side of the question is not
-            anywhere in view from here, and the gauge is the one fixed thing
-            they are always looking at.
+            the bar used to report the plate and link to the bed: a readout about
+            a machine four screens down the sheet, which told the reader the press
+            was off register by a unit and a bit and then made them walk the page
+            to do anything about it. the sheet's own third test is that the page
+            hands you the blade, and it was handing over a *link* — a promise to
+            come back — on the one piece of furniture that is on screen for the
+            whole five thousand pixels.
 
-            and it was a readout about something four screens down the sheet: the
-            reader was told the press was off register by a unit and a bit, and
-            the blade that fixes it was under a poster, a job ticket and a
-            paragraph of argument. so the whole gauge is the way to the bed. it
-            says the number, it says which plate is up, and it is a link, and
-            from anywhere on the page — from the answer, from the type list, from
-            the middle of the close read — one press of it puts the blade under
-            the reader's hand. the sheet's own third test is that the page hands
-            you the blade, and the hand-off used to be somewhere else. */}
-        <a className="gauge" data-on={settled ? 'on' : 'off'} href="#bed">
-          <span className="gauge__plates" aria-hidden="true">
-            <i className="gauge__dot gauge__dot--black" />
-            <i className="gauge__dot gauge__dot--pink" />
-            <i className="gauge__dot gauge__dot--blue" />
-          </span>
-          <span className="gauge__read">{regRead}</span>
-          <span className="gauge__plate" aria-hidden="true">
-            <i className="gauge__pin" key={plateTick} />
-            {findNote(active).index}
-          </span>
-          <span className="gauge__to" aria-hidden="true">↓</span>
-          <span className="sr-only"> — the press bed, further down the sheet</span>
-        </a>
+            so the bar works it. the readout keeps its words, the figure of the
+            plate that is up keeps its place, and between them is a strip of stock
+            with the gate in the middle of it and a squeegee that travels: the
+            same machine as the bed, the same number, the same magnet, and arrows
+            claimed from the window so one key still means one thing. see
+            `blade.tsx`. */}
+        <BarBlade
+          reg={reg}
+          settled={settled}
+          readout={regRead}
+          plate={findNote(active).index}
+          plateTick={plateTick}
+          catchTick={catchTick}
+          onSlide={setReg}
+          onGate={toGate}
+          onLoosen={loosen}
+          onAnnounce={setAnnounce}
+        />
       </header>
 
       <main className="main">
@@ -1703,8 +1712,18 @@ function Poster({
         </span>
         <span className="q__line q__line--3" style={{ '--i': 2 } as CSSProperties}>
           <span className="q__plain">frontend </span>
+          {/* THE TURN, IN WORDS. this line used to open the mark straight onto
+              `frontend`, which read as a well-set poster and was not one: the
+              word before the pause had been dropped so the mark would fit, and
+              the sentence on the sheet had quietly stopped being the sentence in
+              the title — the one line the page is named. the film on the bed was
+              reduced from the same omission, so the loupe agreed with the poster
+              and both were wrong. the turn is three characters and a mark, and
+              the mark now has something to turn away from. */}
           {w('yet', (
-            <span className="mark">
+            <span className="turn">
+              {'yet '}
+              <span className="mark">
               ?
               {/* THE DROP. the pad under the mark is where the pause lands, and a
                   pad is only worth printing if something arrives on it — so when
@@ -1713,6 +1732,7 @@ function Poster({
                   screen underneath it. one fall per plate, and nothing is left
                   behind it but the pool the sheet was already printing. */}
               <i className="mark__bead" />
+            </span>
             </span>
           ))}
           {/* the rule the question mark lands on. printed three times, it is three

@@ -1,45 +1,16 @@
-Iteration 525 — the press bed now carries the whole sheet, and the specimen's rule runs out to the trim.
+The sheet prints its own sentence again, and the blade moves up into the bar where the reader can reach it.
 
-**The bed's film prints the whole sheet, not half of it.** The strip on the press
-bed was the poster reduced, standing at the head edge with roughly eight hundred
-pixels of empty film beside it. A plate carries the whole sheet, so the short
-answer is set on the other side of the gate now: hard against the fore-edge the
-way the question stands against the head edge, at 0.6 of the question's size —
-the ratio the sheet's own scale ladder gives the answer to the question. The two
-blocks are the page's argument about size printed at opposite ends of one strip,
-with the measure of air between them that both are set in. The answer is printed
-in black and in one voice, because it is the sentence the press is allowed to get
-right — it does not come apart under the blade while the question does — and it
-lands on its own rule with the ink trapped at the end of it, filling at the gate
-with every other trap on the sheet. Below roughly 620px of strip there is no
-honest room to set it in, so the film drops back to the question alone rather than
-printing a fragment. The strip's caption now says what is on it.
+**The poster had lost a word.** The third line opened the question mark straight onto `frontend`, so the headline read "is Minimax M3 / good at / frontend ?" — not the sentence the page is named. The mark needed the room, and the word went. The film on the press bed was reduced from the same omission, so the loupe agreed with the poster and both were short a word. `yet` is back in both, set as one lockup with the mark and held on one line: three letters in the press voice, a pause after them, the mark a shade larger because it is the loudest character on the sheet.
 
-**The specimen's counted rule is exactly as wide as the setting it counts.** The
-measure under the phrase was a short column standing at the far edge of the sheet
-with the figure over it, which left eight hundred pixels of nothing between the
-setting and the number measuring it, and which did not in fact measure the
-setting: the pica ticks were set at a fixed pitch and never touched the type. The
-stage is now two columns — the setting, sized by the setting, and the rest of the
-measure — with the ticks spread to the two ends of the type, so the first
-character stands on the first notch and the last on the last. The two columns
-share one hairline with no gutter between them, so the rule reads as a single
-counting rule across the full measure: the first *n* of its picas are counted
-because *n* characters are standing on them, and the rest carry on to the trim at
-a third of the ink with the name of the run at the far end. The traps moved to the
-two ends of the run rather than the two ends of the column, because a notch fills
-where type lands on a rule. Below 900px the stage stacks but the setting keeps
-its own column, so the rule is the width of the type there too. The mark's pad
-is in the flow rather than pinned to the band, so it lands on the rule instead of
-on top of it.
+**The bar works the blade instead of reporting it.** The gauge in the press bar was a readout with a link under it — a promise to walk four screens down to the one control the page is about. It is now a strip of stock with the gate in the middle of it, the three impressions fusing at the centre and a pink squeegee that travels, drags, prints the band it leaves behind and stops at two marked end stops. Drag it, arrow it, `Home` for the gate, `End` to knock the forme loose, `Enter` for either. It is the same machine as the bed: `bedUnit` and `pressTo` now come out of `pull.tsx`, so the magnet, the gate and the limits are one set of rules and a hand that has learned the bar finds the bed under the same hand. New `src/blade.tsx`.
 
-**The plate case gives its rows their air back on a narrow screen.** Below 1180
-the three rows of the case are lines of a form at the full measure and had no
-horizontal padding at all, so the three-pixel blade standing on the case's left
-edge sat on the first letter of the figure it was marking.
+**The register is reachable from anywhere on the sheet.** `0` has always snapped the blade to the gate from anywhere on the page; `g` now knocks it loose, so a reader who has just registered the whole run can watch it come apart again. The pair is printed under the bed with the other keys.
 
-**Reduced motion.** The pad the question mark drops onto is now simply present
-rather than arriving.
+**Also this iteration**
+- The bar's strip is pinned to newsprint inks, so the three impressions on it survive the bar turning over to the slab's palette two thirds of the way down the run.
+- The bed's carry stands down the moment the number stops being its own, so a blade still coasting on the bed cannot fight a hand already on the strip.
+- The catch sweep in the bar is keyed on the same tick as the poster's wash, and is dropped entirely under `prefers-reduced-motion`.
+- Responsive: the strip is the last thing in the bar to narrow, the wordmark gives up its second line below 620px and ellipsises rather than wrapping, and the way down to the bed goes below 480px — the job ticket carries the same blade row a hundred pixels above it.
+- Arrow keys are claimed outright by the strip, so one key still means one thing.
 
-Unchanged: the title and document title, the entry point, the palette, the three
-plates and the register, the four passes, every control and key.
+`npm run build` passes.
