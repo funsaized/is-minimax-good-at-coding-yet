@@ -253,42 +253,61 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
               this sheet that is not printed, and the only thing on the page that
               is drawn by the reader. */}
           <span className="specimen__smudge" aria-hidden="true" />
-          <Plated
-            className="specimen__stack"
-            /* the close read is set well down the press, so its three
-               impressions are nearly one voice by the time the reader is here */
-            wet={0.72}
-            render={ghost => (
-              <span className="specimen__word">
-                {ghost ? null : <span className="sr-only">{note.label}</span>}
-                <span className="specimen__main">
-                  {lines.map(line => (
-                    <span
-                      key={line}
-                      className={line === note.drop ? 'specimen__line specimen__line--drop' : 'specimen__line'}
-                    >
-                      {line}
-                    </span>
-                  ))}
+          {/* THE SETTING, AND THE RUN COUNTED UNDER IT.
+
+              the measure used to be a short column standing at the far edge of
+              the sheet with the figure over it, which left eight hundred pixels
+              of nothing between the setting and the number that was measuring it
+              — a hole in the middle of the one band on this sheet that exists to
+              look closely at a phrase. the rule is now laid under the setting
+              itself and spread to its exact width, one tick a character, so the
+              claim the count has always made — that the rule is as wide as the
+              run — is a thing you can see rather than a thing it says. the traps
+              go to the two ends of the run rather than the two ends of the
+              sheet, because a notch fills where type lands on a rule, not where
+              a rule happens to stop. */}
+          <div className="specimen__setting">
+            <Plated
+              className="specimen__stack"
+              /* the close read is set well down the press, so its three
+                 impressions are nearly one voice by the time the reader is here */
+              wet={0.72}
+              render={ghost => (
+                <span className="specimen__word">
+                  {ghost ? null : <span className="sr-only">{note.label}</span>}
+                  <span className="specimen__main">
+                    {lines.map(line => (
+                      <span
+                        key={line}
+                        className={line === note.drop ? 'specimen__line specimen__line--drop' : 'specimen__line'}
+                      >
+                        {line}
+                      </span>
+                    ))}
+                  </span>
                 </span>
-              </span>
-            )}
-          />
+              )}
+            />
 
-          {note.drop ? <span className="specimen__pad" aria-hidden="true" /> : null}
+            {note.drop ? <span className="specimen__pad" aria-hidden="true" /> : null}
 
-          <p className="specimen__rule" aria-hidden="true">
-            {/* each end of the measure is a corner like any other: the tick and the
-                ink gathered in the notch under it are one mark, and the ink only
-                finishes gathering at the gate */}
-            <InkTrap className="specimen__trap specimen__trap--start" />
-            <InkTrap className="specimen__trap specimen__trap--end" />
-            <span className="specimen__rule-count">{note.chars}</span>
-            {/* the run counted rather than asserted: one pica a character, so the
-                rule is exactly as wide as the setting and cannot disagree with the
-                figure printed over it */}
-            <Pica ticks={note.chars} />
-            <span className="specimen__rule-word">{note.measure}</span>
+            <p className="specimen__run" aria-hidden="true">
+              <span className="specimen__run-count">{note.chars}</span>
+              <Pica ticks={note.chars} />
+              <InkTrap className="specimen__trap specimen__trap--start" rule={false} />
+              <InkTrap className="specimen__trap specimen__trap--end" rule={false} />
+            </p>
+          </div>
+
+          {/* AND THE REST OF THE MEASURE, WHICH IS MOST OF IT.
+              the air around a setting is the thing a specimen is for, and air
+              that nothing is printed in is air the reader has to take on trust.
+              so the rule carries on past the setting to the trim, uncounted and
+              a good deal quieter, and the name of the run stands at the far end
+              of it — six letters of a line that holds rather more than six. */}
+          <p className="specimen__rest" aria-hidden="true">
+            <span className="specimen__rest-word">{note.measure}</span>
+            <span className="specimen__rest-rule" />
           </p>
 
           <span className="specimen__reg" aria-hidden="true">

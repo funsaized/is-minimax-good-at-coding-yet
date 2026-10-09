@@ -65,6 +65,33 @@ const FILM_MARK = '?'
 const FILM_STACK =
   '"Helvetica Neue", Helvetica, Arial, "Avenir Next", "Segoe UI", system-ui, sans-serif'
 
+/* THE OTHER HALF OF THE PLATE.
+
+   the film was the poster reduced and the poster alone, and a plate is not a
+   quarter of a sheet: it is the whole sheet. so the second poster is printed on
+   the other side of the gate — the short answer, set at the step below the
+   question because that is the step it is set at everywhere else on this page,
+   and standing hard against the fore-edge because the question stands hard
+   against the head edge. two masses, one gate, and a measure of air between
+   them that is the same air the specimen on the sheet above is set in.
+
+   and the answer does not misregister. it does not on the proof sheet, at the
+   foot of the run, or in the bed's own readout, because it is the one sentence
+   this press is allowed to get right — so on the film it is printed in black
+   and one voice while the question beside it comes apart, which is what makes
+   the arrival of the blade legible as the moment two sheets become one. */
+const FILM_ANSWER = [
+  { text: 'When the interface', voice: 'press' },
+  { text: 'has a point of view', voice: 'press' },
+  { text: 'you can feel,', voice: 'pink' },
+  { text: 'and it knows when to stop moving.', voice: 'reading' },
+] as const
+const FILM_SERIF = '"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif'
+/* the ratio the sheet's own scale ladder gives the answer to the question —
+   --claim over --question. the film prints it rather than picking a size that
+   happens to fit, so the plate shows the same hierarchy the page sets. */
+const FILM_ANSWER_RATIO = 0.6
+
 /** where the coloured plates sit on the page, in css pixels */
 export const plateOffset = (reg: number) => ({
   x: reg * PULL_RAMP,
@@ -574,13 +601,88 @@ export function PullBed({
     ctx.closePath()
     ctx.fill()
 
+    /* THE OTHER POSTER, ON THE OTHER SIDE OF THE GATE.
+
+       the strip is a plate, and a plate carries the whole sheet: so the short
+       answer is set here too, standing against the fore-edge the way the
+       question stands against the head edge, at the step below it that the
+       sheet's own ladder gives the answer to the question. the two blocks are
+       the page's whole argument about size, printed eight hundred pixels apart,
+       and the air between them is the measure both of them are set in.
+
+       the answer is printed in black and in one voice on purpose — it is the
+       sentence the press is allowed to get right, so it does not come apart
+       under the blade while the question does. nothing here is drawn unless the
+       strip is genuinely wide enough to set it in: below that the film is the
+       question alone rather than the question and a fragment. */
+    const answerFrom = markLeft + markWide
+    const answerTo = w - inset
+    const answerRoom = answerTo - answerFrom - Math.max(16, w * 0.03)
+    if (answerRoom > 132) {
+      const aLeadOf = (size: number) => size * 1.14
+      let aSize = Math.min(size * FILM_ANSWER_RATIO, (h - 26) / 4.42)
+      /* the press voice is what has to fit the strip; the reading line is set
+         small enough that it never becomes the constraint, so the fit is measured
+         on the two lines actually set at the answer's own step */
+      const runWidth = (at: number) => {
+        ctx.font = `800 ${at.toFixed(1)}px ${FILM_STACK}`
+        let wide = 0
+        FILM_ANSWER.forEach(line => {
+          if (line.voice === 'reading') return
+          wide = Math.max(wide, ctx.measureText(line.text).width)
+        })
+        return wide
+      }
+      const over = runWidth(aSize)
+      if (over > answerRoom) aSize *= answerRoom / over
+      const widest = runWidth(aSize)
+      const readSize = aSize * 0.56
+      const aLead = aLeadOf(aSize)
+      const aBase = (h - (aLead * 3 + aSize)) / 2 + aSize
+
+      ctx.textAlign = 'right'
+      FILM_ANSWER.forEach((line, index) => {
+        const y = aBase + index * aLead
+        if (line.voice === 'reading') {
+          ctx.font = `italic 500 ${readSize.toFixed(1)}px ${FILM_SERIF}`
+          ctx.fillStyle = 'rgba(21, 20, 27, .66)'
+        } else {
+          ctx.font = `800 ${aSize.toFixed(1)}px ${FILM_STACK}`
+          ctx.fillStyle = line.voice === 'pink' ? INK_PINK : INK_BLACK
+        }
+        ctx.fillText(line.text, answerTo, y)
+      })
+
+      /* and it lands on a rule of its own — the answer's, the same width as the
+         run above it — with the ink gathered at the end of it: the same trap as
+         the question's, off the same number, so the notch under the answer fills
+         at the gate along with every other one on the sheet */
+      const aFoot = Math.round(aBase + aLead * 3 + aSize * 0.14) + 0.5
+      ctx.strokeStyle = settled ? 'rgba(42, 62, 201, .72)' : 'rgba(21, 20, 27, .2)'
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.moveTo(answerTo, aFoot)
+      ctx.lineTo(answerTo - widest, aFoot)
+      ctx.stroke()
+      const aNotch = answerTo - widest
+      const aPool = settled ? 1 : 0.12
+      ctx.fillStyle = settled ? INK_PINK : 'rgba(255, 46, 107, .45)'
+      ctx.beginPath()
+      ctx.moveTo(aNotch, aFoot)
+      ctx.lineTo(aNotch - aSize * 0.1 * aPool, aFoot)
+      ctx.lineTo(aNotch, aFoot - aSize * 0.08 * aPool)
+      ctx.closePath()
+      ctx.fill()
+      ctx.textAlign = 'left'
+    }
+
     /* THE SCALE IS GONE, and it is the one thing on this strip that was doing no
        work. it was twelve ticks and a hairline under the type at two per cent
        contrast, which at any bed height on this sheet resolved into a smudge — and
        it was not reading the offset anyway: the offset has a rule of its own
        printed down the strip, the bed's own foot is lettered LOOSE / THE GATE /
        TIGHT, and the gauge in the bar carries the figure. what the space was
-       actually for was the three lines of the poster, which now have the room. */
+       actually for is the rest of the sheet. */
 
     /* trim corners */
     ctx.strokeStyle = 'rgba(21, 20, 27, .5)'
@@ -842,7 +944,9 @@ export function PullBed({
         <span className={`bed__stamp ${settled ? 'is-on' : ''}`} aria-hidden="true">
           in register
         </span>
-        <p className="bed__caption" aria-hidden="true">the sentence · pulled once</p>
+        <p className="bed__caption" aria-hidden="true">
+          the whole sheet · the question, and the answer it is answered by
+        </p>
       </div>
 
       <p className="bed__foot">

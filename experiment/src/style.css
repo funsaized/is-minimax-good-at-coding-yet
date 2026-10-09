@@ -5667,15 +5667,19 @@ html[data-register='on'] .proof .sheetbar__flat--black {
 .specimen__stage {
   position: relative;
   display: grid;
-  /* the set phrase stands hard left and the ruled measure is carried out to the
-     trim, so the sheet the phrase is printed on is wider than the phrase on it.
-     that is the whole point of a specimen: you are meant to see the air around
-     the setting, and the column that counts it belongs on the edge of the sheet
-     rather than a fixed distance after the type. */
-  grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: clamp(18px, 2.4vw, 40px);
+  /* the setting is a column of its own and sized by the setting — which is the
+     only way the counted rule beneath it can be exactly as wide as the run it is
+     counting — and the rest of the measure takes what is left, which at this
+     width is most of the sheet. the sheet the phrase is printed on is far wider
+     than the phrase on it, and now both halves of that are printed. */
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+  /* no gutter between them, because they are one rule: the counted part and the
+     rest of the measure have to be a single hairline across the sheet, and a
+     break in it in the middle of the stage would read as a mistake rather than
+     as the end of the setting */
+  column-gap: 0;
   align-items: end;
-  padding: clamp(24px, 3vw, 44px) clamp(20px, 2.6vw, 36px) clamp(26px, 2.8vw, 40px);
+  padding: clamp(24px, 3vw, 44px) clamp(20px, 2.6vw, 36px) clamp(22px, 2.3vw, 32px);
   overflow: hidden;
   border-bottom: 1px solid var(--rule);
   /* one screen, not two. the stage carried a rule every thirty-four pixels as
@@ -5683,9 +5687,16 @@ html[data-register='on'] .proof .sheetbar__flat--black {
      setting the band exists to show is not restraint — it is a second idea
      competing with the type. the screen stays, because a screen is what a press
      prints a wash through, and the tint that varies with the plate stays because
-     it is the wash. the measuring is done by the rule on the right, which now
-     counts the run instead of asserting it. */
+     it is the wash. the measuring is done by the rule, which now counts the run
+     under it and carries on to the trim. */
   background: var(--stage-tint, transparent);
+}
+
+/* the setting and the count that belongs to it: one column, sized by the type */
+.specimen__setting {
+  position: relative;
+  display: grid;
+  min-width: 0;
 }
 
 /* the space between the setting and the measure is not empty: it is the screen
@@ -5763,7 +5774,6 @@ html[data-register='on'] .proof .sheetbar__flat--black {
 .specimen__stack {
   position: relative;
   z-index: 1;
-  grid-column: 1;
   justify-self: start;
   min-width: 0;
   min-height: clamp(52px, 5.4vw, 74px);
@@ -5791,14 +5801,18 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   color: var(--pink-ink);
 }
 
-/* the dropped mark gets a dot screen to land on */
+/* the dropped mark gets a dot screen to land on. it is in the flow rather than
+   hung off the stage, because the stage now carries the counted rule under the
+   setting and a pad pinned to the bottom of the band would land on top of it —
+   the mark drops to its own line, and the line it drops to has to be the one it
+   drops to at every plate and every width. */
 .specimen__pad {
-  position: absolute;
+  position: relative;
   z-index: 1;
-  bottom: clamp(16px, 1.8vw, 26px);
-  left: clamp(20px, 2.6vw, 36px);
+  justify-self: start;
   width: clamp(58px, 10vw, 96px);
-  height: clamp(14px, 2vw, 20px);
+  height: clamp(13px, 1.9vw, 19px);
+  margin-top: 7px;
   color: var(--pink);
   background-image: radial-gradient(circle, currentColor 1.15px, transparent 1.45px);
   background-size: 6px 6px;
@@ -5808,41 +5822,70 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   animation: pad-in .62s var(--ease-out) .12s both;
 }
 
-/* the measure, ruled the way a compositor counts it: a ruled column standing on
-   the trim, one figure per character, with the name of the run under it */
-.specimen__rule {
+/* THE RUN, COUNTED UNDER THE SETTING. the rule is the width of the setting and
+   not the width of the cell it is in, which is the whole difference between a
+   count that measures the run and a count that measures a box: the ticks are
+   spread to the two ends of the type, so the first character stands on the first
+   notch and the last on the last, and the figure over the right-hand end of them
+   cannot be for any other run than this one. */
+.specimen__run {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-column: 2;
-  justify-self: end;
-  align-self: stretch;
-  align-content: end;
-  justify-items: end;
   gap: 6px;
-  padding-right: 2px;
-  padding-left: clamp(12px, 1.4vw, 20px);
-  border-left: 1px solid var(--rule);
-  color: var(--ink-50);
-  text-align: right;
+  margin: clamp(12px, 1.5vw, 22px) 0 0;
 }
 
-.specimen__rule-count {
+.specimen__run-count {
+  justify-self: end;
   color: var(--blue-ink);
   font-family: var(--display);
-  font-size: clamp(1.15rem, 1.7vw, 1.5rem);
+  font-size: clamp(1.05rem, 1.5vw, 1.34rem);
   font-weight: 800;
   line-height: .9;
   letter-spacing: -.03em;
   font-variant-numeric: tabular-nums;
 }
 
-.specimen__rule-word {
+/* THE REST OF THE MEASURE. the rule carries on to the trim, uncounted and a good
+   deal quieter, so the air around the setting is printed rather than asserted —
+   and the name of the run stands at the far end of it, at the trim, which is
+   where the name of a measure goes on any ruled sheet. */
+.specimen__rest {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-self: stretch;
+  align-content: end;
+  justify-items: end;
+  gap: 6px;
+  margin: 0;
+  color: var(--ink-50);
+  text-align: right;
+}
+
+.specimen__rest-word {
   font-family: var(--mono);
   font-size: var(--label-3);
   letter-spacing: .16em;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.specimen__rest-rule {
+  width: 100%;
+  height: 17px;
+  /* the same hairline the counted rule stands on, so the two of them read as one
+     rule running the width of the sheet — and the same tick, a third of the ink,
+     because nobody has set a character on this part of it */
+  border-bottom: 1px solid var(--rule);
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(38, 50, 158, .17) 0 1px,
+    transparent 1px 34px
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 4px;
 }
 
 /* =============================================================
@@ -5864,7 +5907,14 @@ html[data-register='on'] .proof .sheetbar__flat--black {
 .pica {
   display: flex;
   align-items: flex-end;
+  /* the ticks are spread to the two ends of the rule rather than set at a fixed
+     pitch, so the rule is exactly as wide as the run it counts — two notches for
+     M3, three for yet?, six for good at — and the figure printed over the end of
+     it is measuring this setting and no other. one declaration here and the
+     column beside the setting stops being a column. */
+  justify-content: space-between;
   gap: 4px;
+  width: 100%;
   height: 17px;
   padding-bottom: 3px;
   border-bottom: 1px solid var(--rule);
@@ -5897,7 +5947,10 @@ html[data-register='on'] .proof .sheetbar__flat--black {
 /* the end of the measured line. the tick and the notch of ink under it are one
    mark — the whole corner, drawn by the same hand — so the pools are already
    most of the way filled on a column this far down the press, and only finish
-   filling at the gate. */
+   filling at the gate. and the two of them now stand at the two ends of the
+   counted run rather than the two ends of the column: the notch is where the
+   setting lands on the rule, which is under the first letter and under the last
+   one, and not out at the trim where the measure happens to run out. */
 .specimen__trap {
   left: -1px;
   width: clamp(10px, 1.2vw, 16px);
@@ -5907,12 +5960,14 @@ html[data-register='on'] .proof .sheetbar__flat--black {
 }
 
 .specimen__trap--start {
-  top: 0;
+  bottom: -1px;
 }
 
 .specimen__trap--end {
-  bottom: 0;
-  scale: 1 -1;
+  right: -1px;
+  bottom: -1px;
+  left: auto;
+  scale: -1 1;
 }
 
 .specimen__reg {
@@ -9625,29 +9680,37 @@ html[data-reveal='on'] .reveal.is-in {
     min-height: 44px;
   }
 
-  .specimen__body,
-  .specimen__stage {
+  .specimen__body {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /* one column, so the count and the name of the run sit under the setting as a
-     line of their own rather than in a ruled column beside it */
-  .specimen__rule {
-    grid-column: 1;
-    grid-auto-flow: column;
-    grid-auto-columns: auto;
-    align-items: baseline;
-    justify-self: start;
+  /* one column, so the rest of the measure goes under the setting and runs out
+     to the trim rather than standing beside it in a column too narrow to count
+     anything in. the rule is still the width of the setting — that is the whole
+     of it — and the rest is the width of the sheet. */
+  .specimen__stage {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 14px;
+  }
+
+  /* the setting keeps its own column even when the stage stacks, because the
+     whole point of the rule under it is that it is exactly as wide as the type
+     standing on it. stretched to the sheet it would be a rule a character
+     somewhere on, and the count over it would be counting the margin. */
+  .specimen__setting {
+    grid-template-columns: minmax(0, max-content);
+    max-width: 100%;
+  }
+
+  .specimen__rest {
+    align-self: auto;
     justify-items: start;
-    gap: 10px;
-    padding: 12px 0 0;
-    border-top: 1px solid var(--rule);
-    border-left: 0;
     text-align: left;
   }
 
-  /* the column stands on end here, so the corner it trapped no longer exists */
-  .specimen__trap {
+  /* the traps are pinned to the two ends of a rule that now runs edge to edge,
+     and a trap at the very edge of the trim is a trap with nowhere to be */
+  .specimen__trap--end {
     display: none;
   }
 
@@ -9658,7 +9721,8 @@ html[data-reveal='on'] .reveal.is-in {
 
   .specimen__stack {
     min-width: 0;
-    justify-self: stretch;
+    max-width: 100%;
+    justify-self: start;
   }
 
   .specimen__margin {
@@ -9711,8 +9775,13 @@ html[data-reveal='on'] .reveal.is-in {
     gap: 3px 12px;
     /* the rows are lines of a form here, not cells of a case, so the air each one
        was given as a cell has to come back off it — otherwise a phone gets three
-       of the tallest targets on the page and loses the rest of the sheet below */
-    padding: 10px 0 11px;
+       of the tallest targets on the page and loses the rest of the sheet below.
+       the air on the left is the exception and does not come off: the blade
+       stands on the left edge of the case at every width, and the rows used to
+       carry no horizontal padding at all, so on a phone the figure of the plate
+       was set hard against the trim with the mark sitting on the first letter of
+       it. the mark is three pixels wide and the gutter it needs is one hair more. */
+    padding: 10px 0 11px 12px;
   }
 
   /* the figure and the job it does are a fixed measure here, so the three
@@ -10195,6 +10264,12 @@ html[data-slab='on'] .spine {
   .pica i {
     animation-delay: 0s !important;
     transition-delay: 0s !important;
+  }
+
+  /* and the pad the question mark drops onto is already there: it is a printed
+     screen on the paper, not an arrival */
+  .specimen__pad {
+    animation: none;
   }
 
   .reveal,
