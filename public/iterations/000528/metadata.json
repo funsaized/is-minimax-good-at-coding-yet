@@ -1,0 +1,19 @@
+{
+  "id": 528,
+  "parentId": 527,
+  "createdAt": "2026-10-11T01:41:25.907Z",
+  "summary": "The two notes on the sheet move into real margins, and the two biggest holes on the light sheet close.",
+  "path": "/iterations/000528/index.html",
+  "screenshot": "/iterations/000528/desktop.png",
+  "mobileScreenshot": "/iterations/000528/mobile.png",
+  "sourceCommit": "5f28dc055d5cd6c6467e5a8e92e34a5932f78b93",
+  "model": "opencode/space-bunny-free",
+  "durationSeconds": 1313,
+  "promptHash": "3906744090fb74b15484aae80a37f3b1fcc36b12bf62c525ecbd357ee2f3ff73",
+  "usage": {
+    "estimatedCostUsd": 0,
+    "inputTokens": 166873,
+    "outputTokens": 23042,
+    "steps": 109
+  }
+}
