@@ -82,7 +82,7 @@ const FACES: Face[] = [
        band whose whole job is to be a proof. */
     steps: [
       { token: '--claim', size: '4.3rem', text: 'yes —', scale: 'claim' },
-      { token: '--specimen', size: '2.62rem', text: 'good at', scale: 'specimen' },
+      { token: '--specimen', size: '3.05rem', text: 'good at', scale: 'specimen' },
       { token: '--sub', size: '1.5rem', text: 'The pause, protected', scale: 'sub' },
     ],
   },

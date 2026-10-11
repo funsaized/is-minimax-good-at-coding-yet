@@ -166,6 +166,52 @@
 
 
    =============================================================
+   THE MARGIN SPEAKS
+
+   the sheet had two holes in it and one note that belonged in
+   neither.
+
+   the close read set one phrase hard left and then printed
+   eleven hundred pixels of nothing beside it, with the note that
+   annotates the phrase sitting four inches further down in a
+   thirty-character measure and three hundred pixels of nothing on
+   its own other side. the standfirst had the mirror of it: the
+   answer and its argument were a hundred and ninety pixels
+   shorter than the job ticket beside them, so the first screen of
+   the sheet ended in a hole the width of seven columns.
+
+   both of those are holes in a sheet that has spent five hundred
+   iterations refusing to print any. so the notes move into the
+   margins. the close read's margin note is the head of the rest
+   of the measure — set against the top of the setting, where a
+   margin note goes — and the three directives take the column it
+   vacated in the spread below, hung on a hairline with their
+   figures in the margin beside them. the standfirst's note goes
+   the other way: it is about the mark in the title, so it comes
+   down into the argument's column under the title it annotates,
+   and the order of work takes the whole of the other half of the
+   band, top to bottom. one block on the left, one instrument on
+   the right, and the two of them finish within a line of each
+   other. the band lost sixty pixels doing it.
+
+   and both notes are set on the same rule: forty-six pixels of
+   pink and then a hairline carried on to the trim. a stub that
+   carries — which is what the counted rule does with six letters
+   and what the foot margin does with the seven words of the
+   sentence, and is now the one way this sheet draws the head of a
+   note.
+
+   THE NOTE COMES UP WITH THE PLATE. the specimen is keyed on
+   the phrase, so a change of plate brings a new margin note with
+   it, and the note is set the way a note is set when it arrives
+   late on a slow press: the stub draws itself back from the trim
+   and the words follow it in. it is the only type on the sheet
+   that arrives rather than being there, and it is why the margin
+   reads as something the page is saying rather than something the
+   page is showing.
+
+
+   =============================================================
    ITERATION 524 — THE ANSWER STANDS UNDER THE QUESTION
 
    one division, one axis, and one gesture you can point at.
@@ -4452,31 +4498,40 @@ html[data-register='on'] .plated__layer--black .mark {
   white-space: nowrap;
 }
 
-/* THE PRESS'S OWN MARGIN. the note used to take the first three columns and the
-   answer the middle five, so the first screen was divided at three and eight
-   while the poster above it — the same band, two bands up — was divided at seven
-   and eight. the two halves of the first screen disagreed about where the type
-   ended, and the answer, which is the loudest thing under the title, began a
-   third of the way across from the word it was answering.
+/* THE PRESS'S OWN MARGIN — UNDER THE ARGUMENT IT ANNOTATES. the note used to
+   take the last four columns of the band and the answer the first seven, so the
+   band divided once on the poster's own rule and every part of it agreed. but
+   the note was about the mark in the title, and the title is set on the left
+   edge of the poster: a note on the question mark, printed a third of the way
+   to the right of the question mark, with three hundred pixels of nothing under
+   the paragraph it was standing next to.
 
-   so the band divides once, on the poster's own rule. the note goes to the
-   press's margin beside the case, which is where every other note on this sheet
-   about a particular mark already sits, and the note keeps its pink rule — that
-   rule now stands on the division itself, so it is the band saying which half
-   of it you are reading. */
+   so it is in the argument's column now — the answer, the paragraph, and the
+   one line about the mark, sharing a left edge from the title down — and the
+   order of work takes the whole of the other half of the band, top to bottom.
+   which is also what balances the standfirst: the answer used to be a hundred
+   and ninety pixels shorter than the ticket beside it, so the first screen of
+   the sheet ended in a hole the width of seven columns.
+
+   the pink is still the press, and it still stands on something: a stub of it
+   with a hairline carried on to the trim, which is the counted rule and the rest
+   of the measure in miniature and the same device the foot margin counts the
+   sentence with. a rule that crosses the whole column would be a section head,
+   and this is a note. */
 .standfirst__note {
-  grid-column: 8 / -1;
-  grid-row: 2;
   display: grid;
   gap: 10px;
   align-self: start;
   min-width: 0;
-  /* a margin note is a note and not a sub-head: capped so it breaks in its own
-     column instead of running the whole measure of the margin on one line */
-  max-width: 42ch;
-  padding-top: var(--air-block);
-  padding-left: 14px;
-  border-left: 2px solid var(--pink);
+  margin-top: clamp(20px, 2.2vw, 32px);
+  padding-top: 14px;
+  /* the rule carries the width of the argument and the words do not: the stub is
+     the press and the hairline after it is the measure, and the two together are
+     the counted rule of the close read and the rest of its measure in miniature.
+     a note that brought its own short rule down here would print the same device
+     twice at two different lengths on the same sheet. */
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--pink) 0 46px, var(--rule) 46px 100%) 1;
 }
 
 .standfirst__kicker {
@@ -4497,6 +4552,9 @@ html[data-register='on'] .plated__layer--black .mark {
 }
 
 .standfirst__note-text {
+  /* a margin note is a note and not a sub-head: capped so it breaks in its own
+     measure instead of running the whole width of the argument on one line */
+  max-width: 46ch;
   color: var(--ink-70);
   font-family: var(--serif);
   font-size: clamp(1.02rem, .7vw + .88rem, 1.26rem);
@@ -4527,7 +4585,12 @@ html[data-register='on'] .plated__layer--black .mark {
    is what stops seven columns of empty paper appearing between them. it hangs
    from the top of that span rather than floating in the middle of it: the answer
    is the first thing under the title and nothing on this page should be set
-   below the line it has to cross to reach. */
+   below the line it has to cross to reach.
+
+   and it is one block rather than a paragraph with a note floating beside it:
+   the answer, the argument and the line about the mark are all under the title
+   now, on one left edge, which is both the reading order and the fix for a
+   hundred and ninety pixels of hole at the foot of the band. */
 .standfirst__say {
   grid-column: 1 / span 7;
   grid-row: 2 / span 2;
@@ -4684,8 +4747,13 @@ html[data-pulled='on'] .verdict__bloom {
   animation: wash-in 1s var(--ease-out) both;
 }
 
+/* THE MEASURE THE BAND ACTUALLY GAVE IT. seven columns is a long line for this
+   face, and the standfirst was holding a hundred and ninety pixels of unused
+   paper to the right of a three-line paragraph — so the paragraph is given the
+   measure it was set into, which is the same fix the type list and the answer
+   got, and the reason they are all one number. */
 .lede {
-  max-width: 52ch;
+  max-width: 60ch;
   color: var(--ink-70);
   font-family: var(--serif);
   font-size: clamp(1.06rem, .42vw + .97rem, 1.28rem);
@@ -4886,7 +4954,7 @@ html[data-pulled='on'] .verdict__bloom {
 .order {
   position: relative;
   grid-column: 8 / -1;
-  grid-row: 3;
+  grid-row: 2 / span 2;
   align-self: start;
   min-width: 0;
   padding-top: var(--air-block);
@@ -6096,21 +6164,38 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   font-variant-numeric: tabular-nums;
 }
 
-/* THE REST OF THE MEASURE. the rule carries on to the trim, uncounted and a good
-   deal quieter, so the air around the setting is printed rather than asserted —
-   and the name of the run stands at the far end of it, at the trim, which is
-   where the name of a measure goes on any ruled sheet. */
+/* THE REST OF THE MEASURE, WHICH IS MOST OF IT. the rule carries on to the trim,
+   uncounted and a good deal quieter, so the air around the setting is printed
+   rather than asserted — and the name of the run stands at the far end of it, at
+   the trim, which is where the name of a measure goes on any ruled sheet.
+
+   the column is now three things rather than two: the margin note at the head of
+   it, set against the top of the setting, the air, and the measure's own name at
+   the foot. `space-between` is what puts the note and the name at the two ends
+   of the same column without either of them needing a height, and it is the only
+   arrangement that leaves the middle as air — which is the whole claim this band
+   is making about setting type, and the only honest thing to do with eleven
+   hundred pixels of it. */
 .specimen__rest {
   position: relative;
   z-index: 1;
   display: grid;
   align-self: stretch;
-  align-content: end;
+  align-content: space-between;
   justify-items: end;
-  gap: 6px;
+  gap: clamp(16px, 2.4vw, 32px);
+  min-width: 0;
   margin: 0;
   color: var(--ink-50);
   text-align: right;
+}
+
+/* the foot of the column: the name of the run over its uncounted rule */
+.specimen__rest-foot {
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+  margin: 0;
 }
 
 .specimen__rest-word {
@@ -6238,7 +6323,12 @@ html[data-register='on'] .proof .sheetbar__flat--black {
      pixels of nothing between them and the setting above. the two columns are
      fracs of the sheet now and they share the measure, so the prose and the
      thing it is annotating are two voices of one spread instead of a headline
-     and a sticker at the far edge. */
+     and a sticker at the far edge.
+
+     and both of them are printed now. the margin held a thirty-character note
+     above three hundred pixels of nothing; it holds three numbered directives
+     under a hairline, which is a column of the spread rather than a caption
+     stuck to its edge. */
   grid-template-columns: minmax(0, 1.24fr) minmax(0, 1fr);
   gap: clamp(18px, 2.6vw, 42px);
   padding: clamp(22px, 2.6vw, 34px) clamp(20px, 2.6vw, 36px) clamp(20px, 2.4vw, 30px);
@@ -6363,56 +6453,116 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   }
 }
 
-/* THE MARGIN NOTE IS SET AS A MARGIN NOTE, not as a stamp in the corner. it was
-   a two-pixel pink rule down its fore-edge with the words hung off it, which is
-   a quotation mark pretending to be a column; set on a stub of pink above it, in
-   the reading voice at reading size, it is the third thing on the sheet and it
-   earns its own measure. the stub rather than a full rule because a rule that
-   crosses the whole column is a section head, and this is a note. */
+/* THE MARGIN NOTE IS SET AS A MARGIN NOTE, not as a stamp in the corner, and it
+   is in the margin now. it spent most of its life in the second column of the
+   spread below the stage — thirty characters of measure, with three hundred
+   pixels of nothing beside it, four inches below a thousand-pixel hole in the
+   stage above. a note belongs in a margin, so it is in the margin: the head of
+   the rest of the measure, set against the top of the setting, taking the
+   measure the column can hold rather than the thirty characters it was given.
+
+   it is set on a stub of pink — the press saying something — with the hairline
+   carried on past it to the trim, which is the counted rule and the rest of the
+   measure in miniature: the one part of this line somebody has set type on, and
+   then a great deal of line that nobody has. */
+
 .specimen__margin {
-  grid-column: 2;
   align-self: start;
-  max-width: 30ch;
-  padding-top: 14px;
+  max-width: 34ch;
+  margin: 0;
+  padding-top: 2px;
   color: var(--ink-50);
   font-family: var(--serif);
-  font-size: 1.1rem;
+  font-size: clamp(1.06rem, .5vw + .98rem, 1.24rem);
   font-style: italic;
-  line-height: 1.4;
+  line-height: 1.36;
   text-wrap: pretty;
+  hanging-punctuation: first;
 }
 
 .specimen__margin::before {
   display: block;
-  width: 46px;
+  width: 100%;
   height: 2px;
-  margin-bottom: 12px;
+  margin-bottom: 13px;
   content: '';
-  background: var(--pink);
+  /* forty-six pixels of press and the rest of the line, which is the specimen's
+     own device and is now the sheet's device: a short stub that carries */
+  background: linear-gradient(90deg, var(--pink) 0 46px, var(--rule) 46px 100%);
+  transform-origin: 100% 50%;
 }
 
-/* the brief is printed on the specimen itself — a separate sheet of paper lying
-   on the one being ruled, with margins of its own. so it keeps its own three
-   columns: the armature runs on underneath it and comes out the far side */
+/* THE NOTE COMES UP WITH THE PLATE. the sheet is keyed on the phrase, so every
+   change of plate brings a new margin note with it, and the note is set the way
+   a note is set when it arrives late on a slow press: the stub draws itself from
+   the trim back to the press, and the words follow it in. it is the only piece of
+   type on the sheet that arrives rather than being there, and it is why the
+   margin reads as something the page is saying rather than something the page is
+   showing. */
+@media (prefers-reduced-motion: no-preference) {
+  .specimen__margin::before {
+    animation: note-rule .46s var(--ease-out) both;
+  }
+
+  .specimen__margin {
+    animation: note-ink .58s var(--ease-out) .1s both;
+  }
+}
+
+@keyframes note-rule {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes note-ink {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+}
+
+/* THE BRIEF IS A MARGIN COLUMN NOW, not a strip of three cells across the whole
+   sheet. it used to lie under the prose like a slip of paper laid on top of the
+   one being ruled — which is a good object, and was printed in the wrong place:
+   the spread above it had given up its right-hand column to a thirty-character
+   note and then handed the whole measure to a list, so the band was a two-column
+   spread with a hole in it and a form underneath.
+
+   so the three directives take the column the note vacated: one measure, a
+   hairline down its fore-edge, three figures in blue because they are counts. the
+   armature still runs on underneath them and comes out the far side — it is the
+   sheet, not the column — and the specimen keeps the two margins it has always
+   had, a body column and a narrower one beside it, with something in both. */
 .brief {
+  grid-column: 2;
+  align-self: start;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
-  background: var(--rule);
-  border-top: 1px solid var(--rule);
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding-left: clamp(14px, 1.7vw, 24px);
+  border-left: 1px solid var(--rule);
+  list-style: none;
 }
 
 .brief li {
   display: grid;
-  gap: 8px;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 4px 10px;
   align-content: start;
-  padding: clamp(15px, 1.8vw, 22px);
-  background: var(--stock-3);
+  padding: 11px 0 12px;
   color: var(--ink-70);
   font-family: var(--serif);
   font-size: 1rem;
   line-height: 1.44;
   text-wrap: pretty;
+}
+
+/* the figure is hung in the margin of the directive rather than set above it,
+   which is where a margin figure goes and what makes a numbered list read as a
+   column of notes rather than as three small headings */
+.brief li + li {
+  border-top: 1px solid var(--rule-soft);
 }
 
 /* the figures are counts, so federal blue — and the pink that used to sit here
@@ -7543,6 +7693,22 @@ html[data-reveal='on'] .type__panel.is-in .type__resolved-name {
      stacks: the flats and the place, then the count, then the note below */
   .sheetfoot p {
     flex: 1 1 100%;
+  }
+
+  /* and the count has to be able to stand there. the slug beside the rule is
+     the only part of the line that is words, it was told never to shrink, and
+     at a phone's measure it therefore ran a hundred and forty pixels off the
+     trim and was cut in half by it — "three imp" at the right edge of the foot
+     of the sheet. so at this width the slug wraps instead, onto a second line
+     under its own rule, which is what a foot margin does when the measure runs
+     out. */
+  .sheetfoot__count {
+    flex-wrap: wrap;
+  }
+
+  .sheetfoot__count > span:not(.pica) {
+    white-space: normal;
+    text-wrap: pretty;
   }
 
   .sheetfoot__next {
@@ -9044,6 +9210,21 @@ html[data-ready='on'] .signoff__fleck--b {
   opacity: .62;
 }
 
+/* and on a phone the two halves of the head of a block stop trying to sit on
+   one line. `margin-left: auto` was pushing the fact against the trim while the
+   lead wrapped underneath it, so "four notes from the press" broke in the
+   middle of itself and stood beside its own fact at half the width. */
+.colophon__notes-kicker {
+  flex-wrap: wrap;
+  row-gap: 2px;
+}
+
+@media (max-width: 620px) {
+  .colophon__notes-fact {
+    margin-left: 0;
+  }
+}
+
 /* NO FIGURES ON THESE NOTES. they were numbered i–vi, which are the same
    figures the index in the bar gives its four passes, and 01–03 belongs to the
    three plates. a page that prints the same numbers for two different lists has
@@ -9774,7 +9955,6 @@ html[data-reveal='on'] .reveal.is-in {
     row-gap: var(--air-block);
   }
 
-  .standfirst__note,
   .standfirst__say,
   .order {
     grid-column: 1 / -1;
@@ -9783,6 +9963,10 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   .standfirst__note {
+    margin-top: var(--air-block);
+  }
+
+  .standfirst__note-text {
     max-width: 44ch;
   }
 
@@ -9941,17 +10125,11 @@ html[data-reveal='on'] .reveal.is-in {
     padding-bottom: 0;
   }
 
-  .standfirst__note,
   .standfirst__say,
   .order {
     grid-column: 1 / -1;
     grid-row: auto;
     padding-right: 0;
-  }
-
-  .standfirst__note {
-    max-width: 44ch;
-    padding-left: 12px;
   }
 
   /* and the verdict keeps its two voices on one baseline at a phone's
@@ -9992,10 +10170,28 @@ html[data-reveal='on'] .reveal.is-in {
     max-width: 100%;
   }
 
+  /* the rest of the measure goes under the setting and reads as a column: the name
+     of the run and its uncounted rule first — which is the counted measure above
+     carrying on, and wants to be read before anything interrupts it — and the
+     margin note after it, where a note goes under a rule it is standing on. */
   .specimen__rest {
+    display: flex;
+    flex-direction: column;
     align-self: auto;
-    justify-items: start;
+    align-items: flex-start;
+    gap: 12px;
     text-align: left;
+  }
+
+  .specimen__rest-foot {
+    order: 1;
+    width: 100%;
+    justify-items: start;
+  }
+
+  .specimen__margin {
+    order: 2;
+    max-width: 42ch;
   }
 
   /* the traps are pinned to the two ends of a rule that now runs edge to edge,
@@ -10004,19 +10200,25 @@ html[data-reveal='on'] .reveal.is-in {
     display: none;
   }
 
-  .specimen__lede,
-  .specimen__margin {
+  .specimen__lede {
     grid-column: 1;
+  }
+
+  .brief {
+    grid-column: 1;
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .brief li {
+    padding: 10px 0 11px;
   }
 
   .specimen__stack {
     min-width: 0;
     max-width: 100%;
     justify-self: start;
-  }
-
-  .specimen__margin {
-    margin-top: 4px;
   }
 }
 
@@ -10173,10 +10375,6 @@ html[data-reveal='on'] .reveal.is-in {
      and would have put every hairline in the wrong place. */
   :root {
     --cols: 6;
-  }
-
-  .brief {
-    grid-template-columns: minmax(0, 1fr);
   }
 
   /* the slip loses its term column rather than squeezing it: a press slip on a

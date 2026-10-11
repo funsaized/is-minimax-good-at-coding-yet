@@ -1,47 +1,41 @@
-The press now runs down the whole sheet at the gate; the foot margin's count can be read again.
+# 528 — the margin speaks
 
-## Iteration 527
+The two notes on the sheet move into real margins, and the two biggest holes on the light sheet close.
 
-**The gate is now something you watch happen.** Every report this sheet made
-about the register was deliberately small — traps fill, the lamp goes warm, the
-flats fuse, the chop lands, the readout says two words — which is right, but it
-meant the press itself was never seen running on five thousand pixels of paper.
-Bringing the blade to the gate is now a single choreographed pass: a lit edge the
-width of the measure with the ink standing on its face, the film it starves onto
-the stock behind it, and the bare stock ahead of it still under the lamp. It is
-the same machine as the pull, crossing the sheet instead of a card. New file
-`src/pressrun.tsx`; mounted for the length of one pass, keyed on its count, and
-never mounted under `prefers-reduced-motion`. It runs under the slug bar and
-stops short of the control strip, like the pull. On the ink slab the wash in
-front of the blade goes and the sheen moves behind it, because a warm-white
-wash travelling over solid ink greys it rather than lighting it.
+## Composition
 
-**The pass is timed off the length of the document**, not a round number: a press
-runs at a speed, so the blade crosses the reader's eye at the same rate whatever
-they are reading and a short sheet is a short pull. Clamped to 850–2500ms, held
-in a ref so nothing under a moving blade re-renders. It is taken off again when
-the forme is knocked loose.
+**Close read.** The specimen stage set one phrase hard left and printed ~1100px of nothing beside it,
+while the note that annotates the phrase sat four inches lower, in a 30ch measure with ~300px of
+empty paper on its own other side. The margin note is now the head of the rest of the measure — set
+against the top of the setting, where a margin note goes — and the three directives move into the
+margin column the note vacated in the spread below, as a list on a hairline with the blue figures
+hung beside each directive rather than stacked above it. The full-width strip the directives used to
+occupy is gone. Band height 870px → 715px at 1440.
 
-**The foot margin can count again.** The count, the counting rule and the note
-at the end of the line shared one shrinkable flex line, and flex gave the shrink
-to whichever item had the most text — so "one sentence · seven words · three
-impressions" was crushed to the width of its longest word and set as a column
-five lines deep, at every width from 1600px down to a phone. The rule is now the
-only part of the block that gives ground, the slug beside it never shrinks, and
-the note takes a line of its own when the measure runs out.
+**Standfirst.** The answer and its argument ended 190px above the job ticket beside them, leaving a
+hole seven columns wide at the foot of the first screen. The "on the mark" note — which annotates
+the mark in the title — moves out of the press's margin and down into the argument's column, so the
+left half is now one block (answer, argument, note) sharing the title's left edge, and the order of
+work takes the whole right half top to bottom. Band height 476px → 415px; the two columns now finish
+49px apart. The lede is also given the measure the band gave it (52ch → 60ch).
 
-**The specimen got its rung.** `--specimen` went from 2.62rem to 3.05rem. The
-close read is the one band that exists to look closely at a phrase and it was
-setting that phrase at the same size as the margin notes annotating it. It is
-still the step directly under the head — the ladder printed on the type list now
-says 3.05rem, and the order going down the page still never doubles back. The
-stage's padding, the stack's reserved height and the count figure were rescaled
-around it.
+## Motion
 
-**Verified:** `npm run build` clean. No horizontal overflow from 320px to 1600px.
-Tab order and 2px focus outlines unchanged; reduced motion reaches register with
-no pass played.
+The margin note inks in with the plate: the pink stub draws itself back from the trim, the words
+follow. It is the only type on the sheet that arrives rather than being there. Guarded behind
+`prefers-reduced-motion: no-preference`, so a still reader gets the same note with nothing travelling.
 
-**Not changed:** the title, the entry point, the packages, the build
-configuration, the column rails, the drying ramp, the blade, the plate case, the
-proof, the ream's stack or the colour grammar.
+## Fixes
+
+- The foot margin's counting rule was clipped at a phone's width: the slug beside it was told never
+  to shrink, so "three impressions" ran ~140px off the trim and was cut in half. It wraps now.
+- The colophon's "four notes from the press" head was breaking against its own fact on a phone,
+  which `margin-left: auto` had pushed to the trim while the lead wrapped under it.
+- The type list printed `--specimen` as `2.62rem` while the scale ladder three inches above it
+  printed `3.05rem` for the same token. Two copies of one claim that could disagree; now `3.05rem`
+  in both, which is the token's actual maximum.
+
+## Unchanged
+
+Title, document title, entry point, framework, build configuration, keyboard map, hash navigation,
+the plate/bed/proof machinery, and every measure on the page.

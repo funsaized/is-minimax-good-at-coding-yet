@@ -977,25 +977,41 @@ export function App() {
                 </p>
 
                 <p className="lede">{LEDE}</p>
-              </div>
 
-              {/* THE PRESS'S OWN MARGIN. the note used to sit in the first three
-                  columns, against the left edge of the sheet, and the answer it
-                  annotates began a third of the way across from it — so the one
-                  line on this page that says what the question mark is for was
-                  printed in the margin and the answer was printed in the middle.
-                  it is under the case now, where the three plates live and where
-                  every other note on the sheet about a particular mark already
-                  sits, and the answer takes the poster's own left edge. */}
-              <p className="standfirst__note">
-                <span className="standfirst__kicker">
-                  <RegistrationMark className="standfirst__mark" />
-                  on the mark
-                </span>
-                <span className="standfirst__note-text">
-                  The question mark is load-bearing. <em>Give it somewhere to land.</em>
-                </span>
-              </p>
+                {/* THE PRESS'S OWN MARGIN — IN THE MARGIN.
+                    the note used to stand in the fourth band under the title,
+                    in the press's own margin beside the case, which is where
+                    every other note about a particular mark on this sheet sits.
+                    and the argument it annotates began three columns further
+                    left, so the two of them shared no left edge, no measure
+                    and no eye-line — a note about the mark in the title, printed
+                    a third of the way to the right of the title.
+
+                    the argument is under the title now and shares its left edge
+                    all the way down, so the note comes with it. that is what
+                    balances the band as well: the answer and its argument used
+                    to be two hundred pixels shorter than the ticket beside
+                    them, and the first screen of the sheet ended in a hole the
+                    width of seven columns. one block on the left — the answer,
+                    the argument, the one line about the mark — and one instrument
+                    on the right, top to bottom, and the two of them finish
+                    within a line of each other.
+
+                    and the note keeps the sheet's own device: forty-six pixels
+                    of pink and then a hairline to the trim. a stub that
+                    carries, which is what the counted rule in the close read
+                    does with its six characters, and what the foot margin does
+                    with the seven words of the sentence. */}
+                <p className="standfirst__note">
+                  <span className="standfirst__kicker">
+                    <RegistrationMark className="standfirst__mark" />
+                    on the mark
+                  </span>
+                  <span className="standfirst__note-text">
+                    The question mark is load-bearing. <em>Give it somewhere to land.</em>
+                  </span>
+                </p>
+              </div>
 
               {/* THE ORDER OF WORK. the last four columns of the band used to
                   carry two thin links to passes the index in the bar already

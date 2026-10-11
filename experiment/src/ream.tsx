@@ -304,11 +304,31 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
               that nothing is printed in is air the reader has to take on trust.
               so the rule carries on past the setting to the trim, uncounted and
               a good deal quieter, and the name of the run stands at the far end
-              of it — six letters of a line that holds rather more than six. */}
-          <p className="specimen__rest" aria-hidden="true">
-            <span className="specimen__rest-word">{note.measure}</span>
-            <span className="specimen__rest-rule" />
-          </p>
+              of it — six letters of a line that holds rather more than six.
+
+              AND THE AIR IS NOW SPOKEN FOR. this column was eleven hundred
+              pixels of nothing with a hairline at the bottom of it, and the note
+              that annotates the phrase — the one sentence the band has to say
+              about its own setting — was printed four inches below it in a
+              thirty-character measure with three hundred pixels of nothing
+              beside it. the margin note belongs in a margin, so it is here: at
+              the head of the column, set against the top of the setting, where a
+              margin note goes on any spread worth looking at. the note and the
+              setting now share a baseline band and the measure keeps its own,
+              and the void between them is the air the sheet has been arguing
+              about all along rather than a hole the argument had missed.
+
+              the rest of the measure keeps its own voice at the foot of the
+              column, so the block reads top to bottom: what the sheet says
+              about the phrase, the phrase, the count, and the name of the run
+              standing at the trim. */}
+          <div className="specimen__rest">
+            <p className="specimen__margin">{note.margin}</p>
+            <p className="specimen__rest-foot" aria-hidden="true">
+              <span className="specimen__rest-word">{note.measure}</span>
+              <span className="specimen__rest-rule" />
+            </p>
+          </div>
 
           <span className="specimen__reg" aria-hidden="true">
             <RegistrationMark />
@@ -346,19 +366,31 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
               {rest}
             </p>
           </div>
-          <p className="specimen__margin">{note.margin}</p>
-        </div>
 
-        <ol className="brief">
-          {note.look.map((line, position) => (
-            <li key={line}>
-              <span className="brief__fig" aria-hidden="true">
-                {String(position + 1).padStart(2, '0')}
-              </span>
-              {line}
-            </li>
-          ))}
-        </ol>
+          {/* THE THREE DIRECTIVES ARE A MARGIN NOW.
+              they were a strip of three cells laid across the whole sheet under
+              the prose, which is a form — but the form sat below a paragraph and
+              a margin note that had both just left the stage, so the band printed
+              a spread with a hole in its right-hand column and then answered that
+              hole with a full-width band rather than with anything in it.
+
+              so they take the margin the note vacated: three numbered rules set as
+              a list down a hairline column, the figures in blue because they are
+              counts, each one the directive the sheet is actually checked
+              against. the specimen's own margins are what they have always been —
+              a body column and a narrower one beside it — and now both of those
+              columns say something. */}
+          <ol className="brief">
+            {note.look.map((line, position) => (
+              <li key={line}>
+                <span className="brief__fig" aria-hidden="true">
+                  {String(position + 1).padStart(2, '0')}
+                </span>
+                <span className="brief__text">{line}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
 
         <div className="specimen__foot">
           <p className="specimen__prompt"><span aria-hidden="true">↳</span> {note.prompt}</p>
