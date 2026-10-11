@@ -3602,7 +3602,9 @@ html[data-register='on'] .ink-trap__rule {
 }
 
 .sheet__slug {
-  justify-content: space-between;
+  /* the band slug is a contents line: a caption at the head of the band, the
+     fact it is head of at the trim, and a leader measuring the distance. it
+     used to be two things with the rest of the measure left out */
   gap: 14px 24px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--rule);
@@ -3652,6 +3654,13 @@ html[data-register='on'] .ink-trap__rule {
      does — the standfirst's fact is the one that goes, because the band it
      heads is the one the reader is already standing in */
   .standfirst__slug-fact {
+    display: none;
+  }
+
+  /* and a leader with nothing to measure across is two dots somebody drew */
+  .sheet__slug .leader,
+  .standfirst__slug .leader,
+  .specimen__slug .leader {
     display: none;
   }
 }
@@ -3858,7 +3867,8 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
 .qrail__slug {
   /* the slug every band on the light sheet opens on, standing in a margin rather
      than across a measure: the fact moves under the lead instead of opposite
-     it, because opposite it there is no room */
+     it, because opposite it there is no room — so this is the one band slug
+     whose leader is never printed */
   flex-wrap: wrap;
   gap: 3px 10px;
   /* no rule of its own: the case opens on the 2px the press prints at the head of
@@ -4481,7 +4491,6 @@ html[data-register='on'] .plated__layer--black .mark {
 .standfirst__slug {
   grid-column: 1 / -1;
   grid-row: 1;
-  justify-content: space-between;
   gap: 12px 24px;
   padding-bottom: 13px;
 }
@@ -4822,7 +4831,11 @@ html[data-pulled='on'] .verdict__bloom {
    way off the first screen */
 .xlink {
   display: grid;
-  grid-template-columns: 16px minmax(0, 1fr) auto;
+  /* the caption takes its own width and the leader takes the rest, rather than
+     the caption stretching to the trim and the leader having nothing to be
+     measured across. `max-content` rather than `1fr` so the free space goes to
+     the leader and not to the words */
+  grid-template-columns: 16px minmax(0, max-content) minmax(14px, 1fr) auto;
   align-items: center;
   gap: 11px;
   min-height: 44px;
@@ -5075,13 +5088,17 @@ html[data-pulled='on'] .verdict__bloom {
 
 .order__act {
   display: flex;
+  gap: 12px;
   transition: background .26s var(--ease);
 }
 
 /* the label takes what is left of the row, and nothing else may push it out:
    the state on the right is a figure and is never allowed to wrap */
 .order__act .order__label {
-  flex: 1 1 auto;
+  /* the caption takes its own width and the leader takes the rest. given the
+     slack instead, the caption stretched to the middle of the row and left the
+     leader a hundred pixels of nothing to be measured across */
+  flex: 0 1 auto;
 }
 
 .order__act:hover {
@@ -5970,8 +5987,7 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  gap: 10px 22px;
   padding: 12px clamp(18px, 2.2vw, 28px);
   border-bottom: 1px solid var(--rule);
   color: var(--ink-50);
@@ -6578,10 +6594,17 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: space-between;
+  /* the prompt takes its own width and the leader takes the rest, so the two
+     ways on to another plate are joined to the question they are answering
+     rather than floated at the far end of a rule */
   gap: 14px 20px;
   padding: 13px clamp(20px, 2.6vw, 36px);
   border-top: 1px solid var(--rule);
+}
+
+.specimen__foot .leader {
+  align-self: flex-end;
+  margin-bottom: 5px;
 }
 
 .specimen__prompt {
@@ -7091,10 +7114,17 @@ html[data-register='on'] .fold-mark__plate--black {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: space-between;
   gap: 3px 14px;
   padding: 11px 0 10px;
   border-bottom: 1px solid var(--rule);
+}
+
+/* the head of a cell is a caption and a job: which of the three faces this is,
+   and what it is on the sheet for. the leader is the join, and it takes only
+   what the caption has left over so it can never push the job onto a line of
+   its own to buy itself a run. */
+.type__face .leader {
+  max-width: 130px;
 }
 
 .type__face-name {
@@ -7117,6 +7147,18 @@ html[data-register='on'] .fold-mark__plate--black {
   font-size: var(--label-3);
   letter-spacing: .1em;
   text-transform: uppercase;
+}
+
+.type__steps {
+  /* three cells of very different lengths share one band, so the short one
+     used to end with eighty pixels of nothing above its own foot. the steps
+     take the slack between them instead of above the last of them: an even
+     air between the rows is generous setting, and a hole at the foot of one
+     column of three is not */
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .type__step {
@@ -7211,7 +7253,8 @@ html[data-register='on'] .fold-mark__plate--black {
 .type__note {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
+  /* the leader takes the slack, so the token and the figure are joined by a
+     measure rather than by the width of the cell they happen to be in */
   gap: 10px;
   margin-top: 7px;
   color: var(--ink-50);
@@ -7494,12 +7537,13 @@ html[data-register='on'] .fold-mark__plate--black {
   list-style: none;
 }
 
-/* one step of the scale per line: the token that sets it hard left, what it is
-   for in the middle, and the figure hard right — a job ticket read from the top
-   down, with the number in the ink every other number on the sheet is in */
+/* one step of the scale per line: the token that sets it hard left, the figure
+   hard right, and the leader that measures the distance between them — and the
+   role it does in the sheet under the two, which is where a job ticket puts the
+   description of the part rather than across the head of the line. */
 .scale__list li {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, max-content) minmax(14px, 1fr) auto;
   align-items: baseline;
   gap: 2px 12px;
   padding: 7px 0;
@@ -7518,12 +7562,15 @@ html[data-register='on'] .fold-mark__plate--black {
 }
 
 .scale__token {
+  grid-row: 1;
+  grid-column: 1;
   color: var(--black);
   font-weight: 600;
 }
 
 .scale__role {
-  grid-column: 1;
+  grid-row: 2;
+  grid-column: 1 / -1;
   color: var(--ink-50);
   letter-spacing: .08em;
   text-transform: none;
@@ -7531,7 +7578,7 @@ html[data-register='on'] .fold-mark__plate--black {
 
 .scale__size {
   grid-row: 1;
-  grid-column: 2;
+  grid-column: 3;
   color: var(--blue-ink);
   font-weight: 600;
   letter-spacing: .04em;
@@ -9282,11 +9329,21 @@ html[data-ready='on'] .signoff__fleck--b {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: space-between;
+  /* the two leaders take the slack between the three things the foot of the run
+     has to say, so the row is filled edge to edge at every width it is set at */
   gap: 12px 20px;
   margin-top: var(--air-block);
   padding-top: var(--air-tight);
   border-top: 1px solid rgba(251, 248, 241, .18);
+}
+
+/* below the width at which three cells and two leaders can share a line the
+   leaders go and the row stacks: a leader with nothing to measure across is
+   two dots somebody drew, and two of them is worse than none */
+@media (max-width: 900px) {
+  .colophon__foot .leader {
+    display: none;
+  }
 }
 
 .colophon__return {
@@ -9483,12 +9540,12 @@ html[data-register='on'] .colophon__last-rule {
    ============================================================= */
 
 .colophon__signoff {
-  flex: 1 0 100%;
+  /* the middle cell of the foot row now, between two leaders, rather than a row
+     of its own under a measure that was three fifths empty */
   display: flex;
   align-items: baseline;
   gap: 10px;
-  padding-top: 11px;
-  border-top: 1px solid rgba(251, 248, 241, .14);
+  min-width: 0;
   color: var(--slab-50);
   font-family: var(--mono);
   font-size: var(--label-2);
@@ -11477,5 +11534,410 @@ html[data-slab='on'] .pressrun__blade::after {
   }
   to {
     transform: translate3d(0, 136vh, 0);
+  }
+}
+
+
+/* =============================================================
+   ITERATION 529 — THE LEADER
+
+   Every press sheet joins a caption to its figure with a leader: a
+   contents line, a film timing strip, a job ticket, a stopwatch
+   scale. It is the oldest convention on the page and the only one it
+   had never printed. A dozen rows put their caption hard against the
+   left trim and their figure hard against the right one and left
+   several hundred pixels of bare stock in between — five hundred of
+   them on the blade row of the ticket, which is the widest row on the
+   first screen and the one where the distance between the two halves
+   of the sentence is a number the reader is being asked to care
+   about. That is not air on a specimen. On a row with a caption in it,
+   it is a form nobody filled in.
+
+   so the leader is the fill. drawn, not typed: a hairline with a tick
+   standing on it every seven pixels, in federal blue at a quarter,
+   because a leader measures a distance and blue on this sheet is only
+   ever a measurement. it carries nothing, it is hidden from the tree,
+   and the one leader that does report anything says so below.
+
+   the slab gets its own: a leader printed on ink has to be lifted off
+   the dark ground the same way the slab lifts the pink and the blue.
+   ============================================================= */
+
+.leader {
+  position: relative;
+  flex: 1 1 0;
+  align-self: center;
+  min-width: 26px;
+  height: 10px;
+  /* the weight the ticks are drawn at, handed to the keyframe below so that
+     setting the scale up again does not also make it darker */
+  --tick: .22;
+  color: var(--blue-ink);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* the hairline, with a tick standing on it every seven pixels. the tick is
+   what makes it a leader and not a rule: a rule that thin is a border, and a
+   border between a caption and its figure is a box, and this sheet has not
+   drawn a box around anything since the bed and the proof took their own
+   borders with them. */
+.leader::before,
+.leader::after {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  content: '';
+}
+
+.leader::before {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(42, 62, 201, .3), rgba(42, 62, 201, .13));
+}
+
+.leader::after {
+  height: 4px;
+  background-image: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 9px);
+  opacity: .22;
+}
+
+/* the two ends of the run are drawn as well, because a leader that stops in the
+   middle of nowhere reads as a dotted line somebody put there rather than as the
+   join between two things that belong to one another */
+.leader--blue {
+  background-image: linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor);
+  background-position: 0 2px, 100% 2px;
+  background-size: 1px 5px, 1px 5px;
+  background-repeat: no-repeat;
+}
+
+/* ---------- the gate, as a scale ---------- */
+
+.leader--gate {
+  --tick: .2;
+  overflow: visible;
+  min-width: 62px;
+}
+
+.leader--gate::before,
+.leader--gate::after {
+  display: none;
+}
+
+/* the strip. it is broken at the gate, because a mark that runs through the
+   notch it is being measured against is not a mark you can read */
+.leader__rule {
+  position: absolute;
+  inset: auto 0 2px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(42, 62, 201, .3) 0,
+    rgba(42, 62, 201, .3) calc(50% - 3px),
+    transparent calc(50% - 3px),
+    transparent calc(50% + 3px),
+    rgba(42, 62, 201, .3) calc(50% + 3px),
+    rgba(42, 62, 201, .3) 100%
+  );
+}
+
+.leader__rule::after {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  content: '';
+  color: var(--blue-ink);
+  background-image: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 9px);
+  opacity: .2;
+  mask-image: linear-gradient(
+    90deg,
+    #000 0 calc(50% - 3px),
+    transparent calc(50% - 3px) calc(50% + 3px),
+    #000 calc(50% + 3px) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    #000 0 calc(50% - 3px),
+    transparent calc(50% - 3px) calc(50% + 3px),
+    #000 calc(50% + 3px) 100%
+  );
+}
+
+/* the run between the gate and the blade, in the plate that means the press */
+.leader__run {
+  position: absolute;
+  top: 1px;
+  bottom: 2px;
+  left: calc(50% - var(--run, 0%));
+  width: var(--run, 0%);
+  background: var(--pink-ink);
+  opacity: .62;
+  transition: width .1s linear;
+}
+
+/* the gate: two pips either side of the notch the blade has to find */
+.leader__gate {
+  position: absolute;
+  top: 0;
+  bottom: 1px;
+  left: calc(50% - .5px);
+  width: 1px;
+  background: var(--pink-ink);
+  opacity: .5;
+}
+
+.leader__gate::before,
+.leader__gate::after {
+  position: absolute;
+  left: -1px;
+  width: 3px;
+  height: 1px;
+  content: '';
+  background: var(--pink-ink);
+}
+
+.leader__gate::before {
+  top: 1px;
+}
+
+.leader__gate::after {
+  bottom: 2px;
+}
+
+/* the squeegee, where the blade actually is. square at the leading end and a
+   wedge at the trailing one, which is the shape a pull leaves and not the shape
+   a highlighter does */
+.leader__mark {
+  position: absolute;
+  top: -1px;
+  bottom: 1px;
+  left: var(--at, 50%);
+  width: 2px;
+  background: var(--pink-ink);
+  transform: translateX(-1px);
+  transition: left .1s linear;
+}
+
+.leader__mark::before {
+  position: absolute;
+  top: -1px;
+  left: 1px;
+  width: 5px;
+  height: 3px;
+  content: '';
+  background: var(--pink-ink);
+  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+}
+
+/* and at the gate the gauge is one mark on one notch, in black, because a
+   measurement that is finished stops being a measurement */
+html[data-register='on'] .leader__run {
+  opacity: 0;
+}
+
+html[data-register='on'] .leader__mark {
+  background: var(--black);
+}
+
+html[data-register='on'] .leader__mark::before {
+  background: var(--black);
+}
+
+/* ---------- the leader on the slab ---------- */
+
+.leader--slab {
+  color: var(--slab-blue);
+}
+
+.leader--slab::before {
+  background: linear-gradient(90deg, rgba(128, 140, 255, .4), rgba(128, 140, 255, .16));
+}
+
+.leader--slab::after {
+  opacity: .34;
+}
+
+/* ---------- what the gate does to every leader on the sheet ----------
+
+   The leaders were added to fill rows that were printing a caption at one
+   end of the measure and its figure at the other. What they turned out to
+   be, once there were seventeen of them, is the page's own idea spread out
+   across it: every one is a blue plate standing next to a black one, and
+   every one of them opens as the blade comes off the rest and closes as
+   the blade reaches the gate.
+
+   So one attribute on the root and the whole sheet comes into register at
+   once. Seventeen small marks that had been arguing quietly stop arguing
+   at the same beat, which is the argument the page has been making about
+   the difference between a layout and a design — except that here it is
+   literally true, and it costs one selector.
+
+   blue is a measurement; black is a finished one. that rule was already
+   the page's, and the leaders obey it rather than inventing anything. */
+
+html[data-register='on'] .leader::before {
+  background: linear-gradient(90deg, rgba(21, 20, 27, .3), rgba(21, 20, 27, .15));
+}
+
+html[data-register='on'] .leader {
+  color: rgba(21, 20, 27, .5);
+}
+
+html[data-register='on'] .leader__rule {
+  background: linear-gradient(
+    90deg,
+    rgba(21, 20, 27, .3) 0,
+    rgba(21, 20, 27, .3) calc(50% - 3px),
+    transparent calc(50% - 3px),
+    transparent calc(50% + 3px),
+    rgba(21, 20, 27, .3) calc(50% + 3px),
+    rgba(21, 20, 27, .3) 100%
+  );
+}
+
+html[data-register='on'] .leader__rule::after {
+  color: rgba(21, 20, 27, .5);
+}
+
+/* the slab keeps its own ink: a finished measurement on ink is not black,
+   it is the one light that is left */
+html[data-register='on'] .leader--slab {
+  color: rgba(251, 248, 241, .5);
+}
+
+html[data-register='on'] .leader--slab::before {
+  background: linear-gradient(90deg, rgba(251, 248, 241, .34), rgba(251, 248, 241, .14));
+}
+
+/* ---------- narrow measures ----------
+
+   a leader is the join between two things, and a join with nothing to
+   measure across is two dots somebody drew. below the width at which the
+   caption and the figure can still share a line with something between
+   them, the leaders go and the rows go back to being two ends of a rule. */
+
+@media (max-width: 620px) {
+  .leader {
+    display: none;
+  }
+
+  /* except the gate, which is an instrument rather than a join: it has
+     something to say at every width, and on a phone that is exactly where
+     a reader who cannot drag the bed is going to find out how far off the
+     register is */
+  .leader--gate {
+    display: block;
+    min-width: 54px;
+  }
+
+  .leader--gate .leader__rule::after {
+    display: none;
+  }
+}
+
+/* what the rows go back to once the leader has gone. a leader only earns its
+   place by filling a gap; take it away and the gap has to go back to being the
+   two ends of a rule it was before, or the rows print their figure an inch
+   from its own caption for no reason at all. */
+
+@media (max-width: 900px) {
+  .colophon__foot {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 620px) {
+  .sheet__slug,
+  .standfirst__slug,
+  .specimen__slug,
+  .specimen__foot {
+    justify-content: space-between;
+  }
+
+  .type__note {
+    justify-content: space-between;
+  }
+
+  .scale__list li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .scale__list li > .leader {
+    display: none;
+  }
+
+  .xlink {
+    grid-template-columns: 16px minmax(0, 1fr) auto;
+  }
+
+  /* and the caption takes the slack again, with the gate standing at a fixed
+     width beside it — the one leader on the sheet that is an instrument and
+     not a join, so it keeps its place at every width */
+  .order__act .order__label {
+    flex: 1 1 auto;
+  }
+
+  .leader--gate {
+    flex: 0 0 62px;
+  }
+}
+
+/* ---------- what the gate does to the marks themselves ----------
+
+   Every leader on this sheet is a scale: a rule with a tick standing on it,
+   set at a fixed pitch, waiting for somebody to put a mark on it. When the
+   press finally agrees with itself, every one of them is set — all together,
+   once, in a third of a second, and never again until the reader knocks the
+   forme loose and puts it out of register to look at it a second time.
+
+   It is the same gesture the counting rules on the sheet make when the
+   specimen is keyed, run across seventeen rows at once, and it costs one
+   selector and one keyframe. Under stillness it is simply not there: the
+   marks are already standing, which is what a printed scale is. */
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-register='on'] .leader::after,
+  html[data-register='on'] .leader__rule::after {
+    /* the sheet's own `tick-set`, with the resting weight written back into the
+       last frame rather than into the keyframe: a filled animation leaves its
+       final keyframe standing, so a rule that kept the opacity it is drawn at
+       has to hand that number over rather than inherit one. */
+    animation: leader-set .34s var(--ease-out) both;
+  }
+
+  /* and the squeegee drops the last of the way onto the notch rather than
+     sliding there, because the gate takes it the way a magnet does */
+  html[data-register='on'] .leader__mark {
+    animation: blade-set .36s var(--spring) both;
+  }
+
+  html[data-register='on'] .leader__gate {
+    animation: gate-set .36s var(--ease-out) both;
+  }
+}
+
+@keyframes blade-set {
+  from {
+    transform: translateX(-1px) scaleY(2.4);
+  }
+}
+
+@keyframes gate-set {
+  40% {
+    opacity: 1;
+    scale: 1 1.9;
+  }
+}
+
+@keyframes leader-set {
+  from {
+    opacity: 0;
+    transform: scaleY(.15);
+  }
+  to {
+    opacity: var(--tick, .22);
+    transform: scaleY(1);
   }
 }

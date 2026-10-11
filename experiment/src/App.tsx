@@ -14,6 +14,7 @@ import { BarBlade } from './blade'
 import { Chase } from './chase'
 import { ControlEdge } from './edge'
 import { InkTrap } from './ink'
+import { Leader } from './leader'
 import { prefersStill } from './motion'
 import { CropMark, FoldMark, PlateTarget, RegistrationMark, Squeegee } from './marks'
 import { Order } from './order'
@@ -888,6 +889,7 @@ export function App() {
                 <RegistrationMark className="slugline__mark" />
                 the question · set three times · pulled once
               </span>
+              <Leader />
               <span className="sheet__slug-fact">one sentence · seven words · three impressions</span>
             </p>
 
@@ -947,6 +949,7 @@ export function App() {
                   <RegistrationMark className="slugline__mark" />
                   the answer, said once
                 </span>
+                <Leader />
                 <span className="standfirst__slug-fact">and printed once, at the foot of the run</span>
               </p>
 
@@ -1031,6 +1034,7 @@ export function App() {
                 active={active}
                 hot={shown}
                 regRead={regRead}
+                reg={reg}
                 settled={settled}
                 proof={proof}
                 plateTick={plateTick}
@@ -1191,8 +1195,9 @@ export function App() {
                     {SCALE.map((step, index) => (
                       <li key={step.token} style={{ '--i': index } as CSSProperties}>
                         <span className="scale__token">{step.token}</span>
-                        <span className="scale__role">{step.role}</span>
+                        <Leader />
                         <span className="scale__size">{step.size}</span>
+                        <span className="scale__role">{step.role}</span>
                       </li>
                     ))}
                   </ol>
@@ -1449,24 +1454,31 @@ export function App() {
             </section>
           </div>
 
-          <div className="colophon__foot">
+<div className="colophon__foot">
             <a className="colophon__return" href="#question">
               <span aria-hidden="true">↑</span> back to the question
             </a>
-            <p className="colophon__closing">
-              <CropMark className="colophon__crop" />
-              The experiment is the page.
-            </p>
+            <Leader tone="slab" />
 
             {/* THE SIGN-OFF, IN WORDS. the chop on the proof sheet is the reward for
                 finishing the press, and a reward that only exists inside one card is
-                a reward only the readers who happen to be looking at that card
-                ever find. so the foot of the run says the same thing in the plainest
-                voice the sheet owns: what the sheet is waiting for, and the plain
-                fact that it is no longer waiting. both halves of the sentence are
-                facts about the reader's own hands, and it is the only text on the
-                page that changes — which is why it is set to change rather than
-                swapped out from under the eye. */}
+                a reward only the readers who happen to be looking at that card ever
+                find. so the foot of the run says the same thing in the plainest voice
+                the sheet owns: what the sheet is waiting for, and the plain fact that
+                it is no longer waiting. both halves of the sentence are facts about
+                the reader's own hands, and it is the only text on the page that
+                changes — which is why it is set to change rather than swapped out
+                from under the eye.
+
+                and it is the middle of the foot row rather than a row of its own.
+                it used to print underneath the return and the closing line on a
+                measure of its own, which left five hundred pixels of bare slab to
+                the right of a sentence the whole sheet has been arguing towards —
+                the last thing on the page, in the emptiest place on it. now the two
+                leaders either side of it are the row, and the state is the thing
+                they are measuring: the return at one end, the closing line at the
+                other, and the answer to "did they actually work the press" in
+                between. */}
             <p className="colophon__signoff" data-on={ready ? 'on' : 'off'}>
               <span className="colophon__signoff-box" aria-hidden="true">ok</span>
               <span className="colophon__signoff-text">
@@ -1474,6 +1486,12 @@ export function App() {
                   ? 'signed off — the blade is at the gate and the proof is pulled'
                   : 'not signed off — the blade has to reach the gate, and the proof has to be pulled'}
               </span>
+            </p>
+
+            <Leader tone="slab" />
+            <p className="colophon__closing">
+              <CropMark className="colophon__crop" />
+              The experiment is the page.
             </p>
           </div>
 

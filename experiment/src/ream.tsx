@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { findNote, phraseLines, WORD_IDS, type WordId } from './notes'
 import { InkTrap } from './ink'
+import { Leader } from './leader'
 import { RegistrationMark } from './marks'
 import { prefersStill } from './motion'
 import { Pica, Sheetbar } from './paper'
@@ -244,6 +245,7 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
 
         <p className="specimen__slug">
           <span>close read · {note.index} of 03</span>
+          <Leader />
           <span>{note.measure} · {note.set}</span>
         </p>
 
@@ -394,6 +396,7 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
 
         <div className="specimen__foot">
           <p className="specimen__prompt"><span aria-hidden="true">↳</span> {note.prompt}</p>
+          <Leader />
           <p className="specimen__turn">
             <button type="button" onClick={() => onStep(-1)}>← back</button>
             <button type="button" onClick={() => onStep(1)}>next plate →</button>

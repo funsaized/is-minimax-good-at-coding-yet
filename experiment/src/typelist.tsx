@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 import { useFaceReading, type FaceReading, type Kind } from './faces'
+import { Leader } from './leader'
 import { RegisterEye } from './marks'
 import { inRegister } from './pull'
 
@@ -171,6 +172,7 @@ export function TypeList({ reg }: { reg: number }) {
                   {face.name}
                   <span className="type__face-kind">{face.kind}</span>
                 </h3>
+                <Leader />
                 <p className="type__face-role">{face.role}</p>
               </header>
 
@@ -200,6 +202,7 @@ export function TypeList({ reg }: { reg: number }) {
                     )}
                     <p className="type__note">
                       <span>{step.token}</span>
+                      <Leader />
                       <span>{step.size}</span>
                     </p>
                   </li>

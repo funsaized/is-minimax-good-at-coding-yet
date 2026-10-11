@@ -2,6 +2,7 @@ import {
   useRef,
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react'
+import { GateLeader, Leader } from './leader'
 import { findNote, NOTES, WORD_IDS, type WordId } from './notes'
 
 /**
@@ -65,6 +66,10 @@ type OrderProps = {
   hot: WordId
   /** the register, in the words the bar in the head of the page uses for it */
   regRead: string
+  /** the same register as a number, for the scale that stands between the two
+   *  halves of the blade row — the figure and the mark are read out of one
+   *  thing, so they cannot print different answers */
+  reg: number
   settled: boolean
   proof: boolean
   /** remounts on a real change of plate, so the key can be pressed twice */
@@ -102,6 +107,7 @@ export function Order({
   active,
   hot,
   regRead,
+  reg,
   settled,
   proof,
   plateTick,
@@ -204,6 +210,13 @@ export function Order({
             {settled ? 'knock the plates loose' : 'bring the blade to the gate'}
           </span>
         </span>
+        {/* THE SCALE IN THE ROW. the leader that joins this caption to its
+            figure is the bed again, at the width of a table cell: the gate in
+            the middle of it, the blade where it actually is, and the run between
+            them in the plate that means the press. so the reader can see how far
+            off the register is before they read how far off the register it is,
+            and at the gate the two collapse into one mark on one notch. */}
+        <GateLeader reg={reg} />
         <span className="order__state">
           <span className="order__fig">{regRead}</span>
         </span>
@@ -226,6 +239,7 @@ export function Order({
             {proof ? 'cover the proof again' : 'pull the proof'}
           </span>
         </span>
+        <Leader />
         <span className="order__state">
           <span className="order__fig">{proof ? 'pulled' : 'covered'}</span>
         </span>
@@ -242,11 +256,13 @@ export function Order({
         <a className="xlink" href="#close">
           {ARROW}
           <span className="xlink__label">read it closely</span>
+          <Leader />
           <span className="xlink__to" aria-hidden="true">{toClose}</span>
         </a>
         <a className="xlink xlink--quiet" href="#answer">
           {ARROW}
           <span className="xlink__label">go to the pulled answer</span>
+          <Leader />
           <span className="xlink__to" aria-hidden="true">{toAnswer}</span>
         </a>
       </nav>
