@@ -103,12 +103,32 @@ const SCALE = [
 
 /* THE STANDING ARGUMENT. what the sheet says once the verdict is on the table
    above it. this used to be three sentences about the page's own furniture — how
-   the title is set, how many plates print it, where the blade lives — which is
-   an argument a reader has to already be interested in before it means anything.
+   the title is set, how many plates print it, where the blade lives — which is an
+   argument a reader has to already be interested in before it means anything.
    it is now the answer to the title instead, in the plainest voice on the sheet,
-   and the furniture explains itself further down where there is room for it. */
-const LEDE =
-  'And the margin is thin. Any model can write the markup. It is the hundred small decisions nobody asked for — what leads, what gives way, what goes still the moment you stop reading.'
+   and the furniture explains itself further down where there is room for it.
+
+   AND IT IS NOW SET LIKE TYPE, which is the only honest way for a page that
+   argues for typographic judgement to make the argument. the three sentences were
+   run together as one block of serif at one voice, so the paragraph about setting
+   was the one paragraph on the sheet that had not been set. it is cut into the
+   three parts the headline itself obeys:
+
+     hinge   the opening, in the press voice at the body's own size — the same
+             two-voice lockup as the verdict directly above it, so the argument
+             answers the answer in the same two typefaces
+     body    everything else, in the reading voice, at the reading size
+     turn    the last clause, in the one emphasis mark this sheet owns: italic,
+             inked black, underlined in pink. it is the mark the margin note
+             gives "give it somewhere to land", so the page's thesis and the
+             page's advice are printed in the same hand.
+
+   nothing about the words has changed. the paragraph simply has a shape now, and
+   the shape is the sentence's. */
+const LEDE_HINGE = 'And the margin is thin.'
+const LEDE_BODY =
+  ' Any model can write the markup. It is the hundred small decisions nobody asked for — what leads, what gives way, '
+const LEDE_TURN = 'what goes still the moment you stop reading.'
 
 /* the foot of the proof. the standfirst has the honest part now, so the coda
    does the other half of the job: it says what the rest of the page is for and
@@ -205,13 +225,24 @@ export function App() {
   const onBed = findNote(active)
   const waiting = WORD_IDS.filter(id => id !== active).map(id => findNote(id).index)
   const settled = inRegister(reg)
-  /* ONE WAY OF SAYING IT. the bar's gauge, the case's instrument and the type
-     list's gauge all report the register, and a readout that reads the same
-     number three different ways is three chances to be inconsistent — so the
-     sentence is built once, here, and printed three times. */
+  /* ONE WAY OF SAYING IT — AND ONE PLACE TO SAY IT. the bar's gauge, the type
+     list's gauge and the bed's stamp all report the register, and a readout that
+     reads the same number three different ways is three chances to be
+     inconsistent — so the sentence is built once, here, and printed by those
+     three.
+
+     and it is printed by three, rather than by three instruments plus two more.
+     the plate case and the order of work both stood in the first screen printing
+     this same figure in the same words, which put four copies of one number on a
+     screen the size of a phone and then promised "one number, one ramp" in the
+     job ticket at the foot of the page. they now print the *state* — loose, or at
+     the gate — and leave the figure to the two panels that own it: the console in
+     the bar, which is on screen for every pixel of the run, and the bed, which is
+     the machine itself. */
   const regRead = settled
     ? 'in register'
     : `${reg > 0 ? '+' : '−'}${Math.abs(reg).toFixed(2)} off`
+  const regState = settled ? 'at the gate' : 'loose'
   /* THE SHEET IS SIGNED OFF. the blade and the pull are two separate pieces of
      machinery and each of them had a reward of its own, which meant a reader could
      work neither, work one, or work both and the page could not tell the three
@@ -912,7 +943,7 @@ export function App() {
               hot={shown}
               hovering={hover}
               seat={plateSeat}
-              readout={regRead}
+              regState={regState}
               onSelect={select}
               onPreview={setHover}
               onNudge={nudge}
@@ -986,7 +1017,10 @@ export function App() {
                   </span>
                 </p>
 
-                <p className="lede">{LEDE}</p>
+                <p className="lede">
+                  <span className="lede__hinge">{LEDE_HINGE}</span>{LEDE_BODY}
+                  <em className="lede__turn">{LEDE_TURN}</em>
+                </p>
 
                 {/* THE PRESS'S OWN MARGIN — IN THE MARGIN.
                     the note used to stand in the fourth band under the title,
@@ -1040,7 +1074,6 @@ export function App() {
               <Order
                 active={active}
                 hot={shown}
-                regRead={regRead}
                 reg={reg}
                 settled={settled}
                 proof={proof}
@@ -1401,15 +1434,28 @@ export function App() {
                       </p>
                     </div>
 
-                    <div
-                      className="proof__window"
-                      id="proof-body"
-                      role="region"
-                      aria-label="The short answer"
-                      aria-hidden={!proof}
-                    >
-                      <ProofSheet />
-                    </div>
+                    {/* AND IT IS IN THE TREE EITHER WAY. the window used to be
+                       aria-hidden until the proof came out, which meant the one
+                       sentence the whole document exists to deliver was
+                       unreachable to a screen reader who never pressed the key —
+                       a gate the page insists, in print, that is not there. the
+                       sheet's position is that the answer is not behind anything:
+                       newsprint is thin and you can read the whole sentence
+                       through the stock before you touch it, and that is true for
+                       everybody, so the region stays in the tree and the button's
+                       own label is what says whether the sheet on top is out.
+
+                       the copy under the cover is the ghost, and a ghost is not a
+                       sentence, so it is hidden — which leaves exactly one copy
+                       of the answer in the document for a reader to land on. */}
+                  <div
+                    className="proof__window"
+                    id="proof-body"
+                    role="region"
+                    aria-label="The short answer"
+                  >
+                    <ProofSheet />
+                  </div>
                   </div>
                 </div>
               </div>
@@ -1618,7 +1664,7 @@ function Poster({
   hot,
   hovering,
   seat,
-  readout,
+  regState,
   onSelect,
   onPreview,
   onNudge,
@@ -1631,8 +1677,9 @@ function Poster({
   hovering: WordId | null
   /** which of the three cells the blade is standing over, read out of the notes */
   seat: number
-  /** the register, in the plainest words the bar uses for it */
-  readout: string
+  /** the register as a state rather than as a figure — the bar and the bed print
+   *  the number; the case only says whether the press agrees with itself */
+  regState: string
   onSelect: (id: WordId) => void
   onPreview: (id: WordId | null) => void
   onNudge: (event: ReactKeyboardEvent<HTMLElement>, id: WordId) => void
@@ -1934,17 +1981,29 @@ function Poster({
           />
         </div>
 
-        {/* THE INSTRUMENT, HOMED. the three crosses the control strip carries,
-            set where they can be read without being in the way of anything: the
-            foot of the case, on the armature rather than in the middle of a
-            headline. out of register they are three marks arguing; at the gate
-            one bullseye, and the figure beside them says so in the same words
-            the bar uses. */}
+        {/* THE INSTRUMENT, HOMED — AND, FOR THE FIRST TIME, SILENT.
+
+            the three crosses the control strip carries, set where they can be read
+            without being in the way of anything: the foot of the case, on the
+            armature rather than in the middle of a headline. out of register they
+            are three marks arguing; at the gate one bullseye.
+
+            it used to print the figure beside them as well — "+1.00 off", in the
+            same words the bar uses — which made the first screen of this sheet
+            carry the register four times over: here, on the blade row of the order
+            of work, in the bar, and on the bed at the foot of it. four panels for
+            one number, three of them in the same viewport, and the job ticket at
+            the foot of the run promising "one number, one ramp" all the way down.
+
+            so the mark stays and the figure goes. a target reports the offset by
+            BEING it, which is the one instrument on the page that does not have
+            to be read, and the figure is printed in the two places that own it:
+            the console in the bar, which is on screen for every pixel of the run,
+            and the bed, which is the machine itself. */}
         <p className="qrail__eye" aria-hidden="true">
           <PlateTarget className="qrail__target" />
-          <span className="qrail__eye-read">
-            reg. mark · live read · <span className="qrail__eye-fig">{readout}</span>
-          </span>
+          <span className="qrail__eye-read">reg. mark · live</span>
+          <span className="qrail__eye-state">{regState}</span>
         </p>
       </div>
 

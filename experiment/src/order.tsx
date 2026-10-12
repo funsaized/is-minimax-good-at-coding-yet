@@ -26,8 +26,16 @@ import { findNote, NOTES, WORD_IDS, type WordId } from './notes'
  * places the index in the bar already lists, now carries the order of work. It
  * is a job ticket: three rows, one for each machine, each row a real control
  * that does the thing its key does, each row printing its own live state in the
- * sheet's own grammar — a figure in blue, a state in pink, a label in the
+ * sheet's own grammar — a count in blue, a state in pink, a label in the
  * furniture face.
+ *
+ * and a job ticket prints one measurement once. the bar's console reports the
+ * offset and so does the bed, which is the machine, and this ticket used to
+ * report it a third time between them — on one screen, above the bed, below the
+ * case. so the two rows that are operations print the STATE and let the number
+ * belong to the two panels that own it. the blade row keeps its scale, which is
+ * the better instrument anyway: you can see how far off the press is before you
+ * can read how far off it is.
  *
  * Nothing on it is a switch for something else. Every row is the operation.
  *
@@ -64,11 +72,10 @@ type OrderProps = {
   active: WordId
   /** the plate under the pointer or the focus, which need not be the one up */
   hot: WordId
-  /** the register, in the words the bar in the head of the page uses for it */
-  regRead: string
-  /** the same register as a number, for the scale that stands between the two
-   *  halves of the blade row — the figure and the mark are read out of one
-   *  thing, so they cannot print different answers */
+  /** the register as a number, for the scale that stands between the two halves
+   *  of the blade row — the mark is read out of the same thing as the state, so
+   *  they cannot print different answers. the figure itself is printed by the bar
+   *  and by the bed; a job ticket that repeated it would be a fourth copy */
   reg: number
   settled: boolean
   proof: boolean
@@ -106,7 +113,6 @@ const ARROW = (
 export function Order({
   active,
   hot,
-  regRead,
   reg,
   settled,
   proof,
@@ -199,7 +205,7 @@ export function Order({
           so the row is never a control that has nothing left to do. */}
       <button
         type="button"
-        className="order__row order__act"
+        className="order__row order__act order__row--blade"
         data-on={settled ? 'on' : 'off'}
         aria-keyshortcuts={settled ? undefined : '0'}
         onClick={settled ? onLoosen : onGate}
@@ -210,15 +216,24 @@ export function Order({
             {settled ? 'knock the plates loose' : 'bring the blade to the gate'}
           </span>
         </span>
-        {/* THE SCALE IN THE ROW. the leader that joins this caption to its
-            figure is the bed again, at the width of a table cell: the gate in
-            the middle of it, the blade where it actually is, and the run between
-            them in the plate that means the press. so the reader can see how far
-            off the register is before they read how far off the register it is,
-            and at the gate the two collapse into one mark on one notch. */}
+{/* THE SCALE IN THE ROW, AND NOTHING ELSE. the leader that joins this
+            caption to its figure is the bed again, at the width of a table cell:
+            the gate in the middle of it, the blade where it actually is, and the
+            run between them in the plate that means the press. so the reader can
+            see how far off the register is before they read how far off the
+            register it is, and at the gate the two collapse into one mark on one
+            notch.
+
+            the figure that used to stand at the right of it is gone: it was the
+            fourth printing of one number in the first screen — the console in the
+            bar, the target at the foot of the case and the bed underneath all
+            report the same offset — and a form that states the same measurement
+            in four panels is not a form, it is a chorus. what is left is the
+            state, because the state is what the row is for: it says which of the
+            two things the key will now do. */}
         <GateLeader reg={reg} />
         <span className="order__state">
-          <span className="order__fig">{regRead}</span>
+          <span className="order__fig">{settled ? 'at the gate' : 'loose'}</span>
         </span>
         {gateTick > 0 ? <i className="order__flash" key={gateTick} /> : null}
       </button>

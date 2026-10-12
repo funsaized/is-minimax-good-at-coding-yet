@@ -196,6 +196,48 @@
 
 
    =============================================================
+   ITERATION 531 — THE SHEET SETS ITS OWN ARGUMENT
+
+   the page argues for typographic judgement in one block of
+   serif, set the way every other block of serif on the sheet is
+   set. which is the one thing a page like this must not do: the
+   paragraph about setting type was the only piece of setting on
+   the sheet that had not been set.
+
+   so the argument is cut into the three parts the headline obeys.
+   the hinge goes into the press voice at the body's own size — the
+   same lock-up as the verdict directly above it, so the answer and
+   its argument share two typefaces and one left edge. the turn, the
+   clause the page exists to make, takes the one emphasis mark the
+   sheet owns: italic, black, underlined in the press's own pink,
+   declared once and shared with the margin note so the thesis and
+   the advice are printed by the same hand.
+
+   and the hinge takes the lock-up too. at the gate the sheet sets
+   its letters a hair closer together — the only motion the press
+   has that is not a state changing — and the argument is press
+   voice, so it is one of four places on the page that tighten with
+   the title.
+
+   ONE NUMBER, ONE PLACE. the first screen was printing one offset
+   four times: the console in the bar, the target at the foot of
+   the case, the blade row of the order of work, and the bed. four
+   panels for one number, three of them in one viewport, and a job
+   ticket at the foot of the run promising "one number, one ramp".
+   the case and the ticket now print the state and let the figure
+   belong to the two panels that own it. a target reports an offset
+   by BEING it, which is the only instrument on the page that does
+   not have to be read.
+
+   and the title's landing rule answers to the pull, on the same
+   number as the verdict's, with the same two inks in the same
+   proportions. the sentence at the head of the run and the answer
+   at the foot of it now stand on rules that are visibly the same
+   rule, so the last thing a reader does to the page is also the
+   last thing it says.
+
+
+   =============================================================
    THE MARGIN SPEAKS
 
    the sheet had two holes in it and one note that belonged in
@@ -3823,6 +3865,27 @@ html[data-register='on'] .q__land {
   transform: scaleX(1);
 }
 
+/* AND IT ANSWERS TO THE PULL, WHICH IS THE LAST THING THAT HAPPENS HERE.
+   the sheet has four landing rules on it — under the question mark, under the
+   verdict, under the proof and at the signature — and it had only ever given
+   two of them a state. the verdict's rule runs the full width of the argument
+   and beads up at the far end on --land, so the title's rule now does the same
+   thing on the same number, with the same two inks in the same proportions: a
+   reader who pulls the proof six screens down and comes back up finds the
+   sentence at the head of the run standing on exactly the rule the answer is
+   standing on.
+
+   the extent and the traps of this rule still answer to the blade, not to the
+   pull. a squeegee decides how long a rule is; a wash decides what colour it is
+   once the sheet is off the press. */
+html[data-pulled='on'] .q__land {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--blue-ink) 74%, transparent) 0 72%,
+    var(--pink) 100%
+  );
+}
+
 /* the two corners where the rule meets the trim: a wedge of pink, growing. the
    trap's own rule band sits at the top of the mark, so dropping it on the top
    edge of the rule puts the ink in the notch underneath. */
@@ -4075,10 +4138,20 @@ html[data-register='on'] .qrail__row.is-active::after {
   color: var(--ink-70);
 }
 
-/* THE INSTRUMENT, HOMED. the three crosses the control strip carries, set where
-   they can be read without being in the way of anything: the foot of the case,
-   on the armature rather than in the middle of a headline. out of register they
-   are three marks arguing; at the gate one bullseye. */
+/* THE INSTRUMENT, HOMED — AND SILENT. the three crosses the control strip
+   carries, set where they can be read without being in the way of anything: the
+   foot of the case, on the armature rather than in the middle of a headline. out
+   of register they are three marks arguing; at the gate one bullseye.
+
+   and the figure that used to stand beside them is gone. the first screen of
+   this sheet was printing one offset four times — here, on the blade row of the
+   order of work, in the console in the bar, and on the bed at the foot of it —
+   and the job ticket at the foot of the run promising "one number, one ramp" all
+   the way down. so the mark stays and the number does not: a target reports the
+   offset by BEING it, and the figure belongs to the two panels that own it. what
+   is printed at the trim instead is the state, right-aligned on the same x the
+   states of the order of work sit on, so the case and the ticket can be read as
+   one form. */
 .qrail__eye {
   display: flex;
   align-items: center;
@@ -4100,14 +4173,19 @@ html[data-register='on'] .qrail__row.is-active::after {
   color: var(--black);
 }
 
-.qrail__eye-fig {
-  color: var(--blue-ink);
+.qrail__eye-state {
+  margin-left: auto;
+  padding-left: 10px;
+  color: var(--ink-50);
   font-weight: 700;
+  white-space: nowrap;
   transition: color .3s var(--ease);
 }
 
-html[data-register='on'] .qrail__eye-fig {
-  color: var(--black);
+/* a finished measurement stops being a measurement and becomes a fact, and the
+   only ink on this sheet that means *the press has done this* is the pink one */
+html[data-register='on'] .qrail__eye-state {
+  color: var(--pink-ink);
 }
 
 .plate-target__frame {
@@ -4610,11 +4688,28 @@ html[data-register='on'] .plated__layer--black .mark {
   text-wrap: pretty;
 }
 
-.standfirst__note-text em {
+/* THE EMPHASIS MARK — AND IT IS ONE MARK, NOT TWO.
+   italic, inked black, underlined in the press's own pink. the sheet gives it
+   twice: once to its advice, under the title, and once to its thesis, in the
+   argument under the verdict. two uses, one rule, so the page cannot end up
+   with a device that means one thing in one column and another in the next.
+
+   the thickness is optical rather than proportional: a hairline under a line set
+   at a margin note's step has to be heavier than the same hairline under the
+   argument, or it disappears at the size it is actually printed at. so the mark
+   carries a scale and each use takes its own — and the two are declared in the
+   same place so the relationship between them is legible. */
+.standfirst__note-text em,
+.lede em {
   color: var(--black);
   font-style: italic;
   text-decoration: underline;
   text-decoration-color: var(--pink);
+}
+
+/* a margin note is furniture, and furniture carries a rule you can see from
+   across a desk. */
+.standfirst__note-text em {
   text-decoration-thickness: 2px;
   text-underline-offset: 4px;
 }
@@ -4807,6 +4902,89 @@ html[data-pulled='on'] .verdict__bloom {
   font-size: clamp(1.06rem, .42vw + .97rem, 1.28rem);
   line-height: 1.5;
   text-wrap: pretty;
+}
+
+/* =============================================================
+   THE ARGUMENT, SET LIKE TYPE
+
+   This page argues for typographic judgement in one block of
+   serif, set exactly the way every other block of serif on the
+   sheet is set. Which is the one thing a page like this must
+   not do: the paragraph about setting type was the only piece
+   of setting on the sheet that had not been set.
+
+   So the paragraph is cut into the three parts the headline
+   itself obeys, and it is cut with the sheet's own voices
+   rather than with new ones:
+
+     hinge  the opening, in the press voice
+     body   everything else, in the reading voice
+     turn   the last clause, in the emphasis mark
+
+   THE HINGE is the same lockup as the verdict directly above
+   it — press, then serif — at the body's own size rather than a
+   step above it, so the argument answers the answer in the two
+   typefaces the sheet is printed in without taking a rung on
+   the scale. A page that has spent five hundred iterations
+   refusing a second poster is not going to invent one under
+   its own paragraph.
+
+   and it takes the lock-up as well: at the gate the sheet sets
+   its letters a hair closer together, which is the only motion
+   the press has that is not a state changing. The hinge is a
+   press voice, so it is one of the four places on the page that
+   tighten, and it tightens with the title.
+
+   THE TURN is the clause the page exists to make, and it gets
+   the one emphasis mark this sheet owns: italic, inked black,
+   underlined in pink — the same three properties the margin
+   note gives "give it somewhere to land", so the thesis and
+   the advice are printed in the same hand by the same press.
+   It is the only emphasis on the light sheet that is not a
+   number and not a head.
+
+   and the underline answers to the pull. the sheet has been
+   pressed, so the last line of the argument takes a little more
+   ink, the same beat the landing rule under the verdict draws
+   its bead. Two rules and one underline, all of them thicker
+   once the answer is out.
+
+   A position rather than a journey: the thicker underline is
+   simply there after the pull, so a reader who has asked for
+   stillness is given it at the same moment as everyone else.
+   ============================================================= */
+
+.lede__hinge {
+  display: block;
+  margin-bottom: .28em;
+  color: var(--black);
+  font-family: var(--display);
+  font-weight: 800;
+  letter-spacing: -.016em;
+  line-height: 1.34;
+  transition: letter-spacing .8s var(--ease-out);
+}
+
+/* the lock-up, on the argument as well as on the verdict */
+html[data-register='on'] .lede__hinge {
+  letter-spacing: -.0195em;
+}
+
+/* the mark itself is declared once, with the margin note's — see the shared rule
+   further up this sheet. what is here is the optical weight at the reading size,
+   and the beat the pull gives it. */
+.lede em {
+  text-decoration-thickness: .05em;
+  text-underline-offset: .2em;
+  transition: text-decoration-thickness .5s var(--ease);
+}
+
+/* the sheet has been pressed, so the last line of the argument takes a little more
+   ink — the same beat the landing rule under the verdict draws its bead on, and
+   the same number. two rules and one underline, all of them thicker once the
+   answer is out, and all of them standing directly under the title they answer. */
+html[data-pulled='on'] .lede em {
+  text-decoration-thickness: .082em;
 }
 
 /* =============================================================
@@ -5163,6 +5341,22 @@ html[data-pulled='on'] .verdict__bloom {
 
 .order__act[data-on='on'] .order__fig {
   color: var(--black);
+}
+
+/* THE BLADE ROW PRINTS A STATE, SO IT DOES NOT WEAR THE MEASUREMENT INK.
+   the two panels above it still print figures, and a figure is federal blue on
+   every surface on this sheet. the blade row answers a different question — is
+   the press loose or is it at the gate — so its answer is a word, and a word is
+   the muted tone when it is nothing and the pink when it is the thing. that is
+   also what keeps the row from looking like a fifth gauge: the number is above
+   it in the bar and below it on the bed, and here there is only a verb's worth
+   of news. */
+.order__row--blade .order__fig {
+  color: var(--ink-50);
+}
+
+.order__row--blade[data-on='on'] .order__fig {
+  color: var(--pink-ink);
 }
 
 /* the key the row is worked from, printed as a key and not as a caption. it

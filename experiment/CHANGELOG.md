@@ -1,42 +1,38 @@
-Iteration 530 — the close read prints what it measures: the specimen's setting, live, beside the phrase.
+Iteration 531 — the sheet sets its own argument, and prints one number in one place.
 
-**A specimen is a specimen.** The close read is the one band whose whole job is to look
-closely at a phrase, and it was the only band on the sheet printing a phrase with no
-figure of any kind beside it. The stage held a thousand pixels of measure with a margin
-note at the head of the column, the name of the run at the foot, and air in between —
-air in the one place on the page that was arguing about setting type.
+**The argument, set like type.** The paragraph under the verdict — the page's
+standing answer to the title — was one unbroken block of serif at one voice, the
+only piece of setting on the sheet that had not been set. It is now cut into the
+three parts the headline itself obeys. The hinge ("And the margin is thin.") is set
+in the press voice at the body's own size, so the argument answers the verdict in
+the two typefaces and on the same left edge, and takes the same lock-up at the
+gate. The turn ("what goes still the moment you stop reading.") takes the sheet's
+one emphasis mark — italic, inked black, underlined in the press's pink — which is
+now declared in a single rule shared with the margin note, so the page's thesis
+and its advice are set by the same hand. Its underline thickens on the pull, on
+the same `--land` number as the verdict's landing rule. No words changed.
 
-- New `src/specimen.tsx`. A ticket for the setting itself, printed in the middle of
-  that column: **size** (what `--specimen` resolved to, in pixels), **tracking** (the
-  letter-spacing, back in em, which is how it is written), **face** (which family in
-  the chain this machine actually drew — the same canvas probe the type list uses, so
-  the two cells cannot disagree) and **run** (the width of the setting, so the counting
-  rule underneath it can be checked). Every figure is read back off the element, and a
-  `ResizeObserver` re-reads it: the token is a `clamp`, so the size and the run are a
-  different pair of numbers at every width. 48.8px / 159px at 1440, 27.5px / 89px at 390.
-- `src/ream.tsx` mounts the ticket in the specimen stage's rest column, between the
-  margin note and the measure's name. The ref it measures is taken on the black plate
-  only — the two colour impressions are inert copies of the same lines and would
-  otherwise leave the ref pointing at whichever the browser mounted last.
-- `src/style.css`: the rest column is three declared rows instead of two spread apart,
-  so the ticket stands in the middle and the air on either side of it is air again. The
-  four figures are gathered at the trim rather than spread one to a column across eleven
-  hundred pixels — a ticket is a block of data that belongs together. Figures in the blue
-  plate, hairlines between them one step softer than the armature's own, two to a block
-  below the phone breakpoint, and the figures re-ink one after another when the plate
-  moves (delays zeroed under reduced motion, so nothing is left blank).
+**One number, one place.** The first screen printed the plate offset four times:
+the console in the bar, the target at the foot of the plate case, the blade row of
+the order of work, and the press bed. The case and the order of work now print the
+state — *loose* / *at the gate* — and leave the figure to the two panels that own
+it. The target stays: a registration mark reports an offset by being it, which is
+the only instrument on the page that does not have to be read. Its state is
+right-aligned on the trim so the case and the job ticket read as one form.
 
-**The head of the band stopped restating itself.** "Three sheets, one at a time" was
-followed by a deck that said the same sentence again with the words turned round. The
-deck now prints the stack — `02 the hinge on the bed · 01 and 03 still in the ream`,
-read out of the same notes the ream prints its edges from, plate figures in the
-measurement ink. It is keyed on the plate, so it re-prints on the same beat as the
-ticket and is the one line in the band head that reports what just changed.
+**Two landings, one rule.** The rule the question mark stands on now answers to
+the pull as well as to the blade, in the same two inks in the same proportions as
+the rule the verdict stands on. A reader who pulls the proof six screens down and
+comes back up finds the sentence at the head of the run and the answer at the foot
+of it standing on visibly the same rule.
 
-**The note under the answer is a note again.** The standfirst's margin note was set at
-the same size as the argument directly above it, so the first screen carried two
-paragraphs of serif at one volume. It is now a step below the reading voice — the step
-the type list already names for the margin-note token — in a 42-character measure.
+**The answer is no longer behind a gate.** The proof window was `aria-hidden`
+until the proof was pulled, so the one sentence the document exists to deliver was
+unreachable to a screen reader who never pressed the key. It is now in the
+accessibility tree either way, matching the sheet's printed position that the
+answer is not behind anything; the ghost copy under the cover stays hidden, which
+leaves exactly one copy of the answer in the document.
 
-`npm run build` passes. No new dependencies, no network, no assets: the face probe is
-the one already in `faces.tsx`, and the ticket is CSS and two measured strings.
+Untouched: the title and its exact rendering, the document title, the plate
+offsets, the register, the drying ramp, the press run, the blade and its gate, the
+proof, the type list, the colophon, the entry point and the build.
