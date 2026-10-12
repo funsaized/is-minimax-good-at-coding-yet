@@ -164,6 +164,36 @@
    letterforms printing it share a rectangle, so the register is
    legible as a number in a typeface rather than as another panel.
 
+   A SPECIMEN IS A SPECIMEN. the close read is the one band whose
+   whole job is to look closely at a phrase, and it was the only one
+   on the sheet printing a phrase with no figure of any kind beside
+   it: a thousand pixels of measure with a margin note at the head of
+   the column and the name of the run at the foot and air in between.
+   a band about setting type that asserted nothing about the type.
+
+   so the middle of that column is a ticket, and every figure on it
+   is read back off the element rather than typed beside it — the size
+   the --specimen token resolved to, the tracking it was written in,
+   the family this machine actually drew, and the width of the run the
+   counting rule underneath it is measuring. three of the four move,
+   because the token is a clamp and the face is a fact about the
+   reader's machine; the type list at the foot of the sheet prints
+   what was asked for, this prints what was done.
+
+   and the head of the band stopped restating itself: the deck under
+   "three sheets, one at a time" used to say the same sentence again
+   with the words turned round. it prints the stack instead — which
+   figure is on the bed and which two are still behind it — so the one
+   line of the band head that can change is the line that reports what
+   just changed. the figures on it are in the blue plate, because a
+   plate figure is a figure.
+
+   and the note under the answer, in the first screen, was set at the
+   same size as the argument directly above it, so the standfirst
+   carried two paragraphs of serif at one volume. a margin note is a
+   note: it is now a step below the reading voice, which is the step
+   the type list already names for it.
+
 
    =============================================================
    THE MARGIN SPEAKS
@@ -4561,13 +4591,22 @@ html[data-register='on'] .plated__layer--black .mark {
 }
 
 .standfirst__note-text {
-  /* a margin note is a note and not a sub-head: capped so it breaks in its own
-     measure instead of running the whole width of the argument on one line */
-  max-width: 46ch;
-  color: var(--ink-70);
+  /* A MARGIN NOTE IS A NOTE. this block was set at the same size as the
+     argument directly above it, so the first screen carried two paragraphs of
+     serif at one volume and the note read as a second lede — and the sheet's own
+     type list already names the margin-note token a full step below the reading
+     voice. it is now set at that step: the answer is the loudest thing here, the
+     argument is the body, and the line about the mark is the smallest of the
+     three, which is the only order they can be read in.
+
+     capped at forty-two characters so it breaks in its own measure instead of
+     running the whole width of the argument on one line — a note in a margin is
+     never as wide as the column it stands beside. */
+  max-width: 42ch;
+  color: var(--ink-50);
   font-family: var(--serif);
-  font-size: clamp(1.02rem, .7vw + .88rem, 1.26rem);
-  line-height: 1.32;
+  font-size: clamp(.96rem, .28vw + .86rem, 1.09rem);
+  line-height: 1.4;
   text-wrap: pretty;
 }
 
@@ -5768,8 +5807,12 @@ html[data-register='on'] .register-eye__plate--black {
 }
 
 /* a deck is the band's own figure, set under its head on a short rule of its own
-   — the count that used to be missing from the close read's slug, in the one
-   place on the sheet that has a name for it */
+   — and this one is live rather than asserted. the head says three sheets and
+   one at a time, and the line under it used to say the same sentence again with
+   the words turned round. it prints the stack instead: the plate that is on the
+   bed and the two figures still behind it, in blue because a plate figure is a
+   figure. it is the one line in the head of this band that changes, and it
+   changes when the stack does. */
 .read__deck {
   display: flex;
   align-items: baseline;
@@ -5782,11 +5825,32 @@ html[data-register='on'] .register-eye__plate--black {
   font-size: var(--label);
   letter-spacing: .1em;
   text-transform: uppercase;
+  text-wrap: pretty;
 }
 
 .read__deck > span {
   color: var(--pink-ink);
   letter-spacing: 0;
+}
+
+/* the plate figures, in the ink every other figure on the sheet is printed in.
+   the line is keyed on the plate, so a change of plate re-prints it: the deck and
+   the ticket below it are counted onto the paper on the same beat, which is the
+   one moment this band says something twice. */
+.read__deck-fig {
+  color: var(--blue-ink);
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .read__deck-fig {
+    animation: setting-ink .42s var(--ease-out) both;
+  }
+
+  .read__deck-fig:nth-of-type(2) {
+    animation-delay: .1s;
+  }
 }
 
 /* half the measure for the head and half for the paragraph it introduces, split
@@ -6185,21 +6249,21 @@ html[data-register='on'] .proof .sheetbar__flat--black {
    rather than asserted — and the name of the run stands at the far end of it, at
    the trim, which is where the name of a measure goes on any ruled sheet.
 
-   the column is now three things rather than two: the margin note at the head of
-   it, set against the top of the setting, the air, and the measure's own name at
-   the foot. `space-between` is what puts the note and the name at the two ends
-   of the same column without either of them needing a height, and it is the only
-   arrangement that leaves the middle as air — which is the whole claim this band
-   is making about setting type, and the only honest thing to do with eleven
-   hundred pixels of it. */
+   the column is three things rather than two: the margin note at the head of
+   it, set against the top of the setting, the ticket for the setting in the
+   middle, and the measure's own name at the foot. the rows are declared rather
+   than spread, because the middle one is the whole point of the change: it is
+   the one row that takes the slack, so the ticket stands in the middle of the
+   column and the air it used to be printed in is air again — on either side of
+   something that says what the sheet is looking at. */
 .specimen__rest {
   position: relative;
   z-index: 1;
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   align-self: stretch;
-  align-content: space-between;
   justify-items: end;
-  gap: clamp(16px, 2.4vw, 32px);
+  gap: clamp(10px, 1.6vw, 20px);
   min-width: 0;
   margin: 0;
   color: var(--ink-50);
@@ -6236,6 +6300,157 @@ html[data-register='on'] .proof .sheetbar__flat--black {
   );
   background-repeat: no-repeat;
   background-size: 100% 4px;
+}
+
+/* =============================================================
+   THE SETTING, MEASURED
+
+   The close read is the one band on this sheet that exists to look
+   closely at a phrase, and the stage that phrase stands on was a
+   thousand pixels of measure with nothing measured on it: the phrase
+   hard left, its own counted rule underneath it, and to the right a
+   column with a margin note at the head of it and the name of the run
+   at the foot of it and air in between. A band about setting type
+   that printed no figures about the type it was setting.
+
+   So the middle of that column is a ticket, and every figure on it is
+   read back off the element rather than typed beside it: the size the
+   --specimen token resolved to on this machine, the tracking it was
+   written in, the family the platform actually drew, and the width of
+   the run the counting rule underneath is measuring. Three of the four
+   move with the width of the window, because the token is a clamp and
+   the face is the one fact on this page that is about the reader's
+   machine and not about the press. `specimen.tsx` keeps them true.
+
+   It is set in the furniture face at the label tier because that is
+   what a ticket is, and the figures are in the blue plate for the same
+   reason every other figure on this sheet is: they are measurements,
+   and the blue only ever means measurement.
+   ============================================================= */
+
+.setting {
+  align-self: center;
+  justify-self: end;
+  width: 100%;
+  margin: 0;
+  padding-top: clamp(8px, .9vw, 13px);
+  border-top: 1px solid var(--rule-soft);
+  font-family: var(--mono);
+}
+
+.setting__kicker {
+  display: flex;
+  justify-content: flex-end;
+  gap: .7ch;
+  color: var(--ink-50);
+  font-size: var(--label-3);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.setting__kicker > span {
+  color: var(--pink-ink);
+  letter-spacing: 0;
+}
+
+/* four figures, gathered at the trim rather than spread across the measure. a
+   ticket is a block of data that belongs together: printed one to a column over
+   eleven hundred pixels the four figures read as four separate labels floating
+   in the air, and printed as a group they read as one thing the sheet measured
+   about the phrase standing beside them. the hairline is the column rule this
+   band is ruled on, one step softer than the armature's own. */
+.setting__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-top: clamp(6px, .7vw, 10px);
+}
+
+.setting__fact {
+  display: grid;
+  justify-items: end;
+  gap: 3px;
+  min-width: 0;
+  padding: 0 clamp(10px, 1.4vw, 22px);
+  border-left: 1px solid var(--rule-soft);
+  text-align: right;
+}
+
+.setting__fact:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.setting__fact dt {
+  color: var(--ink-50);
+  font-size: var(--label-3);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.setting__fact dd {
+  margin: 0;
+  color: var(--blue-ink);
+  font-size: var(--label-2);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .04em;
+  overflow-wrap: anywhere;
+}
+
+/* the resolved family is a name and not a figure: it is set a step quieter than
+   the numbers beside it so a name this sheet did not ask for never outshouts the
+   three it did — and it is allowed to run long, because a face called
+   `sans-serif` and a face called `Helvetica Neue` are both honest answers and
+   the ticket has to hold either one */
+.setting__fact--wide {
+  max-width: min(38ch, 44vw);
+}
+
+.setting__fact--wide dd {
+  font-size: var(--label-3);
+  font-weight: 500;
+  letter-spacing: .06em;
+  overflow-wrap: anywhere;
+}
+
+/* THE FIGURES ARRIVE LIKE AN INK LINE. the sheet is keyed on the phrase, so a
+   change of plate brings a new ticket with it, and the figures are counted onto
+   the paper one after another rather than swapped. it is the same gesture as the
+   ticks of the counting rule underneath and the stub of the margin note above,
+   which is the only arrival animation in the band and is the reason the ticket
+   reads as something the press has just printed. */
+@media (prefers-reduced-motion: no-preference) {
+  .setting__kicker {
+    animation: note-ink .5s var(--ease-out) .06s both;
+  }
+
+  .setting__fact dd {
+    animation: setting-ink .46s var(--ease-out) both;
+  }
+
+  .setting__fact:nth-child(1) dd {
+    animation-delay: .1s;
+  }
+
+  .setting__fact:nth-child(2) dd {
+    animation-delay: .19s;
+  }
+
+  .setting__fact:nth-child(3) dd {
+    animation-delay: .28s;
+  }
+
+  .setting__fact:nth-child(4) dd {
+    animation-delay: .37s;
+  }
+}
+
+@keyframes setting-ink {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
 }
 
 /* =============================================================
@@ -10024,7 +10239,7 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   .standfirst__note-text {
-    max-width: 44ch;
+    max-width: 40ch;
   }
 
   .standfirst__say {
@@ -10240,6 +10455,50 @@ html[data-reveal='on'] .reveal.is-in {
     text-align: left;
   }
 
+  /* the ticket is still the third thing in the column and not the first: the
+     uncounted rule has to carry on from the counted one directly, and the margin
+     note is a note about the phrase rather than about the machine */
+  .setting {
+    order: 2;
+    align-self: auto;
+    width: 100%;
+    text-align: left;
+  }
+
+  .setting__kicker {
+    justify-content: flex-start;
+  }
+
+  /* two to a row is two to a block, and the hairline goes between the pairs
+     rather than at the head of one */
+  .setting__row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-items: start;
+    row-gap: 14px;
+    column-gap: 16px;
+  }
+
+  .setting__fact,
+  .setting__fact:first-child {
+    padding: 0;
+    border-left: 0;
+  }
+
+  .setting__fact:nth-child(even) {
+    padding-left: 16px;
+    border-left: 1px solid var(--rule-soft);
+  }
+
+  .setting__fact {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .setting__fact--wide {
+    max-width: none;
+  }
+
   .specimen__rest-foot {
     order: 1;
     width: 100%;
@@ -10247,7 +10506,7 @@ html[data-reveal='on'] .reveal.is-in {
   }
 
   .specimen__margin {
-    order: 2;
+    order: 3;
     max-width: 42ch;
   }
 
@@ -10861,6 +11120,17 @@ html[data-slab='on'] .spine {
      the foot margin counts the sentence with seven of them, and a still reader
      would otherwise be looking at five of them and an empty rule */
   .pica i {
+    animation-delay: 0s !important;
+    transition-delay: 0s !important;
+  }
+
+  /* and the figures of the setting ticket, which are counted onto the paper one
+     after another. a stagger with a .001ms animation under it holds each figure
+     in its `from` state for the length of its delay, so a reader who asked for
+     stillness would be looking at four blank columns */
+  .setting__fact dd,
+  .setting__kicker,
+  .read__deck-fig {
     animation-delay: 0s !important;
     transition-delay: 0s !important;
   }

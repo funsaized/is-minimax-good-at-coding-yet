@@ -197,6 +197,13 @@ export function App() {
   regRef.current = reg
 
   const shown = hover ?? active
+  /* WHICH SHEET IS ON THE BED, for the close read's own deck. the head of that
+     band claims there are three sheets and only one is being read, and the claim
+     is worth nothing next to the two figures that say which one — so they are
+     printed under the head, read out of the same notes the ream prints its
+     edges from, and they move when the plate moves. */
+  const onBed = findNote(active)
+  const waiting = WORD_IDS.filter(id => id !== active).map(id => findNote(id).index)
   const settled = inRegister(reg)
   /* ONE WAY OF SAYING IT. the bar's gauge, the case's instrument and the type
      list's gauge all report the register, and a readout that reads the same
@@ -1086,9 +1093,22 @@ export function App() {
                   <h2 id="close-title">
                     Three sheets, <em>one at a time.</em>
                   </h2>
-                  <p className="read__deck">
-                    <span aria-hidden="true">↳</span> three phrases · three impressions ·
-                    one at a time
+                  {/* THE COUNT, MADE LIVE. the head says "three sheets, one at a
+                      time" and the deck under it used to say the same thing a
+                      second time — three phrases, three impressions, one at a
+                      time — which is a claim about a thing the reader can watch
+                      from here. so the line under the head now reports the
+                      stack instead: the figure that is on the bed and the two
+                      that are still behind it, read out of the same notes the
+                      ream prints its edges from. it changes every time a plate
+                      moves, so the one sentence that stands under the head of
+                      this band is the sentence that tells the reader what just
+                      happened to it. */}
+                  <p className="read__deck" key={active}>
+                    <span aria-hidden="true">↳</span>{' '}
+                    <b className="read__deck-fig">{onBed.index}</b> {onBed.gloss} on
+                    the bed · <b className="read__deck-fig">{waiting[0]}</b> and{' '}
+                    <b className="read__deck-fig">{waiting[1]}</b> still in the ream
                   </p>
                 </div>
                 <p>

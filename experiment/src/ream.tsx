@@ -14,6 +14,7 @@ import { RegistrationMark } from './marks'
 import { prefersStill } from './motion'
 import { Pica, Sheetbar } from './paper'
 import { Plated } from './plate'
+import { SettingTicket } from './specimen'
 
 /**
  * The order the three sheets sit in: the one being read on top, the other two
@@ -91,6 +92,11 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
      eased there, which is the same answer every other journey on this page gives. */
 
   const sheetRef = useRef<HTMLElement>(null)
+  /* and the one element on this sheet whose setting the ticket beside it is
+     reporting on. the ref is taken on the black plate only: the two colour
+     impressions are inert copies of the same lines and would otherwise leave the
+     ref pointing at whichever of the three the browser happened to mount last. */
+  const wordRef = useRef<HTMLSpanElement>(null)
   const aimRef = useRef(0)
   const wetRef = useRef(0)
   const loopRef = useRef(0)
@@ -275,7 +281,7 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
                  impressions are nearly one voice by the time the reader is here */
               wet={0.72}
               render={ghost => (
-                <span className="specimen__word">
+                <span className="specimen__word" ref={ghost ? undefined : wordRef}>
                   {ghost ? null : <span className="sr-only">{note.label}</span>}
                   <span className="specimen__main">
                     {lines.map(line => (
@@ -308,24 +314,31 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
               a good deal quieter, and the name of the run stands at the far end
               of it — six letters of a line that holds rather more than six.
 
-              AND THE AIR IS NOW SPOKEN FOR. this column was eleven hundred
-              pixels of nothing with a hairline at the bottom of it, and the note
-              that annotates the phrase — the one sentence the band has to say
-              about its own setting — was printed four inches below it in a
-              thirty-character measure with three hundred pixels of nothing
-              beside it. the margin note belongs in a margin, so it is here: at
-              the head of the column, set against the top of the setting, where a
-              margin note goes on any spread worth looking at. the note and the
-              setting now share a baseline band and the measure keeps its own,
-              and the void between them is the air the sheet has been arguing
-              about all along rather than a hole the argument had missed.
+              AND THE AIR IS NOW SPOKEN FOR, AND IT IS SPOKEN FOR WITH
+              FIGURES. this column was eleven hundred pixels of nothing with a
+              hairline at the bottom of it, and the note that annotates the
+              phrase — the one sentence the band has to say about its own
+              setting — was printed four inches below it in a thirty-character
+              measure with three hundred pixels of nothing beside it. the margin
+              note belongs in a margin, so it is here: at the head of the column,
+              set against the top of the setting, where a margin note goes on any
+              spread worth looking at.
 
-              the rest of the measure keeps its own voice at the foot of the
-              column, so the block reads top to bottom: what the sheet says
-              about the phrase, the phrase, the count, and the name of the run
-              standing at the trim. */}
+              and the middle of the column was the other hole: the note at the
+              head, the name of the run at the foot, and a thousand pixels of air
+              between two pieces of furniture, in the one band on this sheet that
+              exists to look closely at a phrase. so the middle of it is now a
+              ticket for the setting — the size the token resolved to, the
+              tracking it was written in, the family the machine actually drew and
+              the width of the run under the counting rule — read back off the
+              setting itself rather than typed beside it. see `specimen.tsx`.
+
+              the block reads top to bottom: what the sheet says about the phrase,
+              the four numbers that made it, the name of the run standing at the
+              trim. */}
           <div className="specimen__rest">
             <p className="specimen__margin">{note.margin}</p>
+            <SettingTicket word={wordRef} />
             <p className="specimen__rest-foot" aria-hidden="true">
               <span className="specimen__rest-word">{note.measure}</span>
               <span className="specimen__rest-rule" />
