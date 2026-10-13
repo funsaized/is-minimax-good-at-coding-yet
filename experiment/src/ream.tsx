@@ -10,6 +10,7 @@ import {
 import { findNote, phraseLines, WORD_IDS, type WordId } from './notes'
 import { InkTrap } from './ink'
 import { Leader } from './leader'
+import { Loupe, MAGNIFICATION } from './loupe'
 import { RegistrationMark } from './marks'
 import { prefersStill } from './motion'
 import { Pica, Sheetbar } from './paper'
@@ -67,6 +68,30 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
      a note whose body opened with a word would give the same initial back. */
   const initial = note.body.slice(0, 2)
   const rest = note.body.slice(2)
+
+  /* THE LINES, PRINTED TWICE. the setting and the glass under the loupe are the
+     same setting, so they are set by the same function: a copy of this markup
+     that drifted from the original by a class name would be a lens lying about
+     what it is looking at, which is the one thing an instrument on this sheet
+     must not do. */
+  const printLines = () => (
+    <span className="specimen__main">
+      {lines.map(line => (
+        <span
+          key={line}
+          className={line === note.drop ? 'specimen__line specimen__line--drop' : 'specimen__line'}
+        >
+          {line}
+        </span>
+      ))}
+    </span>
+  )
+
+  /* and the setting itself, which is the lines at the specimen step. the glass
+     under the loupe prints this and not the bare lines: a copy without the
+     setting's own box would be set at whatever the body size happened to be and
+     the lens would be magnifying nothing in particular. */
+  const printSetting = () => <span className="specimen__word">{printLines()}</span>
 
   /* THE DRY SHEET REMEMBERS THE HAND.
 
@@ -250,7 +275,7 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
         <Sheetbar />
 
         <p className="specimen__slug">
-          <span>close read · {note.index} of 03</span>
+          <span>close read · {note.index} of 03 · ×{MAGNIFICATION.toFixed(1)}</span>
           <Leader />
           <span>{note.measure} · {note.set}</span>
         </p>
@@ -283,16 +308,7 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
               render={ghost => (
                 <span className="specimen__word" ref={ghost ? undefined : wordRef}>
                   {ghost ? null : <span className="sr-only">{note.label}</span>}
-                  <span className="specimen__main">
-                    {lines.map(line => (
-                      <span
-                        key={line}
-                        className={line === note.drop ? 'specimen__line specimen__line--drop' : 'specimen__line'}
-                      >
-                        {line}
-                      </span>
-                    ))}
-                  </span>
+                  {printLines()}
                 </span>
               )}
             />
@@ -306,6 +322,18 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
               <InkTrap className="specimen__trap specimen__trap--end" rule={false} />
             </p>
           </div>
+
+          {/* THE LOUPE, IN THE AIR THE SETTING LEAVES. the setting is printed one
+              step under the head and cannot go up without making the page's own
+              type scale a lie, so the band looks closer with an instrument
+              instead: the same three plates, one field of the setting at a time,
+              at a magnification printed under the glass. see `loupe.tsx`. */}
+          <Loupe
+            host={stageRef}
+            word={wordRef}
+            wet={0.72}
+            render={printSetting}
+          />
 
           {/* AND THE REST OF THE MEASURE, WHICH IS MOST OF IT.
               the air around a setting is the thing a specimen is for, and air
@@ -323,15 +351,6 @@ export function Ream({ active, stageRef, onStep }: ReamProps) {
               note belongs in a margin, so it is here: at the head of the column,
               set against the top of the setting, where a margin note goes on any
               spread worth looking at.
-
-              and the middle of the column was the other hole: the note at the
-              head, the name of the run at the foot, and a thousand pixels of air
-              between two pieces of furniture, in the one band on this sheet that
-              exists to look closely at a phrase. so the middle of it is now a
-              ticket for the setting — the size the token resolved to, the
-              tracking it was written in, the family the machine actually drew and
-              the width of the run under the counting rule — read back off the
-              setting itself rather than typed beside it. see `specimen.tsx`.
 
               the block reads top to bottom: what the sheet says about the phrase,
               the four numbers that made it, the name of the run standing at the

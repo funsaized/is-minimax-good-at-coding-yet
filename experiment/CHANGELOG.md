@@ -1,19 +1,48 @@
-The press bed now cuts its plate to the box it is given: the question and the answer stack and the blade runs down the strip when there is no room for them side by side.
+The close read gets a loupe — the same three plates, one field of the setting at ×3.2, naming the letter under it.
 
-## What changed
+**The hole.** The close read is the one band on this sheet whose job is to look
+closely at a phrase, and it sets that phrase one rung below the head, because the
+sheet's own law is two posters and nothing in between louder than a section head.
+The type could not grow, so the band stayed a letterbox: a 48px word at the left of
+a stage 1320px wide, a counted rule under it exactly as wide as the run, a ticket
+at the far end, and about 800 × 150px of screened air in between.
 
-**The film composes itself to its own box** (`src/pull.tsx`). The plate used to lay the question and the answer side by side at every width. On a phone that left no air at all: the two masses met in the middle, the squeegee sat on the seam and printed over the first letter of the answer, and the one instrument on the sheet that exists to show what the plates are doing was the one thing that could not be read. It now measures its strip, asks whether the two masses fit across it — measured on the run that is actually longest, not on a guess — and stacks them when they do not. The decision is taken off the box the canvas is given, not off a media query, so a narrow embed inside a wide screen gets the same plate a phone does. When stacked, the question stands against the head of the plate and the answer against the foot, which is the transpose of how they stand across, and the answer keeps the same step below the question: the size is taken off the tighter of the two, so the plate does not print the answer a step louder than the rest of the sheet prints it.
+**The instrument.** That air now holds a lens — the same setting, printed in the
+same three plates, one field of it at a time, at a magnification stated in the
+band's own slug (`close read · 02 of 03 · ×3.2`) and printed under the glass in
+the blue the sheet prints measurements in. It is the one place on the sheet where
+a reader can stand close enough to see the misregistration open out: in the glass
+the pink and the blue come apart again and the sentence is plainly three sheets,
+at 150px of height, and they fuse again at the gate.
 
-**The gate, the blade and the smear follow the axis.** The gate rule is drawn across the strip instead of down it, with its end caps transposed; the wet ink starved behind the blade is a band along the plate rather than across it; and the squeegee is the same handle, the same bar and the same bead of ink turned onto the other axis — the handle still stands above its bar, because a squeegee is held from above whichever way the paper is turned. Pointer position, the carry under a flick, the trail's wipe and `aria-orientation` all read the same axis from one ref, so a vertical drag, a thrown blade and a screen reader all describe the same machine.
+**The registration.** `src/loupe.tsx` writes six numbers on the stage — where the
+setting is (`--word-x/y/w/h`) and where the glass stands (`--lx/ly`) — and the
+geometry is `calc()` over those six and nothing else. There is no second
+measurement to fall out of step with the paper.
 
-**The blade is mounted on the plate, not on the strip.** It was a sibling of the plate, so every one of its proportions — the bar's length, the handle's height, the offset it was pinned to — was a fraction of the film *and its caption bar*. On a wide bed the bar ran roughly thirty pixels past the trim of the film and over the caption underneath it. Its proportions are now fractions of the ink it prints on.
+**The readout.** One box per character is measured off the setting with a range
+(not a ratio — the tracking is negative and a space is not half an em), and the
+lens reports the one under the crosshair: `“d” — the fourth of six`. At rest it
+stands on the middle *letter*, so the readout is meaningful before a hand arrives;
+pointing into a gap says `between two letters` rather than naming a letter it is
+not over.
 
-**The wet band stays in the air.** On a plate cut down, the band the blade lays behind it is held to the gap between the two masses. Ink that has run off the end of the squeegee and across the answer is not a squeegee.
+**Touch.** Not claimed. A finger on the glass is a scroll, so the lens rests where
+it was told to on every pointer that is not a mouse.
 
-**The plate keeps its caption on a phone.** It was dropped below seven hundred pixels, which was right when the plate was a hundred pixels deep and could not carry a label and two masses at once. It now wraps over two lines rather than truncating at the edge.
+**Reduced motion.** The lens closes on its number rather than landing on it, and
+under `prefers-reduced-motion: reduce` it is written straight there — the same
+answer every other movement on this sheet gives.
 
-**The nav rail's ends are printed.** Below about six hundred pixels the four passes are wider than the bar and the rail runs, which read as something that did not fit. It now starts from its own left edge rather than centring an overflow, and its ends fade into the bar they are cut from.
+**Composition.** The stage gains a column and the rest of the measure is sized by
+what is printed in it rather than by what is left over, so the lens sits centred
+in the air the setting leaves: specimen, instrument, note. Three layouts —
+centred lens at 761px and up, lens beside the setting to 620px, lens under it
+below that. Checked at 1920, 1440, 1280, 1180, 900, 760, 620, 390 and 320.
 
-## Checks
+**Drawn in the sheet's own inks.** The bezel is the mark pink and a black hairline
+rather than the brass of the chase: the sheet states three inks at the head of
+every band and in the job ticket, and a fourth colour in the middle of it would
+make the ticket a lie.
 
-`npm run build` clean. Verified at 320, 390, 480, 560, 640, 820, 1024 and 1440: no console or page errors, all four passes reachable, arrow keys drive the bed on both axes, vertical drags reach the gate and the ends, the pull and the proof still land, and reduced motion still resolves to the gate without travel. Desktop page height is unchanged at 5555px.
+Files: `src/loupe.tsx` (new), `src/ream.tsx`, `src/style.css`.

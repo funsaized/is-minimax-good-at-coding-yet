@@ -12720,3 +12720,298 @@ html[data-register='on'] .leader--slab::before {
     transform: scaleY(1);
   }
 }
+
+/* =============================================================
+   THE LOUPE
+
+   The close read is the one band on this sheet whose job is to
+   look closely at a phrase, and it sets that phrase one rung below
+   the head — because the sheet's own law is two posters and nothing
+   in between louder than a section head, and a scale that doubles
+   back on itself is a scale that has stopped being a scale.
+
+   So the type cannot grow, and the band was a letterbox: a small
+   word at the left of a stage a yard wide, a counted rule under it
+   exactly as wide as the run, and eleven hundred pixels of screened
+   air with a ticket at the far end of it. The air was the hole.
+
+   What is in the air now is a lens. It prints the same setting in
+   the same three plates, one field of it at a time, at a
+   magnification printed under the glass and stated in the slug
+   above it — and because it prints in three plates, it is the one
+   place on the sheet where a reader can stand close enough to see
+   the misregistration open out: inside the glass the pink and the
+   blue have come apart again and the sentence is plainly three
+   sheets, at two hundred pixels of height, which is the whole
+   metaphor made visible for the price of one circle.
+
+   THE REGISTRATION. Six numbers are written on the stage by
+   `loupe.tsx`: where the setting is (--word-x/y/w/h) and where the
+   glass is standing over it (--lx/ly). Everything below is those six
+   numbers and nothing else. The field is a circle of --loupe-d; the
+   reticle on the setting is the same circle divided by --loupe-k;
+   the glass is a copy of the setting's box, scaled about the point,
+   offset so that the point lands dead centre. There is no second
+   measurement anywhere and nothing to fall out of register with the
+   paper.
+   ============================================================= */
+
+.specimen__stage {
+  /* one column more: the setting, the lens, and the rest of the
+     measure. --loupe-d is declared here rather than on the lens so
+     the reticle — a sibling of it, not a child — can be sized from
+     the same figure. */
+  --loupe-d: clamp(122px, 13.2vw, 198px);
+
+  /* the lens is centred in the air the setting leaves rather than standing
+     against it, so the band reads left to right as specimen, instrument, note —
+     and so the two gaps either side of the circle are the same gap. */
+  /* the rest of the measure is sized by what is printed in it rather than by
+     what is left over, so the lens is centred in the air the setting leaves
+     instead of drifting toward the trim as the ticket's width changes. */
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr) minmax(0, max-content);
+  column-gap: clamp(16px, 2vw, 34px);
+}
+
+/* THE CIRCLE ON THE SETTING. the region the glass is standing on,
+   drawn where that region is. a magnifier you cannot see working is
+   a magnifier you have to take on trust, and this is the one mark on
+   the sheet that says so without a word on it.
+
+   it is drawn in the mark ink because it is the mark: a hairline
+   ring in pink with a tick at each quarter, which is the same
+   instrument the slug bar prints at the head of every band. */
+
+.specimen__reticle {
+  position: absolute;
+  z-index: 2;
+  left: calc(var(--lx, 0px) - var(--loupe-d) / var(--loupe-k, 3.2) / 2);
+  top: calc(var(--ly, 0px) - var(--loupe-d) / var(--loupe-k, 3.2) / 2);
+  width: calc(var(--loupe-d) / var(--loupe-k, 3.2));
+  height: calc(var(--loupe-d) / var(--loupe-k, 3.2));
+  border: 1px solid var(--pink);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 3px rgba(255, 46, 107, .07),
+    inset 0 0 0 1px rgba(255, 255, 255, .5);
+  pointer-events: none;
+}
+
+/* THE QUARTER TICKS. four marks standing just off the ring, so the circle on the
+   setting is a measuring circle and not a shape somebody drew — and they are
+   drawn entirely out of the two shadows, because an element is drawn by its
+   shadow whether or not it has any ink of its own, and a fifth tick sitting in
+   the middle of the letter would be the one thing on this page that covers the
+   type it exists to look at. */
+.specimen__reticle::before,
+.specimen__reticle::after {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1px;
+  height: 7px;
+  content: '';
+  transform: translate(-50%, -50%);
+}
+
+.specimen__reticle::before {
+  box-shadow:
+    0 calc((var(--loupe-d) / var(--loupe-k, 3.2) / 2 + 4px) * -1) 0 0 var(--pink),
+    0 calc(var(--loupe-d) / var(--loupe-k, 3.2) / 2 + 4px) 0 0 var(--pink);
+}
+
+.specimen__reticle::after {
+  width: 7px;
+  height: 1px;
+  box-shadow:
+    calc((var(--loupe-d) / var(--loupe-k, 3.2) / 2 + 4px) * -1) 0 0 0 var(--pink),
+    calc(var(--loupe-d) / var(--loupe-k, 3.2) / 2 + 4px) 0 0 0 var(--pink);
+}
+
+/* THE LENS. it stands in the middle of the air the setting leaves,
+   which is the one place on the band big enough to hold a circle and
+   the one place where a circle has something to say. */
+
+.specimen__loupe {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  justify-self: center;
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  min-width: 0;
+  pointer-events: none;
+}
+
+/* THE PAPER UNDER THE GLASS. the same tint the stage carries for
+   this plate, and the same rag screen — but the screen is printed by
+   the element the transform scales, so the tooth under a lens is
+   the right size for a lens rather than the right size for the
+   page. a magnifier magnifies paper too, and a sheet that prints
+   that is a sheet that knows what glass is for. */
+
+.specimen__loupe-field {
+  position: relative;
+  width: var(--loupe-d);
+  height: var(--loupe-d);
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--stage-tint, transparent);
+  /* the tooth of the paper, at the weight the stage prints it and no heavier:
+     magnified, a screen at the ink the stage uses would read as a pattern of
+     polka dots laid over the type rather than as the paper under it. */
+  background-image: radial-gradient(circle, rgba(43, 62, 196, .19) 1.05px, transparent 1.35px);
+  background-size: 7px 7px;
+  /* the daylight a lens stands off the paper by: it is the only
+     thing on the light sheet with a shadow cast on the sheet rather
+     than ink sitting in it. */
+  box-shadow:
+    0 6px 18px -8px rgba(52, 38, 22, .42),
+    0 1px 2px rgba(52, 38, 22, .16);
+}
+
+/* THE GLASS. one copy of the setting's own box, scaled about the one
+   point the lens is over, and moved so that point finishes at the
+   centre of the field. The origin and the offset are the same sum
+   written twice — if they ever disagreed the lens would be a
+   beautiful picture of a letter it was not over, which is the one
+   failure this band cannot have. */
+
+.specimen__loupe-glass {
+  position: absolute;
+  top: calc(var(--loupe-d) / 2 - (var(--ly, 0px) - var(--word-y, 0px)));
+  left: calc(var(--loupe-d) / 2 - (var(--lx, 0px) - var(--word-x, 0px)));
+  width: var(--word-w, 0px);
+  height: var(--word-h, 0px);
+  transform: scale(var(--loupe-k, 3.2));
+  transform-origin: calc(var(--lx, 0px) - var(--word-x, 0px))
+    calc(var(--ly, 0px) - var(--word-y, 0px));
+}
+
+/* and inside it, the setting at its own size: the stack takes no
+   minimum height here, because a plated box taller than the type it
+   prints would put the glass a few pixels out of register with the
+   paper for ever. */
+.specimen__stack--loupe {
+  min-height: 0;
+}
+
+/* THE LIGHT ON THE GLASS. one crescent, top left, at the angle the
+   key light in the room is coming from — the same room the stock,
+   the roller and the bloom are printed in. it is the difference
+   between a hole with type in it and a lens. */
+
+.specimen__loupe-light {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(78% 62% at 30% 16%, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 62%),
+    radial-gradient(120% 120% at 62% 108%, rgba(20, 19, 26, .16), rgba(20, 19, 26, 0) 58%);
+  mix-blend-mode: normal;
+  pointer-events: none;
+}
+
+/* THE BEZEL. drawn in the sheet's own two inks rather than in the
+   brass of the chase, because the sheet states three inks at the
+   head of every band and the foot of the run, and a fourth colour
+   in the middle of it would make the job ticket a lie. so: the mark
+   ink on the outside where the light catches it, a black hairline
+   just inside it, and nothing at all beyond. */
+
+.specimen__loupe-rim {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--loupe-d);
+  height: var(--loupe-d);
+  border-radius: 50%;
+  border: 1.5px solid var(--pink);
+  box-shadow:
+    inset 0 0 0 1px rgba(20, 19, 26, .34),
+    inset 0 0 22px -6px rgba(20, 19, 26, .3);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* THE FIGURE UNDER THE GLASS. two lines, and both of them change:
+   the magnification never does, and the letter does, because the
+   lens is standing on one and the sheet prints what it measures. the
+   foot is given its two lines whether it needs them or not — a
+   caption that resizes under the hand is a caption that moves the
+   whole instrument. */
+
+.specimen__loupe-caption {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  margin: 0;
+  text-align: center;
+}
+
+.specimen__loupe-fig {
+  color: var(--blue-ink);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.specimen__loupe-say {
+  display: block;
+  min-height: 2.3em;
+  max-width: 13rem;
+  color: var(--ink-50);
+  font-family: var(--mono);
+  font-size: var(--label-3);
+  line-height: 1.2;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* below the width at which the lens is still a circle and no longer a
+   comfortable one to look at, it comes off the stage rather than
+   shrinking into a stamp: the setting, its counted rule and the
+   ticket are the band, and the lens is an instrument on top of it. */
+
+@media (max-width: 760px) {
+  .specimen__stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, max-content);
+    column-gap: 18px;
+  }
+
+  .specimen__loupe {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .specimen__rest {
+    grid-column: 1 / -1;
+  }
+
+}
+
+@media (max-width: 620px) {
+  .specimen__stage {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 18px;
+  }
+
+  .specimen__loupe {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .specimen__loupe-say {
+    max-width: 14rem;
+  }
+
+  .specimen__rest {
+    grid-column: 1;
+  }
+}
