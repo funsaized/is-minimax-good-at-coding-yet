@@ -1,38 +1,51 @@
-Iteration 531 — the sheet sets its own argument, and prints one number in one place.
+# Iteration 532 — three words on the press
 
-**The argument, set like type.** The paragraph under the verdict — the page's
-standing answer to the title — was one unbroken block of serif at one voice, the
-only piece of setting on the sheet that had not been set. It is now cut into the
-three parts the headline itself obeys. The hinge ("And the margin is thin.") is set
-in the press voice at the body's own size, so the argument answers the verdict in
-the two typefaces and on the same left edge, and takes the same lock-up at the
-gate. The turn ("what goes still the moment you stop reading.") takes the sheet's
-one emphasis mark — italic, inked black, underlined in the press's pink — which is
-now declared in a single rule shared with the margin note, so the page's thesis
-and its advice are set by the same hand. Its underline thickens on the pull, on
-the same `--land` number as the verdict's landing rule. No words changed.
+## The plain words leave the colour plates
 
-**One number, one place.** The first screen printed the plate offset four times:
-the console in the bar, the target at the foot of the plate case, the blade row of
-the order of work, and the press bed. The case and the order of work now print the
-state — *loose* / *at the gate* — and leave the figure to the two panels that own
-it. The target stays: a registration mark reports an offset by being it, which is
-the only instrument on the page that does not have to be read. Its state is
-right-aligned on the trim so the case and the job ticket read as one form.
+The headline was the one place on the sheet where the misregistration had stopped
+reading as a press and started reading as a fault. The sheet has three plates and
+they are three phrases — `M3`, `good at`, `yet?` — but the two colour impressions
+were printing `is Minimax` and `frontend` as well, in black, at the full plate
+offset, on the largest type on the page. The black plate is opaque and sits on top
+of them, so what showed was never a fringe: it was a second, thicker, noisier copy
+of every stem, with the ink screen laid over it three times.
 
-**Two landings, one rule.** The rule the question mark stands on now answers to
-the pull as well as to the blade, in the same two inks in the same proportions as
-the rule the verdict stands on. A reader who pulls the proof six screens down and
-comes back up finds the sentence at the head of the run and the answer at the foot
-of it standing on visibly the same rule.
+The ghosts now print nothing there. The three phrases the reader can choose keep
+all three inks and the full spread between them; the rest of the sentence goes back
+to being ordinary type, which is what plate 01 has been arguing for all along. The
+gate becomes a reward rather than a repair — a headline that is already sharp loses
+its last three coloured words and the whole thing goes quiet.
 
-**The answer is no longer behind a gate.** The proof window was `aria-hidden`
-until the proof was pulled, so the one sentence the document exists to deliver was
-unreachable to a screen reader who never pressed the key. It is now in the
-accessibility tree either way, matching the sheet's printed position that the
-answer is not behind anything; the ghost copy under the cover stays hidden, which
-leaves exactly one copy of the answer in the document.
+## The bar carries the plates, not a figure of them
 
-Untouched: the title and its exact rendering, the document title, the plate
-offsets, the register, the drying ramp, the press run, the blade and its gate, the
-proof, the type list, the colophon, the entry point and the build.
+The console ended in a pin and a number: a readout, on the one piece of furniture
+that is on screen for every pixel of the run, reporting a *choice* the reader could
+only make by walking back to the case beside the title. The bar hands over the
+blade and then reports the plate, and makes you scroll.
+
+That figure is a rack now — three cells, the figures and keys and arrow-walk the
+case and the order of work already use, with one pink pin that travels between
+them rather than three dots that blink. It is the third instrument reporting one
+fact, roving tabindex, arrow keys claimed from the window so moving a plate with
+them does not also nudge the blade, and the pin's travel is a position rather than
+a journey, so it is already in the hole under reduced motion.
+
+## The bar stops hiding under its own furniture
+
+The bar's single row was over-constrained between 1181 and 1400 pixels: the console
+was wider than the track it had been given and sat on top of the last two passes,
+with nothing anywhere saying so. The index track is now shrinkable and scrolls, the
+console never shrinks, the blade strip is narrower, and the two-row bar — which
+already existed for narrow screens — starts at 1439 instead of 1180. The wordmark
+has a short form for the narrowest bar and is cut at the word rather than at the
+letter.
+
+## Smaller
+
+The outlined echo in the colophon stops losing the descenders of `good` and `yet`
+to its own line box.
+
+Verified: `npm run build` clean; no console errors; rack, case and order of work
+report one figure; arrow keys on the rack leave `--reg-x` untouched; tab order
+reaches the rack after the blade; no horizontal overflow or bar collision at 320,
+390, 480, 620, 768, 900, 1024, 1180, 1280, 1366, 1400, 1440, 1600.

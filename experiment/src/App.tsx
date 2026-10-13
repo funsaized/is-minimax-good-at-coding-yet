@@ -838,7 +838,10 @@ export function App() {
         <a className="brand" href="#question" aria-label="Press sheet, back to the question">
           <RegistrationMark className="brand__mark" />
           <span className="brand__text">
-            <strong>press sheet · make ready</strong>
+            <strong>
+              <span className="brand__name">press sheet</span>
+              <span className="brand__sub"> · make ready</span>
+            </strong>
             <small>black · fluorescent pink · federal blue</small>
           </span>
         </a>
@@ -871,18 +874,29 @@ export function App() {
             plate that is up keeps its place, and between them is a strip of stock
             with the gate in the middle of it and a squeegee that travels: the
             same machine as the bed, the same number, the same magnet, and arrows
-            claimed from the window so one key still means one thing. see
-            `blade.tsx`. */}
+            claimed from the window so one key still means one thing.
+
+            and the plate that is up is not merely pinned into the bar — it is
+            chosen there. the figure was a readout about a control two screens up
+            the page, printed on the one piece of furniture that is on screen for
+            the whole run; it is a rack of three cells now, with the figures,
+            the keys and the arrow walk the case and the order of work already
+            use, and one pin that travels between them. one decision, three
+            instruments, one answer — which is the thing this sheet thinks a
+            front end is. see `blade.tsx`. */}
         <BarBlade
           reg={reg}
           settled={settled}
           readout={regRead}
-          plate={findNote(active).index}
+          active={active}
+          hot={shown}
           plateTick={plateTick}
           catchTick={catchTick}
           onSlide={setReg}
           onGate={toGate}
           onLoosen={loosen}
+          onSelect={select}
+          onPreview={setHover}
           onAnnounce={setAnnounce}
         />
       </header>

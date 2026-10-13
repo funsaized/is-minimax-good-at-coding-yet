@@ -6,6 +6,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
 } from 'react'
+import { findNote, NOTES, WORD_IDS, type WordId } from './notes'
 import {
   bedUnit,
   inRegister,
@@ -34,8 +35,10 @@ type BladeProps = {
   settled: boolean
   /** the register, in the plain words the sheet uses everywhere else */
   readout: string
-  /** the figure of the plate that is on the bed — a count, so it is blue */
-  plate: string
+  /** the plate on the bed — the one the rack pins and the one it lights */
+  active: WordId
+  /** the plate under the pointer or the focus, which need not be the one up */
+  hot: WordId
   /** remounts on a real change of plate, so the pin drops again */
   plateTick: number
   /** remounts on the beat the three impressions agree, so the lock sweeps again */
@@ -43,6 +46,8 @@ type BladeProps = {
   onSlide: (value: number) => void
   onGate: () => void
   onLoosen: () => void
+  onSelect: (id: WordId) => void
+  onPreview: (id: WordId | null) => void
   onAnnounce: (message: string) => void
 }
 
@@ -86,17 +91,33 @@ type BladeProps = {
  * The one thing that does move — the sweep of ink the moment the gate takes the
  * blade — is keyed on the same tick the sheet's own catch animation runs on, and
  * it is a state change made visible rather than a route the reader has to ride.
+ *
+ * AND THE BAR CARRIES THE PLATES, NOT A FIGURE OF THEM. The last thing in the
+ * console used to be a pin and a number: a readout, on screen for every pixel of
+ * the run, reporting a *choice* the reader could only make by walking back to the
+ * case beside the title or the keys in the order of work. Which is the page's
+ * own third argument turned round — it hands you the blade from the bar, and it
+ * reports the plate to you and then makes you scroll.
+ *
+ * So the figure is a rack: three cells, the same figures the case prints and the
+ * same keys the ticket prints, with one pin travelling between them. It is the
+ * third instrument reporting one fact, which is the thing this sheet thinks a
+ * front end is. Roving tabindex and the arrow walk are the case's, claimed
+ * outright, because the window still offers the arrows to the blade.
  */
 export function BarBlade({
   reg,
   settled,
   readout,
-  plate,
+  active,
+  hot,
   plateTick,
   catchTick,
   onSlide,
   onGate,
   onLoosen,
+  onSelect,
+  onPreview,
   onAnnounce,
 }: BladeProps) {
   const stripRef = useRef<HTMLDivElement>(null)
@@ -237,14 +258,19 @@ export function BarBlade({
         {catchTick ? <i className="blade__lock" key={catchTick} aria-hidden="true" /> : null}
       </div>
 
-      {/* WHICH PLATE IS UP. the reader is most of the way down the sheet most of
-          the time they are on this page, and the title is not in view: the figure
-          is pinned into the bar, and it is the only thing on the sheet that
-          reports a choice rather than a measurement. */}
-      <p className="console__plate" aria-hidden="true">
-        <i className="console__pin" key={plateTick} />
-        {plate}
-      </p>
+      {/* WHICH PLATE IS UP — AND THE OTHER TWO. the reader is most of the way
+          down the sheet most of the time they are on this page and the title is
+          not in view, so the choice is not merely reported here, it is taken
+          here: three cells, the figures the case prints, and one pin that travels
+          between them. the walk is claimed from the window so that putting a
+          plate up with an arrow key does not also nudge the blade half a unit. */}
+      <PlateRack
+        active={active}
+        hot={hot}
+        tick={plateTick}
+        onSelect={onSelect}
+        onPreview={onPreview}
+      />
 
       {/* and the full press is still a walk away — the film, the wet trail, the
           sentence under the loupe. the bar hands over the blade; the bed is
@@ -253,6 +279,101 @@ export function BarBlade({
         <span aria-hidden="true">↓</span>
         <span className="sr-only">the press bed, further down the sheet</span>
       </a>
+    </div>
+  )
+}
+
+/**
+ * THE RACK. three cells, one pin.
+ *
+ * Not a list of the phrases — a radiogroup of the three choices, with the same
+ * figures, glosses, keys and arrow walk as the case beside the poster, because
+ * they are the case: one decision, three instruments, one answer. `1` `2` `3`
+ * work from anywhere on the sheet already, and they work from here too.
+ *
+ * The pin is a single element that travels rather than three that blink, so
+ * changing a plate reads as one thing being moved. It is a position, not a
+ * journey — it is already in the hole when a reader who has asked for stillness
+ * arrives, and it slides in under a spring for everyone else.
+ */
+function PlateRack({
+  active,
+  hot,
+  tick,
+  onSelect,
+  onPreview,
+}: {
+  active: WordId
+  hot: WordId
+  tick: number
+  onSelect: (id: WordId) => void
+  onPreview: (id: WordId | null) => void
+}) {
+  const cells = useRef<Record<string, HTMLButtonElement | null>>({})
+
+  const nudge = (event: ReactKeyboardEvent<HTMLButtonElement>, id: WordId) => {
+    const here = WORD_IDS.indexOf(id)
+    let next: WordId | null = null
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = WORD_IDS[(here + 1) % WORD_IDS.length]
+    else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      next = WORD_IDS[(here + WORD_IDS.length - 1) % WORD_IDS.length]
+    } else if (event.key === 'Home') next = WORD_IDS[0]
+    else if (event.key === 'End') next = WORD_IDS[WORD_IDS.length - 1]
+    if (!next) return
+    /* the claim is the case's: the window offers the arrows to the blade, and
+       without this a reader who moved a plate with them also moved the press */
+    event.preventDefault()
+    event.stopPropagation()
+    onSelect(next)
+    cells.current[next]?.focus()
+  }
+
+  const seat = Math.max(0, WORD_IDS.indexOf(active))
+
+  return (
+    <div
+      className="rack"
+      role="radiogroup"
+      aria-label="Which plate is on the bed"
+      style={{ '--seat': seat } as CSSProperties}
+    >
+      {NOTES.map((note, index) => {
+        const up = note.id === active
+        return (
+          <button
+            key={note.id}
+            ref={node => {
+              cells.current[note.id] = node
+            }}
+            type="button"
+            role="radio"
+            tabIndex={up ? 0 : -1}
+            aria-checked={up}
+            aria-keyshortcuts={`${index + 1}`}
+            aria-label={`Plate ${note.index}, ${note.gloss}`}
+            className={`rack__cell${up ? ' is-up' : ''}${
+              hot === note.id && !up ? ' is-hot' : ''
+            }`}
+            onClick={() => onSelect(note.id)}
+            onMouseEnter={() => onPreview(note.id)}
+            onMouseLeave={() => onPreview(null)}
+            onFocus={() => onPreview(note.id)}
+            onBlur={() => onPreview(null)}
+            onKeyDown={event => nudge(event, note.id)}
+          >
+            <span className="rack__fig" aria-hidden="true">
+              {note.index}
+            </span>
+            {up && tick > 0 ? <i className="rack__flash" key={tick} aria-hidden="true" /> : null}
+          </button>
+        )
+      })}
+
+      {/* the pin: one element, parked in whichever cell is up, and it travels
+          rather than blinking because a rack is a thing with three holes in it */}
+      <i className="rack__pin" aria-hidden="true">
+        <span className="sr-only">{findNote(active).gloss}</span>
+      </i>
     </div>
   )
 }
