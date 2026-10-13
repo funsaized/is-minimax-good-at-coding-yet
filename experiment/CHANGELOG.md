@@ -1,51 +1,19 @@
-# Iteration 532 — three words on the press
+The press bed now cuts its plate to the box it is given: the question and the answer stack and the blade runs down the strip when there is no room for them side by side.
 
-## The plain words leave the colour plates
+## What changed
 
-The headline was the one place on the sheet where the misregistration had stopped
-reading as a press and started reading as a fault. The sheet has three plates and
-they are three phrases — `M3`, `good at`, `yet?` — but the two colour impressions
-were printing `is Minimax` and `frontend` as well, in black, at the full plate
-offset, on the largest type on the page. The black plate is opaque and sits on top
-of them, so what showed was never a fringe: it was a second, thicker, noisier copy
-of every stem, with the ink screen laid over it three times.
+**The film composes itself to its own box** (`src/pull.tsx`). The plate used to lay the question and the answer side by side at every width. On a phone that left no air at all: the two masses met in the middle, the squeegee sat on the seam and printed over the first letter of the answer, and the one instrument on the sheet that exists to show what the plates are doing was the one thing that could not be read. It now measures its strip, asks whether the two masses fit across it — measured on the run that is actually longest, not on a guess — and stacks them when they do not. The decision is taken off the box the canvas is given, not off a media query, so a narrow embed inside a wide screen gets the same plate a phone does. When stacked, the question stands against the head of the plate and the answer against the foot, which is the transpose of how they stand across, and the answer keeps the same step below the question: the size is taken off the tighter of the two, so the plate does not print the answer a step louder than the rest of the sheet prints it.
 
-The ghosts now print nothing there. The three phrases the reader can choose keep
-all three inks and the full spread between them; the rest of the sentence goes back
-to being ordinary type, which is what plate 01 has been arguing for all along. The
-gate becomes a reward rather than a repair — a headline that is already sharp loses
-its last three coloured words and the whole thing goes quiet.
+**The gate, the blade and the smear follow the axis.** The gate rule is drawn across the strip instead of down it, with its end caps transposed; the wet ink starved behind the blade is a band along the plate rather than across it; and the squeegee is the same handle, the same bar and the same bead of ink turned onto the other axis — the handle still stands above its bar, because a squeegee is held from above whichever way the paper is turned. Pointer position, the carry under a flick, the trail's wipe and `aria-orientation` all read the same axis from one ref, so a vertical drag, a thrown blade and a screen reader all describe the same machine.
 
-## The bar carries the plates, not a figure of them
+**The blade is mounted on the plate, not on the strip.** It was a sibling of the plate, so every one of its proportions — the bar's length, the handle's height, the offset it was pinned to — was a fraction of the film *and its caption bar*. On a wide bed the bar ran roughly thirty pixels past the trim of the film and over the caption underneath it. Its proportions are now fractions of the ink it prints on.
 
-The console ended in a pin and a number: a readout, on the one piece of furniture
-that is on screen for every pixel of the run, reporting a *choice* the reader could
-only make by walking back to the case beside the title. The bar hands over the
-blade and then reports the plate, and makes you scroll.
+**The wet band stays in the air.** On a plate cut down, the band the blade lays behind it is held to the gap between the two masses. Ink that has run off the end of the squeegee and across the answer is not a squeegee.
 
-That figure is a rack now — three cells, the figures and keys and arrow-walk the
-case and the order of work already use, with one pink pin that travels between
-them rather than three dots that blink. It is the third instrument reporting one
-fact, roving tabindex, arrow keys claimed from the window so moving a plate with
-them does not also nudge the blade, and the pin's travel is a position rather than
-a journey, so it is already in the hole under reduced motion.
+**The plate keeps its caption on a phone.** It was dropped below seven hundred pixels, which was right when the plate was a hundred pixels deep and could not carry a label and two masses at once. It now wraps over two lines rather than truncating at the edge.
 
-## The bar stops hiding under its own furniture
+**The nav rail's ends are printed.** Below about six hundred pixels the four passes are wider than the bar and the rail runs, which read as something that did not fit. It now starts from its own left edge rather than centring an overflow, and its ends fade into the bar they are cut from.
 
-The bar's single row was over-constrained between 1181 and 1400 pixels: the console
-was wider than the track it had been given and sat on top of the last two passes,
-with nothing anywhere saying so. The index track is now shrinkable and scrolls, the
-console never shrinks, the blade strip is narrower, and the two-row bar — which
-already existed for narrow screens — starts at 1439 instead of 1180. The wordmark
-has a short form for the narrowest bar and is cut at the word rather than at the
-letter.
+## Checks
 
-## Smaller
-
-The outlined echo in the colophon stops losing the descenders of `good` and `yet`
-to its own line box.
-
-Verified: `npm run build` clean; no console errors; rack, case and order of work
-report one figure; arrow keys on the rack leave `--reg-x` untouched; tab order
-reaches the rack after the blade; no horizontal overflow or bar collision at 320,
-390, 480, 620, 768, 900, 1024, 1180, 1280, 1366, 1400, 1440, 1600.
+`npm run build` clean. Verified at 320, 390, 480, 560, 640, 820, 1024 and 1440: no console or page errors, all four passes reachable, arrow keys drive the bed on both axes, vertical drags reach the gate and the ends, the pull and the proof still land, and reduced motion still resolves to the gate without travel. Desktop page height is unchanged at 5555px.

@@ -2440,6 +2440,33 @@ html[data-slab='on'] .slugbar {
   display: none;
 }
 
+/* THE RAIL, AND THE ENDS OF IT. below about six hundred pixels the four passes
+   are wider than the bar, so the rail runs — which is right, and which used to
+   look like a fault, because a rail that is cut off square at the edge of the
+   page reads as something that did not fit rather than as something that goes
+   on. so the ends are printed: the rail is scrolled, and the stock at each end
+   of it is faded into the bar it is cut from, the way the trim of a sheet fades
+   into the paper around it. the mask only exists where the rail actually runs. */
+@media (max-width: 640px) {
+  .nav {
+    justify-content: flex-start;
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 22px,
+      #000 calc(100% - 22px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 22px,
+      #000 calc(100% - 22px),
+      transparent 100%
+    );
+  }
+}
+
 .nav a {
   position: relative;
   display: inline-flex;
@@ -5806,11 +5833,18 @@ html[data-pulled='on'] .lede em {
   white-space: nowrap;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 880px) {
+  /* the caption is what the plate is, and the plate is the only instrument on
+     the sheet. it used to be dropped below seven hundred pixels, which was the
+     right call when the plate was a hundred pixels deep and could not carry a
+     label and two masses both. now that the plate is cut down and deep there is
+     room under it for its own name, and a name that is truncated at the edge
+     with an ellipsis is worse than a name set over two lines. so it wraps. */
   .bed__caption {
-    display: none;
+    white-space: normal;
+    text-overflow: clip;
+    text-wrap: balance;
   }
-
 }
 
 .bed__dot {
@@ -5899,6 +5933,30 @@ html[data-register='on'] .register-eye__plate--black {
   height: clamp(102px, 13.2vw, 164px);
 }
 
+/* =============================================================
+   THE PLATE IS CUT TO THE BOX IT IS GIVEN.
+
+   The film measures its own strip and decides whether the question and the
+   answer can stand across it or have to stand one over the other, and the only
+   thing this css has to do about that is hand it a box tall enough to hold both
+   when the answer is small — which is every window narrower than a reading
+   desk. The decision itself is not made here: it is made in `pull.tsx` off the
+   box that comes out of it, so a narrow embed inside a wide window gets the same
+   plate a phone does, and so the strip can never disagree with itself about
+   which way up it is.
+
+   What is set here is the *possibility* of the second layout, and the reverse —
+   above this width there is room across again, so the strip goes back to being
+   the wide loupe it was, at the depth it was, with the two masses beside each
+   other and the air between them.
+   ============================================================= */
+
+@media (max-width: 880px) {
+  .bed__film {
+    height: clamp(226px, 62vw, 322px);
+  }
+}
+
 /* THE WET TRAIL. the ink the blade lays down on its own way across, on a
    canvas of its own so the film underneath — which is the whole sentence, drawn
    once per impression — never repaints while the band dries. it is painted in
@@ -5965,6 +6023,58 @@ html[data-register='on'] .register-eye__plate--black {
   background: var(--pink);
   border-radius: 1px;
   opacity: .9;
+}
+
+/* =============================================================
+   THE SAME SQUEEGEE, CUT DOWN THE STRIP.
+
+   Nothing here is a second instrument. it is the handle, the bar and the bead
+   of ink transposed onto the axis the plate is actually running on: the handle
+   still stands above its bar, because a squeegee is held from above whichever
+   way the paper is turned, and only the bar turns — a bar of rubber across the
+   strip instead of down it, lit along its length instead of across its face.
+
+   The bead goes with it, and stays where it was relative to the bar rather than
+   to the page: the ink gathers under the foot of the blade, and the foot of the
+   blade is the side the reader is holding it by.
+   ============================================================= */
+
+.bed[data-axis='y'] {
+  cursor: ns-resize;
+  /* a vertical drag on a bed is a vertical drag, and a browser that thinks it
+     owns the page's scroll would take it before the blade ever saw it */
+  touch-action: none;
+}
+
+.bed[data-axis='y'] .bed__blade {
+  transform: translateY(calc(var(--reg) * var(--unit)));
+}
+
+.bed[data-axis='y'] .bed__arm {
+  top: 36%;
+  width: clamp(32px, 11%, 80px);
+  height: 10%;
+  filter: drop-shadow(0 1.5px 0 rgba(255, 46, 107, .5));
+}
+
+.bed[data-axis='y'] .bed__bar {
+  top: 50%;
+  left: 15.5%;
+  width: 67.5%;
+  height: 9px;
+  background: linear-gradient(180deg, #0a0910 0 20%, #7d7a8d 42%, #100f16 66%);
+  border-radius: 2px;
+  box-shadow: 0 2px 0 rgba(255, 46, 107, .5), 0 -1px 0 rgba(42, 62, 201, .4);
+  transform: translateY(-50%);
+}
+
+.bed[data-axis='y'] .bed__bar::after {
+  right: -3px;
+  bottom: -3px;
+  left: auto;
+  width: 5px;
+  height: auto;
+  top: -3px;
 }
 
 /* the blade complains while it is being dragged */
@@ -11152,8 +11262,15 @@ html[data-reveal='on'] .reveal.is-in {
     flex-wrap: wrap;
   }
 
+  /* the strip is no longer trimmed short here. it used to be cut to a hundred
+     pixels on a phone, which was enough for three lines of question across the
+     whole width and not enough for the gate to be anywhere: the blade ran over
+     the type on both sides of it and the answer was set into what was left. now
+     that the film stacks the two masses when it cannot set them across, the
+     strip is trimmed the other way up instead — deep enough for the question
+     over the answer and the air between them, and no taller than that. */
   .bed__film {
-    height: 100px;
+    height: clamp(228px, 64vw, 316px);
   }
 
   .bed__stamp {

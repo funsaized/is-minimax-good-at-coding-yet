@@ -284,7 +284,17 @@ export function PullBed({
   const paintRef = useRef<() => void>(() => {})
   const draggingRef = useRef(false)
   const unitRef = useRef(0)
+  /* WHICH WAY UP THE PLATE IS CUT. the film lays the question and the answer
+     side by side across the bed and runs the blade left to right between them;
+     on a strip with no room for two masses across, it lays them one over the
+     other and the blade runs down. it is a ref because the hand, the carry and
+     the trail all have to read it in the same frame as the paint, and a state
+     would be a frame behind each of them. */
+  const axisRef = useRef<'x' | 'y'>('x')
   const [unit, setUnit] = useState(120)
+  /* and the same thing again as state, because the one thing that has to know
+     about it is css: the squeegee is a dom element laid out over the canvas */
+  const [axis, setAxis] = useState<'x' | 'y'>('x')
   const [dragging, setDragging] = useState(false)
   /* the blade is still travelling after the hand has come off it, which is not
      the same thing as a hand being on it — so it is its own flag, and the bar
@@ -321,6 +331,8 @@ export function PullBed({
     ctx.clearRect(0, 0, w, h)
     ctx.globalAlpha = 1
 
+    const down = axisRef.current === 'y'
+
     const now = performance.now()
     const wet = wetRef.current
     while (wet.length && now - wet[0].t > WET_MS) wet.shift()
@@ -329,7 +341,7 @@ export function PullBed({
        point, because the newest point is the blade and the blade is what does
        the taking. an inch of the band on either side of the gate is the last to
        go, which is what a squeegee leaves behind it. */
-    const gateX = Math.round(w / 2) + 0.5
+    const gateX = Math.round((down ? h : w) / 2) + 0.5
     let cleared = 0
     if (wipeRef.current >= 0) {
       const run = (now - wipeRef.current) / WIPE_MS
@@ -338,7 +350,7 @@ export function PullBed({
         wipeRef.current = -1
         return
       }
-      cleared = Math.max(0, run) * (w / 2 + 60)
+      cleared = Math.max(0, run) * ((down ? h : w) / 2 + 60)
     }
 
     const live = cleared ? wet.filter(point => Math.abs(point.x - gateX) > cleared) : wet
@@ -349,8 +361,11 @@ export function PullBed({
     if (live.length < 2) return
 
     /* the band: heaviest just above the middle, where the film is printed, and
-       feathered at both edges so it is ink soaking into stock and not a bar */
-    const band = ctx.createLinearGradient(0, 0, 0, h)
+       feathered at both edges so it is ink soaking into stock and not a bar.
+       it falls away across the strip, whichever way up the plate is cut. */
+    const band = down
+      ? ctx.createLinearGradient(0, 0, w, 0)
+      : ctx.createLinearGradient(0, 0, 0, h)
     band.addColorStop(0, 'rgba(20, 19, 26, 0)')
     band.addColorStop(.34, 'rgba(20, 19, 26, .1)')
     band.addColorStop(.56, 'rgba(20, 19, 26, .2)')
@@ -361,12 +376,10 @@ export function PullBed({
       const age = (now - live[i].t) / WET_MS
       ctx.globalAlpha = Math.max(0, 1 - age) ** 1.5
       if (ctx.globalAlpha < .012) continue
-      ctx.fillRect(
-        Math.min(live[i - 1].x, live[i].x),
-        0,
-        Math.max(1, Math.abs(live[i].x - live[i - 1].x) + .6),
-        h,
-      )
+      const a = Math.min(live[i - 1].x, live[i].x)
+      const span = Math.max(1, Math.abs(live[i].x - live[i - 1].x) + .6)
+      if (down) ctx.fillRect(0, a, w, span)
+      else ctx.fillRect(a, 0, span, h)
     }
     ctx.globalAlpha = 1
 
@@ -375,12 +388,14 @@ export function PullBed({
     const head = live[live.length - 1]
     const fresh = 1 - Math.min(1, (now - head.t) / (WET_MS * .45))
     if (fresh > .02 && wipeRef.current < 0) {
-      const r = Math.max(7, unitFor(w) * .36)
-      const bead = ctx.createRadialGradient(head.x, h / 2, 0, head.x, h / 2, r)
+      const r = Math.max(7, unitFor(down ? h : w) * .36)
+      const cx = down ? w / 2 : head.x
+      const cy = down ? head.x : h / 2
+      const bead = ctx.createRadialGradient(cx, cy, 0, cx, cy, r)
       bead.addColorStop(0, `rgba(255, 46, 107, ${(.32 * fresh).toFixed(3)})`)
       bead.addColorStop(1, 'rgba(255, 46, 107, 0)')
       ctx.fillStyle = bead
-      ctx.fillRect(head.x - r, h / 2 - r, r * 2, r * 2)
+      ctx.fillRect(cx - r, cy - r, r * 2, r * 2)
     }
   }, [])
   wetPaintRef.current = paintWet
@@ -413,10 +428,14 @@ export function PullBed({
      the band drying is movement, so a still browser is given the clean sheet
      rather than the same band held still. */
   const layWet = useCallback(
-    (clientX: number) => {
+    (client: number) => {
       const strip = stripRef.current
       if (!strip || settledRef.current || prefersStill()) return
-      const x = clientX - strip.getBoundingClientRect().left
+      const box = strip.getBoundingClientRect()
+      /* the trail is a set of positions along the axis the blade travels, so a
+         plate cut the other way up is measured down the strip instead of across
+         it — and the band it paints is drawn from the same number either way */
+      const x = client - (axisRef.current === 'y' ? box.top : box.left)
       const wet = wetRef.current
       const last = wet[wet.length - 1]
       if (last && Math.abs(last.x - x) < 1.6) return
@@ -460,7 +479,85 @@ export function PullBed({
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
     ctx.clearRect(0, 0, w, h)
 
-    const unitNow = unitFor(w)
+    /* =============================================================
+       THE PLATE IS CUT TO THE BOX IT IS GIVEN.
+
+       the film used to lay the question and the answer side by side across the
+       bed and to run the blade left to right between them, and it did that at
+       every width. on a phone that meant no air at all: the two masses met in
+       the middle, the blade sat on the seam and printed over the first letter of
+       the answer, and the one instrument on the sheet that exists to show the
+       reader what the plates are doing was the one thing that could not be read.
+
+       so the film asks the box whether the two masses fit across it, measured on
+       the run that is actually longest and not on a guess, and stacks them when
+       they do not. one question over the other, the gate between them, and the
+       blade down through the strip. it is the same press and the same gate and
+       the same number — only the axis the hand works on changes — so the reader
+       is handed the machine that fits rather than a squeeze of the one that does
+       not. and because the decision is made off the box rather than off a media
+       query, a narrow window on a wide screen gets the same plate a phone does.
+       ============================================================= */
+
+    /* how wide the two masses need to be to sit across the strip, at the size the
+       strip's depth allows. measured once at a hundred pixels and scaled, because
+       a canvas measures a run linearly in its own size */
+    const pressRun = (at: number) => {
+      ctx.font = `800 ${at.toFixed(1)}px ${FILM_STACK}`
+      let wide = 0
+      FILM_LINES.forEach(line => {
+        wide = Math.max(wide, ctx.measureText(line).width)
+      })
+      wide = Math.max(wide, ctx.measureText(FILM_MARK).width)
+      return wide / at
+    }
+    const answerRun = (at: number) => {
+      ctx.font = `800 ${at.toFixed(1)}px ${FILM_STACK}`
+      let wide = 0
+      FILM_ANSWER.forEach(line => {
+        if (line.voice === 'reading') return
+        wide = Math.max(wide, ctx.measureText(line.text).width)
+      })
+      return wide / at
+    }
+    const qRun = pressRun(100)
+    const aRun = answerRun(100)
+    const markRun = (() => {
+      ctx.font = `800 100px ${FILM_STACK}`
+      return ctx.measureText(FILM_MARK).width / 100
+    })()
+    /* the mark is set against the end of the last line and not against the end of
+       the longest one, so the run that places it is measured on that line */
+    const tailRun = (() => {
+      ctx.font = `800 100px ${FILM_STACK}`
+      return ctx.measureText(FILM_LINES[FILM_LINES.length - 1]).width / 100
+    })()
+
+    const pad = Math.max(12, Math.min(40, w * 0.038))
+    const stackH = 3.53
+    const airGap = Math.max(16, w * 0.03)
+
+    const besideDepth = Math.max(9, Math.min((h - 16) / stackH, (w - pad * 2) / qRun))
+    const besideNeed =
+      pad +
+      qRun * besideDepth +
+      markRun * besideDepth +
+      airGap +
+      aRun * besideDepth * FILM_ANSWER_RATIO +
+      pad
+    const beside = besideNeed <= w
+    const axisNow = beside ? 'x' : 'y'
+
+    if (axisRef.current !== axisNow) {
+      /* a plate that is trimmed the other way up has none of the last one's wet
+         ink on it: the trail is a set of positions along the old axis and would
+         be printed as a band across the wrong edge */
+      wetRef.current.length = 0
+      axisRef.current = axisNow
+      setAxis(axisNow)
+    }
+
+    const unitNow = unitFor(beside ? w : h)
     if (Math.abs(unitNow - unitRef.current) > 0.5) {
       unitRef.current = unitNow
       setUnit(unitNow)
@@ -489,32 +586,58 @@ export function PullBed({
     }
 
     /* the trim edge, so the corners of the strip stay in frame */
-    const inset = Math.max(7, Math.min(18, w * 0.022))
-    const gate = Math.round(w / 2) + 0.5
+    const inset = Math.max(7, Math.min(18, Math.min(w, h) * 0.022))
+    const gate = Math.round((beside ? w : h) / 2) + 0.5
     const bladeX = gate + reg * unitNow
     const gateHalf = Math.max(4, PULL_GATE * unitNow * 2.2)
 
     /* the gate window, so you can see where right is before you get there */
     ctx.fillStyle = settled ? 'rgba(255, 46, 107, .13)' : 'rgba(21, 20, 27, .05)'
-    ctx.fillRect(gate - gateHalf, 0, gateHalf * 2, h)
+    if (beside) ctx.fillRect(gate - gateHalf, 0, gateHalf * 2, h)
+    else ctx.fillRect(0, gate - gateHalf, w, gateHalf * 2)
 
     ctx.save()
     ctx.beginPath()
     ctx.rect(0, 0, w, h)
     ctx.clip()
 
-    /* the poster, reduced — three lines on the sheet's own three rules. the size is
-       a function of the space three lines have to live in, not of one line in the
-       middle of the strip, so the reduction holds at every bed height */
-    const pad = Math.max(13, Math.min(40, w * 0.038))
-    const longest = Math.max(...FILM_LINES.map(line => line.length), FILM_MARK.length)
-    const stackH = 3.53
-    const size = Math.max(
-      9,
-      Math.min((h - 20) / stackH, (w - pad * 2) / (longest * 0.545)),
-    )
-    const leading = size * 1.2
-    const baseline = (h - (leading * (FILM_LINES.length - 1) + size)) / 2 + size
+    /* THE SIZES, AND WHERE THE TWO MASSES STAND.
+
+       side by side, the strip's depth is the only thing the question has to fit
+       in; stacked, each mass has half the depth and the air of the gate between
+       them, and the answer is still set at the step below the question — so the
+       size is taken off the *tighter* of the two, because a plate that prints
+       the answer a step louder than it is printed anywhere else is a plate that
+       has lost the scale the rest of the sheet is set in. */
+    let size: number
+    let leading: number
+    let baseline: number
+    /* the answer's two numbers when the plate is stacked. they are only ever
+       read in that branch, and they are read from the same question size the
+       three lines above were set at — which is the whole point of them */
+    let aSizeStacked = 0
+    let aBaseStacked = 0
+    /* the air of the gate between them, and it is the air the blade rests in */
+    const air = Math.max(14, Math.min(34, h * 0.055))
+    if (beside) {
+      size = besideDepth
+      leading = size * 1.2
+      baseline = (h - (leading * (FILM_LINES.length - 1) + size)) / 2 + size
+    } else {
+      const half = (h - air) / 2 - pad
+      const qCap = Math.min((half - 8) / stackH, (w - pad * 2) / qRun)
+      const aCap = Math.min((half - 8) / 4.42, (w - pad * 2) / aRun)
+      size = Math.max(9, Math.min(qCap, aCap / FILM_ANSWER_RATIO))
+      leading = size * 1.2
+      baseline = pad + 5 + (half - (leading * (FILM_LINES.length - 1) + size)) / 2 + size
+      aSizeStacked = size * FILM_ANSWER_RATIO
+      const aLead = aSizeStacked * 1.14
+      /* the two masses stand against opposite edges of the plate — the question
+         against the head, the answer against the foot — which is the transpose of
+         the way they stand when there is room for them across, and it is what
+         keeps the air between them the air the blade rests in */
+      aBaseStacked = h - Math.max(6, pad * 0.5) - aLead * 3
+    }
     /* a misregistration is a fraction of the type, not of the sheet */
     const spread = magnify(reg)
     const reach = spread * size * FILM_REACH
@@ -528,6 +651,7 @@ export function PullBed({
 
     const impression = (colour: string, dx: number, dy: number) => {
       ctx.fillStyle = colour
+      ctx.font = `800 ${size.toFixed(1)}px ${FILM_STACK}`
       FILM_LINES.forEach((line, index) => {
         ctx.fillText(line, pad + dx, baseline + index * leading + dy)
       })
@@ -551,29 +675,47 @@ export function PullBed({
        printed once, in the press's own ink, exactly as it is on the poster — and
        it is the one thing on the film that never misregisters. */
     ctx.fillStyle = INK_PINK
-    ctx.fillText(
-      FILM_MARK,
-      pad + ctx.measureText(FILM_LINES[2]).width,
-      baseline + 2 * leading,
-    )
+    ctx.font = `800 ${size.toFixed(1)}px ${FILM_STACK}`
+    ctx.fillText(FILM_MARK, pad + tailRun * size, baseline + 2 * leading)
 
-    /* the wet trail: ink starved behind the blade, a shade deeper than the wash */
-    const smear = unitNow * 1.7
-    const left = reg >= 0 ? bladeX - smear : bladeX
-    const shade = ctx.createLinearGradient(
-      bladeX,
-      0,
-      reg >= 0 ? left : bladeX + smear,
-      0,
-    )
-    shade.addColorStop(0, 'rgba(21, 20, 27, .2)')
-    shade.addColorStop(1, 'rgba(21, 20, 27, 0)')
-    ctx.fillStyle = shade
-    ctx.fillRect(left, 0, smear, h)
-
-    /* ink still standing up on the face of the blade */
-    ctx.fillStyle = 'rgba(255, 255, 255, .26)'
-    ctx.fillRect(bladeX - 1, 0, 2, h)
+    /* the wet trail: ink starved behind the blade, a shade deeper than the wash. on a
+       plate cut down the strip it is held to the air between the two masses —
+       the blade lays a band its own width deep, and on a bed this small the band
+       is wider than the air, and ink that has run off the end of the squeegee and
+       across the answer is not a squeegee. across the strip the air is eight
+       hundred pixels and the band is nowhere near it. */
+    const smear = beside ? unitNow * 1.7 : Math.min(unitNow * 1.7, air * 1.45)
+    if (beside) {
+      const left = reg >= 0 ? bladeX - smear : bladeX
+      const shade = ctx.createLinearGradient(
+        bladeX,
+        0,
+        reg >= 0 ? left : bladeX + smear,
+        0,
+      )
+      shade.addColorStop(0, 'rgba(21, 20, 27, .2)')
+      shade.addColorStop(1, 'rgba(21, 20, 27, 0)')
+      ctx.fillStyle = shade
+      ctx.fillRect(left, 0, smear, h)
+      /* ink still standing up on the face of the blade */
+      ctx.fillStyle = 'rgba(255, 255, 255, .26)'
+      ctx.fillRect(bladeX - 1, 0, 2, h)
+    } else {
+      const top = reg >= 0 ? bladeX - smear : bladeX
+      const shade = ctx.createLinearGradient(
+        0,
+        bladeX,
+        0,
+        reg >= 0 ? top : bladeX + smear,
+      )
+      shade.addColorStop(0, 'rgba(21, 20, 27, .2)')
+      shade.addColorStop(1, 'rgba(21, 20, 27, 0)')
+      ctx.fillStyle = shade
+      ctx.fillRect(0, top, w, smear)
+      /* ink still standing up on the face of the blade */
+      ctx.fillStyle = 'rgba(255, 255, 255, .26)'
+      ctx.fillRect(0, bladeX - 1, w, 2)
+    }
     ctx.restore()
     ctx.globalAlpha = 1
 
@@ -586,14 +728,25 @@ export function PullBed({
     ctx.lineWidth = 1
     ctx.setLineDash(settled ? [] : [3, 4])
     ctx.beginPath()
-    ctx.moveTo(gate, 2)
-    ctx.lineTo(gate, h - 2)
+    if (beside) {
+      ctx.moveTo(gate, 2)
+      ctx.lineTo(gate, h - 2)
+    } else {
+      ctx.moveTo(2, gate)
+      ctx.lineTo(w - 2, gate)
+    }
     ctx.stroke()
     ctx.setLineDash([])
-    /* the gate wears end caps, the way a register mark does */
+    /* the gate wears end caps, the way a register mark does — and a cap is a cap
+       whichever way up the plate is cut, so the two are simply the transpose */
     ctx.fillStyle = gateInk
-    ctx.fillRect(gate - 7, ruleTop, 14, 1.5)
-    ctx.fillRect(gate - 7, ruleFoot - 1.5, 14, 1.5)
+    if (beside) {
+      ctx.fillRect(gate - 7, ruleTop, 14, 1.5)
+      ctx.fillRect(gate - 7, ruleFoot - 1.5, 14, 1.5)
+    } else {
+      ctx.fillRect(2, gate - 7, 1.5, 14)
+      ctx.fillRect(w - 3.5, gate - 7, 1.5, 14)
+    }
 
     /* and the film prints its own landing rule, because the mark at the end of
        the last line needs something to stand on here as much as it does on the
@@ -601,8 +754,8 @@ export function PullBed({
        an ink trap fills, so the two pools close up as the plates agree — the
        same trap, off the same number, a third of the size. */
     const tail = FILM_LINES[FILM_LINES.length - 1]
-    const markLeft = pad + ctx.measureText(tail).width
-    const markWide = ctx.measureText(FILM_MARK).width
+    const markLeft = pad + tailRun * size
+    const markWide = markRun * size
     const foot = ruleFoot + size * 0.13 + 0.5
     ctx.strokeStyle = settled ? 'rgba(42, 62, 201, .72)' : 'rgba(21, 20, 27, .24)'
     ctx.lineWidth = 1
@@ -633,18 +786,61 @@ export function PullBed({
        answer is set here too, standing against the fore-edge the way the
        question stands against the head edge, at the step below it that the
        sheet's own ladder gives the answer to the question. the two blocks are
-       the page's whole argument about size, printed eight hundred pixels apart,
-       and the air between them is the measure both of them are set in.
+       the page's whole argument about size, printed apart, and the air between
+       them is the measure both of them are set in — across the strip when there
+       is room for them across, and down it when there is not.
 
        the answer is printed in black and in one voice on purpose — it is the
        sentence the press is allowed to get right, so it does not come apart
        under the blade while the question does. nothing here is drawn unless the
        strip is genuinely wide enough to set it in: below that the film is the
        question alone rather than the question and a fragment. */
-    const answerFrom = markLeft + markWide
-    const answerTo = w - inset
-    const answerRoom = answerTo - answerFrom - Math.max(16, w * 0.03)
-    if (answerRoom > 132) {
+    if (!beside) {
+      const aLead = aSizeStacked * 1.14
+      const aSize = aSizeStacked
+      const readSize = aSize * 0.56
+      const aBase = aBaseStacked
+      const answerTo = w - pad
+      const widest = aRun * aSize
+
+      ctx.textAlign = 'right'
+      FILM_ANSWER.forEach((line, index) => {
+        const y = aBase + index * aLead
+        if (line.voice === 'reading') {
+          ctx.font = `italic 500 ${readSize.toFixed(1)}px ${FILM_SERIF}`
+          ctx.fillStyle = 'rgba(21, 20, 27, .66)'
+        } else {
+          ctx.font = `800 ${aSize.toFixed(1)}px ${FILM_STACK}`
+          ctx.fillStyle = line.voice === 'pink' ? INK_PINK : INK_BLACK
+        }
+        ctx.fillText(line.text, answerTo, y)
+      })
+
+      /* the answer lands on a rule of its own, with the ink gathered at the end
+         of it: the same trap as the question's, off the same number, so the
+         notch under the answer fills at the gate along with every other one */
+      const aFoot = Math.round(aBase + aLead * 3 + aSize * 0.14) + 0.5
+      ctx.strokeStyle = settled ? 'rgba(42, 62, 201, .72)' : 'rgba(21, 20, 27, .2)'
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.moveTo(answerTo, aFoot)
+      ctx.lineTo(answerTo - widest, aFoot)
+      ctx.stroke()
+      const aNotch = answerTo - widest
+      const aPool = settled ? 1 : 0.12
+      ctx.fillStyle = settled ? INK_PINK : 'rgba(255, 46, 107, .45)'
+      ctx.beginPath()
+      ctx.moveTo(aNotch, aFoot)
+      ctx.lineTo(aNotch - aSize * 0.1 * aPool, aFoot)
+      ctx.lineTo(aNotch, aFoot - aSize * 0.08 * aPool)
+      ctx.closePath()
+      ctx.fill()
+      ctx.textAlign = 'left'
+    } else {
+      const answerFrom = markLeft + markWide
+      const answerTo = w - inset
+      const answerRoom = answerTo - answerFrom - airGap
+      if (answerRoom > 132) {
       const aLeadOf = (size: number) => size * 1.14
       let aSize = Math.min(size * FILM_ANSWER_RATIO, (h - 26) / 4.42)
       /* the press voice is what has to fit the strip; the reading line is set
@@ -700,6 +896,7 @@ export function PullBed({
       ctx.closePath()
       ctx.fill()
       ctx.textAlign = 'left'
+      }
     }
 
     /* THE SCALE IS GONE, and it is the one thing on this strip that was doing no
@@ -759,14 +956,22 @@ export function PullBed({
   const lastRaw = useRef({ x: 0, t: 0 })
   const speed = useRef(0)
 
-  const move = (clientX: number) => {
+  /* THE HAND WORKS ALONG THE AXIS THE PLATE IS CUT ON. one function, called with
+     clientX on a strip laid across and clientY on a strip laid down, so there is
+     one place in the file that knows which way the bed is running. the strip is
+     measured on the axis the blade actually travels: the bed's own width beside
+     the plates, and the strip's own height down them. */
+  const move = (client: number) => {
     const bed = bedRef.current
-    if (!bed) return
-    const rect = bed.getBoundingClientRect()
+    const strip = stripRef.current
+    if (!bed || !strip) return
+    const down = axisRef.current === 'y'
+    const box = down ? strip.getBoundingClientRect() : bed.getBoundingClientRect()
     /* the cursor sets where the blade would sit; the gate has an opinion about
        the last third of a unit of it, and applies that opinion while the drag
        is still going rather than waiting to be released */
-    const raw = (clientX - (rect.left + rect.width / 2)) / unitFor(rect.width)
+    const centre = down ? box.top + box.height / 2 : box.left + box.width / 2
+    const raw = (client - centre) / unitFor(down ? box.height : box.width)
     const now = performance.now()
     const held = lastRaw.current
     const dt = held.t ? Math.min(0.1, (now - held.t) / 1000) : 0
@@ -775,6 +980,9 @@ export function PullBed({
     held.t = now
     slideTo(magnetic(raw))
   }
+
+  /* the same hand, reduced to the one number the bed needs */
+  const pointer = () => (axisRef.current === 'y' ? 'clientY' : 'clientX')
 
   /* AND THE CARRY. one loop, mounted on release and taken off the sheet when the
      blade is caught, hits an end stop or runs out of speed. it drives the same
@@ -851,7 +1059,12 @@ export function PullBed({
         const strip = stripRef.current
         if (strip) {
           const box = strip.getBoundingClientRect()
-          layWet(box.left + box.width / 2 + shown * unitFor(box.width))
+          const down = axisRef.current === 'y'
+          layWet(
+            down
+              ? box.top + box.height / 2 + shown * unitFor(box.height)
+              : box.left + box.width / 2 + shown * unitFor(box.width),
+          )
         }
         coastRef.current = requestAnimationFrame(tick)
       }
@@ -893,8 +1106,8 @@ export function PullBed({
     setDragging(true)
     event.currentTarget.setPointerCapture(event.pointerId)
     event.currentTarget.focus({ preventScroll: true })
-    move(event.clientX)
-    layWet(event.clientX)
+    move(event[pointer()])
+    layWet(event[pointer()])
   }
 
   const release = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -952,15 +1165,17 @@ export function PullBed({
       role="slider"
       tabIndex={0}
       aria-label="Plate offset. Drag the squeegee along the bed, or use the arrow keys, to bring the ink into register."
+      aria-orientation={axis === 'y' ? 'vertical' : 'horizontal'}
       aria-valuemin={PULL_MIN}
       aria-valuemax={PULL_MAX}
       aria-valuenow={Number(reg.toFixed(2))}
       aria-valuetext={registerText(reg)}
+      data-axis={axis}
       onPointerDown={grab}
       onPointerMove={event => {
         if (!draggingRef.current) return
-        move(event.clientX)
-        layWet(event.clientX)
+        move(event[pointer()])
+        layWet(event[pointer()])
       }}
       onPointerUp={release}
       onPointerCancel={release}
@@ -983,14 +1198,18 @@ export function PullBed({
       <div className="bed__strip" ref={stripRef}>
         {/* the plate is its own positioned box so the trail is exactly the size of
             the film and not of the strip: the band belongs on the ink, and the
-            caption bar underneath the plate is not ink */}
+            caption bar underneath the plate is not ink. the blade is mounted in
+            the plate for the same reason — a squeegee that ran on past the trim
+            of the film and over its own caption was a squeegee on the caption
+            bar, and every one of its proportions was a fraction of the strip
+            rather than of the plate it is printing. */}
         <span className="bed__plate">
           <canvas ref={canvasRef} className="bed__film" />
           <canvas ref={trailRef} className="bed__trail" />
-        </span>
-        <span className="bed__blade" aria-hidden="true">
-          <Squeegee className="bed__arm" />
-          <span className="bed__bar" />
+          <span className="bed__blade" aria-hidden="true">
+            <Squeegee className="bed__arm" />
+            <span className="bed__bar" />
+          </span>
         </span>
         <span className={`bed__stamp ${settled ? 'is-on' : ''}`} aria-hidden="true">
           in register
