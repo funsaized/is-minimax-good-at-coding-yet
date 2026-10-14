@@ -3984,6 +3984,16 @@ html[data-register='on'] .ink-trap__rule {
   .specimen__slug .leader {
     display: none;
   }
+
+  /* the same rule, on the one slug on the sheet that is not a band head: the
+     order of work prints a lead and a fact side by side across the whole measure,
+     which is eight hundred pixels of room on the press and about two hundred on
+     a phone — so the fact is what goes, exactly as it goes on every other slug,
+     and the lead gets the measure to itself instead of wrapping one word under
+     itself. */
+  .order__fact {
+    display: none;
+  }
 }
 
 /* =============================================================
@@ -4084,6 +4094,83 @@ html[data-register='on'] .question {
 
 .q__line--3 {
   position: relative;
+}
+
+/* =============================================================
+   THE OVERTURE — THE SHEET INKS IN.
+
+   The page used to be fully printed the instant it was parsed, which
+   is a photograph and not a press. The one piece of the sheet that
+   had any business arriving was the headline: three impressions laid
+   one over another by three plates, and the whole argument of the
+   page is that those three do not agree.
+
+   So the question now prints itself, one plate at a time, in the
+   order the plates are stacked — a subject, a standard, a turn — and
+   each line rises about a tenth of an em into the paper it is
+   standing in. The stagger is eighty-five milliseconds, which is
+   faster than a reader can read the line before it, so the sentence
+   assembles rather than animates; the rise is small enough that the
+   only thing you can honestly say you saw was the headline arrive.
+
+   Three constraints, all of them load-bearing:
+
+   it is `backwards` and not `both`, so the animation hands the line
+   back to its own styles the moment it ends and the poster cannot be
+   left at opacity zero by anything that goes wrong further down the
+   stylesheet. it is inside `no-preference`, so a reader who has asked
+   for stillness is given the finished sheet and never a frame of
+   this. and it is an animation and not a transition, because a
+   transition on a class the app toggles would re-run it every time a
+   plate came up — the headline is the one thing on the page that must
+   not move because you looked at it.
+
+   The rise is in em so it is a fraction of the type on every plate
+   and never a fixed number of pixels: the ink drops by the same
+   proportion on a line set at seven point two rem and on one set at
+   four point three.
+   ============================================================= */
+
+@media (prefers-reduced-motion: no-preference) {
+  .q__line {
+    animation: ink-in .46s var(--ease-out) backwards;
+    animation-delay: calc(30ms + var(--i, 0) * 78ms);
+  }
+}
+
+@keyframes ink-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, .085em, 0);
+  }
+}
+
+/* AND THEN THE MARK IS GIVEN SOMETHING TO LAND ON.
+
+   the note in the first screen says the question mark is load-bearing and that it
+   should be given somewhere to land, and for four hundred iterations the thing it
+   landed on was already there when the page opened. so the overture finishes by
+   drawing it: the rule grows out from under the mark towards the left margin at
+   the moment the third line settles, which is the whole thesis of the page in one
+   gesture — a sentence that arrives before the thing that holds it up.
+
+   it is anchored to the right edge, because that is where the mark is and because
+   `.q__land` already grows from there when the blade reaches the gate: the same
+   rule, drawn out once on the way in and again on the way to the press. `backwards`
+   and `no-preference` as above, so a reader who has asked for stillness — and any
+   capture taken in the first half second of the page — is given the finished rule.
+   */
+@media (prefers-reduced-motion: no-preference) {
+  .q__land {
+    animation: draw-rule .44s var(--ease-out) backwards;
+    animation-delay: 400ms;
+  }
+}
+
+@keyframes draw-rule {
+  from {
+    transform: scaleX(0);
+  }
 }
 
 /* the landing rule. the question mark is load-bearing, so the sheet prints it
@@ -4204,6 +4291,20 @@ html[data-register='on'] .question__stack .plated__layer--black::before {
   flex-direction: column;
   min-width: 0;
   padding-left: var(--pad);
+  /* THE TWO MASSES STAND ON ONE LINE. the poster opens with the widest air on
+     the sheet between it and anything at all, which is the right decision for
+     the loudest thing on the page — but the case was still starting from under
+     the slug, so the two columns of the same composition began on different
+     lines and the composition had no top edge to be a composition on. the case
+     takes the same air the poster takes, and the slug of the sheet, the cap of
+     the question and the slug of the case now share one rule across the full
+     measure.
+
+     the air is taken off the case's own foot rather than off its rows: it still
+     reaches the poster's baseline, because the three rows divide the case into
+     equal thirds and that is the only reason one blade can sit on the boundary
+     between two of them rather than near one. */
+  margin-top: var(--air-poster);
 }
 
 .qrail__slug {
@@ -5466,6 +5567,7 @@ html[data-pulled='on'] .lede em {
   font-size: var(--label);
   font-weight: 500;
   letter-spacing: .145em;
+  text-wrap: balance;
   text-transform: uppercase;
 }
 
@@ -5987,12 +6089,16 @@ html[data-register='on'] .register-eye__plate--black {
   background: var(--stock-2);
 }
 
-/* the plate: the two canvases stacked in one positioned box, so the band the
+/* the plate is the two canvases stacked in one positioned box, so the band the
    blade lays down is exactly the size of the film and never creeps down over the
    caption bar underneath it */
 .bed__plate {
   position: relative;
   display: block;
+  /* the blade multiplies into the plate rather than standing on top of it, and a
+     blend reaches everything painted behind it — so the plate is made its own
+     isolation group, or the squeegee would multiply with the page as well. */
+  isolation: isolate;
 }
 
 .bed__film {
@@ -6123,29 +6229,63 @@ html[data-register='on'] .register-eye__plate--black {
 
 .bed[data-axis='y'] .bed__arm {
   top: 36%;
-  width: clamp(32px, 11%, 80px);
-  height: 10%;
+  width: clamp(28px, 9.4%, 68px);
+  height: 9%;
+  /* the handle is held, not printed: it keeps the same shape on either axis and
+     only steps back a weight when the plate is cut down the strip, where it is
+     sitting on top of the answer rather than beside it */
+  color: var(--ink-70);
   filter: drop-shadow(0 1.5px 0 rgba(255, 46, 107, .5));
 }
 
+/* THE BLADE LIES FLAT ON A PLATE CUT DOWN THE STRIP.
+
+   The bar used to be the same nine-pixel black rule whichever way the plate was
+   cut, and on a phone it was drawn straight across the short answer — a line of
+   the sentence the press is allowed to get right, painted over by a bar of
+   rubber, on the one instrument whose entire job is to let the reader read that
+   sentence coming into register.
+
+   So the bar changes its mind about which way it is being seen. Across the
+   strip it stands on its edge and you see the whole of it. Down the strip it is
+   lying flat on the plate under your hand, and what you see from above is not
+   the rubber — it is the shadow the rubber throws, which is a soft band with a
+   hard line down the middle of it. It multiplies into the film rather than
+   standing on it, so the pink and the blue of the question keep their colour
+   where the blade crosses them, exactly as ink does when a second pass goes over
+   the top of it, and it is thin enough that a word under it is dimmed rather
+   than deleted. */
 .bed[data-axis='y'] .bed__bar {
   top: 50%;
-  left: 15.5%;
-  width: 67.5%;
-  height: 9px;
-  background: linear-gradient(180deg, #0a0910 0 20%, #7d7a8d 42%, #100f16 66%);
-  border-radius: 2px;
-  box-shadow: 0 2px 0 rgba(255, 46, 107, .5), 0 -1px 0 rgba(42, 62, 201, .4);
+  left: 14%;
+  width: 72%;
+  height: 4px;
+  mix-blend-mode: multiply;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 19, 26, .58) 0 18%,
+    rgba(125, 122, 141, .74) 50%,
+    rgba(16, 15, 22, .78) 82%
+  );
+  border-radius: 3px;
+  box-shadow:
+    0 1px 0 rgba(255, 46, 107, .5),
+    0 -1px 0 rgba(42, 62, 201, .34),
+    0 7px 12px -6px rgba(21, 20, 27, .5);
   transform: translateY(-50%);
 }
 
 .bed[data-axis='y'] .bed__bar::after {
   right: -3px;
   bottom: -3px;
-  left: auto;
+  left: -3px;
   width: 5px;
   height: auto;
   top: -3px;
+  /* the bead of wet ink gathers under the foot of the blade, and on a plate cut
+     down the strip the foot is the end you are holding it by */
+  mix-blend-mode: normal;
+  opacity: .85;
 }
 
 /* the blade complains while it is being dragged */
@@ -9155,6 +9295,45 @@ html[data-register='on'] .run__seam-rule--black {
 .proof__held > :not(.proof__through) {
   filter: blur(.8px);
   transition: filter .46s var(--ease);
+}
+
+/* THE INK IS WET WHEN THE SHEET GOES DOWN.
+
+   the shadow under the cover is the answer printed on the far side of this sheet,
+   and newsprint is thin — but the far side of a sheet that has just come off the
+   press is not dry yet. so for the first second and a half after the page
+   arrives, the sentence comes through the stock almost crisp, and then it goes
+   soft as the ink spreads into the fibre and finds the paper.
+
+   it is the one promise the card makes that it can keep without the reader doing
+   anything: the answer is there, you can read it, and it is not yet the print.
+   pulling the proof is not a reveal, it is the moment the same sentence comes
+   into focus in the same box — and this is the beat that teaches the reader
+   that the two are the same words before either of them is sharp.
+
+   one blur, one direction, `backwards` so the panel hands the filter straight
+   back to its own declaration the moment it is over, and inside `no-preference`
+   so a reader who has asked for stillness is simply given the soft sheet the
+   card has always printed. */
+@media (prefers-reduced-motion: no-preference) {
+  .proof__held > :not(.proof__through) {
+    animation: ink-diffuse 2.1s var(--ease) backwards;
+    animation-delay: 320ms;
+  }
+}
+
+@keyframes ink-diffuse {
+  from {
+    filter: blur(0);
+  }
+
+  62% {
+    filter: blur(.34px);
+  }
+
+  to {
+    filter: blur(.8px);
+  }
 }
 
 .proof.is-open .proof__held {

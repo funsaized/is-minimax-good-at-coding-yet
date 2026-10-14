@@ -624,19 +624,28 @@ export function PullBed({
       leading = size * 1.2
       baseline = (h - (leading * (FILM_LINES.length - 1) + size)) / 2 + size
     } else {
-      const half = (h - air) / 2 - pad
-      const qCap = Math.min((half - 8) / stackH, (w - pad * 2) / qRun)
-      const aCap = Math.min((half - 8) / 4.42, (w - pad * 2) / aRun)
+      /* THE PLATE CUT DOWN THE STRIP IS TWO HALVES, NOT A TOP AND A BOTTOM.
+
+         the gate sits on the halfway line and each mass is set into its own half,
+         centred in it — so the air between them is the air of the gate on the top
+         side and the air of the gate on the foot side, and neither mass can be
+         pushed against the trim by a long answer or a tall question. the answer
+         used to be hung off the foot of the plate by its own descender, which put
+         its landing rule a pixel or two off the edge of the film and left it with
+         nothing between it and the caption bar below. */
+      const gateY = h / 2
+      const qTop = pad
+      const qRoom = gateY - air / 2 - pad
+      const aTop = gateY + air / 2
+      const aRoom = h - pad - aTop
+      const qCap = Math.min((qRoom - 8) / stackH, (w - pad * 2) / qRun)
+      const aCap = Math.min((aRoom - 8) / 4.42, (w - pad * 2) / aRun)
       size = Math.max(9, Math.min(qCap, aCap / FILM_ANSWER_RATIO))
       leading = size * 1.2
-      baseline = pad + 5 + (half - (leading * (FILM_LINES.length - 1) + size)) / 2 + size
+      baseline = qTop + (qRoom - (leading * (FILM_LINES.length - 1) + size)) / 2 + size
       aSizeStacked = size * FILM_ANSWER_RATIO
       const aLead = aSizeStacked * 1.14
-      /* the two masses stand against opposite edges of the plate — the question
-         against the head, the answer against the foot — which is the transpose of
-         the way they stand when there is room for them across, and it is what
-         keeps the air between them the air the blade rests in */
-      aBaseStacked = h - Math.max(6, pad * 0.5) - aLead * 3
+      aBaseStacked = aTop + (aRoom - (aLead * 3 + aSizeStacked)) / 2 + aSizeStacked
     }
     /* a misregistration is a fraction of the type, not of the sheet */
     const spread = magnify(reg)
@@ -678,13 +687,13 @@ export function PullBed({
     ctx.font = `800 ${size.toFixed(1)}px ${FILM_STACK}`
     ctx.fillText(FILM_MARK, pad + tailRun * size, baseline + 2 * leading)
 
-    /* the wet trail: ink starved behind the blade, a shade deeper than the wash. on a
-       plate cut down the strip it is held to the air between the two masses —
-       the blade lays a band its own width deep, and on a bed this small the band
-       is wider than the air, and ink that has run off the end of the squeegee and
-       across the answer is not a squeegee. across the strip the air is eight
-       hundred pixels and the band is nowhere near it. */
-    const smear = beside ? unitNow * 1.7 : Math.min(unitNow * 1.7, air * 1.45)
+    /* the wet trail: ink starved behind the blade, a shade deeper than the wash. across
+       the strip the blade stands on its edge and lays a band its own travel deep
+       behind it, and the air between the two masses there is eight hundred pixels
+       and the band is nowhere near it. down the strip the blade is lying flat on
+       the plate, so what it prints is shade rather than a smear, and that is
+       drawn below in its own branch. */
+    const smear = unitNow * 1.7
     if (beside) {
       const left = reg >= 0 ? bladeX - smear : bladeX
       const shade = ctx.createLinearGradient(
@@ -701,17 +710,19 @@ export function PullBed({
       ctx.fillStyle = 'rgba(255, 255, 255, .26)'
       ctx.fillRect(bladeX - 1, 0, 2, h)
     } else {
-      const top = reg >= 0 ? bladeX - smear : bladeX
-      const shade = ctx.createLinearGradient(
-        0,
-        bladeX,
-        0,
-        reg >= 0 ? top : bladeX + smear,
-      )
-      shade.addColorStop(0, 'rgba(21, 20, 27, .2)')
-      shade.addColorStop(1, 'rgba(21, 20, 27, 0)')
-      ctx.fillStyle = shade
-      ctx.fillRect(0, top, w, smear)
+      /* ON A PLATE CUT DOWN THE STRIP THE BLADE IS LYING ON THE PAPER, so what
+         it prints into the plate is a band of shade under a hard line rather than
+         the smear that trails a bar standing on its edge. the band is thrown both
+         ways and is deepest at the bar itself, which is the one part of it a
+         reader is meant to track — the type under it goes into shadow, it does
+         not go behind anything. */
+      const shade = Math.max(unitNow * 0.95, 26)
+      const fall = ctx.createLinearGradient(0, bladeX - shade, 0, bladeX + shade)
+      fall.addColorStop(0, 'rgba(21, 20, 27, 0)')
+      fall.addColorStop(0.5, 'rgba(21, 20, 27, .24)')
+      fall.addColorStop(1, 'rgba(21, 20, 27, 0)')
+      ctx.fillStyle = fall
+      ctx.fillRect(0, bladeX - shade, w, shade * 2)
       /* ink still standing up on the face of the blade */
       ctx.fillStyle = 'rgba(255, 255, 255, .26)'
       ctx.fillRect(0, bladeX - 1, w, 2)

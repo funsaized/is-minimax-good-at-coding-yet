@@ -1,11 +1,65 @@
-Iteration 535 — the foot of the sheet is set like a sheet: blocks finish where their neighbours finish.
+# 536 — The question now inks in, the case stands on the poster's line, and the blade lies flat.
 
-**The order of work fills its column.** The standfirst had always claimed that the answer and the instrument beside it finish within a line of each other; the ticket stopped eighty pixels short. It is a column now, with the two cross-references pinned to its foot, and the two blocks share a bottom edge at every width.
+The headline prints itself instead of arriving finished, the plate case takes the poster's top edge,
+and the squeegee stops painting a black rule through the short answer on a narrow plate.
 
-**The proof sheet fills its own box.** The answer band ran its argument to the floor of the slab while the sheet carrying the poster stopped 115px above it, leaving bare ink under the climax. The proof now takes the slack as a foot margin on a sheet of paper, with the slug in that margin pinned to the bottom, and the two columns finish together.
+## The overture
 
-**The four notes are one docket, not a ragged two-up.** Set two to a row in seven columns they had a forty-character measure and a ninety-pixel hole in the middle of the block. They are four ruled rows at a readable measure, with the pressman's lead-in hung in its own column so the block scans as a list; the job ticket beside it is four rows and four rules too, and the two cells end on the same line.
+The page used to be fully printed the instant it was parsed, which is a photograph and not a press.
+The one piece of the sheet with any business arriving was the headline — three impressions laid one
+over another by three plates — so the question now prints itself, one plate at a time, in the order
+the plates are stacked: subject, standard, turn. Each line rises about a tenth of an em into the paper
+it stands in, staggered by 78ms so the sentence assembles rather than animates.
 
-**The ghost on the slab joined the press.** The biggest mark on the ink slab was a flat outlined line of type printed by no plate — the one thing on the page a reader who has taken the blade to the gate could catch lying. It is plated now, and the drying ramp stops at the ink as it does at the signature, so the ghost and the signature are the same plate at two ends of the run: out of register it is three impressions a hair apart, and at the gate the whole sheet agrees on one voice. The colour plates are drawn faint and unmultiplied rather than inked solid, because show-through comes through two thicknesses of ink and pink multiplied by near-black is black. On paper the two are taken off and the ghost prints as the one outline it always was.
+The overture finishes by doing what the margin note in the first screen has been asking for since the
+note was written. `The question mark is load-bearing. Give it somewhere to land.` — the rule the mark
+stands on is now drawn out from under it towards the left margin as the third line settles. A sentence
+that arrives before the thing that holds it up is the whole thesis of the page in one gesture.
 
-No change to the title, the entry point, the build or the tests. Client-only, no new assets, no network.
+Three constraints, all load-bearing: `backwards` fill so nothing can be left at opacity zero, an
+animation rather than a transition so it cannot re-run because a plate came up, and `no-preference`
+throughout, so a reader who has asked for stillness is given the finished sheet and never a frame of it.
+
+## The proof's ink is wet when the sheet goes down
+
+The shadow under the cover is the answer printed on the far side of the proof, and the far side of a
+sheet that has just come off the press is not dry yet. For about two seconds the sentence comes through
+the stock almost crisp and then goes soft, as the ink spreads into the fibre. It is the one promise the
+card keeps without the reader doing anything: the answer is there, it is readable, and it is not yet the
+print. Pulling the proof is not a reveal — it is the same words coming into focus in the same box.
+
+## The two masses stand on one line
+
+The poster opens with the widest air on the sheet between it and anything at all, which is right for the
+loudest thing on the page — but the plate case was still starting from under the slug. Two columns of
+one composition were beginning on different lines, and the composition had no top edge to be one on.
+The case takes the same air the poster takes: the slug of the sheet, the cap of the question and the
+slug of the case now share one rule across the full measure.
+
+## The blade lies flat on a plate cut down the strip
+
+The squeegee bar was the same nine-pixel black rule whichever way the plate was cut, and on a phone it
+was drawn straight across the short answer — the one sentence the press is allowed to get right, painted
+over by a bar of rubber, on the one instrument whose entire job is letting you read that sentence come
+into register. Three changes, all physical:
+
+- The bar now multiplies into the plate instead of standing on it, so the pink and the blue of the
+  question keep their colour where the blade crosses them, as ink does under a second pass. It is thin
+  enough that a word beneath it is dimmed rather than deleted.
+- The plate is its own isolation group, so the blend reaches the film and not the page behind it.
+- The canvas sets the answer into its own half of the plate, centred, with real air above and below —
+  instead of hanging it off the foot by its own descender with its landing rule a pixel from the trim.
+
+The canvas throws the blade's shade both ways and deepest at the bar, which is the one part of it a
+reader is meant to track. The type under it goes into shadow; it does not go behind anything.
+
+## Smaller things
+
+- The order of work drops its fact on a phone, as every other slug on the sheet does, and the lead
+  balances — "THE ORDER OF WORK" no longer wraps one word under itself.
+- The order-of-work kicker takes `text-wrap: balance` at every width.
+
+## Unchanged
+
+The title, the document title, the entry point, the three plates, the blade, the gate, the pull, the
+rubric, the sign-off, and every number the page prints about itself.
