@@ -1076,6 +1076,63 @@
 
    That is the whole page in one line of type, and the only mark on
    it both ends of the press agree about.
+
+
+   =============================================================
+   ITERATION 535 — THE FOOT OF THE SHEET IS SET LIKE A SHEET
+
+   This sheet has one law it keeps breaking in the bands that
+   were composed last, and the law is that a block finishes where
+   the block beside it finishes: paper has margins, not holes.
+
+   THE TICKET STOPPED SHORT. The comment on the standfirst has
+   claimed for a hundred iterations that the answer and the
+   instrument standing beside it finish within a line of each
+   other. They did not: the order of work is three rows and two
+   doors shorter than the argument it annotates, so the last
+   eighty pixels of the first screen were air under a column of
+   rules with nothing under them. The ticket is a column now and
+   its way on is pinned to its foot, which is where a ticket
+   prints the address it is filed under — and the two blocks
+   share a bottom edge at every width.
+
+   THE PROOF SHEET ENDED IN BARE INK. The argument in the first
+   four columns runs to the floor of the slab and the sheet
+   carrying the poster on this page stopped a hundred and fifteen
+   pixels above it, so the climax of the run — the one band whose
+   whole job is to be the climax — had a hole under it. The
+   proof takes the slack rather than the layout: the extra is a
+   foot margin on a sheet of paper, the slug in that margin is
+   pinned to the bottom by the same rule the shadow's caption is
+   pinned by, and the two columns finish together.
+
+   THE NOTES WERE A RAGGED GRID. Four notes set two to a row in
+   the seven columns the job ticket does not use gave each note a
+   forty-character measure — five lines of prose hung off a
+   two-word lead-in — and left the only slack in the block
+   standing in the middle of it as ninety pixels of air. They are
+   one docket of four ruled rows now, at a measure a paragraph can
+   be read at, with the pressman's lead-in hung in a column of
+   its own so the block scans as the list it is. The ticket
+   beside it is four rows and four rules too, and the two cells
+   end on the same line.
+
+   AND THE GHOST JOINED THE PRESS. The biggest mark on the slab
+   was one flat outlined line of type printed by no press at all,
+   which is the one lie a reader who has just taken the blade to
+   the gate can catch with their own hand: everything out of
+   register on this page is the plate offset, and this was not out
+   of register because it was not printed. It is plated now, like
+   everything else, and the ramp stops at the ink exactly as it
+   stops at the signature below it — so the ghost and the slug are
+   the same plate seen at two ends of the run, and taking the
+   blade to the gate lands five thousand pixels of type and this
+   five-hundred-pixel ghost on the same beat. The colour
+   impressions come through two thicknesses of ink, so they are
+   drawn faint and unmultiplied rather than inked solid: on a
+   ground this dark, pink multiplied by near-black is black, and a
+   fringe nobody can see is not a fringe. On paper the two are
+   taken off and the ghost prints as the one outline it always was.
    ============================================================= */
 
 
@@ -5377,7 +5434,20 @@ html[data-pulled='on'] .lede em {
   position: relative;
   grid-column: 8 / -1;
   grid-row: 2 / span 2;
-  align-self: start;
+  /* AND IT RUNS THE FULL DEPTH OF THE BLOCK BESIDE IT. the comment on the
+     standfirst has always claimed that the answer and the instrument standing
+     next to it finish within a line of each other, and for several hundred
+     pixels they did not: the ticket is three rows and two doors shorter than the
+     argument it is annotating, so the last eighty of the band were air under a
+     column of rules with nothing under them.
+
+     so the ticket is a column and its way on is pinned to its foot, which is
+     where a ticket puts the address it is filed under. the two blocks now share
+     a bottom edge, and the rule the first cross-reference already wears is the
+     line that says so. */
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   padding-top: var(--air-block);
   padding-left: var(--pad);
@@ -5732,6 +5802,7 @@ html[data-pulled='on'] .lede em {
    what is left is two lines of furniture with a pink wedge under them, and the
    pass they lead to still printed in blue. */
 .order .xlinks {
+  margin-top: auto;
   padding-left: 0;
   border-top: 0;
 }
@@ -8847,6 +8918,17 @@ html[data-register='on'] .run__seam-rule--black {
      here and the card stays the brightest object in the run */
   position: relative;
   grid-column: 5 / span 8;
+  /* AND IT FILLS THE BOX IT WAS PRINTED IN. the argument in the first four
+     columns runs to the floor of the band and the proof stopped a hundred and
+     fifteen pixels above it, so the sheet carrying the poster on this page ended
+     in bare ink — a hole under the climax, on the band whose whole job is to be
+     the climax. the stage takes the slack rather than the layout, so the extra
+     is a foot margin on a sheet of paper rather than a gap under a card, and the
+     slug in that margin is pinned to the bottom of the sheet by the same rule
+     the shadow's caption is pinned by. */
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
   --black: #14131a;
   --stock-3: #fcfaf3;
   --ink-70: #3a3646;
@@ -9014,6 +9096,10 @@ html[data-register='on'] .run__seam-rule--black {
 .proof__stage {
   position: relative;
   display: grid;
+  /* and this is the cell that takes the slack, for the reason set out on `.proof`:
+     a proof sheet is paper, and paper that stops short of the foot of the block
+     it was printed in is a card. */
+  flex: 1 0 auto;
   /* tall enough that the card is a proof sheet rather than a card that changes
      its own height, and short enough that it still reads as a sheet. it lost the
      rubric to the slab beside it, so what is left is the answer and its
@@ -9761,6 +9847,10 @@ html[data-ready='on'] .signoff__fleck--b {
 }
 
 .colophon__echo {
+  /* the ramp stops at the ink, exactly as it stops at the signature below it:
+     there is no paper under the slab for the ghost to dry into, so the only
+     number that closes this line of type is the blade */
+  --ink-close: 1;
   overflow: hidden;
   color: transparent;
   font-family: var(--display);
@@ -9775,9 +9865,51 @@ html[data-ready='on'] .signoff__fleck--b {
   padding: .08em 0 .16em;
   letter-spacing: -.05em;
   white-space: nowrap;
-  -webkit-text-stroke: 1.3px rgba(252, 250, 243, .34);
+  -webkit-text-stroke-width: 1.3px;
   mask-image: linear-gradient(90deg, #000 0 74%, transparent 98%);
   -webkit-mask-image: linear-gradient(90deg, #000 0 74%, transparent 98%);
+}
+
+/* THE THREE IMPRESSIONS OF THE GHOST.
+
+   the outline is the one mark on the slab that is not ink, so each layer takes
+   its own stroke: the black plate in the same hairline the echo has always worn,
+   and the two colour plates in their own colour. the stroke is set on the layer
+   rather than on the echo because the echo's own colour is transparent — which
+   is what keeps the counters of the type open instead of flooding a five-rem
+   word with 34% white — and the whole block is behind the same @supports the
+   echo's own fallback is behind, so a browser without text-stroke gets the
+   filled word it got before and not a black rectangle. */
+
+.colophon__echo .plated__layer--ghost {
+  /* NOT multiplied. every other stack on this page multiplies its colour plates
+     into the paper, and on a light ground that is what ink does — but the slab
+     is the darkest ground on the sheet, and pink multiplied by near-black is
+     black. these two come through two thicknesses of ink instead of being laid
+     into one, so they are drawn faintly and straight, which is both the truer
+     account of show-through and the only way they are visible at all. */
+  mix-blend-mode: normal;
+  -webkit-text-stroke-color: currentColor;
+  opacity: .58;
+}
+
+@supports ((-webkit-text-stroke: 1px black) or (text-stroke: 1px black)) {
+  .colophon__echo .plated__layer {
+    /* the fill is transparent and only the stroke carries the plate. the colour
+       plates have to hold a real `color` so that `currentColor` can name them in
+       the stroke below, and without this a five-rem word fills solid pink */
+    -webkit-text-fill-color: transparent;
+  }
+
+  .colophon__echo .plated__layer--black {
+    -webkit-text-stroke-color: rgba(252, 250, 243, .34);
+  }
+}
+
+/* the ghost is a word and not a plate of type, so it is set as one — which is
+   also the only thing keeping the block below it where it has always been */
+.colophon__echo-line {
+  display: block;
 }
 
 @supports not ((-webkit-text-stroke: 1px black) or (text-stroke: 1px black)) {
@@ -9970,18 +10102,36 @@ html[data-ready='on'] .signoff__fleck--b {
    means the press. */
 .colophon__machine {
   display: grid;
-  gap: 0 clamp(18px, 2.4vw, 40px);
+  /* THE NOTES ARE ONE DOCKET, NOT TWO. the four of them were set two to a row in
+     the seven columns the ticket does not use, which gave each note a forty-
+     character measure — five lines of prose hung off a two-word lead-in — and left
+     the only slack in the block standing in the middle of it as ninety pixels of
+     air between the two rows. one column of four ruled rows at the measure a
+     paragraph actually wants puts the air back where a form keeps it, inside the
+     cell, and gives the ticket beside it a block of the same shape: four rows,
+     four rules, one shared foot. */
+  gap: 0;
   /* and the block is filled to the bottom of the box it was printed in, the
-     same law as the ticket beside it: four two-line notes are shorter than four
-     rows of a form, and a press run must not end with a hole in one of its
-     columns. the two ruled rows take up the slack */
+     same law as the ticket beside it: four notes are shorter than four rows of a
+     form, and a press run must not end with a hole in one of its columns. the
+     four ruled rows take up the slack, evenly, instead of one gap taking it all */
   flex: 1 0 auto;
   align-content: space-between;
 }
 
 .colophon__machine li {
   position: relative;
-  max-width: 62ch;
+  /* THE LEAD-IN STANDS IN ITS OWN COLUMN. four notes set with the pressman's
+     voice run straight into the paragraph made a ragged left edge on a docket —
+     four different indents and no spine, so the block could not be scanned as a
+     list even though it is one. the lead-in is hung in a column of its own and
+     the four of them line up, which is what a pressman's note actually looks
+     like on a docket, and it gives the copy back the measure it lost when the
+     block was two notes to a row in seven columns. */
+  display: grid;
+  grid-template-columns: minmax(0, 9.2rem) minmax(0, 1fr);
+  gap: 3px clamp(14px, 1.6vw, 24px);
+  align-items: baseline;
   padding: 13px 0 14px;
   border-top: 1px solid rgba(251, 248, 241, .18);
   color: var(--slab-50);
@@ -9989,6 +10139,13 @@ html[data-ready='on'] .signoff__fleck--b {
   font-size: .95rem;
   line-height: 1.55;
   text-wrap: pretty;
+}
+
+/* the copy never runs past the measure a paragraph can be read at, whatever the
+   band has to give it: a docket cell that is three columns wide at 1180 and
+   eight at 1560 has to print one measure, not two */
+.colophon__machine li > span {
+  max-width: 66ch;
 }
 
 .colophon__machine li:first-child {
@@ -10001,17 +10158,17 @@ html[data-ready='on'] .signoff__fleck--b {
   font-size: .92rem;
   font-weight: 800;
   letter-spacing: -.024em;
+  line-height: 1.55;
 }
 
-@media (min-width: 860px) {
-  .colophon__machine {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  /* the second row of a two-up note block starts a row, so it takes the rule —
-     and the two notes in the first row take theirs from the rule above the lot */
-  .colophon__machine li:nth-child(2) {
-    border-top: 0;
+/* the lead-in column is a hanging one: it is the width of the longest of the
+   four, taken off the same list the copy is printed from, and on a phone it goes
+   back under its own note — a pressman's note on a phone is a note, not a
+   docket, and a nine-rem column beside a thirty-character measure is a gutter */
+@media (max-width: 860px) {
+  .colophon__machine li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
   }
 }
 
@@ -12128,6 +12285,17 @@ html[data-slab='on'] .spine {
   .colophon__echo {
     color: transparent;
     -webkit-text-stroke: .6px #000;
+  }
+
+  /* and a printout has one plate, so the ghost is one outline: the two colour
+     impressions of it are taken off the way every other stack on this sheet is,
+     and the black one is the outline the rule above already asks for */
+  .colophon__echo .plated__layer--ghost {
+    display: none;
+  }
+
+  .colophon__echo .plated__layer--black {
+    -webkit-text-stroke-color: #000;
   }
 
   @supports not ((-webkit-text-stroke: 1px black) or (text-stroke: 1px black)) {

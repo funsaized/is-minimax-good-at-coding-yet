@@ -1,48 +1,11 @@
-The close read gets a loupe — the same three plates, one field of the setting at ×3.2, naming the letter under it.
+Iteration 535 — the foot of the sheet is set like a sheet: blocks finish where their neighbours finish.
 
-**The hole.** The close read is the one band on this sheet whose job is to look
-closely at a phrase, and it sets that phrase one rung below the head, because the
-sheet's own law is two posters and nothing in between louder than a section head.
-The type could not grow, so the band stayed a letterbox: a 48px word at the left of
-a stage 1320px wide, a counted rule under it exactly as wide as the run, a ticket
-at the far end, and about 800 × 150px of screened air in between.
+**The order of work fills its column.** The standfirst had always claimed that the answer and the instrument beside it finish within a line of each other; the ticket stopped eighty pixels short. It is a column now, with the two cross-references pinned to its foot, and the two blocks share a bottom edge at every width.
 
-**The instrument.** That air now holds a lens — the same setting, printed in the
-same three plates, one field of it at a time, at a magnification stated in the
-band's own slug (`close read · 02 of 03 · ×3.2`) and printed under the glass in
-the blue the sheet prints measurements in. It is the one place on the sheet where
-a reader can stand close enough to see the misregistration open out: in the glass
-the pink and the blue come apart again and the sentence is plainly three sheets,
-at 150px of height, and they fuse again at the gate.
+**The proof sheet fills its own box.** The answer band ran its argument to the floor of the slab while the sheet carrying the poster stopped 115px above it, leaving bare ink under the climax. The proof now takes the slack as a foot margin on a sheet of paper, with the slug in that margin pinned to the bottom, and the two columns finish together.
 
-**The registration.** `src/loupe.tsx` writes six numbers on the stage — where the
-setting is (`--word-x/y/w/h`) and where the glass stands (`--lx/ly`) — and the
-geometry is `calc()` over those six and nothing else. There is no second
-measurement to fall out of step with the paper.
+**The four notes are one docket, not a ragged two-up.** Set two to a row in seven columns they had a forty-character measure and a ninety-pixel hole in the middle of the block. They are four ruled rows at a readable measure, with the pressman's lead-in hung in its own column so the block scans as a list; the job ticket beside it is four rows and four rules too, and the two cells end on the same line.
 
-**The readout.** One box per character is measured off the setting with a range
-(not a ratio — the tracking is negative and a space is not half an em), and the
-lens reports the one under the crosshair: `“d” — the fourth of six`. At rest it
-stands on the middle *letter*, so the readout is meaningful before a hand arrives;
-pointing into a gap says `between two letters` rather than naming a letter it is
-not over.
+**The ghost on the slab joined the press.** The biggest mark on the ink slab was a flat outlined line of type printed by no plate — the one thing on the page a reader who has taken the blade to the gate could catch lying. It is plated now, and the drying ramp stops at the ink as it does at the signature, so the ghost and the signature are the same plate at two ends of the run: out of register it is three impressions a hair apart, and at the gate the whole sheet agrees on one voice. The colour plates are drawn faint and unmultiplied rather than inked solid, because show-through comes through two thicknesses of ink and pink multiplied by near-black is black. On paper the two are taken off and the ghost prints as the one outline it always was.
 
-**Touch.** Not claimed. A finger on the glass is a scroll, so the lens rests where
-it was told to on every pointer that is not a mouse.
-
-**Reduced motion.** The lens closes on its number rather than landing on it, and
-under `prefers-reduced-motion: reduce` it is written straight there — the same
-answer every other movement on this sheet gives.
-
-**Composition.** The stage gains a column and the rest of the measure is sized by
-what is printed in it rather than by what is left over, so the lens sits centred
-in the air the setting leaves: specimen, instrument, note. Three layouts —
-centred lens at 761px and up, lens beside the setting to 620px, lens under it
-below that. Checked at 1920, 1440, 1280, 1180, 900, 760, 620, 390 and 320.
-
-**Drawn in the sheet's own inks.** The bezel is the mark pink and a black hairline
-rather than the brass of the chase: the sheet states three inks at the head of
-every band and in the job ticket, and a fourth colour in the middle of it would
-make the ticket a lie.
-
-Files: `src/loupe.tsx` (new), `src/ream.tsx`, `src/style.css`.
+No change to the title, the entry point, the build or the tests. Client-only, no new assets, no network.

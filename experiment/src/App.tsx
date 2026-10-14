@@ -1481,7 +1481,30 @@ export function App() {
       <footer className="colophon">
         <Ruling tone="slab" />
         <div className="colophon__inner">
-          <p className="colophon__echo" aria-hidden="true">{TITLE}</p>
+          {/* THE SHEET SHOWING THROUGH THE SLAB, IN THREE PLATES.
+
+              this used to be one flat outlined line of type — the biggest thing
+              on the page, printed by no press at all, which is the one lie on the
+              slab a reader who has just taken the blade to the gate can catch
+              with their own hand: everything out of register on this sheet is the
+              plate offset, and this was not out of register, because it was not
+              printed.
+
+              so it is plated, like everything else. the slab has no paper under it
+              to dry into, so the ramp stops here exactly as it stops at the
+              signature below, and the ghost and the slug are the same plate seen
+              at two ends of the run: take the blade to the gate and five thousand
+              pixels of type and this five-hundred-pixel ghost land on the same
+              beat. the colour impressions come through two thicknesses of ink,
+              so they are set faint and unmultiplied rather than inked solid —
+              which is also the only way they can be seen at all on a dark ground. */}
+          <p className="colophon__echo" aria-hidden="true">
+            <Plated
+              className="colophon__echo-stack"
+              wet={0.5}
+              render={() => <span className="colophon__echo-line">{TITLE}</span>}
+            />
+          </p>
 
           <div className="colophon__bar" aria-hidden="true">
             {INKS.map(ink => (
@@ -1527,7 +1550,8 @@ export function App() {
               <ul className="colophon__machine">
                 {MACHINERY.map(([lead, rest]) => (
                   <li key={lead}>
-                    <strong>{lead}</strong> {rest}
+                    <strong>{lead}</strong>
+                    <span>{rest}</span>
                   </li>
                 ))}
               </ul>
